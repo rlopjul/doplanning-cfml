@@ -1,0 +1,33 @@
+/*Copyright Era7 Information Technologies 2007-2012*/
+html {
+	background-color:#CCCCCC;
+}
+.body_global {
+	background-color:#CCCCCC;
+}
+.body_tree {
+	background-color:#CCCCCC;
+}
+.menu_bar{
+	background-color:#EFEFEF; clear:both; vertical-align:middle; padding-bottom:4px; padding-top:4px; padding-left:5px; padding-right:5px; height:34px;
+}
+.menu_bar a img{
+	margin-right:1px;
+}
+.link_user_logged {font-size:12px; color:#6D7B2F;}
+.link_user_logout {font-size:12px; color:#000000;}
+.link_bottom_small {font-size:12px; color:#333333;}
+#mainContainer{
+	clear:both; height:100%;display:none;margin-top:5px;
+}
+#treeWrapper{
+	float:left; width:33%; height:100%; border-color:#666666; border-style:solid; border-width:1px; background-color:#FFFFFF;
+}
+#areaContainer{
+	float:right; width:66%; height:100%; border-color:#666666; border-style:solid; border-width:1px;
+}
+.link_web {
+	font-size:12px; 
+	color:#0574A2;
+	font-weight:bold;
+}

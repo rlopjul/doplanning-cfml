@@ -1,0 +1,1 @@
+<div class="msg_conversation_area" id="conversationTextArea" name="conversationTextArea"></div>

@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/soluciones.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+
+<link rel="stylesheet" href="../styles.css" type="text/css" />
+<link rel="stylesheet" href="../styles_tutorials.css" type="text/css" />
+<!-- InstanceParam name="idioma" type="text" value="es" -->
+ 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>DoPlanning - La aplicación Web 2.0 para organizaciones</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+
+<script src="../Scripts/functions.js" type="text/javascript"></script>
+<script type="text/javascript">
+	function init()
+	{
+		mostrarActual("soluciones");
+	}
+</script> 
+<script src="../Scripts/AC_RunActiveContent.js" type="text/javascript"></script>
+</head>
+
+<body onload="init()">
+<div id="centrado">
+<div id="contenedor">
+	<div id="cabecera">
+		<div class="contenedor_menu_horizontal">
+	
+    	<div id="menu_horizontal">
+   			
+					
+					
+				<ul>
+					<li id="menuinicio" class="border_menu"><a href="index.cfm">Home</a></li>
+					<li id="menudoplanning"><a href="que_es.cfm">¿Qué es DoPlanning?</a></li>
+					<li id="menuversiones"><a href="versiones.cfm">Versiones y precios</a></li>
+					<li id="menusoluciones"><a href="soluciones.cfm">Soluciones</a></li>
+					<li id="menucasos"><a href="casos_exito.cfm">Casos de éxito</a></li>
+					<li id="menututoriales"><a href="tutorials.cfm">Tutoriales</a></li>
+					<li id="menufaqs"><a href="faqs.cfm">FAQs</a></li>
+				</ul>	  
+					
+					
+					
+					
+					
+					
+			
+           
+        
+        </div><!--fin menu horizontal-->
+		
+					
+			
+		<!--<div class="ingles"><a href="../en/index.cfm"><img src="../assets/gb.png" width="16" height="11" alt="English" /></a></div>-->
+          	
+					
+		</div><!--fin contenedor menu horizontal-->
+		
+      <div id="div_logo">
+	<!-- InstanceBeginEditable name="flash cabecera" --> 
+	    <script type="text/javascript">
+AC_FL_RunContent( 'codebase','http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0','width','960','height','87','title','presentacion','src','../assets/presentacion_dp_cabecera_home','quality','high','pluginspage','http://www.macromedia.com/go/getflashplayer','movie','../assets/presentacion_dp_cabecera_home' ); //end AC code
+</script><noscript><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="960" height="87" title="presentacion">
+          <param name="movie" value="../assets/presentacion_dp_cabecera_home.swf" />
+          <param name="quality" value="high" />
+          <embed src="../assets/presentacion_dp_cabecera_home.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="960" height="87"></embed>
+        </object></noscript>
+		<!-- InstanceEndEditable --> 
+	  </div>
+        <!--fin div logo-->
+    </div><!--fin cabecera-->
+    
+    <div id="wrapper">
+    	<div id="menu">
+  
+  
+    		<div class="titulo_apartado">
+		
+		
+		<a href="soluciones.cfm" class="enlace_apartado">Soluciones</a>
+		
+		
+		
+		
+		</div><!--fin titulo apartado-->
+          	<div id="menuv">
+			   			
+					
+					
+					
+     <!--   <ul class="primernivel">
+            	<li id="empresas.cfm">
+          			<img src="../assets/cuadrado_verde.png"/>&nbsp;
+                <a class="enlace_menuv" href="../es/empresas.cfm">Gestión empresas</a>
+                </li>
+                
+                <li id="fundaciones.cfm">
+                <img src="../assets/cuadrado_azul.png"/>&nbsp;
+                <a class="enlace_menuv" href="../es/fundaciones.cfm">Gestión de fundaciones </a>
+  
+                </li>
+                
+                <li id="hospitales.cfm">
+                <img src="../assets/cuadrado_rojo.png"/>&nbsp;
+                <a class="enlace_menuv" href="../es/hospitales.cfm">Gestión de hospitales </a>                </li>
+                
+                <li id="asociaciones.cfm">
+                <img src="../assets/cuadrado_verde.png"/>&nbsp;
+                <a class="enlace_menuv" href="../es/asociaciones.cfm">Gestión de asociaciones </a>
+
+                </li>
+				<li id="cursos.cfm">
+                <img src="../assets/cuadrado_azul.png"/>&nbsp;
+                <a class="enlace_menuv" href="../es/cursos.cfm">Gestión de cursos </a>
+  
+                </li>
+				<li id="investigacion.cfm">
+                <img src="../assets/cuadrado_rojo.png"/>&nbsp;
+                <a class="enlace_menuv" href="../es/investigacion.cfm">Proyectos de investigación </a>
+  
+                </li>
+				<li id="clientes.cfm">
+                <img src="../assets/cuadrado_verde.png"/>&nbsp;
+                <a class="enlace_menuv" href="../es/clientes.cfm">Gestión de clientes </a>
+  
+                </li>
+                <li id="proveedores.cfm">
+                <img src="../assets/cuadrado_azul.png"/>&nbsp;
+                <a class="enlace_menuv" href="../es/proveedores.cfm">Gestión de proveedores</a>
+  
+                </li>
+
+            </ul>-->
+								
+					
+            
+   		  </div><!--fin menuv-->
+  
+  
+  
+        </div><!--fin menu-->
+		
+		<div class="submenu">
+					
+					
+			  
+			    <p ><a href="nosotros.cfm" class="enlace_azul">Acerca de Nosotros</a>  |   <a href="contacto.cfm" class="enlace_azul">Contacto</a> | <a href="demo.cfm" class="enlace_azul">Solicitar Demo</a>   |  <a href="contratar.cfm" class="enlace_azul"> Contratar DoPlanning &nbsp; <img src="../assets/carrito.gif" alt="contratar" border="0" /> </a> </p>
+					
+					
+			  
+		</div>
+			
+        <div id="contenido">
+		<!-- InstanceBeginEditable name="contenido" -->
+		<div class="contenido_marco">
+			
+		  <p>&nbsp;</p>
+		  <p class="resaltar_rojo">Soluciones</p>
+		  <p>&nbsp;</p>
+		  <p>Doplanning le ayuda a gestionar:</p>
+		  <p>&nbsp;</p>
+		  <table width="100%" border="0" cellspacing="3" cellpadding="3">
+            <tr bgcolor="#E3E3E3">
+              <td width="27%" class="tabla_home_derecha">Cursos</td>
+              <td width="73%">&nbsp;</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Un área del curso con acceso a los profesores permite su colaboración </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Un área por cada asignatura a la que damos acceso a los alumnos permite que cada asignatura tenga su foro donde hacer consultas al profesor y compañeros y su colección de documentos: temas, trabajos de los alumnos, etc. </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td class="tabla_home_derecha">&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr bgcolor="#E3E3E3">
+              <td><span class="tabla_home_derecha">Clientes</span></td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Cree un área para un cliente y sub áreas para cada proyecto con ese cliente </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Asigne los usuarios del cliente a sus correspondientes proyectos y haga que NO puedan ver la organización entera.  </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Sus clientes al entrar en DoPlanning sólo verán las áreas de los proyectos a los que le dio acceso.  </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Su comunicación con sus clientes a través de DoPlanning le permitirá que nunca se pierda un mensaje y que todo documento esté siempre disponible para usted y para su cliente. </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr bgcolor="#E3E3E3">
+              <td class="tabla_home_derecha">Hospitales</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>A partir de la Dirección Gerencia cree todas las áreas que necesite: por ejemplo Dirección Médica.</li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Haga todas las subáreas que necesite: por ejemplo cada servicio médico bajo la Dirección Médica </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Haga áreas para cada proyecto dependiendo de las unidades que ya creó. </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>Organice adecuadamente a las personas , mensajes y documentos en sus respectivas unidades, servicios, proyectos,etc. </td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr bgcolor="#E3E3E3">
+              <td class="tabla_home_derecha">Asociaciones</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Defina un área de gestión para el personal que gestiona la asociación. </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Defina todas las subáreas necesarias para organizar bien la gestión. </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Defina áreas de trabajo para grupos de asociados. </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Conseguirá una gestión más eficiente y le proporcionará a sus asociados una potente herramienta de colaboración a través de Internet.  </li>
+              </ul></td>
+            </tr>
+            
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr bgcolor="#E3E3E3">
+              <td class="tabla_home_derecha">Empresas</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Defina el organigrama de su empresa. </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Asigne a su personal a las distintas áreas y proyectos. </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>EEsté siempre informado del curso de los proyectos de su empresa y de la relación con sus clientes mediante los mensajes automáticos que DoPlanning le envía.  </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Use DoPlanning para gestionar su relación con proveedores: tendrá todos sus documentos y mensajes bien ordenados.</li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Use DoPlanning para gestionar su relación con los clientes: tendrá flexible una Administración de la Relación con los Clientes (CRM).</li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Use DoPlanning para formación interna.  </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr bgcolor="#E3E3E3">
+              <td class="tabla_home_derecha">Descubra más Soluciones </td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li>Descubra nuevas soluciones con DoPlanning y .... </li>
+              </ul></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><ul>
+                <li><a href="contacto.cfm">COMPÁRTALAS CON NOSOTROS. </a></li>
+              </ul></td>
+            </tr>
+          </table>
+		  <p>&nbsp;</p>
+	    </div>
+		<!-- InstanceEndEditable -->
+		
+		
+      </div><!--fin contenido-->
+         
+        <div id="cuadros"><br /></div>
+    
+    </div><!--fin wrapper-->
+    
+    <div id="footer">
+			
+					
+    	<p>Copyright © 2008-2009 <a href="http://www.era7.com/" target="_blank" class="txt_footer">Era7 Information Technologies SLU</a> | <a href="terminos_uso.cfm" class="txt_footer"> Términos de Uso</a> | <a href="aviso_legal.cfm" class="txt_footer">Aviso Legal</a> </p>
+							
+				
+					
+    </div><!--fin footer-->
+</div><!--fin contenedor-->
+</div>
+<!--fin centrado-->
+
+<script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script> 
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-7079354-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+</body>
+<!-- InstanceEnd --></html>

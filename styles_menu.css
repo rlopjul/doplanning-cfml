@@ -1,0 +1,156 @@
+/* CSS Document */
+
+ul.pureCssMenu ul{display:none;}
+ul.pureCssMenu li:hover>ul{display:block}
+ul.pureCssMenu ul{position: absolute;left:-1px;top:98%;}
+ul.pureCssMenu ul ul{position: absolute;left:98%;top:-2px;}
+ul.pureCssMenu,ul.pureCssMenu ul {
+	margin:0px;
+	list-style:none;
+}
+ul.pureCssMenu table {border-collapse:collapse;}
+ul.pureCssMenu {
+	display:block;
+	zoom:1;
+	float: left;
+	width:100%;
+	margin:0;
+	padding:0;
+}
+ul.pureCssMenu.intranet {
+	display:block;
+	zoom:1;
+	float: left;
+	width:100%;
+	margin:0;
+	padding:0;
+	background:#8ba213;
+}
+ul.pureCssMenu ul{
+	/*width:200px;*/
+	width:210px;
+	background-color:#999;
+	/*padding:5px 10px 0px 10px;*/
+	padding:5px 0px 0px 5px;
+	z-index:2;
+}
+ul.pureCssMenu li{
+	display:block;
+	text-align:center;
+	padding-left:2px;
+	padding-right:2px;
+}
+ul.pureCssMenu ul.menu_segundo_nivel {
+	margin-left:3px;
+	padding-bottom:3px;
+}
+ul.pureCssMenu ul.menu_tercer_nivel {
+	margin-left:4px;
+}
+/*ul.pureCssMenu ul.menu_segundo_nivel li.tercer_nivel{
+	margin-left:15px;
+	padding-left:5px;
+	padding-top:0;
+	padding-bottom:0;
+}
+ul.pureCssMenu ul.menu_segundo_nivel li.tercer_nivel a{
+	font-size:11px;
+}*/
+ul.pureCssMenu li a{
+	display:block;
+	vertical-align:middle;
+	text-align:center;
+	text-decoration:none;
+	font-size:14px;
+	font-weight:bold;
+	color:#fff;
+	text-decoration:none;
+	cursor:pointer;
+	padding:5px 15px 5px 15px;
+}
+ul.pureCssMenu li:hover{
+	position:relative;
+}
+ul.pureCssMenu li a:hover{
+	position:relative;
+	background-color:#8ba213;
+}
+ul.pureCssMenu.intranet li a:hover{
+	position:relative;
+	background-color:#119bd5;
+}
+ul.pureCssMenu li.item1.apartadoActual ul.menu_segundo_nivel li a{
+	background:none;
+}
+ul.pureCssMenu li.apartadoActual a{
+	background-color:#8ba213;
+}
+ul.pureCssMenu.intranet li.apartadoActual > a{
+	background-color:#119bd5;
+}
+ul.pureCssMenu li {
+	float:left;
+}
+ul.pureCssMenu ul.menu_segundo_nivel li{
+	float:none;
+	/*height:28px;*/
+	border:none;
+	/*padding-bottom:3px;*/
+	padding-top:3px;
+	
+	padding-bottom:10px;
+}
+ul.pureCssMenu ul.menu_segundo_nivel li a {
+	text-align:left;
+	/*white-space:nowrap;*/
+	white-space:normal;
+	font-size:13px;
+	cursor:pointer;
+	color:#fff;
+	padding:0;
+	margin:0;
+	border:none;
+	text-decoration:none;
+	background:none;
+	font-weight:normal;
+	
+	line-height:14px;
+}
+ul.pureCssMenu ul.menu_segundo_nivel li a:hover{
+	text-decoration:underline;
+	background:none;
+} 
+ul.pureCssMenu ul.menu_segundo_nivel li.menu_tercer_nivel{
+	margin-left:10px;
+}
+ul.pureCssMenu li.dis a {
+	color: #666 !important;
+}
+ul.pureCssMenu ul li.subapartadoActual>a{
+	text-decoration:underline;
+	color:#fff;
+	background:none;
+}
+ul.pureCssMenu.intranet ul li.subapartadoActual>a{
+	background:none;
+}
+
+ul.pureCssMenu img.over{display:none}
+ul.pureCssMenu li.dis a:hover img.over{display:none !important}
+ul.pureCssMenu li.dis a:hover img.def {display:inline !important}
+ul.pureCssMenu li:hover > a img.def  {display:none}
+ul.pureCssMenu li:hover > a img.over {display:inline}
+ul.pureCssMenu a:hover img.over,ul.pureCssMenu a:hover ul img.def,ul.pureCssMenu a:hover a:hover ul img.def,ul.pureCssMenu a:hover a:hover a:hover ul img.def,ul.pureCssMenu a:hover a:hover img.over,ul.pureCssMenu a:hover a:hover a:hover img.over,ul.pureCssMenu a:hover a:hover a:hover a:hover img.over{display:inline}
+ul.pureCssMenu a:hover img.def,ul.pureCssMenu a:hover ul img.over,ul.pureCssMenu a:hover a:hover ul img.over,ul.pureCssMenu a:hover a:hover a:hover ul img.over,ul.pureCssMenu a:hover a:hover img.def,ul.pureCssMenu a:hover a:hover a:hover img.def,ul.pureCssMenu a:hover a:hover a:hover a:hover img.def{display:none}
+ul.pureCssMenu a:hover ul,ul.pureCssMenu a:hover a:hover ul,ul.pureCssMenu a:hover a:hover a:hover ul{display:block}
+ul.pureCssMenu a:hover ul ul,ul.pureCssMenu a:hover a:hover ul ul{display:none}
+ul.pureCssMenu .menu_segundo_nivel span{
+	display:block;
+	background-image:url(./assets/menu/arr_white.gif);
+	background-position:right center;
+	background-repeat: no-repeat;
+   padding-right:12px;}
+ul.pureCssMenu .menu_segundo_nivel li:hover>a>span{	background-image:url(./assets/menu/arrv_white.gif);
+}
+ul.pureCssMenu .menu_segundo_nivel a:hover span{	_background-image:url(./assets/menu/arrv_white.gif)}
+ul.pureCssMenu ul.menu_segundo_nivel span,ul.pureCssMenu a:hover table span{background-image:url(./assets/menu/arr_white.gif)}

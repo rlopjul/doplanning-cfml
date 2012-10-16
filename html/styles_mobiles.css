@@ -1,0 +1,32 @@
+.body_global 
+{
+	width:100%;
+	background-color:#EEEEEE; /*Para que aparezca bien en internet explorer 5 de windows mobile*/	
+	
+	-webkit-text-size-adjust:none; /*Para iOS*/
+}
+
+.div_inicio_logo
+{
+	width:90px; /*85+5*//*Para IE mobile hay que definir anchos*/
+	padding-top:5px; padding-left:5px; padding-bottom:5px;
+}
+
+.div_img_area_menu
+{
+	width:26px; /*20+6*/
+}
+
+.div_img_area_area
+{
+	width:26px; /*20+6*/		
+}
+
+
+.div_header_content
+{
+	height:47px;
+	background-image:url(assets/header_mobile.jpg);
+	background-position:left top;
+	background-repeat:no-repeat;
+}
