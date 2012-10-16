@@ -127,7 +127,6 @@ Messenger.Private.initGetNewConversations();
 	} );
 	
 </script>
-
 </head>
 
 <body class="body_tree">
