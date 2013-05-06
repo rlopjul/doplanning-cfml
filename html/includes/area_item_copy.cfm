@@ -37,6 +37,9 @@
 		<cfif isDefined("FORM.post_to_twitter")>
 			<cfinvokeargument name="post_to_twitter" value="#FORM.post_to_twitter#">
 		</cfif>
+		<cfif isDefined("FORM.creation_date")>
+			<cfinvokeargument name="creation_date" value="#FORM.creation_date#">
+		</cfif>
 		<cfif isDefined("FORM.start_date")>
 			<cfinvokeargument name="start_date" value="#FORM.start_date#">
 		</cfif>
@@ -69,16 +72,18 @@
 		<cfif isDefined("FORM.position")>
 			<cfinvokeargument name="position" value="#FORM.position#">
 		</cfif>       
-		<cfif isDefined("FORM.display_type")>
-			<cfinvokeargument name="display_type" value="#FORM.display_type#">
+		<cfif isDefined("FORM.display_type_id")>
+			<cfinvokeargument name="display_type_id" value="#FORM.display_type_id#">
 		</cfif>
 		<cfif isDefined("FORM.iframe_url")>
 			<cfinvokeargument name="iframe_url" value="#FORM.iframe_url#">
 		</cfif>
-		<cfif isDefined("FORM.iframe_display_type")>
-			<cfinvokeargument name="iframe_display_type" value="#FORM.iframe_display_type#">
+		<cfif isDefined("FORM.iframe_display_type_id")>
+			<cfinvokeargument name="iframe_display_type_id" value="#FORM.iframe_display_type_id#">
 		</cfif>   
-				
+		<cfif isDefined("FORM.identifier")>
+			<cfinvokeargument name="identifier" value="#FORM.identifier#">
+		</cfif>
 		<!---<cfinvokeargument name="return_path" type="string" required="yes">--->
 	</cfinvoke>
 	<cfset msg = resultCopyItem.message>
@@ -131,6 +136,10 @@
 		<cfcase value="6">
 			<cfset sourceItemTypeName = "task">
 		</cfcase>
+		
+		<cfcase value="7">
+			<cfset sourceItemTypeName = "consultation">
+		</cfcase>
 	
 	</cfswitch>
 	
@@ -143,8 +152,8 @@
 
 <cfoutput>
 <link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
 
 <cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>
@@ -158,13 +167,12 @@
 	var applicationId = "#APPLICATION.identifier#";
 	var applicationPath = "#APPLICATION.path#";
 </script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/Tree.js"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/tree.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
 	
 	function areaSelected(areaId)  {
-	
 		var checkBoxId = "#area"+areaId;
 		if($(checkBoxId).attr('disabled')!='disabled')
 			toggleCheckboxChecked(checkBoxId);
@@ -172,7 +180,6 @@
 
 	
 	function treeLoaded (event, data) { //JStree loaded
-
 		$("#areasTreeContainer").bind("select_node.jstree", function (e, data) {
 			var $obj = data.rslt.obj;
 			areaSelected($obj.attr("id"));
@@ -184,12 +191,10 @@
 	
 	}
 	
-	$(window).load( function() {
-		$("input:submit").button();
-		
+	$(window).load( function() {		
 		$("#accordion").accordion({ active: 1, autoHeight: false });
 				
-		showTree(true,"");
+		showTree(true);
 		
 	});
 
@@ -197,7 +202,7 @@
 
 <div class="div_head_subtitle">
 <cfoutput>
-#itemTypeNameEs#
+<span lang="es">#itemTypeNameEs#</span>
 </cfoutput>
 </div>
 
@@ -240,8 +245,7 @@
 <cfoutput>
 <div class="div_file_page_name">#objectItem.title#</div>
 
-<div class="div_head_subtitle">
-Copiar #itemTypeNameEs# a áreas
+<div class="div_head_subtitle"><span lang="es">Copiar #itemTypeNameEs# a áreas</span>
 </div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
@@ -256,7 +260,7 @@ function onSubmitForm()
 		<cfif itemTypeId IS 5>
 		if(!checkDates("start_date", "end_date")) {
 			submitForm = false;
-			alert("Fechas incorrectas. Compruebe que la fecha de fin del evento es igual o posterior a la fecha de inicio y tiene el formato adecuado.");
+			alert(window.lang.convert("Fechas incorrectas. Compruebe que la fecha de fin del evento es igual o posterior a la fecha de inicio y tiene el formato adecuado."));
 		}
 		</cfif>
 		
@@ -270,7 +274,7 @@ function onSubmitForm()
 }
 </script>
 
-<div id="mainContainer" style="clear:both;">		
+<div id="mainContainer" style="clear:both; margin-left:5px;">		
 <cfform name="item_form" method="post" enctype="multipart/form-data" action="#CGI.SCRIPT_NAME#" style="clear:both;" onsubmit="return onSubmitForm();">
 	<input type="hidden" name="itemTypeId" value="#itemTypeId#">
 	<!---<input type="hidden" name="item_id" value="#item_id#">--->
@@ -278,25 +282,27 @@ function onSubmitForm()
 	<input type="hidden" name="sourceItemTypeId" value="#sourceItemTypeId#">
 	</cfif>
 	<input type="hidden" name="area_id" value="#area_id#">
-	<input type="submit" value="Añadir #itemTypeNameEs# a áreas seleccionadas" style="margin-bottom:3px;" />
+	<input type="submit" class="btn btn-primary" value="Añadir #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-bottom:3px;" />
+	
+	<a href="#return_page#" class="btn" lang="es" style="float:right;">Cancelar</a>
+	
 	<div id="accordion">
-		<h3><a href="##">Editar contenido</a></h3>
-		<div><!---Tab1--->
+		<h3><a href="##" lang="es">Editar contenido</a></h3>
+		<div style="padding-left:10px;"><!---Tab1--->
 			
 			<cfset read_only = false>
 			<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_inputs.cfm">
 			
 			
 		</div><!---END Tab1--->
-		<h3><a href="##">Áreas a las que copiar</a></h3>
-		<div><!---Tab2--->
+		<h3><a href="##" lang="es">Áreas a las que copiar</a></h3>
+		<div style="padding-left:10px;"><!---Tab2--->
 			
-			<div class="div_message_page_title">Seleccione las áreas a las que desea copiar el #itemTypeNameEs#:</div>
-	
-			<div id="areasTreeContainer" style="clear:both; margin-top:2px; margin-bottom:2px;">
+			<div class="alert alert-info"><span lang="es">Seleccione las áreas a las que desea copiar <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs#:</span></div>
+			<div id="areasTreeContainer" style="clear:both; margin-bottom:2px;">
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
 				<cfinvokeargument name="with_input_type" value="checkbox">
-				<cfif itemTypeId IS 1 OR itemTypeId IS 6><!---No se pueden copiar a web los mensajes y las tareas--->
+				<cfif itemTypeId IS 1 OR itemTypeId IS 6 OR itemTypeId IS 7><!---No se pueden copiar a web los mensajes, las tareas y las interconsultas--->
 					<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
 				<cfelseif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---No se pueden copiar a no web las entradas, enlaces y noticias--->
 					<cfinvokeargument name="disable_input_area" value="true"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
@@ -305,12 +311,15 @@ function onSubmitForm()
 			</div>
 			
 			<script type="text/javascript">
-				addRailoRequiredCheckBox("areas_ids[]","Debe seleccionar al menos un área");			
+				addRailoRequiredCheckBox("areas_ids[]",window.lang.convert("Debe seleccionar al menos un área"));			
 			</script>
 			
 		</div><!---END Tab2--->
 	</div><!---END accordion--->
-	<input name="submit" type="submit" value="Añadir #itemTypeNameEs# a áreas seleccionadas" style="margin-top:3px;"/>
+	<input name="submit" type="submit" class="btn btn-primary" value="Añadir #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-top:3px;"/>
+	
+	<a href="#return_page#" class="btn" style="float:right;" lang="es">Cancelar</a>
+	
 </cfform>
 
 </div><!---END mainContainer--->

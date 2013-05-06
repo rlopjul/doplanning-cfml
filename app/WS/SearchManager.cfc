@@ -33,10 +33,12 @@
 		<!---<cfset text_re = ReplaceNoCase(text_re," ","|","ALL")>--->
 		<cfset text_re = ReplaceNoCase(text_re," ",".*","ALL")><!---* --> El caracter que le precede debe aparecer cero, una o más veces--->
 		
-		<cfset text_re = REReplaceNoCase(text_re,"[aàáäåãæâ]","[aàáäåãæâ]+", "ALL")>
+		<!---<cfset text_re = REReplaceNoCase(text_re,"[aàáäåãæâ]","[aàáäåãæâ]+", "ALL")>--->
+		<cfset text_re = REReplaceNoCase(text_re,"[aàáäâ]","[aàáäâ]+", "ALL")>
 		<cfset text_re = REReplaceNoCase(text_re,"[eèéêë]","[eèéêë]+", "ALL")>
 		<cfset text_re = REReplaceNoCase(text_re,"[iìíîï]","[iìíîï]+", "ALL")>
-		<cfset text_re = REReplaceNoCase(text_re,"[oöôõðòóø]","[oöôõðòóø]+", "ALL")>
+		<!---<cfset text_re = REReplaceNoCase(text_re,"[oöôõðòóø]","[oöôõðòóø]+", "ALL")>--->
+		<cfset text_re = REReplaceNoCase(text_re,"[oöôòó]","[oöôòó]+", "ALL")>
 		<cfset text_re = REReplaceNoCase(text_re,"[uüûùú]","[uüûùú]+", "ALL")>
 	
 		<cfset last_char = Right(text_re,1)>

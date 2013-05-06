@@ -1,18 +1,47 @@
 <cfoutput>
-<!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
-<link href="#APPLICATION.path#/jquery/wijmo-complete/development-bundle/themes/rocket/jquery-wijmo.css" type="text/css" />
-<link href="#APPLICATION.path#/jquery/wijmo-complete/development-bundle/themes/wijmo/jquery.wijmo.wijtree.css" type="text/css" />
-<link href="#APPLICATION.path#/jquery/wijmo-complete/css/jquery.wijmo-complete.all.2.0.5.min.css" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/wijmo-open/js/jquery.wijmo-open.all.2.0.5.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/wijmo-complete/js/jquery.wijmo-complete.all.2.0.5.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/wijmo-complete/development-bundle/wijmo/minified/jquery.wijmo.wijtree.min.js"></script>--->
-<!---<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.extras-0.1.22.min.js"></script>
-<link href="#APPLICATION.path#/jquery/tablesorter/css/style.css" rel="stylesheet" type="text/css" media="all" />--->
+<script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8" type="text/javascript"></script>
+</cfoutput>
 
-<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
+<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+<div class="div_head_subtitle_area">
+<cfoutput>
+<!---<div class="div_head_subtitle_area_text"><strong>#uCase(itemTypeNameEsP)#</strong><br/>del área</div>--->
+
+<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
+	
+	<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small btn-info"><i class="icon-plus icon-white"></i> <span lang="es"><cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#</span></a>
+	
+	<a href="#itemTypeNameP#.cfm?area=#area_id#&mode=list" class="btn btn-small"><i class="icon-th-list"></i> <span lang="es">Modo lista</span></a>
+	
+	<a href="#itemTypeNameP#.cfm?area=#area_id#&mode=tree" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>	
+	
+	
+<cfelse><!---VPNET--->
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_tree_menu_vpnet.cfm">
+	
+</cfif>
+
+</cfoutput>
+</div>
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+
+
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsTree" returnvariable="xmlTreeResponse">
+	<cfinvokeargument name="area_id" value="#area_id#">
+	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+</cfinvoke>
+
+<cfxml variable="xmlItems">
+	<cfoutput>
+	#xmlTreeResponse.response.result['#itemTypeNameP#'][1]#
+	</cfoutput>
+</cfxml>
+
+<cfoutput>
+
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
 <script type="text/javascript">
@@ -26,16 +55,16 @@
 				"themes" : {
 					"theme" : "dp",
 					"dots" : false,
-					"icons" : true,
+					"icons" : false,
 					"url" : "#APPLICATION.path#/jquery/jstree/themes/dp/style.css"
 				},
 				"types" : {
 					"valid_children" : [ "all" ],
 					"types" : {
 						"message" : {
-							"icon" : { 
+							<!---"icon" : { 
 								"image" : "#APPLICATION.path#/html/assets/icons/message_small.png" 
-							},
+							},--->
 							"max_children"	: -1,
 							"max_depth"		: -1,
 							"valid_children": "all",
@@ -47,47 +76,74 @@
 					}
 				},
 				"plugins" : [ "themes", "html_data", "types", "ui"]
+				,"ui" : {
+					<cfif isDefined("URL.#itemTypeName#")>
+					"initially_select" : [ "#URL[itemTypeName]#" ]
+					<cfelseif app_version NEQ "mobile" AND isDefined("xmlItems.#itemTypeNameP#.#itemTypeName#")><!---En la versión móvil no se puede seleccionar por defecto porque cambia de pantalla--->
+					"initially_select" : [ "#xmlItems['#itemTypeNameP#']['#itemTypeName#'].xmlAttributes.id#" ]
+					</cfif>
+				}
 			});
 		}
 		
+		<!---$("##treeContainer").delegate("a","click", function(e) { 
+			//window.location.href=this.href;
+			openUrl(this.href,'itemIframe',e);
+		});--->
+
+		$("##treeContainer").bind("select_node.jstree", function (event, data) { 
 		
-		$("##treeContainer").delegate("a","click", function(e) { 
-			//$("##treeContainer").jstree("toggle_node", this);
-			window.location.href=this.href;
-		});
+			var href = data.rslt.obj.children("a").attr("href");
+			openUrl(href,'itemIframe',event);
+			
+	  	}); 
+		
+		<!---<cfif isDefined("URL.#itemTypeName#")>
+			$("##treeContainer").jstree("select_node", "##"+"#URL[itemTypeName]#", true); 
+		</cfif>--->
 		
     }); 
 </script>
 </cfoutput>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-<div class="div_head_subtitle_area">
-<cfoutput>
-<div class="div_head_subtitle_area_text">#itemTypeNameEsP#<br/> del área</div>
-<div class="div_element_menu">
-	<div class="div_icon_menus"><a href="#itemTypeNameP#.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/refresh.png" alt="Actualizar" title="Actualizar" /></a></div>
-	<div class="div_text_menus"><a href="#itemTypeNameP#.cfm?area=#area_id#"> Actualizar</a></div>
-</div>
-<div class="div_element_menu">
-	<div class="div_icon_menus"><a href="#itemTypeName#_new.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_new.png" alt="Nuevo #itemTypeName#" title="Crear #itemTypeNameEs#" /></a></div>
-	<div class="div_text_menus"><a href="#itemTypeName#_new.cfm?area=#area_id#"><cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif><br/>#itemTypeNameEs#</a></div>
-</div>
-<div class="div_element_menu">
-	<div class="div_icon_menus"><a href="#itemTypeNameP#.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/list_mode.png" alt="Modo lista" title="Modo lista" /></a></div>
-	<div class="div_text_menus"><a href="#itemTypeNameP#.cfm?area=#area_id#">Modo<br/>lista</a></div>
-</div>
-</cfoutput>
-</div>
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <div id="treeContainer" style="clear:both">
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItemTree" method="outputAreaItemsTree">
+
+<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItemTree" method="outputAreaItemsTree">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-</cfinvoke>
-</div>
+</cfinvoke>--->
+
+<!---<cfoutput>
+<textarea style="width:100%">#xmlItems#</textarea>
+</cfoutput>--->
+
+<cfif isDefined("xmlItems.#itemTypeNameP#.#itemTypeName#")>
+	<ul>
+		
+	<cfloop index="curItem" array="#xmlItems['#itemTypeNameP#']['#itemTypeName#']#">
+		
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItemTree" method="outputItem">
+			<cfinvokeargument name="itemXml" value="#curItem#">
+			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>
+				
+	</cfloop>
+	</ul>
+<cfelse>
+	<script type="text/javascript">
+		loadTree = false;
+		openUrlHtml2('empty.cfm','itemIframe');
+	</script>
+	<cfoutput>
+	<div class="div_items">
+	<div class="div_text_result"><span lang="es">No hay #lCase(itemTypeNameEsP)# en esta área.</span></div>
+	</div>
+	</cfoutput>
+</cfif>
+
 
 </div>

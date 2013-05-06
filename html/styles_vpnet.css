@@ -5,6 +5,7 @@ html {
 }
 .body_global {
 	background-color:#EEEEEE;
+	font-family:Verdana, Arial;
 }
 .body_tree {
 	background-color:#EEEEEE;
@@ -57,12 +58,12 @@ html {
 	color:#0574A2;
 	font-weight:bold;
 }
-.text_message_title {
+.text_item {
 	font-weight:bold;
 }
-.text_file_name {
+/*.text_file_name {
 	font-weight:bold;
-}
+}*/
 .div_head_menu {
 	background-color:#C8C8C8;
 }

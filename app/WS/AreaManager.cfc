@@ -3,10 +3,12 @@
     File created by: ppareja
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 07-09-2012
+    Date of last file change: 15-11-2012
 	
 	07-09-2012 alucena: añadido eliminación de nuevos elementos al eliminar área
 	29-09-2012 alucena: reemplazado "true" por true en comparaciones de booleanos
+	15-11-2012 alucena: cambiado getAreaImageId
+	14-01-2012 alucena: quitado description de los archivos en getAreaFiles
 	
 --->
 <cfcomponent output="false">
@@ -275,6 +277,7 @@
 	
 	<!--- -------------------------- CHECK AREA ACCESS -------------------------------- --->
 	<!---Comprueba si el usuario puede acceder al área y si no puede lanza un error--->
+	<!---Los administradores pueden acceder a todas las áreas aunque no estén en ellas--->
 	
 	<cffunction name="checkAreaAccess" returntype="void" access="public">
 		<cfargument name="area_id" type="numeric" required="yes">
@@ -282,21 +285,11 @@
 		<cfset var method = "checkAreaAccess">
 		
 		<cfset var allUserAreasList = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+					
 		<cfinclude template="includes/functionStart.cfm">
 		
 		<cfif SESSION.client_administrator NEQ user_id><!---Is not an administrator user--->
 
-			<!---<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="allUserAreasList">
-				<cfinvokeargument name="get_user_id" value="#user_id#">
-			</cfinvoke>
-			<cfinvoke component="AreaManager" method="canTheUserAccess" returnvariable="access_result">
-				<cfinvokeargument name="area_id" value="#area_id#">
-				<cfinvokeargument name="allUserAreasList" value="#allUserAreasList#">
-			</cfinvoke>--->
-			
 			<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
@@ -546,30 +539,9 @@
 		<cfset var method = "getRootAreaId">
 		
 		<cfset var root_area_id = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
-			
+					
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<!---<cfquery name="getRootId" datasource="#client_dsn#">
-				SELECT root_area_id 
-				FROM APP_clients
-				WHERE abbreviation = '#client_abb#'
-			</cfquery>
-			
-			<cfif #getRootId.recordCount# GT 0>
-			
-				<cfset root_area_id = getRootId.root_area_id>
-				
-			<cfelse><!---The root id is not found--->
-				
-				<cfset error_code = 402>
-				
-				<cfthrow errorcode="#error_code#">
-			
-			</cfif>--->
-			
 			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
 				<cfinvokeargument name="onlyId" value="true">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -582,6 +554,7 @@
 		
 	</cffunction>
     
+	
     <!--- ---------------------------- getRootArea ---------------------------------- --->
 	
 	<cffunction name="getRootArea" returntype="query" access="public">
@@ -589,18 +562,8 @@
 		<cfset var method = "getRootArea">
 		
 		<cfset var root_area = structNew()>
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+					
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
-			<!---<cfset root_area_id = 1>
-            
-           	<cfinvoke component="AreaManager" method="getArea" returnvariable="root_area">
-				<cfinvokeargument name="get_area_id" value="#root_area_id#">
-				<cfinvokeargument name="format_content" value="default">
-                <cfinvokeargument name="return_type" value="object">
-			</cfinvoke>--->
 			
 			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
 				<cfinvokeargument name="onlyId" value="false">
@@ -986,8 +949,8 @@
 			<cfquery datasource="#client_dsn#" name="isUserInRootArea">
 				SELECT user_id
 				FROM #client_abb#_areas_users AS areas_users
-				WHERE area_id=<cfqueryparam value="#root_area_id#" cfsqltype="cf_sql_integer"> 
-				AND user_id=<cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+				WHERE area_id = <cfqueryparam value="#root_area_id#" cfsqltype="cf_sql_integer"> 
+				AND user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
 			<cfif isUserInRootArea.recordCount GT 0>
@@ -1766,21 +1729,7 @@
 				BEGIN;
 			</cfquery>
 			
-			<!--- --------------DELETE AREA MESSAGES------------------------- --->
-			<!---<cfquery name="messagesQuery" datasource="#client_dsn#">
-				SELECT id 
-				FROM #client_abb#_messages
-				WHERE area_id = #area_id#;
-			</cfquery>
-			<cfif messagesQuery.recordCount GT 0>
-				<cfloop query="messagesQuery">
-					<cfinvoke component="MessageManager" method="deleteMessage">
-						<!---<cfinvokeargument name="id" value="#messagesQuery.id#">--->
-						<cfinvokeargument name="request" value='<request><parameters><message id="#messagesQuery.id#"/></parameters></request>'>
-					</cfinvoke>
-				</cfloop>
-			</cfif>--->
-			
+			<!--- -----------------DELETE AREA MESSAGES------------------------- --->
 			<cfinvoke component="AreaItemManager" method="deleteAreaItems">
 				<cfinvokeargument name="area_id" value="#area_id#">
 				<cfinvokeargument name="itemTypeId" value="1">
@@ -1789,19 +1738,23 @@
 		
 			<cfif APPLICATION.moduleWeb EQ "enabled">
 				
-				<!--- --------------DELETE AREA ENTRIES------------------------- --->
+				<!--- -----------------DELETE AREA ENTRIES------------------------- --->
 				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
 					<cfinvokeargument name="area_id" value="#area_id#">
 					<cfinvokeargument name="itemTypeId" value="2">
 				</cfinvoke>
 				
-				<!--- --------------DELETE AREA LINKS------------------------- --->
-				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
-					<cfinvokeargument name="area_id" value="#area_id#">
-					<cfinvokeargument name="itemTypeId" value="3">
-				</cfinvoke>
+				<cfif APPLICATION.identifier EQ "vpnet">
 				
-				<!--- --------------DELETE AREA NEWS------------------------- --->
+					<!--- -----------------DELETE AREA LINKS------------------------- --->
+					<cfinvoke component="AreaItemManager" method="deleteAreaItems">
+						<cfinvokeargument name="area_id" value="#area_id#">
+						<cfinvokeargument name="itemTypeId" value="3">
+					</cfinvoke>
+				
+				</cfif>
+				
+				<!--- -----------------DELETE AREA NEWS------------------------- --->
 				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
 					<cfinvokeargument name="area_id" value="#area_id#">
 					<cfinvokeargument name="itemTypeId" value="4">
@@ -1812,7 +1765,7 @@
 			
 			<cfif APPLICATION.moduleWeb EQ "enabled" OR APPLICATION.identifier NEQ "vpnet">
 			
-				<!--- --------------DELETE AREA EVENTS------------------------- --->
+				<!--- -----------------DELETE AREA EVENTS------------------------- --->
 				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
 					<cfinvokeargument name="area_id" value="#area_id#">
 					<cfinvokeargument name="itemTypeId" value="5">
@@ -1822,7 +1775,7 @@
 			
 			<cfif APPLICATION.identifier NEQ "vpnet">
 			
-				<!--- --------------DELETE AREA TAGS------------------------- --->
+				<!--- -----------------DELETE AREA TASKS------------------------- --->
 				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
 					<cfinvokeargument name="area_id" value="#area_id#">
 					<cfinvokeargument name="itemTypeId" value="6">
@@ -1830,9 +1783,19 @@
 			
 			</cfif>
 			
+			<cfif APPLICATION.moduleConsultations IS true>
+			
+				<!--- -----------------DELETE AREA CONSULTATIONS------------------------- --->
+				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
+					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="itemTypeId" value="7">
+				</cfinvoke>
+			
+			</cfif>
 			
 			
-			<!--- ------------------DELETE AREAS_FILES------------------------ --->
+			
+			<!--- -------------------DELETE AREAS_FILES------------------------ --->
 			<cfquery name="deleteAreasFiles" datasource="#client_dsn#">
 				DELETE 
 				FROM #client_abb#_areas_files
@@ -1999,9 +1962,9 @@
 								</cfif>
 							<cfelse><!---The area does not exist--->
 				
-									<cfset error_code = 401>
-									
-									<cfthrow errorcode="#error_code#">
+								<cfset error_code = 401>
+								
+								<cfthrow errorcode="#error_code#">
 							</cfif>
 						</cfif> 
 					</cfif>
@@ -2218,25 +2181,16 @@
 			<cfinclude template="includes/functionStart.cfm">
 			
 			<cfquery name="membersQuery" datasource="#client_dsn#">
-				SELECT users.id, users.email, users.name, users.telephone, users.family_name, users.mobile_phone, users.telephone_ccode, users.mobile_phone_ccode
+				SELECT users.id, users.email, users.name, users.telephone, users.family_name, users.mobile_phone, users.telephone_ccode, users.mobile_phone_ccode, users.image_type
 				FROM #client_abb#_users AS users
 				INNER JOIN #client_abb#_areas_users AS areas_users ON users.id = areas_users.user_id
 				WHERE areas_users.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				ORDER BY #arguments.order_by# #arguments.order_type#;
 			</cfquery>
-			
-			<!---INNER JOIN #client_abb#_areas AS areas ON areas_users.area_id = areas.id--->  
-			
-			<cfset xmlResult = '<users>'><!---label="users"--->
+						
+			<cfset xmlResult = '<users>'>
 			
 			<cfif membersQuery.recordCount GT 0>
-				
-				<!---<cfset user_in_charge = membersQuery.user_in_charge>  
-				<cfquery name="getUserInCharge" dbtype="query">
-					SELECT *
-					FROM membersQuery
-					WHERE id = #user_in_charge#;			
-				</cfquery>--->
 				
 				<cfquery name="getAreaUserInCharge" datasource="#client_dsn#">
 					SELECT user_in_charge
@@ -2255,7 +2209,7 @@
 				<cfset user_in_charge = getAreaUserInCharge.user_in_charge>
 				
 				<cfquery name="getUserInCharge" dbtype="query">
-					SELECT id, email, telephone, family_name, name, mobile_phone, telephone_ccode, mobile_phone_ccode
+					SELECT id, email, telephone, family_name, name, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type
 					FROM membersQuery
 					WHERE id = #user_in_charge#;			
 				</cfquery>
@@ -2264,17 +2218,18 @@
 				
 					<cfloop query="getUserInCharge">
 						<cfinvoke component="UserManager" method="objectUser" returnvariable="xmlUser">
-								<cfinvokeargument name="id" value="#getUserInCharge.id#">
-								<cfinvokeargument name="email" value="#getUserInCharge.email#">
-								<cfinvokeargument name="telephone" value="#getUserInCharge.telephone#">
-								<cfinvokeargument name="family_name" value="#getUserInCharge.family_name#">
-								<cfinvokeargument name="name" value="#getUserInCharge.name#">
-								<cfinvokeargument name="mobile_phone" value="#getUserInCharge.mobile_phone#">
-								<cfinvokeargument name="telephone_ccode" value="#getUserInCharge.telephone_ccode#">
-								<cfinvokeargument name="mobile_phone_ccode" value="#getUserInCharge.mobile_phone_ccode#">
-								<cfinvokeargument name="user_in_charge" value="true">
+							<cfinvokeargument name="id" value="#getUserInCharge.id#">
+							<cfinvokeargument name="email" value="#getUserInCharge.email#">
+							<cfinvokeargument name="telephone" value="#getUserInCharge.telephone#">
+							<cfinvokeargument name="family_name" value="#getUserInCharge.family_name#">
+							<cfinvokeargument name="name" value="#getUserInCharge.name#">
+							<cfinvokeargument name="mobile_phone" value="#getUserInCharge.mobile_phone#">
+							<cfinvokeargument name="telephone_ccode" value="#getUserInCharge.telephone_ccode#">
+							<cfinvokeargument name="mobile_phone_ccode" value="#getUserInCharge.mobile_phone_ccode#">
+							<cfinvokeargument name="image_type" value="#getUserInCharge.image_type#">
+							<cfinvokeargument name="user_in_charge" value="true">
 								
-								<cfinvokeargument name="return_type" value="xml">
+							<cfinvokeargument name="return_type" value="xml">
 						</cfinvoke>
 						<cfset xmlResult = xmlResult&xmlUser>				
 					</cfloop>
@@ -2284,16 +2239,17 @@
 				<cfloop query="membersQuery">						
 					<cfif membersQuery.id NEQ user_in_charge>
 						<cfinvoke component="UserManager" method="objectUser" returnvariable="xmlUser">
-								<cfinvokeargument name="id" value="#membersQuery.id#">
-								<cfinvokeargument name="email" value="#membersQuery.email#">
-								<cfinvokeargument name="telephone" value="#membersQuery.telephone#">
-								<cfinvokeargument name="family_name" value="#membersQuery.family_name#">
-								<cfinvokeargument name="name" value="#membersQuery.name#">
-								<cfinvokeargument name="mobile_phone" value="#membersQuery.mobile_phone#">
-								<cfinvokeargument name="telephone_ccode" value="#membersQuery.telephone_ccode#">
-								<cfinvokeargument name="mobile_phone_ccode" value="#membersQuery.mobile_phone_ccode#">
-								
-								<cfinvokeargument name="return_type" value="xml">
+							<cfinvokeargument name="id" value="#membersQuery.id#">
+							<cfinvokeargument name="email" value="#membersQuery.email#">
+							<cfinvokeargument name="telephone" value="#membersQuery.telephone#">
+							<cfinvokeargument name="family_name" value="#membersQuery.family_name#">
+							<cfinvokeargument name="name" value="#membersQuery.name#">
+							<cfinvokeargument name="mobile_phone" value="#membersQuery.mobile_phone#">
+							<cfinvokeargument name="telephone_ccode" value="#membersQuery.telephone_ccode#">
+							<cfinvokeargument name="mobile_phone_ccode" value="#membersQuery.mobile_phone_ccode#">
+							<cfinvokeargument name="image_type" value="#membersQuery.image_type#">
+
+							<cfinvokeargument name="return_type" value="xml">
 						</cfinvoke>
 						<cfset xmlResult = xmlResult&xmlUser>
 					</cfif>
@@ -2326,12 +2282,13 @@
 			
 			<cfinclude template="includes/checkAreaAccess.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getAreaFiles" returnvariable="filesQuery">
+			<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
 				<cfinvokeargument name="area_id" value="#area_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 			
+			<cfset filesQuery = getAreaFilesResult.query>
 			
 			<cfset xmlObject='<files label="files">'>	
 			<cfif filesQuery.recordCount GT 0>
@@ -2346,7 +2303,7 @@
 						<cfinvokeargument name="replacement_date" value="#filesQuery.replacement_date#">
 						<cfinvokeargument name="name" value="#filesQuery.name#">
 						<cfinvokeargument name="file_name" value="#filesQuery.file_name#">
-						<cfinvokeargument name="description" value="#filesQuery.description#">
+						<!---<cfinvokeargument name="description" value="#filesQuery.description#">--->
 						<cfinvokeargument name="user_full_name" value="#filesQuery.family_name# #filesQuery.user_name#">
 						
 						<cfinvokeargument name="return_type" value="xml">
@@ -2632,44 +2589,15 @@
 		
 		<cfset var area_image_id = "">
 		
-			
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfquery name="getImageId" datasource="#client_dsn#">
-				SELECT areas.parent_id, images.id AS image_id
-				FROM #client_abb#_areas AS areas LEFT JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id
-				WHERE areas.id = #arguments.area_id#;
-			</cfquery>	
-			
-			<cfif getImageId.recordCount GT 0>
-			
-				<cfif len(getImageId.image_id) IS 0 OR getImageId.image_id EQ "NULL">
-					<cfif len(getImageId.parent_id) IS NOT 0 AND getImageId.parent_id IS NOT "NULL" AND getImageId.parent_id GT 0> 
-						<cfinvoke component="AreaManager" method="getAreaImageId" returnvariable="area_image_id">
-							<cfinvokeargument name="area_id" value="#getImageId.parent_id#">
-						</cfinvoke>
-					<cfelse><!---Area image not found--->
-			
-						<!---<cfset error_code = 406>
-					
-						<cfthrow errorcode="#error_code#">--->
+			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaImageId" returnvariable="area_image_id">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 						
-						<cfreturn -1>
-						
-					</cfif>	
-				<cfelse>
-					<cfset area_image_id = getImageId.image_id>	
-				</cfif>
-				
-				<cfreturn area_image_id>
-				
-			<cfelse><!---Area does not exist--->
-			
-				<cfset error_code = 401>
-			
-				<cfthrow errorcode="#error_code#">
-					
-			</cfif>	
+			<cfreturn area_image_id>
 
 	</cffunction>	
 	

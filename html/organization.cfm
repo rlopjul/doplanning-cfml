@@ -1,6 +1,6 @@
 <cfprocessingdirective suppresswhitespace="true">
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="es">
 <head>
 <!--Developed and copyright by Era7 Information Technologies 2007-2012 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -8,34 +8,29 @@
 <cfoutput>
 <title>#APPLICATION.title#<cfif isDefined("SESSION.client_name")> - #SESSION.client_name#</cfif></title>
 </cfoutput>
-<script type="text/javascript" src="../SpryAssets/includes/xpath.js"></script>
-<script type="text/javascript" src="../SpryAssets/includes/SpryData.js"></script>
-<script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
-<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
-<cfif APPLICATION.moduleMessenger EQ "enabled">
-<script type="text/javascript" src="../app/scripts/App.js"></script>
-<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
-<!---<cfif isDefined("SESSION.user_id")>
-<script type="text/javascript">
-Messenger.Private.initGetNewConversations();
-</script>
-</cfif>--->
+<cfif APPLICATION.identifier EQ "vpnet">
+	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
+	<script type="text/javascript" src="../SpryAssets/includes/xpath.js"></script>
+	<script type="text/javascript" src="../SpryAssets/includes/SpryData.js"></script>
+	<script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
+	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
+	<cfif APPLICATION.moduleMessenger EQ "enabled">
+		<script type="text/javascript" src="../app/scripts/App.js"></script>
+		<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
+	</cfif>
+	
 </cfif>
 <script type="text/javascript" src="Scripts/functions.js"></script>
-<link href="styles.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "dp">
 <link href="styles_dp.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
 <link href="styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
-<!--using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"-->  
+<!---<!--using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"-->  
 <link href="styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
-<!---<link href="styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
+<link href="styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
 <link href="styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
-
-<cfoutput>
-  <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
-</cfoutput>
 
 <cfoutput>
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
@@ -65,19 +60,20 @@ Messenger.Private.initGetNewConversations();
 	var selectAreaId = "#area_id#";
 	var iframePage = "#iframe_page#";
 	
+	<!---Si se cambian estos valores, también hay que cambiarlos en los CSS--->
 	<cfif APPLICATION.identifier EQ "vpnet">
 		var treeDefaultWidth = "43%";
 		var areaDefaultWidth = "56%";
 	<cfelse>
-		var treeDefaultWidth = "33%";
-		var areaDefaultWidth = "66%";
+		var treeDefaultWidth = "28%";
+		var areaDefaultWidth = "71%";
 	</cfif>
 	
 	</cfoutput>
 </script>
 
-<script type="text/javascript" src="Scripts/Tree.js"></script>
-<script type="text/javascript" src="Scripts/Organization.js"></script>
+<script type="text/javascript" src="Scripts/tree.min.js"></script>
+<script type="text/javascript" src="Scripts/organization.js"></script>
 
 <script type="text/javascript">
 	
@@ -89,7 +85,7 @@ Messenger.Private.initGetNewConversations();
 	
 	function windowHeight() {
 		var de = document.documentElement;
-		return de.clientHeight-140; //92
+		return de.clientHeight-150; //92
 		/*return document.body.clientHeight;*/
 	}	
 	
@@ -130,17 +126,11 @@ Messenger.Private.initGetNewConversations();
 </head>
 
 <body class="body_tree">
-<!---<cfif APPLICATION.identifier NEQ "dp">
-	<div class="div_header">
-		<a href="index.cfm"><div class="div_header_content"><!-- --></div></a>
-		<div class="div_separador_header"><!-- --></div>
-	</div>
-</cfif>--->
  
 <cfoutput>
 <div style="vertical-align:middle; height:60px; margin-bottom:2px;">
 	<div style="float:left">
-		<a id="areaImageAnchor" onclick="goToAreaLink()">
+		<a id="areaImageAnchor" onClick="goToAreaLink()">
 		<cfif isNumeric(area_id)>
 			<img src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#" id="areaImage" alt="Imagen del área" />
 		<cfelse>
@@ -148,9 +138,10 @@ Messenger.Private.initGetNewConversations();
 		</cfif>
 		</a>
 	</div>
-	<div style="float:right;">
 	
-	</div>
+	<!---<div style="float:right;">
+	</div>--->
+	
 	<cfif APPLICATION.identifier EQ "dp">
 		<div style="float:right; padding-top:18px;"><a href="http://www.doplanning.net/" target="_blank"><img src="assets/logo_doplanning.png" alt="DoPlanning" title="DoPlanning"/></a></div>
 	<cfelseif APPLICATION.identifier EQ "vpnet">
@@ -178,12 +169,12 @@ Messenger.Private.initGetNewConversations();
 		<div style="float:left; clear:none;">
 		<a href="my_files.cfm"><img src="assets/icons/my_files.png" alt="Mis documentos" title="Mis documentos"/></a>
 		<cfif APPLICATION.identifier EQ "dp">
-		<a href="all_messages.cfm"><img src="assets/icons/messages.png" alt="Mensajes" title="Mensajes"/></a>
-		<a href="all_events.cfm"><img src="assets/icons/events.png" alt="Eventos" title="Eventos"/></a>
-		<a href="all_tasks.cfm"><img src="assets/icons/tasks.png" alt="Tareas" title="Tareas"/></a>
+		<a href="all_messages.cfm"><img src="assets/icons/messages.png" alt="Mensajes" title="Todos los mensajes"/></a>
+		<a href="all_events.cfm"><img src="assets/icons/events.png" alt="Eventos" title="Todos los eventos"/></a>
+		<a href="all_tasks.cfm"><img src="assets/icons/tasks.png" alt="Tareas" title="Todas las tareas"/></a>
 			<cfif APPLICATION.moduleWeb EQ "enabled">
-			<a href="all_entries.cfm"><img src="assets/icons/entries.png" alt="Entradas" title="Entradas"/></a>
-			<a href="all_newss.cfm"><img src="assets/icons/news.png" alt="Noticias" title="Noticias"/></a>
+			<a href="all_entries.cfm"><img src="assets/icons/entries.png" alt="Entradas" title="Todas las entradas"/></a>
+			<a href="all_newss.cfm"><img src="assets/icons/news.png" alt="Noticias" title="Todas las noticias"/></a>
 			<!---<a href="all_links.cfm"><img src="assets/icons/links.png" alt="Links" title="Links"/></a>--->
 			</cfif>
 		</cfif>
@@ -205,13 +196,13 @@ Messenger.Private.initGetNewConversations();
 		
 		
 		<cfif APPLICATION.moduleMessenger EQ "enabled">
-		<a onclick="App.openMessenger('messenger_general.cfm')" target="_blank" style="cursor:pointer"><img src="assets/icons_#APPLICATION.identifier#/messenger_general.png" alt="Messenger" title="Messenter general" style="margin-left:2px;"/></a>
-		<a onclick="App.openMessenger('messenger_private.cfm')" style="cursor:pointer"><img src="assets/icons_#APPLICATION.identifier#/messenger_private.png" alt="Messenger" title="Messenger privado" style="margin-left:1px;"/></a>
+		<a onClick="App.openMessenger('messenger_general.cfm')" target="_blank" style="cursor:pointer"><img src="assets/icons_#APPLICATION.identifier#/messenger_general.png" alt="Messenger" title="Messenter general" style="margin-left:2px;"/></a>
+		<a onClick="App.openMessenger('messenger_private.cfm')" style="cursor:pointer"><img src="assets/icons_#APPLICATION.identifier#/messenger_private.png" alt="Messenger" title="Messenger privado" style="margin-left:1px;"/></a>
 		<a href="saved_conversations.cfm?return_page=#current_page#"><img src="assets/icons/saved_conversations.png" alt="Conversaciones guardadas" title="Conversaciones guardadas" /></a>
 		</cfif>
 		
 		<cfif objectUser.general_administrator EQ true>
-			<a href="#APPLICATION.path#/#SESSION.client_abb#/index.cfm?app=generalAdmin" target="_blank"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-left:2px;"/></a>
+			<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin" target="_blank"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-left:2px;"/></a>
 		<cfelse>
 			<cfxml variable="areasAdminXml">
 				#objectUser.areas_administration#
@@ -222,15 +213,28 @@ Messenger.Private.initGetNewConversations();
 				<cfset nAreasAdmin = 0>
 			</cfif>
 			<cfif nAreasAdmin GT 0>
-				<a href="#APPLICATION.path#/#SESSION.client_abb#/index.cfm?app=areaAdmin" target="_blank"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-left:2px;"/></a>
+				<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin" target="_blank"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-left:2px;"/></a>
 			</cfif>
 		</cfif>
 		</div>
+		
 		<div style="float:right; text-align:right; clear:none;">
 			<a href="preferences.cfm" title="Preferencias del usuario" class="link_user_logged">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
 			<a href="logout.cfm" title="Cerrar sesión" class="link_user_logout">Salir</a>
 		</div>
-	
+		
+		<cfif APPLICATION.identifier NEQ "vpnet">
+			<div style="float:right; padding-top:1px; padding-right:6px;">
+				<a href="preferences.cfm" title="Preferencias del usuario">
+				<cfif len(objectUser.image_file) GT 0>
+					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
+				<cfelse>
+					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
+				</cfif>
+				</a>
+			</div>
+		</cfif>
+		
 	</div>
   
 	<cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
@@ -260,13 +264,13 @@ Messenger.Private.initGetNewConversations();
 		<div style="clear:both"><!-- --></div>
 		<!---foot--->
 		<div>
-			<img src="assets/icons/refresh_small.png" alt="Actualizar contenido" title="Actualizar contenido" style="float:left; margin-top:1px; margin-right:2px; cursor:pointer;" onclick="updateTree();" /><a onclick="updateTree();" class="link_bottom_small" style="float:left; cursor:pointer;">Actualizar contenido</a>
+			<img src="assets/icons/refresh_small.png" alt="Actualizar contenido" title="Actualizar contenido" style="float:left; margin-top:1px; margin-right:2px; cursor:pointer;" onClick="updateTree();" /><a onClick="updateTree();" class="link_bottom_small" style="float:left; cursor:pointer;">Actualizar contenido</a>
 		</div>
 		<div style="float:right; padding:0; margin:0; font-size:12px;">
 			<a href="mobile.cfm" class="link_bottom_small">Versión móvil</a>
 			<span style="font-size:12px; color:#FFFFFF;">&nbsp;|&nbsp;</span>
 			<cfoutput>
-			<a href="#APPLICATION.path#/#SESSION.client_abb#/index.cfm" class="link_bottom_small">Versión Flash</a>
+			<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=flash" class="link_bottom_small">Versión Flash</a>
 			</cfoutput>
 		</div>
 	</div>

@@ -6,4 +6,7 @@
 <div class="head_title"><a href="my_files.cfm">Mis documentos</a></div>
 </cfoutput>
 </div>
+
+<cfset app_version = "mobile">
+
 <cfinclude template="my_files_id.cfm">

@@ -22,11 +22,17 @@ id
 	
 	<cfif image_id IS NOT -1>
 		
-		<cfquery name="objectFile" datasource="#client_dsn#">
+		<!---<cfquery name="objectFile" datasource="#client_dsn#">
 			SELECT *, file_size AS file_size_full
 			FROM #client_abb#_areas_images
-			WHERE id = #image_id#;
-		</cfquery>		
+			WHERE id = <cfqueryparam value="#image_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>--->
+		
+		<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getImage" returnvariable="objectFile">
+			<cfinvokeargument name="image_id" value="#image_id#">
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
 		
 		<cfset files_directory = "areas_images">
 		

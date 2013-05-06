@@ -29,7 +29,7 @@
 		<cfset APPLICATION.moduleLdapUsers = "enabled">
 		<cfset APPLICATION.moduleConvertFiles = "enabled">
 		<cfset APPLICATION.moduleWeb = "enabled">
-		<cfset APPLICATION.moduleTwitter = "enabled">
+		<cfset APPLICATION.moduleTwitter = true>
 		
 		<cfset APPLICATION.errorReport = "email"><!---email/file--->
 		
@@ -106,7 +106,7 @@
 			<cfset APPLICATION.ldapServer = "10.72.32.3">
 			<cfset APPLICATION.ldapServerPort = "389">
 			<cfset APPLICATION.ldapServerUserName = "admcolabora@areanorte">
-			<cfset APPLICATION.ldapServerPassword = "pozoblanco">
+			<cfset APPLICATION.ldapServerPassword = "pozoblanco2">
 			<cfset APPLICATION.ldapUsersPath = "OU=Usuarios.Areanorte,DC=AREANORTE">
 			<cfset APPLICATION.ldapScope = "subtree">
 			<cfset APPLICATION.ldapUsersLoginAtt = "samaccountname"><!---uid---><!---Att=Attribute--->
@@ -114,7 +114,7 @@
 			<cfset APPLICATION.ldapName = "Área Norte">
 		</cfif>
 		
-		<cfif APPLICATION.moduleTwitter EQ "enabled">
+		<cfif APPLICATION.moduleTwitter IS true>
 			<cfset APPLICATION.twitterConsumerKey = "3RLGsSqZ9mjtoojl0pzA">
 			<cfset APPLICATION.twitterConsumerSecret = "fT792UxhEGCYAdpWI5LNRKLeeeLnPK49ieaBknXoY8">
 			<cfset APPLICATION.twitterAccessToken = "538555543-dBZRANirOkaNdRq2oDNMgniufRlV0meWvYh1Nta8">

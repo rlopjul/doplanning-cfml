@@ -4,7 +4,7 @@
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 28-06-2012
+	Date of last file change: 08-02-2013
 	
 --->
 <cfcomponent output="false">
@@ -33,26 +33,25 @@
 				</cfoutput>
 			</cfxml>
 			
-			<!---<cfset numAreas = ArrayLen(xmlAreas.areas.XmlChildren)>--->
-			
-			<!---<cfoutput>
-			<textarea style="width:100%">#xmlAreas#</textarea>
-			</cfoutput>--->
-			
-			<ul>
-			<cfloop index="curArea" array="#xmlAreas.areas.area#">
-			
-				<cfinvoke component="AreaTree" method="outputArea">
-					<cfinvokeargument name="areaXml" value="#curArea#">
-					<cfinvokeargument name="root_node" value="true">
-					<cfinvokeargument name="with_input_type" value="#arguments.with_input_type#">
-					<cfinvokeargument name="disable_input_web" value="#arguments.disable_input_web#">
-					<cfinvokeargument name="disable_input_area" value="#arguments.disable_input_area#">
-				</cfinvoke>
-				
-			</cfloop>
-			</ul>
-
+			<cfif isDefined("xmlAreas.areas.area")>
+				<ul>
+					<cfloop index="curArea" array="#xmlAreas.areas.area#">
+					
+						<cfinvoke component="AreaTree" method="outputArea">
+							<cfinvokeargument name="areaXml" value="#curArea#">
+							<cfinvokeargument name="root_node" value="true">
+							<cfinvokeargument name="with_input_type" value="#arguments.with_input_type#">
+							<cfinvokeargument name="disable_input_web" value="#arguments.disable_input_web#">
+							<cfinvokeargument name="disable_input_area" value="#arguments.disable_input_area#">
+						</cfinvoke>
+						
+					</cfloop>
+				</ul>
+			<cfelse>
+				<!---User without areas--->
+				<!---<cfthrow errorcode="403">--->
+				<ul><li rel="not-allowed"><a class="jstree-node" style="font-weight:bold" onClick="event.stopPropagation()">No tiene asignada ningún área de la organización para poder acceder. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</a></li></ul>
+			</cfif>
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -66,9 +65,9 @@
 	<cffunction name="outputArea" returntype="void" output="true" access="public">
 		<cfargument name="areaXml" type="xml">
 		<cfargument name="root_node" type="boolean" default="false">
-		<cfargument name="with_input_type" type="string" required="no" default="">
-		<cfargument name="disable_input_web" type="boolean" required="no" default="false">
-		<cfargument name="disable_input_area" type="boolean" required="no" default="false">
+		<cfargument name="with_input_type" type="string" required="true">
+		<cfargument name="disable_input_web" type="boolean" required="true">
+		<cfargument name="disable_input_area" type="boolean" required="true">
 		
 		<cfset var method = "outputTree">
 		
@@ -89,11 +88,12 @@
 		<cfif areaAllowed IS true><!---Área con acceso--->
 			<cfif NOT isDefined("areaXml.xmlAttributes.type") OR areaXml.xmlAttributes.type EQ "">
 				<cfset li_rel = "allowed">
-				<cfset a_href = "messages.cfm?area=#areaXml.xmlAttributes.id#">
+				<!---<cfset a_href = "messages.cfm?area=#areaXml.xmlAttributes.id#">--->
 			<cfelse>
 				<cfset li_rel = "allowed-web">
-				<cfset a_href = "entries.cfm?area=#areaXml.xmlAttributes.id#">
-			</cfif>			 
+				<!---<cfset a_href = "entries.cfm?area=#areaXml.xmlAttributes.id#">--->
+			</cfif>
+			<cfset a_href = "area_items.cfm?area=#areaXml.xmlAttributes.id#">			 
 		<cfelse><!---Área sin acceso--->
 			<cfif NOT isDefined("areaXml.xmlAttributes.type") OR areaXml.xmlAttributes.type EQ "">
 				<cfset li_rel = "not-allowed">

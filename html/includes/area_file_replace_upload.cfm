@@ -16,7 +16,7 @@
 			
 		</cfif>
 		<cfif isDefined("xmlResponseXml") AND xmlResponseXml.response.xmlAttributes.status EQ "ok">
-				<cfset response_page = "area_file.cfm?file=#FORM.file_id#&area=#FORM.area_id#">
+				<cfset response_page = "file.cfm?file=#FORM.file_id#&area=#FORM.area_id#">
 				<cfset upload_file_name = xmlResponseXml.response.result.file.name.xmlText>
 				<cfset upload_file_id = xmlResponseXml.response.result.file.xmlAttributes.id>
 				
@@ -28,15 +28,16 @@
 					
 				<cfif xmlGetFileResponse.response.result.file.xmlAttributes.status EQ "ok">
 				
-					<cfset message = "Archivo "&upload_file_name&" reemplazado correctamente.">
+					<!---<cfset message = "Archivo "&upload_file_name&" reemplazado correctamente.">--->
+					<cfset message = "Archivo reemplazado correctamente.">
 					<cfset message = URLEncodedFormat(message)>
-					<cflocation url="#response_page#&message=#message#" addtoken="no">
+					<cflocation url="#response_page#&res=1&msg=#message#" addtoken="no">
 				
 				<cfelse>
 					
 					<cfset message = "Ha ocurrido un error al subir el archivo.">
 					<cfset message = URLEncodedFormat(message)>
-					<cflocation url="#fail_page#&message=#message#" addtoken="no">	
+					<cflocation url="#fail_page#&res=0&msg=#message#" addtoken="no">	
 					
 				</cfif>
 				
@@ -44,7 +45,7 @@
 			
 			<cfset message = "Ha ocurrido un error al subir el archivo.">
 			<cfset message = URLEncodedFormat(message)>
-			<cflocation url="#fail_page#&message=#message#" addtoken="no">				
+			<cflocation url="#fail_page#&res=0&msg=#message#" addtoken="no">				
 		</cfif>
 			
 	<cfelse><!---No value given for one or more required parameters--->
