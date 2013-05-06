@@ -1,3 +1,5 @@
+<cfif APPLICATION.moduleVirtualMeetings IS true>
+
 <cftry>
 	
 	<cfset debug_mode = false>
@@ -147,10 +149,11 @@
 	</html>
 
 
-
 	<cfcatch>
 	
 		<cfinclude template="#APPLICATION.resourcesPath#/includes/errorHandler.cfm">
 		
 	</cfcatch>
 </cftry>
+
+</cfif>

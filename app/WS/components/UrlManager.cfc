@@ -3,7 +3,10 @@
     File created by: alucena
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 30-05-2012
+    Date of last file change: 17-01-2013
+	
+	17-01-2013 alucena: cambiada la url de los elementos, quitado /html/
+	22-04-2013 alucena: cambiado client_id por client_abb en las URLs con abb=
 	
 --->
 <cfcomponent output="false">
@@ -18,7 +21,7 @@
 		
 		<cfset var itemUrl = "">
 		
-		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/html/?area=#arguments.area_id#&abb=#SESSION.client_id#">
+		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&abb=#SESSION.client_abb#">
 		
 		<cfreturn itemUrl>
 	</cffunction>
@@ -32,7 +35,7 @@
 		
 		<cfset var itemUrl = "">
 		
-		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/html/?area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#&abb=#SESSION.client_id#">
+		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">
 		
 		<cfreturn itemUrl>
 	</cffunction>
@@ -45,7 +48,7 @@
 		
 		<cfset var fileUrl = "">
 		
-		<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/html/?area=#arguments.area_id#&file=#arguments.file_id#&abb=#SESSION.client_id#">
+		<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&file=#arguments.file_id#&abb=#SESSION.client_abb#">
 		
 		<cfreturn fileUrl>
 	</cffunction>
@@ -60,9 +63,9 @@
 		<cfset var fileUrl = "">
 		
 		<cfif isDefined("arguments.item_id") AND isDefined("arguments.itemTypeName")>
-			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/html/?fileDownload=#arguments.file_id#&#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_id#">
+			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?fileDownload=#arguments.file_id#&#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">
 		<cfelse>
-			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/html/?fileDownload=#arguments.file_id#&abb=#SESSION.client_id#">		
+			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?fileDownload=#arguments.file_id#&abb=#SESSION.client_abb#">		
 		</cfif>
 		
 		<cfreturn fileUrl>

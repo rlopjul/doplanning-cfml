@@ -1,0 +1,63 @@
+/*Copyright Era7 Information Technologies 2007-2013*/
+html {
+	/*background-color:#CCCCCC;*/
+	/*background-color:#E0E0E0;*/
+	background-color:#FFFFFF;
+}
+.body_global {
+	/*background-color:#E0E0E0;*/
+	background-color:#FFFFFF;
+}
+.body_tree {
+	/*background-color:#E0E0E0;*/
+	padding-left:2px;
+	padding-right:2px;
+}
+.menu_bar{
+	background-color:#EFEFEF; clear:both; vertical-align:middle; padding-bottom:4px; padding-top:4px; padding-left:5px; padding-right:5px; height:34px;
+}
+.menu_bar a img{
+	margin-right:1px;
+}
+.link_user_logged {font-size:12px; color:#333333; font-weight:bold; line-height:16px;}
+.link_user_logout {font-size:12px; line-height:18px;}
+.link_bottom_small {font-size:12px; color:#333333; line-height:16px;}
+#mainContainer{
+	clear:both; height:100%;display:none;margin-top:5px;
+}
+#treeWrapper{
+	height:100%; 
+	border-color:#CCCCCC; border-style:solid; border-width:1px;
+	background-color:#FFFFFF;
+}
+#areaContainer, #searchContainer{
+	height:100%; 
+	overflow:hidden; /*PARA IE8*/
+}
+#itemsContainer, #searchItemsContainer{
+	width:62%;float:left;clear:left; border-color:#CCCCCC; border-style:solid; border-width:1px;
+}
+#itemContainer, #searchItemContainer{
+	float:right;width:37%;clear:right; border-color:#CCCCCC; border-style:solid; border-width:1px;
+}
+
+.link_web {
+	font-size:12px; 
+	color:#0574A2;
+	font-weight:bold;
+}
+.div_head_subtitle_area {
+	height: 30px;
+}
+/*.div_head_subtitle_area_text {
+	line-height:12px;
+}*/
+
+.text_user_logged {
+	font-size:12px; line-height:18px;
+}
+
+/*BOOTSTRAP CSS CHANGES*/
+.nav-pills:after{
+	clear:none;
+}

@@ -58,7 +58,7 @@
 	
 	<cfloop query="areaEntriesQuery">
 			
-		<cfif areaEntriesQuery.display_type IS 2><!---Lista--->
+		<cfif areaEntriesQuery.display_type_id IS 2><!---Lista--->
 			<cfset item_content_margin_left = "20px">
 		<cfelse>
 			<cfset item_content_margin_left = "0">
@@ -66,13 +66,13 @@
 		
 		<div style="clear:both; margin-bottom:20px;">
 			<a name="entry-#areaEntriesQuery.id#"></a>
-			<cfif areaEntriesQuery.display_type IS 2><!---Lista---><img src="../assets/bullet.jpg" alt="List item" style="margin-right:10px;"/></cfif><span class="subtitle">#areaEntriesQuery.title#</span>
+			<cfif areaEntriesQuery.display_type_id IS 2><!---Lista---><img src="../assets/bullet.jpg" alt="List item" style="margin-right:10px;"/></cfif><span class="subtitle">#areaEntriesQuery.title#</span>
 			
 			<div style="margin-left:#item_content_margin_left#"><!---div item content--->
 			
-			<cfif areaEntriesQuery.display_type IS 1 OR areaEntriesQuery.display_type IS 2 OR areaEntriesQuery.display_type IS 3 OR areaEntriesQuery.display_type IS 4><!---Imagen a la izquierda o a la derecha o listado de elementos--->
+			<cfif areaEntriesQuery.display_type_id IS 1 OR areaEntriesQuery.display_type_id IS 2 OR areaEntriesQuery.display_type_id IS 3 OR areaEntriesQuery.display_type_id IS 4><!---Imagen a la izquierda o a la derecha o listado de elementos--->
 				
-				<cfif areaEntriesQuery.display_type IS 3>
+				<cfif areaEntriesQuery.display_type_id IS 3>
 					<cfset image_position = "right">
 					<cfset image_margin = "left">
 				<cfelse>
@@ -91,7 +91,7 @@
 				</cfif>#areaEntriesQuery.description#</div>
 				
 			
-			<cfelseif areaEntriesQuery.display_type IS 5><!---Figura con pie--->
+			<cfelseif areaEntriesQuery.display_type_id IS 5><!---Figura con pie--->
 				
 				<div style="text-align:center;">
 				<cfif isNumeric(areaEntriesQuery.attached_image_id)>
@@ -115,7 +115,7 @@
 			</cfif>
 			
 			<cfif len(areaEntriesQuery.iframe_url) GT 0>
-				<cfif areaEntriesQuery.iframe_display_type IS 1>
+				<cfif areaEntriesQuery.iframe_display_type_id IS 1>
 					<iframe width="100%" height="400" src="#areaEntriesQuery.iframe_url#" frameborder="0" allowfullscreen></iframe>			
 				<cfelse>
 					<iframe width="560" height="315" src="#areaEntriesQuery.iframe_url#" frameborder="0" allowfullscreen></iframe>

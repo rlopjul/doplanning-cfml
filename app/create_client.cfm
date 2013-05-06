@@ -21,26 +21,27 @@
 <cfform action="create_client.cfm" method="post">
 	<fieldset>
 		<legend>Datos del cliente</legend>
-		<div><label for="name">Nombre de la organización</label>&nbsp;<cfinput type="text" name="name" required="yes" value="" /></div>
-		<div><label for="id">Id de la organización</label>&nbsp;<cfinput type="text" name="id" value="" required="yes" maxlength="15" /></div>
+		<div><label for="name">Nombre de la organización</label>*&nbsp;<cfinput type="text" name="name" required="yes" value="" /></div>
+		<div><label for="id">Id de la organización</label>*&nbsp;<cfinput type="text" name="id" value="" required="yes" maxlength="15" /></div>
 		<!---<cfinput type="text" name="administrator_id" value="" />--->
 		<!---<cfinput type="text" name="root_area_id" value="" />--->
 		<!---<cfinput type="text" name="number_of_users" value="" />--->
 		<!---<cfinput type="text" name="space" value="" />--->
-		<div><label for="abbreviation">Abreviatura</label>&nbsp;<cfinput type="text" name="abbreviation" value="" required="yes" maxlength="15" /></div>
+		<div><label for="abbreviation">Abreviatura</label>*&nbsp;<cfinput type="text" name="abbreviation" value="" required="yes" maxlength="15" /></div>
 		<!---<div><label for="creation_date">Fecha de creación</label><cfinput type="text" name="creation_date" value="" /></div>--->
-		<!---<cfinput type="text" name="number_of_sms_used" value="" />--->
-		<div><label for="number_of_sms_paid">Número de sms pagados</label>&nbsp;<cfinput type="text" name="number_of_sms_paid" value="0" validate="integer" required="yes" message="Introduzca un número de sms pagados" /></div>
+		<!---<div><label for="number_of_sms_paid">Número de sms pagados</label>&nbsp;<cfinput type="text" name="number_of_sms_paid" value="0" validate="integer" required="yes" message="Introduzca un número de sms pagados" /></div>--->
+		<input type="hidden" name="number_of_sms_paid" value="0" />
 	</fieldset>
 	<fieldset>
 		<legend>Datos del usuario administrador</legend>
 		<div><label for="user_family_name">Nombre</label>&nbsp;<cfinput type="text" name="user_family_name" value="" /></div>
 		<div><label for="user_name">Apellidos</label>&nbsp;<cfinput type="text" name="user_name" value="" /></div>
-		<div><label for="user_email">Email</label>&nbsp;<cfinput type="text" name="user_email" value="" required="yes"/></div>		
+		<div><label for="user_email">Email</label>*&nbsp;<cfinput type="text" name="user_email" value="" required="yes"/></div>		
 		<div><label for="user_telephone">Teléfono</label><label for="user_telephone_ccode"></label>&nbsp;<cfinput type="text" name="user_telephone_ccode" value="34" size="5" /><cfinput type="text" name="user_telephone" value="" /></div>
 		<div><label for="user_mobile_phone">Teléfono móvil</label><label for="user_mobile_phone_ccode"></label>&nbsp;<cfinput type="text" name="user_mobile_phone_ccode" value="34" size="5"><cfinput type="text" name="user_mobile_phone" value=""></div>
-		<div><label for="user_password">Contraseña</label>&nbsp;<cfinput type="text" name="user_password" value="" required="yes"><!---6f2a7325a9966a6a135e0bf5e2126430---></div>
-		<div><label for="user_password">Puede enviar SMS</label>&nbsp;<cfinput type="checkbox" name="user_sms_allowed" value="true"></div>
+		<div><label for="user_password">Contraseña</label>*&nbsp;<cfinput type="text" name="user_password" value="" required="yes"><!---6f2a7325a9966a6a135e0bf5e2126430---></div>
+		<!---<div><label for="user_password">Puede enviar SMS</label>&nbsp;<cfinput type="checkbox" name="user_sms_allowed" value="true"></div>--->
+		<input type="hidden" name="user_sms_allowed" value="false" />
 		<div><label for="user_password">Usuario interno</label>&nbsp;<cfinput type="checkbox" name="whole_tree_visible" value="true" checked="yes" disabled="disabled"></div>
 		<cfinput type="hidden" name="user_whole_tree_visible" value="true" /> 
 	</fieldset>

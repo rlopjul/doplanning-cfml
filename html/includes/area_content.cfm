@@ -1,9 +1,13 @@
 <cfoutput>
+<script src="#APPLICATION.htmlPath#/language/area_content_en.js" charset="utf-8" type="text/javascript"></script>
+</cfoutput>
+
+<cfoutput>
 <div class="div_head_title">
 <div class="icon_title">
-<a href="area.cfm"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/organization.png" alt="Organización"/></a>
+<a href="area.cfm"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/organization.png" alt="Árbol de la organización" lang="es"/></a>
 </div>
-<div class="head_title"><a href="area.cfm">Organizaci&oacute;n</a></div>
+<div class="head_title"><a href="area.cfm" lang="es">Árbol de la organización</a></div>
 </div>
 </cfoutput>
 
@@ -65,13 +69,13 @@
 	
 </cfif>
 
+<cfinclude template="area_checks.cfm">
 <cfinclude template="area_menu.cfm">
 
 <!---<textarea style="width:100%; height:150px;"><cfoutput>#xmlAreas#</cfoutput></textarea>--->
 
 <cfif numAreas GT 0>
 
-	
 		<cfoutput>
 		<cfloop index="xmlIndex" from="1" to="#numAreas#" step="1">
 		
@@ -110,5 +114,5 @@
 		</cfoutput>
 
 <cfelse>
-<div class="div_text_result">No hay más areas dentro de esta.</div>
+<div class="div_text_result"><span lang="es">No hay más areas dentro de esta.</span></div>
 </cfif>

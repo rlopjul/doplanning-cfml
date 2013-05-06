@@ -19,10 +19,10 @@
 		<cfset itemTypeNameU = "Entry">
 		<cfset itemTypeNameP = "entries">
 		
-		<cfset itemTypeNameEs = "Entrada">
-		<cfset itemTypeNameEsP = "Entradas">
+		<cfset itemTypeNameEs = "Elemento de contenido web">
+		<cfset itemTypeNameEsP = "Elementos de contenido web">
 
-		<cfset itemTypeGender = "female">
+		<cfset itemTypeGender = "male">
 	
    	</cfcase> 
 	
@@ -75,6 +75,36 @@
 		<cfset itemTypeNameEsP = "Tareas">
 
 		<cfset itemTypeGender = "female">
+	
+   	</cfcase> 
+	
+	<cfcase value="7"><!---consultations--->
+
+		<cfset itemTypeName = "consultation">
+		<cfset itemTypeNameU = "Consultation">
+		<cfset itemTypeNameP = "Consultations">
+		
+		<cfset itemTypeNameEs = "Interconsulta">
+		<cfset itemTypeNameEsP = "Interconsultas">
+
+		<cfset itemTypeGender = "female">
+	
+   	</cfcase> 
+	
+	
+	
+	
+	
+	<cfcase value="10"><!---files--->
+
+		<cfset itemTypeName = "file">
+		<cfset itemTypeNameU = "File">
+		<cfset itemTypeNameP = "Files">
+		
+		<cfset itemTypeNameEs = "Archivo">
+		<cfset itemTypeNameEsP = "Archivos">
+
+		<cfset itemTypeGender = "male">
 	
    	</cfcase> 
 	

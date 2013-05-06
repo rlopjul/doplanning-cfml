@@ -31,6 +31,12 @@
 	<cfset area_type = xmlAreas.area.xmlAttributes.type>
 	<cfset numAreas = ArrayLen(xmlAreas.area.XmlChildren)>
 
+	<cfinclude template="area_id.cfm">
+	<cfinclude template="area_checks.cfm">
 	<cfinclude template="area_menu.cfm">
-
+	
+	 <cfif area_allowed NEQ true>
+	 <div class="div_text_result"><span lang="es">No tiene acceso a los contenidos de esta área.</span></div>
+	 </cfif>
+	
 </cfif>

@@ -55,7 +55,7 @@
 					<cfqueryparam value="#title#" cfsqltype="cf_sql_varchar">,
 					<cfqueryparam value="#description#" cfsqltype="cf_sql_longvarchar">,
 					<cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-					now(),
+					NOW(),
 					<cfqueryparam value="#related_to#" cfsqltype="cf_sql_varchar">,
 					<cfqueryparam value="pending" cfsqltype="cf_sql_varchar">
 					);

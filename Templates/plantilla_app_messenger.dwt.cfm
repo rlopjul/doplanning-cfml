@@ -1,6 +1,6 @@
 <cfprocessingdirective suppresswhitespace="true">
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:spry="http://ns.adobe.com/spry">
+<!DOCTYPE html>
+<html lang="es" xmlns:spry="http://ns.adobe.com/spry">
 <head>
 <!--Developed and copyright by Era7 Information Technologies 2007-2008 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -17,7 +17,7 @@
 <script type="text/javascript" src="../app/scripts/App.js"></script>
 <script type="text/javascript" src="../html/Scripts/MessengerControl.js"></script>
 <script type="text/javascript" src="../html/Scripts/Messenger.js"></script>
-<link href="../html/styles.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../html/styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <link href="../html/styles_messenger.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier NEQ "dp">
 <link href="../html/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />

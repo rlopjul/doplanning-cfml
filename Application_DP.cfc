@@ -9,8 +9,6 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<!---<cfprocessingdirective pageencoding="utf-8"/>---><!---MUY IMPORTANTE PARA QUE LOS CARACTERES APAREZCAN BIEN--->
-
 	<cfset this.name = 'dp_beta_aws_2'>
 	
 	<cfset this.clientmanagement="true">
@@ -30,7 +28,9 @@
 		<cfset APPLICATION.moduleLdapUsers = "disabled">
 		<cfset APPLICATION.moduleConvertFiles = "disabled">
 		<cfset APPLICATION.moduleWeb = "enabled">
-		<cfset APPLICATION.moduleTwitter = "enabled">
+		<cfset APPLICATION.moduleTwitter = true>
+		<cfset APPLICATION.includeConsultationsInAlerts = true>
+		<cfset APPLICATION.moduleConsultations = true>
 		
 		<cfset APPLICATION.errorReport = "email"><!---email/file--->
 		
@@ -73,7 +73,13 @@
 		
 		<cfset APPLICATION.jqueryJSPath = APPLICATION.path&"/jquery/js/jquery-1.7.2.min.js">
 		<cfset APPLICATION.jqueryUIJSPath = APPLICATION.path&"/jquery/jquery-ui/jquery-ui-1.8.18.custom.min.js">
-		<cfset APPLICATION.jqueryUICSSPath = APPLICATION.path&"/jquery/jquery-ui/css/cupertino/jquery-ui-1.8.18.custom.css">
+		<!---<cfset APPLICATION.jqueryUICSSPath = APPLICATION.path&"/jquery/jquery-ui/css/cupertino/jquery-ui-1.8.18.custom.css">--->
+		<cfset APPLICATION.jqueryUICSSPath = APPLICATION.path&"/jquery/jquery-ui/css/jquery-ui-bootstrap/jquery-ui-1.8.16.custom.css">
+		<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js">
+		
+		<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css">
+		<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">
+		<!---<cfset APPLICATION.appDefaultCSSPath = APPLICATION.path&"/html/styles.min.css">--->	
 		
 		<cfset APPLICATION.mainUrl = "http://software.doplanning.net">
 		<cfset APPLICATION.alternateUrl = "">
@@ -82,7 +88,7 @@
 		<cfset APPLICATION.communityUrl = APPLICATION.mainUrl&"">
 		<cfset APPLICATION.webUrl = APPLICATION.mainUrl&"/web/">
 		
-		<cfset APPLICATION.termsOfUsePage = "/web/terms_of_use.cfm">
+		<cfset APPLICATION.termsOfUseUrl = "/web/terms_of_use.cfm">
 		
 		<cfset APPLICATION.addThisProfileId = "">
 		
@@ -114,7 +120,7 @@
 			<cfset APPLICATION.ldapName = "Área Norte">
 		</cfif>
 		
-		<cfif APPLICATION.moduleTwitter EQ "enabled">
+		<cfif APPLICATION.moduleTwitter IS true>
 			<cfset APPLICATION.twitterConsumerKey = "NnzqQl7cPIPDMWJxS0wvTQ">
 			<cfset APPLICATION.twitterConsumerSecret = "WSfrXiKmqIt6eXwKoE5SBT7HvEWECXtkf6pCSihMOQ">
 			<cfset APPLICATION.twitterAccessToken = "575490855-I82I7USCk2qzXAHYPqcJoQhNHTIcmJ9fZpm0D1JL">
@@ -155,7 +161,6 @@
 	</cffunction>
 	
 	<cffunction name="onRequestStart" output="false" returntype="void" >
-		<cfinvoke method="onApplicationStart">
 		
 		<cfif NOT isDefined("APPLICATION.dsn")>
 			<cfinvoke method="onApplicationStart">

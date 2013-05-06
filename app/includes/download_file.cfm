@@ -40,6 +40,9 @@
 <cfelseif isDefined("URL.task") AND isNumeric(URL.task)>
 	<cfset item_id = URL.task>
 	<cfset itemTypeId = 6>
+<cfelseif isDefined("URL.consultation") AND isNumeric(URL.consultation)>
+	<cfset item_id = URL.consultation>
+	<cfset itemTypeId = 7>
 </cfif>
 	
 

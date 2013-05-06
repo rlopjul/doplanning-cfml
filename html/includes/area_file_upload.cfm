@@ -27,7 +27,7 @@
 			<cfset fail_page = "file_new.cfm">
 			<cfset message = "Ha ocurrido un error al subir el archivo.">
 			<cfset message = URLEncodedFormat(message)>
-			<cflocation url="#APPLICATION.htmlPath#/#fail_page#?message=#message#&parent=#URL.folder_id#" addtoken="no">				
+			<cflocation url="#APPLICATION.htmlPath#/#fail_page#?res=0&msg=#message#&parent=#URL.folder_id#" addtoken="no">				
 		</cfif>
 	
 	<cfelse><!---No value given for one or more required parameters--->

@@ -26,7 +26,7 @@ Visualizar archivo</div>
 	<cfset message = xmlFileConvert.file_convert.message.xmlText>
 	
 	<cfoutput>
-	<div class="div_alert_message">#message#</div>
+	<div class="alert">#message#</div>
 
 	<div style="clear:both; padding-top:16px; margin-bottom:20px;">
 		<cfif URL.file_type NEQ ".html">
@@ -40,9 +40,9 @@ Visualizar archivo</div>
 	</div>
 	</cfoutput>
 	
-	<div class="texto_gris_12px" style="margin-bottom:18px;">
+	<p style="margin-bottom:18px;">
 	IMPORTANTE: el archivo generado puede no reproducir exactamente el contenido del original.<br/> Para una visualización detallada se recomienda ver el archivo original.
-	</div>
+	</p>
 	
 	<!---<cfcatch>
 		<cfinclude template="components/includes/errorHandler.cfm">

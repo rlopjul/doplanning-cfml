@@ -45,7 +45,7 @@
 <cfset numAreas = ArrayLen(xmlAreas.area.XmlChildren)>--->
 
 <cfoutput>
-<div class="div_element_folder"><div style="float:left;"><img src="#APPLICATION.htmlPath#/assets/icons/folder.png" /></div><span class="text_file_name">#xmlFolder.folder.xmlAttributes.name#</span></div>
+<div class="div_element_folder"><div style="float:left;"><img src="#APPLICATION.htmlPath#/assets/icons/folder.png" /></div><span class="text_item">#xmlFolder.folder.xmlAttributes.name#</span></div>
 <div style="padding-left:25px; background-color:##f8f8f8; padding-top:10px;" >
 <cfloop index="xmlIndex" from="1" to="#numElements#" step="1">
 	
@@ -54,13 +54,13 @@
 	</cfxml>
 
 	<cfif isDefined("xmlElement.folder")>
-	<div class="div_element_folder"><div style="float:left; width:32px;"><a class="text_file_name" href="#current_page#&folder=#xmlElement.folder.xmlAttributes.id#"><img src="#APPLICATION.htmlPath#/assets/icons/folder.png" /></a></div><a class="text_file_name" href="#current_page#&folder=#xmlElement.folder.xmlAttributes.id#">#xmlElement.folder.xmlAttributes.name#</a></div>
+	<div class="div_element_folder"><div style="float:left; width:32px;"><a class="text_item" href="#current_page#&folder=#xmlElement.folder.xmlAttributes.id#"><img src="#APPLICATION.htmlPath#/assets/icons/folder.png" /></a></div><a class="text_item" href="#current_page#&folder=#xmlElement.folder.xmlAttributes.id#">#xmlElement.folder.xmlAttributes.name#</a></div>
 	<cfelseif isDefined("xmlElement.file")>
 		
 		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
-				<cfinvokeargument name="xml" value="#xmlElement.file#">
-				<cfinvokeargument name="tree_mode" value="true">
-				<cfinvokeargument name="return_type" value="object">
+			<cfinvokeargument name="xml" value="#xmlElement.file#">
+			<cfinvokeargument name="tree_mode" value="true">
+			<cfinvokeargument name="return_type" value="object">
 		</cfinvoke>
 		
 		<cfinclude template="#APPLICATION.htmlPath#/includes/element_file.cfm">
@@ -70,7 +70,7 @@
 </cfloop>
 </div>
 </cfoutput>
-
+<div style="height:5px;clear:both"></div>
 <cfif NOT isDefined("URL.folder") OR NOT isValid("integer",parent_id)>
 	<cfif page_type IS 1>
 		<cfset return_page = "index.cfm">

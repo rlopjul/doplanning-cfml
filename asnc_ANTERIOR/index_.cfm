@@ -1,1 +1,0 @@
-<cflocation url="/servicioandaluzdesalud/asnc/colabora" addtoken="no">

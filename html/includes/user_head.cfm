@@ -4,6 +4,6 @@
 	<cflocation url="index.cfm" addtoken="no">
 </cfif>
 
-<div class="div_head_subtitle">
-Usuario
-</div>
+<cfif isDefined("app_version") AND app_version NEQ "html2">
+<div class="div_head_subtitle"><span lang="es">Usuario</span></div>
+</cfif>
