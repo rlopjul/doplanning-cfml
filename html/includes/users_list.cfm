@@ -127,10 +127,19 @@ Selección de contactos
 <form name="select_users" action="#response_page#?sel=#selected#&content=#content#&subject=#subject#" method="post">
 </cfoutput>
 
-	<div class="input_submit"><input type="submit" value="Continuar" /></div>
+	<div><input type="submit" class="btn btn-primary" value="Continuar" /></div>
 </cfif>
-	<cfif page_type IS 1 >
+	<cfif page_type IS 1><!---Usuarios de un área--->
 		<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">
+			
+			<!---<cfif xmlIndex IS 1>
+				<!---Esta acción solo se completa si está en la versión HTML2--->
+				<cfoutput>
+				<script type="text/javascript">
+					openUrlHtml2('area_user.cfm?area=#area_id#&user=#xmlUsers.users.user[xmlIndex].xmlAttributes.id#','itemIframe');
+				</script>
+				</cfoutput>						
+			</cfif>--->
 			
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserList">
 					<cfinvokeargument name="xmlUser" value="#xmlUsers.users.user[xmlIndex]#">
@@ -160,7 +169,7 @@ Selección de contactos
 		</cfloop>
 	</cfif>
 <cfif page_type IS 3 OR page_type IS 4>
-	<div class="input_submit"><input type="submit" value="Continuar" /></div>
+	<div><input type="submit" class="btn btn-primary" value="Continuar" /></div>
 	
 </form>	
 </cfif>

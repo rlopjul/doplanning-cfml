@@ -59,7 +59,7 @@ Publicar #itemTypeNameEs# en Twitter
 <div class="contenedor_fondo_blanco">
 <div class="div_send_message">
 
-<p class="texto_gris_12px">Utilice esta opción para publicar <cfif itemTypeGender IS "male">este<cfelse>esta</cfif> #itemTypeNameEs# en Twitter. Puede editar el texto del tweet publicado, al que se le agregará de forma automática la dirección URL donde se encuentra el contenido que desea publicar.<br/><br/>
+<p>Utilice esta opción para publicar <cfif itemTypeGender IS "male">este<cfelse>esta</cfif> #itemTypeNameEs# en Twitter. Puede editar el texto del tweet publicado, al que se le agregará de forma automática la dirección URL donde se encuentra el contenido que desea publicar.<br/><br/>
 </p>
 </cfoutput>
 
@@ -92,15 +92,15 @@ function onSubmitForm()
 	<cfinput type="hidden" name="item_id" value="#item_id#">
 	<cfinput type="hidden" name="area_id" value="#area_id#">
 	<cfinput type="hidden" name="return_path" value="#return_path#">
-	<span class="texto_normal">Tweet: </span><span class="texto_gris_12px">(máximo 120 caracteres)</span><br />
-	<textarea name="content" class="textarea_content" style="height:50px;">#tweet_content#</textarea><br/>
+	<span class="texto_normal">Tweet: </span><small>(máximo 120 caracteres)</small><br />
+	<textarea name="content" class="input-xxlarge" style="height:50px;">#tweet_content#</textarea><br/>
 	<script type="text/javascript">		
 		addRailoRequiredMaxLengthTextInput('content', 'Debe definir un contenido para el Tweet de como máximo 120 caracters', 120);
 	</script>
 	
-	<div class="div_subject_input"><span class="texto_normal">URL del contenido publicado: </span><span class="texto_gris_12px">(se agregará al final del texto del tweet)</span><br/><cfinput type="text" name="url" value="#tweet_url#" required="yes" readonly="yes" class="input_message_subject"></div>
+	<div><span class="texto_normal">URL del contenido publicado: </span><small>(se agregará al final del texto del tweet)</small><br/><cfinput type="text" name="url" value="#tweet_url#" required="yes" readonly="yes" class="input-xxlarge"></div>
 
-    <div class="input_submit" id="submitDiv"><cfinput type="submit" name="submit" class="input_message_submit" value="Enviar"></div>
+    <div id="submitDiv"><cfinput type="submit" class="btn btn-primary" name="submit" value="Enviar"></div>
 </cfform>
 </cfoutput>
 

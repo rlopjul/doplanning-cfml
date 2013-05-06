@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<languages>
+	<language id="es">
+	
+		<common>
+			
+			<foot_content_default_1><![CDATA[Este es un email automático enviado por la aplicación]]></foot_content_default_1>
+			
+			<foot_content_default_2><![CDATA[No responda a este email.<br /> Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación.]]></foot_content_default_2>
+		
+			<!--<terms_of_use_default><![CDATA[<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">El uso de #APPLICATION.title# implica la aceptación de los <a href="#APPLICATION.termsOfUseUrl#">términos de uso</a> por parte del usuario.</p>]]></terms_of_use_default>-->
+			
+		</common>
+
+		
+		<!--newItem-->
+		<new_item>
+			
+			<foot_content_1><![CDATA[Este es un email automático enviado por la aplicación]]></foot_content_1>
+			
+			<foot_content_2><![CDATA[que le avisa de nuevos contenidos creados por usuarios en]]></foot_content_2>
+			
+			<foot_content_3><![CDATA[Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación.]]></foot_content_3>
+			
+			<!--<foot_content><![CDATA[Este es un email automático enviado por la aplicación #APPLICATION.title# que le avisa de nuevos contenidos creados por usuarios en #APPLICATION.title#.<br /> No responda a este e-mail desde aquí, utilice #APPLICATION.title# para responder a este mensaje.<br/>Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación.</p>]]></foot_content>-->
+			
+			<access_to_item_male><![CDATA[Acceda directamente a la]]></access_to_item_male>
+			<access_to_item_female><![CDATA[Acceda directamente a la]]></access_to_item_female>
+			<access_to_item_link><![CDATA[mediante el siguiente enlace:]]></access_to_item_link>
+			<access_to_item_links><![CDATA[mediante los siguientes enlaces:]]></access_to_item_links>
+			<access_to_application><![CDATA[Acceda a la aplicación en la siguiente dirección:]]></access_to_application>
+			
+			<access_internal><![CDATA[Acceso interno]]></access_internal>
+			<access_external><![CDATA[Acceso externo]]></access_external>
+			
+			
+			<new_male><![CDATA[Nuevo]]></new_male>
+			<new_female><![CDATA[Nueva]]></new_female>
+			<answer_to><![CDATA[Respuesta a]]></answer_to>
+			
+		</new_item>
+		<!--END newItem-->
+	
+
+		<!--newArea-->
+		<new_area>
+			
+			<foot_content><![CDATA[No responda a este email.<br />Este es un email automático enviado por la aplicación #APPLICATION.title#.]]></foot_content>
+			
+			<new_area><![CDATA[Nueva Área]]></new_area>
+			
+		</new_area>
+		<!--END newArea-->
+
+	</language>
+	
+
+	
+	<language id="en">
+		
+	</language>
+</languages>

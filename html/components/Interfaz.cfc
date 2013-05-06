@@ -1,42 +1,15 @@
-<!---Copyright Era7 Information Technologies 2007-2008
+<!---Copyright Era7 Information Technologies 2007-2013
 
 	Date of file creation: 07-10-2008
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 12-12-2008
+	Date of last file change: 23-04-2013
 	
 --->
 <cfcomponent output="true">
 
 	<cfset component = "Interfaz">
-	
-	<!---
-	includes/alert_message.cfm
-	<cffunction name="messageElement" returntype="void" access="public">
-		
-		<cfset var method = "messageElement">
-		
-		<cfif isDefined(URL.message)>
-		
-			<cfset message = URL.message>
-			<cfoutput>
-				<div class="div_alert_message">
-					#message#
-				</div>
-			</cfoutput>
-			
-		</cfif>
-		
-		<cftry>
-		
-			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-	</cffunction>--->
 	
 	
 	<cffunction name="returnElement" returntype="void" access="public">
@@ -45,10 +18,11 @@
 		<cfset var method = "returnElement">
 		
 		<cfoutput>
-			<div class="div_return">
+			<!---<div class="div_return">
 				<a href="#arguments.return_page#" class="a_return"><img src="#APPLICATION.htmlPath#/assets/icons/return.gif" title="Volver" alt="Volver" />
 				Volver</a>
-			</div>
+			</div>--->
+			<a href="#arguments.return_page#" class="btn btn-small" style="margin-left:5px; margin-bottom:5px;"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
 		</cfoutput>
 		
 		<cftry>
@@ -69,7 +43,7 @@
 		
 		<cfoutput>
 			<div class="div_return">
-				<a href="#arguments.return_page#" class="a_return">Subir</a>
+				<a href="#arguments.return_page#" class="btn btn-small" lang="es">Ir a nivel superior</a>
 			</div>
 		</cfoutput>
 		

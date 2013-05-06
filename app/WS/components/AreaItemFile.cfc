@@ -4,7 +4,9 @@
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 06-06-2012
+	Date of last file change: 15-11-2012
+	
+	15-11-2012 alucena: cambiado tamaño máximo de las imágenes
 	
 --->
 <cfcomponent output="false">
@@ -40,7 +42,7 @@
 				<cfset files_directory = "files">
 				
 				<cfif type EQ "item_image_html">
-					<cfset required_width = 700>
+					<cfset required_width = 1100>
 					<cfset required_height = 1000>
 				</cfif>
 				
@@ -66,7 +68,7 @@
 				solo se limita a un tamaño lógico para web
 				<cfset required_width = 468>
 				<cfset required_height = 60>--->
-				<cfset required_width = 700>
+				<cfset required_width = 1100>
 				<cfset required_height = 1000>
 				
 				<cfif NOT isDefined("arguments.xmlArea")>
@@ -93,6 +95,7 @@
 				</cfxml>
 				
 				<cfset image_user_id = xmlUser.user.xmlAttributes.id>
+								
 			</cfcase>--->
 		
 		</cfswitch>
@@ -334,6 +337,7 @@
 				
 				<!---user_image--->
 				<!---<cfcase value="user_image">
+				
 					<!---Esto no está actualizado, y debe estar como esté el de area_image--->
 					<cfquery datasource="#client_dsn#" name="addFileToUser">
 						UPDATE #client_abb#_users
@@ -346,6 +350,7 @@
 						SET space_used = space_used+<cfqueryparam value="#uploadedFile.fileSize#" cfsqltype="cf_sql_integer">
 						WHERE id = <cfqueryparam value="#image_user_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
+					
 				</cfcase>--->
 			
 			</cfswitch>

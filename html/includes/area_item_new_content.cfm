@@ -2,6 +2,8 @@
 itemTypeId
 return_path: define la ruta donde se encuentra esta página, para que al enviar el mensaje se vuelva a ella--->
 <cfoutput>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js" type="text/javascript"></script>
 </cfoutput>
 
@@ -51,7 +53,11 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 <div class="div_head_subtitle">
 <cfoutput>
-<cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#
+<cfif itemTypeId IS NOT 7 OR parent_kind EQ "area">
+	<span lang="es"><cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#</span>
+<cfelse>
+	<span lang="es">Respuesta a #itemTypeNameEs#</span>
+</cfif>
 </cfoutput>
 </div>
 

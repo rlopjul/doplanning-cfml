@@ -4,7 +4,7 @@
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 25-04-2012
+	Date of last file change: 15-11-2012
 	
 --->
 <cfcomponent output="false">
@@ -201,7 +201,7 @@
 						<cfset area_dot = find(".-",cur_area)>
 						
 						<cfif area_dot GT 0>
-							<cfset cur_area = right(cur_area, len(cur_area)-area_dot)>
+							<cfset cur_area = right(cur_area, len(cur_area)-(area_dot+1))>
 						</cfif>
 						
 						<cfset cur_area = '<a href="'&arguments.with_base_link&arguments.area_id&'">'&cur_area&'</a>'>
@@ -373,6 +373,59 @@
 	</cffunction>
 	
 	
+	
+	<!---getAreaImageId--->
+	
+	<!---Devuelve la imagen del área--->
+	
+	<cffunction name="getAreaImageId" output="false" returntype="numeric" access="public">
+		<cfargument name="area_id" type="numeric" required="yes">	
+			
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">		
+		
+		<cfset var method = "getAreaImageId">
+								
+			<cfquery name="areaImageIdQuery" datasource="#arguments.client_dsn#">
+				SELECT areas.parent_id, images.id AS image_id
+				FROM #client_abb#_areas AS areas LEFT JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>	
+		
+			<cfif areaImageIdQuery.recordCount GT 0>
+			
+				<cfif NOT isNumeric(areaImageIdQuery.image_id)>
+				
+					<cfif isNumeric(areaImageIdQuery.parent_id) AND areaImageIdQuery.parent_id GT 0> 
+						<cfinvoke component="AreaQuery" method="getAreaImageId" returnvariable="area_image_id">
+							<cfinvokeargument name="area_id" value="#areaImageIdQuery.parent_id#">
+							
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+						</cfinvoke>
+					<cfelse><!---Area image not found--->
+			
+						<!---<cfset error_code = 406>
+						<cfthrow errorcode="#error_code#">--->
+						
+						<cfreturn -1>
+					</cfif>	
+					
+				<cfelse>
+					<cfset area_image_id = areaImageIdQuery.image_id>	
+				</cfif>
+				
+				<cfreturn area_image_id>
+				
+			<cfelse><!---Area does not exist--->
+			
+				<cfset error_code = 401>
+			
+				<cfthrow errorcode="#error_code#">
+					
+			</cfif>	
+		
+	</cffunction>
     
   
 </cfcomponent>

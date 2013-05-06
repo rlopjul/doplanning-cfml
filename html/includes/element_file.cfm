@@ -34,11 +34,11 @@
 		
 		<cfif isDefined("page_type")>
 			<cfif page_type IS 1>
-				<a href="my_files_file.cfm?folder=#folder_id#&file=#objectFile.id#" class="text_file_name"><cfif len(objectFile.name) GT 0>#objectFile.name#<cfelse><i>Archivo sin nombre</i></cfif></a>
+				<a href="my_files_file.cfm?folder=#folder_id#&file=#objectFile.id#" class="text_item"><cfif len(objectFile.name) GT 0>#objectFile.name#<cfelse><i>Archivo sin nombre</i></cfif></a>
 			<cfelseif page_type IS 2>
-				<span class="text_file_name">#objectFile.name#</span>
+				<span class="text_item">#objectFile.name#</span>
 			<cfelseif page_type IS 3>
-				<a href="area_file.cfm?area=#area_id#&file=#objectFile.id#" class="text_file_name">#objectFile.name#</a>
+				<a href="file.cfm?area=#area_id#&file=#objectFile.id#" class="text_item">#objectFile.name#</a>
 			</cfif>
 		</cfif>
 		</div>

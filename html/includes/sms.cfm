@@ -50,11 +50,11 @@
 	
 	    
     <!---cftextarea is not supported by Railo 3.0--->
-    <div class="div_content_textarea"><textarea name="content" class="textarea_content">#content#</textarea></div>
+    <div><textarea name="content" class="input-xxlarge">#content#</textarea></div>
     </cfoutput>
     <!---<div><cfinput type="file" name="Filedata"></div>--->
     
-    <div class="input_submit"><input type="submit" name="submit" class="input_message_submit" value="Enviar"></div>
+    <div><input type="submit" class="btn btn-primary" name="submit" value="Enviar"></div>
 </form>
 </div>
 

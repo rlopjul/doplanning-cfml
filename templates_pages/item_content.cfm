@@ -43,7 +43,7 @@
 
 <!---Iframe--->
 <cfif export IS false AND len(getItem.iframe_url) GT 0>
-	<cfif getItem.iframe_display_type IS 1>
+	<cfif getItem.iframe_display_type_id IS 1>
 		<iframe width="100%" height="400" src="#getItem.iframe_url#" frameborder="0" allowfullscreen></iframe>			
 	<cfelse>
 		<iframe width="560" height="315" src="#getItem.iframe_url#" frameborder="0" allowfullscreen></iframe>

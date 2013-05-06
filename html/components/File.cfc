@@ -153,11 +153,11 @@
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
 			</cfinvoke>
 			
-			<cfset msg = "Archivo asociado.">
+			<cfset msg = "Archivo asociado al área.">
 			<cfset msg = URLEncodedFormat(msg)>
 			
-			<!---<cflocation url="#APPLICATION.htmlPath#/files.cfm?area=#arguments.area_id#&message=#msg#" addtoken="no">--->
-			<cflocation url="#arguments.return_path#files.cfm?area=#arguments.area_id#&message=#msg#" addtoken="no">
+			<!---<cflocation url="#arguments.return_path#files.cfm?area=#arguments.area_id#&msg=#msg#&res=1" addtoken="no">--->
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&msg=#msg#&res=1" addtoken="no">
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -263,7 +263,7 @@
 			<cfset msg = URLEncodedFormat(msg)>
 			
 			<!---<cflocation url="#APPLICATION.htmlPath#/files.cfm?area=#arguments.area_id#&message=#msg#" addtoken="no">--->
-			<cflocation url="#arguments.return_path#files.cfm?area=#arguments.area_id#&message=#msg#" addtoken="no">
+			<cflocation url="#arguments.return_path#files.cfm?area=#arguments.area_id#&msg=#msg#&res=1" addtoken="no">
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -311,7 +311,7 @@
 			<cfset message = "Archivo modificado.">
 			<cfset message = URLEncodedFormat(message)>
             
-            <cflocation url="#APPLICATION.htmlPath#/#response_page#&message=#message#" addtoken="no">
+            <cflocation url="#APPLICATION.htmlPath#/#response_page#&msg=#message#&res=1" addtoken="no">
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -340,7 +340,8 @@
 		
 		<cftry>
 			
-			<cfset response_page = "files.cfm?area=#arguments.area_id#&file=#arguments.file_id#">
+			<!---<cfset response_page = "files.cfm?area=#arguments.area_id#&file=#arguments.file_id#">--->
+			<cfset response_page = "area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#">
 
 			<cfsavecontent variable="request_parameters">
 				<cfoutput>
@@ -360,7 +361,7 @@
 			<cfset message = "Archivo modificado.">
 			<cfset message = URLEncodedFormat(message)>
             
-            <cflocation url="#arguments.return_path##response_page#&message=#message#" addtoken="no">
+            <cflocation url="#arguments.return_path##response_page#&msg=#message#&res=1" addtoken="no">
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -405,7 +406,7 @@
 			<cfset message = "Archivo eliminado.">
 			<cfset message = URLEncodedFormat(message)>
             
-            <cflocation url="#APPLICATION.htmlPath#/#response_page#&message=#message#" addtoken="no">
+            <cflocation url="#APPLICATION.htmlPath#/#response_page#&msg=#message#&res=1" addtoken="no">
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -448,7 +449,7 @@
 			<cfset message = "Archivo eliminado.">
 			<cfset message = URLEncodedFormat(message)>
             
-            <cflocation url="#arguments.return_path##response_page#&message=#message#" addtoken="no">
+            <cflocation url="#arguments.return_path##response_page#&msg=#message#&res=1" addtoken="no">
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -458,41 +459,45 @@
 		
 	</cffunction>
 	
-	<!--- ---------------------------------- sendFileByEmail -------------------------------------- --->
 	
-	<!---<cffunction name="sendFileByEmail" returntype="xml" access="public">
-		<cfargument name="file_id" type="numeric" required="true">
-		<!---<cfargument name="return_page" type="string" required="true">--->
-		
-		<cfset var method = "sendFileByEmail">
+	
+	<!--- ----------------------- GET ALL AREAS FILES -------------------------------- --->
+	
+	<cffunction name="getAllAreasFiles" returntype="string" access="public">
+		<cfargument name="search_text" type="string" required="no">
+		<cfargument name="user_in_charge" type="numeric" required="no">
+		<cfargument name="limit" type="numeric" required="no">
+				
+		<cfset var method = "getAllAreasFiles">
 		
 		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
 		
 		<cftry>
 			
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<file id="#arguments.file_id#" />
-					<user id="#SESSION.user_id#" />
-				</cfoutput>
-			</cfsavecontent>
 			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAllAreasFiles" returnvariable="xmlResponseContent">
+				<cfif isDefined("arguments.search_text")>
+				<cfinvokeargument name="search_text" value="#arguments.search_text#">
+				</cfif>
+				<cfif isDefined("arguments.user_in_charge")>
+				<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
+				</cfif>
+				<cfif isDefined("arguments.limit")>
+				<cfinvokeargument name="limit" value="#arguments.limit#">
+				</cfif>
+				<cfinvokeargument name="with_area" value="true">
+			</cfinvoke>	
 			
+			<cfreturn xmlResponseContent>
+            
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
 			
 		</cftry>
 		
-		<cfreturn xmlResponse>
-		
-	</cffunction>--->	
+	</cffunction>
+	
 	
 	
 </cfcomponent>

@@ -30,10 +30,10 @@
 <cfoutput>
 <div style="clear:both; padding-top:10px; padding-bottom:10px;">
 	<cfform action="#CGI.SCRIPT_NAME#" method="get">
-		<div class="div_search_label">Fecha desde:</div><cfinput type="text" validate="eurodate" required="yes" message="Fecha desde correcta requerida" name="date_from" value="#date_from_value#" />&nbsp;<span class="texto_gris_12px">Formato DD-MM-AAAA. Ejemplo: 21-12-2009</span><br/>
+		<div class="div_search_label">Fecha desde:</div><cfinput type="text" validate="eurodate" required="yes" message="Fecha desde correcta requerida" name="date_from" value="#date_from_value#" />&nbsp;<span>Formato DD-MM-AAAA. Ejemplo: 21-12-2009</span><br/>
 		<div class="div_search_label">Fecha hasta:</div><cfinput type="text" validate="eurodate" required="yes" message="Fecha hasta correcta requerida" name="date_to" value="#date_to_value#" /><br/>
 		
-		<input type="submit" name="search" value="Consultar" />
+		<input type="submit" class="btn btn-primary" name="search" value="Consultar" />
 	</cfform>
 </div>
 </cfoutput>

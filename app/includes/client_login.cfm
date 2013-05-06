@@ -1,4 +1,10 @@
 <cfif isDefined("client_abb")>
+	<cflocation url="../html/login/?client_abb=#client_abb#" addtoken="no">
+</cfif>
+
+<!---
+En la nueva versión sin flash, esto no se usa
+<cfif isDefined("client_abb")>
 
 	<cfif findNoCase("iphone",CGI.HTTP_USER_AGENT) IS NOT 0>
 		<cflocation url="html/" addtoken="no">
@@ -49,7 +55,7 @@ var requiredRevision = 0;
 </script>
 </head>
 <body scroll="no">
-<!---<div style="width:#swf_widht#px; height:#swf_height#px; margin:auto; vertical-align:middle;" align="center">--->
+
 <cfoutput>
 <table style="width:100%; height:100%;">
 <tr><td style="vertical-align:middle; margin:auto;" align="center">
@@ -136,7 +142,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 <tr><td style="height:12px"><div style="float:left"><a href="http://www.doplanning.net" class="url_link" target="_blank">www.doplanning.net</a></div><div style="float:right;"><a href="#APPLICATION.helpUrl#" class="help_link" target="_blank">Ayuda</a></div></td></tr>
 </table>
 </cfoutput>
-<!---<iframe name="_history" src="history.htm" frameborder="0" scrolling="no" width="22" height="0"></iframe>--->
+
 </body>
 </html>
-</cfif>
+</cfif>--->

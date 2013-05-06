@@ -41,7 +41,7 @@
 		<!---<div class="div_search_label">Desde:</div> <input type="text" name="date_from" value="" /><br/>
 		<div class="div_search_label">Hasta:</div> <input type="text" name="date_to" value="" /><br/>
 		<div class="div_search_label">Usuario:</div> <input type="text" name="user_in_charge" value="#user_in_charge_value#" /><br/>--->
-		<input type="submit" name="search" value="Buscar" />
+		<input type="submit" class="btn btn-primary" name="search" value="Buscar" />
 	</form>
 </div>
 </cfoutput>

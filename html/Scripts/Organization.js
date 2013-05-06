@@ -1,6 +1,12 @@
 var curAreaId = 0;
 var areaWithLink = false;
 
+function openUrl(url,target){
+	
+	loadIframePage(url);
+}
+
+
 function getFilename(url)
 {
    return url.substring(url.lastIndexOf('/')+1);
@@ -56,7 +62,7 @@ function loadTree(areaId) {
 	$("#mainContainer").hide();
 	
 	$("#treeContainer").load("html_content/tree.cfm", function() {
-		showTree(true,areaId);	  
+		showTree(true);/*,areaId*/	  
 	});
 }
 
@@ -88,29 +94,6 @@ function areaSelected(areaId, areaUrl, withLink)  {
 		restoreTree();
 	
 }
-
-
-function treeLoaded(event, data) { //JStree loaded
-	
-	$("#areasTreeContainer").bind("select_node.jstree", function (e, data) {
-	   var $obj = data.rslt.obj; // this will be a jquery object representing the <li> you've clicked
-	   areaSelected($obj.attr("id"),$obj.children("a").attr("href"),$obj.attr("with_link")=="true");
-	});
-	
-	if ( !isNaN(selectAreaId) ) { //Hay área para cargar
-	
-		selectTreeNode(selectAreaId);
-		
-	}else if(isNaN(selectAreaId)) { //No hay area para cargar
-	
-		$("#areaIframe").attr('src', applicationPath+"/html/iframes/area.cfm");
-		
-	}
-
-	$("#loadingContainer").hide();
-	$("#mainContainer").show();
-}
-
 
 function maximizeTree() {
 	$("#areaContainer").hide();

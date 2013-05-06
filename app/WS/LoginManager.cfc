@@ -1,9 +1,12 @@
-<!---Copyright Era7 Information Technologies 2007-2008
+<!---Copyright Era7 Information Technologies 2007-2013
 
     File created by: ppareja
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 08-07-2009
+    Date of last file change: 10-04-2013
+	
+	17-01-2013 alucena: añadido generateNewPassword
+	10-04-2013 alucena: en loginUser se borra la sesion y se hace logout lo primero (antes se hacía en loginUserInApplication)
 	
 --->
 <cfcomponent output="false">
@@ -24,6 +27,41 @@
 		<cftry>
 		
 			<cfinclude template="includes/functionStartNoSession.cfm">
+			
+			<!---Esto estaba antes en loginUserInApplication--->
+			<cfif getAuthUser() NEQ "">			
+				<cflogout>
+				
+				<!---Check if SESSION vars exists--->
+				<cfif isDefined("SESSION.user_id")>
+					<cfset StructDelete(SESSION, "user_id")>
+				</cfif>
+				<cfif isDefined("SESSION.client_abb")>
+					<cfset StructDelete(SESSION, "client_abb")>
+				</cfif>
+				<cfif isDefined("SESSION.user_language")>
+					<cfset StructDelete(SESSION, "user_language")>
+				</cfif>
+				<cfif isDefined("SESSION.client_id")>
+					<cfset StructDelete(SESSION, "client_id")>
+				</cfif>
+				<cfif isDefined("SESSION.client_name")>
+					<cfset StructDelete(SESSION, "client_name")>
+				</cfif>
+				<cfif isDefined("SESSION.client_administrator")>
+					<cfset StructDelete(SESSION, "client_administrator")>
+				</cfif>
+				<cfif isDefined("SESSION.app_client_version")>
+					<cfset StructDelete(SESSION, "app_client_version")>
+				</cfif>
+				<cfif isDefined("SESSION.client_email_support")>
+					<cfset StructDelete(SESSION, "client_email_support")>
+				</cfif>
+				<cfif isDefined("SESSION.client_email_from")>
+					<cfset StructDelete(SESSION, "client_email_from")>
+				</cfif>
+			</cfif>	
+			
 			
 			<cfset client_abb = xmlRequest.request.parameters.client_abb.xmlText>
 			<cfset user_login = xmlRequest.request.parameters.user.xmlAttributes.email>
@@ -139,40 +177,6 @@
 			<cfset password = objectUser.password>
 			
 			<cfset role = "general">
-			
-			<cfif getAuthUser() NEQ "">			
-				<cflogout>
-				
-				<!---Check if SESSION vars exists--->
-				<cfif isDefined("SESSION.user_id")>
-					<cfset StructDelete(SESSION, "user_id")>
-				</cfif>
-				<cfif isDefined("SESSION.client_abb")>
-					<cfset StructDelete(SESSION, "client_abb")>
-				</cfif>
-				<cfif isDefined("SESSION.user_language")>
-					<cfset StructDelete(SESSION, "user_language")>
-				</cfif>
-				<cfif isDefined("SESSION.client_id")>
-					<cfset StructDelete(SESSION, "client_id")>
-				</cfif>
-				<cfif isDefined("SESSION.client_name")>
-					<cfset StructDelete(SESSION, "client_name")>
-				</cfif>
-				<cfif isDefined("SESSION.client_administrator")>
-					<cfset StructDelete(SESSION, "client_administrator")>
-				</cfif>
-				<cfif isDefined("SESSION.app_client_version")>
-					<cfset StructDelete(SESSION, "app_client_version")>
-				</cfif>
-				<cfif isDefined("SESSION.client_email_support")>
-					<cfset StructDelete(SESSION, "client_email_support")>
-				</cfif>
-				<cfif isDefined("SESSION.client_email_from")>
-					<cfset StructDelete(SESSION, "client_email_from")>
-				</cfif>
-				<!---<cfset getPageContext().getSession().invalidate()>--->
-			</cfif>	
 			
 			<!---  CFLOGIN   --->
 			<cflogin>			
@@ -570,51 +574,142 @@
 		
 	</cffunction>
 	
-	<!--- CHECK USER LOGGED IN AREA--->
-	<!---ESTE MÉTODO NO SE USA, SE USA DIRECTAMENTE checkUserArea--->
-	<!---<cffunction name="checkUserLoggedInArea" returntype="String" access="public">
-		<cfargument name="request" type="string" required="yes">
+	
+	
+	<!---    generateNewPassword     --->
+	
+	<cfscript>
+	
+		/**
+		* Generates a password the length you specify.
+		* 
+		* @param numberOfCharacters      Lengh for the generated password. 
+		* @return Returns a string. 
+		* @author Tony Blackmon (fluid@sc.rr.com) 
+		* @version 1, April 25, 2002 
+		*/
+		function generatePassword(numberofCharacters) {
+			var placeCharacter = "";
+			var currentPlace=0;
+			var group=0;
+			var subGroup=0;
+			
+			for(currentPlace=1; currentPlace lte numberofCharacters; currentPlace = currentPlace+1) {
+			group = randRange(1,4);
+			switch(group) {
+			case "1":
+			subGroup = rand();
+				switch(subGroup) {
+			case "0":
+			placeCharacter = placeCharacter & chr(randRange(33,46));
+			break;
+			case "1":
+			placeCharacter = placeCharacter & chr(randRange(58,64));
+			break;
+			}
+			case "2":
+			placeCharacter = placeCharacter & chr(randRange(97,122));
+			break;
+			case "3":
+			placeCharacter = placeCharacter & chr(randRange(65,90));
+			break;
+			case "4":
+			placeCharacter = placeCharacter & chr(randRange(48,57));
+			break;
+			}
+			}
+			return placeCharacter;
+		}
+	
+	</cfscript>
+	
+	<cffunction name="generateNewPassword" output="false" access="public" returntype="struct">
+		<cfargument name="email_login" type="string" required="yes">
+		<cfargument name="client_abb" type="string" required="yes">
 		
-		<cfset var method = "checkUserLoggedInArea">
+		<cfset var method = "generateNewPassword">
 		
-		<cfset var area_id = "">
+		<cfset var message = "">
+		<cfset var result = false>
+				
+		<cfset var user_email_login = Trim(arguments.email_login)>
+		
+		<cfset var client_dsn = APPLICATION.identifier&"_"&client_abb>
 		
 		<cftry>
 		
-			<cfinclude template="includes/functionStart.cfm">
+			<cfif len(arguments.email_login) GT 0>
+								
+				<cfquery datasource="#client_dsn#" name="getUser">
+					SELECT id, name, family_name
+					FROM #client_abb#_users
+					WHERE email = <cfqueryparam value="#user_email_login#" cfsqltype="cf_sql_varchar">;
+				</cfquery>
+				
+				<cfif getUser.recordCount GT 0>
+				
+					<cfset new_password = generatePassword(8)>
+					<cfset new_password_encoded = hash(new_password)>
+				
+					<cfquery datasource="#client_dsn#" name="generateNewPassword">
+						UPDATE #client_abb#_users
+						SET password = <cfqueryparam value="#new_password_encoded#" cfsqltype="cf_sql_varchar">
+						WHERE id = <cfqueryparam value="#getUser.id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+					
+					<cfinvoke component="AlertManager" method="generateNewPassword">					
+						<cfinvokeargument name="user_full_name" value="#getUser.family_name# #getUser.name#">
+						<cfinvokeargument name="user_email" value="#user_email_login#">
+						<cfinvokeargument name="user_password" value="#new_password#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+					
+					<cfset result = true>
+					<cfset message = "Su nueva contraseña ha sido enviada a su dirección de email">
+				
+				<cfelse>
+				
+					<cfset result = false>
+					<cfset message = "No existe ningún usuario con la dirección de email introducida">
+				
+				</cfif>
+				
+			<cfelse>
 			
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
+				<cfset result = false>
+				<cfset message = "Por favor, introduzca su dirección de email">
 			
-			<cfinvoke component="UserManager" method="checkUserArea" returnvariable="response">
-				<cfinvokeargument name="request" value='<request><parameters><user id="#user_id#" /><area id="#area_id# /></parameters></request>'>
+			</cfif>
+				
+			<cfset response = {result=#result#, message=#message#}>		
+			
+			
+			<!---saveLog--->
+			<cfset log_content = arguments.email_login>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/LogManager" method="saveLog">
+				<cfinvokeargument name="log_component" value="#component#" >
+				<cfinvokeargument name="log_method" value="#method#">
+				<cfinvokeargument name="log_content" value="#log_content#">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			</cfinvoke>
 			
-			<cfxml variable="xmlResponse">
-			<cfoutput>
-			#response#
-			</cfoutput>
-			</cfxml>
-			
-			<cfset xmlResponse.response.xmlAttributes.component = component>
-			<cfset xmlResponse.response.xmlAttributes.method = method>
-			
-			<!---<cfinclude template="includes/functionEndNoLog.cfm">--->
-			
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+			
+				<cfinclude template="#APPLICATION.componentsPath#/includes/errorHandler.cfm">
+				
+				<cfset message = "Ha ocurrido un error al generar la nueva contraseña. Disculpe las molestias.">
+				
+				<cfset response = {result=false, message=#message#}>
+			
 			</cfcatch>
+		
 		</cftry>
+			
+		<cfreturn #response#>
 		
-		<cfreturn xmlResponse>
-		
-	</cffunction>--->
-	
-	<!--- LOGIN ADMINISTRATOR --->
-	<!---ESTE MÉTODO NO SE USA--->
+	</cffunction>	
 	
 	
-	<!--- LOG IN ERA7 CLIENT ADMINISTRATOR --->
-	<!---ESTE MÉTODO NO SE USA--->
-	
-
 </cfcomponent>

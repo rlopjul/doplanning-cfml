@@ -1,12 +1,8 @@
-function submitForm(formName)
-{
+function submitForm(formName){
 	var form = eval("document.forms."+formName);
 	form.submit();
 }
-/*function showDiv(divName)
-{
-	Spry.$(divName).style.display = "block";
-}*/
+
 function showHideDiv(divName){
 	var element = document.getElementById(divName);
 	
@@ -19,11 +15,6 @@ function showHideDiv(divName){
 function goToUrl(url){
 	window.location.href = url;
 }
-
-/*function goBack(){
-	history.go(-1);
-	return false;
-}*/
 
 function openAreaInfo(){
 	var openElement = document.getElementById('openAreaImg');
@@ -40,13 +31,9 @@ function openAreaInfo(){
 	showHideDiv('areaInfo');
 }
 
-function toggleCheckboxChecked(checkboxId) {
-	$(checkboxId).attr('checked',!($(checkboxId).attr('checked')=="checked"));
-}
-
 function confirmAction(actionText) {
 	
-	var message = '¿Seguro que desea '+actionText+'?.';
+	var message = window.lang.convert('¿Seguro que desea ')+window.lang.convert(actionText)+window.lang.convert('?. Esta acción no es reversible.');
 	
 	var resultado = confirm(message);
 	if(resultado)
@@ -55,3 +42,22 @@ function confirmAction(actionText) {
 		return false;
 	
 }
+
+function toggleCheckboxChecked(checkboxId) {
+	$(checkboxId).attr('checked',!($(checkboxId).attr('checked')=="checked"));
+}
+
+var showLoading = true;
+
+function downloadFile(url,event){
+	if(event.preventDefault)
+		event.preventDefault();
+	//event.stopPropagation();
+	
+	showLoading = false;
+	
+	goToUrl(url);
+	
+	return false;
+}
+	

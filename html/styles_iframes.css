@@ -1,0 +1,7 @@
+@media (max-width: 767px) {
+	body {
+		/*To remove padding added by bootstrap when size changes*/
+		padding-right: 0px;
+		padding-left: 0px;
+	}
+}

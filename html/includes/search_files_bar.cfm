@@ -41,7 +41,7 @@
 		<div class="div_search_label">Nombre de archivo:</div><input type="text" name="file_name" value="#file_name_value#" /><br/>
 		<div class="div_search_label">Extensión:</div><input type="text" name="file_type" value="#file_type_value#" /><br/>
 		
-		<input type="submit" name="search" value="Buscar" />
+		<input type="submit" class="btn btn-primary" name="search" value="Buscar" />
 	</form>
 </div>
 </cfoutput>

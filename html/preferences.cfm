@@ -1,33 +1,20 @@
 <cfprocessingdirective suppresswhitespace="true">
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><!-- InstanceBegin template="/Templates/plantilla_app_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
+<!DOCTYPE html>
+<html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2012 (www.era7.com)-->
+<!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>#APPLICATION.title#-Preferencias</title>
 <!-- InstanceEndEditable -->
-</cfoutput>
-<script type="text/javascript" src="../SpryAssets/includes/xpath.js"></script>
-<script type="text/javascript" src="../SpryAssets/includes/SpryData.js"></script>
-<script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
-<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
-<cfif APPLICATION.moduleMessenger EQ "enabled">
-<script type="text/javascript" src="../app/scripts/App.js"></script>
-<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
-<cfif isDefined("SESSION.user_id")>
-<script type="text/javascript">
-window.onload = function ()
-{
-	Messenger.Private.initGetNewConversations();
-}
-</script>
-</cfif>
-</cfif>
-<script type="text/javascript" src="Scripts/functions.js"></script>
-<link href="styles.css" rel="stylesheet" type="text/css" media="all" />
+<link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
+<link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+
+<link href="styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
@@ -38,7 +25,63 @@ window.onload = function ()
 <link href="styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
 <!---<link href="../html/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
 <link href="../html/styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
-<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
+</cfoutput>
+
+<cfif APPLICATION.identifier EQ "vpnet">
+	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
+	<script type="text/javascript" src="../SpryAssets/includes/xpath.js"></script>
+	<script type="text/javascript" src="../SpryAssets/includes/SpryData.js"></script>
+	<script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
+	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
+	<cfif APPLICATION.moduleMessenger EQ "enabled">
+		<script type="text/javascript" src="../app/scripts/App.js"></script>
+		<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
+		<cfif isDefined("SESSION.user_id")>
+		<script type="text/javascript">
+		window.onload = function (){
+			Messenger.Private.initGetNewConversations();
+		}
+		</script>
+		</cfif>
+	</cfif>
+</cfif>
+
+<cfoutput>
+<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
+<script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
+<script type="text/javascript" src="Scripts/functions.js"></script>
+</cfoutput>
+
+<script type="text/javascript">
+	//Language
+	jquery_lang_js.prototype.defaultLang = 'es';
+	jquery_lang_js.prototype.currentLang = 'es';
+	window.lang = new jquery_lang_js();
+	
+	$().ready(function () {
+		//Language
+		window.lang.run();
+	});
+</script>
+
+
+<cfoutput>
+<script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
+</cfoutput>
+<script type="text/javascript">
+	function openUrlLite(url,target){
+		window.location.href = url;
+	}
+	function openUrl(url,target,event){
+		window.location.href = url;
+	}
+	function openUrlHtml2(url,target){
+		//En esta versión no se hace nada con las peticiones a este método
+	}
+</script>
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
 </head>
 
 <body class="body_global">
@@ -56,22 +99,78 @@ window.onload = function ()
 </cfif>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
-		<a href="preferences.cfm" class="text_user_logged" title="Preferencias del usuario">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="logout.cfm" class="text_user_logged" title="Salir">Logout</a>
-	</div> 
+		<a href="preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+	</div>
 </div>
 </cfoutput>
 
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
-<cfinclude template="includes/preferences_head.cfm">
+
+<cfoutput>
+<script src="#APPLICATION.htmlPath#/language/preferences_en.js" charset="utf-8" type="text/javascript"></script>
+</cfoutput>
+
+<cfif APPLICATION.identifier EQ "vpnet">
+	<cfinclude template="includes/preferences_head.cfm">
+</cfif>
 
 <cfset return_page = "index.cfm">
-<div class="div_list_preferences">
+<!---<div>
 
 <div class="div_list_item"><a href="preferences_alerts.cfm">Preferencias de notificaciones</a></div>
 <div class="div_list_item"><a href="preferences_user_data.cfm">Datos Personales</a></div>
 
-</div>
+</div>--->
+
+<script type="text/javascript">
+	
+	$(window).load( function() {		
+		
+		$('#preferencesTab a').click( function (e) {
+			if(e.preventDefault)
+		  		e.preventDefault();
+				
+		  	$(this).tab('show');
+		})
+		
+	} );
+	
+</script>
+
+<div style="clear:both"><!-- --></div>
+
+<div class="tabbable"><!---Tab Panel--->
+	
+  <ul class="nav nav-pills" id="preferencesTab" style="margin-bottom:5px;">
+	<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Datos personales</a></li>
+	<li><a href="#tab2" data-toggle="tab" lang="es">Notificaciones</a></li>
+  </ul>
+  
+  <div class="tab-content">
+  
+	<div class="tab-pane active" id="tab1"><!---Tab Datos personales--->
+	
+		<cfoutput>
+		<iframe src="#APPLICATION.htmlPath#/iframes/preferences_user_data.cfm" marginheight="0" marginwidth="0" scrolling="auto" frameborder="0" style="width:100%;height:690px;background-color:##FFFFFF;clear:none;"></iframe>
+		</cfoutput>		
+	
+	</div><!---END Tab Tree--->
+	
+	
+	<div class="tab-pane" id="tab2"><!---Tab Notificaciones--->
+		<cfoutput>
+		<iframe src="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm" marginheight="0" marginwidth="0" scrolling="auto" frameborder="0" style="width:100%;height:480px;background-color:##FFFFFF;clear:none;"></iframe>
+		</cfoutput>
+		
+	</div><!---END Tab Area--->
+	
+	
+  </div>
+  
+</div><!---END TabPanel--->
+
+
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
 </cfinvoke>

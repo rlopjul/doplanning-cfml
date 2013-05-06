@@ -70,7 +70,7 @@
 		<cfset APPLICATION.helpUrl = APPLICATION.mainUrl&"/tutorials/">
 		<cfset APPLICATION.communityUrl = APPLICATION.mainUrl&"">
 		
-		<cfset APPLICATION.termsOfUsePage = "/web/terms_of_use.cfm">
+		<cfset APPLICATION.termsOfUseUrl = "/web/terms_of_use.cfm">
 		
 		<cfset APPLICATION.defaultLanguage = "es">
 		<!---Al cambiar la aplicacion de sitio tambien hay que modificar los extends de los Application--->

@@ -1,3 +1,7 @@
+<cfoutput>
+<script src="#APPLICATION.htmlPath#/language/file_content_en.js" charset="utf-8" type="text/javascript"></script>
+</cfoutput>
+
 <cfif isDefined("URL.file") AND isValid("integer",URL.file) AND isDefined("URL.area") AND isValid("integer",URL.area)>
 	<cfset file_id = URL.file>
 	<cfset area_id = URL.area>
@@ -10,9 +14,9 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <div class="div_head_subtitle">
-Modificar archivo</div>
+<span lang="es">Modificar Archivo</span></div>
 
-<cfset return_page = "area_file.cfm?area=#area_id#&file=#file_id#">
+<cfset return_page = "file.cfm?area=#area_id#&file=#file_id#">
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 	<cfinvokeargument name="file_id" value="#file_id#">
@@ -24,7 +28,7 @@ function onSubmitForm()
 {
 	if(check_custom_form())
 	{
-		document.getElementById("submitDiv").innerHTML = "Enviando...";
+		document.getElementById("submitDiv").innerHTML = window.lang.convert("Enviando...");
 
 		return true;
 	}
@@ -38,7 +42,7 @@ function onSubmitForm()
 
 <cfoutput>
 
-<cfform action="#APPLICATION.htmlComponentsPath#/File.cfc?method=updateFileRemote" method="post" class="form_preferences_user_data" name="file_form" onsubmit="return onSubmitForm();">
+<cfform action="#APPLICATION.htmlComponentsPath#/File.cfc?method=updateFileRemote" method="post" name="file_form" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('file_form');
@@ -48,19 +52,21 @@ function onSubmitForm()
 	<input type="hidden" name="file_id" value="#file_id#" />
 	<input type="hidden" name="area_id" value="#area_id#" />
 	<input type="hidden" name="return_path" value="#return_path#" />
-	<div class="form_fila"><span class="texto_gris_12px">Nombre:</span><br />
-	<cfinput type="text" name="name" value="#objectFile.name#" style="width:100%;" required="yes" message="Debe introducir un nombre de archivo"/></div>
-	<!---<div class="form_fila"><span class="texto_gris_12px">Archivo:</span><br />
-	<input type="file" name="Filedata" value="" style="width:100%; height:23px;"/></div>--->
-	<div class="form_fila"><span class="texto_gris_12px">Descripción:</span><br /> 
-	<textarea name="description" style="width:100%;">#objectFile.description#</textarea></div>
+	<label for="name" lang="es">Nombre:</label>
+	<cfinput type="text" name="name" id="name" value="#objectFile.name#" class="input-block-level" required="yes" message="Debe introducir un nombre de archivo"/>
+
+	<label for="description" lang="es">Descripción:</label> 
+	<textarea name="description" id="description" class="input-block-level">#objectFile.description#</textarea>
 	
-	<div class="input_submit" id="submitDiv"><input type="submit" name="modify" value="Guardar" /></div>
+	<div id="submitDiv"><input type="submit" class="btn btn-primary" name="modify" value="Guardar" lang="es"/>
+	
+	<a href="#return_page#" class="btn" style="float:right;" lang="es">Cancelar</a>
+	</div>
 </cfform>
 </cfoutput>
 
 </div>
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
+<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>
+</cfinvoke>--->

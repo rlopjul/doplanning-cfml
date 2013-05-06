@@ -19,7 +19,7 @@
 	<cfset res = resultAddFiles.result>
 	
 	<cfif isDefined("FORM.area_id")>
-		<cflocation url="#return_path#area_file.cfm?file=#file_id#&area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+		<cflocation url="#return_path#file.cfm?file=#file_id#&area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 	<cfelseif isDefined("FORM.folder_id")>
 		<cflocation url="#return_path#my_files_file.cfm?file=#file_id#&folder=#FORM.folder_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 	</cfif>	
@@ -27,9 +27,6 @@
 </cfif>
 
 <cfoutput>
-<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
 
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
@@ -37,38 +34,29 @@
 	var applicationId = "#APPLICATION.identifier#";
 	var applicationPath = "#APPLICATION.path#";
 </script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/Tree.js"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/tree.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
 	
 	function areaSelected(areaId)  {
-	
 		var checkBoxId = "#area"+areaId;
 		if($(checkBoxId).attr('disabled')!='disabled')
 			toggleCheckboxChecked(checkBoxId);
 	}
-
 	
 	function treeLoaded (event, data) { //JStree loaded
-
 		$("#areasTreeContainer").bind("select_node.jstree", function (e, data) {
 			var $obj = data.rslt.obj;
 			areaSelected($obj.attr("id"));
-		
 		});
 		
 		$("#loadingContainer").hide();
 		$("#mainContainer").show();
-	
 	}
 	
 	$(window).load( function() {
-		$("input:submit").button();
-		//$( "a", "#buttons" ).button();
-				
-		showTree(true,"");
-		
+		showTree(true);/*,""*/
 	});
 
 </script>
@@ -78,6 +66,10 @@
 </cfif>
 <cfif isDefined("URL.folder") AND isNumeric(URL.folder)>
 	<cfset folder_id = URL.folder>
+</cfif>
+
+<cfif isDefined("area_id")>
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 </cfif>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/file_head.cfm">
@@ -101,7 +93,7 @@ Asociar archivo a áreas
 </cfif>
 </div>
 
-<div class="div_message_page_title">Seleccione las áreas a las que desea asociar el archivo:</div>
+<div class="alert alert-info" style="margin:5px;">Seleccione las áreas a las que desea asociar el archivo:</div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
 
@@ -119,7 +111,7 @@ function onSubmitForm()
 }
 </script>
 			
-<div id="mainContainer" style="clear:both;display:none;">
+<div id="mainContainer" style="clear:both;display:none;padding-left:5px;">
 <cfform name="add_file_to_areas" method="post" action="#CGI.SCRIPT_NAME#" style="clear:both;" onsubmit="return onSubmitForm();">
 	<cfoutput>
 	
@@ -141,17 +133,29 @@ function onSubmitForm()
 	<!---<div id="buttons">
 	<cfoutput>
 	<cfif isDefined("area_id")>
-		<a href="#return_path#area_file.cfm?file=#file_id#&area=#area_id#">Cancelar</a>
+		<a href="#return_path#file.cfm?file=#file_id#&area=#area_id#">Cancelar</a>
 	<cfelseif isDefined("folder_id")>
 		<a href="#return_path#my_files_file.cfm?file=#file_id#&folder=#folder_id#">Cancelar</a>
 	</cfif>
 	</cfoutput>
 	</div>--->
+	<cfif isDefined("area_id")>
+		<cfset return_page = "#return_path#file.cfm?file=#file_id#&area=#area_id#">
+	<cfelseif isDefined("folder_id")>
+		<cfset return_page = "#return_path#my_files_file.cfm?file=#file_id#&folder=#folder_id#">
+	</cfif>
 	
-	<input type="submit" value="Añadir archivo a áreas seleccionadas" />
+	<cfoutput>
+	
+	<input type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas" />
+	
+	<a href="#return_page#" class="btn" style="float:right;">Cancelar</a>
 	
 	<div id="areasTreeContainer" style="clear:both; margin-top:2px; margin-bottom:2px;">
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
+		<cfif APPLICATION.identifier EQ "dp">
+			<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan asociar archivos a las áreas WEB--->
+		</cfif>
 		<cfinvokeargument name="with_input_type" value="checkbox">
 	</cfinvoke>
 	</div>
@@ -160,17 +164,14 @@ function onSubmitForm()
 		addRailoRequiredCheckBox("areas_ids[]","Debe seleccionar al menos un área");			
 	</script>
 	
-	<cfinput name="submit" type="submit" value="Añadir archivo a áreas seleccionadas"/>
+	<cfinput name="submit" type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas"/>
+	<a href="#return_page#" class="btn" style="float:right;">Cancelar</a>
+	</cfoutput>
 </cfform>
 	
 	<div style="height:5px;"><!-- --></div>
 	
-	<cfif isDefined("area_id")>
-		<cfset return_page = "#return_path#area_file.cfm?file=#file_id#&area=#area_id#">
-	<cfelseif isDefined("folder_id")>
-		<cfset return_page = "#return_path#my_files_file.cfm?file=#file_id#&folder=#folder_id#">
-	</cfif>
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
+	<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
 		<cfinvokeargument name="return_page" value="#return_page#">
-	</cfinvoke>
+	</cfinvoke>--->
 </div>

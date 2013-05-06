@@ -5,7 +5,7 @@
 <cfoutput>
 
 <script type="text/javascript">
-	<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+	<cfif itemTypeId IS 5 OR itemTypeId IS 6 OR itemTypeId IS 4><!---Events, Tasks, News--->
 	
 	<cfif read_only IS false>
 	
@@ -14,8 +14,9 @@
 		
 		var dates = $( ".input_datepicker" ).datepicker({ dateFormat: 'dd-mm-yy', 
 			changeMonth: true,
-			changeYear: true,
-			onSelect: function( selectedDate ) {
+			changeYear: true
+			<cfif itemTypeId IS NOT 4>
+			, onSelect: function( selectedDate ) {
 				var option = this.id == "start_date" ? "minDate" : "maxDate",
 				instance = $( this ).data( "datepicker" ),
 				date = $.datepicker.parseDate(
@@ -28,6 +29,7 @@
 					else if(this.id == "end_date")
 						$( "##start_date" ).datepicker( "option", option, date );
 				}
+			</cfif>
 			});
 		
 	});
@@ -55,12 +57,6 @@
 	}
 
 	</cfif>
-	
-	function downloadFile(url){
-		showLoading = false;
-		
-		goToUrl(url);
-	}
 	
 	function openPopup(url) {
 		 window.open(url, "popup_id", "scrollbars,resizable,width=580,height=500");
@@ -108,14 +104,8 @@
 </script>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/checkRailoForm.js"></script>
 
-<!---<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-	<cfset objectItem.start_date = DateFormat(objectItem.start_date, APPLICATION.dateFormat)>
-	<cfset objectItem.end_date = DateFormat(objectItem.end_date, APPLICATION.dateFormat)>
-</cfif>--->
-	
 
-
-<cfif itemTypeId IS 1>
+<cfif itemTypeId IS 1 OR itemTypeId IS 7>
 	<cfset t_title = "Asunto">
 <cfelse>
 	<cfset t_title = "Título">
@@ -127,15 +117,18 @@
 	<cfset title_required = true>
 </cfif>
 <cfif itemTypeId IS 3>
-	<cfset t_link = "URL (con http://)">
+	<cfset t_link = "URL">
 	<cfset link_required = true>
 <cfelse>
-	<cfset t_link = "URL más información (con http://)">
+	<cfset t_link = "URL más información">
 	<cfset link_required = false>
 </cfif>
+<cfif itemTypeId IS 4>
+	<cfset t_creation_date = "Fecha de creación">
+</cfif>
 <cfif itemTypeId IS 5 OR itemTypeId IS 6>
-	<cfset t_start_date = "Fecha inicio">
-	<cfset t_end_date = "Fecha fin">
+	<cfset t_start_date = "Fecha de inicio">
+	<cfset t_end_date = "Fecha de fin">
 	<cfif itemTypeId IS 5>
 		<cfset t_start_time = "Hora">
 		<cfset t_end_time = "Hora">
@@ -147,7 +140,7 @@
 	</cfif>
 </cfif>
 <cfset t_position = "Posición">
-<cfset t_iframe_url = "Incrustar contenido (URL)">
+<cfset t_iframe_url = "Incrustar contenido">
 <cfset t_iframe_display_type = "Tamaño contenido incrustado">
 
 <cfif read_only IS true>
@@ -156,88 +149,154 @@
 	<cfset passthrough = "">
 </cfif>
 
-<div class="div_subject_input"><span class="texto_normal">#t_title#:</span>&nbsp;<cfinput type="text" name="title" class="input_message_subject" value="#objectItem.title#" required="#title_required#" message="#t_title# requerido" passthrough="#passthrough#"></div>
+<cfif itemTypeId IS NOT 7 OR NOT isDefined("parent_kind") OR parent_kind EQ "area">
+<div class="control-group">
+	<label class="control-label" for="item_title" lang="es">#t_title#:</label>
+	<div class="controls">
+		<cfinput type="text" name="title" id="item_title" value="#objectItem.title#" required="#title_required#" message="#t_title# requerido" passthrough="#passthrough#" class="input-block-level">
+	</div>
+</div>
+<cfelse><!---Consultations--->
+	<cfinput type="hidden" name="title" value="#objectItem.title#">
+</cfif>
+
+<cfif itemTypeId IS 4><!---News--->
+
+	<div class="control-group">
+		<label class="control-label" lang="es">#t_creation_date#:</label>
+		<div class="controls">
+			<cfif len(objectItem.creation_date) GT 10>
+				<cfset objectItem.creation_date = left(objectItem.creation_date, findOneOf(" ", objectItem.creation_date))>
+			</cfif>
+		
+			<cfinput type="text" name="creation_date" id="creation_date" class="input_datepicker" value="#objectItem.creation_date#" required="true" message="#t_creation_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+			<span style="font-size:10px" lang="es">Formato DD-MM-AAAA. Ejemplo:</span><span style="font-size:10px"> #DateFormat(now(), "DD-MM-YYYY")#</span>
+		</div>
+	</div>
+
+</cfif>
+
 <cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
 
 <cfif itemTypeId IS 6><!---Tasks--->
-	<div style="padding-bottom:2px;"><span class="texto_normal">#t_recipient_user#:</span>&nbsp;<cfinput type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" validate="integer" required="yes" message="Usuario destinatario requerido"/><cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes"><cfif read_only IS false><button onclick="return openPopup('area_users_select.cfm?area=#area_id#');">Seleccionar usuario</button>&nbsp;<span style="font-size:10px">Usuario al que se le asignará la tarea</span></cfif></div>
+	<div class="control-group">
+		<label class="control-label" lang="es">#t_recipient_user#:</label>
+		<div class="controls">
+			<cfinput type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" validate="integer" required="yes" message="Usuario destinatario requerido"/><cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes"><cfif read_only IS false> <button onclick="return openPopup('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');" class="btn" lang="es">Seleccionar usuario</button><br/><span style="font-size:10px" lang="es">Usuario al que se le asignará la tarea</span></cfif>
+		</div>
+	</div>
 </cfif>
 
-<div><span class="texto_normal">#t_start_date#:</span>&nbsp;<cfinput type="text" name="start_date" id="start_date" class="input_datepicker" value="#objectItem.start_date#" required="true" message="#t_start_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
-
-<cfif itemTypeId IS 5>
+<div class="control-group">
+	<label class="control-label" for="start_date" lang="es">#t_start_date#:</label>
 	
-	<cfif len(objectItem.start_time) IS 0>
-		<cfset objectItem.start_time = createTime(0,0,0)>
+	<cfinput type="text" name="start_date" id="start_date" class="input_datepicker" value="#objectItem.start_date#" required="true" message="#t_start_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+	
+	<cfif itemTypeId IS 5>
+		
+		<cfif len(objectItem.start_time) IS 0>
+			<cfset objectItem.start_time = createTime(0,0,0)>
+		</cfif>
+		
+		<cfset start_hour = hour(objectItem.start_time)>
+		<cfset start_minute = minute(objectItem.start_time)>
+		
+		<!---<label class="control-label">#t_start_time#:</label>&nbsp;--->
+		<select name="start_hour" style="width:55px;">
+			<cfloop from="0" to="23" index="hour">
+				<option value="#hour#" <cfif hour EQ start_hour>selected="selected"</cfif>>#hour#</option>
+			</cfloop>
+		</select>:<select name="start_minute" style="width:55px;">
+			<cfloop from="0" to="59" index="minutes" step="15">
+				<cfif minutes EQ "0">
+					<cfset minutes = "00">
+				</cfif>
+				<option value="#minutes#" <cfif minutes EQ start_minute>selected="selected"</cfif>>#minutes#</option>
+			</cfloop>
+		</select>
+	
+	<cfelse>
+		<!---<span style="font-size:10px">Formato DD-MM-AAAA. Ejemplo: #DateFormat(now(), "DD-MM-YYYY")#</span>--->
 	</cfif>
-	
-	<cfset start_hour = hour(objectItem.start_time)>
-	<cfset start_minute = minute(objectItem.start_time)>
-	
-	<span class="texto_normal">#t_start_time#:</span>&nbsp;<select name="start_hour">
-		<cfloop from="0" to="23" index="hour">
-			<option value="#hour#" <cfif hour EQ start_hour>selected="selected"</cfif>>#hour#</option>
-		</cfloop>
-	</select>:<select name="start_minute">
-		<cfloop from="0" to="59" index="minutes" step="15">
-			<cfif minutes EQ "0">
-				<cfset minutes = "00">
-			</cfif>
-			<option value="#minutes#" <cfif minutes EQ start_minute>selected="selected"</cfif>>#minutes#</option>
-		</cfloop>
-	</select>
 
-<cfelse>
-	<span style="font-size:10px">Formato DD-MM-AAAA. Ejemplo: #DateFormat(now(), "DD-MM-YYYY")#</span>
-</cfif>
 </div>
 
-<div style="padding-top:5px; padding-bottom:5px;"><span class="texto_normal">#t_end_date#:&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;<cfinput type="text" name="end_date" id="end_date" class="input_datepicker" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
-
-<cfif itemTypeId IS 5>
-
-	<cfif len(objectItem.end_time) IS 0>
-		<cfset objectItem.end_time = createTime(0,0,0)>
-	</cfif>
-
-	<cfset end_hour = hour(objectItem.end_time)>
-	<cfset end_minute = minute(objectItem.end_time)>
+<div class="control-group">
+	<label class="control-label" for="end_date" lang="es">#t_end_date#:</label>
 	
-	<span class="texto_normal">#t_end_time#:</span>&nbsp;<select name="end_hour">
-		<cfloop from="0" to="23" index="hour">
-			<option value="#hour#" <cfif hour EQ end_hour>selected="selected"</cfif>>#hour#</option>
-		</cfloop>
-	</select>:<select name="end_minute">
-		<cfloop from="0" to="59" index="minutes" step="15">
-			<cfif minutes EQ "0">
-				<cfset minutes = "00">
-			</cfif>
-			<option value="#minutes#" <cfif minutes EQ end_minute>selected="selected"</cfif>>#minutes#</option>
-		</cfloop>
-	</select>
+	<cfinput type="text" name="end_date" id="end_date" class="input_datepicker" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 
-</cfif>
-
+	<cfif itemTypeId IS 5>
+	
+		<cfif len(objectItem.end_time) IS 0>
+			<cfset objectItem.end_time = createTime(0,0,0)>
+		</cfif>
+	
+		<cfset end_hour = hour(objectItem.end_time)>
+		<cfset end_minute = minute(objectItem.end_time)>
+		
+		<select name="end_hour" style="width:55px;">
+			<cfloop from="0" to="23" index="hour">
+				<option value="#hour#" <cfif hour EQ end_hour>selected="selected"</cfif>>#hour#</option>
+			</cfloop>
+		</select>:<select name="end_minute" style="width:55px;">
+			<cfloop from="0" to="59" index="minutes" step="15">
+				<cfif minutes EQ "0">
+					<cfset minutes = "00">
+				</cfif>
+				<option value="#minutes#" <cfif minutes EQ end_minute>selected="selected"</cfif>>#minutes#</option>
+			</cfloop>
+		</select>
+	
+		</cfif>
 </div>
 </cfif>
 
 <cfif itemTypeId IS 5><!---Events--->
-<div><span class="texto_normal">#t_place#:</span>&nbsp;<cfinput type="text" name="place" id="place" value="#objectItem.place#" required="true" message="#t_place# requerido" passthrough="#passthrough#"></div>
+<div class="control-group">
+	<label class="control-label" for="place" lang="es">#t_place#:</label>
+	<div class="controls">
+		<cfinput type="text" name="place" id="place" value="#objectItem.place#" required="true" message="#t_place# requerido" passthrough="#passthrough#">
+	</div>
+</div>
 <cfelseif itemTypeId IS 6><!---Tasks--->
-<div><span class="texto_normal">#t_estimated_value#:</span>&nbsp;<cfinput type="text" name="estimated_value" id="estimated_value" value="#objectItem.estimated_value#" required="true" validate="float" message="#t_estimated_value# debe ser un decimal" style="width:50px;" passthrough="#passthrough#">&nbsp;<span style="font-size:10px">Valor (tiempo, coste, ...) estimado para la tarea.</span></div>
-<div style="padding-top:5px; padding-bottom:5px;"><span class="texto_normal">#t_real_value#:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cfinput type="text" name="real_value" id="real_value" value="#objectItem.real_value#" required="true" validate="float" message="#t_real_value# debe ser un decimal" style="width:50px;">&nbsp;<span style="font-size:10px">Valor real de la tarea una vez realizada.</span></div>
 
-<div style="padding-top:7px; padding-right:4px; float:left; clear:none;"><cfinput type="checkbox" name="done" value="true" title="Tarea realizada"></div><div style="clear:none; float:left;"><img src="#APPLICATION.htmlPath#/assets/icons/task_done.png" alt="Tarea realizada"/></div><div class="texto_normal" style="clear:none; float:left; padding-top:5px;">&nbsp;Tarea realizada</div>
+<div class="control-group">
+	<label class="control-label" for="estimated_value" lang="es">#t_estimated_value#:</label>
+		<cfinput type="text" name="estimated_value" id="estimated_value" value="#objectItem.estimated_value#" required="true" validate="float" message="#t_estimated_value# debe ser un decimal" style="width:50px;" passthrough="#passthrough#"><!---&nbsp;<span style="font-size:10px">Valor (tiempo, coste, ...) estimado para la tarea.</span>--->
 
-<div style="clear:both; height:1px;"><!-- --></div>
+	&nbsp;&nbsp;&nbsp;<label class="control-label" for="real_value" lang="es">#t_real_value#:</label>
+
+	<cfinput type="text" name="real_value" id="real_value" value="#objectItem.real_value#" required="true" validate="float" message="#t_real_value# debe ser un decimal" style="width:50px;"><!---&nbsp;<span style="font-size:10px">Valor real de la tarea una vez realizada.</span>--->
+
+</div>
+
+<div class="control-group">
+    <div class="controls">
+		<label class="checkbox">
+			
+			<input type="checkbox" name="done" value="true" title="Tarea realizada" lang="es" <cfif objectItem.done IS true>checked="checked"</cfif>>
+			<img src="#APPLICATION.htmlPath#/assets/icons/task_done.png" alt="Tarea realizada"/>
+			<span lang="es">Tarea realizada</span>
+		</label>
+	</div>
+</div>
+
+<div style="clear:both; height:5px;"><!-- --></div>
 
 </cfif>
 
-<div class="div_content_textarea"><textarea name="description" class="textarea_content" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea></div>
+<div style="margin-bottom:10px; margin-top:5px;"><textarea name="description" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea></div>
 
-<!---<cfif itemTypeId IS NOT 1>--->
-<div><span class="texto_normal">#t_link#:</span>&nbsp;<cfinput type="text" name="link" value="#objectItem.link#" required="#link_required#" message="#t_link# válida con http:// requerida" style="width:280px;" passthrough="#passthrough#"></div><!---validate="url" DA PROBLEMAS--->
-<!---</cfif>--->
+<cfif itemTypeId IS 7>
+
+	<!---<label class="control-label">##:</label>--->
+	<div class="controls">
+		<cfinput type="text" name="identifier" value="#objectItem.identifier#" placeholder="Identificador" class="input-xlarge" passthrough="#passthrough#" lang="es">
+	</div>
+	<div style="height:4px;"><!-- --></div>
+</cfif>
+	
 
 <cfif read_only IS false>
 	
@@ -247,10 +306,10 @@
 			<!---<div style="padding-top:5px;"><span class="texto_normal">Modificar archivo adjunto:</span>&nbsp;<cfinput type="file" name="Filedata"></div>--->
 			
 			<cfif isNumeric(objectItem.id)><!---No es para copiar elemento--->
-			
-				<div style="padding-top:5px;"><span class="texto_normal">Archivo adjunto:</span> <a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#')" class="link_blue" style="cursor:pointer;">#objectItem.attached_file_name#</a>
 				
-				<button onclick="return deleteAttachedFile()">Eliminar archivo adjunto</button>
+				<div><label class="control-label" lang="es">Archivo adjunto:</label> <a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#',event)" style="cursor:pointer;">#objectItem.attached_file_name#</a>
+				
+				<button onclick="return deleteAttachedFile()" class="btn btn-mini btn-danger" lang="es">Eliminar archivo adjunto</button>
 				
 				</div>
 			
@@ -258,8 +317,8 @@
 			
 				<cfif itemTypeId IS NOT 3 AND isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0><!---No es enlace y el archivo está definido--->
 					
-					<div style="padding-top:5px;"><input type="checkbox" name="copy_attached_file_id" value="#objectItem.attached_file_id#" checked="checked" />&nbsp;<span class="texto_normal">Archivo adjunto:</span> <span>#objectItem.attached_file_name#</span>
-					</div>
+					<label class="checkbox"><input type="checkbox" name="copy_attached_file_id" value="#objectItem.attached_file_id#" checked="checked" />&nbsp;<span lang="es">Archivo adjunto:</span> <span class="texto_normal">#objectItem.attached_file_name#</span>
+					</label>
 						
 				</cfif>
 			
@@ -267,7 +326,13 @@
 
 			
 		<cfelse>
-			<div style="padding-top:5px;"><span class="texto_normal">Adjuntar un archivo:</span>&nbsp;<cfinput type="file" name="Filedata"></div>
+			<div class="control-group">
+				<!---<label class="control-label">Archivo:</label>--->
+				<div class="controls">
+    				<i class="icon-file icon-large" title="Archivo" lang="es"></i>
+					<cfinput type="file" name="Filedata">
+				</div>
+			</div>
 		</cfif>
 	
 	</cfif>
@@ -278,9 +343,11 @@
 		
 			<cfif isNumeric(objectItem.id)><!---No es para copiar elemento--->
 			
-				<div style="padding-top:5px;"><span class="texto_normal">Imagen adjunta:</span> <a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#')" class="link_blue" style="cursor:pointer;">#objectItem.attached_image_name#</a>
+				<div class="control-group">
 				
-				<button onclick="return deleteAttachedImage()">Eliminar imagen adjunta</button>
+					<label class="control-label" lang="es">Imagen adjunta:</label> <a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#',event)" style="cursor:pointer;">#objectItem.attached_image_name#</a>
+					
+					<button onclick="return deleteAttachedImage()" class="btn btn-mini btn-danger" lang="es">Eliminar imagen adjunta</button>
 				
 				</div>
 			
@@ -288,53 +355,119 @@
 			
 				<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0><!---No es mensaje y el archivo está definido--->
 					
-					<div style="padding-top:5px;"><input type="checkbox" name="copy_attached_image_id" value="#objectItem.attached_image_id#" checked="checked" />&nbsp;<span class="texto_normal">Imagen adjunta:</span> <span>#objectItem.attached_image_name#</span>
-					</div>
+					<label class="checkbox"><input type="checkbox" name="copy_attached_image_id" value="#objectItem.attached_image_id#" checked="checked" />&nbsp;<span lang="es">Imagen adjunta:</span> <span class="texto_normal">#objectItem.attached_image_name#</span>
+					</label>
 						
 				</cfif>
 			
 			</cfif>
 		<cfelse>
-			<div style="padding-top:5px;"><span class="texto_normal">Adjuntar una imagen (JPG, PNG, GIF):</span>&nbsp;<cfinput type="file" name="imagedata" accept="image/*"></div>
+			<div class="control-group">
+				<div class="controls">
+					<i class="icon-camera icon-large" title="Imagen (jpg, png, gif)" lang="es"></i>
+					<cfinput type="file" name="imagedata" accept="image/*">
+				</div>
+			</div>
 		</cfif>
 	
 	</cfif>
 </cfif>
 
-<cfif itemTypeId IS 2 OR itemTypeId IS 4 OR itemTypeId IS 5>
-<div style="padding-top:5px;">
 
-	<span class="texto_normal">#t_iframe_url#:</span>&nbsp;<cfinput type="text" name="iframe_url" value="#objectItem.iframe_url#" message="#t_iframe_url# válida con http:// requerida" style="width:324px;" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
-	<div style="height:2px;"><!--- ---></div>
-	<span class="texto_normal">#t_iframe_display_type#:</span>
-	<cfset iframe_display_type_options = "Ancho de página, 560 x 315">
+<div class="control-group">
+
+	<label class="control-label" for="link" lang="es">#t_link#:</label>
+	<div class="controls">
+		<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="input-block-level" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+	</div>
+	
+</div>
+
+
+<cfif APPLICATION.moduleWeb EQ "enabled" AND ( itemTypeId IS 2 OR itemTypeId IS 4 OR itemTypeId IS 5 )>
+<div class="control-group">
+
+	<label class="control-label" for="iframe_url" lang="es">#t_iframe_url#:</label> <small lang="es">(Sólo para publicar en web)</small>
+	<div class="controls">
+		<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="#t_iframe_url# válida con http:// requerida" class="input-block-level" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+	</div>
+	
+</div>
+
+<div class="control-group">
+
+	<label class="control-label" for="iframe_display_type_id" lang="es">#t_iframe_display_type#:</label>
+	
+	<cfinvoke component="#APPLICATION.componentsPath#/IframeDisplayTypeManager" method="getDisplayTypes" returnvariable="iframeDisplayTypeQuery">
+	</cfinvoke>
+	
+	<!---<cfset iframe_display_type_options = "Ancho de página, 560 x 315">
 	<cfset iframe_display_type_values = "1,2">
-	<select name="iframe_display_type" <cfif read_only IS true>disabled="disabled"</cfif>>
-		<cfloop list="#iframe_display_type_values#" index="iframe_display_type">
-			<option value="#iframe_display_type#" <cfif objectItem.iframe_display_type IS iframe_display_type>selected="selected"</cfif>>#listGetAt(iframe_display_type_options,iframe_display_type)#</option>
-		</cfloop>
-	</select>
+	<option value="#iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframe_display_type_id>selected="selected"</cfif>>#listGetAt(iframe_display_type_options,iframe_display_type_id)#</option>--->
+	<div class="controls">
+		<select name="iframe_display_type_id" id="iframe_display_type_id" <cfif read_only IS true>disabled="disabled"</cfif>>
+			<cfloop query="iframeDisplayTypeQuery">
+				<option value="#iframeDisplayTypeQuery.iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframeDisplayTypeQuery.iframe_display_type_id>selected="selected"</cfif>>#iframeDisplayTypeQuery.iframe_display_type_title_es#</option>
+			</cfloop>
+		</select>
+	</div>
 
 </div>
+
+
+<!---<cfset t_iframe_width = "Ancho">
+<cfset t_iframe_height = "Alto">
+
+<div class="control-group">
+	<label class="control-label" for="iframe_width">#t_iframe_width#:</label>
+	
+	<cfinput type="text" name="iframe_width" id="iframe_width" value="" required="true" message="#t_iframe_width# válido requerido" validate="integer" passthrough="#passthrough#" style="width:55px;"><!---#objectItem.iframe_width#--->
+	
+	&nbsp;<label class="control-label" for="iframe_height">#t_iframe_height#:</label>
+	
+	<cfinput type="text" name="iframe_height" id="iframe_height" value="" required="true" message="#t_iframe_height# válido requerido" validate="integer" passthrough="#passthrough#" style="width:55px;">
+	
+</div>
+--->
+
 </cfif>
 
-<cfif itemTypeId IS 2 OR itemTypeId IS 3><!---Entries, Links--->
-<div style="padding-top:5px;">
+<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
+<div class="control-group">
 
-<span class="texto_normal">#t_position#:</span>&nbsp;<cfinput type="text" name="position" id="position" value="#objectItem.position#" required="true" validate="integer" message="#t_position# debe ser un número entero" style="width:50px;" passthrough="#passthrough#">
-
-	<cfif itemTypeId IS 2>
-	<span class="texto_normal">#t_display_type#:</span>&nbsp;
-	<cfset display_type_options = "Por defecto,Listado de elementos,Imagen a la derecha,Imagen a la izquierda,Figura con pie">
-	<cfset display_type_values = "1,2,3,4,5">
-	<select name="display_type" <cfif read_only IS true>disabled="disabled"</cfif>>
-		<cfloop list="#display_type_values#" index="display_type">
-			<option value="#display_type#" <cfif objectItem.display_type IS display_type>selected="selected"</cfif>>#listGetAt(display_type_options,display_type)#</option>
-		</cfloop>
-	</select>
-	</cfif>
+	<label class="control-label" lang="es">#t_position#:</label>
+	
+	<div class="controls">
+	<cfinput type="text" name="position" id="position" value="#objectItem.position#" required="true" validate="integer" message="#t_position# debe ser un número entero" style="width:50px;" passthrough="#passthrough#">
+	</div>
 
 </div>
+
+	<cfif itemTypeId IS 2>
+	<div class="control-group">
+	
+		<label class="control-label" lang="es">#t_display_type#:</label>
+		
+		<div class="controls">
+		
+			<cfinvoke component="#APPLICATION.componentsPath#/DisplayTypeManager" method="getDisplayTypes" returnvariable="displayTypeQuery">
+			</cfinvoke>
+			
+			<!---<cfset display_type_options = "Por defecto,Listado de elementos,Imagen a la derecha,Imagen a la izquierda,Figura con pie">
+			<cfset display_type_values = "1,2,3,4,5">
+			<cfloop list="#display_type_values#" index="display_type_id">
+				<option value="#display_type_id#" <cfif objectItem.display_type_id IS display_type_id>selected="selected"</cfif>>#listGetAt(display_type_options,display_type_id)#</option>
+			</cfloop>--->
+			
+			<select name="display_type_id" <cfif read_only IS true>disabled="disabled"</cfif>>
+				<cfloop query="displayTypeQuery">
+					<option value="#displayTypeQuery.display_type_id#" <cfif objectItem.display_type_id IS display_type_id>selected="selected"</cfif>>#displayTypeQuery.display_type_title_es#</option>
+				</cfloop>
+			</select>
+		</div>
+	</div>
+	</cfif>
+
 </cfif>
 
 
@@ -344,28 +477,19 @@
 <cfif APPLICATION.identifier NEQ "dp"><!---SMS Deshabilitado para DoPlanning--->
 	<cfif objectUser.sms_allowed IS true>
 		<cfoutput>
-		<div style="padding-top:8px; padding-right:4px; float:left; clear:none;"><cfinput type="checkbox" name="notify_by_sms" value="true" title="Enviar notificación por SMS"></div><div style="clear:none; float:left;"><img src="#APPLICATION.htmlPath#/assets/icons/sms.png" alt="Enviar SMS"/></div><div class="texto_normal" style="clear:none; float:left; padding-top:6px;">&nbsp;Enviar notificación por SMS</div>
+		
+		<div class="control-group">
+			<div class="controls">
+			  <label class="checkbox">
+				<img src="#APPLICATION.htmlPath#/assets/icons/sms.png" alt="Enviar SMS"/> <cfinput type="checkbox" name="notify_by_sms" value="true" title="Enviar notificación por SMS"> Enviar notificación por SMS
+			  </label>
+			</div>
+		</div>
+		
 		</cfoutput>
 	</cfif>
 </cfif>
 <div style="clear:both"></div>
-
-<cfif read_only IS true>
-	<script type="text/javascript">
-	
-		var editor;
-
-		// The instanceReady event is fired, when an instance of CKEditor has finished
-		// its initialization.
-		
-		CKEDITOR.on('instanceReady', function( ev )	{
-			editor = ev.editor;
-		
-			editor.setReadOnly(true);
-		});
-	
-	</script>
-</cfif>
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
 	<cfinvokeargument name="name" value="description">

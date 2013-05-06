@@ -161,4 +161,26 @@
 	</cffunction>
 	
 	
+	<!--- GENERATE NEW PASSWORD --->	
+	
+	<cffunction name="generateNewPassword" returntype="struct" output="false" access="public">
+		<cfargument name="email" type="string" required="true">
+		<cfargument name="client_abb" type="string" required="true">
+		
+		<cfset var method = "generateNewPassword">
+		
+		<cfset var response_message = "">
+		
+			
+		<cfinvoke component="#APPLICATION.componentsPath#/LoginManager" method="generateNewPassword" returnvariable="response">
+			<cfinvokeargument name="email_login" value="#arguments.email#">
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+		</cfinvoke>
+		
+		<cfreturn response>
+		
+	</cffunction>
+	
+	
+	
 </cfcomponent>

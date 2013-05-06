@@ -44,19 +44,6 @@
 	
 	<cfcatch>
 	
-		<!---<cfmail subject="Error en #APPLICATION.title#" server="#APPLICATION.emailServer#" username="#APPLICATION.emailServerUserName#" password="#APPLICATION.emailServerPassword#" from="#APPLICATION.emailFrom#" replyto="#APPLICATION.emailReply#" failto="#APPLICATION.emailFail#" to="#APPLICATION.emailErrors#" type="html">
-		<html><body>
-				<p>Se ha producido un error en #APPLICATION.title#.<br />
-				<cfoutput>
-				Mensaje: #cfcatch.Message#<br />
-				Componente: #component#<br />
-				Método: #method#<br />
-				Datos: #xmlResponseContent#<br />
-				</cfoutput>
-				<cfdump var=#cfcatch#>
-				<br />
-		</body></html>
-		</cfmail>--->
 		<cfsavecontent variable="mail_content">
 			<cfoutput>
 			<html><body>
