@@ -34,6 +34,8 @@
 		<cfset APPLICATION.moduleVirtualMeetings = true>
 		<!---<cfset APPLICATION.moduleLanguages = true>--->
 		
+		<cfset APPLICATION.languages = "es,en">
+		
 		<cfset APPLICATION.errorReport = "email"><!---email/file--->
 		
 		<cfset APPLICATION.dateFormat = "dd-mm-yyyy">

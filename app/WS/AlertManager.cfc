@@ -33,10 +33,8 @@
 				
 		<cfset var method = "newAreaItem">
 		
-        <cfset var listInternalUsersEs = "">
-		<cfset var listInternalUsersEn = "">
-		<cfset var listExternalUsersEs = "">
-		<cfset var listExternalUsersEn = "">
+        <cfset var listInternalUsers = "">
+		<cfset var listExternalUsers = "">
 		
 		<cfset var listInternalUsersPhones = "">
 		<cfset var listExternalUsersPhones = "">
@@ -93,347 +91,357 @@
 			<cfinvokeargument name="request" value="#getUsersRequest#"/>
 		</cfinvoke>
         
-        <cfset listInternalUsers = usersToNotifyLists.listInternalUsers>
+        <!---<cfset listInternalUsers = usersToNotifyLists.listInternalUsers>
         <cfset listExternalUsers = usersToNotifyLists.listExternalUsers>
 		
-		<cfset listInternalUsersEs = usersToNotifyLists.listInternalUsers>
-        <cfset listExternalUsersEn = usersToNotifyLists.listExternalUsers>
-		
 		<cfset listInternalUsersPhones = usersToNotifyLists.listInternalUsersPhones>
-		<cfset listExternalUsersPhones = usersToNotifyLists.listExternalUsersPhones>
+		<cfset listExternalUsersPhones = usersToNotifyLists.listExternalUsersPhones>--->
+		<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
+		<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
+
+		<cfset internalUsersPhones = usersToNotifyLists.structInternalUsersPhones>
+		<cfset externalUsersPhones = usersToNotifyLists.structExternalUsersPhones>
 		
-		<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
+		<!---Get area name--->
+		<cfquery name="selectAreaQuery" datasource="#client_dsn#">
+			SELECT id, name 
+			FROM #client_abb#_areas
+			WHERE id = <cfqueryparam value="#objectItem.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+		<cfif selectAreaQuery.recordCount GT 0>
 		
-			<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-				SELECT id, name 
-				FROM #client_abb#_areas
-				WHERE id = <cfqueryparam value="#objectItem.area_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-			<cfif selectAreaQuery.recordCount GT 0>
+			<cfset area_name = selectAreaQuery.name>
 			
-				<cfset area_name = selectAreaQuery.name>
-				
-			<cfelse><!---The area does not exist--->
-				
-				<cfset error_code = 301>
-				
-				<cfthrow errorcode="#error_code#">
+		<cfelse><!---The area does not exist--->
 			
-			</cfif>
+			<cfset error_code = 301>
 			
-			<!---HAY QUE AGREGAR LOS IDIOMAS A ESTA PARTE PARA QUE LOS EMAILS PUEDAN ESTAR EN VARIOS IDIOMAS--->
+			<cfthrow errorcode="#error_code#">
+		
+		</cfif>
 			
-			<!---itemUrl--->
-			<cfinvoke component="#APPLICATION.componentsPath#/components/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+			
+		<!---itemUrl--->
+		<cfinvoke component="#APPLICATION.componentsPath#/components/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+			<cfinvokeargument name="item_id" value="#objectItem.id#">
+			<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+			<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+		</cfinvoke>
+		
+		<!---fileDownloadUrl--->
+		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
+			<cfinvoke component="#APPLICATION.componentsPath#/components/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
+				<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-				<cfinvokeargument name="area_id" value="#objectItem.area_id#">
 			</cfinvoke>
+		</cfif>
+		
+		<!---imageDownloadUrl--->
+		<cfif isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
+			<cfinvoke component="#APPLICATION.componentsPath#/components/UrlManager" method="getDownloadFileUrl" returnvariable="downloadImageUrl">
+				<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
+				<cfinvokeargument name="item_id" value="#objectItem.id#">
+				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+			</cfinvoke>			
+		</cfif>
+		
+		<cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
+		</cfinvoke>
+		<!---En el asunto se pone el nombre del área raiz--->
+		
+		
+		<cfloop list="#APPLICATION.languages#" index="curLang">
+		
+			<cfset listInternalUsers = internalUsersEmails[curLang]>
+			<cfset listExternalUsers = externalUsersEmails[curLang]>
 			
-			<!---fileDownloadUrl--->
-			<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
-				<cfinvoke component="#APPLICATION.componentsPath#/components/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
-					<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
-					<cfinvokeargument name="item_id" value="#objectItem.id#">
-					<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-				</cfinvoke>
-			</cfif>
+			<cfset listInternalUsersPhones = internalUsersPhones[curLang]>
+			<cfset listExternalUsersPhones = externalUsersPhones[curLang]>
 			
-			<!---imageDownloadUrl--->
-			<cfif isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
-				<cfinvoke component="#APPLICATION.componentsPath#/components/UrlManager" method="getDownloadFileUrl" returnvariable="downloadImageUrl">
-					<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
-					<cfinvokeargument name="item_id" value="#objectItem.id#">
-					<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-				</cfinvoke>			
-			</cfif>
-			
-			
-			<cfif arguments.action NEQ "delete"><!---Si el elemento no se elimina--->
-			
-				<cfif APPLICATION.identifier EQ "dp"><!---DP--->
+			<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
+						
+				<cfif arguments.action NEQ "delete"><!---Si el elemento no se elimina--->
 				
-					<cfsavecontent variable="access_content">
-					<cfoutput>
-					-&nbsp;<cfif itemTypeGender EQ "male">#langText.es.new_item.access_to_item_male#<cfelse>#langText.new_item.access_to_item_female#</cfif> #itemTypeNameEs# #langText.es.new_item.access_to_item_link# <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a>
+					<cfif APPLICATION.identifier EQ "dp"><!---DP--->
 					
-					<br/>-&nbsp;#langText.es.new_item.access_to_application#
-					<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#</a>
-					</cfoutput>
-					</cfsavecontent>
+						<cfsavecontent variable="access_content">
+						<cfoutput>
+						-&nbsp;<cfif itemTypeGender EQ "male">#langText.es.new_item.access_to_item_male#<cfelse>#langText.new_item.access_to_item_female#</cfif> #itemTypeNameEs# #langText.es.new_item.access_to_item_link# <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a>
+						
+						<br/>-&nbsp;#langText.es.new_item.access_to_application#
+						<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#</a>
+						</cfoutput>
+						</cfsavecontent>
+						
+						
+					<cfelseif APPLICATION.identifier EQ "vpnet">
 					
+						<cfsavecontent variable="access_content">
+						<cfoutput><cfif itemTypeGender EQ "male">#langText.es.new_item.access_to_item_male#<cfelse>#langText.new_item.access_to_item_female#</cfif> #itemTypeNameEs# #langText.es.new_item.access_to_item_links#<br/>
+						<!----&nbsp;Acceso interno <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#itemTypeName#.cfm?#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#">#APPLICATION.mainUrl##APPLICATION.path#/#itemTypeName#.cfm?#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#</a><br/>
+						-&nbsp;Acceso externo <a target="_blank" href="#APPLICATION.alternateUrl##itemTypeName#.cfm?#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#">#APPLICATION.alternateUrl##itemTypeName#.cfm?#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#</a>--->
+						-&nbsp;#langText.es.new_item.access_internal# <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a><br/>
+						-&nbsp;#langText.es.new_item.access_external#  <a target="_blank" href="#APPLICATION.alternateUrl#/?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#">#APPLICATION.alternateUrl#/?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#</a>
+						</cfoutput>
+						</cfsavecontent>
+						
+						
+						<!---<cfset access_default = '<br/><br/>Puede contestar al mensaje accediendo a la aplicación a través de: '>
 					
-				<cfelseif APPLICATION.identifier EQ "vpnet">
-				
-					<cfsavecontent variable="access_content">
-					<cfoutput><cfif itemTypeGender EQ "male">#langText.es.new_item.access_to_item_male#<cfelse>#langText.new_item.access_to_item_female#</cfif> #itemTypeNameEs# #langText.es.new_item.access_to_item_links#<br/>
-					<!----&nbsp;Acceso interno <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#itemTypeName#.cfm?#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#">#APPLICATION.mainUrl##APPLICATION.path#/#itemTypeName#.cfm?#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#</a><br/>
-					-&nbsp;Acceso externo <a target="_blank" href="#APPLICATION.alternateUrl##itemTypeName#.cfm?#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#">#APPLICATION.alternateUrl##itemTypeName#.cfm?#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#</a>--->
-					-&nbsp;#langText.es.new_item.access_internal# <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a><br/>
-					-&nbsp;#langText.es.new_item.access_external#  <a target="_blank" href="#APPLICATION.alternateUrl#/?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#">#APPLICATION.alternateUrl#/?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#&abb=#SESSION.client_abb#</a>
-					</cfoutput>
-					</cfsavecontent>
+						<cfsavecontent variable="access_content">
+						<cfoutput>
+						#access_default#<br/>
+						-&nbsp;Acceso interno <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/">#APPLICATION.mainUrl##APPLICATION.path#/</a><br/>
+						-&nbsp;Acceso externo <a target="_blank" href="#APPLICATION.alternateUrl#">#APPLICATION.alternateUrl#</a>
+						</cfoutput>
+						</cfsavecontent>--->	
+					</cfif>
 					
-					
-					<!---<cfset access_default = '<br/><br/>Puede contestar al mensaje accediendo a la aplicación a través de: '>
-				
-					<cfsavecontent variable="access_content">
-					<cfoutput>
-					#access_default#<br/>
-					-&nbsp;Acceso interno <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/">#APPLICATION.mainUrl##APPLICATION.path#/</a><br/>
-					-&nbsp;Acceso externo <a target="_blank" href="#APPLICATION.alternateUrl#">#APPLICATION.alternateUrl#</a>
-					</cfoutput>
-					</cfsavecontent>--->	
 				</cfif>
 				
-			</cfif>
-			
-			<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">'&langText.es.new_item.foot_content_1&' #APPLICATION.title# '&langText.es.new_item.foot_content_2&' #APPLICATION.title#.<br /> '&langText.es.new_item.foot_content_3&'</p>'>			
-			
-            <cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
-            </cfinvoke>
-            <!---EN EL ASUNTO SE PONE EL NOMBRE DEL ÁREA RAIZ--->
-			
-			<cfswitch expression="#arguments.action#">
+				<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">'&langText.es.new_item.foot_content_1&' #APPLICATION.title# '&langText.es.new_item.foot_content_2&' #APPLICATION.title#.<br /> '&langText.es.new_item.foot_content_3&'</p>'>			
 				
-				<cfcase value="new"><!---Nuevo--->
-				
-					<cfif arguments.itemTypeId IS NOT 7 OR objectItem.parent_kind EQ "area">
-						<cfif itemTypeGender EQ "male">
-							<cfset action_name = "#langText.es.new_item.new_male# #itemTypeNameEs#">
-						<cfelse>
-							<cfset action_name = "#langText.es.new_item.new_female# #itemTypeNameEs#">
+				<cfswitch expression="#arguments.action#">
+					
+					<cfcase value="new"><!---Nuevo--->
+					
+						<cfif arguments.itemTypeId IS NOT 7 OR objectItem.parent_kind EQ "area">
+							<cfif itemTypeGender EQ "male">
+								<cfset action_name = "#langText.es.new_item.new_male# #itemTypeNameEs#">
+							<cfelse>
+								<cfset action_name = "#langText.es.new_item.new_female# #itemTypeNameEs#">
+							</cfif>
+							<cfset subject = "[#root_area.name#][#itemTypeNameEs#] #objectItem.title#">
+						<cfelse><!---Respuesta a consulta--->
+							
+							<cfset action_name = "#langText.es.new_item.answer_to# #itemTypeNameEs#">
+							<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
+							
 						</cfif>
-						<cfset subject = "[#root_area.name#][#itemTypeNameEs#] #objectItem.title#">
-					<cfelse><!---Respuesta a consulta--->
+					
+					</cfcase>
+					
+					<cfcase value="delete"><!---Eliminado--->
+					
+						<cfif itemTypeGender EQ "male">
+							<cfset action_name = "#itemTypeNameEs# eliminado">
+						<cfelse>
+							<cfset action_name = "#itemTypeNameEs# eliminada">
+						</cfif>
 						
-						<cfset action_name = "#langText.es.new_item.answer_to# #itemTypeNameEs#">
+						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
+	
+					</cfcase>
+					
+					<cfcase value="update"><!---Modificado--->
+					
+						<cfif itemTypeGender EQ "male">
+							<cfset action_name = "#itemTypeNameEs# modificado">
+						<cfelse>
+							<cfset action_name = "#itemTypeNameEs# modificada">
+						</cfif>
+						
+						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
+					
+					</cfcase>
+					
+					<cfcase value="done"><!---Realizada (tarea)--->
+						
+						<cfset action_name = "#itemTypeNameEs# realizada">
 						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
 						
-					</cfif>
-				
-				</cfcase>
-				
-				<cfcase value="delete"><!---Eliminado--->
-				
-					<cfif itemTypeGender EQ "male">
-						<cfset action_name = "#itemTypeNameEs# eliminado">
-					<cfelse>
-						<cfset action_name = "#itemTypeNameEs# eliminada">
-					</cfif>
+					</cfcase>				
 					
-					<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
-
-				</cfcase>
-				
-				<cfcase value="update"><!---Modificado--->
-				
-					<cfif itemTypeGender EQ "male">
-						<cfset action_name = "#itemTypeNameEs# modificado">
-					<cfelse>
-						<cfset action_name = "#itemTypeNameEs# modificada">
-					</cfif>
+					<cfcase value="close"><!---Cerrada (consulta)--->
 					
-					<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
-				
-				</cfcase>
-				
-				<cfcase value="done"><!---Realizada (tarea)--->
+						<cfset action_name = "#itemTypeNameEs# cerrada">
+						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">				
 					
-					<cfset action_name = "#itemTypeNameEs# realizada">
-					<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
+					</cfcase>
 					
-				</cfcase>				
+				</cfswitch>
 				
-				<cfcase value="close"><!---Cerrada (consulta)--->
 				
-					<cfset action_name = "#itemTypeNameEs# cerrada">
-					<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">				
+				<cfset sms_message = "#uCase(action_name)#:#objectItem.title#. ÁREA:#area_name#">
 				
-				</cfcase>
+				<cfif len(sms_message) GT 160>
+					<cfset sms_message = left(sms_message, 160)>
+				</cfif>
+							
 				
-			</cfswitch>
-			
-			<!---<cfif arguments.action EQ "new"><!---Nuevo--->
-			<cfelseif arguments.action EQ "delete"><!---Eliminado--->
-			<cfelse><!---Modificado--->
-			</cfif>--->
-			
-			<cfset sms_message = "#uCase(action_name)#:#objectItem.title#. ÁREA:#area_name#">
-			
-			<cfif len(sms_message) GT 160>
-				<cfset sms_message = left(sms_message, 160)>
-			</cfif>
+				<!---CONTENIDO DEL EMAIL--->
+				<cfif includeItemContent IS true>
+				
+					<cfsavecontent variable="alertContent">
+						<cfoutput>
+						<cfif itemTypeId IS 1>Asunto<cfelse>Título</cfif>: <strong style="font-size:14px;">#objectItem.title#</strong><br/>			
+						Usuario: <b>#objectItem.user_full_name#</b><br/>		
+						<cfif itemTypeId IS 6><!---Tasks--->
+						Asignada a: <b>#objectItem.recipient_user_full_name#</b><br/>
+						</cfif>
+						Fecha de creación: <strong>#objectItem.creation_date#</strong><br/>
+						<cfif itemTypeId IS NOT 1 AND len(objectItem.last_update_date) GT 0>
+						Fecha de última modificación: <strong>#objectItem.last_update_date#</strong><br/>
+						</cfif>
+					
+						<cfif len(objectItem.link) GT 0>
+						<cfif itemTypeId IS 3><!---Links--->
+						URL del enlace: 
+						<cfelse>
+						Enlace: </cfif><a href="#objectItem.link#" target="_blank" style="font-weight:bold;">#objectItem.link#</a><br/>
+						</cfif>
+						<cfif len(objectItem.iframe_url) GT 0>
+						URL del contenido incrustado: 
+						<a href="#objectItem.iframe_url#" target="_blank" style="font-weight:bold;">#objectItem.iframe_url#</a><br/>
+						</cfif>
+						<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+						Fecha de inicio<cfif itemTypeId IS 5> del evento</cfif>: <b>#objectItem.start_date#</b> <cfif itemTypeId IS 5>Hora: <b>#TimeFormat(objectItem.start_time,"HH:mm")#</b></cfif><br/>
+						Fecha de fin<cfif itemTypeId IS 5> del evento</cfif>: <b>#objectItem.end_date#</b> <cfif itemTypeId IS 5>Hora: <b>#TimeFormat(objectItem.end_time,"HH:mm")#</b></cfif><br/>
+							<cfif itemTypeId IS 5>
+							Lugar: <b>#objectItem.place#</b><br/>
+							<cfelse>
+							Valor estimado: <b>#objectItem.estimated_value#</b><br/>
+							Valor real: <b>#objectItem.real_value#</b><br/>
+							Tarea realizada: <b><cfif objectItem.done IS true>Sí<cfelse>No</cfif></b><br/>
+							</cfif>
+						</cfif>	
+						<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
+							<cfif arguments.action NEQ "delete">
+							Archivo adjunto: <a href="#downloadFileUrl#" target="_blank">#objectItem.attached_file_name#</a><br/>
+							<cfelse>
+							Archivo adjunto: #objectItem.attached_file_name#<br/>
+							</cfif>
+						</cfif>
+						<cfif isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
+							<cfif arguments.action NEQ "delete">
+							Imagen adjunta: <a href="#downloadImageUrl#" target="_blank">#objectItem.attached_image_name#</a><br/>
+							<cfelse>
+							Imagen adjunta: #objectItem.attached_image_name#<br/>
+							</cfif>
+						</cfif>
 						
-			
-			<!---CONTENIDO DEL EMAIL--->
-			<cfif includeItemContent IS true>
-			
-				<cfsavecontent variable="alertContent">
-					<cfoutput>
-					<cfif itemTypeId IS 1>Asunto<cfelse>Título</cfif>: <strong style="font-size:14px;">#objectItem.title#</strong><br/>			
-					Usuario: <b>#objectItem.user_full_name#</b><br/>		
-					<cfif itemTypeId IS 6><!---Tasks--->
-					Asignada a: <b>#objectItem.recipient_user_full_name#</b><br/>
-					</cfif>
-					Fecha de creación: <strong>#objectItem.creation_date#</strong><br/>
-					<cfif itemTypeId IS NOT 1 AND len(objectItem.last_update_date) GT 0>
-					Fecha de última modificación: <strong>#objectItem.last_update_date#</strong><br/>
-					</cfif>
-					<!---<cfif objectItem.attached_file_name NEQ "NULL" AND objectItem.attached_file_name NEQ "">--->
-					<cfif len(objectItem.link) GT 0>
-					<cfif itemTypeId IS 3><!---Links--->
-					URL del enlace: 
-					<cfelse>
-					Enlace: </cfif><a href="#objectItem.link#" target="_blank" style="font-weight:bold;">#objectItem.link#</a><br/>
-					</cfif>
-					<cfif len(objectItem.iframe_url) GT 0>
-					URL del contenido incrustado: 
-					<a href="#objectItem.iframe_url#" target="_blank" style="font-weight:bold;">#objectItem.iframe_url#</a><br/>
-					</cfif>
-					<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-					Fecha de inicio<cfif itemTypeId IS 5> del evento</cfif>: <b>#objectItem.start_date#</b> <cfif itemTypeId IS 5>Hora: <b>#TimeFormat(objectItem.start_time,"HH:mm")#</b></cfif><br/>
-					Fecha de fin<cfif itemTypeId IS 5> del evento</cfif>: <b>#objectItem.end_date#</b> <cfif itemTypeId IS 5>Hora: <b>#TimeFormat(objectItem.end_time,"HH:mm")#</b></cfif><br/>
-						<cfif itemTypeId IS 5>
-						Lugar: <b>#objectItem.place#</b><br/>
-						<cfelse>
-						Valor estimado: <b>#objectItem.estimated_value#</b><br/>
-						Valor real: <b>#objectItem.real_value#</b><br/>
-						Tarea realizada: <b><cfif objectItem.done IS true>Sí<cfelse>No</cfif></b><br/>
-						</cfif>
-					</cfif>	
-					<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
-						<cfif arguments.action NEQ "delete">
-						Archivo adjunto: <a href="#downloadFileUrl#" target="_blank">#objectItem.attached_file_name#</a><br/>
-						<cfelse>
-						Archivo adjunto: #objectItem.attached_file_name#<br/>
-						</cfif>
-					</cfif>
-					<cfif isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
-						<cfif arguments.action NEQ "delete">
-						Imagen adjunta: <a href="#downloadImageUrl#" target="_blank">#objectItem.attached_image_name#</a><br/>
-						<cfelse>
-						Imagen adjunta: #objectItem.attached_image_name#<br/>
-						</cfif>
-					</cfif>
-					
-					<br/>
-					<div style="padding-left:15px;">#objectItem.description#</div><!---<br/>--->
-					
-					<cfif len(objectItem.link) GT 0 AND (itemTypeId IS 4 OR itemTypeId IS 5)><!---Links, News, Events--->
-					<br/>Más información: <a href="#objectItem.link#" target="_blank">#objectItem.link#</a><br/>
-					</cfif>
-					
-					<br/>
-					
-					<cfif arguments.action NEQ "delete"><!---Si el elemento no se elimina--->
-					<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>
-					</cfif>
-					</cfoutput>					
-				</cfsavecontent>
-				
-			<cfelse><!---includeItemContent IS false--->
-			
-				<cfsavecontent variable="alertContent">
-					<cfoutput>
-					<!---<i>En este e-mail no se incluye el contenido <cfif itemTypeGender EQ "male">del<cfelse>de la</cfif> #lCase(itemTypeNameEs)#.</i><br/><br/>--->
-					<cfif arguments.action NEQ "delete">
-					<div style="border-color:##CCCCCC; border-style:solid; border-width:1px; padding:8px;">
-						<strong style="font-size:14px;">Para ver el contenido <cfif itemTypeGender EQ "male">del<cfelse>de la</cfif> #lCase(itemTypeNameEs)# debe acceder a la aplicación:</strong><br/>
+						<br/>
+						<div style="padding-left:15px;">#objectItem.description#</div>
 						
-						<span style="color:##666666;">#access_content#</span>
-					</div>
-					</cfif>
-					</cfoutput>
-				</cfsavecontent>
+						<cfif len(objectItem.link) GT 0 AND (itemTypeId IS 4 OR itemTypeId IS 5)><!---Links, News, Events--->
+						<br/>Más información: <a href="#objectItem.link#" target="_blank">#objectItem.link#</a><br/>
+						</cfif>
+						
+						<br/>
+						
+						<cfif arguments.action NEQ "delete"><!---Si el elemento no se elimina--->
+						<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>
+						</cfif>
+						</cfoutput>					
+					</cfsavecontent>
+					
+				<cfelse><!---includeItemContent IS false--->
 				
-			</cfif>
-			
-			
-            
-			<!---INTERNAL USERS--->
-			<cfif len(listInternalUsers) GT 0>
-			
-				<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
-					<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-				</cfinvoke>
-				
-                <cfset subjectInternal = subject>
-			
-				<cfsavecontent variable="contentInternal">
-				<cfoutput>
-		#action_name# en el área: <b>#area_name#</b>.<br/>
-		Ruta del área: #area_path#<br/><br/>
-		
-		#alertContent#
-				</cfoutput>		
-				</cfsavecontent>
-				
-				<cfinvoke component="EmailManager" method="sendEmail">
-					<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-					<cfif listLen(listInternalUsers,";") GT 1>
-						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
-						<cfinvokeargument name="bcc" value="#listInternalUsers#">
-					<cfelse>
-						<cfinvokeargument name="to" value="#listInternalUsers#">
-					</cfif>
-					<cfinvokeargument name="subject" value="#subjectInternal#">
-					<cfinvokeargument name="content" value="#contentInternal#">
-					<cfinvokeargument name="foot_content" value="#foot_content#">
-				</cfinvoke>	
-				
-				<!---SMS--->
-				<cfif arguments.send_sms IS true>
-				
-					<cfinvoke component="SMSManager" method="sendSMSNew">
-						<cfinvokeargument name="text" value="#sms_message#">
-						<cfinvokeargument name="recipients" value="#listInternalUsersPhones#">
-					</cfinvoke>
-									
+					<cfsavecontent variable="alertContent">
+						<cfoutput>
+						<!---<i>En este e-mail no se incluye el contenido <cfif itemTypeGender EQ "male">del<cfelse>de la</cfif> #lCase(itemTypeNameEs)#.</i><br/><br/>--->
+						<cfif arguments.action NEQ "delete">
+						<div style="border-color:##CCCCCC; border-style:solid; border-width:1px; padding:8px;">
+							<strong style="font-size:14px;">Para ver el contenido <cfif itemTypeGender EQ "male">del<cfelse>de la</cfif> #lCase(itemTypeNameEs)# debe acceder a la aplicación:</strong><br/>
+							
+							<span style="color:##666666;">#access_content#</span>
+						</div>
+						</cfif>
+						</cfoutput>
+					</cfsavecontent>
+					
 				</cfif>
 				
-			</cfif>
-			
-			<!---EXTERNAL USERS--->
-			<cfif len(listExternalUsers) GT 0>
-				
-				<cfset subjectExternal = subject>
-                
-				<cfsavecontent variable="contentExternal">
-				<cfoutput>
-		#action_name# en el área <b>#area_name#</b> de la organización #root_area.name#.<br/><br/>
-		
-		#alertContent#
-				</cfoutput>		
-				</cfsavecontent>
 				
 				
-				<cfinvoke component="EmailManager" method="sendEmail">
-					<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-					<cfif listLen(listExternalUsers,";") GT 1>
-						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
-						<cfinvokeargument name="bcc" value="#listExternalUsers#">
-					<cfelse>
-						<cfinvokeargument name="to" value="#listExternalUsers#">
-					</cfif>
-					<cfinvokeargument name="subject" value="#subjectExternal#">
-					<cfinvokeargument name="content" value="#contentExternal#">
-					<cfinvokeargument name="foot_content" value="#foot_content#">
-				</cfinvoke>	
+				<!---INTERNAL USERS--->
+				<cfif len(listInternalUsers) GT 0>
 				
-				<!---SMS--->
-				<cfif arguments.send_sms IS true>
-				
-					<cfinvoke component="SMSManager" method="sendSMSNew">
-						<cfinvokeargument name="text" value="#sms_message#">
-						<cfinvokeargument name="recipients" value="#listExternalUsersPhones#">
+					<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
 					</cfinvoke>
-									
+					
+					<cfset subjectInternal = subject>
+				
+					<cfsavecontent variable="contentInternal">
+					<cfoutput>
+			#action_name# en el área: <b>#area_name#</b>.<br/>
+			Ruta del área: #area_path#<br/><br/>
+			
+			#alertContent#
+					</cfoutput>		
+					</cfsavecontent>
+					
+					<cfinvoke component="EmailManager" method="sendEmail">
+						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+						<cfif listLen(listInternalUsers,";") GT 1>
+							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
+							<cfinvokeargument name="bcc" value="#listInternalUsers#">
+						<cfelse>
+							<cfinvokeargument name="to" value="#listInternalUsers#">
+						</cfif>
+						<cfinvokeargument name="subject" value="#subjectInternal# #curLang#">
+						<cfinvokeargument name="content" value="#contentInternal#">
+						<cfinvokeargument name="foot_content" value="#foot_content#">
+					</cfinvoke>	
+					
+					<!---SMS--->
+					<cfif arguments.send_sms IS true>
+					
+						<cfinvoke component="SMSManager" method="sendSMSNew">
+							<cfinvokeargument name="text" value="#sms_message#">
+							<cfinvokeargument name="recipients" value="#listInternalUsersPhones#">
+						</cfinvoke>
+										
+					</cfif>
+					
 				</cfif>
 				
-			</cfif>
+				<!---EXTERNAL USERS--->
+				<cfif len(listExternalUsers) GT 0>
+					
+					<cfset subjectExternal = subject>
+					
+					<cfsavecontent variable="contentExternal">
+					<cfoutput>
+			#action_name# en el área <b>#area_name#</b> de la organización #root_area.name#.<br/><br/>
+			
+			#alertContent#
+					</cfoutput>		
+					</cfsavecontent>
+					
+					
+					<cfinvoke component="EmailManager" method="sendEmail">
+						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+						<cfif listLen(listExternalUsers,";") GT 1>
+							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
+							<cfinvokeargument name="bcc" value="#listExternalUsers#">
+						<cfelse>
+							<cfinvokeargument name="to" value="#listExternalUsers#">
+						</cfif>
+						<cfinvokeargument name="subject" value="#subjectExternal# #curLang#">
+						<cfinvokeargument name="content" value="#contentExternal#">
+						<cfinvokeargument name="foot_content" value="#foot_content#">
+					</cfinvoke>	
+					
+					<!---SMS--->
+					<cfif arguments.send_sms IS true>
+					
+						<cfinvoke component="SMSManager" method="sendSMSNew">
+							<cfinvokeargument name="text" value="#sms_message#">
+							<cfinvokeargument name="recipients" value="#listExternalUsersPhones#">
+						</cfinvoke>
+										
+					</cfif>
+					
+				</cfif>
+			
+			</cfif><!---END len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0--->
+			
 	
-		</cfif>
+		</cfloop><!---END APPLICATION.languages loop--->
+
 		
 	</cffunction>
 	
