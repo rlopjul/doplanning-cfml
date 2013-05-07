@@ -881,10 +881,21 @@
 			</cfif>
 			
 			<cfif isDefined("userXml.user.XmlAttributes.language")>
-				<cfquery name="updateUserDni" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET language = <cfqueryparam value="#userXml.user.XmlAttributes.language#" cfsqltype="cf_sql_varchar">
-					WHERE id = <cfqueryparam value="#userXml.user.XmlAttributes.id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+				<cfset userLanguage = userXml.user.XmlAttributes.language>
+				<cfif listFind(APPLICATION.languages, userLanguage) GT 0>
+
+					<cfquery name="updateUserLanguage" datasource="#client_dsn#">
+						UPDATE #client_abb#_users SET language = <cfqueryparam value="#userLanguage#" cfsqltype="cf_sql_varchar">
+						WHERE id = <cfqueryparam value="#userXml.user.XmlAttributes.id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+					
+				<cfelse><!---The application does not have this language--->
+					
+					<cfset error_code = 10000>
+					
+					<cfthrow errorcode="#error_code#" message="The application does not have defined this language: #userLanguage#">
+					
+				</cfif>
 			</cfif>
 			
 			<cfif APPLICATION.identifier EQ "vpnet">
@@ -1790,7 +1801,7 @@ step="1">
 			<cfif listLen(usersList) GT 0>
 			
 				<cfquery name="areaUsersQuery" datasource="#client_dsn#">
-					SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type
+					SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type, language
 					FROM #client_abb#_users AS u
 					WHERE u.id IN (#usersList#)
 					<cfif isDefined("arguments.include_user_log_in") AND arguments.include_user_log_in NEQ true>
@@ -1857,6 +1868,7 @@ step="1">
 							<cfinvokeargument name="telephone_ccode" value="#areaUsersQuery.telephone_ccode#">
 							<cfinvokeargument name="mobile_phone_ccode" value="#areaUsersQuery.mobile_phone_ccode#">
 							<cfinvokeargument name="image_type" value="#areaUsersQuery.image_type#">
+							<cfinvokeargument name="language" value="#areaUsersQuery.language#">
 							
 							<cfif listFind(areaMembersList, areaUsersQuery.id) GT 0>
 								<cfinvokeargument name="area_member" value="1">
@@ -2462,7 +2474,7 @@ step="1">
 	
 	<!--- ---------------------------- GET USERS TO NOTIFY  ------------------------------- --->
 	
-	<cffunction name="getUsersToNotify" returntype="string" output="false" access="public">	
+	<cffunction name="getUsersToNotify" returntype="array" output="false" access="public">	
 		<cfargument name="request" type="string" required="yes">
 	
 		<cfset var method = "getUsersToNotify">
@@ -2567,7 +2579,7 @@ step="1">
 			<cfset usersArray = returnArrays.usersArray>
 			<cfset areasArray = returnArrays.areasArray>
 
-			<cfprocessingdirective suppresswhitespace="yes">
+			<!---<cfprocessingdirective suppresswhitespace="yes">
 			<cfsavecontent variable="usersXml">
 				<users>
 					<cfif arrayLen(usersArray) GT 0>
@@ -2650,7 +2662,16 @@ step="1">
 			
 			<cfset xmlResponse = usersXml>
 			
-		<cfreturn xmlResponse>
+		<cfreturn xmlResponse>--->
+
+			<cfif arrayLen(usersArray) GT 0>
+							
+				<cfset usersArray = arrayOfStructsSort(usersArray, "#order_by#", "#order_type#", "textnocase")>
+							
+			</cfif>
+			
+		<cfreturn usersArray>
+			
 	
 	</cffunction>
 	
@@ -2661,20 +2682,26 @@ step="1">
 		<cfargument name="request" type="string" required="yes">
 	
 		<cfset var method = "getUsersToNotifyLists">
-        
-        <cfset var listInternalUsers = "">
+		
+		<cfset var internalUsersEmails = structNew()>
+		<cfset var externalUsersEmails = structNew()>
+		
+		<!---<cfset var listInternalUsers = "">
 		<cfset var listExternalUsers = "">
 		
 		<cfset var listInternalUsersPhones = "">
-		<cfset var listExternalUsersPhones = "">
+		<cfset var listExternalUsersPhones = "">--->
+		
+		<cfset var internalUsersPhones = structNew()>
+		<cfset var externalUsersPhones = structNew()>
 		
         <cfset var structResponse = structNew()>
 		
-        <cfinvoke component="UserManager" method="getUsersToNotify" returnvariable="usersToNotify">
+        <cfinvoke component="UserManager" method="getUsersToNotify" returnvariable="arrayUsersToNotify">
 			<cfinvokeargument name="request" value="#arguments.request#"/>
 		</cfinvoke>
 		
-		<cfxml variable="xmlUsers">
+		<!---<cfxml variable="xmlUsers">
 			<cfoutput>
 			#usersToNotify#
 			</cfoutput>
@@ -2713,13 +2740,55 @@ step="1">
 				</cfif>
 			</cfif>
 					
-		</cfloop>
-				
-        <cfset structResponse.listInternalUsers = listInternalUsers>
-        <cfset structResponse.listExternalUsers = listExternalUsers>
+		</cfloop>--->
 		
-		<cfset structResponse.listInternalUsersPhones = listInternalUsersPhones>
-		<cfset structResponse.listExternalUsersPhones = listExternalUsersPhones>
+		<cfloop list="#APPLICATION.languages#" index="curLang">
+			
+			<cfset internalUsersEmails[curLang] = "">
+			<cfset externalUsersEmails[curLang] = "">
+			
+			<cfset internalUsersPhones[curLang] = "">
+			<cfset externalUsersPhones[curLang] = "">
+			
+		</cfloop>
+		
+		<cfloop index="curUser" array="#arrayUsersToNotify#">
+							
+			<cfset curr_val = curUser.email>
+			
+			<cfset curr_phone = curUser.mobile_phone>
+			<cfset curr_phone_ccode = curUser.mobile_phone_ccode>
+
+			<cfif curUser.whole_tree_visible IS true>
+				<!---<cfset listInternalUsers = ListAppend(listInternalUsers,curr_val,";")>--->
+				<cfset internalUsersEmails[curUser.language] = ListAppend(internalUsersEmails[curUser.language],curr_val,";")>
+				<cfif len(curr_phone) GT 0>
+					<cfif APPLICATION.identifier EQ "dp">
+						<cfset internalUsersPhones[curUser.language] = ListAppend(internalUsersPhones[curUser.language],curr_phone_ccode&curr_phone,";")>
+					<cfelse><!---vpnet--->
+						<cfset internalUsersPhones[curUser.language]  = ListAppend(internalUsersPhones[curUser.language],curr_phone,";")>
+					</cfif>	
+				</cfif>
+			<cfelse>
+				<!---<cfset listExternalUsers = ListAppend(listExternalUsers,curr_val,";")>--->
+				<cfset externalUsersEmails[curUser.language] = ListAppend(externalUsersEmails[curUser.language],curr_val,";")>
+				<cfif len(curr_phone) GT 0>
+					<cfif APPLICATION.identifier EQ "dp">
+						<cfset externalUsersPhones[curUser.language] = ListAppend(externalUsersPhones[curUser.language],curr_phone_ccode&curr_phone,";")>
+					<cfelse><!---vpnet--->
+						<cfset externalUsersPhones[curUser.language] = ListAppend(externalUsersPhones[curUser.language],curr_phone,";")>
+					</cfif>
+				</cfif>
+			</cfif>	
+			
+		</cfloop>
+		
+				
+        <cfset structResponse.structInternalUsersEmails = internalUsersEmails>
+        <cfset structResponse.structExternalUsersEmails = externalUsersEmails>
+		
+		<cfset structResponse.structInternalUsersPhones = internalUsersPhones>
+		<cfset structResponse.structExternalUsersPhones = externalUsersPhones>
 		
 		<cfreturn structResponse>
 	
