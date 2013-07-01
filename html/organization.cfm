@@ -4,6 +4,7 @@
 <head>
 <!--Developed and copyright by Era7 Information Technologies 2007-2012 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <cfoutput>
 <title>#APPLICATION.title#<cfif isDefined("SESSION.client_name")> - #SESSION.client_name#</cfif></title>
@@ -14,13 +15,13 @@
 	<script type="text/javascript" src="../SpryAssets/includes/SpryData.js"></script>
 	<script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
 	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
-	<cfif APPLICATION.moduleMessenger EQ "enabled">
+	<cfif APPLICATION.moduleMessenger EQ true>
 		<script type="text/javascript" src="../app/scripts/App.js"></script>
 		<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
 	</cfif>
 	
 </cfif>
-<script type="text/javascript" src="Scripts/functions.js"></script>
+<script type="text/javascript" src="Scripts/functions.min.js"></script>
 <link href="styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "dp">
 <link href="styles_dp.css" rel="stylesheet" type="text/css" media="all" />
@@ -100,7 +101,7 @@
 		resizeIframe();
 		loadTree(selectAreaId);
 		
-		<cfif APPLICATION.moduleMessenger EQ "enabled" AND isDefined("SESSION.user_id")>
+		<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
 		Messenger.Private.initGetNewConversations();
 		</cfif>
 		
@@ -172,7 +173,7 @@
 		<a href="all_messages.cfm"><img src="assets/icons/messages.png" alt="Mensajes" title="Todos los mensajes"/></a>
 		<a href="all_events.cfm"><img src="assets/icons/events.png" alt="Eventos" title="Todos los eventos"/></a>
 		<a href="all_tasks.cfm"><img src="assets/icons/tasks.png" alt="Tareas" title="Todas las tareas"/></a>
-			<cfif APPLICATION.moduleWeb EQ "enabled">
+			<cfif APPLICATION.moduleWeb EQ true>
 			<a href="all_entries.cfm"><img src="assets/icons/entries.png" alt="Entradas" title="Todas las entradas"/></a>
 			<a href="all_newss.cfm"><img src="assets/icons/news.png" alt="Noticias" title="Todas las noticias"/></a>
 			<!---<a href="all_links.cfm"><img src="assets/icons/links.png" alt="Links" title="Links"/></a>--->
@@ -195,7 +196,7 @@
 		<a href="incidences.cfm?return_page=#current_page#"><img src="assets/icons/incidence.png" alt="Incidencias" title="Incidencias"/></a>
 		
 		
-		<cfif APPLICATION.moduleMessenger EQ "enabled">
+		<cfif APPLICATION.moduleMessenger EQ true>
 		<a onClick="App.openMessenger('messenger_general.cfm')" target="_blank" style="cursor:pointer"><img src="assets/icons_#APPLICATION.identifier#/messenger_general.png" alt="Messenger" title="Messenter general" style="margin-left:2px;"/></a>
 		<a onClick="App.openMessenger('messenger_private.cfm')" style="cursor:pointer"><img src="assets/icons_#APPLICATION.identifier#/messenger_private.png" alt="Messenger" title="Messenger privado" style="margin-left:1px;"/></a>
 		<a href="saved_conversations.cfm?return_page=#current_page#"><img src="assets/icons/saved_conversations.png" alt="Conversaciones guardadas" title="Conversaciones guardadas" /></a>

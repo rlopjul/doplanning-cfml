@@ -8,6 +8,7 @@
 	
 	20-03-2013 alucena: añadido campo DNI para todos los usuarios
 	23-04-2013 alucena: updateUser modifica el campo language
+	16-05-2013 alucena: outputUser incluye acceso a reunión virtual
 	
 --->
 <cfcomponent output="true">
@@ -121,19 +122,17 @@
 	</cffunction>
 	
 	
-	<cffunction name="getUsers" returntype="xml" output="false" access="public">
+	<cffunction name="getUsers" returntype="struct" output="false" access="public">
 		<cfargument name="search_text" type="string" required="false" default="">
 		<cfargument name="order_by" type="string" required="false" default="">
 		<cfargument name="order_type" type="string" required="false" default="asc">
+		<cfargument name="limit" type="numeric" required="false">
 		
 		<cfset var method = "getUsers">
-		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-		
+				
 		<cftry>
 			
-			<cfsavecontent variable="request_parameters">
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					<user id="" mobile_phone_ccode="" mobile_phone="" email="" image_type="">
 						<family_name><![CDATA[]]></family_name>
@@ -156,11 +155,40 @@
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>--->		
+
+			<cfxml variable="xmlUser">
+				<cfoutput>
+					<user id="" mobile_phone_ccode="" mobile_phone="" email="" image_type="">
+						<family_name><![CDATA[]]></family_name>
+						<name><![CDATA[]]></name>		
+					</user>
+				</cfoutput>
+			</cfxml>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUsers" returnvariable="response">
+				<cfinvokeargument name="xmlUser" value="#xmlUser#"/>
+				<cfif len(arguments.search_text) GT 0>
+					<cfinvokeargument name="search_text" value="#arguments.search_text#"/>
+				</cfif>
+				<cfif len(arguments.order_by) GT 0>
+					<cfinvokeargument name="order_by" value="#arguments.order_by#"/>
+					<cfinvokeargument name="order_type" value="#arguments.order_type#"/>
+				</cfif>
+				<cfif isDefined("arguments.limit")>
+					<cfinvokeargument name="limit" value="#arguments.limit#"/>
+				</cfif>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
 		
-		<cfreturn xmlResponse>
+		<cfreturn response>
 		
 	</cffunction>
 	
@@ -169,44 +197,40 @@
 	
 	<!--- ----------------------------------- getAllAreaUsers ------------------------------------- --->
 	
-	<cffunction name="getAllAreaUsers" returntype="xml" access="public">
+	<cffunction name="getAllAreaUsers" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<!---<cfargument name="order_by" type="string" required="false" default="">
 		<cfargument name="order_type" type="string" required="false" default="asc">--->
 		
 		<cfset var method = "getAllAreaUsers">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<cfset var response = structNew()>
 		
 		<cftry>
-			
-			<cfsavecontent variable="request_parameters">
+
+			<cfxml variable="xmlUser">
 				<cfoutput>
-					<area id="#arguments.area_id#"/>
 					<user id="" email="" image_type="" area_member="">
 						<family_name><![CDATA[]]></family_name>
 						<name><![CDATA[]]></name>		
 					</user>
-					<!---<cfif len(arguments.order_by) GT 0>
-					<order parameter="#arguments.order_by#" order_type="#arguments.order_type#"/>
-					</cfif>--->
 				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			</cfxml>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getAllAreaUsers" returnvariable="response">
+				<cfinvokeargument name="xmlUser" value="#xmlUser#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			</cfinvoke>
 			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>				
+																							
 		</cftry>
 		
-		<cfreturn xmlResponse>
+		<cfreturn response>
 		
 	</cffunction>
 	
@@ -256,9 +280,10 @@
 		<cfset var request_parameters = "">
 		<cfset var xmlResponse = "">
 		
-		<!---<cftry>--->
+		<cftry>
 			
-			<cfset response_page = "iframes/preferences_user_data.cfm">
+			<!---<cfset response_page = "iframes/preferences_user_data.cfm">--->
+			<cfset response_page = "preferences.cfm">
 			
 			<cfif arguments.password NEQ arguments.password_confirmation>
 		
@@ -311,7 +336,7 @@
 			
 			<cfif isDefined("arguments.imagedata") AND len(arguments.imagedata) GT 0>
 			
-				<cfinvoke component="#APPLICATION.componentsPath#/components/UserImageFile" method="uploadUserImage">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="uploadUserImage">
 					<cfinvokeargument name="imagedata" value="#arguments.imagedata#">
 					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
@@ -328,11 +353,11 @@
             
             <cflocation url="#APPLICATION.htmlPath#/#response_page#?msg=#message#&res=1" addtoken="no">
 			
-			<!---<cfcatch>
+			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
 			
-		</cftry>--->
+		</cftry>
 		
 		<cfreturn xmlResponse>
 		
@@ -366,7 +391,7 @@
 					notify_replace_file="#arguments.notify_replace_file#"
 					notify_new_area="#arguments.notify_new_area#"
 					
-					<cfif APPLICATION.moduleWeb EQ "enabled">
+					<cfif APPLICATION.moduleWeb EQ true>
 						<cfif APPLICATION.identifier EQ "vpnet">
 						notify_new_link="#arguments.notify_new_link#"
 						</cfif>
@@ -400,38 +425,47 @@
 		<cfreturn xmlResponse>
 		
 	</cffunction>
-	
-	
-	<!---<cffunction name="getUsersEmails" returntype="string" output="false" access="public">
-		<cfargument name="users_ids" type="string" required="true">
+
+
+	<cffunction name="updateUserLanguage" returntype="struct" output="false" access="public">
+		<cfargument name="user_id" type="string" required="true">
+		<cfargument name="language" type="string" required="true">
 		
-		<cfset var method = "getUsersEmails">
+		<cfset var method = "updateUserLanguage">
 		
-		<cfset var usersEmails = "">
-				
+		<cfset var request_parameters = "">
+		<cfset var response = "">
+		
 		<cftry>
 			
-			<cfquery datasource="#client_dsn#" name="getUsersEmails">
-				SELECT *
-				FROM #SESSION.client_abb#_users
-				WHERE id IN (#arguments.users_ids#)
-				ORDER BY FIELD(id,#arguments.users_ids#);
-			</cfquery>
+			<cfsavecontent variable="request_parameters">
+				<cfoutput>
+					<user id="#arguments.user_id#" 
+						language="#arguments.language#">
+					</user>
+				</cfoutput>
+			</cfsavecontent>
 			
-			<cfloop query="getUsersEmails">
-				<cfset usersEmails = listAppend(usersEmails,getUsersEmails.email,";")>
-			</cfloop>
+			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
+				<cfinvokeargument name="request_component" value="#request_component#">
+				<cfinvokeargument name="request_method" value="updateUser">
+				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			</cfinvoke>
 			
+			<cfset response = {result="true", message=""}>
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
 			
 		</cftry>
 		
-		<cfreturn usersEmails>
+		<cfreturn response>
 		
-	</cffunction>--->
+	</cffunction>
 	
+
+
 	
 	
 	<cffunction name="outputUser" returntype="void" output="true" access="public">
@@ -457,13 +491,31 @@
 			<div class="div_user_page_user">
 				<div class="div_user_page_label"><span lang="es">Email:</span> <a href="mailto:#objectUser.email#" class="div_user_page_text">#objectUser.email#</a></div>
 				<cfif len(objectUser.dni) GT 0>
-				<div class="div_user_page_label"><span lang="es">Número de identificación - DNI:</span> <span class="div_user_page_text">#objectUser.dni#</span></div>
+				<div class="div_user_page_label"><span lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif>:</span> <span class="div_user_page_text">#objectUser.dni#</span></div>
 				</cfif>
 				<div class="div_user_page_label"><span lang="es">Teléfono:</span> <a href="tel:#objectUser.telephone#" class="div_user_page_text"><cfif len(objectUser.telephone) GT 0>#objectUser.telephone_ccode#</cfif> #objectUser.telephone#</a></div>
 				<div class="div_user_page_label"><span lang="es">Teléfono móvil:</span> <a href="tel:#objectUser.mobile_phone#" class="div_user_page_text"><cfif len(objectUser.mobile_phone) GT 0>#objectUser.mobile_phone_ccode#</cfif> #objectUser.mobile_phone#</a></div>
+				<cfif len(objectUser.address) GT 0>
 				<div class="div_user_page_label"><span lang="es">Dirección:</span></div> 
 				<div class="div_user_page_address">#objectUser.address#</div>
+				</cfif>
+				<cfif APPLICATION.moduleWebRTC IS true>
+				<div style="padding-top:8px; clear:both;">
+					<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/user_meeting.png" width="20" alt="Reunión virtual" lang="es"/>--->
+					
+					<div>
+					<a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es" class="btn btn-small btn-info"><i class="icon-facetime-video"></i>&nbsp; <span lang="es">Reunión virtual</span></a>
+					</div>
+					<div class="div_user_page_label"><span lang="es">URL de acceso a reunión virtual con este usuario:</span></div>
+					<textarea class="input-block-level" readonly="readonly" style="height:50px; cursor:text">#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#</textarea>
+													
+				</div>
+				</cfif>
+				
 			</div>
+			
+			
+			
 			</cfoutput>								
 			
 			<cfcatch>
@@ -654,7 +706,7 @@
 										window.close();
 									
 									}else{
-										alert("No se ha seleccionado ningún usuario");
+										alert(window.lang.convert("No se ha seleccionado ningún usuario"));
 									}
 										
 								<cfelse>
@@ -668,18 +720,18 @@
 											usuarioNombre = $("input[type=hidden][name=user_full_name]",this).attr("value");
 																			
 											if(!window.opener.addUsuarioPermiso(usuarioId, usuarioNombre))
-												alert("El usuario "+usuarioNombre+" ya está en la lista");
+												alert(usuarioNombre+window.lang.convert(" ya está en la lista"));
 			
 										});
 										
 									}else{
-										alert("No se ha seleccionado ningún usuario");
+										alert(window.lang.convert("No se ha seleccionado ningún usuario"));
 									}
 									
 								</cfif>
 								
 							}else{
-								alert("Error: no se puede asignar el usuario seleccionado");
+								alert(window.lang.convert("Error: no se puede asignar el usuario seleccionado"));
 							}
 						}); 
 						
@@ -692,9 +744,9 @@
 					<thead>
 						<tr>
 							<th style="width:35px;"></th>
-							<th>Nombre</th>
-							<th>Apellidos</th>
-							<th>Email</th>
+							<th lang="es">Nombre</th>
+							<th lang="es">Apellidos</th>
+							<th lang="es">Email</th>
 						</tr>
 					</thead>
 					
@@ -727,7 +779,7 @@
 				</cfoutput>
 				
 				<div style="height:2px; clear:both;"><!-- --></div>
-				<button type="button" id="submit_select" class="btn btn-primary" style="margin-left:5px;">Asignar usuario seleccionado</button>
+				<button type="button" id="submit_select" class="btn btn-primary" style="margin-left:5px;" lang="es">Asignar usuario seleccionado</button>
 				
 			</cfif>
 								
@@ -774,13 +826,41 @@
 						});*/
 						
 						$("##listTable").tablesorter({ 
+							<cfif arguments.show_area_members IS true>
+							widgets: ['zebra','filter','select'],
+							<cfelse>
 							widgets: ['zebra','select'],
+							</cfif>
 							sortList: [[2,0]] ,
 							headers: { 
 								0: { 
 									sorter: false 
 								}
-							} 
+								<!---<cfif APPLICATION.moduleWebRTC IS true>
+								, 5: { 
+									sorter: false 
+								}
+								</cfif>--->
+							},
+							<cfif arguments.show_area_members IS true>
+							widgetOptions : {
+								filter_childRows : false,
+								filter_columnFilters : true,
+								filter_cssFilter : 'tablesorter-filter',
+								filter_filteredRow   : 'filtered',
+								filter_formatter : null,
+								filter_functions : null,
+								filter_hideFilters : false,
+								filter_ignoreCase : true,
+								filter_liveSearch : true,
+								//filter_reset : 'button.reset',
+								filter_searchDelay : 300,
+								filter_serversideFiltering: false,
+								filter_startsWith : false,
+								filter_useParsedData : false,
+						    },
+						    </cfif>
+
 						});
 						
 						//  Adds "over" class to rows on mouseover
@@ -800,13 +880,16 @@
 				<table id="listTable" class="tablesorter">
 					<thead>
 						<tr>
-							<th style="width:35px;"></th>
+							<th style="width:35px;" class="filter-false"></th>
 							<th lang="es">Nombre</th>
 							<th lang="es">Apellidos</th>
 							<th lang="es">Email</th>
 							<cfif arguments.show_area_members IS true>
-							<th style="width:98px;" lang="es">De este área</th>
+							<th style="width:110px;" lang="es">De este área</th>
 							</cfif>
+							<!---<cfif APPLICATION.moduleWebRTC IS true>
+							<th style="width:40px;" lang="es"></th>
+							</cfif>--->
 						</tr>
 					</thead>
 					
@@ -872,6 +955,9 @@
 							<cfif arguments.show_area_members IS true>
 							<td><span class="text_item" lang="es" <cfif arguments.user_in_charge IS objectUser.id>style="font-weight:bold"</cfif>><cfif objectUser.area_member IS true>Sí<cfelse>No</cfif></span></td>
 							</cfif>
+							<!---<cfif APPLICATION.moduleWebRTC IS true>
+							<td><a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/user_meeting.png" alt="Reunión virtual" lang="es"/></a></td>
+							</cfif>--->
 						</tr>
 					</cfloop>
 					</tbody>
@@ -901,7 +987,7 @@
 		
 		<cftry>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/UserImageFile" method="deleteUserImage">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="deleteUserImage">
 				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>		

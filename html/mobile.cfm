@@ -4,6 +4,7 @@
 <head>
 <!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
@@ -33,7 +34,7 @@
 	<script type="text/javascript" src="../SpryAssets/includes/SpryData.js"></script>
 	<script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
 	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
-	<cfif APPLICATION.moduleMessenger EQ "enabled">
+	<cfif APPLICATION.moduleMessenger EQ true>
 		<script type="text/javascript" src="../app/scripts/App.js"></script>
 		<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
 		<cfif isDefined("SESSION.user_id")>
@@ -50,7 +51,7 @@
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="Scripts/functions.js"></script>
+<script type="text/javascript" src="Scripts/functions.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -133,7 +134,7 @@
 	
 		</cfif>
 		
-		<cfif APPLICATION.moduleMessenger EQ "enabled">
+		<cfif APPLICATION.moduleMessenger EQ true>
 		<li><a onClick="App.openMessenger('messenger_general.cfm')" style="cursor:pointer;"><img src="assets/icons_#APPLICATION.identifier#/messenger_general.png" alt="Messenger" title="Messenter general"/>&nbsp;&nbsp;Messenger general</a></li>
 		
 		<li><a onClick="App.openMessenger('messenger_private.cfm')" style="cursor:pointer;"><img src="assets/icons_#APPLICATION.identifier#/messenger_privado.gif" alt="Messenger" title="Messenger privado"/>&nbsp;&nbsp;Messenger privado</a></li>
@@ -169,7 +170,7 @@
 	
 	<!---<div class="div_row_menu_inicio"><div class="div_img_row_menu_inicio"><a href="notifications.cfm?return_page=#current_page#"><img src="assets/icons_#APPLICATION.identifier#/notifications.gif" alt="Notificaciones" title="Notificaciones"/></a></div><div class="div_text_row_menu_inicio"><a class="a_row_menu_inicio" href="notifications.cfm?return_page=#current_page#">Notificaciones</a></div></div>--->
 	
-	<cfif APPLICATION.moduleMessenger EQ "enabled">
+	<cfif APPLICATION.moduleMessenger EQ true>
 	<div class="div_row_menu_inicio"><div class="div_img_row_menu_inicio"><a onClick="App.openMessenger('messenger_general.cfm')" target="_blank"><img src="assets/icons_#APPLICATION.identifier#/messenger_general.png" alt="Messenger" title="Messenter general"/></a></div><div class="div_text_row_menu_inicio"><a class="a_row_menu_inicio" onClick="App.openMessenger('messenger_general.cfm')" style="cursor:pointer;">Messenger general</a></div></div>
 	
 	<div class="div_row_menu_inicio"><div class="div_img_row_menu_inicio"><a onClick="App.openMessenger('messenger_private.cfm')"><img src="assets/icons_#APPLICATION.identifier#/messenger_privado.gif" alt="Messenger" title="Messenger privado"/></a></div><div class="div_text_row_menu_inicio"><a class="a_row_menu_inicio" onClick="App.openMessenger('messenger_private.cfm')" style="cursor:pointer;">Messenger privado</a></div></div>

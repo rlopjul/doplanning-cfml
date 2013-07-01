@@ -1,9 +1,17 @@
 <cfif isDefined("URL.lan")>
 	<cfif URL.lan EQ "es">
-		<cfset SESSION.user_language = "es">
+		<cfset user_language = "es">
+		<!--- <cfset SESSION.user_language = "es"> --->
 	<cfelse>
-		<cfset SESSION.user_language = "en">
+		<cfset user_language = "en">
+		<!--- <cfset SESSION.user_language = "en"> --->
 	</cfif>
+	
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="updateUserLanguage" returnvariable="updateLanguageResult">
+		<cfinvokeargument name="user_id" value="#SESSION.user_id#"/>
+		<cfinvokeargument name="language" value="#user_language#"/>
+	</cfinvoke>
+
 </cfif>
 <cfif isDefined("URL.rpage")>
 	<cflocation url="#URL.rpage#" addtoken="no">

@@ -40,37 +40,56 @@
 	
 	
 	<!--- ----------------------------------- getMainTree -------------------------------------- --->
-	
-	<cffunction name="getMainTree" output="false" returntype="xml" access="public">
-	
+
+	<cffunction name="getMainTree" output="false" returntype="struct" access="public">
+		
 		<cfset var method = "getMainTree">
-		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-		
+
+		<cfset var response = structNew()>
+					
 		<cftry>
-			
-			<!---<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<xml_format>jstree</xml_format>
-				</cfoutput>
-			</cfsavecontent>--->
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getMainTree" returnvariable="response">
 			</cfinvoke>
 			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
 		
-		<cfreturn xmlResponse>
-		
+		<cfreturn response>
+			
 	</cffunction>
+
+
+	<!--- ----------------------------------- getMainTreeAdmin -------------------------------------- --->
+
+	<cffunction name="getMainTreeAdmin" output="false" returntype="struct" access="public">
+		
+		<cfset var method = "getMainTreeAdmin">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getMainTreeAdmin" returnvariable="response">
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+	
 	
 	
 	<!--- ----------------------------------- getAreaContent -------------------------------------- --->
@@ -286,33 +305,50 @@
 		
 		<cfset var method = "getAreaMembers">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<cfset var response = structNew()>
 		
 		<cftry>
 			
+			<!--- 
 			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<area id="#arguments.area_id#"/>
-					<cfif len(arguments.order_by) GT 0>
-					<order parameter="#arguments.order_by#" order_type="#arguments.order_type#"/>
-					</cfif>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+							<cfoutput>
+								<area id="#arguments.area_id#"/>
+								<cfif len(arguments.order_by) GT 0>
+								<order parameter="#arguments.order_by#" order_type="#arguments.order_type#"/>
+								</cfif>
+							</cfoutput>
+						</cfsavecontent>
+						
+						<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
+							<cfinvokeargument name="request_component" value="#request_component#">
+							<cfinvokeargument name="request_method" value="#method#">
+							<cfinvokeargument name="request_parameters" value="#request_parameters#">
+						</cfinvoke>
+						
+						<cfcatch>
+							<cfinclude template="includes/errorHandler.cfm">
+						</cfcatch>										
+						
+					</cftry>
+					
+					<cfreturn xmlResponse> --->
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaMembers" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="order_by" value="#arguments.order_by#"/>
+				<cfinvokeargument name="order_type" value="#arguments.order_type#"/>
 			</cfinvoke>
-			
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>				
+																							
 		</cftry>
 		
-		<cfreturn xmlResponse>
+		<cfreturn response>
+			
 		
 	</cffunction>
 	

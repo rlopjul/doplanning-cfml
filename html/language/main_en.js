@@ -11,6 +11,7 @@ jquery_lang_js.prototype.lang.en = {
 	'Buscar área en el árbol':'Search area in the tree',
 	'Expandir todo el árbol':'Expand whole tree',
 	'Colapsar todo el árbol':'Collapse whole tree',
+	/*'Administración':'Administration',*/
 	'Administración general':'General administration',
 	'Administración de áreas':'Areas administration', 
 	'Preferencias del usuario':'User preferences',
@@ -20,4 +21,4 @@ jquery_lang_js.prototype.lang.en = {
 	'Versión estándar':'Standard version',
 	'Preferencias':'Preferences',
 	/*END mobile.cfm*/
-}
+};

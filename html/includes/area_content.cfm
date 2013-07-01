@@ -60,7 +60,7 @@
 	
 	<cfxml variable="xmlAreas">
 		<cfoutput>
-		#xmlGetMainTreeResponse.response.result.areas[1]#
+		#xmlGetMainTreeResponse.areasXml#
 		</cfoutput>
 	</cfxml>
 	

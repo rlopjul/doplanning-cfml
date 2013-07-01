@@ -25,6 +25,7 @@ var area_items_content_en = {
 	'Apellidos':'Last name',
 	'Email':'Email',
 	'De este área':'From this area',
+	'Reunión virtual':'Virtual meeting',
 	
 	'No hay messages en esta área.':'There are no messages in this area.',
 	'No hay eventos en esta área.':'There are no events in this area.',
@@ -95,7 +96,7 @@ var area_items_content_en = {
 	'Evento eliminado.':'Event deleted.',
 	'Tarea eliminada.':'Task deleted.',
 	'Interconsulta eliminada.':'Interconsultation deleted.',
-	'Elemento de contenido web eliminada.':'Web content element deleted.',
+	'Elemento de contenido web eliminado.':'Web content element deleted.',
 	'Noticia eliminada.':'News item deleted',
 	
 	'Mensaje incorrecto.':'Incorrect message.',

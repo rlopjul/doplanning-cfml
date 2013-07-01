@@ -1,6 +1,6 @@
 <div class="div_element_menu">
-	<div class="div_icon_menus"><a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#')" style="cursor:pointer"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" title="Descargar archivo" alt="Descargar archivo"/></a></div>
-	<div class="div_text_menus"><a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#')" class="text_menus" style="cursor:pointer"><br />Descargar</a></div>
+	<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" onclick="return downloadFileLinked(this,event)"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" title="Descargar archivo" alt="Descargar archivo"/></a></div>
+	<div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" onclick="return downloadFileLinked(this,event)" class="text_menus"><br />Descargar</a></div>
 </div>
 <cfif objectFile.user_in_charge EQ SESSION.user_id>
 	<cfif page_type IS 1> 
@@ -69,7 +69,7 @@
 	</cfif>
 </div>
 </cfif>
-<cfif APPLICATION.moduleConvertFiles EQ "enabled">
+<cfif APPLICATION.moduleConvertFiles EQ true>
 	<cfif objectFile.file_types_conversion.recordCount GT 0>
 		<div class="div_element_menu" style="width:130px;">
 			<cfif page_type IS 1>

@@ -5,9 +5,9 @@
 </cfif>
 <cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
 <div class="div_element_menu" style="padding-left:5px;">
-<div class="div_icon_menus"><a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#')" style="cursor:pointer;"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" alt="Descargar adjunto"/></a></div><div class="div_text_menus"><a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#')" style="cursor:pointer;"><span class="texto_normal"> Descargar adjunto</span></a></div>
+<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="downloadLinkedFile(this,event)"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" alt="Descargar adjunto"/></a></div><div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="downloadLinkedFile(this,event)"><span class="texto_normal"> Descargar adjunto</span></a></div>
 </div>
-	<cfif APPLICATION.moduleConvertFiles EQ "enabled">
+	<cfif APPLICATION.moduleConvertFiles EQ true>
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 			<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
 			<cfinvokeargument name="item_id" value="#item_id#">
@@ -57,7 +57,7 @@
 			<option value="message">Mensaje</option>
 			</cfif>
 			
-			<cfif APPLICATION.moduleWeb EQ "enabled">
+			<cfif APPLICATION.moduleWeb EQ true>
 				<cfif itemTypeId IS NOT 2>
 				<option value="entry">Contenido web</option>
 				</cfif>
@@ -118,7 +118,7 @@
 </cfif>
 
 
-<cfif APPLICATION.moduleWeb EQ "enabled" AND APPLICATION.moduleTwitter IS true AND area_type EQ "web">
+<cfif APPLICATION.moduleWeb EQ true AND APPLICATION.moduleTwitter IS true AND area_type EQ "web">
 <div class="div_element_menu">
 	<div class="div_icon_menus"><a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#"><img src="#APPLICATION.htmlPath#/assets/icons/twitter_icon.png" title="Publicar #itemTypeNameEs# en Twitter" alt="Publicar #itemTypeNameEs# en Twitter"/></a></div><div class="div_text_menus"><a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#"><span class="texto_normal">Publicar en<br/> Twitter</span></a></div>
 </div>

@@ -307,7 +307,7 @@
 			
 			<cfif isNumeric(objectItem.id)><!---No es para copiar elemento--->
 				
-				<div><label class="control-label" lang="es">Archivo adjunto:</label> <a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#',event)" style="cursor:pointer;">#objectItem.attached_file_name#</a>
+				<div><label class="control-label" lang="es">Archivo adjunto:</label> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_file_name#</a>
 				
 				<button onclick="return deleteAttachedFile()" class="btn btn-mini btn-danger" lang="es">Eliminar archivo adjunto</button>
 				
@@ -337,7 +337,7 @@
 	
 	</cfif>
 	
-	<cfif APPLICATION.moduleWeb IS "enabled" AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6>
+	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6>
 	
 		<cfif len(objectItem.attached_image_name) GT 0 AND objectItem.attached_image_name NEQ "-">
 		
@@ -345,7 +345,7 @@
 			
 				<div class="control-group">
 				
-					<label class="control-label" lang="es">Imagen adjunta:</label> <a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#',event)" style="cursor:pointer;">#objectItem.attached_image_name#</a>
+					<label class="control-label" lang="es">Imagen adjunta:</label> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_image_name#</a>
 					
 					<button onclick="return deleteAttachedImage()" class="btn btn-mini btn-danger" lang="es">Eliminar imagen adjunta</button>
 				
@@ -384,51 +384,61 @@
 </div>
 
 
-<cfif APPLICATION.moduleWeb EQ "enabled" AND ( itemTypeId IS 2 OR itemTypeId IS 4 OR itemTypeId IS 5 )>
-<div class="control-group">
+<cfif itemTypeId IS 2 OR itemTypeId IS 4 OR itemTypeId IS 5>
 
-	<label class="control-label" for="iframe_url" lang="es">#t_iframe_url#:</label> <small lang="es">(Sólo para publicar en web)</small>
-	<div class="controls">
-		<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="#t_iframe_url# válida con http:// requerida" class="input-block-level" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
-	</div>
-	
-</div>
+	<cfif APPLICATION.moduleWeb EQ true>
+		
+	<div class="control-group">
 
-<div class="control-group">
-
-	<label class="control-label" for="iframe_display_type_id" lang="es">#t_iframe_display_type#:</label>
-	
-	<cfinvoke component="#APPLICATION.componentsPath#/IframeDisplayTypeManager" method="getDisplayTypes" returnvariable="iframeDisplayTypeQuery">
-	</cfinvoke>
-	
-	<!---<cfset iframe_display_type_options = "Ancho de página, 560 x 315">
-	<cfset iframe_display_type_values = "1,2">
-	<option value="#iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframe_display_type_id>selected="selected"</cfif>>#listGetAt(iframe_display_type_options,iframe_display_type_id)#</option>--->
-	<div class="controls">
-		<select name="iframe_display_type_id" id="iframe_display_type_id" <cfif read_only IS true>disabled="disabled"</cfif>>
-			<cfloop query="iframeDisplayTypeQuery">
-				<option value="#iframeDisplayTypeQuery.iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframeDisplayTypeQuery.iframe_display_type_id>selected="selected"</cfif>>#iframeDisplayTypeQuery.iframe_display_type_title_es#</option>
-			</cfloop>
-		</select>
+		<label class="control-label" for="iframe_url" lang="es">#t_iframe_url#:</label> <small lang="es">(Sólo para publicar en web)</small>
+		<div class="controls">
+			<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="#t_iframe_url# válida con http:// requerida" class="input-block-level" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+		</div>
+		
 	</div>
 
-</div>
+	<div class="control-group">
+
+		<label class="control-label" for="iframe_display_type_id" lang="es">#t_iframe_display_type#:</label>
+		
+		<cfinvoke component="#APPLICATION.componentsPath#/IframeDisplayTypeManager" method="getDisplayTypes" returnvariable="iframeDisplayTypeQuery">
+		</cfinvoke>
+		
+		<!---<cfset iframe_display_type_options = "Ancho de página, 560 x 315">
+		<cfset iframe_display_type_values = "1,2">
+		<option value="#iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframe_display_type_id>selected="selected"</cfif>>#listGetAt(iframe_display_type_options,iframe_display_type_id)#</option>--->
+		<div class="controls">
+			<select name="iframe_display_type_id" id="iframe_display_type_id" <cfif read_only IS true>disabled="disabled"</cfif>>
+				<cfloop query="iframeDisplayTypeQuery">
+					<option value="#iframeDisplayTypeQuery.iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframeDisplayTypeQuery.iframe_display_type_id>selected="selected"</cfif>>#iframeDisplayTypeQuery.iframe_display_type_title_es#</option>
+				</cfloop>
+			</select>
+		</div>
+
+	</div>
 
 
-<!---<cfset t_iframe_width = "Ancho">
-<cfset t_iframe_height = "Alto">
+	<!---<cfset t_iframe_width = "Ancho">
+	<cfset t_iframe_height = "Alto">
 
-<div class="control-group">
-	<label class="control-label" for="iframe_width">#t_iframe_width#:</label>
-	
-	<cfinput type="text" name="iframe_width" id="iframe_width" value="" required="true" message="#t_iframe_width# válido requerido" validate="integer" passthrough="#passthrough#" style="width:55px;"><!---#objectItem.iframe_width#--->
-	
-	&nbsp;<label class="control-label" for="iframe_height">#t_iframe_height#:</label>
-	
-	<cfinput type="text" name="iframe_height" id="iframe_height" value="" required="true" message="#t_iframe_height# válido requerido" validate="integer" passthrough="#passthrough#" style="width:55px;">
-	
-</div>
---->
+	<div class="control-group">
+		<label class="control-label" for="iframe_width">#t_iframe_width#:</label>
+		
+		<cfinput type="text" name="iframe_width" id="iframe_width" value="" required="true" message="#t_iframe_width# válido requerido" validate="integer" passthrough="#passthrough#" style="width:55px;"><!---#objectItem.iframe_width#--->
+		
+		&nbsp;<label class="control-label" for="iframe_height">#t_iframe_height#:</label>
+		
+		<cfinput type="text" name="iframe_height" id="iframe_height" value="" required="true" message="#t_iframe_height# válido requerido" validate="integer" passthrough="#passthrough#" style="width:55px;">
+		
+	</div>
+	--->
+
+	<cfelse>
+		<!--- Este valor es necesario porque la columna en la que se almacena tiene una referencia con otra tabla --->
+		<input type="hidden" name="iframe_display_type_id" value="#objectItem.iframe_display_type_id#"/>
+
+	</cfif>
+
 
 </cfif>
 
@@ -493,4 +503,5 @@
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
 	<cfinvokeargument name="name" value="description">
+	<cfinvokeargument name="language" value="#SESSION.user_language#"/>
 </cfinvoke>

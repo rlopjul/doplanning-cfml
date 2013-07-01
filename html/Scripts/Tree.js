@@ -1,4 +1,4 @@
-//Variable requerida: appplicationPath
+//Variable requerida: applicationPath (YA NO SE USA)
 
 function showTree(selectable) { /*, areaId*/
 
@@ -10,15 +10,16 @@ function showTree(selectable) { /*, areaId*/
 			"theme" : "dp",
 			"dots" : false,
 			"icons" : true,
-			"url" : applicationPath+"/jquery/jstree/themes/dp/style2.css"
+			/*Deshabilitadas las URLs porque no funcionan desde accesos externos como el del SAS que tienen reescritura de direcciones. Desde páginas normales no funcionan si no son absolutas.*/
+			/*"url" : applicationPath+"/jquery/jstree/themes/dp/style2.min.css"*/
 		},
 		"types" : {
 			"valid_children" : [ "all" ],
 			"types" : {
 				"allowed" : {
-					"icon" : { 
-						"image" : applicationPath+"/html/assets/icons_"+applicationId+"/area_small.png" 
-					},
+					/*"icon" : { 
+						"image" : applicationPath+"/html/assets/icons_"+applicationId+"/area_small.png"
+					},*/
 					"max_children"	: -1,
 					"max_depth"		: -1,
 					"valid_children": "all",
@@ -27,9 +28,9 @@ function showTree(selectable) { /*, areaId*/
 			
 				},
 				"allowed-web" : {
-					"icon" : { 
+					/*"icon" : { 
 						"image" : applicationPath+"/html/assets/icons_"+applicationId+"/area_web_small.png" 
-					},
+					},*/
 					"max_children"	: -1,
 					"max_depth"		: -1,
 					"valid_children": "all",
@@ -38,9 +39,9 @@ function showTree(selectable) { /*, areaId*/
 			
 				},
 				"not-allowed" : {
-					"icon" : { 
+					/*"icon" : { 
 						"image" : applicationPath+"/html/assets/icons_"+applicationId+"/area_small_disabled.png" 
-					},
+					},*/
 					"max_children"	: -1,
 					"max_depth" 	: -1,
 					"valid_children" : "all",
@@ -48,9 +49,9 @@ function showTree(selectable) { /*, areaId*/
 					"select_node" : selectable
 				},
 				"not-allowed-web" : {
-					"icon" : { 
+					/*"icon" : { 
 						"image" : applicationPath+"/html/assets/icons_"+applicationId+"/area_web_small_disabled.png" 
-					},
+					},*/
 					"max_children"	: -1,
 					"max_depth" 	: -1,
 					"valid_children" : "all",
@@ -115,7 +116,8 @@ function treeLoaded(event, data) { //JStree loaded
 		
 	}else if( isNaN(selectAreaId) ) { //No hay area para cargar
 	
-		$("#areaIframe").attr('src', applicationPath+"/html/iframes/area.cfm");
+		//$("#areaIframe").attr('src', applicationPath+"/html/iframes/area.cfm");
+		$("#areaIframe").attr('src', "iframes/area.cfm");
 		
 	}
 

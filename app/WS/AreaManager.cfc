@@ -9,6 +9,7 @@
 	29-09-2012 alucena: reemplazado "true" por true en comparaciones de booleanos
 	15-11-2012 alucena: cambiado getAreaImageId
 	14-01-2012 alucena: quitado description de los archivos en getAreaFiles
+	19-06-2013 alucena: cambios por errores en comprobación de permisos al realizar importación de usuarios
 	
 --->
 <cfcomponent output="false">
@@ -220,7 +221,7 @@
 			
 		<cfinclude template="includes/functionStart.cfm">
 		
-		<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaPath" returnvariable="area_path">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaPath" returnvariable="area_path">
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -238,6 +239,8 @@
 		
 		<cfset var method = "checkAdminAccess">
 		
+		<cfset var user_id = "">
+
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
 		<cfinclude template="includes/functionStart.cfm">
@@ -284,7 +287,7 @@
 		
 		<cfset var method = "checkAreaAccess">
 		
-		<cfset var allUserAreasList = "">
+		<cfset var access_result = "">
 					
 		<cfinclude template="includes/functionStart.cfm">
 		
@@ -381,7 +384,7 @@
 							
 		<cfinclude template="includes/functionStart.cfm">
 		
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -403,8 +406,11 @@
 		
 		<cfset var method = "checkAreaAdminAccess">
 		
-		<cfset var allUserAreasList = "">
+		<cfset var user_id = "">
 		
+		<cfset var allUserAreasList = "">
+		<cfset var access_result = false>
+
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
 		<cfinclude template="includes/functionStart.cfm">
@@ -415,7 +421,7 @@
 			</cfinvoke>
 			
 			<cfinvoke component="AreaManager" method="canTheUserAccess" returnvariable="access_result">
-				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="allUserAreasList" value="#allUserAreasAdminList#">
 			</cfinvoke>
 	
@@ -438,25 +444,15 @@
 		
 		<cfset var method = "checkAreasAccess">
 		
-		<cfset var allUserAreasList = "">
+		<cfset var current_area = "">
+		<cfset var access_result = false>
 		
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
 		<cfinclude template="includes/functionStart.cfm">
 
-		<!---<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="allUserAreasList">
-			<cfinvokeargument name="get_user_id" value="#user_id#">
-		</cfinvoke>--->
-		
-		<cfset access_result = false>
-		
 		<cfloop list="#arguments.areasList#" index="current_area">
 
-			<!---<cfinvoke component="AreaManager" method="canTheUserAccess" returnvariable="current_access_result">
-				<cfinvokeargument name="area_id" value="#current_area#">
-				<cfinvokeargument name="allUserAreasList" value="#allUserAreasList#">
-			</cfinvoke>--->
-			
 			<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="current_access_result">
 				<cfinvokeargument name="area_id" value="#current_area#">
 			</cfinvoke>
@@ -492,7 +488,8 @@
 			
 		<cfset var xmlRequest = "">
 		<cfset var xmlResponseContent = "">
-		
+
+		<cfset var access_result = false>
 		
 		<cftry>
 				
@@ -500,8 +497,6 @@
 			
 			<cfset areasList = xmlRequest.request.parameters.areasIds.xmlText>
 			
-			<cfset access_result = false>
-		
 			<cfloop list="#areasList#" index="current_area">
 	
 				<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="current_access_result">
@@ -542,7 +537,7 @@
 					
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
 				<cfinvokeargument name="onlyId" value="true">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -565,7 +560,7 @@
 					
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
 				<cfinvokeargument name="onlyId" value="false">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -583,6 +578,8 @@
 		
 		<cfset var method = "canUserSeeTheWholeTree">
 		
+		<cfset var user_id = "">
+
 		<cfset var whole_tree_visible = false>
 		
 		<!---<cfinclude template="includes/initVars.cfm">--->	
@@ -629,7 +626,7 @@
 				
 				<cfloop query="getUserAreas">
 					<cfscript>
-						ArrayAppend(areasArray,#area_id#);
+						ArrayAppend(areasArray,#getUserAreas.area_id#);
 					</cfscript>
 				</cfloop>
 				
@@ -724,6 +721,8 @@
 		
 		<cfset var method = "getAllUserAreasList">
 		
+		<cfset var user_id = "">
+
 		<cfset var allAreasList = "">
 		
 		<!---<cfinclude template="includes/initVars.cfm">--->	
@@ -831,6 +830,8 @@
 	<cffunction name="getUserAreasAdminArray" returntype="array" access="public">
 		
 		<cfset var method = "getUserAreasAdminArray">
+
+		<cfset var user_id = "">
 		
 		<cfset var areasAdminArray = ArrayNew(1)>
 		
@@ -877,6 +878,7 @@
 		
 		<cfset var method = "getAllUserAreasAdminList">
 		
+		<cfset var root_area_id = "">
 		<cfset var allAreasAdminList = "">
 		<cfset var areasAdminArray = "">
 		
@@ -934,7 +936,7 @@
 			</cfinvoke>			
 			
 			<!---Se obtiene la lista de las áreas raices visibles (la raiz real no se muestra en el árbol de la aplicación)--->			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getVisibleRootAreas" returnvariable="rootAreasQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getVisibleRootAreas" returnvariable="rootAreasQuery">
 				<cfinvokeargument name="root_area_id" value="#root_area_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1054,7 +1056,7 @@
 					</cfif> 
 				</cfif>
 				
-				<!---<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getRootAreas" returnvariable="rootAreasQuery">
+				<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getRootAreas" returnvariable="rootAreasQuery">
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
@@ -1361,7 +1363,7 @@
 				ORDER BY areas.name ASC;
 			</cfquery>--->
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
 				<cfinvokeargument name="area_id" value="#arguments.parent_id#">				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1476,14 +1478,9 @@
 			</cfinvoke>	
             
 			<!---Alerta al usuario que que es responsable de la misma--->
-			<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="get_user_id" value="#area.user_in_charge#">
-			</cfinvoke>
-			
-			<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
-					<cfinvokeargument name="xml" value="#xmlResponseContent#">
-					
-					<cfinvokeargument name="return_type" value="object">
+			<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
+				<cfinvokeargument name="get_user_id" value="#area.user_in_charge#"/>
+				<cfinvokeargument name="return_type" value="object"/>
 			</cfinvoke>
 		
 			<cfinvoke component="AlertManager" method="assignUserToArea">
@@ -1628,7 +1625,7 @@
 				AND areas.id = <cfqueryparam value="#arguments.get_area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>--->
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getArea" returnvariable="selectAreaQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="selectAreaQuery">
 				<cfinvokeargument name="area_id" value="#arguments.get_area_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1736,7 +1733,7 @@
 			</cfinvoke>
 		
 		
-			<cfif APPLICATION.moduleWeb EQ "enabled">
+			<cfif APPLICATION.moduleWeb EQ true>
 				
 				<!--- -----------------DELETE AREA ENTRIES------------------------- --->
 				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
@@ -1763,7 +1760,7 @@
 			</cfif>
 			
 			
-			<cfif APPLICATION.moduleWeb EQ "enabled" OR APPLICATION.identifier NEQ "vpnet">
+			<cfif APPLICATION.moduleWeb EQ true OR APPLICATION.identifier NEQ "vpnet">
 			
 				<!--- -----------------DELETE AREA EVENTS------------------------- --->
 				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
@@ -2282,7 +2279,7 @@
 			
 			<cfinclude template="includes/checkAreaAccess.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
 				<cfinvokeargument name="area_id" value="#area_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -2591,7 +2588,7 @@
 		
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaImageId" returnvariable="area_image_id">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaImageId" returnvariable="area_image_id">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

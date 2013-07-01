@@ -1,8 +1,8 @@
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.extras-0.1.22.min.js"></script>
-<link href="#APPLICATION.path#/jquery/tablesorter/css/style.css" rel="stylesheet" type="text/css" media="all" />
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
 </cfoutput>
 

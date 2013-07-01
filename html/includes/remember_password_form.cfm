@@ -8,9 +8,17 @@ encrypt_key (remember_password_query.cfm)
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-<cfform action="#CGI.SCRIPT_NAME#" method="post">
+<script type="text/javascript">
+	function getNewPasswordOnSubmit(form){
+		$("##languageInput").val(window.lang.convert("es")); 
+		return true;
+	}
+</script>
+
+<cfform action="#CGI.SCRIPT_NAME#" method="post" onsubmit="return getNewPasswordOnSubmit(this);">
 
 	<input name="client_abb" type="hidden" value="#client_abb#" />
+	<input name="language" type="hidden" id="languageInput" value="es" />
 	
 	<label for="email" lang="es">Email:</label>
 	<cfinput name="email" type="text" id="email" autofocus="true" required="true" validate="email" message="Introduzca un email válido" class="input-block-level" />

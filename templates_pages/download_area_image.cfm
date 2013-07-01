@@ -13,7 +13,7 @@ id
 	
 	
 	<!---getAreaType--->
-	<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaTypeWeb" returnvariable="areaTypeResult">
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaTypeWeb" returnvariable="areaTypeResult">
 		<cfinvokeargument name="area_id" value="#area_id#">
 		
 		<cfinvokeargument name="client_abb" value="#clientAbb#">
@@ -22,7 +22,7 @@ id
 			
 	<cfif areaTypeResult.areaType EQ areaTypeRequired><!---Solo se pueden descargar desde aquí archivos que estén en áreas web--->
 	
-		<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaImageId" returnvariable="image_id">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaImageId" returnvariable="image_id">
 			<cfinvokeargument name="area_id" value="#area_id#">
 			<cfinvokeargument name="client_abb" value="#clientAbb#"> 
 			<cfinvokeargument name="client_dsn" value="#clientDsn#">
@@ -30,7 +30,7 @@ id
 		
 		<cfif image_id IS NOT -1>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getImage" returnvariable="fileQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getImage" returnvariable="fileQuery">
 				<cfinvokeargument name="image_id" value="#image_id#">
 				<cfinvokeargument name="client_abb" value="#clientAbb#">
 				<cfinvokeargument name="client_dsn" value="#clientDsn#">

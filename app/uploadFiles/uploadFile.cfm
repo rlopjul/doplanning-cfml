@@ -74,7 +74,7 @@
 		
 		</cfswitch>
 		
-		<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemFile" method="uploadItemFile" returnvariable="objectFile">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemFile" method="uploadItemFile" returnvariable="objectFile">
 			<cfinvokeargument name="type" value="#type#">
 			<cfinvokeargument name="user_id" value="#user_id#">
 			<cfinvokeargument name="client_abb" value="#client_abb#">

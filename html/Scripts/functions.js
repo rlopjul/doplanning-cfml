@@ -49,6 +49,10 @@ function toggleCheckboxChecked(checkboxId) {
 
 var showLoading = true;
 
+/**
+Esta función no se debe usar porque no funciona en los accesos externos del SAS
+Se mantiene para cuando no se puede incluir un <a> y se tiene que utilizar un <span> (AreaItemTree.cfc)
+*/
 function downloadFile(url,event){
 	if(event.preventDefault)
 		event.preventDefault();
@@ -59,5 +63,25 @@ function downloadFile(url,event){
 	goToUrl(url);
 	
 	return false;
+}
+
+/**
+Esta función se utiliza para acceder a la descarga de archivos a partir de la URL especificada en el href
+Es necesario usar esta función para webs en las que se reescriben las URLs (accesos externos del SAS),
+ya que si la URL no se incluye en el href, no funciona correctamente
+*/
+function downloadFileLinked(anchor,event){
+
+	if(event.preventDefault)
+		event.preventDefault();
+	//event.stopPropagation();
+
+	showLoading = false;
+
+	//goToUrl(event.target.href);
+	goToUrl(anchor.href);
+	
+	return false;
+
 }
 	

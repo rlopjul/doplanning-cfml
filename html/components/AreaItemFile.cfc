@@ -43,7 +43,7 @@
 			</cfoutput>
 		</cfxml>
 		
-		<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemFile" method="uploadItemFile" returnvariable="objectFile">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemFile" method="uploadItemFile" returnvariable="objectFile">
 			<cfinvokeargument name="type" value="#arguments.file_type#">
 			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">

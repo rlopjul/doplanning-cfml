@@ -22,14 +22,26 @@ Datos Personales
 	<cfinvokeargument name="return_type" value="object">
 </cfinvoke>
 
-<!---<cfset ccode = "34">--->
 
 <cfoutput>
 
 <!---
 <script src="#APPLICATION.htmlPath#/Scripts/bootstrap/bootstrap-fileupload.js" type="text/javascript"></script>--->
 
-<form action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser" method="post" enctype="multipart/form-data" style="margin-left:15px;">
+<script type="text/javascript">
+
+	function setLanguageBeforeSend(form) {
+		
+		var selectedLanguage = $("##language").val();
+		
+		window.lang.change(selectedLanguage);
+		
+		return true;	
+	}
+
+</script>
+
+<form action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser" method="post" enctype="multipart/form-data" style="margin-left:15px;" onsubmit="return setLanguageBeforeSend(this)">
 	<input type="hidden" name="id" value="#objectUser.id#" />
 	
 	<div class="row">
@@ -84,7 +96,7 @@ Datos Personales
 			<label for="email" lang="es">Email:</label>
 			<input type="email" name="email" id="email" value="#objectUser.email#" required="true" />
 				
-			<label for="dni" lang="es">Número de identificación - DNI:</label>
+			<label for="dni" lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif>:</label>
 			<input type="text" name="dni" id="dni" value="#objectUser.dni#" />
 		
 			<label class="control-label" for="language" lang="es">Idioma:</label>

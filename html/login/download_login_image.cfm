@@ -6,7 +6,7 @@
 	<cfset clientDsn = APPLICATION.identifier&"_"&clientAbb>
 	
 	<!---Get root area id--->
-	<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
 		<cfinvokeargument name="onlyId" value="true">
 		<cfinvokeargument name="client_abb" value="#clientAbb#">
 		<cfinvokeargument name="client_dsn" value="#clientDsn#">
@@ -15,7 +15,7 @@
 			
 	<cfif area_id GT 0>
 	
-		<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaImageId" returnvariable="image_id">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaImageId" returnvariable="image_id">
 			<cfinvokeargument name="area_id" value="#area_id#">
 			<cfinvokeargument name="client_abb" value="#clientAbb#"> 
 			<cfinvokeargument name="client_dsn" value="#clientDsn#">
@@ -23,7 +23,7 @@
 		
 		<cfif image_id IS NOT -1>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getImage" returnvariable="fileQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getImage" returnvariable="fileQuery">
 				<cfinvokeargument name="image_id" value="#image_id#">
 				<cfinvokeargument name="client_abb" value="#clientAbb#">
 				<cfinvokeargument name="client_dsn" value="#clientDsn#">

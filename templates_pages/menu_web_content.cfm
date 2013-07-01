@@ -1,7 +1,7 @@
 <cfinclude template="#APPLICATION.path#/templates_pages/udf_url.cfm">
 
 <!---getSubAreas--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getSubAreas" returnvariable="menuAreasQuery">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="menuAreasQuery">
 	<cfinvokeargument name="area_id" value="#rootAreaId#">
 	<cfinvokeargument name="remove_order" value="true">
 					
@@ -42,7 +42,7 @@
 				<a href="../web/page.cfm?id=#menuAreasQuery.id#&title=#page_url_title#"><span>#menu_area_name#</span><![if gt IE 6]></a><![endif]><!--[if lte IE 6]><table><tr><td><![endif]-->
 				
 				<!---getSubAreas--->
-				<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getSubAreas" returnvariable="menuSubAreasQuery">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="menuSubAreasQuery">
 					<cfinvokeargument name="area_id" value="#menuAreasQuery.id#">
 					<cfinvokeargument name="remove_order" value="true">
 									
@@ -71,7 +71,7 @@
 							</cfif>
 						
 							<!---getSubSubAreas--->
-							<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getSubAreas" returnvariable="menuSubSubAreasQuery">
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="menuSubSubAreasQuery">
 								<cfinvokeargument name="area_id" value="#menuSubAreasQuery.id#">
 								<cfinvokeargument name="remove_order" value="true">
 												
