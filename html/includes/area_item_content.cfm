@@ -156,8 +156,8 @@
 		</cfif>
 		
 		<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
-			<a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#',event)" class="btn btn-small"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
-			<cfif APPLICATION.moduleConvertFiles EQ "enabled">
+			<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-small"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
+			<cfif APPLICATION.moduleConvertFiles EQ true>
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 					<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
 					<cfinvokeargument name="item_id" value="#item_id#">
@@ -202,7 +202,7 @@
 				<option value="message">Mensaje</option>
 				</cfif>
 				
-				<cfif APPLICATION.moduleWeb EQ "enabled">
+				<cfif APPLICATION.moduleWeb EQ true>
 					<cfif itemTypeId IS NOT 2>
 					<option value="entry">Contenido web</option>
 					</cfif>
@@ -232,7 +232,7 @@
 				<li><a href="message_copy.cfm?#copy_query_string#" lang="es">Mensaje</a></li>
 				<!---</cfif>--->
 				
-				<cfif APPLICATION.moduleWeb EQ "enabled">
+				<cfif APPLICATION.moduleWeb EQ true>
 					<!---<cfif itemTypeId IS NOT 2>--->
 					<li><a href="entry_copy.cfm?#copy_query_string#" lang="es">Elemento de contenido web</a></li>
 					<!---</cfif>--->
@@ -257,7 +257,7 @@
 		</div>
 		
 		
-		<cfif APPLICATION.moduleWeb EQ "enabled" AND APPLICATION.moduleTwitter IS true AND area_type EQ "web">
+		<cfif APPLICATION.moduleWeb EQ true AND APPLICATION.moduleTwitter IS true AND area_type EQ "web">
 		<a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#" class="btn btn-small"><i class="icon-twitter"></i> Publicar en Twitter</a>
 		
 		</cfif>

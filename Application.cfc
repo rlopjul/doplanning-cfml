@@ -9,7 +9,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_9'>
+	<cfset this.name = 'dp_beta_aws_19'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
@@ -24,18 +24,23 @@
 		<cfset APPLICATION.dsn = "doplanning_app">
 		<cfset APPLICATION.dataBaseName = "doplanning_app">
 		
-		<cfset APPLICATION.moduleMessenger = "disabled"><!---enabled/disabled--->
-		<cfset APPLICATION.moduleLdapUsers = "disabled">
-		<cfset APPLICATION.moduleConvertFiles = "disabled">
-		<cfset APPLICATION.moduleWeb = "enabled">
+		<cfset APPLICATION.moduleMessenger = false><!---true/false--->
+		<cfset APPLICATION.moduleLdapUsers = false>
+		<cfset APPLICATION.moduleConvertFiles = false>
+		<cfset APPLICATION.moduleWeb = true>
 		<cfset APPLICATION.moduleTwitter = true>
 		<cfset APPLICATION.moduleConsultations = true>
 		<cfset APPLICATION.includeConsultationsInAlerts = true>
-		<cfset APPLICATION.moduleVirtualMeetings = true>
-		<!---<cfset APPLICATION.moduleLanguages = true>--->
+		<cfset APPLICATION.moduleVirtualMeetings = false>
+		<cfset APPLICATION.moduleWebRTC = true>
+		<cfset APPLICATION.showDniTitle = false>
+		<cfset APPLICATION.twoUrlsToAccess = false>
+		
+		<cfset APPLICATION.openTokApiKey = 28563472>
+		<cfset APPLICATION.openTokApiSecret = "155e13718a36a6077960595721274bd23b1089d7">
 		
 		<cfset APPLICATION.languages = "es,en">
-		
+
 		<cfset APPLICATION.errorReport = "email"><!---email/file--->
 		
 		<cfset APPLICATION.dateFormat = "dd-mm-yyyy">
@@ -49,11 +54,12 @@
 		<!---<cfset APPLICATION.emailServer = "email-smtp.us-east-1.amazonaws.com">
 		<cfset APPLICATION.emailServerUserName = "AKIAJZY3BSAHTCHSPSKA">
 		<cfset APPLICATION.emailServerPassword = "Aq8nlzC331t22OuHRHrXFsyvt+FFR77514nBOfNzVFNO">--->
+		<cfset APPLICATION.emailSendMode = "MandrillAPI"><!---SMTP/MandrillAPI--->
 		<cfset APPLICATION.emailServer = "smtp.mandrillapp.com">
 		<cfset APPLICATION.emailServerUserName = "bioinformatics@era7.com">
 		<cfset APPLICATION.emailServerPassword = "257c5e37-d2c7-4896-815d-b3fc97a958ca">
 		<cfset APPLICATION.emailServerPort = "587"><!---Default 587, SSL 465 (SSL da problemas con algunas versiones de JDK/JRE y Railo)--->
-		<cfset APPLICATION.emailFrom = """#APPLICATION.title#"" <doplanning@era7bioinformatics.com>">
+		<cfset APPLICATION.emailFrom = "doplanning@era7bioinformatics.com">
 		<cfset APPLICATION.emailFalseTo = """Undisclosed-Recipients"" <dpera7@gmail.com>"> 
 		<cfset APPLICATION.emailReply = "support@doplanning.net">
 		<cfset APPLICATION.emailFail = "support@doplanning.net">
@@ -68,10 +74,11 @@
 		
 		<cfset APPLICATION.path = "">
 		<cfset APPLICATION.resourcesPath = APPLICATION.path&"/app">
-		<cfset APPLICATION.componentsPath = APPLICATION.path&"/app/WS">
-		<!---<cfset APPLICATION.webServicesPath = "/dp_pruebas/WS">--->
 		<cfset APPLICATION.uploadFilesPath = APPLICATION.path&"/app/uploadFiles">
-		<!---<cfset APPLICATION.filesPath = "/WEBpool/webroot/files/doplanning">--->
+		<cfset APPLICATION.corePath = "/dp-core">
+		<!---<cfset APPLICATION.componentsPath = APPLICATION.path&"/app/WS">--->
+		<cfset APPLICATION.componentsPath = APPLICATION.corePath&"/components">
+		<cfset APPLICATION.coreComponentsPath = APPLICATION.componentsPath&"/core-components">
 		<cfset APPLICATION.filesPath = "/webroot/files/doplanning">
 		<cfset APPLICATION.defaultTimeout = 840><!---Si se pone a un tiempo menor que el de filesTimeout parece que algunas veces da problemas en la subida de archivos al acceder a otros métodos--->
 		<cfset APPLICATION.filesTimeout = 840><!---14 minutes--->
@@ -79,19 +86,17 @@
 		<cfset APPLICATION.htmlPath = APPLICATION.path&"/html">
 		<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
 		
-		<!---<cfinclude template="app/includes/language_definition.cfm">
-		<cfset APPLICATION.langText = langText>--->
-		
 		<!---<cfset APPLICATION.jqueryJSPath = APPLICATION.path&"/jquery/js/jquery-1.7.2.min.js">
 		<cfset APPLICATION.jqueryUIJSPath = APPLICATION.path&"/jquery/jquery-ui/jquery-ui-1.8.18.custom.min.js">--->
-		<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
-		<cfset APPLICATION.jqueryUIJSPath = "//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js">
-		<cfset APPLICATION.jqueryUICSSPath = APPLICATION.path&"/jquery/jquery-ui/css/jquery-ui-bootstrap/jquery-ui-1.8.16.custom.css">
-		<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js">
+		<!---<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+		<cfset APPLICATION.jqueryUIJSPath = "//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js">--->
+		<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
+		<cfset APPLICATION.jqueryUIJSPath = "//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js">
+		<cfset APPLICATION.jqueryUICSSPath = APPLICATION.path&"/jquery/jquery-ui/css/jquery-ui-bootstrap/jquery-ui-1.10.0.custom.css">
+		<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js">
 		
-		<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap.no-icons.min.css">
-		<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">
-		<!---<cfset APPLICATION.appDefaultCSSPath = APPLICATION.path&"/html/styles.min.css">--->		
+		<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css">
+		<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css">
 		
 		<cfset APPLICATION.mainUrl = "http://software.doplanning.net">
 		<cfset APPLICATION.alternateUrl = "">
@@ -107,7 +112,7 @@
 		<cfset APPLICATION.defaultLanguage = "es">
 		<!---Al cambiar la aplicacion de sitio tambien hay que modificar los extends de los Application--->
 		
-		<cfif APPLICATION.moduleMessenger EQ "enabled">
+		<cfif APPLICATION.moduleMessenger EQ true>
 			
 			<cfset APPLICATION.messengerUserExpireTime = 60><!---In seconds--->
 			
@@ -119,7 +124,7 @@
 			resolveURL="yes" file="checkIfUsersAreConnectedResult.html">
 		</cfif>
 		
-		<cfif APPLICATION.moduleLdapUsers EQ "enabled">
+		<cfif APPLICATION.moduleLdapUsers EQ true>
 			
 			<cfset APPLICATION.ldapServer = "10.72.32.3">
 			<cfset APPLICATION.ldapServerPort = "389">
@@ -139,7 +144,7 @@
 			<cfset APPLICATION.twitterAccessTokenSecret = "ocWlHYr7K0J3NSIELSoHSih5Xk9V6swOqk442XbL3g">
 		
 		</cfif>
-		<!---<cfif APPLICATION.moduleWeb EQ "enabled">
+		<!---<cfif APPLICATION.moduleWeb EQ true>
 			<cfset var paths = [expandPath("./app/WS/components/twitter4j-core-2.2.6-SNAPSHOT.jar")]>
 			<cfset APPLICATION.javaloader = createObject("component", "app.WS.components.javaloader.JavaLoader").init(paths)>
 			<cfset APPLICATION.Twitter = APPLICATION.javaloader.create("twitter4j.Twitter")>		

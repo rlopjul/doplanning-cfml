@@ -24,12 +24,12 @@
 		
 		<cftry>
 			
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getMainTree" returnvariable="xmlGetMainTreeResponse">
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getMainTree" returnvariable="getMainTreeResponse">
 			</cfinvoke>
 
 			<cfxml variable="xmlAreas">
 				<cfoutput>
-				#xmlGetMainTreeResponse.response.result.areas[1]#
+				#getMainTreeResponse.areasXml#
 				</cfoutput>
 			</cfxml>
 			
@@ -51,6 +51,55 @@
 				<!---User without areas--->
 				<!---<cfthrow errorcode="403">--->
 				<ul><li rel="not-allowed"><a class="jstree-node" style="font-weight:bold" onClick="event.stopPropagation()">No tiene asignada ningún área de la organización para poder acceder. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</a></li></ul>
+			</cfif>
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>
+	</cffunction>
+
+
+	<!---outputMainTree--->
+	<cffunction name="outputMainTreeAdmin" returntype="void" output="true" access="public">
+		<cfargument name="with_input_type" type="string" required="no" default="">
+		<cfargument name="disable_input_web" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
+		<cfargument name="disable_input_area" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
+		
+		<cfset var method = "outputMainTreeAdmin">
+		
+		<cfset var curArea = "">
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getMainTreeAdmin" returnvariable="getMainTreeResponse">
+			</cfinvoke>
+
+			<cfxml variable="xmlAreas">
+				<cfoutput>
+				#getMainTreeResponse.areasXml#
+				</cfoutput>
+			</cfxml>
+			
+			<cfif isDefined("xmlAreas.areas.area")>
+				<ul>
+					<cfloop index="curArea" array="#xmlAreas.areas.area#">
+					
+						<cfinvoke component="AreaTree" method="outputArea">
+							<cfinvokeargument name="areaXml" value="#curArea#">
+							<cfinvokeargument name="root_node" value="true">
+							<cfinvokeargument name="with_input_type" value="#arguments.with_input_type#">
+							<cfinvokeargument name="disable_input_web" value="#arguments.disable_input_web#">
+							<cfinvokeargument name="disable_input_area" value="#arguments.disable_input_area#">
+						</cfinvoke>
+						
+					</cfloop>
+				</ul>
+			<cfelse>
+				<!---User without areas to admin--->
+				<!---<cfthrow errorcode="403">--->
+				<ul><li rel="not-allowed"><a class="jstree-node" style="font-weight:bold" onClick="event.stopPropagation()">No tiene asignada ningún área de la organización para poder administrar. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</a></li></ul>
 			</cfif>
 			
 			<cfcatch>
@@ -131,4 +180,5 @@
 	</cffunction>
 	
 	
+
 </cfcomponent>

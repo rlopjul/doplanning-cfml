@@ -19,7 +19,7 @@
 		<cfset subAreasQuery = menuSubAreasQueries[getArea.parent_id]>
 	<cfelse><!---Subsubapartados--->
 		
-		<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getArea" returnvariable="selectParentAreaQuery">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="selectParentAreaQuery">
 			<cfinvokeargument name="area_id" value="#getArea.parent_id#">
 			<cfinvokeargument name="with_user" value="false">
 			<cfinvokeargument name="client_abb" value="#clientAbb#">

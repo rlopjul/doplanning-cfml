@@ -48,8 +48,9 @@ TOTAL: #getClients.recordCount#
 <table class="clients">
 	<tr>
 		<td><b>Cliente</b></td>
-		<td>DB Migrada</td>
-		<td>DB Final</td>
+		<!--- <td>DB Migrada</td>
+				<td>DB Final</td> --->
+		<td>DB 2.1</td>
 		<td>abb</td>
 		<td>Usuarios</td>
 		<td>Mensajes</td>
@@ -71,9 +72,6 @@ TOTAL: #getClients.recordCount#
 		<cfset cur_client_abb = getClients.abbreviation>
 		<cfset cur_sms_used = getClients.number_of_sms_used>
 		<cfset client_dsn = APPLICATION.identifier&"_"&getClients.abbreviation>
-		<cfoutput>
-			<td><a href="http://doplanning.net/#getClients.id#" target="_blank"><b>#getClients.name#</b></a></td>
-		</cfoutput>
 
 			<!---Esta consulta anterior no se puede ejecutar (da error) en versiones antiguas de MySQL--->
 			<cfquery datasource="#client_dsn#" name="getClient">
@@ -117,6 +115,7 @@ TOTAL: #getClients.recordCount#
 				FROM #cur_client_abb#_contacts;
 			</cfquery>
 			
+			<!--- 
 			<cfquery datasource="#client_dsn#" name="isNewDb">
 				SHOW COLUMNS FROM #cur_client_abb#_users FROM dp_#cur_client_abb# WHERE Field = 'image_type';
 			</cfquery>
@@ -125,11 +124,20 @@ TOTAL: #getClients.recordCount#
 				<cfquery datasource="#client_dsn#" name="isFinalVersion">
 					SHOW COLUMNS FROM #cur_client_abb#_entries FROM dp_#cur_client_abb# WHERE Field = 'iframe_display_type_id';
 				</cfquery>
-			</cfif>
+			</cfif> 
+			--->
 			
+			<cfquery datasource="#client_dsn#" name="isDbDp21">
+				SHOW TABLES LIKE '#cur_client_abb#_meetings_users_sessions';
+			</cfquery>
+
 		<cfoutput>
-			<td><cfif isNewDb.recordCount GT 0>Sí<cfelse><strong>No</strong></cfif></td>
-			<td><cfif isNewDb.recordCount GT 0 AND isFinalVersion.recordCount GT 0>Sí<cfelse><strong>No</strong></cfif></td>
+			<td><a href="http://doplanning.net/#getClients.id#" target="_blank"><b>#getClients.name#</b></a></td>
+			<!---<td><cfif isNewDb.recordCount GT 0>Sí<cfelse><strong>No</strong></cfif></td>
+			<td><cfif isNewDb.recordCount GT 0 AND isFinalVersion.recordCount GT 0>Sí<cfelse><strong>No</strong></cfif></td>--->
+			<td><cfif isDbDp21.recordCount GT 0>Sí
+			<cfelse><strong>No</strong>
+			</cfif></td>
 			<td>#getClients.abbreviation#</td>	
 			<td>#getUsersCount.users#</td>	
 			<td>#getMessagesCount.messages#</td>

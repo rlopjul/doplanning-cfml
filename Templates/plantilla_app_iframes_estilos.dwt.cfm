@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<!---language--->
-<!---<cfset page_language = SESSION.user_language>--->
-
 <html lang="es">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- TemplateBeginEditable name="doctitle" -->
 <title></title>
 <!-- TemplateEndEditable -->
@@ -25,9 +23,8 @@
 
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 
-
-<script type="text/javascript" src="../html/Scripts/functions.js"></script>
-<script type="text/javascript" src="../html/Scripts/iframesFunctions.js"></script>
+<script type="text/javascript" src="../html/Scripts/functions.min.js"></script>
+<script type="text/javascript" src="../html/Scripts/iframesFunctions.min.js"></script>
 
 <script type="text/javascript">
 	//Language

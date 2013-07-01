@@ -5,6 +5,7 @@
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- InstanceBeginEditable name="doctitle" -->
 <title></title>
 <!-- InstanceEndEditable -->
@@ -25,9 +26,8 @@
 
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 
-
-<script type="text/javascript" src="../Scripts/functions.js"></script>
-<script type="text/javascript" src="../Scripts/iframesFunctions.js"></script>
+<script type="text/javascript" src="../Scripts/functions.min.js"></script>
+<script type="text/javascript" src="../Scripts/iframesFunctions.min.js"></script>
 
 <script type="text/javascript">
 	//Language

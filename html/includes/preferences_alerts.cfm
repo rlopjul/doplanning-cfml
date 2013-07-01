@@ -23,7 +23,7 @@ Preferencias de notificaciones
 <cfset notify_replace_file = xmlPreferences.preferences.xmlAttributes.notify_replace_file>
 <cfset notify_new_area = xmlPreferences.preferences.xmlAttributes.notify_new_area>
 
-<cfif APPLICATION.moduleWeb EQ "enabled">
+<cfif APPLICATION.moduleWeb EQ true>
 	<cfif APPLICATION.identifier EQ "vpnet">
 		<cfset notify_new_link = xmlPreferences.preferences.xmlAttributes.notify_new_link>
 	</cfif>
@@ -52,7 +52,7 @@ Preferencias de notificaciones
 	</label>
 	</div>
 
-<cfif APPLICATION.moduleWeb EQ "enabled"><!---Web--->
+<cfif APPLICATION.moduleWeb EQ true><!---Web--->
 
 <cfif APPLICATION.identifier EQ "vpnet">
 	

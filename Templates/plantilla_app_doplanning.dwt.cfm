@@ -4,6 +4,7 @@
 <head>
 <!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
@@ -33,7 +34,7 @@
 	<script type="text/javascript" src="../SpryAssets/includes/SpryData.js"></script>
 	<script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
 	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
-	<cfif APPLICATION.moduleMessenger EQ "enabled">
+	<cfif APPLICATION.moduleMessenger EQ true>
 		<script type="text/javascript" src="../app/scripts/App.js"></script>
 		<script type="text/javascript" src="../html/Scripts/MessengerControl.js"></script>
 		<cfif isDefined("SESSION.user_id")>
@@ -50,7 +51,7 @@
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="../html/Scripts/functions.js"></script>
+<script type="text/javascript" src="../html/Scripts/functions.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -94,11 +95,11 @@
 @@(" ")@@
 <cfoutput>
 <cfif APPLICATION.identifier EQ "dp">
-<div style="float:left; padding-top:2px;"><a href="index.cfm"><img src="../html/assets/logo_app.gif" alt="Inicio" title="Inicio"/></a></div>
+<div style="float:left; padding-top:2px;"><a href="../html/index.cfm"><img src="../html/assets/logo_app.gif" alt="Inicio" title="Inicio"/></a></div>
 </cfif>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
-		<a href="preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+		<a href="../html/preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="../html/logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 	</div>
 </div>
 </cfoutput>

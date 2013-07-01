@@ -1,4 +1,27 @@
 #################
+## General
+#################
+*.zip
+app/historial/
+assets/
+templates_pages/
+Scripts/
+asnc/
+vpnet/
+web4bio7/
+software7/
+web/
+intranet/
+web_DP/
+prueba/
+pruebas/
+_notes/
+Application_POZOBLANCO.cfc
+Application_POZOBLANCO_ANTERIOR.cfc
+index_POZOBLANCO.cfm
+
+
+#################
 ## Eclipse
 #################
 

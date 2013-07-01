@@ -82,7 +82,7 @@
 		<cfinclude template="#APPLICATION.path#/templates_pages/udfs.cfm">
 		
 		<!---Obtiene todas las áreas de la intranet--->
-		<!---<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="geSubAreasIds" returnvariable="areas_list">
+		<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="geSubAreasIds" returnvariable="areas_list">
 			<cfinvokeargument name="area_id" value="#rootAreaId#">
 			
 			<cfinvokeargument name="client_abb" value="#clientAbb#">
@@ -99,7 +99,7 @@
 			<cfset documentsAreaId = 470>
 			
 			<!---Obtiene todas las áreas de documentos--->
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="geSubAreasIds" returnvariable="documentos_areas_list">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="geSubAreasIds" returnvariable="documentos_areas_list">
 				<cfinvokeargument name="area_id" value="#documentsAreaId#">
 				
 				<cfinvokeargument name="client_abb" value="#clientAbb#">
@@ -108,7 +108,7 @@
 			
 			<cfset documentos_areas_list = listAppend(documentos_areas_list, documentsAreaId)>
 						
-			<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getAreaFiles" returnvariable="filesQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="filesQuery">
 				<!---<cfinvokeargument name="area_id" value="#documentsAreaId#">--->
 				<cfinvokeargument name="areas_ids" value="#documentos_areas_list#">
 				<cfinvokeargument name="limit" value="2">
@@ -231,7 +231,7 @@
 		
 		<!---Noticias--->
 		<cfset newsAreaId = 465>
-		<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaNewsResult">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaNewsResult">
 			<cfinvokeargument name="area_id" value="#newsAreaId#">
 			<cfinvokeargument name="itemTypeId" value="4">
 			<cfinvokeargument name="format_content" value="all">
@@ -320,7 +320,7 @@ Integer a enim at mauris placerat iaculis.</p></td>
 			
 			<!---Eventos--->
 			<cfset eventsAreaId = 466>
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaEventsResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaEventsResult">
 				<cfinvokeargument name="area_id" value="#eventsAreaId#">
 				<cfinvokeargument name="itemTypeId" value="5">
 				<cfinvokeargument name="format_content" value="all">
@@ -361,7 +361,7 @@ para 2012”</a></p><br />--->
 			<cfset formacionAreaId = 471>
 			
 			<!---Obtiene todas las áreas de formación--->
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="geSubAreasIds" returnvariable="formacion_areas_list">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="geSubAreasIds" returnvariable="formacion_areas_list">
 				<cfinvokeargument name="area_id" value="#formacionAreaId#">
 				
 				<cfinvokeargument name="client_abb" value="#clientAbb#">
@@ -370,7 +370,7 @@ para 2012”</a></p><br />--->
 			
 			<cfset formacion_areas_list = listAppend(formacion_areas_list, formacionAreaId)>
 						
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaFormacionResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaFormacionResult">
 				<!---<cfinvokeargument name="area_id" value="#formacionAreaId#">--->
 				<cfinvokeargument name="areas_ids" value="#formacion_areas_list#">
 				<cfinvokeargument name="itemTypeId" value="2">

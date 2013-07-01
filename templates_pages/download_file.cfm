@@ -19,7 +19,7 @@
 	</cfif>
 	
 	<!---File--->
-	<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getFile" returnvariable="fileQuery">
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
 		<cfinvokeargument name="file_id" value="#file_id#">
 		<cfif isDefined("area_id")>
 			<cfinvokeargument name="area_id" value="#area_id#">
@@ -32,7 +32,7 @@
 	
 		<cfif NOT isDefined("area_id") AND isDefined("item_id")>
 			<!---getAreaItem--->
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getItem" returnvariable="getItemQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="getItemQuery">
 				<cfinvokeargument name="item_id" value="#item_id#">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				
@@ -50,7 +50,7 @@
 		<cfif isDefined("area_id")>
 		
 			<!---getAreaType--->
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaTypeWeb" returnvariable="areaTypeResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaTypeWeb" returnvariable="areaTypeResult">
 				<cfinvokeargument name="area_id" value="#area_id#">
 				
 				<cfinvokeargument name="client_abb" value="#clientAbb#">

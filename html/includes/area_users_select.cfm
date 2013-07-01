@@ -1,7 +1,7 @@
 <cfoutput>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.extras-0.1.22.min.js"></script>
-<link href="#APPLICATION.path#/jquery/tablesorter/css/style.css" rel="stylesheet" type="text/css" media="all" />
+<script src="#APPLICATION.htmlPath#/language/area_users_select_en.js" charset="utf-8" type="text/javascript"></script>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 </cfoutput>
 
 
@@ -31,7 +31,7 @@
 	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
 	
 	<div class="div_head_subtitle">
-	Selección de usuario
+	<span lang="es">Selección de usuario</span>
 	</div>
 	
 	<div class="div_users">
@@ -50,4 +50,4 @@
 	</div>
 </form>
 <br/>
-<small style="margin-left:5px;">En esta lista solo se incluyen los miembros del área actual.</small>
+<small style="margin-left:5px;" lang="es">En esta lista solo se incluyen los usuarios con acceso al área actual.</small>

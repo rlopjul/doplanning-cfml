@@ -1,10 +1,14 @@
 var user_content_en = {
 	'Usuario':'User',
 	'Email:':'Email:',
-	'Número de identificación - DNI:':'Identification number - ID card:',
+	'Número de identificación:':'Identification number:',
+	'DNI:':'ID card:',
 	'Teléfono:':'Phone:',
 	'Teléfono móvil:':'Mobile phone:',
 	'Dirección:':'Address:',
+	
+	'Reunión virtual':'Virtual meeting',
+	'URL de acceso a reunión virtual con este usuario:':'URL to virtual meeting with this person:',
 	
 	/*preferences_user_data.cfm*/
 	'Nombre:':'Name:',

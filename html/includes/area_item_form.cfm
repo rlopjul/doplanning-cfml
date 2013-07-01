@@ -125,7 +125,7 @@ function onSubmitForm()
 	
 	<cfset objectItem.display_type_id = "">
 	<cfset objectItem.iframe_url = "">
-	<cfset objectItem.iframe_display_type_id = "">
+	<cfset objectItem.iframe_display_type_id = 1>
 	
 	<cfif itemTypeId IS 3>
 		<cfset objectItem.link = "http://">

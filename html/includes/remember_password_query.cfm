@@ -9,6 +9,7 @@
 		<cfinvoke component="#APPLICATION.htmlPath#/login/Login" method="generateNewPassword" returnvariable="loginUserResult">
 			<cfinvokeargument name="email" value="#FORM.email#">
 			<cfinvokeargument name="client_abb" value="#FORM.client_abb#">
+			<cfinvokeargument name="language" value="#FORM.language#"/>
 		</cfinvoke>
 		<cfset res = loginUserResult.result>
 		

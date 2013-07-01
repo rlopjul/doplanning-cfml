@@ -34,7 +34,6 @@
 	
 	
 	<cfset status = "error">	
-	<!---<cfinclude template="generateResponse.cfm">--->
 	
 	<cfif isDefined("error_code")>
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Error" method="showError">
@@ -43,41 +42,44 @@
 	</cfif>	
 	
 	<cfcatch>
-	
-		<!---<cfmail subject="Error en Doplanning" server="#APPLICATION.emailServer#" username="#APPLICATION.emailServerUserName#" password="#APPLICATION.emailServerPassword#" from="#APPLICATION.emailFrom#" replyto="#APPLICATION.emailReply#" failto="#APPLICATION.emailFail#" to="#APPLICATION.emailErrors#" type="html">
-		<html><body>
-				<p>Se ha producido un error en Doplanning.<br />
+		
+		<cftry>
+		
+			<cfsavecontent variable="mail_content">
 				<cfoutput>
-				Mensaje: #cfcatch.Message#<br />
-				Componente: #component#<br />
-				Método: #method#<br />
+				<html><body>
+					Se ha producido un error en Doplanning.<br />
+					Mensaje: #cfcatch.Message#<br />
+					Componente: #component#<br />
+					Método: #method#<br />
+					<cfdump var="#cfcatch#">
+					<br />
+				</body></html>
 				</cfoutput>
-				<cfdump var=#cfcatch#>
-				<br />
-		</body></html>
-		</cfmail>--->
-		
-		<cfsavecontent variable="mail_content">
-		<cfoutput>
-		<html><body>
-			<p>Se ha producido un error en Doplanning.<br />
-			Mensaje: #cfcatch.Message#<br />
-			Componente: #component#<br />
-			Método: #method#<br />
-			<cfdump var=#cfcatch#>
-			<br />
-		</body></html>
-		</cfoutput>
-		</cfsavecontent>
-		
-		<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
-			<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-			<cfinvokeargument name="to" value="#APPLICATION.emailErrors#">
-			<cfinvokeargument name="bcc" value="">
-			<cfinvokeargument name="subject" value="Error en #APPLICATION.title#">
-			<cfinvokeargument name="content" value="#mail_content#">
-			<cfinvokeargument name="foot_content" value="">
-		</cfinvoke>
+			</cfsavecontent>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+				<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
+				<cfinvokeargument name="to" value="#APPLICATION.emailErrors#">
+				<cfinvokeargument name="bcc" value="">
+				<cfinvokeargument name="subject" value="Error en #APPLICATION.title#">
+				<cfinvokeargument name="content" value="#mail_content#">
+				<cfinvokeargument name="foot_content" value="">
+			</cfinvoke>
+			
+			<cffinally>
+				
+				<cfset status = "error">	
+	
+				<cfif isDefined("error_code")>
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Error" method="showError">
+						<cfinvokeargument name="error_code" value="#error_code#">
+					</cfinvoke>
+				</cfif>	
+			
+			</cffinally>
+			
+		</cftry>
 		
 	</cfcatch>
 	

@@ -1,7 +1,7 @@
 <cfsetting enablecfoutputonly="yes">
 
 <!---Obtiene todas las áreas de la intranet--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="geSubAreasIds" returnvariable="areas_ids">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="geSubAreasIds" returnvariable="areas_ids">
 	<cfinvokeargument name="area_id" value="#rootAreaId#">
 	
 	<cfinvokeargument name="client_abb" value="#clientAbb#">
@@ -9,7 +9,7 @@
 </cfinvoke>
 
 <!---AreaItems--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getAreaFiles" returnvariable="items">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="items">
 	<cfinvokeargument name="areas_ids" value="#areas_ids#">
 
 	<cfinvokeargument name="client_abb" value="#clientAbb#">

@@ -11,7 +11,7 @@
 <cfoutput>
 
 <!---Eventos--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaEventsResult">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaEventsResult">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="itemTypeId" value="5">
 	<cfinvokeargument name="format_content" value="all">

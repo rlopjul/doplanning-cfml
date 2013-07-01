@@ -13,17 +13,6 @@
 	<cfset request_component = "AreaItemManager">
 	
 	
-	<!---<cfscript>
-	
-		function insertBR(str) 
-		{
-		
-			str = replace(str,chr(13),"<br />","ALL");
-			return str;	
-		}
-	
-	</cfscript>--->	
-	
 	<cffunction name="selectItem" returntype="xml" access="public">
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -33,7 +22,7 @@
 		<cfset var request_parameters = "">
 		<cfset var xmlResponse = "">
 		
-		<cftry>
+		<!--- <cftry> --->
 			
 			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 			
@@ -50,11 +39,13 @@
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
 			</cfinvoke>
 			
+			<!--- 
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
+							<cfinclude template="includes/errorHandler.cfm">
+						</cfcatch>										
+						
+					</cftry> --->
 			
-		</cftry>
 		
 		<cfreturn xmlResponse>
 		
@@ -1403,7 +1394,7 @@
 	
 	<!--- ----------------------- GET ALL AREAS ITEMS -------------------------------- --->
 	
-	<cffunction name="getAllAreasItems" returntype="string" access="public">
+	<cffunction name="getAllAreasItems" returntype="struct" access="public">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="search_text" type="string" required="no">
 		<cfargument name="user_in_charge" type="numeric" required="no">
@@ -1414,13 +1405,13 @@
 				
 		<cfset var method = "getAllAreasItems">
 		
-		<cfset var request_parameters = "">
+		<cfset var response = structNew()>
 		
 		<cftry>
 			
 			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAllAreasItems" returnvariable="xmlResponseContent">
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAllAreasItems" returnvariable="response">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfif isDefined("arguments.search_text")>
 				<cfinvokeargument name="search_text" value="#arguments.search_text#">
@@ -1442,14 +1433,16 @@
 				</cfif>
 				<cfinvokeargument name="with_area" value="true">
 			</cfinvoke>	
-			
-			<cfreturn xmlResponseContent>
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
             
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 	
@@ -1465,25 +1458,25 @@
 				
 		<cfset var method = "getAllAreaItems">
 		
-		<cfset var request_parameters = "">
-		
 		<cftry>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAllAreaItems" returnvariable="getAllAreaItemsResult">
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAllAreaItems" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="area_type" value="#arguments.area_type#">
 				<cfif isDefined("arguments.limit")>
 				<cfinvokeargument name="limit" value="#arguments.limit#">
 				</cfif>
 			</cfinvoke>	
-			
-			<cfreturn getAllAreaItemsResult>
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
             
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 	
@@ -1570,12 +1563,10 @@
 					
 							
 					<cfif isNumeric(objectItem.attached_file_id)>
-					<!---<div class="div_message_page_label">Archivo adjunto: </div>
-					<div class="div_message_page_file"><a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#',event)" style="cursor:pointer">#objectItem.attached_file_name#</a></div>--->
-					<div class="div_message_page_label"><span lang="es">Archivo:</span> <a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#',event)" style="cursor:pointer">#objectItem.attached_file_name#</a></div>
+					<div class="div_message_page_label"><span lang="es">Archivo:</span> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_file_name#</a></div>
 					</cfif>
 					<cfif isNumeric(objectItem.attached_image_id)>
-					<div class="div_message_page_label"><span lang="es">Imagen:</span> <a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#',event)" style="cursor:pointer">#objectItem.attached_image_name#</a></div>
+					<div class="div_message_page_label"><span lang="es">Imagen:</span> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_image_name#</a></div>
 					</cfif>
 					
 					
@@ -1647,7 +1638,11 @@
 						});
 						
 						$("##listTable").tablesorter({ 
+							<cfif arguments.full_content IS false>
+							widgets: ['zebra','filter','select'],
+							<cfelse>
 							widgets: ['zebra','select'],
+							</cfif>
 							
 							<cfif itemTypeId IS 6><!---Tasks--->
 								<cfif arguments.full_content IS false>
@@ -1686,7 +1681,25 @@
 									}
 									</cfif>
 								</cfif>
-							} 
+							},
+							<cfif arguments.full_content IS false>
+							widgetOptions : {
+								filter_childRows : false,
+								filter_columnFilters : true,
+								filter_cssFilter : 'tablesorter-filter',
+								filter_filteredRow   : 'filtered',
+								filter_formatter : null,
+								filter_functions : null,
+								filter_hideFilters : false,
+								filter_ignoreCase : true,
+								filter_liveSearch : true,
+								//filter_reset : 'button.reset',
+								filter_searchDelay : 300,
+								filter_serversideFiltering: false,
+								filter_startsWith : false,
+								filter_useParsedData : false,
+						    }, 
+						   </cfif>
 						});
 						
 						//  Adds "over" class to rows on mouseover
@@ -1709,7 +1722,7 @@
 					<thead>
 						<tr>
 							<cfif itemTypeId IS NOT 6>
-								<th style="width:35px"></th>
+								<th style="width:35px" class="filter-false"></th>
 								<cfif arguments.full_content IS false>
 									<cfif itemTypeId IS 1><!---Messages--->
 										<th style="width:55%" lang="es">Asunto</th>
@@ -1718,7 +1731,7 @@
 									<cfelse>
 										<th style="width:55%" lang="es">Título</th>
 									</cfif>
-									<th style="width:5%"></th>
+									<th style="width:5%" class="filter-false"></th>
 									<th style="width:23%" lang="es">De</th>
 									<th style="width:12%" lang="es">Fecha</th>
 									<cfif itemTypeId IS 5>
@@ -1726,11 +1739,11 @@
 										<th style="width:4%" lang="es">Fin</th>
 									</cfif>
 									<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-									<th style="width:6%">##</th>
+									<th style="width:6%" class="filter-false">##</th>
 									</cfif>
 								<cfelse>
 									<th style="width:39%" lang="es"><cfif itemTypeId IS 1>Asunto<cfelse>Título</cfif></th>
-									<th style="width:5%"></th>
+									<th style="width:5%" class="filter-false"></th>
 									<th style="width:19%" lang="es">De</th>
 									<th style="width:10%" lang="es">Fecha</th>
 									<cfif itemTypeId IS 5>
@@ -1740,10 +1753,10 @@
 									<th style="width:23%" lang="es">Área</th>
 								</cfif>
 							<cfelse><!---Tasks--->
-								<th style="width:34px"></th>
+								<th style="width:34px" class="filter-false"></th>
 								<cfif arguments.full_content IS false>
 								<th style="width:27%" lang="es">Título</th>
-								<th style="width:4%"></th>
+								<th style="width:4%" class="filter-false"></th>
 								<th style="width:17%" lang="es">De</th>
 								<th style="width:17%" lang="es">Para</th>
 								<!---<th style="width:9%">Hecha</th>--->
@@ -1861,10 +1874,10 @@
 							<td><a href="#item_page_url#" class="text_item">#objectItem.title#</a></td>
 							<td><!---Attached files--->
 								<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
-								<a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#',event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
 								</cfif>
 								<cfif len(objectItem.attached_image_id) GT 0>
-								<a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#',event)" title="Descargar imagen adjunta"><i class="icon-camera"></i><span class="hidden">2</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" title="Descargar imagen adjunta"><i class="icon-camera"></i><span class="hidden">2</span></a>
 								
 								</cfif>
 							</td>
@@ -1956,7 +1969,11 @@
 						});
 						
 						$("##listTable").tablesorter({ 
+							<cfif arguments.full_content IS false>
+							widgets: ['zebra','filter','select'],
+							<cfelse>
 							widgets: ['zebra','select'],
+							</cfif>
 							sortList: [[1,1]],
 							headers: { 
 								/*0: { 
@@ -1965,7 +1982,25 @@
 								1: { 
 									sorter: "datetime" 
 								}
-							} 
+							},
+							<cfif arguments.full_content IS false>
+							widgetOptions : {
+								filter_childRows : false,
+								filter_columnFilters : true,
+								filter_cssFilter : 'tablesorter-filter',
+								filter_filteredRow   : 'filtered',
+								filter_formatter : null,
+								filter_functions : null,
+								filter_hideFilters : false,
+								filter_ignoreCase : true,
+								filter_liveSearch : true,
+								//filter_reset : 'button.reset',
+								filter_searchDelay : 300,
+								filter_serversideFiltering: false,
+								filter_startsWith : false,
+								filter_useParsedData : false,
+						    }, 
+						    </cfif> 
 						});
 						
 						//  Adds "over" class to rows on mouseover
@@ -1995,7 +2030,7 @@
 							<cfelse>
 							<th style="width:23%" lang="es">Asunto</th>
 							</cfif>
-							<th style="width:5%"></th>
+							<th style="width:5%" class="filter-false"></th>
 							<th style="width:10%">##</th>
 							<th style="width:10%" lang="es">Estado</th>
 							<cfif arguments.full_content IS true>
@@ -2074,10 +2109,10 @@
 							<td><a href="#item_page_url#" class="text_item">#objectItem.title#</a></td>
 							<td><!---Attached files--->
 								<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
-								<a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#',event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
 								</cfif>
 								<cfif len(objectItem.attached_image_id) GT 0>
-								<a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#',event)" title="Descargar imagen adjunta"><i class="icon-camera"></i><span class="hidden">2</span></a>							
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" title="Descargar imagen adjunta"><i class="icon-camera"></i><span class="hidden">2</span></a>							
 								</cfif>
 							</td>
 							<td><span class="text_message_data">#objectItem.identifier#</span></td>							
@@ -2147,13 +2182,59 @@
 						});
 						
 						$("##listTable").tablesorter({ 
-							widgets: ['zebra','select'],
+							widgets: ['zebra','filter','select'],
 							sortList: [[4,1]] ,
 							headers: { 
 								4: { 
 									sorter: "datetime" 
 								}
-							} 
+							},
+
+   							//widthFixed : true,
+							widgetOptions : {
+
+								filter_childRows : false,
+								filter_columnFilters : true,
+								filter_cssFilter : 'tablesorter-filter',
+								filter_filteredRow   : 'filtered',
+								filter_formatter : null,
+								filter_functions : null,
+								filter_hideFilters : false,
+								filter_ignoreCase : true,
+								filter_liveSearch : true,
+								//filter_reset : 'button.reset',
+								filter_searchDelay : 300,
+								filter_serversideFiltering: false,
+								filter_startsWith : false,
+								filter_useParsedData : false,
+
+						     	<!---filter_formatter : {
+									
+							 		// Date (one input)
+							        4 : function($cell, indx){
+							          return $.tablesorter.filterFormatter.uiDateCompare( $cell, indx, {
+							            // defaultDate : '1/1/2014', // default date
+							            //cellText : 'dates >= ', // text added before the input
+							            cellText : '',
+							            changeMonth : true,
+							            changeYear : true,
+							            compare : '=',
+							            dateFormat : 'dd-mm-yy',
+							          });
+							        },
+
+							        // Date (two inputs)
+							        /*4 : function($cell, indx){
+							          return $.tablesorter.filterFormatter.uiDatepicker( $cell, indx, {
+							            // from : '08/01/2013', // default from date
+							            // to   : '1/18/2014',  // default to date
+							            changeMonth : true,
+							            changeYear : true
+							          });
+							        }*/
+
+						    	},--->
+						    }
 						});
 						
 						//  Adds "over" class to rows on mouseover
@@ -2175,17 +2256,17 @@
 				<table id="listTable" class="tablesorter">
 					<thead>
 						<tr>
-							<th style="width:35px"></th>
+							<th style="width:35px" class="filter-false"></th>
 							<cfif len(area_type) IS 0>
 							<th style="width:55%" lang="es">Título</th>
 							<cfelse>
 							<th style="width:49%" lang="es">Título</th>
 							</cfif>
-							<th style="width:5%"></th>
+							<th style="width:5%" class="filter-false"></th>
 							<th style="width:23%" lang="es">De</th>
 							<th style="width:12%" lang="es">Fecha</th>
 							<cfif len(area_type) GT 0>
-							<th style="width:6%">##</th>
+							<th style="width:6%" class="filter-false">##</th>
 							</cfif>
 						</tr>
 					</thead>
@@ -2279,12 +2360,12 @@
 							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
 							<td><!---Attached files--->
 								<cfif itemTypeId IS 10>
-								<a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#',event)" title="Descargar archivo"><i class="icon-download-alt"></i><span class="hidden">3</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt"></i><span class="hidden">3</span></a>
 								<cfelseif isNumeric(itemsQuery.attached_file_id)>
-								<a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#',event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
 								</cfif>
 								<cfif isNumeric(itemsQuery.attached_image_id)>
-								<a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#',event)" title="Descargar imagen adjunta"><i class="icon-camera"></i><span class="hidden">2</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar imagen adjunta"><i class="icon-camera"></i><span class="hidden">2</span></a>
 								
 								</cfif>
 							</td>

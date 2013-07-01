@@ -1,8 +1,12 @@
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.extras-0.1.22.min.js"></script>
-<link href="#APPLICATION.path#/jquery/tablesorter/css/style.css" rel="stylesheet" type="text/css" media="all" />
+
+<!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>--->
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
@@ -22,11 +26,11 @@
 	
 	<cfif len(area_type) IS 0>
 	<a href="message_new.cfm?area=#area_id#" onclick="openUrl('message_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo Mensaje" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/message.png" style="height:22px;"/></a>
-	
-	<!---<a href="area_file_new.cfm?area=#area_id#" onclick="openUrl('area_file_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small btn-info"><i class="icon-plus icon-white"></i> Archivo</a>--->
+	</cfif>
+
 	<a href="area_file_new.cfm?area=#area_id#" onclick="openUrl('area_file_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo Archivo" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file.png" style="height:22px;"/></a>
 	
-	<cfelse><!---WEB--->
+	<cfif len(area_type) IS NOT 0><!---WEB--->
 	<a href="entry_new.cfm?area=#area_id#" onclick="openUrl('entry_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo elemento de contenido" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/entry.png" style="height:22px;"/></a>	
 	<a href="news_new.cfm?area=#area_id#" onclick="openUrl('news_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Noticia" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/news.png" style="height:22px;"/></a>	
 	</cfif>
