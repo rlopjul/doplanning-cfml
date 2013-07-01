@@ -15,7 +15,11 @@
 		});
 		
 		$("#listTable").tablesorter({ 
+			<cfif full_content IS false>
+			widgets: ['zebra','filter','select'],
+			<cfelse>
 			widgets: ['zebra','select'],
+			</cfif>
 			sortList: [[5,1]] ,
 			headers: { 
 				0: { 
@@ -27,7 +31,25 @@
 				5: { 
 					sorter: "datetime" 
 				}
-			} 
+			},
+			<cfif full_content IS false>
+			widgetOptions : {
+				filter_childRows : false,
+				filter_columnFilters : true,
+				filter_cssFilter : 'tablesorter-filter',
+				filter_filteredRow   : 'filtered',
+				filter_formatter : null,
+				filter_functions : null,
+				filter_hideFilters : false,
+				filter_ignoreCase : true,
+				filter_liveSearch : true,
+				//filter_reset : 'button.reset',
+				filter_searchDelay : 300,
+				filter_serversideFiltering: false,
+				filter_startsWith : false,
+				filter_useParsedData : false,
+		    },
+			</cfif>
 		});
 		
 		//  Adds "over" class to rows on mouseover
@@ -44,6 +66,8 @@
 	
 </script>
 
+<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsmx,ppt,pptx,pps,ppsx,odt">
+
 <cfset numFiles = ArrayLen(xmlFiles.files.XmlChildren)>
 <div class="div_items">
 <!---<div class="div_separator"><!-- --></div>--->
@@ -56,7 +80,7 @@
 		<thead>
 			<tr>
 				<cfif full_content IS false>
-					<th style="width:32px"></th>
+					<th style="width:32px" class="filter-false"></th>
 					<th style="width:37%" lang="es">Archivo</th>
 					<th style="width:6%" lang="es">Tipo</th>
 					<th style="width:20%" lang="es">De</th>
@@ -87,7 +111,6 @@
 		<!---Importante: en este xml no viene user_full_name--->
 		
 		<!---<cfinclude template="#APPLICATION.htmlPath#/includes/element_file.cfm">--->
-		
 
 		<cfif isDefined("area_id")>
 			<cfset objectFile.area_id = area_id>
@@ -143,7 +166,16 @@
 						<input type="image" src="#APPLICATION.htmlPath#/assets/icons/new_file.gif" class="img_file" title="Añadir archivo"/>
 					</form>
 				<cfelse>
-					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" target="_blank" onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#',event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" class="img_file" style="max-width:none;"/></a>
+
+					<cfset fileType = replace(objectFile.file_type,".","")>
+					<cfif listFind (iconTypes, fileType)>
+						<cfset fileIcon = "_"&fileType>
+					<cfelse>
+						<cfset fileIcon = "">
+					</cfif>
+
+					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file#fileIcon#.png" class="img_file" style="max-width:none;"/></a>
+					<!---<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" class="img_file" style="max-width:none;"/></a>--->
 				</cfif><!---style="max-width:none;" Requerido para corregir un bug con Bootstrap en Chrome--->
 			</td>
 			<td><cfif isDefined("page_type")>

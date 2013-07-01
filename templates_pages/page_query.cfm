@@ -11,7 +11,7 @@
 
 <!---getAreaType--->
 <!---Esta consulta devuelve el tipo, el nombre, la descripción y el área padre para ahorrarse otra consulta--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaTypeWeb" returnvariable="getArea">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaTypeWeb" returnvariable="getArea">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	
 	<cfinvokeargument name="client_abb" value="#clientAbb#">
@@ -34,7 +34,7 @@
 <!---getAreaPath--->
 <!---
 Esto no se usa porque se construye la ruta con los valores ya cargados pare evitar consultas a la BD
-<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getAreaPath" returnvariable="area_path">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaPath" returnvariable="area_path">
 	<cfinvokeargument name="area_id" value="#selectAreaQuery.parent_id#">
 	<cfinvokeargument name="from_area_id" value="#rootAreaId#">
 	<cfinvokeargument name="separator" value=" / ">

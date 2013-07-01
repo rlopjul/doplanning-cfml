@@ -2,6 +2,11 @@ var curAreaId = 0;
 var areaWithLink = false;
 var currentTab = "#tab1";
 
+function windowHeight() {
+	var de = document.documentElement;
+	return de.clientHeight;
+}	
+
 function getURLParameterFromPath(name, path) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec( path )||[,""])[1].replace(/\+/g, '%20'))||null;
 }
@@ -125,6 +130,9 @@ function areaSelected(areaId, areaUrl, withLink)  {
 function searchTextInTree(){
 	searchInTree(document.getElementById('searchText').value);	
 }
+
+
+
 
 /*function maximizeTree() {
 	$("#areaContainer").hide();

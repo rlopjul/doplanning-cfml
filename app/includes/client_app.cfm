@@ -13,10 +13,21 @@
 		<cfelseif URL.app EQ "generalAdmin">
 			<cfset swf_name = "DPGeneralAdmin">	
 		</cfif>
-	<cfelse>
-		<cfset swf_name = "DPCore_#APPLICATION.clientVersion#">
+	<!---<cfelse>
+			<cfset swf_name = "DPCore_#APPLICATION.clientVersion#">--->
+	
 	</cfif>
-	<!-- saved from url=(0014)about:internet -->
+
+	<!---<cfset componentsPath = APPLICATION.componentsPath>
+	<cfset uploadFilesPath = APPLICATION.uploadFilesPath>
+	<cfset resourcesPath = APPLICATION.resourcesPath>--->
+	<!--- Estas variables se definen así para que la administración de Flex pueda funcionar desde el acceso externo del SAS, que necesita rutas relativas. uploadFilesPath no puede tener una ruta relativa porque no lo permite el componente de AS que realiza la subida, por lo que se añade la URL 
+	No se puede usar directamente aquí el valor de la variable APPLICATION.componentsPath porque el valor de esta variable para las nuevas versiones ha cambiado y ya no es el directorio /app/WS que sólo se mantiene temporalmente para la administración de Flex --->
+	<cfset componentsPath = "../app/WS">
+	<!--- <cfset uploadFilesPath = "#APPLICATION.mainUrl##APPLICATION.uploadFilesPath#"> --->
+	<cfset uploadFilesPath = "../app/uploadFiles">
+	<cfset resourcesPath = "../app">
+
 	<html lang="en">
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -72,7 +83,7 @@
 	
 		AC_FL_RunContent(
 			"src", "../app/playerProductInstall",
-			"FlashVars", "MMredirectURL="+MMredirectURL+'&MMplayerType='+MMPlayerType+'&MMdoctitle='+MMdoctitle+"&main_url=#APPLICATION.mainUrl#&sign_out_url=#APPLICATION.signOutUrl#&path=#APPLICATION.path#&components_path=#APPLICATION.componentsPath#&upload_files_path=#APPLICATION.uploadFilesPath#&resources_path=#APPLICATION.resourcesPath#&help_url=#APPLICATION.helpUrl#&community_url=#APPLICATION.communityUrl#&default_language=#APPLICATION.defaultLanguage#&debug_mode=#debug_mode#" ,
+			"FlashVars", "MMredirectURL="+MMredirectURL+'&MMplayerType='+MMPlayerType+'&MMdoctitle='+MMdoctitle+"&main_url=#APPLICATION.mainUrl#&sign_out_url=#APPLICATION.signOutUrl#&path=#APPLICATION.path#&components_path=#componentsPath#&upload_files_path=#uploadFilesPath#&resources_path=#resourcesPath#&help_url=#APPLICATION.helpUrl#&community_url=#APPLICATION.communityUrl#&default_language=#APPLICATION.defaultLanguage#&debug_mode=#debug_mode#&ldap_users=#APPLICATION.moduleLdapUsers#" ,
 			"width", "100%",
 			"height", "100%",
 			"align", "middle",
@@ -96,7 +107,7 @@
 				"quality", "high",
 				"bgcolor", "##FFFFFF",
 				"name", "#swf_name#",
-				"flashvars",'main_url=#APPLICATION.mainUrl#&sign_out_url=#APPLICATION.signOutUrl#&path=#APPLICATION.path#&components_path=#APPLICATION.componentsPath#&upload_files_path=#APPLICATION.uploadFilesPath#&resources_path=#APPLICATION.resourcesPath#&help_url=#APPLICATION.helpUrl#&community_url=#APPLICATION.communityUrl#&default_language=#APPLICATION.defaultLanguage#&debug_mode=#debug_mode#',
+				"flashvars",'main_url=#APPLICATION.mainUrl#&sign_out_url=#APPLICATION.signOutUrl#&path=#APPLICATION.path#&components_path=#componentsPath#&upload_files_path=#uploadFilesPath#&resources_path=#resourcesPath#&help_url=#APPLICATION.helpUrl#&community_url=#APPLICATION.communityUrl#&default_language=#APPLICATION.defaultLanguage#&debug_mode=#debug_mode#&ldap_users=#APPLICATION.moduleLdapUsers#',
 				"allowScriptAccess","sameDomain",
 				"type", "application/x-shockwave-flash",
 				"pluginspage", "http://www.adobe.com/go/getflashplayer"
@@ -114,7 +125,7 @@
 			<param name="quality" value="high" />
 			<param name="bgcolor" value="##FFFFFF" />
 			<param name="allowScriptAccess" value="sameDomain" />
-			<param name="flashVars" value="main_url=#APPLICATION.mainUrl#&sign_out_url=#APPLICATION.signOutUrl#&path=#APPLICATION.path#&components_path=#APPLICATION.componentsPath#&upload_files_path=#APPLICATION.uploadFilesPath#&resources_path=#APPLICATION.resourcesPath#&default_language=#APPLICATION.defaultLanguage#&debug_mode=#debug_mode#"/>
+			<param name="flashVars" value="main_url=#APPLICATION.mainUrl#&sign_out_url=#APPLICATION.signOutUrl#&path=#APPLICATION.path#&components_path=#componentsPath#&upload_files_path=#uploadFilesPath#&resources_path=#resourcesPath#&default_language=#APPLICATION.defaultLanguage#&debug_mode=#debug_mode#&ldap_users=#APPLICATION.moduleLdapUsers#"/>
 			<embed src="../app/#swf_name#.swf?#CGI.QUERY_STRING#" quality="high" bgcolor="##FFFFFF"
 				width="100%" height="100%" name="#swf_name#" align="middle"
 				play="true"

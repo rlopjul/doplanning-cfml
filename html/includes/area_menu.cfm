@@ -45,7 +45,7 @@
 			 
 			 	<li <cfif curElement EQ "items">class="active"</cfif>><a href="area_items.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/area.png" title="Todos los elementos del área" alt="Todos los elementos del área" lang="es"/></a></li>
 					
-				<cfif APPLICATION.moduleWeb EQ "enabled" AND area_type EQ "web" OR area_type EQ "intranet">
+				<cfif APPLICATION.moduleWeb EQ true AND area_type EQ "web" OR area_type EQ "intranet">
 					<li <cfif curElement EQ "entries">class="active"</cfif>><a href="entries.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/entry.png" title="Elementos de contenidos WEB del área" alt="Elementos e contenidos WEB del área" lang="es"/></a></li>
 					
 					<li <cfif curElement EQ "news">class="active"</cfif>><a href="newss.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/news.png" title="Noticias WEB del área" alt="Noticias WEB del área" lang="es"/></a></li>
@@ -56,19 +56,19 @@
 					
 				</cfif>
 				
-				<cfif APPLICATION.moduleWeb NEQ "enabled" OR len(area_type) IS 0>
+				<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0>
 				<li <cfif curElement EQ "messages">class="active"</cfif>><a href="messages.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/message.png" title="Mensajes del área" alt="Mensajes del área" lang="es"/></a></li>
 				</cfif>
 				
-				<cfif APPLICATION.moduleWeb NEQ "enabled" OR len(area_type) IS 0 OR APPLICATION.identifier EQ "vpnet">
+				<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0 OR APPLICATION.identifier EQ "vpnet">
 				<li <cfif curElement EQ "files">class="active"</cfif>><a href="files.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/file.png" title="Archivos del área" alt="Archivos del área" lang="es"/></a></li>
 				</cfif>
 				
-				<cfif APPLICATION.identifier EQ "dp" OR (APPLICATION.moduleWeb EQ "enabled" AND area_type EQ "web" OR area_type EQ "intranet")><!---Events--->
+				<cfif APPLICATION.identifier EQ "dp" OR (APPLICATION.moduleWeb EQ true AND area_type EQ "web" OR area_type EQ "intranet")><!---Events--->
 					<li <cfif curElement EQ "events">class="active"</cfif>><a href="events.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/event.png" title="Eventos del área" alt="Eventos del área" lang="es"/></a></li>
 				</cfif>
 				
-				<cfif APPLICATION.moduleWeb NEQ "enabled" OR len(area_type) IS 0>
+				<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0>
 				
 					<cfif APPLICATION.identifier EQ "dp"><!---Tasks--->
 						<li <cfif curElement EQ "tasks">class="active"</cfif>><a href="tasks.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/task.png" title="Tareas del área" alt="Tareas del área" lang="es"/></a></li>			
@@ -82,7 +82,7 @@
 				
 				<li <cfif curElement EQ "users">class="active"</cfif>><a href="users.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/users.png" title="Usuarios del área" alt="Usuarios del área" lang="es"/></a></li>
 				
-				<cfif APPLICATION.moduleMessenger EQ "enabled">
+				<cfif APPLICATION.moduleMessenger EQ true>
 				<li><a onclick="<cfif app_version EQ "standard">window.parent.</cfif>App.openMessenger('<cfif app_version EQ "standard" AND NOT (CGI.HTTP_USER_AGENT CONTAINS "MSIE")>../</cfif>messenger_area.cfm?area=#area_id#')" style="cursor:pointer;"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/messenger_general.png" title="Messenger del área" alt="Messenger del área" lang="es"/></a></li>
 				</cfif>
 				
@@ -125,31 +125,31 @@
 			<div><a href="#APPLICATION.path#/#SESSION.client_abb#/meeting.cfm?type=2&area=#area_id#" target="_blank"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/area_meeting.png" title="Acceder a Reunión virtual del área (SOLO PCs)" alt="Acceder a Reunión virtual del área (SOLO PCs)" /></a></div>	
 			</cfif>
 			
-			<cfif APPLICATION.moduleMessenger EQ "enabled">
+			<cfif APPLICATION.moduleMessenger EQ true>
 			<div><a onclick="<cfif app_version EQ "standard">window.parent.</cfif>App.openMessenger('<cfif app_version EQ "standard" AND NOT (CGI.HTTP_USER_AGENT CONTAINS "MSIE")>../</cfif>messenger_area.cfm?area=#area_id#')" style="cursor:pointer;"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/messenger_general.png" title="Messenger del área" alt="Messenger del área" /></a></div>
 			</cfif>
 			
 			<div <cfif curElement EQ "users">class="current"</cfif>><a href="users.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/users_dark.gif" title="Usuarios del área" alt="Usuarios del área" /></a></div>
 			
 			
-			<cfif APPLICATION.identifier EQ "dp" AND (APPLICATION.moduleWeb NEQ "enabled" OR len(area_type) IS 0)><!---Tasks--->
+			<cfif APPLICATION.identifier EQ "dp" AND (APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0)><!---Tasks--->
 				<div <cfif curElement EQ "tasks">class="current"</cfif>><a href="tasks.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/tasks.png" title="Tareas del área" alt="Tareas del área" /></a></div>			
 			</cfif>
 			
-			<cfif APPLICATION.identifier EQ "dp" OR (APPLICATION.moduleWeb EQ "enabled" AND area_type EQ "web" OR area_type EQ "intranet")><!---Events--->
+			<cfif APPLICATION.identifier EQ "dp" OR (APPLICATION.moduleWeb EQ true AND area_type EQ "web" OR area_type EQ "intranet")><!---Events--->
 				<div <cfif curElement EQ "events">class="current"</cfif>><a href="events.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/events.png" title="Eventos del área" alt="Eventos del área" /></a></div>
 			</cfif>
 			
-			<cfif APPLICATION.moduleWeb NEQ "enabled" OR len(area_type) IS 0 OR APPLICATION.identifier EQ "vpnet">
+			<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0 OR APPLICATION.identifier EQ "vpnet">
 			<div <cfif curElement EQ "files">class="current"</cfif>><a href="files.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/files.png" title="Archivos del área" alt="Archivos del área"/></a></div>
 			</cfif>
 			
-			<cfif APPLICATION.moduleWeb NEQ "enabled" OR len(area_type) IS 0>
+			<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0>
 			<div <cfif curElement EQ "messages">class="current"</cfif>><a href="messages.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/messages.png" title="Mensajes del área" alt="Mensajes del área"/></a></div>
 			</cfif>
 			
 			
-			<cfif APPLICATION.moduleWeb EQ "enabled" AND area_type EQ "web" OR area_type EQ "intranet">
+			<cfif APPLICATION.moduleWeb EQ true AND area_type EQ "web" OR area_type EQ "intranet">
 			
 				<cfif APPLICATION.identifier EQ "vpnet">
 				<div <cfif curElement EQ "links">class="current"</cfif>><a href="links.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/links.png" title="Enlaces del área" alt="Enlaces del área" /></a></div>

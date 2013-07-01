@@ -163,6 +163,7 @@
 
 <script type="text/javascript" src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 
+<!--- <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.css" rel="stylesheet" type="text/css" /> --->
 <script type="text/javascript">
 	var applicationId = "#APPLICATION.identifier#";
 	var applicationPath = "#APPLICATION.path#";
@@ -192,8 +193,9 @@
 	}
 	
 	$(window).load( function() {		
-		$("#accordion").accordion({ active: 1, autoHeight: false });
-				
+		<!--- $("#accordion").accordion({ active: 1, autoHeight: false }); --->
+		$("#accordion").accordion({ active: 1 , heightStyle: "content"});
+
 		showTree(true);
 		
 	});

@@ -53,14 +53,14 @@
 
 <cfif NOT isDefined("curElement") OR curElement NEQ "users">
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="xmlResponse">	
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">	
 		<cfinvokeargument name="order_by" value="name">
 		<cfinvokeargument name="order_type" value="asc">
 	</cfinvoke>
 	
 	<cfxml variable="xmlUsers">
 		<cfoutput>
-		#xmlResponse.response.result.users#
+		#getUsersResponse.usersXml#
 		</cfoutput>
 	</cfxml>
 	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
@@ -124,6 +124,7 @@
 	</cfif>
 	
 	&nbsp;<label for="limit" lang="es">Nº resultados</label> <select name="limit" id="limit" class="input-small">
+	<!---<option value="1" <cfif limit_to IS 1>selected="selected"</cfif>>1</option>--->
 	<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
 	<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>
 	<option value="1000" <cfif limit_to IS 1000>selected="selected"</cfif>>1000</option>

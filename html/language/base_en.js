@@ -11,12 +11,14 @@ jquery_lang_js.prototype.lang.en = {
 	'¿Olvidó su contraseña?':'Forgot your password?',
 	'Acceso a DoPlanning':'Access of DoPlanning',
 	'Ayuda DoPlanning':'DoPlanning Help',
-	'Identificar con:':'Identify with:',
+	'Identificar con usuario y contraseña de:':'Identify with user and password of:',
 	/*END login*/
 	
 	/*remember_password.cfm*/
+	'es' : 'en',
 	'Obtener una nueva contraseña para DoPlanning':'Get a new password for DoPlanning',
 	'Introduzca los siguientes números:':'Enter the following numbers:',
+	'Su nueva contraseña ha sido enviada a su dirección de email':'Your new password has been sent to your email address',
 	'Enviar':'Send',
 	'Cancelar':'Cancel',
 	/*END remember_password.cfm*/

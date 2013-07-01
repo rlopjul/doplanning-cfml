@@ -95,7 +95,7 @@
 			<!---Noticias--->
 			<cfset newsAreaId = 498><!---ANSC--->
 			<!---<cfset newsAreaId = 235>DP--->
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaNewsResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaNewsResult">
 				<cfinvokeargument name="area_id" value="#newsAreaId#">
 				<cfinvokeargument name="itemTypeId" value="4">
 				<cfinvokeargument name="format_content" value="all">

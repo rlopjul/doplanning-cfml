@@ -1,9 +1,9 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2013
 
     File created by: alucena
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 10-05-2012
+    Date of last file change: 10-06-2013
 	
 --->
 <cfcomponent output="false">
@@ -28,8 +28,10 @@
 		
 		<cftry>
 			
-			<cfif arguments.encoded NEQ true>
-				<cfset arguments.password = lCase(hash(arguments.password))>
+			<cfif APPLICATION.moduleLdapUsers IS false OR arguments.ldap_id EQ "doplanning">
+				<cfif arguments.encoded NEQ true>
+					<cfset arguments.password = lCase(hash(arguments.password))>
+				</cfif>
 			</cfif>
 			
 			<cfsavecontent variable="xmlRequest">
@@ -166,6 +168,7 @@
 	<cffunction name="generateNewPassword" returntype="struct" output="false" access="public">
 		<cfargument name="email" type="string" required="true">
 		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="language" type="string" required="true"/>
 		
 		<cfset var method = "generateNewPassword">
 		
@@ -175,6 +178,7 @@
 		<cfinvoke component="#APPLICATION.componentsPath#/LoginManager" method="generateNewPassword" returnvariable="response">
 			<cfinvokeargument name="email_login" value="#arguments.email#">
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="language" value="#arguments.language#"/>
 		</cfinvoke>
 		
 		<cfreturn response>

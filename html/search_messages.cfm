@@ -4,6 +4,7 @@
 <head>
 <!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
@@ -33,7 +34,7 @@
 	<script type="text/javascript" src="../SpryAssets/includes/SpryData.js"></script>
 	<script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
 	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
-	<cfif APPLICATION.moduleMessenger EQ "enabled">
+	<cfif APPLICATION.moduleMessenger EQ true>
 		<script type="text/javascript" src="../app/scripts/App.js"></script>
 		<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
 		<cfif isDefined("SESSION.user_id")>
@@ -50,7 +51,7 @@
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="Scripts/functions.js"></script>
+<script type="text/javascript" src="Scripts/functions.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -113,12 +114,7 @@ Buscar mensajes
 
 <cfset return_page = "search.cfm">
 
-<cfoutput>
-<!---<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>--->
-<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.extras-0.1.22.min.js"></script>
-<link href="#APPLICATION.path#/jquery/tablesorter/css/style.css" rel="stylesheet" type="text/css" media="all" />
-</cfoutput>
+<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
 <!---<cfinclude template="includes/search_bar.cfm">--->
 <cfinclude template="includes/search_messages_bar.cfm">

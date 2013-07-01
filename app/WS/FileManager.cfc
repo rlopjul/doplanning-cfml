@@ -6,6 +6,7 @@
     Date of last file change: 14-01-2013
 	
 	15-04-2013 alucena: corregido error en deleteFile con archivos con status que no es ok
+	13-06-2013 alucena: corregido error con variable files_table (se utilizaba file_table) en deleteImageFile
 	
 --->
 <cfcomponent output="false">	
@@ -1278,7 +1279,7 @@ step="1">
 				<cfinclude template="includes/checkAreaAccess.cfm">					
 			</cfif>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getFile" returnvariable="selectFileQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="selectFileQuery">
 				<cfinvokeargument name="file_id" value="#file_id#">
 				<cfif area_passed IS true>
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -1311,7 +1312,7 @@ step="1">
 						<cfelse>--->
 							
 							<!---Aquí comprueba si el archivo está asociado a otro tipo de elemento (entradas, noticias, eventos, etc)--->
-							<cfinclude template="includes/areaItemTypeSwitch.cfm">
+							<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 							
 							<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
 								SELECT area_id
@@ -1361,7 +1362,7 @@ step="1">
 				
 				<cfelse>
 					
-					<cfif APPLICATION.moduleConvertFiles EQ "enabled">
+					<cfif APPLICATION.moduleConvertFiles EQ true>
 					
 						<!---getFileTypesConversion--->
 						<cfinvoke component="FileTypeManager" method="getFileTypesConversion" returnvariable="objectFileTypes">
@@ -1388,7 +1389,7 @@ step="1">
 						<cfinvokeargument name="description" value="#selectFileQuery.description#">
 						<cfinvokeargument name="user_full_name" value="#selectFileQuery.family_name# #selectFileQuery.user_name#">
 						<cfinvokeargument name="user_image_type" value="#selectFileQuery.user_image_type#">
-						<cfif APPLICATION.moduleConvertFiles EQ "enabled">
+						<cfif APPLICATION.moduleConvertFiles EQ true>
 							<cfinvokeargument name="file_types_conversion" value="#objectFileTypes#">
 						</cfif>
 						<cfinvokeargument name="status" value="#selectFileQuery.status#">
@@ -1445,7 +1446,7 @@ step="1">
 					
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getFile" returnvariable="selectFileQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="selectFileQuery">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1748,7 +1749,7 @@ step="1">
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 						
 			<cfquery datasource="#client_dsn#" name="getFile">				
@@ -3098,7 +3099,7 @@ step="1">
 			<!--- Query to get the physical name and file_size of the file --->
 			<cfquery name="selectPhysicalName" datasource="#client_dsn#">				
 				SELECT physical_name, file_size
-				FROM #client_abb#_#file_table#
+				FROM #client_abb#_#files_table#
 				WHERE id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
@@ -3114,7 +3115,7 @@ step="1">
 				<!--- Deletion of the row representing the file --->
 				<cfquery name="deleteFileQuery" datasource="#client_dsn#">		
 					DELETE
-					FROM #client_abb#_#file_table#
+					FROM #client_abb#_#files_table#
 					WHERE id = <cfqueryparam value="#file_id#" CFSQLType="CF_SQL_integer">;
 				</cfquery>
 				
@@ -3195,7 +3196,7 @@ step="1">
 				<cfinvokeargument name="get_user_id" value="#user_id#">
 			</cfinvoke>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
 				<cfinvokeargument name="areas_ids" value="#user_areas_ids#">
 				<cfif isDefined("arguments.search_text")>
 					<cfinvokeargument name="search_text" value="#arguments.search_text#">

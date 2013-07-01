@@ -24,17 +24,11 @@
 
 <script type="text/javascript">
 
-function confirmDeleteFile()
-{
+function confirmDeleteFile() {
+	
 	var message_delete = window.lang.convert("Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?");
 	return confirm(message_delete);
 }
-
-<!---function downloadFile(url){
-	showLoading = false;
-	
-	goToUrl(url);
-}--->
 
 </script>
 
@@ -47,7 +41,7 @@ function confirmDeleteFile()
 	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 	
 	
-		<a onclick="downloadFile('#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#',event)" class="btn btn-small btn-info"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
+		<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-small btn-info"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
 		
 		<cfif listFind(".gif,.jpg,.png",objectFile.file_type) GT 0>
 			<cfif page_type IS 1>
@@ -93,7 +87,7 @@ function confirmDeleteFile()
 			</cfif>
 		</cfif>
 		
-		<cfif APPLICATION.moduleConvertFiles EQ "enabled">
+		<cfif APPLICATION.moduleConvertFiles EQ true>
 			<cfif objectFile.file_types_conversion.recordCount GT 0>
 				<div class="div_element_menu" style="width:130px;">
 					<cfif page_type IS 1>

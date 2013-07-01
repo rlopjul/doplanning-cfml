@@ -24,13 +24,22 @@
 		<cfset APPLICATION.dsn = "doplanning_app">
 		<cfset APPLICATION.dataBaseName = "doplanning_app">
 		
-		<cfset APPLICATION.moduleMessenger = "disabled"><!---enabled/disabled--->
-		<cfset APPLICATION.moduleLdapUsers = "disabled">
-		<cfset APPLICATION.moduleConvertFiles = "disabled">
-		<cfset APPLICATION.moduleWeb = "enabled">
-		<cfset APPLICATION.moduleTwitter = true>
-		<cfset APPLICATION.includeConsultationsInAlerts = true>
+		<cfset APPLICATION.moduleMessenger = false><!---true/false--->
+		<cfset APPLICATION.moduleLdapUsers = false>
+		<cfset APPLICATION.moduleConvertFiles = false>
+		<cfset APPLICATION.moduleWeb = true>
+		<cfset APPLICATION.moduleTwitter = false>
 		<cfset APPLICATION.moduleConsultations = true>
+		<cfset APPLICATION.includeConsultationsInAlerts = true>
+		<cfset APPLICATION.moduleVirtualMeetings = false>
+		<cfset APPLICATION.moduleWebRTC = true>
+		<cfset APPLICATION.showDniTitle = false>
+		<cfset APPLICATION.twoUrlsToAccess = false>
+
+		<cfset APPLICATION.openTokApiKey = 29269902>
+		<cfset APPLICATION.openTokApiSecret = "96298660cbdaef41dda77b9e97f41f7c749a28b4">
+		
+		<cfset APPLICATION.languages = "es,en">
 		
 		<cfset APPLICATION.errorReport = "email"><!---email/file--->
 		
@@ -42,10 +51,11 @@
 		<cfset APPLICATION.title = "DoPlanning">
 		<cfset APPLICATION.identifier = "dp"><!---Por defecto aquí debe poner dp. dp para DoPlanning. vpnet para hospital--->
 		
+		<cfset APPLICATION.emailSendMode = "MandrillAPI"><!---SMTP/MandrillAPI--->
 		<cfset APPLICATION.emailServer = "174.143.213.37">
 		<cfset APPLICATION.emailServerUserName = "doplanning">
 		<cfset APPLICATION.emailServerPassword = "lIFu-Rj_71Rla.Q13XzDfe">
-		<cfset APPLICATION.emailFrom = """#APPLICATION.title#"" <no-reply@doplanning.net>">
+		<cfset APPLICATION.emailFrom = "no-reply@doplanning.net">
 		<cfset APPLICATION.emailFalseTo = """Undisclosed-Recipients"" <dpera7@gmail.com>"> 
 		<cfset APPLICATION.emailReply = "support@doplanning.net">
 		<cfset APPLICATION.emailFail = "support@doplanning.net">
@@ -63,6 +73,7 @@
 		<cfset APPLICATION.componentsPath = APPLICATION.path&"/app/WS">
 		<!---<cfset APPLICATION.webServicesPath = "/dp_pruebas/WS">--->
 		<cfset APPLICATION.uploadFilesPath = APPLICATION.path&"/app/uploadFiles">
+		<cfset APPLICATION.coreComponentsPath = "/dp-core/">
 		<!---<cfset APPLICATION.filesPath = "/WEBpool/webroot/files/doplanning">--->
 		<cfset APPLICATION.filesPath = "/webroot/files/doplanning">
 		<cfset APPLICATION.defaultTimeout = 840><!---Si se pone a un tiempo menor que el de filesTimeout parece que algunas veces da problemas en la subida de archivos al acceder a otros métodos--->
@@ -78,8 +89,7 @@
 		<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js">
 		
 		<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css">
-		<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">
-		<!---<cfset APPLICATION.appDefaultCSSPath = APPLICATION.path&"/html/styles.min.css">--->	
+		<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css">
 		
 		<cfset APPLICATION.mainUrl = "http://software.doplanning.net">
 		<cfset APPLICATION.alternateUrl = "">
@@ -95,7 +105,7 @@
 		<cfset APPLICATION.defaultLanguage = "es">
 		<!---Al cambiar la aplicacion de sitio tambien hay que modificar los extends de los Application--->
 		
-		<cfif APPLICATION.moduleMessenger EQ "enabled">
+		<cfif APPLICATION.moduleMessenger EQ true>
 			
 			<cfset APPLICATION.messengerUserExpireTime = 60><!---In seconds--->
 			
@@ -107,7 +117,7 @@
 			resolveURL="yes" file="checkIfUsersAreConnectedResult.html">
 		</cfif>
 		
-		<cfif APPLICATION.moduleLdapUsers EQ "enabled">
+		<cfif APPLICATION.moduleLdapUsers EQ true>
 			
 			<cfset APPLICATION.ldapServer = "10.72.32.3">
 			<cfset APPLICATION.ldapServerPort = "389">
@@ -127,7 +137,7 @@
 			<cfset APPLICATION.twitterAccessTokenSecret = "ocWlHYr7K0J3NSIELSoHSih5Xk9V6swOqk442XbL3g">
 		
 		</cfif>
-		<!---<cfif APPLICATION.moduleWeb EQ "enabled">
+		<!---<cfif APPLICATION.moduleWeb EQ true>
 			<cfset var paths = [expandPath("./app/WS/components/twitter4j-core-2.2.6-SNAPSHOT.jar")]>
 			<cfset APPLICATION.javaloader = createObject("component", "app.WS.components.javaloader.JavaLoader").init(paths)>
 			<cfset APPLICATION.Twitter = APPLICATION.javaloader.create("twitter4j.Twitter")>		

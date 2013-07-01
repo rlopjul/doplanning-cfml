@@ -9,7 +9,7 @@
 <cfset export = false>
 
 <!---getSubAreas--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getSubAreas" returnvariable="menuAreasQuery">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="menuAreasQuery">
 	<cfinvokeargument name="area_id" value="#rootAreaId#">
 	<cfinvokeargument name="remove_order" value="true">
 					
@@ -44,7 +44,7 @@
 	
 	
 	<!---getSubAreas--->
-	<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getSubAreas" returnvariable="menuSubAreasQuery">
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="menuSubAreasQuery">
 		<cfinvokeargument name="area_id" value="#menuAreasQuery.id#">
 		<cfinvokeargument name="remove_order" value="true">
 						
@@ -65,7 +65,7 @@
 				<li><a href="#APPLICATION.path#/#webDirectory#/page.cfm?id=#subAreasQuery.id#">#subAreasQuery.name#</a>				
 					
 					<!---getSubSubAreas--->
-					<cfinvoke component="#APPLICATION.componentsPath#/components/AreaQuery" method="getSubAreas" returnvariable="menuSubSubAreasQuery">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="menuSubSubAreasQuery">
 						<cfinvokeargument name="area_id" value="#menuSubAreasQuery.id#">
 						<cfinvokeargument name="remove_order" value="true">
 										

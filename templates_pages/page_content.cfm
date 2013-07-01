@@ -40,7 +40,7 @@
 
 
 <!---Entradas--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaEntriesResult">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaEntriesResult">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="itemTypeId" value="2">
 	<cfinvokeargument name="format_content" value="all">
@@ -133,7 +133,7 @@
 
 
 <!---Noticias--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaNewsResult">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaNewsResult">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="itemTypeId" value="4">
 	<cfinvokeargument name="format_content" value="all">
@@ -193,7 +193,7 @@
 
 
 <!---Eventos--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaEventsResult">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaEventsResult">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="itemTypeId" value="5">
 	<cfinvokeargument name="format_content" value="all">
@@ -255,7 +255,7 @@
 <!---Enlaces--->
 <cfif APPLICATION.identifier EQ "vpnet">
 
-	<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaLinksResult">
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaLinksResult">
 		<cfinvokeargument name="area_id" value="#area_id#">
 		<cfinvokeargument name="itemTypeId" value="3">
 		<cfinvokeargument name="format_content" value="all">
@@ -291,7 +291,7 @@
 </cfif>
 
 <!---Documentos--->
-<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getAreaFiles" returnvariable="areaFilesQuery">
+<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="areaFilesQuery">
 	<cfinvokeargument name="area_id" value="#area_id#">
 
 	<cfinvokeargument name="client_abb" value="#clientAbb#">

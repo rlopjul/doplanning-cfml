@@ -21,8 +21,10 @@ var area_item_content_en = {
 	'Modificar Evento':'Modify Event',
 	'Modificar Tarea':'Modify Task',
 	'Modificar Interconsulta':'Modify Interconsultation',
-	'Modificar Elemento de contenido':'Modify Content element',
+	'Modificar Elemento de contenido web':'Modify web content element',
 	'Modificar Noticia':'Modify News item',
+	'Archivo eliminado.':'File deleted.',
+	'Imagen eliminada.':'Image deleted.',
 	/*END area_item_modify_content*/
 	
 	'Asunto:':'Subject:',

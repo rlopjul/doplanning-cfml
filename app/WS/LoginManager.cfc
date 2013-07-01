@@ -7,6 +7,7 @@
 	
 	17-01-2013 alucena: añadido generateNewPassword
 	10-04-2013 alucena: en loginUser se borra la sesion y se hace logout lo primero (antes se hacía en loginUserInApplication)
+	21-05-2013 alucena: no se añade el nombre de la dirección de correo en SESSION.client_email_from porque Mandrill no lo permite
 	
 --->
 <cfcomponent output="false">
@@ -23,6 +24,8 @@
 		<cfset var client_abb = "">
 		<cfset var user_login = "">
 		<cfset var password = "">
+		<cfset var ldap_id = "">
+		<cfset var ldapLogin = false>
 		
 		<cftry>
 		
@@ -89,11 +92,26 @@
 				<cfinvokeargument name="return_type" value="object">
 			</cfinvoke>
 			
-			<cfif isDefined("APPLICATION.moduleLdapUsers") AND APPLICATION.moduleLdapUsers EQ "enabled"><!---LDAP Login--->
-				<cfset ldap_id = "default">
+			<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP Login--->
+
 				<cfif isDefined("xmlRequest.request.parameters.ldap.xmlAttributes.id")><!---ldap id: default/diraya--->
-					<cfset ldap_id = xmlRequest.request.parameters.ldap.xmlAttributes.id>				
+					<cfset ldap_id = xmlRequest.request.parameters.ldap.xmlAttributes.id>
+				<cfelse>
+				 	<cfset ldap_id = "default">				
 				</cfif>
+
+				<cfif ldap_id EQ "doplanning">
+					<cfset ldapLogin = false>
+				<cfelse>
+					<cfset ldapLogin = true>
+				</cfif>
+
+			<cfelse>
+				<cfset ldapLogin = false>
+			</cfif>
+
+
+			<cfif ldapLogin IS true><!---LDAP Login--->				
 			
 				<cfinvoke component="LoginLDAPManager" method="loginLDAPUser" returnvariable="xmlResponseContent">
 					<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -104,7 +122,7 @@
 				
 				<cfinclude template="includes/functionEndNoLog.cfm"><!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
 			
-			<cfelse><!---Default Login--->
+			<cfelse><!---Default Login (DoPlanning)--->
 			
 				<cfset table = client_abb&"_users">			
 			
@@ -193,7 +211,9 @@
 				<cfset SESSION.client_name = objectClient.name>
 				<cfset SESSION.client_administrator = objectClient.administrator_id>
 				<cfset SESSION.client_email_support = objectClient.email_support>
-				<cfset SESSION.client_email_from = """#APPLICATION.title#"" <#objectClient.email_support#>">
+				<!---<cfset SESSION.client_email_from = """#APPLICATION.title#"" <#objectClient.email_support#>">--->
+				<!---No se incluye el nombre junto con la dirección porque Mandrill no lo permite--->
+				<cfset SESSION.client_email_from = objectClient.email_support>
 				
 				<cfloginuser name="#user_login#" password="#password#" roles="#role#">				
 					
@@ -226,7 +246,7 @@
 					COMMIT;						
 				</cfquery>
 				
-				<cfif APPLICATION.moduleMessenger EQ "enabled">
+				<cfif APPLICATION.moduleMessenger EQ true>
 					<cfinvoke component="MessengerManager" method="disconnectUser">
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="user_id" value="#user_id#">
@@ -276,7 +296,7 @@
 				<!---The log is saved here because it needs the SESSION vars, and later are deleted--->
 				<cfinclude template="includes/logRecord.cfm">
 				
-				<cfif APPLICATION.moduleMessenger EQ "enabled">
+				<cfif APPLICATION.moduleMessenger EQ true>
 					<cfinvoke component="MessengerManager" method="disconnectUser">
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="user_id" value="#user_id#">
@@ -352,7 +372,7 @@
 		
 			<cfinclude template="includes/functionStartNoSession.cfm">
 			
-			<cfif APPLICATION.moduleMessenger EQ "enabled">
+			<cfif APPLICATION.moduleMessenger EQ true>
 				<cfinvoke component="MessengerManager" method="disconnectUser">
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 					<cfinvokeargument name="user_id" value="#arguments.user_id#">
@@ -626,6 +646,7 @@
 	<cffunction name="generateNewPassword" output="false" access="public" returntype="struct">
 		<cfargument name="email_login" type="string" required="yes">
 		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="language" type="string" required="true"/>
 		
 		<cfset var method = "generateNewPassword">
 		
@@ -661,6 +682,7 @@
 						<cfinvokeargument name="user_full_name" value="#getUser.family_name# #getUser.name#">
 						<cfinvokeargument name="user_email" value="#user_email_login#">
 						<cfinvokeargument name="user_password" value="#new_password#">
+						<cfinvokeargument name="user_language" value="#arguments.language#"/>
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>

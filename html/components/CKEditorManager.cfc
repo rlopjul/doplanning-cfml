@@ -5,6 +5,9 @@
 	Last file change by: alucena
 	Date of last file change: 13-01-2010
 
+	03-06-2013 alucena: añadido language a loadComponent
+	12-06-2013 alucena: quitado contentsCss porque por defecto ya carga /ckeditor/contents.css y si se define la ruta da problemas en los accesos externos del SAS que usa reescritura de URLs
+
 --->
 <cfcomponent displayname="CKEditorManager" output="true">
 
@@ -17,15 +20,16 @@
 	<!---    loadComponent     --->
 	<cffunction name="loadComponent" output="true" access="public" returntype="void">
 		<cfargument name="name" type="string" required="true">
-		<cfargument name="width" type="numeric" required="no">
-		<cfargument name="height" type="numeric" required="no">
-		<cfargument name="toolbar" type="string" required="no" default="DP">
+		<cfargument name="width" type="numeric" required="false">
+		<cfargument name="height" type="numeric" required="false">
+		<cfargument name="toolbar" type="string" required="false" default="DP">
 		<cfargument name="toolbarStartupExpanded" type="boolean" default="true">
+		<cfargument name="language" type="string" required="false" default="#APPLICATION.defaultLanguage#"/>
 	
 		<cfoutput>
 			
 			<script type="text/javascript">
-				CKEDITOR.replace('#arguments.name#', {toolbar:'#arguments.toolbar#', toolbarStartupExpanded:#arguments.toolbarStartupExpanded#, contentsCss:'#APPLICATION.htmlPath#/ckeditor/contents.css'
+				CKEDITOR.replace('#arguments.name#', {toolbar:'#arguments.toolbar#', toolbarStartupExpanded:#arguments.toolbarStartupExpanded#, language:'#arguments.language#'
 					<cfif isDefined("arguments.width")>
 					, width:#arguments.width#
 					</cfif>
@@ -33,8 +37,10 @@
 					, height:#arguments.height#
 					</cfif>});
 			</script>
-			<!--- --->
+			
 		</cfoutput>
+		<!---contentsCss:'#APPLICATION.htmlPath#/ckeditor/contents.css' (Por defecto, CKEditor ya carga esta página)
+		Se quita la definición de la hoja de estilos porque por defecto carga esa hoja de estilos, y si se pasa este valor no se carga la hoja de estilos bien en páginas con reescritura de URLs como los accesos externos del SAS--->
 		<!---, enterMode:CKEDITOR.ENTER_BR--->
 		
 	</cffunction>

@@ -69,8 +69,8 @@
 	}
 -->
 </style>
-<script type="text/javascript" src="../../html/Scripts/functions.js"></script>
-<script type="text/javascript" src="../../html/login/class.cod.js" ></script>
+<script type="text/javascript" src="../../html/Scripts/functions.min.js"></script>
+<script type="text/javascript" src="../../html/login/class.cod.min.js" ></script>
 <script type="text/javascript">
 // JavaScript Document
 function codificarForm(form)

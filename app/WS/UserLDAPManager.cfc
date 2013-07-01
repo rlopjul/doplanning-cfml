@@ -5,6 +5,8 @@
 	ColdFusion version required: 8
 	Last file change by: alucena
 	Date of last file change: 22-11-2011
+
+	19-06-2013 alucena: se guarda password en createUser si está definido
 	
 --->
 <cfcomponent output="false">
@@ -133,40 +135,6 @@
 	
 	<!---  -----------------------CREATE USER------------------------------------- --->
 
-	<!---<cffunction name="createUser" returntype="string" output="false" access="remote">
-		<cfargument name="request" type="string" required="yes">	
-		
-		<cfset var method = "updateLDAPUser">
-		<cfset var user_id = "">
-		<cfset var client_abb = "">
-		<cfset var user_language = "">
-			
-		<cfset var xmlRequest = "">
-		<cfset var xmlResponseContent = "">
-	
-			
-		<cftry>
-			
-			<cfinclude template="includes/functionStart.cfm">	
-			
-					
-			
-			<cfset xmlResponseContent = xmlResult>
-			
-			<cfinclude template="includes/functionEnd.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-		
-		</cftry>
-		
-		<cfreturn xmlResponse>
-		
-	</cffunction>--->
-	
-	
 	
 	<cffunction name="createUser" returntype="string" output="false" access="public">
 		<cfargument name="request" type="string" required="yes">
@@ -240,11 +208,16 @@
 						<cfthrow errorcode="#error_code#">
 					</cfif>					
 					
-					<!---Check if exist in LDAP--->
-					<cfinvoke component="UserLDAPManager" method="getLDAPUser" returnvariable="xmlResponseUser">
-						<cfinvokeargument name="login_ldap" value="#objectUser.login_ldap#">
-						<cfinvokeargument name="return_type" value="xml">
-					</cfinvoke>
+					<!---Check if exist in LDAP (ONLY VPNET)--->
+					<cfif APPLICATION.identifier EQ "vpnet">
+
+						<cfinvoke component="UserLDAPManager" method="getLDAPUser" returnvariable="xmlResponseUser">
+							<cfinvokeargument name="login_ldap" value="#objectUser.login_ldap#">
+							<cfinvokeargument name="return_type" value="xml">
+						</cfinvoke>
+
+					</cfif>
+					
 				</cfif>
 				
 				<cfif len(objectUser.login_diraya) GT 0>
@@ -263,7 +236,8 @@
 					</cfif>					
 				
 				</cfif>
-				<!---<cfif len(objectUser.login_diraya) GT 0><!---Check if exist in LDAP--->
+				<!--- 
+				<cfif len(objectUser.login_diraya) GT 0><!---Check if exist in LDAP--->
 					<cftry>
 					
 						No se puede chequear porque no disponemos de un usuario que tenga permisos para hacer consultas sobre el LDAP
@@ -274,17 +248,25 @@
 							<cfthrow errorcode="#error_code#"> 
 						</cfcatch>
 					</cftry>
-				</cfif>--->
+				</cfif> --->
+				
 				
 				<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
 				</cfinvoke>
 				
-				<cfset objectUser.language = "es">
+				<cfset objectUser.language = APPLICATION.defaultLanguage>
 				
 				<!---Insert User in DataBase--->			
 				<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
 					INSERT INTO #client_abb#_users
-					(email,name,family_name,telephone,address, internal_user, sms_allowed, mobile_phone, creation_date, telephone_ccode, mobile_phone_ccode, language, login_ldap, login_diraya, center_id, category_id, service_id, service, other_1, other_2, dni)
+					(email,name,family_name,telephone,address, internal_user, sms_allowed, mobile_phone, creation_date, telephone_ccode, mobile_phone_ccode, language, login_ldap, login_diraya, dni
+						<cfif APPLICATION.identifier EQ "vpnet">
+							, center_id, category_id, service_id, service, other_1, other_2 
+						</cfif>
+						<cfif len(objectUser.password) GT 0>
+							, password
+						</cfif>
+						)
 					VALUES(
 						<cfqueryparam value="#objectUser.email#" cfsqltype="cf_sql_varchar">,
 						<cfqueryPARAM value="#objectUser.name#" CFSQLType = "CF_SQL_varchar">,
@@ -295,31 +277,35 @@
 						<cfqueryPARAM value="#objectUser.sms_allowed#" CFSQLType = "CF_SQL_bit">,
 						<cfqueryPARAM value="#objectUser.mobile_phone#" CFSQLType = "CF_SQL_varchar">,
 						<cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,
-						<!---<cfif len(objectUser.telephone_ccode) GT 0>
+						<cfif len(objectUser.telephone_ccode) GT 0>
 							<cfqueryPARAM value="#objectUser.telephone_ccode#" cfsqltype="cf_sql_integer">,
-						<cfelse>--->
+						<cfelse>
 							<cfqueryparam null="true" cfsqltype="cf_sql_numeric">,
-						<!---</cfif>--->
-						<!---<cfif len(objectUser.mobile_phone_ccode) GT 0>
+						</cfif>
+						<cfif len(objectUser.mobile_phone_ccode) GT 0>
 							<cfqueryPARAM value="#objectUser.mobile_phone_ccode#" cfsqltype="cf_sql_integer">,
-						<cfelse>--->
+						<cfelse>
 							<cfqueryparam null="true" cfsqltype="cf_sql_numeric">,
-						<!---</cfif>--->
+						</cfif>
 						<cfqueryparam value="#objectUser.language#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#objectUser.login_ldap#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#objectUser.login_diraya#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#objectUser.center_id#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value="#objectUser.category_id#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value="#objectUser.service_id#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value="#objectUser.service#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#objectUser.other_1#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#objectUser.other_2#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#objectUser.dni#" cfsqltype="cf_sql_varchar">
+						<cfif APPLICATION.identifier EQ "vpnet">
+							, <cfqueryparam value="#objectUser.center_id#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#objectUser.category_id#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#objectUser.service_id#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#objectUser.service#" cfsqltype="cf_sql_varchar">,
+							<cfqueryparam value="#objectUser.other_1#" cfsqltype="cf_sql_varchar">,
+							<cfqueryparam value="#objectUser.other_2#" cfsqltype="cf_sql_varchar">
+						</cfif>
+						<cfif len(objectUser.password) GT 0>
+						, <cfqueryparam value="#objectUser.password#" cfsqltype="cf_sql_varchar">
+						</cfif>						
 						);
 				</cfquery>
 				
 				<!---Aquí se obtiene el id del usuario insertado en base de datos--->
-				<!---<cfset objectUser.id = insertUserResult.GENERATED_KEY>--->
 				<cfquery name="getLastInsertId" datasource="#client_dsn#">
 					SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_users;
 				</cfquery>
@@ -348,14 +334,7 @@
 					SET root_folder_id = #root_folder_id#
 					WHERE id = <cfqueryPARAM value="#objectUser.id#" CFSQLType="cf_sql_integer">;
 				</cfquery>
-				
-				<!---<cfset objectUser.language = "es">
-				<cfquery name="insertUserPreferencesQuery" datasource="#client_dsn#"  >
-					INSERT INTO #client_abb#_user_preferences
-					(user_id, language)
-					VALUES(<cfqueryPARAM value="#objectUser.id#" CFSQLType="cf_sql_integer">, <cfqueryparam value="#objectUser.language#" cfsqltype="cf_sql_varchar">);
-				</cfquery>--->	
-				
+			
 				<cfquery name="commitQuery" datasource="#client_dsn#">
 					COMMIT;
 				</cfquery>
@@ -376,10 +355,12 @@
 			</cftry>	
 			
 			<!---<cfset password_temp = xmlRequest.request.parameters.user.password_temp.xmlText>--->
-			
+
 			<cfinvoke component="AlertManager" method="newUser">
 				<cfinvokeargument name="objectUser" value="#objectUser#">
-				<!---<cfinvokeargument name="password_temp" value="#password_temp#">--->
+				<cfif len(objectUser.password) GT 0 AND len(objectUser.password_temp) GT 0>
+					<cfinvokeargument name="password_temp" value="#objectUser.password_temp#"/>
+				</cfif>
 			</cfinvoke>
 			
 			<cfinvoke component="UserManager" method="xmlUser" returnvariable="xmlResponseContent">

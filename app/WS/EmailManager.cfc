@@ -4,10 +4,11 @@
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 26-09-2012
+	Date of last file change: 10-06-2013
 	
 	26-09-2012 alucena: añadido port="#APPLICATION.emailServerPort#"
-	
+	21-05-2013 alucena: modificado sendEmail para enviar a través de la API de Mandrill
+	29-05-2013 alucena: quitado head_content, no se usa en esta versión	
 --->
 <cfcomponent output="false">
 
@@ -17,6 +18,7 @@
 	
 	<cffunction name="sendEmail" access="public" returntype="void">
 		<cfargument name="from" type="string" required="yes">
+		<cfargument name="from_name" type="string" required="false">
 		<cfargument name="to" type="string" required="yes">
 		<cfargument name="bcc" type="string" required="no" default="">
 		<cfargument name="subject" type="string" required="yes">
@@ -25,18 +27,19 @@
 		<cfargument name="foot_content" type="string" required="no">
 		<cfargument name="styles" type="boolean" required="no" default="true">
 		<cfargument name="file_source" type="string" required="no">
-		<!---<cfargument name="file_name" type="string" required="no">--->
 		
 		<cfset var method = "sendEmail">
 		
-		<!---<cfinclude template="includes/functionStartOnlySession.cfm">--->
-		
-		<cfset head_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">No responda a este email.</span><br />Este email ha sido enviado mediante la aplicación #APPLICATION.title#.</p>'>
-		
+		<cfset var toEmails = "">
+		<cfset var jsonFields = "">
+		<cfset var fromName = "">
+				
+		<!--- <cfset head_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">No responda a este email.</span><br />Este email ha sido enviado mediante la aplicación #APPLICATION.title#.</p>'> --->
+
 		<cfprocessingdirective suppresswhitespace="yes">
 	<cfsavecontent variable="email_content">
-	<!--Este mensaje está en formato HTML, si usted lee esto significa que su cliente de correo no le está mostrando el mensaje en dicho formato, por lo que no lo podrá ver correctamente--><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+	<!--Este mensaje está en formato HTML, si usted lee esto significa que su cliente de correo no le está mostrando el mensaje en dicho formato, por lo que no lo podrá ver correctamente--><!DOCTYPE html>
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <cfif styles EQ true><style type="text/css">
@@ -44,7 +47,6 @@
 body {
 	<cfif APPLICATION.identifier EQ "dp">
 	background-color:#FFFFFF;
-	<!---background-color:#EEEEEE;--->
 	color:#333333;
 	<cfelse>
 	background-color:#FFFFFF;
@@ -58,7 +60,7 @@ body {
 </head>
 <body>
 <cfoutput>
-<cfif isDefined("head_content")>#head_content#<hr /><br /></cfif>
+<!--- <cfif isDefined("head_content")>#head_content#<hr /><br /></cfif> --->
 #arguments.content#
 <cfif isDefined("arguments.foot_content")><br /><hr />#arguments.foot_content#</cfif>
 </cfoutput>
@@ -67,33 +69,117 @@ body {
 	</cfsavecontent>
 	
 	<cfif APPLICATION.identifier EQ "dp">
-	
-		<cfif isDefined("SESSION.client_email_support")>
-			<cfset email_failto = SESSION.client_email_support>
-		<cfelse>
-			<cfset email_failto = APPLICATION.emailFail>
-		</cfif>
-	
-		<cfmail server="#APPLICATION.emailServer#" username="#APPLICATION.emailServerUserName#" password="#APPLICATION.emailServerPassword#" failto="#email_failto#" type="html" from="#arguments.from#" to="#arguments.to#" bcc="#arguments.bcc#" subject="#arguments.subject#" charset="utf-8" port="#APPLICATION.emailServerPort#">#email_content#</cfmail>
 		
-		<!---<cfinvoke webservice="http://195.34.71.223/apps/Era7SendEmail.cfc?wsdl" method="sendEmail" returnvariable="sendResult">
-			<cfinvokeargument name="user" value="#hash('doplanning')#">
-			<cfinvokeargument name="password" value="#hash('X6zklja56a0za65f')#">
-			<cfinvokeargument name="serverUserName" value="#APPLICATION.emailServerUserName#">
-			<cfinvokeargument name="serverPassword" value="#APPLICATION.emailServerPassword#">
-			<cfinvokeargument name="from" value="#arguments.from#">
-			<cfinvokeargument name="to" value="#arguments.to#">
-			<cfinvokeargument name="bcc" value="#arguments.bcc#">
-			<cfinvokeargument name="failto" value="#email_failto#">
-			<cfinvokeargument name="subject" value="#arguments.subject#">
-			<cfinvokeargument name="content" value="#email_content#">
-			<cfinvokeargument name="file_path" value="">
-		</cfinvoke>--->
-	
-	
+		<cfif isDefined("arguments.from_name")>
+			<cfset fromName = "#APPLICATION.title#-#arguments.from_name#">
+		<cfelse>
+			<cfset fromName = APPLICATION.title>			
+		</cfif>
+
+		<cfif APPLICATION.emailSendMode EQ "SMTP">
+			
+			<!---<cfif isDefined("SESSION.client_email_support")>
+				<cfset email_failto = SESSION.client_email_support>
+			<cfelse>
+				<cfset email_failto = APPLICATION.emailFail>
+			</cfif>--->
+
+			<cfset fullFrom = '"#fromName#" <#APPLICATION.emailFrom#>'>
+		
+			<cfif len(APPLICATION.emailServerUserName) IS NOT 0><!---With authentication--->
+				
+				<cfmail server="#APPLICATION.emailServer#" username="#APPLICATION.emailServerUserName#" password="#APPLICATION.emailServerPassword#" type="html" from="#fullFrom#" to="#arguments.to#" bcc="#arguments.bcc#" subject="#arguments.subject#" charset="utf-8" port="#APPLICATION.emailServerPort#">#email_content#</cfmail><!---from="#arguments.from#" failto="#email_failto#"--->
+
+			<cfelse><!---Without authentication--->
+
+				<cfmail server="#APPLICATION.emailServer#" type="html" from="#fullFrom#" to="#arguments.to#" bcc="#arguments.bcc#" subject="#arguments.subject#" charset="utf-8" port="#APPLICATION.emailServerPort#">#email_content#</cfmail><!---from="#arguments.from#" failto="#email_failto#"--->
+
+			</cfif>
+
+
+		<cfelse><!---Send emails by Mandrill API--->
+
+			<cfset toEmails = arrayNew()>
+		
+			<cfif len(arguments.to) GT 0 AND arguments.to NEQ APPLICATION.emailFalseTo>
+				
+				<cfloop list="#arguments.to#" index="toEmail" delimiters=";">
+				
+					<cfset arrayAppend(toEmails, {"email":"#toEmail#"})>
+				
+				</cfloop>
+				
+			</cfif>
+			
+			<cfif len(arguments.bcc) GT 0>
+				
+				<cfloop list="#arguments.bcc#" index="bccEmail" delimiters=";">
+				
+					<cfset arrayAppend(toEmails, {"email":"#bccEmail#"})>
+				
+				</cfloop>
+			
+			</cfif>
+			
+			<cfif arrayLen(toEmails) IS 0><!---Unexpected error--->
+				<cfthrow errorcode="10000">
+			</cfif>
+			
+			<cfset jsonFields = {
+
+				"key": "#APPLICATION.emailServerPassword#",
+				"message": {
+					"html": "#email_content#",
+					"subject": "#arguments.subject#",
+					"from_email": "#APPLICATION.emailFrom#",
+					"from_name": "#fromName#",
+					"to": #toEmails#,
+					"important": false,
+					"track_opens": false,
+					"track_clicks": false,
+					"auto_text": false,
+					"auto_html": false,
+					"inline_css": false,
+					"url_strip_qs": false,
+					"preserve_recipients": false,
+				},
+				"async": true
+			}>
+			
+			<!---"to": [
+				{
+					"email": "alucena@era7.com"
+				},
+				{
+					"email": "bugs@doplanning.net"
+				}
+			],
+			
+			"headers": {
+				"Reply-To": "#APPLICATION.emailReply#"
+			},--->
+			
+			<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult">
+				<cfhttpparam type="header" name="Content-Type" value="application/json" />
+				<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
+			</cfhttp>
+					
+			<cfset mandrillResponse = deserializeJSON(responseResult.filecontent)>
+			
+			<cfif responseResult.status_code NEQ 200>
+				
+				<cfthrow errorcode="1302" message="#mandrillResponse.message#">
+				
+			</cfif>
+		
+
+		</cfif>
+		
+
 	<cfelseif APPLICATION.identifier EQ "vpnet">
 
-		<cfhttp url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/sendMail.jsp" method="post" result="pageResponse">				        <cfhttpparam name="email_from" type="formfield" value="#arguments.from#">
+		<cfhttp url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/sendMail.jsp" method="post" result="pageResponse">				        
+			<cfhttpparam name="email_from" type="formfield" value="#arguments.from#">
 			<cfhttpparam name="email_to" type="formfield" value="#arguments.to#">
 			<cfhttpparam name="email_bcc" type="formfield" value="#arguments.bcc#">
 			<!---<cfhttpparam name="email_replyto" type="formfield" value="">--->

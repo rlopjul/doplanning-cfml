@@ -3,7 +3,7 @@
     File created by: alucena
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 01-02-2013
+    Date of last file change: 11-06-2013
 	
 	06-09-2012 alucena: añadido en objectItem parseo de fechas start_date y end_date
 	26-09-2012 alucena: reemplazado "true" por true en comparaciones de booleanos
@@ -14,7 +14,7 @@
 	09-01-2013 alucena: añadido attached_image_id al contenido de los listados
 	10-01-2013 alucena: los elementos web se pueden modificar por usuarios que no son los propietarios
 	15-04-2013 alucena: añadido deleteUserItems
-	
+	11-06-2013 alucena: iframe_display_type_id se recibe y guarda aunque APPLICATION.moduleWeb sea falso
 --->
 <cfcomponent output="false">
 	
@@ -39,7 +39,7 @@
 		
 		<cftry>
 		
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfprocessingdirective suppresswhitespace="true">
 			<cfsavecontent variable="xmlResult">
@@ -249,7 +249,7 @@
 		
 		<cftry>
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfif isDefined("arguments.xml")>
 			
@@ -509,7 +509,7 @@
 			
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 		
-		<cfinclude template="includes/areaItemTypeSwitch.cfm">
+		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 				
 		<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="objectItem">
 			<cfinvokeargument name="xml" value="#xmlItem#">
@@ -524,7 +524,7 @@
 		<cfelse>
 		
 			<!---GET ITEM PARENT--->
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getItemParent" returnvariable="getItemParentResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemParent" returnvariable="getItemParentResult">
 				<cfinvokeargument name="item_id" value="#objectItem.parent_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -658,9 +658,7 @@
 				</cfif>
 				<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
 					, iframe_url = <cfqueryparam value="#objectItem.iframe_url#" cfsqltype="cf_sql_varchar">
-					<cfif APPLICATION.moduleWeb EQ "enabled"><!---Si no es web no se recibe el valor--->
 					, iframe_display_type_id = <cfqueryparam value="#objectItem.iframe_display_type_id#" cfsqltype="cf_sql_integer">
-					</cfif>
 				</cfif>	 
 				<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
 				, start_date = STR_TO_DATE(<cfqueryparam value="#objectItem.start_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
@@ -698,7 +696,7 @@
 		
 		<cfif arguments.itemTypeId IS 7 AND objectItem.parent_kind NEQ "area" AND parent_state NEQ "answered"><!---Consultations--->
 	
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="updateItemState">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="updateItemState">
 				<cfinvokeargument name="item_id" value="#objectItem.parent_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="state" value="answered">
@@ -749,7 +747,7 @@
 							
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 			<cfinvoke component="AreaItemManager" method="createItem" returnvariable="objectItem">
 				<cfinvokeargument name="xmlItem" value="#xmlItem#">
@@ -826,7 +824,7 @@
 			
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 		
-		<cfinclude template="includes/areaItemTypeSwitch.cfm">
+		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 		
 		<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="objectItem">
 			<cfinvokeargument name="xml" value="#xmlItem#">
@@ -841,6 +839,7 @@
 		</cfinvoke>
 		
 		<cfset objectItem.area_id = getItemObject.area_id><!---Esta variable se utiliza despues para enviar las alertas--->	
+		<cfset objectItem.user_in_charge = getItemObject.user_in_charge>
 		<cfset objectItem.user_full_name = getItemObject.user_full_name><!---Para las alertas--->
 		
 		<!---checkAreaAccess--->
@@ -905,7 +904,7 @@
 						<cfinvokeargument name="return_type" value="object">
 					</cfinvoke>
 					
-					<!---Asigna el nombre el nuevo usuario para las alertas--->
+					<!---Asigna el nombre del nuevo usuario para las alertas--->
 					<cfset objectItem.user_in_charge = user_id>
 					<cfset objectItem.user_full_name = objectUser.family_name&" "&objectUser.name>
 					
@@ -975,9 +974,7 @@
 				</cfif>
 				<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
 					, iframe_url = <cfqueryparam value="#objectItem.iframe_url#" cfsqltype="cf_sql_varchar">
-					<cfif APPLICATION.moduleWeb EQ "enabled">
 					, iframe_display_type_id = <cfqueryparam value="#objectItem.iframe_display_type_id#" cfsqltype="cf_sql_integer">
-					</cfif>
 				</cfif>	 
 				<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
 				, start_date = STR_TO_DATE(<cfqueryparam value="#objectItem.start_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
@@ -1039,7 +1036,7 @@
 							
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 			<cfinvoke component="AreaItemManager" method="updateItem" returnvariable="objectItem">
 				<cfinvokeargument name="xmlItem" value="#xmlItem#">
@@ -1120,7 +1117,7 @@
 							
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<!---Se duplica el archivo--->
 			<cfinvoke component="FileManager" method="duplicateFile" returnvariable="objectFile">
@@ -1156,7 +1153,7 @@
 		<cfset var method = "getWebItemUrl">
 		<cfset var item_url = "">
 				
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfset item_url = "#APPLICATION.webUrl##lCase(itemTypeNameEs)#.cfm?iid=#arguments.item_id#">
 		
@@ -1202,7 +1199,7 @@
 				<cfset tweet_content = arguments.content&" "&tweet_url>
 			</cfif>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/TwitterManager" method="sendTweet">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TwitterManager" method="sendTweet">
 				<cfinvokeargument name="content" value="#tweet_content#">
 			</cfinvoke>
 		
@@ -1219,7 +1216,7 @@
 			
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getItemParent" returnvariable="getItemParentResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemParent" returnvariable="getItemParentResult">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -1240,7 +1237,7 @@
 			
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getItemRoot" returnvariable="getItemRootResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemRoot" returnvariable="getItemRootResult">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -1268,7 +1265,7 @@
 		
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getItem" returnvariable="selectItemQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="selectItemQuery">
 				<cfinvokeargument name="item_id" value="#id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -1371,7 +1368,7 @@
 				
 				<cfif itemTypeId IS 7><!---Consultations--->
 					
-					<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="addReadToItem">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="addReadToItem">
 						<cfinvokeargument name="item_id" value="#id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="user_id" value="#user_id#">
@@ -1383,7 +1380,7 @@
 						
 						<cfif selectItemQuery.state EQ "created">
 						
-							<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="updateItemState">
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="updateItemState">
 								<cfinvokeargument name="item_id" value="#id#">
 								<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 								<cfinvokeargument name="state" value="read">
@@ -1393,7 +1390,7 @@
 							
 						<cfelseif NOT isDate(selectItemQuery.read_date)>
 							
-							<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="setItemReadDate">
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="setItemReadDate">
 								<cfinvokeargument name="item_id" value="#id#">
 								<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 								<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -1435,7 +1432,7 @@
 		
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItemsLastPosition" returnvariable="getLastPositionResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItemsLastPosition" returnvariable="getLastPositionResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				
@@ -1468,7 +1465,7 @@
 		
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfquery name="getItem" datasource="#client_dsn#">		
 				SELECT position, area_id
@@ -1553,7 +1550,7 @@
 		
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfquery name="getItem" datasource="#client_dsn#">		
 				SELECT area_id, state, parent_kind, parent_id, user_in_charge
@@ -1570,7 +1567,7 @@
 			
 				<cfif getItem.user_in_charge EQ user_id AND getItem.parent_kind EQ "area" AND getItem.state NEQ "closed" AND arguments.state EQ "closed"><!---Solo se pueden cerrar las consultas por el creador--->
 				
-					<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="changeItemsState">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="changeItemsState">
 						<cfinvokeargument name="item_id" value="#arguments.item_id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="state" value="#arguments.state#">
@@ -1626,7 +1623,7 @@
 		
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfquery name="getItem" datasource="#client_dsn#">		
 				SELECT area_id, done, user_in_charge, recipient_user
@@ -1697,7 +1694,7 @@
 		
 		<cfinclude template="includes/checkAreaAdminAccess.cfm">
 		
-		<cfinclude template="includes/areaItemTypeSwitch.cfm">
+		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 		
 		<!--- --------------DELETE AREA ITEMS------------------------- --->
 		<cfquery name="itemsQuery" datasource="#client_dsn#">
@@ -1731,7 +1728,7 @@
 		
 		<cfinclude template="includes/functionStart.cfm">
 				
-		<cfinclude template="includes/areaItemTypeSwitch.cfm">
+		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 		
 		<!---checkAdminUser--->
 		<cfif SESSION.client_administrator NEQ user_id><!---The user is not the organization administrator--->
@@ -1776,7 +1773,7 @@
 						
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 		
 			<cfquery name="getItemQuery" datasource="#client_dsn#">		
 				SELECT id,parent_kind,parent_id,attached_file_id,area_id,user_in_charge
@@ -1936,7 +1933,7 @@
 						
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 					
 			<cfquery name="getItemQuery" datasource="#client_dsn#">		
 				SELECT id,parent_kind,parent_id,attached_file_id,area_id,user_in_charge
@@ -2040,7 +2037,7 @@
 						
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 		
 			<cfquery name="getItemQuery" datasource="#client_dsn#">		
 				SELECT id,parent_kind,parent_id,attached_image_id,area_id,user_in_charge
@@ -2143,7 +2140,7 @@
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			
 			<cfquery name="getSubItemsQuery" datasource="#client_dsn#" result="result">
@@ -2263,7 +2260,7 @@
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfquery name="getSubItemsQuery" datasource="#client_dsn#" result="result">
 				SELECT items.id, title, user_in_charge, attached_file_name, family_name, users.name AS user_name, items.creation_date AS item_creation_date, UNIX_TIMESTAMP(items.creation_date) AS creation_date_epoch
@@ -2351,13 +2348,13 @@
 				
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 						
 			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">
 			
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfif isDefined("arguments.user_in_charge")>
 					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
@@ -2487,13 +2484,13 @@
 				
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="user_areas_ids">
 				<cfinvokeargument name="get_user_id" value="#user_id#">
 			</cfinvoke>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
 				<cfinvokeargument name="areas_ids" value="#user_areas_ids#">
 				<cfif isDefined("arguments.search_text")>
 					<cfinvokeargument name="search_text" value="#arguments.search_text#">
@@ -2617,7 +2614,7 @@
 			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/components/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="area_type" value="#arguments.area_type#">
 				<cfif isDefined("arguments.limit")>
@@ -2656,7 +2653,7 @@
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinclude template="includes/areaItemTypeSwitch.cfm">	
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">	
 			
 			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">

@@ -28,7 +28,7 @@ id
 			WHERE id = <cfqueryparam value="#image_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>--->
 		
-		<cfinvoke component="#APPLICATION.componentsPath#/components/FileQuery" method="getImage" returnvariable="objectFile">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getImage" returnvariable="objectFile">
 			<cfinvokeargument name="image_id" value="#image_id#">
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
