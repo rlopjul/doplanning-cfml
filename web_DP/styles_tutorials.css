@@ -1,0 +1,102 @@
+.tutorial_path
+{
+	font-size:17px;
+	color:#004080;
+	font-weight:bold;
+	text-decoration:none;
+}
+.tutorial_path_div
+{
+	font-size:17px;
+	color:#004080;
+	font-weight:bold;
+	text-decoration:none;
+	padding:20px;
+}
+.tutorial_list_text
+{
+	padding-left:20px;
+	font-size:12px;
+	padding-bottom:10px;
+}
+.tutorial_list
+{
+	padding-left:20px;
+}
+.tutorial_list_title_div
+{
+	padding-top:10px;
+	padding-bottom:10px;
+}
+.tutorial_list_title
+{
+	font-size:14px;
+	color:#004080;
+	
+}
+
+.tutorial_list_title:hover{
+	color:#009999;
+
+}
+.tutorial_list_title:visited
+{
+	color:#333333;
+}
+.tutorial_container
+{
+	padding-top:15px;
+	padding-bottom:15px;
+	padding-left:20px;
+	font-size:13px;
+	color:#333333;
+}
+.tutorial_element
+{
+	font-weight:bold;
+	color:#004080;
+}
+.tutorial_title
+{
+	padding-top:10px;
+	padding-bottom:10px;
+}
+.tutorial_description
+{
+	padding:10px;
+}
+.tutorial_goal
+{
+	padding:10px;
+}
+.tutorial_how_to
+{
+	padding:10px;
+}
+.tutorial_link
+{
+	/*color:#333333;*/
+	font-weight:bold;
+	color:#009999;
+}
+
+.tutorial_link:hover{
+	color:#F34745;}
+.tutorial_link_div
+{
+
+}
+
+.enlace_volver{
+	color:#004080;
+	text-decoration:none;
+}
+.enlace_volver:hover{
+	color:#009999;
+}
+
+.bullet{
+	padding-right:5px;
+}
+.volver{
+vertical-align:middle;}
