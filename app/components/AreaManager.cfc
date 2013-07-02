@@ -991,9 +991,6 @@
 		
 
 			<cfcatch>
-				<!--- <cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-				<cfreturn xmlResponse> --->
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
 
