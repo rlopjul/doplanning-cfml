@@ -7,11 +7,13 @@
 	
 	<!---Check the application client version--->
 	<!---If SESSION.app_client_version is defined is because THE CLIENT IS FLEX, if not is defined, the client is HTML--->
+	<!--- DESHABILITADA ESTA COMPROBACIÓN QUE SÓLO SE USABA PARA FLEX
 	<cfif isDefined("SESSION.app_client_version") AND APPLICATION.clientVersion NEQ SESSION.app_client_version>
 		<cfset error_code = 1004>
 						
 		<cfthrow errorcode="#error_code#">	
-	</cfif>
+	</cfif> --->
+	
 	
 <cfelse><!---Session parameters are undefined--->
 				
