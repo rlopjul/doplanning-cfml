@@ -16,19 +16,21 @@
 
 	<!--- LOGIN USER --->
 	
-	<cffunction name="loginUser" returntype="string" output="false" access="public">
-		<cfargument name="request" type="string" required="yes">
-		
+	<cffunction name="loginUser" returntype="struct" output="false" access="public">
+		<cfargument name="login" type="string" required="true">
+		<cfargument name="password" type="string" required="true">
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="ldap_id" type="string" required="false" default="default"><!---ldap id: default/diraya/dmsas--->
+
 		<cfset var method = "loginUser">
-		
-		<cfset var client_abb = "">
+			
+		<cfset var response = structNew()>
+
 		<cfset var user_login = "">
-		<cfset var password = "">
-		<cfset var ldap_id = "">
 		<cfset var ldapLogin = false>
 		
 		<cftry>
-		
+
 			<cfinclude template="includes/functionStartNoSession.cfm">
 			
 			<!---Esto estaba antes en loginUserInApplication--->
@@ -65,18 +67,14 @@
 				</cfif>
 			</cfif>	
 			
-			
-			<cfset client_abb = xmlRequest.request.parameters.client_abb.xmlText>
-			<cfset user_login = xmlRequest.request.parameters.user.xmlAttributes.email>
-			<cfset password = xmlRequest.request.parameters.user.xmlAttributes.password>
-			
-			<cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
+			<cfset user_login = arguments.login>
+			<cfset client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 			
 			<!---Get client data--->
 			<cfquery name="getClient" datasource="#APPLICATION.dsn#">
 				SELECT id, name, administrator_id, email_support
 				FROM APP_clients
-				WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">;
+				WHERE abbreviation = <cfqueryparam value="#arguments.client_abb#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
 			
 			<cfif getClient.RecordCount IS 0><!---Client does not exist--->
@@ -88,19 +86,14 @@
 			</cfif>
 			
 			<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
-				<cfinvokeargument name="xml" value="#xmlRequest.request.parameters.user#">
-				<cfinvokeargument name="return_type" value="object">
+				<cfinvokeargument name="email" value="#arguments.login#"/>
+				<cfinvokeargument name="password" value="#arguments.password#"/>
+				<cfinvokeargument name="return_type" value="object"/>
 			</cfinvoke>
 			
 			<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP Login--->
 
-				<cfif isDefined("xmlRequest.request.parameters.ldap.xmlAttributes.id")><!---ldap id: default/diraya--->
-					<cfset ldap_id = xmlRequest.request.parameters.ldap.xmlAttributes.id>
-				<cfelse>
-				 	<cfset ldap_id = "default">				
-				</cfif>
-
-				<cfif ldap_id EQ "doplanning">
+				<cfif arguments.ldap_id EQ "doplanning">
 					<cfset ldapLogin = false>
 				<cfelse>
 					<cfset ldapLogin = true>
@@ -114,13 +107,15 @@
 			<cfif ldapLogin IS true><!---LDAP Login--->				
 			
 				<cfinvoke component="LoginLDAPManager" method="loginLDAPUser" returnvariable="xmlResponseContent">
-					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 					<cfinvokeargument name="objectClient" value="#getClient#">
 					<cfinvokeargument name="objectUser" value="#objectUser#">
 					<cfinvokeargument name="ldap_id" value="#ldap_id#">
 				</cfinvoke>
 				
-				<cfinclude template="includes/functionEndNoLog.cfm"><!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
+				<!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
+
+				<cfset response = {result="true", message=""}>
 			
 			<cfelse><!---Default Login (DoPlanning)--->
 			
@@ -131,63 +126,59 @@
 					SELECT users.id, users.number_of_connections, users.language 
 					FROM #table# AS users 
 					<!---INNER JOIN #client_abb#_user_preferences AS preferences ON users.id = preferences.user_id --->
-					WHERE users.email = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar"> AND password = <cfqueryparam value="#password#" cfsqltype="cf_sql_varchar">;
+					WHERE users.email = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar"> AND password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">;
 				</cfquery>		
 				
 				<!--- If at least one record is found, it means that the login is valid --->
-				<cfif loginQuery.RecordCount GREATER THAN 0>
+				<cfif loginQuery.RecordCount GT 0>
 					
 					<cfset objectUser.id = loginQuery.id>
 					<cfset objectUser.language = loginQuery.language>
 					<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
 				
-					<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="xmlResponseContent">
-						<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="response">
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="objectClient" value="#getClient#">
 						<cfinvokeargument name="objectUser" value="#objectUser#">
 					</cfinvoke>
 					
-					<cfinclude template="includes/functionEndNoLog.cfm"><!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
+					<!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
 				
 				<cfelse>
 				
-					<cfset login_message = "Usuario o contraseña incorrecta.">
-			
-					<cfsavecontent variable="xmlResponseContent">
-						<cfoutput><login valid="false"><message><![CDATA[#login_message#]]></message></login></cfoutput>
-					</cfsavecontent>
+					<cfset response_message = "Usuario o contraseña incorrecta.">
 					
-					<cfinclude template="includes/functionEndNoSession.cfm">
-			
+					<cfset response = {result=false, message=#login_message#}>
+								
 				</cfif>
 			
 			</cfif>
-			
-			
-			<cfcatch>
-				<cfset xmlResponseConent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-			
-		</cftry>
-		<cfreturn xmlResponse>
 		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
 	</cffunction>
 	
 	
 	<!--- loginUserInApplication --->
 	
-	<cffunction name="loginUserInApplication" returntype="string" output="false" access="public">
+	<cffunction name="loginUserInApplication" returntype="struct" output="false" access="public">
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="objectClient" type="any" required="yes">
 		<cfargument name="objectUser" type="struct" required="yes">
 		
 		<cfset var method = "loginUserInApplication">
 		
+		<cfset var response = structNew()>
+
 		<cfset var user_login = "">
-		<cfset var password = "">
-		<cfset var returnValue = "">
-		
+		<cfset var password = "">		
 		
 			<cfinclude template="includes/functionStartNoSession.cfm">
 			
@@ -252,37 +243,30 @@
 						<cfinvokeargument name="user_id" value="#user_id#">
 					</cfinvoke>
 				</cfif>
-								
-				<cfset returnValue = "true">
-									
+																	
 			</cflogin>	
-			
-			<cfsavecontent variable="xmlResponse">
-				<cfoutput>
-					<login valid="#returnValue#"></login>
-				</cfoutput>
-			</cfsavecontent>
-					
+
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
-			
-		<cfreturn xmlResponse>
+
+			<cfset response = {result=true, message=""}>
+
+		<cfreturn response>
 		
 	</cffunction>
 	
 	
 	<!--- LOG OUT USER --->
 	
-	<cffunction name="logOutUser" returntype="string" output="false" access="public">
-		<!---<cfargument name="userName" type="string" required="true">--->
+	<cffunction name="logOutUser" returntype="struct" output="false" access="public">
 		
 		<cfset var method = "logOutUser">
+
+		<cfset var response = structNew()>
 
 		<cftry>
 		
 			<cfinclude template="includes/functionStartNoSession.cfm">
-			
-			<!---<cfset userName = xmlRequest.request.parameters.user.xmlAttributes.id>--->
-			
+						
 			<cfif isDefined("SESSION.user_id")>
 				<cfset user_id = SESSION.user_id>
 			</cfif>
@@ -341,21 +325,19 @@
 			<cfif isDefined("SESSION.client_email_from")>
 				<cfset StructDelete(SESSION, "client_email_from")>
 			</cfif>
-			
-			<!---<cfreturn true>--->
-			<cfset xmlResponseContent = "true">	
 
-			<cfset status = "ok">
 			<!---The log is saved before in this method--->
-			<cfinclude template="includes/generateResponse.cfm">
+
+			<cfset response = {result=true, message=""}>
 			
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-	
-		<cfreturn xmlResponse>
+
+		<cfreturn response>
 	
 	</cffunction>
 	
@@ -405,54 +387,56 @@
 
 	<!--- ONE USER IS ALREADY LOGGED IN --->
 
+	<!--- Deshabilitado: sólo usado en cliente Flex
 	<cffunction name="oneUserIsAlreadyLoggedIn" returntype="String" output="false" access="public">
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "oneUserIsAlreadyLoggedIn">
-		
-		<cftry>
-			<cfinclude template="includes/functionStartNoSession.cfm">			
+			<cfargument name="request" type="string" required="yes">
 			
-			<cfset app_client_login_version = xmlRequest.request.parameters.app_client_version.xmlText>
+			<cfset var method = "oneUserIsAlreadyLoggedIn">
 			
-			
-			<cfif APPLICATION.clientLoginVersion NEQ app_client_login_version>
+			<cftry>
+				<cfinclude template="includes/functionStartNoSession.cfm">			
 				
-				<cfset error_code = 1004>
-						
-				<cfthrow errorcode="#error_code#">
+				<cfset app_client_login_version = xmlRequest.request.parameters.app_client_version.xmlText>
 				
-			</cfif>
-			
-			<cfif getAuthUser() NEQ "">
-			
-				<cfset result = true>
-			
-			<cfelse>
 				
-				<cfset result = false>
+				<cfif APPLICATION.clientLoginVersion NEQ app_client_login_version>
+					
+					<cfset error_code = 1004>
+							
+					<cfthrow errorcode="#error_code#">
+					
+				</cfif>
 				
-			</cfif>
+				<cfif getAuthUser() NEQ "">
+				
+					<cfset result = true>
+				
+				<cfelse>
+					
+					<cfset result = false>
+					
+				</cfif>
+				
+				<cfset xmlResponseContent = "<value><![CDATA[#result#]]></value>">
 			
-			<cfset xmlResponseContent = "<value><![CDATA[#result#]]></value>">
-		
-			<cfinclude template="includes/functionEndNoLog.cfm">
+				<cfinclude template="includes/functionEndNoLog.cfm">
+				
+				<cfcatch>
+					<cfset xmlResponseContent = "">
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>
+			</cftry>
 			
-			<cfcatch>
-				<cfset xmlResponseContent = "">
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-		</cftry>
-		
-		<cfreturn xmlResponse>
-		
-	</cffunction>
+			<cfreturn xmlResponse>
+			
+		</cffunction> --->
+	
 
 
 	<!--- GET USER LOGGED IN --->
-
+ 
 	<cffunction name="getUserLoggedIn" returntype="String" access="public">
-			
+				
 		<cfset var method = "getUserLoggedIn">
 		
 		<cfset var xmlResponseContent = "">
@@ -478,12 +462,16 @@
 		</cftry>
 		
 		<cfreturn xmlResponse>
-		
+			
 	</cffunction>
+	
 	
 	
 	<!--- --------------------------------- sendClientAppVersion --------------------------------- --->
 
+	<!--- Este método DEBE DEJAR DE USARSE cuando se deshabilite la versión de Flex --->
+
+	<!--- 
 	<cffunction name="sendClientAppVersion" returntype="String" access="public">
 		<cfargument name="request" type="string" required="yes">
 		
@@ -519,7 +507,8 @@
 		
 		<cfreturn xmlResponse>
 		
-	</cffunction>
+	</cffunction> --->
+	
 	
 	<!--- ----------------------- sendEmailToAdministrator -------------------------------- --->
 	
@@ -729,7 +718,7 @@
 		
 		</cftry>
 			
-		<cfreturn #response#>
+		<cfreturn response>
 		
 	</cffunction>	
 	

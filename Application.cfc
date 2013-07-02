@@ -48,6 +48,7 @@
 		<cfset APPLICATION.version = "1.8">
 		<cfset APPLICATION.clientVersion = "1.8">
 		<cfset APPLICATION.clientLoginVersion = "1.4.1">
+		
 		<cfset APPLICATION.title = "DoPlanning">
 		<cfset APPLICATION.identifier = "dp"><!---Por defecto aquí debe poner dp. dp para DoPlanning. vpnet para hospital--->
 		
@@ -61,7 +62,7 @@
 		<cfset APPLICATION.emailServerPort = "587"><!---Default 587, SSL 465 (SSL da problemas con algunas versiones de JDK/JRE y Railo)--->
 		<cfset APPLICATION.emailFrom = "doplanning@era7bioinformatics.com">
 		<cfset APPLICATION.emailFalseTo = """Undisclosed-Recipients"" <dpera7@gmail.com>"> 
-		<cfset APPLICATION.emailReply = "support@doplanning.net">
+		<cfset APPLICATION.emailReply = "support@doplanninng.net">
 		<cfset APPLICATION.emailFail = "support@doplanning.net">
 		<cfset APPLICATION.emailErrors = "bugs@doplanning.net">
 		

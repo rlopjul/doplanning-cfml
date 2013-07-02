@@ -3,7 +3,7 @@
     File created by: alucena
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 10-06-2013
+    Date of last file change: 02-07-2013
 	
 --->
 <cfcomponent output="false">
@@ -20,10 +20,11 @@
 		<cfargument name="password" type="string" required="true">
 		<cfargument name="ldap_id" type="string" required="false">
 		<cfargument name="client_abb" type="string" required="true">
-		<!---<cfargument name="destination_page" type="string" required="no" default="">--->
 		
 		<cfset var method = "loginUser">
 		
+		<cfset var response = structNew()>
+
 		<cfset var response_message = "">
 		
 		<cftry>
@@ -34,64 +35,24 @@
 				</cfif>
 			</cfif>
 			
-			<cfsavecontent variable="xmlRequest">
-				<cfoutput>
-				<request>
-					<parameters>
-					<user email="#arguments.email#" password="#arguments.password#"/>
-    				<client_abb><![CDATA[#arguments.client_abb#]]></client_abb>
-					<cfif isDefined("arguments.ldap_id")>
-					<ldap id="#arguments.ldap_id#"/>
-					</cfif>
-					</parameters>
-				</request>
-				</cfoutput>
-			</cfsavecontent>
-			
 			<cfinvoke component="#APPLICATION.componentsPath#/LoginManager" method="loginUser" returnvariable="response">
-				<cfinvokeargument name="request" value="#xmlRequest#">
+				<cfinvokeargument name="login" value="#arguments.email#"/>
+				<cfinvokeargument name="password" value="#arguments.password#"/>
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
+				<cfif isDefined("arguments.ldap_id")>
+					<cfinvokeargument name="ldap_id" value="#arguments.ldap_id#"/>
+				</cfif>
 			</cfinvoke>
 			
-			<cfxml variable="xmlResponse">
-				<cfoutput>
-				#response#
-				</cfoutput>			
-			</cfxml>
-			
-			<cfif xmlResponse.response.result.login.xmlAttributes.valid EQ "true">
-				
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Request" method="doRequest" returnvariable="sendClientAppVersionResponse">
-					<cfinvokeargument name="request_component" value="LoginManager">
-					<cfinvokeargument name="request_method" value="sendClientAppVersion">
-					<cfinvokeargument name="request_parameters" value="<app_client_version><![CDATA[#APPLICATION.clientVersion#]]></app_client_version>">
-				</cfinvoke>
-				
-				<!---<cfif len(arguments.destination_page) IS 0>
-					<cflocation url="#APPLICATION.path#/html/" addtoken="no">
-				<cfelse>
-					<cflocation url="#arguments.destination_page#" addtoken="no">
-				</cfif>--->
-				<cfset response = {result="true", message=""}>	
-				
-			<cfelse>
-				<!---<cfset message =  URLEncodedFormat(xmlResponse.response.result.login.message.xmlText)>
-				<cfif len(arguments.destination_page) IS 0>
-					<cflocation url="index.cfm?client_abb=#client_abb#&message=#message#" addtoken="no">
-				<cfelse>
-					<cflocation url="index.cfm?client_abb=#client_abb#&dpage=#arguments.destination_page#&message=#message#" addtoken="no">
-				</cfif>--->
-				<cfset response_message = xmlResponse.response.result.login.message.xmlText>
-				<cfset response = {result="false", message=#response_message#}>	
-			</cfif>
-			
 			<cfcatch>
-				<!---<cfinclude template="../components/includes/errorHandler.cfm">--->
+				
+				<cfinclude template="#APPLICATION.htmlComponentsPath#/includes/errorHandlerNoRedirectStruct.cfm">
+
 				<cfset response_message = "Ha ocurrido un error al realizar el login">
 				<cfset response = {result="false", message=#response_message#}>	
 				
-				<!---<cflocation url="../error.cfm">No se puede dirigir a esta página porque no se está logeado--->
 			</cfcatch>
-			
+				
 		</cftry>
 		
 		<cfreturn response>
@@ -101,42 +62,29 @@
 	
 	<!--- LOGOUT USER --->
 	
-	<cffunction name="logOutUser" returntype="void" output="false" access="public">
+	<cffunction name="logOutUser" returntype="struct" output="false" access="public">
 		
 		<cfset var method = "logoutUser">
+
+		<cfset var response = structNew()>
 		
 		<cftry>			
-			
-			<!---<cfif isDefined("SESSION.client_id")>
-				<cfset client_id = SESSION.client_id>
-			</cfif>--->
 			
 			<cfinvoke component="#APPLICATION.componentsPath#/LoginManager" method="logOutUser" returnvariable="response">
 			</cfinvoke>
 			
-			<!---<cfxml variable="xmlResponse">
-				<cfoutput>
-				#response#
-				</cfoutput>			
-			</cfxml>			
-			<cfif xmlResponse.response.result.login.xmlAttributes.valid EQ "true">
-			<cfelse>
-			</cfif>--->
-			
-			<!---<cfif isDefined("client_id")>
-				<cflocation url="#APPLICATION.path#/#client_id#/html/" addtoken="no">
-			<cfelse>
-				<cflocation url="#APPLICATION.mainUrl#" addtoken="no">
-			</cfif>--->
-						
 			<cfcatch>
-				<cfinclude template="../components/includes/errorHandler.cfm">
-			</cfcatch>
+				<cfinclude template="#APPLICATION.htmlComponentsPath#/includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
 			
 		</cftry>
 		
+		<cfreturn response>
+		
 	</cffunction>
+
 	
+	<!--- GET USER LOGGED --->
 	
 	<cffunction name="getUserLoggedIn" returntype="xml" output="false" access="public">
 		
@@ -166,20 +114,27 @@
 	<!--- GENERATE NEW PASSWORD --->	
 	
 	<cffunction name="generateNewPassword" returntype="struct" output="false" access="public">
-		<cfargument name="email" type="string" required="true">
-		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="email" type="string" required="true"/>
+		<cfargument name="client_abb" type="string" required="true"/>
 		<cfargument name="language" type="string" required="true"/>
 		
 		<cfset var method = "generateNewPassword">
-		
-		<cfset var response_message = "">
-		
+
+		<cfset var response = structNew()>	
+
+		<cftry>
 			
-		<cfinvoke component="#APPLICATION.componentsPath#/LoginManager" method="generateNewPassword" returnvariable="response">
-			<cfinvokeargument name="email_login" value="#arguments.email#">
-			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-			<cfinvokeargument name="language" value="#arguments.language#"/>
-		</cfinvoke>
+			<cfinvoke component="#APPLICATION.componentsPath#/LoginManager" method="generateNewPassword" returnvariable="response">
+				<cfinvokeargument name="email_login" value="#arguments.email#">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="language" value="#arguments.language#"/>
+			</cfinvoke>
+		
+			<cfcatch>
+				<cfinclude template="#APPLICATION.htmlComponentsPath#/includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
 		
 		<cfreturn response>
 		

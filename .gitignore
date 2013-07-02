@@ -2,7 +2,9 @@
 ## General
 #################
 *.zip
+*.sublime-project
 _notes
+sftp-config.json
 /app/historial/
 /app/temp/
 /assets/
@@ -20,7 +22,6 @@ _notes
 /pruebas/
 /styles.css
 /styles_menu.css
-sftp-config.json
 Application_POZOBLANCO.cfc
 Application_POZOBLANCO_ANTERIOR.cfc
 index_POZOBLANCO.cfm
