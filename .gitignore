@@ -18,8 +18,8 @@ _notes
 /web_DP/
 /prueba/
 /pruebas/
-.styles.css
-.styles_menu.css
+/styles.css
+/styles_menu.css
 sftp-config.json
 Application_POZOBLANCO.cfc
 Application_POZOBLANCO_ANTERIOR.cfc
