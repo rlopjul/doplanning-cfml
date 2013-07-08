@@ -17,7 +17,7 @@
 
 <form action="users.cfm?area=#area_id#" method="post" style="padding:0; margin:0; clear:none;">
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="xmlResponse">	
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="response">	
 		<cfinvokeargument name="area_id" value="#area_id#">
 		<!---<cfinvokeargument name="order_by" value="#order_by#">
 		<cfinvokeargument name="order_type" value="#order_type#">--->
@@ -25,7 +25,7 @@
 	
 	<cfxml variable="xmlUsers">
 		<cfoutput>
-		#xmlResponse.response.result.users#
+		#response.usersXml#
 		</cfoutput>
 	</cfxml>
 	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>

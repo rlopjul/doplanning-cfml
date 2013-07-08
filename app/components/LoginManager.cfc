@@ -19,8 +19,9 @@
 	<cffunction name="loginUser" returntype="struct" output="false" access="public">
 		<cfargument name="login" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
-		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="password_encoded" type="boolean" required="false" default="true">
 		<cfargument name="ldap_id" type="string" required="false" default="default"><!---ldap id: default/diraya/dmsas--->
+		<cfargument name="client_abb" type="string" required="true">
 
 		<cfset var method = "loginUser">
 			
@@ -67,6 +68,12 @@
 				</cfif>
 			</cfif>	
 			
+			<cfif APPLICATION.moduleLdapUsers IS false OR arguments.ldap_id EQ "doplanning">
+				<cfif arguments.password_encoded NEQ true>
+					<cfset arguments.password = lCase(hash(arguments.password))>
+				</cfif>
+			</cfif>
+
 			<cfset user_login = arguments.login>
 			<cfset client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 			
@@ -125,7 +132,6 @@
 				<cfquery name="loginQuery" datasource="#client_dsn#">			
 					SELECT users.id, users.number_of_connections, users.language 
 					FROM #table# AS users 
-					<!---INNER JOIN #client_abb#_user_preferences AS preferences ON users.id = preferences.user_id --->
 					WHERE users.email = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar"> AND password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">;
 				</cfquery>		
 				
@@ -148,7 +154,7 @@
 				
 					<cfset response_message = "Usuario o contraseña incorrecta.">
 					
-					<cfset response = {result=false, message=#login_message#}>
+					<cfset response = {result=false, message=#response_message#}>
 								
 				</cfif>
 			
@@ -708,7 +714,7 @@
 			
 			<cfcatch>
 			
-				<cfinclude template="#APPLICATION.componentsPath#/includes/errorHandler.cfm">
+				<cfinclude template="#APPLICATION.componentsPath#/includes/errorHandlerStruct.cfm">
 				
 				<cfset message = "Ha ocurrido un error al generar la nueva contraseña. Disculpe las molestias.">
 				

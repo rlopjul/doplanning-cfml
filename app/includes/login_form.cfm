@@ -2,7 +2,22 @@
 
 <div class="div_login_form">
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+<cfinclude template="#APPLICATION.corePath#/includes/alert_message.cfm">
+
+<script type="text/javascript">
+function codificarForm(form) { 	
+	$('.btn-primary').button('loading');
+	
+	form.password.readonly = true;
+	<cfif APPLICATION.moduleLdapUsers IS false>
+		var password = form.password.value;
+		form.password.value = "";
+		var passwordcod = MD5.hex_md5(password);
+		form.password.value = passwordcod;
+	</cfif>
+	return (true);
+}
+</script>
 
 <form action="#CGI.SCRIPT_NAME#" method="post" onsubmit="return codificarForm(this)">
 	
