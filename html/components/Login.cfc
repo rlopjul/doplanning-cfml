@@ -4,7 +4,7 @@
     ColdFusion version required: 8
     Last file change by: alucena
     Date of last file change: 02-07-2013
-	
+
 --->
 <cfcomponent output="false">
 
@@ -14,7 +14,7 @@
 
 	<!--- LOGIN USER --->
 	
-	<cffunction name="loginUser" returntype="struct" output="false" access="public">
+	<!--- <cffunction name="loginUser" returntype="struct" output="false" access="public">
 		<cfargument name="encoded" type="string" required="no" default="true">
 		<cfargument name="email" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
@@ -57,13 +57,14 @@
 		
 		<cfreturn response>
 		
-	</cffunction>
+	</cffunction> --->
 	
 	
 	<!--- LOGOUT USER --->
 	
+	<!--- 
 	<cffunction name="logOutUser" returntype="struct" output="false" access="public">
-		
+			
 		<cfset var method = "logoutUser">
 
 		<cfset var response = structNew()>
@@ -81,7 +82,8 @@
 		
 		<cfreturn response>
 		
-	</cffunction>
+	</cffunction> --->
+	
 
 	
 	<!--- GET USER LOGGED --->
@@ -113,7 +115,7 @@
 	
 	<!--- GENERATE NEW PASSWORD --->	
 	
-	<cffunction name="generateNewPassword" returntype="struct" output="false" access="public">
+	<!--- <cffunction name="generateNewPassword" returntype="struct" output="false" access="public">
 		<cfargument name="email" type="string" required="true"/>
 		<cfargument name="client_abb" type="string" required="true"/>
 		<cfargument name="language" type="string" required="true"/>
@@ -138,7 +140,7 @@
 		
 		<cfreturn response>
 		
-	</cffunction>
+	</cffunction> --->
 	
 	
 	

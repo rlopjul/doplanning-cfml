@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<cfinclude template="#APPLICATION.htmlPath#/includes/remember_password_query.cfm">
+<cfinclude template="#APPLICATION.corePath#/includes/remember_password_query.cfm">
 
 <cfif NOT isDefined("URL.client_abb")>
 	<cfif len(APPLICATION.path) GT 0>
@@ -142,7 +142,7 @@
 	<div class="row">
 		<cfif APPLICATION.identifier EQ "dp">
 
-			<cfinclude template="#APPLICATION.htmlPath#/includes/remember_password_form.cfm">
+			<cfinclude template="#APPLICATION.corePath#/includes/remember_password_form.cfm">
 			
 		</cfif>
 	</div>

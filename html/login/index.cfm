@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<cfinclude template="#APPLICATION.htmlPath#/includes/login_query.cfm">
+<cfinclude template="#APPLICATION.corePath#/includes/login_query.cfm">
 
 <cfif NOT isDefined("URL.client_abb")>
 	<cfif len(APPLICATION.path) GT 0>
@@ -99,20 +99,7 @@
 </cfoutput>
 
 <script src="class.cod.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-function codificarForm(form) { 	
-	$('.btn-primary').button('loading');
-	
-	form.password.readonly = true;
-	<cfif APPLICATION.moduleLdapUsers IS false>
-		var password = form.password.value;
-		form.password.value = "";
-		var passwordcod = MD5.hex_md5(password);
-		form.password.value = passwordcod;
-	</cfif>
-	return (true);
-}
-</script>
+
 <!-- InstanceEndEditable -->
 </head>
 
@@ -169,7 +156,7 @@ function codificarForm(form) {
 			<cfset destination_page = "">
 		</cfif>
 		
-		<cfinclude template="#APPLICATION.htmlPath#/includes/login_form.cfm">
+		<cfinclude template="#APPLICATION.corePath#/includes/login_form.cfm">
 	</div>
 
 </div>
