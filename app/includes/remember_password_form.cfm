@@ -6,7 +6,7 @@ encrypt_key (remember_password_query.cfm)
 
 <div class="div_login_form">
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+<cfinclude template="#APPLICATION.corePath#/includes/alert_message.cfm">
 
 <script type="text/javascript">
 	function getNewPasswordOnSubmit(form){

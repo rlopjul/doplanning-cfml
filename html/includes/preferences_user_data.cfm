@@ -9,7 +9,7 @@ Datos Personales
 
 <cfset return_page = "preferences.cfm">
 
-<cfinvoke component="#APPLICATION.htmlPath#/login/Login" method="getUserLoggedIn" returnvariable="xmlResponse">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Login" method="getUserLoggedIn" returnvariable="xmlResponse">
 </cfinvoke>
 
 <cfxml variable="xmlUser">
