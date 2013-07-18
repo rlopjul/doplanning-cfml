@@ -1,3 +1,5 @@
+<!--- CUIDADO: este script redirige de página si hay un error. Usar errorHandlerNoRedirectStruct.cfm en su lugar si no se quiere que redirija para mostrar error--->
+
 <cftry>
 	<!---Default Error Handler--->
 

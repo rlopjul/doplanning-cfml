@@ -31,11 +31,11 @@
 		<cfset FORM["#arguments.itemTypeName#"] = '<#arguments.itemTypeName# id="#arguments.item_id#"/>'>
 		<cfinclude template='#APPLICATION.resourcesPath#/uploadFiles/uploadFile.cfm'>--->
 		
-		<cfxml variable="xmlFile">
+		<!---<cfxml variable="xmlFile">
 			<cfoutput>
 			<file id="#arguments.file_id#" physical_name="#arguments.file_physical_name#"/>
 			</cfoutput>
-		</cfxml>	
+		</cfxml>--->	
 		
 		<cfxml variable="xmlItem">
 			<cfoutput>
@@ -48,7 +48,9 @@
 			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			<cfinvokeargument name="user_language" value="#SESSION.user_language#">
-			<cfinvokeargument name="xmlFile" value="#xmlFile#">
+			<!---<cfinvokeargument name="xmlFile" value="#xmlFile#">--->
+			<cfinvokeargument name="file_id" value="#arguments.file_id#">
+			<cfinvokeargument name="file_physical_name" value="#arguments.file_physical_name#">
 			<cfinvokeargument name="Filedata" value="#arguments.Filedata#">
 			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 			<cfinvokeargument name="xmlItem" value="#xmlItem#">

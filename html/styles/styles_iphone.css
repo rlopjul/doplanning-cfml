@@ -9,7 +9,7 @@
 .div_header_content
 {
 	height:47px;
-	background-image:url(assets/header_mobile.jpg);
+	background-image:url(../assets/header_mobile.jpg);
 	background-position:left top;
 	background-repeat:no-repeat;
 }

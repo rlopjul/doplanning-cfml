@@ -992,47 +992,35 @@
 	<!--- ----------------------- DELETE USER -------------------------------- --->
 	
 	<cffunction name="deleteUser" returntype="string" output="false" access="public">
-		<cfargument name="request" type="string" required="yes">
+		<cfargument name="delete_user_id" type="numeric" required="yes">
 		
 		<cfset var method = "deleteUser">
-		<cfset var delete_user_id = "">
+
+		<cfset var response = structNew()>
+
 		<cfset var user_id = "">
-<cfset var client_abb = "">
-<cfset var user_language = "">
-	
-<cfset var xmlRequest = "">
-<cfset var xmlResponseContent = "">
-	
+		<cfset var client_abb = "">
 		
 		<cftry>
 		
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="includes/checkAdminAccess.cfm">
-			
-			<cfset delete_user_id = xmlRequest.request.parameters.user.xmlAttributes.id>
-			
+						
 			<cfquery name="getUserQuery" datasource="#client_dsn#">		
-				SELECT id, root_folder_id, image_file<!---, image_id (ESTE CAMPO YA NO SE USA)--->
+				SELECT id, root_folder_id, image_file
 				FROM #client_abb#_users
-				WHERE id=<cfqueryparam value="#delete_user_id#" cfsqltype="cf_sql_integer">;		
+				WHERE id=<cfqueryparam value="#arguments.delete_user_id#" cfsqltype="cf_sql_integer">;		
 			</cfquery>
 			
 			<cfif getUserQuery.recordCount GT 0>
 				
-				<!---checkAdminUser--->
-				<!---<cfquery name="checkAdminUser" datasource="#APPLICATION.dsn#">
-					SELECT *
-					FROM APP_clients
-					WHERE abbreviation=<cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar"> AND administrator_id=<cfqueryparam value="#delete_user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>--->
-				
-				<!---<cfif checkAdminUser.recordCount GT 0>--->
+				<!--- 
 				<cfif SESSION.client_administrator NEQ user_id><!---The user is not the organization administrator--->
 					<cfset error_code = 206>
 				
 					<cfthrow errorcode="#error_code#">
-				</cfif>
+				</cfif> --->	
 				
 				<cfquery name="beginQuery" datasource="#client_dsn#">		
 					BEGIN;		
@@ -1043,52 +1031,21 @@
 				<cfquery name="changeUserAreasInCharge" datasource="#client_dsn#">
 					UPDATE #client_abb#_areas 
 					SET user_in_charge=<cfqueryparam value="#SESSION.client_administrator#" cfsqltype="cf_sql_integer">
-					WHERE user_in_charge=#getUserQuery.id#;
+					WHERE user_in_charge=<cfqueryparam value="#getUserQuery.id#" cfsqltype="cf_sql_integer">;
 				</cfquery>		
 				
 				<!--- DELETE USER AREAS LINKS --->
 				<cfquery name="deleteUserAreasQuery" datasource="#client_dsn#">	
 					DELETE FROM #client_abb#_areas_users
-					WHERE user_id=#getUserQuery.id#;
+					WHERE user_id = <cfqueryparam value="#getUserQuery.id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 				
 				<!---DELETE USER CONTACTS--->
 				<!---All the user contacts are deleted in the database when the user is deleted--->
 				
-				<!--- DELETE USER MESSAGES --->
-				<!---<cfquery name="selectUserMessagesQuery" datasource="#client_dsn#">
-					SELECT id
-					FROM #client_abb#_messages
-					WHERE user_in_charge = #getUserQuery.id#; 
-				</cfquery>
-				<cfloop query="selectUserMessagesQuery">
-					<cfinvoke component="MessageManager" method="deleteMessage" returnvariable="deleteMessageResult">
-						<cfinvokeargument name="request" value='<request><parameters><message id="#selectUserMessagesQuery.id#"/></parameters></request>'>
-					</cfinvoke>
-					
-					<cfxml variable="xmlDeleteMessageResult">
-						<cfoutput>
-						#deleteMessageResult#
-						</cfoutput>
-					</cfxml>
-					
-					<cfif xmlDeleteMessageResult.response.xmlAttributes.status EQ "error"><!---Delete user message failed--->
-						<!--- RollBack the transaction --->
-						<cfquery name="rollBackTransaction" datasource="#client_dsn#">
-							ROLLBACK;
-						</cfquery>
-									
-						<cfset error_code = 509>
-				
-						<cfthrow errorcode="#error_code#">
-												
-					</cfif>
-					
-				</cfloop>--->
-				
 				<!--- -----------------DELETE USER MESSAGES------------------------- --->
 				<cfinvoke component="AreaItemManager" method="deleteUserItems">
-					<cfinvokeargument name="delete_user_id" value="#delete_user_id#">
+					<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 					<cfinvokeargument name="itemTypeId" value="1">
 				</cfinvoke>	
 				
@@ -1096,7 +1053,7 @@
 				
 					<!--- -----------------DELETE USER ENTRIES------------------------- --->
 					<cfinvoke component="AreaItemManager" method="deleteUserItems">
-						<cfinvokeargument name="delete_user_id" value="#delete_user_id#">
+						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 						<cfinvokeargument name="itemTypeId" value="2">
 					</cfinvoke>
 					
@@ -1104,7 +1061,7 @@
 					
 						<!--- -----------------DELETE USER LINKS------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
-							<cfinvokeargument name="delete_user_id" value="#delete_user_id#">
+							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 							<cfinvokeargument name="itemTypeId" value="3">
 						</cfinvoke>
 					
@@ -1112,7 +1069,7 @@
 					
 					<!--- -----------------DELETE USER NEWS------------------------- --->
 					<cfinvoke component="AreaItemManager" method="deleteUserItems">
-						<cfinvokeargument name="delete_user_id" value="#delete_user_id#">
+						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 						<cfinvokeargument name="itemTypeId" value="4">
 					</cfinvoke>
 				
@@ -1123,7 +1080,7 @@
 				
 					<!--- -----------------DELETE USER EVENTS------------------------- --->
 					<cfinvoke component="AreaItemManager" method="deleteUserItems">
-						<cfinvokeargument name="delete_user_id" value="#delete_user_id#">
+						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 						<cfinvokeargument name="itemTypeId" value="5">
 					</cfinvoke>
 					
@@ -1133,7 +1090,7 @@
 				
 					<!--- -----------------DELETE USER TASKS------------------------- --->
 					<cfinvoke component="AreaItemManager" method="deleteUserItems">
-						<cfinvokeargument name="delete_user_id" value="#delete_user_id#">
+						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 						<cfinvokeargument name="itemTypeId" value="6">
 					</cfinvoke>
 				
@@ -1143,7 +1100,7 @@
 				
 					<!--- -----------------DELETE USER CONSULTATIONS------------------------- --->
 					<cfinvoke component="AreaItemManager" method="deleteUserItems">
-						<cfinvokeargument name="delete_user_id" value="#delete_user_id#">
+						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 						<cfinvokeargument name="itemTypeId" value="7">
 					</cfinvoke>
 				
@@ -1174,14 +1131,9 @@
 				
 				
 				<!---DELETE USER IMAGE--->
-				<!---<cfif len(getUserQuery.image_id) GT 0 AND isValid("integer",getUserQuery.image_id)>
-					<cfinvoke component="FileManager" method="deleteImageFile">
-						<cfinvokeargument name="request" value='<request><parameters><message id="#getUserQuery.image_id#"/></parameters></request>'>
-					</cfinvoke>
-				</cfif>--->
 				<cfif len(getUserQuery.image_file) GT 0>
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="deleteUserImage">
-						<cfinvokeargument name="user_id" value="#delete_user_id#">
+						<cfinvokeargument name="user_id" value="#arguments.delete_user_id#">
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 					</cfinvoke>
 				</cfif>	
@@ -1206,9 +1158,12 @@
 				
 				<cfquery name="commitQuery" datasource="#client_dsn#">		
 					COMMIT;		
-				</cfquery>				
+				</cfquery>
+
+				<cfinclude template="includes/functionEndOnlyLog.cfm">
+		
+				<cfset response = {result="true", message="", user_id=#arguments.delete_user_id#}>				
 								
-				<cfset xmlResponseContent = '<user id="#delete_user_id#"/>'>
 			
 			<cfelse><!---The user id is not found, user does not exist--->
 				
@@ -1218,16 +1173,14 @@
 				
 			</cfif>			
 		
-			<cfinclude template="includes/functionEnd.cfm">
-		
 			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-		
-		<cfreturn xmlResponse>	
+
+		<cfreturn response>
 		
 	</cffunction>
 	

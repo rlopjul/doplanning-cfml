@@ -61,7 +61,7 @@ function showTree(selectable) { /*, areaId*/
 				
 			}
 		},
-		"plugins" : [ "themes", "html_data", "types", "ui", "search"]
+		"plugins" : [ "themes", "html_data", "types", "ui", "search", "crrm"]
 	});
 	
 	/*$("##areasTreeContainer").delegate("a","click", function(e) { 

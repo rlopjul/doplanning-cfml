@@ -73,14 +73,19 @@
 
 		
 		</cfswitch>
+
+
+		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
+				<cfinvokeargument name="xml" value="#xmlFile#">
+		</cfinvoke>
 		
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemFile" method="uploadItemFile" returnvariable="objectFile">
 			<cfinvokeargument name="type" value="#type#">
 			<cfinvokeargument name="user_id" value="#user_id#">
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="user_language" value="#user_language#">
-			<!---<cfinvokeargument name="client_dsn" value="#client_dsn#">--->
-			<cfinvokeargument name="xmlFile" value="#xmlFile#">
+			<!---<cfinvokeargument name="xmlFile" value="#xmlFile#">--->
+			<cfinvokeargument name="objectFile" value="#objectFile#">
 			<cfif type EQ "item_image_html">
 				<cfinvokeargument name="Filedata" value="#FORM.imagedata#">
 			<cfelse>

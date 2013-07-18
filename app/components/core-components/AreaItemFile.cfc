@@ -24,10 +24,13 @@
 		<cfargument name="user_language" type="string" required="yes">
 		<!---<cfargument name="client_dsn" type="string" required="yes">--->
 		<cfargument name="Filedata" type="string" required="yes">
-		<cfargument name="xmlFile" type="xml" required="yes">
+		<!---<cfargument name="xmlFile" type="xml" required="yes">--->
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="file_physical_name" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="no">
 		<cfargument name="xmlItem" type="xml" required="no">
-		<cfargument name="xmlArea" type="xml" required="no">
+		<!---<cfargument name="xmlArea" type="xml" required="no">--->
+		<cfargument name="area_id" type="numeric" required="false"/>
 				
 		<cfset var method = "uploadItemFile">		
 		
@@ -72,13 +75,14 @@
 				<cfset required_width = 1100>
 				<cfset required_height = 1000>
 				
-				<cfif NOT isDefined("arguments.xmlArea")>
+				<!---<cfif NOT isDefined("arguments.xmlArea")>--->
+				<cfif NOT isDefined("arguments.area_id")>
 					<cfset error_code = 610>
 	
 					<cfthrow errorcode="#error_code#">
 				</cfif>
 				
-				<cfset area_id = xmlArea.area.xmlAttributes.id>
+				<!--- <cfset area_id = xmlArea.area.xmlAttributes.id> --->
 				
 			</cfcase>
 			
@@ -103,12 +107,19 @@
 		
 		<cfset var destination = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/'>
 
-		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
+		<!---<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
 			<cfinvokeargument name="xml" value="#xmlFile#">
 			
 			<cfinvokeargument name="return_type" value="object">
-		</cfinvoke>	
+		</cfinvoke>--->
 		
+		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
+			<cfinvokeargument name="id" value="#arguments.file_id#">
+			<cfinvokeargument name="physical_name" value="#arguments.file_physical_name#"/>
+			
+			<cfinvokeargument name="return_type" value="object">
+		</cfinvoke>
+
 		<cfset objectFile.user_in_charge = user_id>
 		
 		<cfquery datasource="#client_dsn#" name="getFile">
@@ -141,7 +152,7 @@
 			<cfquery name="selectAreaImageQuery" datasource="#client_dsn#">
 				SELECT * 
 				FROM #client_abb#_areas AS areas LEFT JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id
-				WHERE areas.id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
 			<cfif selectAreaImageQuery.recordCount GT 0>
@@ -151,7 +162,7 @@
 					<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
 						UPDATE #client_abb#_areas
 						SET space_used = space_used-#selectAreaImageQuery.file_size#
-						WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+						WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 					
 					<cfset objectFile.physical_name = selectAreaImageQuery.physical_name>
@@ -325,13 +336,13 @@
 					<cfquery datasource="#client_dsn#" name="addFileToArea">
 						UPDATE #client_abb#_areas
 						SET image_id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">
-						WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+						WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 					
 					<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
 						UPDATE #client_abb#_areas
 						SET space_used = space_used+<cfqueryparam value="#uploadedFile.fileSize#" cfsqltype="cf_sql_integer">
-						WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+						WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 					
 				</cfcase>

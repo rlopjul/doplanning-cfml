@@ -55,12 +55,12 @@ function onSubmitForm()
 
 <cfoutput>
 
-<cfform action="area_file_upload.cfm?user_id=#SESSION.user_id#&client_abb=#SESSION.client_abb#&language=#SESSION.user_language#&session_id=#SESSION.SessionID#" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
+<cfform action="area_file_upload.cfm" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();"><!---?user_id=#SESSION.user_id#&client_abb=#SESSION.client_abb#&language=#SESSION.user_language#&session_id=#SESSION.SessionID#--->
 	
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('file_form');
 	</script>
-	<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/checkRailoForm.js"></script>
+	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 	
 	<input type="hidden" name="area_id" value="#area_id#"/>
 	

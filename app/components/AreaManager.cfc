@@ -1388,31 +1388,29 @@
 	
 	<!--- ------------------------------------- createArea ------------------------------------- --->
 	
-	<cffunction name="createArea" output="false" access="public" returntype="String">		
-		<cfargument name="request" type="string" required="yes">
+	<cffunction name="createArea" output="false" access="public" returntype="struct">		
+		<cfargument name="parent_id" type="string" required="true"/>
+		<cfargument name="user_in_charge" type="numeric" required="true"/>
+		<cfargument name="name" type="string" required="true"/>
+		<cfargument name="description" type="string" required="true"/>
 		
 		<cfset var method = "createArea">
+
+		<cfset var response = structNew()>
 		
 		<cfset var area_id = "">
 		<cfset var user_id = "">
 		<cfset var client_abb = "">
 		<cfset var user_language = "">
 			
-		<cfset var xmlRequest = "">
-		<cfset var xmlResponseContent = "">
-		
-		
 		<cftry>
 				
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinvoke component="AreaManager" method="objectArea" returnvariable="area">
-				<cfinvokeargument name="xml" value="#xmlRequest.request.parameters.area#">
+			<!---<cfinclude template="includes/checkAreaAdminAccess.cfm">--->
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
+				<cfinvokeargument name="area_id" value="#arguments.parent_id#">
 			</cfinvoke>
-			
-			<cfset area_id = area.parent_id>
-			
-			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 		
 			<cfquery name="beginQuery" datasource="#client_dsn#">
 				BEGIN;
@@ -1428,69 +1426,273 @@
 			<cfquery name="insertAreaQuery" datasource="#client_dsn#" result="insertAreaResult">					
 				INSERT INTO #client_abb#_areas (name,parent_id,user_in_charge,creation_date,description) 
 				VALUES (
-					<cfqueryPARAM value="#area.name#" CFSQLType="CF_SQL_varchar">,			
-					<cfqueryPARAM value="#area.parent_id#" CFSQLType="cf_sql_integer">,					
-					<cfqueryPARAM value="#area.user_in_charge#" CFSQLType="cf_sql_integer">,
+					<cfqueryPARAM value="#arguments.name#" CFSQLType="CF_SQL_varchar">,			
+					<cfqueryPARAM value="#arguments.parent_id#" CFSQLType="cf_sql_integer">,					
+					<cfqueryPARAM value="#arguments.user_in_charge#" CFSQLType="cf_sql_integer">,
 					<cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,
-					<cfqueryPARAM value="#area.description#" CFSQLType="CF_SQL_varchar">
+					<cfqueryPARAM value="#arguments.description#" CFSQLType="CF_SQL_varchar">
 					);			
 			</cfquery>
-			<!---<cfset area.id = insertAreaResult.GENERATED_KEY>--->
 			<cfquery name="getLastInsertId" datasource="#client_dsn#">
 				SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_areas;
 			</cfquery>
-			<cfset area.id = getLastInsertId.last_insert_id>
+			<cfset area_id = getLastInsertId.last_insert_id>
 			
 			<cfquery name="insertUserQuery" datasource="#client_dsn#">
 				INSERT INTO #client_abb#_areas_users
-				VALUES (#area.id#,
-						<cfqueryPARAM value = "#area.user_in_charge#" CFSQLType="cf_sql_integer">				
+				VALUES (#area_id#,
+						<cfqueryPARAM value = "#arguments.user_in_charge#" CFSQLType="cf_sql_integer">				
 					);
 			</cfquery>
 			
 			<cfquery name="commitQuery" datasource="#client_dsn#">
 				COMMIT;
 			</cfquery>
-			
-			<cfset area.creation_date = stringCurrentDate>
-			
+						
             <!---Alerta a todos los usuarios que tienen acceso al área que se ha creado--->
+			<cfinvoke component="AreaManager" method="objectArea" returnvariable="objectArea">
+				<cfinvokeargument name="id" value="#area_id#"/>
+				<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
+				<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
+				<cfinvokeargument name="name" value="#arguments.name#"/>
+				<cfinvokeargument name="description" value="#arguments.description#"/>
+				<cfinvokeargument name="creation_date" value="#stringCurrentDate#"/>
+			</cfinvoke>
+
 			<cfinvoke component="AlertManager" method="newArea">
-				<cfinvokeargument name="objectArea" value="#area#">
+				<cfinvokeargument name="objectArea" value="#objectArea#">
 			</cfinvoke>	
             
 			<!---Alerta al usuario que que es responsable de la misma--->
 			<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
-				<cfinvokeargument name="get_user_id" value="#area.user_in_charge#"/>
+				<cfinvokeargument name="get_user_id" value="#arguments.user_in_charge#"/>
 				<cfinvokeargument name="return_type" value="object"/>
 			</cfinvoke>
 		
 			<cfinvoke component="AlertManager" method="assignUserToArea">
 				<cfinvokeargument name="objectUser" value="#objectUser#">
-				<cfinvokeargument name="area_id" value="#area.id#">
+				<cfinvokeargument name="area_id" value="#area_id#">
 				<cfinvokeargument name="new_area" value="true">
 			</cfinvoke>
 			
 			
-			
-			<cfinvoke component="AreaManager" method="xmlArea" returnvariable="xmlResponseContent">
+			<!---<cfinvoke component="AreaManager" method="xmlArea" returnvariable="areaXml">
 				<cfinvokeargument name="objectArea" value="#area#">
-			</cfinvoke>
+			</cfinvoke>--->
 			
-			<cfinclude template="includes/functionEnd.cfm">
+			<cfinclude template="includes/functionEndOnlyLog.cfm">
 			
-			<cfcatch type="any">
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">							
+			<cfset response = {result=true, message="", area_id=#area_id#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
 			</cfcatch>
-		
 		</cftry>
-		<cfreturn xmlResponse>
-		
+
+		<cfreturn response>
 		
 	</cffunction>
 	
 	<!---  --->
+
+
+	<!--- -------------------------------- updateArea ----------------------------------  --->
+	
+	<cffunction name="updateArea" returntype="struct" output="false" access="public">
+		<cfargument name="area_id" type="string" required="true"/>
+		<cfargument name="name" type="string" required="false"/>
+		<cfargument name="parent_id" type="numeric" required="false"/>
+		<cfargument name="with_link" type="string" required="false"/>
+		<cfargument name="link" type="string" required="false"/>
+		<cfargument name="with_image" type="boolean" required="false"/>
+		<cfargument name="user_in_charge" type="numeric" required="false"/>
+		<cfargument name="description" type="string" required="false"/>
+		<cfargument name="image_file" type="string" required="false"/>
+
+		<cfset var method = "updateArea">
+		
+		<cfset var response = structNew()>
+
+		<cftry>
+		
+			<cfinclude template="includes/functionStartOnlySession.cfm">		
+			
+			<cfinclude template="includes/checkAreaAdminAccess.cfm">
+				
+			<cfquery name="beginQuery" datasource="#client_dsn#">
+				BEGIN;
+			</cfquery>
+			
+				<cftry>
+				
+					<cfif isDefined("arguments.name") AND arguments.name NEQ "">
+						<cfquery name="nameQuery" datasource="#client_dsn#">
+							UPDATE #client_abb#_areas SET name = <cfqueryPARAM value = "#arguments.name#" CFSQLType = "CF_SQL_varchar">
+							WHERE id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+						</cfquery>
+					</cfif>
+					<cfif isDefined("arguments.parent_id") AND arguments.parent_id NEQ "">
+						<cfquery name="parentIdQuery" datasource="#client_dsn#">
+							UPDATE #client_abb#_areas SET parent_id = <cfqueryPARAM value = "#arguments.parent_id#" CFSQLType = "CF_SQL_integer">
+							WHERE id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+						</cfquery>
+					</cfif>
+					<cfif isDefined("arguments.with_link") AND arguments.with_link NEQ "">
+						<cfif arguments.with_link EQ "false">
+							<cfquery name="withLinkQuery" datasource="#client_dsn#">
+								UPDATE #client_abb#_areas SET link = <cfqueryPARAM null="yes" cfsqltype="cf_sql_varchar">
+								WHERE id = <cfqueryPARAM value="#arguments.area_id#" CFSQLType="CF_SQL_integer">;
+							</cfquery>
+						<cfelse>
+							<cfquery name="withLinkQuery" datasource="#client_dsn#">
+								UPDATE #client_abb#_areas SET link = <cfqueryPARAM value="" cfsqltype="cf_sql_varchar">
+								WHERE id = <cfqueryPARAM value="#arguments.area_id#" CFSQLType="CF_SQL_integer">;
+							</cfquery>
+						</cfif>
+					</cfif>
+					<cfif isDefined("arguments.link") AND arguments.link NEQ "">
+						<cfquery name="parentIdQuery" datasource="#client_dsn#">
+							UPDATE #client_abb#_areas SET link = <cfqueryPARAM value="#arguments.link#" cfsqltype="cf_sql_varchar">
+							WHERE id = <cfqueryPARAM value="#arguments.area_id#" CFSQLType="CF_SQL_integer">;
+						</cfquery>
+					</cfif>
+					<cfif isDefined("arguments.with_image") AND arguments.with_image NEQ "">
+						<cfif arguments.with_image EQ "false">
+							<!--- check if exist the image --->
+							<cfquery name="selectAreaQuery" datasource="#client_dsn#">
+								SELECT * 
+								FROM #client_abb#_areas AS areas
+								WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+							</cfquery>
+							
+							<cfif selectAreaQuery.recordCount GT 0>
+								<cfif len(selectAreaQuery.image_id) GT 0 AND selectAreaQuery.image_id NEQ "NULL">
+									<!---Delete area image--->
+									<cfinvoke component="AreaManager" method="deleteAreaImage" returnvariable="deleteAreaImageResponse">
+										<cfinvokeargument name="area_id" value="#arguments.area_id#">
+									</cfinvoke>
+									<cfif deleteAreaImageResponse.result NEQ true>
+					
+										<cfset error_code = 605>
+								
+										<cfthrow errorcode="#error_code#">
+										
+									</cfif>
+								</cfif>
+							<cfelse><!---The area does not exist--->
+				
+								<cfset error_code = 401>
+								
+								<cfthrow errorcode="#error_code#">
+							</cfif>
+						</cfif> 
+					</cfif>
+					<!--- +++++++++++++++++++++++++++++++++++USER IN CHARGE+++++++++++++++++++++++++++++++++++++ --->
+					<cfif isDefined("arguments.user_in_charge") AND arguments.user_in_charge NEQ "">
+						<cfquery name="userInChargeQuery" datasource="#client_dsn#">
+							UPDATE #client_abb#_areas SET user_in_charge = <cfqueryPARAM value = "#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
+							WHERE id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+						</cfquery>
+						
+						<cfquery name="checkIsMember" datasource="#client_dsn#">
+							SELECT user_id 
+							FROM #client_abb#_areas_users
+							WHERE user_id = <cfqueryPARAM value = "#arguments.user_in_charge#" CFSQLType="cf_sql_integer">
+								AND area_id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+						</cfquery>
+						
+						<cfif #checkIsMember.recordCount# LT 1> 
+							<cfquery name="insertMember" datasource="#client_dsn#">
+								INSERT 
+								INTO #client_abb#_areas_users
+								VALUES(<cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">,
+										<cfqueryPARAM value = "#arguments.user_in_charge#" CFSQLType="cf_sql_integer">);					
+							</cfquery>
+						</cfif>				
+					</cfif>
+					<cfif isDefined("arguments.description") AND arguments.description NEQ "">
+						<cfquery name="descriptionQuery" datasource="#client_dsn#">
+							UPDATE #client_abb#_areas SET description = <cfqueryPARAM value = "#arguments.description#" CFSQLType="cf_sql_longvarchar">
+							WHERE id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+						</cfquery>
+					</cfif>	
+
+					<cfif isDefined("arguments.image_file") AND len(arguments.image_file) GT 0>
+						
+						<!--- <cffile action="Upload" filefield="#arguments.image_file#" destination="#destination##tempdirectory#" nameconflict="makeunique" result="result_cffile"> --->
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemFile" method="uploadItemFile" returnvariable="objectFile">
+							<cfinvokeargument name="type" value="area_image">
+							<cfinvokeargument name="user_id" value="#user_id#">
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="user_language" value="#user_language#">
+							<cfinvokeargument name="file_id" value="">
+							<cfinvokeargument name="file_physical_name" value="">
+							<cfinvokeargument name="Filedata" value="#arguments.image_file#">
+							<cfinvokeargument name="area_id" value="#arguments.area_id#">
+						</cfinvoke>		
+
+					</cfif>
+				
+				<cfquery name="commitQuery" datasource="#client_dsn#">
+					COMMIT;
+				</cfquery>	
+				
+				<cfcatch>
+
+					<cfquery name="rollBackQuery" datasource="#client_dsn#">
+						ROLLBACK;
+					</cfquery>
+
+					<cfinclude template="includes/errorHandlerStruct.cfm">
+
+					<cfset response = {result=false, message=#cfcatch.message#, area_id=#arguments.area_id#}>
+					<cfreturn response>
+				</cfcatch>										
+				
+			</cftry>
+			
+
+			<cfinclude template="includes/functionEndOnlyLog.cfm">
+
+
+			<!--- <cfquery name="selectQuery" datasource="#client_dsn#">
+				SELECT *, users.name AS user_name
+				FROM #client_abb#_areas AS areas INNER JOIN #client_abb#_users AS users ON areas.user_in_charge = users.id
+				WHERE areas.id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType="CF_SQL_integer">;
+			</cfquery>	
+		
+			<cfinvoke component="AreaManager" method="objectArea" returnvariable="areaXml">
+				<cfinvokeargument name="id" value="#selectQuery.id#">
+				<cfinvokeargument name="parent_id" value="#selectQuery.parent_id#">
+				<cfinvokeargument name="parent_kind" value="">
+				<cfinvokeargument name="user_in_charge" value="#selectQuery.user_in_charge#">
+				<cfinvokeargument name="creation_date" value="#selectQuery.creation_date#">
+				<cfinvokeargument name="name" value="#selectQuery.name#">
+				<cfinvokeargument name="description" value="#selectQuery.description#">
+				<cfinvokeargument name="user_full_name" value="#selectQuery.family_name# #selectQuery.user_name#">
+				
+				<cfinvokeargument name="return_type" value="xml">
+			</cfinvoke>	--->
+			
+			<cfset response = {result=true, message="", area_id=#arguments.area_id#}><!---areaXml=#areaXml#--->
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+		
+	</cffunction>
+	
+	<!--- _____________________________________________________________________________  --->
+	
 	
 	
 	<!--- ------------------------------------- selectArea -------------------------------------  --->
@@ -1663,6 +1865,7 @@
 	<!--- _____________________________________________________________________________  --->
 	
 	
+
 	<!--- ________________________________DELETE AREA__________________________________  --->
 	
 	<cffunction name="deleteArea" output="false" access="public" returntype="string">		
@@ -1792,17 +1995,11 @@
 			<cfif len(area.image_id) GT 0 AND isNumeric(area.image_id)>
 			
 				<!---Delete area image--->
-				<cfinvoke component="AreaManager" method="deleteAreaImage" returnvariable="deleteAreaImageResult">
-					<cfinvokeargument name="request" value="#arguments.request#">
+				<cfinvoke component="AreaManager" method="deleteAreaImage" returnvariable="deleteAreaImageResponse">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfinvoke>
 				
-				<cfxml variable="xmlDeleteAreaImageResult">
-					<cfoutput>
-						#deleteAreaImageResult#
-					</cfoutput>
-				</cfxml>
-		
-				<cfif xmlDeleteAreaImageResult.response.xmlAttributes.status NEQ "ok">
+				<cfif deleteAreaImageResponse.result NEQ true>
 					
 					<cfset error_code = 605>
 			
@@ -1861,176 +2058,7 @@
 					
 	</cffunction>
 	<!--- _____________________________________________________________________________  --->
-	
-	
-	<!--- -------------------------------- updateArea ----------------------------------  --->
-	
-	<cffunction name="updateArea" returntype="string" output="false" access="public">
-		<cfargument name="request" type="string" required="yes">
-		<!---<cfargument name="area" type="string" required="yes">--->	
-		
-		<cfset var method = "updateArea">
-		
-		<cfset var area_id = "">
-		
-		<cftry>
-		
-			<cfinclude template="includes/functionStart.cfm">		
-			
-			<cfinvoke component="AreaManager" method="objectArea" returnvariable="area">
-				<cfinvokeargument name="xml" value="#xmlRequest.request.parameters.area#">
-			</cfinvoke>
-			
-			<cfset area_id = area.id>
-			
-			<cfinclude template="includes/checkAreaAdminAccess.cfm">
-				
-			
-			<cfquery name="beginQuery" datasource="#client_dsn#">
-				BEGIN;
-			</cfquery>
-			
-				<cftry>
-				
-					<cfif isDefined("area.name") AND area.name NEQ "">
-						<cfquery name="nameQuery" datasource="#client_dsn#">
-							UPDATE #client_abb#_areas SET name = <cfqueryPARAM value = "#area.name#" CFSQLType = "CF_SQL_varchar">
-							WHERE id = <cfqueryPARAM value = "#area.id#" CFSQLType = "CF_SQL_integer">;
-						</cfquery>
-					</cfif>
-					<cfif isDefined("area.parent_id") AND area.parent_id NEQ "">
-						<cfquery name="parentIdQuery" datasource="#client_dsn#">
-							UPDATE #client_abb#_areas SET parent_id = <cfqueryPARAM value = "#area.parent_id#" CFSQLType = "CF_SQL_integer">
-							WHERE id = <cfqueryPARAM value = "#area.id#" CFSQLType = "CF_SQL_integer">;
-						</cfquery>
-					</cfif>
-					<cfif isDefined("area.with_link") AND area.with_link NEQ "">
-						<cfif area.with_link EQ "false">
-							<cfquery name="withLinkQuery" datasource="#client_dsn#">
-								UPDATE #client_abb#_areas SET link = <cfqueryPARAM null="yes" cfsqltype="cf_sql_varchar">
-								WHERE id = <cfqueryPARAM value="#area.id#" CFSQLType="CF_SQL_integer">;
-							</cfquery>
-						<cfelse>
-							<cfquery name="withLinkQuery" datasource="#client_dsn#">
-								UPDATE #client_abb#_areas SET link = <cfqueryPARAM value="" cfsqltype="cf_sql_varchar">
-								WHERE id = <cfqueryPARAM value="#area.id#" CFSQLType="CF_SQL_integer">;
-							</cfquery>
-						</cfif>
-					</cfif>
-					<cfif isDefined("area.link") AND area.link NEQ "">
-						<cfquery name="parentIdQuery" datasource="#client_dsn#">
-							UPDATE #client_abb#_areas SET link = <cfqueryPARAM value="#area.link#" cfsqltype="cf_sql_varchar">
-							WHERE id = <cfqueryPARAM value="#area.id#" CFSQLType="CF_SQL_integer">;
-						</cfquery>
-					</cfif>
-					<cfif isDefined("area.with_image") AND area.with_image NEQ "">
-						<cfif area.with_image EQ "false">
-							<!--- check if exist the image --->
-							<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-								SELECT * 
-								FROM #client_abb#_areas AS areas
-								WHERE areas.id = <cfqueryparam value="#area.id#" cfsqltype="cf_sql_integer">;
-							</cfquery>
-							
-							<cfif selectAreaQuery.recordCount GT 0>
-								<cfif len(selectAreaQuery.image_id) GT 0 AND selectAreaQuery.image_id NEQ "NULL">
-									<!---Delete area image--->
-									<cfinvoke component="AreaManager" method="deleteAreaImage" returnvariable="deleteAreaImageResult">
-										<cfinvokeargument name="request" value="#arguments.request#">
-									</cfinvoke>
-								</cfif>
-							<cfelse><!---The area does not exist--->
-				
-								<cfset error_code = 401>
-								
-								<cfthrow errorcode="#error_code#">
-							</cfif>
-						</cfif> 
-					</cfif>
-					<!--- +++++++++++++++++++++++++++++++++++USER IN CHARGE+++++++++++++++++++++++++++++++++++++ --->
-					<cfif isDefined("area.user_in_charge") AND area.user_in_charge NEQ "">
-						<cfquery name="userInChargeQuery" datasource="#client_dsn#">
-							UPDATE #client_abb#_areas SET user_in_charge = <cfqueryPARAM value = "#area.user_in_charge#" cfsqltype="cf_sql_integer">
-							WHERE id = <cfqueryPARAM value = "#area.id#" CFSQLType = "CF_SQL_integer">;
-						</cfquery>
-						
-						<cfquery name="checkIsMember" datasource="#client_dsn#">
-							SELECT user_id 
-							FROM #client_abb#_areas_users
-							WHERE user_id = <cfqueryPARAM value = "#area.user_in_charge#" CFSQLType="cf_sql_integer">
-								AND area_id = <cfqueryPARAM value = "#area.id#" CFSQLType = "CF_SQL_integer">;
-						</cfquery>
-						
-						<cfif #checkIsMember.recordCount# LT 1> 
-							<cfquery name="insertMember" datasource="#client_dsn#">
-								INSERT 
-								INTO #client_abb#_areas_users
-								VALUES(<cfqueryPARAM value = "#area.id#" CFSQLType = "CF_SQL_integer">,
-										<cfqueryPARAM value = "#area.user_in_charge#" CFSQLType="cf_sql_integer">);					
-							</cfquery>
-						</cfif>				
-					</cfif>
-					<cfif isDefined("area.description") AND area.description NEQ "">
-						<!---<cfset desc = "#area.description#">
-						<cfset desc = '#replace(desc,"<![CDATA[","","all")#'>
-						<cfset desc = '#replace(desc,"]]>","","all")#'>--->
-						<cfquery name="descriptionQuery" datasource="#client_dsn#">
-							UPDATE #client_abb#_areas SET description = <cfqueryPARAM value = "#area.description#" CFSQLType="cf_sql_longvarchar">
-							WHERE id = <cfqueryPARAM value = "#area.id#" CFSQLType = "CF_SQL_integer">;
-						</cfquery>
-					</cfif>	
-				
-				<cfquery name="commitQuery" datasource="#client_dsn#">
-					COMMIT;
-				</cfquery>	
-				
-				<cfcatch>
-					<cfquery name="rollBackQuery" datasource="#client_dsn#">
-						ROLLBACK;
-					</cfquery>
-					<cfset xmlResponseContent = arguments.request>
-					<cfinclude template="includes/errorHandler.cfm">
-					<cfreturn xmlResponse>
-				</cfcatch>										
-				
-			</cftry>
-			
 
-			<cfquery name="selectQuery" datasource="#client_dsn#">
-				SELECT *, users.name AS user_name
-				FROM #client_abb#_areas AS areas INNER JOIN #client_abb#_users AS users ON areas.user_in_charge = users.id
-				WHERE areas.id = <cfqueryPARAM value = "#area.id#" CFSQLType="CF_SQL_integer">;
-			</cfquery>	
-		
-			<cfinvoke component="AreaManager" method="objectArea" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="id" value="#selectQuery.id#">
-				<cfinvokeargument name="parent_id" value="#selectQuery.parent_id#">
-				<cfinvokeargument name="parent_kind" value="">
-				<cfinvokeargument name="user_in_charge" value="#selectQuery.user_in_charge#">
-				<cfinvokeargument name="creation_date" value="#selectQuery.creation_date#">
-				<cfinvokeargument name="name" value="#selectQuery.name#">
-				<cfinvokeargument name="description" value="#selectQuery.description#">
-				<cfinvokeargument name="user_full_name" value="#selectQuery.family_name# #selectQuery.user_name#">
-				
-				<cfinvokeargument name="return_type" value="xml">
-			</cfinvoke>	
-		
-			<cfinclude template="includes/functionEnd.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn xmlResponse>
-		
-	</cffunction>
-	
-	<!--- _____________________________________________________________________________  --->
-	
-	
 
 	
 	<!--- ----------------GET AREA MESSAGES LIST---------------------------------------   --->
@@ -2075,6 +2103,8 @@
 		<cfargument name="order_type" type="string" required="false"/>
 		
 		<cfset var method = "getAreaMembers">
+
+		<cfset var response = structNew()>
 				
 		<cftry>
 		
@@ -2094,7 +2124,7 @@
 			</cfinvoke>	
 				
 		
-			<cfset response = {result="true", message="", usersXml=#usersXml#}>
+			<cfset response = {result=true, message="", usersXml=#usersXml#}>
 
 			<cfcatch>
 
@@ -2579,35 +2609,38 @@
 	
 	<!--- ----------------------- createAreaImage -------------------------------- --->
 	<!---Este método no se usa pero más adelante debería usarse--->
+	<!--- 
 	<cffunction name="createAreaImage" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "createAreaImage">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-		
-		<cftry>
+			<cfargument name="request" type="string" required="yes">
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfset var method = "createAreaImage">
 			
-			<cfinvoke component="FileManager" method="createImageFile" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="file" value="#xmlRequest.request.parameters.file#">
-				<cfinvokeargument name="type" value="area_image">
-				<cfinvokeargument name="status" value="pending"> 
-			</cfinvoke>
+			<!---<cfinclude template="includes/initVars.cfm">--->	
+			
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfinvoke component="FileManager" method="createImageFile" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="file" value="#xmlRequest.request.parameters.file#">
+					<cfinvokeargument name="type" value="area_image">
+					<cfinvokeargument name="status" value="pending"> 
+				</cfinvoke>
+			
+				<cfinclude template="includes/functionEnd.cfm">
+				
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>										
+				
+			</cftry>
+			
+			<cfreturn xmlResponse>
 		
-			<cfinclude template="includes/functionEnd.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn xmlResponse>
+		</cffunction> 
+	--->
 	
-	</cffunction>
 	
 	
 	<!--- ----------------------- selectAreaImage -------------------------------- --->
@@ -2670,25 +2703,24 @@
 	
 	</cffunction>
 	
+
 	<!--- -------------------------- deleteAreaImage -------------------------------- --->
 
-	<cffunction name="deleteAreaImage" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
+	<cffunction name="deleteAreaImage" returntype="struct" output="false" access="public">		
+		<cfargument name="area_id" type="numeric" required="yes">
 		
 		<cfset var method = "deleteAreaImage">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-		
-		<!---<cftry>--->
+
+		<cfset var response = structNew()>
+
+		<cfset var image_id = "">
+				
+		<cftry>
 			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
-			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+						
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
-			
-			<!---<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>--->
-			
+						
 			<cfquery name="beginQuery" datasource="#client_dsn#">
 				BEGIN;
 			</cfquery>
@@ -2697,7 +2729,7 @@
 			<cfquery name="selectAreaImageQuery" datasource="#client_dsn#">
 				SELECT image_id, physical_name, file_size
 				FROM #client_abb#_areas AS areas INNER JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id
-				WHERE areas.id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
 			<cfif selectAreaImageQuery.recordCount GT 0>
@@ -2708,7 +2740,7 @@
 				<cfquery name="deleteAssociationFolderQuery" datasource="#client_dsn#">
 					UPDATE #client_abb#_areas
 					SET image_id = <cfqueryparam null="yes" cfsqltype="cf_sql_numeric">
-					WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+					WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>		
 				
 				<!--- Deletion of the row representing the file --->
@@ -2734,19 +2766,18 @@
 				<cfquery name="updateAreaSpaceUsed" datasource="#client_dsn#">
 					UPDATE #client_abb#_areas
 					SET space_used = space_used-#selectAreaImageQuery.file_size#
-					WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+					WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 								
 				<!--- End of the transaction --->
 				<cfquery name="endTransaction" datasource="#client_dsn#">
 					COMMIT;
-				</cfquery>
-				
-				<cfset xmlResponseContent = '<file id="#image_id#" />'>
-				
-				<cfinclude template="includes/functionEnd.cfm">
-			
-			
+				</cfquery>		
+
+				<cfinclude template="includes/functionEndOnlyLog.cfm">
+
+				<cfset response = {result=true, message="", file_id=#image_id#}>
+					
 			<cfelse><!---The area has no image--->
 			
 				<!--- RollBack the transaction --->
@@ -2754,24 +2785,20 @@
 					ROLLBACK;
 				</cfquery>
 				
-				<cfset xmlResponseContent = arguments.request>
 				<cfset error_code = 406>
 			
 				<cfthrow errorcode="#error_code#">
 							
 			</cfif>	
-			
-		
-			<cfinclude template="includes/functionEnd.cfm">
-			
-			<!---<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>--->
-		
-		<cfreturn xmlResponse>
+					
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
 	
 	</cffunction>
 

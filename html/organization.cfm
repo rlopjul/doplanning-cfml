@@ -17,21 +17,21 @@
 	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
 	<cfif APPLICATION.moduleMessenger EQ true>
 		<script type="text/javascript" src="../app/scripts/App.js"></script>
-		<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
+		<script type="text/javascript" src="scripts/MessengerControl.js"></script>
 	</cfif>
 	
 </cfif>
-<script type="text/javascript" src="Scripts/functions.min.js"></script>
-<link href="styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="scripts/functions.min.js"></script>
+<link href="styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "dp">
-<link href="styles_dp.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
-<link href="styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
 <!---<!--using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"-->  
-<link href="styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
-<link href="styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
-<link href="styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
+<link href="styles/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
+<link href="styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
+<link href="styles/styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
 
 <cfoutput>
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
@@ -73,8 +73,8 @@
 	</cfoutput>
 </script>
 
-<script type="text/javascript" src="Scripts/tree.min.js"></script>
-<script type="text/javascript" src="Scripts/organization.js"></script>
+<script type="text/javascript" src="scripts/tree.min.js"></script>
+<script type="text/javascript" src="scripts/organization.js"></script>
 
 <script type="text/javascript">
 	

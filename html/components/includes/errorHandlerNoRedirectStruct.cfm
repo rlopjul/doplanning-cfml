@@ -1,3 +1,5 @@
+<!--- Usar este script en lugar de errorHandlerStruct.cfm cuando NO se quiere que se redirija a otra página para mostrar el error porque se va a mostrar el error de otra forma --->
+
 <cftry>
 	<!---Default Error Handler without show error--->
 
@@ -34,9 +36,9 @@
 
 
 	<!---<cfif isDefined("error_code")>
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Error" method="showError">
-				<cfinvokeargument name="error_code" value="#error_code#">
-			</cfinvoke>
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Error" method="showError">
+			<cfinvokeargument name="error_code" value="#error_code#">
+		</cfinvoke>
 	</cfif>--->
 	
 
