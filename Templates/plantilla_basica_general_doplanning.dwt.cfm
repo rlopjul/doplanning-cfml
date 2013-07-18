@@ -15,15 +15,15 @@
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
-<link href="../html/styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../html/styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
-<link href="../html/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../html/styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
-<link href="../html/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../html/styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
 <!--using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"-->  
-<link href="../html/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
-<link href="../html/styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
+<link href="../html/styles/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
+<link href="../html/styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
 <!---<link href="../html/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
 <link href="../html/styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
 </cfoutput>
@@ -36,7 +36,7 @@
 	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
 	<cfif APPLICATION.moduleMessenger EQ true>
 		<script type="text/javascript" src="../app/scripts/App.js"></script>
-		<script type="text/javascript" src="../html/Scripts/MessengerControl.js"></script>
+		<script type="text/javascript" src="../html/scripts/MessengerControl.js"></script>
 		<cfif isDefined("SESSION.user_id")>
 		<script type="text/javascript">
 		window.onload = function (){
@@ -51,7 +51,7 @@
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="../html/Scripts/functions.min.js"></script>
+<script type="text/javascript" src="../html/scripts/functions.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">

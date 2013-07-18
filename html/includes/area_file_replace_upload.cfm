@@ -2,23 +2,19 @@
 
 	<cfif isDefined("FORM.file_id") AND isDefined("FORM.area_id") AND isDefined("FORM.Filedata")>
 		
-		<cfinclude template="#APPLICATION.path#/app/uploadFiles/myFilesReplaceFile.cfm">
+		<!--- <cfinclude template="#APPLICATION.path#/app/uploadFiles/myFilesReplaceFile.cfm"> --->
+
+		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="replaceFile" returnvariable="replaceFileResponse">
+			<cfinvokeargument name="file_id" value="#FORM.file_id#"/>
+			<cfinvokeargument name="Filedata" value="#FORM.Filedata#"/>
+		</cfinvoke>	
 	
 		<cfset fail_page = "area_file_replace.cfm?file=#FORM.file_id#&area=#FORM.area_id#">
 	
-		<cfif isDefined("xmlResponse")>
-			
-			<cfxml variable="xmlResponseXml">
-				<cfoutput>
-				#xmlResponse#
-				</cfoutput>
-			</cfxml>
-			
-		</cfif>
-		<cfif isDefined("xmlResponseXml") AND xmlResponseXml.response.xmlAttributes.status EQ "ok">
+		<cfif replaceFileResponse.result IS true>
 				<cfset response_page = "file.cfm?file=#FORM.file_id#&area=#FORM.area_id#">
-				<cfset upload_file_name = xmlResponseXml.response.result.file.name.xmlText>
-				<cfset upload_file_id = xmlResponseXml.response.result.file.xmlAttributes.id>
+				<!---<cfset upload_file_name = xmlResponseXml.response.result.file.name.xmlText>--->
+				<cfset upload_file_id = replaceFileResponse.file_id>
 				
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Request" method="doRequest" returnvariable="xmlGetFileResponse">
                     <cfinvokeargument name="request_component" value="FileManager">
@@ -58,7 +54,7 @@
 	
 	
 	<cfcatch>
-		<cfinclude template="components/includes/errorHandler.cfm">
+		<cfinclude template="#APPLICATION.htmlPath#components/includes/errorHandler.cfm">
 	</cfcatch>										
 	
 </cftry>

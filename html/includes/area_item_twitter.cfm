@@ -86,7 +86,7 @@ function onSubmitForm()
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('item_form');
 	</script>
-	<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/checkRailoForm.js"></script>
+	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 	<cfinput type="hidden" name="itemTypeId" value="#itemTypeId#">
 	<cfinput type="hidden" name="item_id" value="#item_id#">

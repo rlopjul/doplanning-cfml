@@ -34,7 +34,7 @@
 	var applicationId = "#APPLICATION.identifier#";
 	var applicationPath = "#APPLICATION.path#";
 </script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/tree.min.js"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -118,7 +118,7 @@ function onSubmitForm()
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('add_file_to_areas');
 	</script>
-	<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/checkRailoForm.js"></script>
+	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 	
 	<input type="hidden" name="file_id" value="#file_id#">
 	<cfif isDefined("area_id")>

@@ -357,15 +357,30 @@
 				
 			<cfelse><!---Hay archivo para subir--->
 			
-            	<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
+            	<!---<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
                     <cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
                     <cfinvokeargument name="request_method" value="create#itemTypeNameU#WithAttachedFile">
                     <cfinvokeargument name="request_parameters" value="#request_parameters#">
-                </cfinvoke>
+                </cfinvoke>--->
 				
-				<cfset createdItemId = xmlResponse.response.result[#itemTypeName#].xmlAttributes.id>
-				<cfset file_id = xmlResponse.response.result.file.xmlAttributes.id>
-				<cfset file_physical_name = xmlResponse.response.result.file.xmlAttributes.physical_name>
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItemWithAttachedFile" returnvariable="createItemWithAttachedResponse">
+					<cfinvokeargument name="xmlItem" value="#xmlResultItem#"/>
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>	
+					<cfinvokeargument name="file_name" value="#objectFile.name#">
+					<cfinvokeargument name="file_file_name" value="#objectFile.file_name#">
+					<cfinvokeargument name="file_type" value="#objectFile.file_type#">
+					<cfinvokeargument name="file_size" value="#objectFile.file_size#">
+					<cfinvokeargument name="file_description" value="#objectFile.description#">
+				</cfinvoke>
+
+				<cfif createItemWithAttachedResponse.result IS true>
+					<cfset createdItemId = createItemWithAttachedResponse.objectItem.id>					
+				<cfelse>
+					<cfthrow message="#createItemWithAttachedResponse.message#">
+				</cfif>
+
+				<cfset file_id = createItemWithAttachedResponse.objectFile.id>
+				<cfset file_physical_name = createItemWithAttachedResponse.objectFile.physical_name>
 				
 				<!---Aquí el archivo se sube, pero no se marca como que se ha completado (eso se hace después en la llamada a getItemFileStatus--->
 				<cfinvoke component="AreaItemFile" method="uploadItemFile">
@@ -383,7 +398,7 @@
 			
 			<!---Subida de IMAGEN--->
 			<cfif with_image IS true>
-				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="xmlImageFile">		
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFileImage">		
 					<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">		
 					<cfinvokeargument name="file_name" value="(Pendiente de subir la imagen)">
 					<cfinvokeargument name="file_type" value="pending">
@@ -391,11 +406,11 @@
 					<cfinvokeargument name="description" value=" ">
 					<cfinvokeargument name="file_size" value="0">
 					
-					<cfinvokeargument name="return_type" value="xml">
+					<cfinvokeargument name="return_type" value="object">
 				</cfinvoke>
 				
 				
-				<cfsavecontent variable="xmlRequest">
+				<!---<cfsavecontent variable="xmlRequest">
 					<request>
 						<parameters>
 						<cfoutput>
@@ -409,18 +424,25 @@
 					<cfinvokeargument name="request" value="#xmlRequest#">
 					<cfinvokeargument name="status" value="pending">
 				</cfinvoke>
-					
+	
 				<cfxml variable="xmlResultFile">
 					<cfoutput>
 						#resultFile#
 					</cfoutput>					
-				</cfxml>
-				
-				
-				<cfif xmlResultFile.response.xmlAttributes.status EQ "ok">
+				</cfxml>--->
+
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="createFileResponse">
+					<cfinvokeargument name="name" value="#objectFileImage.name#">		
+					<cfinvokeargument name="file_name" value="#objectFileImage.file_name#">
+					<cfinvokeargument name="file_type" value="#objectFileImage.file_type#">
+					<cfinvokeargument name="file_size" value="#objectFileImage.file_size_full#">
+					<cfinvokeargument name="description" value="#objectFileImage.description#">
+				</cfinvoke>			
 			
-					<cfset image_id = xmlResultFile.response.result.file.xmlAttributes.id>
-					<cfset image_physical_name = xmlResultFile.response.result.file.xmlAttributes.physical_name>
+				<cfif createFileResponse.result IS true>
+			
+					<cfset image_id = createFileResponse.objectFile.id>
+					<cfset image_physical_name = createFileResponse.objectFile.physical_name>
 					
 					<cftry>
 					

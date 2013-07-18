@@ -13,21 +13,21 @@
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
-<link href="../styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
-<link href="../styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
-<link href="../styles_dp.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
-<link href="../styles_iframes.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../styles/styles_iframes.css" rel="stylesheet" type="text/css" media="all" />
 
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
 
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 
-<script type="text/javascript" src="../Scripts/functions.min.js"></script>
-<script type="text/javascript" src="../Scripts/iframesFunctions.min.js"></script>
+<script type="text/javascript" src="../scripts/functions.min.js"></script>
+<script type="text/javascript" src="../scripts/iframesFunctions.min.js"></script>
 
 <script type="text/javascript">
 	//Language
@@ -58,11 +58,8 @@
 
 <body onbeforeunload="onUnloadPage()" onLoad="onLoadPage()">
 <!---divLoading--->
-<div style="position:absolute; width:100%; text-align:center; padding-top:160px;" id="areaLoading">
-	<cfoutput>
-	<img src="#APPLICATION.htmlPath#/assets/icons/loading.gif" alt="Loading" title="Loading" style="text-align:center;" /> 
-	</cfoutput>
-</div>
+<cfinclude template="#APPLICATION.htmlPath#/includes/loading_iframe_div.cfm">
+
 <!-- InstanceBeginEditable name="content" -->
 
 <cfset itemTypeId = 1>

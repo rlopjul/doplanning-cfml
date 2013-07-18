@@ -466,6 +466,35 @@
 	
 
 
+
+	<!--- ----------------------------------- deleteUser -------------------------------------- --->
+
+	<cffunction name="deleteUser" output="false" returntype="struct" access="public">
+		<cfargument name="user_id" type="numeric" required="true"/>
+
+		<cfset var method = "deleteUser">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="deleteUser" returnvariable="response">
+				<cfinvokeargument name="delete_user_id" value="#arguments.user_id#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+
+
 	
 	
 	<cffunction name="outputUser" returntype="void" output="true" access="public">
@@ -617,10 +646,9 @@
 		
 		<!---
 			page_types
-			1 select only one
+			1 select only one user
 			2 multiple selection
 		--->
-
 		
 		<cftry>
 		
@@ -686,31 +714,39 @@
 						
 						
 						$("##submit_select").click(function(){ 
-			
-							if(window.opener != null){
+											
+							var usuarioId = null;
+							var usuarioNombre = "";
+							
+							<cfif page_type IS 1>
 								
-								var usuarioId = null;
-								var usuarioNombre = "";
+								// Selección de usuario
+								usuarioId = $("##listTable tr.selected input[type=hidden][name=user_id]").attr("value");
 								
-								<cfif page_type IS 1>
+								if(usuarioId != null) {
+							
+									usuarioNombre = $("##listTable tr.selected input[type=hidden][name=user_full_name]").attr("value");
 									
-									// Selección de usuario para responsable
-									usuarioId = $("##listTable tr.selected input[type=hidden][name=user_id]").attr("value");
-									
-									if(usuarioId != null) {
-								
-										usuarioNombre = $("##listTable tr.selected input[type=hidden][name=user_full_name]").attr("value");
-										
+									if(window.opener != null){
+
 										window.opener.setRecipientUser(usuarioId, usuarioNombre);
-																				
+																			
 										window.close();
-									
+
 									}else{
-										alert(window.lang.convert("No se ha seleccionado ningún usuario"));
+
+										setResponsibleUser(usuarioId, usuarioNombre);
 									}
-										
-								<cfelse>
 								
+								}else{
+									alert(window.lang.convert("No se ha seleccionado ningún usuario"));
+								}
+
+							<!---<cfelse>
+								
+								
+								if(window.opener != null){
+
 									// Selección de usuarios para permisos
 									if($("##listTable tr.selected").length > 0) {
 									
@@ -727,12 +763,17 @@
 									}else{
 										alert(window.lang.convert("No se ha seleccionado ningún usuario"));
 									}
-									
-								</cfif>
+
+								}else{
+
+									alert(window.lang.convert("Error: no se puede asignar el usuario seleccionado"));
+
+								}
+
+								--->
 								
-							}else{
-								alert(window.lang.convert("Error: no se puede asignar el usuario seleccionado"));
-							}
+							</cfif>
+							
 						}); 
 						
 						
@@ -793,13 +834,15 @@
 	</cffunction>
 	
 	
-	<!---outputUsersList (HTML Table)--->
+	<!---outputUsersList (HTML TABLE)--->
 	
 	<cffunction name="outputUsersList" returntype="void" output="true" access="public">
 		<cfargument name="xmlUsers" type="xml" required="true">
 		<cfargument name="area_id" type="numeric" required="no">
 		<cfargument name="user_in_charge" type="numeric" required="no" default="0">
 		<cfargument name="show_area_members" type="boolean" required="no" default="false">
+		<cfargument name="open_url_target" type="string" required="false" default="itemIframe">
+		<cfargument name="filter_enabled" type="boolean" required="false" default="true">
 		
 		<cfset var method = "outputUsersList">
 		
@@ -826,7 +869,7 @@
 						});*/
 						
 						$("##listTable").tablesorter({ 
-							<cfif arguments.show_area_members IS true>
+							<cfif arguments.filter_enabled IS true>
 							widgets: ['zebra','filter','select'],
 							<cfelse>
 							widgets: ['zebra','select'],
@@ -842,12 +885,12 @@
 								}
 								</cfif>--->
 							},
-							<cfif arguments.show_area_members IS true>
+							<cfif arguments.filter_enabled IS true>
 							widgetOptions : {
 								filter_childRows : false,
 								filter_columnFilters : true,
 								filter_cssFilter : 'tablesorter-filter',
-								filter_filteredRow   : 'filtered',
+								filter_filteredRow : 'filtered',
 								filter_formatter : null,
 								filter_functions : null,
 								filter_hideFilters : false,
@@ -920,7 +963,7 @@
 								<cfif URL.user IS objectUser.id>
 									<!---Esta acción solo se completa si está en la versión HTML2--->
 									<script type="text/javascript">
-										openUrlHtml2('#user_page_url#','itemIframe');
+										openUrlHtml2('#user_page_url#','#arguments.open_url_target#');
 									</script>
 									<cfset itemSelected = true>
 								</cfif>
@@ -929,7 +972,7 @@
 							
 								<!---Esta acción solo se completa si está en la versión HTML2--->
 								<script type="text/javascript">
-									openUrlHtml2('#user_page_url#','itemIframe');
+									openUrlHtml2('#user_page_url#','#arguments.open_url_target#');
 								</script>
 								<cfset itemSelected = true>
 								
@@ -941,7 +984,7 @@
 							
 						</cfif>
 						
-						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#user_page_url#','itemIframe',event)">
+						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#user_page_url#','#arguments.open_url_target#',event)">
 							<td style="text-align:center">
 								<cfif len(objectUser.image_type) GT 0>
 									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>									

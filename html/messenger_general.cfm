@@ -15,16 +15,16 @@
 <script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
 <script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
 <script type="text/javascript" src="../app/scripts/App.js"></script>
-<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
-<script type="text/javascript" src="Scripts/Messenger.js"></script>
-<link href="styles.min.css" rel="stylesheet" type="text/css" media="all" />
-<link href="styles_messenger.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="scripts/MessengerControl.js"></script>
+<script type="text/javascript" src="scripts/Messenger.js"></script>
+<link href="styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles_messenger.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier NEQ "dp">
-<link href="styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
-<link href="styles_screen.css" rel="stylesheet" type="text/css" media="screen" />
-<link href="styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
-<link href="styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />
+<link href="styles/styles_screen.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
+<link href="styles/styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
 </head>
 

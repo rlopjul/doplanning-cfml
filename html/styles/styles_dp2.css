@@ -12,6 +12,7 @@ html {
 	/*background-color:#E0E0E0;*/
 	padding-left:2px;
 	padding-right:2px;
+	padding-top:5px;
 }
 .menu_bar{
 	background-color:#EFEFEF; clear:both; vertical-align:middle; padding-bottom:4px; padding-top:4px; padding-left:5px; padding-right:5px; height:34px;
@@ -23,7 +24,8 @@ html {
 .link_user_logout {font-size:12px; line-height:18px;}
 .link_bottom_small {font-size:12px; color:#333333; line-height:16px;}
 #mainContainer{
-	clear:both; height:100%;display:none;margin-top:5px;
+	clear:both; height:100%;display:none;
+	/*margin-top:5px;*/
 }
 #treeWrapper{
 	height:100%; 
@@ -38,7 +40,14 @@ html {
 	width:62%;float:left;clear:left; border-color:#CCCCCC; border-style:solid; border-width:1px;
 }
 #itemContainer, #searchItemContainer{
-	float:right;width:37%;clear:right; border-color:#CCCCCC; border-style:solid; border-width:1px;
+	width:37%;float:right;clear:right; border-color:#CCCCCC; border-style:solid; border-width:1px;
+}
+
+#areaUsersContainer {
+	width:45%;float:left;clear:left; border-color:#CCCCCC; border-style:solid; border-width:1px;
+}
+#usersContainer {
+	width:54%;float:right;clear:right; border-color:#CCCCCC; border-style:solid; border-width:1px;
 }
 
 .link_web {

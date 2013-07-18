@@ -15,15 +15,15 @@
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
-<link href="styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
-<link href="styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
-<link href="styles_dp.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
 <!--using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"-->  
-<link href="styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
-<link href="styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
+<link href="styles/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
+<link href="styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
 <!---<link href="../html/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
 <link href="../html/styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
 </cfoutput>
@@ -36,7 +36,7 @@
 	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
 	<cfif APPLICATION.moduleMessenger EQ true>
 		<script type="text/javascript" src="../app/scripts/App.js"></script>
-		<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
+		<script type="text/javascript" src="scripts/MessengerControl.js"></script>
 		<cfif isDefined("SESSION.user_id")>
 		<script type="text/javascript">
 		window.onload = function (){
@@ -51,7 +51,7 @@
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="Scripts/functions.min.js"></script>
+<script type="text/javascript" src="scripts/functions.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -149,7 +149,7 @@ function onSubmitForm()
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('file_form');
 	</script>
-	<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/checkRailoForm.js"></script>
+	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 	<input type="hidden" name="file_id" value="#file_id#" />
 	<input type="hidden" name="folder_id" value="#folder_id#" />

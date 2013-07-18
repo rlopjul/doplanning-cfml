@@ -47,7 +47,7 @@ function onSubmitForm()
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('file_form');
 	</script>
-	<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/checkRailoForm.js"></script>
+	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 	<input type="hidden" name="file_id" value="#file_id#" />
 	<input type="hidden" name="area_id" value="#area_id#" />

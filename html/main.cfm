@@ -24,9 +24,9 @@
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
 <cfif APPLICATION.identifier EQ "dp">
-<link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles_dp2.min.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp2.min.css"/>
 <cfelse>
-<link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles_vpnet.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
 <!--- <link rel="stylesheet" type="text/css" href="../jquery/jstree/themes/dp/style.css"/> --->
 
@@ -38,16 +38,14 @@
 	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
 	<cfif APPLICATION.moduleMessenger EQ true>
 		<script type="text/javascript" src="../app/scripts/App.js"></script>
-		<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
+		<script type="text/javascript" src="scripts/MessengerControl.js"></script>
 	</cfif>
 </cfif>
 
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
-<cfif APPLICATION.identifier EQ "dp">
 <script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
-</cfif>
 
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8" type="text/javascript"></script>
@@ -94,9 +92,9 @@
 </script>
 
 <cfoutput>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/functions.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/tree.min.js?v=2.1"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/organization2.min.js?v=2.2"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/functions.min.js"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.1"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.2"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -125,12 +123,30 @@
 
 	function searchIframeLoaded() {
 
-		if($("#loadingContainer").css('display') == "block"){
+		if($("#searchIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
 			$("#loadingContainer").hide();
 			$("#mainContainer").show();
 		}
 			
 	}
+
+	function loadAreaImage(areaId) {
+
+		if(applicationId != "vpnet") { //Esto solo está habilitado para DP ya que en la otra versión no se utiliza y carga la aplicación
+			$("#areaImage").attr('src', "../app/downloadAreaImage.cfm?id="+areaId);
+		}
+
+	}
+
+	function goToAreaLink() {
+		
+		if(areaWithLink == true) {
+			window.open("../app/goToAreaLink.cfm?id="+curAreaId, "_blank");
+		}
+		
+	}
+
+
 	
 	$(window).resize( function() {
 		resizeIframe();
@@ -196,7 +212,7 @@
 		
 	});
 	
-	$().ready(function () {
+	$(document).ready(function () {
 		//Language
    		window.lang.run();
 		
@@ -217,15 +233,12 @@
 
 <body class="body_tree">			
 
-<div class="div_contenedor_contenido">
+<!--- Loading --->
+<cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
 
-<cfoutput>
+<div class="div_contenedor_contenido">
   	
-	<cfset current_page = "organization.cfm">
-	
-  
-	<cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
-	</cfoutput>	
+	<!---<cfset current_page = "main.cfm">--->
 	
 	<div id="mainContainer">
 	
@@ -295,6 +308,8 @@
 					<a onClick="updateTree();" class="btn" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
 					<a onClick="expandTree();" class="btn" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
 					<a onClick="collapseTree();" class="btn" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+
+					<input type="hidden" id="changeTabDisabled" value="true"/><!---No cambiar de pestaña al seleccionar área--->
 					
 					<!---<a onclick="expandTree();" class="btn btn-mini" title="Abrir nodos del árbol"><i class="icon-plus"></i> Expandir</a>
 					<a onclick="collapseTree();" class="btn btn-mini" title="Abrir nodos del árbol"><i class="icon-minus"></i> Colapsar</a>--->

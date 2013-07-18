@@ -1,0 +1,24 @@
+@media (max-width: 767px) {
+	body {
+		/*To remove padding added by bootstrap when size changes*/
+		padding-right: 0px;
+		padding-left: 0px;
+	}
+}
+
+@media screen and (max-width: 979px){
+	/*To enable navbar-fixed in iframes*/
+	.navbar-fixed-top {
+		position: fixed;
+		margin:0;
+		padding:0 !important;
+	}
+	.navbar-inner {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+}
+
+.loading_iframe{
+	position:absolute; top:50%; left:50%; margin:-12px 0 0 -12px; width:200px; margin-left:-100px;
+}
