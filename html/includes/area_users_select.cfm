@@ -30,10 +30,6 @@
 	</cfxml>
 	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
 	
-	<div class="div_head_subtitle">
-	<span lang="es">Selección de usuario</span>
-	</div>
-	
 	<div class="div_users">
 	
 	<cfif numUsers GT 0>
@@ -41,6 +37,7 @@
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersSelectList">
 			<cfinvokeargument name="xmlUsers" value="#xmlUsers#">
 			<cfinvokeargument name="page_type" value="1">
+			<cfinvokeargument name="filter_enabled" value="false">
 		</cfinvoke>	
 
 	<cfelse>

@@ -736,16 +736,24 @@
 	
 	<!--- ----------------------- CREATE ITEM WITH ATTACHED -------------------------------- --->
 	
-	<cffunction name="createItemWithAttachedFile" returntype="string" output="false" access="public">		
+	<cffunction name="createItemWithAttachedFile" returntype="struct" output="false" access="public">		
 		<cfargument name="xmlItem" type="xml" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<!---Este parámetro debe quitarse cuando se modifiquen los métodos de FileManager y ya no sea requerido--->
-		<cfargument name="request" type="string" required="yes">
-		
+		<!---<cfargument name="request" type="string" required="yes">--->
+		<cfargument name="file_name" type="string" required="true"/>
+		<cfargument name="file_file_name" type="string" required="true"/>
+		<cfargument name="file_size" type="numeric" required="true"/>
+		<cfargument name="file_type" type="string" required="true"/>
+		<cfargument name="file_description" type="string" required="true"/>
 		
 		<cfset var method = "createItemWithAttachedFile">
+
+		<cfset var response = structNew()>
+
+		<cftry>
 							
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
@@ -754,7 +762,7 @@
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 			</cfinvoke>
 			
-			<cfinvoke component="FileManager" method="createFile" returnvariable="resultFile">
+			<!---<cfinvoke component="FileManager" method="createFile" returnvariable="resultFile">
 				<cfinvokeargument name="request" value="#xmlRequest#">
 				<cfinvokeargument name="status" value="pending">
 			</cfinvoke>
@@ -763,15 +771,22 @@
 				<cfoutput>
 					#resultFile#
 				</cfoutput>					
-			</cfxml>
+			</cfxml>--->
+
+			<cfinvoke component="FileManager" method="createFile" returnvariable="createFileResponse">
+				<cfinvokeargument name="name" value="#arguments.file_name#">		
+				<cfinvokeargument name="file_name" value="#arguments.file_file_name#">
+				<cfinvokeargument name="file_type" value="#arguments.file_type#">
+				<cfinvokeargument name="file_size" value="#arguments.file_size#">
+				<cfinvokeargument name="description" value="#arguments.file_description#">
+			</cfinvoke>			
 			
-			
-			<cfif xmlResultFile.response.xmlAttributes.status EQ "ok">
+			<cfif createFileResponse.result IS true>
 				
-				<cfset objectItem.attached_file_id = xmlResultFile.response.result.file.xmlAttributes.id>
-				<cfset objectItem.attached_file_name = xmlResultFile.response.result.file.file_name.xmlText>
+				<cfset objectItem.attached_file_id = createFileResponse.objectFile.id>
+				<cfset objectItem.attached_file_name = createFileResponse.objectFile.file_name>
 				
-				<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlItem">
+				<!---<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlItem">
 					<cfinvokeargument name="objectItem" value="#objectItem#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				</cfinvoke>
@@ -788,26 +803,38 @@
 					#xmlFile#
 					</cfoutput>				
 				</cfsavecontent>
-				
 
 				<cfset xmlResponseContent = xmlResult>
-						
+
+				<cfreturn xmlResponseContent>--->
+
+				<cfset response = {result=true, message="", objectItem=#objectItem#, objectFile=#createFileResponse.objectFile#}>						
 			
 			<cfelse><!---File insert failed--->
 			
 				<!---Delete the inserted item--->
+				<!---
+				No se elimina porque se envía la notificación de eliminar un mensaje que no se ha enviado
 				<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="resultDeleteItem">
 					<cfinvokeargument name="item_id" value="#objectItem.id#">
-				</cfinvoke>
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				</cfinvoke>--->
 		
 				<cfset error_code = 602>
 				
 				<cfthrow errorcode="#error_code#">
 			
 			</cfif>
-			
-			
-		<cfreturn xmlResponseContent>
+
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
 	
 	</cffunction>
 	

@@ -351,6 +351,62 @@
 			
 		
 	</cffunction>
+
+
+	<!--- ----------------------------------- createArea -------------------------------------- --->
+
+	<cffunction name="createArea" output="false" returntype="struct" returnformat="json" access="remote">
+		
+		<cfset var method = "createArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="createArea" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Área creada">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+
+
+	<!--- ----------------------------------- updateArea -------------------------------------- --->
+
+	<cffunction name="updateArea" output="false" returntype="struct" returnformat="json" access="remote">
+		
+		<cfset var method = "updateArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="updateArea" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Área modificada">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
 	
 	
 </cfcomponent>

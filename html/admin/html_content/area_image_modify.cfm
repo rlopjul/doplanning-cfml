@@ -1,0 +1,1 @@
+<cfinclude template="#APPLICATION.htmlPath#/admin/includes/area_image_modify.cfm">

@@ -35,7 +35,7 @@ html {
 .div_header_content{
 	height:60px;
 	/*background-image:url(assets/header_screen.jpg);*/
-	background-image:url(../app/vpnet_banner.png);
+	background-image:url(../../app/vpnet_banner.png);
 	background-position:left top;
 	background-repeat:no-repeat;
 }

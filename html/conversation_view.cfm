@@ -15,15 +15,15 @@
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
-<link href="styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
-<link href="styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
-<link href="styles_dp.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
 <!--using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"-->  
-<link href="styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
-<link href="styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
+<link href="styles/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
+<link href="styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
 <!---<link href="../html/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
 <link href="../html/styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
 </cfoutput>
@@ -36,7 +36,7 @@
 	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
 	<cfif APPLICATION.moduleMessenger EQ true>
 		<script type="text/javascript" src="../app/scripts/App.js"></script>
-		<script type="text/javascript" src="Scripts/MessengerControl.js"></script>
+		<script type="text/javascript" src="scripts/MessengerControl.js"></script>
 		<cfif isDefined("SESSION.user_id")>
 		<script type="text/javascript">
 		window.onload = function (){
@@ -51,7 +51,7 @@
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="Scripts/functions.min.js"></script>
+<script type="text/javascript" src="scripts/functions.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -82,7 +82,7 @@
 	}
 </script>
 <!-- InstanceBeginEditable name="head" -->
-<link href="../html/styles_messenger.css" rel="stylesheet" type="text/css" media="all" />
+<link href="styles/styles_messenger.css" rel="stylesheet" type="text/css" media="all" />
 <!-- InstanceEndEditable -->
 </head>
 
@@ -137,8 +137,8 @@ function confirmDeleteConversation()
 		<div class="div_text_menus"><a href="conversation_download.cfm?id=#conversation_id#" class="text_menus"><br />Descargar</a></div>
 	</div>
 	<div class="div_element_menu">
-		<div class="div_icon_menus"><a href="#APPLICATION.htmlComponentsPath#/Messenger.cfc?method=deleteConversation&conversation_id=#conversation_id#" onclick="return confirmDeleteConversation();"><img src="assets/icons_#APPLICATION.identifier#/delete_conversation.gif" title="Eliminar conversación" alt="Eliminar conversación" /></a></div>
-		<div class="div_text_menus"><a href="#APPLICATION.htmlComponentsPath#/Messenger.cfc?method=deleteConversation&conversation_id=#conversation_id#" class="text_menus" onclick="return confirmDeleteConversation();"><br />Eliminar</a></div>
+		<div class="div_icon_menus"><a href="#APPLICATION.htmlComponentsPath#/Messenger.cfc?method=deleteConversation&conversation_id=#conversation_id#" onClick="return confirmDeleteConversation();"><img src="assets/icons_#APPLICATION.identifier#/delete_conversation.gif" title="Eliminar conversación" alt="Eliminar conversación" /></a></div>
+		<div class="div_text_menus"><a href="#APPLICATION.htmlComponentsPath#/Messenger.cfc?method=deleteConversation&conversation_id=#conversation_id#" class="text_menus" onClick="return confirmDeleteConversation();"><br />Eliminar</a></div>
 	</div>
 	
 </div>

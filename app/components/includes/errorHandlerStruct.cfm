@@ -26,7 +26,7 @@
 	<cfinvoke component="#APPLICATION.componentsPath#/ErrorManager" method="saveError">
 		<cfinvokeargument name="error_component" value="#component#" >
 		<cfinvokeargument name="error_method" value="#method#">
-		<cfinvokeargument name="error_content" value="#xmlResponseContent#">
+		<cfinvokeargument name="error_content" value="">
 		<!---<cfif isDefined("error_code")>--->
 			<cfinvokeargument name="error_code" value="#error_code#">
 		<!---</cfif>--->

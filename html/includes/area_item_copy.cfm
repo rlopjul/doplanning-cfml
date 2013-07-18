@@ -168,7 +168,7 @@
 	var applicationId = "#APPLICATION.identifier#";
 	var applicationPath = "#APPLICATION.path#";
 </script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/Scripts/tree.min.js"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -313,7 +313,7 @@ function onSubmitForm()
 			</div>
 			
 			<script type="text/javascript">
-				addRailoRequiredCheckBox("areas_ids[]",window.lang.convert("Debe seleccionar al menos un área"));			
+				addRailoRequiredCheckBox("areas_ids[]",window.lang.convert("Debe seleccionar al menos un área"));	
 			</script>
 			
 		</div><!---END Tab2--->

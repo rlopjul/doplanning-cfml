@@ -92,6 +92,7 @@
 							<cfinvokeargument name="with_input_type" value="#arguments.with_input_type#">
 							<cfinvokeargument name="disable_input_web" value="#arguments.disable_input_web#">
 							<cfinvokeargument name="disable_input_area" value="#arguments.disable_input_area#">
+							<cfinvokeargument name="admin" value="true">
 						</cfinvoke>
 						
 					</cfloop>
@@ -117,6 +118,7 @@
 		<cfargument name="with_input_type" type="string" required="true">
 		<cfargument name="disable_input_web" type="boolean" required="true">
 		<cfargument name="disable_input_area" type="boolean" required="true">
+		<cfargument name="admin" type="boolean" required="false" default="false">
 		
 		<cfset var method = "outputTree">
 		
@@ -142,7 +144,12 @@
 				<cfset li_rel = "allowed-web">
 				<!---<cfset a_href = "entries.cfm?area=#areaXml.xmlAttributes.id#">--->
 			</cfif>
-			<cfset a_href = "area_items.cfm?area=#areaXml.xmlAttributes.id#">			 
+			<cfif arguments.admin IS false>
+				<cfset a_href = "area_items.cfm?area=#areaXml.xmlAttributes.id#">		
+			<cfelse>
+				<cfset a_href = "area_users.cfm?area=#areaXml.xmlAttributes.id#">		
+			</cfif>
+				 
 		<cfelse><!---Área sin acceso--->
 			<cfif NOT isDefined("areaXml.xmlAttributes.type") OR areaXml.xmlAttributes.type EQ "">
 				<cfset li_rel = "not-allowed">
@@ -170,6 +177,7 @@
 					<cfinvokeargument name="with_input_type" value="#arguments.with_input_type#">
 					<cfinvokeargument name="disable_input_web" value="#arguments.disable_input_web#">
 					<cfinvokeargument name="disable_input_area" value="#arguments.disable_input_area#">
+					<cfinvokeargument name="admin" value="#arguments.admin#"/>
 				</cfinvoke>	
 			
 			</cfloop>

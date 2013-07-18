@@ -121,7 +121,7 @@
 
 <script src="https://swww.tokbox.com/webrtc/v2.0/js/TB.min.js"></script>
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/Scripts/openTokUserMeeting.js"></script>
+<script src="#APPLICATION.htmlPath#/scripts/openTokUserMeeting.js"></script>
 <script type="text/javascript" charset="utf-8">
 
 	var openTokApiKey = #APPLICATION.openTokApiKey#; 
