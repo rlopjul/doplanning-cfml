@@ -4,7 +4,6 @@
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 21-05-2012
 	
 --->
 <cfcomponent output="false">
@@ -21,27 +20,16 @@
 		<cfargument name="file_physical_name" type="string" required="yes">
 		<cfargument name="Filedata" type="string" required="yes">		
 						
-		<!---<cfset FORM.user_id = SESSION.user_id>
-		<cfset FORM.client_abb = SESSION.client_abb>
-		<cfset FORM.language = SESSION.user_language>
-		<cfset FORM.session_id = SESSION.SessionID>
-		<cfset FORM.type = arguments.file_type>
-		<cfset FORM.file = '<file id="#arguments.file_id#" physical_name="#arguments.file_physical_name#"/>'>
-		<cfset FORM.itemTypeId = arguments.itemTypeId>
-		<cfset FORM["#arguments.itemTypeName#"] = '<#arguments.itemTypeName# id="#arguments.item_id#"/>'>
-		<cfinclude template='#APPLICATION.resourcesPath#/uploadFiles/uploadFile.cfm'>--->
-		
 		<!---<cfxml variable="xmlFile">
 			<cfoutput>
 			<file id="#arguments.file_id#" physical_name="#arguments.file_physical_name#"/>
 			</cfoutput>
-		</cfxml>--->	
-		
+		</cfxml>
 		<cfxml variable="xmlItem">
 			<cfoutput>
 			<#arguments.itemTypeName# id="#arguments.item_id#"/>
 			</cfoutput>
-		</cfxml>
+		</cfxml>--->	
 		
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemFile" method="uploadItemFile" returnvariable="objectFile">
 			<cfinvokeargument name="type" value="#arguments.file_type#">
@@ -53,13 +41,13 @@
 			<cfinvokeargument name="file_physical_name" value="#arguments.file_physical_name#">
 			<cfinvokeargument name="Filedata" value="#arguments.Filedata#">
 			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-			<cfinvokeargument name="xmlItem" value="#xmlItem#">
+			<!---<cfinvokeargument name="xmlItem" value="#xmlItem#">--->
+			<cfinvokeargument name="item_id" value="#arguments.item_id#"/>
 		</cfinvoke>		
 		
 		<!---<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="xmlFile" returnvariable="xmlResponseContent">
 				<cfinvokeargument name="objectFile" value="#objectFile#">
 		</cfinvoke>--->
-		
 		
 		<!---<cfinvoke component="Request" method="doRequest" returnvariable="xmlGetFileResponse">
 			<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">

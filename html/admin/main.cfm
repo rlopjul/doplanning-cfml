@@ -14,7 +14,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <cfoutput>
 
-<title>#APPLICATION.title#<cfif isDefined("SESSION.client_name")> - #SESSION.client_name#</cfif></title>
+<title>Administración #APPLICATION.title#<cfif isDefined("SESSION.client_name")> - #SESSION.client_name#</cfif></title>
 
 <cfif APPLICATION.identifier EQ "dp">
 <link href="#APPLICATION.htmlPath#/assets/favicon.ico" rel="shortcut icon" type="image/x-icon"> 
@@ -125,7 +125,6 @@
 
 		if($("#searchIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
 			$("#loadingContainer").hide();
-			$("#mainContainer").show();
 		}
 			
 	}
@@ -227,7 +226,6 @@
 			if(currentTab == "#tab3" && $("#searchIframe").attr('src') == "about:blank") { //Load search page
 				$("#searchIframe").attr('src', 'iframes/messages_search.cfm');
 				$("#loadingContainer").show();
-				$("#mainContainer").hide();
 			}
 
 		})
@@ -356,9 +354,9 @@
 					<a onClick="expandTree();" class="btn" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
 					<a onClick="collapseTree();" class="btn" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
 					
-					<a onClick="showAreaNewModal(curAreaId);" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
+					<a onClick="loadModal("html_content/area_new.cfm?parent="+curAreaId);" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
 
-					<a onClick="showAreaCutModal(curAreaId);" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Cortar área</span></a>
+					<a onClick="loadModal("html_content/area_cut.cfm?area="+curAreaId);" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Cortar área</span></a>
 
 					<a class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
 
