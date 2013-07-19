@@ -1619,22 +1619,6 @@
 						</cfquery>
 					</cfif>	
 
-					<cfif isDefined("arguments.image_file") AND len(arguments.image_file) GT 0>
-						
-						<!--- <cffile action="Upload" filefield="#arguments.image_file#" destination="#destination##tempdirectory#" nameconflict="makeunique" result="result_cffile"> --->
-
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemFile" method="uploadItemFile" returnvariable="objectFile">
-							<cfinvokeargument name="type" value="area_image">
-							<cfinvokeargument name="user_id" value="#user_id#">
-							<cfinvokeargument name="client_abb" value="#client_abb#">
-							<cfinvokeargument name="user_language" value="#user_language#">
-							<cfinvokeargument name="file_id" value="">
-							<cfinvokeargument name="file_physical_name" value="">
-							<cfinvokeargument name="Filedata" value="#arguments.image_file#">
-							<cfinvokeargument name="area_id" value="#arguments.area_id#">
-						</cfinvoke>		
-
-					</cfif>
 				
 				<cfquery name="commitQuery" datasource="#client_dsn#">
 					COMMIT;
@@ -1653,8 +1637,99 @@
 				</cfcatch>										
 				
 			</cftry>
-			
 
+
+
+			<cfif isDefined("arguments.image_file") AND len(arguments.image_file) GT 0>
+
+
+				<cfquery name="getAreaFile" datasource="#client_dsn#">
+					SELECT image_id
+					FROM #client_abb#_areas
+					WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+			
+				<cfif getAreaFile.recordCount GT 0>
+					
+					<cfif NOT isValid("integer", getAreaFile.image_id)><!---El area no tiene imagen--->
+						
+
+						<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="createImageFileResponse">
+							<cfinvokeargument name="name" value=" ">		
+							<cfinvokeargument name="file_name" value=" ">
+							<cfinvokeargument name="file_type" value=" ">
+							<cfinvokeargument name="file_size" value="0">
+							<cfinvokeargument name="description" value="">
+						</cfinvoke>
+
+						<cfif createImageFileResponse.result IS true>
+			
+							<cfset image_id = createImageFileResponse.objectFile.id>
+							<cfset image_physical_name = createImageFileResponse.objectFile.physical_name>
+
+						<cfelse>
+				
+							<cfset response_message = "Error al crear la imagen.">
+
+							<cfset response = {result=false, message=#response_message#}>	
+							<cfreturn response>
+							
+						</cfif>			
+
+						
+					<cfelse><!---El área ya tiene una imagen: se va a reemplazar--->
+						
+						<cfset image_id = getAreaFile.image_id>
+
+						<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">				
+							<cfinvokeargument name="get_file_id" value="#image_id#">
+						
+							<cfinvokeargument name="return_type" value="object">
+						</cfinvoke>	
+
+						<cfset image_physical_name = objectFile.physical_name>
+						
+						<cfquery name="updateStateUploadingFile" datasource="#client_dsn#">
+							UPDATE #client_abb#_#files_table#
+							SET status_replacement = 'pending'
+							WHERE id=<cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+						
+					</cfif>
+					
+					
+				<cfelse><!---The area does not exist--->
+			
+					<cfset error_code = 301>
+					
+					<cfthrow errorcode="#error_code#">
+				
+				</cfif>		
+
+					
+				<cftry>
+				
+					<cfinvoke component="AreaItemFile" method="uploadItemFile">
+						<cfinvokeargument name="file_type" value="area_image">
+						<cfinvokeargument name="file_id" value="#image_id#">
+						<cfinvokeargument name="file_physical_name" value="#image_physical_name#">
+						<cfinvokeargument name="Filedata" value="#arguments.image_file#">
+					</cfinvoke>
+					
+					<cfcatch>
+					
+						<cfset response = {result=false, message=#cfcatch.Message#}>	
+						<cfreturn response>
+					
+					</cfcatch>
+					
+				</cftry>
+					
+					
+				
+			</cfif>
+
+			
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
 
 

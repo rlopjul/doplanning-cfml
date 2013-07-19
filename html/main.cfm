@@ -125,7 +125,7 @@
 
 		if($("#searchIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
 			$("#loadingContainer").hide();
-			$("#mainContainer").show();
+			<!---$("#mainContainer").show();--->
 		}
 			
 	}
@@ -197,7 +197,7 @@
 			if(currentTab == "#tab3" && $("#searchIframe").attr('src') == "about:blank") { //Load search page
 				$("#searchIframe").attr('src', 'iframes/messages_search.cfm');
 				$("#loadingContainer").show();
-				$("#mainContainer").hide();
+				<!---$("#mainContainer").hide();--->
 			}
 
 		})

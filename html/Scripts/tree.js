@@ -122,5 +122,8 @@ function treeLoaded(event, data) { //JStree loaded
 	}
 
 	$("#loadingContainer").hide();
-	$("#mainContainer").show();
+	$("#treeContainer").css('visibility', 'visible');
+
+	if($("#mainContainer").is(":hidden"))
+		$("#mainContainer").show();
 }

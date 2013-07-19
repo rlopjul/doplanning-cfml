@@ -93,15 +93,14 @@ function postModalForm(formId, requestUrl, responseUrl, responseTarget){
 		  	if(status == "success"){
 		  		var message = encodeURIComponent(data.message);
 
-		  		//openUrl(responseUrl+"&msg="+message+"&res="+data.result,responseTarget);
-		  		openUrl(responseUrl,responseTarget);
+		  		openUrl(responseUrl+"&msg="+message+"&res="+data.result,responseTarget);
 
 		  		//hideModal(modalId);
 		  		hideDefaultModal();
 
 		  		$('body').modalmanager('removeLoading');
 		  		
-		  		showAlertMessage(message, data.result);
+		  		//showAlertMessage(message, data.result);
 
 		  	}else
 				alert(status);
@@ -235,7 +234,8 @@ function setWithLink(value) {
 function loadTree() {
 		
 	$("#loadingContainer").show();
-	$("#mainContainer").hide();
+	//$("#mainContainer").hide();
+	$("#treeContainer").css('visibility', 'hidden');
 	
 	var noCacheNumber = Math.floor(Math.random()*1001);
 	$("#treeContainer").load("html_content/tree.cfm?n="+noCacheNumber, function() {

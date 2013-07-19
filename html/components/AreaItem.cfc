@@ -790,10 +790,11 @@
 					<cfinvokeargument name="description" value=" ">
 					<cfinvokeargument name="file_size" value="0">
 					
-					<cfinvokeargument name="return_type" value="xml">
+					<cfinvokeargument name="return_type" value="object">
 				</cfinvoke>
 				
 				
+				<!--- 
 				<cfsavecontent variable="xmlRequest">
 					<request>
 						<parameters>
@@ -813,13 +814,20 @@
 					<cfoutput>
 						#resultFile#
 					</cfoutput>					
-				</cfxml>
-				
-				
-				<cfif xmlResultFile.response.xmlAttributes.status EQ "ok">
+				</cfxml> --->
+
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="createImageFileResponse">
+					<cfinvokeargument name="name" value="#objectFileImage.name#">		
+					<cfinvokeargument name="file_name" value="#objectFileImage.file_name#">
+					<cfinvokeargument name="file_type" value="#objectFileImage.file_type#">
+					<cfinvokeargument name="file_size" value="#objectFileImage.file_size_full#">
+					<cfinvokeargument name="description" value="#objectFileImage.description#">
+				</cfinvoke>			
 			
-					<cfset image_id = xmlResultFile.response.result.file.xmlAttributes.id>
-					<cfset image_physical_name = xmlResultFile.response.result.file.xmlAttributes.physical_name>
+				<cfif createImageFileResponse.result IS true>
+			
+					<cfset image_id = createImageFileResponse.objectFile.id>
+					<cfset image_physical_name = createImageFileResponse.objectFile.physical_name>
 					
 					<cftry>
 					
@@ -843,19 +851,10 @@
 						
 					</cftry>
 					
-					<!---<cfif xmlGetFileResponse.response.result.file.xmlAttributes.status NEQ "ok">
-						
-						<cfset response_message = "Error al subir la imagen">
-						<cfset response_message = URLEncodedFormat(response_message)>
-						<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&msg=#response_message#&res=0" addtoken="no">
-						
-					</cfif>--->
-					
 				<cfelse>
 				
 					<cfset response_message = "Error al crear la imagen.">
-					<!---<cfset response_message = URLEncodedFormat(response_message)>
-					<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&response_message=#response_message#&res=0" addtoken="no">--->
+
 					<cfset response = {result="false", message=#response_message#}>	
 					<cfreturn response>
 					
