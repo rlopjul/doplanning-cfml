@@ -71,9 +71,9 @@
 			<cfif isDefined("user_id")>
 			<a class="btn btn-info btn-small" href="user_associate.cfm"><i class="icon-plus icon-white"></i> Asociar a este área</a>
 			</cfif>
- 			<a class="btn btn-info btn-small" href="user_new.cfm"><i class="icon-plus icon-white"></i> Nuevo usuario</a>
+ 			<a class="btn btn-info btn-small" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white"></i> Nuevo usuario</a>
  			<cfif isDefined("user_id")>
- 			<a class="btn btn-info btn-small" href="user_modify.cfm?user=#user_id#"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+ 			<a class="btn btn-info btn-small" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');" ><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
  			<a class="btn btn-danger btn-small" title="Eliminar Usuario" onClick="return confirmAction('eliminar');" href="user_delete.cfm?user=#user_id#" lange="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
  			</cfif>
  			

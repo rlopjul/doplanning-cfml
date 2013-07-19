@@ -1,3 +1,7 @@
+<!--- 
+Esta página ya no se debe usar, se mantiene por si es requerida esta funcionalidad de nuevo para ciertos clientes
+ --->
+
 <cfprocessingdirective suppresswhitespace="true">
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
