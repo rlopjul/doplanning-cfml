@@ -51,7 +51,7 @@ function loadModal(url){
 	$('body').modalmanager('loading');
 
 	$modal.load(url, '', function(){
-	  $modal.modal();
+	  $modal.modal({width:630});
 	});
 
 
@@ -91,16 +91,16 @@ function postModalForm(formId, requestUrl, responseUrl, responseTarget){
 		  success: function(data, status) {
 
 		  	if(status == "success"){
-		  		var message = encodeURIComponent(data.message);
+		  		var message = data.message;
 
-		  		openUrl(responseUrl+"&msg="+message+"&res="+data.result,responseTarget);
+		  		//openUrl(responseUrl+"&msg="+message+"&res="+data.result,responseTarget);
+		  		openUrl(responseUrl);
 
-		  		//hideModal(modalId);
 		  		hideDefaultModal();
 
 		  		$('body').modalmanager('removeLoading');
 		  		
-		  		//showAlertMessage(message, data.result);
+		  		showAlertMessage(message, data.result);
 
 		  	}else
 				alert(status);
@@ -112,7 +112,7 @@ function postModalForm(formId, requestUrl, responseUrl, responseTarget){
 }
 
 
-function postModalFormMain(formId, requestUrl){
+/*function postModalFormMain(formId, requestUrl){
 
 	$('body').modalmanager('loading');
 
@@ -138,7 +138,7 @@ function postModalFormMain(formId, requestUrl){
 		  },
 		  dataType: "json"
 		});
-}
+}*/
 
 
 function postModalFormTree(formId, requestUrl){
@@ -156,8 +156,16 @@ function postModalFormTree(formId, requestUrl){
 
 		  		hideDefaultModal();
 
-		  		disableNextTabChange = true;
-		  		updateTreeWithSelectedArea(data.area_id);
+		  		if(formId != "#deleteAreaForm") {
+
+		  			disableNextTabChange = true;
+		  			updateTreeWithSelectedArea(data.area_id);
+
+		  		} else {
+
+		  			updateTreeWithSelectedArea();
+		  		}
+		  		
 
 		  		$('body').modalmanager('removeLoading');
 
@@ -232,7 +240,9 @@ function setWithLink(value) {
 }
 
 function loadTree() {
-		
+	
+	curAreaId = undefined;
+
 	$("#loadingContainer").show();
 	//$("#mainContainer").hide();
 	$("#treeContainer").css('visibility', 'hidden');

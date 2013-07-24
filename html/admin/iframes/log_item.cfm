@@ -59,33 +59,9 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfif isDefined("URL.user") AND isDefined("URL.area")>
-	<cfset user_id = URL.user>
-	<cfset area_id = URL.area>
-</cfif>
 
-<cfoutput>
-<div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
+<cfinclude template="#APPLICATION.htmlPath#/admin/includes/log_item.cfm">
 
- 			<cfif isDefined("user_id") AND isDefined("area_id")>
- 			<a class="btn btn-warning btn-small" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de este area</span></a>
-
- 			</cfif>
- 			
-		</div>
-	</div>
-</div>
-</cfoutput>
-
-<div style="height:40px;"><!-- ---></div>
-
-<cfif isDefined("user_id") AND isDefined("URL.area")>
-	<cfinclude template="#APPLICATION.htmlPath#/admin/includes/user_content.cfm">
-<cfelse>
-	No hay usuario seleccionado
-</cfif>
 
 <!-- InstanceEndEditable -->
 </body>

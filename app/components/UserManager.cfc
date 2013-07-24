@@ -1162,7 +1162,7 @@
 
 				<cfinclude template="includes/functionEndOnlyLog.cfm">
 		
-				<cfset response = {result="true", message="", user_id=#arguments.delete_user_id#}>				
+				<cfset response = {result=true, message="", user_id=#arguments.delete_user_id#}>				
 								
 			
 			<cfelse><!---The user id is not found, user does not exist--->
@@ -1189,35 +1189,29 @@
 		
 		
 	<!------------------------ ASSIGN USER TO AREA-------------------------------------->	
-	<cffunction name="assignUserToArea" returntype="string" output="true" access="public">
-		<cfargument name="request" type="string" required="yes">
+	<cffunction name="assignUserToArea" returntype="struct" output="false" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="add_user_id" type="numeric" required="true">
 		
 		<cfset var method = "assignUserToArea">
-		<cfset var userId = "">
-		<cfset var area_id = "">
+
+		<cfset response = structNew()>
+
 		<cfset var user_id = "">
-<cfset var client_abb = "">
-<cfset var user_language = "">
-	
-<cfset var xmlRequest = "">
-<cfset var xmlResponseContent = "">
-	
+		<cfset var client_abb = "">	
 			
 		<cftry>
 			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset userId = xmlRequest.request.parameters.user.xmlAttributes.id>
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
-			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+						
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 		
 			<!---checkIfExist--->
 			<cfquery name="checkIfExistQuery" datasource="#client_dsn#">
 				SELECT user_id
 				FROM #client_abb#_areas_users
-				WHERE area_id=<cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer"> 
-				AND user_id=<cfqueryparam value="#userId#" cfsqltype="cf_sql_integer">;
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+				AND user_id = <cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
 			<cfif checkIfExistQuery.recordCount GT 0><!--- The user already is in the area  --->
@@ -1227,149 +1221,135 @@
 			</cfif>
 		
 			<cfquery name="assignUser" datasource="#client_dsn#">
-			INSERT INTO #client_abb#_areas_users (area_id, user_id)
-			VALUES(<cfqueryPARAM value="#area_id#" cfsqltype="cf_sql_integer">,
-				<cfqueryparam value="#userId#" cfsqltype="cf_sql_integer">);
+				INSERT INTO #client_abb#_areas_users (area_id, user_id)
+				VALUES(<cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
+					<cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">);
 			</cfquery>	
 			
 			<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="get_user_id" value="#userId#">
+				<cfinvokeargument name="get_user_id" value="#arguments.add_user_id#">
 			</cfinvoke>	
 			
 			<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
-					<cfinvokeargument name="xml" value="#xmlResponseContent#">
+				<cfinvokeargument name="xml" value="#xmlResponseContent#">
 					
-					<cfinvokeargument name="return_type" value="object">
+				<cfinvokeargument name="return_type" value="object">
 			</cfinvoke>		
 		
 			<cfinvoke component="AlertManager" method="assignUserToArea">
 				<cfinvokeargument name="objectUser" value="#objectUser#">
-				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="new_area" value="false">
 			</cfinvoke>
 			
-			<cfinclude template="includes/functionEnd.cfm">
+			<cfinclude template="includes/functionEndOnlyLog.cfm">
 			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
+			<cfset response = {result=true, message="", area_id=#arguments.area_id#, user_id=#arguments.add_user_id#}>
 		
-		<cfreturn xmlResponse>	
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
 				
 	</cffunction>
 	
 	
 	<!------------------------ ASSIGN USERS TO AREA-------------------------------------->	
-	<cffunction name="assignUsersToArea" returntype="string" output="true" access="public">
-		<cfargument name="request" type="string" required="yes">
+	<cffunction name="assignUsersToArea" returntype="struct" output="false" access="public">
+		<cfargument name="area_id" type="numeric" required="true"/>
+		<cfargument name="users_id" type="list" required="true"/>
 		
 		<cfset var method = "assignUsersToArea">
-		<cfset var userId = "">
-		<cfset var area_id = "">
+
+		<cfset var response = structNew()>
+
 		<cfset var user_id = "">
-<cfset var client_abb = "">
-<cfset var user_language = "">
-	
-<cfset var xmlRequest = "">
-<cfset var xmlResponseContent = "">
-	
+		<cfset var client_abb = "">
 			
 		<cftry>
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
-			<cfxml variable="xmlUsers">
+			<!---<cfxml variable="xmlUsers">
 				<cfoutput>
 					#xmlRequest.request.parameters.users#
 				</cfoutput>
-			</cfxml>
+			</cfxml>--->
 			
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 		
-			<cfloop index="cur_user_index" from="1" to="#ArrayLen(xmlUsers.users)#"
-step="1">
-				<cfset cur_user_id = xmlUsers.users[cur_user_index].xmlAttributes.id>
+			<cfloop index="cur_user_index" list="#arguments.users_id#">
+				<cfset cur_user_id = cur_user_index>
 				
-				<cfinvoke component="UserManager" method="assignUserToArea" returnvariable="resultAssignUser">
-					<cfinvokeargument name="request" value='<request><parameters><area id="#area_id#" /><user id="#cur_user_id#"/></parameters></request>'>
+				<cfinvoke component="UserManager" method="assignUserToArea" returnvariable="responseAssignUser">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+					<cfinvokeargument name="add_user_id" value="#cur_user_id#"/>
 				</cfinvoke>
 				
-				<cfxml variable="xmlResultAssignUser">
+				<!--- <cfxml variable="xmlResultAssignUser">
 					<cfoutput>
 						#resultAssignUser#
 					</cfoutput>
-				</cfxml>
+				</cfxml> --->
 				
-				<cfif xmlResultAssignUser.response.xmlAttributes.status NEQ "ok"><!---User assign failed--->
+				<cfif responseAssignUser.result IS false><!---User assign failed--->
 					
-					<cfset error_code = xmlResultAssignUser.response.error.xmlAttributes.code>
-
-					<cfthrow errorcode="#error_code#">
+					<cfreturn responseAssignUser>
 				
 				</cfif>
 
-			</cfloop>
+			</cfloop>	
+			
+			<cfinclude template="includes/functionEndOnlyLog.cfm">
+			
+			<cfset response = {result=true, message="", area_id=#arguments.area_id#}>
 		
-					
-			<cfset xmlResponseContent = xmlUsers>
-	
-			
-			<cfinclude template="includes/functionEnd.cfm">
-			
 			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-		
-		<cfreturn xmlResponse>	
+
+		<cfreturn response>	
 				
 	</cffunction>
 
 
 	<!--- -------------------DISSOCIATE USER FROM AREA------------------------------------ --->
 	
-	<cffunction name="dissociateUserFromArea" returntype="string" output="true" access="public">
-		<cfargument name="request" type="string" required="yes">
-		<!---<cfargument name="userId" type="string" required="true">
-		<cfargument name="areaId" type="string" required="true">--->
+	<cffunction name="dissociateUserFromArea" returntype="struct" output="true" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="dissociate_user_id" type="numeric" required="true">
 		
 		<cfset var method = "dissociateUserFromArea">
-		<cfset var userId = "">
-		<cfset var area_id = "">
+
+		<cfset var response = structNew()>
+
 		<cfset var user_id = "">
-<cfset var client_abb = "">
-<cfset var user_language = "">
-	
-<cfset var xmlRequest = "">
-<cfset var xmlResponseContent = "">
-	
-			
+		<cfset var client_abb = "">
+
 		<cftry>
 			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset userId = xmlRequest.request.parameters.user.xmlAttributes.id>
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
-			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+						
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 			
 			
 			<cfquery name="getArea" datasource="#client_dsn#">
 				SELECT user_in_charge
 				FROM #client_abb#_areas AS areas
-				WHERE areas.id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 						
 			<cfif getArea.recordCount GT 0>
 			
 				<!---check if the user is not the user_in_charge of the area--->
-				<cfif getArea.user_in_charge EQ userId>
+				<cfif getArea.user_in_charge EQ arguments.dissociate_user_id>
 					
 					<cfset error_code = 411>
 					
@@ -1379,12 +1359,8 @@ step="1">
 			
 				<cfquery name="assignUser" datasource="#client_dsn#">
 					DELETE FROM #client_abb#_areas_users
-					WHERE area_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer"> AND user_id = <cfqueryparam value="#userId#" cfsqltype="cf_sql_integer">;
-				</cfquery>	
-				<!---<cfreturn true>--->
-				
-				<cfset xmlResponseContent = '<user id="#userId#"/>'>
-			
+					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND user_id = <cfqueryparam value="#arguments.dissociate_user_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
 			
 			<cfelse><!---The area does not exist--->
 				
@@ -1393,17 +1369,20 @@ step="1">
 				<cfthrow errorcode="#error_code#">
 			
 			</cfif>
+
+			<cfinclude template="includes/functionEndOnlyLog.cfm">
 			
-			<cfinclude template="includes/functionEnd.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
+			<cfset response = {result=true, message="", area_id=#arguments.area_id#}>
 		
-		<cfreturn xmlResponse>	
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>	
+				
 				
 	</cffunction>
 
@@ -2062,12 +2041,6 @@ step="1">
 		
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
-			<!---<cfxml variable="xmlUser">
-				<cfoutput>
-					#xmlRequest.request.parameters.user#
-				</cfoutput>
-			</cfxml>--->
 					
 			<!--- ORDER --->
 			<cfinclude template="includes/usersOrderParameters.cfm">
