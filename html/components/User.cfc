@@ -4,7 +4,6 @@
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 24-03-2013
 	
 	20-03-2013 alucena: añadido campo DNI para todos los usuarios
 	23-04-2013 alucena: updateUser modifica el campo language
@@ -463,7 +462,6 @@
 		<cfreturn response>
 		
 	</cffunction>
-	
 
 
 
@@ -496,6 +494,104 @@
 
 
 	
+
+	<cffunction name="deleteUserImage" returntype="void" access="remote">
+		<cfargument name="return_page" type="string" required="true">
+		
+		<cfset var method = "deleteUserImage">
+		
+		<cfset var response_page= "">
+		<cfset var request_parameters = "">
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="deleteUserImage">
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>		
+				
+			<cfset msg = "Imagen eliminada.">
+			
+			<cfset msg = URLEncodedFormat(msg)>
+            
+            <cflocation url="#arguments.return_page#?msg=#msg#&res=1" addtoken="no">	
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
+
+	<!--- ----------------------------------- assignUserToArea -------------------------------------- --->
+
+	<cffunction name="assignUserToArea" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true" />
+		<cfargument name="user_id" type="numeric" required="true" />
+		
+		<cfset var method = "assignUserToArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="assignUserToArea" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="add_user_id" value="#arguments.user_id#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Usuario asociado">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+	
+
+
+	<!--- ----------------------------------- dissociateUserFromArea -------------------------------------- --->
+
+	<cffunction name="dissociateUserFromArea" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true" />
+		<cfargument name="user_id" type="numeric" required="true" />
+		
+		<cfset var method = "dissociateUserFromArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="dissociateUserFromArea" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="dissociate_user_id" value="#arguments.user_id#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Usuario quitado del área">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+	
+
+
 	
 	<cffunction name="outputUser" returntype="void" output="true" access="public">
 		<cfargument name="objectUser" type="struct" required="true">
@@ -1018,36 +1114,5 @@
 		</cftry>
 		
 	</cffunction>
-	
-	
-	<cffunction name="deleteUserImage" returntype="void" access="remote">
-		<cfargument name="return_page" type="string" required="true">
-		
-		<cfset var method = "deleteUserImage">
-		
-		<cfset var response_page= "">
-		<cfset var request_parameters = "">
-		
-		<cftry>
-			
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="deleteUserImage">
-				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-			</cfinvoke>		
-				
-			<cfset msg = "Imagen eliminada.">
-			
-			<cfset msg = URLEncodedFormat(msg)>
-            
-            <cflocation url="#arguments.return_page#?msg=#msg#&res=1" addtoken="no">	
-			
-			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-	</cffunction>
-	
 	
 </cfcomponent>

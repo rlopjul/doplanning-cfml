@@ -11,7 +11,7 @@
 		<cfif APPLICATION.identifier NEQ "vpnet">
 	
 		<!---<div style="float:right; margin-right:5px; margin-top:5px;">--->
-		<div class="span4">
+		<div class="span3">
 
 				<div style="text-align:left;">
 				<cfif len(objectUser.image_file) GT 0 AND len(objectUser.image_type)>

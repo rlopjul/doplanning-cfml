@@ -59,7 +59,9 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfinclude template="#APPLICATION.htmlPath#/admin/includes/user_modify.cfm">
+
+<cfinclude template="#APPLICATION.htmlPath#/admin/includes/logs.cfm">
+
 
 <!-- InstanceEndEditable -->
 </body>
