@@ -23,7 +23,7 @@
 		<cfset error_code = 10000>
 	</cfif>
 	
-	<cfinvoke component="#APPLICATION.componentsPath#/ErrorManager" method="saveError">
+	<cfinvoke component="#APPLICATION.componentsPath#/ErrorManager" method="saveError" returnvariable="saveErrorResponse">
 		<cfinvokeargument name="error_component" value="#component#" >
 		<cfinvokeargument name="error_method" value="#method#">
 		<cfinvokeargument name="error_content" value="">
@@ -39,10 +39,22 @@
 		</cfif>
 	</cfinvoke>
 
+	<cfif error_code IS NOT 10000>
+		<cfinvoke component="#APPLICATION.componentsPath#/ErrorManager" method="getError" returnvariable="objectError">
+			<cfinvokeargument name="error_code" value="#error_code#">	
+		</cfinvoke>
 
-	<!--- response --->
-	<cfset response = {result="false", message="#error_message#", error_code="#error_code#"}>
-	
+		<!--- response --->
+		<cfset response = {result=false, message="#objectError.title#", error_code="#error_code#"}>
+
+	<cfelse>
+
+		<!--- response --->
+		<cfset response = {result=false, message="#error_message#", error_code="#error_code#"}>
+
+	</cfif>
+
+
 	<cfcatch>
 			
 		<cftry>
