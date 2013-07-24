@@ -166,30 +166,29 @@
 <!--- <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.css" rel="stylesheet" type="text/css" /> --->
 <script type="text/javascript">
 	var applicationId = "#APPLICATION.identifier#";
-	var applicationPath = "#APPLICATION.path#";
+	<!---var applicationPath = "#APPLICATION.path#";--->
 </script>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js"></script>
 </cfoutput>
 
 <script type="text/javascript">
 	
-	function areaSelected(areaId)  {
+	function treeLoaded () { 
+
+		$("#loadingContainer").hide();
+		<!---$("#mainContainer").show();--->
+
+		if($("#mainContainer").is(":hidden"))
+			$("#mainContainer").show();
+
+	}
+
+	function areaSelected(areaId, areaUrl, withLink)  {
+
 		var checkBoxId = "#area"+areaId;
 		if($(checkBoxId).attr('disabled')!='disabled')
 			toggleCheckboxChecked(checkBoxId);
-	}
 
-	
-	function treeLoaded (event, data) { //JStree loaded
-		$("#areasTreeContainer").bind("select_node.jstree", function (e, data) {
-			var $obj = data.rslt.obj;
-			areaSelected($obj.attr("id"));
-		
-		});
-		
-		$("#loadingContainer").hide();
-		$("#mainContainer").show();
-	
 	}
 	
 	$(window).load( function() {		

@@ -4,40 +4,12 @@
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 16-07-2009
 	
 --->
 <cfcomponent output="false">
 
 	<cfset component = "Area">
 	<cfset request_component = "AreaManager">
-	
-	<!--- ----------------------------------- getRootAreaId -------------------------------------- --->
-	<!---Este método no se puede usar en la versión HTML porque cuando un usuario no puede ver el árbol completo no sirve de nada obtener el área raiz--->
-	<!---<cffunction name="getRootAreaId" returntype="numeric" access="public">
-	
-		<cfset var method = "getRootAreaId">
-		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-		
-		<cfset var root_area_id = "">
-		
-		<cftry>
-
-			<cfinvoke component="#APPLICATION.componentsPath#/#request_component#" method="#method#" returnvariable="root_area_id">				
-			</cfinvoke>		
-			
-			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn root_area_id>
-		
-	</cffunction>--->
-	
 	
 	<!--- ----------------------------------- getMainTree -------------------------------------- --->
 
@@ -193,6 +165,7 @@
 			</cfinvoke>
 			
 			<cfcatch>
+				<!--- Esto hay que cambiarlo porque en las páginas en las que se carga con JavaScript el contenido no debe haber redirecciones a otras páginas--->
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
 			
@@ -384,6 +357,7 @@
 	<!--- ----------------------------------- updateArea -------------------------------------- --->
 
 	<cffunction name="updateArea" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true"/>
 		
 		<cfset var method = "updateArea">
 
@@ -409,9 +383,40 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- updateArea -------------------------------------- --->
+
+	<cffunction name="moveArea" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true"/>
+		<cfargument name="parent_id" type="numeric" required="true"/>
+		
+		<cfset var method = "moveArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="updateArea" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Área movida">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+
+
 	<!--- ----------------------------------- updateAreaImage -------------------------------------- --->
 
 	<cffunction name="updateAreaImage" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true"/>
 		
 		<cfset var method = "updateArea">
 
@@ -435,7 +440,36 @@
 		<cfreturn response>
 			
 	</cffunction>
+
+
+	<!--- ----------------------------------- deleteArea -------------------------------------- --->
+
+	<cffunction name="deleteArea" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true"/>
+		
+		<cfset var method = "deleteArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
 	
-	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="deleteArea" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Área eliminada">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+
 	
 </cfcomponent>

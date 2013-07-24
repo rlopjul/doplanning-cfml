@@ -36,10 +36,10 @@ html {
 	height:100%; 
 	overflow:hidden; /*PARA IE8*/
 }
-#itemsContainer, #searchItemsContainer{
+#itemsContainer, #searchItemsContainer, #logItemsContainer{
 	width:62%;float:left;clear:left; border-color:#CCCCCC; border-style:solid; border-width:1px;
 }
-#itemContainer, #searchItemContainer{
+#itemContainer, #searchItemContainer, #logItemContainer{
 	width:37%;float:right;clear:right; border-color:#CCCCCC; border-style:solid; border-width:1px;
 }
 

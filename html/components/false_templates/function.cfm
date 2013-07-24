@@ -1,38 +1,61 @@
-
-<!---NOTAS:
-	-Las funciones que son public deben ser llamadas por otras funciones de ColdFusion que serán remote, por lo que las funciones public no tendrán try-catch, ya que son las funciones que las llaman las que gestionan los errores, y serán las que tienen try-catch.
-		
+<!--- 
+Ejemplos de este tipo
+Area/getMainTree 
 --->
-
-<cffunction name="" returntype="string" access="public">
+<cffunction name="" output="false"  returntype="struct" access="public">
 	
-	<cfset var method = "">
+	<cfset var method = "functionName">
 	
-	<!---<cfinclude template="includes/initVars.cfm">--->	
-	
-	<cfset var request_parameters = "">
+	<cfset var response = structNew()>	
 		
 	<cftry>
 		
-		<cfinclude template="includes/functionStart.cfm">
 		
-		<cfinclude template="includes/checkAreaAccess.cfm">
-		
-		<cfinclude template="includes/checkAdminAccess.cfm">
-		
-		
-		
-		<cfset xmlResponseContent = arguments.request>
-		
-		<cfinclude template="includes/functionEndNoLog.cfm">
-		
+		<!---Para gestión de respuesta por defecto
+		<cfinclude template="includes/responseHandlerStruct.cfm">--->
+
+		<cfinclude template="includes/responseHandlerStructNoRedirect.cfm">
+
 		<cfcatch>
-			<cfset xmlResponseContent = arguments.request>
-			<cfinclude template="includes/errorHandler.cfm">
+			<!---Para gestión de errores por defecto
+			<cfinclude template="includes/errorHandlerStruct.cfm">--->
+
+			<cfinclude template="inculdes/errorHandlerNoRedirectStruct.cfm">
 		</cfcatch>										
 		
 	</cftry>
 	
-	<cfreturn xmlResponse>
+	<cfreturn response>
 	
+</cffunction>
+
+
+
+<!--- 
+Ejemplos de este tipo
+Area/createArea
+Area/deleteArea
+User/assignUserToArea 
+--->
+<cffunction name="" output="false" returntype="struct" returnformat="json" access="remote">
+	
+	<cfset var method = "functionName">
+
+	<cfset var response = structNew()>
+				
+	<cftry>
+
+		
+		<cfif response.result IS true>
+			<cfset response.message = "Mensaje de respuesta en español">
+		</cfif>
+
+		<cfcatch>
+			<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+		</cfcatch>										
+		
+	</cftry>
+	
+	<cfreturn response>
+		
 </cffunction>

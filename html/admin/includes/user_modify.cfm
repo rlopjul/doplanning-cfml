@@ -24,6 +24,22 @@
 
 	</script>
 
-	<cfinclude template="#APPLICATION.htmlPath#/includes/user_data_form.cfm"/>
+	<div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="areaModalLabel">Modificar usuario</h3>
+	</div>
+
+ 	<div class="modal-body">
+
+ 		<div>
+		<cfinclude template="#APPLICATION.htmlPath#/includes/user_data_form.cfm"/>
+		</div>
+
+	</div>
+
+	<!---<div class="modal-footer">
+	    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+	    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)">Guardar cambios</button>
+	</div>--->
 
 </cfif>

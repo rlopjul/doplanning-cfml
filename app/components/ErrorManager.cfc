@@ -45,8 +45,7 @@
 				VALUES (#error_code#, '#error_content#', '#error_method#', '#error_component#')
 			</cfquery>
 		</cfif>
-				
-				
+	
 		<cfif error_code IS NOT 102 AND error_code IS NOT 607>
 			<cfif APPLICATION.errorReport EQ "email">
 			
