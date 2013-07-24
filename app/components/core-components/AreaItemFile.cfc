@@ -28,8 +28,9 @@
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_physical_name" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="no">
-		<cfargument name="xmlItem" type="xml" required="no">
-		<!---<cfargument name="xmlArea" type="xml" required="no">--->
+		<!---<cfargument name="xmlItem" type="xml" required="no">
+		<cfargument name="xmlArea" type="xml" required="no">--->
+		<cfargument name="item_id" type="numeric" required="false"/>
 		<cfargument name="area_id" type="numeric" required="false"/>
 				
 		<cfset var method = "uploadItemFile">		
@@ -52,13 +53,13 @@
 				
 				<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 				
-				<cfif NOT isDefined("arguments.xmlItem")>
+				<cfif NOT isDefined("arguments.item_id")>
 					<cfset error_code = 610>
 	
 					<cfthrow errorcode="#error_code#">
 				</cfif>
 				
-				<cfset item_id = xmlItem[itemTypeName].xmlAttributes.id>
+				<!---<cfset item_id = xmlItem[itemTypeName].xmlAttributes.id>--->
 				
 			</cfcase>
 			

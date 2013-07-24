@@ -121,11 +121,29 @@
 	
 	}
 
+	function treeLoaded() {
+
+		if ( !isNaN(selectAreaId) ) { //Hay área para seleccionar
+
+			selectTreeNode(selectAreaId);
+			
+		}else if( isNaN(selectAreaId) ) { //No hay area para seleccionar
+
+			emptyIframes();
+		}
+
+		$("#loadingContainer").hide();
+		$("#treeContainer").css('visibility', 'visible');
+
+		if($("#mainContainer").is(":hidden"))
+			$("#mainContainer").show();
+	}
+	
 	function searchIframeLoaded() {
 
 		if($("#searchIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
 			$("#loadingContainer").hide();
-			$("#mainContainer").show();
+			<!---$("#mainContainer").show();--->
 		}
 			
 	}
@@ -146,6 +164,13 @@
 		
 	}
 
+
+	function emptyIframes(){
+
+		$("#areaIframe").attr('src', 'iframes/area.cfm');
+		$("#itemIframe").attr('src', 'about:blank');
+		
+	}
 
 	
 	$(window).resize( function() {
@@ -197,7 +222,7 @@
 			if(currentTab == "#tab3" && $("#searchIframe").attr('src') == "about:blank") { //Load search page
 				$("#searchIframe").attr('src', 'iframes/messages_search.cfm');
 				$("#loadingContainer").show();
-				$("#mainContainer").hide();
+				<!---$("#mainContainer").hide();--->
 			}
 
 		})

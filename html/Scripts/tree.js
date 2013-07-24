@@ -3,7 +3,7 @@
 function showTree(selectable) { /*, areaId*/
 
 	$("#areasTreeContainer").bind("loaded.jstree", function (event, data) {
-		treeLoaded(event, data);
+		jsTreeLoaded(event, data);
 	})
 	.jstree({ 
 		"themes" : {
@@ -102,25 +102,12 @@ function collapseNode() {
 	
 }
 
-
-function treeLoaded(event, data) { //JStree loaded
+function jsTreeLoaded(event, data) { //JStree loaded
 	
 	$("#areasTreeContainer").bind("select_node.jstree", function (e, data) {
 	   var $obj = data.rslt.obj; // this will be a jquery object representing the <li> you've clicked
 	   areaSelected($obj.attr("id"),$obj.children("a").attr("href"),$obj.attr("with_link")=="true");
 	});
 	
-	if ( !isNaN(selectAreaId) ) { //Hay área para cargar
-
-		selectTreeNode(selectAreaId);
-		
-	}else if( isNaN(selectAreaId) ) { //No hay area para cargar
-	
-		//$("#areaIframe").attr('src', applicationPath+"/html/iframes/area.cfm");
-		$("#areaIframe").attr('src', "iframes/area.cfm");
-		
-	}
-
-	$("#loadingContainer").hide();
-	$("#mainContainer").show();
+	treeLoaded();
 }

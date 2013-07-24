@@ -59,7 +59,9 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfinclude template="#APPLICATION.htmlPath#/admin/includes/user_new.cfm">
+
+<cfinclude template="#APPLICATION.htmlPath#/admin/includes/area_cut_tree.cfm"/>
+
 
 <!-- InstanceEndEditable -->
 </body>

@@ -2800,122 +2800,124 @@ step="1">
 	</response>
 	--->
 	
+	<!--- 
 	<cffunction name="createImageFileTicket" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "createImageFileTicket">
-		
-		<cfset var area_id = "">
-		<cfset var type = "">
-		
-		<cfset var files_table = "">
-		
-		<cfset var objectFile = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-		
-		<cftry>
+			<cfargument name="request" type="string" required="yes">
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfset var method = "createImageFileTicket">
 			
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
-			<cfset type = xmlRequest.request.parameters.image_type.xmlText>
-												
-			<cfswitch expression="#type#">
+			<cfset var area_id = "">
+			<cfset var type = "">
+			
+			<cfset var files_table = "">
+			
+			<cfset var objectFile = "">
+			
+			<!---<cfinclude template="includes/initVars.cfm">--->	
+			
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
+				<cfset type = xmlRequest.request.parameters.image_type.xmlText>
+													
+				<cfswitch expression="#type#">
+		
 	
-
-				<cfcase value="area_image">
-					<cfset files_table = "areas_images">
+					<cfcase value="area_image">
+						<cfset files_table = "areas_images">
+						
+					</cfcase>
 					
-				</cfcase>
+					<cfcase value="user_image">
+						<cfset files_table = "users_images">
+						
+					</cfcase>
 				
-				<cfcase value="user_image">
-					<cfset files_table = "users_images">
-					
-				</cfcase>
-			
-			</cfswitch>
-			
-			
-			<cfinvoke component="FileManager" method="objectFile" returnvariable="objectFile">
-
-				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>
-			
-			
-			<cfquery name="getAreaFile" datasource="#client_dsn#">
-				SELECT *
-				FROM #client_abb#_areas
-				WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-			
-			<cfif getAreaFile.recordCount GT 0>
-				
-				<cfif NOT isValid("integer", getAreaFile.image_id)><!---El area no tiene imagen--->
-				
-					<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-					</cfinvoke>
-					
-					<cfset objectFile.uploading_date = current_date>
-					
-					<cfquery name="createFileQuery" datasource="#client_dsn#" result="createFileResult">
-						INSERT INTO #client_abb#_#files_table#
-						(uploading_date,status)
-						VALUES(	<cfqueryparam value="#objectFile.uploading_date#" cfsqltype="cf_sql_timestamp">,	
-								<cfqueryparam value="pending" cfsqltype="cf_sql_varchar">
-							);
-					</cfquery>
-					<!---<cfset objectFile.id = createFileResult.GENERATED_KEY>--->
-					<cfquery name="getLastInsertId" datasource="#client_dsn#">
-						SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_#files_table#;
-					</cfquery>
-					<cfset objectFile.id = getLastInsertId.last_insert_id>
-					
-					
-					<!--- ------------------ Update User Space Used --------------------- --->
-					<!---Esto se hace en la página en la que realmente se sube el archivo--->					
-					
-				<cfelse><!---El área ya tiene una imagen: se va a reemplazar--->
-					
-					<cfset objectFile.id = getAreaFile.image_id>
-					
-					<cfquery name="updateStateUploadingFile" datasource="#client_dsn#">
-						UPDATE #client_abb#_#files_table#
-						SET status_replacement = 'pending'
-						WHERE id=<cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
-					
-				</cfif>
+				</cfswitch>
 				
 				
-				<cfinvoke component="FileManager" method="xmlFile" returnvariable="xmlResult">
-					<cfinvokeargument name="objectFile" value="#objectFile#">
+				<cfinvoke component="FileManager" method="objectFile" returnvariable="objectFile">
+	
+					<cfinvokeargument name="return_type" value="object">
 				</cfinvoke>
+				
+				
+				<cfquery name="getAreaFile" datasource="#client_dsn#">
+					SELECT *
+					FROM #client_abb#_areas
+					WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+				
+				<cfif getAreaFile.recordCount GT 0>
 					
-				<cfset xmlResponseContent = xmlResult>
-
-				<cfinclude template="includes/functionEnd.cfm">
-			
-			
-			<cfelse><!---The area does not exist--->
-		
-				<cfset error_code = 301>
+					<cfif NOT isValid("integer", getAreaFile.image_id)><!---El area no tiene imagen--->
+					
+						<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
+						</cfinvoke>
+						
+						<cfset objectFile.uploading_date = current_date>
+						
+						<cfquery name="createFileQuery" datasource="#client_dsn#" result="createFileResult">
+							INSERT INTO #client_abb#_#files_table#
+							(uploading_date,status)
+							VALUES(	<cfqueryparam value="#objectFile.uploading_date#" cfsqltype="cf_sql_timestamp">,	
+									<cfqueryparam value="pending" cfsqltype="cf_sql_varchar">
+								);
+						</cfquery>
+						<!---<cfset objectFile.id = createFileResult.GENERATED_KEY>--->
+						<cfquery name="getLastInsertId" datasource="#client_dsn#">
+							SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_#files_table#;
+						</cfquery>
+						<cfset objectFile.id = getLastInsertId.last_insert_id>
+						
+						
+						<!--- ------------------ Update User Space Used --------------------- --->
+						<!---Esto se hace en la página en la que realmente se sube el archivo--->					
+						
+					<cfelse><!---El área ya tiene una imagen: se va a reemplazar--->
+						
+						<cfset objectFile.id = getAreaFile.image_id>
+						
+						<cfquery name="updateStateUploadingFile" datasource="#client_dsn#">
+							UPDATE #client_abb#_#files_table#
+							SET status_replacement = 'pending'
+							WHERE id=<cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+						
+					</cfif>
+					
+					
+					<cfinvoke component="FileManager" method="xmlFile" returnvariable="xmlResult">
+						<cfinvokeargument name="objectFile" value="#objectFile#">
+					</cfinvoke>
+						
+					<cfset xmlResponseContent = xmlResult>
+	
+					<cfinclude template="includes/functionEnd.cfm">
 				
-				<cfthrow errorcode="#error_code#">
-			
-			</cfif>					
 				
-
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
+				<cfelse><!---The area does not exist--->
 			
-		</cftry>
-		
-		<cfreturn xmlResponse>	
-		
-	</cffunction>
+					<cfset error_code = 301>
+					
+					<cfthrow errorcode="#error_code#">
+				
+				</cfif>					
+					
+	
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>										
+				
+			</cftry>
+			
+			<cfreturn xmlResponse>	
+			
+		</cffunction> --->
+	
 	
 	
 	<!--- ----------------------- CREATE IMAGE FILE -------------------------------- --->

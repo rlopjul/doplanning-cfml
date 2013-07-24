@@ -14,7 +14,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <cfoutput>
 
-<title>#APPLICATION.title#<cfif isDefined("SESSION.client_name")> - #SESSION.client_name#</cfif></title>
+<title>Administración #APPLICATION.title#<cfif isDefined("SESSION.client_name")> - #SESSION.client_name#</cfif></title>
 
 <cfif APPLICATION.identifier EQ "dp">
 <link href="#APPLICATION.htmlPath#/assets/favicon.ico" rel="shortcut icon" type="image/x-icon"> 
@@ -103,8 +103,8 @@
 		var userIframeHeight = 300;
 
 		$("#areaIframe").height(newHeight-userIframeHeight-5)
-		$("#itemIframe").height(newHeight-userIframeHeight-5);
-		$("#searchItemIframe").height(newHeight);
+		$("#allUsersIframe").height(newHeight-userIframeHeight-5);
+		$("#logItemIframe").height(newHeight);
 		$("#treeContainer").height(newHeight-73);
 	}
 
@@ -121,11 +121,28 @@
 	
 	}
 
-	function searchIframeLoaded() {
+	function treeLoaded() {
 
-		if($("#searchIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
-			$("#loadingContainer").hide();
+		if ( !isNaN(selectAreaId) ) { //Hay área para seleccionar
+
+			selectTreeNode(selectAreaId);
+			
+		}else if( isNaN(selectAreaId) ) { //No hay area para seleccionar
+
+			emptyIframes();
+		}
+
+		$("#loadingContainer").hide();
+		$("#treeContainer").css('visibility', 'visible');
+
+		if($("#mainContainer").is(":hidden"))
 			$("#mainContainer").show();
+	}
+
+	function logIframeLoaded() {
+
+		if($("#logIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
+			$("#loadingContainer").hide();
 		}
 			
 	}
@@ -148,35 +165,37 @@
 		}
 		
 	}--->
-	
 
-	function showAreaNewModal(parentAreaId) {
+	function openAreaNewModal(){
 
-		loadModal("html_content/area_new.cfm?parent="+parentAreaId);
-
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/area_new.cfm?parent='+curAreaId);
+		else
+			alert("Debe seleccionar un área en la que crear la nueva");
 	}
 
-	<!--- 
-	function showAreaModifyModal(areaId) {
-	
-			//$('#areaModal').removeData('modal');
-			<!--- $('#areaModal').modal({
-							  keyboard: true,
-							  remote: "html_content/area_modify.cfm?area="+areaId,
-							}); --->
-			
-			loadModal("html_content/area_modify.cfm?area="+areaId);
-	} --->
+	function openAreaMoveModal(){
 
-	function showAreaCutModal(areaId) {
-
-		loadModal("html_content/area_cut.cfm?area="+areaId);
-
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/area_cut.cfm?area='+curAreaId);
+		else
+			alert("Debe seleccionar un área para mover");
 	}
 
-	<!---function createArea() {
-		 $("#areasTreeContainer").jstree("create",null,false, "Nueva área", {attr : {id: "area_id"}, data: "name"}, true);
-	}--->
+	function openAreaAssociateModal(userId){
+
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/area_user_associate.cfm?area='+curAreaId+'&user='+userId);
+		else
+			alert("Debe seleccionar un área para asociar el usuario");
+	}
+	
+	function emptyIframes(){
+
+		$("#areaIframe").attr('src', 'about:blank');
+		$("#userAreaIframe").attr('src', 'about:blank');
+		
+	}
 
 	$(window).resize( function() {
 		resizeIframe();
@@ -224,14 +243,12 @@
 			var pattern=/#.+/gi //use regex to get anchor(==selector)
 			currentTab = e.target.toString().match(pattern)[0];
 
-			if(currentTab == "#tab3" && $("#searchIframe").attr('src') == "about:blank") { //Load search page
-				$("#searchIframe").attr('src', 'iframes/messages_search.cfm');
+			if(currentTab == "#tab3" && $("#logIframe").attr('src') == "about:blank") { //Load logs page
+				$("#logIframe").attr('src', 'iframes/logs.cfm');
 				$("#loadingContainer").show();
-				$("#mainContainer").hide();
 			}
 
 		})
-		
 		
 		$("#searchText").on("keydown", function(e) { 
 		
@@ -293,7 +310,9 @@
 		  <ul class="nav nav-pills" id="dpTab" style="margin-bottom:0px; clear:none;">
 			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
+			<cfif SESSION.client_administrator IS SESSION.user_id>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Logs</a></li>
+			</cfif>
 		  </ul>
 		  
 		  <cfoutput>
@@ -356,14 +375,11 @@
 					<a onClick="expandTree();" class="btn" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
 					<a onClick="collapseTree();" class="btn" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
 					
-					<a onClick="showAreaNewModal(curAreaId);" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
+					<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
 
-					<a onClick="showAreaCutModal(curAreaId);" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Cortar área</span></a>
+					<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover área</span></a>
 
-					<a class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
-
-					<!---<a onclick="expandTree();" class="btn btn-mini" title="Abrir nodos del árbol"><i class="icon-plus"></i> Expandir</a>
-					<a onclick="collapseTree();" class="btn btn-mini" title="Abrir nodos del árbol"><i class="icon-minus"></i> Colapsar</a>--->
+					<a onClick="loadModal('html_content/area_delete.cfm?area='+curAreaId);" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
 
 					<a href="../main.cfm" class="btn btn-info" style="float:right"><i class="icon-arrow-left"></i> <span>Volver</span></a>
 				</div>
@@ -439,8 +455,7 @@
 					<div id="usersContainer"><!---Users--->
 						
 						<!---All users--->
-						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframeItem" src="iframes/all_users.cfm" style="height:100%;background-color:#FFFFFF;" id="itemIframe"></iframe>
-						<!---iframes2/empty.cfm--->
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframeItem" src="iframes/all_users.cfm" style="height:100%;background-color:#FFFFFF;" id="allUsersIframe"></iframe>
 
 						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframeItem" src="iframes/user.cfm" style="height:300px;background-color:#FFFFFF; border-top: 1px solid #CCCCCC;" id="userAdminIframe"></iframe>
 						
@@ -452,30 +467,33 @@
 			</div><!---END Tab Area--->
 			
 			
-			<div class="tab-pane" id="tab3"><!---Tab Search--->
+			<cfif SESSION.client_administrator IS SESSION.user_id>
+
+			<div class="tab-pane" id="tab3"><!---Tab Logs--->
 				
-				<!---searchContainer--->
-				<div id="searchContainer">
+				<!---logContainer--->
+				<div id="logContainer">
 					
 					
-					<div id="searchItemsContainer"><!---Items Search--->
+					<div id="logItemsContainer"><!---Items Log--->
 						
-						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="searchIframe" onload="searchIframeLoaded()"></iframe><!---iframes/messages_search.cfm--->
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="logIframe" onload="logIframeLoaded()"></iframe>
 					
 					</div>
 					
-					<div id="searchItemContainer"><!---Item Search--->
+					<div id="logItemContainer"><!---Item Log--->
 					
-						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="searchItem" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="searchItemIframe" ></iframe><!---iframes2/empty.cfm"--->
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="logItem" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="logItemIframe"></iframe>
 						
 					</div>
 					
 				
 				</div>
 				
-			</div><!---END Tab Search--->
+			</div><!---END Tab Logs--->
+
+			</cfif>
 						
-			
 		  </div>
 		  
 		</div><!---END TabPanel--->
@@ -484,19 +502,9 @@
 		<div style="clear:both"><!-- --></div>
 		
 	</div>
-	
 
 	<!--- Modal Window --->
 	<div id="ajax-modal" class="modal hide fade" tabindex="-1"></div>
-
-	<!---<div id="areaModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="areaModalLabel" aria-hidden="true">
-	  <div class="modal-header">
-	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	    <h3 id="areaModalLabel">Modificar área</h3>
-	  </div>
-	  <div class="modal-body">
-	  </div>
-	</div>--->
 
 	<div style="clear:both"><!-- --></div>
 	<div class="msg_div_error" id="errorMessage"></div>

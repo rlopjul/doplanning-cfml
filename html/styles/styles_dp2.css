@@ -36,10 +36,10 @@ html {
 	height:100%; 
 	overflow:hidden; /*PARA IE8*/
 }
-#itemsContainer, #searchItemsContainer{
+#itemsContainer, #searchItemsContainer, #logItemsContainer{
 	width:62%;float:left;clear:left; border-color:#CCCCCC; border-style:solid; border-width:1px;
 }
-#itemContainer, #searchItemContainer{
+#itemContainer, #searchItemContainer, #logItemContainer{
 	width:37%;float:right;clear:right; border-color:#CCCCCC; border-style:solid; border-width:1px;
 }
 
@@ -64,6 +64,10 @@ html {
 
 .text_user_logged {
 	font-size:12px; line-height:18px;
+}
+
+.loading_position{
+	position:absolute; top:50%; left:50%; margin:-12px 0 0 -12px; width:200px; margin-left:-100px;
 }
 
 /*BOOTSTRAP CSS CHANGES*/
