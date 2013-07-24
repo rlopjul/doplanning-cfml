@@ -1,0 +1,1 @@
+<div class="div_message_page_title">Entrada de log</div>
