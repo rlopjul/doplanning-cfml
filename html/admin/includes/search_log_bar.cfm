@@ -1,5 +1,12 @@
 
+
+
+
 <cfoutput>
+
+
+
+
 <!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>--->
@@ -23,17 +30,22 @@
 	<cfset action = "">
 </cfif>
 
+
+<cfoutput>
 <cfif isDefined("URL.from_date")>
 	<cfset from_date = URL.from_date>
 <cfelse>
-	<cfset from_date = "">
+	<cfset previousday = DateAdd("d",-1,now())>
+	<cfset from_date = "#DateFormat(previousday, "DD-MM-YYYY")#">
 </cfif>
 
 <cfif isDefined("URL.end_date")>
 	<cfset end_date = URL.end_date>
 <cfelse>
-	<cfset end_date = "">
+	<cfset end_date = "#DateFormat(now(), "DD-MM-YYYY")#">
 </cfif>
+
+</cfoutput>
 
 
 <cfif isDefined("URL.limit") AND isNumeric(URL.limit)>
