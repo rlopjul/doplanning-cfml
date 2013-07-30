@@ -161,7 +161,7 @@
 					<thead>
 						<tr>
 							<th style="width:35px" class="filter-false"></th>	
-							<th style="width:39%" lang="es">Action</th>		
+							<th style="width:39%" lang="es">Acción</th>		
 							<th lang="es">De</th>
 							<th style="width:150px;" lang="es">Fecha</th>
 						</tr>
@@ -243,21 +243,40 @@
 		
 		<cfset var user_page = "">
 		
-<!---		<cftry>--->
+		<cftry>
 			
 			<cfoutput>
 			<div class="div_log_page_title">			
-			Detalles del log 
+			<span lang="es">Detalles del log</span>
 			</div>
 			<div class="div_separator"><!-- --></div>
+			
+		
+				<div class="div_user_page_title">
+				<cfif len(log.image_type) GT 0>
+					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#log.user_id#&type=#log.image_type#&medium=" alt="#log.name#" class="item_img" style="margin-right:2px;"/>									
+				<cfelse>							
+					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#log.name#" class="item_img_default" style="margin-right:2px;"/>
+				</cfif><br/>
+				<span lang="es" class="div_log_page_label">Usuario</span>
+				</div>
+				
+				<div class="div_separator"><!-- --></div>
+				<div class="div_user_page_user">
+					<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Nombre:</span> #log.name#</div>
+					<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Email:</span> <a href="mailto:#log.email#" class="div_user_page_text">#log.email#</a></div>	
+					<div class="div_log_page_label"><span lang="es" style="font-weight:bold">&nbsp;</span></div>				
+				</div>			
+		
+			
+			
 			<div class="div_log_page_log">
 				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Id:</span> #log.log_id#</div>
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Método:</span> #log.method#</div>
+				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Acción:</span> #log.method#</div>
 				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Componente:</span> #log.component#</div>
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Usuario:</span> #log.name#</div>
 				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Fecha:</span> #DateFormat(log.time, APPLICATION.dateFormat)# #TimeFormat(log.time, "HH:mm:ss")#</div>
 				<div class="div_log_page_label">
-				<span lang="es" style="font-weight:bold">Request:</span> 
+				<span lang="es" style="font-weight:bold">Petición:</span> 
 				<cfif IsXML(log.request_content)>
 					<cfdump var="#xmlParse(log.request_content)#">
 				<cfelse>
@@ -269,19 +288,14 @@
 				</div>
 			</div>
 			
-
-<!---				<cfwddx action="wddx2cfml" input="#log.request_content#" output="cfmlContent">
-		
-				<cfdump var="#cfmlContent#">--->
-			
 			
 			</cfoutput>								
 			
-<!---			<cfcatch>
+			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
 			
-		</cftry>--->
+		</cftry>
 		
 	</cffunction>
 	
