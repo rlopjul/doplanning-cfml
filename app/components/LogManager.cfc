@@ -332,7 +332,7 @@
 			<cfinclude template="includes/checkAdminAccess.cfm">
 			
 			<cfquery datasource="#client_dsn#" name="logs">
-				SELECT logs.*, logs.id AS log_id, CONCAT(users.family_name, ' ', users.name) as name
+				SELECT logs.*, logs.id AS log_id, CONCAT(users.family_name, ' ', users.name) as name, users.email, users.image_type, users.id as user_id
 				FROM #client_abb#_logs AS logs 
 				LEFT JOIN #client_abb#_users AS users ON logs.user_id = users.id
 				WHERE logs.id = <cfqueryparam value="#arguments.log_id#" cfsqltype="cf_sql_integer">

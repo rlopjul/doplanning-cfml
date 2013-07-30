@@ -3,6 +3,11 @@
 <!---<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">--->
 
 <cfoutput>
+<script src="#APPLICATION.htmlPath#/admin/language/logs_content_en.js" charset="utf-8" type="text/javascript"></script>
+</cfoutput>
+
+
+<cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8" type="text/javascript"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
@@ -89,7 +94,7 @@
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>
 	
-	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca unos parámetros de búsqueda y haga click en "Buscar".</span></div>
+	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca los parámetros que desee y haga click en "Filtrar".</span></div>
 
 </cfif>
 
