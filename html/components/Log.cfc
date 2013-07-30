@@ -100,14 +100,14 @@
 							</cfif>
 		
 
-							sortList: [[3,1]] ,
+							sortList: [[2,1]] ,
 
 							headers: { 
 
 								0: { 
 									sorter: false 
 								},
-								3: { 
+								2: { 
 									sorter: "datetime" 
 								}
 		
@@ -160,10 +160,12 @@
 				<table id="listTable" class="tablesorter">
 					<thead>
 						<tr>
-							<th style="width:35px" class="filter-false"></th>	
-							<th style="width:39%" lang="es">Acción</th>		
+							<th style="width:35px" class="filter-false"></th>
 							<th lang="es">De</th>
-							<th style="width:150px;" lang="es">Fecha</th>
+							<th style="width:150px;" lang="es">Fecha</th>	
+							<th style="width:39%" lang="es">Acción</th>		
+							
+							
 						</tr>
 					</thead>
 					
@@ -209,10 +211,12 @@
 									<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img" alt="#itemTypeNameEs#"/>									
 								</cfif>
 	
-							</td>							
-							<td><span class="text_message_data">#logs.method#</span></td>
+							</td>		
 							<td><span class="text_message_data">#logs.name#</span></td>
-							<td><span class="text_message_data">#DateFormat(logs.time, APPLICATION.dateFormat)# #TimeFormat(logs.time, "HH:mm:ss")#</span></td>
+							<td><span class="text_message_data">#DateFormat(logs.time, APPLICATION.dateFormat)# #TimeFormat(logs.time, "HH:mm:ss")#</span></td>					
+							<td><span class="text_message_data">#logs.method#</span></td>
+							
+							
 							
 						</tr>
 					
