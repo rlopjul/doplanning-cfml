@@ -1,10 +1,6 @@
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8" type="text/javascript"></script>
 
-<!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>--->
-
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
 </cfoutput>
@@ -14,7 +10,8 @@
 <div class="div_head_subtitle_area">
 	<cfoutput>
 
-	<!---<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
+	<!---
+	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 	
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
 		
@@ -51,6 +48,8 @@
 	<span class="divider">&nbsp;</span>
 	
 	<a href="area_items.cfm?area=#area_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+
+	<a href="#APPLICATION.htmlPath#/area_items_full.cfm?area=#area_id#" class="btn btn-small" title="Ampliar contenido" lang="es" target="_blank"><i class="icon-external-link-sign" style="font-size:14px; line-height:23px;"></i></a>
 	
 	</cfoutput>
 </div>
