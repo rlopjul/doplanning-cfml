@@ -434,6 +434,52 @@
 		</cfif>
 			
 	</cffunction>
+
+
+	<!--- -------------------------- CHECK AREA ADMIN ACCESS -------------------------------- --->
+	<!---Comprueba si el usuario es administrador del área al que quiere acceder y si no lanza un error--->
+	
+	<!---
+		
+	Esto está pendiente de terminar
+
+	<cffunction name="isUserAreaAdministrator" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
+		
+		<cfset var method = "isUserAreaAdministrator">
+
+		<cfset var response = structNew()>
+		
+		<cfset var allUserAreasList = "">
+		<cfset var access_result = false>
+					
+		<cfif SESSION.client_administrator NEQ arguments.user_id><!---Is not an administrator user--->
+
+			<cfinvoke component="AreaManager" method="getAllUserAreasAdminList" returnvariable="allUserAreasAdminList">
+				ESTE MÉTODO HAY QUE CAMBIARLO PARA PODER PASARLE EL USUARIO DEL QUE HAY QUE COMPROBAR SI ES ADMINISTRADOR
+			</cfinvoke>
+			
+			<cfinvoke component="AreaManager" method="canTheUserAccess" returnvariable="access_result">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="allUserAreasList" value="#allUserAreasAdminList#">
+			</cfinvoke>
+	
+			<cfif access_result IS NOT true>
+
+				<cfset response = {result=false}>
+
+			</cfif>		
+		
+		<cfelse>
+
+			<cfset response = {result=true}>
+
+		</cfif>
+
+		<cfreturn response>
+			
+	</cffunction>--->
 	
 	
 	<!--- -------------------------- CHECK AREAS ACCESS -------------------------------- --->
