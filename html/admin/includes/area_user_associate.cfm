@@ -35,7 +35,7 @@
 						<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="item_img_default" style="margin-right:2px;"/>
 					</cfif> <strong>#objectUser.family_name# #objectUser.name#</strong> (#objectUser.email#)<br/>
 				</div>
-				<div style="margin-top:10px;">Area:
+				<div style="margin-top:10px;">Área:
 					<strong>#objectArea.name#</strong><br/>
 					<span>Ruta del área: #area_path#
 				</div>
