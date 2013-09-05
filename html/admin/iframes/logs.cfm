@@ -59,7 +59,7 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-
+<cfset itemTypeId = 1>
 <cfinclude template="#APPLICATION.htmlPath#/admin/includes/logs.cfm">
 
 
