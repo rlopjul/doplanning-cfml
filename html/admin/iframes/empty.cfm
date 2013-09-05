@@ -59,48 +59,6 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfif isDefined("URL.user") AND isDefined("URL.area")>
-	<cfset user_id = URL.user>
-	<cfset area_id = URL.area>
-</cfif>
-
-<cfoutput>
-<div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
-
- 			<cfif isDefined("user_id") AND isDefined("area_id")>
- 			<a class="btn btn-warning btn-small" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de este area</span></a>
-
- 			</cfif>
-
- 			<cfif SESSION.client_administrator IS SESSION.user_id>
-
- 				<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
-					<cfinvokeargument name="area_id" value="#area_id#"/>
-					<cfinvokeargument name="user_id" value="#user_id#"/>
-				</cfinvoke>
-
-				<cfif isAdministratorResponse.result IS false>--->
-					
-					<a class="btn btn-info  btn-small disabled" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>
-
-				<!---</cfif>--->
-
- 			</cfif>
- 			
-		</div>
-	</div>
-</div>
-</cfoutput>
-
-<div style="height:40px;"><!-- ---></div>
-
-<cfif isDefined("user_id") AND isDefined("URL.area")>
-	<cfinclude template="#APPLICATION.htmlPath#/admin/includes/user_content.cfm">
-<cfelse>
-	No hay usuario seleccionado
-</cfif>
 
 <!-- InstanceEndEditable -->
 </body>
