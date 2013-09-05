@@ -5,8 +5,19 @@
 <cfinclude template="#APPLICATION.corePath#/includes/alert_message.cfm">
 
 <script type="text/javascript">
+
+<!--- 
+Esto se ha implementado sin jQuery porque daba problemas en IE ya que en un iframe no se cargan los scripts por restricciones de IE con las cookies
+$(document).ready(function () {
+
+	if (window.self !== window.top) { <!---Is in a frame--->
+		$('##login_form').attr('target', '_parent');
+		$('##remember_button').attr('target', '_blank');
+	}
+
+});--->
+
 function codificarForm(form) { 	
-	$('.btn-primary').button('loading');
 	
 	form.password.readonly = true;
 	<cfif APPLICATION.moduleLdapUsers IS false>
@@ -15,11 +26,14 @@ function codificarForm(form) {
 		var passwordcod = MD5.hex_md5(password);
 		form.password.value = passwordcod;
 	</cfif>
+
+	$('.btn-primary').button('loading');
+
 	return (true);
 }
 </script>
 
-<form action="#CGI.SCRIPT_NAME#" method="post" onsubmit="return codificarForm(this)">
+<form id="login_form" action="#CGI.SCRIPT_NAME#" method="post" onsubmit="return codificarForm(this)">
 	
 	<cfif APPLICATION.moduleLdapUsers IS true><!--- LDAP --->
 		<input name="encoded" type="hidden" value="false" /> 
@@ -72,10 +86,19 @@ function codificarForm(form) {
 	
 	<cfif APPLICATION.identifier EQ "dp">
 	
-	<a href="remember_password.cfm?client_abb=#client_abb#" class="btn" title="¿Olvidó su contraseña?" lang="es"><span lang="es">Resetear contraseña</span></a>
+	<a href="remember_password.cfm?client_abb=#client_abb#" class="btn" id="remember_button" title="¿Olvidó su contraseña?" lang="es"><span lang="es">Resetear contraseña</span></a>
 	
 	</cfif>
 </form>
 </div>
 
 </cfoutput>
+
+<script type="text/javascript">
+
+	if (window.self !== window.top) { <!---Is in a frame--->
+		document.getElementById('login_form').target = '_parent';
+		document.getElementById('remember_button').target = '_blank';
+	}
+
+</script>

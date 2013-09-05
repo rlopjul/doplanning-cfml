@@ -47,7 +47,7 @@
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		</cfquery>
 		
-	</cftransantion>
+	</cftransaction>
 	-Creada nueva tabla meetings_users_sessions.<br/>
 
 	Modificaciones terminadas.<br/>
