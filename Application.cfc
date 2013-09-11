@@ -91,7 +91,7 @@
 		<cfset APPLICATION.jqueryUIJSPath = APPLICATION.path&"/jquery/jquery-ui/jquery-ui-1.8.18.custom.min.js">--->
 		<!---<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
 		<cfset APPLICATION.jqueryUIJSPath = "//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js">--->
-		<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
+		<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
 		<cfset APPLICATION.jqueryUIJSPath = "//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js">
 		<cfset APPLICATION.jqueryUICSSPath = APPLICATION.path&"/jquery/jquery-ui/css/jquery-ui-bootstrap/jquery-ui-1.10.0.custom.css">
 		<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js">
