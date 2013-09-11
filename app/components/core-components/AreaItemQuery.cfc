@@ -17,7 +17,6 @@
 
 	<cfset component = "AreaItemQuery">	
 	
-	
 	<cfset date_format = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset datetime_format = "%d-%m-%Y %H:%i:%s">
 	

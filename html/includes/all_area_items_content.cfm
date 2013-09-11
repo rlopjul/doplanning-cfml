@@ -46,10 +46,14 @@
 	</cfif>
 	
 	<span class="divider">&nbsp;</span>
-	
-	<a href="area_items.cfm?area=#area_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
 
-	<!--- QUITADO EL ENLACE HASTA QUE SE TERMINE EL DESARROLLO <a href="#APPLICATION.htmlPath#/area_items_full.cfm?area=#area_id#" class="btn btn-small" title="Ampliar contenido" lang="es" target="_blank"><i class="icon-external-link-sign" style="font-size:14px; line-height:23px;"></i></a> --->
+	<cfif app_version NEQ "mobile">
+	<a href="#APPLICATION.htmlPath#/area_items.cfm?area=#area_id#" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+	</cfif>
+
+	<!--- QUITADO EL ENLACE HASTA QUE SE TERMINE EL DESARROLLO, esta página debe mostrar el contenido de los elementos <a href="#APPLICATION.htmlPath#/area_items_full.cfm?area=#area_id#" class="btn btn-small" title="Expandir contenido" lang="es" target="_blank"><i class="icon-external-link-sign" style="font-size:14px; line-height:23px;"></i></a> --->
+
+	<a href="area_items.cfm?area=#area_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
 	
 	</cfoutput>
 </div>

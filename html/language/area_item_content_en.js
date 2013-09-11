@@ -81,6 +81,7 @@ var area_item_content_en = {
 	'Realizada':'Done',
 	'Eliminar':'Delete',
 	'Ampliar':'Enlarge',
+	'Abrir en nueva ventana':'Open in new window',
 	'Adjunto':'Attached',
 	'Copiar como':'Copy as',
 	
