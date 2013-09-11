@@ -107,5 +107,18 @@
 		<cfset itemTypeGender = "male">
 	
    	</cfcase> 
+
+   	<cfcase value="11"><!---lists--->
+
+		<cfset itemTypeName = "list">
+		<cfset itemTypeNameU = "List">
+		<cfset itemTypeNameP = "Lists">
+		
+		<cfset itemTypeNameEs = "Lista">
+		<cfset itemTypeNameEsP = "Listas">
+
+		<cfset itemTypeGender = "female">
 	
+   	</cfcase> 
+
 </cfswitch>

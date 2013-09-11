@@ -12,6 +12,7 @@ var area_menu_en = {
 	'Eventos del área':'Area events',
 	'Tareas del área':'Area tasks',
 	'Interconsultas del área':'Area interconsultations',
+	'Listas del área':'Area lists',
 	'Usuarios del área':'Area users',
 	'Elementos de contenidos WEB del área':'Area Web content elements',
 	'Noticias WEB del área':'Area Web News',
@@ -36,5 +37,6 @@ var area_menu_en = {
 	'Modo árbol':'Tree mode',
 	'Modo lista':'List mode',
 	'Actualizar':'Refresh',
+	'Abrir en nueva ventana':'Open in new window',
 }
 $.extend(jquery_lang_js.prototype.lang.en, area_menu_en);

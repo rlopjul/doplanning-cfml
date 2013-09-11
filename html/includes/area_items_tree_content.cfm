@@ -11,11 +11,22 @@
 
 <cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 	
-	<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small btn-info"><i class="icon-plus icon-white"></i> <span lang="es"><cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#</span></a>
+	<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"> 
+		<cfif itemTypeId IS 7>
+			<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
+		<cfelse>
+			<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
+		</cfif></a>
 	
-	<a href="#itemTypeNameP#.cfm?area=#area_id#&mode=list" class="btn btn-small"><i class="icon-th-list"></i> <span lang="es">Modo lista</span></a>
+	<span class="divider">&nbsp;</span>
+
+	<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=list" class="btn btn-small"><i class="icon-th-list" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo lista</span></a>
 	
-	<a href="#itemTypeNameP#.cfm?area=#area_id#&mode=tree" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>	
+	<cfif app_version NEQ "mobile">
+	<a href="#APPLICATION.htmlPath#/#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+	</cfif>
+
+	<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>	
 	
 	
 <cfelse><!---VPNET--->

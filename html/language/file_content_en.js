@@ -6,6 +6,7 @@ var file_content_en = {
 	'Visualizar':'View',
 	'Reemplazar':'Replace',
 	'Ampliar':'Enlarge',
+	'Abrir en nueva ventana':'Open in new window',
 	'Asociar a áreas':'Associate to areas',
 	'Modificar datos':'Modify data',
 	'Quitar del área':'Remove from area',
