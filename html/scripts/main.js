@@ -16,6 +16,25 @@ function getFilename(url) {
    return url.substring(url.lastIndexOf('/')+1);
 }
 
+function hasLocalStorage() {
+
+	//http://mathiasbynens.be/notes/localstorage-pattern
+
+  	var uid = new Date,
+          result;
+          
+    try {
+
+        localStorage.setItem(uid, uid);
+        result = localStorage.getItem(uid) == uid;
+        localStorage.removeItem(uid);
+
+        return result && localStorage;
+
+    } catch(e) {}
+
+}
+
 
 function showAlertMessage(msg, res){
 
@@ -152,6 +171,7 @@ function postModalFormTree(formId, requestUrl){
 		  success: function(data, status) {
 
 		  	if(status == "success"){
+		  		//alert(JSON.stringify(data));
 		  		var message = data.message;
 
 		  		hideDefaultModal();
@@ -245,15 +265,15 @@ function setWithLink(value) {
 
 function loadTree() {
 	
-	curAreaId = undefined;
+	curAreaId = "undefined";
 
 	$("#loadingContainer").show();
 	//$("#mainContainer").hide();
 	$("#treeContainer").css('visibility', 'hidden');
-	
+
 	var noCacheNumber = Math.floor(Math.random()*1001);
 	$("#treeContainer").load("html_content/tree.cfm?n="+noCacheNumber, function() {
-		showTree(true);/*areaId*/	  
+		showTree(true);	  
 	});
 }
 

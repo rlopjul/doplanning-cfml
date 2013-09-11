@@ -168,7 +168,7 @@
 	var applicationId = "#APPLICATION.identifier#";
 	<!---var applicationPath = "#APPLICATION.path#";--->
 </script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
 </cfoutput>
 
 <script type="text/javascript">
