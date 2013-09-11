@@ -93,8 +93,8 @@
 
 <cfoutput>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/functions.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.1"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.2"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.4"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.5"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -177,9 +177,11 @@
 		resizeIframe();
 	});
 	
-	$(window).load( function() {		
+	$(window).load( function() {	
+
 		resizeIframe();
-		loadTree(selectAreaId);
+		//loadTree(selectAreaId);
+		loadTree();
 		
 		<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
 		Messenger.Private.initGetNewConversations();
@@ -241,11 +243,12 @@
 		//Language
    		window.lang.run();
 		
-		selectedLanguage = localStorage.getItem('langJs_currentLang');
+   		if(hasLocalStorage())
+			selectedLanguage = localStorage.getItem('langJs_currentLang');
 
 		if(userLanguage != selectedLanguage)
 			window.lang.change(userLanguage);
-		
+
 		if(selectedLanguage == 'en')
 			$('#languageSelector').text('Español');
 		else

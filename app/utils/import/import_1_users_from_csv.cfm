@@ -1,14 +1,87 @@
-<cfif SESSION.client_administrator EQ SESSION.user_id>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<cfprocessingdirective suppresswhitespace="true">
+<!DOCTYPE html>
+<html lang="es"><!-- InstanceBegin template="/Templates/plantilla_basica_general_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
+<!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
+<!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<cfoutput>
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>#APPLICATION.title# - Cargar usuarios desde CSV</title>
+<!-- InstanceEndEditable -->
+<link href="../../../html/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
+<link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+
+<link href="../../../html/styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<cfif APPLICATION.identifier EQ "vpnet">
+<link href="../../../html/styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
+<cfelse>
+<link href="../../../html/styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
+</cfif>
+<!--using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"-->  
+<link href="../../../html/styles/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
+<link href="../../../html/styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
+<!---<link href="../html/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
+<link href="../html/styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
+</cfoutput>
+
+<cfif APPLICATION.identifier EQ "vpnet">
+	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
+	<script type="text/javascript" src="../../../SpryAssets/includes/xpath.js"></script>
+	<script type="text/javascript" src="../../../SpryAssets/includes/SpryData.js"></script>
+	<script type="text/javascript" src="../../../SpryAssets/includes/SpryXML.js"></script>
+	<script type="text/javascript" src="../../../SpryAssets/includes/SpryDOMUtils.js"></script>
+	<cfif APPLICATION.moduleMessenger EQ true>
+		<script type="text/javascript" src="../../scripts/App.js"></script>
+		<script type="text/javascript" src="../../../html/scripts/MessengerControl.js"></script>
+		<cfif isDefined("SESSION.user_id")>
+		<script type="text/javascript">
+		window.onload = function (){
+			Messenger.Private.initGetNewConversations();
+		}
+		</script>
+		</cfif>
+	</cfif>
+</cfif>
+
+<cfoutput>
+<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
+<script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
+<script type="text/javascript" src="../../../html/scripts/functions.min.js"></script>
+</cfoutput>
+
+<script type="text/javascript">
+	//Language
+	jquery_lang_js.prototype.defaultLang = 'es';
+	jquery_lang_js.prototype.currentLang = 'es';
+	window.lang = new jquery_lang_js();
+	
+	$().ready(function () {
+		//Language
+		window.lang.run();
+	});
+</script>
+
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
 </head>
 
-<body>
+<body class="body_global">
+<cfif APPLICATION.identifier NEQ "dp">
+	<div class="div_header">
+		<a href="../../../html/"><div class="div_header_content"><!-- --></div></a>
+		<div class="div_separador_header"><!-- --></div>
+	</div>
+</cfif>
+<!-- InstanceBeginEditable name="header" -->
 
+<!-- InstanceEndEditable -->
+<div class="div_contenedor_contenido">
+<!-- InstanceBeginEditable name="contenido" -->
 
 <cfif isDefined("FORM.file") AND isDefined("FORM.table_to")>
 							
@@ -77,22 +150,26 @@
 		
 		<cfoutput>
 		<p>
-		Importar los datos mediante un archivo .csv delimitado por ; codificado en iso-8859-1 (codificación por defecto en Windows).<br/><br/>
-		Para realizar la importación debe tener en cuenta lo siguiente:<br/>
+		<br/><br/>
+		
+		El archivo utilizado para realizar esta importación es necesario cumplir lo siguiente:<br/>
+		
 			<div style="padding-left:12px;">
-			-El orden de las columnas requerido es:<br />
+			-Debe ser un <strong>archivo .csv delimitado por ; codificado en iso-8859-1</strong> (codificación por defecto en Windows).
+			-El <strong>orden de las columnas</strong> requerido es:<br />
 			<em><cfloop from="1" to="#arrayLen(#arrayColumnsFrom#)#" index="curIndex" step="1">
 			#arrayColumnsFrom[curIndex]#
 				<cfif curIndex LT arrayLen(arrayColumnsFrom)>
 				,
 				</cfif>
 			</cfloop></em><br/>
-			-Cualquier cambio de orden de columnas provocará un error al actualizar la tabla o una actualización incorrecta.<br/>
+			-Cualquier cambio de orden de columnas provocará un error al cargar los datos o unos datos cargados incorrectos.<br/>
 <!----En el archivo no debe aparecer ninguna fila con los títulos de las columnas.<br/>--->
--Los títulos de las columnas pueden ser diferentes a los indicados, pero no pueden contener espacios, tildes o caracteres especiales.<br/>
--Una vez pulsado el botón actualizar debe esperar unos minutos hasta que se complete la operación.<br/>
+-La primera fila del archivo corresponderá a los títulos de las columnas. Los títulos de las columnas pueden ser diferentes a los indicados, pero <strong>no pueden contener espacios, tildes o caracteres especiales</strong>.<br/>
+<br/>
+Una vez pulsado el botón actualizar <strong>debe esperar unos minutos hasta que se complete la operación</strong>.<br/>
 
--<strong>Al realizar esta actualización se perderán todos los datos existentes en la tabla.</strong>
+Al realizar esta actualización <strong>se borrarán todos los datos de usuarios cargados previamente mediante esta página</strong>, por lo tanto cada vez que se suba un archivo se perderán los datos cargados en el anterior. Los usuarios cargados mediante esta página no afectan a los existente en DoPlanning. Para crear en DoPlanning los usuarios cargados mediante esta página es necesario seguir con el siguiente paso: <a href="import/import_2_users_to_doplanning.cfm" target="_blank">2º Crear los usuarios cargados en DoPlanning.</a>
 			</div>
 		</p><br/><br/>
 		
@@ -108,60 +185,31 @@
 		<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
 		<cfform name="import_data" method="post" action="#CGI.SCRIPT_NAME#" enctype="multipart/form-data" onsubmit="hideButtom('submitButton');">
-			<label>CLIENT DSN</label><input name="client_dsn" type="text" value="#client_dsn#" readonly="true" />
+			
+						
 			<input name="num_colums" value="#numColumns#" type="hidden" />
 			<input type="hidden" name="table_to" value="#SESSION.client_abb#_users_to_import" />
 				
 			<cfloop from="1" to="#numColumns#" index="curColum">
 			<input type="hidden" name="col_to_#curColum#" value="#arrayColumnsTo[#curColum#]#"/>
 			</cfloop>
-			<table style="width:100%">
-				<tr>
-					<td style="width:25%;"><span class="attribute_normal">Archivo CSV</span></td>
-					<td style="width:70%;"><cfinput name="file" type="file" width="100%" required="yes" message="Archivo de datos requerido para la actualización" /></td>
-					<td style="width:5%;"></td>
-				</tr>									
-				<tr>
-					<td></td>
-					<td><span id="submitButton" class="text_wait"><input type="submit" value="Importar" class="input_submit" /></span></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td></td>
-					<td></td>
-				</tr>
-			</table>
 			
+			<label>Identificador de DoPlanning para el que se cargarán los usuarios:</label>
+			<input name="client_dsn" type="text" value="#client_dsn#" readonly="true" />	
+					
+			<label>Archivo CSV</label>
+			<cfinput name="file" type="file" width="100%" required="yes" message="Archivo de datos requerido para la actualización" />
+			
+			<input type="submit" value="Importar" class="btn btn-primary" />
+					
 		</cfform>
 		</cfoutput>
 	
 	
-	</cfif>
-
-
-</body>
-</html>
-
 </cfif>
 
-<!--- 
-
-SCRIPT para crear la tabla
-
-CREATE TABLE `dp_software7`.`software7_users_to_import` (
-  `user_id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  `login` VARCHAR(255) NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `family_name_1` VARCHAR(255) NOT NULL,
-  `family_name_2` VARCHAR(255) NOT NULL,
-  `login_dmsas` VARCHAR(255) NOT NULL,
-  `login_diraya` VARCHAR(255) NOT NULL,
-  `dni` VARCHAR(255) NOT NULL,
-  `nif` VARCHAR(255) NOT NULL,
-  `address` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`user_id`)
-)
-ENGINE = InnoDB;
-
---->
+<!-- InstanceEndEditable -->
+</div>
+</body>
+<!-- InstanceEnd --></html>
+</cfprocessingdirective>

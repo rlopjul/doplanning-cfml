@@ -143,6 +143,31 @@
 		</cfif>
 		
 		<li><a href="search.cfm?return_page=#current_page#"><img src="assets/icons/search.png" alt="Búsqueda" title="Buscar"/>&nbsp;&nbsp;<span lang="es">Buscar</span></a></li>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="isMobileBrowser" returnvariable="isMobileBrowser">
+		</cfinvoke>
+
+		<cfif NOT isMobileBrowser><!--- Is not mobile version --->
+
+				<li>
+				<cfif objectUser.general_administrator EQ true>
+					<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin" target="_blank"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-right:3px;" lang="es"/>&nbsp;&nbsp;<span lang="es">Administración</span></a>
+				<cfelse>
+					<cfxml variable="areasAdminXml">
+						#objectUser.areas_administration#
+					</cfxml>
+					<cfif isDefined("areasAdminXml.areas_administration.area")>
+						<cfset nAreasAdmin = arrayLen(areasAdminXml.areas_administration.area)>
+					<cfelse>
+						<cfset nAreasAdmin = 0>
+					</cfif>
+					<cfif nAreasAdmin GT 0>
+						<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin" target="_blank"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/>&nbsp;&nbsp;<span lang="es">Administración de áreas</span></a>
+					</cfif>
+				</cfif>
+				</li>
+
+		</cfif>
 		
 		<!---<li><a href="incidences.cfm?return_page=#current_page#"><img src="assets/icons/incidence.png" alt="Incidencias" title="Incidencias"/>&nbsp;&nbsp;Incidencias<cfif APPLICATION.identifier EQ "dp"> y sugerencias</cfif></a></li>--->
 		
