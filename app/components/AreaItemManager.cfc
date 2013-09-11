@@ -2380,7 +2380,6 @@
 			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">
 			
-			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfif isDefined("arguments.user_in_charge")>

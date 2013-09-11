@@ -117,9 +117,9 @@ var area_items_content_en = {
 	'Ha ocurrido un error al subir la imagen.':'Failed to upload image.',
 	
 	'Tarea marcada como realizada':'Task marked as done',
-	
 	/*END AreaItem.cfc*/
 	
+
 	/*File.cfc*/
 	'Archivo asociado al área.':'File added to area.',
 	'Archivo asociado a las áreas.':'File added to areas.',

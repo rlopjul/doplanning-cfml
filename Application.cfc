@@ -9,7 +9,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_19'>
+	<cfset this.name = 'dp_beta_aws_21'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
@@ -35,6 +35,9 @@
 		<cfset APPLICATION.moduleWebRTC = true>
 		<cfset APPLICATION.showDniTitle = false>
 		<cfset APPLICATION.twoUrlsToAccess = false>
+		<cfset APPLICATION.modulefilesWithTables = true>
+		<cfset APPLICATION.moduleLists = true>
+		<cfset APPLICATION.moduleForms = true>
 		
 		<cfset APPLICATION.openTokApiKey = 28563472>
 		<cfset APPLICATION.openTokApiSecret = "155e13718a36a6077960595721274bd23b1089d7">
@@ -70,7 +73,6 @@
 		<cfset APPLICATION.smsUserName = "epareja@era7.com">
 		<cfset APPLICATION.smsPassword = "M_sop73sxr">
 		<cfset APPLICATION.smsServerAddress = "http://api.mensatek.com/v4/enviar.php">
-		<!---<cfset APPLICATION.smsServerProxyAddress = "http://api.mensatek.com:3378/v4/enviar.php">--->
 		<cfset APPLICATION.smsReportAddress = "support@era7.com">
 		
 		<cfset APPLICATION.path = "">
@@ -110,11 +112,21 @@
 		
 		<cfset APPLICATION.termsOfUseUrl = APPLICATION.mainUrl&"/web/terms_of_use.cfm">
 
-		<cfset APPLICATION.addThisProfileId = "">
-		
 		<cfset APPLICATION.defaultLanguage = "es">
 		<!---Al cambiar la aplicacion de sitio tambien hay que modificar los extends de los Application--->
 		
+		<cfif APPLICATION.moduleWeb EQ true><!---DPWeb enabled--->
+			
+			<cfset APPLICATION.dpWebClientAbb = "doplanning">
+			<cfset APPLICATION.dpWebClientDsn = APPLICATION.identifier&"_"&APPLICATION.dpWebClientAbb>
+			<cfset APPLICATION.dpWebClientTitle = "DoPlanning">
+
+			<cfset APPLICATION.dpUrl = "http://software.doplanning.net">
+
+			<cfset APPLICATION.addThisProfileId = "">
+
+		</cfif>
+
 		<cfif APPLICATION.moduleMessenger EQ true>
 			
 			<cfset APPLICATION.messengerUserExpireTime = 60><!---In seconds--->
@@ -128,7 +140,6 @@
 		</cfif>
 		
 		<cfif APPLICATION.moduleLdapUsers EQ true>
-			
 			<cfset APPLICATION.ldapServer = "10.72.32.3">
 			<cfset APPLICATION.ldapServerPort = "389">
 			<cfset APPLICATION.ldapServerUserName = "formacion@areanorte">

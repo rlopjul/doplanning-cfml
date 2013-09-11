@@ -386,8 +386,9 @@
 						<a onClick="changeLanguage()" id="languageSelector" style="font-size:12px;cursor:pointer;">Inglés</a>
 						
 						<span style="font-size:12px;">&nbsp;|&nbsp;</span>
-						
-						<a href="mobile.cfm" style="font-size:12px" lang="es">Versión móvil</a>
+						<cfoutput>
+						<a href="mobile.cfm?abb=#SESSION.client_abb#" style="font-size:12px" lang="es">Versión móvil</a>
+						</cfoutput>
 						<!---<span style="font-size:12px;">&nbsp;|&nbsp;</span>
 						<cfoutput>
 						<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=flash" style="font-size:12px">Versión Flash</a>

@@ -80,6 +80,12 @@
 				
 				</cfif>
 				
+				<cfif APPLICATION.moduleLists IS true><!--- Lists --->
+
+					<li <cfif curElement EQ "tables">class="active"</cfif>><a href="lists.cfm?area=#area_id#" title="Listas del área" lang="es"><i class="icon-table" style="font-size:26px; color:##7A7A7A"></i></a></li>
+
+				</cfif>
+
 				<li <cfif curElement EQ "users">class="active"</cfif>><a href="users.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/users.png" title="Usuarios del área" alt="Usuarios del área" lang="es"/></a></li>
 				
 				<cfif APPLICATION.moduleMessenger EQ true>

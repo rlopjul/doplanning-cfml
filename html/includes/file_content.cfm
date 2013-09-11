@@ -60,7 +60,7 @@ function confirmDeleteFile() {
 				<a href="my_files_file_replace.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-small"><i class="icon-repeat"></i> <span lang="es">Reemplazar</span></a>
 				
 				<cfif app_version NEQ "mobile">
-				<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+				<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 				</cfif>
 				
 				<a href="file_associate_areas.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-small"><i class="icon-plus-sign"></i> <span lang="es">Asociar a áreas</span></a>
@@ -73,7 +73,7 @@ function confirmDeleteFile() {
 				<a href="area_file_replace.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-small"><i class="icon-repeat"></i> <span lang="es">Reemplazar</span></a>
 				
 				<cfif app_version NEQ "mobile">
-				<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+				<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 				</cfif>
 				
 				<a href="area_file_associate_areas.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-small"><i class="icon-plus-sign"></i> <span lang="es">Asociar a áreas</span></a>

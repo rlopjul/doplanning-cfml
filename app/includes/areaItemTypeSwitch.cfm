@@ -91,4 +91,30 @@
 	
    	</cfcase> 
 
+
+
+   	<cfcase value="11"><!---lists--->
+
+		<cfset itemTypeName = "list">
+		<cfset itemTypeNameP = "lists">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Listas">
+
+		<cfset itemTypeGender = "female">
+	
+   	</cfcase> 
+
+   	<cfcase value="12"><!---attributes--->
+
+		<cfset itemTypeName = "attribute">
+		<cfset itemTypeNameP = "attributes">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Tipología">
+
+		<cfset itemTypeGender = "female">
+	
+   	</cfcase>
+
 </cfswitch>
