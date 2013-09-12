@@ -1,10 +1,9 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2013
 
     File created by: alucena
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 22-11-2012
-	
+
 --->
 
 <cfcomponent displayname="Application" output="false">
@@ -38,7 +37,7 @@
 		<cfset APPLICATION.modulefilesWithTables = true>
 		<cfset APPLICATION.moduleLists = true>
 		<cfset APPLICATION.moduleForms = true>
-		
+
 		<cfset APPLICATION.openTokApiKey = 28563472>
 		<cfset APPLICATION.openTokApiSecret = "155e13718a36a6077960595721274bd23b1089d7">
 		
@@ -128,7 +127,6 @@
 		</cfif>
 
 		<cfif APPLICATION.moduleMessenger EQ true>
-			
 			<cfset APPLICATION.messengerUserExpireTime = 60><!---In seconds--->
 			
 			<cfschedule action="update"	task="checkIfUsersAreConnected"	operation="HTTPRequest"
@@ -155,8 +153,7 @@
 			<cfset APPLICATION.twitterConsumerKey = "NnzqQl7cPIPDMWJxS0wvTQ">
 			<cfset APPLICATION.twitterConsumerSecret = "WSfrXiKmqIt6eXwKoE5SBT7HvEWECXtkf6pCSihMOQ">
 			<cfset APPLICATION.twitterAccessToken = "575490855-I82I7USCk2qzXAHYPqcJoQhNHTIcmJ9fZpm0D1JL">
-			<cfset APPLICATION.twitterAccessTokenSecret = "ocWlHYr7K0J3NSIELSoHSih5Xk9V6swOqk442XbL3g">
-		
+			<cfset APPLICATION.twitterAccessTokenSecret = "ocWlHYr7K0J3NSIELSoHSih5Xk9V6swOqk442XbL3g">	
 		</cfif>
 		<!---<cfif APPLICATION.moduleWeb EQ true>
 			<cfset var paths = [expandPath("./app/WS/components/twitter4j-core-2.2.6-SNAPSHOT.jar")]>

@@ -1,9 +1,8 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2013
 
     File created by: alucena
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 18-08-2009
 	
 --->
 
@@ -120,7 +119,6 @@
 		</cfif>
 
 		<cfif APPLICATION.moduleMessenger EQ true>
-			
 			<cfset APPLICATION.messengerUserExpireTime = 60><!---In seconds--->
 			
 			<cfschedule action="update"	task="checkIfUsersAreConnected"	operation="HTTPRequest"
@@ -148,7 +146,6 @@
 			<cfset APPLICATION.twitterConsumerSecret = "WSfrXiKmqIt6eXwKoE5SBT7HvEWECXtkf6pCSihMOQ">
 			<cfset APPLICATION.twitterAccessToken = "575490855-I82I7USCk2qzXAHYPqcJoQhNHTIcmJ9fZpm0D1JL">
 			<cfset APPLICATION.twitterAccessTokenSecret = "ocWlHYr7K0J3NSIELSoHSih5Xk9V6swOqk442XbL3g">
-		
 		</cfif>
 		<!---<cfif APPLICATION.moduleWeb EQ true>
 			<cfset var paths = [expandPath("./app/WS/components/twitter4j-core-2.2.6-SNAPSHOT.jar")]>
