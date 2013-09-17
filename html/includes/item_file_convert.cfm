@@ -6,12 +6,12 @@
 	<cflocation url="area.cfm" addtoken="no">
 </cfif>
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="selectItem" returnvariable="xmlResponse">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
 	<cfinvokeargument name="item_id" value="#item_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
-<cfxml variable="xmlItem">
+<!---<cfxml variable="xmlItem">
 	<cfoutput>
 	#xmlResponse.response.result[itemTypeName]#
 	</cfoutput>
@@ -21,7 +21,7 @@
 	<cfinvokeargument name="xml" value="#xmlItem.message#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 	<cfinvokeargument name="return_type" value="object">
-</cfinvoke>
+</cfinvoke>--->
 
 <cfset area_id = objectItem.area_id>
 

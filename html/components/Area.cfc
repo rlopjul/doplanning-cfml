@@ -150,6 +150,8 @@
 	
 	<!--- ----------------------------------- getArea ------------------------------------- --->
 	
+	<!---Este método no hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Item directamente del AreaItemManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
+	
 	<cffunction name="getArea" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		
@@ -165,7 +167,8 @@
 			</cfinvoke>
 			
 			<cfcatch>
-				<!--- Esto hay que cambiarlo porque en las páginas en las que se carga con JavaScript el contenido no debe haber redirecciones a otras páginas--->
+				<!--- Esto hay que cambiarlo porque en las páginas en las que se carga con JavaScript el contenido no debe haber redirecciones a otras páginas
+				EN EL CASO DE ESTAS PÁGINAS NO HAY QUE USAR ESTE MÉTODO, HAY QUE USAR DIRECTAMENTE getArea de AreaManager y comprobar en el resultado si es true o false para mostrar si hay error--->
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
 			

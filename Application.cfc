@@ -8,7 +8,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_21'>
+	<cfset this.name = 'dp_beta_aws_24'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
@@ -100,7 +100,7 @@
         <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
 		
 		<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css">
-		<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css">
+		<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
 		
 		<cfset APPLICATION.mainUrl = "http://software.doplanning.net">
 		<cfset APPLICATION.alternateUrl = "">

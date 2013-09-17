@@ -4,7 +4,7 @@
 		
 		<cfset tableTypeName = "list">
 		<cfset tableTypeNameP = "lists">
-		<cfset tableTypeTable = "tb_"&tableTypeNameP>
+		<cfset tableTypeTable = tableTypeNameP>
 		
 		<!---<cfset tableTypeNameEs = "Lista">--->
 		
@@ -14,11 +14,11 @@
 	
    	</cfcase> 
 	
-	<cfcase value="2"><!---files--->
+	<cfcase value="2"><!---typologies (files)--->
 
-		<cfset tableTypeName = "file">
-		<cfset tableTypeNameP = "files">
-		<cfset tableTypeTable = "tb_"&tableTypeNameP>
+		<cfset tableTypeName = "typology">
+		<cfset tableTypeNameP = "typologies">
+		<cfset tableTypeTable = tableTypeNameP>
 		
 		<!---<cfset tableTypeNameEs = "Tipología">--->
 
@@ -32,7 +32,7 @@
 
 		<cfset tableTypeName = "form">
 		<cfset tableTypeNameP = "forms">
-		<cfset tableTypeTable = "tb_"&tableTypeNameP>
+		<cfset tableTypeTable = tableTypeNameP>
 		
 		<!---<cfset tableTypeNameEs = "Formulario">--->
 

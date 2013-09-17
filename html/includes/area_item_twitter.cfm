@@ -12,12 +12,12 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <cfif isDefined("URL.#itemTypeName#")>
 	<cfset item_id = URL[#itemTypeName#]>
 	
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="selectItem" returnvariable="xmlResponse">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
 		<cfinvokeargument name="item_id" value="#item_id#">
 		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 	</cfinvoke>
 	
-	<cfxml variable="xmlItem">
+	<!---<cfxml variable="xmlItem">
 		<cfoutput>
 		#xmlResponse.response.result.xmlChildren[1]#
 		</cfoutput>
@@ -27,10 +27,7 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 		<cfinvokeargument name="xml" value="#xmlItem#">
 		<cfinvokeargument name="return_type" value="object">
-	</cfinvoke>
-	
-	<!---<cfset area_id = xmlItem.xmlChildren[1].xmlAttributes.area_id>
-	<cfset title_default = "Re: "&xmlItem.xmlChildren[1].title.xmlText>--->
+	</cfinvoke>--->
 	
 	<cfset area_id = objectItem.area_id>
 	

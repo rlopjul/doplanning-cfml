@@ -12,7 +12,7 @@
 	
 
 	<cfif isDefined("cfcatch")>
-		<cfset error_message = "#cfcatch.Message#">
+		<cfset error_message = cfcatch.Message>
 		<cfif NOT isDefined("error_code") AND isDefined("cfcatch.errorcode") AND isValid("integer",cfcatch.errorcode)>
 			<cfset error_code = cfcatch.errorcode>
 		</cfif>
@@ -40,12 +40,14 @@
 			<cfinvokeargument name="error_code" value="#error_code#">
 		</cfinvoke>
 	</cfif>--->
-	
 
 
 	<!--- response --->
-	<cfset response = {result="false", message="#error_message#", error_code="#error_code#"}>
-	
+	<cfif isDefined("error_code")>
+		<cfset response = {result="false", message="#error_message#", error_code="#error_code#"}>
+	<cfelse>
+		<cfset response = {result="false", message="#error_message#"}>
+	</cfif>
 	
 	<cfcatch>
 		
