@@ -36,10 +36,6 @@ $(window).on('beforeunload', function(){
 	
 	if(preventClose){
 		
-		<!---var alertMessage1 = window.lang.convert('Está <cfif page_type IS 1>creando<cfelse>editando</cfif>');
-		var alertMessage2 = window.lang.convert(' <cfif itemTypeGender EQ "male">un<cfelse>una</cfif> #itemTypeNameEs#');
-		var alertMessage3 = window.lang.convert(', si abandona esta página <cfif itemTypeGender EQ "male">lo<cfelse>la</cfif> perderá.');--->
-		
 		var alerMessage = window.lang.convert('Tiene texto sin enviar, si abandona esta página lo perderá');
 		
 		return alertMessage;

@@ -13,18 +13,18 @@
 	<cfset request_component = "AreaItemManager">
 	
 	
+	<!---
 	<cffunction name="selectItem" returntype="xml" access="public">
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		
 		<cfset var method = "selectItem">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<cfset var response = structNew()>
 		
-		<!--- <cftry> --->
+		<cftry>
 			
-			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
+			<!---<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 			
 			<cfsavecontent variable="request_parameters">
 				<cfoutput>
@@ -32,23 +32,64 @@
 				</cfoutput>
 			</cfsavecontent>
 			
-			
 			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
 				<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
 				<cfinvokeargument name="request_method" value="select#itemTypeNameU#">
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			</cfinvoke>--->
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getItem" returnvariable="response">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				
+				<cfinvokeargument name="return_type" value="xml">
+			</cfinvoke>
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response.item>
+			
+		
+	</cffunction>--->
+
+
+	<!--- ----------------------------------- getItem -------------------------------------- --->
+
+	<!---Este método no hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Item directamente del AreaItemManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
+
+	<cffunction name="getItem" output="false" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+
+		<cfset var method = "getItem">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getItem" returnvariable="response">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				
+				<cfinvokeargument name="return_type" value="object">
 			</cfinvoke>
 			
-			<!--- 
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
 			<cfcatch>
-							<cfinclude template="includes/errorHandler.cfm">
-						</cfcatch>										
-						
-					</cftry> --->
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
 			
+		</cftry>
 		
-		<cfreturn xmlResponse>
-		
+		<cfreturn response.item>
+			
 	</cffunction>
     
     
@@ -220,7 +261,9 @@
 		
 		<cfset var response_message = "">
 		
-			
+		
+		<cftry>
+
 			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 			
 			<cfif len(arguments.Filedata) GT 0>
@@ -325,25 +368,36 @@
 				</cfinvoke>
             </cfif>
             
-			<cfsavecontent variable="request_parameters">
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					#xmlResultItem#
                     <cfif with_attached IS true>
                     #xmlFileResult#
                     </cfif>
 				</cfoutput>
-			</cfsavecontent>
+			</cfsavecontent>--->
 			
             <cfif with_attached IS false><!---No hay archivo para subir--->
 			
 				<!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->
-                <cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
+                <!---<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
                     <cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
                     <cfinvokeargument name="request_method" value="create#itemTypeNameU#">
                     <cfinvokeargument name="request_parameters" value="#request_parameters#">
                 </cfinvoke>
-				
-				<cfset createdItemId = xmlResponse.response.result[#itemTypeName#].xmlAttributes.id>
+
+            	<cfset createdItemId = xmlResponse.response.result[#itemTypeName#].xmlAttributes.id>--->
+
+                <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" returnvariable="createItemResponse">
+					<cfinvokeargument name="xmlItem" value="#xmlResultItem#"/>
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>	
+				</cfinvoke>
+
+				<cfif createItemResponse.result IS true>
+					<cfset createdItemId = createItemResponse.objectItem.id>					
+				<cfelse>
+					<cfthrow message="#createItemResponse.message#">
+				</cfif>
 				
 				<cfif itemTypeId IS NOT 7 OR arguments.parent_kind EQ "area">
 					<cfif itemTypeGender EQ "male">
@@ -564,7 +618,15 @@
 			<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&response_message=#response_message#&res=1" addtoken="no">--->
 			
 			<cfset response = {result="true", message=#response_message#, item_id=#createdItemId#}>
-			<cfreturn response>
+
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 	
@@ -1356,12 +1418,9 @@
 	
 	
 	
-	
-	
-	
 	<!--- ----------------------------------- getAreaItemsList ------------------------------------- --->
 	
-	<cffunction name="getAreaItemsList" returntype="xml" access="public">
+	<cffunction name="getAreaItemsList" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		
@@ -1374,26 +1433,22 @@
 			
 			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 			
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<area id="#arguments.area_id#"/>
-					<format content="default"/>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
-				<cfinvokeargument name="request_method" value="getArea#itemTypeNameP#List">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAreaItems" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="listFormat" value="true">
+				<cfinvokeargument name="format_content" value="default">
 			</cfinvoke>
 			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
 		
-		<cfreturn xmlResponse>
+		<cfreturn response>
 		
 	</cffunction>
 	
@@ -1401,7 +1456,7 @@
 	
 	<!--- ----------------------------------- getAreaItemsTree ------------------------------------- --->
 	
-	<cffunction name="getAreaItemsTree" returntype="xml" access="public">
+	<cffunction name="getAreaItemsTree" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		
@@ -1414,31 +1469,27 @@
 			
 			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 			
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<area id="#arguments.area_id#"/>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
-				<cfinvokeargument name="request_method" value="getArea#itemTypeNameU#sTree">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAreaItems" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="listFormat" value="false">
+				<cfinvokeargument name="format_content" value="default">
 			</cfinvoke>
 			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+			
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
-		
-		<cfreturn xmlResponse>
+
+		<cfreturn response>
 		
 	</cffunction>
 	
 	
-	
-	
+
 	<!--- ----------------------- GET ALL AREAS ITEMS -------------------------------- --->
 	
 	<cffunction name="getAllAreasItems" returntype="struct" access="public">
@@ -1679,7 +1730,7 @@
 				<script type="text/javascript">
 					$(document).ready(function() { 
 						
-						$.tablesorter.addParser({
+						<!---$.tablesorter.addParser({
 							id: "datetime",
 							is: function(s) {
 								return false; 
@@ -1690,7 +1741,7 @@
 								return $.tablesorter.formatFloat(new Date(s).getTime());
 							},
 							type: "numeric"
-						});
+						});--->
 						
 						$("##listTable").tablesorter({ 
 							<cfif arguments.full_content IS false>
@@ -2010,7 +2061,7 @@
 				<script type="text/javascript">
 					$(document).ready(function() { 
 						
-						$.tablesorter.addParser({
+						<!---$.tablesorter.addParser({
 							id: "datetime",
 							is: function(s) {
 								return false; 
@@ -2021,7 +2072,7 @@
 								return $.tablesorter.formatFloat(new Date(s).getTime());
 							},
 							type: "numeric"
-						});
+						});--->
 						
 						$("##listTable").tablesorter({ 
 							<cfif arguments.full_content IS false>
@@ -2223,19 +2274,6 @@
 				<script type="text/javascript">
 					$(document).ready(function() { 
 						
-						$.tablesorter.addParser({
-							id: "datetime",
-							is: function(s) {
-								return false; 
-							},
-							format: function(s,table) {
-								s = s.replace(/\-/g,"/");
-								s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$2/$1");
-								return $.tablesorter.formatFloat(new Date(s).getTime());
-							},
-							type: "numeric"
-						});
-						
 						$("##listTable").tablesorter({ 
 							widgets: ['zebra','filter','select'],
 							sortList: [[4,1]] ,
@@ -2395,9 +2433,13 @@
 										<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_not_done.png" alt="Tarea no realizada" title="Tarea no realizada" class="item_img"/>
 									</cfif>
 									
-								<cfelseif itemTypeId IS 7>
+								<cfelseif itemTypeId IS 7><!--- Consultation --->
 								
 									<i class="icon-exchange" style="font-size:25px; color:##0088CC"></i>
+
+								<cfelseif itemTypeId IS 11><!--- List --->
+
+									<i class="icon-table" style="font-size:27px; color:##7A7A7A"></i>
 									
 								<cfelseif itemTypeId IS NOT 3><!---No es link--->
 								
@@ -2413,7 +2455,14 @@
 								<span class="hidden">#itemTypeId#</span>								
 							</td>							
 							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
-							<td><!---Attached files--->
+							<td>
+								<cfif itemTypeId IS 11>
+									<a href="area_list_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>
+
+									<a href="area_list_data.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros" class="btn btn-mini"><i class="icon-list"></i></a>
+								</cfif>
+
+								<!---Attached files--->
 								<cfif itemTypeId IS 10>
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt"></i><span class="hidden">3</span></a>
 								<cfelseif isNumeric(itemsQuery.attached_file_id)>

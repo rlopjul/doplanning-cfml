@@ -11,7 +11,7 @@
 
 <cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 	
-	<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"> 
+	<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>  
 		<cfif itemTypeId IS 7>
 			<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
 		<cfelse>
@@ -40,14 +40,14 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsTree" returnvariable="xmlTreeResponse">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsTree" returnvariable="getTreeResponse">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
 <cfxml variable="xmlItems">
 	<cfoutput>
-	#xmlTreeResponse.response.result['#itemTypeNameP#'][1]#
+	#getTreeResponse.xmlItems#
 	</cfoutput>
 </cfxml>
 

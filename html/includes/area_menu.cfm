@@ -82,7 +82,7 @@
 				
 				<cfif APPLICATION.moduleLists IS true><!--- Lists --->
 
-					<li <cfif curElement EQ "tables">class="active"</cfif>><a href="lists.cfm?area=#area_id#" title="Listas del área" lang="es"><i class="icon-table" style="font-size:26px; color:##7A7A7A"></i></a></li>
+					<li <cfif curElement EQ "tables">class="active"</cfif>><a href="lists.cfm?area=#area_id#" title="Listas del área" lang="es"><i class="icon-table" style="font-size:27px; color:##7A7A7A"></i></a></li>
 
 				</cfif>
 

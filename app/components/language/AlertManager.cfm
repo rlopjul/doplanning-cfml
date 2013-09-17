@@ -24,6 +24,11 @@ curLangText["es"] = {
 			"7": {
 				"name" : "Interconsulta",
 			},
+
+
+			"11": {
+				"name" : "Lista",
+			},
 			
 		},
 		
@@ -200,6 +205,10 @@ curLangText["en"] = {
 			},
 			"7": {
 				"name" : "Interconsultation",
+			},
+
+			"11": {
+				"name" : "List",
 			},
 			
 		},

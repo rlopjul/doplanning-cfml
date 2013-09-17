@@ -52,7 +52,7 @@
 	
 <cfelse><!---Si no se le pasa area_id por URL, ESTÁ EN LA RAIZ--->
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getMainTree" returnvariable="xmlGetMainTreeResponse">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getMainTree" returnvariable="getMainTreeResponse">
 	</cfinvoke>
 	
 	<!---<cfset area_id = xmlGetMainTreeResponse.response.result.areas.area[1].xmlAttributes.id>--->
@@ -60,7 +60,7 @@
 	
 	<cfxml variable="xmlAreas">
 		<cfoutput>
-		#xmlGetMainTreeResponse.areasXml#
+		#getMainTreeResponse.areasXml#
 		</cfoutput>
 	</cfxml>
 	

@@ -37,7 +37,7 @@
 				SELECT items.parent_id, items.parent_kind, items.user_in_charge, items.creation_date, items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.id AS item_id, items.link,
 				users.name AS user_name, users.family_name, users.image_type AS user_image_type
 				
-				<cfif arguments.itemTypeId IS NOT 1>
+				<cfif arguments.itemTypeId IS NOT 1><!---Is not Messages--->
 					, items.last_update_date, items.attached_image_id, items.attached_image_name
 				</cfif>
 				<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
@@ -362,48 +362,53 @@
 				SELECT items.*, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				FROM (
 				<cfif len(arguments.area_type) IS 0><!---IS NOT WEB--->
-					(SELECT #commonColums#, NULL AS attached_image_id, NULL AS position, NULL AS done, 1 AS itemTypeId
+					( SELECT #commonColums#, NULL AS attached_image_id, NULL AS position, NULL AS done, 1 AS itemTypeId
 					FROM #client_abb#_messages AS messages 
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					<cfif APPLICATION.moduleConsultations IS true>
 					UNION ALL
-					(SELECT #commonColums#, attached_image_id, NULL AS position, NULL AS done, 7 AS itemTypeId
+					( SELECT #commonColums#, attached_image_id, NULL AS position, NULL AS done, 7 AS itemTypeId
 					FROM #client_abb#_consultations AS consultations
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					</cfif>
 				<cfelse><!---WEB--->
-					(SELECT #commonColums#, attached_image_id, position, NULL AS done, 2 AS itemTypeId
+					( SELECT #commonColums#, attached_image_id, position, NULL AS done, 2 AS itemTypeId
 					FROM #client_abb#_entries AS entries
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					<cfif APPLICATION.identifier EQ "vpnet">
 					UNION ALL
-					(SELECT #commonColums#, attached_image_id, position, NULL AS done, 3 AS itemTypeId
+					( SELECT #commonColums#, attached_image_id, position, NULL AS done, 3 AS itemTypeId
 					FROM #client_abb#_links AS links
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					</cfif>
 					UNION ALL
-					(SELECT #commonColums#, attached_image_id, position, NULL AS done, 4 AS itemTypeId
+					( SELECT #commonColums#, attached_image_id, position, NULL AS done, 4 AS itemTypeId
 					FROM #client_abb#_news AS news
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 				</cfif>
 				UNION ALL
-				(SELECT #commonColums#, attached_image_id, NULL AS position, NULL AS done, 5 AS itemTypeId
+				( SELECT #commonColums#, attached_image_id, NULL AS position, NULL AS done, 5 AS itemTypeId
 				FROM #client_abb#_events AS events
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				UNION ALL
-				(SELECT #commonColums#, attached_image_id, NULL AS position, done, 6 AS itemTypeId
+				( SELECT #commonColums#, attached_image_id, NULL AS position, done, 6 AS itemTypeId
 				FROM #client_abb#_tasks AS tasks
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				AND status='ok')
+				UNION ALL
+				( SELECT #commonColums#, attached_image_id, NULL AS position, NULL AS done, 11 AS itemTypeId
+				FROM #client_abb#_lists AS lists
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				<!---Files--->
 				UNION ALL
-				(SELECT id, name, association_date, description, user_in_charge, id AS attached_file_id, #area_id# AS area_id, NULL AS attached_image_id, NULL AS position, NULL AS done, 10 AS itemTypeId
+				( SELECT id, name, association_date, description, user_in_charge, id AS attached_file_id, #area_id# AS area_id, NULL AS attached_image_id, NULL AS position, NULL AS done, 10 AS itemTypeId
 				FROM #client_abb#_files AS files
 				INNER JOIN #client_abb#_areas_files AS area_files ON files.id = area_files.file_id
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">

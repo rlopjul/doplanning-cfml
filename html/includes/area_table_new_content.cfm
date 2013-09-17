@@ -1,3 +1,7 @@
+<!--- 
+
+ESTA PÁGINA NO SE VA A USAR
+
 <!---Variables requeridas:
 itemTypeId
 return_path: define la ruta donde se encuentra esta página, para que al enviar el mensaje se vuelva a ella--->
@@ -60,5 +64,49 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 </cfoutput>
 </div>
 
+
 <cfset page_type = 1>
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form.cfm">
+<div class="tabbable"><!---Tab Panel--->
+	
+	<ul class="nav nav-pills" id="tableTab" style="margin-bottom:0px; clear:none;">
+		<li class="active"><a href="#tab1" data-toggle="tab" lang="es"><cfoutput>Crear #itemTypeNameEs#</cfoutput></a></li>
+		<li><a href="#tab2" data-toggle="tab" lang="es">Campos</a></li>
+	</ul>
+
+    <div class="tab-content" style="clear:both;">
+	  
+		<div class="tab-pane active" id="tab1"><!---Tab1--->
+
+			<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form.cfm">
+
+		</div>
+
+		<div class="tab-pane" id="tab2"><!---Tab2--->
+
+			<cfif page_type IS 1>
+				<cfoutput>
+					<p>Primero debe crear <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para poder introducir sus campos.</p>
+				</cfoutput>
+				
+			<cfelse>
+				<cfinclude template="#APPLICATION.htmlPath#/includes/area_table_form_fields.cfm">
+			</cfif>
+
+		</div>
+
+	</div>
+
+</div>
+
+
+<script type="text/javascript">
+
+	$('#tableTab a').click( function (e) {
+		if(e.preventDefault)
+	  		e.preventDefault();
+		
+	  	$(this).tab('show');
+		
+	});
+		
+</script> --->

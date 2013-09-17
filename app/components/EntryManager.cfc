@@ -14,43 +14,45 @@
 	
 	<!--- ----------------------- CREATE ENTRY -------------------------------- --->
 	
+	<!--- 
 	<cffunction name="createEntry" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "createEntry">
-		
-		<cftry>
+			<cfargument name="request" type="string" required="yes">
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfset var method = "createEntry">
 			
-			<cfxml variable="xmlEntry">
-				<cfoutput>
-				#xmlRequest.request.parameters.entry#
-				</cfoutput>
-			</cfxml>
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfxml variable="xmlEntry">
+					<cfoutput>
+					#xmlRequest.request.parameters.entry#
+					</cfoutput>
+				</cfxml>
+				
+				<!---createItem--->
+				<cfinvoke component="AreaItemManager" method="createItem" returnvariable="objectItem">
+					<cfinvokeargument name="xmlItem" value="#xmlEntry#">
+					<cfinvokeargument name="itemTypeId" value="#entryTypeId#">
+				</cfinvoke>
+				
+				<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="objectItem" value="#objectItem#">
+					<cfinvokeargument name="itemTypeId" value="#entryTypeId#">
+				</cfinvoke>
+				
+				<cfinclude template="includes/functionEnd.cfm">
+				
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>
+			</cftry>
 			
-			<!---createItem--->
-			<cfinvoke component="AreaItemManager" method="createItem" returnvariable="objectItem">
-				<cfinvokeargument name="xmlItem" value="#xmlEntry#">
-				<cfinvokeargument name="itemTypeId" value="#entryTypeId#">
-			</cfinvoke>
+			<cfreturn xmlResponse>
 			
-			<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="objectItem" value="#objectItem#">
-				<cfinvokeargument name="itemTypeId" value="#entryTypeId#">
-			</cfinvoke>
-			
-			<cfinclude template="includes/functionEnd.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-		</cftry>
-		
-		<cfreturn xmlResponse>
-		
-	</cffunction>
+		</cffunction> --->
+	
 	
 	
 	<!--- ----------------------- CREATE ENTRY WITH ATTACHED -------------------------------- --->
