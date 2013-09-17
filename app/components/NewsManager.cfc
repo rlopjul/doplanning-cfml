@@ -14,43 +14,45 @@
 	
 	<!--- ----------------------- CREATE NEWS -------------------------------- --->
 	
+	<!--- 
 	<cffunction name="createNews" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "createNews">
-		
-		<cftry>
+			<cfargument name="request" type="string" required="yes">
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfset var method = "createNews">
 			
-			<cfxml variable="xmlNews">
-				<cfoutput>
-				#xmlRequest.request.parameters.news#
-				</cfoutput>
-			</cfxml>
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfxml variable="xmlNews">
+					<cfoutput>
+					#xmlRequest.request.parameters.news#
+					</cfoutput>
+				</cfxml>
+				
+				<!---createItem--->
+				<cfinvoke component="AreaItemManager" method="createItem" returnvariable="objectItem">
+					<cfinvokeargument name="xmlItem" value="#xmlNews#">
+					<cfinvokeargument name="itemTypeId" value="#newsTypeId#">
+				</cfinvoke>
+				
+				<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="objectItem" value="#objectItem#">
+					<cfinvokeargument name="itemTypeId" value="#newsTypeId#">
+				</cfinvoke>
+				
+				<cfinclude template="includes/functionEnd.cfm">
+				
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>
+			</cftry>
 			
-			<!---createItem--->
-			<cfinvoke component="AreaItemManager" method="createItem" returnvariable="objectItem">
-				<cfinvokeargument name="xmlItem" value="#xmlNews#">
-				<cfinvokeargument name="itemTypeId" value="#newsTypeId#">
-			</cfinvoke>
+			<cfreturn xmlResponse>
 			
-			<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="objectItem" value="#objectItem#">
-				<cfinvokeargument name="itemTypeId" value="#newsTypeId#">
-			</cfinvoke>
-			
-			<cfinclude template="includes/functionEnd.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-		</cftry>
-		
-		<cfreturn xmlResponse>
-		
-	</cffunction>
+		</cffunction> --->
+	
 	
 	
 	<!--- ----------------------- CREATE NEWS WITH ATTACHED -------------------------------- --->
@@ -298,45 +300,47 @@
 	
 	
 	<!--- ----------------GET AREA NEWSS LIST---------------------------------------   --->
+	<!--- 
 	<cffunction name="getAreaNewssList" output="false" returntype="string" access="public">
-		<cfargument name="request" type="string" required="yes">
-
-		<cfset var method = "getAreaNewssList">
-		
-		<cfset var area_id = "">
-		<cfset var format_content = "">
-		
-		<cftry>
-			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
-			
-			<cfif isDefined("xmlRequest.request.parameters.format.xmlAttributes.content")>
-				<cfset format_content = xmlRequest.request.parameters.format.xmlAttributes.content>
-			</cfif>
-			
-			<cfinvoke component="AreaItemManager" method="getAreaItems" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="area_id" value="#area_id#">
-				<cfinvokeargument name="itemTypeId" value="#newsTypeId#">
-				<cfinvokeargument name="listFormat" value="true">
-				<cfif isDefined("format_content")>
-				<cfinvokeargument name="format_content" value="#format_content#">
-				</cfif>
-			</cfinvoke>
-							
-			<cfinclude template="includes/functionEndNoLog.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>	
-												
-		</cftry>
+			<cfargument name="request" type="string" required="yes">
 	
-	<cfreturn xmlResponse>
+			<cfset var method = "getAreaNewssList">
 			
-	</cffunction>
+			<cfset var area_id = "">
+			<cfset var format_content = "">
+			
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
+				
+				<cfif isDefined("xmlRequest.request.parameters.format.xmlAttributes.content")>
+					<cfset format_content = xmlRequest.request.parameters.format.xmlAttributes.content>
+				</cfif>
+				
+				<cfinvoke component="AreaItemManager" method="getAreaItems" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="itemTypeId" value="#newsTypeId#">
+					<cfinvokeargument name="listFormat" value="true">
+					<cfif isDefined("format_content")>
+					<cfinvokeargument name="format_content" value="#format_content#">
+					</cfif>
+				</cfinvoke>
+								
+				<cfinclude template="includes/functionEndNoLog.cfm">
+				
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>	
+													
+			</cftry>
+		
+		<cfreturn xmlResponse>
+				
+		</cffunction> --->
+	
 	<!--- ------------------------------------------------------------------------------  --->
 	
 	

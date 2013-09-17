@@ -212,7 +212,7 @@
 	<cfinvokeargument name="format_content" value="all">
 </cfinvoke>
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="selectItem" returnvariable="xmlResponse">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
 	<cfinvokeargument name="item_id" value="#item_id#">
 	
 	<cfif isDefined("sourceItemTypeId")><!---Si se va a copiar de un mensaje o de otro tipo de elemento que no es el mismo que el de destino--->
@@ -222,7 +222,7 @@
 	</cfif>
 </cfinvoke>
 
-<cfxml variable="xmlItem">
+<!---<cfxml variable="xmlItem">
 	<cfoutput>
 	#xmlResponse.response.result.xmlChildren[1]#
 	</cfoutput>
@@ -236,7 +236,7 @@
 	</cfif>
 	<cfinvokeargument name="xml" value="#xmlItem#">
 	<cfinvokeargument name="return_type" value="object">
-</cfinvoke>
+</cfinvoke>--->
 
 <cfset objectItem.id = ""><!---Se borra el id para que no se pueda hacer nada sobre el original--->
 

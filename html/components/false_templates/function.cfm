@@ -20,7 +20,7 @@ Area/getMainTree
 			<!---Para gestión de errores por defecto
 			<cfinclude template="includes/errorHandlerStruct.cfm">--->
 
-			<cfinclude template="inculdes/errorHandlerNoRedirectStruct.cfm">
+			<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 		</cfcatch>										
 		
 	</cftry>

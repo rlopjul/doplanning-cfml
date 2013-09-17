@@ -28,14 +28,14 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsList" returnvariable="xmlResponse">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsList" returnvariable="getAreaItemsListResponse">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
 <cfxml variable="xmlItems">
 	<cfoutput>
-	#xmlResponse.response.result.xmlChildren[1]#
+	#getAreaItemsListResponse.xmlItems#
 	</cfoutput>
 </cfxml>
 

@@ -14,43 +14,45 @@
 	
 	<!--- ----------------------- CREATE EVENT -------------------------------- --->
 	
+	<!--- 
 	<cffunction name="createEvent" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "createEvent">
-		
-		<cftry>
+			<cfargument name="request" type="string" required="yes">
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfset var method = "createEvent">
 			
-			<cfxml variable="xmlEvent">
-				<cfoutput>
-				#xmlRequest.request.parameters.event#
-				</cfoutput>
-			</cfxml>
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfxml variable="xmlEvent">
+					<cfoutput>
+					#xmlRequest.request.parameters.event#
+					</cfoutput>
+				</cfxml>
+				
+				<!---createItem--->
+				<cfinvoke component="AreaItemManager" method="createItem" returnvariable="objectItem">
+					<cfinvokeargument name="xmlItem" value="#xmlEvent#">
+					<cfinvokeargument name="itemTypeId" value="#eventTypeId#">
+				</cfinvoke>
+				
+				<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="objectItem" value="#objectItem#">
+					<cfinvokeargument name="itemTypeId" value="#eventTypeId#">
+				</cfinvoke>
+				
+				<cfinclude template="includes/functionEnd.cfm">
+				
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>
+			</cftry>
 			
-			<!---createItem--->
-			<cfinvoke component="AreaItemManager" method="createItem" returnvariable="objectItem">
-				<cfinvokeargument name="xmlItem" value="#xmlEvent#">
-				<cfinvokeargument name="itemTypeId" value="#eventTypeId#">
-			</cfinvoke>
+			<cfreturn xmlResponse>
 			
-			<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="objectItem" value="#objectItem#">
-				<cfinvokeargument name="itemTypeId" value="#eventTypeId#">
-			</cfinvoke>
-			
-			<cfinclude template="includes/functionEnd.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-		</cftry>
-		
-		<cfreturn xmlResponse>
-		
-	</cffunction>
+		</cffunction> --->
+	
 	
 	
 	<!--- ----------------------- CREATE EVENT WITH ATTACHED -------------------------------- --->
@@ -297,7 +299,7 @@
 	
 	
 	<!--- ----------------GET AREA EVENTS LIST---------------------------------------   --->
-	<cffunction name="getAreaEventsList" output="false" returntype="string" access="public">
+	<!---<cffunction name="getAreaEventsList" output="false" returntype="string" access="public">
 		<cfargument name="request" type="string" required="yes">
 
 		<cfset var method = "getAreaEventsList">
@@ -335,7 +337,7 @@
 	
 	<cfreturn xmlResponse>
 			
-	</cffunction>
+	</cffunction>--->
 	<!--- ------------------------------------------------------------------------------  --->
 	
 	

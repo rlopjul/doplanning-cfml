@@ -1,4 +1,4 @@
-<!--- CUIDADO: este script redirige de página si hay un error. Usar errorHandlerNoRedirectStruct.cfm en su lugar si no se quiere que redirija para mostrar error--->
+<!--- CUIDADO: este script REDIRIGE de página si hay un error. Usar errorHandlerNoRedirectStruct.cfm en su lugar si no se quiere que redirija para mostrar error--->
 
 <cftry>
 	<!---Default Error Handler--->
@@ -35,15 +35,16 @@
 	</cfinvoke>
 
 
-	<cfif isDefined("error_code")>
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Error" method="showError">
-			<cfinvokeargument name="error_code" value="#error_code#">
-		</cfinvoke>
+	<cfif NOT isDefined("error_code")>
+		<cfset error_code = 10000><!--- Unexpected ---> 
 	</cfif>	
 
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Error" method="showError">
+		<cfinvokeargument name="error_code" value="#error_code#">
+	</cfinvoke>
 
 	<!--- response --->
-	<cfset response = {result="false", message="#error_message#", error_code="#error_code#"}>
+	<!--- <cfset response = {result="false", message="#error_message#", error_code="#error_code#"}> --->
 	
 	
 	<cfcatch>
@@ -74,8 +75,11 @@
 			
 			<cffinally>
 
-				<!--- response --->
-				<cfset response = {result="false", message="#cfcatch.message#"}>
+				<cfif isDefined("error_code")>
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Error" method="showError">
+						<cfinvokeargument name="error_code" value="#error_code#">
+					</cfinvoke>
+				</cfif>	
 			
 			</cffinally>
 

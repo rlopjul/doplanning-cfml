@@ -296,45 +296,47 @@
 	
 	
 	<!--- ----------------GET AREA TASKS LIST---------------------------------------   --->
+	<!--- 
 	<cffunction name="getAreaTasksList" output="false" returntype="string" access="public">
-		<cfargument name="request" type="string" required="yes">
-
-		<cfset var method = "getAreaTasksList">
-		
-		<cfset var area_id = "">
-		<cfset var format_content = "">
-		
-		<cftry>
-			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
-			
-			<cfif isDefined("xmlRequest.request.parameters.format.xmlAttributes.content")>
-				<cfset format_content = xmlRequest.request.parameters.format.xmlAttributes.content>
-			</cfif>
-			
-			<cfinvoke component="AreaItemManager" method="getAreaItems" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="area_id" value="#area_id#">
-				<cfinvokeargument name="itemTypeId" value="#taskTypeId#">
-				<cfinvokeargument name="listFormat" value="true">
-				<cfif isDefined("format_content")>
-				<cfinvokeargument name="format_content" value="#format_content#">
-				</cfif>
-			</cfinvoke>
-							
-			<cfinclude template="includes/functionEndNoLog.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>	
-												
-		</cftry>
+			<cfargument name="request" type="string" required="yes">
 	
-	<cfreturn xmlResponse>
+			<cfset var method = "getAreaTasksList">
 			
-	</cffunction>
+			<cfset var area_id = "">
+			<cfset var format_content = "">
+			
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
+				
+				<cfif isDefined("xmlRequest.request.parameters.format.xmlAttributes.content")>
+					<cfset format_content = xmlRequest.request.parameters.format.xmlAttributes.content>
+				</cfif>
+				
+				<cfinvoke component="AreaItemManager" method="getAreaItems" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="itemTypeId" value="#taskTypeId#">
+					<cfinvokeargument name="listFormat" value="true">
+					<cfif isDefined("format_content")>
+					<cfinvokeargument name="format_content" value="#format_content#">
+					</cfif>
+				</cfinvoke>
+								
+				<cfinclude template="includes/functionEndNoLog.cfm">
+				
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>	
+													
+			</cftry>
+		
+		<cfreturn xmlResponse>
+				
+		</cffunction> --->
+	
 	<!--- ------------------------------------------------------------------------------  --->
 	
 	

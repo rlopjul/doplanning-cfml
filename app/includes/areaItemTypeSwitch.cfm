@@ -68,7 +68,6 @@
 	<cfcase value="6"><!---tasks--->
 
 		<cfset itemTypeName = "task">
-		<!---<cfset itemTypeNameU = "Task">--->
 		<cfset itemTypeNameP = "tasks">
 		<cfset itemTypeTable = itemTypeNameP>
 		
@@ -81,7 +80,6 @@
 	<cfcase value="7"><!---consultations--->
 
 		<cfset itemTypeName = "consultation">
-		<!---<cfset itemTypeNameU = "Consultation">--->
 		<cfset itemTypeNameP = "consultations">
 		<cfset itemTypeTable = itemTypeNameP>
 		
@@ -91,6 +89,19 @@
 	
    	</cfcase> 
 
+
+   	<!---
+   	<cfcase value="8"><!---images--->
+
+		<cfset itemTypeName = "image">
+		<cfset itemTypeNameP = "images">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Imagen">
+
+		<cfset itemTypeGender = "female">
+	
+   	</cfcase>---> 
 
 
    	<cfcase value="11"><!---lists--->
@@ -105,15 +116,27 @@
 	
    	</cfcase> 
 
-   	<cfcase value="12"><!---attributes--->
+   	<cfcase value="12"><!---typologies (files)--->
 
-		<cfset itemTypeName = "attribute">
-		<cfset itemTypeNameP = "attributes">
+		<cfset itemTypeName = "typology">
+		<cfset itemTypeNameP = "typologies">
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Tipología">
 
 		<cfset itemTypeGender = "female">
+	
+   	</cfcase>
+
+   	<cfcase value="13"><!---forms--->
+
+		<cfset itemTypeName = "form">
+		<cfset itemTypeNameP = "forms">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Formulario">
+
+		<cfset itemTypeGender = "male">
 	
    	</cfcase>
 
