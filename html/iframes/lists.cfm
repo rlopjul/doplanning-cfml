@@ -62,10 +62,8 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<!--- <cfset tableTypeId = 1> --->
-
-<cfset itemTypeId = 11>
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_content.cfm">
+<cfset tableTypeId = 1>
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_tables_content.cfm">
 
 <!-- InstanceEndEditable -->
 </body>

@@ -3,7 +3,6 @@
     File created by: ppareja
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 22-11-2011
 	
 	22-05-2012 alucena: quitado BEGIN y COMMIT de updateUserDownloadedSpace y cambiada la posición de BEGIN del método createUser
 	05-07-2012 alucena: modificados métodos para permitir preferencias de notificaciones de los nuevos elementos (entradas, enlaces, noticias y eventos).
@@ -13,6 +12,7 @@
 	15-04-2013 alucena: se borran todos los elementos de un usuario al eliminarlo
 	07-05-2013 alucena: modificado getUsersToNotifyLists
 	19-06-2013 alucena: añadido password_temp a xmlUser y objectUser
+	18-09-2013 alucena: añadida comprobación de language para ver si es un valor válido
 	
 --->
 <cfcomponent output="false">
@@ -31,107 +31,8 @@
 		<cftry>
 		
 			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="xmlResult">
-				<cfoutput><user
-				<cfif len(objectUser.id) NEQ 0>
-					id="#objectUser.id#"
-				</cfif>
-				<cfif len(objectUser.email) NEQ 0>
-					email="#xmlFormat(objectUser.email)#"
-				</cfif>
-				<cfif len(objectUser.language) NEQ 0>
-					language="#objectUser.language#"
-				</cfif>
-				<cfif len(objectUser.client_abb) NEQ 0>
-					client_abb="#objectUser.client_abb#"
-				</cfif>
-				<cfif len(objectUser.password) NEQ 0>
-					password="#objectUser.password#"
-				</cfif>
-				<cfif len(objectUser.telephone) NEQ 0>			
-					telephone="#objectUser.telephone#"
-				</cfif>	
-				<cfif len(objectUser.space_used_full) NEQ 0>
-					space_used_full="#objectUser.space_used_full#"
-				</cfif>	
-				<cfif len(objectUser.space_used) NEQ 0>
-					space_used="#objectUser.space_used#"
-				</cfif>
-				<cfif len(objectUser.number_of_connections) NEQ 0>
-					number_of_connections="#objectUser.number_of_connections#"
-				</cfif>
-				<cfif len(objectUser.last_connection) NEQ 0>
-					last_connection="#objectUser.last_connection#"
-				</cfif>
-				<cfif len(objectUser.connected) NEQ 0>
-					connected="#objectUser.connected#"
-				</cfif>
-				<cfif len(objectUser.session_id) NEQ 0>
-					session_id="#objectUser.session_id#"
-				</cfif>
-				<cfif len(objectUser.creation_date) NEQ 0>
-					creation_date="#objectUser.creation_date#"
-				</cfif>
-				<cfif len(objectUser.whole_tree_visible) NEQ 0>
-					whole_tree_visible="#objectUser.whole_tree_visible#"
-				</cfif>
-				<cfif len(objectUser.internal_user) NEQ 0>
-					internal_user="#objectUser.internal_user#"
-				</cfif>
-				<cfif len(objectUser.root_folder_id) NEQ 0>
-					root_folder_id="#objectUser.root_folder_id#"
-				</cfif>
-				<cfif len(objectUser.general_administrator) NEQ 0>
-					general_administrator="#objectUser.general_administrator#"
-				</cfif>
-				<cfif len(objectUser.sms_allowed) NEQ 0>
-					sms_allowed="#objectUser.sms_allowed#"
-				</cfif>
-				<cfif len(objectUser.mobile_phone) NEQ 0>
-					mobile_phone="#objectUser.mobile_phone#"
-				</cfif>
-				<cfif len(objectUser.telephone_ccode) NEQ 0>
-					telephone_ccode="#objectUser.telephone_ccode#"
-				</cfif>
-				<cfif len(objectUser.mobile_phone_ccode) NEQ 0>
-					mobile_phone_ccode="#objectUser.mobile_phone_ccode#"
-				</cfif>
-				<cfif len(objectUser.area_id) GT 0>
-					area_id="#objectUser.area_id#"
-				</cfif>
-				<cfif len(objectUser.user_in_charge) GT 0>
-					user_in_charge="#objectUser.user_in_charge#"
-				</cfif>	
-				<cfif len(objectUser.image_file) GT 0>
-					image_file="#objectUser.image_file#"
-				</cfif>	
-				<cfif len(objectUser.image_type) GT 0>
-					image_type="#objectUser.image_type#"
-				</cfif>
-				<cfif len(objectUser.area_member) GT 0>
-					area_member="#objectUser.area_member#"
-				</cfif>		
-				>
-				<cfif len(objectUser.family_name) NEQ 0>
-					<family_name><![CDATA[#objectUser.family_name#]]></family_name>
-				</cfif>
-				<cfif len(objectUser.name) NEQ 0>
-					<name><![CDATA[#objectUser.name#]]></name>
-				</cfif>
-				<cfif len(objectUser.user_full_name) NEQ 0>
-					<user_full_name><![CDATA[#objectUser.user_full_name#]]></user_full_name>
-				</cfif>
-				<cfif len(objectUser.address) NEQ 0>	
-					<address><![CDATA[#objectUser.address#]]></address>
-				</cfif>
-				<cfif APPLICATION.moduleLdapUsers EQ true>
-					<cfif len(objectUser.login_ldap) NEQ 0>
-						<login_ldap><![CDATA[#objectUser.login_ldap#]]></login_ldap>
-					</cfif>
-					<cfif len(objectUser.login_diraya) NEQ 0>
-						<login_diraya><![CDATA[#objectUser.login_diraya#]]></login_diraya>
-					</cfif>
-				</cfif>
+			<cfsavecontent variable="xmlResult"><cfoutput><user<cfif len(objectUser.id) NEQ 0> id="#objectUser.id#"</cfif><cfif len(objectUser.email) NEQ 0> email="#xmlFormat(objectUser.email)#"</cfif><cfif len(objectUser.language) NEQ 0> language="#objectUser.language#"</cfif><cfif len(objectUser.client_abb) NEQ 0> client_abb="#objectUser.client_abb#"</cfif><cfif len(objectUser.password) NEQ 0> password="#objectUser.password#"</cfif><cfif len(objectUser.telephone) NEQ 0> telephone="#objectUser.telephone#"</cfif><cfif len(objectUser.space_used_full) NEQ 0>	space_used_full="#objectUser.space_used_full#"</cfif><cfif len(objectUser.space_used) NEQ 0> space_used="#objectUser.space_used#"</cfif><cfif len(objectUser.number_of_connections) NEQ 0> number_of_connections="#objectUser.number_of_connections#"</cfif><cfif len(objectUser.last_connection) NEQ 0> last_connection="#objectUser.last_connection#"</cfif><cfif len(objectUser.connected) NEQ 0> connected="#objectUser.connected#"</cfif><cfif len(objectUser.session_id) NEQ 0> session_id="#objectUser.session_id#"</cfif><cfif len(objectUser.creation_date) NEQ 0> creation_date="#objectUser.creation_date#"</cfif><cfif len(objectUser.whole_tree_visible) NEQ 0> whole_tree_visible="#objectUser.whole_tree_visible#"</cfif><cfif len(objectUser.internal_user) NEQ 0> internal_user="#objectUser.internal_user#"</cfif><cfif len(objectUser.root_folder_id) NEQ 0> root_folder_id="#objectUser.root_folder_id#"</cfif><cfif len(objectUser.general_administrator) NEQ 0> general_administrator="#objectUser.general_administrator#"</cfif><cfif len(objectUser.sms_allowed) NEQ 0> sms_allowed="#objectUser.sms_allowed#"</cfif><cfif len(objectUser.mobile_phone) NEQ 0> mobile_phone="#objectUser.mobile_phone#"</cfif><cfif len(objectUser.telephone_ccode) NEQ 0> telephone_ccode="#objectUser.telephone_ccode#"</cfif><cfif len(objectUser.mobile_phone_ccode) NEQ 0> mobile_phone_ccode="#objectUser.mobile_phone_ccode#"</cfif><cfif len(objectUser.area_id) GT 0> area_id="#objectUser.area_id#"</cfif><cfif len(objectUser.user_in_charge) GT 0> user_in_charge="#objectUser.user_in_charge#"</cfif><cfif len(objectUser.image_file) GT 0> image_file="#objectUser.image_file#"</cfif><cfif len(objectUser.image_type) GT 0> image_type="#objectUser.image_type#"</cfif><cfif len(objectUser.area_member) GT 0> area_member="#objectUser.area_member#"</cfif>>
+			<cfif len(objectUser.family_name) NEQ 0><family_name><![CDATA[#objectUser.family_name#]]></family_name></cfif><cfif len(objectUser.name) NEQ 0><name><![CDATA[#objectUser.name#]]></name></cfif><cfif len(objectUser.user_full_name) NEQ 0><user_full_name><![CDATA[#objectUser.user_full_name#]]></user_full_name></cfif><cfif len(objectUser.address) NEQ 0><address><![CDATA[#objectUser.address#]]></address></cfif><cfif APPLICATION.moduleLdapUsers EQ true><cfif len(objectUser.login_ldap) NEQ 0><login_ldap><![CDATA[#objectUser.login_ldap#]]></login_ldap></cfif><cfif len(objectUser.login_diraya) NEQ 0><login_diraya><![CDATA[#objectUser.login_diraya#]]></login_diraya></cfif></cfif>
 				<cfif APPLICATION.identifier EQ "vpnet">
 					<cfif len(objectUser.center_id) GT 0>
 						<center id="#objectUser.center_id#"/>
@@ -148,18 +49,9 @@
 					<cfif len(objectUser.other_2) GT 0>
 						<other_2><![CDATA[#objectUser.other_2#]]></other_2>
 					</cfif>	
-				</cfif>
-				<cfif len(objectUser.dni) GT 0>
-					<dni><![CDATA[#objectUser.dni#]]></dni>
-				</cfif>
-				<cfif len(objectUser.password_temp) NEQ 0>	
-					<password_temp><![CDATA[#objectUser.password_temp#]]></password_temp>
-				</cfif>	
-				<cfif len(objectUser.areas_administration) NEQ 0>	
-					#objectUser.areas_administration#
-				</cfif>
-					</user></cfoutput>
-			</cfsavecontent>
+				</cfif><cfif len(objectUser.dni) GT 0><dni><![CDATA[#objectUser.dni#]]></dni></cfif>
+				<cfif len(objectUser.password_temp) NEQ 0><password_temp><![CDATA[#objectUser.password_temp#]]></password_temp></cfif>	
+				<cfif len(objectUser.areas_administration) NEQ 0>#objectUser.areas_administration#</cfif></user></cfoutput></cfsavecontent>
 			</cfprocessingdirective>
 			
 			<cfreturn xmlResult>
@@ -609,6 +501,10 @@
 				<cfif len(objectUser.sms_allowed) IS 0>
 					<cfset objectUser.sms_allowed = "false">
 				</cfif>
+
+				<cfif listFind(APPLICATION.languages, objectUser.language , ",") IS 0>
+					<cfset objectUser.language = APPLICATION.defaultLanguage>
+				</cfif>
 				
 				<cfset objectUser.email = Trim(objectUser.email)>
 				<cfset objectUser.mobile_phone = Trim(objectUser.mobile_phone)>
@@ -634,9 +530,7 @@
 					
 					<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
 					</cfinvoke>
-					
-					<!---<cfset objectUser.language = APPLICATION.defaultLanguage>--->
-					
+										
 					<!---Insert User in DataBase--->			
 					<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
 						INSERT INTO #client_abb#_users
@@ -2075,11 +1969,7 @@ step="1">
 					<cfinvokeargument name="request" value="#arguments.request#">
 				</cfinvoke>
 				
-				<cfxml variable="xmlResponse">
-					<cfoutput>
-					#result#
-					</cfoutput>
-				</cfxml>
+				<cfxml variable="xmlResponse"><cfoutput>#result#</cfoutput></cfxml>
 				
 				<cfset xmlResponse.response.xmlAttributes.component = component>
 				<cfset xmlResponse.response.xmlAttributes.method = method>

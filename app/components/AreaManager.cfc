@@ -30,9 +30,7 @@
 		<cftry>
 		
 			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="xmlResult">
-				<cfoutput>
-					<area id="#objectArea.id#"
+			<cfsavecontent variable="xmlResult"><cfoutput><area id="#objectArea.id#"
 						 parent_id="#objectArea.parent_id#"
 						 user_in_charge="#objectArea.user_in_charge#"
 						 creation_date="#objectArea.creation_date#"
@@ -46,7 +44,7 @@
 						 link="#objectArea.link#"
 						</cfif>
 						<cfif len(objectArea.with_link) GT 0>
-						 link="#objectArea.with_link#"
+						 with_link="#objectArea.with_link#"
 						</cfif>
 						<cfif len(objectArea.type) GT 0>
 						 type="#objectArea.type#"
@@ -57,9 +55,7 @@
 						<cfif len(objectArea.user_full_name) GT 0>
 						<user_full_name><![CDATA[#objectArea.user_full_name#]]></user_full_name>
 						</cfif>
-					</area>
-				</cfoutput>
-			</cfsavecontent>
+					</area></cfoutput></cfsavecontent>
 			</cfprocessingdirective>
 			<!---<cfif len(objectArea.image_background_color) GT 0>
 			 image_background_color="#objectArea.image_background_color#"
@@ -413,7 +409,7 @@
 
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
-		<cfinclude template="includes/functionStart.cfm">
+		<cfinclude template="includes/functionStartOnlySession.cfm">
 		
 		<cfif SESSION.client_administrator NEQ user_id><!---Is not an administrator user--->
 
@@ -432,6 +428,45 @@
 			</cfif>		
 		
 		</cfif>
+			
+	</cffunction>
+
+
+	<!--- -------------------------- CHECK AREA RESPONSIBLE ACCESS -------------------------------- --->
+	<!---Comprueba si el usuario es administrador del área al que quiere acceder y si no lanza un error--->
+	
+	<cffunction name="checkAreaResponsibleAccess" returntype="void" access="public">
+		<cfargument name="area_id" type="numeric" required="yes">
+		
+		<cfset var method = "checkAreaAdminAccess">
+		
+		<cfset var user_id = "">
+		
+		<cfset var allUserAreasList = "">
+		<cfset var access_result = false>
+			
+		<cfinclude template="includes/functionStartOnlySession.cfm">
+		
+		<!--- ESTO ESTÁ PENDIENTE DE IMPLEMENTAR --->
+
+		<!---
+		<cfif SESSION.client_administrator NEQ user_id><!---Is not an administrator user--->
+
+			<cfinvoke component="AreaManager" method="getAllUserAreasAdminList" returnvariable="allUserAreasAdminList">
+			</cfinvoke>
+			
+			<cfinvoke component="AreaManager" method="canTheUserAccess" returnvariable="access_result">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="allUserAreasList" value="#allUserAreasAdminList#">
+			</cfinvoke>
+	
+			<cfif access_result IS NOT true>
+				<cfset error_code = 105>
+				
+				<cfthrow errorcode="#error_code#">		
+			</cfif>		
+		
+		</cfif>--->
 			
 	</cffunction>
 

@@ -35,7 +35,18 @@
 
 				<!---postModalForm("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea", "#return_page#", "areaIframe"); --->
 
-				postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea");
+				if( $.isNumeric($("##user_in_charge").val()) ){
+
+			    	if( $("##name").val().length > 0 ){
+			    		postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea");
+			    	} else {
+			    		alert("Debe introducir un nombre de área");
+			    	}
+
+				} else {
+
+					alert("Debe seleccionar un usuario responsable");
+				}
 
 			}
 		</script>

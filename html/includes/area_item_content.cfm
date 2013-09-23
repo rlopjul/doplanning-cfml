@@ -29,7 +29,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
-<cfif isDefined("URL.#itemTypeName#")>
+<cfif isDefined("URL.#itemTypeName#") AND isNumeric(URL[itemTypeName])>
 	<cfset item_id = URL[#itemTypeName#]>
 <cfelse>
 	<cflocation url="area.cfm" addtoken="no">

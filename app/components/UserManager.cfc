@@ -3,7 +3,6 @@
     File created by: ppareja
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 22-11-2011
 	
 	22-05-2012 alucena: quitado BEGIN y COMMIT de updateUserDownloadedSpace y cambiada la posición de BEGIN del método createUser
 	05-07-2012 alucena: modificados métodos para permitir preferencias de notificaciones de los nuevos elementos (entradas, enlaces, noticias y eventos).
@@ -13,6 +12,7 @@
 	15-04-2013 alucena: se borran todos los elementos de un usuario al eliminarlo
 	07-05-2013 alucena: modificado getUsersToNotifyLists
 	19-06-2013 alucena: añadido password_temp a xmlUser y objectUser
+	18-09-2013 alucena: añadida comprobación de language para ver si es un valor válido
 	
 --->
 <cfcomponent output="false">
@@ -31,8 +31,7 @@
 		<cftry>
 		
 			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="xmlResult">
-				<cfoutput><user
+			<cfsavecontent variable="xmlResult"><cfoutput><user
 				<cfif len(objectUser.id) NEQ 0>
 					id="#objectUser.id#"
 				</cfif>
@@ -158,8 +157,7 @@
 				<cfif len(objectUser.areas_administration) NEQ 0>	
 					#objectUser.areas_administration#
 				</cfif>
-					</user></cfoutput>
-			</cfsavecontent>
+					</user></cfoutput></cfsavecontent>
 			</cfprocessingdirective>
 			
 			<cfreturn xmlResult>
@@ -610,6 +608,10 @@
 					<cfset objectUser.sms_allowed = "false">
 				</cfif>
 				
+				<cfif listFind(APPLICATION.languages, objectUser.language , ",") IS 0>
+					<cfset objectUser.language = APPLICATION.defaultLanguage>
+				</cfif>
+
 				<cfset objectUser.email = Trim(objectUser.email)>
 				<cfset objectUser.mobile_phone = Trim(objectUser.mobile_phone)>
 				
@@ -634,9 +636,7 @@
 					
 					<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
 					</cfinvoke>
-					
-					<!---<cfset objectUser.language = APPLICATION.defaultLanguage>--->
-					
+										
 					<!---Insert User in DataBase--->			
 					<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
 						INSERT INTO #client_abb#_users

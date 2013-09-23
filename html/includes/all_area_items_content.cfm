@@ -44,6 +44,11 @@
 	<cfif APPLICATION.moduleConsultations IS true AND len(area_type) IS 0>
 	<a href="consultation_new.cfm?area=#area_id#" onclick="openUrl('consultation_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Interconsulta" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i></a>
 	</cfif>
+
+	<cfif APPLICATION.moduleLists IS true>
+	<a href="list_new.cfm?area=#area_id#" onclick="openUrl('list_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Lista" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<i class="icon-table" style="font-size:18px; color:##7A7A7A"></i></a>
+	</cfif>
+
 	
 	<span class="divider">&nbsp;</span>
 

@@ -212,9 +212,9 @@
 								</cfif>
 	
 							</td>		
-							<td><span class="text_message_data">#logs.name#</span></td>
-							<td><span class="text_message_data">#DateFormat(logs.time, APPLICATION.dateFormat)# #TimeFormat(logs.time, "HH:mm:ss")#</span></td>					
-							<td><span class="text_message_data">#logs.method#</span></td>
+							<td><span>#logs.name#</span></td>
+							<td><span>#DateFormat(logs.time, APPLICATION.dateFormat)# #TimeFormat(logs.time, "HH:mm:ss")#</span></td>					
+							<td><span>#logs.method#</span></td>
 							
 							
 							

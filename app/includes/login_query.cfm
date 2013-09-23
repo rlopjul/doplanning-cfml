@@ -34,8 +34,33 @@
 			<cflocation url="#APPLICATION.path#/html/" addtoken="no">
 		</cfif>
 	<cfelse>
+
+		<!---<cfif isDefined("URL.logo")>
+			<cfset show_logo = URL.logo>
+		<cfelse>
+			<cfset show_logo = true>
+		</cfif>
+
+		<cfif isDefined("URL.banner")>
+			<cfset show_banner = URL.banner>
+		<cfelse>
+			<cfset show_banner = true>
+		</cfif>
+
+		<cfif isDefined("URL.help")>
+			<cfset show_help = URL.help>
+		<cfelse>
+			<cfset show_help = true>
+		</cfif>
+
+		<cfif isDefined("URL.title")>
+			<cfset show_title = URL.title>
+		<cfelse>
+			<cfset show_title = true>
+		</cfif>--->
+
 		<cfset msg = urlEncodedFormat(loginResponse.message)>
-		<cflocation url="#CGI.SCRIPT_NAME#?client_abb=#FORM.client_abb#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+		<cflocation url="#CGI.SCRIPT_NAME#?client_abb=#FORM.client_abb#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no"><!---&logo=#show_logo#&banner=#show_banner#&help=#show_help#&title=#show_title#---->
 	</cfif>
 	
 </cfif>

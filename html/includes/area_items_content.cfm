@@ -33,20 +33,24 @@
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
-<cfxml variable="xmlItems">
+<!---<cfxml variable="xmlItems">
 	<cfoutput>
 	#getAreaItemsListResponse.xmlItems#
 	</cfoutput>
 </cfxml>
+<cfset numItems = ArrayLen(xmlItems.xmlChildren[1].XmlChildren)>--->
 
-<cfset numItems = ArrayLen(xmlItems.xmlChildren[1].XmlChildren)>
+<cfset areaItems = getAreaItemsListResponse.areaItems>
+
+<cfset numItems = areaItems.recordCount>
+
 <div class="div_items">
 <cfif numItems GT 0>
 
 	<cfif itemTypeId IS NOT 7>
 	
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItemsList">
-			<cfinvokeargument name="xmlItems" value="#xmlItems#">
+			<cfinvokeargument name="itemsQuery" value="#areaItems#">
 			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 			<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
 			<cfinvokeargument name="app_version" value="#app_version#">
@@ -55,7 +59,7 @@
 	<cfelse><!---Consultations--->
 	
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputConsultationsList">
-			<cfinvokeargument name="xmlItems" value="#xmlItems#">
+			<cfinvokeargument name="itemsQuery" value="#areaItems#">
 			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 			<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
 			<cfinvokeargument name="app_version" value="#app_version#">
