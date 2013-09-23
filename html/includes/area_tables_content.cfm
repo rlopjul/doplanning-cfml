@@ -5,6 +5,8 @@
 
 </cfoutput>
 
+<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
 
@@ -28,41 +30,24 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-<!--- 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsList" returnvariable="xmlResponse">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
 	<cfinvokeargument name="area_id" value="#area_id#">
-	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
 
-<cfxml variable="xmlItems">
-	<cfoutput>
-	#xmlResponse.response.result.xmlChildren[1]#
-	</cfoutput>
-</cfxml>
+<cfset areaTables = getAreaTablesResponse.areaTables>
 
-<cfset numItems = ArrayLen(xmlItems.xmlChildren[1].XmlChildren)>
+<cfset numItems = areaTables.recordCount>
+
 <div class="div_items">
 <cfif numItems GT 0>
-
-	<cfif itemTypeId IS NOT 7>
 	
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItemsList">
-			<cfinvokeargument name="xmlItems" value="#xmlItems#">
-			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-			<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
-			<cfinvokeargument name="app_version" value="#app_version#">
-		</cfinvoke>
-	
-	<cfelse><!---Consultations--->
-	
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputConsultationsList">
-			<cfinvokeargument name="xmlItems" value="#xmlItems#">
-			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-			<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
-			<cfinvokeargument name="app_version" value="#app_version#">
-		</cfinvoke>
-		
-	</cfif>
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="outputTablesList">
+		<cfinvokeargument name="itemsQuery" value="#areaTables#">
+		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
+		<cfinvokeargument name="app_version" value="#app_version#">
+	</cfinvoke>
 
 <cfelse>
 	
@@ -74,4 +59,4 @@
 	<div class="div_text_result"><span lang="es">No hay #lCase(itemTypeNameEsP)# en esta área.</span></div>
 	</cfoutput>
 </cfif>
-</div> --->
+</div>

@@ -10,16 +10,16 @@
 		<cfset method = "undefined">
 	</cfif>	
 	
-
-	<cfif isDefined("cfcatch")>
-		<cfset error_message = "#cfcatch.Message#">
-		<cfif NOT isDefined("error_code") AND isDefined("cfcatch.errorcode") AND isValid("integer",cfcatch.errorcode)>
-			<cfset error_code = cfcatch.errorcode>
+	<cfif NOT isDefined("error_message")>
+		<cfif isDefined("cfcatch")>
+			<cfset error_message = "#cfcatch.Message#">
+			<cfif NOT isDefined("error_code") AND isDefined("cfcatch.errorcode") AND isValid("integer",cfcatch.errorcode)>
+				<cfset error_code = cfcatch.errorcode>
+			</cfif>
+		<cfelse>
+			<cfset error_message = "undefined">
 		</cfif>
-	<cfelse>
-		<cfset error_message = "undefined">
 	</cfif>
-
 	
 	<cfinvoke component="#APPLICATION.componentsPath#/ErrorManager" method="saveError">
 		<cfinvokeargument name="error_component" value="#component#" >
@@ -42,10 +42,6 @@
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Error" method="showError">
 		<cfinvokeargument name="error_code" value="#error_code#">
 	</cfinvoke>
-
-	<!--- response --->
-	<!--- <cfset response = {result="false", message="#error_message#", error_code="#error_code#"}> --->
-	
 	
 	<cfcatch>
 		

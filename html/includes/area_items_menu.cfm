@@ -4,6 +4,8 @@
 			<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
 		<cfelseif itemTypeId IS 11><!--- Lists --->
 			<i class="icon-table" style="font-size:18px; color:##7A7A7A"></i>
+		<cfelseif itemTypeId IS 12><!---Typologies--->
+			<i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i>
 		<cfelse>
 			<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
 		</cfif>

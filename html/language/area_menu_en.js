@@ -5,6 +5,7 @@ var area_menu_en = {
 	'Fecha de creación:':'Creation date:',
 	'Descripción:':'Description:',
 	'No hay descripción del área':'No description of the area',
+	'URL del área en DoPlanning:':'DoPlanning area URL:',
 	
 	'Todos los elementos del área':'All area elements',
 	'Mensajes del área':'Area messages',

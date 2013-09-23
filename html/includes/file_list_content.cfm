@@ -187,20 +187,20 @@
 						<a href="file.cfm?area=#objectFile.area_id#&file=#objectFile.id#" class="text_item">#objectFile.name#</a>
 					</cfif>
 			</cfif></td>
-			<td><span class="text_message_data">#objectFile.file_type#</span></td>
-			<td><span class="text_message_data">#objectFile.user_full_name#</span></td>
-			<!---<td><span class="text_message_data">#objectFile.file_size#</span></td>--->
+			<td><span>#objectFile.file_type#</span></td>
+			<td><span>#objectFile.user_full_name#</span></td>
+			<!---<td><span>#objectFile.file_size#</span></td>--->
 			<td>
 				<cfset spacePos = findOneOf(" ", objectFile.association_date)>
-				<span class="text_message_data">#left(objectFile.association_date, spacePos)#</span>
+				<span>#left(objectFile.association_date, spacePos)#</span>
 				<span class="hidden">#right(objectFile.association_date, len(objectFile.association_date)-spacePos)#</span>
 			</td>
 			<td><cfif len(objectFile.replacement_date) GT 0>				
 				<cfset spacePos2 = findOneOf(" ", objectFile.replacement_date)>
-				<span class="text_message_data">#left(objectFile.replacement_date, spacePos2)#</span>
+				<span>#left(objectFile.replacement_date, spacePos2)#</span>
 				<span class="hidden">#right(objectFile.replacement_date, len(objectFile.replacement_date)-spacePos2)#</span>
 			<cfelse>
-				<span class="text_message_data">#left(objectFile.association_date, spacePos)#</span>
+				<span>#left(objectFile.association_date, spacePos)#</span>
 				<span class="hidden">#right(objectFile.association_date, len(objectFile.association_date)-spacePos)#</span>
 			</cfif></td>
 			

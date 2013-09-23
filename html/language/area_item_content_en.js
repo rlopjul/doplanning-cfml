@@ -107,6 +107,7 @@ var area_item_content_en = {
 	'Identificador:':'Identifier:',
 	'Descripción:':'Description:',
 	'Contenido:':'Content:',
+	'URL en DoPlanning:':'DoPlanning URL:',
 	/*END area_item_content*/
 	
 	/*area_item_copy.cfm*/

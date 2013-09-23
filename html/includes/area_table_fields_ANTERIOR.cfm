@@ -49,10 +49,10 @@
 	<!---<span class="divider">&nbsp;</span>
 
 	<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/area_#itemTypeName#_data.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+		<a href="#APPLICATION.htmlPath#/#itemTypeName#_data.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
 	</cfif>
 
-	<a href="area_#itemTypeName#_data.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>--->
+	<a href="#itemTypeName#_data.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>--->
 
 </div>
 

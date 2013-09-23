@@ -153,6 +153,15 @@ function confirmDeleteFile() {
 		
 		<div class="div_file_page_label"><span lang="es">Descripción:</span></div>
 		<div class="div_file_page_description">#objectFile.description#</div>
+
+		<!---fileUrl--->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
+			<cfinvokeargument name="file_id" value="#objectFile.id#">
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>
+
+		<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
+		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
 	</div>
 </cfoutput>
 

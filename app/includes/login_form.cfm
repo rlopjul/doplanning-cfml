@@ -4,36 +4,7 @@
 
 <cfinclude template="#APPLICATION.corePath#/includes/alert_message.cfm">
 
-<script type="text/javascript">
-
-<!--- 
-Esto se ha implementado sin jQuery porque daba problemas en IE ya que en un iframe no se cargan los scripts por restricciones de IE con las cookies
-$(document).ready(function () {
-
-	if (window.self !== window.top) { <!---Is in a frame--->
-		$('##login_form').attr('target', '_parent');
-		$('##remember_button').attr('target', '_blank');
-	}
-
-});--->
-
-function codificarForm(form) { 	
-	
-	form.password.readonly = true;
-	<cfif APPLICATION.moduleLdapUsers IS false>
-		var password = form.password.value;
-		form.password.value = "";
-		var passwordcod = MD5.hex_md5(password);
-		form.password.value = passwordcod;
-	</cfif>
-
-	$('.btn-primary').button('loading');
-
-	return (true);
-}
-</script>
-
-<form id="login_form" action="#CGI.SCRIPT_NAME#" method="post" onsubmit="return codificarForm(this)">
+<form id="login_form" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" onsubmit="return codificarForm(this)">
 	
 	<cfif APPLICATION.moduleLdapUsers IS true><!--- LDAP --->
 		<input name="encoded" type="hidden" value="false" /> 
@@ -95,10 +66,36 @@ function codificarForm(form) {
 </cfoutput>
 
 <script type="text/javascript">
+	<!--- 
+	Esto se ha implementado sin jQuery porque daba problemas en IE ya que en un iframe no se cargan los scripts por restricciones de IE con las cookies
+	$(document).ready(function () {
+
+		if (window.self !== window.top) { <!---Is in a frame--->
+			$('##login_form').attr('target', '_parent');
+			$('##remember_button').attr('target', '_blank');
+		}
+
+	});--->
 
 	if (window.self !== window.top) { <!---Is in a frame--->
 		document.getElementById('login_form').target = '_parent';
 		document.getElementById('remember_button').target = '_blank';
 	}
 
+	function codificarForm(form) { 	
+		
+		form.password.readonly = true;
+		<cfif APPLICATION.moduleLdapUsers IS false>
+			var password = form.password.value;
+			form.password.value = "";
+			var passwordcod = MD5.hex_md5(password);
+			form.password.value = passwordcod;
+		</cfif>
+
+		$('.btn-primary').button('loading');
+
+		return (true);
+	}
 </script>
+
+<cfinclude template="#APPLICATION.corePath#/includes/login_md5_js.cfm">

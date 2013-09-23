@@ -223,7 +223,7 @@
 	
 	<!---  ---------------------- SELECT TASK -------------------------------- --->
 	
-	<cffunction name="selectTask" returntype="string" access="public">
+	<!---<cffunction name="selectTask" returntype="string" access="public">
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "selectTask">
@@ -254,7 +254,7 @@
 		
 		<cfreturn xmlResponse>
 		
-	</cffunction>
+	</cffunction>--->
 	<!---  ------------------------------------------------------------------------ --->
 	
 	

@@ -7,8 +7,8 @@
 <cfif NOT isDefined("xmlResponseContent")>
 	<cfset xmlResponseContent = "">
 </cfif>
-
-<cfinvoke component="#APPLICATION.componentsPath#/ResponseManager" method="generateResponse" returnvariable="xmlResponse">
+<!---#APPLICATION.componentsPath#/--->
+<cfinvoke component="ResponseManager" method="generateResponse" returnvariable="xmlResponse">
 	<cfinvokeargument name="response_status" value="#status#">
 	<cfinvokeargument name="response_component" value="#component#">
 	<cfinvokeargument name="response_method" value="#method#">

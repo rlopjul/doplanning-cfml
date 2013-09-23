@@ -98,7 +98,7 @@
 <script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
 </cfoutput>
 
-<script src="class.cod.min.js" type="text/javascript"></script>
+<!---<script src="class.cod.min.js" type="text/javascript"></script>--->
 
 <!-- InstanceEndEditable -->
 </head>
@@ -117,37 +117,69 @@
 <cfoutput>
 <div class="container-fluid"><!---login_container--->
 
+	<cfif isDefined("URL.logo")>
+		<cfset show_logo = URL.logo>
+	<cfelse>
+		<cfset show_logo = true>
+	</cfif>
+
+	<cfif isDefined("URL.banner")>
+		<cfset show_banner = URL.banner>
+	<cfelse>
+		<cfset show_banner = true>
+	</cfif>
+
+	<cfif isDefined("URL.help")>
+		<cfset show_help = URL.help>
+	<cfelse>
+		<cfset show_help = true>
+	</cfif>
+
+	<cfif isDefined("URL.title")>
+		<cfset show_title = URL.title>
+	<cfelse>
+		<cfset show_title = true>
+	</cfif>
+
+	<cfif show_logo OR show_banner OR show_help>
+		
 	<div class="row-fluid">
-	
-		<div class="span2"><!---class="div_login_logo"--->
-			<cfif APPLICATION.identifier EQ "dp"><a href="http://www.doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a></cfif>
-		</div>
 		
-		<cfif APPLICATION.identifier EQ "dp">
-		<div class="span8" style="text-align:center">
-			<img src="download_login_image.cfm?abb=#client_abb#" alt="DoPlanning Banner" />
-		</div>
+		<cfif APPLICATION.identifier EQ "dp" AND show_logo>
+			<div class="span2">
+				<a href="http://www.doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a>
+			</div>
 		</cfif>
 		
-		<cfif APPLICATION.identifier EQ "dp">
-		<div class="span1 offset1" style="text-align:right;"><!---class="div_login_help"--->
-			<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" lang="es"><i class="icon-question-sign"></i></a>
-		</div>
+		<cfif APPLICATION.identifier EQ "dp" AND show_banner>
+			<div class="span8" style="text-align:center">
+				<img src="download_login_image.cfm?abb=#client_abb#" alt="DoPlanning Banner" />
+			</div>
+		</cfif>
+		
+		<cfif APPLICATION.identifier EQ "dp" AND show_help>
+			<div class="span1 offset1" style="text-align:right;"><!---class="div_login_help"--->
+				<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" lang="es"><i class="icon-question-sign"></i></a>
+			</div>
 		</cfif>
 		
 	</div>
-	
-	<div class="row">
-		<div style="text-align:center;padding-top:30px;">
-			<span class="texto_normal">
-			<cfif APPLICATION.identifier EQ "dp">
-			<span lang="es">Acceso a DoPlanning</span> <strong>#getClient.name#</strong>
-			<cfelseif APPLICATION.identifier EQ "vpnet">
-			Acceso a Colabora.
-			</cfif>
-			</span>
+
+	</cfif>
+
+	<cfif show_title IS true>
+		<div class="row">
+			<div style="text-align:center;padding-top:30px;">
+				<span class="texto_normal">
+				<cfif APPLICATION.identifier EQ "dp">
+				<span lang="es">Acceso a DoPlanning</span> <strong>#getClient.name#</strong>
+				<cfelseif APPLICATION.identifier EQ "vpnet">
+				Acceso a Colabora.
+				</cfif>
+				</span>
+			</div>
 		</div>
-	</div>
+	</cfif>
 	
 	<div class="row">
 		<cfif isDefined("URL.dpage")>

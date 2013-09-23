@@ -37,40 +37,31 @@
 			</cfinvoke>	
 		</cfif>
 		
-		<cfprocessingdirective suppresswhitespace="true"><cfsavecontent variable="xmlResponse"><cfoutput><response status="#response_status#" component="#response_component#" method="#response_method#">
-				<cfif response_status EQ "ok">
-				<result>
-				#response_xmlContent#
-				</result>
-				<cfelseif response_status EQ "error">
-				<error code="#errorDetails.error_code#" show_in_client="#errorDetails.show_in_client#" restart_app="#errorDetails.restart_client_app#" handled="#errorDetails.handled#">
-					<title>
-						<![CDATA[#errorDetails.title#]]>
-					</title>
-					<description>
-						<![CDATA[#errorDetails.description#]]>
-					</description>
-					<source>
-					#response_xmlContent#
-					</source>
-				</error>
-				</cfif>
-			</response></cfoutput>
-			</cfsavecontent>
-		</cfprocessingdirective>
+		<cfset arguments.response_xmlContent = trim(arguments.response_xmlContent)>
+
+		<cfif response_status EQ "ok">
+			<!---<cfprocessingdirective suppresswhitespace="true"><cfsavecontent variable="xmlResponse"><cfoutput><response status="#response_status#" component="#response_component#" method="#response_method#"><result>#arguments.response_xmlContent#</result></response></cfoutput></cfsavecontent>
+			</cfprocessingdirective>--->
+			<cfset xmlResponse = '<response status="#response_status#" component="#response_component#" method="#response_method#"><result>#arguments.response_xmlContent#</result></response>'>
+		<cfelse>
+			<cfprocessingdirective suppresswhitespace="true"><cfsavecontent variable="xmlResponse"><cfoutput><response status="#response_status#" component="#response_component#" method="#response_method#"><error code="#errorDetails.error_code#" show_in_client="#errorDetails.show_in_client#" restart_app="#errorDetails.restart_client_app#" handled="#errorDetails.handled#"><title><![CDATA[#errorDetails.title#]]></title><description><![CDATA[#errorDetails.description#]]></description><source>#arguments.response_xmlContent#</source></error></response></cfoutput></cfsavecontent>
+			</cfprocessingdirective>
+		</cfif>
+		<!---<cfprocessingdirective suppresswhitespace="true"><cfsavecontent variable="xmlResponse"><cfoutput><response status="#response_status#" component="#response_component#" method="#response_method#"><cfif response_status EQ "ok"><result>#arguments.response_xmlContent#</result><cfelseif response_status EQ "error"><error code="#errorDetails.error_code#" show_in_client="#errorDetails.show_in_client#" restart_app="#errorDetails.restart_client_app#" handled="#errorDetails.handled#"><title><![CDATA[#errorDetails.title#]]></title><description><![CDATA[#errorDetails.description#]]></description><source>#arguments.response_xmlContent#</source></error></cfif></response></cfoutput></cfsavecontent>
+		</cfprocessingdirective>--->
 		
-		<!---<cfif NOT IsXmlDoc(response_xmlContent)>
-			<cfset response_xmlContent = XMLParse(response_xmlContent)>
+		<!---<cfif NOT IsXmlDoc(arguments.response_xmlContent)>
+			<cfset arguments.response_xmlContent = XMLParse(arguments.response_xmlContent)>
 		</cfif>
 		
 		<cfif response_status EQ "ok">
 		
-			<cfset XmlAppend(xmlResponse.response.result.xmlChildren, response_xmlContent) />
-			<!---<cfset xmlResponse.response.result.xmlChildren = response_xmlContent>--->
+			<cfset XmlAppend(xmlResponse.response.result.xmlChildren, arguments.response_xmlContent) />
+			<!---<cfset xmlResponse.response.result.xmlChildren = arguments.response_xmlContent>--->
 			
 		<cfelseif response_status EQ "error">
 		
-			<cfset xmlResponse.response.error.source.xmlChildren = response_xmlContent>
+			<cfset xmlResponse.response.error.source.xmlChildren = arguments.response_xmlContent>
 			
 		</cfif>--->
 		

@@ -1,4 +1,6 @@
-<cftry>
+<cfinclude template="errorHandlerStruct.cfm">
+
+<!---<cftry>
 	<!---Default Error Handler--->
 
 	<cfif NOT isDefined("component")>
@@ -83,4 +85,4 @@
 		
 	</cfcatch>
 	
-</cftry>
+</cftry>--->

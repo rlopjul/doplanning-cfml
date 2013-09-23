@@ -32,8 +32,19 @@
 			function submitAreaModal(e){
 
 			    e.preventDefault();
-			      
-				postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=createArea");
+			    
+			    if( $.isNumeric($("##user_in_charge").val()) ){
+
+			    	if( $("##name").val().length > 0 ){
+			    		postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=createArea");
+			    	} else {
+			    		alert("Debe introducir un nombre de área");
+			    	}
+
+				} else {
+
+					alert("Debe seleccionar un usuario responsable");
+				}
 
 			}
 		</script>

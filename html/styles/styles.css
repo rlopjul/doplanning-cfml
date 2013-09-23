@@ -171,12 +171,10 @@ a:hover {text-decoration:none; }
 .text_item a:visited{
  	color:#0066CC;
 }
-/*.div_text_item{float:left; clear:right; padding-top:8px; }*/
-.text_message_data{
+/*.text_message_data{
 	font-size:11px; 
-	/*color:#333333;*/
 	color:#666666;
-}
+}*/
 .div_tree_message_data{
 	color:#666666;
 }
@@ -454,12 +452,6 @@ a:hover {text-decoration:none; }
 	padding-top:5px;
 	padding-left:3px;
 }
-/*.a_return{
-	font-family:Verdana, Arial, Helvetica, sans-serif;
-	font-weight:bold;
-	font-size:12px;
-	color:#0066CC;
-}*/
 
 /*
 ////////////////////////////////////////////newMessage\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -545,6 +537,21 @@ a:hover {text-decoration:none; }
 .navbar_brand {
 	display:block; padding-top:10px; float:left;
 }
+
+#listTable td {
+	font-size: 11px;
+	color:#666666;
+}
+#dataTable td {
+	font-size: 11px;
+}
+#dataTable tr {
+	height: 28px;
+}
+.field_label {
+	font-size: 12px;
+}
+
 
 /*BOOTSTRAP CSS CHANGES*/
 .navbar {

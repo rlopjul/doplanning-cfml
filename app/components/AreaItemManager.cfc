@@ -768,7 +768,7 @@
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
-			<cfinvoke component="AreaItemManager" method="createItem" returnvariable="objectItem">
+			<cfinvoke component="AreaItemManager" method="createItem" returnvariable="createItemResponse">
 				<cfinvokeargument name="xmlItem" value="#xmlItem#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 			</cfinvoke>
@@ -794,6 +794,7 @@
 			
 			<cfif createFileResponse.result IS true>
 				
+				<cfset objectItem = createItemResponse.objectItem>
 				<cfset objectItem.attached_file_id = createFileResponse.objectFile.id>
 				<cfset objectItem.attached_file_name = createFileResponse.objectFile.file_name>
 				
@@ -869,13 +870,15 @@
 			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 		</cfinvoke>
 		
-		<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemObject">
+		<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 			<cfinvokeargument name="item_id" value="#objectItem.id#">
 			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 			
 			<cfinvokeargument name="return_type" value="object">
 		</cfinvoke>
 		
+		<cfset getItemObject = getItemResponse.item>
+
 		<cfset objectItem.area_id = getItemObject.area_id><!---Esta variable se utiliza despues para enviar las alertas--->	
 		<cfset objectItem.user_in_charge = getItemObject.user_in_charge>
 		<cfset objectItem.user_full_name = getItemObject.user_full_name><!---Para las alertas--->
@@ -1246,12 +1249,14 @@
 			</cfinvoke>
 			
 			<cfif NOT isDefined("arguments.content") OR len(arguments.content) IS 0>
-				<cfinvoke component="AreaItemManager" method="getItem" returnvariable="objectItem">
+				<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 					<cfinvokeargument name="item_id" value="#arguments.item_id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					
 					<cfinvokeargument name="return_type" value="object">
 				</cfinvoke>
+
+				<cfset objectItem = getItemResponse.item>
 				
 				<cfif len(objectItem.title) GT 119><!---Se deben reservar 20 caracteres + 1 espacio para la URL (la URL abreviada ocupa 20 caracteres)--->
 					<cfset tweet_content = left(objectItem.title,116)&"...">
@@ -1317,7 +1322,7 @@
 	
 	<!---  ---------------------- getItem -------------------------------- --->
 	
-	<cffunction name="getItem" returntype="any" access="public">
+	<cffunction name="getItem" returntype="struct" access="public">
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="return_type" type="string" required="no" default="xml">
@@ -1339,6 +1344,7 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="selectItemQuery">
 				<cfinvokeargument name="item_id" value="#id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -1433,7 +1439,7 @@
 					<cfinvokeargument name="identifier" value="#selectItemQuery.identifier#">
 					</cfif>
 					
-					<cfinvokeargument name="return_type" value="#return_type#">
+					<cfinvokeargument name="return_type" value="#arguments.return_type#">
 				</cfinvoke>
 				
 				
@@ -1473,10 +1479,8 @@
 					</cfif>
 					
 				</cfif>
-				
-				<cfset xmlResponse = result>
-				
-				<cfset response = {result=true, item=#xmlResponse#}>
+								
+				<cfset response = {result=true, item=#result#}>
 				
 			<cfelse><!---Item does not exist--->
 			
@@ -1508,7 +1512,7 @@
 		
 		<cfset var method = "getAreaItemsLastPosition">
 		
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItemsLastPosition" returnvariable="getLastPositionResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -1653,11 +1657,13 @@
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>	
 								
-					<cfinvoke component="AreaItemManager" method="getItem" returnvariable="objectItem">
+					<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 						<cfinvokeargument name="item_id" value="#arguments.item_id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="return_type" value="object">
 					</cfinvoke>
+
+					<cfset objectItem = getItemResponse.item>
 					
 					<!---Alert--->
 					<cfinvoke component="AlertManager" method="newAreaItem">
@@ -1726,12 +1732,14 @@
 						id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;			
 					</cfquery>
 					
-					<cfinvoke component="AreaItemManager" method="getItem" returnvariable="objectItem">
+					<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 						<cfinvokeargument name="item_id" value="#arguments.item_id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="return_type" value="object">
 					</cfinvoke>
 					
+					<cfset objectItem = getItemResponse.item>
+
 					<!---Alert--->
 					<cfinvoke component="AlertManager" method="newAreaItem">
 						<cfinvokeargument name="objectItem" value="#objectItem#">
@@ -1884,12 +1892,14 @@
 				</cfif>
 				
 					
-				<cfinvoke component="AreaItemManager" method="getItem" returnvariable="objectItem">
+				<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 					<cfinvokeargument name="item_id" value="#arguments.item_id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="return_type" value="object">
 				</cfinvoke>
 				
+				<cfset objectItem = getItemResponse.item>
+
 				<!---Alert--->
 				<cfinvoke component="AlertManager" method="newAreaItem">
 					<cfinvokeargument name="objectItem" value="#objectItem#">
@@ -2409,9 +2419,75 @@
 	
 	
 	<!--- ----------------GET AREA ITEMS--------------------------------------------   --->
-	<!---A esta función siempre la llama otra funcion de ColdFusion, por lo que no tiene que tener try catch, ya que la otra fucion que llame a esta lo tendrá.--->
 	
 	<cffunction name="getAreaItems" output="false" returntype="struct" access="public">
+		<cfargument name="itemTypeId" type="numeric" required="yes">
+		<cfargument name="area_id" type="numeric" required="yes">
+		<cfargument name="user_in_charge" type="numeric" required="no">
+		<cfargument name="recipient_user" type="numeric" required="no">
+		<cfargument name="format_content" type="string" required="no" default="default"><!---default/all--->
+		<cfargument name="limit" type="numeric" required="no">
+		<cfargument name="done" type="boolean" required="no">
+		
+		<cfset var method = "getAreaItems">
+		<cfset var areaItemsQuery = "">
+				
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+						
+			<!---checkAreaAccess--->
+			<cfinclude template="includes/checkAreaAccess.cfm">
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfif isDefined("arguments.user_in_charge")>
+					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
+				</cfif>
+				<cfif isDefined("arguments.recipient_user")>
+					<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
+				</cfif>
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="listFormat" value="true">
+				<cfinvokeargument name="format_content" value="#arguments.format_content#">
+				<cfinvokeargument name="with_user" value="true">
+				<cfinvokeargument name="parse_dates" value="true"/>
+				<cfif isDefined("arguments.limit")>
+					<cfinvokeargument name="limit" value="#arguments.limit#">
+				</cfif>
+				<cfif isDefined("arguments.done")>
+				<cfinvokeargument name="done" value="#arguments.done#">
+				</cfif>				
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfset areaItemsQuery = getAreaItemsResult.query>
+
+			<cfset response = {result=true, areaItems=#areaItemsQuery#}>
+			
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+
+
+
+	<!--- ------------------------------------------------------------------------------  --->
+	
+	
+	<!--- getAreaItemsTree --->
+
+	<cffunction name="getAreaItemsTree" output="false" returntype="struct" access="public">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">
 		<cfargument name="user_in_charge" type="numeric" required="no">
@@ -2421,7 +2497,7 @@
 		<cfargument name="limit" type="numeric" required="no">
 		<cfargument name="done" type="boolean" required="no">
 		
-		<cfset var method = "getAreaItems">
+		<cfset var method = "getAreaItemsTree">
 		<cfset var areaItemsQuery = "">
 				
 		<cftry>
@@ -2541,9 +2617,7 @@
 		<cfreturn response>
 			
 	</cffunction>
-	<!--- ------------------------------------------------------------------------------  --->
-	
-	
+
 	
 	
 	<!--- ------------------------GET ALL AREAS ITEMS-----------------------------------   --->

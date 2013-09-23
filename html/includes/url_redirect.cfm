@@ -26,8 +26,11 @@
 	<cfset redirect_page = "task.cfm?task=#URL.task#">
 	<!---<cfset redirect_area_page = "tasks.cfm?task=#URL.task#&area=#URL.area#">--->
 	<cfset redirect_area_page = "area_items.cfm?task=#URL.task#&area=#URL.area#">
-<cfelseif isDefined("URL.consultation")>
+<cfelseif APPLICATION.moduleConsultations AND isDefined("URL.consultation")>
 	<cfset redirect_page = "consultation.cfm?consultation=#URL.consultation#">
 	<!---<cfset redirect_area_page = "consultations.cfm?consultation=#URL.consultation#&area=#URL.area#">--->
 	<cfset redirect_area_page = "area_items.cfm?consultation=#URL.consultation#&area=#URL.area#">
+<cfelseif APPLICATION.moduleLists IS true AND isDefined("URL.list")>
+	<cfset redirect_page = "list.cfm?list=#URL.list#">
+	<cfset redirect_area_page = "area_items.cfm?list=#URL.list#&area=#URL.area#">
 </cfif>
