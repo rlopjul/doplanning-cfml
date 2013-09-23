@@ -64,7 +64,7 @@
 
 <cfset tableTypeId = 1>
 <!---<cfset itemTypeId = 11>--->
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_table_data.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/table_data.cfm">
 
 <!-- InstanceEndEditable -->
 </body>

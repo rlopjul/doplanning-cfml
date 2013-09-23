@@ -1,9 +1,8 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2013
 
     File created by: alucena
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 17-01-2013
 	
 	17-01-2013 alucena: cambiada la url de los elementos, quitado /html/
 	22-04-2013 alucena: cambiado client_id por client_abb en las URLs con abb=
@@ -21,7 +20,8 @@
 		
 		<cfset var itemUrl = "">
 		
-		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&abb=#SESSION.client_abb#">
+		<!---<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&abb=#SESSION.client_abb#">--->
+		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&area=#arguments.area_id#">
 		
 		<cfreturn itemUrl>
 	</cffunction>
@@ -35,7 +35,8 @@
 		
 		<cfset var itemUrl = "">
 		
-		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">
+		<!---<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">--->
+		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#">		
 		
 		<cfreturn itemUrl>
 	</cffunction>
@@ -48,7 +49,8 @@
 		
 		<cfset var fileUrl = "">
 		
-		<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&file=#arguments.file_id#&abb=#SESSION.client_abb#">
+		<!---<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&file=#arguments.file_id#&abb=#SESSION.client_abb#">--->
+		<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&file=#arguments.file_id#">
 		
 		<cfreturn fileUrl>
 	</cffunction>
@@ -63,9 +65,10 @@
 		<cfset var fileUrl = "">
 		
 		<cfif isDefined("arguments.item_id") AND isDefined("arguments.itemTypeName")>
-			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?fileDownload=#arguments.file_id#&#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">
+			<!---<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?fileDownload=#arguments.file_id#&#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">--->
+			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&fileDownload=#arguments.file_id#&#itemTypeName#=#arguments.item_id#">
 		<cfelse>
-			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?fileDownload=#arguments.file_id#&abb=#SESSION.client_abb#">		
+			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&fileDownload=#arguments.file_id#">		
 		</cfif>
 		
 		<cfreturn fileUrl>

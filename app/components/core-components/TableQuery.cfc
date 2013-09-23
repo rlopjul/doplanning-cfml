@@ -2,60 +2,40 @@
 
 <cfcomponent output="false">
 
-	<cfset component = "AreaItemQuery">	
+	<cfset component = "TableQuery">	
 	
-	<cfset date_format = "%d-%m-%Y"><!---Formato de fecha en la que se debe recibir los parámetros--->
-	<cfset datetime_format = "%d-%m-%Y %H:%i:%s">
+	<cfset dateFormat = "%d-%m-%Y"><!---Formato de fecha en la que se debe recibir los parámetros--->
+	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
 
-	<cfset fields_types_table = "tables_fields_types">
 
-	<!---getFieldTypes--->
+	<!---getTable--->
 		
-	<cffunction name="getFieldTypes" output="false" returntype="query" access="public">
+	<cffunction name="getTable" output="false" returntype="query" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
 				
-		<cfset var method = "getFieldTypes">
-			
-			<cfquery name="getFieldTypesQuery" datasource="#client_dsn#">
-				SELECT field_type_id, input_type, name
-				FROM #client_abb#_#fields_types_table#;
-			</cfquery>
-		
-		<cfreturn getFieldTypesQuery>
-		
-	</cffunction>
-
-
-	<!---getTableFields--->
-		
-	<cffunction name="getTableFields" output="false" returntype="query" access="public">
-		<cfargument name="table_id" type="numeric" required="true">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-		<cfargument name="with_types" type="boolean" required="false" default="false">
-
-		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">
-
-		<cfset var method = "getTableFields">
+		<cfset var method = "getTable">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-							
-			<cfquery name="getTableFieldsQuery" datasource="#client_dsn#">
-				SELECT table_fields.*
-				<cfif arguments.with_types IS true>
-				, fields_types.*
-				</cfif>
-				FROM #client_abb#_#tableTypeTable#_fields AS table_fields
-				<cfif arguments.with_types IS true>
-				INNER JOIN #client_abb#_#fields_types_table# AS fields_types ON table_fields.field_type_id = fields_types.field_type_id
-				</cfif>
+			
+			<!---<cfquery name="getTableQuery" datasource="#client_dsn#">
+				SELECT *
+				FROM #client_abb#_#tableTypeTable#
 				WHERE table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-				
-		<cfreturn getTableFieldsQuery>
+			</cfquery>--->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="getItemQuery">
+				<cfinvokeargument name="item_id" value="#arguments.table_id#">
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+		<cfreturn getItemQuery>
 		
 	</cffunction>
 
@@ -75,7 +55,8 @@
 			
 			<cfquery name="getTableDataQuery" datasource="#client_dsn#">
 				SELECT *
-				FROM #client_abb#_#tableTypeTable#_data_#arguments.table_id#;
+				FROM #client_abb#_#tableTypeTable#_data_#arguments.table_id#
+				ORDER BY insert_date DESC;
 			</cfquery>
 		
 		<cfreturn getTableDataQuery>

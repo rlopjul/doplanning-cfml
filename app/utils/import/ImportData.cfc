@@ -1,17 +1,12 @@
-<!---Copyright Era7 Information Technologies 2007-2008
+<!---Copyright Era7 Information Technologies 2007-2013
 	
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 26-05-2010
 
 --->
 <cfcomponent displayname="ImportData" output="no">
 
-	<!---INITIAL CONFIGURATION PARAMETERS--->
-
-	
-	<!------>
 	
 	
 	<!---    importTable     --->
@@ -22,12 +17,10 @@
 
 		<cfargument name="client_dsn" type="string" required="true">
 
-		
 		<cfset var method = "importTable">
 		
-		<!---<cftry>--->
+		<cftry>
 		
-			
 			<cfset fileServerName = "import_data.csv">
 							
 			<cffile action="Upload" filefield="file" destination="#fileServerName#" nameconflict="overwrite" result="result_cffile" charset="iso-8859-1">
@@ -39,15 +32,13 @@
 				<cfinvokeargument name="delimiter" value=";">
 			</cfinvoke>
 			
-			
 			<!---<cfset numColumns = arrayLen(fileArray[1])>--->
 			<cfset numColumns = arguments.num_colums>
 			
 			<cfsetting requesttimeout="120">
-
-			
-			<cfoutput>			
+					
 			<cfsavecontent variable="queryColumns">
+				<cfoutput>	
 				INSERT INTO `#arguments.table_to#` (
 				<cfloop from="1" to="#numColumns#" index="curColum">
 					`#arguments["col_to_#curColum#"]#`
@@ -55,14 +46,31 @@
 					,
 					</cfif>
 				</cfloop>
-				)			
+				)
+				</cfoutput>			
 			</cfsavecontent>
-			</cfoutput>
 			
 			<cftransaction>
-			<cfquery datasource="#arguments.client_dsn#" name="truncateTableQuery">
-				TRUNCATE TABLE #arguments.table_to#;
-			</cfquery>
+				<cfquery datasource="#arguments.client_dsn#" name="truncateTableQuery">
+					CREATE TABLE IF NOT EXISTS `#arguments.table_to#` (
+						  `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+						  `email_login` varchar(255) NOT NULL,
+						  `name` varchar(255) NOT NULL,
+						  `family_name_1` varchar(255) NOT NULL,
+						  `family_name_2` varchar(255) NOT NULL,
+						  `address` varchar(255) NOT NULL,
+						  `dni` varchar(255) NOT NULL,
+						  `nif` varchar(255) NOT NULL,
+						  <!---<cfif APPLICATION.moduleLdapUsers IS true>--->
+						  	`login_dmsas` varchar(255) NOT NULL,
+						  	`login_diraya` varchar(255) NOT NULL,
+						  <!---</cfif>--->
+						  PRIMARY KEY (`user_id`)
+						) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+				</cfquery>
+				<cfquery datasource="#arguments.client_dsn#" name="truncateTableQuery">
+					TRUNCATE TABLE #arguments.table_to#;
+				</cfquery>
 			</cftransaction>
 					
 			<cftransaction>
@@ -88,12 +96,12 @@
 			</cfloop>
 			</cftransaction>
 			
-			<cfset response = {result="true", message='Actualización realizada correctamente.'}>
+			<cfset response = {result="true", message='Carga realizada correctamente.'}>
 		
-			<!---<cfcatch>
-				<cfset response = {result="false", message="Error al importar los datos. Compruebe que el orden de las columnas es correcto. #cfcatch.Message#"}>
+			<cfcatch>
+				<cfset response = {result="false", message="Error al importar los datos. Compruebe que el archivo es correcto. #cfcatch.Message#"}>
 			</cfcatch>
-		</cftry>--->
+		</cftry>
 		
 		<cfreturn #response#>
 		

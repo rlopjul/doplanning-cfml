@@ -1784,12 +1784,14 @@ step="1">
 							
 							<cfif arguments.send_alert IS true>
 							
-								<cfinvoke component="AreaItemManager" method="getItem" returnvariable="objectItem">
+								<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 									<cfinvokeargument name="item_id" value="#item_id#">
 									<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 									<cfinvokeargument name="return_type" value="object">
 								</cfinvoke>
 								
+								<cfset objectItem = getItemResponse.item>
+
 								<cfinvoke component="AlertManager" method="newAreaItem">
 									<cfinvokeargument name="objectItem" value="#objectItem#">
 									<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">

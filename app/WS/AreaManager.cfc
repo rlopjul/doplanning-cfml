@@ -30,36 +30,7 @@
 		<cftry>
 		
 			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="xmlResult">
-				<cfoutput>
-					<area id="#objectArea.id#"
-						 parent_id="#objectArea.parent_id#"
-						 user_in_charge="#objectArea.user_in_charge#"
-						 creation_date="#objectArea.creation_date#"
-						<cfif len(objectArea.image_id) GT 0>
-						 image_id="#objectArea.image_id#"
-						</cfif>
-						<cfif len(objectArea.with_image) GT 0>
-						 with_image="#objectArea.with_image#"
-						</cfif>
-						<cfif len(objectArea.link) GT 0>
-						 link="#objectArea.link#"
-						</cfif>
-						<cfif len(objectArea.with_link) GT 0>
-						 link="#objectArea.with_link#"
-						</cfif>
-						<cfif len(objectArea.type) GT 0>
-						 type="#objectArea.type#"
-						</cfif>
-						>
-						<name><![CDATA[#objectArea.name#]]></name>
-						<description><![CDATA[#objectArea.description#]]></description>
-						<cfif len(objectArea.user_full_name) GT 0>
-						<user_full_name><![CDATA[#objectArea.user_full_name#]]></user_full_name>
-						</cfif>
-					</area>
-				</cfoutput>
-			</cfsavecontent>
+			<cfsavecontent variable="xmlResult"><cfoutput><area id="#objectArea.id#" parent_id="#objectArea.parent_id#" user_in_charge="#objectArea.user_in_charge#" creation_date="#objectArea.creation_date#"<cfif len(objectArea.image_id) GT 0> image_id="#objectArea.image_id#"</cfif><cfif len(objectArea.with_image) GT 0> with_image="#objectArea.with_image#"</cfif><cfif len(objectArea.link) GT 0> link="#objectArea.link#"</cfif><cfif len(objectArea.with_link) GT 0> with_link="#objectArea.with_link#"</cfif><cfif len(objectArea.type) GT 0> type="#objectArea.type#"</cfif>><name><![CDATA[#objectArea.name#]]></name><description><![CDATA[#objectArea.description#]]></description><cfif len(objectArea.user_full_name) GT 0><user_full_name><![CDATA[#objectArea.user_full_name#]]></user_full_name></cfif></area></cfoutput></cfsavecontent>
 			</cfprocessingdirective>
 			<!---<cfif len(objectArea.image_background_color) GT 0>
 			 image_background_color="#objectArea.image_background_color#"
@@ -1599,7 +1570,7 @@
 	
 	<!--- ------------------------------------- getArea ------------------------------------ --->
 	
-	<cffunction name="getArea" returntype="any" access="public">		
+	<cffunction name="getArea" output="false" returntype="any" access="public">		
 		<cfargument name="get_area_id" type="numeric" required="yes">
 		<cfargument name="format_content" type="string" required="no" default="default">
         <cfargument name="return_type" type="string" required="no" default="xml">

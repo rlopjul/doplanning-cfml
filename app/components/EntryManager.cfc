@@ -226,7 +226,7 @@
 	
 	<!---  ---------------------- SELECT ENTRY -------------------------------- --->
 	
-	<cffunction name="selectEntry" returntype="string" access="public">
+	<!---<cffunction name="selectEntry" returntype="string" access="public">
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "selectEntry">
@@ -257,7 +257,7 @@
 		
 		<cfreturn xmlResponse>
 		
-	</cffunction>
+	</cffunction>--->
 	<!---  ------------------------------------------------------------------------ --->
 	
 	

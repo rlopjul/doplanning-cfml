@@ -89,6 +89,7 @@
 		<cfargument name="recipient_user" type="numeric" required="no">
 		<cfargument name="with_user" type="boolean" required="no" default="false">
 		<cfargument name="with_area" type="boolean" required="no" default="false">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="limit" type="numeric" required="no"><!---Limita el número de elementos a mostrar. Solo debe usarse si listFormat es false--->
 		<cfargument name="done" type="boolean" required="no">
 		<cfargument name="state" type="string" required="no">
@@ -117,25 +118,32 @@
 				
 			</cfif>
 			
-			
 			<cftransaction>
 			
 				<cfquery name="areaItemsQuery" datasource="#client_dsn#">
 					SELECT <cfif isDefined("arguments.limit")>SQL_CALC_FOUND_ROWS</cfif>
-					items.id, items.title, items.user_in_charge, items.creation_date, 
-					items.attached_file_name, items.attached_file_id, items.area_id
+					items.id, items.title, items.user_in_charge 
+					<cfif arguments.parse_dates IS true>
+						, DATE_FORMAT(items.creation_date, '#datetime_format#') AS creation_date 
+					<cfelse>
+						, items.creation_date
+					</cfif>
+					, items.attached_file_name, items.attached_file_id, items.area_id
 					<cfif arguments.with_user IS true>
-					, users.family_name, users.name AS user_name, users.image_type AS user_image_type
-					<cfif arguments.itemTypeId IS 6><!---Tasks--->
-					, items.start_date, items.end_date, items.done, items.estimated_value, items.real_value, items.end_date
-					, recipient_users.family_name AS recipient_user_family_name, recipient_users.name AS recipient_user_name
-					</cfif>					
+					, users.family_name, users.name AS user_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
+						<cfif arguments.itemTypeId IS 6><!---Tasks--->
+						, items.done, items.estimated_value, items.real_value
+						, recipient_users.family_name AS recipient_user_family_name, recipient_users.name AS recipient_user_name, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name
+						</cfif>					
 					</cfif>
 					<cfif arguments.itemTypeId IS NOT 1>
 					, items.attached_image_id, items.attached_image_name, items.link				
 					</cfif>
+					<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+					, DATE_FORMAT(items.start_date, '#date_format#') AS start_date, DATE_FORMAT(items.end_date, '#date_format#') AS end_date
+					</cfif>
 					<cfif itemTypeId IS 5><!---Events--->
-					, items.start_date, items.end_date, items.start_time, items.end_time, items.place
+					, items.start_time, items.end_time, items.place
 					</cfif>
 					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 3 OR arguments.itemTypeId IS 4><!---Entries, Links, News--->
 						, items.position
@@ -149,9 +157,6 @@
 					</cfif>	 
 					
 					<cfif arguments.itemTypeId IS 7><!---Consultations--->
-					, items.state, items.identifier
-					</cfif>
-					<cfif arguments.itemTypeId IS 7><!---Consultation--->
 					, items.state, items.identifier
 					</cfif>
 					<cfif format_content EQ "all"><!---format_content EQ all--->
@@ -401,11 +406,13 @@
 				FROM #client_abb#_tasks AS tasks
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
+				<cfif APPLICATION.moduleLists IS true><!---Lists--->
 				UNION ALL
 				( SELECT #commonColums#, attached_image_id, NULL AS position, NULL AS done, 11 AS itemTypeId
 				FROM #client_abb#_lists AS lists
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
+				</cfif>
 				<!---Files--->
 				UNION ALL
 				( SELECT id, name, association_date, description, user_in_charge, id AS attached_file_id, #area_id# AS area_id, NULL AS attached_image_id, NULL AS position, NULL AS done, 10 AS itemTypeId
@@ -485,7 +492,7 @@
 	<!---getAreaItemsLastPosition--->
 	
 	<cffunction name="getAreaItemsLastPosition" output="false" returntype="struct" access="public">
-		<cfargument name="area_id" type="string" required="yes">
+		<cfargument name="area_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		
 		<cfargument name="client_abb" type="string" required="yes">

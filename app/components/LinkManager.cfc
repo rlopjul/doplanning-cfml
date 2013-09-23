@@ -225,7 +225,7 @@
 	
 	<!---  ---------------------- SELECT LINK -------------------------------- --->
 	
-	<cffunction name="selectLink" returntype="string" access="public">
+	<!---<cffunction name="selectLink" returntype="string" access="public">
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "selectLink">
@@ -256,7 +256,7 @@
 		
 		<cfreturn xmlResponse>
 		
-	</cffunction>
+	</cffunction>--->
 	<!---  ------------------------------------------------------------------------ --->
 	
 	

@@ -20,5 +20,13 @@
 	<span lang="es">Descripcion:</span>
 	</div>
 	<div class="div_message_page_description"><cfif len(objectArea.description) GT 0>#objectArea.description#<cfelse><i><span lang="es">No hay descripción del área</span></i></cfif></div>
+
+	<!---areaUrl--->
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfinvoke>
+
+	<div class="div_message_page_label"><span lang="es">URL del área en DoPlanning:</span></div>
+	<input type="text" value="#areaUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
 </div>
 </cfoutput>

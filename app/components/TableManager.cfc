@@ -3,15 +3,65 @@
 <cfcomponent output="false">
 	
 	<cfset component = "TableManager">
+
+
+	<!--- ------------------------------------- getTable -------------------------------------  --->
 	
-	<cfset listTypeId = 1>
-	<cfset fileTypeId = 2>
-	<cfset formTypeId = 3>
+	<cffunction name="getTable" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getTable">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="getTableQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">		
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif getTableQuery.recordCount GT 0>
+
+				<cfset area_id = getTableQuery.area_id>
+
+				<!---checkAreaAccess--->
+				<cfinclude template="includes/checkAreaAccess.cfm">
+
+				<cfset response = {result=true, table=#getTableQuery#}>
+
+			<cfelse><!---Item does not exist--->
+			
+				<cfset error_code = 501>
+			
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
 
 
 
 	<!--- ------------------------------------- getAreaTables -------------------------------------  --->
-	
 	
 	<cffunction name="getAreaTables" output="false" access="public" returntype="struct">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -43,6 +93,7 @@
 				<cfinvokeargument name="listFormat" value="true">
 				<cfinvokeargument name="format_content" value="default">
 				<cfinvokeargument name="with_user" value="false">
+				<cfinvokeargument name="parse_dates" value="true"/>
 				<cfif isDefined("arguments.limit")>
 					<cfinvokeargument name="limit" value="#arguments.limit#">
 				</cfif>		
@@ -53,7 +104,7 @@
 						
 			<cfset areaTablesQuery = getAreaTablesResult.query>
 
-			<cfset response = {result=true, tablesQuery=#areaTablesQuery#}>
+			<cfset response = {result=true, areaTables=#areaTablesQuery#}>
 		
 			<cfcatch>
 
@@ -138,40 +189,6 @@
 	
 
 
-	<!--- ------------------------------------- getFieldTypes -------------------------------------  --->
-	
-	<cffunction name="getFieldTypes" output="false" access="public" returntype="struct">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-
-		<cfset var method = "getFieldTypes">
-
-		<cfset var response = structNew()>
-
-		<cftry>
-			
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getFieldTypes" returnvariable="getFieldTypesQuery">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
-			<cfset response = {result=true, fieldTypes=getFieldTypesQuery}>
-								
-			<cfcatch>
-
-				<cfinclude template="includes/errorHandlerStruct.cfm">
-
-			</cfcatch>
-		</cftry>
-
-		<cfreturn response>
-		
-	</cffunction>
-
-
 	<!--- ------------------------------------- getTableFields -------------------------------------  --->
 	
 	<cffunction name="getTableFields" output="false" access="public" returntype="struct">
@@ -187,7 +204,7 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 	
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTableFields" returnvariable="getTableFieldsQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="getTableFieldsQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_types" value="#arguments.with_types#">
