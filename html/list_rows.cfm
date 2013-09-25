@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>#APPLICATION.title#-Datos</title>
+<title>#APPLICATION.title#-Registros</title>
 <!-- InstanceEndEditable -->
 <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
@@ -107,7 +107,7 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 <cfset tableTypeId = 1>
-<cfinclude template="#APPLICATION.htmlPath#/includes/table_data.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows.cfm">
 
 <cfset return_page = "area.cfm?area=#area_id#">
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">

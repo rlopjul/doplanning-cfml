@@ -58,14 +58,16 @@
 		
 	</cfinvoke>
 		
-	<cfxml variable="xmlItems">
+	<!---<cfxml variable="xmlItems">
 	<cfoutput>
 	#getAllAreasItemsResponse.itemsXml#
 	</cfoutput>
 	</cfxml>
+	<cfset numItems = ArrayLen(xmlItems.xmlChildren[1].XmlChildren)>--->
 	
-	
-	<cfset numItems = ArrayLen(xmlItems.xmlChildren[1].XmlChildren)>
+	<cfset areaItemsQuery = getAllAreasItemsResponse.query>
+
+	<cfset numItems = areaItemsQuery.recordCount>
 	<cfif numItems GT 0>
 		<cfoutput>
 		<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numItems# <span lang="es"><cfif numItems GT 1>#itemTypeNameEsP#<cfelse>#itemTypeNameEs#</cfif></span></div>
@@ -81,7 +83,8 @@
 		<cfif itemTypeId IS NOT 7>
 	
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItemsList">
-				<cfinvokeargument name="xmlItems" value="#xmlItems#">
+				<!---<cfinvokeargument name="xmlItems" value="#xmlItems#">--->
+				<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				<cfinvokeargument name="full_content" value="true">
 				<cfinvokeargument name="app_version" value="html2">
@@ -90,7 +93,8 @@
 		<cfelse><!---Consultations--->
 		
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputConsultationsList">
-				<cfinvokeargument name="xmlItems" value="#xmlItems#">
+				<!---<cfinvokeargument name="xmlItems" value="#xmlItems#">--->
+				<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				<cfinvokeargument name="full_content" value="true">
 				<cfinvokeargument name="app_version" value="html2">

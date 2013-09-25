@@ -19,7 +19,7 @@
 			
 			<cfquery name="getFieldTypesQuery" datasource="#client_dsn#">
 				SELECT field_type_id, input_type, name, mysql_type
-				FROM #client_abb#_#fieldsTypesTable#
+				FROM `#client_abb#_#fieldsTypesTable#`
 				WHERE enabled = true;
 			</cfquery>
 		
@@ -40,7 +40,7 @@
 			
 			<cfquery name="getFieldTypeQuery" datasource="#client_dsn#">
 				SELECT field_type_id, input_type, name, mysql_type
-				FROM #client_abb#_#fieldsTypesTable#
+				FROM `#client_abb#_#fieldsTypesTable#`
 				WHERE field_type_id = <cfqueryparam value="#arguments.field_type_id#" cfsqltype="cf_sql_integer">
 				AND enabled = true;
 			</cfquery>
@@ -73,12 +73,12 @@
 				<cfif arguments.with_table IS true>
 				, tables.area_id
 				</cfif>
-				FROM #client_abb#_#tableTypeTable#_fields AS table_fields
+				FROM `#client_abb#_#tableTypeTable#_fields` AS table_fields
 				<cfif arguments.with_type IS true>
-					INNER JOIN #client_abb#_#fieldsTypesTable# AS fields_types ON table_fields.field_type_id = fields_types.field_type_id
+					INNER JOIN `#client_abb#_#fieldsTypesTable#` AS fields_types ON table_fields.field_type_id = fields_types.field_type_id
 				</cfif>
 				<cfif arguments.with_table IS true>
-					INNER JOIN #client_abb#_#tableTypeTable# AS tables ON table_fields.table_id = tables.id
+					INNER JOIN `#client_abb#_#tableTypeTable#` AS tables ON table_fields.table_id = tables.id
 				</cfif>
 				WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
@@ -88,7 +88,6 @@
 	</cffunction>
 
 
-	
 	<!---getTableFields--->
 		
 	<cffunction name="getTableFields" output="false" returntype="query" access="public">
@@ -108,9 +107,9 @@
 				<cfif arguments.with_types IS true>
 				, fields_types.*
 				</cfif>
-				FROM #client_abb#_#tableTypeTable#_fields AS table_fields
+				FROM `#client_abb#_#tableTypeTable#_fields` AS table_fields
 				<cfif arguments.with_types IS true>
-				INNER JOIN #client_abb#_#fieldsTypesTable# AS fields_types ON table_fields.field_type_id = fields_types.field_type_id
+				INNER JOIN `#client_abb#_#fieldsTypesTable#` AS fields_types ON table_fields.field_type_id = fields_types.field_type_id
 				</cfif>
 				WHERE table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
 				ORDER BY position ASC;
@@ -137,7 +136,7 @@
 						
 				<cfquery name="fieldsPositionQuery" datasource="#client_dsn#">
 					SELECT MAX(position) AS max_position					
-					FROM #client_abb#_#tableTypeTable#_fields AS tables_fields
+					FROM `#client_abb#_#tableTypeTable#_fields` AS tables_fields
 					WHERE tables_fields.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 				
@@ -147,6 +146,5 @@
 		
 	</cffunction>
 	
-
 
 </cfcomponent>

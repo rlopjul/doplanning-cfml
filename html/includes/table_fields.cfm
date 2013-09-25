@@ -3,19 +3,19 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
 <cfif isDefined("URL.#itemTypeName#") AND isNumeric(URL[itemTypeName])>
-	<cfset item_id = URL[#itemTypeName#]>
+	<cfset table_id = URL[#itemTypeName#]>
 <cfelse>
 	<cflocation url="area.cfm" addtoken="no">
 </cfif>
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
-	<cfinvokeargument name="item_id" value="#item_id#">
+	<cfinvokeargument name="item_id" value="#table_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
 <!---Table fields--->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
-	<cfinvokeargument name="table_id" value="#item_id#">
+	<cfinvokeargument name="table_id" value="#table_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 	<cfinvokeargument name="with_types" value="true">
 </cfinvoke>
@@ -41,15 +41,19 @@
 
 <div class="div_head_subtitle_area">
 
-	<a href="#itemTypeName#_field_new.cfm?#itemTypeName#=#item_id#" onclick="openUrl('#itemTypeName#_field_new.cfm?#itemTypeName#=#item_id#', 'itemIframe', event)" class="btn btn-small"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Añadir campo</span></a>
+	<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-small"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Añadir campo</span></a>
+
+	<span class="divider">&nbsp;</span>
+
+	<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
 
 	<span class="divider">&nbsp;</span>
 
 	<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/#itemTypeName#_fields.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+		<a href="#APPLICATION.htmlPath#/#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
 	</cfif>
 
-	<!---<a href="#itemTypeName#_data.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>--->
+	<!---<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>--->
 
 </div>
 
@@ -97,7 +101,7 @@
 				<!---<cfif isDefined("arguments.return_page")>
 					<cfset rpage = arguments.return_page>
 				<cfelse>--->
-					<cfset rpage = "#itemTypeName#_fields.cfm?#tableTypeName#=#item_id#">
+					<cfset rpage = "#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">
 				<!---</cfif>--->
 				<cfset field_page_url = "#tableTypeName#_field.cfm?field=#fields.field_id#&return_page=#URLEncodedFormat(rpage)#">
 
