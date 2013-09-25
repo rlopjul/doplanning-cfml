@@ -2,27 +2,27 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
-<cfif isDefined("URL.#itemTypeName#")>
-	<cfset item_id = URL[#itemTypeName#]>
+<cfif isDefined("URL.#tableTypeName#")>
+	<cfset table_id = URL[#tableTypeName#]>
 <cfelse>
 	<cflocation url="area.cfm" addtoken="no">
 </cfif>
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
-	<cfinvokeargument name="item_id" value="#item_id#">
+	<cfinvokeargument name="item_id" value="#table_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
-<!---Table data--->
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableData" returnvariable="tableDataResult">
-	<cfinvokeargument name="table_id" value="#item_id#">
+<!---Table rows--->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRows" returnvariable="tableRowsResult">
+	<cfinvokeargument name="table_id" value="#table_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
-<cfset tableData = tableDataResult.tableData>
+<cfset tableRows = tableRowsResult.tableRows>
 
 <!---Table fields--->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
-	<cfinvokeargument name="table_id" value="#item_id#">
+	<cfinvokeargument name="table_id" value="#table_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
 <cfset fields = fieldsResult.tableFields>
@@ -38,15 +38,19 @@
 
 <div class="div_head_subtitle_area">
 
-	<a href="#itemTypeName#_data_new.cfm?#itemTypeName#=#item_id#" onclick="openUrl('#itemTypeName#_data_new.cfm?#itemTypeName#=#item_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva entrada" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Nueva entrada</span></a>
+	<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo registro" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Nuevo registro</span></a>
+
+	<span class="divider">&nbsp;</span>
+
+	<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos<span></a>
 
 	<span class="divider">&nbsp;</span>
 
 	<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/#itemTypeName#_data.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+		<a href="#APPLICATION.htmlPath#/#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
 	</cfif>
 
-	<a href="#itemTypeName#_data.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+	<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
 
 </div>
 
@@ -54,7 +58,7 @@
 
 <div class="div_items">
 
-	<cfif tableData.recordCount GT 0>
+	<cfif tableRows.recordCount GT 0>
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
@@ -87,7 +91,7 @@
 						filter_searchDelay : 300,
 						filter_serversideFiltering: false,
 						filter_startsWith : false,
-						filter_useParsedData : false,
+						filter_useParsedRow : false,
 				    }
 				});
 				
@@ -118,25 +122,25 @@
 
 			<cfset alreadySelected = false>
 
-			<cfloop query="tableData">
+			<cfloop query="tableRows">
 
 				<!---<cfif isDefined("arguments.return_page")>
 					<cfset rpage = arguments.return_page>
 				<cfelse>--->
-					<cfset rpage = "#itemTypeName#_data.cfm?#tableTypeName#=#item_id#">
+					<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
 				<!---</cfif>--->
-				<cfset data_page_url = "#tableTypeName#_data.cfm?#tableTypeName#=#item_id#&data=#tableData.data_id#&return_page=#URLEncodedFormat(rpage)#">
+				<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
 
 				<!---Row selection--->
 				<cfset dataSelected = false>
 				
 				<cfif alreadySelected IS false>
 
-					<cfif ( isDefined("URL.data") AND (URL.data IS tableData.data_id) ) OR ( selectFirst IS true AND tableData.currentrow IS 1 AND app_version NEQ "mobile" ) >
+					<cfif ( isDefined("URL.data") AND (URL.data IS tableRows.row_id) ) OR ( selectFirst IS true AND tableRows.currentrow IS 1 AND app_version NEQ "mobile" ) >
 
 						<!---Esta acción solo se completa si está en la versión HTML2--->
 						<script type="text/javascript">
-							openUrlHtml2('#data_page_url#','itemIframe');
+							openUrlHtml2('#row_page_url#','itemIframe');
 						</script>
 
 						<cfset dataSelected = true>
@@ -146,13 +150,13 @@
 					
 				</cfif>
 
-				<tr <cfif dataSelected IS true>class="selected"</cfif> onclick="openUrl('#data_page_url#','itemIframe',event)">
-					<td>#tableData.data_id#</td>
-					<td>#DateFormat(tableData.insert_date, "dd/mm/yyyy")# #TimeFormat(tableData.insert_date, "HH:mm")#</td>
-					<td><cfif len(tableData.last_update_date) GT 0>#DateFormat(tableData.last_update_date, "dd/mm/yyyy")# #TimeFormat(tableData.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
+				<tr <cfif dataSelected IS true>class="selected"</cfif> onclick="openUrl('#row_page_url#','itemIframe',event)">
+					<td>#tableRows.row_id#</td>
+					<td>#DateFormat(tableRows.creation_date, "dd/mm/yyyy")# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>
+					<td><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, "dd/mm/yyyy")# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
 					<cfloop query="fields">
 						<cfif fields.field_type_id IS NOT 3><!--- IS NOT long text --->	
-							<cfset field_value = tableData['field_#fields.field_id#']>
+							<cfset field_value = tableRows['field_#fields.field_id#']>
 							<cfif fields.field_type_id IS 6 AND len(field_value) GT 0>
 								<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), "dd/mm/yyyy")>
 							</cfif>
@@ -160,8 +164,8 @@
 						</cfif>
 					</cfloop>
 					<!---<td>
-						<a href="#itemTypeName#_data_edit.cfm?#itemTypeName#=#item_id#data=#tableData.data_id#" class="btn btn-info btn-small"><i class="icon-pencil"></i></a>
-						<a href="#itemTypeName#_data_edit.cfm?#itemTypeName#=#item_id#data=#tableData.data_id#" class="btn btn-danger btn-small"><i class="icon-remove"></i></a>
+						<a href="#tableTypeName#_row_edit.cfm?#tableTypeName#=#table_id#data=#tableRows.row_id#" class="btn btn-info btn-small"><i class="icon-pencil"></i></a>
+						<a href="#tableTypeName#_row_edit.cfm?#tableTypeName#=#table_id#data=#tableRows.row_id#" class="btn btn-danger btn-small"><i class="icon-remove"></i></a>
 					</td>--->
 				</tr>
 			</cfloop>

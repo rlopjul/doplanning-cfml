@@ -26,7 +26,7 @@
 		<cfargument name="Filedata" type="string" required="yes">
 		<!---<cfargument name="xmlFile" type="xml" required="yes">--->
 		<cfargument name="file_id" type="numeric" required="true">
-		<cfargument name="file_physical_name" type="numeric" required="true">
+		<cfargument name="file_physical_name" type="numeric" required="false">
 		<cfargument name="itemTypeId" type="numeric" required="no">
 		<!---<cfargument name="xmlItem" type="xml" required="no">
 		<cfargument name="xmlArea" type="xml" required="no">--->
@@ -116,7 +116,9 @@
 		
 		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
 			<cfinvokeargument name="id" value="#arguments.file_id#">
-			<cfinvokeargument name="physical_name" value="#arguments.file_physical_name#"/>
+			<cfif isDefined("arguments.file_physical_name")>
+				<cfinvokeargument name="physical_name" value="#arguments.file_physical_name#"/>
+			</cfif>
 			
 			<cfinvokeargument name="return_type" value="object">
 		</cfinvoke>

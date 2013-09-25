@@ -2638,7 +2638,6 @@
 		<cfset var method = "getAllAreasItems">
 
 		<cfset var response = structNew()>
-		<cfset var areaItemsQuery = "">
 
 		<cftry>
 			
@@ -2666,6 +2665,7 @@
 				<cfinvokeargument name="format_content" value="#arguments.format_content#">
 				<cfinvokeargument name="with_user" value="true">
 				<cfinvokeargument name="with_area" value="#arguments.with_area#">
+				<cfinvokeargument name="parse_dates" value="true"/>
 				<cfif isDefined("arguments.limit")>
 				<cfinvokeargument name="limit" value="#arguments.limit#">
 				</cfif>
@@ -2686,7 +2686,7 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 			
-			<cfset areaItemsQuery = getAreaItemsResult.query>
+			<!---<cfset areaItemsQuery = getAreaItemsResult.query>
 			
 			<cfset xmlItems=''>
 			<cfif areaItemsQuery.recordCount GT 0>
@@ -2751,7 +2751,9 @@
 				<cfset xmlItems='<#itemTypeNameP#/>'>	
 			</cfif>			
 						
-			<cfset response = {result="true", message="", itemsXml=#xmlItems#}>
+			<cfset response = {result="true", message="", itemsXml=#xmlItems#}>--->
+
+			<cfset response = {result=true, query=#getAreaItemsResult.query#}>
 		
 			<cfcatch>
 
@@ -2798,7 +2800,7 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>	
 
-			<cfset response = {result="true", message="", query=#getAreaItemsResult.query#}>
+			<cfset response = {result=true, query=#getAreaItemsResult.query#}>
 
 			<cfcatch>
 				<!--- <cfset xmlResponseContent = arguments.request>

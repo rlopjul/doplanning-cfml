@@ -108,7 +108,7 @@
 <!-- InstanceBeginEditable name="contenido" -->
 <cfset tableTypeId = 1>
 <!---<cfset itemTypeId = 11>--->
-<cfinclude template="#APPLICATION.htmlPath#/includes/table_data.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows.cfm">
 
 <cfset return_page = "lists.cfm?area=#area_id#">
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">

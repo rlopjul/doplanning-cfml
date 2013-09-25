@@ -1561,6 +1561,8 @@
 		<cfargument name="limit" type="numeric" required="no">
 				
 		<cfset var method = "getAllAreaItems">
+
+		<cfset var response = structNew()>
 		
 		<cftry>
 			
@@ -1782,18 +1784,18 @@
 									sorter: "datetime" 
 								}
 								<cfelse><!---Tasks--->
-									<cfif arguments.full_content IS false>
-									8: { 
+									<!---<cfif arguments.full_content IS false>
+									7: { 
 										sorter: "datetime" 
 									}
-									<cfelse>
-									8: { 
+									<cfelse>--->
+									7: { 
 										sorter: "datetime" 
 									},
-									9: { 
+									8: { 
 										sorter: "datetime" 
 									}
-									</cfif>
+									<!---</cfif>--->
 								</cfif>
 							},
 							<cfif arguments.full_content IS false>
@@ -2410,7 +2412,7 @@
 								<cfif itemTypeId IS 11 OR itemTypeId IS 13><!---Lists, Forms--->
 									<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>
 
-									<a href="#itemTypeName#_data.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros" class="btn btn-mini"><i class="icon-list"></i></a>
+									<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros" class="btn btn-mini"><i class="icon-list"></i></a>
 								</cfif>
 
 								<!---Attached files--->
