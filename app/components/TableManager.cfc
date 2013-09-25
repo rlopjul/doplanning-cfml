@@ -227,13 +227,13 @@
 	</cffunction>
 
 
-	<!--- ------------------------------------- getTableData -------------------------------------  --->
+	<!--- ------------------------------------- getTableRows -------------------------------------  --->
 	
-	<cffunction name="getTableData" output="false" access="public" returntype="struct">
+	<cffunction name="getTableRows" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
-		<cfset var method = "getTableData">
+		<cfset var method = "getTableRows">
 
 		<cfset var response = structNew()>
 
@@ -241,15 +241,16 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 	
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTableData" returnvariable="getTableDataQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="getTableRowsQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<!---<cfinvokeargument name="parse_dates" value="false"/>--->
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<cfset response = {result=true, tableData=getTableDataQuery}>
+			<cfset response = {result=true, tableRows=getTableRowsQuery}>
 								
 			<cfcatch>
 

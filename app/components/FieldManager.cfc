@@ -93,14 +93,14 @@
 				<cfset field_id = getLastInsertId.last_insert_id>
 
 				<cfquery name="insertFieldInTable" datasource="#client_dsn#">
-					ALTER TABLE `#client_abb#_#tableTypeTable#_data_#arguments.table_id#` 
+					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
 					ADD COLUMN `field_#field_id#` #fieldType.mysql_type# NOT NULL;
 				</cfquery>
 
 			</cftransaction>
 
 			
-			<cfset response = {result=true, field_id=#field_id#}>
+			<cfset response = {result=true, field_id=#field_id#, table_id=#arguments.table_id#}>
 
 			<cfcatch>
 
@@ -176,7 +176,7 @@
 
 			</cftransaction>
 		
-			<cfset response = {result=true, field_id=#arguments.field_id#}>
+			<cfset response = {result=true, field_id=#arguments.field_id#, table_id=#field.table_id#}>
 
 			<cfcatch>
 
@@ -263,7 +263,7 @@
 				</cfquery>
 
 				<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
-					ALTER TABLE `#client_abb#_#tableTypeTable#_data_#field.table_id#` 
+					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#field.table_id#` 
 					DROP COLUMN `field_#arguments.field_id#`;
 				</cfquery>
 

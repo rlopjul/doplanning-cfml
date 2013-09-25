@@ -101,9 +101,9 @@
 	</cffunction>
 
 
-	<!--- ----------------------------------- getTableData ------------------------------------- --->
+	<!--- ----------------------------------- getTableRows ------------------------------------- --->
 	
-	<cffunction name="getTableData" returntype="struct" access="public">
+	<cffunction name="getTableRows" returntype="struct" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		
@@ -113,7 +113,7 @@
 					
 		<cftry>
 	
-			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableData" returnvariable="response">
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableRows" returnvariable="response">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 			</cfinvoke>
@@ -262,7 +262,7 @@
 								<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>
 							</cfif>
 							<cfif itemTypeId IS 11 OR itemTypeId IS 13><!---Lists, Forms--->
-								<a href="#itemTypeName#_data.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros" class="btn btn-mini"><i class="icon-list"></i></a>
+								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros" class="btn btn-mini"><i class="icon-list"></i></a>
 							</cfif>
 							</td>
 							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>

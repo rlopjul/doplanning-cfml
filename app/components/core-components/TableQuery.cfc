@@ -38,29 +38,6 @@
 		<cfreturn getItemQuery>
 		
 	</cffunction>
-
-
-	<!---getTableData--->
-		
-	<cffunction name="getTableData" output="false" returntype="query" access="public">
-		<cfargument name="table_id" type="numeric" required="true">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-
-		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-				
-		<cfset var method = "getTableData">
-
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-			
-			<cfquery name="getTableDataQuery" datasource="#client_dsn#">
-				SELECT *
-				FROM #client_abb#_#tableTypeTable#_data_#arguments.table_id#
-				ORDER BY insert_date DESC;
-			</cfquery>
-		
-		<cfreturn getTableDataQuery>
-		
-	</cffunction>
+	
 
 </cfcomponent>	

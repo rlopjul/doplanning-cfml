@@ -25,77 +25,25 @@
 		<cftry>
 		
 			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="xmlResult">
-				<cfoutput><file
-					<cfif len(objectFile.id) GT 0> 
-						id="#objectFile.id#"
-					</cfif>
-					<cfif objectFile.tree_mode EQ "true">
-						name="#xmlFormat(objectFile.name)#"
-					</cfif> 
-					<cfif len(objectFile.physical_name) GT 0>
-						physical_name="#xmlFormat(objectFile.physical_name)#"
-					</cfif>
-					<cfif len(objectFile.user_in_charge) GT 0> 
-						user_in_charge="#objectFile.user_in_charge#" 
-					</cfif>
-					<cfif len(objectFile.file_size_full) GT 0>
-						file_size_full="#objectFile.file_size_full#"
-					</cfif>
-					<cfif len(objectFile.file_size_kb) GT 0>
-						file_size_kb="#objectFile.file_size_kb#"
-					</cfif>
-					<cfif len(objectFile.file_size) GT 0>
-						file_size="#objectFile.file_size#"
-					</cfif>
-					<cfif len(objectFile.file_type) GT 0> 
-						file_type="#objectFile.file_type#"
-					</cfif>
-					<cfif len(objectFile.uploading_date) GT 0>
-						uploading_date="#objectFile.uploading_date#"
-					</cfif>
-					<cfif len(objectFile.replacement_date) GT 0>
-						replacement_date="#objectFile.replacement_date#"
-					</cfif>
-					<cfif len(objectFile.association_date) GT 0>
-						association_date="#objectFile.association_date#"
-					</cfif>
-					<cfif len(objectFile.status) GT 0>
-						status="#objectFile.status#"
-					</cfif>
-					<cfif len(objectFile.area_id) GT 0>
-						area_id="#objectFile.area_id#"
-					</cfif>
-					<cfif len(objectFile.user_image_type) GT 0>
-						user_image_type="#objectFile.user_image_type#"
-					</cfif>
-					>
-					<cfif objectFile.tree_mode NEQ "true">
+			<cfsavecontent variable="xmlResult" trim="true">
+				<cfoutput><file<cfif len(objectFile.id) GT 0> id="#objectFile.id#"</cfif><cfif objectFile.tree_mode EQ "true"> name="#xmlFormat(objectFile.name)#"</cfif><cfif len(objectFile.physical_name) GT 0>  physical_name="#xmlFormat(objectFile.physical_name)#"</cfif><cfif len(objectFile.user_in_charge) GT 0> user_in_charge="#objectFile.user_in_charge#"</cfif><cfif len(objectFile.file_size_full) GT 0> file_size_full="#objectFile.file_size_full#"</cfif><cfif len(objectFile.file_size_kb) GT 0> file_size_kb="#objectFile.file_size_kb#"</cfif><cfif len(objectFile.file_size) GT 0> file_size="#objectFile.file_size#"</cfif><cfif len(objectFile.file_type) GT 0> file_type="#objectFile.file_type#"</cfif><cfif len(objectFile.uploading_date) GT 0> uploading_date="#objectFile.uploading_date#"</cfif><cfif len(objectFile.replacement_date) GT 0> replacement_date="#objectFile.replacement_date#"</cfif><cfif len(objectFile.association_date) GT 0> association_date="#objectFile.association_date#"</cfif><cfif len(objectFile.status) GT 0> status="#objectFile.status#"</cfif><cfif len(objectFile.area_id) GT 0> area_id="#objectFile.area_id#"</cfif><cfif len(objectFile.user_image_type) GT 0> user_image_type="#objectFile.user_image_type#"</cfif>><cfif objectFile.tree_mode NEQ "true">
 						<cfif len(objectFile.name) GT 0>
-						<name><![CDATA[#objectFile.name#]]></name>
-						</cfif>
+						<name><![CDATA[#objectFile.name#]]></name></cfif>
 						<cfif len(objectFile.file_name) GT 0>
-						<file_name><![CDATA[#objectFile.file_name#]]></file_name>
-						</cfif>
+						<file_name><![CDATA[#objectFile.file_name#]]></file_name></cfif>
 						<cfif len(objectFile.description) GT 0>
-						<description><![CDATA[#objectFile.description#]]></description>
-						</cfif>
+						<description><![CDATA[#objectFile.description#]]></description></cfif>
 						<cfif len(objectFile.user_full_name) GT 0>
-						<user_full_name><![CDATA[#objectFile.user_full_name#]]></user_full_name>
-						</cfif>
+						<user_full_name><![CDATA[#objectFile.user_full_name#]]></user_full_name></cfif>
 						<cfif len(objectFile.area_name) GT 0>
-						<area_name><![CDATA[#objectFile.area_name#]]></area_name>
-						</cfif>
+						<area_name><![CDATA[#objectFile.area_name#]]></area_name></cfif>
 						<cfif isDefined("objectFile.file_types_conversion") AND objectFile.file_types_conversion.recordCount GT 0>
 							<file_types_conversion>
 								<cfloop query="objectFile.file_types_conversion">
 									<file_type id="#objectFile.file_types_conversion.file_type#"><name_es><![CDATA[#objectFile.file_types_conversion.name_es#]]></name_es><name_en><![CDATA[#objectFile.file_types_conversion.name_en#]]></name_en></file_type>
 								</cfloop>
 							</file_types_conversion>
-						</cfif> 
-					</cfif>
-					</file></cfoutput>
-			</cfsavecontent>
+						</cfif></cfif></file></cfoutput></cfsavecontent>
 			</cfprocessingdirective>
 			
 			<cfreturn xmlResult>
@@ -2839,7 +2787,6 @@ step="1">
 			
 			
 			<cfinvoke component="FileManager" method="objectFile" returnvariable="objectFile">
-
 				<cfinvokeargument name="return_type" value="object">
 			</cfinvoke>
 			

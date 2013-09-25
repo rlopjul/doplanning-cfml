@@ -6,6 +6,7 @@
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
 
+
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Field" method="getField" returnvariable="field">
 	<cfinvokeargument name="field_id" value="#field_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">

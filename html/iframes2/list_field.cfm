@@ -64,7 +64,8 @@
 
 <cfset return_path = "#APPLICATION.htmlPath#/iframes2/">
 <cfset tableTypeId = 1>
-<cfinclude template="#APPLICATION.htmlPath#/includes/table_field_content.cfm">
+<cfset page_type = 2>
+<cfinclude template="#APPLICATION.htmlPath#/includes/table_field_form.cfm">
 
 <!-- InstanceEndEditable -->
 </body>

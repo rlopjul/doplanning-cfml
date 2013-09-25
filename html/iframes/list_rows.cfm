@@ -62,13 +62,10 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfset return_path = "#APPLICATION.htmlPath#/iframes2/">
 <cfset tableTypeId = 1>
-<cfinclude template="#APPLICATION.htmlPath#/includes/table_data_new_content.cfm">
+<!---<cfset itemTypeId = 11>--->
+<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows.cfm">
 
-<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
-	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>--->
 <!-- InstanceEndEditable -->
 </body>
 <!-- InstanceEnd --></html>

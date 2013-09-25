@@ -96,9 +96,9 @@
 	</cffunction>
 
 
-	<!--- -------------------------------createFieldRemote-------------------------------------- --->
+	<!--- -------------------------------createField-------------------------------------- --->
 	
-    <cffunction name="createFieldRemote" returntype="void" access="remote">
+    <cffunction name="createField" returntype="struct" access="public">
     	<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="field_type_id" type="numeric" required="true">
@@ -108,9 +108,9 @@
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
 		
-		<cfargument name="return_path" type="string" required="yes">
+		<!---<cfargument name="return_path" type="string" required="yes">--->
 		
-		<cfset var method = "createFieldRemote">
+		<cfset var method = "createField">
 
 		<cfset var response = structNew()>
 		
@@ -120,6 +120,10 @@
 			</cfinvoke>
 			
 			<cfif response.result IS true>
+				<cfset response.message = "Campo creado">
+			</cfif>
+
+			<!---<cfif response.result IS true>
 				<cfset msg = URLEncodedFormat("Campo creado")>
 
 				<cflocation url="#arguments.return_path#&field=#response.field_id#&res=#response.result#&msg=#msg#" addtoken="no">
@@ -127,33 +131,33 @@
 				<cfset msg = URLEncodedFormat(response.message)>
 
 				<cflocation url="#arguments.return_path#&res=#response.result#&msg=#msg#" addtoken="no">
-			</cfif>
-
-			<!---SI HAY UN ERROR AQUÍ DEBE ENVIAR EL FORMULARIO A LA PÁGINA DE VUELTA--->
+			</cfif>--->
             
 			<cfcatch>
-				<cfinclude template="includes/errorHandlerStruct.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 
 
-	<!--- -------------------------------updateFieldRemote-------------------------------------- --->
+	<!--- -------------------------------updateField-------------------------------------- --->
 	
-    <cffunction name="updateFieldRemote" returntype="void" access="remote">
+    <cffunction name="updateField" returntype="struct" access="public">
     	<cfargument name="field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="label" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
         <cfargument name="default_value" type="string" required="true">
-        <cfargument name="position" type="numeric" required="true">
+        <!---<cfargument name="position" type="numeric" required="true">
 		
-		<cfargument name="return_path" type="string" required="yes">
+		<cfargument name="return_path" type="string" required="yes">--->
 		
-		<cfset var method = "updateFieldRemote">
+		<cfset var method = "updateField">
 
 		<cfset var response = structNew()>
 		
@@ -166,15 +170,17 @@
 				<cfset response.message = "Campo modificado">
 			</cfif>
 			
-			<cfset msg = URLEncodedFormat(response.message)>
+			<!---<cfset msg = URLEncodedFormat(response.message)>
 			
-			<cflocation url="#arguments.return_path#&field=#arguments.field_id#&res=#response.result#&msg=#msg#" addtoken="no">		
+			<cflocation url="#arguments.return_path#&field=#arguments.field_id#&res=#response.result#&msg=#msg#" addtoken="no">--->		
             
 			<cfcatch>
-				<cfinclude template="includes/errorHandlerStruct.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 
