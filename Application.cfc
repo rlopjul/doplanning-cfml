@@ -8,7 +8,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_24'>
+	<cfset this.name = 'dp_beta_aws_25'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
@@ -37,6 +37,7 @@
 		<cfset APPLICATION.modulefilesWithTables = true>
 		<cfset APPLICATION.moduleLists = true>
 		<cfset APPLICATION.moduleForms = true>
+		<cfset APPLICATION.modulePubMedComments = true>
 
 		<cfset APPLICATION.openTokApiKey = 28563472>
 		<cfset APPLICATION.openTokApiSecret = "155e13718a36a6077960595721274bd23b1089d7">

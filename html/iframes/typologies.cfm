@@ -62,7 +62,7 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfset tableTypeId = 2>
+<cfset tableTypeId = 3>
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_tables_content.cfm">
 
 <!-- InstanceEndEditable -->

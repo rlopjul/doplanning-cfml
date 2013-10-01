@@ -2,9 +2,15 @@
 	<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> 
 		<cfif itemTypeId IS 7><!--- Consultation --->
 			<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
+		<cfelseif itemTypeId IS 8><!---PubMed article--->
+			<i class="icon-book" style="font-size:19px; color:##0088CC"></i>
+		<cfelseif itemTypeId IS 9><!---Images--->
+			<i class="icon-picture" style="font-size:18px; color:##0088CC"></i>
 		<cfelseif itemTypeId IS 11><!--- Lists --->
 			<i class="icon-table" style="font-size:18px; color:##7A7A7A"></i>
-		<cfelseif itemTypeId IS 12><!---Typologies--->
+		<cfelseif itemTypeId IS 12><!--- Forms --->
+			<i class="icon-columns" style="font-size:18px; color:##7A7A7A"></i>
+		<cfelseif itemTypeId IS 13><!---Typologies--->
 			<i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i>
 		<cfelse>
 			<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>

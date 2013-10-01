@@ -64,7 +64,7 @@
 
 <cfset return_path = "#APPLICATION.htmlPath#/iframes2/">
 <cfset tableTypeId = 1>
-<cfset page_type = 1>
+<cfset page_type = 2>
 <cfinclude template="#APPLICATION.htmlPath#/includes/table_row_form.cfm">
 
 <!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">

@@ -42,7 +42,7 @@
 
 	<span class="divider">&nbsp;</span>
 
-	<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos<span></a>
+	<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos<span></a>
 
 	<span class="divider">&nbsp;</span>
 
@@ -136,7 +136,7 @@
 				
 				<cfif alreadySelected IS false>
 
-					<cfif ( isDefined("URL.data") AND (URL.data IS tableRows.row_id) ) OR ( selectFirst IS true AND tableRows.currentrow IS 1 AND app_version NEQ "mobile" ) >
+					<cfif ( isDefined("URL.data") AND (URL.data IS tableRows.row_id) ) OR ( selectFirst IS true AND tableRows.currentrow IS tableRows.recordCount AND app_version NEQ "mobile" ) >
 
 						<!---Esta acción solo se completa si está en la versión HTML2--->
 						<script type="text/javascript">

@@ -37,6 +37,7 @@
 		<cfset APPLICATION.modulefilesWithTables = true>
 		<cfset APPLICATION.moduleLists = true>
 		<cfset APPLICATION.moduleForms = true>
+		<cfset APPLICATION.modulePubMedComments = true>
 
 		<cfset APPLICATION.openTokApiKey = 29269902>
 		<cfset APPLICATION.openTokApiSecret = "96298660cbdaef41dda77b9e97f41f7c749a28b4">

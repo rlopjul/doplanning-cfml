@@ -6,6 +6,35 @@
 	<cfset request_component = "TableManager">
 
 
+	<!--- -------------------------------createTable-------------------------------------- --->
+	
+    <cffunction name="createTable" returntype="struct" access="public">
+    	<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+				
+		<cfset var method = "createTable">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+					
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="createTable" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Tabla creada">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
 
 	<!--- ----------------------------------- getTable -------------------------------------- --->
 
@@ -37,6 +66,35 @@
 		<cfreturn response.table>
 			
 	</cffunction>
+
+
+	<!--- ----------------------------------- getEmptyTable -------------------------------------- --->
+
+	<cffunction name="getEmptyTable" output="false" returntype="query" access="public">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getEmptyTable">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getEmptyTable" returnvariable="response">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
+			
+		</cftry>
+		
+		<cfreturn response.table>
+			
+	</cffunction>
+
 
 
 	<!--- ----------------------------------- getAreaTables ------------------------------------- --->
@@ -131,6 +189,83 @@
 	</cffunction>
 
 
+
+	<!--- -------------------------------createTable-------------------------------------- --->
+	
+    <cffunction name="createTable" returntype="struct" access="public">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="title" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
+		<cfargument name="link" type="string" required="false" default="">
+		<cfargument name="area_id" type="numeric" required="true">
+        <cfargument name="position" type="numeric" required="false">
+				
+		<cfset var method = "createTable">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+					
+			<cfinvoke component="AreaItem" method="createItem" returnvariable="response">
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="title" value="#arguments.title#">
+				<cfinvokeargument name="link" value="#arguments.link#">
+				<cfinvokeargument name="description" value="#arguments.description#">
+				<cfinvokeargument name="parent_id" value="#arguments.area_id#">
+				<cfinvokeargument name="parent_kind" value="area">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfif isDefined("arguments.position")>
+					<cfinvokeargument name="position" value="#arguments.position#">
+				</cfif>
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+	<!--- -------------------------------updateTable-------------------------------------- --->
+	
+    <cffunction name="updateTable" returntype="struct" access="public">
+    	<cfargument name="field_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="label" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
+		<cfargument name="required" type="boolean" required="false" default="false">
+        <cfargument name="default_value" type="string" required="true">
+		
+		<cfset var method = "updateTable">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+					
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="updateTable" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Campo modificado">
+			</cfif>
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
 	<!--- ----------------------------------- outputTablesList ------------------------------------- --->
 
 	<cffunction name="outputTablesList" returntype="void" output="true" access="public">
@@ -161,7 +296,7 @@
 							<cfelse>
 							widgets: ['zebra','select'],
 							</cfif>
-							sortList: [[2,0]],
+							sortList: [[2,1]],
 							headers: { 
 								1: { 
 									sorter: false 
@@ -258,11 +393,12 @@
 						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','itemIframe',event)">													
 							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
 							<td>
+							<!---
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Typologies, Forms--->
 								<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>
-							</cfif>
+							</cfif>--->
 							<cfif itemTypeId IS 11 OR itemTypeId IS 13><!---Lists, Forms--->
-								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros" class="btn btn-mini"><i class="icon-list"></i></a>
+								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
 							</cfif>
 							</td>
 							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>

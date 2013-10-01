@@ -12,53 +12,6 @@
 	<cfset component = "Item">
 	<cfset request_component = "AreaItemManager">
 	
-	
-	<!---
-	<cffunction name="selectItem" returntype="xml" access="public">
-		<cfargument name="item_id" type="numeric" required="true">
-		<cfargument name="itemTypeId" type="numeric" required="true">
-		
-		<cfset var method = "selectItem">
-		
-		<cfset var response = structNew()>
-		
-		<cftry>
-			
-			<!---<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
-			
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<#itemTypeName# id="#arguments.item_id#"/>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
-				<cfinvokeargument name="request_method" value="select#itemTypeNameU#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>--->
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getItem" returnvariable="response">
-				<cfinvokeargument name="item_id" value="#arguments.item_id#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				
-				<cfinvokeargument name="return_type" value="xml">
-			</cfinvoke>
-
-			<cfinclude template="includes/responseHandlerStruct.cfm">
-			
-			<cfcatch>
-				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn response.item>
-			
-		
-	</cffunction>--->
-
-
 	<!--- ----------------------------------- getItem -------------------------------------- --->
 
 	<!---Este método no hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Item directamente del AreaItemManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
@@ -92,6 +45,35 @@
 			
 	</cffunction>
     
+
+
+	<!--- ----------------------------------- getEmptyItem -------------------------------------- --->
+
+	<cffunction name="getEmptyItem" output="false" returntype="query" access="public">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+
+		<cfset var method = "getEmptyItem">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getEmptyItem" returnvariable="response">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
+			
+		</cftry>
+		
+		<cfreturn response.field>
+			
+	</cffunction>
+
     
 	<!--- -------------------------------createItemRemote-------------------------------------- --->
 	
@@ -132,7 +114,7 @@
 		
 			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 			
-			<cfinvoke component="AreaItem" method="createItem" returnvariable="createItemResult">
+			<cfinvoke component="AreaItem" method="createItem" returnvariable="createItemResponse">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="title" value="#arguments.title#">
 				<cfinvokeargument name="link" value="#arguments.link#">
@@ -197,11 +179,29 @@
 				</cfif>
 			</cfinvoke>
 			
-			<cfset msg = URLEncodedFormat(createItemResult.message)>
-			<!---<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&msg=#msg#&res=#createItemResult.result#" addtoken="no">--->	
-			
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#itemTypeName#=#createItemResult.item_id#&res=#createItemResult.result#&msg=#URLEncodedFormat(msg)#" addtoken="no">		
-            
+			<cfset msg = URLEncodedFormat(createItemResponse.message)>
+			<!---<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&msg=#msg#&res=#createItemResponse.result#" addtoken="no">--->	
+
+			<cfif createItemResponse.result IS true>
+
+				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 13><!---Lists, Forms--->
+
+					<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+					<cflocation url="#arguments.return_path##tableTypeName#_fields.cfm?&#tableTypeName#=#createItemResponse.item_id#&res=#createItemResponse.result#&msg=#msg#" addtoken="no">
+
+				<cfelse>
+
+					<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#itemTypeName#=#createItemResponse.item_id#&res=#createItemResponse.result#&msg=#msg#" addtoken="no">
+
+				</cfif>
+
+			<cfelse>
+
+				<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&res=#createItemResponse.result#&msg=#msg#" addtoken="no">
+				
+			</cfif>
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
@@ -543,33 +543,42 @@
 			<!---Ahora se marca que el archivo y/o la imagen se han subido--->		
 			<cfif with_attached IS true>
 				<!---Obtiene el status de la subida del archivo para comprobar que se ha subido correctamente. Si se ha completado la subida, se marca el archivo y el elemento que lo lleva adjunto como subido.--->
-				<cfinvoke component="Request" method="doRequest" returnvariable="xmlGetFileResponse">
+				<!---<cfinvoke component="Request" method="doRequest" returnvariable="xmlGetFileResponse">
 					<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
 					<cfinvokeargument name="request_method" value="get#itemTypeNameU#FileStatus">
 					<cfinvokeargument name="request_parameters" value='<file id="#file_id#"/>'>
-				</cfinvoke>
-				
-				<cfif xmlGetFileResponse.response.result.file.xmlAttributes.status EQ "ok">
+				</cfinvoke>--->
+
+				<cftry>
+
+					<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAreaItemFileStatus" returnvariable="xmlGetFileResponseContent">
+						<cfinvokeargument name="file_id" value="#file_id#">
+						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+						<cfinvokeargument name="file_type" value="file">
+					</cfinvoke>
 					
 					<!---<cfif itemTypeGender EQ "male">
-						<cfset response_message = "#itemTypeNameEs# con adjunto enviado.">
-					<cfelse>
-						<cfset response_message = "#itemTypeNameEs# con adjunto enviada.">
-					</cfif>--->
+							<cfset response_message = "#itemTypeNameEs# con adjunto enviado.">
+						<cfelse>
+							<cfset response_message = "#itemTypeNameEs# con adjunto enviada.">
+						</cfif>--->
 					<cfif itemTypeGender EQ "male">
 						<cfset response_message = "#itemTypeNameEs# insertado.">
 					<cfelse>
 						<cfset response_message = "#itemTypeNameEs# insertada.">
 					</cfif>
-				
-				<cfelse>
-					<!---IMPORTANTE: aquí da error si la sesión ha caducado--->
-					<cfset response_message = "Ha ocurrido un error al subir el archivo adjunto.">
-
-					<cfset response = {result="false", message=#response_message#}>	
-					<cfreturn response>
 					
-				</cfif>
+					<cfcatch>
+						
+						<cfset response_message = "Ha ocurrido un error al subir el archivo adjunto.">
+
+						<cfset response = {result="false", message=#response_message#}>	
+						<cfreturn response>
+					
+					</cfcatch>
+				
+				</cftry>
+
 			</cfif>
 			
 			<cfif with_image IS true>
@@ -791,31 +800,39 @@
 				
             </cfif>
             
-			<cfsavecontent variable="request_parameters">
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					#xmlResultItem#
                     <cfif with_attached IS true>
                     #xmlFileResult#
                     </cfif>
 				</cfoutput>
-			</cfsavecontent>
+			</cfsavecontent>--->
 			
             <cfif with_attached IS false>
 			
 				<!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->			
+                <!--- 
                 <cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
                     <cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
                     <cfinvokeargument name="request_method" value="update#itemTypeNameU#">
                     <cfinvokeargument name="request_parameters" value="#request_parameters#">
-                </cfinvoke>
+                </cfinvoke> --->
+
+                <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="updateItem" returnvariable="updateItemResponse">
+					<cfinvokeargument name="xmlItem" value="#xmlResultItem#"/>
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>	
+				</cfinvoke>
+
+				<cfif updateItemResponse.result IS NOT true>
+					<cfthrow message="#updateItemResponse.message#">
+				</cfif>
 				
 				<cfif itemTypeGender EQ "male">
-					<cfset msg = "#itemTypeNameEs# modificado.">
+					<cfset response_message = "#itemTypeNameEs# modificado.">
 				<cfelse>
-					<cfset msg = "#itemTypeNameEs# modificada.">
-				</cfif>
-				<cfset response_message = URLEncodedFormat(msg)>
-				
+					<cfset response_message = "#itemTypeNameEs# modificada.">
+				</cfif>				
 								
 			<cfelse><!---Hay archivo para subir--->
 					
@@ -1234,7 +1251,7 @@
 			
 			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 			
-			<cfset request_parameters = '<#itemTypeName# id="#arguments.item_id#"/>'>
+			<!---<cfset request_parameters = '<#itemTypeName# id="#arguments.item_id#"/>'>
 			<cfset request_parameters = request_parameters&'<area id="#arguments.area_id#"/>'>
 			<cfset request_parameters = request_parameters&'<tweet><content><![CDATA[#arguments.content#]]></content></tweet>'>
 			
@@ -1242,6 +1259,14 @@
 				<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
 				<cfinvokeargument name="request_method" value="post#itemTypeNameU#ToTwitter">
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			</cfinvoke>--->
+
+			<!---postItemToTwitter--->
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="postItemToTwitter">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="content" value="#arguments.content#">
 			</cfinvoke>
 			
 			<cfif itemTypeGender EQ "male">
@@ -1288,29 +1313,45 @@
 			
 				<cfset item = "#itemTypeNameEs# incorrecto.">
 				<cfset item = URLEncodedFormat(item)>
-				<cflocation url="#APPLICATION.htmlPath#/#response_page#&item=#item#" addtoken="no">
+				<cflocation url="#APPLICATION.htmlPath#/#arguments.return_page#&item=#item#" addtoken="no">
 			
 			</cfif>
 			
-			<cfset request_parameters = '<#itemTypeName# id="#arguments.item_id#"/>'>
+			<!---<cfset request_parameters = '<#itemTypeName# id="#arguments.item_id#"/>'>
 			
 			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
 				<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
 				<cfinvokeargument name="request_method" value="delete#itemTypeNameU#">
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			</cfinvoke>--->	
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="deleteItem" returnvariable="deleteItemResponse">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 			</cfinvoke>	
-			
-			<cfif itemTypeGender EQ "male">
-				<cfset msg = "#itemTypeNameEs# eliminado.">
-			<cfelse>
-				<cfset msg = "#itemTypeNameEs# eliminada.">
-			</cfif>
-			<cfset msg = URLEncodedFormat(msg)>
+
+			<cfif deleteItemResponse.result IS true>
+
+				<cfif itemTypeGender EQ "male">
+					<cfset msg = "#itemTypeNameEs# eliminado.">
+				<cfelse>
+					<cfset msg = "#itemTypeNameEs# eliminada.">
+				</cfif>
+				<cfset msg = URLEncodedFormat(msg)>
             
-            <cflocation url="#arguments.return_page#&msg=#msg#&res=1" addtoken="no">	
-			
+
+				<cflocation url="#arguments.return_page#&msg=#msg#&res=1" addtoken="no">	
+
+			<cfelse>
+
+				<cfset msg = URLEncodedFormat(deleteItemResponse.message)>
+
+				<cflocation url="#arguments.return_page#&msg=#msg#&res=0" addtoken="no">	
+				
+			</cfif>
+
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
@@ -2009,7 +2050,7 @@
 								<td><a onclick="openUrl('#itemTypeNameP#.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="link_blue">#itemsQuery.area_name#</a></td>
 							<cfelse>
 								<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-								<td style="vertical-align:middle"><span style="line-height:30px;">#itemsQuery.position#</span><div style="float:right;clear:none;"><a onclick="openUrl('area_item_position_up.cfm?item=#itemsQuery.id#&type=#itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a><div style="clear:both; height:0px;"><!-- --></div><a onclick="openUrl('area_item_position_down.cfm?item=#itemsQuery.id#&type=#itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a></div></td>
+								<td style="vertical-align:middle"><span style="line-height:30px;">#itemsQuery.position#</span><!---Opciones de ordenar anteriores<div style="float:right;clear:none;"><a onclick="openUrl('area_item_position_up.cfm?item=#itemsQuery.id#&type=#itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a><div style="clear:both; height:0px;"><!-- --></div><a onclick="openUrl('area_item_position_down.cfm?item=#itemsQuery.id#&type=#itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a></div>---></td>
 								</cfif>
 							</cfif>
 							
@@ -2410,19 +2451,19 @@
 							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
 							<td>
 								<cfif itemTypeId IS 11 OR itemTypeId IS 13><!---Lists, Forms--->
-									<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>
+									<!---<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>--->
 
-									<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros" class="btn btn-mini"><i class="icon-list"></i></a>
+									<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
 								</cfif>
 
 								<!---Attached files--->
 								<cfif itemTypeId IS 10>
-								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt"></i><span class="hidden">3</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i><span class="hidden">3</span></a>
 								<cfelseif isNumeric(itemsQuery.attached_file_id)>
-								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip" style="font-size:14px;"></i><span class="hidden">1</span></a>
 								</cfif>
 								<cfif isNumeric(itemsQuery.attached_image_id)>
-								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar imagen adjunta"><i class="icon-camera"></i><span class="hidden">2</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar imagen adjunta"><i class="icon-camera" style="font-size:13px;"></i><span class="hidden">2</span></a>
 								
 								</cfif>
 							</td>
@@ -2452,9 +2493,16 @@
 							</td>
 							
 							<cfif len(arguments.area_type) GT 0>
-							<td style="vertical-align:middle"><span style="line-height:30px;">#itemsQuery.position#</span><!---<div style="float:right;clear:none;"><a onclick="openUrl('area_item_position_up.cfm?item=#itemsQuery.id#&type=#itemsQuery.itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a><div style="clear:both; height:0px;"><!-- --></div><a onclick="openUrl('area_item_position_down.cfm?item=#itemsQuery.id#&type=#itemsQuery.itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a></div>---></td>
+								
+							<td style="vertical-align:middle"><span style="line-height:30px;">#itemsQuery.position#</span><div style="float:right;clear:none;"><cfif itemsQuery.currentRow NEQ 1>
+								<cfset up_item_id = itemsQuery.id[itemsQuery.currentRow-1]>
+								<cfset up_item_type = itemsQuery.itemTypeId[itemsQuery.currentRow-1]>
+								<a onclick="openUrl('area_item_position_up.cfm?item=#itemsQuery.id#&type=#itemTypeId#&oitem=#up_item_id#&otype=#up_item_type#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a></cfif><div style="clear:both; height:0px;"><!-- --></div><cfif itemsQuery.currentRow NEQ itemsQuery.recordCount>
+									<cfset down_item = itemsQuery.id[itemsQuery.currentRow+1]>
+									<cfset down_item_type = itemsQuery.itemTypeId[itemsQuery.currentRow+1]>
+									<a onclick="openUrl('area_item_position_down.cfm?item=#itemsQuery.id#&type=#itemTypeId#&oitem=#down_item#&otype=#down_item_type#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a>
+								</cfif></div></td>
 							</cfif>
-							
 							
 						</tr>
 					</cfloop>

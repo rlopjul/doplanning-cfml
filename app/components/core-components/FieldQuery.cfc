@@ -18,7 +18,7 @@
 		<cfset var method = "getFieldTypes">
 			
 			<cfquery name="getFieldTypesQuery" datasource="#client_dsn#">
-				SELECT field_type_id, input_type, name, mysql_type
+				SELECT field_type_id, input_type, name, max_length, mysql_type, cf_sql_type
 				FROM `#client_abb#_#fieldsTypesTable#`
 				WHERE enabled = true;
 			</cfquery>
@@ -122,25 +122,25 @@
 
 	<!---getFieldsLastPosition--->
 	
-	<cffunction name="getFieldsLastPosition" output="false" returntype="struct" access="public">
+	<cffunction name="getFieldLastPosition" output="false" returntype="struct" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
 		
-		<cfset var method = "getFieldsLastPosition">
+		<cfset var method = "getFielsLastPosition">
 		<cfset var position = 0>
 					
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 						
-				<cfquery name="fieldsPositionQuery" datasource="#client_dsn#">
+				<cfquery name="fieldPositionQuery" datasource="#client_dsn#">
 					SELECT MAX(position) AS max_position					
 					FROM `#client_abb#_#tableTypeTable#_fields` AS tables_fields
 					WHERE tables_fields.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 				
-				<cfset position = fieldsPositionQuery.max_position>
+				<cfset position = fieldPositionQuery.max_position>
 		
 		<cfreturn {position=position}>
 		

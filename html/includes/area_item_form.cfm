@@ -113,7 +113,14 @@ function onSubmitForm()
 
 	<cfset form_action = "#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=createItemRemote">
 
-	<cfset objectItem = structNew()>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getEmptyItem" returnvariable="objectItem">
+		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+	</cfinvoke>
+	
+	<cfset objectItem.title = title_default>
+
+	<!---<cfset objectItem = structNew()>
 	<cfset objectItem.title = title_default>
 	<cfset objectItem.description = "">
 	<cfset objectItem.attached_file_name = ""> 
@@ -167,7 +174,7 @@ function onSubmitForm()
 		
 		<cfset objectItem.position = lastPosition+1>
 	
-	</cfif>
+	</cfif>--->
 	
 
 <cfelse><!---MODIFY ITEM--->

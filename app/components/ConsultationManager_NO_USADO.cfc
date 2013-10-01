@@ -263,36 +263,38 @@
 	
 	<!--- ------------------------- DELETE CONSULTATION -------------------------------- --->
 	
+	<!--- 
 	<cffunction name="deleteConsultation" returntype="string" access="public">
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "deleteConsultation">
-		
-		<cfset var consultation_id = "">
+			<cfargument name="request" type="string" required="yes">
 			
-		<cftry>
+			<cfset var method = "deleteConsultation">
 			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset consultation_id = xmlRequest.request.parameters.consultation.xmlAttributes.id> 
-			
-			<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="item_id" value="#consultation_id#">
-				<cfinvokeargument name="itemTypeId" value="#consultationTypeId#">
-			</cfinvoke>
-
-			<cfinclude template="includes/functionEnd.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn xmlResponse>
+			<cfset var consultation_id = "">
 				
-	</cffunction>
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfset consultation_id = xmlRequest.request.parameters.consultation.xmlAttributes.id> 
+				
+				<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="item_id" value="#consultation_id#">
+					<cfinvokeargument name="itemTypeId" value="#consultationTypeId#">
+				</cfinvoke>
+	
+				<cfinclude template="includes/functionEnd.cfm">
+				
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>										
+				
+			</cftry>
+			
+			<cfreturn xmlResponse>
+					
+		</cffunction> --->
+	
 	<!--- ------------------------------------------------------------------------ --->
 	
 	
@@ -385,38 +387,40 @@
 	
 	<!---Devuelve el campo status del archivo en la base de datos, que representa el estado de la subida del archivo al servidor. Si el archivo tiene el status ok, devuelve sus datos--->
 	
+	<!--- 
 	<cffunction name="getConsultationFileStatus" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "getConsultationFileStatus">
-		
-		<cfset var file_id = "">
-					
-		<cftry>
+			<cfargument name="request" type="string" required="yes">
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfset var method = "getConsultationFileStatus">
 			
-			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
+			<cfset var file_id = "">
+						
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
+				
+				
+				<cfinvoke component="FileManager" method="getAreaItemFileStatus" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="itemTypeId" value="#consultationTypeId#">
+					<cfinvokeargument name="file_type" value="file">
+				</cfinvoke>
+				
+				<cfinclude template="includes/functionEndNoLog.cfm">
 			
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>										
+				
+			</cftry>
 			
-			<cfinvoke component="FileManager" method="getAreaItemFileStatus" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="file_id" value="#file_id#">
-				<cfinvokeargument name="itemTypeId" value="#consultationTypeId#">
-				<cfinvokeargument name="file_type" value="file">
-			</cfinvoke>
+			<cfreturn xmlResponse>		
 			
-			<cfinclude template="includes/functionEndNoLog.cfm">
-		
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn xmlResponse>		
-		
-	</cffunction>
+		</cffunction> --->
+	
 	
 	
 	
@@ -424,38 +428,40 @@
 	
 	<!---Devuelve el campo status del archivo en la base de datos, que representa el estado de la subida del archivo al servidor. Si el archivo tiene el status ok, devuelve sus datos--->
 	
+	<!--- 
 	<cffunction name="getConsultationImageStatus" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "getConsultationImageStatus">
-		
-		<cfset var file_id = "">
-					
-		<cftry>
+			<cfargument name="request" type="string" required="yes">
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfset var method = "getConsultationImageStatus">
 			
-			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
+			<cfset var file_id = "">
+						
+			<cftry>
+				
+				<cfinclude template="includes/functionStart.cfm">
+				
+				<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
+				
+				
+				<cfinvoke component="FileManager" method="getAreaItemFileStatus" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="itemTypeId" value="#consultationTypeId#">
+					<cfinvokeargument name="file_type" value="image">
+				</cfinvoke>
+				
+				<cfinclude template="includes/functionEndNoLog.cfm">
 			
+				<cfcatch>
+					<cfset xmlResponseContent = arguments.request>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>										
+				
+			</cftry>
 			
-			<cfinvoke component="FileManager" method="getAreaItemFileStatus" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="file_id" value="#file_id#">
-				<cfinvokeargument name="itemTypeId" value="#consultationTypeId#">
-				<cfinvokeargument name="file_type" value="image">
-			</cfinvoke>
+			<cfreturn xmlResponse>		
 			
-			<cfinclude template="includes/functionEndNoLog.cfm">
-		
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn xmlResponse>		
-		
-	</cffunction>
+		</cffunction> --->
+	
 	
 
 </cfcomponent>

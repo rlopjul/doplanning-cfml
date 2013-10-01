@@ -90,18 +90,29 @@
    	</cfcase> 
 
 
-   	<!---
-   	<cfcase value="8"><!---images--->
+   	<cfcase value="8"><!---pubmed article--->
+
+		<cfset itemTypeName = "pubmed">
+		<cfset itemTypeNameP = "pubmeds">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Comentario de artículo PubMed">
+
+		<cfset itemTypeGender = "female">
+	
+   	</cfcase> 
+	
+	<cfcase value="9"><!---images--->
 
 		<cfset itemTypeName = "image">
 		<cfset itemTypeNameP = "images">
 		<cfset itemTypeTable = itemTypeNameP>
 		
-		<cfset itemTypeNameEs = "Imagen">
+		<cfset itemTypeNameEs = "Image">
 
 		<cfset itemTypeGender = "female">
 	
-   	</cfcase>---> 
+   	</cfcase> 
 
 
    	<cfcase value="11"><!---lists--->
@@ -110,25 +121,15 @@
 		<cfset itemTypeNameP = "lists">
 		<cfset itemTypeTable = itemTypeNameP>
 		
-		<cfset itemTypeNameEs = "Listas">
+		<cfset itemTypeNameEs = "Lista">
 
 		<cfset itemTypeGender = "female">
+
+		<cfset tableTypeId = 1>
 	
    	</cfcase> 
 
-   	<cfcase value="12"><!---typologies (files)--->
-
-		<cfset itemTypeName = "typology">
-		<cfset itemTypeNameP = "typologies">
-		<cfset itemTypeTable = itemTypeNameP>
-		
-		<cfset itemTypeNameEs = "Tipología">
-
-		<cfset itemTypeGender = "female">
-	
-   	</cfcase>
-
-   	<cfcase value="13"><!---forms--->
+   	<cfcase value="12"><!---forms--->
 
 		<cfset itemTypeName = "form">
 		<cfset itemTypeNameP = "forms">
@@ -137,6 +138,22 @@
 		<cfset itemTypeNameEs = "Formulario">
 
 		<cfset itemTypeGender = "male">
+
+		<cfset tableTypeId = 2>
+	
+   	</cfcase>
+
+   	 <cfcase value="13"><!---typologies (files)--->
+
+		<cfset itemTypeName = "typology">
+		<cfset itemTypeNameP = "typologies">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Tipología">
+
+		<cfset itemTypeGender = "female">
+
+		<cfset tableTypeId = 3>
 	
    	</cfcase>
 

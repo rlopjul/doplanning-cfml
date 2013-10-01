@@ -5,6 +5,68 @@
 	<cfset component = "TableManager">
 
 
+	<!--- ------------------------------------- createTableInDatabase -------------------------------------  --->
+	
+	<cffunction name="createTableInDatabase" output="false" access="package" returntype="void">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "createTableInDatabase">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfquery name="createTable" datasource="#client_dsn#">
+				CREATE TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` (
+				  `row_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+				  `insert_user_id` int(11) NOT NULL,
+				  `last_update_user_id` int(11) DEFAULT NULL,
+				  `creation_date` datetime NOT NULL,
+				  `last_update_date` datetime DEFAULT NULL,
+				  `position` int(10) unsigned NOT NULL,
+				  PRIMARY KEY (`row_id`) USING BTREE,
+				  KEY `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_1` (`insert_user_id`),
+				  KEY `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` (`last_update_user_id`),
+				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` FOREIGN KEY (`last_update_user_id`) REFERENCES `#client_abb#_users` (`id`),
+				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_1` FOREIGN KEY (`insert_user_id`) REFERENCES `#client_abb#_users` (`id`)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			</cfquery>
+			
+	</cffunction>
+
+
+
+	<!--- ------------------------------------ deleteTableInDatabase -----------------------------------  --->
+		
+	<cffunction name="deleteTableInDatabase" output="false" access="package" returntype="void">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "deleteTableFields">
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="RowManager" method="deleteTableRowsInDatabase">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+
+			<cfinvoke component="FieldManager" method="deleteTableFields">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+
+			<cfquery name="deleteTable" datasource="#client_dsn#">
+				DROP TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
+			</cfquery>	
+			
+	</cffunction>
+
+
+
 	<!--- ------------------------------------- getTable -------------------------------------  --->
 	
 	<cffunction name="getTable" output="false" access="public" returntype="struct">
@@ -48,6 +110,42 @@
 
 			</cfif>
 		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+
+	<!--- ------------------------------------- getEmptyTable -------------------------------------  --->
+	
+	<cffunction name="getEmptyTable" output="false" access="public" returntype="struct">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getEmptyTable">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+			
+			<cfquery name="getTableQuery" datasource="#client_dsn#">
+				SELECT *
+				FROM #client_abb#_#tableTypeTable#
+				WHERE table_id = -1;
+			</cfquery>
+
+			<cfset response = {result=true, field=#getTableQuery#}>
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
