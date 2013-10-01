@@ -223,38 +223,49 @@
 			</select>
 		</form>--->
 		
-		<cfset copy_query_string = "sourceItemTypeId=#itemTypeId#&#itemTypeName#=#objectItem.id#">
-		<div class="btn-group">
-			<a href="##" class="btn btn-small dropdown-toggle" data-toggle="dropdown" title="Copiar a otras áreas"> 
-			<i class="icon-copy"></i> <span lang="es">Copiar como</span> <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<!---<cfif itemTypeId IS NOT 1>--->
-				<li><a href="message_copy.cfm?#copy_query_string#" lang="es">Mensaje</a></li>
-				<!---</cfif>--->
-				
-				<cfif APPLICATION.moduleWeb EQ true>
-					<!---<cfif itemTypeId IS NOT 2>--->
-					<li><a href="entry_copy.cfm?#copy_query_string#" lang="es">Elemento de contenido web</a></li>
+		<cfif itemTypeId LT 10>
+			
+			<cfset copy_query_string = "sourceItemTypeId=#itemTypeId#&#itemTypeName#=#objectItem.id#">
+			<div class="btn-group">
+				<a href="##" class="btn btn-small dropdown-toggle" data-toggle="dropdown" title="Copiar a otras áreas"> 
+				<i class="icon-copy"></i> <span lang="es">Copiar como</span> <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<!---<cfif itemTypeId IS NOT 1>--->
+					<li><a href="message_copy.cfm?#copy_query_string#" lang="es">Mensaje</a></li>
 					<!---</cfif>--->
-					<cfif APPLICATION.identifier EQ "vpnet"><!---itemTypeId IS NOT 3 AND --->
-					<li><a href="link_copy.cfm?#copy_query_string#" lang="es">Enlace</a></li>
+					
+					<cfif APPLICATION.moduleWeb EQ true>
+						<!---<cfif itemTypeId IS NOT 2>--->
+						<li><a href="entry_copy.cfm?#copy_query_string#" lang="es">Elemento de contenido web</a></li>
+						<!---</cfif>--->
+						<cfif APPLICATION.identifier EQ "vpnet"><!---itemTypeId IS NOT 3 AND --->
+						<li><a href="link_copy.cfm?#copy_query_string#" lang="es">Enlace</a></li>
+						</cfif>
+						<!---<cfif itemTypeId IS NOT 4>--->
+						<li><a href="news_copy.cfm?#copy_query_string#" lang="es">Noticia</a></li>
+						<!---</cfif>--->
 					</cfif>
-					<!---<cfif itemTypeId IS NOT 4>--->
-					<li><a href="news_copy.cfm?#copy_query_string#" lang="es">Noticia</a></li>
+					
+					<!---<cfif itemTypeId IS NOT 5>--->
+						<li><a href="event_copy.cfm?#copy_query_string#" lang="es">Evento</a></li>
 					<!---</cfif>--->
-				</cfif>
-				
-				<!---<cfif itemTypeId IS NOT 5>--->
-					<li><a href="event_copy.cfm?#copy_query_string#" lang="es">Evento</a></li>
-				<!---</cfif>--->
-				<cfif APPLICATION.identifier EQ "dp"><!---AND itemTypeId IS NOT 6--->
-				<li><a href="task_copy.cfm?#copy_query_string#" lang="es">Tarea</a></li>
-				</cfif>
-				<cfif APPLICATION.moduleConsultations IS true>
-				<li><a href="consultation_copy.cfm?#copy_query_string#" lang="es">Interconsulta</a></li>
-				</cfif>
-			</ul>
-		</div>
+					<cfif APPLICATION.identifier EQ "dp"><!---AND itemTypeId IS NOT 6--->
+					<li><a href="task_copy.cfm?#copy_query_string#" lang="es">Tarea</a></li>
+					</cfif>
+					<cfif APPLICATION.moduleConsultations IS true>
+					<li><a href="consultation_copy.cfm?#copy_query_string#" lang="es">Interconsulta</a></li>
+					</cfif>
+				</ul>
+			</div>
+
+		<cfelseif itemTypeId IS 11 OR itemTypeId IS 13><!---Lists OR Forms--->
+
+			<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
+
+			<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos<span></a>
+
+		</cfif>
+
 		
 		
 		<cfif APPLICATION.moduleWeb EQ true AND APPLICATION.moduleTwitter IS true AND area_type EQ "web">

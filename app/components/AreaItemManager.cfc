@@ -507,6 +507,7 @@
 		<cfset var parent_kind = "">
 		<cfset var parent_id = "">
 		<cfset var area_id = "">
+		<cfset var area_type = "">
 
 		<cftry>
 
@@ -537,10 +538,16 @@
 				<cfset area_id = getItemParentResult.parent_area_id>
 				
 			</cfif>
-			
+
 			<cfinclude template="includes/checkAreaAccess.cfm">
 			
 			<cfset objectItem.area_id = area_id><!---Esta variable se utiliza despues para enviar las ALERTAS--->
+
+			<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">				
+				<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+			</cfinvoke>
+		
+			<cfset area_type = areaTypeResult.areaType>
 			
 			<cfif itemTypeId IS 7 AND objectItem.parent_kind NEQ "area"><!---Consultations--->
 				
@@ -654,7 +661,7 @@
 					, last_update_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">
 					</cfif>
 					<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-					, position = <cfqueryparam value="#objectItem.position#" cfsqltype="cf_sql_integer">
+					<!---, position = <cfqueryparam value="#objectItem.position#" cfsqltype="cf_sql_integer"> --->
 						<cfif itemTypeId IS 2><!---Entries--->
 						, display_type_id = <cfqueryparam value="#objectItem.display_type_id#" cfsqltype="cf_sql_integer">
 						</cfif>
@@ -688,10 +695,41 @@
 				<cfquery name="getLastInsertId" datasource="#client_dsn#">
 					SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_#itemTypeTable#;
 				</cfquery>
-			
+
+				<cfset objectItem.id = getLastInsertId.last_insert_id>
+
+				<cfif len(arguments.area_type) IS NOT 0><!---IS WEB---><!---El orden sólo se utiliza en estas áreas--->
+				<!---<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>--->
+				
+					<!---getItemLastPosition--->
+					<cfinvoke component="AreaItemManager" method="getAreaItemsLastPosition" returnvariable="itemLastPosition">
+						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+					</cfinvoke>
+					
+					<cfset objectItem.position = itemLastPosition+1>
+
+					<cfinvoke component="AreaItemManager" method="insertAreaItemPosition">
+						<cfinvokeargument name="item_id" value="#objectItem.parent_id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+						<cfinvokeargument name="position" value="#objectItem.position#">
+					</cfinvoke>
+					
+				<!---</cfif>--->
+				</cfif>
+
+				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12><!---Lists, Forms--->
+					
+					<cfinvoke component="TableManager" method="createTableInDatabase">
+						<cfinvokeargument name="table_id" value="#objectItem.id#">
+						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					</cfinvoke>
+
+				</cfif>
+
 			</cftransaction>
 			
-			<cfset objectItem.id = getLastInsertId.last_insert_id>
+			
 			
 			<cfif itemTypeId IS NOT 4>
 				<cfset objectItem.creation_date = stringCurrentDate>
@@ -772,6 +810,12 @@
 				<cfinvokeargument name="xmlItem" value="#xmlItem#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 			</cfinvoke>
+
+			<cfif createItemResponse.result IS false>
+				
+				<cfreturn createItemResponse>
+
+			</cfif>
 			
 			<!---<cfinvoke component="FileManager" method="createFile" returnvariable="resultFile">
 				<cfinvokeargument name="request" value="#xmlRequest#">
@@ -1008,7 +1052,7 @@
 				</cfif>
 				, last_update_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">
 				<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-				, position = <cfqueryparam value="#objectItem.position#" cfsqltype="cf_sql_integer">
+				<!---, position = <cfqueryparam value="#objectItem.position#" cfsqltype="cf_sql_integer">--->
 					<cfif itemTypeId IS 2><!---Entries--->
 					, display_type_id = <cfqueryparam value="#objectItem.display_type_id#" cfsqltype="cf_sql_integer">
 					</cfif>
@@ -1500,13 +1544,93 @@
 		<cfreturn response>
 		
 	</cffunction>
-	<!---  ------------------------------------------------------------------------ --->
+	<!---  -------------------------------------------------------------------------------- --->
+
+
+	<!--- ----------------------------------- getEmptyItem ----------------------------------  --->
 	
+	<cffunction name="getEmptyItem" output="false" access="public" returntype="struct">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+
+		<cfset var method = "getEmptyItem">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+			
+			<!---<cfquery name="getEmptyItem" datasource="#client_dsn#">
+				SELECT *
+				FROM #client_abb#_#tableTypeTable#_items
+				WHERE item_id = -1;
+			</cfquery>--->
+
+			<cfset objectItem = structNew()>
+			<cfset objectItem.title = "">
+			<cfset objectItem.description = "">
+			<cfset objectItem.attached_file_name = ""> 
+			<cfset objectItem.attached_image_name = "">
+			
+			<cfset objectItem.display_type_id = "">
+			<cfset objectItem.iframe_url = "">
+			<cfset objectItem.iframe_display_type_id = 1>
+			
+			<cfif itemTypeId IS 3>
+				<cfset objectItem.link = "http://">
+			<cfelse>
+				<cfset objectItem.link = "">
+			</cfif>
+			
+			<cfif itemTypeId IS 4><!---News--->
+				<cfset cur_date = DateFormat(now(), "DD-MM-YYYY")>
+				<cfset objectItem.creation_date = cur_date>
+			</cfif>
+			
+			<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+				<cfset cur_date = DateFormat(now(), "DD-MM-YYYY")>
+				
+				<cfset objectItem.start_date = cur_date>
+				<cfset objectItem.end_date = cur_date>
+				
+				<cfif itemTypeId IS 5>
+					<cfset objectItem.start_time = "00:00">
+					<cfset objectItem.end_time = "00:00">
+					<cfset objectItem.place = "">
+				<cfelse>
+					<cfset objectItem.recipient_user = "">
+					<cfset objectItem.recipient_user_full_name = "">
+					<cfset objectItem.done = "">
+					<cfset objectItem.estimated_value = 0>
+					<cfset objectItem.real_value = 0>
+				</cfif>
+		 	</cfif>
+			
+			<cfif itemTypeId IS 7><!---Consultation--->
+				<cfset objectItem.identifier = "">
+			</cfif>
+			
+			<cfset response = {result=true, item=#objectItem#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+	<!---  -------------------------------------------------------------------------------- --->
+
 	
 	
 	<!---  ---------------------- getAreaItemsLastPosition -------------------------------- --->
 	
-	<cffunction name="getAreaItemsLastPosition" returntype="numeric" access="public">
+	<cffunction name="getAreaItemsLastPosition" returntype="numeric" access="package">
 		<cfargument name="area_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		
@@ -1532,10 +1656,141 @@
 	<!---  ------------------------------------------------------------------------ --->
 	
 	
+	<!---  ---------------------- changeAreaItemPosition -------------------------------- --->
+
+	<cffunction name="insertAreaItemPosition" returntype="void" access="package">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="position" type="numeric" required="true">
+		
+		<cfset var method = "insertAreaItemPosition">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+						
+			<cfquery name="insertAreaItemPosition" datasource="#client_dsn#">		
+				INSERT INTO #client_abb#_items_position
+				SET item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">,
+				item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">,
+				area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
+				position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+						
+		
+	</cffunction>
+
 	
 	<!---  ---------------------- changeAreaItemPosition -------------------------------- --->
-	
+
 	<cffunction name="changeAreaItemPosition" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="yes">
+		<cfargument name="itemTypeId" type="numeric" required="yes">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="other_itemTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="action" type="string" required="yes"><!---increase/decrease--->
+		
+		<cfset var method = "changeAreaItemPosition">
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+			
+			<cfquery name="getItem" datasource="#client_dsn#">		
+				SELECT area_id, position
+				FROM #client_abb#_#itemTypeTable# AS items
+				LEFT JOIN #client_abb#_items_position AS items_position
+				ON items.id = items_position.item_id AND items_position.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+				AND items_position.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				WHERE items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;			
+			</cfquery>
+			
+			<cfif getItem.recordCount GT 0>
+				
+				<cfset area_id = getItem.area_id>
+			
+				<!---checkAreaAccess--->
+				<cfinclude template="includes/checkAreaAccess.cfm">
+				
+				<!---<cfquery name="getOtherItem" datasource="#client_dsn#">		
+					SELECT id, position 
+					FROM #client_abb#_#itemTypeTable# 
+					WHERE
+					area_id = <cfqueryparam value="#getItem.area_id#" cfsqltype="cf_sql_integer">
+					AND 
+					<cfif arguments.action IS "increase">
+					position < <cfqueryparam value="#getItem.position#" cfsqltype="cf_sql_integer"> 
+					ORDER BY position DESC
+					<cfelse>
+					position > <cfqueryparam value="#getItem.position#" cfsqltype="cf_sql_integer"> 
+					ORDER BY position ASC
+					</cfif>
+					LIMIT 1;			
+				</cfquery>--->
+
+				<cfquery name="getOtherItem" datasource="#client_dsn#">		
+					SELECT position, area_id
+					FROM #client_abb#_#itemTypeTable# AS items
+					LEFT JOIN #client_abb#_items_position AS items_position
+					ON items.id = items_position.item_id AND items_position.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+					AND items_position.area_id =  <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					WHERE items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+			
+					
+				<cfif getOtherItem.recordCount GT 0>
+					
+					<cftransaction>
+						
+						<cfquery name="updateOtherItemQuery" datasource="#client_dsn#">		
+							UPDATE #client_abb#_items_position
+							SET position = <cfqueryparam value="#getItem.position#" cfsqltype="cf_sql_integer">
+							WHERE id = <cfqueryparam value="#getOtherItem.id#" cfsqltype="cf_sql_integer">
+							AND item_type_id = <cfqueryparam value="#arguments.other_itemTypeId#" cfsqltype="cf_sql_integer">
+							AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+						
+						<cfquery name="updateItemQuery" datasource="#client_dsn#">		
+							UPDATE #client_abb#_items_position
+							SET position = <cfqueryparam value="#getOtherItem.position#" cfsqltype="cf_sql_integer">
+							WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+							AND item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+							AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;	
+						</cfquery>
+					
+					</cftransaction>
+					
+				<cfelse>
+				
+					<cfset response = {result=false, message="Error, no se ha encontrado el elemento por el que hay que cambiar el orden"}>
+					
+					<cfreturn response>
+					
+				</cfif>
+				
+				<cfset response = {result=true, area_id=getItem.area_id}>
+			
+			<cfelse>
+			
+				<cfset response = {result=false, message="Error, no se ha encontrado el elemento"}>
+			
+			</cfif>
+			
+		<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+	
+	<!---<cffunction name="changeAreaItemPosition" returntype="struct" access="public">
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="action" type="string" required="yes"><!---increase/decrease--->
@@ -1544,7 +1799,9 @@
 		<cfset var response = structNew()>
 		
 		<cfset var area_id = "">
-		
+
+		<cftry>
+			
 			<cfinclude template="includes/functionStart.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -1605,17 +1862,24 @@
 					
 				</cfif>
 				
-				<cfset response = {result="true", area_id=getItem.area_id}>
+				<cfset response = {result=true, area_id=getItem.area_id}>
 			
 			<cfelse>
 			
-				<cfset response = {result="false", message="Error, no se ha encontrado el elemento"}>
+				<cfset response = {result=false, message="Error, no se ha encontrado el elemento"}>
 			
 			</cfif>
 			
-			<cfreturn response>
+		<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
 		
-	</cffunction>
+	</cffunction>--->
 	<!---  ------------------------------------------------------------------------ --->
 	
 	
@@ -1849,15 +2113,19 @@
 	
 	<!--- ----------------------- DELETE ITEM -------------------------------- --->
 	
-	<cffunction name="deleteItem" returntype="string" access="public">
-		<cfargument name="item_id" type="string" required="yes">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
+	<cffunction name="deleteItem" output="false" access="public" returntype="struct">
+		<cfargument name="item_id" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
 		
 		<cfset var method = "deleteItem">
 		
+		<cfset var response = structNew()>
+
 		<cfset var area_id = "">
+
+		<cftry>
 						
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 		
@@ -1865,7 +2133,7 @@
 				SELECT id,parent_kind,parent_id,attached_file_id,area_id,user_in_charge
 				<cfif arguments.itemTypeId IS NOT 1>,attached_image_id</cfif>
 				<cfif arguments.itemTypeId IS 7>,state</cfif>
-				FROM #client_abb#_#itemTypeTable#
+				FROM `#client_abb#_#itemTypeTable#`
 				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;		
 			</cfquery>
 			
@@ -1890,7 +2158,15 @@
 					<!---Los administradores sí pueden borrar las interconsultas cuando borran un área--->
 					<cfinclude template="includes/checkAreaAdminAccess.cfm">
 				</cfif>
-				
+
+				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---List, Forms, Typologies--->
+
+					<!---checkAreaResponsibleAccess--->
+					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+						<cfinvokeargument name="area_id" value="#area_id#">
+					</cfinvoke>
+
+				</cfif>				
 					
 				<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 					<cfinvokeargument name="item_id" value="#arguments.item_id#">
@@ -1899,6 +2175,42 @@
 				</cfinvoke>
 				
 				<cfset objectItem = getItemResponse.item>
+					
+				<cftransaction>
+
+					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---List, Forms, Typologies--->
+						
+						<cfinvoke component="TableManager" method="deleteTableInDatabase">
+							<cfinvokeargument name="table_id" value="#arguments.item_id#">
+							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+						</cfinvoke>
+
+					</cfif>
+					
+					<!--- CHANGE SUB ITEMS  --->
+					<!---Ya no se borran los submensajes de un mensaje, lo que se hace es que se ponen como hijos del nivel superior--->
+					<cfquery name="changeSubItemsQuery" datasource="#client_dsn#">
+						UPDATE #client_abb#_#itemTypeTable#
+						SET parent_id = #getItemQuery.parent_id#, 
+						parent_kind = <cfqueryparam value="#getItemQuery.parent_kind#" cfsqltype="cf_sql_varchar">			
+						WHERE parent_id = <cfqueryparam value="#getItemQuery.id#" cfsqltype="cf_sql_integer"> 
+						AND parent_kind = <cfqueryparam value="item" cfsqltype="cf_sql_varchar">;
+					</cfquery>
+
+					<!---DELETE ITEM POSITION--->
+					<cfquery name="deleteItemPosition" datasource="#client_dsn#">
+						DELETE FROM #client_abb#_items_position
+						WHERE item_id = <cfqueryparam value="#getItemQuery.id#" cfsqltype="cf_sql_integer">
+						AND item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+					
+					<!---DELETE ITEM--->
+					<cfquery name="deleteItemQuery" datasource="#client_dsn#">	
+						DELETE FROM #client_abb#_#itemTypeTable#
+						WHERE id = <cfqueryparam value="#getItemQuery.id#" cfsqltype="cf_sql_integer">;
+					</cfquery>										
+				
+				</cftransaction>
 
 				<!---Alert--->
 				<cfinvoke component="AlertManager" method="newAreaItem">
@@ -1907,29 +2219,6 @@
 					<cfinvokeargument name="action" value="delete">
 				</cfinvoke>
 					
-							
-				<cftransaction>
-					
-					<!--- CHANGE SUB ITEMS  --->
-					<cfquery name="changeSubItemsQuery" datasource="#client_dsn#">
-						UPDATE #client_abb#_#itemTypeTable#
-						SET parent_id = #getItemQuery.parent_id#, 
-						parent_kind = <cfqueryparam value="#getItemQuery.parent_kind#" cfsqltype="cf_sql_varchar">			
-						WHERE parent_id = <cfqueryparam value="#getItemQuery.id#" cfsqltype="cf_sql_integer"> 
-						AND parent_kind = <cfqueryparam value="item" cfsqltype="cf_sql_varchar">;
-					</cfquery>
-				
-					<cfquery name="deleteItemQuery" datasource="#client_dsn#">	
-						DELETE FROM #client_abb#_#itemTypeTable#
-						WHERE id = <cfqueryparam value="#getItemQuery.id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
-					
-					<!--- DELETE SUB ITEMS  --->
-					<!---Ya no se borran los submensajes de un mensaje, lo que se hace es que se ponen como hijos del nivel superior--->					
-					
-				
-				</cftransaction>
-				
 					
 				<!---DELETE ATTACHED_FILE FILE--->
 				<cfif getItemQuery.attached_file_id NEQ "NULL" AND getItemQuery.attached_file_id NEQ "" AND getItemQuery.attached_file_id NEQ "-1">
@@ -1989,8 +2278,9 @@
 					
 				</cfif>
 
-				
-				<cfset xmlResponseContent = '<#itemTypeName# id="#arguments.item_id#"/>'>
+				<!---<cfset xmlResponseContent = '<#itemTypeName# id="#arguments.item_id#"/>'>--->
+
+				<cfset response = {result=true, item_id=#arguments.item_id#}>
 				
 			<cfelse><!---Item does not exist--->
 			
@@ -2001,7 +2291,14 @@
 			</cfif>	
 			
 						
-		<cfreturn xmlResponseContent>
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
 				
 	</cffunction>
 	<!--- ----------------------------------------------------------------------- --->
