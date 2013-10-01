@@ -13,7 +13,7 @@
 	<cfinvokeargument name="row_id" value="#row_id#"/>
 </cfinvoke>
 
-<cfset row = getRowResponse.rows>
+<cfset row = getRowResponse.row>
 <cfset table = getRowResponse.table>
 <cfset area_id = table.area_id>
 
@@ -28,22 +28,33 @@
 </cfif>--->
 
 <cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
-	<cfset url_return_path = "&return_page="&URLEncodedFormat("#return_path##URL.return_page#")>
+	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##URL.return_page#")>
 <cfelse>
-	<cfset url_return_path = "&return_page="&URLEncodedFormat("#return_path##itemTypeNameP#.cfm?area=#area_id#")>
+	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##itemTypeNameP#.cfm?area=#area_id#")>
 </cfif>
+
+<script type="text/javascript">
+
+	function confirmDeleteRow() {
+	
+		var message_delete = "Si ELIMINA el registro, se borrarán definitivamente todos los contenidos que almacena. ¿Seguro que desea eliminar el registro?";
+		return confirm(message_delete);
+	}
+
+</script>
+
 
 <cfoutput>
 
-<div class="div_message_page_title">#table.title#</div>
+<div class="div_message_page_title">Registro #row.row_id#</div>
 <div class="div_separator"><!-- --></div>
 
 
 <div class="div_elements_menu"><!---div_elements_menu--->
 	
-	<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#" class="btn btn-small btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+	<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-small btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 	
-	<a href="#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowRemote&#tableTypeName#=#table_id#&row_id=#row_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteField();" title="Eliminar registro" class="btn btn-danger btn-small"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+	<a href="#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowRemote&table_id=#table_id#&row_id=#row_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteRow();" title="Eliminar registro" class="btn btn-danger btn-small"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 
 	<a href="#APPLICATION.htmlPath#/#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 

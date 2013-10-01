@@ -5,35 +5,17 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/table_field_form_query.cfm">
 
-<!---<cfif page_type IS 1>
-	<cfset form_action = "#APPLICATION.htmlComponentsPath#/Field.cfc?method=createFieldRemote">
-	<!---<cfset return_page = "#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">--->
-<cfelse>
-	<cfset form_action = "#APPLICATION.htmlComponentsPath#/Field.cfc?method=updateFieldRemote">
-	<!---<cfset return_page = "#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">--->
-</cfif>
-<cfif app_version EQ "mobile">
-	<cfset return_path = "#APPLICATION.htmlPath#/#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">
-<cfelse>
-	<cfset return_path = "#APPLICATION.htmlPath#/iframes2/#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">
-</cfif>--->
-
 <cfset return_page = "#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">
 
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
-
-<!---<cfset read_only = false>
-<cfif read_only IS true>
-	<cfset passthrough = 'readonly="readonly"'>
-<cfelse>
-	<cfset passthrough = "">
-</cfif>--->
 
 <!---Table fields types--->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Field" method="getFieldTypes" returnvariable="typesResult">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
 <cfset fieldTypes = typesResult.fieldTypes>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <script type="text/javascript">
 
@@ -51,8 +33,6 @@
 		return true;
 	}
 </script>
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <div class="contenedor_fondo_blanco">
 <cfoutput>

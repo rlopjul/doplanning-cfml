@@ -122,7 +122,7 @@
 			
 				<cfquery name="areaItemsQuery" datasource="#client_dsn#">
 					SELECT <cfif isDefined("arguments.limit")>SQL_CALC_FOUND_ROWS</cfif>
-					items.id, items.title, items.user_in_charge 
+					items.id, items.title, items.user_in_charge, items_position.position 
 					<cfif arguments.parse_dates IS true>
 						, DATE_FORMAT(items.creation_date, '#datetime_format#') AS creation_date 
 					<cfelse>
@@ -178,6 +178,11 @@
 					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5>
 						INNER JOIN #client_abb#_iframes_display_types AS iframes_display_types ON items.iframe_display_type_id = iframes_display_types.iframe_display_type_id
 					</cfif>
+					<cfif isDefined("arguments.area_id")>
+					LEFT JOIN #client_abb#_items_position AS items_position
+					ON items.id = items_position.item_id AND items_position.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+					AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					</cfif>
 					WHERE  
 					<cfif isDefined("arguments.areas_ids")>
 					items.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
@@ -221,13 +226,18 @@
 					</cfif>
 
 					
+					<!--- Forma anterior de ordenar elementos
 					<cfif (arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 3) AND NOT isDefined("arguments.areas_ids")><!---Entries, Links--->
 					ORDER BY items.position ASC, items.creation_date ASC
 					<cfelseif arguments.itemTypeId IS 4 AND NOT isDefined("arguments.areas_ids")><!---News--->
 					ORDER BY items.position DESC
+					<cfelse>--->
+					<cfif isDefined("arguments.area_id")>
+						ORDER BY items_position.position DESC, items.creation_date DESC
 					<cfelse>
-					ORDER BY items.creation_date DESC				
-					</cfif>
+						ORDER BY items.creation_date DESC		
+					</cfif>		
+					<!---</cfif>--->
 					
 					<cfif isDefined("arguments.limit")>
 					LIMIT <cfif isDefined("arguments.offset")>#arguments.offset#, </cfif>#arguments.limit#
@@ -364,66 +374,86 @@
 			<cfset commonColums = "id, title, creation_date, description, user_in_charge, attached_file_id, area_id"><!---attached_file_name,--->
 								
 			<cfquery name="areaItemsQuery" datasource="#client_dsn#">
-				SELECT items.*, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
+				SELECT items.*, items_position.position, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				FROM (
 				<cfif len(arguments.area_type) IS 0><!---IS NOT WEB--->
-					( SELECT #commonColums#, NULL AS attached_image_id, NULL AS position, NULL AS done, 1 AS itemTypeId
+					( SELECT #commonColums#, NULL AS attached_image_id, <!--- NULL AS position, ---> NULL AS done, 1 AS itemTypeId
 					FROM #client_abb#_messages AS messages 
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					<cfif APPLICATION.moduleConsultations IS true>
 					UNION ALL
-					( SELECT #commonColums#, attached_image_id, NULL AS position, NULL AS done, 7 AS itemTypeId
+					( SELECT #commonColums#, attached_image_id, <!--- NULL AS position, ---> NULL AS done, 7 AS itemTypeId
 					FROM #client_abb#_consultations AS consultations
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					</cfif>
 				<cfelse><!---WEB--->
-					( SELECT #commonColums#, attached_image_id, position, NULL AS done, 2 AS itemTypeId
+					( SELECT #commonColums#, attached_image_id, <!--- position, ---> NULL AS done, 2 AS itemTypeId
 					FROM #client_abb#_entries AS entries
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					<cfif APPLICATION.identifier EQ "vpnet">
 					UNION ALL
-					( SELECT #commonColums#, attached_image_id, position, NULL AS done, 3 AS itemTypeId
+					( SELECT #commonColums#, attached_image_id, <!--- position, ---> NULL AS done, 3 AS itemTypeId
 					FROM #client_abb#_links AS links
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					</cfif>
 					UNION ALL
-					( SELECT #commonColums#, attached_image_id, position, NULL AS done, 4 AS itemTypeId
+					( SELECT #commonColums#, attached_image_id, <!--- position, ---> NULL AS done, 4 AS itemTypeId
 					FROM #client_abb#_news AS news
+					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					AND status='ok')
+					UNION ALL
+					( SELECT #commonColums#, attached_image_id, NULL AS done, 9 AS itemTypeId
+					FROM #client_abb#_images AS images
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 				</cfif>
 				UNION ALL
-				( SELECT #commonColums#, attached_image_id, NULL AS position, NULL AS done, 5 AS itemTypeId
+				( SELECT #commonColums#, attached_image_id, <!--- NULL AS position, ---> NULL AS done, 5 AS itemTypeId
 				FROM #client_abb#_events AS events
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				UNION ALL
-				( SELECT #commonColums#, attached_image_id, NULL AS position, done, 6 AS itemTypeId
+				( SELECT #commonColums#, attached_image_id, <!--- NULL AS position, ---> done, 6 AS itemTypeId
 				FROM #client_abb#_tasks AS tasks
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
+				<cfif APPLICATION.modulePubMedComments IS true>
+				UNION ALL
+				( SELECT #commonColums#, attached_image_id, NULL AS done, 8 AS itemTypeId
+				FROM #client_abb#_pubmeds AS pubmeds
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				AND status='ok')
+				</cfif>
 				<cfif APPLICATION.moduleLists IS true><!---Lists--->
 				UNION ALL
-				( SELECT #commonColums#, attached_image_id, NULL AS position, NULL AS done, 11 AS itemTypeId
+				( SELECT #commonColums#, attached_image_id, <!--- NULL AS position, ---> NULL AS done, 11 AS itemTypeId
 				FROM #client_abb#_lists AS lists
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				AND status='ok')
+				</cfif>
+				<cfif APPLICATION.moduleForms IS true><!---Forms--->
+				UNION ALL
+				( SELECT #commonColums#, attached_image_id, NULL AS done, 12 AS itemTypeId
+				FROM #client_abb#_forms AS forms
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				</cfif>
 				<!---Files--->
 				UNION ALL
-				( SELECT id, name, association_date, description, user_in_charge, id AS attached_file_id, #area_id# AS area_id, NULL AS attached_image_id, NULL AS position, NULL AS done, 10 AS itemTypeId
+				( SELECT id, name, association_date, description, user_in_charge, id AS attached_file_id, #area_id# AS area_id, NULL AS attached_image_id, <!--- NULL AS position, ---> NULL AS done, 10 AS itemTypeId
 				FROM #client_abb#_files AS files
-				INNER JOIN #client_abb#_areas_files AS area_files ON files.id = area_files.file_id
-				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				AND status='ok') 
+				INNER JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id AND files.status='ok') 
 				) AS items
 				INNER JOIN #client_abb#_users AS users
 				ON items.user_in_charge = users.id
-				ORDER BY items.creation_date DESC
+				LEFT JOIN #client_abb#_items_position AS items_position
+				ON items.id = items_position.item_id AND itemTypeId = items_position.item_type_id
+				AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				ORDER BY items_position.position DESC, items.creation_date DESC
 				<cfif isDefined("arguments.limit")>
 				LIMIT #arguments.limit#
 				</cfif>;
@@ -436,7 +466,7 @@
 	
 	
 	<!---listAllAreaWebItems--->
-	<!---Esta función debe dejar de usarse, se mantiene por retrocompatibilidad--->
+	<!---Esta función DEBE DEJAR DE USARSE, sólo se mantiene por retrocompatibilidad--->
 	<cffunction name="listAllAreaWebItems" output="false" returntype="query" access="public">
 		<cfargument name="area_id" type="numeric" required="yes">
 		<cfargument name="limit" type="numeric" required="no">
@@ -491,7 +521,7 @@
 	
 	<!---getAreaItemsLastPosition--->
 	
-	<cffunction name="getAreaItemsLastPosition" output="false" returntype="struct" access="public">
+	<cffunction name="getAreaItemsLastPosition" output="false" returntype="struct" access="package">
 		<cfargument name="area_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		
@@ -503,12 +533,18 @@
 					
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 						
-				<cfquery name="areaItemsPositionQuery" datasource="#client_dsn#">
+				<!---<cfquery name="areaItemsPositionQuery" datasource="#client_dsn#">
 					SELECT MAX(position) AS max_position					
 					FROM #client_abb#_#itemTypeTable# AS items
 					WHERE items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+				</cfquery>--->
 				
+				<cfquery name="areaItemsPositionQuery" datasource="#client_dsn#">
+					SELECT MAX(position) AS max_position					
+					FROM #client_abb#_items_position
+					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
 				<cfset position = areaItemsPositionQuery.max_position>
 		
 		<cfreturn {position=position}>

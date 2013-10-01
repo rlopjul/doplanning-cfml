@@ -89,7 +89,7 @@
 				<cfinclude template="#APPLICATION.componentsPath#/includes/generateResponse.cfm"> --->
 
 				<!--- response --->
-				<cfset response = {result="false", message="#cfcatch.message#"}>
+				<cfset response = {result=false, message="#cfcatch.message#"}>
 			
 			</cffinally>
 			

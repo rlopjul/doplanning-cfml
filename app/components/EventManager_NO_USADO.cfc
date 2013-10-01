@@ -95,7 +95,7 @@
 	
 	<!--- ----------------------- UPDATE EVENT -------------------------------- --->
 	
-	<cffunction name="updateEvent" returntype="string" output="false" access="public">		
+	<!---<cffunction name="updateEvent" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "updateEvent">
@@ -131,7 +131,7 @@
 		
 		<cfreturn xmlResponse>
 		
-	</cffunction>
+	</cffunction>--->
 	
 	
 	<!--- ----------------------- UPDATE EVENT WITH ATTACHED -------------------------------- --->
@@ -175,7 +175,7 @@
 	
 	<!--- ----------------------- POST EVENT TO TWITTER -------------------------------- --->
 	
-	<cffunction name="postEventToTwitter" returntype="string" output="false" access="public">		
+	<!---<cffunction name="postEventToTwitter" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "postEventToTwitter">
@@ -221,7 +221,7 @@
 		
 		<cfreturn xmlResponse>
 		
-	</cffunction>
+	</cffunction>--->
 	
 	
 	<!---  ---------------------- SELECT EVENT -------------------------------- --->
@@ -264,7 +264,7 @@
 	
 	<!--- ------------------------- DELETE EVENT -------------------------------- --->
 	
-	<cffunction name="deleteEvent" returntype="string" access="public">
+	<!---<cffunction name="deleteEvent" returntype="string" access="public">
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "deleteEvent">
@@ -293,7 +293,7 @@
 		
 		<cfreturn xmlResponse>
 				
-	</cffunction>
+	</cffunction>--->
 	<!--- ------------------------------------------------------------------------ --->
 	
 	
@@ -379,7 +379,7 @@
 	
 	<!---Devuelve el campo status del archivo en la base de datos, que representa el estado de la subida del archivo al servidor. Si el archivo tiene el status ok, devuelve sus datos--->
 	
-	<cffunction name="getEventFileStatus" returntype="string" output="false" access="public">		
+	<!---<cffunction name="getEventFileStatus" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "getEventFileStatus">
@@ -410,7 +410,7 @@
 		
 		<cfreturn xmlResponse>		
 		
-	</cffunction>
+	</cffunction>--->
 	
 	
 	
@@ -418,7 +418,7 @@
 	
 	<!---Devuelve el campo status del archivo en la base de datos, que representa el estado de la subida del archivo al servidor. Si el archivo tiene el status ok, devuelve sus datos--->
 	
-	<cffunction name="getEventImageStatus" returntype="string" output="false" access="public">		
+	<!---<cffunction name="getEventImageStatus" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "getEventImageStatus">
@@ -449,7 +449,7 @@
 		
 		<cfreturn xmlResponse>		
 		
-	</cffunction>
+	</cffunction>--->
 	
 
 </cfcomponent>

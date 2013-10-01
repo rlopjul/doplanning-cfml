@@ -444,7 +444,7 @@
 </cfif>
 
 <cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-<div class="control-group">
+<!---<div class="control-group">
 
 	<label class="control-label" lang="es">#t_position#:</label>
 	
@@ -452,7 +452,7 @@
 	<cfinput type="text" name="position" id="position" value="#objectItem.position#" required="true" validate="integer" message="#t_position# debe ser un número entero" style="width:50px;" passthrough="#passthrough#">
 	</div>
 
-</div>
+</div>--->
 
 	<cfif itemTypeId IS 2>
 	<div class="control-group">

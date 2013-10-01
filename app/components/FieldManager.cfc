@@ -65,8 +65,8 @@
 
 				<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>
 				
-					<!---getFieldsLastPosition--->
-					<cfinvoke component="FieldManager" method="getFieldsLastPosition" returnvariable="fieldLastPosition">
+					<!---getFieldLastPosition--->
+					<cfinvoke component="FieldManager" method="getFieldLastPosition" returnvariable="fieldLastPosition">
 						<cfinvokeargument name="table_id" value="#table_id#">
 						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					</cfinvoke>
@@ -190,17 +190,17 @@
 	</cffunction>
 
 
-	<!---  ---------------------- getFieldsLastPosition -------------------------------- --->
+	<!---  ---------------------- getFieldLastPosition -------------------------------- --->
 	
-	<cffunction name="getFieldsLastPosition" returntype="numeric" access="public">
+	<cffunction name="getFieldLastPosition" returntype="numeric" access="package">
 		<cfargument name="table_id" type="numeric" required="yes">
 		<cfargument name="tableTypeId" type="numeric" required="yes">
 		
-		<cfset var method = "getFieldsLastPosition">
+		<cfset var method = "getFieldLastPosition">
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getFieldsLastPosition" returnvariable="getLastPositionResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getFieldLastPosition" returnvariable="getLastPositionResult">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				
@@ -279,6 +279,45 @@
 		</cftry>
 
 		<cfreturn response>
+			
+	</cffunction>
+
+
+
+	<!--- ------------------------------------ deleteTableFields -----------------------------------  --->
+		
+	<cffunction name="deleteTableFields" output="false" access="package" returntype="void">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "deleteTableFields">
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_types" value="false">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfloop query="fields">
+
+				<cfquery name="deleteField" datasource="#client_dsn#">
+					DELETE FROM `#client_abb#_#tableTypeTable#_fields`
+					WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+				<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
+					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+					DROP COLUMN `field_#fields.field_id#`;
+				</cfquery>
+
+			</cfloop>
 			
 	</cffunction>
 

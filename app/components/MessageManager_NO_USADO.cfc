@@ -133,7 +133,7 @@
 	
 	<!--- ------------------------- DELETE MESSAGE -------------------------------- --->
 	
-	<cffunction name="deleteMessage" returntype="string" access="public">
+	<!---<cffunction name="deleteMessage" returntype="string" access="public">
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "deleteMessage">
@@ -162,7 +162,7 @@
 		
 		<cfreturn xmlResponse>
 				
-	</cffunction>
+	</cffunction>--->
 	<!--- ------------------------------------------------------------------------ --->
 	
 	
@@ -268,7 +268,7 @@
 	--->
 	
 	
-	<cffunction name="getMessageFileStatus" returntype="string" output="false" access="public">		
+	<!---<cffunction name="getMessageFileStatus" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "getMessageFileStatus">
@@ -300,7 +300,7 @@
 		
 		<cfreturn xmlResponse>		
 		
-	</cffunction>
+	</cffunction>--->
 	
 	
 	

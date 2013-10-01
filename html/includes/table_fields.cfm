@@ -45,7 +45,7 @@
 
 	<span class="divider">&nbsp;</span>
 
-	<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
+	<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
 
 	<span class="divider">&nbsp;</span>
 
@@ -155,7 +155,7 @@
 		</script>				
 
 		<cfoutput>
-		<div class="div_text_result"><span lang="es">No hay campos definidos. Haga clic en Añadir campo parar crear un nuevo campo</span></div>
+		<div class="div_text_result"><span lang="es">Haga clic en Añadir campo parar crear un nuevo campo.</span></div>
 		</cfoutput>
 
 	</cfif>

@@ -73,7 +73,7 @@
 	<cffunction name="getEmptyField" output="false" returntype="query" access="public">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
-		<cfset var method = "getField">
+		<cfset var method = "getEmptyField">
 
 		<cfset var response = structNew()>
 					
@@ -107,9 +107,7 @@
 		<cfargument name="required" type="boolean" required="false" default="false">
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
-		
-		<!---<cfargument name="return_path" type="string" required="yes">--->
-		
+				
 		<cfset var method = "createField">
 
 		<cfset var response = structNew()>
@@ -123,16 +121,6 @@
 				<cfset response.message = "Campo creado">
 			</cfif>
 
-			<!---<cfif response.result IS true>
-				<cfset msg = URLEncodedFormat("Campo creado")>
-
-				<cflocation url="#arguments.return_path#&field=#response.field_id#&res=#response.result#&msg=#msg#" addtoken="no">
-			<cfelse>
-				<cfset msg = URLEncodedFormat(response.message)>
-
-				<cflocation url="#arguments.return_path#&res=#response.result#&msg=#msg#" addtoken="no">
-			</cfif>--->
-            
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>										
@@ -153,9 +141,6 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
         <cfargument name="default_value" type="string" required="true">
-        <!---<cfargument name="position" type="numeric" required="true">
-		
-		<cfargument name="return_path" type="string" required="yes">--->
 		
 		<cfset var method = "updateField">
 
@@ -169,10 +154,6 @@
 			<cfif response.result IS true>
 				<cfset response.message = "Campo modificado">
 			</cfif>
-			
-			<!---<cfset msg = URLEncodedFormat(response.message)>
-			
-			<cflocation url="#arguments.return_path#&field=#arguments.field_id#&res=#response.result#&msg=#msg#" addtoken="no">--->		
             
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
