@@ -60,21 +60,21 @@
 	<label for="label">Nombre</label>
 	<cfinput type="text" name="label" id="label" value="#field.label#" maxlength="100" required="true" message="Nombre requerido" class="input-block-level"/>
 
+	<cfif page_type IS 2>
+		<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
+	</cfif>
 	<label for="field_type_id">Tipo</label>
 	<select name="field_type_id" id="field_type_id" class="input-block-level" <cfif page_type IS 2>disabled="disabled"</cfif>>
 		<cfloop query="fieldTypes">
 			<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
 		</cfloop>
 	</select>
-	<cfif page_type IS 2>
-		<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
-	</cfif>
-	<span class="help-block">No se puede modificar el tipo una vez creado el campo.</span>
+	<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>
 
 	<label for="required" class="checkbox">
-		<input type="checkbox" name="required" id="required" value="true" <cfif isDefined("field.required") AND field.required IS true>checked="checked"</cfif> /> Obligatorio
+		<input type="checkbox" name="required" id="required" value="true" <cfif isDefined("field.required") AND field.required IS true>checked="checked"</cfif> /> Obligatorio<br/>
+		<small class="help-block">Indica si el campo deber rellenarse de forma obligatoria</small>
 	</label>
-	<span class="help-block">Indica si el campo deber rellenarse de forma obligatoria</span>
 
 	<label for="description">Descripción</label>
 	<textarea name="description" id="description" class="input-block-level" maxlength="1000">#field.description#</textarea>

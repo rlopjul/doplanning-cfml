@@ -17,12 +17,13 @@
 
 <!---<cfset return_page = "area.cfm?area=#area_id#">--->
 
+<cfoutput>
 
 <script type="text/javascript">
 
-$(document).ready(function(){
+$(document).ready(function() {
 
-	$('#formFile').change(function(e){
+	$('##formFile').change(function(e){
 		$inputFile=$(this);
 	  	  
      	var fileName = $inputFile.val();
@@ -30,16 +31,16 @@ $(document).ready(function(){
 	  	if(fileName.length > 0) {
 		  fileName = fileName.substr(fileName.lastIndexOf('\\') + 1);
 				  
-		  if($('#formFileName').val().length == 0)
-		  	$('#formFileName').val(fileName);
+		  if($('##formFileName').val().length == 0)
+		  	$('##formFileName').val(fileName);
 		}
 		
 	});
 	
 });
 
-function onSubmitForm()
-{
+function onSubmitForm() {
+
 	if(check_custom_form())
 	{
 		document.getElementById("submitDiv").innerHTML = window.lang.convert("Enviando archivo...");
@@ -49,13 +50,41 @@ function onSubmitForm()
 	else
 		return false;
 }
+
+<!--- 
+function loadTypology(typologyId) {
+
+	$("##areaLoading").show();
+
+	if(!isNaN(typologyId)){
+
+		$("##typologyContainer").load("#APPLICATION.htmlPath#/html_content/typology_row_form_inputs.cfm?typology="+typologyId, function() {
+
+			$("##areaLoading").hide();
+
+		});
+
+	} else {
+
+		$("##typologyContainer").empty();
+	}
+} --->
+
 </script>
+
+
+<!--- 
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
+	<cfinvokeargument name="area_id" value="#area_id#">
+	<cfinvokeargument name="tableTypeId" value="3">
+</cfinvoke>
+<cfset areaTables = getAreaTablesResponse.areaTables>
+ --->
+
 
 <div class="contenedor_fondo_blanco">
 
-<cfoutput>
-
-<cfform action="area_file_upload.cfm" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();"><!---?user_id=#SESSION.user_id#&client_abb=#SESSION.client_abb#&language=#SESSION.user_language#&session_id=#SESSION.SessionID#--->
+<cfform action="area_file_upload.cfm" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('file_form');
@@ -63,6 +92,16 @@ function onSubmitForm()
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 	
 	<input type="hidden" name="area_id" value="#area_id#"/>
+
+	<!--- 
+	<label for="typology_id">Tipología</label>
+		<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val());">
+			<option value="" selected="selected">Básica</option>
+			<cfloop query="#areaTables#">
+				<option value="#areaTables.id#">#areaTables.title#</option>	
+			</cfloop>
+		</select> --->
+	
 	
 	<label for="formFile" lang="es">Archivo:</label>
 	<cfinput type="file" name="Filedata" value="" id="formFile" required="yes" message="Debe seleccionar un archivo para subirlo"/>
@@ -72,11 +111,13 @@ function onSubmitForm()
 	
 	<label for="description" lang="es">Descripción:</label> 
 	<textarea name="description" id="description" class="input-block-level"></textarea>
+
+	<!--- <div id="typologyContainer"></div> --->
 	
 	<div id="submitDiv"><input type="submit" class="btn btn-primary" name="modify" value="Enviar" lang="es"/></div>
 	<small lang="es">Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.</small>
 </cfform>
 
-</cfoutput>
-
 </div>
+
+</cfoutput>

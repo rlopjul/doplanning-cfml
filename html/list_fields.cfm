@@ -109,7 +109,7 @@
 <cfset tableTypeId = 1>
 <cfinclude template="#APPLICATION.htmlPath#/includes/table_fields.cfm">
 
-<cfset return_page = "area.cfm?area=#area_id#">
+<cfset return_page = "#tableTypeName#.cfm?#tableTypeName#=#table_id#">
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
 </cfinvoke>

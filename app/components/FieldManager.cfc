@@ -63,39 +63,17 @@
 
 			<cftransaction>
 
-				<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>
-				
-					<!---getFieldLastPosition--->
-					<cfinvoke component="FieldManager" method="getFieldLastPosition" returnvariable="fieldLastPosition">
-						<cfinvokeargument name="table_id" value="#table_id#">
-						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-					</cfinvoke>
-					
-					<cfset arguments.position = fieldLastPosition+1>
-					
-				</cfif>
-
-				<cfquery name="createField" datasource="#client_dsn#">
-					INSERT INTO `#client_abb#_#tableTypeTable#_fields`
-					SET table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">,
-					field_type_id = <cfqueryparam value="#arguments.field_type_id#" cfsqltype="cf_sql_integer">,
-					label = <cfqueryparam value="#arguments.label#" cfsqltype="cf_sql_varchar">,
-					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">,
-					required = <cfqueryparam value="#arguments.required#" cfsqltype="cf_sql_bit">,
-					default_value = <cfqueryparam value="#arguments.default_value#" cfsqltype="cf_sql_longvarchar">,
-					position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-
-				<cfquery name="getLastInsertId" datasource="#client_dsn#">
-					SELECT LAST_INSERT_ID() AS last_insert_id FROM `#client_abb#_#tableTypeTable#_fields`;
-				</cfquery>
-
-				<cfset field_id = getLastInsertId.last_insert_id>
-
-				<cfquery name="insertFieldInTable" datasource="#client_dsn#">
-					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
-					ADD COLUMN `field_#field_id#` #fieldType.mysql_type# NOT NULL;
-				</cfquery>
+				<cfinvoke component="FieldManager" method="createFieldInDatabase" returnvariable="field_id">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="field_type_id" value="#arguments.field_type_id#">
+					<cfinvokeargument name="label" value="#arguments.label#">
+					<cfinvokeargument name="description" value="#arguments.description#">
+					<cfinvokeargument name="required" value="#arguments.required#">
+					<cfinvokeargument name="default_value" value="#arguments.default_value#">
+					<cfinvokeargument name="position" value="#arguments.position#">
+					<cfinvokeargument name="mysql_type" value="#fieldType.mysql_type#">
+				</cfinvoke>
 
 			</cftransaction>
 
@@ -113,6 +91,72 @@
 			
 	</cffunction>
 
+
+	<!--- ------------------------------------- createFieldInDatabase -------------------------------------  --->
+
+	<!---La llamada a esta función tiene que hacerse dentro de una transacción <cftransaction/>--->
+	
+	<cffunction name="createFieldInDatabase" output="false" access="package" returntype="numeric">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="field_type_id" type="numeric" required="true">
+		<cfargument name="label" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
+		<cfargument name="required" type="boolean" required="false" default="false">
+        <cfargument name="default_value" type="string" required="true">
+        <cfargument name="position" type="numeric" required="false">
+        <cfargument name="mysql_type" type="string" required="true">
+
+		<cfset var method = "createFieldInDatabase">
+
+		<cfset var field_id = "">
+
+		<cfset var fieldLastPosition = "">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>
+				
+				<!---getFieldLastPosition--->
+				<cfinvoke component="FieldManager" method="getFieldLastPosition" returnvariable="fieldLastPosition">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				</cfinvoke>
+				
+				<cfset arguments.position = fieldLastPosition+1>
+				
+			</cfif>
+
+			<cfquery name="createField" datasource="#client_dsn#">
+				INSERT INTO `#client_abb#_#tableTypeTable#_fields`
+				SET table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">,
+				field_type_id = <cfqueryparam value="#arguments.field_type_id#" cfsqltype="cf_sql_integer">,
+				label = <cfqueryparam value="#arguments.label#" cfsqltype="cf_sql_varchar">,
+				description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">,
+				required = <cfqueryparam value="#arguments.required#" cfsqltype="cf_sql_bit">,
+				default_value = <cfqueryparam value="#arguments.default_value#" cfsqltype="cf_sql_longvarchar">,
+				position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfquery name="getLastInsertId" datasource="#client_dsn#">
+				SELECT LAST_INSERT_ID() AS last_insert_id FROM `#client_abb#_#tableTypeTable#_fields`;
+			</cfquery>
+
+			<cfset field_id = getLastInsertId.last_insert_id>
+
+			<cfquery name="insertFieldInTable" datasource="#client_dsn#">
+				ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+				ADD COLUMN `field_#field_id#` #arguments.mysql_type# 
+				<cfif arguments.required IS true>
+				NOT NULL	
+				</cfif>;
+			</cfquery>
+
+			<cfreturn field_id>
+			
+	</cffunction>
 
 
 	<!--- ------------------------------------- updateField -------------------------------------  --->
@@ -177,6 +221,84 @@
 			</cftransaction>
 		
 			<cfset response = {result=true, field_id=#arguments.field_id#, table_id=#field.table_id#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+	<!--- ------------------------------------- copyTableFields -------------------------------------  --->
+	
+	<cffunction name="copyTableFields" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="copy_from_table_id" type="numeric" required="true">
+		<cfargument name="fields_ids" type="array" required="true">
+
+		<cfset var method = "copyTableFields">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var fields = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<!---Table fields--->
+			<cfinvoke component="TableManager" method="getTableFields" returnvariable="getFieldsResponse">
+				<cfinvokeargument name="table_id" value="#arguments.copy_from_table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="with_types" value="true">
+			</cfinvoke>
+
+			<cfif getFieldsResponse.result IS false>
+				<cfreturn getFieldsResponse>
+			</cfif>
+
+			<cfset fields = getFieldsResponse.tableFields>
+
+			<cfset area_id = fields.area_id>
+
+			<!---checkAreaResponsibleAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+
+			<cftransaction>
+
+				<cfloop query="fields">
+
+					<cfif arrayFind(arguments.fields_ids, fields.field_id)>
+						
+						<cfinvoke component="FieldManager" method="createFieldInDatabase" returnvariable="field_id">
+							<cfinvokeargument name="table_id" value="#arguments.table_id#">
+							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+							<cfinvokeargument name="field_type_id" value="#fields.field_type_id#">
+							<cfinvokeargument name="label" value="#fields.label#">
+							<cfinvokeargument name="description" value="#fields.description#">
+							<cfinvokeargument name="required" value="#fields.required#">
+							<cfinvokeargument name="default_value" value="#fields.default_value#">
+							<cfinvokeargument name="mysql_type" value="#fields.mysql_type#">
+						</cfinvoke>
+
+					</cfif>
+					
+				</cfloop>
+
+			</cftransaction>
+		
+			<cfset response = {result=true, table_id=#arguments.table_id#}>
 
 			<cfcatch>
 

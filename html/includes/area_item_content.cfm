@@ -258,10 +258,11 @@
 				</ul>
 			</div>
 
-		<cfelseif itemTypeId IS 11 OR itemTypeId IS 13><!---Lists OR Forms--->
+		<cfelseif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
 
-			<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
-
+			<cfif itemTypeId IS 11 OR itemTypeId IS 12>
+				<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
+			</cfif>
 			<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos<span></a>
 
 		</cfif>

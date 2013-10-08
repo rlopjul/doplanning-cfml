@@ -3,7 +3,6 @@
     File created by: ppareja
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 14-01-2013
 	
 	15-04-2013 alucena: corregido error en deleteFile con archivos con status que no es ok
 	13-06-2013 alucena: corregido error con variable files_table (se utilizaba file_table) en deleteImageFile
@@ -14,6 +13,8 @@
 	<cfset component = "FileManager">
 	
 	<cfset messageTypeId = 1>
+	<cfset fileTypeId = 10>
+	<cfset typologyTableTypeId = 3>
 	
 	<!--- ----------------------- XML FILE -------------------------------- --->
 	
@@ -68,6 +69,12 @@
 					</cfif>
 					<cfif len(objectFile.user_image_type) GT 0>
 						user_image_type="#objectFile.user_image_type#"
+					</cfif>
+					<cfif len(objectFile.typology_id) GT 0>
+						typology_id="#objectFile.typology_id#"
+					</cfif>
+					<cfif len(objectFile.typology_row_id) GT 0>
+						typology_row_id="#objectFile.typology_row_id#"
 					</cfif>
 					>
 					<cfif objectFile.tree_mode NEQ "true">
@@ -131,6 +138,8 @@
 		<cfargument name="area_id" type="string" required="no" default="">
 		<cfargument name="area_name" type="string" required="no" default="">
 		<cfargument name="user_image_type" type="string" required="no" default="">
+		<cfargument name="typology_id" type="string" required="false" default="">
+		<cfargument name="typology_row_id" type="string" required="false" default="">
 		
 		<cfargument name="file_types_conversion" type="query" required="no" default="#queryNew("")#">
 		
@@ -147,9 +156,7 @@
 			<cfif isDefined("arguments.xml")>
 			
 				<cfxml variable="xmlFile">
-					<cfoutput>
-					#arguments.xml#
-					</cfoutput>
+					<cfoutput>#arguments.xml#</cfoutput>
 				</cfxml>
 			
 				<cfif isDefined("xmlFile.file.XmlAttributes.id")>
@@ -182,6 +189,12 @@
 				</cfif>
 				<cfif tree_mode EQ true AND isDefined("xmlFile.file.XmlAttributes.name")>
 					<cfset name=xmlFile.file.XmlAttributes.name>
+				</cfif>
+				<cfif tree_mode EQ true AND isDefined("xmlFile.file.XmlAttributes.typology_id")>
+					<cfset typology_id=xmlFile.file.XmlAttributes.typology_id>
+				</cfif>
+				<cfif tree_mode EQ true AND isDefined("xmlFile.file.XmlAttributes.typology_row_id")>
+					<cfset typology_row_id=xmlFile.file.XmlAttributes.typology_row_id>
 				</cfif>
 				<cfif isDefined("xmlFile.file.name")>
 					<cfset name=xmlFile.file.name.xmlText>
@@ -273,7 +286,9 @@
 				area_id="#area_id#",
 				area_name="#area_name#",
 				file_types_conversion="#file_types_conversion#",
-				user_image_type="#user_image_type#"
+				user_image_type="#user_image_type#",
+				typology_id="#typology_id#",
+				typology_row_id="#typology_row_id#"
 				}>
 			
 			<cfif isDefined("arguments.return_type")>
@@ -353,97 +368,97 @@
 	
 	<cffunction name="deleteFile" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
-		<!---<cfargument name="transaction" type="string" required="no" default="true">--->
 		
 		<cfset var method = "deleteFile">
 		
 		<cfset var file_id = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+					
 		<cftry>
 			
 			<cfinclude template="includes/functionStart.cfm">
 			
 			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
 			
-			<!---<cfif arguments.transaction IS true>--->
-				<cfquery name="beginQuery" datasource="#client_dsn#">
-					BEGIN;
-				</cfquery>
-			<!---</cfif>--->
-			
 			<!--- Query to get the physical name and file_size of the file --->
-			<cfquery name="selectPhysicalName" datasource="#client_dsn#">				
-				SELECT physical_name, file_size, user_in_charge, status
+			<cfquery name="getFileQuery" datasource="#client_dsn#">				
+				SELECT physical_name, file_size, user_in_charge, status, typology_id, typology_row_id
 				FROM #client_abb#_files
 				WHERE id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
-			<cfif selectPhysicalName.recordCount GT 0>
-			
-				<!--- Delete association area file --->
-				
-				<cfquery name="deleteAssociationAreaQuery" datasource="#client_dsn#">
-					DELETE 
-					FROM #client_abb#_areas_files
-					WHERE file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>	
-				
-				<!--- Delete association folder file --->
-				<cfquery name="deleteAssociationFolderQuery" datasource="#client_dsn#">
-					DELETE 
-					FROM #client_abb#_folders_files
-					WHERE file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>		
-				
-				<!--- Deletion of the row representing the file --->
-				<cfquery name="deleteFileQuery" datasource="#client_dsn#">		
-					DELETE
-					FROM #client_abb#_files 
-					WHERE id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-				
-				<cfset path = APPLICATION.filesPath&'/#client_abb#/files/'>	
-				<cfset filePath = path & "#selectPhysicalName.physical_name#">			
-				
-				<!--- Now we delete physically the file on the server --->
-				<cfif FileExists(filePath)><!---If the physical file exist--->
-					<cffile action="delete" file="#filePath#">
-				<cfelse><!---The physical file does not exist--->
-					<!---<cfset error_code = 608>
-					<cfthrow errorcode="#error_code#">--->
+
+			<cfif getFileQuery.recordCount GT 0>
+
+				<!---checkAccess--->
+				<cfif getFileQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
+					<cfinclude template="includes/checkAdminAccess.cfm">
 				</cfif>
-				
-				<!---Update User Space Used--->
-				<cfif selectPhysicalName.status EQ "ok">
-					<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
-						UPDATE #client_abb#_users
-						SET space_used = space_used-#selectPhysicalName.file_size#
-						WHERE id = #selectPhysicalName.user_in_charge#;
+
+				<cftransaction>
+								
+					<!---Delete typology--->
+					<cfif isNumeric(getFileQuery.typology_id) AND isNumeric(getFileQuery.typology_row_id)>
+						
+						<cfinvoke component="RowManager" method="deleteRow" returnvariable="deleteRowResponse">
+							<cfinvokeargument name="typology_row_id" value="#getFileQuery.typology_row_id#"/>
+							<cfinvokeargument name="table_id" value="#getFileQuery.typology_id#"/>
+							<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
+						</cfinvoke>
+
+						<cfif deleteRowResponse.result IS false>
+							<cfthrow message="#deleteRowResponse.message#">
+						</cfif>
+
+					</cfif>
+
+					<!--- Delete association area file --->
+					<cfquery name="deleteAssociationAreaQuery" datasource="#client_dsn#">
+						DELETE 
+						FROM #client_abb#_areas_files
+						WHERE file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>	
+					
+					<!--- Delete association folder file --->
+					<cfquery name="deleteAssociationFolderQuery" datasource="#client_dsn#">
+						DELETE 
+						FROM #client_abb#_folders_files
+						WHERE file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>		
+					
+					<!--- Deletion of the row representing the file --->
+					<cfquery name="deleteFileQuery" datasource="#client_dsn#">		
+						DELETE
+						FROM #client_abb#_files 
+						WHERE id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
-				</cfif>
+					
+					<cfset path = APPLICATION.filesPath&'/#client_abb#/files/'>	
+					<cfset filePath = path & "#getFileQuery.physical_name#">			
+					
+					<!--- Now we delete physically the file on the server --->
+					<cfif FileExists(filePath)><!---If the physical file exist--->
+						<cffile action="delete" file="#filePath#">
+					<cfelse><!---The physical file does not exist--->
+						<!---<cfset error_code = 608>
+						<cfthrow errorcode="#error_code#">--->
+					</cfif>
+					
+					<!---Update User Space Used--->
+					<cfif getFileQuery.status EQ "ok">
+						<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
+							UPDATE #client_abb#_users
+							SET space_used = space_used-#getFileQuery.file_size#
+							WHERE id = #getFileQuery.user_in_charge#;
+						</cfquery>
+					</cfif>
 				
-				<!---<cfif arguments.transaction IS true>--->		
-					<!--- End of the transaction --->
-					<cfquery name="endTransaction" datasource="#client_dsn#">
-						COMMIT;
-					</cfquery>
-				<!---</cfif>--->
-				
+				</cftransaction>
+
 				<cfset xmlResponseContent = '<file id="#file_id#" />'>
 				
 				<cfinclude template="includes/functionEnd.cfm">
 			
 			
 			<cfelse><!---The file does not exist (is not found)--->
-				
-				<!---<cfif arguments.transaction IS true>--->
-					<!--- RollBack the transaction --->
-					<cfquery name="rollBackTransaction" datasource="#client_dsn#">
-						ROLLBACK;
-					</cfquery>
-				<!---</cfif>--->
 				
 				<cfset xmlResponseContent = arguments.request>
 				<cfset error_code = 601>
@@ -466,79 +481,71 @@
 
 	<!--- ----------------------- UPDATE FILE -------------------------------- --->
 	
-	<cffunction name="updateFile" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
+	<cffunction name="updateFile" returntype="struct" output="false" access="public">		
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="name" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
 		
 		<cfset var method = "updateFile">
-		
-		<cfset var file = "">
-		<cfset var fileXml = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+
+		<cfset var response = structNew()>
+					
 		<cftry>
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<!---checkAccess--->
+			<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">				
+				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
 			
-			<cfset file = xmlRequest.request.parameters.file>
-			
-			<cfxml variable="fileXml">
-				<cfoutput>
-				#file#
-				</cfoutput>
-			</cfxml>
-			
-			<cfquery name="beginQuery" datasource="#client_dsn#">
-				BEGIN;
-			</cfquery>
-			
-			<cfif isDefined("fileXml.file.description.xmlText")>
-				<cfset desc = "#fileXml.file.description.xmlText#">
-				<cfset desc = '#replace(desc,"<![CDATA[","","all")#'>
-				<cfset desc = '#replace(desc,"]]>","","all")#'>
-				<cfquery name="descriptionQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_files
-					SET description = <cfqueryPARAM value = "#desc#" CFSQLType = "CF_SQL_varchar">
-					WHERE id = <cfqueryPARAM value = "#fileXml.file.XmlAttributes.id#" CFSQLType = "CF_SQL_integer">;
-				</cfquery>
-			</cfif>
-			
-			<cfif isDefined("fileXml.file.name.xmlText")>
-				<cfquery name="descriptionQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_files
-					SET name = <cfqueryPARAM value = "#fileXml.file.name.xmlText#" CFSQLType = "CF_SQL_varchar">
-					WHERE id = <cfqueryPARAM value = "#fileXml.file.XmlAttributes.id#" CFSQLType = "CF_SQL_integer">;
-				</cfquery>
-			</cfif>		
-			
-			<cfquery name="commitQuery" datasource="#client_dsn#">
-				COMMIT;
-			</cfquery>						
+				<cfinvokeargument name="return_type" value="object">
+			</cfinvoke>		
+
+			<cfif objectFile.user_in_charge NEQ user_id>
+				
+				<cfset error_code = 103><!---Access denied--->
 						
-			<cfinvoke method="selectFile" component="FileManager" returnvariable="result">
-				<cfinvokeargument name="request" value='<request><parameters><file id="#fileXml.file.xmlAttributes.id#" /></parameters></request>'>								
-			</cfinvoke>
-									
-			<cfxml variable="xmlResponse">
-				<cfoutput>
-				#result#
-				</cfoutput>
-			</cfxml>
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cftransaction>
+
+				<cfquery name="updateFileQuery" datasource="#client_dsn#">
+					UPDATE `#client_abb#_files`
+					SET name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
+					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">
+					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>	
+
+				<!--- setFileTypology --->
+				<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+					
+					<cfinvoke component="FileManager" method="setFileTypology" argumentcollection="#arguments#" returnvariable="setFileTypologyResponse">
+					</cfinvoke>
+
+					<cfif setFileTypologyResponse.result IS false>
+
+						<cfthrow message="#setFileTypologyResponse.message#">
+	
+					</cfif>
+
+				</cfif>		
+
+			</cftransaction>				
 			
-			<cfset xmlResponse.response.xmlAttributes.component = component>
-			<cfset xmlResponse.response.xmlAttributes.method = method>			
-		
-			<!---<cfinclude template="includes/functionEnd.cfm">--->
 			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, file_id=#arguments.file_id#}>
 			
 			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-		
-		<cfreturn xmlResponse>		
+
+		<cfreturn response>	
 		
 	</cffunction>
 
@@ -630,7 +637,7 @@
 	
 	<!---Falta por terminar de implementar y por probar--->
 	
-	<cffunction name="associateFiles" returntype="string" access="public">
+	<!---<cffunction name="associateFiles" returntype="string" access="public">
 		<cfargument name="request" type="string" required="yes">
 		
 		<cfset var method = "associateFiles">
@@ -681,44 +688,43 @@
 		
 		<cfreturn xmlResponse>
 		
-	</cffunction>
+	</cffunction>--->
 	
 		
 	<!--- ----------------------- ASSOCIATE FILE -------------------------------- --->
 	
-	<cffunction name="associateFileToAreas" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">		
+	<cffunction name="associateFileToAreas" returntype="struct" output="false" access="public">		
+		<!---<cfargument name="request" type="string" required="yes">--->
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="areas_ids" type="string" required="true">		
 		
 		<cfset var method = "associateFileToAreas">
+
+		<cfset var response = structNew()>
 		
-		<cfset var file_id = "">
-		<cfset var area_id = "">
 		<cfset var allAreas = true>
 		<cfset var successfulAreas = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+					
 		<cftry>
 			
 			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
-			
+						
 			<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">				
-				<cfinvokeargument name="get_file_id" value="#file_id#">
+				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
 			
 				<cfinvokeargument name="return_type" value="object">
 			</cfinvoke>		
 			
-			<cfxml variable="xmlAreas">
+			<!---<cfxml variable="xmlAreas">
 				<cfoutput>
 					#xmlRequest.request.parameters.areas#
 				</cfoutput>
 			</cfxml>
 					
 			<cfloop index="cur_area_index" from="1" to="#ArrayLen(xmlAreas.areas.area)#"
-step="1">
-				<cfset cur_area_id = xmlAreas.areas.area[cur_area_index].xmlAttributes.id>
+step="1">--->
+
+			<cfloop list="#arguments.areas_ids#" index="cur_area_id">
 				
 				<cftry>
 				
@@ -727,7 +733,7 @@ step="1">
 						<cfinvokeargument name="area_id" value="#cur_area_id#">
 					</cfinvoke>	
 					
-					<cfset successfulAreas = successfulAreas&'<area id="#cur_area_id#"/>'>	
+					<cfset successfulAreas = listAppend(successfulAreas, cur_area_id)>	
 					
 					<cfcatch>
 						<cfif isDefined("cfcatch.errorcode") AND cfcatch.errorcode IS 607><!---The file exists in the area--->	
@@ -740,79 +746,77 @@ step="1">
 			
 			</cfloop>
 			
-			<cfinvoke component="FileManager" method="xmlFile" returnvariable="xmlResult">
+			<!---<cfinvoke component="FileManager" method="xmlFile" returnvariable="xmlResult">
 				<cfinvokeargument name="objectFile" value="#objectFile#">
 			</cfinvoke>
 			
-			<cfset xmlResponseContent = xmlResult&'<areas all="#allAreas#">#successfulAreas#</areas>'>
+			<cfset xmlResponseContent = xmlResult&'<areas all="#allAreas#">#successfulAreas#</areas>'>--->
 							
-			<cfinclude template="includes/functionEnd.cfm">
+			<cfinclude template="includes/functionEndNoLog.cfm">
 			
+			<cfset response = {result=true, file_id=#arguments.file_id#, areas_ids=#successfulAreas#, allAreas=#allAreas#}>		
+
 			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-		
-		<cfreturn xmlResponse>		
+
+		<cfreturn response>			
 		
 	</cffunction>
 	
 
 	<!--- ----------------------- ASSOCIATE FILE -------------------------------- --->
 	
-	<cffunction name="associateFile" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">		
+	<cffunction name="associateFile" returntype="struct" output="false" access="public">		
+		<!---<cfargument name="request" type="string" required="yes">--->
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">				
 		
 		<cfset var method = "associateFile">
 		
-		<cfset var file_id = "">
-		<cfset var area_id = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+		<cfset var response = structNew()>
+					
 		<cftry>
 			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
-			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+	
 			<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">				
-				<cfinvokeargument name="get_file_id" value="#file_id#">
+				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
 			
 				<cfinvokeargument name="return_type" value="object">
 			</cfinvoke>		
 			
 			<cfinvoke component="FileManager" method="associateFileToArea">				
 				<cfinvokeargument name="objectFile" value="#objectFile#">
-				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>		
 			
-			<cfinvoke component="FileManager" method="xmlFile" returnvariable="xmlResult">
+			<!---<cfinvoke component="FileManager" method="xmlFile" returnvariable="xmlResult">
 				<cfinvokeargument name="objectFile" value="#objectFile#">
 			</cfinvoke>
 			
-			<cfset xmlResponseContent = xmlResult>
-							
-			<cfinclude template="includes/functionEnd.cfm">
+			<cfset xmlResponseContent = xmlResult>--->
 			
+			<cfset response = {result=true, file_id=#arguments.file_id#, area_id=#arguments.area_id#}>		
+
 			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-		
-		<cfreturn xmlResponse>		
+
+		<cfreturn response>
 		
 	</cffunction>
 	
 	
 	<!--- ----------------------- ASSOCIATE FILE TO AREA -------------------------------- --->
 	
-	<cffunction name="associateFileToArea" returntype="void" output="false" access="public">		
+	<cffunction name="associateFileToArea" returntype="void" output="false" access="package">		
 		<cfargument name="objectFile" type="struct" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">		
 		
@@ -826,7 +830,7 @@ step="1">
 			<cfquery datasource="#client_dsn#" name="isFileInAreaQuery">
 				SELECT file_id
 				FROM #client_abb#_areas_files
-				WHERE area_id = <cfqueryparam value = "#area_id#" cfsqltype="cf_sql_integer"> AND 
+				WHERE area_id = <cfqueryparam value = "#arguments.area_id#" cfsqltype="cf_sql_integer"> AND 
 				file_id = <cfqueryparam value = "#objectFile.id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
@@ -835,66 +839,97 @@ step="1">
 			
 				<cfthrow errorcode="#error_code#">		
 			</cfif>
-		
-			<cfquery name="associateFileQuery" datasource="#client_dsn#">		
-				INSERT INTO #client_abb#_areas_files  (area_id, file_id, association_date)
-					VALUES(
-					<cfqueryparam value = "#area_id#" cfsqltype="cf_sql_integer">,
-					<cfqueryparam value = "#objectFile.id#" cfsqltype="cf_sql_integer">,
-					NOW()
-				);			
-			</cfquery>			
+
+			<cftransaction>
+				
+				<cfquery name="associateFileQuery" datasource="#client_dsn#">		
+					INSERT INTO #client_abb#_areas_files (area_id, file_id, association_date)
+						VALUES(
+						<cfqueryparam value = "#arguments.area_id#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value = "#objectFile.id#" cfsqltype="cf_sql_integer">,
+						NOW()
+					);			
+				</cfquery>
+
+				<!---Add items position--->
+				<cfinvoke component="AreaItemManager" method="getAreaItemsLastPosition" returnvariable="itemLastPosition">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+				
+				<cfset file_position = itemLastPosition+1>
+
+				<cfinvoke component="AreaItemManager" method="insertAreaItemPosition">
+					<cfinvokeargument name="item_id" value="#objectFile.id#">
+					<cfinvokeargument name="itemTypeId" value="#fileTypeId#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="position" value="#file_position#">
+				</cfinvoke>
+
+			</cftransaction>
+								
 			
 			<cfinvoke component="AlertManager" method="newFile">
 				<cfinvokeargument name="objectFile" value="#objectFile#">
-				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="action" value="associate">
-			</cfinvoke>			
+			</cfinvoke>
+
+			<cfinclude template="includes/functionEndOnlyLog.cfm">			
 		
 	</cffunction>
 	
 	
 	<!--- ----------------------- DISSOCIATE FILE -------------------------------- --->
 	
-	<cffunction name="dissociateFile" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">		
+	<cffunction name="dissociateFile" returntype="struct" output="false" access="public">		
+		<!---<cfargument name="request" type="string" required="yes">--->
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">		
 		
 		<cfset var method = "dissociateFile">
 		
-		<cfset var file_id = "">
-		<cfset var area_id = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+		<cfset var response = structNew()>
+					
 		<cftry>
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
-			
+			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">
+
+			<!---Chequea si el archivo está en otra área--->
+			<cfquery datasource="#client_dsn#" name="isFileInAreaQuery">
+				SELECT file_id
+				FROM #client_abb#_areas_files
+				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif isFileInAreaQuery.recordCount LT 2><!---The file is only in this area--->
+				<cfset response_message = "El archivo solo está asociado en este área. Para quitarlo debe eliminarlo.">
+				<cfset response = {result=false, message=#response_message#, file_id=#arguments.file_id#, area_id=#arguments.area_id#}>
+				<cfreturn response>
+			</cfif>
 		
 			<cfquery name="dissociateFileQuery" datasource="#client_dsn#">		
 				DELETE FROM #client_abb#_areas_files 
-					WHERE(
-					area_id = <cfqueryPARAM value = "#area_id#" CFSQLType = "CF_SQL_integer">
-					AND file_id = <cfqueryPARAM value = "#file_id#" CFSQLType = "CF_SQL_integer">
-				);			
+				WHERE area_id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "cf_sql_integer">
+					AND file_id = <cfqueryPARAM value = "#arguments.file_id#" CFSQLType = "cf_sql_integer">;	
 			</cfquery>			
 											
-			<cfset xmlResponseContent = '<file id="#file_id#"/><area id="#area_id#" />'>
+			<!---<cfset xmlResponseContent = '<file id="#file_id#"/><area id="#area_id#" />'>--->
+
+			<cfinclude template="includes/functionEndOnlyLog.cfm">	
 			
-			<cfinclude template="includes/functionEnd.cfm">
-		
+			<cfset response = {result=true, file_id=#arguments.file_id#, area_id=#arguments.area_id#}>		
+
 			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-		
-		<cfreturn xmlResponse>		
+
+		<cfreturn response>		
 		
 	</cffunction>
 	
@@ -1301,31 +1336,21 @@ step="1">
 					
 					<cfif getFileAreasQuery.RecordCount IS 0 AND isDefined("arguments.itemTypeId")><!---The file is not in area--->
 					
-						<!---<cfif NOT isDefined("arguments.item_id") OR NOT isDefined("arguments.itemTypeId")>
+					
+						<!---Aquí comprueba si el archivo está asociado a otro tipo de elemento (entradas, noticias, eventos, etc)--->
+						<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 						
-							<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
-								SELECT area_id
-								FROM #client_abb#_messages
-								WHERE attached_file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
-							</cfquery>
-							
-						<cfelse>--->
-							
-							<!---Aquí comprueba si el archivo está asociado a otro tipo de elemento (entradas, noticias, eventos, etc)--->
-							<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-							
-							<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
-								SELECT area_id
-								FROM #client_abb#_#itemTypeTable# AS items
-								WHERE (attached_file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer"> 
-								<cfif itemTypeId IS NOT 1>OR attached_image_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer"></cfif>)
-								<cfif isDefined("arguments.item_id")>
-								AND items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
-								</cfif>
-								;
-							</cfquery>
+						<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
+							SELECT area_id
+							FROM #client_abb#_#itemTypeTable# AS items
+							WHERE (attached_file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer"> 
+							<cfif itemTypeId IS NOT 1>OR attached_image_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer"></cfif>)
+							<cfif isDefined("arguments.item_id")>
+							AND items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+							</cfif>
+							;
+						</cfquery>
 						
-						<!---</cfif>--->
 					
 					</cfif>
 					
@@ -1393,6 +1418,8 @@ step="1">
 							<cfinvokeargument name="file_types_conversion" value="#objectFileTypes#">
 						</cfif>
 						<cfinvokeargument name="status" value="#selectFileQuery.status#">
+						<cfinvokeargument name="typology_id" value="#selectFileQuery.typology_id#">
+						<cfinvokeargument name="typology_row_id" value="#selectFileQuery.typology_row_id#">
 						
 						<cfinvokeargument name="return_type" value="object">
 					</cfinvoke>
@@ -1429,7 +1456,38 @@ step="1">
 	</cffunction>
 	
 	
+	<!--- ----------------------------------- getEmptyFile ----------------------------------  --->
 	
+	<cffunction name="getEmptyFile" output="false" access="public" returntype="struct">
+		<cfset var method = "getEmptyFile">
+
+		<cfset var response = structNew()>
+
+		<cfset var file = structNew()>
+		
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfset file.name = "">
+			<cfset file.description = "">
+			<cfset file.typology_id = "">
+			<cfset file.typology_row_id = ""> 
+			
+			<cfset response = {result=true, file=#file#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+	<!---  -------------------------------------------------------------------------------- --->
+
 	
 	<!--- ----------------------- DUPLICATE FILE -------------------------------- --->
 	
@@ -2383,10 +2441,10 @@ step="1">
 		<!---Este parametro se le pasa cuando se adjunta un archivo a un mensaje, que primero se crea el mensaje y luego se sube--->
 		<cfargument name="status" type="string" required="no" default="">
 		
-		<cfargument name="user_id" required="no">
+		<!---<cfargument name="user_id" required="no">
 		<cfargument name="client_abb" required="no">
-		<cfargument name="user_language" required="no">
-		<!---Este metodo necesita recibir las variables como argumentos porque cuando se suben archivos desde Firefox no se puede acceder a las variables de sesion--->		
+		<cfargument name="user_language" required="no">--->
+		<!---Este metodo necesitaba recibir las variables como argumentos porque en cuando se suben archivos en Flex desde Firefox no se puede acceder a las variables de sesion--->		
 
 		<cfset var method = "createFile">
 
@@ -2394,67 +2452,45 @@ step="1">
 		
 		<cfset var file = "">
 		<cfset var folder_id = "">
-		<cfset var fileSequence = "">
 				
 		<cftry>
 			
-			<cfif isDefined("arguments.user_id") AND isDefined("arguments.client_abb") AND isDefined("arguments.user_language")>
+			<!---<cfif isDefined("arguments.user_id") AND isDefined("arguments.client_abb") AND isDefined("arguments.user_language")>
 			
 				<cfinclude template="includes/functionStartNoSession.cfm">
 				
-			<cfelse>
+			<cfelse>--->
 			
-				<cfinclude template="includes/functionStartOnlySession.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 				
-			</cfif>
+			<!---</cfif>--->
 
-			<!---<cfset file = xmlRequest.request.parameters.file>
+			<cfinvoke component="FileManager" method="objectFile" returnvariable="objectFile">
+				<cfinvokeargument name="name" value="#arguments.name#">
+				<cfinvokeargument name="file_name" value="#arguments.file_name#">
+				<cfinvokeargument name="file_size" value="#arguments.file_size#">
+				<!---<cfinvokeargument name="file_size_full" value="#arguments.file_size_full#">--->
+				<cfinvokeargument name="file_type" value="#arguments.file_type#">
+				<cfinvokeargument name="description" value="#arguments.description#"/>
+
+				<cfinvokeargument name="return_type" value="object">
+			</cfinvoke>
 			
-			<cfxml variable="fileXml">
-				<cfoutput>
-				#file#
-				</cfoutput>
-			</cfxml>
+			<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
+			</cfinvoke>
 			
-									
-			<cfif isDefined("fileXml.file.name.xmlText") AND
-				isDefined("fileXml.file.file_name.xmlText") AND
-				isDefined("fileXml.file.XmlAttributes.file_size") AND
-				isDefined("fileXml.file.XmlAttributes.file_type") AND
-				isDefined("fileXml.file.description.xmlText")>--->
-				
-				<!---<cfinvoke component="FileManager" method="objectFile" returnvariable="objectFile">
-					<cfinvokeargument name="xml" value="#fileXml.file#">
-					
-					<cfinvokeargument name="return_type" value="object">
-				</cfinvoke>--->
+			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
+				<cfinvokeargument name="timestamp_date" value="#current_date#">
+			</cfinvoke>
 
-				<cfinvoke component="FileManager" method="objectFile" returnvariable="objectFile">
-					<cfinvokeargument name="name" value="#arguments.name#">
-					<cfinvokeargument name="file_name" value="#arguments.file_name#">
-					<cfinvokeargument name="file_size" value="#arguments.file_size#">
-					<!---<cfinvokeargument name="file_size_full" value="#arguments.file_size_full#">--->
-					<cfinvokeargument name="file_type" value="#arguments.file_type#">
-					<cfinvokeargument name="description" value="#arguments.description#"/>
-
-					<cfinvokeargument name="return_type" value="object">
-				</cfinvoke>
-				
-				<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-				</cfinvoke>
-				
-				<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
-					<cfinvokeargument name="timestamp_date" value="#current_date#">
-				</cfinvoke>
-
-				<cfset objectFile.user_in_charge = user_id>
-				<cfset objectFile.uploading_date = stringCurrentDate>
-				
-				<cftransaction>
-				
+			<cfset objectFile.user_in_charge = user_id>
+			<cfset objectFile.uploading_date = stringCurrentDate>
+			
+			<cftransaction>
+			
 				<cfquery name="createFileQuery" datasource="#client_dsn#" result="createFileResult">
 					INSERT INTO #client_abb#_files
-(name,file_name,user_in_charge,file_size,file_type,uploading_date,description,status)
+	(name,file_name,user_in_charge,file_size,file_type,uploading_date,description,status)
 					VALUES(	<cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
 							<cfqueryparam value="#arguments.file_name#" cfsqltype="cf_sql_varchar">,
 							<cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
@@ -2465,7 +2501,7 @@ step="1">
 							<cfqueryparam value="pending" cfsqltype="cf_sql_varchar">
 						);
 				</cfquery>
-	
+
 				<cfquery name="getLastInsertId" datasource="#client_dsn#">
 					SELECT LAST_INSERT_ID() AS insert_file_id FROM #client_abb#_files;
 				</cfquery>
@@ -2493,48 +2529,28 @@ step="1">
 				
 				<!--- ------------------ Update User Space Used --------------------- --->
 				<!---Esto se hace en la página donde se sube realmente el archivo--->			
-				
-				</cftransaction>			
-
-				<cfquery name="selectUserFileQuery" datasource="#client_dsn#">
-					SELECT family_name, name
-					FROM #client_abb#_users
-					WHERE id=<cfqueryparam value="#objectFile.user_in_charge#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-				
-				<cfif selectUserFileQuery.recordCount GT 0>
-					
-					<cfset objectFile.user_full_name = "#selectUserFileQuery.family_name# #selectUserFileQuery.name#">
-					
-				<cfelse><!---the user does not exist--->
-				
-					<cfset error_code = 204>
-					
-					<cfthrow errorcode="#error_code#"> 
-				
-				</cfif>
-				
-				<!---<cfinvoke component="FileManager" method="xmlFile" returnvariable="xmlResult">
-					<cfinvokeargument name="objectFile" value="#objectFile#">
-				</cfinvoke>
-					
-				<cfset xmlResponseContent = xmlResult>
-	
-				<cfinclude template="includes/functionEndNoLog.cfm">--->
-
-				<cfset response = {result=true, message="", objectFile=#objectFile#}>
-								
-			<!--- 
-			<cfelse><!---XML received is incorrect or incomplete--->
-						
-				<cfset xmlResponseContent = arguments.request>
-
-				<cfset error_code = 1002>
-				
-				<cfthrow errorcode="#error_code#">
-				
-			</cfif> --->
 			
+			</cftransaction>			
+
+			<cfquery name="selectUserFileQuery" datasource="#client_dsn#">
+				SELECT family_name, name
+				FROM #client_abb#_users
+				WHERE id=<cfqueryparam value="#objectFile.user_in_charge#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif selectUserFileQuery.recordCount GT 0>
+				
+				<cfset objectFile.user_full_name = "#selectUserFileQuery.family_name# #selectUserFileQuery.name#">
+				
+			<cfelse><!---the user does not exist--->
+			
+				<cfset error_code = 204>
+				
+				<cfthrow errorcode="#error_code#"> 
+			
+			</cfif>
+
+			<cfset response = {result=true, message="", objectFile=#objectFile#}>
 			
 			<cfcatch>
 
@@ -3095,58 +3111,56 @@ step="1">
 			</cfswitch>
 			
 			
-			<cfquery name="beginQuery" datasource="#client_dsn#">
-				BEGIN;
-			</cfquery>
-			
 			<!--- Query to get the physical name and file_size of the file --->
-			<cfquery name="selectPhysicalName" datasource="#client_dsn#">				
-				SELECT physical_name, file_size
+			<cfquery name="getFileQuery" datasource="#client_dsn#">				
+				SELECT physical_name, file_size, user_in_charge
 				FROM #client_abb#_#files_table#
 				WHERE id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
-			<cfif selectPhysicalName.recordCount GT 0>
-			
-				<!--- Delete association --->
-				<cfquery name="deleteAssociationAreaQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_#association_table#
-					SET image_id = <cfqueryparam null="yes" cfsqltype="cf_sql_numeric">
-					WHERE image_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>			
-				
-				<!--- Deletion of the row representing the file --->
-				<cfquery name="deleteFileQuery" datasource="#client_dsn#">		
-					DELETE
-					FROM #client_abb#_#files_table#
-					WHERE id = <cfqueryparam value="#file_id#" CFSQLType="CF_SQL_integer">;
-				</cfquery>
-				
-				<cfset path = APPLICATION.filesPath&'/#client_abb#/#files_directory#/'>	
-				<cfset filePath = path & "#selectPhysicalName.physical_name#">			
-				
-				<!--- Now we delete physically the file on the server --->
-				<cfif FileExists(filePath)><!---If the physical file exist--->
-					<cffile action="delete" file="#filePath#">
-				<cfelse><!---The physical file does not exist--->
-					<cfset error_code = 608>
-				
-					<cfthrow errorcode="#error_code#">
+			<cfif getFileQuery.recordCount GT 0>
+
+				<cfif getFileQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
+					<cfinclude template="includes/checkAdminAccess.cfm">
 				</cfif>
+
+				<cftransaction>
+					
+					<!--- Delete association --->
+					<cfquery name="deleteAssociationAreaQuery" datasource="#client_dsn#">
+						UPDATE #client_abb#_#association_table#
+						SET image_id = <cfqueryparam null="yes" cfsqltype="cf_sql_numeric">
+						WHERE image_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>			
+					
+					<!--- Deletion of the row representing the file --->
+					<cfquery name="deleteFileQuery" datasource="#client_dsn#">		
+						DELETE
+						FROM #client_abb#_#files_table#
+						WHERE id = <cfqueryparam value="#file_id#" CFSQLType="CF_SQL_integer">;
+					</cfquery>
+					
+					<cfset path = APPLICATION.filesPath&'/#client_abb#/#files_directory#/'>	
+					<cfset filePath = path & "#getFileQuery.physical_name#">			
+					
+					<!--- Now we delete physically the file on the server --->
+					<cfif FileExists(filePath)><!---If the physical file exist--->
+						<cffile action="delete" file="#filePath#">
+					<cfelse><!---The physical file does not exist--->
+						<cfset error_code = 608>
+					
+						<cfthrow errorcode="#error_code#">
+					</cfif>
+					
+					<!---Update User Space Used--->
+					<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
+						UPDATE #client_abb#_users
+						SET space_used = space_used-#getFileQuery.file_size#
+						WHERE id = #user_id#;
+					</cfquery>	
 				
-				<!---Update User Space Used--->
-				<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
-					UPDATE #client_abb#_users
-					SET space_used = space_used-#selectPhysicalName.file_size#
-					WHERE id = #user_id#;
-				</cfquery>	
-				
-				
-				<!--- End of the transaction --->
-				<cfquery name="endTransaction" datasource="#client_dsn#">
-					COMMIT;
-				</cfquery>
-				
+				</cftransaction>
+			
 				<cfset xmlResponseContent = '<file id="#file_id#" />'>
 				
 				<cfinclude template="includes/functionEnd.cfm">
@@ -3154,11 +3168,6 @@ step="1">
 			
 			<cfelse><!---The file does not exist (is not found)--->
 			
-				<!--- RollBack the transaction --->
-				<cfquery name="rollBackTransaction" datasource="#client_dsn#">
-					ROLLBACK;
-				</cfquery>
-				
 				<cfset xmlResponseContent = arguments.request>
 				<cfset error_code = 601>
 				
@@ -3277,94 +3286,21 @@ step="1">
 	
 	
 	
-	
-	
-	<!--- ----------------------- SEND FILE BY EMAIL -------------------------------- --->
-	<!---Este método no funciona bien porque al borrar el archivo no lo tiene disponible para enviar por email, así que habría que tenerlo en un directorio temporal hasta que se envíe.--->
-	<!---<cffunction name="sendFileByEmail" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "sendFileByEmail">
-		
-		<cfset var file_id = "">
-		<cfset var email_to = "">
-		
-		<cfset var subject = "">
-		<cfset var content = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
-		<cftry>
-			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
-			<cfset send_user_id = xmlRequest.request.parameters.user.xmlAttributes.id>
-			
-			<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">
-				<cfinvokeargument name="get_file_id" value="#file_id#">
-				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>
-			
-			<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
-				<cfinvokeargument name="get_user_id" value="#send_user_id#">
-				<cfinvokeargument name="format_content" value="default">
-				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>	
-			
-			
-			<cfset subject = "Archivo: #objectFile.name#">
-			<cfset content = "En este email se adjunta el archivo: #objectFile.name#.<br />Descripción del archivo: #objectFile.description#">
-			<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">Este es un email enviado por la aplicación #APPLICATION.title# porque usted ha solicitado que se le envíe un archivo a su correo.<br /> No responda a este email.<br /></p>'>
-			
-			<cfset files_directory = "files">
-			<cfset files_path = "#APPLICATION.filesPath#/#client_abb#">
-			
-			<cfset file_source = "#files_path#/#files_directory#/#objectFile.physical_name#">
-			<cfset file_destination = "#files_path#/#objectFile.file_name#">
-			<cffile action="copy" source="#file_source#" destination="#file_destination#" nameconflict="overwrite">
-			
-			<cfinvoke component="EmailManager" method="sendEmail">
-				<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-				<cfinvokeargument name="to" value="#objectUser.email#">
-				<cfinvokeargument name="subject" value="#subject#">
-				<cfinvokeargument name="content" value="#content#">
-				<cfinvokeargument name="foot_content" value="#foot_content#">
-				<cfinvokeargument name="file_source" value="#file_destination#">
-			</cfinvoke>
-			
-			<cffile action="delete" file="#file_destination#">
-			
-			<cfset xmlResponseContent = "">
-				
-			<cfinclude template="includes/functionEnd.cfm">
-
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn xmlResponse>		
-		
-	</cffunction>--->
-	
-	
-	
-	
 	<!--- ----------------------------------- uploadNewFile -------------------------------------- --->
 
 	<cffunction name="uploadNewFile" output="false" returntype="struct" access="public">
 		<cfargument name="name" type="string" required="true"/>
 		<cfargument name="description" type="string" required="true"/>
 		<cfargument name="Filedata" type="string" required="true"/>
-		
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="typology_id" type="string" required="false">
+
 		<cfset var method = "uploadNewFile">
 
 		<cfset var response = structNew()>
 
 		<cfset var folder_id = "">
+		<cfset var upload_file_id = "">
 					
 		<cftry>
 
@@ -3381,7 +3317,7 @@ step="1">
 		
 			<cfset temp_file="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">	
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="createFileResult">
+			<cfinvoke component="FileManager" method="createFile" returnvariable="createFileResult">
 				<cfinvokeargument name="name" value="#arguments.name#"/>
 				<cfinvokeargument name="file_name" value="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#"/>
 				<cfinvokeargument name="file_type" value=".#uploadedFile.clientFileExt#"/>
@@ -3392,14 +3328,39 @@ step="1">
 				<cfinvokeargument name="folder_id" value="#folder_id#"/>
 			</cfinvoke>	
 
-			<cfif createFileResult.result IS true>
+			<cfif createFileResult.result IS true AND isDefined("createFileResult.objectFile.id") AND isNumeric(createFileResult.objectFile.id)>
 				
 				<cftry>
 					
-					<cfset upload_file_id = createFileResult.objectFile.id>		
-					
-					<cffile action="rename" source="#destination##temp_file#" 
-							destination="#destination##upload_file_id#">
+					<cfset upload_file_id = createFileResult.objectFile.id>
+
+					<!--- setFileTypology --->
+					<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+
+						<cfset arguments.file_id = upload_file_id>
+						
+						<cfinvoke component="FileManager" method="setFileTypology" argumentcollection="#arguments#" returnvariable="setFileTypologyResponse">
+						</cfinvoke>
+
+						<cfif setFileTypologyResponse.result IS false>
+
+							<cfthrow message="#setFileTypologyResponse.message#">
+		
+						</cfif>
+
+					</cfif>		
+
+					<!--- associateFileToArea --->
+					<cfinvoke component="FileManager" method="associateFileToAreas" returnvariable="response">
+						<cfinvokeargument name="file_id" value="#upload_file_id#"/>
+						<cfinvokeargument name="areas_ids" value="#arguments.area_id#"/>
+					</cfinvoke>
+
+					<cfif response.result IS false>
+
+						<cfthrow message="#associateFileResponse.message#">
+	
+					</cfif>
 							
 					<!--- ------------------ Update User Space Used --------------------- --->
 					<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
@@ -3407,15 +3368,20 @@ step="1">
 						SET space_used = space_used+<cfqueryparam value="#uploadedFile.fileSize#" cfsqltype="cf_sql_integer">
 						WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
-					
+
+					<cffile action="rename" source="#destination##temp_file#" destination="#destination##upload_file_id#">
+
 					<cfcatch><!---The upload fail--->
+
 						<cfif isDefined("upload_file_id")>
 							<cfquery datasource="#client_dsn#" name="changeFileStatus">
 								UPDATE #client_abb#_files
 								SET status = <cfqueryparam value="failed" cfsqltype="cf_sql_varchar">
-								WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">
+								WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
 							</cfquery>
 						</cfif>
+
+						<cffile action="delete" file="#destination##temp_file#">
 						
 						<!---<cfset error_code = 604>--->
 				
@@ -3424,9 +3390,6 @@ step="1">
 					</cfcatch>
 				</cftry>
 
-				<cfset response = {result=true, message="", file_id=#upload_file_id#}>
-										
-				
 			<cfelse><!---File insert fail--->
 			
 				<cffile action="delete" file="#destination##temp_file#">
@@ -3564,6 +3527,48 @@ step="1">
 			</cfif>
 
 		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+	
+
+	<!--- ----------------------------------- setFileTypology -------------------------------------- --->
+
+	<cffunction name="setFileTypology" output="false" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="action" type="string" required="true">
+
+		<cfset var method = "setFileTypology">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="RowManager" method="saveRow" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+
+			<cfif response.result IS true AND arguments.action IS "create">
+
+				<cfquery datasource="#client_dsn#" name="setFileTypology">
+					UPDATE #client_abb#_files
+					SET typology_id = <cfqueryparam value="#response.table_id#" cfsqltype="cf_sql_integer">,
+					typology_row_id = <cfqueryparam value="#response.row_id#" cfsqltype="cf_sql_integer">
+					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+			</cfif>
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">

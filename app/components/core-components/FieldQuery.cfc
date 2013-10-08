@@ -94,6 +94,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="with_types" type="boolean" required="false" default="false">
+		<cfargument name="with_table" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -107,9 +108,15 @@
 				<cfif arguments.with_types IS true>
 				, fields_types.*
 				</cfif>
+				<cfif arguments.with_table IS true>
+				, tables.area_id, tables.structure_available, tables.general
+				</cfif>
 				FROM `#client_abb#_#tableTypeTable#_fields` AS table_fields
 				<cfif arguments.with_types IS true>
 				INNER JOIN `#client_abb#_#fieldsTypesTable#` AS fields_types ON table_fields.field_type_id = fields_types.field_type_id
+				</cfif>
+				<cfif arguments.with_table IS true>
+					INNER JOIN `#client_abb#_#tableTypeTable#` AS tables ON table_fields.table_id = tables.id
 				</cfif>
 				WHERE table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
 				ORDER BY position ASC;

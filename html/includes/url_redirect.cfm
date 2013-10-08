@@ -26,11 +26,23 @@
 	<cfset redirect_page = "task.cfm?task=#URL.task#">
 	<!---<cfset redirect_area_page = "tasks.cfm?task=#URL.task#&area=#URL.area#">--->
 	<cfset redirect_area_page = "area_items.cfm?task=#URL.task#&area=#URL.area#">
+<cfelseif isDefined("URL.image")>
+	<cfset redirect_page = "image.cfm?image=#URL.image#">
+	<cfset redirect_area_page = "area_items.cfm?image=#URL.image#&area=#URL.area#">
 <cfelseif APPLICATION.moduleConsultations AND isDefined("URL.consultation")>
 	<cfset redirect_page = "consultation.cfm?consultation=#URL.consultation#">
 	<!---<cfset redirect_area_page = "consultations.cfm?consultation=#URL.consultation#&area=#URL.area#">--->
 	<cfset redirect_area_page = "area_items.cfm?consultation=#URL.consultation#&area=#URL.area#">
+<cfelseif APPLICATION.modulePubMedComments IS true AND isDefined("URL.pubmed")>
+	<cfset redirect_page = "pubmed.cfm?pubmed=#URL.pubmed#">
+	<cfset redirect_area_page = "area_items.cfm?pubmed=#URL.pubmed#&area=#URL.area#">
 <cfelseif APPLICATION.moduleLists IS true AND isDefined("URL.list")>
 	<cfset redirect_page = "list.cfm?list=#URL.list#">
 	<cfset redirect_area_page = "area_items.cfm?list=#URL.list#&area=#URL.area#">
+<cfelseif APPLICATION.moduleForms IS true AND isDefined("URL.form")>
+	<cfset redirect_page = "form.cfm?form=#URL.form#">
+	<cfset redirect_area_page = "area_items.cfm?form=#URL.form#&area=#URL.area#">
+<cfelseif APPLICATION.modulefilesWithTables IS true AND isDefined("URL.typology")>
+	<cfset redirect_page = "typology.cfm?typology=#URL.typology#">
+	<cfset redirect_area_page = "area_items.cfm?typology=#URL.typology#&area=#URL.area#">
 </cfif>

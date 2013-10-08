@@ -100,7 +100,7 @@
 		<cfset itemTypeNameEs = "Comentario de artículo PubMed">
 		<cfset itemTypeNameEsP = "Comentarios de artículos PubMed">
 
-		<cfset itemTypeGender = "female">
+		<cfset itemTypeGender = "male">
 	
    	</cfcase> 
 	
@@ -110,8 +110,8 @@
 		<!--- <cfset itemTypeNameU = "Image"> --->
 		<cfset itemTypeNameP = "images">
 		
-		<cfset itemTypeNameEs = "Image">
-		<cfset itemTypeNameEsP = "Images">
+		<cfset itemTypeNameEs = "Imagen">
+		<cfset itemTypeNameEsP = "Imágenes">
 
 		<cfset itemTypeGender = "female">
 	

@@ -65,7 +65,10 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_new.cfm">
+<!---<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_new.cfm">--->
+
+<cfset page_type = 1>
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form.cfm">
 
 <!-- InstanceEndEditable -->
 </body>

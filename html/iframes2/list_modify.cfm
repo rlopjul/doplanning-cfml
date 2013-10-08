@@ -63,8 +63,9 @@
 <!-- InstanceBeginEditable name="content" -->
 
 <cfset return_path = "#APPLICATION.htmlPath#/iframes2/">
-<cfset itemTypeId = 11>
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_modify_content.cfm">
+<cfset tableTypeId = 1>
+<cfset page_type = 2>
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_table_form.cfm">
 
 <!-- InstanceEndEditable -->
 </body>

@@ -46,6 +46,7 @@
 			 	<li <cfif curElement EQ "items">class="active"</cfif>><a href="area_items.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/area.png" title="Todos los elementos del área" alt="Todos los elementos del área" lang="es"/></a></li>
 					
 				<cfif APPLICATION.moduleWeb EQ true AND area_type EQ "web" OR area_type EQ "intranet">
+
 					<li <cfif curElement EQ "entries">class="active"</cfif>><a href="entries.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/entry.png" title="Elementos de contenidos WEB del área" alt="Elementos e contenidos WEB del área" lang="es"/></a></li>
 					
 					<li <cfif curElement EQ "news">class="active"</cfif>><a href="newss.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/news.png" title="Noticias WEB del área" alt="Noticias WEB del área" lang="es"/></a></li>
@@ -53,6 +54,8 @@
 					<cfif APPLICATION.identifier EQ "vpnet">
 					<li <cfif curElement EQ "links">class="active"</cfif>><a href="links.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/link.png" title="Enlaces del área" alt="Enlaces del área" lang="es"/></a></li>
 					</cfif>
+
+					<li <cfif curElement EQ "images">class="active"</cfif>><a href="images.cfm?area=#area_id#" title="Imágenes del área" lang="es"><i class="icon-picture" style="font-size:25px; color:##7A7A7A"></i></a></li>	
 					
 				</cfif>
 				
@@ -60,9 +63,9 @@
 				<li <cfif curElement EQ "messages">class="active"</cfif>><a href="messages.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/message.png" title="Mensajes del área" alt="Mensajes del área" lang="es"/></a></li>
 				</cfif>
 				
-				<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0 OR APPLICATION.identifier EQ "vpnet">
+				<!---<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0 OR APPLICATION.identifier EQ "vpnet">--->
 				<li <cfif curElement EQ "files">class="active"</cfif>><a href="files.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/file.png" title="Archivos del área" alt="Archivos del área" lang="es"/></a></li>
-				</cfif>
+				<!---</cfif>--->
 				
 				<cfif APPLICATION.identifier EQ "dp" OR (APPLICATION.moduleWeb EQ true AND area_type EQ "web" OR area_type EQ "intranet")><!---Events--->
 					<li <cfif curElement EQ "events">class="active"</cfif>><a href="events.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/event.png" title="Eventos del área" alt="Eventos del área" lang="es"/></a></li>
@@ -83,6 +86,18 @@
 				<cfif APPLICATION.moduleLists IS true><!--- Lists --->
 
 					<li <cfif curElement EQ "tables">class="active"</cfif>><a href="lists.cfm?area=#area_id#" title="Listas del área" lang="es"><i class="icon-table" style="font-size:27px; color:##7A7A7A"></i></a></li>
+
+				</cfif>
+
+				<cfif APPLICATION.moduleForms IS true><!--- Forms --->
+
+					<li <cfif curElement EQ "forms">class="active"</cfif>><a href="forms.cfm?area=#area_id#" title="Formularios del área" lang="es"><i class="icon-columns" style="font-size:27px; color:##7A7A7A"></i></a></li>
+
+				</cfif>
+
+				<cfif APPLICATION.modulePubMedComments IS true><!--- PubMed Comments --->
+
+					<li <cfif curElement EQ "pubmed">class="active"</cfif>><a href="pubmeds.cfm?area=#area_id#" title="Comentarios PubMed del área" lang="es"><i class="icon-book" style="font-size:27px; color:##0088CC"></i></a></li>
 
 				</cfif>
 

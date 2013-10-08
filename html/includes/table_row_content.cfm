@@ -30,7 +30,7 @@
 <cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
 	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##URL.return_page#")>
 <cfelse>
-	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##itemTypeNameP#.cfm?area=#area_id#")>
+	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##tableTypeNameP#.cfm?area=#area_id#")>
 </cfif>
 
 <script type="text/javascript">
@@ -91,36 +91,8 @@
 
 	<div style="height:10px;clear:both"></div>
 
-	<!---Table fields--->
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
-		<cfinvokeargument name="table_id" value="#table_id#">
-		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-		<cfinvokeargument name="with_types" value="true"/>
-	</cfinvoke>
-	<cfset fields = fieldsResult.tableFields>
-
-	<cfloop query="fields">
-
-		<cfset field_label = fields.label&":">
-		<cfset field_name = "field_#fields.field_id#">
-		<cfset field_value = row[field_name]>
-
-		<cfif fields.input_type IS "textarea">
-
-			<div class="div_message_page_label">#field_label#</div> 
-			<div class="div_message_page_description">#field_value#</div>
-
-		<cfelseif fields.field_type_id IS 8><!---URL--->
-
-			<div class="div_message_page_label">#field_label#<br/> <a href="#field_value#" target="_blank">#field_value#</a></div>
-
-		<cfelse>
-
-			<div class="div_message_page_label">#field_label# <span class="text_message_page">#field_value#</span></div>
-
-		</cfif>		
-
-	</cfloop>
+	<!--- Fields --->
+	<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">
 
 </div>
 

@@ -95,10 +95,14 @@
 
 			<cfif getTableQuery.recordCount GT 0>
 
-				<cfset area_id = getTableQuery.area_id>
+				<cfif arguments.tableTypeId IS NOT 3 OR getTableQuery.general IS NOT true><!---No es tipología general--->
+					
+					<cfset area_id = getTableQuery.area_id>
 
-				<!---checkAreaAccess--->
-				<cfinclude template="includes/checkAreaAccess.cfm">
+					<!---checkAreaAccess--->
+					<cfinclude template="includes/checkAreaAccess.cfm">
+
+				</cfif>
 
 				<cfset response = {result=true, table=#getTableQuery#}>
 
@@ -141,10 +145,10 @@
 			<cfquery name="getTableQuery" datasource="#client_dsn#">
 				SELECT *
 				FROM #client_abb#_#tableTypeTable#
-				WHERE table_id = -1;
+				WHERE id = -1;
 			</cfquery>
 
-			<cfset response = {result=true, field=#getTableQuery#}>
+			<cfset response = {result=true, table=#getTableQuery#}>
 
 			<cfcatch>
 
@@ -166,6 +170,7 @@
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="user_in_charge" type="numeric" required="false">
 		<cfargument name="limit" type="numeric" required="false">
+		<cfargument name="structure_available" type="boolean" required="false">
 
 		<cfset var method = "getAreaTables">
 
@@ -176,8 +181,6 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-
-			<!---<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">--->
 	
 			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">
@@ -194,6 +197,9 @@
 				<cfinvokeargument name="parse_dates" value="true"/>
 				<cfif isDefined("arguments.limit")>
 					<cfinvokeargument name="limit" value="#arguments.limit#">
+				</cfif>
+				<cfif isDefined("arguments.structure_available") AND arguments.structure_available IS true>
+					<cfinvokeargument name="structure_available" value="true"/>
 				</cfif>		
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -214,77 +220,47 @@
 		<cfreturn response>
 			
 	</cffunction>
-	
-	
 
 
 
-	<!---    createTable     --->
-	<!--- 
-	<cffunction name="createTable" output="false" access="public" returntype="struct">
-			<cfargument name="table_type_id" type="numeric" required="yes">
-			<cfargument name="user_in_charge" type="numeric" required="yes">
-			<cfargument name="area_id" type="numeric" required="yes">
-			<cfargument name="title" type="string" required="yes">
-			<cfargument name="description" type="string" required="yes">
-			<cfargument name="structure_available" type="boolean" required="no" default="false">
-			<cfargument name="general" type="boolean" required="no" default="false">
-					
-			<cfset var method = "createTable">
+	<!--- -------------------------------- getTablesWithStructureAvailable -------------------------------  --->
 	
-			<cfset var response = structNew()>
+	<cffunction name="getTablesWithStructureAvailable" output="false" access="public" returntype="struct">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getTablesWithStructureAvailable">
+
+		<cfset var response = structNew()>
+
+		<cftry>
 			
-			<cfset var table_id = "">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 	
-			<cftry>
-				
-				<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-	
-				<cfset arguments.title = trim(arguments.title)>
-				
-				<cftransaction>
-							
-					<cfquery datasource="#dsn#" name="createTable">
-						INSERT INTO #tables_tb# 
-						SET 
-						creation_date = UTC_TIMESTAMP(),
-						table_type_id = <cfqueryparam value="#arguments.table_type_id#" cfsqltype="cf_sql_varchar">,
-						user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_varchar">,
-						title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
-						description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">,
-						fields_number = <cfqueryparam value="#arguments.fields_number#" cfsqltype="cf_sql_integer">,
-						public = <cfqueryparam value="#arguments.public#" cfsqltype="cf_sql_bit">,
-						nuhsa_field = <cfqueryparam value="#arguments.nuhsa_field#" cfsqltype="cf_sql_bit">,
-						email_notification = <cfqueryparam value="#arguments.email_notification#" cfsqltype="cf_sql_varchar">,
-						enabled = 0;		
-					</cfquery>
-					
-					<cfquery datasource="#dsn#" name="getLastInsertId">
-						SELECT LAST_INSERT_ID() AS last_insert_id FROM #tables_tb#;
-					</cfquery>
-				
-				</cftransaction>
-				
-				<cfset table_id = getLastInsertId.last_insert_id>
-	
-				<cfinclude template="includes/functionEndOnlyLog.cfm">
-				
-				<cfset response = {result="true", table_id=#table_id#}>
-				
-				<cfreturn response>
-				
-				<cfcatch>
-	
-					<cfinclude template="includes/errorHandlerStruct.cfm">
-	
-				</cfcatch>
-	
-			</cftry>
-	
-			<cfreturn response>	
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getAllTables" returnvariable="getTablesResult">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			
-		</cffunction> --->
+				<cfinvokeargument name="structure_available" value="true"/>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+						
+			<cfset response = {result=true, tables=#getTablesResult.query#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
 	
+
 
 
 	<!--- ------------------------------------- getTableFields -------------------------------------  --->
@@ -298,18 +274,32 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var area_id = "">
+
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-	
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="getTableFieldsQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_types" value="#arguments.with_types#">
+				<cfinvokeargument name="with_table" value="true">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
+
+			<cfif getTableFieldsQuery.recordCount GT 0>
+				<cfif getTableFieldsQuery.structure_available IS false AND getTableFieldsQuery.general IS false>
+
+					<cfset area_id = getTableFieldsQuery.area_id>
+
+					<!---checkAreaAccess--->
+					<cfinclude template="includes/checkAreaAccess.cfm">
+
+				</cfif>
+			</cfif>
 
 			<cfset response = {result=true, tableFields=getTableFieldsQuery}>
 								

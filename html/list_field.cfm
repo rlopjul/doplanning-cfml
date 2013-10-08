@@ -106,8 +106,11 @@
 
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
+
+<cfset return_path = "#APPLICATION.htmlPath#/">
 <cfset tableTypeId = 1>
-<cfinclude template="#APPLICATION.htmlPath#/includes/table_field_content.cfm">
+<cfset page_type = 2>
+<cfinclude template="#APPLICATION.htmlPath#/includes/table_field_form.cfm">
 
 <cfset return_page = "#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
