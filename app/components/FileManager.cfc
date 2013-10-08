@@ -509,30 +509,30 @@
 
 			</cfif>
 
-			<cftransaction>
+			<!---<cftransaction> No se puede usar aquí transacción porque dentro de setFileTypology hay transacciones--->
 
-				<cfquery name="updateFileQuery" datasource="#client_dsn#">
-					UPDATE `#client_abb#_files`
-					SET name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
-					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">
-					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>	
+			<cfquery name="updateFileQuery" datasource="#client_dsn#">
+				UPDATE `#client_abb#_files`
+				SET name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
+				description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">
+				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>	
 
-				<!--- setFileTypology --->
-				<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
-					
-					<cfinvoke component="FileManager" method="setFileTypology" argumentcollection="#arguments#" returnvariable="setFileTypologyResponse">
-					</cfinvoke>
+			<!--- setFileTypology --->
+			<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+				
+				<cfinvoke component="FileManager" method="setFileTypology" argumentcollection="#arguments#" returnvariable="setFileTypologyResponse">
+				</cfinvoke>
 
-					<cfif setFileTypologyResponse.result IS false>
+				<cfif setFileTypologyResponse.result IS false>
 
-						<cfthrow message="#setFileTypologyResponse.message#">
-	
-					</cfif>
+					<cfthrow message="#setFileTypologyResponse.message#">
 
-				</cfif>		
+				</cfif>
 
-			</cftransaction>				
+			</cfif>		
+
+			<!---</cftransaction>--->				
 			
 			<cfinclude template="includes/logRecord.cfm">
 
@@ -2485,6 +2485,24 @@ step="1">--->
 
 			<cfset objectFile.user_in_charge = user_id>
 			<cfset objectFile.uploading_date = stringCurrentDate>
+
+			<cfquery name="selectUserFileQuery" datasource="#client_dsn#">
+				SELECT family_name, name
+				FROM #client_abb#_users
+				WHERE id=<cfqueryparam value="#objectFile.user_in_charge#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif selectUserFileQuery.recordCount GT 0>
+				
+				<cfset objectFile.user_full_name = "#selectUserFileQuery.family_name# #selectUserFileQuery.name#">
+				
+			<cfelse><!---the user does not exist--->
+			
+				<cfset error_code = 204>
+				
+				<cfthrow errorcode="#error_code#"> 
+			
+			</cfif>
 			
 			<cftransaction>
 			
@@ -2532,23 +2550,7 @@ step="1">--->
 			
 			</cftransaction>			
 
-			<cfquery name="selectUserFileQuery" datasource="#client_dsn#">
-				SELECT family_name, name
-				FROM #client_abb#_users
-				WHERE id=<cfqueryparam value="#objectFile.user_in_charge#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-			
-			<cfif selectUserFileQuery.recordCount GT 0>
-				
-				<cfset objectFile.user_full_name = "#selectUserFileQuery.family_name# #selectUserFileQuery.name#">
-				
-			<cfelse><!---the user does not exist--->
-			
-				<cfset error_code = 204>
-				
-				<cfthrow errorcode="#error_code#"> 
-			
-			</cfif>
+			<cfinclude template="includes/logRecord.cfm">
 
 			<cfset response = {result=true, message="", objectFile=#objectFile#}>
 			
@@ -3515,6 +3517,8 @@ step="1">--->
 					
 					</cfcatch>
 				</cftry>
+
+				<cfinclude template="includes/logRecord.cfm">
 			
 				<cfset response = {result=true, message="", file_id=#arguments.file_id#}>
 								

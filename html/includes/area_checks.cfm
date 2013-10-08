@@ -36,16 +36,28 @@ app_version almacena si es la versión móvil o la estandar--->
 			<cfset curElement = "events">
 		</cfcase>
 		
-		<cfcase value="5">
-			<cfset curElement = "events">
-		</cfcase>
-		
 		<cfcase value="6">
 			<cfset curElement = "tasks">
 		</cfcase>
 		
 		<cfcase value="7">
 			<cfset curElement = "consultations">
+		</cfcase>
+
+		<cfcase value="8">
+			<cfset curElement = "pubmeds">
+		</cfcase>
+		
+		<cfcase value="9">
+			<cfset curElement = "images">
+		</cfcase>
+		
+		<cfcase value="11">
+			<cfset curElement = "lists">
+		</cfcase>
+
+		<cfcase value="12">
+			<cfset curElement = "forms">
 		</cfcase>
 		
 	</cfswitch>

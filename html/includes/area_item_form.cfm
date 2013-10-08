@@ -1,4 +1,33 @@
+<!---Variables requeridas:
+itemTypeId
+return_path: define la ruta donde se encuentra esta página, para que al enviar el mensaje se vuelva a ella--->
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form_query.cfm">
+
+<cfoutput>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js" type="text/javascript"></script>
+</cfoutput>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+
+<div class="div_head_subtitle">
+	<cfoutput>
+	<span lang="es"><cfif page_type IS 1>
+		<cfif itemTypeId IS NOT 7 OR parent_kind EQ "area">
+			<cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#
+		<cfelse>
+			Respuesta a #itemTypeNameEs#
+		</cfif>
+	<cfelse>
+		Modificar #itemTypeNameEs#
+	</cfif> 
+	</span>
+	</cfoutput>
+</div>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <div class="contenedor_fondo_blanco">
 <div class="div_send_message">
@@ -111,77 +140,6 @@ function onSubmitForm()
 </script>
 </cfoutput>
 
-<cfif page_type IS 1><!---NEW ITEM--->
-
-	<!---<cfset form_action = "#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=createItemRemote">--->
-
-
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getEmptyItem" returnvariable="objectItem">
-		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-	</cfinvoke>
-	
-	<cfset objectItem.title = title_default>
-
-	<!---<cfset objectItem = structNew()>
-	<cfset objectItem.title = title_default>
-	<cfset objectItem.description = "">
-	<cfset objectItem.attached_file_name = ""> 
-	<cfset objectItem.attached_image_name = "">
-	
-	<cfset objectItem.display_type_id = "">
-	<cfset objectItem.iframe_url = "">
-	<cfset objectItem.iframe_display_type_id = 1>
-	
-	<cfif itemTypeId IS 3>
-		<cfset objectItem.link = "http://">
-	<cfelse>
-		<cfset objectItem.link = "">
-	</cfif>
-	
-	<cfif itemTypeId IS 4><!---News--->
-		<cfset cur_date = DateFormat(now(), "DD-MM-YYYY")>
-		<cfset objectItem.creation_date = cur_date>
-	</cfif>
-	
-	<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-		<cfset cur_date = DateFormat(now(), "DD-MM-YYYY")>
-		
-		<cfset objectItem.start_date = cur_date>
-		<cfset objectItem.end_date = cur_date>
-		
-		<cfif itemTypeId IS 5>
-			<cfset objectItem.start_time = "00:00">
-			<cfset objectItem.end_time = "00:00">
-			<cfset objectItem.place = "">
-		<cfelse>
-			<cfset objectItem.recipient_user = "">
-			<cfset objectItem.recipient_user_full_name = "">
-			<cfset objectItem.done = "">
-			<cfset objectItem.estimated_value = 0>
-			<cfset objectItem.real_value = 0>
-		</cfif>
- 	</cfif>
-	
-	<cfif itemTypeId IS 7><!---Consultation--->
-		<cfset objectItem.identifier = "">
-	</cfif>
-	
-	<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-	
-		<!---getAreaItemsLastPosition--->
-		<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAreaItemsLastPosition" returnvariable="lastPosition">
-			<cfinvokeargument name="area_id" value="#area_id#">
-			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-		</cfinvoke>
-		
-		<cfset objectItem.position = lastPosition+1>
-	
-	</cfif>--->
-	
-
-<cfelse><!---MODIFY ITEM--->
-	<!---<cfset form_action = "#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=updateItemRemote">--->
-</cfif>
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-inline" onsubmit="return onSubmitForm();">
 	<cfinput type="hidden" name="itemTypeId" value="#itemTypeId#">
@@ -225,6 +183,9 @@ function onSubmitForm()
 			</cfoutput>
 		</cfif>
 	</div>
+
+	<div style="height:10px;"><!--- ---></div>
+	<small lang="es">* Campos obligatorios.</small>
 	
 </cfform>
 

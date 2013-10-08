@@ -1,3 +1,7 @@
+<!---page_types
+1 Create new file
+2 Modify file
+--->
 
 <cfif isDefined("URL.area") AND isValid("integer",URL.area)>
 	<cfset area_id = URL.area>
@@ -22,7 +26,7 @@
 		
 		<cfset msg = URLEncodedFormat(actionResponse.message)>
 		
-		<cflocation url="area_items.cfm?area=#FORM.area_id#&file=#file_id#&res=1&msg=#msg#" addtoken="no">
+		<cflocation url="area_items.cfm?area=#area_id#&file=#file_id#&res=1&msg=#msg#" addtoken="no">
 			
 	<cfelse>
 		

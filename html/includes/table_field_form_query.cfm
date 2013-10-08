@@ -36,6 +36,7 @@
 		<cfset URL.msg = actionResponse.message>
 
 		<cfset field = FORM>
+		<cfset table_id = FORM.table_id>
 		
 	</cfif> 
 
@@ -84,15 +85,13 @@
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
+		<cfoutput>
+
 		<cfif app_version NEQ "html2">
 			<div class="div_head_subtitle">
-			<cfoutput>
-			<span lang="es">Campo</span>
-			</cfoutput>
+				<span lang="es">Campo</span>
 			</div>
 		</cfif>
-
-		<cfoutput>
 
 		<div class="div_message_page_title">#field.label#</div>
 		<div class="div_separator"><!-- --></div>

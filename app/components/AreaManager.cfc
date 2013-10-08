@@ -1560,7 +1560,7 @@
 				<cfinvokeargument name="objectArea" value="#area#">
 			</cfinvoke>--->
 			
-			<cfinclude template="includes/functionEndOnlyLog.cfm">
+			<cfinclude template="includes/logRecord.cfm">
 			
 			<cfset response = {result=true, message="", area_id=#area_id#}>
 		
@@ -1810,28 +1810,8 @@
 			</cfif>
 
 			
-			<cfinclude template="includes/functionEndOnlyLog.cfm">
+			<cfinclude template="includes/logRecord.cfm">
 
-
-			<!--- <cfquery name="selectQuery" datasource="#client_dsn#">
-				SELECT *, users.name AS user_name
-				FROM #client_abb#_areas AS areas INNER JOIN #client_abb#_users AS users ON areas.user_in_charge = users.id
-				WHERE areas.id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType="CF_SQL_integer">;
-			</cfquery>	
-		
-			<cfinvoke component="AreaManager" method="objectArea" returnvariable="areaXml">
-				<cfinvokeargument name="id" value="#selectQuery.id#">
-				<cfinvokeargument name="parent_id" value="#selectQuery.parent_id#">
-				<cfinvokeargument name="parent_kind" value="">
-				<cfinvokeargument name="user_in_charge" value="#selectQuery.user_in_charge#">
-				<cfinvokeargument name="creation_date" value="#selectQuery.creation_date#">
-				<cfinvokeargument name="name" value="#selectQuery.name#">
-				<cfinvokeargument name="description" value="#selectQuery.description#">
-				<cfinvokeargument name="user_full_name" value="#selectQuery.family_name# #selectQuery.user_name#">
-				
-				<cfinvokeargument name="return_type" value="xml">
-			</cfinvoke>	--->
-			
 			<cfset response = {result=true, message="", area_id=#arguments.area_id#}><!---areaXml=#areaXml#--->
 		
 			<cfcatch>

@@ -73,143 +73,6 @@
 		<cfreturn response.item>
 			
 	</cffunction>
-
-    
-	<!--- -------------------------------createItemRemote-------------------------------------- --->
-	
-    <!---<cffunction name="createItemRemote" returntype="void" access="remote">
-		<cfargument name="itemTypeId" type="numeric" required="true">
-		<cfargument name="title" type="string" required="true">
-		<cfargument name="link" type="string" required="false" default="">
-		<cfargument name="link_target" type="string" required="false" default="">
-        <cfargument name="description" type="string" required="false" default="">
-        <cfargument name="parent_id" type="numeric" required="true">
-        <cfargument name="parent_kind" type="string" required="true">
-		<cfargument name="area_id" type="numeric" required="true">
-        <cfargument name="Filedata" type="any" required="false" default="">
-		<cfargument name="imagedata" type="any" required="false" default="">
-		<cfargument name="notify_by_sms" type="boolean" required="no">
-		<cfargument name="post_to_twitter" type="boolean" required="no">
-		<cfargument name="creation_date" type="string" required="no">
-		<cfargument name="start_date" type="string" required="no">
-		<cfargument name="end_date" type="string" required="no">
-		<cfargument name="start_hour" type="numeric" required="no">
-		<cfargument name="start_minute" type="numeric" required="no">
-		<cfargument name="end_hour" type="numeric" required="no">
-		<cfargument name="end_minute" type="numeric" required="no">
-		<cfargument name="place" type="string" required="no">
-		<cfargument name="recipient_user" type="numeric" required="no">
-		<cfargument name="estimated_value" type="numeric" required="no">
-		<cfargument name="real_value" type="numeric" required="no">
-		<cfargument name="done" type="boolean" required="no">
-		<cfargument name="position" type="numeric" required="no">
-		<cfargument name="display_type_id" type="numeric" required="no">
-		<cfargument name="iframe_url" type="string" required="no">
-		<cfargument name="iframe_display_type_id" type="numeric" required="no">
-		<cfargument name="identifier" type="string" required="no">
-		<cfargument name="return_path" type="string" required="yes">
-		
-		<cfset var method = "createItemRemote">
-		
-		<cftry>
-		
-			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
-			
-			<cfinvoke component="AreaItem" method="createItem" returnvariable="createItemResponse">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				<cfinvokeargument name="title" value="#arguments.title#">
-				<cfinvokeargument name="link" value="#arguments.link#">
-				<cfinvokeargument name="link_target" value="#arguments.link_target#">
-				<cfinvokeargument name="description" value="#arguments.description#">
-				<cfinvokeargument name="parent_id" value="#arguments.parent_id#">
-				<cfinvokeargument name="parent_kind" value="#arguments.parent_kind#">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="Filedata" value="#arguments.Filedata#">
-				<cfinvokeargument name="imagedata" value="#arguments.imagedata#">
-				<cfif isDefined("arguments.notify_by_sms")>
-					<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
-				</cfif>
-				<cfif isDefined("arguments.post_to_twitter")>
-					<cfinvokeargument name="post_to_twitter" value="#arguments.post_to_twitter#">
-				</cfif>
-				<cfif isDefined("arguments.creation_date")>
-					<cfinvokeargument name="creation_date" value="#arguments.creation_date#">
-				</cfif>
-				<cfif isDefined("arguments.start_date")>
-					<cfinvokeargument name="start_date" value="#arguments.start_date#">
-				</cfif>
-				<cfif isDefined("arguments.end_date")>
-					<cfinvokeargument name="end_date" value="#arguments.end_date#">
-				</cfif>
-				<cfif isDefined("arguments.start_hour") AND isDefined("arguments.start_minute")>
-					<cfinvokeargument name="start_hour" value="#arguments.start_hour#">
-					<cfinvokeargument name="start_minute" value="#arguments.start_minute#">
-				</cfif>
-				<cfif isDefined("arguments.end_hour") AND isDefined("arguments.end_minute")>
-					<cfinvokeargument name="end_hour" value="#arguments.end_hour#">
-					<cfinvokeargument name="end_minute" value="#arguments.end_minute#">
-				</cfif>
-				<cfif isDefined("arguments.place")>
-					<cfinvokeargument name="place" value="#arguments.place#">
-				</cfif>
-				<cfif isDefined("arguments.recipient_user")>
-					<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
-				</cfif>
-				<cfif isDefined("arguments.estimated_value")>
-					<cfinvokeargument name="estimated_value" value="#arguments.estimated_value#">
-				</cfif>
-				<cfif isDefined("arguments.real_value")>
-					<cfinvokeargument name="real_value" value="#arguments.real_value#">
-				</cfif>
-				<cfif isDefined("arguments.done")>
-					<cfinvokeargument name="done" value="#arguments.done#">
-				</cfif>
-				<cfif isDefined("arguments.position")>
-					<cfinvokeargument name="position" value="#arguments.position#">
-				</cfif>
-				<cfif isDefined("arguments.display_type_id")>
-					<cfinvokeargument name="display_type_id" value="#arguments.display_type_id#">
-				</cfif>
-				<cfif isDefined("arguments.iframe_url")>
-					<cfinvokeargument name="iframe_url" value="#arguments.iframe_url#">
-				</cfif>
-				<cfif isDefined("arguments.iframe_display_type_id")>
-					<cfinvokeargument name="iframe_display_type_id" value="#arguments.iframe_display_type_id#">
-				</cfif>
-				<cfif isDefined("arguments.identifier")>
-					<cfinvokeargument name="identifier" value="#arguments.identifier#">
-				</cfif>
-			</cfinvoke>
-			
-			<cfset msg = URLEncodedFormat(createItemResponse.message)>
-
-			<cfif createItemResponse.result IS true>
-
-				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 13><!---Lists, Forms--->
-
-					<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-
-					<cflocation url="#arguments.return_path##tableTypeName#_fields.cfm?&#tableTypeName#=#createItemResponse.item_id#&res=#createItemResponse.result#&msg=#msg#" addtoken="no">
-
-				<cfelse>
-
-					<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#itemTypeName#=#createItemResponse.item_id#&res=#createItemResponse.result#&msg=#msg#" addtoken="no">
-
-				</cfif>
-
-			<cfelse>
-
-				<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&res=#createItemResponse.result#&msg=#msg#" addtoken="no">
-				
-			</cfif>
-
-			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-	</cffunction>--->
 	
 	
 	
@@ -287,7 +150,7 @@
                 <cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
                 <cfinvokeargument name="parent_id" value="#arguments.parent_id#">
                 <cfinvokeargument name="parent_kind" value="#arguments.parent_kind#">
-				<cfif with_attached IS false>
+				<!---<cfif with_attached IS false>
                 	<cfinvokeargument name="attached_file_id" value="-1">
                     <cfinvokeargument name="attached_file_name" value="NULL">
          		<cfelse>
@@ -300,7 +163,7 @@
 				<cfelse>
 					<cfinvokeargument name="attached_image_id" value="NULL">
                     <cfinvokeargument name="attached_image_name" value="(Pendiente de subir el archivo)">
-				</cfif>
+				</cfif>--->
                 <cfif isDefined("arguments.notify_by_sms")>
 					<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
 				</cfif>
@@ -721,7 +584,7 @@
 				</cfif>
                 <cfinvokeargument name="description" value="#arguments.description#">
                 <cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
-				<cfif with_attached IS false>
+				<!---<cfif with_attached IS false>
                 	<cfinvokeargument name="attached_file_id" value="-1">
                     <cfinvokeargument name="attached_file_name" value="NULL">
          		<cfelse>
@@ -734,7 +597,7 @@
 				<cfelse>
 					<cfinvokeargument name="attached_image_id" value="NULL">
                     <cfinvokeargument name="attached_image_name" value="(Pendiente de subir el archivo)">
-				</cfif>
+				</cfif>--->
                 <cfif isDefined("arguments.notify_by_sms")>
 					<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
 				</cfif>
@@ -1443,6 +1306,43 @@
 		
 	</cffunction>
 	
+
+
+	<!---  ---------------------- changeAreaItemPosition -------------------------------- --->
+
+	<cffunction name="changeAreaItemPosition" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="other_item_id" type="numeric" required="true">
+		<cfargument name="other_itemTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="action" type="string" required="true"><!---increase/decrease--->
+		
+		<cfset var method = "changeAreaItemPosition">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeAreaItemPosition" returnvariable="response">
+				<cfinvokeargument name="a_item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="a_itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="b_item_id" value="#arguments.other_item_id#">
+				<cfinvokeargument name="b_itemTypeId" value="#arguments.other_itemTypeId#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="action" value="#arguments.action#">
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
 	
 	
 	<!--- ----------------------------------- getAreaItemsList ------------------------------------- --->
@@ -2005,10 +1905,10 @@
 							</td>							
 							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
 							<td><!---Attached files--->
-								<cfif len(itemsQuery.attached_file_name) GT 0 AND itemsQuery.attached_file_name NEQ "-">
+								<cfif isNumeric(itemsQuery.attached_file_id)>
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
 								</cfif>
-								<cfif itemTypeId IS NOT 1 AND len(itemsQuery.attached_image_id) GT 0>
+								<cfif itemTypeId IS NOT 1 AND isNumeric(itemsQuery.attached_image_id)>
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar imagen adjunta"><i class="icon-camera"></i><span class="hidden">2</span></a>
 								
 								</cfif>
@@ -2277,7 +2177,11 @@
 						
 						$("##listTable").tablesorter({ 
 							widgets: ['zebra','filter','select'],
+							<cfif len(area_type) GT 0><!--- WEB --->
+							sortList: [[5,1]] ,
+							<cfelse>
 							sortList: [[4,1]] ,
+							</cfif>
 							headers: { 
 								4: { 
 									sorter: "datetime" 
@@ -2489,6 +2393,7 @@
 									<cfset down_item_type = itemsQuery.itemTypeId[itemsQuery.currentRow+1]>
 									<a onclick="openUrl('area_item_position_down.cfm?item=#itemsQuery.id#&type=#itemTypeId#&oitem=#down_item#&otype=#down_item_type#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a>
 								</cfif></div></td>
+
 							</cfif>
 							
 						</tr>

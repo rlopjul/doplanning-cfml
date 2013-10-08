@@ -29,7 +29,8 @@ UserManager/dissociateUserFromArea
 
 
 		
-		<cfinclude template="includes/functionEndOnlyLog.cfm">
+		<!---<cfinclude template="includes/functionEndOnlyLog.cfm">--->
+		<cfinclude template="includes/logRecord.cfm">
 
 		<cfset response = {result=true, message="", argument_response_1=#arg_res_1#, argument_response_2=#arg_res_2#}>
 		
