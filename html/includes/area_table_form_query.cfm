@@ -18,11 +18,15 @@
 
 	<cfif actionResponse.result IS true>
 		
-		<cfset return_page = "#tableTypeNameP#.cfm?#tableTypeName#=#actionResponse.table_id#">	
+		<cfif page_type IS 1>
+			<cfset return_page = "#tableTypeName#_fields.cfm?">	
+		<cfelse>
+			<cfset return_page = "#tableTypeNameP#.cfm?area=#actionResponse.area_id#&">	
+		</cfif>
 
 		<cfset msg = urlEncodedFormat(actionResponse.message)>
 
-		<cflocation url="#return_page#&table=#actionResponse.table_id#&res=#actionResponse.result#&msg=#msg#" addtoken="no">
+		<cflocation url="#return_page##tableTypeName#=#actionResponse.table_id#&res=#actionResponse.result#&msg=#msg#" addtoken="no">
 
 	<cfelse>
 		
@@ -30,70 +34,39 @@
 		<cfset URL.msg = actionResponse.message>
 
 		<cfset table = FORM>
+
+		<cfset area_id = FORM.area_id>
 		
 	</cfif> 
 
 <cfelse>
 
-	<cfif isDefined("URL.area") AND isNumeric(URL.area)>
-		<cfset area_id = URL.area>
-	<cfelse>
-		<cflocation url="empty.cfm" addtoken="no">
-	</cfif>
+	<cfif page_type IS 1><!--- NEW --->
 
-	<cfif page_type IS 1>
-
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getEmptyTable" returnvariable="table">
-			<cfinvokeargument name="table_id" value="#table_id#">
-			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-		</cfinvoke>
-
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
-			<cfinvokeargument name="table_id" value="#table_id#">
-			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-		</cfinvoke>
-
-		<cfset area_id = table.area_id>
-
-		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-
-		<div class="div_head_subtitle">
-			<span lang="es">Nueva tipología</span>
-		</div>
-
-	<cfelse>
-
-		<cfif isDefined("URL.table") AND isNumeric(URL.table)>
-			<cfset table_id = URL.table>
+		<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+			<cfset area_id = URL.area>
 		<cfelse>
 			<cflocation url="empty.cfm" addtoken="no">
 		</cfif>
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="getTableResponse">
-			<cfinvokeargument name="table_id" value="#table_id#"/>
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getEmptyTable" returnvariable="table">
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-			<cfinvokeargument name="table_id" value="#table_id#">
 		</cfinvoke>
+		
+	<cfelse><!--- MODIFY --->
 
-		<cfset table = getTableResponse.tables>
-		<cfset area_id = getTableResponse.table.area_id>
-
-		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-
-		<cfif app_version NEQ "html2">
-			<div class="div_head_subtitle">
-			<cfoutput>
-			<span lang="es">Modificar tipología</span>
-			</cfoutput>
-			</div>
+		<cfif isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
+			<cfset table_id = URL[tableTypeName]>
+		<cfelse>
+			<cflocation url="empty.cfm" addtoken="no">
 		</cfif>
 
-		<cfoutput>
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
+			<cfinvokeargument name="table_id" value="#table_id#"/>
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		</cfinvoke>
 
-		<!---<div class="div_message_page_title">#table.label#</div>--->
-		<div class="div_separator"><!-- --></div>
-
-		</cfoutput>
+		<cfset area_id = table.area_id>
 
 	</cfif>
 

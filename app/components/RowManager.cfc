@@ -90,11 +90,11 @@
 					<cfif arguments.action IS "create">
 						insert_user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 						position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">,
-						creation_date = NOW()
+						creation_date = NOW(),
 					<cfelse>
 						last_update_user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-						last_update_date = NOW()
 					</cfif>
+					last_update_date = NOW()
 
 					<cfloop query="fields">
 
@@ -263,14 +263,12 @@
 
 			<!---PENDIENTE DE AÑADIR CHECK TABLE EDIT ACCESS--->
 
-			<cftransaction>
 
-				<cfquery name="deleteRow" datasource="#client_dsn#">
-					DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
-					WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+			<cfquery name="deleteRow" datasource="#client_dsn#">
+				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+				WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
 
-			</cftransaction>
 		
 			<cfset response = {result=true, row_id=#arguments.row_id#, table_id=#arguments.table_id#}>
 
@@ -435,6 +433,41 @@
 			</cfquery>
 
 			<cfset response = {result=true, row=#getRowQuery#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+	<!--- ------------------------------------ fillEmptyRow -------------------------------------  --->
+	
+	<cffunction name="fillEmptyRow" output="false" access="public" returntype="struct">
+		<cfargument name="emptyRow" type="query" required="true">
+		<cfargument name="fields" type="query" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "fillEmptyRow">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfset queryAddRow(emptyRow, 1)>
+			
+			<cfloop query="fields">
+				
+				<cfset querySetCell(emptyRow, "field_#fields.field_id#", fields.default_value, 1)>
+
+			</cfloop>
+
+			<cfset response = {result=true, row=#emptyRow#}>
 
 			<cfcatch>
 

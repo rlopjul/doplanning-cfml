@@ -6,7 +6,7 @@
 		<cfset tableTypeNameP = "lists">
 		<cfset tableTypeTable = tableTypeNameP>
 		
-		<!---<cfset tableTypeNameEs = "Lista">--->
+		<cfset tableTypeNameEs = "Lista">
 		
 		<cfset tableTypeGender = "female">
 
@@ -14,27 +14,27 @@
 	
    	</cfcase> 
 	
-	<cfcase value="2"><!---typologies (files)--->
+	<cfcase value="2"><!---forms--->
 
-		<cfset tableTypeName = "typology">
-		<cfset tableTypeNameP = "typologies">
+		<cfset tableTypeName = "form">
+		<cfset tableTypeNameP = "forms">
 		<cfset tableTypeTable = tableTypeNameP>
 		
-		<!---<cfset tableTypeNameEs = "Tipología">--->
+		<cfset tableTypeNameEs = "Formulario">
 
 		<cfset tableTypeGender = "male">
 
 		<cfset itemTypeId = 12>
 	
    	</cfcase> 
-	
-	<cfcase value="3"><!---forms--->
 
-		<cfset tableTypeName = "form">
-		<cfset tableTypeNameP = "forms">
+   	<cfcase value="3"><!---typologies (files)--->
+
+		<cfset tableTypeName = "typology">
+		<cfset tableTypeNameP = "typologies">
 		<cfset tableTypeTable = tableTypeNameP>
 		
-		<!---<cfset tableTypeNameEs = "Formulario">--->
+		<cfset tableTypeNameEs = "Tipología">
 
 		<cfset tableTypeGender = "male">
 

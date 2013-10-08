@@ -1,10 +1,9 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2013
 
 	Date of file creation: 02-10-2008
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 23-08-2012
 	
 --->
 <cfcomponent output="false">
@@ -88,6 +87,32 @@
 		<cfreturn objectFile>
 		
 	</cffunction>
+
+
+	<!--- ----------------------------------- getEmptyFile -------------------------------------- --->
+
+	<cffunction name="getEmptyFile" output="false" returntype="struct" access="public">
+
+		<cfset var method = "getEmptyFile">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getEmptyFile" returnvariable="response">
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
+			
+		</cftry>
+		
+		<cfreturn response.file>
+			
+	</cffunction>
 	
 	
 	<!--- ---------------------------------- convertFile -------------------------------------- --->
@@ -135,12 +160,11 @@
 		
 		<cfset var method = "associateFile">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<cfset var response = structNew()>
 		
 		<cftry>
 			
-			<cfsavecontent variable="request_parameters">
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					<file id="#arguments.file_id#"/>
 					<area id="#arguments.area_id#"/>
@@ -157,7 +181,22 @@
 			<cfset msg = URLEncodedFormat(msg)>
 			
 			<!---<cflocation url="#arguments.return_path#files.cfm?area=#arguments.area_id#&msg=#msg#&res=1" addtoken="no">--->
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&msg=#msg#&res=1" addtoken="no">
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&msg=#msg#&res=1" addtoken="no">--->
+
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="associateFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset msg = "Archivo asociado al área.">
+				<cfset msg = URLEncodedFormat(msg)>
+				<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#&msg=#msg#&res=1" addtoken="no">
+			<cfelse>
+				<cfset msg = response.message>
+				<cfset msg = URLEncodedFormat(msg)>
+				<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#&msg=#msg#&res=0" addtoken="no">
+			</cfif>
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -176,14 +215,11 @@
 		
 		<cfset var method = "associateFileToAreas">
 		
-		<cfset var request_parameters = "">
-		<cfset var response_message = "">
-		<cfset var response = "">
-		<cfset var xmlResponse = "">
-		
+		<cfset var response = structNew()>
+
 		<cftry>
 			
-			<cfsavecontent variable="request_parameters">
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					<file id="#arguments.file_id#"/>
 					<areas>
@@ -204,30 +240,49 @@
 				<cfoutput>
 					#xmlResponse.response.result.areas#
 				</cfoutput>
-			</cfxml>
+			</cfxml>--->
 			
-			<cfif xmlAreas.areas.xmlAttributes.all IS true>
-				<cfif arrayLen(areas_ids) IS 1>
-					<cfset response_message = "Archivo asociado al área.">
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="associateFileToAreas" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="areas_ids" value="#arrayToList(arguments.areas_ids)#"/>
+			</cfinvoke>
+
+			<cfif response.result IS true>
+
+				<cfif response.allAreas IS true>
+					
+					<cfif arrayLen(areas_ids) IS 1>
+						<cfset response_message = "Archivo asociado al área.">
+					<cfelse>
+						<cfset response_message = "Archivo asociado a las áreas.">
+					</cfif>
+
 				<cfelse>
-					<cfset response_message = "Archivo asociado a las áreas.">
+
+					<cfif arrayLen(areas_ids) IS 1>
+						<cfset response_message = "El archivo ya estaba asociado al área.">
+
+						<cfset response = {result=false, message=#response_message#}>	
+						<cfreturn response>
+					<cfelse>
+						<cfset response_message = "Archivo asociado a las áreas. En una o varias de las areas seleccionadas ya estaba asociado.">
+					</cfif>
+
 				</cfif>
-			<cfelse>
-				<cfset response_message = "Archivo asociado a las áreas. En una o varias de las areas seleccionadas ya estaba asociado.">
-			</cfif>
-			<cfset response = {result="true", message=#response_message#}>				
-			
+
+				<cfset response = {result=true, message=#response_message#}>	
+
+			</cfif>			
 			
 			<cfcatch>
-				<cfinclude template="includes/errorHandlerNoRedirect.cfm">
-				
-				<cfset response_message = error_message>
-				<cfset response = {result="false", message=#response_message#}>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
 			</cfcatch>										
 			
 		</cftry>
 		
-		<cfreturn #response#>
+		<cfreturn response>
 		
 	</cffunction>
 	
@@ -240,13 +295,12 @@
 		<cfargument name="return_path" type="string" required="yes">
 		
 		<cfset var method = "dissociateFile">
-		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-		
+
+		<cfset var response = structNew()>
+
 		<cftry>
 			
-			<cfsavecontent variable="request_parameters">
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					<file id="#arguments.file_id#"/>
 					<area id="#arguments.area_id#"/>
@@ -257,14 +311,23 @@
 				<cfinvokeargument name="request_component" value="#request_component#">
 				<cfinvokeargument name="request_method" value="#method#">
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			</cfinvoke>--->
+
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="dissociateFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			</cfinvoke>
 			
-			<cfset msg = "Archivo quitado del área.">
-			<cfset msg = URLEncodedFormat(msg)>
-			
-			<!---<cflocation url="#APPLICATION.htmlPath#/files.cfm?area=#arguments.area_id#&message=#msg#" addtoken="no">--->
-			<cflocation url="#arguments.return_path#files.cfm?area=#arguments.area_id#&msg=#msg#&res=1" addtoken="no">
-			
+			<cfif response.result IS true>
+				<cfset msg = "Archivo quitado del área.">
+				<cfset msg = URLEncodedFormat(msg)>
+				<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&msg=#msg#&res=1" addtoken="no">
+			<cfelse>
+				<cfset msg = response.message>
+				<cfset msg = URLEncodedFormat(msg)>
+				<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#&msg=#msg#&res=0" addtoken="no">
+			</cfif>
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
@@ -272,13 +335,107 @@
 		</cftry>
 		
 	</cffunction>
+
+
+	<!--- ---------------------------------- createFile -------------------------------------- --->
 	
+	<cffunction name="createFile" access="public" returntype="struct">
+		<cfargument name="name" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
+		<cfargument name="Filedata" type="string" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="typology_id" type="string" required="false">
+		
+		<cfset var method = "createFile">
+		
+		<cfset var response = structNew()>
+
+		<cfset var file_id = "">
+
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="uploadNewFile" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>	
+
+			<cfif response.result IS true>
+				<cfset response.message = "Archivo añadido al área.">
+			</cfif>
+
+			<!---<cfif uploadNewFileResponse.result IS true>
+				<cfset file_id = uploadNewFileResponse.file_id>
+				
+				<cfset areas_ids = arrayNew(1)>
+				<cfset arrayAppend(areas_ids, FORM.area_id)>
+				
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="associateFileToAreas" returnvariable="resultAddFile">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="areas_ids" value="#areas_ids#">
+				</cfinvoke>
+				
+				<cfset response_message = resultAddFile.message>
+				
+				<cfset response = {result=#resultAddFile.result#, message=#response_message#, file_id=#file_id#}>
+					
+			<cfelse>
+				
+				<cfset response = {result=false, message=#uploadNewFileResponse.message#}>
+
+			</cfif>--->
+			
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
 	
+
 	<!--- ---------------------------------- updateFile -------------------------------------- --->
 	
-	<!---Este método solo se usa desde Mis documentos y debe dejar de usarse en futuras versiones--->
+	<cffunction name="updateFile" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="name" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
+		<cfargument name="typology_id" type="string" required="false">
+		
+		<cfset var method = "updateFile">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="updateFile" argumentcollection="#arguments#" returnvariable="response">
+				<!---<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="name" value="#arguments.name#"/>
+				<cfinvokeargument name="description" value="#arguments.description#"/>--->
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Datos modificados">
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
+	</cffunction>
+
 	
-	<cffunction name="updateFile" returntype="void" access="remote">
+	<!--- ---------------------------------- updateFile -------------------------------------- --->
+	<!---Este método solo se usa desde Mis documentos y debe dejar de usarse en futuras versiones--->
+	<!---<cffunction name="updateFile" returntype="void" access="remote">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="folder_id" type="numeric" required="true">
 		<cfargument name="name" type="string" required="true">
@@ -321,12 +478,12 @@
 		
 		<cfreturn xmlResponse>
 		
-	</cffunction>
+	</cffunction>--->
 	
 	
 	<!--- ---------------------------------- updateFileRemote -------------------------------------- --->
 	
-	<cffunction name="updateFileRemote" returntype="void" access="remote">
+	<!---<cffunction name="updateFileRemote" returntype="void" access="remote">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="name" type="string" required="true">
@@ -343,7 +500,7 @@
 			<!---<cfset response_page = "files.cfm?area=#arguments.area_id#&file=#arguments.file_id#">--->
 			<cfset response_page = "area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#">
 
-			<cfsavecontent variable="request_parameters">
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					<file id="#arguments.file_id#">
 						<name><![CDATA[#arguments.name#]]></name>
@@ -356,22 +513,31 @@
 				<cfinvokeargument name="request_component" value="#request_component#">
 				<cfinvokeargument name="request_method" value="updateFile">
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			</cfinvoke>--->
+
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="updateFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="name" value="#arguments.name#"/>
+				<cfinvokeargument name="description" value="#arguments.description#"/>
 			</cfinvoke>
 			
-			<cfset message = "Archivo modificado.">
-			<cfset message = URLEncodedFormat(message)>
+			<cfif response.result IS true>
+				<cfset msg = "Archivo modificado.">
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+			
+			<cfset msg = URLEncodedFormat(msg)>
             
-            <cflocation url="#arguments.return_path##response_page#&msg=#message#&res=1" addtoken="no">
+            <cflocation url="#arguments.return_path##response_page#&msg=#msg#&res=#response.result#" addtoken="no">
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
 			
 		</cftry>
-		
-		<cfreturn xmlResponse>
-		
-	</cffunction>
+				
+	</cffunction>--->
 	
 	
 	<!--- ---------------------------------- deleteFile -------------------------------------- --->
@@ -432,7 +598,7 @@
 		
 		<cftry>
 			
-			<cfset response_page = "files.cfm?area=#arguments.area_id#">
+			<cfset response_page = "area_items.cfm?area=#arguments.area_id#">
 			
 			<cfsavecontent variable="request_parameters">
 				<cfoutput>

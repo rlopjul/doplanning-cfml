@@ -117,6 +117,12 @@
 
 			<cfset APPLICATION.addThisProfileId = "">
 
+			<cfset APPLICATION.cssLayout = "#APPLICATION.path#/app/css/mockup.css">
+	        <cfset APPLICATION.colorLayout = "#APPLICATION.path#/app/css/colors/palette.css">
+	        <cfset APPLICATION.fontLayout = "#APPLICATION.path#/app/css/fonts/type.css">
+	        <cfset APPLICATION.layout = "#APPLICATION.path#/app/layouts/pages/002.cfm">
+	        <cfset APPLICATION.indexLayout = "#APPLICATION.path#/app/layouts/pages/index.cfm">
+
 		</cfif>
 
 		<cfif APPLICATION.moduleMessenger EQ true>

@@ -28,7 +28,7 @@
 					
 		
 		<cfquery name="selectFileQuery" datasource="#client_dsn#">		
-			SELECT physical_name, user_in_charge, file_size, file_type, files.name, file_name, uploading_date, replacement_date, files.description, files.status, users.family_name, files.id AS file_id, users.name AS user_name, users.image_type AS user_image_type
+			SELECT physical_name, user_in_charge, file_size, file_type, files.name, file_name, uploading_date, replacement_date, files.description, files.status, users.family_name, files.id AS file_id, users.name AS user_name, users.image_type AS user_image_type, files.typology_id, files.typology_row_id
 			<cfif isDefined("arguments.area_id")>
 			, areas_files.association_date
 			</cfif>

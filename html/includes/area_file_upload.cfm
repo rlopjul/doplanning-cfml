@@ -5,7 +5,6 @@
 		<!---<cfinclude template="#APPLICATION.path#/app/uploadFiles/myFilesUploadFile.cfm">--->
 
 		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="uploadNewFile" returnvariable="uploadNewFileResponse">
-			<!---<cfinvokeargument name="request" value="#xmlRequest#">--->
 			<cfinvokeargument name="name" value="#FORM.name#"/>
 			<cfinvokeargument name="description" value="#FORM.description#"/>
 			<cfinvokeargument name="Filedata" value="#FORM.Filedata#"/>

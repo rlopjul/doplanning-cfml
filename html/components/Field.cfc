@@ -166,6 +166,39 @@
 	</cffunction>
 
 
+	<!--- -------------------------------copyTableFields-------------------------------------- --->
+	
+    <cffunction name="copyTableFields" returntype="struct" access="public">
+    	<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="copy_from_table_id" type="numeric" required="true">
+		<cfargument name="fields_ids" type="array" required="true">
+		
+		<cfset var method = "copyTableFields">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+					
+			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="copyTableFields" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message="Campos de #tableTypeNameEs# copiados.">
+			</cfif>
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
 
 	<!--- -------------------------------deleteFieldRemote-------------------------------------- --->
 	

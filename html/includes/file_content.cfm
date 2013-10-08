@@ -162,6 +162,40 @@ function confirmDeleteFile() {
 
 		<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
 		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+
+		<!---Typology--->
+		<cfif APPLICATION.modulefilesWithTables IS true>
+			
+			<!---Typology fields--->
+			<cfset table_id = objectFile.typology_id>
+			<cfset tableTypeId = 3>
+			<cfset row_id = objectFile.typology_row_id>
+
+			<cfif isNumeric(table_id) AND isNumeric(row_id)>
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				</cfinvoke>
+				
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
+					<cfinvokeargument name="table_id" value="#table_id#"/>
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
+					<cfinvokeargument name="row_id" value="#row_id#"/>
+				</cfinvoke>
+
+				<cfset row = getRowResponse.row>
+
+				<div class="div_message_page_label">Tipología: <span class="text_message_page">#table.title#</span></div>
+
+				<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">
+				
+			</cfif>
+
+			
+
+		</cfif>
+
 	</div>
 </cfoutput>
 

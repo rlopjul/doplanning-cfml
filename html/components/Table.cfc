@@ -8,7 +8,7 @@
 
 	<!--- -------------------------------createTable-------------------------------------- --->
 	
-    <cffunction name="createTable" returntype="struct" access="public">
+    <!---<cffunction name="createTable" returntype="struct" access="public">
     	<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 				
@@ -17,14 +17,114 @@
 		<cfset var response = structNew()>
 		
 		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 					
-			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="createTable" argumentcollection="#arguments#" returnvariable="response">
+			<cfinvoke component="AreaItem" method="createItem" returnvariable="createItemResponse">
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="title" value="#arguments.title#">
+				<cfinvokeargument name="link" value="">
+				<cfinvokeargument name="description" value="#arguments.description#">
+				<cfinvokeargument name="parent_id" value="#arguments.area_id#">
+				<cfinvokeargument name="parent_kind" value="area">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+			
+			<cfif createItemResponse.result IS true>
+				<cfset response = {result=true, message="Tabla creada", table_id=createItemResponse.item_id}>
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>--->
+
+
+	<!--- -------------------------------createTable-------------------------------------- --->
+	
+    <cffunction name="createTable" returntype="struct" access="public">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="title" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
+		<cfargument name="link" type="string" required="false" default="">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="general" type="boolean" required="false" default="false">
+				
+		<cfset var method = "createTable">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+					
+			<cfinvoke component="AreaItem" method="createItem" returnvariable="response">
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="title" value="#arguments.title#">
+				<cfinvokeargument name="link" value="#arguments.link#">
+				<cfinvokeargument name="description" value="#arguments.description#">
+				<cfinvokeargument name="parent_id" value="#arguments.area_id#">
+				<cfinvokeargument name="parent_kind" value="area">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
+				<cfinvokeargument name="general" value="#arguments.general#">
+			</cfinvoke>
+
+			<cfif response.result IS true>
+				<cfset response = {result=true, message="#tableTypeNameEs# creada, defina ahora los campos.", table_id=response.item_id, area_id=#arguments.area_id#}>
+			</cfif>	
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+	<!--- -------------------------------updateTable-------------------------------------- --->
+	
+    <cffunction name="updateTable" returntype="struct" access="public">
+    	<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="title" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
+		<cfargument name="link" type="string" required="false" default="">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="general" type="boolean" required="false" default="false">
+		
+		<cfset var method = "updateTable">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+					
+			<cfinvoke component="AreaItem" method="updateItem" returnvariable="response">
+				<cfinvokeargument name="item_id" value="#arguments.table_id#">
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="title" value="#arguments.title#">
+				<cfinvokeargument name="link" value="#arguments.link#">
+				<cfinvokeargument name="description" value="#arguments.description#">
+				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
+				<cfinvokeargument name="general" value="#arguments.general#">
 			</cfinvoke>
 			
 			<cfif response.result IS true>
-				<cfset response.message = "Tabla creada">
+				<cfset response = {result=true, message="#tableTypeNameEs# modificada.", table_id=arguments.table_id, area_id=#arguments.area_id#}>
 			</cfif>
-
+            
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>										
@@ -127,6 +227,35 @@
 	</cffunction>
 
 
+
+	<!--- ---------------------------- getTablesWithStructureAvailable ---------------------------------- --->
+	
+	<cffunction name="getTablesWithStructureAvailable" returntype="struct" access="public">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		
+		<cfset var method = "getTablesWithStructureAvailable">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTablesWithStructureAvailable" returnvariable="response">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
+
 	<!--- ----------------------------------- getTableFields ------------------------------------- --->
 	
 	<cffunction name="getTableFields" returntype="struct" access="public">
@@ -188,83 +317,7 @@
 		
 	</cffunction>
 
-
-
-	<!--- -------------------------------createTable-------------------------------------- --->
 	
-    <cffunction name="createTable" returntype="struct" access="public">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-		<cfargument name="title" type="string" required="true">
-		<cfargument name="description" type="string" required="true">
-		<cfargument name="link" type="string" required="false" default="">
-		<cfargument name="area_id" type="numeric" required="true">
-        <cfargument name="position" type="numeric" required="false">
-				
-		<cfset var method = "createTable">
-
-		<cfset var response = structNew()>
-		
-		<cftry>
-
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-					
-			<cfinvoke component="AreaItem" method="createItem" returnvariable="response">
-				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-				<cfinvokeargument name="title" value="#arguments.title#">
-				<cfinvokeargument name="link" value="#arguments.link#">
-				<cfinvokeargument name="description" value="#arguments.description#">
-				<cfinvokeargument name="parent_id" value="#arguments.area_id#">
-				<cfinvokeargument name="parent_kind" value="area">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfif isDefined("arguments.position")>
-					<cfinvokeargument name="position" value="#arguments.position#">
-				</cfif>
-			</cfinvoke>
-
-			<cfcatch>
-				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
-		</cftry>
-
-		<cfreturn response>
-		
-	</cffunction>
-
-
-	<!--- -------------------------------updateTable-------------------------------------- --->
-	
-    <cffunction name="updateTable" returntype="struct" access="public">
-    	<cfargument name="field_id" type="numeric" required="true">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-		<cfargument name="label" type="string" required="true">
-		<cfargument name="description" type="string" required="true">
-		<cfargument name="required" type="boolean" required="false" default="false">
-        <cfargument name="default_value" type="string" required="true">
-		
-		<cfset var method = "updateTable">
-
-		<cfset var response = structNew()>
-		
-		<cftry>
-					
-			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="updateTable" argumentcollection="#arguments#" returnvariable="response">
-			</cfinvoke>
-			
-			<cfif response.result IS true>
-				<cfset response.message = "Campo modificado">
-			</cfif>
-            
-			<cfcatch>
-				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
-		</cftry>
-
-		<cfreturn response>
-		
-	</cffunction>
-
 
 	<!--- ----------------------------------- outputTablesList ------------------------------------- --->
 
@@ -337,6 +390,10 @@
 							<th lang="es">Nombre</th>
 							<th class="filter-false" style="width:55px;"></th>
 							<th style="width:20%;" lang="es">Fecha</th>
+							<th>Estructura compartida</th>
+							<cfif tableTypeId IS 3><!---Typologies--->
+							<th>General</th>	
+							</cfif>
 						</tr>
 					</thead>
 					
@@ -397,14 +454,18 @@
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Typologies, Forms--->
 								<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>
 							</cfif>--->
-							<cfif itemTypeId IS 11 OR itemTypeId IS 13><!---Lists, Forms--->
+							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
 							</cfif>
 							</td>
 							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>
 								<span>#left(itemsQuery.creation_date, spacePos)#</span>
 								<span class="hidden">#right(itemsQuery.creation_date, len(itemsQuery.creation_date)-spacePos)#</span>
-							</td>							
+							</td>
+							<td><cfif itemsQuery.structure_available IS true>Sí<cfelse>No</cfif></td>
+							<cfif tableTypeId IS 3><!---Typologies--->
+							<td><span lang="es"><cfif itemsQuery.general IS true>Sí<cfelse>No</cfif></span></td>
+							</cfif>							
 						</tr>
 					</cfloop>
 					</tbody>

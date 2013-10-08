@@ -8,9 +8,10 @@
 	<cflocation url="area.cfm" addtoken="no">
 </cfif>
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
-	<cfinvokeargument name="item_id" value="#table_id#">
-	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+<!---Table--->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
+	<cfinvokeargument name="table_id" value="#table_id#">
+	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
 
 <!---Table fields--->
@@ -21,31 +22,29 @@
 </cfinvoke>
 <cfset fields = fieldsResult.tableFields>
 
-<!---<cfif fields.recordCount IS 0>
-	<cfset queryAddRow(fields)>
-</cfif>--->
-
-<!---Table fields types--->
-<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getFieldTypes" returnvariable="typesResult">
-	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-</cfinvoke>
-<cfset fieldTypes = typesResult.fieldTypes>--->
-
-<cfset area_id = objectItem.area_id>
+<cfset area_id = table.area_id>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <cfoutput>
-<div class="div_message_page_title">#objectItem.title#</div>
+<div class="div_message_page_title">#table.title#</div>
 <div class="div_separator"><!-- --></div>
 
 <div class="div_head_subtitle_area">
 
 	<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-small"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Añadir campo</span></a>
 
+	<a href="#tableTypeName#_fields_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Copiar campos" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar campos<span></a>
+
+	<cfif tableTypeId IS NOT 3>
+		<span class="divider">&nbsp;</span>
+
+		<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
+	</cfif>
+
 	<span class="divider">&nbsp;</span>
 
-	<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
+	<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-small" title="#itemTypeNameEsP# del área" lang="es"><!---<i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i>---> <span lang="es">#itemTypeNameEsP# del área</span></a>
 
 	<span class="divider">&nbsp;</span>
 
@@ -63,90 +62,7 @@
 
 	<cfif fields.recordCount GT 0>
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
-
-		<script type="text/javascript">
-			$(document).ready(function() { 
-				
-				$("##dataTable").tablesorter({ 
-					widgets: ['zebra','select'],
-					sortList: [[0,0]] ,
-				});
-				
-			}); 
-		</script>
-
-		<cfset selectFirst = true>
-
-		<cfif isDefined("URL.field")>
-			<cfset selectFirst = false>
-		</cfif>
-
-		<table id="dataTable" class="table-hover" style="margin-top:5px;">
-			<thead>
-				<tr>
-					<th style="width:25px;">##</th>
-					<th style="width:35%">Nombre del campo</th>
-					<th>Tipo de campo</th>
-					<th>Obligatorio</th>
-					<th style="width:25%">Valor por defecto</th>
-				</tr>
-			</thead>
-			<tbody>
-
-			<cfset alreadySelected = false>
-
-			<cfloop query="fields">
-
-				<!---<cfif isDefined("arguments.return_page")>
-					<cfset rpage = arguments.return_page>
-				<cfelse>--->
-					<cfset rpage = "#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">
-				<!---</cfif>--->
-				<cfset field_page_url = "#tableTypeName#_field.cfm?field=#fields.field_id#&return_page=#URLEncodedFormat(rpage)#">
-
-				<!---Row selection--->
-				<cfset fieldSelected = false>
-				
-				<cfif alreadySelected IS false>
-
-					<cfif ( isDefined("URL.field") AND (URL.field IS fields.field_id) ) OR ( selectFirst IS true AND fields.currentrow IS 1 AND app_version NEQ "mobile" ) >
-
-						<!---Esta acción solo se completa si está en la versión HTML2--->
-						<script type="text/javascript">
-							openUrlHtml2('#field_page_url#','itemIframe');
-						</script>
-
-						<cfset fieldSelected = true>
-						<cfset alreadySelected = true>
-																		
-					</cfif>
-					
-				</cfif>
-
-				<tr <cfif fieldSelected IS true>class="selected"</cfif> onclick="openUrl('#field_page_url#','itemIframe',event)">	
-					<td>#fields.currentRow#</td>		
-					<td>
-						<span class="field_label">#fields.label#</span>
-					</td>
-					<td>
-						#fields.name#
-					</td>
-					<td>
-						<cfif fields.required IS true>Sí<cfelse>No</cfif>
-					</td>
-					<td>
-						#fields.default_value#
-					</td>
-					<!---<td><cfif isDefined("fields.field_id") AND isNumeric(fields.field_id)>
-						<a onclick="return confirmActionLink('Campo #index#', 'eliminar', 'table_field_delete.cfm?ffid=#fields.field_id#&fid=#fields.table_id#')" class="btn btn-danger btn-small" title="Eliminar"><i class="icon-remove"></i></a>
-						</cfif>
-					</td>--->
-				</tr>
-			</cfloop>
-			</tbody>
-		</table>
-
+		<cfinclude template="#APPLICATION.htmlPath#/includes/table_fields_list.cfm">
 
 	<cfelse>
 	

@@ -1,3 +1,5 @@
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form_query.cfm">
+
 <div class="contenedor_fondo_blanco">
 <div class="div_send_message">
 
@@ -111,7 +113,7 @@ function onSubmitForm()
 
 <cfif page_type IS 1><!---NEW ITEM--->
 
-	<cfset form_action = "#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=createItemRemote">
+	<!---<cfset form_action = "#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=createItemRemote">--->
 
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getEmptyItem" returnvariable="objectItem">
@@ -178,10 +180,10 @@ function onSubmitForm()
 	
 
 <cfelse><!---MODIFY ITEM--->
-	<cfset form_action = "#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=updateItemRemote">
+	<!---<cfset form_action = "#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=updateItemRemote">--->
 </cfif>
 
-<cfform action="#form_action#" method="post" enctype="multipart/form-data" name="item_form" class="form-inline" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-inline" onsubmit="return onSubmitForm();">
 	<cfinput type="hidden" name="itemTypeId" value="#itemTypeId#">
 	<cfinput type="hidden" name="area_id" value="#area_id#">
 	<cfinput type="hidden" name="return_path" value="#return_path#">
@@ -223,7 +225,6 @@ function onSubmitForm()
 			</cfoutput>
 		</cfif>
 	</div>
-	
 	
 </cfform>
 
