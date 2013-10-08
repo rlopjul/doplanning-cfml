@@ -118,6 +118,17 @@
 
    	</cfcase> 
 
+	<cfcase value="10"><!---files--->
+
+		<cfset itemTypeName = "file">
+		<cfset itemTypeNameP = "files">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Archivo">
+
+		<cfset itemTypeGender = "male">
+	
+   	</cfcase> 
 
    	<cfcase value="11"><!---lists--->
 

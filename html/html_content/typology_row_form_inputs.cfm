@@ -37,6 +37,10 @@
 
 			<cfset row = getRowResponse.row>
 
+			<cfoutput>
+				<input type="hidden" name="typology_row_id" value="#row.row_id#"/>
+			</cfoutput>
+
 		<cfelse><!--- NEW ROW --->
 
 			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="getEmptyRow" returnvariable="getEmptyRowResponse">

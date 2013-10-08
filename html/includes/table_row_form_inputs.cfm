@@ -78,14 +78,16 @@
 
 			<!--- DATE --->
 				
-			<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="span2"/>
+			<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="input_datepicker"/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
 
 			<script type="text/javascript">
 				<cfif fields.required IS true>
 					addRailoRequiredDate("#field_name#", "El campo '#field_label#' debe ser una fecha con formato DD-MM-AAAA y es obligatorio");
 				<cfelse>
 					addRailoValidateDate("#field_name#", "El campo '#field_label#' debe ser una fecha con formato DD-MM-AAAA");
-				</cfif>	
+				</cfif>
+
+				enableDatePicker('###field_name#');	
 			</script>
 
 		<cfelseif fields.input_type IS "text">			

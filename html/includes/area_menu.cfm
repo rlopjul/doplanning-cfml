@@ -85,7 +85,7 @@
 				
 				<cfif APPLICATION.moduleLists IS true><!--- Lists --->
 
-					<li <cfif curElement EQ "tables">class="active"</cfif>><a href="lists.cfm?area=#area_id#" title="Listas del área" lang="es"><i class="icon-table" style="font-size:27px; color:##7A7A7A"></i></a></li>
+					<li <cfif curElement EQ "lists">class="active"</cfif>><a href="lists.cfm?area=#area_id#" title="Listas del área" lang="es"><i class="icon-table" style="font-size:27px; color:##7A7A7A"></i></a></li>
 
 				</cfif>
 
@@ -97,7 +97,7 @@
 
 				<cfif APPLICATION.modulePubMedComments IS true><!--- PubMed Comments --->
 
-					<li <cfif curElement EQ "pubmed">class="active"</cfif>><a href="pubmeds.cfm?area=#area_id#" title="Comentarios PubMed del área" lang="es"><i class="icon-book" style="font-size:27px; color:##0088CC"></i></a></li>
+					<li <cfif curElement EQ "pubmeds">class="active"</cfif>><a href="pubmeds.cfm?area=#area_id#" title="Comentarios PubMed del área" lang="es"><i class="icon-book" style="font-size:27px; color:##0088CC"></i></a></li>
 
 				</cfif>
 

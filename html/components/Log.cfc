@@ -1,10 +1,9 @@
-<!---Copyright Era7 Information Technologies 2007-2008
+<!---Copyright Era7 Information Technologies 2007-2013
 
 	Date of file creation: 08-07-2009
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 08-07-2009
 	
 --->
 <cfcomponent output="true">
@@ -241,7 +240,6 @@
 	
 	<cffunction name="outputLogItem" returntype="void" output="true" access="public">
 		<cfargument name="log" type="query" required="true">
-		<!---<cfargument name="contact_format" type="boolean" required="false" default="false">--->
 		
 		<cfset var method = "outputLogItem">
 		
@@ -256,40 +254,37 @@
 			<div class="div_separator"><!-- --></div>
 			
 		
-				<div class="div_user_page_title">
+			<div class="div_user_page_title">
 				<cfif len(log.image_type) GT 0>
 					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#log.user_id#&type=#log.image_type#&medium=" alt="#log.name#" class="item_img" style="margin-right:2px;"/>									
 				<cfelse>							
 					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#log.name#" class="item_img_default" style="margin-right:2px;"/>
 				</cfif><br/>
 				<span lang="es" class="div_log_page_label">Usuario</span>
-				</div>
-				
-				<div class="div_separator"><!-- --></div>
-				<div class="div_user_page_user">
-					<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Nombre:</span> #log.name#</div>
-					<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Email:</span> <a href="mailto:#log.email#" class="div_user_page_text">#log.email#</a></div>	
-					<div class="div_log_page_label"><span lang="es" style="font-weight:bold">&nbsp;</span></div>				
-				</div>			
-		
+			</div>
 			
-			
+			<div class="div_separator"><!-- --></div>
+
+			<div class="div_user_page_user">
+				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Nombre:</span> #log.name#</div>
+				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Email:</span> <!---<a href="mailto:#log.email#" class="div_user_page_text">--->#log.email#<!---</a>---></div>	
+				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">&nbsp;</span></div>				
+			</div>			
+	
 			<div class="div_log_page_log">
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Id:</span> #log.log_id#</div>
+				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Log ID:</span> #log.log_id#</div>
 				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Acción:</span> #log.method#</div>
 				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Componente:</span> #log.component#</div>
 				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Fecha:</span> #DateFormat(log.time, APPLICATION.dateFormat)# #TimeFormat(log.time, "HH:mm:ss")#</div>
 				<div class="div_log_page_label">
-				<span lang="es" style="font-weight:bold">Petición:</span> 
-				<cfif IsXML(log.request_content)>
+				<span lang="es" style="font-weight:bold">Petición:</span>
+				</div> 
+				<!---<cfif IsXML(log.request_content)>
 					<cfdump var="#xmlParse(log.request_content)#">
-				<cfelse>
-					#log.request_content#
-				</cfif>
+				<cfelse>--->
+					<textarea readonly="readonly" class="input-block-level" style="height:350px">#log.request_content#</textarea>
+				<!---</cfif>--->
 				
-
-	
-				</div>
 			</div>
 			
 			

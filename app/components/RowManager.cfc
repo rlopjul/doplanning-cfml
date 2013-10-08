@@ -50,7 +50,7 @@
 			<!---PENDIENTE DE AÑADIR CHECK TABLE EDIT ACCESS--->
 
 			<!---Table fields--->
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
+			<cfinvoke component="TableManager" method="getTableFields" returnvariable="fieldsResult">
 				<cfinvokeargument name="table_id" value="#table_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="with_types" value="true"/>
@@ -137,6 +137,8 @@
 
 			</cftransaction>
 			
+			<cfinclude template="includes/logRecord.cfm">
+
 			<cfset response = {result=true, row_id=#row_id#, table_id=#arguments.table_id#}>
 
 			<cfcatch>
@@ -178,51 +180,6 @@
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
 
-
-	<!---  ---------------------- getRowFieldsQueryContent -------------------------------- --->
-	
-	<!---<cffunction name="getRowFieldsQueryContent" returntype="string" access="public">
-		<cfargument name="table_id" type="numeric" required="true">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-		
-		<cfset var method = "getRowFieldsQueryContent">
-					
-			<!---Table fields--->
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="with_types" value="true"/>
-			</cfinvoke>
-			<cfset fields = fieldsResult.tableFields>
-			
-			<cfsavecontent variable="rowQueryContent" trim="true">
-				<cfloop query="fields">
-					<cfset field_name = "field_#fields.field_id#">
-
-					<cfif fields.input_type NEQ "check" OR isDefined("arguments.field_#fields.field_id#")><!---No es YES/NO o está definido--->
-						<cfset field_value = arguments[field_name]>
-					<cfelse>
-						<cfset field_value = false>
-					</cfif>
-
-					, field_#fields.field_id# = 	
-											
-					<cfif fields.mysql_type IS "DATE"><!---DATE--->
-						<cfif len(field_value) GT 0>
-							STR_TO_DATE(<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">,'#dateFormat#')
-						<cfelse>
-							<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="yes">
-						</cfif>								
-					<cfelse>														
-						<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
-					</cfif>
-				</cfloop>
-			</cfsavecontent>
-
-		<cfreturn rowQueryContent>
-		
-	</cffunction>--->
-	<!---  ------------------------------------------------------------------------ --->
 
 
 	<!--- ------------------------------------- deleteRow -------------------------------------  --->
@@ -269,7 +226,8 @@
 				WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 
-		
+			<cfinclude template="includes/logRecord.cfm">
+			
 			<cfset response = {result=true, row_id=#arguments.row_id#, table_id=#arguments.table_id#}>
 
 			<cfcatch>
