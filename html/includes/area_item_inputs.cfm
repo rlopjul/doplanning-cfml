@@ -121,7 +121,7 @@
 	<cfset t_link = "URL">
 	<cfset link_required = true>
 <cfelse>
-	<cfset t_link = "URL más información">
+	<cfset t_link = "URL más información (enlace)">
 	<cfset link_required = false>
 </cfif>
 <cfif itemTypeId IS 4>
@@ -289,7 +289,7 @@
 
 <div style="margin-bottom:10px; margin-top:5px;"><textarea name="description" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea></div>
 
-<cfif itemTypeId IS 7>
+<cfif itemTypeId IS 7 OR itemTypeId IS 8>
 
 	<!---<label class="control-label">##:</label>--->
 	<div class="controls">
@@ -301,7 +301,7 @@
 
 <cfif read_only IS false>
 	
-	<cfif itemTypeId IS NOT 3>
+	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9>
 	
 		<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
 			<!---<div style="padding-top:5px;"><span class="texto_normal">Modificar archivo adjunto:</span>&nbsp;<cfinput type="file" name="Filedata"></div>--->
@@ -338,7 +338,7 @@
 	
 	</cfif>
 	
-	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6>
+	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 8>
 	
 		<cfif len(objectItem.attached_image_name) GT 0 AND objectItem.attached_image_name NEQ "-">
 		
@@ -366,7 +366,11 @@
 			<div class="control-group">
 				<div class="controls">
 					<i class="icon-camera icon-large" title="Imagen (jpg, png, gif)" lang="es"></i>
-					<cfinput type="file" name="imagedata" accept="image/*">
+					<cfif itemTypeId IS NOT 9>
+						<cfinput type="file" name="imagedata" accept="image/*">
+					<cfelse>
+						<cfinput type="file" name="imagedata" accept="image/*" required="true" message="Archivo de imagen requerido">
+					</cfif>
 				</div>
 			</div>
 		</cfif>
@@ -383,6 +387,21 @@
 	</div>
 	
 </div>
+
+<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7><!---IS NOT Messages, Tasks OR Consultations--->
+	
+<div class="control-group">
+
+	<label class="control-label" for="link_target" lang="es">Abrir URL en:</label>
+	
+	<select name="link_target" id="link_target">
+		<option value="_blank" <cfif objectItem.link_target EQ "_blank">selected="selected"</cfif>>Nueva ventana</option>
+		<option value="_self" <cfif objectItem.link_target EQ "_self">selected="selected"</cfif>>Misma ventana</option>
+	</select>
+	
+</div>
+
+</cfif>
 
 
 <cfif itemTypeId IS 2 OR itemTypeId IS 4 OR itemTypeId IS 5>

@@ -8,7 +8,7 @@
 
 	<!--- ----------------------------------- getRow -------------------------------------- --->
 
-	<!---Este método no hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Item directamente del AreaItemManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
+	<!---Este método no hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Item directamente del RowManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
 
 	<cffunction name="getRow" output="false" returntype="struct" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
@@ -84,7 +84,7 @@
 		
 		<cftry>
 			
-			<cfset arguments.action = "create">
+			<!---<cfset arguments.action = "create">--->
 
 			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="saveRow" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
@@ -117,7 +117,7 @@
 		
 		<cftry>
 			
-			<cfset arguments.action = "update">
+			<!---<cfset arguments.action = "update">--->
 
 			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="saveRow" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>

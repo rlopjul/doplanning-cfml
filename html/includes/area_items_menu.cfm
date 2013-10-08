@@ -3,7 +3,7 @@
 		<cfif itemTypeId IS 7><!--- Consultation --->
 			<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
 		<cfelseif itemTypeId IS 8><!---PubMed article--->
-			<i class="icon-book" style="font-size:19px; color:##0088CC"></i>
+			<i class="icon-book" style="font-size:19px; color:##7A7A7A"></i>
 		<cfelseif itemTypeId IS 9><!---Images--->
 			<i class="icon-picture" style="font-size:18px; color:##0088CC"></i>
 		<cfelseif itemTypeId IS 11><!--- Lists --->

@@ -3,65 +3,65 @@
 	<cfcase value="1"><!---messages--->
 		
 		<cfset itemTypeName = "message">
-		<!---<cfset itemTypeNameU = "Message">--->
 		<cfset itemTypeNameP = "messages">
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Mensaje">
 		
 		<cfset itemTypeGender = "male">
-	
+		<cfset itemTypeWeb = false>
+
    	</cfcase> 
 	
 	<cfcase value="2"><!---entries--->
 
 		<cfset itemTypeName = "entry">
-		<!---<cfset itemTypeNameU = "Entry">--->
 		<cfset itemTypeNameP = "entries">
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Elemento de contenido web">
 
 		<cfset itemTypeGender = "male">
+		<cfset itemTypeWeb = true>
 	
    	</cfcase> 
 	
 	<cfcase value="3"><!---links--->
 
 		<cfset itemTypeName = "link">
-		<!---<cfset itemTypeNameU = "Link">--->
 		<cfset itemTypeNameP = "links">
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Enlace">
 
 		<cfset itemTypeGender = "male">
+		<cfset itemTypeWeb = true>
 	
    	</cfcase> 
 	
 	<cfcase value="4"><!---news--->
 
 		<cfset itemTypeName = "news">
-		<!---<cfset itemTypeNameU = "News">--->
 		<cfset itemTypeNameP = "newss">
 		<cfset itemTypeTable = "news">
 		
 		<cfset itemTypeNameEs = "Noticia">
 
 		<cfset itemTypeGender = "female">
+		<cfset itemTypeWeb = true>
 	
    	</cfcase> 
 
 	<cfcase value="5"><!---events--->
 
 		<cfset itemTypeName = "event">
-		<!---<cfset itemTypeNameU = "Event">--->
 		<cfset itemTypeNameP = "events">
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Evento">
 
-		<cfset itemTypeGender = "male">
+		<cfset itemTypeGender = "male">	
+		<cfset itemTypeWeb = true>
 	
    	</cfcase>
 	
@@ -74,6 +74,7 @@
 		<cfset itemTypeNameEs = "Tarea">
 
 		<cfset itemTypeGender = "female">
+		<cfset itemTypeWeb = false>
 	
    	</cfcase> 
 	
@@ -86,6 +87,7 @@
 		<cfset itemTypeNameEs = "Interconsulta">
 
 		<cfset itemTypeGender = "female">
+		<cfset itemTypeWeb = false>
 	
    	</cfcase> 
 
@@ -98,7 +100,8 @@
 		
 		<cfset itemTypeNameEs = "Comentario de artículo PubMed">
 
-		<cfset itemTypeGender = "female">
+		<cfset itemTypeGender = "male">
+		<cfset itemTypeWeb = true>
 	
    	</cfcase> 
 	
@@ -108,10 +111,11 @@
 		<cfset itemTypeNameP = "images">
 		<cfset itemTypeTable = itemTypeNameP>
 		
-		<cfset itemTypeNameEs = "Image">
+		<cfset itemTypeNameEs = "Imagen">
 
 		<cfset itemTypeGender = "female">
-	
+		<cfset itemTypeWeb = true>
+
    	</cfcase> 
 
 
@@ -124,6 +128,7 @@
 		<cfset itemTypeNameEs = "Lista">
 
 		<cfset itemTypeGender = "female">
+		<cfset itemTypeWeb = true>
 
 		<cfset tableTypeId = 1>
 	
@@ -138,6 +143,7 @@
 		<cfset itemTypeNameEs = "Formulario">
 
 		<cfset itemTypeGender = "male">
+		<cfset itemTypeWeb = true>
 
 		<cfset tableTypeId = 2>
 	
@@ -152,9 +158,10 @@
 		<cfset itemTypeNameEs = "Tipología">
 
 		<cfset itemTypeGender = "female">
+		<cfset itemTypeWeb = false>
 
 		<cfset tableTypeId = 3>
-	
+
    	</cfcase>
 
 </cfswitch>

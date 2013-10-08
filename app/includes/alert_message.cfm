@@ -1,14 +1,4 @@
-<cfif isDefined("URL.message") AND NOT isNumeric(URL.message)>
-
-	<cfset message = URLDecode(URL.message)>
-	<cfoutput>
-		<div class="alert alert-block">
-			<!---<button type="button" class="close" data-dismiss="alert">&times;</button>--->
-			<span lang="es">#message#</span>
-		</div>
-	</cfoutput>
-
-<cfelseif isDefined("URL.msg")>
+<cfif isDefined("URL.msg")>
 	
 	<cfset msg = URLDecode(URL.msg)>
 	<cfoutput>
@@ -24,5 +14,15 @@
 			</div>
 		</cfif>
 	</cfoutput>
-	
+
+<cfelseif isDefined("URL.message") AND NOT isNumeric(URL.message)>
+
+	<cfset alert_message_text = URLDecode(URL.message)>
+	<cfoutput>
+		<div class="alert alert-block">
+			<!---<button type="button" class="close" data-dismiss="alert">&times;</button>--->
+			<span lang="es">#alert_message_text#</span>
+		</div>
+	</cfoutput>
+
 </cfif>

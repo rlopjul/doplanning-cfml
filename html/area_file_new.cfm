@@ -111,7 +111,8 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_new.cfm">
+<cfset page_type = 1>
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form.cfm">
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">

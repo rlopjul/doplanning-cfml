@@ -103,6 +103,8 @@
 	<cffunction name="getSubAreas" output="false" returntype="query" access="public">
 		<cfargument name="area_id" type="string" required="yes">
 		<cfargument name="remove_order" type="boolean" required="no" default="false">
+
+		 <cfargument name="menu_type_id" type="numeric" required="false" >        
 		
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">		
@@ -113,6 +115,9 @@
 				SELECT id, <cfif arguments.remove_order IS true>SUBSTRING_INDEX(name, '.-', -1) AS name<cfelse>name</cfif>, parent_id, creation_date, user_in_charge, image_id, link, type
 				FROM #client_abb#_areas AS areas
 				WHERE areas.parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				<cfif isDefined("arguments.menu_type_id")>
+                AND menu_type_id = <cfqueryparam value="#arguments.menu_type_id#" cfsqltype="cf_sql_integer">
+                </cfif>
 				ORDER BY areas.name ASC;
 			</cfquery>	
 		

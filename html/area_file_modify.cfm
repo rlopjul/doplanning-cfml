@@ -111,8 +111,11 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 
-<cfset return_path = "#APPLICATION.htmlPath#/">
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_modify.cfm">
+<!---<cfset return_path = "#APPLICATION.htmlPath#/">
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_modify.cfm">--->
+
+<cfset page_type = 2>
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form.cfm">
 
 <!-- InstanceEndEditable -->
 </div>

@@ -5,13 +5,13 @@
 
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-<cfif page_type IS 1>
-	<cfset methodAction = "createRow">
-<cfelse>
-	<cfset methodAction = "updateRow">
-</cfif>
-
 <cfif isDefined("FORM.page")>
+
+	<cfif page_type IS 1>
+		<cfset methodAction = "createRow">
+	<cfelse>
+		<cfset methodAction = "updateRow">
+	</cfif>
 	
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="#methodAction#" argumentcollection="#FORM#" returnvariable="actionResponse">
 	</cfinvoke>
@@ -30,6 +30,8 @@
 		<cfset URL.msg = actionResponse.message>
 
 		<cfset row = FORM>
+
+		<cfset area_id = FORM.area_id>
 		
 	</cfif> 
 
@@ -41,7 +43,7 @@
 		<cflocation url="empty.cfm" addtoken="no">
 	</cfif>
 
-	<cfif page_type IS 1>
+	<cfif page_type IS 1><!--- NEW --->
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="row">
 			<cfinvokeargument name="table_id" value="#table_id#">
@@ -55,13 +57,7 @@
 
 		<cfset area_id = table.area_id>
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-
-		<div class="div_head_subtitle">
-			<span lang="es">Nuevo registro</span>
-		</div>
-
-	<cfelse>
+	<cfelse><!--- MODIFY --->
 
 		<cfif isDefined("URL.row") AND isNumeric(URL.row)>
 			<cfset row_id = URL.row>
@@ -75,25 +71,9 @@
 			<cfinvokeargument name="row_id" value="#row_id#">
 		</cfinvoke>
 
-		<cfset row = getRowResponse.rows>
+		<cfset row = getRowResponse.row>
+
 		<cfset area_id = getRowResponse.table.area_id>
-
-		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-
-		<cfif app_version NEQ "html2">
-			<div class="div_head_subtitle">
-			<cfoutput>
-			<span lang="es">Modificar registro</span>
-			</cfoutput>
-			</div>
-		</cfif>
-
-		<cfoutput>
-
-		<!---<div class="div_message_page_title">#row.label#</div>--->
-		<div class="div_separator"><!-- --></div>
-
-		</cfoutput>
 
 	</cfif>
 

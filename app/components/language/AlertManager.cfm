@@ -24,10 +24,23 @@ curLangText["es"] = {
 			"7": {
 				"name" : "Interconsulta",
 			},
+			"8": {
+				"name" : "Comentario de artículo PubMed",
+			},
+			"9": {
+				"name" : "Imagen",
+			},
+
 
 
 			"11": {
 				"name" : "Lista",
+			},
+			"12": {
+				"name" : "Formulario",
+			},
+			"13": {
+				"name" : "Tipología",
 			},
 			
 		},
@@ -206,9 +219,23 @@ curLangText["en"] = {
 			"7": {
 				"name" : "Interconsultation",
 			},
+			"8": {
+				"name" : "PubMed article comment",
+			},
+			"9": {
+				"name" : "Image",
+			},
+
+
 
 			"11": {
 				"name" : "List",
+			},
+			"12": {
+				"name" : "Form",
+			},
+			"13": {
+				"name" : "Typology",
 			},
 			
 		},

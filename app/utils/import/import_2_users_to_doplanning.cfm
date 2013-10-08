@@ -222,7 +222,7 @@
 
 <cfelse>
 
-	-Cada usuario creado en DoPlanning recibirá un correo electrónico con su cuenta y contraseña.<br/>
+	-Cada usuario creado en DoPlanning recibirá un correo electrónico con su cuenta y una contraseña generada de forma aleatoria.<br/>
 	<!--- -Los usuarios no podrán ver todo el árbol de la organización (se crearán como usuarios externos).<br/> ---->
 	-A los usuarios se les añadirá por defecto al área indicada a continuación.<br/>
 	-Este proceso no es reversible.<br/>

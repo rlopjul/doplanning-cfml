@@ -141,6 +141,12 @@
 					<cfif len(objectItem.link_target) GT 0>
 						link_target="#objectItem.link_target#"
 					</cfif>
+					<cfif len(objectItem.structure_available) GT 0>
+						structure_available="#objectItem.structure_available#"
+					</cfif>
+					<cfif len(objectItem.general) GT 0>
+						general="#objectItem.general#"
+					</cfif>
 					>
 					<cfif objectItem.tree_mode NEQ "true">
 						<cfif len(objectItem.attached_file_name) NEQ 0 AND objectItem.attached_file_name NEQ "NULL">
@@ -213,6 +219,7 @@
 		<cfargument name="attached_image_name" type="string" required="no" default="">
 		<cfargument name="title" type="string" required="no" default="">
 		<cfargument name="link" type="string" required="no" default="">
+		<cfargument name="link_target" type="string" required="no" default="">
 		<cfargument name="description" type="string" required="no" default="">
 		<cfargument name="user_full_name" type="string" required="no" default="">
 		<cfargument name="sub_items" type="string" required="no" default="">
@@ -237,7 +244,8 @@
 		<cfargument name="user_image_type" type="string" required="no" default="">
 		<cfargument name="state" type="string" required="no" default="">
 		<cfargument name="identifier" type="string" required="no" default="">
-		<cfargument name="link_target" type="string" required="no" default="">
+		<cfargument name="structure_available" type="string" required="false" default="">
+		<cfargument name="general" type="string" required="false" default="">
 		
 		<cfargument name="tree_mode" type="boolean" required="no" default="false"><!---Con esto a true se pasan los elementos como atributos--->
 		
@@ -303,6 +311,9 @@
 				</cfif>
 				<cfif isDefined("xmlItem.#itemTypeName#.link")>
 					<cfset link=xmlItem.xmlChildren[1].link.xmlText>
+				</cfif>
+				<cfif isDefined("xmlItem.#itemTypeName#.xmlAttributes.link_target")>
+					<cfset link_target="#xmlItem.xmlChildren[1].XmlAttributes.link_target#">
 				</cfif>
 				<cfif isDefined("xmlItem.#itemTypeName#.description")>
 					<cfset description=xmlItem.xmlChildren[1].description.xmlText>
@@ -375,8 +386,11 @@
 				<cfif isDefined("xmlItem.#itemTypeName#.xmlAttributes.identifier")>
 					<cfset identifier="#xmlItem.xmlChildren[1].XmlAttributes.identifier#">
 				</cfif>
-				<cfif isDefined("xmlItem.#itemTypeName#.xmlAttributes.link_target")>
-					<cfset link_target="#xmlItem.xmlChildren[1].XmlAttributes.link_target#">
+				<cfif isDefined("xmlItem.#itemTypeName#.xmlAttributes.structure_available")>
+					<cfset structure_available="#xmlItem.xmlChildren[1].XmlAttributes.structure_available#">
+				</cfif>
+				<cfif isDefined("xmlItem.#itemTypeName#.xmlAttributes.general")>
+					<cfset general="#xmlItem.xmlChildren[1].XmlAttributes.general#">
 				</cfif>
 				
 			</cfif>
@@ -446,7 +460,9 @@
 				user_image_type="#user_image_type#",
 				state="#state#",
 				identifier="#identifier#",
-				link_target="#link_target#"
+				link_target="#link_target#",
+				structure_available="#structure_available#",
+				general="#general#"
 				}>
 
 
@@ -497,8 +513,9 @@
 	<!--- ----------------------- CREATE ITEM -------------------------------- --->
 	
 	<cffunction name="createItem" returntype="struct" output="false" access="public">		
-		<cfargument name="xmlItem" type="xml" required="yes">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
+		<!---<cfargument name="xmlItem" type="xml" required="yes">--->
+		<cfargument name="objectItem" type="struct" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
 
 		<cfset var method = "createItem">
 		
@@ -515,10 +532,10 @@
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 					
-			<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="objectItem">
+			<!---<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="objectItem">
 				<cfinvokeargument name="xml" value="#xmlItem#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-			</cfinvoke>
+			</cfinvoke>--->
 			
 			<!---checkAreaAccess--->
 			<cfif objectItem.parent_kind EQ "area">
@@ -654,9 +671,12 @@
 					<cfelse>
 						creation_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,
 					</cfif>
-					status = '#status#',
+					status = <cfqueryparam value="#status#" cfsqltype="cf_sql_varchar">,
 					area_id = <cfqueryparam value="#objectItem.area_id#" cfsqltype="cf_sql_integer">,
 					link = <cfqueryparam value="#objectItem.link#" cfsqltype="cf_sql_varchar">
+					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
+					, link_target = <cfqueryparam value="#objectItem.link_target#" cfsqltype="cf_sql_varchar">
+					</cfif>
 					<cfif itemTypeId IS NOT 1>
 					, last_update_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">
 					</cfif>
@@ -685,9 +705,17 @@
 					, estimated_value = <cfqueryparam value="#objectItem.estimated_value#" cfsqltype="cf_sql_float">
 					, real_value = <cfqueryparam value="#objectItem.real_value#" cfsqltype="cf_sql_float">
 					</cfif>
-					<cfif itemTypeId IS 7><!---Consultation--->
+					<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultation, PubMed comment--->
 					, identifier = <cfqueryparam value="#objectItem.identifier#" cfsqltype="cf_sql_varchar"
-	>				, state = <cfqueryparam value="created" cfsqltype="cf_sql_varchar">
+		>				<cfif itemTypeId IS 7>
+						, state = <cfqueryparam value="created" cfsqltype="cf_sql_varchar">
+						</cfif>
+					</cfif>
+					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
+					, structure_available = <cfqueryparam value="#objectItem.structure_available#" cfsqltype="cf_sql_bit">
+						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
+						, general = <cfqueryparam value="#objectItem.general#" cfsqltype="cf_sql_bit">
+						</cfif>
 					</cfif>
 					;			
 				</cfquery>
@@ -698,7 +726,8 @@
 
 				<cfset objectItem.id = getLastInsertId.last_insert_id>
 
-				<cfif len(arguments.area_type) IS NOT 0><!---IS WEB---><!---El orden sólo se utiliza en estas áreas--->
+				<!---<cfif len(area_type) IS NOT 0>--->
+				<cfif itemTypeWeb IS true><!---IS WEB---><!---El orden sólo se utiliza en los elementos web--->
 				<!---<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>--->
 				
 					<!---getItemLastPosition--->
@@ -709,7 +738,7 @@
 					<cfset objectItem.position = itemLastPosition+1>
 
 					<cfinvoke component="AreaItemManager" method="insertAreaItemPosition">
-						<cfinvokeargument name="item_id" value="#objectItem.parent_id#">
+						<cfinvokeargument name="item_id" value="#objectItem.id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
 						<cfinvokeargument name="position" value="#objectItem.position#">
@@ -718,7 +747,7 @@
 				<!---</cfif>--->
 				</cfif>
 
-				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12><!---Lists, Forms--->
+				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 OR arguments.itemTypeId IS 13><!---Lists, Forms, Typologies--->
 					
 					<cfinvoke component="TableManager" method="createTableInDatabase">
 						<cfinvokeargument name="table_id" value="#objectItem.id#">
@@ -786,7 +815,8 @@
 	<!--- ----------------------- CREATE ITEM WITH ATTACHED -------------------------------- --->
 	
 	<cffunction name="createItemWithAttachedFile" returntype="struct" output="false" access="public">		
-		<cfargument name="xmlItem" type="xml" required="yes">
+		<!---<cfargument name="xmlItem" type="xml" required="yes">--->
+		<cfargument name="objectItem" type="struct" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<!---Este parámetro debe quitarse cuando se modifiquen los métodos de FileManager y ya no sea requerido--->
 		<!---<cfargument name="request" type="string" required="yes">--->
@@ -807,7 +837,8 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 			<cfinvoke component="AreaItemManager" method="createItem" returnvariable="createItemResponse">
-				<cfinvokeargument name="xmlItem" value="#xmlItem#">
+				<!---<cfinvokeargument name="xmlItem" value="#xmlItem#">--->
+				<cfinvokeargument name="objectItem" value="#arguments.objectItem#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 			</cfinvoke>
 
@@ -899,210 +930,235 @@
 	<!--- ----------------------- UPDATE ITEM -------------------------------- --->
 	
 	<cffunction name="updateItem" returntype="struct" output="false" access="public">		
-		<cfargument name="xmlItem" type="xml" required="yes">
+		<!---<cfargument name="xmlItem" type="xml" required="yes">--->
+		<cfargument name="objectItem" type="struct" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 
 		<cfset var method = "updateItem">
 				
-			
-		<cfinclude template="includes/functionStartOnlySession.cfm">
-		
-		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-		
-		<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="objectItem">
-			<cfinvokeargument name="xml" value="#xmlItem#">
-			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-		</cfinvoke>
-		
-		<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
-			<cfinvokeargument name="item_id" value="#objectItem.id#">
-			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-			
-			<cfinvokeargument name="return_type" value="object">
-		</cfinvoke>
-		
-		<cfset getItemObject = getItemResponse.item>
+		<cfset var response = structNew()>
 
-		<cfset objectItem.area_id = getItemObject.area_id><!---Esta variable se utiliza despues para enviar las alertas--->	
-		<cfset objectItem.user_in_charge = getItemObject.user_in_charge>
-		<cfset objectItem.user_full_name = getItemObject.user_full_name><!---Para las alertas--->
-		
-		<!---checkAreaAccess--->
-		<!---Esto se hace en getItem--->
-		<!---<cfinclude template="includes/checkAreaAccess.cfm">--->
-		
-		<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+		<cftry>
 			
-			<cfif len(objectItem.start_date) GT 0 AND len(objectItem.end_date) GT 0>
-				<cfset start_date = createDateFromString(objectItem.start_date)>
-				<cfset end_date = createDateFromString(objectItem.end_date)>
-				
-				<!---end_date check--->
-				<cfif DateCompare(start_date,end_date,"d") IS 1>
-					<cfset response_message = 'Fechas incorrectas: la fecha de fin del evento debe ser posterior a la de inicio.'>
-				
-					<cfthrow message="#response_message#">
-				</cfif>	
-			</cfif>
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-		</cfif>
-		
-		
-		<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Messages, Consultations--->
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
-			<cfset error_code = 103><!---Access denied--->
-					
-			<cfthrow errorcode="#error_code#">
-		
-		<cfelseif itemTypeId IS 6><!---Tasks--->
-			
-			<!---Si es una tarea, puede modificarla el usuario que la creó y el usuario asignado.--->
-			
-			<cfif getItemObject.user_in_charge NEQ user_id AND getItemObject.recipient_user NEQ user_id><!---El usuario que accede no tiene permiso--->
-				<cfset error_code = 103><!---Access denied--->
-					
-				<cfthrow errorcode="#error_code#">
-			</cfif>
-			
-		<cfelse>
-		
-			<cfif getItemObject.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que intenta modificar--->
-					
-				<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">				
-					<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-				</cfinvoke>
-			
-				<cfset area_type = areaTypeResult.areaType>
-				
-				<!---Si el área es web o intranet, los items pueden modificarlos todos los que tengan acceso a ese área--->
-				<cfif area_type NEQ "web" AND area_type NEQ "intranet">
-				
-					<cfset error_code = 103><!---Access denied--->
-					
-					<cfthrow errorcode="#error_code#">
-					
-				<cfelse>
-				
-					<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
-						<cfinvokeargument name="get_user_id" value="#user_id#">
-						<cfinvokeargument name="format_content" value="default">
-						<cfinvokeargument name="return_type" value="object">
-					</cfinvoke>
-					
-					<!---Asigna el nombre del nuevo usuario para las alertas--->
-					<cfset objectItem.user_in_charge = user_id>
-					<cfset objectItem.user_full_name = objectUser.family_name&" "&objectUser.name>
-					
-				</cfif>
-					
-			</cfif>
-			
-		</cfif>
-		
-		
-		<cfif itemTypeId IS 6><!---Tasks--->
-			
-			<cfquery datasource="#client_dsn#" name="getRecipientUserData">
-				SELECT family_name, name
-				FROM #client_abb#_users
-				WHERE id = <cfqueryparam value="#objectItem.recipient_user#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-			
-			<cfif getRecipientUserData.recordCount LT 1><!---the user does not exist--->
-				
-				<cfset error_code = 204>
-				
-				<cfthrow errorcode="#error_code#"> 
-				
-			</cfif>
-		
-			<cfset objectItem.recipient_user_full_name = "#getRecipientUserData.family_name# #getRecipientUserData.name#">
-		
-		</cfif>
-		
-		
-		<cfif itemTypeId IS NOT 1>
-			<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-			</cfinvoke>
-			
-			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
-				<cfinvokeargument name="timestamp_date" value="#current_date#">
-			</cfinvoke>
-		</cfif>
-		
-	
-		<!---Status of item--->
-		<!---<cfif NOT isDefined("xmlItem.item.attached_file_name.xmlText") OR len(xmlItem.item.attached_file_name.xmlText) IS 0 OR xmlItem.item.xmlAttributes.attached_file_id EQ "NULL">--->
-		<cfif len(objectItem.attached_file_name) IS 0 OR objectItem.attached_file_id IS "NULL"
-			OR objectItem.attached_image_id IS "NULL">
-			<cfset status = "pending">
-		<cfelse>
-			<cfset status = "ok">
-		</cfif>
-		
-		<cftransaction>
-		
-			<cfquery name="updateItemQuery" datasource="#client_dsn#">		
-				UPDATE #client_abb#_#itemTypeTable#
-				SET title = <cfqueryparam value="#objectItem.title#" cfsqltype="cf_sql_varchar">,
-				description = <cfqueryparam value="#objectItem.description#" cfsqltype="cf_sql_longvarchar">,
-				link = <cfqueryparam value="#objectItem.link#" cfsqltype="cf_sql_varchar">
-				<cfif itemTypeId IS 4><!---News--->
-				, creation_date = STR_TO_DATE(<cfqueryparam value="#objectItem.creation_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
-				</cfif>
-				, last_update_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">
-				<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-				<!---, position = <cfqueryparam value="#objectItem.position#" cfsqltype="cf_sql_integer">--->
-					<cfif itemTypeId IS 2><!---Entries--->
-					, display_type_id = <cfqueryparam value="#objectItem.display_type_id#" cfsqltype="cf_sql_integer">
-					</cfif>
-				</cfif>
-				<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
-					, iframe_url = <cfqueryparam value="#objectItem.iframe_url#" cfsqltype="cf_sql_varchar">
-					, iframe_display_type_id = <cfqueryparam value="#objectItem.iframe_display_type_id#" cfsqltype="cf_sql_integer">
-				</cfif>	 
-				<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-				, start_date = STR_TO_DATE(<cfqueryparam value="#objectItem.start_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
-				, end_date = STR_TO_DATE(<cfqueryparam value="#objectItem.end_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
-				</cfif>
-				<cfif itemTypeId IS 5><!---Events--->
-				, start_time = <cfqueryparam value="#objectItem.start_time#" cfsqltype="cf_sql_time">
-				, end_time = <cfqueryparam value="#objectItem.end_time#" cfsqltype="cf_sql_time">
-				, place = <cfqueryparam value="#objectItem.place#" cfsqltype="cf_sql_varchar">
-				</cfif>
-				<cfif itemTypeId IS 6><!---Tasks--->
-				, recipient_user = <cfqueryparam value="#objectItem.recipient_user#" cfsqltype="cf_sql_varchar">
-				, done = <cfqueryparam value="#objectItem.done#" cfsqltype="cf_sql_bit">
-				, estimated_value = <cfqueryparam value="#objectItem.estimated_value#" cfsqltype="cf_sql_float">
-				, real_value = <cfqueryparam value="#objectItem.real_value#" cfsqltype="cf_sql_float">
-				<cfelse><!---Is not tasks--->
-				, user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
-				</cfif>
-				WHERE id = <cfqueryparam value="#objectItem.id#" cfsqltype="cf_sql_integer">;			
-			</cfquery>
-			
-		</cftransaction>
-		
-		<cfif itemTypeId IS NOT 4>
-			<cfset objectItem.creation_date = getItemObject.creation_date><!---Para las alertas--->
-		</cfif>
-		
-		<cfset objectItem.last_update_date = stringCurrentDate>
-		
-		
-		<cfif status EQ "ok">
-			<cfinvoke component="AlertManager" method="newAreaItem">
-				<cfinvokeargument name="objectItem" value="#objectItem#">
+			<!---<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="objectItem">
+				<cfinvokeargument name="xml" value="#xmlItem#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				<cfinvokeargument name="action" value="update">
-				<cfif objectItem.notify_by_sms EQ "true">
-					<cfinvokeargument name="send_sms" value="true">
-				</cfif>
+			</cfinvoke>--->
+			
+			<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
+				<cfinvokeargument name="item_id" value="#objectItem.id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				
+				<cfinvokeargument name="return_type" value="object">
 			</cfinvoke>
-		</cfif>
+			
+			<cfset getItemObject = getItemResponse.item>
+
+			<cfset objectItem.area_id = getItemObject.area_id><!---Esta variable se utiliza despues para enviar las alertas--->	
+			<cfset objectItem.user_in_charge = getItemObject.user_in_charge>
+			<cfset objectItem.user_full_name = getItemObject.user_full_name><!---Para las alertas--->
+			
+			<!---checkAreaAccess--->
+			<!---Esto se hace en getItem--->
+			<!---<cfinclude template="includes/checkAreaAccess.cfm">--->
+			
+			<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+				
+				<cfif len(objectItem.start_date) GT 0 AND len(objectItem.end_date) GT 0>
+					<cfset start_date = createDateFromString(objectItem.start_date)>
+					<cfset end_date = createDateFromString(objectItem.end_date)>
+					
+					<!---end_date check--->
+					<cfif DateCompare(start_date,end_date,"d") IS 1>
+						<cfset response_message = 'Fechas incorrectas: la fecha de fin del evento debe ser posterior a la de inicio.'>
+					
+						<cfthrow message="#response_message#">
+					</cfif>	
+				</cfif>
+				
+			</cfif>
+			
+			
+			<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Messages, Consultations--->
+				
+				<cfset error_code = 103><!---Access denied--->
+						
+				<cfthrow errorcode="#error_code#">
+			
+			<cfelseif itemTypeId IS 6><!---Tasks--->
+				
+				<!---Si es una tarea, puede modificarla el usuario que la creó y el usuario asignado.--->
+				
+				<cfif getItemObject.user_in_charge NEQ user_id AND getItemObject.recipient_user NEQ user_id><!---El usuario que accede no tiene permiso--->
+					<cfset error_code = 103><!---Access denied--->
+						
+					<cfthrow errorcode="#error_code#">
+				</cfif>
+				
+			<cfelse>
+			
+				<cfif getItemObject.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que intenta modificar--->
+						
+					<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">				
+						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+					</cfinvoke>
+				
+					<cfset area_type = areaTypeResult.areaType>
+					
+					<!---Si el área es web o intranet, los items pueden modificarlos todos los que tengan acceso a ese área--->
+					<cfif area_type NEQ "web" AND area_type NEQ "intranet">
+					
+						<cfset error_code = 103><!---Access denied--->
+						
+						<cfthrow errorcode="#error_code#">
+						
+					<cfelse>
+					
+						<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
+							<cfinvokeargument name="get_user_id" value="#user_id#">
+							<cfinvokeargument name="format_content" value="default">
+							<cfinvokeargument name="return_type" value="object">
+						</cfinvoke>
+						
+						<!---Asigna el nombre del nuevo usuario para las alertas--->
+						<cfset objectItem.user_in_charge = user_id>
+						<cfset objectItem.user_full_name = objectUser.family_name&" "&objectUser.name>
+						
+					</cfif>
+						
+				</cfif>
+				
+			</cfif>
+			
+			
+			<cfif itemTypeId IS 6><!---Tasks--->
+				
+				<cfquery datasource="#client_dsn#" name="getRecipientUserData">
+					SELECT family_name, name
+					FROM #client_abb#_users
+					WHERE id = <cfqueryparam value="#objectItem.recipient_user#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+				
+				<cfif getRecipientUserData.recordCount LT 1><!---the user does not exist--->
+					
+					<cfset error_code = 204>
+					
+					<cfthrow errorcode="#error_code#"> 
+					
+				</cfif>
+			
+				<cfset objectItem.recipient_user_full_name = "#getRecipientUserData.family_name# #getRecipientUserData.name#">
+			
+			</cfif>
+			
+			
+			<cfif itemTypeId IS NOT 1>
+				<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
+				</cfinvoke>
+				
+				<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
+					<cfinvokeargument name="timestamp_date" value="#current_date#">
+				</cfinvoke>
+			</cfif>
+			
 		
+			<!---Status of item--->
+			<!---<cfif NOT isDefined("xmlItem.item.attached_file_name.xmlText") OR len(xmlItem.item.attached_file_name.xmlText) IS 0 OR xmlItem.item.xmlAttributes.attached_file_id EQ "NULL">--->
+			<cfif len(objectItem.attached_file_name) IS 0 OR objectItem.attached_file_id IS "NULL"
+				OR objectItem.attached_image_id IS "NULL">
+				<cfset status = "pending">
+			<cfelse>
+				<cfset status = "ok">
+			</cfif>
+			
+			<cftransaction>
+			
+				<cfquery name="updateItemQuery" datasource="#client_dsn#">		
+					UPDATE #client_abb#_#itemTypeTable#
+					SET title = <cfqueryparam value="#objectItem.title#" cfsqltype="cf_sql_varchar">,
+					description = <cfqueryparam value="#objectItem.description#" cfsqltype="cf_sql_longvarchar">,
+					link = <cfqueryparam value="#objectItem.link#" cfsqltype="cf_sql_varchar">
+					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
+					, link_target = <cfqueryparam value="#objectItem.link_target#" cfsqltype="cf_sql_varchar">
+					</cfif>
+					<cfif itemTypeId IS 4><!---News--->
+					, creation_date = STR_TO_DATE(<cfqueryparam value="#objectItem.creation_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
+					</cfif>
+					, last_update_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">
+					<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
+					<!---, position = <cfqueryparam value="#objectItem.position#" cfsqltype="cf_sql_integer">--->
+						<cfif itemTypeId IS 2><!---Entries--->
+						, display_type_id = <cfqueryparam value="#objectItem.display_type_id#" cfsqltype="cf_sql_integer">
+						</cfif>
+					</cfif>
+					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
+						, iframe_url = <cfqueryparam value="#objectItem.iframe_url#" cfsqltype="cf_sql_varchar">
+						, iframe_display_type_id = <cfqueryparam value="#objectItem.iframe_display_type_id#" cfsqltype="cf_sql_integer">
+					</cfif>	 
+					<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+					, start_date = STR_TO_DATE(<cfqueryparam value="#objectItem.start_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
+					, end_date = STR_TO_DATE(<cfqueryparam value="#objectItem.end_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
+					</cfif>
+					<cfif itemTypeId IS 5><!---Events--->
+					, start_time = <cfqueryparam value="#objectItem.start_time#" cfsqltype="cf_sql_time">
+					, end_time = <cfqueryparam value="#objectItem.end_time#" cfsqltype="cf_sql_time">
+					, place = <cfqueryparam value="#objectItem.place#" cfsqltype="cf_sql_varchar">
+					</cfif>
+					<cfif itemTypeId IS 6><!---Tasks--->
+					, recipient_user = <cfqueryparam value="#objectItem.recipient_user#" cfsqltype="cf_sql_varchar">
+					, done = <cfqueryparam value="#objectItem.done#" cfsqltype="cf_sql_bit">
+					, estimated_value = <cfqueryparam value="#objectItem.estimated_value#" cfsqltype="cf_sql_float">
+					, real_value = <cfqueryparam value="#objectItem.real_value#" cfsqltype="cf_sql_float">
+					<cfelse><!---Is not tasks--->
+					, user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif itemTypeId IS 8><!---PubMed comment--->
+					, identifier = <cfqueryparam value="#objectItem.identifier#" cfsqltype="cf_sql_varchar"
+		>
+					</cfif>
+					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
+					, structure_available = <cfqueryparam value="#objectItem.structure_available#" cfsqltype="cf_sql_bit">
+						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
+						, general = <cfqueryparam value="#objectItem.general#" cfsqltype="cf_sql_bit">
+						</cfif>
+					</cfif>
+					WHERE id = <cfqueryparam value="#objectItem.id#" cfsqltype="cf_sql_integer">;			
+				</cfquery>
+				
+			</cftransaction>
+			
+			<cfif itemTypeId IS NOT 4>
+				<cfset objectItem.creation_date = getItemObject.creation_date><!---Para las alertas--->
+			</cfif>
+			
+			<cfset objectItem.last_update_date = stringCurrentDate>
+			
+			
+			<cfif status EQ "ok">
+				<cfinvoke component="AlertManager" method="newAreaItem">
+					<cfinvokeargument name="objectItem" value="#objectItem#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="action" value="update">
+					<cfif objectItem.notify_by_sms EQ "true">
+						<cfinvokeargument name="send_sms" value="true">
+					</cfif>
+				</cfinvoke>
+			</cfif>
 		
-		<cfreturn objectItem>
+			<cfset response = {result=true, objectItem=#objectItem#}>		
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 	
@@ -1111,7 +1167,8 @@
 	<!--- ----------------------- UPDATE ITEM WITH ATTACHED -------------------------------- --->
 	
 	<cffunction name="updateItemWithAttachedFile" returntype="struct" output="false" access="public">		
-		<cfargument name="xmlItem" type="xml" required="yes">
+		<!---<cfargument name="xmlItem" type="xml" required="yes">--->
+		<cfargument name="objectItem" type="struct" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<!---Este parámetro debe quitarse cuando se modifiquen los métodos de FileManager y ya no sea requerido--->
 <!---		<cfargument name="request" type="string" required="yes">--->
@@ -1131,10 +1188,10 @@
 				
 				<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 	
-				<cfinvoke component="AreaItemManager" method="updateItem" returnvariable="objectItem">
+				<!---<cfinvoke component="AreaItemManager" method="updateItem" returnvariable="objectItem">
 					<cfinvokeargument name="xmlItem" value="#xmlItem#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				</cfinvoke>
+				</cfinvoke>--->
 				
 	<!---			<cfinvoke component="FileManager" method="createFile" returnvariable="resultFile">
 					<cfinvokeargument name="request" value="#xmlRequest#">
@@ -1436,7 +1493,9 @@
 						<cfinvokeargument name="attached_file_name" value="#selectItemQuery.attached_file_name#">
 					</cfif>
 					<cfinvokeargument name="link" value="#selectItemQuery.link#">
-
+					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
+						<cfinvokeargument name="link_target" value="#selectItemQuery.link_target#">
+					</cfif>
 					<cfif arguments.itemTypeId NEQ messageTypeId>
 						<cfinvokeargument name="last_update_date" value="#selectItemQuery.last_update_date#">
 						<cfinvokeargument name="attached_image_id" value="#selectItemQuery.attached_image_id#">
@@ -1478,9 +1537,11 @@
 					<cfinvokeargument name="description" value="#selectItemQuery.description#">
 					<cfinvokeargument name="user_full_name" value="#selectItemQuery.family_name# #selectItemQuery.user_name#">
 					<cfinvokeargument name="user_image_type" value="#selectItemQuery.user_image_type#">
-					<cfif arguments.itemTypeId IS 7><!---Consultations--->
-					<cfinvokeargument name="state" value="#selectItemQuery.state#">
+					<cfif arguments.itemTypeId IS 7 OR arguments.itemTypeId IS 8><!---Consultations, PubMed comments--->
 					<cfinvokeargument name="identifier" value="#selectItemQuery.identifier#">
+					<cfif arguments.itemTypeId IS 7>
+						<cfinvokeargument name="state" value="#selectItemQuery.state#">
+					</cfif>
 					</cfif>
 					
 					<cfinvokeargument name="return_type" value="#arguments.return_type#">
@@ -1556,11 +1617,11 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var objectItem = structNew()>
+
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 			
 			<!---<cfquery name="getEmptyItem" datasource="#client_dsn#">
 				SELECT *
@@ -1568,7 +1629,6 @@
 				WHERE item_id = -1;
 			</cfquery>--->
 
-			<cfset objectItem = structNew()>
 			<cfset objectItem.title = "">
 			<cfset objectItem.description = "">
 			<cfset objectItem.attached_file_name = ""> 
@@ -1583,6 +1643,7 @@
 			<cfelse>
 				<cfset objectItem.link = "">
 			</cfif>
+			<cfset objectItem.link_target = "_blank">
 			
 			<cfif itemTypeId IS 4><!---News--->
 				<cfset cur_date = DateFormat(now(), "DD-MM-YYYY")>
@@ -1608,7 +1669,7 @@
 				</cfif>
 		 	</cfif>
 			
-			<cfif itemTypeId IS 7><!---Consultation--->
+			<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, PubMed comments--->
 				<cfset objectItem.identifier = "">
 			</cfif>
 			
@@ -1632,22 +1693,28 @@
 	
 	<cffunction name="getAreaItemsLastPosition" returntype="numeric" access="package">
 		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
+		<!---<cfargument name="itemTypeId" type="numeric" required="yes">--->
 		
 		<cfset var method = "getAreaItemsLastPosition">
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItemsLastPosition" returnvariable="getLastPositionResult">
+			<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItemsLastPosition" returnvariable="getLastPositionResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
+			</cfinvoke>--->
+
+			<cfquery name="areaItemsPositionQuery" datasource="#client_dsn#">
+				SELECT MAX(position) AS max_position					
+				FROM #client_abb#_items_position
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
 		
-		<cfif isNumeric(getLastPositionResult.position)>
-			<cfreturn getLastPositionResult.position>
+		<cfif isNumeric(areaItemsPositionQuery.max_position)>
+			<cfreturn areaItemsPositionQuery.max_position>
 		<cfelse>
 			<cfreturn 0>
 		</cfif>
@@ -2146,7 +2213,8 @@
 				<cfinclude template="includes/checkAreaAccess.cfm">
 				
 				<cfif getItemQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
-					<!---<cfset error_code = 103><!---Access denied--->
+					<!---
+					<cfset error_code = 103><!---Access denied--->
 					<cfthrow errorcode="#error_code#">--->
 					<cfinclude template="includes/checkAreaAdminAccess.cfm">
 				</cfif>
@@ -2982,73 +3050,6 @@
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
-			<!---<cfset areaItemsQuery = getAreaItemsResult.query>
-			
-			<cfset xmlItems=''>
-			<cfif areaItemsQuery.recordCount GT 0>
-					
-					<cfset xmlItems = '<#itemTypeNameP#>'>
-						
-						<cfloop query="areaItemsQuery">																		
-							
-							<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="xmlResultItem">
-								<cfinvokeargument name="id" value="#areaItemsQuery.id#">
-								<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-								<cfinvokeargument name="title" value="#areaItemsQuery.title#">
-								<cfinvokeargument name="user_in_charge" value="#areaItemsQuery.user_in_charge#">
-								<cfinvokeargument name="creation_date" value="#areaItemsQuery.creation_date#">
-								<cfinvokeargument name="attached_file_name" value="#areaItemsQuery.attached_file_name#">
-								<cfinvokeargument name="attached_file_id" value="#areaItemsQuery.attached_file_id#">
-								<cfif arguments.itemTypeId IS NOT 1>
-									<cfinvokeargument name="attached_image_id" value="#areaItemsQuery.attached_image_id#">
-								</cfif>
-								<cfinvokeargument name="user_full_name" value="#areaItemsQuery.family_name# #areaItemsQuery.user_name#">
-								<cfinvokeargument name="user_image_type" value="#areaItemsQuery.user_image_type#">
-								<cfif arguments.itemTypeId IS 5 OR arguments.itemTypeId IS 6><!---Events OR Tasks--->
-									<cfinvokeargument name="start_date" value="#areaItemsQuery.start_date#">
-									<cfinvokeargument name="end_date" value="#areaItemsQuery.end_date#">
-								</cfif>
-								<cfif arguments.itemTypeId IS 6><!---Tasks--->
-									<cfinvokeargument name="recipient_user_full_name" value="#areaItemsQuery.recipient_user_family_name# #areaItemsQuery.recipient_user_name#">
-									<cfinvokeargument name="done" value="#areaItemsQuery.done#">
-									<cfinvokeargument name="estimated_value" value="#areaItemsQuery.estimated_value#">
-									<cfinvokeargument name="real_value" value="#areaItemsQuery.real_value#">
-									<cfinvokeargument name="end_date" value="#areaItemsQuery.end_date#">
-								</cfif>
-								<cfif arguments.itemTypeId IS 7><!---Consultations--->
-									<cfinvokeargument name="state" value="#areaItemsQuery.state#">
-									<cfinvokeargument name="identifier" value="#areaItemsQuery.identifier#">
-								</cfif>
-												
-								<cfif format_content EQ "all">
-									<!---<cfinvokeargument name="area_name" value="#areaItemsQuery.area_name#">--->
-									<cfinvokeargument name="parent_id" value="#areaItemsQuery.parent_id#">
-									<cfinvokeargument name="parent_kind" value="#areaItemsQuery.parent_kind#">
-									<cfinvokeargument name="description" value="#areaItemsQuery.description#">	
-								</cfif> 
-								
-								<cfif arguments.with_area IS true>
-									<cfinvokeargument name="area_name" value="#areaItemsQuery.area_name#">
-									<cfinvokeargument name="area_id" value="#areaItemsQuery.area_id#">	
-								</cfif>
-
-								<cfinvokeargument name="tree_mode" value="true"><!---Esto hace que se pasen los elementos del mensaje como atributos--->
-								<cfinvokeargument name="return_type" value="xml">
-							</cfinvoke>
-							
-							<cfset xmlItems = xmlItems&xmlResultItem>
-							
-						</cfloop>
-						
-
-				<cfset xmlItems = xmlItems&'</#itemTypeNameP#>'>
-
-			<cfelse>	
-				<cfset xmlItems='<#itemTypeNameP#/>'>	
-			</cfif>			
-						
-			<cfset response = {result="true", message="", itemsXml=#xmlItems#}>--->
 
 			<cfset response = {result=true, query=#getAreaItemsResult.query#}>
 		

@@ -5,12 +5,6 @@
 
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-<cfif page_type IS 1>
-	<cfset methodAction = "createField">
-<cfelse>
-	<cfset methodAction = "updateField">
-</cfif>
-
 <!---<cfif app_version EQ "mobile">
 	<cfset return_path = "#APPLICATION.htmlPath#/#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">
 <cfelse>
@@ -18,7 +12,13 @@
 </cfif>--->
 
 <cfif isDefined("FORM.page")>
-	
+
+	<cfif page_type IS 1>
+		<cfset methodAction = "createField">
+	<cfelse>
+		<cfset methodAction = "updateField">
+	</cfif>
+		
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Field" method="#methodAction#" argumentcollection="#FORM#" returnvariable="actionResponse">
 	</cfinvoke>
 
