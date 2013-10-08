@@ -1,7 +1,7 @@
 
 <cfoutput>
-	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 </cfoutput>
 
 <cfif NOT isDefined("itemTypeId")>

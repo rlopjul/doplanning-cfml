@@ -77,6 +77,7 @@
 
 			</cftransaction>
 
+			<cfinclude template="includes/logRecord.cfm">
 			
 			<cfset response = {result=true, field_id=#field_id#, table_id=#arguments.table_id#}>
 
@@ -185,7 +186,7 @@
 			<cfinvoke component="FieldManager" method="getField" returnvariable="getFieldResponse">
 				<cfinvokeargument name="field_id" value="#arguments.field_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
-				<cfinvokeargument name="with_table" value="true"/>
+				<cfinvokeargument name="with_type" value="true"/>
 			</cfinvoke>
 
 			<cfif getFieldResponse.result IS false>
@@ -218,7 +219,17 @@
 					WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
+				<cfquery name="updateFieldInTable" datasource="#client_dsn#">
+					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+					MODIFY COLUMN `field_#field_id#` #field.mysql_type# 
+					<cfif arguments.required IS true>
+					NOT NULL	
+					</cfif>;
+				</cfquery>
+
 			</cftransaction>
+
+			<cfinclude template="includes/logRecord.cfm">
 		
 			<cfset response = {result=true, field_id=#arguments.field_id#, table_id=#field.table_id#}>
 
@@ -450,6 +461,7 @@
 	<cffunction name="getField" output="false" access="public" returntype="struct">
 		<cfargument name="field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="with_type" type="boolean" required="false">
 
 		<cfset var method = "getField">
 
@@ -466,7 +478,10 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getField" returnvariable="getFieldQuery">
 				<cfinvokeargument name="field_id" value="#arguments.field_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-				<cfinvokeargument name="with_table" value="true"/>		
+				<cfinvokeargument name="with_table" value="true"/>
+				<cfif isDefined("arguments.with_type")>
+					<cfinvokeargument name="with_type" value="#arguments.with_type#"/>		
+				</cfif>
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

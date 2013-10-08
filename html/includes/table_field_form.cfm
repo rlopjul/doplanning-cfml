@@ -48,12 +48,11 @@
 		</cfif>
 	</div>
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
+	<input type="hidden" name="table_id" value="#table_id#"/>
 	<input type="hidden" name="tableTypeId" value="#tableTypeId#"/>
 	<!---<input type="hidden" name="return_path" value="#return_path#"/>--->
-		
-	<cfif page_type IS 1>
-		<input type="hidden" name="table_id" value="#table_id#"/>
-	<cfelse>
+
+	<cfif page_type IS 2>
 		<input type="hidden" name="field_id" value="#field.field_id#"/>
 	</cfif>
 

@@ -11,79 +11,99 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
-
 <div class="div_head_subtitle"><span lang="es"><cfif page_type IS 1>Nuevo Archivo
 <cfelse>Modificar archivo</cfif></span></div>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <!---<cfset return_page = "area.cfm?area=#area_id#">--->
 
 <cfoutput>
 
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+
 <script type="text/javascript">
 
-$(document).ready(function() {
+	$(document).ready(function() {
 
-	$('##formFile').change(function(e){
-		$inputFile=$(this);
-	  	  
-     	var fileName = $inputFile.val();
-		
-	  	if(fileName.length > 0) {
-		  fileName = fileName.substr(fileName.lastIndexOf('\\') + 1);
-				  
-		  if($('##formFileName').val().length == 0)
-		  	$('##formFileName').val(fileName);
-		}
+		$('##formFile').change(function(e){
+			$inputFile=$(this);
+		  	  
+	     	var fileName = $inputFile.val();
+			
+		  	if(fileName.length > 0) {
+			  fileName = fileName.substr(fileName.lastIndexOf('\\') + 1);
+					  
+			  if($('##formFileName').val().length == 0)
+			  	$('##formFileName').val(fileName);
+			}
+			
+		});
+
+
+		<cfif page_type IS 2>
+			
+			<cfif isNumeric(file.typology_id)>
+
+				<cfif isNumeric(file.typology_row_id)>
+					loadTypology(#file.typology_id#, #file.typology_row_id#);
+				<cfelse>
+					loadTypology(#file.typology_id#, '');
+				</cfif>
+
+			</cfif>
+
+		</cfif>
 		
 	});
 
-	<cfif page_type IS 2>
-		
-		<cfif isNumeric(file.typology_id) AND isNumeric(file.typology_row_id)>
-			
-			loadTypology(#file.typology_id#, #file.typology_row_id#);
+	function onSubmitForm() {
 
-		</cfif>
+		if(check_custom_form())	{
+			document.getElementById("submitDiv").innerHTML = window.lang.convert("Enviando archivo...");
 
-	</cfif>
-	
-});
-
-function onSubmitForm() {
-
-	if(check_custom_form())	{
-		document.getElementById("submitDiv").innerHTML = window.lang.convert("Enviando archivo...");
-
-		return true;
-	}
-	else
-		return false;
-}
-
-function loadTypology(typologyId,rowId) {
-
-	if(!isNaN(typologyId)){
-
-		$("##areaLoading").show();
-
-		var typologyPage = "#APPLICATION.htmlPath#/html_content/typology_row_form_inputs.cfm?typology="+typologyId;
-
-		if(!isNaN(rowId)){
-			typologyPage = typologyPage+"&row="+rowId;
+			return true;
 		}
-
-		$("##typologyContainer").load(typologyPage, function() {
-
-			$("##areaLoading").hide();
-
-		});
-
-	} else {
-
-		$("##typologyContainer").empty();
+		else
+			return false;
 	}
-}
+
+	function loadTypology(typologyId,rowId) {
+
+		if(!isNaN(typologyId)){
+
+			$("##areaLoading").show();
+
+			var typologyPage = "#APPLICATION.htmlPath#/html_content/typology_row_form_inputs.cfm?typology="+typologyId;
+
+			if(!isNaN(rowId)){
+				typologyPage = typologyPage+"&row="+rowId;
+			}
+
+			$("##typologyContainer").load(typologyPage, function() {
+
+				$("##areaLoading").hide();
+
+			});
+
+		} else {
+
+			$("##typologyContainer").empty();
+		}
+	}
+
+	function enableDatePicker(selector){
+
+		$(selector).datepicker({
+		  format: 'dd-mm-yyyy', 
+		  autoclose: true,
+		  weekStart: 1,
+		  language: 'es',
+		  todayBtn: 'linked'
+		});
+	}
 </script>
 
 <script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
@@ -152,7 +172,7 @@ function loadTypology(typologyId,rowId) {
 
 	<div id="submitDiv"><input type="submit" class="btn btn-primary" name="modify" value="Enviar" lang="es"/></div>
 	<small lang="es">Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.</small><br/>
-	<small lang="es">* Campos requeridos.</small>
+	<small lang="es">* Campos obligatorios.</small>
 </cfform>
 
 </div>

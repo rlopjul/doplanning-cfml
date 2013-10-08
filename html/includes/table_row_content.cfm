@@ -96,5 +96,7 @@
 
 </div>
 
+<div style="height:10px;clear:both"></div>
+
 </cfoutput>
 

@@ -2,7 +2,6 @@
 <script src="#APPLICATION.htmlPath#/admin/language/log_item_content_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
 
-
 <cfif isDefined("URL.log") AND isNumeric(URL.log)>
 	<cfset log_id = URL.log>
 	<cfinvoke component="#APPLICATION.componentsPath#/LogManager" method="getLogItem" returnvariable="getLogResponse">
@@ -15,7 +14,6 @@
 		<cfset numItems = logResponse.RecordCount>
 
 		<cfif numItems IS 1>
-
 			<div class="div_items">
 			
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Log" method="outputLogItem">
@@ -26,7 +24,6 @@
 			
 			</div>
 		<cfelse>
-					
 			<div class="div_items">
 			<cfoutput>
 			<div class="div_text_result"><span lang="es">No se ha seleccionado ningún log</span></div>
@@ -36,17 +33,15 @@
 		
 	<cfelse>
 		<cfset message = getLogResponse.message>
-			<cfoutput>
-			<div class="alert alert-error" style="margin:10px;">&nbsp;<span lang="es">#message#</span></div>
-			</cfoutput>
-	
+		<cfoutput>
+		<div class="alert alert-error" style="margin:10px;">&nbsp;<span lang="es">#message#</span></div>
+		</cfoutput>
 	</cfif>
 
-<cfelse>
+<!---<cfelse>
 
 	<script type="text/javascript">
 		openUrlHtml2('empty.cfm','itemIframe');
-	</script>
-
+	</script>--->
 
 </cfif>

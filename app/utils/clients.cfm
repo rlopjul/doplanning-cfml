@@ -51,6 +51,7 @@ TOTAL: #getClients.recordCount#
 		<!--- <td>DB Migrada</td>
 				<td>DB Final</td> --->
 		<td>DB 2.1</td>
+		<td>DB 2.5</td>
 		<td>abb</td>
 		<td>Usuarios</td>
 		<td>Mensajes</td>
@@ -131,11 +132,18 @@ TOTAL: #getClients.recordCount#
 				SHOW TABLES LIKE '#cur_client_abb#_meetings_users_sessions';
 			</cfquery>
 
+			<cfquery datasource="#client_dsn#" name="isDbDp25">
+				SHOW TABLES LIKE '#cur_client_abb#_lists';
+			</cfquery>
+
 		<cfoutput>
 			<td><a href="http://doplanning.net/#getClients.id#" target="_blank"><b>#getClients.name#</b></a></td>
 			<!---<td><cfif isNewDb.recordCount GT 0>Sí<cfelse><strong>No</strong></cfif></td>
 			<td><cfif isNewDb.recordCount GT 0 AND isFinalVersion.recordCount GT 0>Sí<cfelse><strong>No</strong></cfif></td>--->
 			<td><cfif isDbDp21.recordCount GT 0>Sí
+			<cfelse><strong>No</strong>
+			</cfif></td>
+			<td><cfif isDbDp25.recordCount GT 0>Sí
 			<cfelse><strong>No</strong>
 			</cfif></td>
 			<td>#getClients.abbreviation#</td>	

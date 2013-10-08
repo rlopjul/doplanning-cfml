@@ -1,4 +1,6 @@
-/* =========================================================
+/*
+ * http://vitalets.github.io/bootstrap-datepicker/
+ * =========================================================
  * bootstrap-datepicker.js
  * http://www.eyecon.ro/bootstrap-datepicker
  * =========================================================
@@ -35,13 +37,12 @@
 
 		this.element = $(element);
 		this.language = options.language||this.element.data('date-language')||"en";
-		this.language = this.language in dates ? this.language : this.language.split('-')[0]; //Check if "de-DE" style date is available, if not language should fallback to 2 letter code eg "de"
 		this.language = this.language in dates ? this.language : "en";
 		this.isRTL = dates[this.language].rtl||false;
-		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||dates[this.language].format||'mm/dd/yyyy');
+		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
 		this.isInline = false;
 		this.isInput = this.element.is('input');
-		this.component = this.element.is('.date') ? this.element.find('.add-on, .btn') : false;
+		this.component = this.element.is('.date') ? this.element.find('.add-on') : false;
 		this.hasInput = this.component && this.element.find('input').length;
 		if(this.component && this.component.length === 0)
 			this.component = false;
@@ -54,7 +55,7 @@
 		} else if ('dateForceParse' in this.element.data()) {
 			this.forceParse = this.element.data('date-force-parse');
 		}
-
+		 
 
 		this.picker = $(DPGlobal.template)
 							.appendTo(this.isInline ? this.element : 'body')
@@ -75,7 +76,7 @@
 		}
 		$(document).on('mousedown', function (e) {
 			// Clicked outside the datepicker, hide it
-			if ($(e.target).closest('.datepicker.datepicker-inline, .datepicker.datepicker-dropdown').length === 0) {
+			if ($(e.target).closest('.datepicker').length === 0) {
 				that.hide();
 			}
 		});
@@ -106,37 +107,8 @@
 				break;
 		}
 
-		this.minViewMode = options.minViewMode||this.element.data('date-min-view-mode')||0;
-		if (typeof this.minViewMode === 'string') {
-			switch (this.minViewMode) {
-				case 'months':
-					this.minViewMode = 1;
-					break;
-				case 'years':
-					this.minViewMode = 2;
-					break;
-				default:
-					this.minViewMode = 0;
-					break;
-			}
-		}
-
-		this.viewMode = this.startViewMode = Math.max(this.startViewMode, this.minViewMode);
-
 		this.todayBtn = (options.todayBtn||this.element.data('date-today-btn')||false);
 		this.todayHighlight = (options.todayHighlight||this.element.data('date-today-highlight')||false);
-
-		this.calendarWeeks = false;
-		if ('calendarWeeks' in options) {
-			this.calendarWeeks = options.calendarWeeks;
-		} else if ('dateCalendarWeeks' in this.element.data()) {
-			this.calendarWeeks = this.element.data('date-calendar-weeks');
-		}
-		if (this.calendarWeeks)
-			this.picker.find('tfoot th.today')
-						.attr('colspan', function(i, val){
-							return parseInt(val) + 1;
-						});
 
 		this.weekStart = ((options.weekStart||this.element.data('date-weekstart')||dates[this.language].weekStart||0) % 7);
 		this.weekEnd = ((this.weekStart + 6) % 7);
@@ -215,7 +187,8 @@
 			this.update();
 			this.place();
 			$(window).on('resize', $.proxy(this.place, this));
-			if (e) {
+			if (e ) {
+				e.stopPropagation();
 				e.preventDefault();
 			}
 			this.element.trigger({
@@ -226,7 +199,6 @@
 
 		hide: function(e){
 			if(this.isInline) return;
-			if (!this.picker.is(':visible')) return;
 			this.picker.hide();
 			$(window).off('resize', this.place);
 			this.viewMode = this.startViewMode;
@@ -253,9 +225,6 @@
 			this._detachEvents();
 			this.picker.remove();
 			delete this.element.data().datepicker;
-			if (!this.isInput) {
-				delete this.element.data().date;
-			}
 		},
 
 		getDate: function() {
@@ -329,7 +298,7 @@
 			var zIndex = parseInt(this.element.parents().filter(function() {
 							return $(this).css('z-index') != 'auto';
 						}).first().css('z-index'))+10;
-			var offset = this.component ? this.component.parent().offset() : this.element.offset();
+			var offset = this.component ? this.component.offset() : this.element.offset();
 			var height = this.component ? this.component.outerHeight(true) : this.element.outerHeight(true);
 			this.picker.css({
 				top: offset.top + height,
@@ -351,6 +320,7 @@
 
 			if(fromArgs) this.setValue();
 
+			var oldViewDate = this.viewDate;
 			if (this.date < this.startDate) {
 				this.viewDate = new Date(this.startDate);
 			} else if (this.date > this.endDate) {
@@ -358,17 +328,19 @@
 			} else {
 				this.viewDate = new Date(this.date);
 			}
+
+			if (oldViewDate && oldViewDate.getTime() != this.viewDate.getTime()){
+				this.element.trigger({
+					type: 'changeDate',
+					date: this.viewDate
+				});
+			}
 			this.fill();
 		},
 
 		fillDow: function(){
 			var dowCnt = this.weekStart,
 			html = '<tr>';
-			if(this.calendarWeeks){
-				var cell = '<th class="cw">&nbsp;</th>';
-				html += cell;
-				this.picker.find('.datepicker-days thead tr:first-child').prepend(cell);
-			}
 			while (dowCnt < this.weekStart + 7) {
 				html += '<th class="dow">'+dates[this.language].daysMin[(dowCnt++)%7]+'</th>';
 			}
@@ -395,7 +367,7 @@
 				endMonth = this.endDate !== Infinity ? this.endDate.getUTCMonth() : Infinity,
 				currentDate = this.date && this.date.valueOf(),
 				today = new Date();
-			this.picker.find('.datepicker-days thead th.switch')
+			this.picker.find('.datepicker-days thead th:eq(1)')
 						.text(dates[this.language].months[month]+' '+year);
 			this.picker.find('tfoot th.today')
 						.text(dates[this.language].today)
@@ -414,21 +386,6 @@
 			while(prevMonth.valueOf() < nextMonth) {
 				if (prevMonth.getUTCDay() == this.weekStart) {
 					html.push('<tr>');
-					if(this.calendarWeeks){
-						// ISO 8601: First week contains first thursday.
-						// ISO also states week starts on Monday, but we can be more abstract here.
-						var
-							// Start of current week: based on weekstart/current date
-							ws = new Date(+prevMonth + (this.weekStart - prevMonth.getUTCDay() - 7) % 7 * 864e5),
-							// Thursday of this week
-							th = new Date(+ws + (7 + 4 - ws.getUTCDay()) % 7 * 864e5),
-							// First Thursday of year, year from thursday
-							yth = new Date(+(yth = UTCDate(th.getUTCFullYear(), 0, 1)) + (7 + 4 - yth.getUTCDay())%7*864e5),
-							// Calendar week: ms between thursdays, div ms per day, div 7 days
-							calWeek =  (th - yth) / 864e5 / 7 + 1;
-						html.push('<td class="cw">'+ calWeek +'</td>');
-
-					}
 				}
 				clsName = '';
 				if (prevMonth.getUTCFullYear() < year || (prevMonth.getUTCFullYear() == year && prevMonth.getUTCMonth() < month)) {
@@ -526,6 +483,7 @@
 		},
 
 		click: function(e) {
+			e.stopPropagation();
 			e.preventDefault();
 			var target = $(e.target).closest('span, td, th');
 			if (target.length == 1) {
@@ -563,29 +521,19 @@
 						if (!target.is('.disabled')) {
 							this.viewDate.setUTCDate(1);
 							if (target.is('.month')) {
-								var day = 1;
 								var month = target.parent().find('span').index(target);
-								var year = this.viewDate.getUTCFullYear();
 								this.viewDate.setUTCMonth(month);
 								this.element.trigger({
 									type: 'changeMonth',
 									date: this.viewDate
 								});
-								if ( this.minViewMode == 1 ) {
-									this._setDate(UTCDate(year, month, day,0,0,0,0));
-								}
 							} else {
 								var year = parseInt(target.text(), 10)||0;
-								var day = 1;
-								var month = 0;
 								this.viewDate.setUTCFullYear(year);
 								this.element.trigger({
 									type: 'changeYear',
 									date: this.viewDate
 								});
-								if ( this.minViewMode == 2 ) {
-									this._setDate(UTCDate(year, month, day,0,0,0,0));
-								}
 							}
 							this.showMode(-1);
 							this.fill();
@@ -782,7 +730,7 @@
 
 		showMode: function(dir) {
 			if (dir) {
-				this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
+				this.viewMode = Math.max(0, Math.min(2, this.viewMode + dir));
 			}
 			/*
 				vitalets: fixing bug of very special conditions:

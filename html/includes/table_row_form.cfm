@@ -35,6 +35,10 @@
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
+	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+	<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+
 	<script type="text/javascript">
 		function confirmDeleteField() {
 		
@@ -51,6 +55,17 @@
 				return true;
 			} else
 				return false;
+		}
+
+		function enableDatePicker(selector){
+
+			$(selector).datepicker({
+			  format: 'dd-mm-yyyy', 
+			  autoclose: true,
+			  weekStart: 1,
+			  language: 'es',
+			  todayBtn: 'linked'
+			});
 		}
 	</script>
 
@@ -80,6 +95,9 @@
 				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn" style="float:right">Cancelar</a>
 			</cfif>
 		</div>
+
+		<div style="height:10px;"><!--- ---></div>
+		<small lang="es">* Campos obligatorios.</small>
 		
 	</cfform>
 
