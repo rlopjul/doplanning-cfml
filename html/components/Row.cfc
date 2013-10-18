@@ -71,6 +71,39 @@
 
 
 
+	<!--- ----------------------------------- fillEmptyRow -------------------------------------- --->
+
+	<cffunction name="fillEmptyRow" output="false" returntype="query" access="public">
+		<cfargument name="emptyRow" type="query" required="true"/>
+		<cfargument name="fields" type="query" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "fillEmptyRow">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="fillEmptyRow" returnvariable="response">
+				<cfinvokeargument name="emptyRow" value="#arguments.emptyRow#">
+				<cfinvokeargument name="fields" value="#arguments.fields#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
+			
+		</cftry>
+		
+		<cfreturn response.row>
+			
+	</cffunction>
+
+
+
 
 	<!--- -------------------------------createRow-------------------------------------- --->
 	

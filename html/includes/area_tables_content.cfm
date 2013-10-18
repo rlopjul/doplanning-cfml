@@ -30,6 +30,17 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
+<cfif tableTypeId IS 3><!--- Typologies --->
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaDefaultTable" returnvariable="getDefaultTableResponse">
+		<cfinvokeargument name="area_id" value="#area_id#">
+		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+	</cfinvoke>
+	<cfset default_table_id = getDefaultTableResponse.table_id> 
+
+</cfif>
+
+
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
@@ -47,6 +58,12 @@
 		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 		<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
 		<cfinvokeargument name="app_version" value="#app_version#">
+		<cfif isDefined("default_table_id") AND isNumeric(default_table_id)>
+			<cfinvokeargument name="default_table_id" value="#default_table_id#"/>
+		</cfif>
+		<cfif tableTypeId IS 3><!--- Typology --->
+			<cfinvokeargument name="area_id" value="#area_id#"/>
+		</cfif>
 	</cfinvoke>
 
 <cfelse>

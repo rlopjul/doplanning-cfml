@@ -266,7 +266,24 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<!---Table fields--->
+			<!---Table--->
+			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+			
+			<cfif getTableResponse.result IS false>
+				<cfreturn getTableResponse>
+			</cfif>
+
+			<cfset area_id = getTableResponse.table.area_id>
+
+			<!---checkAreaResponsibleAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+
+			<!---Table fields to copy--->
 			<cfinvoke component="TableManager" method="getTableFields" returnvariable="getFieldsResponse">
 				<cfinvokeargument name="table_id" value="#arguments.copy_from_table_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
@@ -278,13 +295,6 @@
 			</cfif>
 
 			<cfset fields = getFieldsResponse.tableFields>
-
-			<cfset area_id = fields.area_id>
-
-			<!---checkAreaResponsibleAccess--->
-			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
-				<cfinvokeargument name="area_id" value="#area_id#">
-			</cfinvoke>
 
 			<cftransaction>
 
@@ -308,7 +318,9 @@
 				</cfloop>
 
 			</cftransaction>
-		
+			
+			<cfinclude template="includes/logRecord.cfm">
+
 			<cfset response = {result=true, table_id=#arguments.table_id#}>
 
 			<cfcatch>
@@ -401,7 +413,9 @@
 				</cfquery>
 
 			</cftransaction>
-		
+			
+			<cfinclude template="includes/logRecord.cfm">
+
 			<cfset response = {result=true, field_id=#arguments.field_id#}>
 
 			<cfcatch>

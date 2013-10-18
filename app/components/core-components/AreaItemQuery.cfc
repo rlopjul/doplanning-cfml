@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2013
 
 	Date of file creation: 25-04-2012
 	File created by: alucena
@@ -17,14 +17,15 @@
 
 	<cfset component = "AreaItemQuery">	
 	
-	<cfset date_format = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
-	<cfset datetime_format = "%d-%m-%Y %H:%i:%s">
+	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
+	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
 	
 	<!---getItem--->
 	
 	<cffunction name="getItem" output="false" returntype="query" access="public">
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">		
@@ -34,11 +35,18 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfquery name="selectItemQuery" datasource="#client_dsn#">
-				SELECT items.parent_id, items.parent_kind, items.user_in_charge, items.creation_date, items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.id AS item_id, items.link,
-				users.name AS user_name, users.family_name, users.image_type AS user_image_type
-				
+				SELECT items.id, items.id AS item_id, items.parent_id, items.parent_kind, items.user_in_charge,  items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link,
+				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
+				<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(items.creation_date, '#dateTimeFormat#') AS creation_date 
+				<cfelse>
+					, items.creation_date
+				</cfif>
 				<cfif arguments.itemTypeId IS NOT 1><!---Is not Messages--->
-					, items.last_update_date, items.attached_image_id, items.attached_image_name
+					<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(items.last_update_date, '#dateTimeFormat#') AS last_update_date 
+					<cfelse>, items.last_update_date</cfif>
+					, items.attached_image_id, items.attached_image_name
 				</cfif>
 				<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
 					, items.link_target
@@ -66,6 +74,9 @@
 				</cfif>	 
 				<cfif arguments.itemTypeId IS 7><!---Consultation--->
 					, items.state, items.read_date
+				</cfif>
+				<cfif arguments.itemTypeId IS 13><!--- Typology --->
+					, items.general
 				</cfif>
 				FROM #client_abb#_#itemTypeTable# AS items
 				INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
@@ -134,7 +145,7 @@
 					, items_position.position 
 					</cfif>
 					<cfif arguments.parse_dates IS true>
-						, DATE_FORMAT(items.creation_date, '#datetime_format#') AS creation_date 
+						, DATE_FORMAT(items.creation_date, '#dateTimeFormat#') AS creation_date 
 					<cfelse>
 						, items.creation_date
 					</cfif>
@@ -149,8 +160,11 @@
 					<cfif arguments.itemTypeId IS NOT 1>
 					, items.attached_image_id, items.attached_image_name, items.link				
 					</cfif>
+					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
+					, items.link_target
+					</cfif>
 					<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-					, DATE_FORMAT(items.start_date, '#date_format#') AS start_date, DATE_FORMAT(items.end_date, '#date_format#') AS end_date
+					, DATE_FORMAT(items.start_date, '#dateFormat#') AS start_date, DATE_FORMAT(items.end_date, '#dateFormat#') AS end_date
 					</cfif>
 					<cfif itemTypeId IS 5><!---Events--->
 					, items.start_time, items.end_time, items.place
@@ -235,10 +249,10 @@
 					</cfif>					
 
 					<cfif isDefined("arguments.from_date")>
-					AND items.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#date_format#')
+					AND items.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
 					</cfif>
 					<cfif isDefined("arguments.end_date")>
-					AND items.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#datetime_format#')
+					AND items.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
 					</cfif>
 					<cfif isDefined("arguments.structure_available")>
 					AND items.structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
@@ -380,102 +394,152 @@
 	<!---listAllAreaItems--->
 	
 	<cffunction name="listAllAreaItems" output="false" returntype="struct" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="area_type" type="string" required="yes">
-		<cfargument name="limit" type="numeric" required="no">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="area_type" type="string" required="false">
+		<cfargument name="limit" type="numeric" required="false">
+		<cfargument name="full_content" type="boolean" required="false" default="false">
 		
-		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">		
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
 		
 		<cfset var method = "listAllAreaItems">
-		
-			<cfset commonColums = "id, title, creation_date, description, user_in_charge, attached_file_id, area_id"><!---attached_file_name,--->
+			
+			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, attached_file_id">
+			<cfset var fileColums = "id, name, association_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id">
+
+			<cfset var commonColumsNull = "NULL AS done">
+
+			<cfset var eventColums = "NULL AS done">
+			<cfset var taskColums = "done">
+			<cfset var pubmedColums = "NULL AS done">
+
+			<cfset var webColums = "attached_image_id">
+			<cfset var webColumsNull = "NULL AS attached_image_id">
+
+			<cfset var iframeColums = "">
+			<cfset var iframeColumsNull = "">
+
+			<cfset var displayColums = "">
+			<cfset var displayColumsNull = "">
+
+			<cfif arguments.full_content IS true>
+
+				<cfset commonColums = commonColums&", link, NULL AS file_size, NULL AS file_type">
+				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS end_date, NULL AS identifier">
+
+				<cfset eventColums = eventColums&", place, start_date, end_date, NULL AS identifier">
+				<cfset taskColums = taskColums&", NULL AS place, start_date, end_date, NULL AS identifier">
+				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, NULL AS end_date, identifier">
+
+				<cfset fileColums = fileColums&", NULL AS link, file_size, file_type">
+				
+				<cfset webColums = webColums&", link_target">
+				<cfset webColumsNull = webColumsNull&", NULL AS link_target">
+
+				<cfset iframeColums = "iframe_url, iframe_display_type_id, ">
+				<cfset iframeColumsNull = "NULL AS iframe_url, NULL AS iframe_display_type_id, ">
+
+				<cfset displayColums = "display_type_id, ">
+				<cfset displayColumsNull = "NULL AS display_type_id, ">
+
+			</cfif>
 								
 			<cfquery name="areaItemsQuery" datasource="#client_dsn#">
 				SELECT items.*, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
-					<cfif len(arguments.area_type) GT 0><!---WEB--->,items_position.position</cfif>
+					<cfif len(arguments.area_type) GT 0><!--- WEB --->
+					, items_position.position
+						<cfif arguments.full_content IS true>
+							, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
+						</cfif>
+					</cfif>
 				FROM (
-				<cfif len(arguments.area_type) IS 0><!---IS NOT WEB--->
-					( SELECT #commonColums#, NULL AS attached_image_id, <!--- NULL AS position, ---> NULL AS done, 1 AS itemTypeId
+				<cfif len(arguments.area_type) IS 0><!--- IS NOT WEB --->
+					<!--- Messages --->
+					( SELECT #commonColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 1 AS itemTypeId
 					FROM #client_abb#_messages AS messages 
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
+					UNION ALL <!--- Tasks --->
+					( SELECT #commonColums#, #webColumsNull#, #taskColums#, #iframeColumsNull# #displayColumsNull# 6 AS itemTypeId
+					FROM #client_abb#_tasks AS tasks
+					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					AND status='ok')
 					<cfif APPLICATION.moduleConsultations IS true>
-					UNION ALL
-					( SELECT #commonColums#, attached_image_id, <!--- NULL AS position, ---> NULL AS done, 7 AS itemTypeId
+					UNION ALL <!--- Consultations --->
+					( SELECT #commonColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 7 AS itemTypeId
 					FROM #client_abb#_consultations AS consultations
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					</cfif>
-				<cfelse><!---WEB--->
-					( SELECT #commonColums#, attached_image_id, <!--- position, ---> NULL AS done, 2 AS itemTypeId
+				<cfelse><!--- WEB --->
+					<!--- Entries --->
+					( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColums# #displayColums# 2 AS itemTypeId
 					FROM #client_abb#_entries AS entries
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					<cfif APPLICATION.identifier EQ "vpnet">
-					UNION ALL
-					( SELECT #commonColums#, attached_image_id, <!--- position, ---> NULL AS done, 3 AS itemTypeId
+					UNION ALL <!--- Links --->
+					( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 3 AS itemTypeId
 					FROM #client_abb#_links AS links
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					</cfif>
-					UNION ALL
-					( SELECT #commonColums#, attached_image_id, <!--- position, ---> NULL AS done, 4 AS itemTypeId
+					UNION ALL <!--- News --->
+					( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColums# #displayColumsNull# 4 AS itemTypeId
 					FROM #client_abb#_news AS news
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
-					UNION ALL
-					( SELECT #commonColums#, attached_image_id, NULL AS done, 9 AS itemTypeId
+					UNION ALL <!--- Images --->
+					( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 9 AS itemTypeId
 					FROM #client_abb#_images AS images
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 				</cfif>
-				UNION ALL
-				( SELECT #commonColums#, attached_image_id, <!--- NULL AS position, ---> NULL AS done, 5 AS itemTypeId
+				UNION ALL <!--- Events --->
+				( SELECT #commonColums#, #webColums#, #eventColums#, #iframeColums# #displayColumsNull# 5 AS itemTypeId
 				FROM #client_abb#_events AS events
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
+				<cfif APPLICATION.modulePubMedComments IS true><!--- Pubmeds --->
 				UNION ALL
-				( SELECT #commonColums#, attached_image_id, <!--- NULL AS position, ---> done, 6 AS itemTypeId
-				FROM #client_abb#_tasks AS tasks
-				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				AND status='ok')
-				<cfif APPLICATION.modulePubMedComments IS true>
-				UNION ALL
-				( SELECT #commonColums#, attached_image_id, NULL AS done, 8 AS itemTypeId
+				( SELECT #commonColums#, #webColums#, #pubmedColums#, #iframeColumsNull# #displayColumsNull# 8 AS itemTypeId
 				FROM #client_abb#_pubmeds AS pubmeds
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				</cfif>
-				<cfif APPLICATION.moduleLists IS true><!---Lists--->
+				<cfif APPLICATION.moduleLists IS true><!--- Lists --->
 				UNION ALL
-				( SELECT #commonColums#, attached_image_id, <!--- NULL AS position, ---> NULL AS done, 11 AS itemTypeId
+				( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 11 AS itemTypeId
 				FROM #client_abb#_lists AS lists
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				</cfif>
-				<cfif APPLICATION.moduleForms IS true><!---Forms--->
+				<cfif APPLICATION.moduleForms IS true><!--- Forms --->
 				UNION ALL
-				( SELECT #commonColums#, attached_image_id, NULL AS done, 12 AS itemTypeId
+				( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 12 AS itemTypeId
 				FROM #client_abb#_forms AS forms
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				</cfif>
-				<!---Files--->
+				<!--- Files --->
 				UNION ALL
-				( SELECT id, name, association_date, description, user_in_charge, id AS attached_file_id, #area_id# AS area_id, NULL AS attached_image_id, <!--- NULL AS position, ---> NULL AS done, 10 AS itemTypeId
+				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 10 AS itemTypeId
 				FROM #client_abb#_files AS files
 				INNER JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id AND files.status='ok') 
 				) AS items
 				INNER JOIN #client_abb#_users AS users
 				ON items.user_in_charge = users.id
 				<cfif len(arguments.area_type) GT 0><!---WEB--->
-				LEFT JOIN #client_abb#_items_position AS items_position
-				ON items.id = items_position.item_id AND itemTypeId = items_position.item_type_id
-				AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				ORDER BY items_position.position DESC, items.creation_date DESC
+					LEFT JOIN #client_abb#_items_position AS items_position
+					ON items.id = items_position.item_id AND itemTypeId = items_position.item_type_id
+					AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					<cfif arguments.full_content IS true>
+						LEFT JOIN #client_abb#_iframes_display_types AS iframes_display_types
+						ON items.iframe_display_type_id = iframes_display_types.iframe_display_type_id
+					</cfif>
+					ORDER BY items_position.position DESC, items.creation_date DESC
 				<cfelse>
-				ORDER BY items.creation_date DESC
+					ORDER BY items.creation_date DESC
 				</cfif>
 				<cfif isDefined("arguments.limit")>
 				LIMIT #arguments.limit#

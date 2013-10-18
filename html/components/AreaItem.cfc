@@ -579,6 +579,7 @@
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="id" value="#arguments.item_id#">
                 <cfinvokeargument name="title" value="#arguments.title#">
+                <cfinvokeargument name="link" value="#arguments.link#">
 				<cfif isDefined("arguments.link_target")>
 					<cfinvokeargument name="link_target" value="#arguments.link_target#">
 				</cfif>
@@ -1519,7 +1520,7 @@
 		
 	
 	<cffunction name="outputItem" returntype="void" output="true" access="public">
-		<cfargument name="objectItem" type="struct" required="true">
+		<cfargument name="objectItem" type="object" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="itemTypeName" type="string" required="true">
 		
@@ -1609,11 +1610,11 @@
 					<cfif len(objectItem.link) GT 0>
 					<div class="div_message_page_label"><span lang="es"><cfif itemTypeId IS 3>URL del enlace<cfelse>Más información</cfif>:</span><br/> <a href="#objectItem.link#" target="_blank">#objectItem.link#</a></div>
 					</cfif>
-					<cfif len(objectItem.iframe_url) GT 0>
+					<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
 					<div class="div_message_page_label"><span lang="es">URL contenido incrustado:</span><br/> <a href="#objectItem.iframe_url#" target="_blank">#objectItem.iframe_url#</a></div>
 					</cfif>
 					
-					<cfif len(objectItem.identifier) GT 0>
+					<cfif isDefined("objectItem.identifier") AND len(objectItem.identifier) GT 0>
 					<div class="div_message_page_label"><span lang="es">Identificador:</span> <span class="text_message_page">#objectItem.identifier#</span></div>
 					</cfif>
 					
@@ -2326,9 +2327,10 @@
 								
 									<i class="icon-exchange" style="font-size:25px; color:##0088CC"></i>
 
+								<!---
 								<cfelseif itemTypeId IS 11><!--- List --->
 
-									<i class="icon-table" style="font-size:27px; color:##7A7A7A"></i>
+									<i class="icon-table" style="font-size:27px; color:##7A7A7A"></i>--->
 									
 								<cfelseif itemTypeId IS NOT 3><!---No es link--->
 								

@@ -32,7 +32,7 @@
 					<label class="control-label" for="image_file" lang="es">Imagen:</label>
 					<div class="control-group">
 						<cfinput type="file" name="image_file" id="image_file" /><br/>
-						<small>Si no se asigna una imagen a este área se mostrará la heredada de las áreas superiores.</small>
+						<small>Si no se asigna una imagen a esta área se mostrará la heredada de las áreas superiores.</small>
 					</div>
 				</div>
 

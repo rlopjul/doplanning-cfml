@@ -49,13 +49,14 @@
 						<cfif len(objectArea.type) GT 0>
 						 type="#objectArea.type#"
 						</cfif>
-						>
+						<cfif len(objectArea.default_typology_id) GT 0>
+						 default_typology_id="#objectArea.default_typology_id#"
+						</cfif>>
 						<name><![CDATA[#objectArea.name#]]></name>
 						<description><![CDATA[#objectArea.description#]]></description>
 						<cfif len(objectArea.user_full_name) GT 0>
 						<user_full_name><![CDATA[#objectArea.user_full_name#]]></user_full_name>
-						</cfif>
-					</area></cfoutput></cfsavecontent>
+						</cfif></area></cfoutput></cfsavecontent>
 			</cfprocessingdirective>
 			<!---<cfif len(objectArea.image_background_color) GT 0>
 			 image_background_color="#objectArea.image_background_color#"
@@ -92,6 +93,7 @@
 		<cfargument name="description" type="string" required="no" default="">
 		<cfargument name="user_full_name" type="string" required="no" default="">
 		<cfargument name="type" type="string" required="no" default="">
+		<cfargument name="default_typology_id" type="string" required="false" default="">
 		
 		
 		<cfargument name="return_type" type="string" required="no">
@@ -147,6 +149,10 @@
 				<cfif isDefined("xmlArea.area.XmlAttributes.type")>
 					<cfset type=xmlArea.area.XmlAttributes.type>
 				</cfif>
+
+				<cfif isDefined("xmlArea.area.XmlAttributes.default_typology_id")>
+					<cfset default_typology_id=xmlArea.area.XmlAttributes.default_typology_id>
+				</cfif>
 				
 				<cfif isDefined("xmlArea.area.description.xmlText")>
 					<cfset description="#xmlArea.area.description.xmlText#">
@@ -176,6 +182,7 @@
 				link="#link#",
 				with_link="#with_link#",
 				type="#type#",
+				default_typology_id="#default_typology_id#",
 				description="#description#",
 				user_full_name="#user_full_name#"
 				}>
@@ -225,6 +232,29 @@
 		
 		<cfreturn area_path>
 					
+	</cffunction>
+
+
+	<!--- -------------------------- getAreaType -------------------------------- --->
+	<!---Obtiene el tipo del área, si el área no la tiene definida la busca en sus áreas superiores--->
+	
+	<cffunction name="getAreaType" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="yes">
+		
+		<cfset var method = "getAreaType">
+							
+		<cfinclude template="includes/functionStart.cfm">
+		
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+					
+
+		<cfreturn getAreaTypeResult>
+		
 	</cffunction>
 	
 	
@@ -315,10 +345,8 @@
 		
 		<cfset var access_result = false>
 		<cfset var area_users_list = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
-		<cfinclude template="includes/functionStart.cfm">
+					
+		<cfinclude template="includes/functionStartOnlySession.cfm">
 
 		<cfquery datasource="#client_dsn#" name="getAreaUsers">
 			SELECT areas_users.user_id, areas.parent_id
@@ -348,16 +376,21 @@
 			
 		<cfelse><!---No users in area--->
 		
-			<cfinvoke component="AreaManager" method="getArea" returnvariable="objectArea">
+			<!---<cfinvoke component="AreaManager" method="getArea" returnvariable="objectArea">
 				<cfinvokeargument name="get_area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="format_content" value="default">
 				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>
+			</cfinvoke>--->
+			<cfquery datasource="#client_dsn#" name="getAreaParent">
+				SELECT areas.parent_id
+				FROM #client_abb#_areas AS areas
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
 			
-			<cfif isNumeric(objectArea.parent_id)>
+			<cfif isNumeric(getAreaParent.parent_id)>
 			
 				<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
-					<cfinvokeargument name="area_id" value="#objectArea.parent_id#">
+					<cfinvokeargument name="area_id" value="#getAreaParent.parent_id#">
 				</cfinvoke>
 			
 			</cfif>
@@ -365,30 +398,6 @@
 		</cfif>
 		
 		<cfreturn access_result>
-		
-	</cffunction>
-	
-	
-	
-	<!--- -------------------------- getAreaType -------------------------------- --->
-	<!---Obtiene el tipo del área, si el área no la tiene definida la busca en sus áreas superiores--->
-	
-	<cffunction name="getAreaType" returntype="struct" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
-		
-		<cfset var method = "getAreaType">
-							
-		<cfinclude template="includes/functionStart.cfm">
-		
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-					
-
-		<cfreturn getAreaTypeResult>
 		
 	</cffunction>
 	
@@ -432,32 +441,64 @@
 	</cffunction>
 
 
-	<!--- -------------------------- CHECK AREA RESPONSIBLE ACCESS -------------------------------- --->
-	<!---Comprueba si el usuario es administrador del área al que quiere acceder y si no lanza un error--->
+	<!--- -------------------------- isUserAreaResponsible -------------------------------- --->
+	<!---Comprueba si el usuario es responsable del área, y devuelve el resultado en una variable--->
+	<!---El administrador general tiene permiso de responsable en todas las áreas--->
 	
-	<cffunction name="checkAreaResponsibleAccess" returntype="void" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
+	<cffunction name="isUserAreaResponsible" returntype="boolean" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
 		
-		<cfset var method = "checkAreaAdminAccess">
-		
+		<cfset var method = "isUserAreaResponsible">
+
 		<cfset var user_id = "">
+		<cfset var client_administrator = "">
 		
-		<cfset var allUserAreasList = "">
 		<cfset var access_result = false>
-			
+
 		<cfinclude template="includes/functionStartOnlySession.cfm">
+					
+		<cfif client_administrator IS user_id><!---Is general administrator user--->
+			<cfreturn true>
+		</cfif>
+
+		<cfquery datasource="#client_dsn#" name="getArea">
+			SELECT areas.user_in_charge, areas.parent_id
+			FROM #client_abb#_areas AS areas
+			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
 		
-		<!--- ESTO ESTÁ PENDIENTE DE IMPLEMENTAR --->
-
-		<!---
-		<cfif SESSION.client_administrator NEQ user_id><!---Is not an administrator user--->
-
-			<cfinvoke component="AreaManager" method="getAllUserAreasAdminList" returnvariable="allUserAreasAdminList">
-			</cfinvoke>
+		<cfif getArea.recordCount GT 0>
 			
-			<cfinvoke component="AreaManager" method="canTheUserAccess" returnvariable="access_result">
+			<cfif getArea.user_in_charge IS user_id>
+				<cfreturn true>
+			</cfif>
+
+			<cfif isNumeric(getArea.parent_id)>	
+				<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
+					<cfinvokeargument name="area_id" value="#getArea.parent_id#">
+				</cfinvoke>
+			</cfif>
+		
+		</cfif>
+
+		<cfreturn access_result>
+				
+	</cffunction>
+
+
+	<!--- -------------------------- CHECK AREA RESPONSIBLE ACCESS -------------------------------- --->
+	<!---Comprueba si el usuario es responsable del área y si no lanza un error--->
+	<!---El administrador general tiene permiso de responsable en todas las áreas--->
+
+	<cffunction name="checkAreaResponsibleAccess" returntype="void" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		
+		<cfset var method = "checkAreaResponsibleAccess">
+									
+		<cfif SESSION.client_administrator NEQ SESSION.user_id><!---Is not an administrator user--->
+
+			<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="allUserAreasList" value="#allUserAreasAdminList#">
 			</cfinvoke>
 	
 			<cfif access_result IS NOT true>
@@ -466,7 +507,7 @@
 				<cfthrow errorcode="#error_code#">		
 			</cfif>		
 		
-		</cfif>--->
+		</cfif>
 			
 	</cffunction>
 
@@ -552,61 +593,6 @@
 		</cfif>		
 	
 	</cffunction>		
-	
-	
-	
-	<!--- ------------------------------------- checkAreasAccess ------------------------------------- --->
-	
-	<!---
-	NO USADO EN VERSION HTML
-	<cffunction name="checkAreasAccessRemote" output="false" access="public" returntype="String">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "checkAreasAccessRemote">
-		
-		<cfset var areasIds = "">
-		<cfset var user_id = "">
-		<cfset var client_abb = "">
-		<cfset var user_language = "">
-			
-		<cfset var xmlRequest = "">
-		<cfset var xmlResponseContent = "">
-
-		<cfset var access_result = false>
-		
-		<cftry>
-				
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset areasList = xmlRequest.request.parameters.areasIds.xmlText>
-			
-			<cfloop list="#areasList#" index="current_area">
-	
-				<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="current_access_result">
-					<cfinvokeargument name="area_id" value="#current_area#">
-				</cfinvoke>
-				
-				<cfif current_access_result IS true>
-					<cfset access_result = true>
-					<cfbreak>
-				</cfif>
-			
-			</cfloop>
-			
-			<cfset xmlResponseContent = "<access><![CDATA["&access_result&"]]></access>">
-			
-			<cfinclude template="includes/functionEndNoLog.cfm">
-			
-			<cfreturn xmlResponse>
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-				<cfreturn xmlResponse>
-			</cfcatch>
-		</cftry>
-	
-	</cffunction>--->
 	
 	
 	
@@ -1139,7 +1125,7 @@
 			
 			<cfset areasXml =  "<areas>#areasResult#</areas>">
 
-			<cfset response = {result="true", message="", areasXml=#areasXml#}>
+			<cfset response = {result=true, areasXml=#areasXml#}>
 
 		
 			<cfcatch>
@@ -1958,7 +1944,8 @@
 						<cfinvokeargument name="link" value="#selectAreaQuery.area_link#">
 					</cfif>
 					<cfinvokeargument name="type" value="#selectAreaQuery.type#">
-					
+					<cfinvokeargument name="default_typology_id" value="#selectAreaQuery.default_typology_id#">
+
 				</cfinvoke>
 				
                 <cfif arguments.return_type EQ "object">

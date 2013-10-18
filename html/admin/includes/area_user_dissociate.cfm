@@ -26,7 +26,7 @@
 
 	 	<div class="modal-body">
 	  		
-			¿Seguro que desea quitar este usuario de este área?:<br/>
+			¿Seguro que desea quitar este usuario de esta área?:<br/>
 			<div style="padding-left:50px; padding-top:15px;">
 				<div>
 					<cfif len(objectUser.image_type) GT 0>

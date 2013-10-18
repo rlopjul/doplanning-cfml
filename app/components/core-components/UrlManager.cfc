@@ -13,17 +13,16 @@
 	<cfset component = "UrlManager">
 	
 	
-	
 	<!--- ----------------------- getAreaUrl -------------------------------- --->
 	<cffunction name="getAreaUrl" access="public" returntype="string">
 		<cfargument name="area_id" type="numeric" required="yes">
 		
-		<cfset var itemUrl = "">
+		<cfset var areaUrl = "">
 		
-		<!---<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&abb=#SESSION.client_abb#">--->
-		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&area=#arguments.area_id#">
+		<!---<cfset areaUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&abb=#SESSION.client_abb#">--->
+		<cfset areaUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&area=#arguments.area_id#">
 		
-		<cfreturn itemUrl>
+		<cfreturn areaUrl>
 	</cffunction>
 	
 	
@@ -74,5 +73,51 @@
 		<cfreturn fileUrl>
 	</cffunction>
 	
+
+	<!--- ----------------------- getAreaWebPage -------------------------------- --->
+
+	<!---Para poder URLs absolutas es necesario saber la URL donde está publicada la web.
+	Esta URL podría estar definida en base de datos en el cliente correspondiente.
+	También es necesario saber en qué idioma está---->
+
+	<cffunction name="getAreaWebPage" access="public" returntype="string">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="name" type="string" required="true">
+		<cfargument name="remove_order" type="boolean" required="true">
+		
+		<cfset var areaWebUrl = "">
+		<cfset var pageTitle = "">
+		
+		<cfif arguments.remove_order IS true>
+			<cfset pageTitle = mid(arguments.name, findOneOf(".-", arguments.name)+2, len(arguments.name))>
+		<cfelse>
+			<cfset pageTitle = arguments.name>
+		</cfif>
+
+		<cfset pageTitle = pageTitleToUrl(pageTitle)>
+
+		<cfset areaWebUrl = "page.cfm?id=#arguments.area_id#&title=#pageTitle#">
+		
+		<cfreturn areaWebUrl>
+	</cffunction>
+
+
+
+	<!--- ----------------------- pageTitleToUrl -------------------------------- --->
+	<cffunction name="pageTitleToUrl" access="public" returntype="string">
+		<cfargument name="title" type="string" required="true">
+
+		<cfset var titleUrl = "">
+
+		<cfset titleUrl = lCase(arguments.title)>
+	
+		<cfset titleUrl = replaceList(titleUrl," ,á,é,í,ó,ú,ñ", "-,a,e,i,o,u,n")>
+	
+		<!---Reemplazar comillas dobles por comillas simples--->
+		<cfset titleUrl = replaceList(titleUrl, Chr(34), "")>
+
+		<cfreturn titleUrl>
+	</cffunction>
+
 	
 </cfcomponent>

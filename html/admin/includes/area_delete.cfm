@@ -19,7 +19,7 @@
 
 	 	<div class="modal-body">
 	  		
-			¿Seguro que desea eliminar definitivamente este área?:<br/>
+			¿Seguro que desea eliminar definitivamente esta área?:<br/>
 			<div style="padding-left:50px; padding-top:15px; padding-bottom:15px;">
 
 				<div style="margin-top:10px;">Area:

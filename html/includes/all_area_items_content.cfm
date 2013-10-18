@@ -30,7 +30,7 @@
 
 	<a href="news_new.cfm?area=#area_id#" onclick="openUrl('news_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Noticia" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/news.png" style="height:22px;"/></a>
 
-	<a href="image_new.cfm?area=#area_id#" onclick="openUrl('image_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Imagen" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<i class="icon-picture" style="font-size:18px; color:##7A7A7A"></i></a>
+	<a href="image_new.cfm?area=#area_id#" onclick="openUrl('image_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Imagen" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<img src="#APPLICATION.htmlPath#/assets/icons/image.png" style="height:22px;"/></a>
 	</cfif>
 
 	<a href="area_file_new.cfm?area=#area_id#" onclick="openUrl('area_file_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo Archivo" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file.png" style="height:22px;"/></a>
@@ -42,20 +42,24 @@
 	<a href="task_new.cfm?area=#area_id#" onclick="openUrl('task_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Tarea" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/task.png" style="height:22px;"/></a>
 	</cfif>	
 	
+	<cfif is_user_area_responsible>
+
+		<cfif APPLICATION.moduleLists IS true>
+		<a href="list_new.cfm?area=#area_id#" onclick="openUrl('list_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Lista" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<img src="#APPLICATION.htmlPath#/assets/icons/list.png" style="height:22px;" alt="Nueva Lista" lang="es"/></a>
+		</cfif>
+
+		<cfif APPLICATION.moduleForms IS true>
+		<a href="form_new.cfm?area=#area_id#" onclick="openUrl('form_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo Formulario" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<img src="#APPLICATION.htmlPath#/assets/icons/form.png" style="height:22px;" alt="Nuevo Formulario" lang="es"/></i></a>
+		</cfif>
+
+	</cfif>
+
 	<cfif APPLICATION.moduleConsultations IS true AND len(area_type) IS 0>
 	<a href="consultation_new.cfm?area=#area_id#" onclick="openUrl('consultation_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Interconsulta" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i></a>
 	</cfif>
 
-	<cfif APPLICATION.moduleLists IS true>
-	<a href="list_new.cfm?area=#area_id#" onclick="openUrl('list_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Lista" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<i class="icon-table" style="font-size:18px; color:##7A7A7A"></i></a>
-	</cfif>
-
-	<cfif APPLICATION.moduleForms IS true>
-	<a href="form_new.cfm?area=#area_id#" onclick="openUrl('form_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo Formulario" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<i class="icon-columns" style="font-size:18px; color:##7A7A7A"></i></a>
-	</cfif>
-
 	<cfif APPLICATION.modulePubMedComments IS true>
-	<a href="pubmed_new.cfm?area=#area_id#" onclick="openUrl('pubmed_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo Comentario de PubMed" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<i class="icon-book" style="font-size:18px; color:##0088CC"></i></a>
+	<a href="pubmed_new.cfm?area=#area_id#" onclick="openUrl('pubmed_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo Comentario de PubMed" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" style="height:22px;"/></a>
 	</cfif>
 	
 	<span class="divider">&nbsp;</span>

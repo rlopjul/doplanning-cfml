@@ -32,9 +32,7 @@
 	</cfinvoke>
 	
 	<cfxml variable="xmlAreas">
-		<cfoutput>
-		#xmlResponse.area#
-		</cfoutput>
+		<cfoutput>#xmlResponse.area#</cfoutput>
 	</cfxml>
 
 	<cfset parent_area_id = xmlAreas.area.xmlAttributes.parent_id>
@@ -59,9 +57,7 @@
 	<!---Si está en la raiz del árbol no se define area_id porque no se está en ningún área--->
 	
 	<cfxml variable="xmlAreas">
-		<cfoutput>
-		#getMainTreeResponse.areasXml#
-		</cfoutput>
+		<cfoutput>#getMainTreeResponse.areasXml#</cfoutput>
 	</cfxml>
 	
 	<cfset return_page = "mobile.cfm">
@@ -76,42 +72,42 @@
 
 <cfif numAreas GT 0>
 
-		<cfoutput>
-		<cfloop index="xmlIndex" from="1" to="#numAreas#" step="1">
-		
-			<cfif isDefined("URL.area")>
-				<cfxml variable="xmlArea">
-				#xmlAreas.area.area[xmlIndex]#
-				</cfxml>
-			<cfelse>
-				<cfxml variable="xmlArea">
-				#xmlAreas.areas.area[xmlIndex]#
-				</cfxml>			
-			</cfif>
-				
-			<cfif xmlArea.area.xmlAttributes.allowed EQ true>
-				<cfif NOT isDefined("xmlArea.area.xmlAttributes.type") OR xmlArea.area.xmlAttributes.type EQ "">
-					<cfset area_image = "assets/icons_#APPLICATION.identifier#/area_small.png">
-				<cfelse>
-					<cfset area_image = "assets/icons_#APPLICATION.identifier#/area_web_small.png">
-				</cfif>
-			<cfelse>
-				<cfif NOT isDefined("xmlArea.area.xmlAttributes.type") OR xmlArea.area.xmlAttributes.type EQ "">
-					<cfset area_image = "assets/icons_#APPLICATION.identifier#/area_small_disabled.png">
-				<cfelse>
-					<cfset area_image = "assets/icons_#APPLICATION.identifier#/area_web_small_disabled.png">
-				</cfif>
-			</cfif>
+	<cfoutput>
+	<cfloop index="xmlIndex" from="1" to="#numAreas#" step="1">
+	
+		<cfif isDefined("URL.area")>
+			<cfxml variable="xmlArea">
+			#xmlAreas.area.area[xmlIndex]#
+			</cfxml>
+		<cfelse>
+			<cfxml variable="xmlArea">
+			#xmlAreas.areas.area[xmlIndex]#
+			</cfxml>			
+		</cfif>
 			
+		<cfif xmlArea.area.xmlAttributes.allowed EQ true>
+			<cfif NOT isDefined("xmlArea.area.xmlAttributes.type") OR xmlArea.area.xmlAttributes.type EQ "">
+				<cfset area_image = "assets/icons_#APPLICATION.identifier#/area_small.png">
+			<cfelse>
+				<cfset area_image = "assets/icons_#APPLICATION.identifier#/area_web_small.png">
+			</cfif>
+		<cfelse>
+			<cfif NOT isDefined("xmlArea.area.xmlAttributes.type") OR xmlArea.area.xmlAttributes.type EQ "">
+				<cfset area_image = "assets/icons_#APPLICATION.identifier#/area_small_disabled.png">
+			<cfelse>
+				<cfset area_image = "assets/icons_#APPLICATION.identifier#/area_web_small_disabled.png">
+			</cfif>
+		</cfif>
 		
-			<div class="div_area">
-				<div class="div_img_area_area">
-				<a href="area.cfm?area=#xmlArea.area.xmlAttributes.id#"><img src="#area_image#" alt="Área"/></a>
-				</div>
-				<div class="div_text_area"><a href="area.cfm?area=#xmlArea.area.xmlAttributes.id#" class="a_area_area">#xmlArea.area.xmlAttributes.name#</a></div>
-			</div>		
-		</cfloop>
-		</cfoutput>
+	
+		<div class="div_area">
+			<div class="div_img_area_area">
+			<a href="area.cfm?area=#xmlArea.area.xmlAttributes.id#"><img src="#area_image#" alt="Área"/></a>
+			</div>
+			<div class="div_text_area"><a href="area.cfm?area=#xmlArea.area.xmlAttributes.id#" class="a_area_area">#xmlArea.area.xmlAttributes.name#</a></div>
+		</div>		
+	</cfloop>
+	</cfoutput>
 
 <cfelse>
 <div class="div_text_result"><span lang="es">No hay más areas dentro de esta.</span></div>

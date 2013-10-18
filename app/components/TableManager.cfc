@@ -62,7 +62,9 @@
 			<cfquery name="deleteTable" datasource="#client_dsn#">
 				DROP TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
 			</cfquery>	
-			
+
+			<cfinclude template="includes/logRecord.cfm">
+
 	</cffunction>
 
 
@@ -87,7 +89,8 @@
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="getTableQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">		
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="parse_dates" value="true">		
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -350,6 +353,180 @@
 		<cfreturn response>
 		
 	</cffunction>
+
+
+	<!--- ------------------------------------- setAreaDefaultTable -------------------------------------  --->
+	
+	<cffunction name="setAreaDefaultTable" output="false" access="public" returntype="struct">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "setAreaDefaultTable">
+
+		<cfset var response = structNew()>
+
+		<cfset var table = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<!---checkAreaResponsibleAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+
+			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+			
+			<cfif getTableResponse.result IS false>
+				<cfreturn getTableResponse>
+			</cfif>
+
+			<cfset table = getTableResponse.table>
+
+			<cfif table.area_id IS arguments.area_id OR table.general IS true>
+
+				<cfquery datasource="#client_dsn#" name="setAreaDefaultTable">
+					UPDATE #client_abb#_areas
+					SET default_#tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+					WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+			<cfelse>
+
+				<cfthrow message="Tabla no disponible en esta área">
+
+			</cfif>
+		
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, area_id=#arguments.area_id#, table_id=#arguments.table_id#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+	<!--- ------------------------------------- removeAreaDefaultTable -------------------------------------  --->
+	
+	<cffunction name="removeAreaDefaultTable" output="false" access="public" returntype="struct">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "removeAreaDefaultTable">
+
+		<cfset var response = structNew()>
+
+		<cfset var table = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<!---checkAreaResponsibleAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+
+			<cfquery datasource="#client_dsn#" name="setAreaDefaultTable">
+				UPDATE #client_abb#_areas
+				SET default_#tableTypeName#_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+		
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, area_id=#arguments.area_id#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+
+	<!--- ------------------------------------- getAreaDefaultTable -------------------------------------  --->
+	
+	<cffunction name="getAreaDefaultTable" output="false" access="public" returntype="struct">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getAreaDefaultTable">
+
+		<cfset var response = structNew()>
+
+		<cfset var default_table_id = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfquery datasource="#client_dsn#" name="getAreaDefaultTableId">
+				SELECT areas.parent_id, areas.default_#tableTypeName#_id AS default_table_id
+				FROM #client_abb#_areas AS areas
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif getAreaDefaultTableId.recordCount GT 0>
+			
+				<cfif isNumeric(getAreaDefaultTableId.default_table_id) GT 0>
+				
+					<cfset default_table_id = getAreaDefaultTableId.default_table_id>
+					
+				<cfelseif isNumeric(getAreaDefaultTableId.parent_id)>
+							
+					<cfinvoke component="TableManager" method="getAreaDefaultTable" returnvariable="defaultTableResponse">
+						<cfinvokeargument name="area_id" value="#getAreaDefaultTableId.parent_id#">
+						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					</cfinvoke>
+					
+					<cfset default_table_id = defaultTableResponse.table_id>
+											
+				</cfif>
+				
+			<cfelse><!---The area does not exist--->
+					
+				<cfset error_code = 401>
+				<cfthrow errorcode="#error_code#">
+			
+			</cfif>
+
+			<cfset response = {result=true, table_id=#default_table_id#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
 
 
 

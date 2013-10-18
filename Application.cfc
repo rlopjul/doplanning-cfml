@@ -8,7 +8,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_25'>
+	<cfset this.name = 'dp_beta_aws_34'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
@@ -113,6 +113,11 @@
 		<cfset APPLICATION.termsOfUseUrl = APPLICATION.mainUrl&"/web/terms_of_use.cfm">
 
 		<cfset APPLICATION.defaultLanguage = "es">
+		
+		<!---Google analytics--->
+		<cfset APPLICATION.googleAnalyticsAccountId = "">
+		
+		
 		<!---Al cambiar la aplicacion de sitio tambien hay que modificar los extends de los Application--->
 		
 		<cfif APPLICATION.moduleWeb EQ true><!---DPWeb enabled--->
@@ -125,11 +130,17 @@
 
 			<cfset APPLICATION.addThisProfileId = "">
 
-			<cfset APPLICATION.cssLayout = "#APPLICATION.path#/app/css/mockup.css">
-	        <cfset APPLICATION.colorLayout = "#APPLICATION.path#/app/css/colors/palette.css">
-	        <cfset APPLICATION.fontLayout = "#APPLICATION.path#/app/css/fonts/type.css">
-	        <cfset APPLICATION.layout = "#APPLICATION.path#/app/layouts/pages/002.cfm">
-	        <cfset APPLICATION.indexLayout = "#APPLICATION.path#/app/layouts/pages/index.cfm">
+			<cfset APPLICATION.cssLayout = "#APPLICATION.path#/app/css/mockup_hcs.css">
+            <cfset APPLICATION.colorLayout = "#APPLICATION.path#/app/css/colors/palette_hcs.css">
+            <cfset APPLICATION.fontLayout = "#APPLICATION.path#/app/css/fonts/type_hcs.css">
+            <cfset APPLICATION.layout = "#APPLICATION.path#/app/layouts/pages/003_hcs.cfm">
+            <cfset APPLICATION.indexLayout = "#APPLICATION.path#/app/layouts/pages/001_hcs.cfm">			
+            <cfset APPLICATION.jsLayout = "#APPLICATION.path#/app/js/carousel_init.js">   
+			
+			<cfset APPLICATION.cssIntranetLayout = "#APPLICATION.path#/app/css/mockup_intranet_hcs.css">
+			<cfset APPLICATION.intranetLayout = "#APPLICATION.path#/app/layouts/pages/intranet_hcs.cfm">
+			<cfset APPLICATION.indexIntranetLayout = "#APPLICATION.path#/app/layouts/pages/index_intranet_hcs.cfm">
+			<cfset APPLICATION.colorIntranetLayout = "#APPLICATION.path#/app/css/colors/palette_intranet_hcs.css">
 
 		</cfif>
 

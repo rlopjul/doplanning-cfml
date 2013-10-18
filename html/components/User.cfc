@@ -235,28 +235,26 @@
 	
 	
 	
-	
-	<cffunction name="getUserPreferences" returntype="xml" output="false" access="public">
+	<cffunction name="getUserPreferences" output="false" returntype="query" access="public">
 		
 		<cfset var method = "getUserPreferences">
 		
-		<cfset var xmlResponse = "">
-		
+		<cfset var response = structNew()>
+					
 		<cftry>
-			
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUserPreferences" returnvariable="response">
 			</cfinvoke>
 			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
 			
 		</cftry>
 		
-		<cfreturn xmlResponse>
+		<cfreturn response.preferences>
 		
 	</cffunction>
 	
@@ -374,15 +372,20 @@
 		<cfargument name="notify_new_event" type="string" required="false" default="false">
 		<cfargument name="notify_new_task" type="string" required="false" default="false">
 		<cfargument name="notify_new_consultation" type="string" required="false" default="false">
+
+		<cfargument name="notify_new_image" type="string" required="false" default="false">
+		<cfargument name="notify_new_typology" type="string" required="false" default="false">
+		<cfargument name="notify_new_list" type="string" required="false" default="false">
+		<cfargument name="notify_new_form" type="string" required="false" default="false">
+		<cfargument name="notify_new_pubmed" type="string" required="false" default="false">
 		
 		<cfset var method = "updateUserPreferences">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<cfset var response = structNew()>
 		
 		<cftry>
-			
-			<cfsavecontent variable="request_parameters">
+					
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 				<preferences user_id="#SESSION.user_id#"
 					notify_new_message="#arguments.notify_new_message#"
@@ -408,20 +411,26 @@
 				<cfinvokeargument name="request_component" value="#request_component#">
 				<cfinvokeargument name="request_method" value="#method#">
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			</cfinvoke>--->
+
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUserPreferences" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
 			
-			<cfset message = "Modificación guardada.">
-			<cfset message = URLEncodedFormat(message)>
+			<cfif response.result IS true>
+				<cfset msg = "Modificación guardada.">
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+
+			<cfset msg = URLEncodedFormat(msg)>
             
-            <cflocation url="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm?msg=#message#&res=1" addtoken="no">
+            <cflocation url="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">
 			
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
-		
-		<cfreturn xmlResponse>
 		
 	</cffunction>
 
@@ -934,9 +943,9 @@
 	
 	<cffunction name="outputUsersList" returntype="void" output="true" access="public">
 		<cfargument name="xmlUsers" type="xml" required="true">
-		<cfargument name="area_id" type="numeric" required="no">
-		<cfargument name="user_in_charge" type="numeric" required="no" default="0">
-		<cfargument name="show_area_members" type="boolean" required="no" default="false">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="user_in_charge" type="numeric" required="false" default="0">
+		<cfargument name="show_area_members" type="boolean" required="false" default="false">
 		<cfargument name="open_url_target" type="string" required="false" default="itemIframe">
 		<cfargument name="filter_enabled" type="boolean" required="false" default="true">
 		
@@ -1024,7 +1033,7 @@
 							<th lang="es">Apellidos</th>
 							<th lang="es">Email</th>
 							<cfif arguments.show_area_members IS true>
-							<th style="width:110px;" lang="es">De este área</th>
+							<th style="width:110px;" lang="es">De esta área</th>
 							</cfif>
 							<!---<cfif APPLICATION.moduleWebRTC IS true>
 							<th style="width:40px;" lang="es"></th>
@@ -1102,6 +1111,12 @@
 					</tbody>
 					
 				</table>
+
+				<cfif arguments.user_in_charge GT 0>
+					<div style="margin-top:10px">
+						<small class="help-block" lang="es">Se muestra en negrita el responsable del área</small>
+					</div>
+				</cfif>
 				</cfoutput>
 			
 			</cfif>
