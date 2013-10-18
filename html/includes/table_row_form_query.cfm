@@ -43,10 +43,24 @@
 		<cflocation url="empty.cfm" addtoken="no">
 	</cfif>
 
+	<!---Table fields--->
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
+		<cfinvokeargument name="table_id" value="#table_id#">
+		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		<cfinvokeargument name="with_types" value="true"/>
+	</cfinvoke>
+	<cfset fields = fieldsResult.tableFields>
+
 	<cfif page_type IS 1><!--- NEW --->
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="row">
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
 			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		</cfinvoke>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="fillEmptyRow" returnvariable="row">
+			<cfinvokeargument name="emptyRow" value="#emptyRow#">
+			<cfinvokeargument name="fields" value="#fields#">
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 		</cfinvoke>
 

@@ -14,7 +14,7 @@
 		<cfargument name="row_id" type="numeric" required="false">
 		<cfargument name="position" type="numeric" required="false">
 
-		<cfargument name="action" type="string" required="true">
+		<cfargument name="action" type="string" required="true"><!---create/modify--->
 
 		<cfset var method = "saveRow">
 
@@ -100,27 +100,32 @@
 
 						<cfset field_name = "field_#fields.field_id#">
 
+						<!---
 						<cfif fields.input_type NEQ "check" OR isDefined("arguments.field_#fields.field_id#")><!---No es YES/NO o está definido--->
 							<cfset field_value = arguments[field_name]>
 						<cfelse>
 							<cfset field_value = false>
-						</cfif>
+						</cfif>--->
+
+						<cfset field_value = arguments[field_name]>
 
 						, field_#fields.field_id# = 	
 
 						<cfif fields.mysql_type IS "DATE"><!---DATE--->
 							<cfif len(field_value) GT 0>
-								STR_TO_DATE(<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">,'#dateFormat#')
+								STR_TO_DATE('#field_value#','#dateFormat#')
 							<cfelse>
-								<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="yes">
-							</cfif>								
+								<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">
+							</cfif>
+						<cfelseif fields.field_type_id IS 7 AND len(field_value) IS 0><!--- BOOLEAN --->	
+							<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">							
 						<cfelse>														
 							<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
 						</cfif>
 
 					</cfloop>
 
-					<cfif arguments.action IS "update">
+					<cfif arguments.action NEQ "create">
 						WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
 					</cfif>;
 				</cfquery>

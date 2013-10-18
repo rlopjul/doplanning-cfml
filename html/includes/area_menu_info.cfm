@@ -25,8 +25,23 @@
 	<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
-
 	<div class="div_message_page_label"><span lang="es">URL del área en DoPlanning:</span></div>
 	<input type="text" value="#areaUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+
+	<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->
+		
+		<cfif area_type EQ "web" OR area_type EQ "intranet">
+			<!---areaWebUrl--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaWebPage" returnvariable="areaPage">
+				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="name" value="#objectArea.name#">
+				<cfinvokeargument name="remove_order" value="true">
+			</cfinvoke>
+			<cfset areaWebUrl = "/#area_type#/#areaPage#">
+			<div class="div_message_page_label"><span lang="es">URL relativa en la web:</span></div>
+			<input type="text" value="#areaWebUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+		</cfif>
+
+	</cfif>
 </div>
 </cfoutput>

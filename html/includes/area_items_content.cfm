@@ -33,13 +33,6 @@
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
-<!---<cfxml variable="xmlItems">
-	<cfoutput>
-	#getAreaItemsListResponse.xmlItems#
-	</cfoutput>
-</cfxml>
-<cfset numItems = ArrayLen(xmlItems.xmlChildren[1].XmlChildren)>--->
-
 <cfset areaItems = getAreaItemsListResponse.areaItems>
 
 <cfset numItems = areaItems.recordCount>

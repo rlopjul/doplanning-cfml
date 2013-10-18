@@ -317,6 +317,131 @@
 		
 	</cffunction>
 
+
+	<!--- ----------------------------------- setAreaDefaultTableRemote ------------------------------------- --->
+	
+	<cffunction name="setAreaDefaultTableRemote" returntype="void" access="remote">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="return_page" type="string" required="true">
+		
+		<cfset var method = "setAreaDefaultTableRemote">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="setAreaDefaultTable" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+
+			<cfif response.result IS true>
+
+				<cfset msg = "#tableTypeNameEs# definida por defecto en esta área">            
+		
+			<cfelse>
+
+				<cfset msg = response.message>
+				
+			</cfif>
+
+			<cfset msg = URLEncodedFormat(msg)>
+
+			
+			<cflocation url="#arguments.return_page#&msg=#msg#&res=#response.result#&#tableTypeName#=#arguments.table_id#" addtoken="no">	
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+				
+	</cffunction>
+
+
+	<!--- ----------------------------------- removeAreaDefaultTable ------------------------------------- --->
+	
+	<cffunction name="removeAreaDefaultTable" returntype="void" access="remote">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="return_page" type="string" required="true">
+		
+		<cfset var method = "removeAreaDefaultTable">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="removeAreaDefaultTable" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+
+			<cfif response.result IS true>
+
+				<cfset msg = "#tableTypeNameEs# por defecto quitada">            
+		
+			<cfelse>
+
+				<cfset msg = response.message>
+				
+			</cfif>
+
+			<cfset msg = URLEncodedFormat(msg)>
+
+			
+			<cflocation url="#arguments.return_page#&msg=#msg#&res=#response.result#&#tableTypeName#=#arguments.table_id#" addtoken="no">	
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+				
+	</cffunction>
+
+
+	<!--- ----------------------------------- getAreaDefaultTable ------------------------------------- --->
+	
+	<cffunction name="getAreaDefaultTable" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		
+		<cfset var method = "getAreaDefaultTable">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getAreaDefaultTable" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
 	
 
 	<!--- ----------------------------------- outputTablesList ------------------------------------- --->
@@ -327,7 +452,9 @@
 		<cfargument name="full_content" type="boolean" required="no" default="false">
 		<cfargument name="return_page" type="string" required="no">
 		<cfargument name="app_version" type="string" required="true">
-		
+		<cfargument name="default_table_id" type="numeric" required="false" default="0">
+		<cfargument name="area_id" type="numeric" required="false">
+
 		<cfset var method = "outputItemsList">
 
 		<cftry>
@@ -408,7 +535,12 @@
 						<cfelse>
 							<cfset rpage = "#lCase(itemTypeNameP)#.cfm?area=#itemsQuery.area_id#">
 						</cfif>
-						<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+
+						<cfif isDefined("arguments.area_id")>
+							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#arguments.area_id#&return_page=#URLEncodedFormat(rpage)#">
+						<cfelse>
+							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+						</cfif>
 						
 						<!---Item selection--->
 						<cfset itemSelected = false>
@@ -448,7 +580,7 @@
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 			
 						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','itemIframe',event)">													
-							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
+							<td><a href="#item_page_url#" class="text_item" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
 							<td>
 							<!---
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Typologies, Forms--->
@@ -471,8 +603,16 @@
 					</tbody>
 				
 				</table>
+
+				<cfif arguments.default_table_id IS NOT 0>
+					<div style="margin-top:10px">
+						<small class="help-block" lang="es">* #tableTypeNameEs# por defecto en esta área</small>
+					</div>
+				</cfif>
+				
 				</cfoutput>
-			</cfif>		
+			</cfif>	
+
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">

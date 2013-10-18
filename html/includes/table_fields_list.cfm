@@ -26,12 +26,6 @@
 	}); 
 
 	<cfif fields_selectable IS true>
-		
-		function toggleCheckboxesChecked(status) {
-			$("input").each( function() {
-				$(this).attr("checked",status);
-			})
-		}
 
 		function stopPropagation(e) {
 			if (!e) var e = window.event;
@@ -113,7 +107,17 @@
 				<cfif fields.required IS true>Sí<cfelse>No</cfif>
 			</td>
 			<td>
-				#fields.default_value#
+				<cfset field_default_value = fields.default_value>
+				<cfif len(field_default_value) GT 0>
+					<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
+						<cfif field_default_value IS true>
+							<cfset field_default_value = "Sí">
+						<cfelse>
+							<cfset field_default_value = "No">
+						</cfif>
+					</cfif>
+				</cfif>
+				#field_default_value#
 			</td>
 		</tr>
 	</cfloop>

@@ -9,13 +9,11 @@
 
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
 
-<!---Table fields types--->
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Field" method="getFieldTypes" returnvariable="typesResult">
-	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-</cfinvoke>
-<cfset fieldTypes = typesResult.fieldTypes>
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+<cfoutput>
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+</cfoutput>
 
 <script type="text/javascript">
 
@@ -32,7 +30,85 @@
 
 		return true;
 	}
+
+	function fieldTypeChange(typeId){
+
+		if(typeId == 6){ //Date
+
+			//$("#requiredContainer").show();
+
+			$("#default_value_text").prop('disabled', true);
+			$("#default_value_date").prop('disabled', false);
+			$("#default_value_boolean").prop('disabled', true);
+
+			$("#textDefaultValue").hide();
+			$("#dateDefaultValue").show();
+			$("#booleanDefaultValue").hide();
+
+		}else if(typeId == 7){ //Boolean
+
+			//$("#requiredContainer").hide();
+
+			$("#textDefaultValue").hide();
+			$("#dateDefaultValue").hide();
+			$("#booleanDefaultValue").show();
+
+			$("#default_value_text").prop('disabled', true);
+			$("#default_value_date").prop('disabled', true);
+			$("#default_value_boolean").prop('disabled', false);
+
+		}else {
+
+			//$("#requiredContainer").show();
+
+			$("#textDefaultValue").show();
+			$("#dateDefaultValue").hide();
+			$("#booleanDefaultValue").hide();
+
+			$("#default_value_text").prop('disabled', false);
+			$("#default_value_date").prop('disabled', true);
+			$("#default_value_boolean").prop('disabled', true);
+
+			if(typeId == 2 || typeId == 3){
+
+				$("#default_value_text").attr("rows", '3');
+
+			}else{
+
+				$("#default_value_text").attr("rows", '1');
+			}
+
+		}
+	}
+
+	function enableDatePicker(selector){
+
+		$(selector).datepicker({
+		  format: 'dd-mm-yyyy', 
+		  autoclose: true,
+		  weekStart: 1,
+		  language: 'es',
+		  todayBtn: 'linked'
+		});
+	}
+
+	$(document).ready(function() { 
+
+		<cfoutput>
+		fieldTypeChange(#field.field_type_id#);
+		</cfoutput>
+
+		enableDatePicker('#default_value_date');
+	});
 </script>
+
+<!---Table fields types--->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Field" method="getFieldTypes" returnvariable="typesResult">
+	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+</cfinvoke>
+<cfset fieldTypes = typesResult.fieldTypes>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <div class="contenedor_fondo_blanco">
 <cfoutput>
@@ -56,21 +132,21 @@
 		<input type="hidden" name="field_id" value="#field.field_id#"/>
 	</cfif>
 
-	<label for="label">Nombre</label>
+	<label for="label">Nombre *</label>
 	<cfinput type="text" name="label" id="label" value="#field.label#" maxlength="100" required="true" message="Nombre requerido" class="input-block-level"/>
 
 	<cfif page_type IS 2>
 		<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
 	</cfif>
-	<label for="field_type_id">Tipo</label>
-	<select name="field_type_id" id="field_type_id" class="input-block-level" <cfif page_type IS 2>disabled="disabled"</cfif>>
+	<label for="field_type_id">Tipo *</label>
+	<select name="field_type_id" id="field_type_id" class="input-block-level" onchange="fieldTypeChange($('##field_type_id').val());"> <cfif page_type IS 2>disabled="disabled"</cfif>>
 		<cfloop query="fieldTypes">
 			<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
 		</cfloop>
 	</select>
 	<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>
 
-	<label for="required" class="checkbox">
+	<label for="required" class="checkbox" id="requiredContainer">
 		<input type="checkbox" name="required" id="required" value="true" <cfif isDefined("field.required") AND field.required IS true>checked="checked"</cfif> /> Obligatorio<br/>
 		<small class="help-block">Indica si el campo deber rellenarse de forma obligatoria</small>
 	</label>
@@ -78,8 +154,23 @@
 	<label for="description">Descripción</label>
 	<textarea name="description" id="description" class="input-block-level" maxlength="1000">#field.description#</textarea>
 
-	<label for="default_value">Valor por defecto</label>
-	<textarea name="default_value" id="default_value" class="input-block-level" maxlength="1000">#field.default_value#</textarea>
+	<div id="textDefaultValue">
+		<label for="default_value_text">Valor por defecto</label>
+		<textarea name="default_value" id="default_value_text" class="input-block-level" maxlength="1000" rows="3" <cfif field.field_type_id IS 6 OR field.field_type_id IS 7>disabled="disabled"</cfif>>#field.default_value#</textarea>
+	</div>
+	<div id="dateDefaultValue">
+		<label for="default_value_date">Valor por defecto</label>
+		<input type="text" name="default_value" id="default_value_date" value="#field.default_value#" maxlength="10" class="input_datepicker" <cfif field.field_type_id NEQ 6>disabled="disabled"</cfif>/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
+	</div>
+	<div id="booleanDefaultValue">
+		<label for="default_value_boolean">Valor por defecto</label>
+		<select name="default_value" id="default_value_boolean" class="input-small" <cfif field.field_type_id NEQ 7>disabled="disabled"</cfif>>
+			<option value=""></option>
+			<option value="0" <cfif field.default_value IS false>selected="selected"</cfif>>No</option>
+			<option value="1" <cfif field.default_value IS true>selected="selected"</cfif>>Sí</option>
+		</select>
+	</div>
+	
 
 	<!---<label for="position">Posición</label>
 	<cfinput type="text" name="position" id="position" value="#field.position#" required="true" validate="integer" message="Posición debe ser un número entero" style="width:50px;">--->

@@ -25,7 +25,7 @@
 		<cfset var method = "getArea">
 			
 			<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-				SELECT areas.id, areas.name AS area_name, areas.creation_date, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id AS area_image_id, areas.link AS area_link, areas.type
+				SELECT areas.id, areas.name AS area_name, areas.creation_date, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id AS area_image_id, areas.link AS area_link, areas.type, areas.default_typology_id
 				<cfif arguments.with_user IS true>
 				, users.family_name, users.name AS user_name
 				</cfif>
@@ -112,7 +112,7 @@
 		<cfset var method = "getSubAreas">
 								
 			<cfquery name="subAreasQuery" datasource="#client_dsn#">
-				SELECT id, <cfif arguments.remove_order IS true>SUBSTRING_INDEX(name, '.-', -1) AS name<cfelse>name</cfif>, parent_id, creation_date, user_in_charge, image_id, link, type
+				SELECT id, <cfif arguments.remove_order IS true>SUBSTRING_INDEX(name, '.-', -1) AS name<cfelse>name</cfif>, parent_id, creation_date, user_in_charge, image_id, link, type, menu_type_id, hide_in_menu
 				FROM #client_abb#_areas AS areas
 				WHERE areas.parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				<cfif isDefined("arguments.menu_type_id")>
@@ -320,6 +320,59 @@
 		
 	</cffunction>
 	
+
+	<!--- -------------------------- getAreaMenuType -------------------------------- --->
+	<!---Obtiene el tipo de menu del área, si el área no la tiene definida la busca en sus áreas superiores--->
+	
+	<cffunction name="getAreaMenuType" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="yes">
+		
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">	
+		
+		<cfset var method = "getAreaMenuType">
+		
+		<cfset var menuType = "">
+					
+		<cfquery datasource="#client_dsn#" name="getAreaMenuType">
+			SELECT areas.menu_type_id, areas.parent_id
+			FROM #client_abb#_areas AS areas
+			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+		
+		<cfif getAreaMenuType.recordCount GT 0>
+		
+			<cfif isNumeric(getAreaMenuType.menu_type_id)>
+			
+				<cfset menuType = getAreaMenuType.menu_type_id>
+				
+			<cfelse>
+					
+				<cfif isNumeric(getAreaMenuType.parent_id)>
+						
+					<cfinvoke component="AreaQuery" method="getAreaMenuType" returnvariable="menuTypeResponse">
+						<cfinvokeargument name="area_id" value="#getAreaMenuType.parent_id#">
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+					
+					<cfset menuType = menuTypeResponse.menuType>
+					
+				</cfif>
+				
+			</cfif>
+			
+		<cfelse><!---The area does not exist--->
+				
+			<cfset error_code = 401>
+			<cfthrow errorcode="#error_code#">
+		
+		</cfif>
+		
+		<cfset response = {result="true", menuType=#menuType#}>	
+		<cfreturn response>
+		
+	</cffunction>
 	
 	
 	
@@ -336,9 +389,10 @@
 		<cfset var method = "getAreaTypeWeb">
 		
 		<cfset var areaType = "">
+		<cfset var menuType = "">
 					
 		<cfquery datasource="#client_dsn#" name="getAreaType">
-			SELECT areas.type, areas.parent_id, areas.id, areas.name, areas.description
+			SELECT areas.type, areas.parent_id, areas.id, areas.name, areas.description, areas.menu_type_id
 			FROM #client_abb#_areas AS areas
 			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
@@ -364,6 +418,26 @@
 				</cfif>
 				
 			</cfif>
+
+			<cfif isNumeric(getAreaType.menu_type_id)>
+				
+				<cfset menuType = getAreaType.menu_type_id>
+
+			<cfelse>
+
+				<cfif isNumeric(getAreaType.parent_id)>
+						
+					<cfinvoke component="AreaQuery" method="getAreaMenuType" returnvariable="menuTypeResponse">
+						<cfinvokeargument name="area_id" value="#getAreaType.parent_id#">
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+					
+					<cfset menuType = menuTypeResponse.menuType>
+					
+				</cfif>
+
+			</cfif>
 			
 		<cfelse><!---The area does not exist--->
 				
@@ -372,7 +446,7 @@
 		
 		</cfif>
 		
-		<cfset response = {result="true", areaType=#areaType#, id=#getAreaType.id#, name=#getAreaType.name#, parent_id=#getAreaType.parent_id#, description=#getAreaType.description#}>	
+		<cfset response = {result="true", areaType=#areaType#, id=#getAreaType.id#, name=#getAreaType.name#, parent_id=#getAreaType.parent_id#, description=#getAreaType.description#, menu_type_id=#menuType#}>	
 		<cfreturn response>
 		
 	</cffunction>

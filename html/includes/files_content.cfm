@@ -27,7 +27,7 @@
 		
 		<!---Opción deshabilitada definitivamente<a href="file_associate.cfm?area=#area_id#" onclick="openUrl('file_associate.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Asociar archivo existente" lang="es"><i class="icon-plus-sign"></i> <span lang="es">Asociar Archivo</span></a>--->
 		
-		<cfif APPLICATION.modulefilesWithTables>
+		<cfif APPLICATION.modulefilesWithTables AND is_user_area_responsible>
 			<a href="typologies.cfm?area=#area_id#" class="btn btn-small" title="Tipologías de documentos" lang="es"><i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i> <span>Tipologías de documentos</span></a>
 		</cfif>
 

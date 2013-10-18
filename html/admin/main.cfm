@@ -189,7 +189,16 @@
 		else
 			alert("Debe seleccionar un área para asociar el usuario");
 	}
-	
+
+	function openAreaModifyModal(){
+
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/area_modify.cfm?area='+curAreaId);
+		else
+			alert("Debe seleccionar un área para modificar");
+	}
+
+
 	function emptyIframes(){
 
 		$("#areaIframe").attr('src', 'about:blank');
@@ -379,6 +388,8 @@
 					<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
 
 					<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover área</span></a>
+
+					<a onclick="openAreaModifyModal()" class="btn btn-info" title="Modificar área" lang="es"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
 
 					<a onClick="loadModal('html_content/area_delete.cfm?area='+curAreaId);" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
 

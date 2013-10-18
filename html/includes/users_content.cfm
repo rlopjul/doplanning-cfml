@@ -24,8 +24,8 @@
 			<input type="hidden" name="area_id" value="#area_id#"/>
 			<!---<label for="users_select">Mostrar</label>--->
 			<select name="all" id="users_select" onchange="submitUsersForm()" style="width:250px;">
-				<option value="0" <cfif all_users IS false>selected="selected"</cfif>>Usuarios de este área</option>
-				<option value="1" <cfif all_users IS true>selected="selected"</cfif>>Usuarios con acceso a este área</option>
+				<option value="0" <cfif all_users IS false>selected="selected"</cfif>>Usuarios de esta área</option>
+				<option value="1" <cfif all_users IS true>selected="selected"</cfif>>Usuarios con acceso a esta área</option>
 			</select>
 			<button type="submit" class="btn btn-small" title="Actualizar"><i class="icon-refresh"></i> Actualizar</button>
 		</form>--->

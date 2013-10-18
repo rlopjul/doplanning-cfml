@@ -1,10 +1,10 @@
 var area_items_content_en = {
 	
-	'No tiene acceso para ver los mensajes de este área':'Not have access to view messages from this area',
-	'No tiene acceso para ver los archivos de este área':'Not have access to view files from this area',
-	'No tiene acceso para ver los eventos de este área':'Not have access to view events from this area',
-	'No tiene acceso para ver las tareas de este área':'Not have access to view tasks from this area',
-	'No tiene acceso para ver los usuarios de este área':'Not have access to view users from this area',
+	'No tiene acceso para ver los mensajes de esta área':'Not have access to view messages from this area',
+	'No tiene acceso para ver los archivos de esta área':'Not have access to view files from this area',
+	'No tiene acceso para ver los eventos de esta área':'Not have access to view events from this area',
+	'No tiene acceso para ver las tareas de esta área':'Not have access to view tasks from this area',
+	'No tiene acceso para ver los usuarios de esta área':'Not have access to view users from this area',
 	
 	'Título':'Title',
 	'Asunto':'Subject',
@@ -24,7 +24,7 @@ var area_items_content_en = {
 	'Nombre':'Name',
 	'Apellidos':'Last name',
 	'Email':'Email',
-	'De este área':'From this area',
+	'De esta área':'From this area',
 	'Reunión virtual':'Virtual meeting',
 	'Fecha desde':'Date from',
 	'Fecha hasta':'Date to',

@@ -24,6 +24,23 @@
 <script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
+
+<cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaDefaultTable" returnvariable="getDefaultTableResponse">
+		<cfinvokeargument name="area_id" value="#area_id#">
+		<cfinvokeargument name="tableTypeId" value="3">
+	</cfinvoke>
+	<cfset default_typology_id = getDefaultTableResponse.table_id> 
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
+		<cfinvokeargument name="area_id" value="#area_id#">
+		<cfinvokeargument name="tableTypeId" value="3">
+	</cfinvoke>
+	<cfset areaTables = getAreaTablesResponse.areaTables>	
+
+</cfif>
+
 <script type="text/javascript">
 
 	$(document).ready(function() {
@@ -43,20 +60,29 @@
 		});
 
 
-		<cfif page_type IS 2>
-			
-			<cfif isNumeric(file.typology_id)>
+		<cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
+			<cfif page_type IS 1>
 
-				<cfif isNumeric(file.typology_row_id)>
-					loadTypology(#file.typology_id#, #file.typology_row_id#);
-				<cfelse>
+				<cfif isNumeric(file.typology_id)>
 					loadTypology(#file.typology_id#, '');
+				<cfelseif isNumeric(default_typology_id)>
+					loadTypology(#default_typology_id#, '');
+				</cfif>
+				
+			<cfelse>
+				
+				<cfif isNumeric(file.typology_id)>
+
+					<cfif isNumeric(file.typology_row_id)>
+						loadTypology(#file.typology_id#, #file.typology_row_id#);
+					<cfelse>
+						loadTypology(#file.typology_id#, '');
+					</cfif>
+
 				</cfif>
 
 			</cfif>
-
-		</cfif>
-		
+		</cfif>		
 	});
 
 	function onSubmitForm() {
@@ -69,6 +95,8 @@
 		else
 			return false;
 	}
+
+	<cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
 
 	function loadTypology(typologyId,rowId) {
 
@@ -104,19 +132,11 @@
 		  todayBtn: 'linked'
 		});
 	}
+
+	</cfif>
 </script>
 
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
-
-<cfif APPLICATION.modulefilesWithTables IS true>
-
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
-		<cfinvokeargument name="area_id" value="#area_id#">
-		<cfinvokeargument name="tableTypeId" value="3">
-	</cfinvoke>
-	<cfset areaTables = getAreaTablesResponse.areaTables>	
-
-</cfif>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
 
 
 <div class="contenedor_fondo_blanco">
@@ -136,11 +156,17 @@
 	<!--- Typologies --->
 	<cfif APPLICATION.modulefilesWithTables IS true>
 
+		<cfif isNumeric(file.typology_id)>
+			<cfset selected_typology_id = file.typology_id>
+		<cfelse>
+			<cfset selected_typology_id = default_typology_id>
+		</cfif>
+
 		<label for="typology_id">Tipología *</label>
 		<select name="typology_id" id="typology_id" class="span3" onchange="loadTypology($('##typology_id').val(),'');">
 			<option value="" <cfif NOT isNumeric(file.typology_id)>selected="selected"</cfif>>Básica</option>
 			<cfloop query="#areaTables#">
-				<option value="#areaTables.id#" <cfif file.typology_id IS areaTables.id>selected="selected"</cfif>>#areaTables.title#</option>	
+				<option value="#areaTables.id#" <cfif areaTables.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS areaTables.id>style="font-weight:bold"</cfif>>#areaTables.title#</option>
 			</cfloop>
 		</select>
 
@@ -170,7 +196,13 @@
 	
 	<div style="height:10px;"><!--- ---></div>
 
-	<div id="submitDiv"><input type="submit" class="btn btn-primary" name="modify" value="Enviar" lang="es"/></div>
+	<div id="submitDiv">
+		<input type="submit" class="btn btn-primary" name="modify" value="Enviar" lang="es"/>
+
+		<cfif page_type IS 2>
+			<a href="file.cfm?file=#file_id#&area=#area#" class="btn" style="float:right">Cancelar</a>
+		</cfif>
+	</div>
 	<small lang="es">Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.</small><br/>
 	<small lang="es">* Campos obligatorios.</small>
 </cfform>

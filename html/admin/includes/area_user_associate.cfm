@@ -26,7 +26,7 @@
 
 	 	<div class="modal-body">
 	  		
-			¿Seguro que desea asociar este usuario a este área?:<br/>
+			¿Seguro que desea asociar este usuario a esta área?:<br/>
 			<div style="padding-left:50px; padding-top:15px;">
 				<div>
 					<cfif len(objectUser.image_type) GT 0>

@@ -13,6 +13,7 @@
 	<cffunction name="getTable" output="false" returntype="query" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -30,16 +31,20 @@
 			</cfinvoke>--->		
 			
 			<cfquery name="selectItemQuery" datasource="#client_dsn#">
-				SELECT items.user_in_charge, items.creation_date, items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.id AS table_id, items.link,
-				users.name AS user_name, users.family_name, users.image_type AS user_image_type
-				<cfif tableTypeId IS NOT 3>
-					, items.last_update_date, items.attached_image_id, items.attached_image_name
-					, items.link_target
-				<cfelse><!---Typologies--->
+				SELECT items.id, items.id AS table_id, items.user_in_charge, items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link, 
+				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
+				, items.attached_image_id, items.attached_image_name
+				, items.link_target
+				<cfif tableTypeId IS 3><!---Typologies--->
 				, items.general
 				</cfif>
 				, items.structure_available
-
+				<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(items.creation_date, '#dateTimeFormat#') AS creation_date 
+					, DATE_FORMAT(items.last_update_date, '#dateTimeFormat#') AS last_update_date 
+				<cfelse>
+					, items.creation_date, items.last_update_date
+				</cfif>
 				FROM #client_abb#_#tableTypeTable# AS items
 				INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
 				LEFT JOIN #client_abb#_files AS files ON files.id = items.attached_file_id

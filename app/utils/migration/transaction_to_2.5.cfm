@@ -301,18 +301,18 @@
 		
 		<!--- INSERT --->
 		
-		<cfquery datasource="#client_dsn#">	
-			INSERT INTO `#client_abb#_tables_fields_types` (`field_type_id`,`input_type`,`name`,`max_length`,`mysql_type`,`cf_sql_type`,`enabled`) VALUES 
-			 (1,'text','Texto plano 1 línea (máx. 255 caracteres)',255,'VARCHAR(255)','cf_sql_varchar',1),
-			 (2,'textarea','Texto plano varias líneas (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1),
-			 (3,'textarea','Texto de varias líneas grande',1000000,'MEDIUMTEXT','cf_sql_longvarchar',1),
-			 (4,'text','Número entero',20,'BIGINT(20)','cf_sql_bigint',1),
-			 (5,'text','Número decimal',30,'DECIMAL(30,5)','cf_sql_decimal',1),
-			 (6,'text','Fecha (formato DD/MM/AAAA)',10,'DATE','cf_sql_date',1),
-			 (7,'check','Booleano (Sí/No)',1,'TINYINT(1)','cf_sql_bit',1),
-			 (8,'text','URL',2000,'VARCHAR(2000)','cf_sql_varchar',1),
-			 (9,'select','Lista desplegable con selección simple',11,'INT(11)','cf_sql_integer',0),
-			 (10,'select','Lista desplegable con selección múltiple',11,'INT(11)','cf_sql_integer',0);
+		<cfquery datasource="#client_dsn#">				 
+			 INSERT INTO `#client_abb#_tables_fields_types` (`field_type_id`,`input_type`,`name`,`max_length`,`mysql_type`,`cf_sql_type`,`enabled`) VALUES
+				 (1,'text','Texto plano 1 línea (máx. 255 caracteres)',255,'VARCHAR(255)','cf_sql_varchar',1),
+				 (2,'textarea','Texto plano varias líneas (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1),
+				 (3,'textarea','Texto de varias líneas grande',1000000,'MEDIUMTEXT','cf_sql_longvarchar',1),
+				 (4,'number','Número entero',20,'BIGINT(20)','cf_sql_bigint',1),
+				 (5,'text','Número decimal',30,'DECIMAL(30,5)','cf_sql_decimal',1),
+				 (6,'date','Fecha (formato DD-MM-AAAA)',10,'DATE','cf_sql_date',1),
+				 (7,'select','Booleano (Sí/No)',1,'TINYINT(1)','cf_sql_bit',1),
+				 (8,'url','URL',2000,'VARCHAR(2000)','cf_sql_varchar',1),
+				 (9,'select','Lista desplegable con selección simple',11,'INT(11)','cf_sql_integer',0),
+				 (10,'select','Lista desplegable con selección múltiple',11,'INT(11)','cf_sql_integer',0);
 		</cfquery>			
 		
 		
@@ -341,7 +341,50 @@
 		</cfquery>			
 		
 					
+		<!--- Menu type --->
 		
+		
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_areas` ADD COLUMN `menu_type_id` INTEGER UNSIGNED AFTER `type`;
+		</cfquery>
+
+		
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_menu_types` (
+			  `menu_type_id` int(10) unsigned NOT NULL,
+			  `menu_type_title_es` varchar(255) NOT NULL,
+			  PRIMARY KEY (`menu_type_id`) USING BTREE
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		</cfquery>
+		
+		<cfquery datasource="#client_dsn#">	
+			INSERT INTO `#client_abb#_menu_types` VALUES 
+			 (1,'Menú principal'),
+			 (2,'Pie'),
+			 (3,'Otros'),
+			 (4,'Centros');
+		</cfquery>	
+		
+		
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_areas` ADD CONSTRAINT `FK_#client_abb#_areas_4` FOREIGN KEY `FK_#client_abb#_areas_4` (`menu_type_id`)
+				REFERENCES `#client_abb#_menu_types` (`menu_type_id`)
+				ON DELETE RESTRICT
+				ON UPDATE RESTRICT;
+		</cfquery>		
+		
+		
+		<cfquery datasource="#client_dsn#">	
+		ALTER TABLE `#client_abb#_areas` ADD COLUMN `default_typology_id` INTEGER UNSIGNED AFTER `menu_type_id`,
+			 ADD CONSTRAINT `FK_#client_abb#_areas_5` FOREIGN KEY `FK_#client_abb#_areas_5` (`default_typology_id`)
+				REFERENCES `#client_abb#_typologies` (`id`)
+				ON DELETE RESTRICT
+				ON UPDATE RESTRICT;
+		</cfquery>				
+		
+		
+
+
 				
 	</cftransaction>
 

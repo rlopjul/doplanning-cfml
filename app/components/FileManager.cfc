@@ -530,6 +530,20 @@
 
 				</cfif>
 
+				<cfif objectFile.typology_id NEQ arguments.typology_id AND isNumeric(objectFile.typology_row_id)><!---File typology was changed--->
+					
+					<cfinvoke component="RowManager" method="deleteRow" returnvariable="deleteRowResponse">
+						<cfinvokeargument name="row_id" value="#objectFile.typology_row_id#"/>
+						<cfinvokeargument name="table_id" value="#objectFile.typology_id#"/>
+						<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
+					</cfinvoke>
+
+					<cfif deleteRowResponse.result IS false>
+						<cfthrow message="#deleteRowResponse.message#">
+					</cfif>
+
+				</cfif>
+
 			</cfif>		
 
 			<!---</cftransaction>--->				
@@ -905,7 +919,7 @@ step="1">--->
 			</cfquery>
 			
 			<cfif isFileInAreaQuery.recordCount LT 2><!---The file is only in this area--->
-				<cfset response_message = "El archivo solo está asociado en este área. Para quitarlo debe eliminarlo.">
+				<cfset response_message = "El archivo solo está asociado en esta área. Para quitarlo debe eliminarlo.">
 				<cfset response = {result=false, message=#response_message#, file_id=#arguments.file_id#, area_id=#arguments.area_id#}>
 				<cfreturn response>
 			</cfif>
