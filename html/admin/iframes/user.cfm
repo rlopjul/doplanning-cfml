@@ -69,7 +69,7 @@
 		<div class="container">
 
 			<cfif isDefined("user_id")>
-			<a class="btn btn-info btn-small" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar a este área</a>
+			<a class="btn btn-info btn-small" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar a esta área</a>
 			</cfif>
 
 			<cfif SESSION.client_administrator IS SESSION.user_id>

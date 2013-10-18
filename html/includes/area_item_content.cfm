@@ -2,37 +2,12 @@
 <script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
 
-<script type="text/javascript">
-	<!---Esto es para evitar que se abran enlaces en el iframe--->
-	$(document).ready( function(){
-		$('.dropdown-toggle').dropdown();
-		$(".div_message_page_description a").attr('target','_blank');
-	}); 
-	
-	<!---function submitCopyItemForm(){
-	
-		var url = "_copy.cfm";
-		
-		var form=document.getElementById("copy_item_to");
-		
-		var itemTypeName = form.elements["item_type"].value;
-		
-		url = itemTypeName+url;
-		
-		form.action = url;
-				
-		form.submit();
-	
-	}--->
-
-</script>
-
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
 <cfif isDefined("URL.#itemTypeName#") AND isNumeric(URL[itemTypeName])>
 	<cfset item_id = URL[#itemTypeName#]>
 <cfelse>
-	<cflocation url="area.cfm" addtoken="no">
+	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
@@ -40,21 +15,30 @@
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
-<!---<cfxml variable="xmlItem">
-	<cfoutput>
-	#xmlResponse.response.result.xmlChildren[1]#
-	</cfoutput>
-</cfxml>
-
-<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="objectItem" returnvariable="objectItem">
-	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-	<cfinvokeargument name="xml" value="#xmlItem#">
-	<cfinvokeargument name="return_type" value="object">
-</cfinvoke>--->
-
 <cfset area_id = objectItem.area_id>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+
+<script type="text/javascript">
+	<!---Esto es para evitar que se abran enlaces en el iframe--->
+	$(document).ready( function(){
+		$('.dropdown-toggle').dropdown();
+		$(".div_message_page_description a").attr('target','_blank');
+	}); 
+
+	<!---function submitCopyItemForm(){
+	
+		var url = "_copy.cfm";
+		var form=document.getElementById("copy_item_to");
+		var itemTypeName = form.elements["item_type"].value;
+		url = itemTypeName+url;
+
+		form.action = url;
+		form.submit();
+	
+	}--->
+
+</script>
 
 <cfif app_version NEQ "html2">
 	<div class="div_head_subtitle">
@@ -77,6 +61,7 @@
 			<cfif itemTypeId IS 1 OR objectItem.state NEQ "closed">
 				<a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#" class="btn btn-small btn-info"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
 			</cfif>
+	
 		<cfelse><!---Si no es mensaje--->
 			
 			<!---En las áreas web o intranet se pueden modificar los elementos--->
@@ -141,21 +126,23 @@
 		
 		</cfif>
 
-			
-		<cfif objectItem.user_in_charge EQ SESSION.user_id>
+		<cfif itemTypeId IS NOT 7 OR objectItem.state EQ "created"><!---Is not consultation or is not created--->
+
+			<cfif objectItem.user_in_charge EQ SESSION.user_id>
 		
-			<cfif itemTypeId IS NOT 7 OR objectItem.state EQ "created"><!---Is not consultation or is not created--->
 				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-small"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 		
 			</cfif>
-		
+
 		</cfif>
+
 		
 		<cfif app_version NEQ "mobile">
 		<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 		</cfif>
 		
-		<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
+		<!---<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">--->
+		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
 			<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-small"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
 			<cfif APPLICATION.moduleConvertFiles EQ true>
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
@@ -257,13 +244,6 @@
 					</cfif>
 				</ul>
 			</div>
-
-		<cfelseif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
-
-			<cfif itemTypeId IS 11 OR itemTypeId IS 12>
-				<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
-			</cfif>
-			<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#item_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos<span></a>
 
 		</cfif>
 

@@ -1186,7 +1186,47 @@
 	
 	<!--- ----------------------------------------------------------------------- --->
 			
+	
+
+	<!------------------------ IS USER ASSOCIATED TO AREA-------------------------------------->	
+	<cffunction name="isUserAssociatedToArea" returntype="struct" output="false" access="public">
+		<cfargument name="area_id" type="numeric" required="true"/>
+		<cfargument name="check_user_id" type="numeric" required="true"/>
+
+		<cfset var method = "isUserAssociatedToArea">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<!---isUserInArea--->
+			<cfquery name="isUserInArea" datasource="#client_dsn#">
+				SELECT user_id
+				FROM #client_abb#_areas_users
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+				AND user_id = <cfqueryparam value="#arguments.check_user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif isUserInArea.recordCount GT 0><!--- The user is in the area  --->
+				<cfset response = {result=true, isUserInArea=true}>
+			<cfelse>
+				<cfset response = {result=true, isUserInArea=false}>
+			</cfif>
 		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 		
 	<!------------------------ ASSIGN USER TO AREA-------------------------------------->	
 	<cffunction name="assignUserToArea" returntype="struct" output="false" access="public">
@@ -1207,14 +1247,21 @@
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 		
 			<!---checkIfExist--->
-			<cfquery name="checkIfExistQuery" datasource="#client_dsn#">
+			<!---<cfquery name="checkIfExistQuery" datasource="#client_dsn#">
 				SELECT user_id
 				FROM #client_abb#_areas_users
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 				AND user_id = <cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
+			</cfquery>--->
+			<cfinvoke component="UserManager" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="check_user_id" value="#arguments.add_user_id#">
+			</cfinvoke>	
+			<cfif isUserInAreaResponse.result IS false>
+				<cfreturn isUserInAreaResponse>
+			</cfif>
 			
-			<cfif checkIfExistQuery.recordCount GT 0><!--- The user already is in the area  --->
+			<cfif isUserInAreaResponse.isUserInArea IS true><!--- The user already is in the area  --->
 				<cfset error_code = 408>
 			
 				<cfthrow errorcode="#error_code#">
@@ -1339,7 +1386,6 @@
 						
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 			
-			
 			<cfquery name="getArea" datasource="#client_dsn#">
 				SELECT user_in_charge
 				FROM #client_abb#_areas AS areas
@@ -1347,8 +1393,20 @@
 			</cfquery>
 						
 			<cfif getArea.recordCount GT 0>
-			
-				<!---check if the user is not the user_in_charge of the area--->
+
+				<cfinvoke component="UserManager" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="check_user_id" value="#arguments.dissociate_user_id#">
+				</cfinvoke>	
+				<cfif isUserInAreaResponse.result IS false>
+					<cfreturn isUserInAreaResponse>
+				</cfif>
+				
+				<cfif isUserInAreaResponse.isUserInArea IS false><!--- The user is not associated  --->
+					<cfthrow message="Este usuario no está asociado directamente a esta área">
+				</cfif>
+
+				<!---check if the user is the user_in_charge of the area--->
 				<cfif getArea.user_in_charge EQ arguments.dissociate_user_id>
 					
 					<cfset error_code = 411>
@@ -1357,7 +1415,7 @@
 					
 				</cfif>
 			
-				<cfquery name="assignUser" datasource="#client_dsn#">
+				<cfquery name="dissociateUser" datasource="#client_dsn#">
 					DELETE FROM #client_abb#_areas_users
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND user_id = <cfqueryparam value="#arguments.dissociate_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
@@ -2706,11 +2764,10 @@
 		<cfset var init_area_id = "">
 		
 		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
-			
-		<cfinclude template="includes/functionStartOnlySession.cfm">
 				
 		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<!---<cfxml variable="xmlUser">
 				<cfoutput>
@@ -2827,7 +2884,7 @@
 			</cfsavecontent>
 			</cfprocessingdirective>
 
-			<cfset response = {result="true", message="", usersXml=#usersXml#}>
+			<cfset response = {result=true, usersXml=#usersXml#}>
 
 			<cfcatch>
 
@@ -2847,45 +2904,54 @@
 	
 
 	<!--- ****************************************************************************************** --->
-	<!--- ********************************  USER PREFERENCES   ************************************** --->
+	<!--- ********************************  USER PREFERENCES   ************************************* --->
 	<!--- ****************************************************************************************** --->
 	
 	
 	<!--- ----------------------- GET USER PREFERENCES -------------------------------- --->
-	<cffunction name="getUserPreferences" returntype="string" output="true" access="public">		
-	
+	<cffunction name="getUserPreferences" returntype="struct" output="false" access="public">		
+		
 		<cfset var method = "getUserPreferences">
-		<cfset var user_id = "">
-<cfset var client_abb = "">
-<cfset var user_language = "">
-	
-<cfset var xmlRequest = "">
-<cfset var xmlResponseContent = "">
-	
+
+		<cfset var response = structNew()>	
 			
 		<cftry>
 		
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 		
-			<cfquery name="getUserPreferences" datasource="#client_dsn#">
+			<cfquery name="getUserPreferencesQuery" datasource="#client_dsn#">
 				SELECT id, notify_new_message, notify_new_file, notify_replace_file, notify_new_area,
 				notify_new_event, notify_new_task 
 				<cfif APPLICATION.moduleConsultations IS true>
 				, notify_new_consultation
 				</cfif>
-				<cfif APPLICATION.moduleWeb EQ true>
+				<cfif APPLICATION.modulePubMedComments IS true>
+				, notify_new_pubmed
+				</cfif>
+				<cfif APPLICATION.modulefilesWithTables IS true>
+				, notify_new_typology	
+				</cfif>
+				<cfif APPLICATION.moduleLists IS true>
+				, notify_new_list
+				, notify_new_list_row
+				</cfif>
+				<cfif APPLICATION.moduleForms IS true>
+				, notify_new_form
+				, notify_new_form_row
+				</cfif>
+				<cfif APPLICATION.moduleWeb IS true>
 					<cfif APPLICATION.identifier EQ "vpnet">
 					, notify_new_link
 					</cfif>
-					, notify_new_entry, notify_new_news
+					, notify_new_entry, notify_new_news, notify_new_image
 				</cfif>
 				FROM #client_abb#_users		
 				WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;			
 			</cfquery>
 			
-			<cfif getUserPreferences.recordCount GT 0>
+			<cfif getUserPreferencesQuery.recordCount GT 0>
 			
-				<cfsavecontent variable="xmlResult">	
+				<!---<cfsavecontent variable="xmlResult">	
 				<preferences user_id="#user_id#"
 					notify_new_message="#getUserPreferences.notify_new_message#"
 					notify_new_file="#getUserPreferences.notify_new_file#"
@@ -2905,50 +2971,88 @@
 					notify_new_consultation="#getUserPreferences.notify_new_consultation#"
 					</cfif>
 					/>
-				</cfsavecontent>
-				
+				</cfsavecontent>--->
+
+				<cfset response = {result=true, preferences=#getUserPreferencesQuery#}>
+
 			<cfelse><!---The user does not exist--->
 				
 				<cfset error_code = 204>
 				
 				<cfthrow errorcode="#error_code#"> 
 				
-			</cfif>
-			
-			<cfset xmlResponseContent = xmlResult>
+			</cfif>		
 		
-			<cfinclude template="includes/functionEndNoLog.cfm">
-			
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-		
-		<cfreturn xmlResponse>		
-		
+
+		<cfreturn response>		
+				
 	</cffunction>
 	
 	
+	
 	<!--- ------------------- UPDATE USER PREFERENCES -------------------------------- --->
-	<cffunction name="updateUserPreferences" returntype="string" output="true" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		<!---<cfargument name="preferences" type="string" required="yes">--->
-		
+	<cffunction name="updateUserPreferences" returntype="struct" output="true" access="public">
+		<cfargument name="notify_new_message" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_file" type="boolean" required="false" default="false">
+		<cfargument name="notify_replace_file" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_area" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_link" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_entry" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_news" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_event" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_task" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_consultation" type="boolean" required="false" default="false">
+
+		<cfargument name="notify_new_image" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_typology" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_list" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_form" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_pubmed" type="boolean" required="false" default="false">
+
 		<cfset var method = "updateUserPreferences">
-		<cfset var user_id = "">
-<cfset var client_abb = "">
-<cfset var user_language = "">
-	
-<cfset var xmlRequest = "">
-<cfset var xmlResponseContent = "">
-	
-			
+		
+		<cfset var response = structNew()>
+
 		<cftry>
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfquery name="selectQuery" datasource="#client_dsn#">
+				SELECT id
+				FROM #client_abb#_users
+				WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>	
 			
-			<cfxml variable="preferencesXml">
+			<cfif selectQuery.recordCount GT 0>
+
+				<cfquery name="updateUserPreferences" datasource="#client_dsn#">
+					UPDATE #client_abb#_users SET 
+					notify_new_message = <cfqueryparam value="#arguments.notify_new_message#" cfsqltype="cf_sql_bit">
+					, notify_new_file = <cfqueryparam value="#arguments.notify_new_file#" cfsqltype="cf_sql_bit">
+					, notify_replace_file = <cfqueryparam value="#arguments.notify_replace_file#" cfsqltype="cf_sql_bit">
+					, notify_new_area = <cfqueryparam value="#arguments.notify_new_area#" cfsqltype="cf_sql_bit">
+					, notify_new_entry = <cfqueryparam value="#arguments.notify_new_entry#" cfsqltype="cf_sql_bit">
+					<cfif APPLICATION.identifier EQ "vpnet">
+					, notify_new_link = <cfqueryparam value="#arguments.notify_new_link#" cfsqltype="cf_sql_bit">
+					</cfif>
+					WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+			<cfelse><!---The user does not exist--->
+				
+				<cfset error_code = 204>
+				
+				<cfthrow errorcode="#error_code#"> 
+				
+			</cfif>	
+			
+			<!---<cfxml variable="preferencesXml">
 				<cfoutput >
 					#xmlRequest.request.parameters.preferences#
 				</cfoutput>
@@ -3083,18 +3187,20 @@
 				
 			</cfif>	
 				
-			<cfset xmlResponseContent = xmlResult>
+			<cfset xmlResponseContent = xmlResult>--->
 		
-			<cfinclude template="includes/functionEnd.cfm">
+			<cfinclude template="includes/logRecord.cfm">
 			
+			<cfset response = {result=true}>
+		
 			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-		
-		<cfreturn xmlResponse>		
+
+		<cfreturn response>		
 		
 	</cffunction>
 	

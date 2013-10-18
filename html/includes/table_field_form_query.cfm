@@ -58,7 +58,7 @@
 			<cfinvokeargument name="table_id" value="#table_id#">
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 		</cfinvoke>
-
+		
 		<cfset area_id = table.area_id>
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">

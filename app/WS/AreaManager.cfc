@@ -1589,13 +1589,6 @@
 			
 			<!---<cfinclude template="includes/checkAreaAccess.cfm">Un usuario aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
 			
-			<!---<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-				SELECT areas.id, areas.creation_date, areas.parent_id, areas.user_in_charge, areas.description, users.family_name, areas.name AS area_name, users.name AS user_name, areas.image_id AS area_image_id, areas.link AS area_link, areas.type
-				FROM #client_abb#_areas AS areas, #client_abb#_users AS users
-				WHERE areas.user_in_charge = users.id 
-				AND areas.id = <cfqueryparam value="#arguments.get_area_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>--->
-			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="selectAreaQuery">
 				<cfinvokeargument name="area_id" value="#arguments.get_area_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -1616,8 +1609,7 @@
 					<cfif arguments.format_content EQ "all">
 						<cfinvokeargument name="link" value="#selectAreaQuery.area_link#">
 					</cfif>
-					<cfinvokeargument name="type" value="#selectAreaQuery.type#">
-					
+					<cfinvokeargument name="type" value="#selectAreaQuery.type#">					
 				</cfinvoke>
 				
                 <cfif arguments.return_type EQ "object">
@@ -1634,8 +1626,6 @@
                 
                 </cfif>
 				
-				
-				
 			<cfelse><!---The area does not exist--->
 				
 				<cfset error_code = 401>
@@ -1644,7 +1634,6 @@
 			
 			</cfif>
 				
-		
 		<cfreturn xmlResponse>
 					
 	</cffunction>

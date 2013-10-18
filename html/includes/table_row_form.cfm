@@ -11,14 +11,6 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<!---Table fields--->
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
-	<cfinvokeargument name="table_id" value="#table_id#">
-	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-	<cfinvokeargument name="with_types" value="true"/>
-</cfinvoke>
-<cfset fields = fieldsResult.tableFields>
-
 <cfoutput>
 <div class="div_head_subtitle">
 	<span lang="es"><cfif page_type IS 1>Nuevo<cfelse>Modificar</cfif> Registro</span>
@@ -32,8 +24,6 @@
 	No hay campos definidos para rellenar.
 
 <cfelse>
-
-	<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
@@ -70,6 +60,8 @@
 	</script>
 
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 	<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="row_form" onsubmit="return onSubmitForm();">
 

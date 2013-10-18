@@ -21,7 +21,7 @@
 
 	function onSubmitForm(){
 
-		document.getElementById("submitDiv1").innerHTML = 'Enviando...';
+		<!---document.getElementById("submitDiv1").innerHTML = 'Enviando...';--->
 		document.getElementById("submitDiv2").innerHTML = 'Enviando...';
 
 		return true;
@@ -43,13 +43,13 @@
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" onsubmit="return onSubmitForm();">
 
-	<div id="submitDiv1" style="margin-bottom:10px;">
+	<!---<div id="submitDiv1" style="margin-bottom:10px;">
 		<input type="submit" value="Guardar" class="btn btn-primary"/>
 
 		<cfif page_type IS 2>
 			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#" class="btn" style="float:right">Cancelar</a>
 		</cfif>
-	</div>
+	</div>--->
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
 	<input type="hidden" name="tableTypeId" value="#tableTypeId#"/>
 	
@@ -66,7 +66,7 @@
 
 	<label for="structure_available" class="checkbox">
 		<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> Permitir copiar la estructura de campos de esta #lCase(tableTypeNameEs)#<br/>
-		<small class="help-block">Indica si la definición de campos de esta #lCase(tableTypeNameEs)# está disponible para ser copiada por cualquier usuario de la organización.</small>
+		<small class="help-block">Indica si la definición de campos de esta #lCase(tableTypeNameEs)# está disponible para ser usada por cualquier usuario de la organización.</small>
 	</label>
 	
 	<cfif tableTypeId IS 3 AND SESSION.client_administrator EQ SESSION.user_id>

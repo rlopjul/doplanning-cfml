@@ -46,6 +46,12 @@ function confirmAction(actionText) {
 function toggleCheckboxChecked(checkboxId) {
 	$(checkboxId).attr('checked',!($(checkboxId).attr('checked')=="checked"));
 }
+		
+function toggleCheckboxesChecked(status) {
+	$("input").each( function() {
+		$(this).attr("checked",status);
+	})
+}
 
 var showLoading = true;
 

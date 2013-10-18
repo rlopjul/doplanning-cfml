@@ -13,10 +13,14 @@
 	<cfset field_name = "field_#fields.field_id#">
 	<cfset field_value = row[field_name]>
 
+
+
 	<cfif fields.input_type IS "textarea">
 
-		<div class="div_message_page_label">#field_label#</div> 
-		<div class="div_message_page_description">#field_value#</div>
+		<div class="div_message_page_label">#field_label#</div>
+		<cfif len(field_value) GT 0>
+			<div class="div_message_page_description">#field_value#</div>
+		</cfif> 
 
 	<cfelseif fields.field_type_id IS 8><!---URL--->
 
@@ -24,11 +28,17 @@
 
 	<cfelse>
 
-		<cfif fields.input_type IS "check">
+		<cfif fields.field_type_id IS 6><!--- DATE --->
+
+			<cfif isDate(field_value)>
+				<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
+			</cfif>		
+		
+		<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
 			
 			<cfif field_value IS true>
 				<cfset field_value = "Sí">
-			<cfelse>
+			<cfelseif field_Value IS false>
 				<cfset field_value = "No">
 			</cfif>
 

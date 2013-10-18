@@ -183,6 +183,13 @@ ALTER TABLE `dp_software7`.`software7_news` MODIFY COLUMN `position` INTEGER UNS
 
 
 
+ALTER TABLE `dp_software7`.`software7_areas` ADD COLUMN `default_typology_id` INTEGER UNSIGNED AFTER `menu_type_id`,
+ ADD CONSTRAINT `FK_software7_areas_5` FOREIGN KEY `FK_software7_areas_5` (`default_typology_id`)
+    REFERENCES `software7_typologies` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT;
+
+
 
 
 <!---

@@ -182,7 +182,7 @@
 	<!--- ----------------------------------- canUserAccessToArea ------------------------------------- --->
 	
 	<cffunction name="canUserAccessToArea" output="false" returntype="boolean" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
+		<cfargument name="area_id" type="numeric" required="true">
 		
 		<cfset var method = "canUserAccessToArea">
 		
@@ -190,13 +190,8 @@
 		
 		<cftry>
 			
-			<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllUserAreasList" returnvariable="allUserAreasList">
-				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
-			</cfinvoke>--->
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="#method#" returnvariable="access_result">				
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="access_result">				
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<!---<cfinvokeargument name="allUserAreasList" value="#allUserAreasList#">--->
 			</cfinvoke>
 			
 			<cfcatch>
@@ -209,6 +204,31 @@
 		
 	</cffunction>
 	
+
+	<!--- ----------------------------------- isUserAreaResponsible ------------------------------------- --->
+	
+	<cffunction name="isUserAreaResponsible" output="false" returntype="boolean" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		
+		<cfset var method = "isUserAreaResponsible">
+		
+		<cfset var access_result = false>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaResponsible" returnvariable="access_result">				
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn access_result>
+		
+	</cffunction>
 	
 	
 	<!--- ----------------------------------- getAreaType ------------------------------------- --->

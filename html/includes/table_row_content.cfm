@@ -73,7 +73,7 @@
 		
 		<a href="area_user.cfm?area=#area_id#&user=#row.insert_user_id#">#row.insert_user_full_name#</a>
 	</div>
-	<div class="div_message_page_label"><span lang="es">Fecha de creación:</span> <span class="text_message_page">#DateFormat(row.creation_date, "dd/mm/yyyy")# #TimeFormat(row.creation_date, "HH:mm")#</span></div>
+	<div class="div_message_page_label"><span lang="es">Fecha de creación:</span> <span class="text_message_page">#DateFormat(row.creation_date, APPLICATION.dateFormat)# #TimeFormat(row.creation_date, "HH:mm")#</span></div>
 
 	<cfif isNumeric(row.last_update_user_id)>
 		<div class="div_message_page_label">Última modificación por: 
@@ -86,7 +86,7 @@
 			
 			<a href="area_user.cfm?area=#area_id#&user=#row.last_update_user_id#">#row.update_user_full_name#</a>
 		</div>
-		<div class="div_message_page_label"><span lang="es">Fecha de última modificación:</span> <span class="text_message_page">#DateFormat(row.last_update_date, "dd/mm/yyyy")# #TimeFormat(row.last_update_date, "HH:mm")#</span></div>
+		<div class="div_message_page_label"><span lang="es">Fecha de última modificación:</span> <span class="text_message_page">#DateFormat(row.last_update_date, APPLICATION.dateFormat)# #TimeFormat(row.last_update_date, "HH:mm")#</span></div>
 	</cfif>
 
 	<div style="height:10px;clear:both"></div>

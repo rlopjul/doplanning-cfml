@@ -156,13 +156,22 @@
 
 				<tr <cfif dataSelected IS true>class="selected"</cfif> onclick="openUrl('#row_page_url#','itemIframe',event)">
 					<td>#tableRows.row_id#</td>
-					<td>#DateFormat(tableRows.creation_date, "dd/mm/yyyy")# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>
-					<td><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, "dd/mm/yyyy")# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
+					<td>#DateFormat(tableRows.creation_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>
+					<td><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
 					<cfloop query="fields">
 						<cfif fields.field_type_id IS NOT 3><!--- IS NOT long text --->	
 							<cfset field_value = tableRows['field_#fields.field_id#']>
-							<cfif fields.field_type_id IS 6 AND len(field_value) GT 0>
-								<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), "dd/mm/yyyy")>
+
+							<cfif len(field_value) GT 0>
+								<cfif fields.field_type_id IS 6><!--- DATE --->
+									<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
+								<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
+									<cfif field_value IS true>
+										<cfset field_value = "Sí">
+									<cfelseif field_value IS false>
+										<cfset field_value = "No">
+									</cfif>
+								</cfif>
 							</cfif>
 							<td>#field_value#</td>
 						</cfif>

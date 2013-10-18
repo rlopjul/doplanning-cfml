@@ -513,7 +513,6 @@
 	<!--- ----------------------- CREATE ITEM -------------------------------- --->
 	
 	<cffunction name="createItem" returntype="struct" output="false" access="public">		
-		<!---<cfargument name="xmlItem" type="xml" required="yes">--->
 		<cfargument name="objectItem" type="struct" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="status" type="string" required="false" default="ok"><!---pending/ok--->
@@ -532,12 +531,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-					
-			<!---<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="objectItem">
-				<cfinvokeargument name="xml" value="#xmlItem#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-			</cfinvoke>--->
-			
+	
 			<!---checkAreaAccess--->
 			<cfif objectItem.parent_kind EQ "area">
 			
@@ -557,8 +551,20 @@
 				
 			</cfif>
 
-			<cfinclude template="includes/checkAreaAccess.cfm">
-			
+			<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
+
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+			<cfelse>
+
+				<!---checkAreaAccess--->
+				<cfinclude template="includes/checkAreaAccess.cfm">
+
+			</cfif>
+
 			<cfset objectItem.area_id = area_id><!---Esta variable se utiliza despues para enviar las ALERTAS--->
 
 			<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">				
@@ -1003,7 +1009,14 @@
 						
 					<cfthrow errorcode="#error_code#">
 				</cfif>
-				
+			
+			<cfelseif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
+
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+					<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+				</cfinvoke>
+
 			<cfelse>
 			
 				<cfif getItemObject.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que intenta modificar--->
@@ -1488,9 +1501,13 @@
 				
 
 				<cfset area_id = selectItemQuery.area_id>
-			
-				<!---checkAreaAccess--->
-				<cfinclude template="includes/checkAreaAccess.cfm">
+				
+				<cfif arguments.itemTypeId IS NOT 13 OR selectItemQuery.general IS NOT true><!---No es tipología general--->
+
+					<!---checkAreaAccess--->
+					<cfinclude template="includes/checkAreaAccess.cfm">
+
+				</cfif>
 				
 				<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="result">
 					<cfinvokeargument name="id" value="#selectItemQuery.item_id#">
@@ -2379,8 +2396,6 @@
 					</cfif>
 					
 				</cfif>
-
-				<!---<cfset xmlResponseContent = '<#itemTypeName# id="#arguments.item_id#"/>'>--->
 
 				<cfinclude template="includes/logRecord.cfm">
 

@@ -188,7 +188,9 @@
 			<cfset destination_page = "">
 		</cfif>
 		
-		<cfinclude template="#APPLICATION.corePath#/includes/login_form.cfm">
+		<div style="margin-left:auto; margin-right:auto; margin-top: 30px; width:550px;">
+			<cfinclude template="#APPLICATION.corePath#/includes/login_form.cfm">
+		</div>
 	</div>
 
 </div>
