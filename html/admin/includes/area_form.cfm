@@ -33,9 +33,58 @@
 	<div class="control-group">
 		<label class="control-label" for="description" lang="es">Descripción:</label>
 		<div class="controls">
-			<textarea type="text" name="description" id="description" class="input-block-level" rows="2"/>#objectArea.description#</textarea>
+			<textarea type="text" name="description" id="description" class="input-block-level" rows="2">#objectArea.description#</textarea>
 		</div>
-	</div>			
+	</div>	
+	
+	<!---get area_type--->
+	
+	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaType" returnvariable="areaTypeResult">				
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfinvoke>
+	
+	<cfif areaTypeResult.result EQ true>
+	
+		<cfset area_type = areaTypeResult.areaType>
+		
+		<cfif area_type EQ "web" OR area_type EQ "intranet">
+			
+			<div class="control-group">		
+				<div class="controls">					
+					<input style="margin-top:-2px;" id="hide_in_menu" name="hide_in_menu" type="checkbox" value="true" <cfif objectArea.hide_in_menu IS true>checked="checked"</cfif>  />
+					<label class="control-label" for="hide_in_menu" lang="es" style="margin-top:5px;">Ocultar menú</label>		
+				</div>
+			</div>	
+			
+			
+			<!---solo se muestra si es un área de 3er nivel--->
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectAreaParent">				
+				<cfinvokeargument name="get_area_id" value="#objectArea.parent_id#">
+				<cfinvokeargument name="return_type" value="object">
+				
+			</cfinvoke>	
+			
+			<cfset area_parent = objectAreaParent>
+			
+			<cfif area_parent.type EQ "web" OR area_parent.type EQ "intranet">
+			
+				<div class="control-group">		
+					<div class="controls">
+						<label class="control-label" for="type_menu" lang="es">Tipo de menú</label>
+						
+						<cfinclude template="menu_type_list.cfm" />
+					</div>
+				</div>	
+			
+			</cfif>
+		
+		</cfif>	
+		
+	<cfelse>	
+		<label>Error al obtener el tipo de área</label>
+	</cfif>
+			
 </form>
 </cfoutput>
 
