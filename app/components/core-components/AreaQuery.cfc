@@ -25,7 +25,7 @@
 		<cfset var method = "getArea">
 			
 			<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-				SELECT areas.id, areas.name AS area_name, areas.creation_date, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id AS area_image_id, areas.link AS area_link, areas.type, areas.default_typology_id
+				SELECT areas.id, areas.name AS area_name, areas.creation_date, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id AS area_image_id, areas.link AS area_link, areas.type, areas.default_typology_id, areas.hide_in_menu, areas.menu_type_id
 				<cfif arguments.with_user IS true>
 				, users.family_name, users.name AS user_name
 				</cfif>
@@ -321,6 +321,11 @@
 	</cffunction>
 	
 
+	
+	
+	
+	
+
 	<!--- -------------------------- getAreaMenuType -------------------------------- --->
 	<!---Obtiene el tipo de menu del área, si el área no la tiene definida la busca en sus áreas superiores--->
 	
@@ -505,6 +510,27 @@
 			</cfif>	
 		
 	</cffunction>
+	
+	
+	<!--- -------------------------- getMenuTypeList -------------------------------- --->
+	<!---Obtiene la lista de menu type--->
+	
+	<cffunction name="getMenuTypeList" returntype="query" access="public">
+		
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">	
+		
+		<cfset var method = "getMenuTypeList">
+					
+		<cfquery datasource="#client_dsn#" name="getMenuTypeList">
+			SELECT *
+			FROM #client_abb#_menu_types AS menu_types;
+		</cfquery>
+
+		<cfreturn getMenuTypeList>
+		
+	</cffunction>	
+	
     
   
 </cfcomponent>
