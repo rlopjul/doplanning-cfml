@@ -94,6 +94,8 @@
 		<cfargument name="user_full_name" type="string" required="no" default="">
 		<cfargument name="type" type="string" required="no" default="">
 		<cfargument name="default_typology_id" type="string" required="false" default="">
+		<cfargument name="hide_in_menu" type="string" required="no" default="">
+		<cfargument name="menu_type_id" type="string" required="no" default="">
 		
 		
 		<cfargument name="return_type" type="string" required="no">
@@ -161,6 +163,14 @@
 				<cfif isDefined("xmlArea.area.user_full_name.xmlText")>
 					<cfset user_full_name="#xmlArea.area.user_full_name.xmlText#">
 				</cfif>
+				
+				<cfif isDefined("xmlArea.area.XmlAttributes.hide_in_menu")>
+					<cfset with_link=xmlArea.area.XmlAttributes.hide_in_menu>
+				</cfif>
+				
+				<cfif isDefined("xmlArea.area.XmlAttributes.menu_type_id")>
+					<cfset with_link=xmlArea.area.XmlAttributes.menu_type_id>
+				</cfif>				
 			
 			<cfelseif NOT isDefined("arguments.id")>
 				<cfreturn null>
@@ -184,7 +194,9 @@
 				type="#type#",
 				default_typology_id="#default_typology_id#",
 				description="#description#",
-				user_full_name="#user_full_name#"
+				user_full_name="#user_full_name#",
+				hide_in_menu="#hide_in_menu#", 
+				menu_type_id ="#menu_type_id#"
 				}>
 				
 			
@@ -256,6 +268,11 @@
 		<cfreturn getAreaTypeResult>
 		
 	</cffunction>
+	
+	
+	
+	
+	
 	
 	
 	<!--- -------------------------- CHECK ADMIN ACCESS -------------------------------- --->
@@ -1576,6 +1593,8 @@
 		<cfargument name="user_in_charge" type="numeric" required="false"/>
 		<cfargument name="description" type="string" required="false"/>
 		<cfargument name="image_file" type="string" required="false"/>
+		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
+		<cfargument name="menu_type_id" type="numeric" required="false"/>
 
 		<cfset var method = "updateArea">
 		
@@ -1624,6 +1643,22 @@
 							WHERE id = <cfqueryPARAM value="#arguments.area_id#" CFSQLType="CF_SQL_integer">;
 						</cfquery>
 					</cfif>
+					
+					<cfif isDefined("arguments.hide_in_menu") AND arguments.hide_in_menu NEQ "">
+						<cfquery name="hideMenuQuery" datasource="#client_dsn#">
+							UPDATE #client_abb#_areas SET hide_in_menu = <cfqueryPARAM value = "#arguments.hide_in_menu#" cfsqltype = "cf_sql_boolean">
+							WHERE id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+						</cfquery>		
+					</cfif>
+					
+					<cfif isDefined("arguments.menu_type_id") AND arguments.menu_type_id NEQ "">
+						<cfquery name="menuTypeIdQuery" datasource="#client_dsn#">
+							UPDATE #client_abb#_areas SET menu_type_id = <cfqueryPARAM value = "#arguments.menu_type_id#" cfsqltype = "CF_SQL_integer">
+							WHERE id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+						</cfquery>		
+					</cfif>					
+					
+					
 					<cfif isDefined("arguments.with_image") AND arguments.with_image NEQ "">
 						<cfif arguments.with_image EQ "false">
 							<!--- check if exist the image --->
@@ -1945,6 +1980,8 @@
 					</cfif>
 					<cfinvokeargument name="type" value="#selectAreaQuery.type#">
 					<cfinvokeargument name="default_typology_id" value="#selectAreaQuery.default_typology_id#">
+					<cfinvokeargument name="hide_in_menu" value="#selectAreaQuery.hide_in_menu#">
+					<cfinvokeargument name="menu_type_id" value="#selectAreaQuery.menu_type_id#">
 
 				</cfinvoke>
 				
@@ -2910,5 +2947,38 @@
 		<cfreturn response>
 	
 	</cffunction>
+	
+	
+<!--- -------------------------- GET MENU TYPE LIST -------------------------------- --->
+	
+	<cffunction name="getMenuTypeList" returntype="struct" access="public">
+		
+		<cfset var method = "getMenuTypeList">
+		
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getMenuTypeList" returnvariable="menuTypeList">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset response = {result=true, menuTypeList=#menuTypeList#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>		
+		
+					
+	</cffunction>	
 
 </cfcomponent>
