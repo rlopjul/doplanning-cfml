@@ -834,7 +834,7 @@
 									
 									if(window.opener != null){
 
-										window.opener.setRecipientUser(usuarioId, usuarioNombre);
+										window.opener.setSelectedUser(usuarioId, usuarioNombre);
 																			
 										window.close();
 

@@ -144,6 +144,17 @@ curLangText["es"] = {
 			"description" : "Descripción",
 
 		},
+
+		"change_owner_file": {
+			
+			"file_owner_changed" : "Archivo cambiado de propietario",
+			"old_user" : "Propietario anterior",
+			"new_user" : "Nuevo propietario",
+
+			"your_file_was_changed" : "Este archivo que era de su propiedad ha pasado a ser de otro usuario.",
+			"you_have_new_file" : "Este archivo que era de otro usuario ha pasado a ser suyo.",
+
+		},
 		
 		"new_area": {
 			
@@ -338,6 +349,16 @@ curLangText["en"] = {
 			"replacement_date" : "Replacement date",
 			"description" : "Description",
 
+		},
+
+		"change_owner_file": {
+			
+			"file_owner_changed" : "File owner changed",
+			"old_user" : "Old owner",
+			"new_user" : "New owner",
+
+			"your_file_was_changed" : "This file that was your property has changed to another user.",
+			"you_have_new_file" : "This file from another user is now yours.",
 		},
 		
 		"new_area": {

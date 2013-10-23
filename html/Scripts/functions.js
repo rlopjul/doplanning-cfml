@@ -47,10 +47,11 @@ function toggleCheckboxChecked(checkboxId) {
 	$(checkboxId).attr('checked',!($(checkboxId).attr('checked')=="checked"));
 }
 		
-function toggleCheckboxesChecked(status) {
-	$("input").each( function() {
+function toggleCheckboxesChecked(checked) {
+	/*$("input").each( function() {
 		$(this).attr("checked",status);
-	})
+	})*/
+	$("input:checkbox").prop("checked",checked); 
 }
 
 var showLoading = true;
@@ -89,5 +90,10 @@ function downloadFileLinked(anchor,event){
 	
 	return false;
 
+}
+
+function openPopUp(url) {
+	window.open(url, "popup_id", "scrollbars,resizable,width=580,height=500");
+	return false;
 }
 	

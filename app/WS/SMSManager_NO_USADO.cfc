@@ -267,7 +267,7 @@
 				<cfif APPLICATION.identifier EQ "dp">
 				
 					<!---Envio de SMS por defecto--->
-					<cfhttp url="#APPLICATION.smsServerAddress#" method="POST" resolveurl="false" > 
+					<cfhttp url="#APPLICATION.smsServerAddress#" method="POST" resolveurl="false" result="resultVar"> 
 						<cfhttpparam type="formfield" name="Correo" value="#APPLICATION.smsUserName#"> 
 						<cfhttpparam type="FORMfield" name="Passwd" value="#APPLICATION.smsPassword#"> 
 						<!---<cfhttpparam type="FORMfield" name="Remitente" value="#APPLICATION.smsFrom#">--->
@@ -284,7 +284,7 @@
 				
 					<!---Envío de SMS de Pozoblanco--->
 					<cfloop index="recipient_number" list="#recipient#" delimiters=";">
-						<cfhttp url="#APPLICATION.smsServerAddress#" method="get" resolveurl="false" timeout="40" charset="utf-8"> 
+						<cfhttp url="#APPLICATION.smsServerAddress#" method="get" resolveurl="false" timeout="40" charset="utf-8" result="resultVar"> 
 							<cfhttpparam type="url" name="id_emisor" value="asnc"> 
 							<cfhttpparam type="url" name="clave" value="#APPLICATION.smsPassword#"> 
 							<!---<cfhttpparam type="FORMfield" name="Remitente" value="#APPLICATION.smsFrom#">---> 
@@ -306,7 +306,7 @@
 				</cfquery>
 				
 				<cfset msgid=''>	
-				<cfset blau=''>		
+				<!---<cfset blau=''>--->		
 				
 				<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
 				</cfinvoke>	
@@ -319,7 +319,7 @@
 						<cfqueryPARAM value = "#text#" CFSQLType = "CF_SQL_varchar">,
 						<cfqueryPARAM value = "#user_id#" CFSQLType="cf_sql_integer">,					
 						<cfqueryPARAM value = "#recipient#" CFSQLType = "CF_SQL_varchar">,
-						<cfqueryPARAM value = "#blau#" CFSQLType = "CF_SQL_varchar">,
+						<cfqueryPARAM value = "#SerializeJSON(resultVar)#" CFSQLType = "CF_SQL_varchar">,
 						<cfqueryPARAM value = "#msgid#" CFSQLType = "CF_SQL_varchar">,
 						<cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">						
 					);			

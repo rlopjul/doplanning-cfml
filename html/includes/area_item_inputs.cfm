@@ -59,12 +59,7 @@
 
 	</cfif>
 	
-	function openPopup(url) {
-		 window.open(url, "popup_id", "scrollbars,resizable,width=580,height=500");
-		 return false;
-	}
-	
-	function setRecipientUser(userId, userName) {
+	function setSelectedUser(userId, userName) {
 				
 		document.getElementById("recipient_user").value = userId;
 		document.getElementById("recipient_user_full_name").value = userName;
@@ -183,7 +178,7 @@
 	<div class="control-group">
 		<label class="control-label" lang="es">#t_recipient_user#</label>
 		<div class="controls">
-			<cfinput type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" validate="integer" required="yes" message="Usuario destinatario requerido"/><cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes"><cfif read_only IS false> <button onclick="return openPopup('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');" class="btn" lang="es">Seleccionar usuario</button><br/><span style="font-size:10px" lang="es">Usuario al que se le asignará la tarea</span></cfif>
+			<cfinput type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" validate="integer" required="yes" message="Usuario destinatario requerido"/><cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes"><cfif read_only IS false> <button onclick="return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');" class="btn" lang="es">Seleccionar usuario</button><br/><span style="font-size:10px" lang="es">Usuario al que se le asignará la tarea</span></cfif>
 		</div>
 	</div>
 </cfif>
@@ -303,7 +298,7 @@
 	
 	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9>
 	
-		<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
+		<cfif isDefined("objectItem.attached_file_name") AND len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
 			<!---<div style="padding-top:5px;"><span class="texto_normal">Modificar archivo adjunto:</span>&nbsp;<cfinput type="file" name="Filedata"></div>--->
 			
 			<cfif isNumeric(objectItem.id)><!---No es para copiar elemento--->
@@ -340,7 +335,7 @@
 	
 	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 8>
 	
-		<cfif len(objectItem.attached_image_name) GT 0 AND objectItem.attached_image_name NEQ "-">
+		<cfif isDefined("objectItem.attached_image_name") AND len(objectItem.attached_image_name) GT 0 AND objectItem.attached_image_name NEQ "-">
 		
 			<cfif isNumeric(objectItem.id)><!---No es para copiar elemento--->
 			

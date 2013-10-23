@@ -390,6 +390,9 @@ a:hover {text-decoration:none; }
 .div_elements_menu{
 	padding-top:5px; padding-left:5px;
 }
+.div_elements_menu a{
+	margin-bottom: 2px;
+}
 
 /*
 /////////////////////////my files page\\\\\\\\\\\\\\\\\\\\\\\\\\\\

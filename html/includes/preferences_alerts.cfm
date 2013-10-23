@@ -48,7 +48,6 @@ Preferencias de notificaciones
 	</label>
 	</div>
 
-
 	<div class="control-group">
 	<label class="checkbox">
 	 	<input type="checkbox" name="notify_new_message" value="true" <cfif preferences.notify_new_message IS true>checked="checked"</cfif> />

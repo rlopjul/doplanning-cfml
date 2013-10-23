@@ -922,6 +922,39 @@
 		<cfreturn response>
 		
 	</cffunction>
+
+
+	<!--- ---------------------------------- changeItemUser -------------------------------------- --->
+	
+	<cffunction name="changeItemUser" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="new_user_in_charge" type="numeric" required="true">
+		
+		<cfset var method = "changeItemUser">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeItemUser" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Propietario modificado">
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
+	</cffunction>
 	
 	
 	<!--- ---------------------------------copyItemToAreas------------------------------- --->

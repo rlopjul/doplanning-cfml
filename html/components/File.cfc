@@ -432,6 +432,40 @@
 				
 	</cffunction>
 
+
+	<!--- ---------------------------------- changeFileUser -------------------------------------- --->
+	
+	<cffunction name="changeFileUser" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="new_user_in_charge" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		
+		<cfset var method = "changeFileUser">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileUser" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Propietario modificado">
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
+	</cffunction>
+
+
 	
 	<!--- ---------------------------------- updateFile -------------------------------------- --->
 	<!---Este método solo se usa desde Mis documentos y debe dejar de usarse en futuras versiones--->
