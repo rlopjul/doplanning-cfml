@@ -25,9 +25,10 @@ a:hover{text-decoration:none}.body_global{margin:auto}@media(max-width:767px){bo
 .div_log_page_text{font-size:13px;color:#000}.div_log_page_address{clear:both;font-size:13px;color:#000;padding-top:0;padding-bottom:3px}.div_file_page_name{clear:both;font-size:13px;color:#666;padding-left:8px;padding-top:6px;padding-bottom:6px;font-weight:bold}
 .div_file_page_file{background-color:#fff;padding-left:8px;padding-top:4px;padding-bottom:8px}.text_file_page{font-size:13px;color:#000}.div_file_page_label{float:left;clear:left;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666;line-height:16px;padding-top:3px;padding-bottom:3px;padding-right:5px}
 .div_file_page_user{clear:both;font-size:13px;color:#000;padding-bottom:3px}.div_file_page_size{float:right}.div_file_page_description{clear:both;font-size:13px;color:#000;padding-top:0;padding-bottom:3px}
-.div_elements_menu{padding-top:5px;padding-left:5px}.text_menus{font-size:12px;color:#fff}.text_menus a:visited{color:#fff}.div_text_menus{vertical-align:top;display:block;clear:none;line-height:12px}
-.div_text_menus a{font-size:12px;color:#333;line-height:12px}.div_text_menus a:visited{color:#333}.span_text_menus{font-size:12px;color:#333;line-height:12px}
-.div_icon_menus{height:30px;width:31px;float:left;vertical-align:middle;text-align:center}.div_element_menu{width:105px;height:32px;vertical-align:top;display:block;float:left;clear:none;border-width:1px;border-style:solid;margin-right:1px;border-color:#ccc}
+.div_elements_menu{padding-top:5px;padding-left:5px}.div_elements_menu a{margin-bottom:2px}.text_menus{font-size:12px;color:#fff}.text_menus a:visited{color:#fff}
+.div_text_menus{vertical-align:top;display:block;clear:none;line-height:12px}.div_text_menus a{font-size:12px;color:#333;line-height:12px}.div_text_menus a:visited{color:#333}
+.span_text_menus{font-size:12px;color:#333;line-height:12px}.div_icon_menus{height:30px;width:31px;float:left;vertical-align:middle;text-align:center}
+.div_element_menu{width:105px;height:32px;vertical-align:top;display:block;float:left;clear:none;border-width:1px;border-style:solid;margin-right:1px;border-color:#ccc}
 .div_element_menu_subtitle{padding-bottom:10px;height:20px;float:left}.div_text_result{font-size:12px;color:#000;padding-top:55px;padding-bottom:65px;padding-left:20px}
 .div_element_folder{clear:both;height:26px;vertical-align:middle}.div_element_folder a{line-height:25px}.div_return{padding-top:5px;padding-left:3px}.div_send_message{clear:both}
 .div_search_results_text{clear:both;font-size:12px;color:#000}.div_search_pages{padding-top:6px;padding-bottom:6px;font-size:12px;text-align:center;color:#000}

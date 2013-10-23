@@ -11,8 +11,8 @@
 
 	<cfset component = "FileQuery">	
 	
-	<cfset date_format = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
-	<cfset datetime_format = "%d-%m-%Y %H:%i:%s">
+	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
+	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
 	
 	
 	<!---getFile--->
@@ -20,6 +20,7 @@
 	<cffunction name="getFile" output="false" returntype="query" access="public">
 		<cfargument name="file_id" type="numeric" required="yes">
 		<cfargument name="area_id" type="numeric" required="no">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">		
@@ -28,9 +29,17 @@
 					
 		
 		<cfquery name="selectFileQuery" datasource="#client_dsn#">		
-			SELECT physical_name, user_in_charge, file_size, file_type, files.name, file_name, uploading_date, replacement_date, files.description, files.status, users.family_name, files.id AS file_id, users.name AS user_name, users.image_type AS user_image_type, files.typology_id, files.typology_row_id
+			SELECT physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, files.id, files.id AS file_id, users.image_type AS user_image_type, files.typology_id, files.typology_row_id,
+				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 			<cfif isDefined("arguments.area_id")>
 			, areas_files.association_date
+			</cfif>
+			<cfif arguments.parse_dates IS true>
+				, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
+				, DATE_FORMAT(files.replacement_date, '#dateTimeFormat#') AS replacement_date 
+			<cfelse>
+				, files.uploading_date
+				, files.replacement_date
 			</cfif>
 			FROM #client_abb#_files AS files
 			INNER JOIN #client_abb#_users AS users 
@@ -108,10 +117,10 @@
 			AND files.status = 'ok'
 			
 			<cfif isDefined("arguments.from_date")>
-			AND files.uploading_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#date_format#')
+			AND files.uploading_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
 			</cfif>
 			<cfif isDefined("arguments.end_date")>
-			AND files.uploading_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#datetime_format#')
+			AND files.uploading_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
 			</cfif>			
 			
 			ORDER BY last_version_date DESC

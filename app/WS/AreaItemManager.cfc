@@ -1325,9 +1325,10 @@
 							<cfinvokeargument name="attached_image_name" value="#selectItemQuery.attached_image_name#">
 						</cfif>
 						
+						<!---
 						<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 3 OR arguments.itemTypeId IS 4><!---Entries, Links, News--->
 							<cfinvokeargument name="position" value="#selectItemQuery.position#">
-						</cfif>
+						</cfif>--->
 						
 						<cfif arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6><!---Events, Tasks--->
 							<cfinvokeargument name="start_date" value="#selectItemQuery.start_date#">

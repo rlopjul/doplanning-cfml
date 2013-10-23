@@ -3534,7 +3534,7 @@ step="1">--->
 
 				<cfinclude template="includes/logRecord.cfm">
 			
-				<cfset response = {result=true, message="", file_id=#arguments.file_id#}>
+				<cfset response = {result=true, file_id=#arguments.file_id#}>
 								
 			<cfelse><!---File does not exist--->
 			
@@ -3586,6 +3586,92 @@ step="1">--->
 				</cfquery>
 
 			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+
+	<!--- ----------------------------------- changeFileUser -------------------------------------- --->
+
+	<cffunction name="changeFileUser" output="false" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="new_user_in_charge" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+
+		<cfset var method = "changeFileUser">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfif isDefined("arguments.area_id")>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfif>
+				<cfinvokeargument name="parse_dates" value="true">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfif fileQuery.recordCount IS 0><!---File does not exist--->
+			
+				<cfset error_code = 601>
+			
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>					
+
+			<cfif fileQuery.user_in_charge NEQ user_id>
+				
+				<cfif isDefined("arguments.area_id")>
+					<!---checkAreaResponsibleAccess--->
+					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+						<cfinvokeargument name="area_id" value="#area_id#">
+					</cfinvoke>
+				<cfelse>
+					<!---checkAdminAccess--->
+					<cfinvoke component="AreaManager" method="checkAdminAccess">
+					</cfinvoke>
+				</cfif>
+				
+			</cfif>
+
+			<cfif fileQuery.user_in_charge EQ arguments.new_user_in_charge>
+				
+				<cfthrow message="El usuario seleccionado es el propietario del archivo">
+
+			</cfif>			
+
+			<cfquery datasource="#client_dsn#" name="changeFileUserInCharge">
+				UPDATE #client_abb#_files
+				SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<!---Send Alert--->
+			<cfinvoke component="AlertManager" method="changeFileUser">
+				<cfinvokeargument name="objectFile" value="#fileQuery#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="old_user_id" value="#fileQuery.user_in_charge#">
+				<cfinvokeargument name="new_user_id" value="#arguments.new_user_in_charge#">
+			</cfinvoke>	
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, file_id=#arguments.file_id#}>
 
 			<cfcatch>
 

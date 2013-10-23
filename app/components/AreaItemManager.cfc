@@ -1295,6 +1295,115 @@
 		<cfreturn response>
 	
 	</cffunction>
+
+
+
+
+	<!--- ----------------------------------- changeItemUser -------------------------------------- --->
+
+	<cffunction name="changeItemUser" output="false" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="new_user_in_charge" type="numeric" required="true">
+
+		<cfset var method = "changeItemUser">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+					
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ItemQuery" method="getItem" returnvariable="itemQuery">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="parse_dates" value="true">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfif itemQuery.recordCount IS 0><!---Item does not exist--->
+			
+				<cfset error_code = 601>
+			
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>					
+
+			<cfset area_id = itemQuery.area_id>
+
+			<cfif itemQuery.user_in_charge NEQ user_id>
+				
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+				
+			</cfif>
+
+			<cfif itemQuery.user_in_charge EQ arguments.new_user_in_charge>
+				
+				<cfthrow message="El usuario seleccionado es el propietario">
+
+			</cfif>			
+
+			<cftransaction>
+				
+				<cfquery datasource="#client_dsn#" name="changeItemUserInCharge">
+					UPDATE #client_abb#_#itemTypeTable#
+					SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
+					WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+				<cfif isNumeric(itemQuery.attached_file_id) AND itemQuery.attached_file_id GT 0>
+
+					<cfquery datasource="#client_dsn#" name="changeItemUserInCharge">
+						UPDATE #client_abb#_files
+						SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
+						WHERE id = <cfqueryparam value="#itemQuery.attached_file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+
+				</cfif>
+
+				<cfif isNumeric(itemQuery.attached_image_id) AND itemQuery.attached_image_id GT 0>
+
+					<cfquery datasource="#client_dsn#" name="changeItemUserInCharge">
+						UPDATE #client_abb#_files
+						SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
+						WHERE id = <cfqueryparam value="#itemQuery.attached_image_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+
+				</cfif>
+
+			</cftransaction>
+			
+
+			<!---Send Alert--->
+			<cfinvoke component="AlertManager" method="changeItemUser">
+				<cfinvokeargument name="objectItem" value="#itemQuery#">
+				<cfinvokeargument name="old_user_id" value="#itemQuery.user_in_charge#">
+				<cfinvokeargument name="new_user_id" value="#arguments.new_user_in_charge#">
+			</cfinvoke>	
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, item_id=#arguments.item_id#, area_id=#area_id#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
 	
 	
 	
