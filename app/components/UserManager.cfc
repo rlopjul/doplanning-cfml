@@ -1529,7 +1529,7 @@
 	<cffunction name="getUser" returntype="any" output="false" access="public">
 		<cfargument name="get_user_id" type="numeric" required="yes">
 		<cfargument name="format_content" type="string" required="no" default="default">
-		<cfargument name="return_type" type="string" required="no" default="xml">
+		<cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
 		
 		<cfset var method = "getUser">
 		
@@ -1538,12 +1538,15 @@
 		<cfset var user_language = "">
 
 		<cfset var objectUser = structNew()>
+
+		<cfset var response = "">
 		
 		
 			<cfinclude template="includes/functionStart.cfm"> 
 		
 			<cfquery name="selectUserQuery" datasource="#client_dsn#">
-				SELECT id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, image_file, image_type, dni, language
+				SELECT id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, image_file, image_type, dni, language,
+				CONCAT_WS(' ', family_name, name) AS user_full_name
 				<cfif arguments.format_content EQ "all">
 				, space_used, number_of_connections, last_connection, connected, session_id, creation_date, root_folder_id, sms_allowed
 				</cfif> 
@@ -1579,22 +1582,28 @@
 				
 			</cfif>
 			<cfif selectUserQuery.recordCount GT 0>
+
+				<cfif arguments.return_type EQ "query">
+                    
+                    <cfset response = selectUserQuery>
 				
-				<cfsavecontent variable="areasUser">
-					<cfif isDefined("checkAreaAdministrator") AND checkAreaAdministrator.recordCount GT 0>
-						<areas_administration>
-							<cfoutput>
-								<cfloop query="checkAreaAdministrator">
-									<area id="#area_id#"/>
-								</cfloop>
-							</cfoutput>
-						</areas_administration>
-					<cfelse>
-						<areas_administration />
-					</cfif>
-				</cfsavecontent>	
-				
-				<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
+				<cfelse>
+
+					<cfsavecontent variable="areasUser">
+						<cfif isDefined("checkAreaAdministrator") AND checkAreaAdministrator.recordCount GT 0>
+							<areas_administration>
+								<cfoutput>
+									<cfloop query="checkAreaAdministrator">
+										<area id="#area_id#"/>
+									</cfloop>
+								</cfoutput>
+							</areas_administration>
+						<cfelse>
+							<areas_administration />
+						</cfif>
+					</cfsavecontent>	
+					
+					<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
 						<cfinvokeargument name="id" value="#selectUserQuery.id#">
 						<cfinvokeargument name="email" value="#selectUserQuery.email#">
 						<cfinvokeargument name="telephone" value="#selectUserQuery.telephone#">
@@ -1641,25 +1650,24 @@
 						
 						
 						<cfinvokeargument name="return_type" value="object">
-				</cfinvoke>
-				
-				<cfif arguments.return_type EQ "object">
-                    
-                    <cfset xmlResponse = objectUser>
-                    
-                <cfelse>
-                
-                	<cfinvoke component="UserManager" method="xmlUser" returnvariable="xmlResponseContent">
-                        <cfinvokeargument name="objectUser" value="#objectUser#">
-                    </cfinvoke>
-                    
-                    <cfset xmlResponse = xmlResponseContent>
-                
-                </cfif>			
-				
-		
-				<!---<cfinclude template="includes/functionEndNoLog.cfm">--->
-				
+					</cfinvoke>
+					
+					<cfif arguments.return_type EQ "object">
+	                    
+	                    <cfset response = objectUser>
+	                    
+	                <cfelse>
+	                
+	                	<cfinvoke component="UserManager" method="xmlUser" returnvariable="xmlResponseContent">
+	                        <cfinvokeargument name="objectUser" value="#objectUser#">
+	                    </cfinvoke>
+	                    
+	                    <cfset response = xmlResponseContent>
+	                
+	                </cfif>	
+
+	            </cfif>				
+						
 			<cfelse><!---the user does not exist--->
 				
 				<cfset error_code = 204>
@@ -1667,9 +1675,8 @@
 				<cfthrow errorcode="#error_code#"> 
 				
 			</cfif>
-			
 		
-		<cfreturn xmlResponse>
+		<cfreturn response>
 				
 	</cffunction>
 	
@@ -1788,6 +1795,12 @@
 		<cfargument name="notify_new_event" type="string" required="no" default="">
 		<cfargument name="notify_new_task" type="string" required="no" default="">
 		<cfargument name="notify_new_consultation" type="string" required="no" default="">
+
+		<cfargument name="notify_new_image" type="string" required="false" default="">
+		<cfargument name="notify_new_typology" type="string" required="false" default="">
+		<cfargument name="notify_new_list" type="string" required="false" default="">
+		<cfargument name="notify_new_form" type="string" required="false" default="">
+		<cfargument name="notify_new_pubmed" type="string" required="false" default="">
 		
 		<cfargument name="with_external" type="string" required="no" default="true">
         
@@ -1849,6 +1862,22 @@
 					</cfif>
 					<cfif arguments.notify_new_consultation NEQ "">
 					AND u.notify_new_consultation = <cfqueryparam value="#arguments.notify_new_consultation#" cfsqltype="cf_sql_bit">
+					</cfif>
+
+					<cfif arguments.notify_new_image NEQ "">
+					AND u.notify_new_image = <cfqueryparam value="#arguments.notify_new_image#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif arguments.notify_new_typology NEQ "">
+					AND u.notify_new_typology = <cfqueryparam value="#arguments.notify_new_typology#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif arguments.notify_new_list NEQ "">
+					AND u.notify_new_list = <cfqueryparam value="#arguments.notify_new_list#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif arguments.notify_new_form NEQ "">
+					AND u.notify_new_form = <cfqueryparam value="#arguments.notify_new_form#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif arguments.notify_new_pubmed NEQ "">
+					AND u.notify_new_pubmed = <cfqueryparam value="#arguments.notify_new_pubmed#" cfsqltype="cf_sql_bit">
 					</cfif>
 					
 					<cfif arguments.with_external EQ "false">
@@ -2493,7 +2522,13 @@
 		<cfset var notify_new_event = "">
 		<cfset var notify_new_task = "">
 		<cfset var notify_new_consultation = "">
-		
+
+		<cfset var notify_new_image = "">
+		<cfset var notify_new_typology = "">
+		<cfset var notify_new_list = "">
+		<cfset var notify_new_form = "">
+		<cfset var notify_new_pubmed = "">
+
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
 			
@@ -2512,7 +2547,6 @@
 			<cfinclude template="includes/usersOrder.cfm">
 			
 			
-				
 			<cfif isDefined("xmlRequest.request.parameters.preferences")>				
 				
 				<cfxml variable="xmlPreferences">
@@ -2552,6 +2586,22 @@
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_consultation")>
 					<cfset notify_new_consultation = xmlPreferences.preferences.xmlAttributes.notify_new_consultation>
 				</cfif>
+
+				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_image")>
+					<cfset notify_new_image = xmlPreferences.preferences.xmlAttributes.notify_new_image>
+				</cfif>
+				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_typology")>
+					<cfset notify_new_typology = xmlPreferences.preferences.xmlAttributes.notify_new_typology>
+				</cfif>
+				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_list")>
+					<cfset notify_new_list = xmlPreferences.preferences.xmlAttributes.notify_new_list>
+				</cfif>
+				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_form")>
+					<cfset notify_new_form = xmlPreferences.preferences.xmlAttributes.notify_new_form>
+				</cfif>
+				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_pubmed")>
+					<cfset notify_new_pubmed = xmlPreferences.preferences.xmlAttributes.notify_new_pubmed>
+				</cfif>
 				
 			</cfif>
 			
@@ -2572,7 +2622,13 @@
 				<cfinvokeargument name="notify_new_news" value="#notify_new_news#">
 				<cfinvokeargument name="notify_new_event" value="#notify_new_event#">
 				<cfinvokeargument name="notify_new_task" value="#notify_new_task#">	
-				<cfinvokeargument name="notify_new_consultation" value="#notify_new_consultation#">				
+				<cfinvokeargument name="notify_new_consultation" value="#notify_new_consultation#">
+
+				<cfinvokeargument name="notify_new_image" value="#notify_new_image#">
+				<cfinvokeargument name="notify_new_typology" value="#notify_new_typology#">
+				<cfinvokeargument name="notify_new_list" value="#notify_new_list#">
+				<cfinvokeargument name="notify_new_form" value="#notify_new_form#">
+				<cfinvokeargument name="notify_new_pubmed" value="#notify_new_pubmed#">
 			</cfinvoke>
 			
 			<cfset usersArray = returnArrays.usersArray>
@@ -3037,9 +3093,32 @@
 					, notify_new_file = <cfqueryparam value="#arguments.notify_new_file#" cfsqltype="cf_sql_bit">
 					, notify_replace_file = <cfqueryparam value="#arguments.notify_replace_file#" cfsqltype="cf_sql_bit">
 					, notify_new_area = <cfqueryparam value="#arguments.notify_new_area#" cfsqltype="cf_sql_bit">
-					, notify_new_entry = <cfqueryparam value="#arguments.notify_new_entry#" cfsqltype="cf_sql_bit">
-					<cfif APPLICATION.identifier EQ "vpnet">
-					, notify_new_link = <cfqueryparam value="#arguments.notify_new_link#" cfsqltype="cf_sql_bit">
+					, notify_new_event = <cfqueryparam value="#arguments.notify_new_event#" cfsqltype="cf_sql_bit">
+					, notify_new_task = <cfqueryparam value="#arguments.notify_new_task#" cfsqltype="cf_sql_bit">
+					<cfif APPLICATION.moduleWeb IS true>
+						, notify_new_entry = <cfqueryparam value="#arguments.notify_new_entry#" cfsqltype="cf_sql_bit">
+						<cfif APPLICATION.identifier EQ "vpnet">
+						, notify_new_link = <cfqueryparam value="#arguments.notify_new_link#" cfsqltype="cf_sql_bit">
+						</cfif>
+						, notify_new_news = <cfqueryparam value="#arguments.notify_new_news#" cfsqltype="cf_sql_bit">
+						, notify_new_image = <cfqueryparam value="#arguments.notify_new_image#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif APPLICATION.moduleConsultations IS true>
+					, notify_new_consultation = <cfqueryparam value="#arguments.notify_new_consultation#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif APPLICATION.modulePubMedComments IS true>
+					, notify_new_pubmed = <cfqueryparam value="#arguments.notify_new_pubmed#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif APPLICATION.modulefilesWithTables IS true>
+					, notify_new_typology = <cfqueryparam value="#arguments.notify_new_typology#" cfsqltype="cf_sql_bit">	
+					</cfif>
+					<cfif APPLICATION.moduleLists IS true>
+					, notify_new_list = <cfqueryparam value="#arguments.notify_new_list#" cfsqltype="cf_sql_bit">
+					<!---, notify_new_list_row = <cfqueryparam value="#arguments.notify_new_list_row#" cfsqltype="cf_sql_bit">--->
+					</cfif>
+					<cfif APPLICATION.moduleForms IS true>
+					, notify_new_form = <cfqueryparam value="#arguments.notify_new_form#" cfsqltype="cf_sql_bit">
+					<!---, notify_new_form_row = <cfqueryparam value="#arguments.notify_new_form_row#" cfsqltype="cf_sql_bit">--->
 					</cfif>
 					WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>

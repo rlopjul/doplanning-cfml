@@ -136,6 +136,12 @@
 
 		</cfif>
 
+		<cfif itemTypeId IS NOT 1 AND (objectItem.user_in_charge EQ SESSION.user_id OR is_user_area_responsible)>
+			
+			<a href="item_change_user.cfm?item=#item_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-small"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>	
+
+		</cfif>
+
 		
 		<cfif app_version NEQ "mobile">
 		<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>

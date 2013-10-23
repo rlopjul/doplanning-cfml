@@ -83,8 +83,14 @@ function confirmDeleteFile() {
 				<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFileRemote&file_id=#objectFile.id#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmDeleteFile();" class="btn btn-danger btn-small"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 				
 				<a href="area_file_modify.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-small"><i class="icon-edit"></i> <span lang="es">Modificar datos</span></a>	
-				
+
 			</cfif>
+		</cfif>
+
+		<cfif page_type IS 2 AND (objectFile.user_in_charge EQ SESSION.user_id OR is_user_area_responsible)>
+			
+			<a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-small"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>	
+
 		</cfif>
 		
 		<cfif APPLICATION.moduleConvertFiles EQ true>
