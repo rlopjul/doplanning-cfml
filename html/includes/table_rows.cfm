@@ -38,13 +38,42 @@
 
 <div class="div_head_subtitle_area">
 
-	<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo registro" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Nuevo registro</span></a>
+	<!---checkListPermissions--->
+	<cfset table_edit_permission = true>
 
-	<span class="divider">&nbsp;</span>
+	<cfif is_user_area_responsible IS false>
+		
+		<cfif tableTypeId IS 1 AND APPLICATION.moduleListsWithPermissions IS true><!---IS List and list permissions is enabled--->
 
-	<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos<span></a>
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="isUserInTable" returnvariable="isUserInTable">
+				<cfinvokeargument name="table_id" value="#table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			</cfinvoke>	
 
-	<span class="divider">&nbsp;</span>
+			<cfif isUserInTable IS false>
+				<cfset table_edit_permission = false>
+			</cfif>
+
+		</cfif>
+
+	</cfif>
+	
+
+	<cfif is_user_area_responsible OR table_edit_permission IS true>
+		<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo registro" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Nuevo registro</span></a>
+
+		<span class="divider">&nbsp;</span>
+	</cfif>	
+
+	<cfif is_user_area_responsible>
+		<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos<span></a>
+
+		<cfif APPLICATION.moduleListsWithPermissions IS true AND itemTypeId IS 11><!---List with permissions--->
+			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#" class="btn btn-small" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores<span></a>
+		</cfif>
+
+		<span class="divider">&nbsp;</span>
+	</cfif>
 
 	<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-small" title="#itemTypeNameEsP# del área" lang="es"><!---<i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i>---> <span lang="es">#itemTypeNameEsP# del área</span></a>
 

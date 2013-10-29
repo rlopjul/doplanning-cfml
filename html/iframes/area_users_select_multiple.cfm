@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- InstanceBeginEditable name="doctitle" -->
-<title></title>
+<title>Selección de usuarios</title>
 <!-- InstanceEndEditable -->
 <cfoutput>
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
@@ -63,17 +63,12 @@
 <!-- InstanceBeginEditable name="content" -->
 
 
-<cfif isDefined("URL.area") AND isValid("integer",URL.area)>
-	<cfset area_id = URL.area>
-	<cfset return_page = "users.cfm?area=#area_id#">
-<cfelse>
-	<cflocation url="empty.cfm" addtoken="no">
-</cfif>
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+<div class="div_head_subtitle">
+	<span lang="es">Selección de usuarios</span>
+</div>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/user_head.cfm">
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/user_content.cfm">
+<cfset page_type = 2>
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_users_select.cfm">
 
 <!-- InstanceEndEditable -->
 </body>

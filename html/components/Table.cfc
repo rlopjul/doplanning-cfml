@@ -294,7 +294,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		
-		<cfset var method = "getTableData">
+		<cfset var method = "getTableRows">
 
 		<cfset var response = structNew()>
 					
@@ -315,6 +315,118 @@
 		
 		<cfreturn response>
 		
+	</cffunction>
+
+
+	<!--- ----------------------------------- getTableUsers ------------------------------------- --->
+	
+	<cffunction name="getTableUsers" returntype="struct" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		
+		<cfset var method = "getTableUsers">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableUsers" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
+
+	<!--- ----------------------------------- addUsersToTable -------------------------------------- --->
+
+	<cffunction name="addUsersToTable" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="table_id" type="numeric" required="true" />
+		<cfargument name="tableTypeId" type="numeric" required="true" />
+		<cfargument name="users_ids" type="array" required="true" />
+		
+		<cfset var method = "addUsersToTable">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="addUsersToTable" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+				<cfinvokeargument name="users_ids" value="#arguments.users_ids#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Usuario/s añadido/s">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+
+
+	<!--- ----------------------------------- removeUserFromTable ------------------------------------- --->
+	
+	<cffunction name="removeUserFromTable" returntype="void" access="remote">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="remove_user_id" type="numeric" required="true">
+		<cfargument name="return_page" type="string" required="true">
+		
+		<cfset var method = "removeUserFromTable">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="removeUserFromTable" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+				<cfinvokeargument name="remove_user_id" value="#arguments.remove_user_id#"/>
+			</cfinvoke>
+
+			<cfif response.result IS true>
+
+				<cfset msg = "Usuario quitado">            
+		
+			<cfelse>
+
+				<cfset msg = response.message>
+				
+			</cfif>
+
+			<cfset msg = URLEncodedFormat(msg)>
+
+			
+			<cflocation url="#arguments.return_page#&msg=#msg#&res=#response.result#" addtoken="no">	
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+				
 	</cffunction>
 
 
@@ -439,6 +551,37 @@
 		</cftry>
 		
 		<cfreturn response>
+		
+	</cffunction>
+
+
+	<!--- ----------------------------------- isUserInTable ------------------------------------- --->
+	
+	<cffunction name="isUserInTable" returntype="boolean" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		
+		<cfset var method = "isUserInTable">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="isUserInTable" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+				<cfinvokeargument name="check_user_id" value="#SESSION.user_id#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response.isUserInTable>
 		
 	</cffunction>
 

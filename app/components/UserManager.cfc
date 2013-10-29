@@ -622,6 +622,12 @@
 					</cfquery>
 					
 					<!---checkEmail--->
+
+					<!---Esto no puede estar habilitado hasta que se cambie la interfaz o la gestión de errores
+					<cfif len(objectUser.email) IS 0 OR NOT isValid("email",objectUser.email)>
+						<cfthrow message="Email incorrecto"/>
+					</cfif>--->
+
 					<cfquery name="checkEmail" datasource="#client_dsn#">
 						SELECT id
 						FROM #client_abb#_users
@@ -697,12 +703,6 @@
 						SET root_folder_id = #root_folder_id#
 						WHERE id = <cfqueryPARAM value="#objectUser.id#" CFSQLType="cf_sql_integer">;
 					</cfquery>
-					
-					<!---<cfquery name="insertUserPreferencesQuery" datasource="#client_dsn#"  >
-						INSERT INTO #client_abb#_user_preferences
-						(user_id, language)
-						VALUES(<cfqueryPARAM value="#objectUser.id#" CFSQLType="cf_sql_integer">, <cfqueryparam value="#objectUser.language#" cfsqltype="cf_sql_varchar">);
-					</cfquery>--->	
 					
 					<cfquery name="commitQuery" datasource="#client_dsn#">
 						COMMIT;
@@ -793,6 +793,13 @@
 			
 			<cfif isDefined("userXml.user.XmlAttributes.email")>
 				<!---checkEmail--->
+
+				<!---
+				Esto no puede estar habilitado hasta que se cambie la interfaz o la gestión de errores
+				<cfif len(Trim(userXml.user.XmlAttributes.email)) IS 0 OR NOT isValid("email", Trim(userXml.user.XmlAttributes.email))>
+					<cfthrow message="Email incorrecto"/>
+				</cfif>--->
+
 				<cfquery name="checkEmail" datasource="#client_dsn#">
 					SELECT id
 					FROM #client_abb#_users
@@ -1273,15 +1280,16 @@
 					<cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">);
 			</cfquery>	
 			
-			<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
+			<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
 				<cfinvokeargument name="get_user_id" value="#arguments.add_user_id#">
+				<cfinvokeargument name="return_type" value="query"/>
 			</cfinvoke>	
 			
-			<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
+			<!---<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
 				<cfinvokeargument name="xml" value="#xmlResponseContent#">
 					
 				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>		
+			</cfinvoke>--->		
 		
 			<cfinvoke component="AlertManager" method="assignUserToArea">
 				<cfinvokeargument name="objectUser" value="#objectUser#">
@@ -1291,7 +1299,7 @@
 			
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
 			
-			<cfset response = {result=true, message="", area_id=#arguments.area_id#, user_id=#arguments.add_user_id#}>
+			<cfset response = {result=true, area_id=#arguments.area_id#, user_id=#arguments.add_user_id#}>
 		
 			<cfcatch>
 
@@ -1545,7 +1553,7 @@
 			<cfinclude template="includes/functionStart.cfm"> 
 		
 			<cfquery name="selectUserQuery" datasource="#client_dsn#">
-				SELECT id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, image_file, image_type, dni, language,
+				SELECT id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, internal_user AS whole_tree_visible, image_file, image_type, dni, language,
 				CONCAT_WS(' ', family_name, name) AS user_full_name
 				<cfif arguments.format_content EQ "all">
 				, space_used, number_of_connections, last_connection, connected, session_id, creation_date, root_folder_id, sms_allowed
@@ -1934,7 +1942,7 @@
 			</cfif>
 			
 			
-			<cfset response = {usersArray = usersArray, areasArray = areasArray}>
+			<cfset response = {usersArray=usersArray, areasArray=areasArray}>
 			<cfreturn response>
 	
 	</cffunction>
@@ -1947,20 +1955,14 @@
 		<cfargument name="usersList" type="string" required="no" default="">
 		<cfargument name="areasArray" type="array" required="yes">
 		<!---<cfargument name="include_user_log_in" type="boolean" required="no" default="false">--->
-		<cfargument name="get_orientation" type="string" required="no" default="desc">
-		
-		<!---<cfargument name="notify_new_message" type="string" required="no" default="">
-		<cfargument name="notify_new_file" type="string" required="no" default="">
-		<cfargument name="notify_replace_file" type="string" required="no" default="">
-		<cfargument name="notify_new_area" type="string" required="no" default="">
-		<cfargument name="with_external" type="string" required="no" default="true">--->
+		<cfargument name="get_orientation" type="string" required="no" default="desc"><!---desc/asc/both---><!---both: obtiene los usuarios de las áreas superiores e inferiores--->
         
 		<cfset var method = "getAreaUsersIds">
 		<cfset var areaMembersList = "">
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfif arrayFindCustom(areasArray, "#area_id#") IS 0><!---The area IS NOT searched before--->
+			<cfif arrayFindCustom(areasArray, "#arguments.area_id#") IS 0><!---The area IS NOT searched before--->
 				
 				<cfquery name="membersQuery" datasource="#client_dsn#">
 					SELECT user_id
@@ -1983,14 +1985,15 @@
 					
 				</cfif>
 				
-				<cfset ArrayAppend(areasArray,"#area_id#")>
+				<cfset ArrayAppend(areasArray,"#arguments.area_id#")>
 				
-				<cfif get_orientation EQ "desc">
+				<!--- Get Descendeant Areas --->
+				<cfif arguments.get_orientation EQ "desc" OR arguments.get_orientation EQ "both">
 				
 					<cfquery datasource="#client_dsn#" name="getDescendantAreas">
 						SELECT id AS area_id
 						FROM #client_abb#_areas
-						WHERE parent_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+						WHERE parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 					
 					<cfif getDescendantAreas.recordCount GT 0>
@@ -2011,13 +2014,15 @@
 						</cfloop>
 						
 					</cfif>
-				
-				<cfelseif get_orientation EQ "asc">
+				</cfif>
+
+				<!--- Get Ascendant Areas --->
+				<cfif arguments.get_orientation EQ "asc" OR arguments.get_orientation EQ "both">
 				
 					<cfquery datasource="#client_dsn#" name="getAscendantAreas">
 						SELECT parent_id
 						FROM #client_abb#_areas
-						WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+						WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 					
 					<cfif getAscendantAreas.recordCount GT 0 AND isNumeric(getAscendantAreas.parent_id)>
@@ -2105,7 +2110,7 @@
 	
 	<!--- ---------------------------- getUsersExternal------------------------------- --->
 	
-	<!---Obtiene los usuarios visibles para un usuario externo y que no está en la raiz--->
+	<!---Obtiene todos los usuarios que tienen acceso a las áreas de un usuario externo que no está en la raiz--->
 	
 	<cffunction name="getUsersExternal" returntype="struct" output="false" access="public">
 		<cfargument name="xmlUser" type="xml" required="true"/>
@@ -2119,7 +2124,7 @@
 
 		<cfset var response = structNew()>
 		
-		<cfset var get_orientation = "desc">
+		<!---<cfset var get_orientation = "desc">--->
 		<cfset var usersList = "">
 		<cfset var areasArray = arrayNew(1)>
 		<cfset var usersArray = arrayNew(1)>
@@ -2149,21 +2154,34 @@
 			
 			<cfloop query="getUserAreas">
 				
-				<!---Obtiene los usuarios de las áreas--->
+				<!---Obtiene los usuarios de las áreas hacia abajo y hacia arriba--->
+				<!---En versiones anteriores de la aplicación sólo se mostraban los usuarios de las áreas inferiores, ya que los usuarios externos sólo podían ver los usuarios que estaban directamente asociados a las áreas a las que tienen acceso y sus áreas inferiores.--->
 				<cfinvoke component="UserManager" method="getAreaUsersIds" returnvariable="usersIdsResult">
 					<cfinvokeargument name="area_id" value="#getUserAreas.area_id#">
 					<cfinvokeargument name="usersList" value="#usersList#">
 					<cfinvokeargument name="areasArray" value="#areasArray#">
 			
-					<cfinvokeargument name="get_orientation" value="#get_orientation#">	
+					<cfinvokeargument name="get_orientation" value="both">
 				</cfinvoke>
-				
+
 				<cfset usersList = usersIdsResult.usersList>
 				<cfset areasArray = usersIdsResult.areasArray>
+
+				<!---Obtiene los usuarios de las áreas hacia arriba--->
+				<!---<cfinvoke component="UserManager" method="getAreaUsersIds" returnvariable="usersIdsAscResult">
+					<cfinvokeargument name="area_id" value="#getUserAreas.area_id#">
+					<cfinvokeargument name="usersList" value="#usersList#">
+					<cfinvokeargument name="areasArray" value="#areasAscArray#">
+			
+					<cfinvokeargument name="get_orientation" value="asc">	
+				</cfinvoke>
 				
+				<cfset usersList = usersIdsAscResult.usersList>
+				<cfset areasAscArray = usersIdsAscResult.areasArray>--->
+			
 			</cfloop>
 			
-			<cfset xmlUsersResult = "<users>">
+			<!---<cfset xmlUsersResult = "<users>">--->
 			
 			<cfif listLen(usersList) GT 0>
 			
@@ -2180,15 +2198,14 @@
 					</cfif>
 					<cfif isDefined("arguments.limit")>
 					LIMIT #arguments.limit#
-					</cfif>
-					;
+					</cfif>;
 				</cfquery>
 				
 				<cfif membersQuery.recordCount GT 0>
 						
 					<cfloop query="membersQuery">
 						
-						<cfinvoke component="UserManager" method="objectUser" returnvariable="xmlUserResult">
+						<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
 							<cfif isDefined("xmlUser.user.xmlAttributes.id")>
 								<cfinvokeargument name="id" value="#membersQuery.id#">
 							</cfif>
@@ -2256,20 +2273,22 @@
 								<cfinvokeargument name="image_type" value="#membersQuery.image_type#">
 							</cfif>
 							
-							<cfinvokeargument name="return_type" value="xml">
+							<cfinvokeargument name="return_type" value="object">
 						</cfinvoke>
 						
-						<cfset xmlUsersResult = xmlUsersResult&xmlUserResult>
-					
+						<!---<cfset xmlUsersResult = xmlUsersResult&xmlUserResult>--->
+						
+						<cfset arrayAppend(usersArray, objectUser)>
+
 					</cfloop>
 									
 				</cfif>	
 			
 			</cfif>
 			
-			<cfset xmlUsersResult = xmlUsersResult&"</users>">
+			<!---<cfset xmlUsersResult = xmlUsersResult&"</users>">--->
 			
-			<cfset response = {result="true", message="", usersXml=#xmlUsersResult#}>	
+			<cfset response = {result=true, users=#usersArray#}><!---usersXml=#xmlUsersResult#--->	
 
 		<cfreturn response>
 			
@@ -2296,6 +2315,8 @@
 		<cfset var user_language = "">
 			
 		<cfset var search_text_re = "">
+
+		<cfset var usersArray = arrayNew(1)>
 	
 		<cftry>
 		
@@ -2306,7 +2327,6 @@
 					#xmlRequest.request.parameters.user#
 				</cfoutput>
 			</cfxml>
-			
 			<!--- with external users --->
 			<cfif isDefined("xmlRequest.request.parameters.with_external")>
 				<cfset with_external = xmlRequest.request.parameters.with_external.xmlText>
@@ -2330,7 +2350,6 @@
 				</cfinvoke>
 			</cfif>
 
-			
             <cfif isDefined("xmlUser.user.xmlAttributes.space_used") OR isDefined("xmlUser.user.xmlAttributes.number_of_connections")>
                 <cfquery name="getTotals" datasource="#client_dsn#">
                     SELECT
@@ -2392,10 +2411,8 @@
 				LIMIT #arguments.limit#
 				</cfif>;
             </cfquery>
-                
              		
-                    
-			<cfset usersXml = '<users'>
+			<!---<cfset usersXml = '<users'>
 			<cfif isDefined("xmlUser.user.xmlAttributes.space_used")>
 				<!---Parse total_space_used to megabytes--->
 				<cfset total_space_used = getTotals.total_space_used><!---file_size_full is the file_size from database without parse to megabytes--->
@@ -2405,87 +2422,85 @@
 			</cfif>
 			<cfif isDefined("xmlUser.user.xmlAttributes.number_of_connections")>
 				<cfset usersXml = usersXml&' total_connections="#getTotals.total_connections#"'>
-			</cfif>
-			<cfset usersXml = usersXml&'>'>
-				<cfloop query="getAllUsersQuery">
-					<cfinvoke component="UserManager" method="objectUser" returnvariable="xmlUserResult">
-						<cfif isDefined("xmlUser.user.xmlAttributes.id")>
-							<cfinvokeargument name="id" value="#getAllUsersQuery.id#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.email")>
-							<cfinvokeargument name="email" value="#getAllUsersQuery.email#">
-						</cfif>
-						<!---<cfif isDefined("xmlUser.user.xmlAttributes.language")>
-							<cfinvokeargument name="language" value="#getAllUsersQuery.language#">
-						</cfif>--->
-						<cfif isDefined("xmlUser.user.xmlAttributes.telephone")>
-							<cfinvokeargument name="telephone" value="#getAllUsersQuery.telephone#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.space_used")>
-							<cfinvokeargument name="space_used" value="#getAllUsersQuery.space_used#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.number_of_connections")>
-							<cfinvokeargument name="number_of_connections" value="#getAllUsersQuery.number_of_connections#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.last_connection")>
-							<cfinvokeargument name="last_connection" value="#getAllUsersQuery.last_connection#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.connected")>
-							<cfinvokeargument name="connected" value="#getAllUsersQuery.connected#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.session_id")>
-							<cfinvokeargument name="session_id" value="#getAllUsersQuery.session_id#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.creation_date")>
-							<cfinvokeargument name="creation_date" value="#getAllUsersQuery.creation_date#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.whole_tree_visible")>
-							<cfinvokeargument name="whole_tree_visible" value="#getAllUsersQuery.internal_user#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.root_folder_id")>
-							<cfinvokeargument name="root_folder_id" value="#getAllUsersQuery.root_folder_id#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.general_administrator")>
-							<cfinvokeargument name="general_administrator" value="">
-						</cfif>
-						<cfif isDefined("xmlUser.user.family_name")>
-							<cfinvokeargument name="family_name" value="#getAllUsersQuery.family_name#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.name")>
-							<cfinvokeargument name="name" value="#getAllUsersQuery.name#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.address")>
-							<cfinvokeargument name="address" value="#getAllUsersQuery.address#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.areas_administration")>
-							<cfinvokeargument name="areas_administration" value="">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.mobile_phone")>
-							<cfinvokeargument name="mobile_phone" value="#getAllUsersQuery.mobile_phone#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.user_full_name")>
-							<cfinvokeargument name="user_full_name" value="#getAllUsersQuery.family_name# #getAllUsersQuery.name#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.telephone_ccode")>
-							<cfinvokeargument name="telephone_ccode" value="#getAllUsersQuery.telephone_ccode#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.mobile_phone_ccode")>
-							<cfinvokeargument name="mobile_phone_ccode" value="#getAllUsersQuery.mobile_phone_ccode#">
-						</cfif>
-						<cfif isDefined("xmlUser.user.xmlAttributes.image_type")>
-							<cfinvokeargument name="image_type" value="#getAllUsersQuery.image_type#">
-						</cfif>
-						
-						<cfinvokeargument name="return_type" value="xml">
-					</cfinvoke>
+			</cfif>--->
+
+			<cfloop query="getAllUsersQuery">
+				<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
+					<cfif isDefined("xmlUser.user.xmlAttributes.id")>
+						<cfinvokeargument name="id" value="#getAllUsersQuery.id#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.email")>
+						<cfinvokeargument name="email" value="#getAllUsersQuery.email#">
+					</cfif>
+					<!---<cfif isDefined("xmlUser.user.xmlAttributes.language")>
+						<cfinvokeargument name="language" value="#getAllUsersQuery.language#">
+					</cfif>--->
+					<cfif isDefined("xmlUser.user.xmlAttributes.telephone")>
+						<cfinvokeargument name="telephone" value="#getAllUsersQuery.telephone#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.space_used")>
+						<cfinvokeargument name="space_used" value="#getAllUsersQuery.space_used#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.number_of_connections")>
+						<cfinvokeargument name="number_of_connections" value="#getAllUsersQuery.number_of_connections#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.last_connection")>
+						<cfinvokeargument name="last_connection" value="#getAllUsersQuery.last_connection#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.connected")>
+						<cfinvokeargument name="connected" value="#getAllUsersQuery.connected#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.session_id")>
+						<cfinvokeargument name="session_id" value="#getAllUsersQuery.session_id#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.creation_date")>
+						<cfinvokeargument name="creation_date" value="#getAllUsersQuery.creation_date#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.whole_tree_visible")>
+						<cfinvokeargument name="whole_tree_visible" value="#getAllUsersQuery.internal_user#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.root_folder_id")>
+						<cfinvokeargument name="root_folder_id" value="#getAllUsersQuery.root_folder_id#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.general_administrator")>
+						<cfinvokeargument name="general_administrator" value="">
+					</cfif>
+					<cfif isDefined("xmlUser.user.family_name")>
+						<cfinvokeargument name="family_name" value="#getAllUsersQuery.family_name#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.name")>
+						<cfinvokeargument name="name" value="#getAllUsersQuery.name#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.address")>
+						<cfinvokeargument name="address" value="#getAllUsersQuery.address#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.areas_administration")>
+						<cfinvokeargument name="areas_administration" value="">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.mobile_phone")>
+						<cfinvokeargument name="mobile_phone" value="#getAllUsersQuery.mobile_phone#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.user_full_name")>
+						<cfinvokeargument name="user_full_name" value="#getAllUsersQuery.family_name# #getAllUsersQuery.name#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.telephone_ccode")>
+						<cfinvokeargument name="telephone_ccode" value="#getAllUsersQuery.telephone_ccode#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.mobile_phone_ccode")>
+						<cfinvokeargument name="mobile_phone_ccode" value="#getAllUsersQuery.mobile_phone_ccode#">
+					</cfif>
+					<cfif isDefined("xmlUser.user.xmlAttributes.image_type")>
+						<cfinvokeargument name="image_type" value="#getAllUsersQuery.image_type#">
+					</cfif>
 					
-					<cfset usersXml = usersXml&xmlUserResult>
-					
-				</cfloop>
-			<cfset usersXml = usersXml&'</users>'>
-		
+					<cfinvokeargument name="return_type" value="object">
+				</cfinvoke>
 				
-			<cfset response = {result="true", message="", usersXml=#usersXml#}>
+				<cfset arrayAppend(usersArray, objectUser)>
+					
+			</cfloop>
+		
+			<cfset response = {result=true, users=#usersArray#}><!---usersXml=#usersXml#--->
 		
 			<cfcatch>
 
@@ -2509,6 +2524,9 @@
 		
 		<cfset var xmlUser = "">
 		<cfset var init_area_id = "">
+
+		<cfset var usersArray = ArrayNew(1)>
+		<cfset var areasArray = ArrayNew(1)>
 		
 		<!---PREFERENCES--->
 		<cfset var notify_new_message = "">
@@ -2528,6 +2546,7 @@
 		<cfset var notify_new_list = "">
 		<cfset var notify_new_form = "">
 		<cfset var notify_new_pubmed = "">
+
 
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
@@ -2604,8 +2623,6 @@
 				</cfif>
 				
 			</cfif>
-			
-			<cfset areasArray=ArrayNew(1)>
 			
 			<cfinvoke component="UserManager" method="getAreaUsers" returnvariable="returnArrays">
 				<cfinvokeargument name="area_id" value="#init_area_id#">
@@ -2824,21 +2841,11 @@
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
-			<!---<cfxml variable="xmlUser">
-				<cfoutput>
-					#xmlRequest.request.parameters.user#
-				</cfoutput>
-			</cfxml>
-			
-			<cfset init_area_id = xmlRequest.request.parameters.area.xmlAttributes.id>--->
 
 			<cfset init_area_id = arguments.area_id>
 			
-			
 			<!--- ORDER --->
 			<cfinclude template="includes/usersOrderParameters.cfm">
-			
 			
 			<cfset areasArray = ArrayNew(1)>
 			
@@ -2850,9 +2857,13 @@
 			</cfinvoke>
 			
 			<cfset usersArray = returnArrays.usersArray>
-			<cfset areasArray = returnArrays.areasArray>
+			<!---<cfset areasArray = returnArrays.areasArray>--->
 
-			<cfprocessingdirective suppresswhitespace="yes">
+			<!--- ORDER --->
+			<cfif arrayLen(usersArray) GT 0>
+				<cfset usersArray = arrayOfStructsSort(usersArray, "#order_by#", "#order_type#", "textnocase")>
+			</cfif>
+			<!---<cfprocessingdirective suppresswhitespace="yes">
 			<cfsavecontent variable="usersXml">
 				<users>
 					<cfif arrayLen(usersArray) GT 0>
@@ -2938,9 +2949,9 @@
 					</cfif>
 				</users>
 			</cfsavecontent>
-			</cfprocessingdirective>
+			</cfprocessingdirective>--->
 
-			<cfset response = {result=true, usersXml=#usersXml#}>
+			<cfset response = {result=true, users=#usersArray#}>
 
 			<cfcatch>
 

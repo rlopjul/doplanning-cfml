@@ -58,6 +58,11 @@
 	}
 
 	</cfif>
+
+	function openUserSelector(){
+
+		 return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
+	}
 	
 	function setSelectedUser(userId, userName) {
 				
@@ -178,7 +183,7 @@
 	<div class="control-group">
 		<label class="control-label" lang="es">#t_recipient_user#</label>
 		<div class="controls">
-			<cfinput type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" validate="integer" required="yes" message="Usuario destinatario requerido"/><cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes"><cfif read_only IS false> <button onclick="return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');" class="btn" lang="es">Seleccionar usuario</button><br/><span style="font-size:10px" lang="es">Usuario al que se le asignará la tarea</span></cfif>
+			<cfinput type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" validate="integer" required="true" message="Usuario destinatario requerido"/><cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes" required="true" onclick="openUserSelector()"><cfif read_only IS false> <button onclick="return openUserSelector();" class="btn" lang="es">Seleccionar usuario</button><br/><span style="font-size:10px" lang="es">Usuario al que se le asignará la tarea</span></cfif>
 		</div>
 	</div>
 </cfif>
@@ -271,7 +276,7 @@
     <div class="controls">
 		<label class="checkbox">
 			
-			<input type="checkbox" name="done" value="true" title="Tarea realizada" lang="es" <cfif objectItem.done IS true>checked="checked"</cfif>>
+			<input type="checkbox" name="done" value="true" title="Tarea realizada" lang="es" <cfif isDefined("objectItem.done") AND objectItem.done IS true>checked="checked"</cfif>>
 			<img src="#APPLICATION.htmlPath#/assets/icons/task_done.png" alt="Tarea realizada"/>
 			<span lang="es">Tarea realizada</span>
 		</label>

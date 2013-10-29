@@ -203,6 +203,7 @@
 			<a href="file.cfm?file=#file_id#&area=#area#" class="btn" style="float:right">Cancelar</a>
 		</cfif>
 	</div>
+	<br/>
 	<small lang="es">Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.</small><br/>
 	<small lang="es">* Campos obligatorios.</small>
 </cfform>

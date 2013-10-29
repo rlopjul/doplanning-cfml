@@ -3,16 +3,16 @@
 <input type="hidden" name="tableTypeId" value="#tableTypeId#"/>
 <input type="hidden" name="table_id" value="#table_id#"/>
 
-<cfif isNumeric(row.row_id)>
+<cfif isDefined("row.row_id") AND isNumeric(row.row_id)>
+	<cfset action = "modify">
 	<input type="hidden" name="row_id" value="#row.row_id#"/>
 	<cfif tableTypeId IS 3><!--- Typology --->
 		<input type="hidden" name="typology_row_id" value="#row.row_id#"/>
 	</cfif>
-	<input type="hidden" name="action" value="modify"/>
 <cfelse>
-	<input type="hidden" name="action" value="create"/>
+	<cfset action = "create">
 </cfif>
-
+<input type="hidden" name="action" value="#action#"/>
 
 <cfloop query="fields">
 
@@ -80,7 +80,7 @@
 
 	<cfelseif fields.input_type IS "date"><!--- DATE --->
 		
-		<cfif isNumeric(row.row_id) AND NOT isDefined("FORM.tableTypeId") AND isDate(field_value)>
+		<cfif action EQ "create" AND NOT isDefined("FORM.tableTypeId") AND isDate(field_value)>
 			<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
 		</cfif>
 

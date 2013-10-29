@@ -24,7 +24,7 @@
 
 		<cflocation url="#return_page#&row=#actionResponse.row_id#&res=#actionResponse.result#&msg=#msg#" addtoken="no">
 
-	<cfelse>
+	<cfelse><!--- Error --->
 		
 		<cfset URL.res = 0>
 		<cfset URL.msg = actionResponse.message>
@@ -32,6 +32,15 @@
 		<cfset row = FORM>
 
 		<cfset area_id = FORM.area_id>
+		<cfset table_id = FORM.table_id>
+
+		<!---Table fields--->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			<cfinvokeargument name="with_types" value="true"/>
+		</cfinvoke>
+		<cfset fields = fieldsResult.tableFields>
 		
 	</cfif> 
 

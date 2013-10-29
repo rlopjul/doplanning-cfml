@@ -744,8 +744,9 @@
 	<!---outputUsersSelectList (HTML Table)--->
 	
 	<cffunction name="outputUsersSelectList" returntype="void" output="true" access="public">
-		<cfargument name="xmlUsers" type="xml" required="true">
+		<cfargument name="users" type="array" required="true">
 		<cfargument name="page_type" type="numeric" required="true">
+		<cfargument name="filter_enabled" type="boolean" required="false" default="false">
 		
 		<cfset var method = "outputUsersSelectList">
 		
@@ -757,53 +758,61 @@
 		
 		<cftry>
 		
-			<cfset numUsers = ArrayLen(xmlUsers.xmlChildren[1].XmlChildren)>
+			<cfset numUsers = ArrayLen(users)>
 
 			<cfif numUsers GT 0>
 				
 				<script type="text/javascript">
 					$(document).ready(function() { 
 						
-						/*$.tablesorter.addParser({
-							id: "datetime",
-							is: function(s) {
-								return false; 
-							},
-							format: function(s,table) {
-								s = s.replace(/\-/g,"/");
-								s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$2/$1");
-								return $.tablesorter.formatFloat(new Date(s).getTime());
-							},
-							type: "numeric"
-						});*/
-						
 						$("##listTable").tablesorter({ 
-							<cfif page_type IS 1>
-							widgets: ['zebra'],
+							<!---<cfif page_type IS 1>--->
+							<cfif arguments.filter_enabled IS true>
+							widgets: ['zebra','filter'],
 							<cfelse>
-							widgets: ['zebra','select'],
+							widgets: ['zebra'],
 							</cfif>
+							<!---<cfelse>
+							widgets: ['zebra','select'],
+							</cfif>--->
 							/*sortList: [[1,1]] ,*/
 							headers: { 
 								0: { 
 									sorter: false 
 								}
-							} 
+							},
+							<cfif arguments.filter_enabled IS true>
+							widgetOptions : {
+								filter_childRows : false,
+								filter_columnFilters : true,
+								filter_cssFilter : 'tablesorter-filter',
+								filter_filteredRow : 'filtered',
+								filter_formatter : null,
+								filter_functions : null,
+								filter_hideFilters : false,
+								filter_ignoreCase : true,
+								filter_liveSearch : true,
+								//filter_reset : 'button.reset',
+								filter_searchDelay : 300,
+								filter_serversideFiltering: false,
+								filter_startsWith : false,
+								filter_useParsedData : false,
+						    },
+						    </cfif> 
 						});
 						
-						//  Adds "over" class to rows on mouseover
+						<!---//  Adds "over" class to rows on mouseover
 						$("##listTable tr").mouseover(function(){
 						  $(this).addClass("over");
 						});
-					
+	
 						//  Removes "over" class from rows on mouseout
 						$("##listTable tr").mouseout(function(){
 						  $(this).removeClass("over");
-						});
-						
+						});--->
 						
 						<cfif page_type IS 1>
-						$("##listTable tr").click(function(){
+						$("##listTable tbody tr").click(function(){
 							
 							var selected = false;
 							if($(this).hasClass("selected"))
@@ -815,13 +824,31 @@
 								$(this).addClass("selected")
 							
 						});
+						<cfelse>
+						$("##listTable tbody tr").click(function(){
+							
+							if($(this).hasClass("selected"))
+							var selected = false;
+							if($(this).hasClass("selected"))
+								selected = true;
+														
+							if(!selected)
+								$(this).addClass("selected")
+							else
+								$(this).removeClass("selected")
+						});
 						</cfif>
-						
+
+						$("##listTable thead tr.tablesorter-filter-row").click(function(){
+							$("##listTable tr").removeClass('selected');
+						});
 						
 						$("##submit_select").click(function(){ 
 											
 							var usuarioId = null;
 							var usuarioNombre = "";
+
+							var parentWindowDefined = false;
 							
 							<cfif page_type IS 1>
 								
@@ -831,11 +858,13 @@
 								if(usuarioId != null) {
 							
 									usuarioNombre = $("##listTable tr.selected input[type=hidden][name=user_full_name]").attr("value");
+
+									if(window.opener != null)
+										parentWindowDefined = ( typeof(window.opener.setSelectedUser) == typeof(Function) );
 									
-									if(window.opener != null){
+									if(parentWindowDefined){
 
 										window.opener.setSelectedUser(usuarioId, usuarioNombre);
-																			
 										window.close();
 
 									}else{
@@ -847,49 +876,62 @@
 									alert(window.lang.convert("No se ha seleccionado ningún usuario"));
 								}
 
-							<!---<cfelse>
+							<cfelse>
 								
-								
-								if(window.opener != null){
+								if(window.opener != null)
+									parentWindowDefined = ( typeof(window.opener.addUser) == typeof(Function) );
 
-									// Selección de usuarios para permisos
-									if($("##listTable tr.selected").length > 0) {
+								// Selección de usuarios para permisos
+								if($("##listTable tr.selected").length > 0) {
+
+									var allUsersAdded = true;
+								
+									$("##listTable tr.selected").each( function() {
 									
-										$("##listTable tr.selected").each( function() {
+										usuarioId = $("input[type=hidden][name=user_id]",this).attr("value");								
+										usuarioNombre = $("input[type=hidden][name=user_full_name]",this).attr("value");
 										
-											usuarioId = $("input[type=hidden][name=user_id]",this).attr("value");								
-											usuarioNombre = $("input[type=hidden][name=user_full_name]",this).attr("value");
-																			
-											if(!window.opener.addUsuarioPermiso(usuarioId, usuarioNombre))
+										if(parentWindowDefined){	
+
+											if(window.opener.addUser(usuarioId, usuarioNombre))
+												window.close();
+											else
 												alert(usuarioNombre+window.lang.convert(" ya está en la lista"));
-			
-										});
-										
-									}else{
-										alert(window.lang.convert("No se ha seleccionado ningún usuario"));
+
+										}else{
+
+											if(addUser(usuarioId, usuarioNombre) == false)
+												allUsersAdded = false;
+
+										}
+
+									});
+
+									if(!parentWindowDefined){
+
+										if(allUsersAdded){
+											sendUsersForm();
+											$("##submit_select").prop('disabled', true); 
+										}
+											
 									}
-
+									
 								}else{
-
-									alert(window.lang.convert("Error: no se puede asignar el usuario seleccionado"));
-
+									alert(window.lang.convert("No se ha seleccionado ningún usuario"));
 								}
 
-								--->
-								
 							</cfif>
 							
 						}); 
-						
-						
+							
 					}); 
 				</script>
 				
 				<cfoutput>
-				<table id="listTable" class="tablesorter">
+				<table id="listTable" class="table-hover">
 					<thead>
 						<tr>
-							<th style="width:35px;"></th>
+							<th style="width:35px;" class="filter-false"></th>
 							<th lang="es">Nombre</th>
 							<th lang="es">Apellidos</th>
 							<th lang="es">Email</th>
@@ -897,13 +939,13 @@
 					</thead>
 					
 					<tbody>
-					<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">
+					<!---<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">
 						
 						<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="objectUser">
 							<cfinvokeargument name="xml" value="#xmlUsers.xmlChildren[1].xmlChildren[xmlIndex]#">
 							<cfinvokeargument name="return_type" value="object">
-						</cfinvoke>	
-						
+						</cfinvoke>--->
+					<cfloop index="objectUser" array="#users#">	
 						<tr>
 							<td style="text-align:center">
 								<cfif len(objectUser.image_type) GT 0>
@@ -925,7 +967,7 @@
 				</cfoutput>
 				
 				<div style="height:2px; clear:both;"><!-- --></div>
-				<button type="button" id="submit_select" class="btn btn-primary" style="margin-left:5px;" lang="es">Asignar usuario seleccionado</button>
+				<button type="button" id="submit_select" class="btn btn-primary" style="margin-left:5px;" lang="es"><cfif page_type IS 1>Asignar usuario seleccionado<cfelse>Añadir usuarios seleccionados</cfif></button>
 				
 			</cfif>
 								
@@ -942,37 +984,26 @@
 	<!---outputUsersList (HTML TABLE)--->
 	
 	<cffunction name="outputUsersList" returntype="void" output="true" access="public">
-		<cfargument name="xmlUsers" type="xml" required="true">
+		<cfargument name="users" type="array" required="true">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="user_in_charge" type="numeric" required="false" default="0">
 		<cfargument name="show_area_members" type="boolean" required="false" default="false">
 		<cfargument name="open_url_target" type="string" required="false" default="itemIframe">
 		<cfargument name="filter_enabled" type="boolean" required="false" default="true">
+
+		<cfargument name="list_id" type="numeric" required="false">
 		
 		<cfset var method = "outputUsersList">
 		
 		<cftry>
 			
-			<cfset numUsers = ArrayLen(xmlUsers.xmlChildren[1].XmlChildren)>
+			<cfset numUsers = ArrayLen(users)>
 
 			<cfif numUsers GT 0>
 				
 				<script type="text/javascript">
 					$(document).ready(function() { 
-						
-						/*$.tablesorter.addParser({
-							id: "datetime",
-							is: function(s) {
-								return false; 
-							},
-							format: function(s,table) {
-								s = s.replace(/\-/g,"/");
-								s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$2/$1");
-								return $.tablesorter.formatFloat(new Date(s).getTime());
-							},
-							type: "numeric"
-						});*/
-						
+
 						$("##listTable").tablesorter({ 
 							<cfif arguments.filter_enabled IS true>
 							widgets: ['zebra','filter','select'],
@@ -1011,7 +1042,7 @@
 
 						});
 						
-						//  Adds "over" class to rows on mouseover
+						<!---//  Adds "over" class to rows on mouseover
 						$("##listTable tr").mouseover(function(){
 						  $(this).addClass("over");
 						});
@@ -1019,13 +1050,13 @@
 						//  Removes "over" class from rows on mouseout
 						$("##listTable tr").mouseout(function(){
 						  $(this).removeClass("over");
-						});			
+						});---->			
 						
 					}); 
 				</script>
 				
 				<cfoutput>
-				<table id="listTable" class="tablesorter">
+				<table id="listTable" class="table-hover">
 					<thead>
 						<tr>
 							<th style="width:35px;" class="filter-false"></th>
@@ -1045,15 +1076,23 @@
 					
 					<cfset alreadySelected = false>
 					
-					<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">
+					<!---<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">
 						
 						<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="objectUser">
 							<cfinvokeargument name="xml" value="#xmlUsers.xmlChildren[1].xmlChildren[xmlIndex]#">
 							<cfinvokeargument name="return_type" value="object">
-						</cfinvoke>	
+						</cfinvoke>--->
+
+					<cfset userIndex = 0>
+
+					<cfloop index="objectUser" array="#users#">	
 						
+						<cfset userIndex++>
+
 						<cfif isDefined("arguments.area_id")>
 							<cfset user_page_url = "area_user.cfm?area=#arguments.area_id#&user=#objectUser.id#"> 
+						<cfelseif isDefined("arguments.list_id")>
+							<cfset user_page_url = "list_user.cfm?user=#objectUser.id#&list=#arguments.list_id#"> 
 						<cfelse>
 							<cfset user_page_url = "user.cfm?user=#objectUser.id#"> 
 						</cfif>
@@ -1073,7 +1112,7 @@
 									<cfset itemSelected = true>
 								</cfif>
 								
-							<cfelseif xmlIndex IS 1>
+							<cfelseif userIndex IS 1>
 							
 								<!---Esta acción solo se completa si está en la versión HTML2--->
 								<script type="text/javascript">
@@ -1128,6 +1167,50 @@
 			
 		</cftry>
 		
+	</cffunction>
+
+
+	<!--- queryToArray --->
+	<!---Este método se utiliza para convertir las consultas de usuarios en arrays, necesarios para outputUsersList--->
+	<cffunction name="queryToArray" access="public" returntype="array" output="false" hint="This turns a query into an array of structures.">
+		<cfargument name="data" type="query" required="yes" />
+
+		<cfscript>
+			// Define the local scope.
+			var LOCAL = StructNew();
+
+			// Get the column names as an array.
+			LOCAL.Columns = ListToArray( ARGUMENTS.data.ColumnList );
+
+			// Create an array that will hold the query equivalent.
+			LOCAL.QueryArray = ArrayNew( 1 );
+
+			// Loop over the query.
+			for (LOCAL.RowIndex = 1 ; LOCAL.RowIndex LTE ARGUMENTS.data.RecordCount ; LOCAL.RowIndex = (LOCAL.RowIndex + 1)){
+
+			// Create a row structure.
+			LOCAL.Row = StructNew();
+
+			// Loop over the columns in this row.
+			for (LOCAL.ColumnIndex = 1 ; LOCAL.ColumnIndex LTE ArrayLen( LOCAL.Columns ) ; LOCAL.ColumnIndex = (LOCAL.ColumnIndex + 1)){
+
+			// Get a reference to the query column.
+			LOCAL.ColumnName = LOCAL.Columns[ LOCAL.ColumnIndex ];
+
+			// Store the query cell value into the struct by key.
+			LOCAL.Row[ LOCAL.ColumnName ] = ARGUMENTS.data[ LOCAL.ColumnName ][ LOCAL.RowIndex ];
+
+			}
+
+			// Add the structure to the query array.
+			ArrayAppend( LOCAL.QueryArray, LOCAL.Row );
+
+			}
+
+			// Return the array equivalent.
+			return( LOCAL.QueryArray );
+		</cfscript>
+
 	</cffunction>
 	
 </cfcomponent>

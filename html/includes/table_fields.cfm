@@ -2,8 +2,8 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
-<cfif isDefined("URL.#itemTypeName#") AND isNumeric(URL[itemTypeName])>
-	<cfset table_id = URL[#itemTypeName#]>
+<cfif isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
+	<cfset table_id = URL[#tableTypeName#]>
 <cfelse>
 	<cflocation url="area.cfm" addtoken="no">
 </cfif>
@@ -34,7 +34,7 @@
 
 	<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-small"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Añadir campo</span></a>
 
-	<a href="#tableTypeName#_fields_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Copiar campos" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar campos<span></a>
+	<a href="#tableTypeName#_fields_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Copiar de plantilla" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar de plantilla<span></a>
 
 	<cfif tableTypeId IS NOT 3>
 		<span class="divider">&nbsp;</span>
@@ -44,7 +44,7 @@
 
 	<span class="divider">&nbsp;</span>
 
-	<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-small" title="#itemTypeNameEsP# del área" lang="es"><!---<i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i>---> <span lang="es">#itemTypeNameEsP# del área</span></a>
+	<a href="#tableTypeNameP#.cfm?area=#area_id#" class="btn btn-small" title="#itemTypeNameEsP# del área" lang="es"><!---<i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i>---> <span lang="es">#itemTypeNameEsP# del área</span></a>
 
 	<span class="divider">&nbsp;</span>
 
