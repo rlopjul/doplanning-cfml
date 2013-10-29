@@ -38,10 +38,18 @@
 	</div>	
 	
 	<cfif isDefined("area_id")>
+		<cfset check_area = area_id>
+	<cfelseif isDefined("parent_area_id")>
+		<cfset check_area = parent_area_id>
+	</cfif>
+	
+	
+	<cfif isDefined("check_area")>
+	
 
 		<!---get area_type--->
 		<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaType" returnvariable="areaTypeResult">				
-			<cfinvokeargument name="area_id" value="#area_id#">
+			<cfinvokeargument name="area_id" value="#check_area#">
 		</cfinvoke>
 		
 		<cfif areaTypeResult.result EQ true>
@@ -53,40 +61,60 @@
 				<div class="control-group">		
 					<div class="controls">					
 						<input style="margin-top:-2px;" id="hide_in_menu" name="hide_in_menu" type="checkbox" value="true" <cfif objectArea.hide_in_menu IS true>checked="checked"</cfif>  />
-						<label class="control-label" for="hide_in_menu" lang="es" style="margin-top:5px;">Ocultar del menú de la web</label>		
+						<label class="control-label" for="hide_in_menu" lang="es" style="margin-top:5px;">Ocultar del menú de la web las áreas inferiores a esta</label>		
 					</div>
 				</div>	
 				
+				<cfset show_type_menu = false>
 				
+				<cfif isDefined("area_id")><!---si está definidio area_id--->
 				<!---solo se muestra si es un área de 3er nivel--->
 				
-				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectAreaParent">				
-					<cfinvokeargument name="get_area_id" value="#objectArea.parent_id#">
-					<cfinvokeargument name="return_type" value="object">
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectAreaParent">				
+						<cfinvokeargument name="get_area_id" value="#objectArea.parent_id#">
+						<cfinvokeargument name="return_type" value="object">
+						
+					</cfinvoke>	
 					
-				</cfinvoke>	
+					<cfset area_parent = objectAreaParent>
+					
+					<cfif area_parent.type EQ "web" OR area_parent.type EQ "intranet"><!---si es de tipo web o intranet--->
+					
+						<cfset show_type_menu = true>
+					
+					</cfif><!---end  si es de tipo web o intranet--->
+					
+				<cfelseif isDefined("parent_area_id")>
 				
-				<cfset area_parent = objectAreaParent>
+					<cfif objectParentArea.type EQ "web" OR objectParentArea.type EQ "intranet">
+						<cfset show_type_menu = true>
+					</cfif>				
 				
-				<cfif area_parent.type EQ "web" OR area_parent.type EQ "intranet">
+				</cfif><!---end si está definidio area_id--->
 				
+					
+				<cfif show_type_menu>
+					
 					<div class="control-group">		
 						<div class="controls">
 							<label class="control-label" for="type_menu" lang="es">Tipo de menú</label>
 							
 							<cfinclude template="menu_type_list.cfm" />
 						</div>
-					</div>	
+					</div>					
 				
 				</cfif>
+				
 			
 			</cfif>	
 			
 		<cfelse>	
 			<span>Error al obtener el tipo de área</span>
 		</cfif>
-
+		
 	</cfif>
+
+	
 			
 </form>
 </cfoutput>
@@ -104,6 +132,7 @@
  		<cfif NOT isDefined("area_id")>
  			<cfset area_id = parent_area_id>
  		</cfif>
+ 		<cfset page_type = 1>
  		<cfinclude template="#APPLICATION.htmlPath#/includes/area_users_select.cfm">
  	</div>
 

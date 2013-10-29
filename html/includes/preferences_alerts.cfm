@@ -118,7 +118,7 @@ Preferencias de notificaciones
 	<div class="control-group">
 	<label class="checkbox">
 		<input type="checkbox" name="notify_new_typology" value="true" <cfif preferences.notify_new_typology IS true>checked="checked"</cfif> />
-		<i class="icon-file-text" style="font-size:25px; color:##7A7A7A"></i> <span lang="es">Una tipología ha sido creada, modificada o eliminada</span>
+		<i class="icon-file-text" style="font-size:28px; color:##7A7A7A; margin-left:6px;"></i>&nbsp; <span lang="es">Una tipología ha sido creada, modificada o eliminada</span>
 	</label>
 	</div>	
 </cfif>
@@ -148,7 +148,7 @@ Preferencias de notificaciones
 	<label class="checkbox">
 		<input type="checkbox" name="notify_new_consultation" value="true" <cfif preferences.notify_new_consultation IS true>checked="checked"</cfif> />
 		<!---<img src="#APPLICATION.htmlPath#/assets/icons/consultation.png" alt="Nueva interconsulta" />--->
-		&nbsp;&nbsp;<i class="icon-exchange" style="font-size:28px; color:##0088CC"></i>&nbsp; <span lang="es">Una interconsulta ha sido creada, respondida, cerrada o eliminada</span>
+		&nbsp;<i class="icon-exchange" style="font-size:28px; color:##0088CC"></i>&nbsp; <span lang="es">Una interconsulta ha sido creada, respondida, cerrada o eliminada</span>
 	</label>
 	</div>
 </cfif>

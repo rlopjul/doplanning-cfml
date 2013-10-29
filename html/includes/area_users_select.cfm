@@ -1,3 +1,9 @@
+<!---
+	page_types
+	1 select only one user
+	2 multiple selection
+--->
+
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_users_select_en.js" charset="utf-8" type="text/javascript"></script>
 
@@ -17,27 +23,30 @@
 
 <form action="users.cfm?area=#area_id#" method="post" style="padding:0; margin:0; clear:none;">
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="response">	
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="areaUsersResponse">	
 		<cfinvokeargument name="area_id" value="#area_id#">
 		<!---<cfinvokeargument name="order_by" value="#order_by#">
 		<cfinvokeargument name="order_type" value="#order_type#">--->
 	</cfinvoke>
 	
-	<cfxml variable="xmlUsers">
+	<!---<cfxml variable="xmlUsers">
 		<cfoutput>
 		#response.usersXml#
 		</cfoutput>
 	</cfxml>
-	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
+	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>--->
+
+	<cfset areaUsers = areaUsersResponse.users>
+	<cfset numUsers = ArrayLen(areaUsers)>
 	
 	<div class="div_users">
 	
 	<cfif numUsers GT 0>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersSelectList">
-			<cfinvokeargument name="xmlUsers" value="#xmlUsers#">
-			<cfinvokeargument name="page_type" value="1">
-			<cfinvokeargument name="filter_enabled" value="false">
+			<cfinvokeargument name="users" value="#areaUsers#">
+			<cfinvokeargument name="page_type" value="#page_type#">
+			<cfinvokeargument name="filter_enabled" value="true">
 		</cfinvoke>	
 
 	<cfelse>

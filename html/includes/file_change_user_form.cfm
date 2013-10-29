@@ -83,6 +83,9 @@
 
 		<a href="file.cfm?file=#file_id#&area=#area#" class="btn" style="float:right">Cancelar</a>
 	</div>
+
+	<br/>
+	<small class="help-block" lang="es">Se enviará notificación por email del cambio al nuevo propietario y al anterior.</small>
 </cfform>
 
 </div>

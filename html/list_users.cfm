@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>#APPLICATION.title#-Preferencias</title>
+<title>#APPLICATION.title#-Editores</title>
 <!-- InstanceEndEditable -->
 <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
@@ -81,8 +81,7 @@
 		//En esta versión no se hace nada con las peticiones a este método
 	}
 </script>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
 </head>
 
 <body class="body_global">
@@ -107,73 +106,10 @@
 
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
+<cfset tableTypeId = 1>
+<cfinclude template="#APPLICATION.htmlPath#/includes/table_users.cfm">
 
-<cfoutput>
-<script src="#APPLICATION.htmlPath#/language/preferences_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
-
-<cfif APPLICATION.identifier EQ "vpnet">
-	<cfinclude template="includes/preferences_head.cfm">
-</cfif>
-
-<cfset return_page = "index.cfm">
-<!---<div>
-
-<div class="div_list_item"><a href="preferences_alerts.cfm">Preferencias de notificaciones</a></div>
-<div class="div_list_item"><a href="preferences_user_data.cfm">Datos Personales</a></div>
-
-</div>--->
-
-<script type="text/javascript">
-	
-	$(window).load( function() {		
-		
-		$('#preferencesTab a').click( function (e) {
-			if(e.preventDefault)
-		  		e.preventDefault();
-				
-		  	$(this).tab('show');
-		})
-		
-	} );
-	
-</script>
-
-<div style="clear:both"><!-- --></div>
-
-<div class="tabbable"><!---Tab Panel--->
-	
-  <ul class="nav nav-pills" id="preferencesTab" style="margin-bottom:5px;">
-	<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Datos personales</a></li>
-	<li><a href="#tab2" data-toggle="tab" lang="es">Notificaciones</a></li>
-  </ul>
-  
-  <div class="tab-content">
-  
-	<div class="tab-pane active" id="tab1"><!---Tab Datos personales--->
-	
-		<!---<cfoutput>
-		<iframe src="#APPLICATION.htmlPath#/iframes/preferences_user_data.cfm" marginheight="0" marginwidth="0" scrolling="auto" frameborder="0" style="width:100%;height:690px;background-color:##FFFFFF;clear:none;"></iframe>
-		</cfoutput> --->
-		<cfinclude template="#APPLICATION.htmlPath#/includes/preferences_user_data.cfm"/>
-						
-	
-	</div><!---END Tab Tree--->
-	
-	
-	<div class="tab-pane" id="tab2"><!---Tab Notificaciones--->
-		<cfoutput>
-		<iframe src="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm" marginheight="0" marginwidth="0" scrolling="auto" frameborder="0" style="width:100%;height:600px;background-color:##FFFFFF;clear:none;"></iframe>
-		</cfoutput>
-		
-	</div><!---END Tab Area--->
-	
-	
-  </div>
-  
-</div><!---END TabPanel--->
-
-<cfset return_page = "index.cfm">
+<cfset return_page = "#tableTypeName#.cfm?#tableTypeName#=#table_id#">
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
 </cfinvoke>

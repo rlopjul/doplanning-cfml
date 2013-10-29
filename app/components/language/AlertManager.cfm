@@ -145,11 +145,22 @@ curLangText["es"] = {
 
 		},
 
+
+		"change_owner_item": {
+			
+			"owner_changed_male" : "cambiado de propietario",
+			"owner_changed_female" : "cambiada de propietario",
+			"old_user" : "Propietario anterior",
+			"new_user" : "Nuevo propietario",
+
+			"your_item_was_changed" : "Este elemento que era de su propiedad ha pasado a ser de otro usuario.",
+			"you_have_new_item" : "Este elemento que era de otro usuario ha pasado a ser suyo.",
+
+		},
+
 		"change_owner_file": {
 			
 			"file_owner_changed" : "Archivo cambiado de propietario",
-			"old_user" : "Propietario anterior",
-			"new_user" : "Nuevo propietario",
 
 			"your_file_was_changed" : "Este archivo que era de su propiedad ha pasado a ser de otro usuario.",
 			"you_have_new_file" : "Este archivo que era de otro usuario ha pasado a ser suyo.",
@@ -199,6 +210,12 @@ curLangText["es"] = {
 			
 			"new_password" : "Nueva contraseña",
 			
+		},
+
+		"add_user_to_table": {
+		
+			"has_been_added_as_editor_of" : "Ha sido añadido como editor de la",
+
 		},
 	};
 	
@@ -351,11 +368,22 @@ curLangText["en"] = {
 
 		},
 
+
+		"change_owner_item": {
+			
+			"owner_changed_male" : "owner changed",
+			"owner_changed_female" : "owner changed",
+			"old_user" : "Old owner",
+			"new_user" : "New owner",
+
+			"your_item_was_changed" : "This item that was your property has changed to another user.",
+			"you_have_new_item" : "This item from another user is now yours.",
+
+		},
+
 		"change_owner_file": {
 			
 			"file_owner_changed" : "File owner changed",
-			"old_user" : "Old owner",
-			"new_user" : "New owner",
 
 			"your_file_was_changed" : "This file that was your property has changed to another user.",
 			"you_have_new_file" : "This file from another user is now yours.",
@@ -404,6 +432,12 @@ curLangText["en"] = {
 			
 			"new_password" : "New password",
 			
+		},
+
+		"add_user_to_table": {
+		
+			"has_been_added_as_editor_of" : "You have been added as editor of the",
+
 		},
 	};
 </cfscript>

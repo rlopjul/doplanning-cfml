@@ -2,7 +2,7 @@
 <!---
 <script src="#APPLICATION.htmlPath#/scripts/bootstrap/bootstrap-fileupload.js" type="text/javascript"></script>--->
 
-<form action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser" method="post" enctype="multipart/form-data" style="margin-left:15px;" onsubmit="return setLanguageBeforeSend(this)">
+<cfform action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser" method="post" enctype="multipart/form-data" style="margin-left:15px;" onsubmit="return setLanguageBeforeSend(this)">
 	<input type="hidden" name="id" value="#objectUser.id#" />
 	
 	<div class="row">
@@ -55,7 +55,7 @@
 		<div class="span3">
 		
 			<label for="email" lang="es">Email:</label>
-			<input type="email" name="email" id="email" value="#objectUser.email#" required="true" />
+			<cfinput type="text" name="email" id="email" value="#objectUser.email#" required="true" validate="email" message="Dirección de email válida requerida" />
 				
 			<label for="dni" lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif>:</label>
 			<input type="text" name="dni" id="dni" value="#objectUser.dni#" />
@@ -97,7 +97,7 @@
 	<div>
 	<input type="submit" class="btn btn-primary" name="modify" value="Guardar" lang="es" />
 	</div>
-</form>
+</cfform>
 </cfoutput>
 
 <!---<script type="text/javascript">

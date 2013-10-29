@@ -1556,6 +1556,7 @@
 		<cfargument name="objectItem" type="object" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="itemTypeName" type="string" required="true">
+		<cfargument name="area_type" type="string" required="true">
 		
 		<cfset var method = "outputItem">
 		
@@ -1664,6 +1665,24 @@
 
 					<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
 					<input type="text" value="#areaItemUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+
+					<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->
+
+						<cfif (area_type EQ "web" OR area_type EQ "intranet") AND (itemTypeId IS 4 OR itemTypeId IS 5)>
+
+							<!---itemWebUrl--->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getItemWebPage" returnvariable="itemPage">
+								<cfinvokeargument name="item_id" value="#objectItem.id#">
+								<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+								<cfinvokeargument name="title" value="#objectItem.title#">
+							</cfinvoke>
+							<cfset itemWebUrl = "/#area_type#/#itemPage#">
+
+							<div class="div_message_page_label"><span lang="es">URL relativa en la #area_type#:</span></div>
+							<input type="text" value="#itemWebUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+						</cfif>
+						
+					</cfif>
 				</div>
 			</cfoutput>								
 			

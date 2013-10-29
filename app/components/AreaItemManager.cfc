@@ -1318,7 +1318,15 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/ItemQuery" method="getItem" returnvariable="itemQuery">
+			<cfif arguments.itemTypeId IS 1><!--- Message --->
+
+				<cfset error_code = 103><!---Access denied--->
+							
+				<cfthrow errorcode="#error_code#">
+				
+			</cfif>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="parse_dates" value="true">
@@ -1362,7 +1370,7 @@
 
 				<cfif isNumeric(itemQuery.attached_file_id) AND itemQuery.attached_file_id GT 0>
 
-					<cfquery datasource="#client_dsn#" name="changeItemUserInCharge">
+					<cfquery datasource="#client_dsn#" name="changeItemUserFile">
 						UPDATE #client_abb#_files
 						SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
 						WHERE id = <cfqueryparam value="#itemQuery.attached_file_id#" cfsqltype="cf_sql_integer">;
@@ -1372,7 +1380,7 @@
 
 				<cfif isNumeric(itemQuery.attached_image_id) AND itemQuery.attached_image_id GT 0>
 
-					<cfquery datasource="#client_dsn#" name="changeItemUserInCharge">
+					<cfquery datasource="#client_dsn#" name="changeItemUserImage">
 						UPDATE #client_abb#_files
 						SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
 						WHERE id = <cfqueryparam value="#itemQuery.attached_image_id#" cfsqltype="cf_sql_integer">;
@@ -1386,6 +1394,7 @@
 			<!---Send Alert--->
 			<cfinvoke component="AlertManager" method="changeItemUser">
 				<cfinvokeargument name="objectItem" value="#itemQuery#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="old_user_id" value="#itemQuery.user_in_charge#">
 				<cfinvokeargument name="new_user_id" value="#arguments.new_user_in_charge#">
 			</cfinvoke>	

@@ -14,7 +14,7 @@
 
 	<cfif actionResponse.result IS true>
 
-		<cfset item_id = actionResponse.file_id>
+		<cfset item_id = actionResponse.item_id>
 		
 		<cfset msg = URLEncodedFormat(actionResponse.message)>
 		

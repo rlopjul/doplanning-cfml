@@ -78,15 +78,17 @@
 		<cfinvokeargument name="order_type" value="asc">
 	</cfinvoke>
 	
-	<cfxml variable="xmlUsers">
+	<!---<cfxml variable="xmlUsers">
 		<cfoutput>
 		#getUsersResponse.usersXml#
 		</cfoutput>
 	</cfxml>
-	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
+	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>--->
+
+	<cfset users = getUsersResponse.users>
+	<cfset numUsers = ArrayLen(users)>
 
 </cfif>
-
 
 
 <script type="text/javascript">
@@ -120,7 +122,6 @@
 </script>
 
 
-
 <cfoutput>
 <div style="clear:both; padding-left:2px;">
 <form method="get" class="form-inline" action="#CGI.SCRIPT_NAME#">
@@ -134,17 +135,17 @@
 	
 		&nbsp;<label for="from_user" lang="es">De</label> <select name="from_user" id="from_user">
 		<option value="" lang="es">Todos</option>
-		<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">				
+		<!---<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">				
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="objectUser">
 				<cfinvokeargument name="xml" value="#xmlUsers.users.user[xmlIndex]#">
 				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>	
+			</cfinvoke>--->	
+		<cfloop index="objectUser" array="#users#">	
 			
 			<option value="#objectUser.id#" <cfif objectUser.id EQ user_in_charge>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
 			
 		</cfloop>
 		</select>
-		
 		
 		<br/>	
 		&nbsp;<label for="from_user" lang="es">Fecha desde</label> 		
@@ -152,8 +153,6 @@
 
 		&nbsp;<label for="end_user" lang="es">Fecha hasta</label> 
 		<input type="text" name="end_date" id="end_date" value="#end_date#" class="input_datepicker" onchange="setEndDate()"/>
-		
-		
 	
 		<cfif itemTypeId IS 6><!---Tasks--->
 			&nbsp;<label for="done" lang="es">Hecha</label> <select name="done" id="done" class="input-mini">
@@ -163,11 +162,7 @@
 		
 			<label for="to_user" lang="es">Para</label> <select name="to_user" lang="to_user">
 				<option value="" lang="es">Todos</option>
-				<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">				
-					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="objectUser">
-						<cfinvokeargument name="xml" value="#xmlUsers.users.user[xmlIndex]#">
-						<cfinvokeargument name="return_type" value="object">
-					</cfinvoke>	
+				<cfloop index="objectUser" array="#users#">	
 					
 					<option value="#objectUser.id#" <cfif objectUser.id EQ recipient_user>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
 				</cfloop>
@@ -186,9 +181,6 @@
 		</cfif>
 		
 	</cfif>
-	
-	
-	
 	
 	&nbsp;<label for="limit" lang="es">Nº resultados</label> <select name="limit" id="limit" class="input-small">
 	<!---<option value="1" <cfif limit_to IS 1>selected="selected"</cfif>>1</option>--->

@@ -67,6 +67,7 @@
 	<span lang="es">Selección de usuario</span>
 </div>
 
+<cfset page_type = 1>
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_users_select.cfm">
 
 <!-- InstanceEndEditable -->

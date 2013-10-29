@@ -1476,6 +1476,8 @@
 		<cfargument name="user_in_charge" type="numeric" required="true"/>
 		<cfargument name="name" type="string" required="true"/>
 		<cfargument name="description" type="string" required="true"/>
+		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
+		<cfargument name="menu_type_id" type="numeric" required="false"/>
 		
 		<cfset var method = "createArea">
 
@@ -1507,13 +1509,21 @@
 			</cfinvoke>
 					
 			<cfquery name="insertAreaQuery" datasource="#client_dsn#" result="insertAreaResult">					
-				INSERT INTO #client_abb#_areas (name,parent_id,user_in_charge,creation_date,description) 
+				INSERT INTO #client_abb#_areas (name,parent_id,user_in_charge,creation_date,description, hide_in_menu
+					<cfif isDefined("arguments.menu_type_id") AND arguments.menu_type_id NEQ "">
+						, menu_type_id
+					</cfif>		
+				) 
 				VALUES (
 					<cfqueryPARAM value="#arguments.name#" CFSQLType="CF_SQL_varchar">,			
 					<cfqueryPARAM value="#arguments.parent_id#" CFSQLType="cf_sql_integer">,					
 					<cfqueryPARAM value="#arguments.user_in_charge#" CFSQLType="cf_sql_integer">,
 					<cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,
-					<cfqueryPARAM value="#arguments.description#" CFSQLType="CF_SQL_varchar">
+					<cfqueryPARAM value="#arguments.description#" CFSQLType="CF_SQL_varchar">,
+					<cfqueryPARAM value="#arguments.hide_in_menu#" CFSQLType="CF_SQL_boolean">
+						<cfif isDefined("arguments.menu_type_id") AND arguments.menu_type_id NEQ "">
+							,<cfqueryPARAM value = "#arguments.menu_type_id#" cfsqltype = "CF_SQL_integer">									
+						</cfif>	
 					);			
 			</cfquery>
 			<cfquery name="getLastInsertId" datasource="#client_dsn#">

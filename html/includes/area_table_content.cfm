@@ -100,6 +100,12 @@
 		
 	</cfif>
 
+	<cfif is_user_table_area_responsible OR objectItem.user_in_charge EQ SESSION.user_id>
+		
+		<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-small"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>	
+
+	</cfif>
+
 
 	<cfif is_user_area_responsible><!--- Area Responsible --->
 		
@@ -166,6 +172,11 @@
 	</cfif>
 	<cfif is_user_table_area_responsible IS true>
 		<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#table_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos<span></a>
+
+		<cfif APPLICATION.moduleListsWithPermissions IS true AND itemTypeId IS 11><!---List with permissions--->
+			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#" class="btn btn-small" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores<span></a>
+		</cfif>
+
 	</cfif>
 	
 </div><!---END div_elements_menu--->
@@ -174,4 +185,5 @@
 	<cfinvokeargument name="objectItem" value="#objectItem#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 	<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+	<cfinvokeargument name="area_type" value="#area_type#">
 </cfinvoke>

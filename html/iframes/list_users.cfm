@@ -62,18 +62,8 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-
-<cfif isDefined("URL.area") AND isValid("integer",URL.area)>
-	<cfset area_id = URL.area>
-	<cfset return_page = "users.cfm?area=#area_id#">
-<cfelse>
-	<cflocation url="empty.cfm" addtoken="no">
-</cfif>
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/user_head.cfm">
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/user_content.cfm">
+<cfset tableTypeId = 1>
+<cfinclude template="#APPLICATION.htmlPath#/includes/table_users.cfm">
 
 <!-- InstanceEndEditable -->
 </body>
