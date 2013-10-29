@@ -162,6 +162,40 @@
 		<cfreturn {query=tablesQuery, count=count}>
 		
 	</cffunction>
+
+
+	<!---getTableUsers--->
+		
+	<cffunction name="getTableUsers" output="false" returntype="query" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="with_table" type="boolean" required="no" default="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
+				
+		<cfset var method = "getTableUsers">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
+							
+			<cfquery name="getTableUsersQuery" datasource="#client_dsn#">
+				SELECT table_users.user_id, users.id, users.family_name, users.name, users.email, users.image_file, users.image_type,
+				CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
+				<cfif arguments.with_table IS true>
+					, tables.area_id
+				</cfif>
+				FROM `#client_abb#_#tableTypeTable#_users` AS table_users
+				INNER JOIN `#client_abb#_users` AS users ON users.id = table_users.user_id
+				AND table_users.#tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				<cfif arguments.with_table IS true>
+					INNER JOIN `#client_abb#_#tableTypeTable#` AS tables ON tables.id = table_users.#tableTypeName#_id 
+				</cfif>
+				ORDER BY users.name ASC;
+			</cfquery>
+				
+		<cfreturn getTableUsersQuery>
+				
+	</cffunction>
 	
 
 </cfcomponent>	

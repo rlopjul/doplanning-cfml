@@ -20,7 +20,6 @@
 
 		<cfset var response = structNew()>
 
-		<cfset var area_id = "">
 		<cfset var row_id = "">
 
 		<cfset field_value = "">
@@ -42,12 +41,15 @@
 
 			<cfset table = getTableResponse.table>
 
-			<cfset area_id = table.area_id>
-
-			<!---checkAreaAccess--->
-			<cfinclude template="includes/checkAreaAccess.cfm">
-
-			<!---PENDIENTE DE AÑADIR CHECK TABLE EDIT ACCESS--->
+			<!---canUserModifyRow--->
+			<cfinvoke component="RowManager" method="canUserModifyRow" returnvariable="canUserModifyRow">
+				<cfinvokeargument name="table_id" value="#table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="table" value="#table#">
+			</cfinvoke>
+			<cfif canUserModifyRow IS false>
+				<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">
+			</cfif>			
 
 			<!---Table fields--->
 			<cfinvoke component="TableManager" method="getTableFields" returnvariable="fieldsResult">
@@ -56,9 +58,6 @@
 				<cfinvokeargument name="with_types" value="true"/>
 			</cfinvoke>
 			<cfset fields = fieldsResult.tableFields>
-
-			<!---<cfinvoke component="RowManager" method="getRowFieldsQueryContent" returnvariable="rowFieldsQueryContent" argumentcollection="#arguments#">
-			</cfinvoke>--->
 
 			<cftransaction>
 
@@ -158,6 +157,57 @@
 	</cffunction>
 	
 
+	<!--- --------------------------------- canUserModifyRow ---------------------------------  --->
+	
+	<cffunction name="canUserModifyRow" output="false" access="private" returntype="boolean">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="table" type="query" required="true">
+
+		<cfset var method = "canUserModifyRow">
+
+		<cfset var area_id = "">
+
+		<cfinclude template="includes/functionStartOnlySession.cfm">
+
+		<cfif arguments.tableTypeId NEQ 3 OR arguments.table.general IS NOT true><!---IS NOT typology OR IS NOT general typology--->
+
+			<cfset area_id = table.area_id>
+
+			<!---checkAreaAccess--->
+			<cfinclude template="includes/checkAreaAccess.cfm">
+
+		</cfif>
+
+		<!---checkListPermissions--->
+		<cfif tableTypeId IS 1 AND APPLICATION.moduleListsWithPermissions IS true><!---IS List and list permissions is enabled--->
+			
+			<cfinvoke component="TableManager" method="isUserInTable" returnvariable="isUserInTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="check_user_id" value="#user_id#">
+			</cfinvoke>	
+			<cfif isUserInTableResponse.result IS false>
+				<cfreturn isUserInTableResponse>
+			</cfif>
+
+			<cfif isUserInTableResponse.isUserInTable IS false><!--- The user is not in the table  --->
+
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isAreaResponsible">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+				<cfif isAreaResponsible IS false>
+					<cfreturn false>
+				</cfif>
+				
+			</cfif>
+
+		</cfif>
+
+		<cfreturn true>
+
+	</cffunction>
+
 	<!---  ---------------------- getRowLastPosition -------------------------------- --->
 	
 	<cffunction name="getRowLastPosition" returntype="numeric" access="public">
@@ -198,14 +248,34 @@
 
 		<cfset var response = structNew()>
 
-		<cfset var area_id = "">
-
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
+			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+			
+			<cfif getTableResponse.result IS false>
+				<cfreturn getTableResponse>
+			</cfif>
+
+			<cfset table = getTableResponse.table>
+
+			<!---canUserModifyRow--->
+			<cfinvoke component="RowManager" method="canUserModifyRow" returnvariable="canUserModifyRow">
+				<cfinvokeargument name="table_id" value="#table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="table" value="#table#">
+			</cfinvoke>
+			<cfif canUserModifyRow IS false>
+				<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">
+			</cfif>
+
+			<!--- getRow --->
 			<cfinvoke component="RowManager" method="getRow" returnvariable="getRowResponse">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
@@ -217,14 +287,6 @@
 			</cfif>
 
 			<cfset row = getRowResponse.row>
-
-			<cfset area_id = getRowResponse.table.area_id>
-
-			<!---checkAreaAccess--->
-			<cfinclude template="includes/checkAreaAccess.cfm">
-
-			<!---PENDIENTE DE AÑADIR CHECK TABLE EDIT ACCESS--->
-
 
 			<cfquery name="deleteRow" datasource="#client_dsn#">
 				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`

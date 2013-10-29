@@ -23,19 +23,22 @@
 	
 	<!---<cfset full_content = true>--->
 
-	<cfxml variable="xmlUsers">
+	<!---<cfxml variable="xmlUsers">
 		<cfoutput>
 		#usersResponse.usersXml#
 		</cfoutput>
 	</cfxml>
-	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
+	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>--->
+
+	<cfset users = usersResponse.users>
+	<cfset numUsers = ArrayLen(users)>
 	
 	<div class="div_items">
 		
 		<cfif numUsers GT 0>
 	
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
-				<cfinvokeargument name="xmlUsers" value="#xmlUsers#">
+				<cfinvokeargument name="users" value="#users#">
 			</cfinvoke>	
 	
 		<cfelse>

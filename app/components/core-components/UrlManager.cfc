@@ -89,7 +89,7 @@
 		<cfset var pageTitle = "">
 		
 		<cfif arguments.remove_order IS true>
-			<cfset pageTitle = mid(arguments.name, findOneOf(".-", arguments.name)+2, len(arguments.name))>
+			<cfset pageTitle = mid(arguments.name, findOneOf(".-", arguments.name)+3, len(arguments.name))>
 		<cfelse>
 			<cfset pageTitle = arguments.name>
 		</cfif>
@@ -102,6 +102,35 @@
 	</cffunction>
 
 
+	<!--- ----------------------- getItemWebPage -------------------------------- --->
+
+	<!---Para poder URLs absolutas es necesario saber la URL donde está publicada la web.
+	Esta URL podría estar definida en base de datos en el cliente correspondiente.
+	También es necesario saber en qué idioma está---->
+
+	<cffunction name="getItemWebPage" access="public" returntype="string">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="title" type="string" required="true">
+
+		<cfset var pageName = "">
+		<cfset var itemWebUrl = "">
+		<cfset var pageTitle = "">
+
+		<cfif arguments.itemTypeId IS 4>
+			<cfset pageName = "noticia.cfm">
+		<cfelse>
+			<cfset pageName = "evento.cfm">
+		</cfif>
+
+		<cfset pageTitle = pageTitleToUrl(arguments.title)>
+
+		<cfset itemWebUrl = "#pageName#?id=#arguments.item_id#&title=#pageTitle#">
+		
+		<cfreturn itemWebUrl>
+	</cffunction>
+
+
 
 	<!--- ----------------------- pageTitleToUrl -------------------------------- --->
 	<cffunction name="pageTitleToUrl" access="public" returntype="string">
@@ -109,7 +138,7 @@
 
 		<cfset var titleUrl = "">
 
-		<cfset titleUrl = lCase(arguments.title)>
+		<cfset titleUrl = lCase(trim(arguments.title))>
 	
 		<cfset titleUrl = replaceList(titleUrl," ,á,é,í,ó,ú,ñ", "-,a,e,i,o,u,n")>
 	

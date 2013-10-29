@@ -23,13 +23,8 @@
 	
 	<!---<cfset full_content = true>--->
 
-	<cfxml variable="xmlUsers">
-		<cfoutput>
-		#usersResponse.usersXml#
-		</cfoutput>
-	</cfxml>
-	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
-
+	<cfset users = usersResponse.users>
+	<cfset numUsers = ArrayLen(users)>
 
 	<div class="div_message_page_title">Todos los usuarios</div>
 
@@ -39,7 +34,7 @@
 		<cfif numUsers GT 0>
 	
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
-				<cfinvokeargument name="xmlUsers" value="#xmlUsers#">
+				<cfinvokeargument name="users" value="#users#">
 				<cfinvokeargument name="open_url_target" value="userAdminIframe">
 				<cfinvokeargument name="filter_enabled" value="true">
 			</cfinvoke>	

@@ -687,6 +687,11 @@
 			
 			<cfif isDefined("userXml.user.XmlAttributes.email")>
 				<!---checkEmail--->
+
+				<!---<cfif len(Trim(userXml.user.XmlAttributes.email)) IS 0 OR NOT isValid("email", Trim(userXml.user.XmlAttributes.email))>
+					<cfthrow message="Email incorrecto">
+				</cfif>--->
+
 				<cfquery name="checkEmail" datasource="#client_dsn#">
 					SELECT id
 					FROM #client_abb#_users

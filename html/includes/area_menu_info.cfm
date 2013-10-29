@@ -38,7 +38,7 @@
 				<cfinvokeargument name="remove_order" value="true">
 			</cfinvoke>
 			<cfset areaWebUrl = "/#area_type#/#areaPage#">
-			<div class="div_message_page_label"><span lang="es">URL relativa en la web:</span></div>
+			<div class="div_message_page_label"><span lang="es">URL relativa en la #area_type#:</span></div>
 			<input type="text" value="#areaWebUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
 		</cfif>
 

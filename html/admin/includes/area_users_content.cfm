@@ -51,19 +51,22 @@
 	<cfinvokeargument name="area_id" value="#area_id#">
 </cfinvoke>
 
-<cfxml variable="xmlUsers">
+<!---<cfxml variable="xmlUsers">
 	<cfoutput>
 	#usersResponse.usersXml#
 	</cfoutput>
 </cfxml>
-<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
+<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>--->
+
+<cfset users = usersResponse.users>
+<cfset numUsers = ArrayLen(users)>
 
 <div class="div_users">
 	
 	<cfif numUsers GT 0>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
-			<cfinvokeargument name="xmlUsers" value="#xmlUsers#">
+			<cfinvokeargument name="users" value="#users#">
 			<cfinvokeargument name="area_id" value="#area_id#">
 			<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
 			<cfinvokeargument name="show_area_members" value="true">

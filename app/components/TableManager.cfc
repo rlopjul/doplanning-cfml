@@ -355,6 +355,45 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- getTableUsers -------------------------------------  --->
+	
+	<cffunction name="getTableUsers" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="with_table" type="boolean" required="false" default="false">
+
+		<cfset var method = "getTableUsers">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+	
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTableUsers" returnvariable="getTableUsersQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_table" value="#arguments.with_table#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset response = {result=true, tableUsers=getTableUsersQuery}>
+								
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+
 	<!--- ------------------------------------- setAreaDefaultTable -------------------------------------  --->
 	
 	<cffunction name="setAreaDefaultTable" output="false" access="public" returntype="struct">
@@ -526,6 +565,251 @@
 		<cfreturn response>
 			
 	</cffunction>
+
+
+	<!------------------------ IS USER IN TABLE-------------------------------------->	
+	<cffunction name="isUserInTable" returntype="struct" output="false" access="public">
+		<cfargument name="table_id" type="numeric" required="true"/>
+		<cfargument name="check_user_id" type="numeric" required="true"/>
+
+		<cfset var method = "isUserInTable">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<!---isUserInTable--->
+			<cfquery name="isUserInTable" datasource="#client_dsn#">
+				SELECT user_id
+				FROM #client_abb#_#tableTypeTable#_users
+				WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer"> 
+				AND user_id = <cfqueryparam value="#arguments.check_user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif isUserInTable.recordCount GT 0><!--- The user is in the table  --->
+				<cfset response = {result=true, isUserInTable=true}>
+			<cfelse>
+				<cfset response = {result=true, isUserInTable=false}>
+			</cfif>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+	<!------------------------ ADD USER TO TABLE-------------------------------------->	
+	<cffunction name="addUserToTable" returntype="struct" output="false" access="private">
+		<cfargument name="tableQuery" type="query" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="add_user_id" type="numeric" required="true">
+		
+		<cfset var method = "addUserToTable">
+
+		<cfset response = structNew()>
+
+		<cfset var client_abb = "">	
+			
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfset table_id = tableQuery.table_id>
+			
+			<cfinvoke component="UserManager" method="getUser" returnvariable="userQuery">
+				<cfinvokeargument name="get_user_id" value="#arguments.add_user_id#">
+				<cfinvokeargument name="return_type" value="query"/>
+			</cfinvoke>
+
+			<cfinvoke component="TableManager" method="isUserInTable" returnvariable="isUserInTableResponse">
+				<cfinvokeargument name="table_id" value="#table_id#">
+				<cfinvokeargument name="check_user_id" value="#arguments.add_user_id#">
+			</cfinvoke>	
+			<cfif isUserInTableResponse.result IS false>
+				<cfreturn isUserInTableResponse>
+			</cfif>
+
+			<cfif isUserInTableResponse.isUserInTable IS true><!--- The user already is in the table  --->
+				<cfthrow message="El usuario ya estaba añadido en la #tableTypeNameEs#">
+			</cfif>
+		
+			<cfquery name="addUserToTable" datasource="#client_dsn#">
+				INSERT INTO #client_abb#_#tableTypeTable#_users (#tableTypeName#_id, user_id)
+				VALUES (<cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">,
+					<cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">);
+			</cfquery>			
+		
+			<cfinvoke component="AlertManager" method="addUserToTable">
+				<cfinvokeargument name="tableQuery" value="#arguments.tableQuery#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="userQuery" value="#userQuery#">
+			</cfinvoke>
+			
+			<cfinclude template="includes/logRecord.cfm">
+			
+			<cfset response = {result=true, table_id=#table_id#, user_id=#arguments.add_user_id#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+				
+	</cffunction>
+	
+	
+	<!------------------------ ADD USERS TO TABLE-------------------------------------->	
+	<cffunction name="addUsersToTable" returntype="struct" output="false" access="public">
+		<cfargument name="table_id" type="numeric" required="true"/>
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="users_ids" type="array" required="true"/>
+		
+		<cfset var method = "addUsersToTable">
+
+		<cfset var response = structNew()>
+		
+		<cfset var area_id = "">
+		<cfset var table = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+			
+			<cfif getTableResponse.result IS false>
+				<cfreturn getTableResponse>
+			</cfif>
+
+			<cfset table = getTableResponse.table>
+
+			<cfset area_id = table.area_id>
+			
+			<!---checkAreaResponsibleAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+		
+			<cfloop array="#arguments.users_ids#" index="cur_user_id">
+				
+				<cfinvoke component="TableManager" method="addUserToTable" returnvariable="responseAddUser">
+					<cfinvokeargument name="tableQuery" value="#table#"/>
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+					<cfinvokeargument name="add_user_id" value="#cur_user_id#"/>
+				</cfinvoke>
+				
+				<cfif responseAddUser.result IS false><!---User assign failed--->
+					
+					<cfreturn responseAddUser>
+				
+				</cfif>
+
+			</cfloop>	
+						
+			<cfset response = {result=true, table_id=#arguments.table_id#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>	
+				
+	</cffunction>
+
+
+
+	<!--- ------------------------------------- removeUserFromTable -------------------------------------  --->
+	
+	<cffunction name="removeUserFromTable" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="remove_user_id" type="numeric" required="true">
+
+		<cfset var method = "removeUserFromTable">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var table = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+			
+			<cfif getTableResponse.result IS false>
+				<cfreturn getTableResponse>
+			</cfif>
+
+			<cfset table = getTableResponse.table>
+
+			<cfset area_id = table.area_id>
+
+			<!---checkAreaResponsibleAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+
+			<cfinvoke component="TableManager" method="isUserInTable" returnvariable="isUserInTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="check_user_id" value="#arguments.remove_user_id#">
+			</cfinvoke>	
+			<cfif isUserInTableResponse.result IS false>
+				<cfreturn isUserInTableResponse>
+			</cfif>
+
+			<cfif isUserInTableResponse.isUserInTable IS false><!--- The user is not in the table  --->
+				<cfthrow message="El usuario no estaba añadido en la #tableTypeNameEs#">
+			</cfif>
+
+			<cfquery name="removeUserFromTable" datasource="#client_dsn#">
+				DELETE FROM #client_abb#_#tableTypeTable#_users 
+				WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				AND user_id = <cfqueryparam value="#arguments.remove_user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>		
+		
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, table_id=#arguments.table_id#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
 
 
 
