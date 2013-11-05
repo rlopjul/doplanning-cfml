@@ -31,7 +31,8 @@
 		<script>
 			function submitAreaModal(e){
 
-			    e.preventDefault();
+			    if(e.preventDefault)
+					e.preventDefault();
 			    
 			    if( $.isNumeric($("##user_in_charge").val()) ){
 

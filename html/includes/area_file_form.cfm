@@ -59,7 +59,6 @@
 			
 		});
 
-
 		<cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
 			<cfif page_type IS 1>
 
@@ -141,7 +140,7 @@
 
 <div class="contenedor_fondo_blanco">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-inline" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('file_form');
@@ -161,35 +160,42 @@
 		<cfelse>
 			<cfset selected_typology_id = default_typology_id>
 		</cfif>
-
-		<label for="typology_id">Tipología *</label>
-		<select name="typology_id" id="typology_id" class="span3" onchange="loadTypology($('##typology_id').val(),'');">
-			<option value="" <cfif NOT isNumeric(file.typology_id)>selected="selected"</cfif>>Básica</option>
-			<cfloop query="#areaTables#">
-				<option value="#areaTables.id#" <cfif areaTables.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS areaTables.id>style="font-weight:bold"</cfif>>#areaTables.title#</option>
-			</cfloop>
-		</select>
+		<div class="control-group">
+			<label for="typology_id">Tipología *</label>
+			<select name="typology_id" id="typology_id" class="span3" onchange="loadTypology($('##typology_id').val(),'');">
+				<option value="" <cfif NOT isNumeric(file.typology_id)>selected="selected"</cfif>>Básica</option>
+				<cfloop query="#areaTables#">
+					<option value="#areaTables.id#" <cfif areaTables.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS areaTables.id>style="font-weight:bold"</cfif>>#areaTables.title#</option>
+				</cfloop>
+			</select>
+		</div>
 
 	</cfif>
 	
 	<cfif page_type IS 1>
-		<label for="formFile" lang="es">Archivo *</label>
-		<input type="file" name="Filedata" value="" id="formFile" required="required" />
+		<div class="control-group">
+			<label for="formFile" lang="es">Archivo *</label>
+			<input type="file" name="Filedata" value="" id="formFile" required="required" />
 
-		<script type="text/javascript">
-			addRailoRequiredTextInput("Filedata", "Debe seleccionar un archivo para subir");
-		</script>
+			<script type="text/javascript">
+				addRailoRequiredTextInput("Filedata", "Debe seleccionar un archivo para subir");
+			</script>
+		</div>
 	</cfif>
 	
-	<label for="formFileName" lang="es">Nombre *</label>
-	<input type="text" name="name" value="#file.name#" id="formFileName" class="input-block-level" required="required" />
+	<div class="control-group">
+		<label for="formFileName" lang="es">Nombre *</label>
+		<input type="text" name="name" value="#file.name#" id="formFileName" class="input-block-level" required="required" />
 
-	<script type="text/javascript">
-		addRailoRequiredTextInput("name", "Debe especificar un nombre para el archivo");
-	</script>
-	
-	<label for="description" lang="es">Descripción</label> 
-	<textarea name="description" id="description" class="input-block-level">#file.description#</textarea>
+		<script type="text/javascript">
+			addRailoRequiredTextInput("name", "Debe especificar un nombre para el archivo");
+		</script>
+	</div>
+
+	<div class="control-group">
+		<label for="description" lang="es">Descripción</label> 
+		<textarea name="description" id="description" class="input-block-level">#file.description#</textarea>
+	</div>
 
 	<!--- Typology fields --->
 	<div id="typologyContainer"></div>

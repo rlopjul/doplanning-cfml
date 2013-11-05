@@ -107,6 +107,7 @@
 		<cfargument name="required" type="boolean" required="false" default="false">
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
+        <cfargument name="list_area_id" type="numeric" required="false">
 				
 		<cfset var method = "createField">
 
@@ -141,6 +142,7 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
         <cfargument name="default_value" type="string" required="true">
+        <cfargument name="list_area_id" type="numeric" required="false">
 		
 		<cfset var method = "updateField">
 

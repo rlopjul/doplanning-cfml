@@ -63,7 +63,7 @@
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-	<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="row_form" onsubmit="return onSubmitForm();">
+	<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="row_form" class="form-inline" onsubmit="return onSubmitForm();">
 
 		<script type="text/javascript">
 			var railo_custom_form=new RailoForms('row_form');

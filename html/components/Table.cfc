@@ -730,7 +730,7 @@
 								<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>
 							</cfif>--->
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
-								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
+								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
 							</cfif>
 							</td>
 							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>

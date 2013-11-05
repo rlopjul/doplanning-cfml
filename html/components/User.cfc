@@ -859,9 +859,10 @@
 							
 									usuarioNombre = $("##listTable tr.selected input[type=hidden][name=user_full_name]").attr("value");
 
-									if(window.opener != null)
-										parentWindowDefined = ( typeof(window.opener.setSelectedUser) == typeof(Function) );
-									
+									if(window.opener != null){
+										parentWindowDefined = ( $.isFunction(window.opener.setSelectedUser) || (typeof window.opener.setSelectedUser!='undefined') ); // Segunda comprobación para IE
+									} 
+
 									if(parentWindowDefined){
 
 										window.opener.setSelectedUser(usuarioId, usuarioNombre);
@@ -878,8 +879,10 @@
 
 							<cfelse>
 								
-								if(window.opener != null)
-									parentWindowDefined = ( typeof(window.opener.addUser) == typeof(Function) );
+								if(window.opener != null){
+									parentWindowDefined = ( $.isFunction(window.opener.addUser) || (typeof window.opener.addUser!='undefined') );
+								}
+									
 
 								// Selección de usuarios para permisos
 								if($("##listTable tr.selected").length > 0) {

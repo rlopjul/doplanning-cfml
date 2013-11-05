@@ -103,6 +103,39 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- getRowSelectedAreas -------------------------------------- --->
+
+	<cffunction name="getRowSelectedAreas" output="false" returntype="struct" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="field_id" type="numeric" required="false">
+		<cfargument name="row_id" type="numeric" required="false">
+
+		<cfset var method = "getRowSelectedAreas">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="getRowSelectedAreas" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+				<cfinvokeargument name="field_id" value="#arguments.field_id#">
+				<cfinvokeargument name="row_id" value="#arguments.row_id#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+
 
 
 	<!--- -------------------------------createRow-------------------------------------- --->

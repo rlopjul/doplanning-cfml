@@ -16,6 +16,7 @@
 		<cfargument name="required" type="boolean" required="false" default="false">
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
+        <cfargument name="list_area_id" type="numeric" required="false">
 
 		<cfset var method = "createField">
 
@@ -72,10 +73,12 @@
 					<cfinvokeargument name="required" value="#arguments.required#">
 					<cfinvokeargument name="default_value" value="#arguments.default_value#">
 					<cfinvokeargument name="position" value="#arguments.position#">
+					<cfinvokeargument name="list_area_id" value="#arguments.list_area_id#">
 					<cfinvokeargument name="mysql_type" value="#fieldType.mysql_type#">
 				</cfinvoke>
 
 			</cftransaction>
+
 
 			<cfinclude template="includes/logRecord.cfm">
 			
@@ -95,7 +98,7 @@
 
 	<!--- ------------------------------------- createFieldInDatabase -------------------------------------  --->
 
-	<!---La llamada a esta función tiene que hacerse dentro de una transacción <cftransaction/>--->
+	<!---IMPORTANTE: La llamada a esta función tiene que hacerse dentro de una transacción <cftransaction>--->
 	
 	<cffunction name="createFieldInDatabase" output="false" access="package" returntype="numeric">
 		<cfargument name="table_id" type="numeric" required="true">
@@ -106,6 +109,7 @@
 		<cfargument name="required" type="boolean" required="false" default="false">
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
+        <cfargument name="list_area_id" type="numeric" required="false">
         <cfargument name="mysql_type" type="string" required="true">
 
 		<cfset var method = "createFieldInDatabase">
@@ -117,6 +121,16 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10><!--- IS SELECT --->
+
+				<cfif NOT isDefined("arguments.list_area_id")>
+					
+					<cfthrow message="No hay área seleccionada para la lista">
+
+				</cfif>
+
+			</cfif>
 
 			<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>
 				
@@ -138,7 +152,12 @@
 				description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">,
 				required = <cfqueryparam value="#arguments.required#" cfsqltype="cf_sql_bit">,
 				default_value = <cfqueryparam value="#arguments.default_value#" cfsqltype="cf_sql_longvarchar">,
-				position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">;
+				position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">
+				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10><!--- IS SELECT --->
+					, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
+				<cfelse>
+					, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+				</cfif>;
 			</cfquery>
 
 			<cfquery name="getLastInsertId" datasource="#client_dsn#">
@@ -147,13 +166,17 @@
 
 			<cfset field_id = getLastInsertId.last_insert_id>
 
-			<cfquery name="insertFieldInTable" datasource="#client_dsn#">
-				ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
-				ADD COLUMN `field_#field_id#` #arguments.mysql_type# 
-				<cfif arguments.required IS true>
-				NOT NULL	
-				</cfif>;
-			</cfquery>
+			<cfif arguments.field_type_id NEQ 9 AND arguments.field_type_id NEQ 10><!--- IS NOT SELECT --->
+
+				<cfquery name="insertFieldInTable" datasource="#client_dsn#">
+					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+					ADD COLUMN `field_#field_id#` #arguments.mysql_type# 
+					<cfif arguments.required IS true>
+					NOT NULL	
+					</cfif>;
+				</cfquery>
+
+			</cfif>
 
 			<cfreturn field_id>
 			
@@ -170,6 +193,7 @@
 		<cfargument name="required" type="boolean" required="false" default="false">
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
+        <cfargument name="list_area_id" type="numeric" required="false">
 
 		<cfset var method = "updateField">
 
@@ -202,6 +226,16 @@
 				<cfinvokeargument name="area_id" value="#area_id#">
 			</cfinvoke>
 
+			<cfif field.field_type_id IS 9 OR field.field_type_id IS 10><!--- IS SELECT --->
+
+				<cfif NOT isDefined("arguments.list_area_id")>
+					
+					<cfthrow message="No hay área seleccionada para la lista">
+
+				</cfif>
+
+			</cfif>
+
 			<cfset arguments.label = trim(arguments.label)>
 
 			<cftransaction>
@@ -216,16 +250,25 @@
 					<cfif isDefined("arguments.position")>
 						, position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">
 					</cfif>
+					<cfif isDefined("arguments.list_area_id")>
+						, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
+					<cfelse>
+						, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+					</cfif>
 					WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
-				<cfquery name="updateFieldInTable" datasource="#client_dsn#">
-					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
-					MODIFY COLUMN `field_#field_id#` #field.mysql_type# 
-					<cfif arguments.required IS true>
-					NOT NULL	
-					</cfif>;
-				</cfquery>
+				<cfif field.field_type_id NEQ 9 AND field.field_type_id NEQ 10><!--- IS NOT SELECT --->
+
+					<cfquery name="updateFieldInTable" datasource="#client_dsn#">
+						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+						MODIFY COLUMN `field_#field_id#` #field.mysql_type# 
+						<cfif arguments.required IS true>
+						NOT NULL	
+						</cfif>;
+					</cfquery>
+
+				</cfif>
 
 			</cftransaction>
 
@@ -311,6 +354,9 @@
 							<cfinvokeargument name="required" value="#fields.required#">
 							<cfinvokeargument name="default_value" value="#fields.default_value#">
 							<cfinvokeargument name="mysql_type" value="#fields.mysql_type#">
+							<cfif isNumeric(fields.list_area_id)>
+								<cfinvokeargument name="list_area_id" value="#fields.list_area_id#"/>
+							</cfif>
 						</cfinvoke>
 
 					</cfif>
@@ -407,10 +453,14 @@
 					WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
-				<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
-					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#field.table_id#` 
-					DROP COLUMN `field_#arguments.field_id#`;
-				</cfquery>
+				<cfif field.field_type_id NEQ 9 AND field.field_type_id NEQ 10><!--- IS NOT SELECT --->
+
+					<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
+						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#field.table_id#` 
+						DROP COLUMN `field_#arguments.field_id#`;
+					</cfquery>
+
+				</cfif>
 
 			</cftransaction>
 			
@@ -459,10 +509,14 @@
 					WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
-				<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
-					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
-					DROP COLUMN `field_#fields.field_id#`;
-				</cfquery>
+				<cfif field.field_type_id NEQ 9 AND field.field_type_id NEQ 10><!--- IS NOT SELECT --->
+
+					<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
+						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+						DROP COLUMN `field_#fields.field_id#`;
+					</cfquery>
+
+				</cfif>
 
 			</cfloop>
 			

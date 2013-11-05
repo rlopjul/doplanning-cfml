@@ -44,8 +44,9 @@
 		<script>
 			function submitAssociateModal(e){
 
-			    e.preventDefault();
-
+			    if(e.preventDefault)
+					e.preventDefault();
+				
 				postModalFormTree("##deleteAreaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=deleteArea");
 
 			}
