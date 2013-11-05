@@ -66,10 +66,10 @@
 	</cfif>	
 
 	<cfif is_user_area_responsible>
-		<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos<span></a>
+		<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos</span></a>
 
 		<cfif APPLICATION.moduleListsWithPermissions IS true AND itemTypeId IS 11><!---List with permissions--->
-			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#" class="btn btn-small" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores<span></a>
+			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#" class="btn btn-small" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores</span></a>
 		</cfif>
 
 		<span class="divider">&nbsp;</span>
@@ -132,6 +132,7 @@
 		</script>
 
 		<cfset selectFirst = true>
+		<cfset listFields = false>
 
 		<cfif isDefined("URL.field")>
 			<cfset selectFirst = false>
@@ -141,17 +142,32 @@
 			<thead>
 				<tr>
 					<th style="width:25px;">##</th>
-					<th>Fecha de inserción</th>
-					<th>Fecha de última modificación</th>
-					<cfloop query="#fields#">
+					<th>Fecha inserción</th>
+					<th>Fecha última modificación</th>
+					<cfloop query="fields">
 						<cfif fields.field_type_id IS NOT 3><!--- IS NOT long text --->	
 							<th>#fields.label#</th>
+						</cfif>
+						<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10>
+							<cfset listFields = true>
 						</cfif>
 					</cfloop>
 					<!---<th class="filter-false">Acciones</th>--->
 				</tr>
 			</thead>
 			<tbody>
+
+			<cfif listFields IS true>
+				
+				<!--- Get selected areas --->
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRowSelectedAreas" returnvariable="getRowSelectedAreasResponse">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				</cfinvoke>
+
+				<cfset selectedAreas = getRowSelectedAreasResponse.areas>
+
+			</cfif>
 
 			<cfset alreadySelected = false>
 
@@ -187,28 +203,51 @@
 					<td>#tableRows.row_id#</td>
 					<td>#DateFormat(tableRows.creation_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>
 					<td><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
+					<cfset row_id = tableRows.row_id>
 					<cfloop query="fields">
 						<cfif fields.field_type_id IS NOT 3><!--- IS NOT long text --->	
-							<cfset field_value = tableRows['field_#fields.field_id#']>
 
-							<cfif len(field_value) GT 0>
-								<cfif fields.field_type_id IS 6><!--- DATE --->
-									<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
-								<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
-									<cfif field_value IS true>
-										<cfset field_value = "Sí">
-									<cfelseif field_value IS false>
-										<cfset field_value = "No">
+							<cfset field_value = "">
+
+							<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS LIST --->
+
+								<cfif selectedAreas.recordCount GT 0>
+
+									<cfquery dbtype="query" name="rowSelectedAreas">
+										SELECT name
+										FROM selectedAreas
+										WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
+										AND row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">;
+									</cfquery>
+
+									<cfif rowSelectedAreas.recordCount GT 0>
+										<cfset field_value = valueList(rowSelectedAreas.name, "<br/>")>
+									</cfif>
+
+								</cfif>
+								
+							<cfelse><!--- IS NOT LIST --->
+
+								<cfset field_value = tableRows['field_#fields.field_id#']>
+
+								<cfif len(field_value) GT 0>
+									<cfif fields.field_type_id IS 6><!--- DATE --->
+										<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
+									<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
+										<cfif field_value IS true>
+											<cfset field_value = "Sí">
+										<cfelseif field_value IS false>
+											<cfset field_value = "No">
+										</cfif>
 									</cfif>
 								</cfif>
+
 							</cfif>
+
 							<td>#field_value#</td>
+
 						</cfif>
 					</cfloop>
-					<!---<td>
-						<a href="#tableTypeName#_row_edit.cfm?#tableTypeName#=#table_id#data=#tableRows.row_id#" class="btn btn-info btn-small"><i class="icon-pencil"></i></a>
-						<a href="#tableTypeName#_row_edit.cfm?#tableTypeName#=#table_id#data=#tableRows.row_id#" class="btn btn-danger btn-small"><i class="icon-remove"></i></a>
-					</td>--->
 				</tr>
 			</cfloop>
 			</tbody>

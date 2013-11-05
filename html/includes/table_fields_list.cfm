@@ -107,15 +107,32 @@
 				<cfif fields.required IS true>Sí<cfelse>No</cfif>
 			</td>
 			<td>
-				<cfset field_default_value = fields.default_value>
-				<cfif len(field_default_value) GT 0>
-					<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
-						<cfif field_default_value IS true>
-							<cfset field_default_value = "Sí">
-						<cfelse>
-							<cfset field_default_value = "No">
+				<cfset field_default_value = "">
+				<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS LIST --->
+
+					<cfif isNumeric(fields.default_value)>
+						
+						<!--- getArea --->
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="listArea">
+							<cfinvokeargument name="area_id" value="#fields.default_value#">
+						</cfinvoke>
+						<cfset field_default_value = listArea.name>
+
+					</cfif>
+					
+				<cfelse><!--- IS NOT LIST --->
+
+					<cfset field_default_value = fields.default_value>
+					<cfif len(field_default_value) GT 0>
+						<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
+							<cfif field_default_value IS true>
+								<cfset field_default_value = "Sí">
+							<cfelse>
+								<cfset field_default_value = "No">
+							</cfif>
 						</cfif>
 					</cfif>
+
 				</cfif>
 				#field_default_value#
 			</td>

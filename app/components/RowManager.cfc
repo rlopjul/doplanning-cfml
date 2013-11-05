@@ -22,7 +22,8 @@
 
 		<cfset var row_id = "">
 
-		<cfset field_value = "">
+		<cfset var field_value = "">
+		<cfset var selectFields = false>
 
 		<cftry>
 			
@@ -43,8 +44,8 @@
 
 			<!---canUserModifyRow--->
 			<cfinvoke component="RowManager" method="canUserModifyRow" returnvariable="canUserModifyRow">
-				<cfinvokeargument name="table_id" value="#table_id#">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="table" value="#table#">
 			</cfinvoke>
 			<cfif canUserModifyRow IS false>
@@ -53,8 +54,8 @@
 
 			<!---Table fields--->
 			<cfinvoke component="TableManager" method="getTableFields" returnvariable="fieldsResult">
-				<cfinvokeargument name="table_id" value="#table_id#">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_types" value="true"/>
 			</cfinvoke>
 			<cfset fields = fieldsResult.tableFields>
@@ -83,7 +84,9 @@
 
 				</cfif>
 
-				<cfquery name="createField" datasource="#client_dsn#">
+				<cfset selectFields = false>
+
+				<cfquery name="saveRow" datasource="#client_dsn#">
 					#sqlAction# `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
 					SET 
 					<cfif arguments.action IS "create">
@@ -97,29 +100,27 @@
 
 					<cfloop query="fields">
 
-						<cfset field_name = "field_#fields.field_id#">
+						<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- SELECT --->
 
-						<!---
-						<cfif fields.input_type NEQ "check" OR isDefined("arguments.field_#fields.field_id#")><!---No es YES/NO o está definido--->
+							<cfset field_name = "field_#fields.field_id#">
 							<cfset field_value = arguments[field_name]>
-						<cfelse>
-							<cfset field_value = false>
-						</cfif>--->
 
-						<cfset field_value = arguments[field_name]>
+							, field_#fields.field_id# = 	
 
-						, field_#fields.field_id# = 	
-
-						<cfif fields.mysql_type IS "DATE"><!---DATE--->
-							<cfif len(field_value) GT 0>
-								STR_TO_DATE('#field_value#','#dateFormat#')
-							<cfelse>
+							<cfif fields.mysql_type IS "DATE"><!--- DATE --->
+								<cfif len(field_value) GT 0>
+									STR_TO_DATE('#field_value#','#dateFormat#')
+								<cfelse>
+									<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">
+								</cfif>
+							<cfelseif fields.field_type_id IS 7 AND len(field_value) IS 0><!--- BOOLEAN --->	
 								<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">
+							<cfelse>														
+								<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
 							</cfif>
-						<cfelseif fields.field_type_id IS 7 AND len(field_value) IS 0><!--- BOOLEAN --->	
-							<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">							
-						<cfelse>														
-							<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
+
+						<cfelse><!---SELECT FIELDS--->
+							<cfset selectFields = true>
 						</cfif>
 
 					</cfloop>
@@ -137,8 +138,63 @@
 
 					<cfset row_id = getLastInsertId.last_insert_id>
 
+				<cfelse>
+
+					<cfset row_id = arguments.row_id>
+
 				</cfif>
 
+				<cfif selectFields IS true><!--- Select fields values ---->
+					
+					<cfloop query="fields">
+
+						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- SELECT --->
+
+							<cfif arguments.action NEQ "create">
+								
+								<!--- Delete old values --->
+								<cfquery name="deleteEntitySectors" datasource="#client_dsn#">
+									DELETE FROM `#client_abb#_#tableTypeTable#_rows_areas`
+									WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+									AND row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
+									AND field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">;
+								</cfquery>
+
+							</cfif>
+
+							<cfset field_name = "field_#fields.field_id#">
+							
+							<cfif isDefined("arguments.#field_name#")>
+								
+								<cfset field_values = arguments[field_name]>
+
+								<!--- Save new values --->
+								<cfloop array="#field_values#" index="select_value">
+
+									<cfif isNumeric(select_value)>
+										
+										<cfquery name="addValueToTable" datasource="#client_dsn#">
+											INSERT INTO `#client_abb#_#tableTypeTable#_rows_areas` (#tableTypeName#_id, row_id, field_id, area_id)
+											VALUES (<cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">,
+												<cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">,
+												<cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">,
+												<cfqueryparam value="#select_value#" cfsqltype="cf_sql_integer">);
+										</cfquery>
+
+									</cfif>
+
+								</cfloop>
+
+							<cfelseif fields.required IS true>
+								<cfthrow message="Campo lista sin valor requerido seleccionado">
+							</cfif>
+
+						</cfif>
+
+					</cfloop>
+
+				</cfif>
+				
 			</cftransaction>
 			
 			<cfinclude template="includes/logRecord.cfm">
@@ -435,6 +491,46 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- getRowSelectedAreas -------------------------------------  --->
+	
+	<cffunction name="getRowSelectedAreas" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="field_id" type="numeric" required="false">
+		<cfargument name="row_id" type="numeric" required="false">
+
+		<cfset var method = "getRowSelectedAreas">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getRowSelectedAreas" returnvariable="getRowAreasQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="field_id" value="#arguments.field_id#">
+				<cfinvokeargument name="row_id" value="#arguments.row_id#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfset response = {result=true, areas=#getRowAreasQuery#}>
+			
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
 	<!--- ------------------------------------- getEmptyRow -------------------------------------  --->
 	
 	<cffunction name="getEmptyRow" output="false" access="public" returntype="struct">
@@ -487,6 +583,11 @@
 			<cfset queryAddRow(emptyRow, 1)>
 			
 			<cfloop query="fields">
+
+				<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS SELECT --->
+					<!---Se crean los campos para poder definir en ellos los valores por defecto--->
+					<cfset queryAddColumn(emptyRow, "field_#fields.field_id#")>
+				</cfif>
 				
 				<cfset querySetCell(emptyRow, "field_#fields.field_id#", fields.default_value, 1)>
 

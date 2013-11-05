@@ -11,42 +11,60 @@
 
 	<cfset field_label = fields.label&":">
 	<cfset field_name = "field_#fields.field_id#">
-	<cfset field_value = row[field_name]>
+	
+	<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- LISTS --->
 
+		<!--- Get selected areas --->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRowSelectedAreas" returnvariable="getRowSelectedAreasResponse">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			<cfinvokeargument name="field_id" value="#fields.field_id#">
+			<cfinvokeargument name="row_id" value="#row_id#">
+		</cfinvoke>
 
+		<cfset selectedAreas = getRowSelectedAreasResponse.areas>
+		<cfset field_value = valueList(selectedAreas.name, "<br/>")>
 
-	<cfif fields.input_type IS "textarea">
+		<div class="div_message_page_label">#field_label#<cfif fields.field_type_id IS 10><br/></cfif> <span class="text_message_page">#field_value#</span></div>
 
-		<div class="div_message_page_label">#field_label#</div>
-		<cfif len(field_value) GT 0>
-			<div class="div_message_page_description">#field_value#</div>
-		</cfif> 
+	<cfelse><!--- IS NOT LISTS --->
 
-	<cfelseif fields.field_type_id IS 8><!---URL--->
+		<cfset field_value = row[field_name]>
 
-		<div class="div_message_page_label">#field_label#<br/> <a href="#field_value#" target="_blank">#field_value#</a></div>
+		<cfif fields.input_type IS "textarea">
 
-	<cfelse>
+			<div class="div_message_page_label">#field_label#</div>
+			<cfif len(field_value) GT 0>
+				<div class="div_message_page_description">#field_value#</div>
+			</cfif> 
 
-		<cfif fields.field_type_id IS 6><!--- DATE --->
+		<cfelseif fields.field_type_id IS 8><!---URL--->
 
-			<cfif isDate(field_value)>
-				<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
-			</cfif>		
-		
-		<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
+			<div class="div_message_page_label">#field_label#<br/> <a href="#field_value#" target="_blank">#field_value#</a></div>
+
+		<cfelse>
+
+			<cfif fields.field_type_id IS 6><!--- DATE --->
+
+				<cfif isDate(field_value)>
+					<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
+				</cfif>		
 			
-			<cfif field_value IS true>
-				<cfset field_value = "Sí">
-			<cfelseif field_Value IS false>
-				<cfset field_value = "No">
+			<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
+				
+				<cfif field_value IS true>
+					<cfset field_value = "Sí">
+				<cfelseif field_Value IS false>
+					<cfset field_value = "No">
+				</cfif>
+
 			</cfif>
 
-		</cfif>
+			<div class="div_message_page_label">#field_label# <span class="text_message_page">#field_value#</span></div>
 
-		<div class="div_message_page_label">#field_label# <span class="text_message_page">#field_value#</span></div>
+		</cfif>		
 
-	</cfif>		
+	</cfif>
 
 </cfloop>
 </cfoutput>

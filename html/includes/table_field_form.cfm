@@ -13,7 +13,9 @@
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
-</cfoutput>
+
+<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.js"></script>
+<link rel="stylesheet" type="text/css" href="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.css">
 
 <script type="text/javascript">
 
@@ -25,57 +27,132 @@
 
 	function onSubmitForm(){
 
+		var typeId = $('##field_type_id').val();
+
+		if(typeId == 9 || typeId == 10){
+
+			var selectedAreaid = $('##list_area_id').val();
+			if(!$.isNumeric(selectedAreaid)){
+				alert("Debe seleccionar un área para generar la lista");
+				return false;
+			}
+
+		}
+
 		document.getElementById("submitDiv1").innerHTML = 'Enviando...';
 		document.getElementById("submitDiv2").innerHTML = 'Enviando...';
 
 		return true;
 	}
 
+	function openAreaSelector(){
+		
+		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
+		
+	}
+
+	function setSelectedArea(areaId, areaName) {
+		
+		$("##list_area_id").val(areaId);
+		$("##list_area_name").val(areaName);
+
+		loadAreaList(areaId, 1)
+			
+	}
+
+	function loadAreaList(areaId, selectedValue) {
+
+		if(!isNaN(areaId)){
+
+			$("##areaLoading").show();
+
+			var areaListPage = "#APPLICATION.htmlPath#/html_content/area_list_input_options.cfm?area="+areaId;
+
+			if(!isNaN(selectedValue)){
+				areaListPage = areaListPage+"&selected="+selectedValue;
+			}
+
+			$("##default_value_list").load(areaListPage, function() {
+
+				$("##areaLoading").hide();
+
+				//$('.selectpicker').selectpicker('refresh');
+			});
+
+		} else {
+
+			$("##default_value_list").empty();
+		}
+	}
+
+
 	function fieldTypeChange(typeId){
 
 		if(typeId == 6){ //Date
 
-			//$("#requiredContainer").show();
+			//$("##requiredContainer").show();
 
-			$("#default_value_text").prop('disabled', true);
-			$("#default_value_date").prop('disabled', false);
-			$("#default_value_boolean").prop('disabled', true);
+			$("##textDefaultValue").hide();
+			$("##dateDefaultValue").show();
+			$("##booleanDefaultValue").hide();
+			$("##listDefaultValue").hide();
+			$("##listAreaSelector").hide();
 
-			$("#textDefaultValue").hide();
-			$("#dateDefaultValue").show();
-			$("#booleanDefaultValue").hide();
+			$("##default_value_text").prop('disabled', true);
+			$("##default_value_date").prop('disabled', false);
+			$("##default_value_boolean").prop('disabled', true);
+			$("##default_value_list").prop('disabled', true);
+			$("##list_area_id").prop('disabled', true);
 
 		}else if(typeId == 7){ //Boolean
 
-			//$("#requiredContainer").hide();
+			$("##textDefaultValue").hide();
+			$("##dateDefaultValue").hide();
+			$("##booleanDefaultValue").show();
+			$("##listDefaultValue").hide();
+			$("##listAreaSelector").hide();
 
-			$("#textDefaultValue").hide();
-			$("#dateDefaultValue").hide();
-			$("#booleanDefaultValue").show();
+			$("##default_value_text").prop('disabled', true);
+			$("##default_value_date").prop('disabled', true);
+			$("##default_value_boolean").prop('disabled', false);
+			$("##default_value_list").prop('disabled', true);
+			$("##list_area_id").prop('disabled', true);
 
-			$("#default_value_text").prop('disabled', true);
-			$("#default_value_date").prop('disabled', true);
-			$("#default_value_boolean").prop('disabled', false);
+		}else if(typeId == 9 || typeId ==10){ //List
+
+			$("##textDefaultValue").hide();
+			$("##dateDefaultValue").hide();
+			$("##booleanDefaultValue").hide();
+			$("##listDefaultValue").show();
+			$("##listAreaSelector").show();
+
+			$("##default_value_text").prop('disabled', true);
+			$("##default_value_date").prop('disabled', true);
+			$("##default_value_boolean").prop('disabled', true);
+			$("##default_value_list").prop('disabled', false);
+			$("##list_area_id").prop('disabled', false);
 
 		}else {
 
-			//$("#requiredContainer").show();
+			$("##textDefaultValue").show();
+			$("##dateDefaultValue").hide();
+			$("##booleanDefaultValue").hide();
+			$("##listDefaultValue").hide();
+			$("##listAreaSelector").hide();
 
-			$("#textDefaultValue").show();
-			$("#dateDefaultValue").hide();
-			$("#booleanDefaultValue").hide();
-
-			$("#default_value_text").prop('disabled', false);
-			$("#default_value_date").prop('disabled', true);
-			$("#default_value_boolean").prop('disabled', true);
+			$("##default_value_text").prop('disabled', false);
+			$("##default_value_date").prop('disabled', true);
+			$("##default_value_boolean").prop('disabled', true);
+			$("##default_value_list").prop('disabled', true);
+			$("##list_area_id").prop('disabled', true);
 
 			if(typeId == 2 || typeId == 3){
 
-				$("#default_value_text").attr("rows", '3');
+				$("##default_value_text").attr("rows", '4');
 
 			}else{
 
-				$("#default_value_text").attr("rows", '1');
+				$("##default_value_text").attr("rows", '1');
 			}
 
 		}
@@ -94,13 +171,18 @@
 
 	$(document).ready(function() { 
 
-		<cfoutput>
 		fieldTypeChange(#field.field_type_id#);
-		</cfoutput>
 
-		enableDatePicker('#default_value_date');
+		enableDatePicker('##default_value_date');
+
+		<cfif isDefined("field.list_area_id") AND isNumeric(field.list_area_id)>
+			loadAreaList(#field.list_area_id#, '#field.default_value#');
+		</cfif>
+
+		//$('.selectpicker').selectpicker();
 	});
 </script>
+</cfoutput>
 
 <!---Table fields types--->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Field" method="getFieldTypes" returnvariable="typesResult">
@@ -112,7 +194,7 @@
 
 <div class="contenedor_fondo_blanco">
 <cfoutput>
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-inline" onsubmit="return onSubmitForm();">
 
 	<div id="submitDiv1" style="margin-bottom:10px;">
 		<input type="submit" value="Guardar" class="btn btn-primary"/>
@@ -132,43 +214,73 @@
 		<input type="hidden" name="field_id" value="#field.field_id#"/>
 	</cfif>
 
-	<label for="label">Nombre *</label>
-	<cfinput type="text" name="label" id="label" value="#field.label#" maxlength="100" required="true" message="Nombre requerido" class="input-block-level"/>
-
-	<cfif page_type IS 2>
-		<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
-	</cfif>
-	<label for="field_type_id">Tipo *</label>
-	<select name="field_type_id" id="field_type_id" class="input-block-level" onchange="fieldTypeChange($('##field_type_id').val());"> <cfif page_type IS 2>disabled="disabled"</cfif>>
-		<cfloop query="fieldTypes">
-			<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
-		</cfloop>
-	</select>
-	<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>
-
-	<label for="required" class="checkbox" id="requiredContainer">
-		<input type="checkbox" name="required" id="required" value="true" <cfif isDefined("field.required") AND field.required IS true>checked="checked"</cfif> /> Obligatorio<br/>
-		<small class="help-block">Indica si el campo deber rellenarse de forma obligatoria</small>
-	</label>
-
-	<label for="description">Descripción</label>
-	<textarea name="description" id="description" class="input-block-level" maxlength="1000">#field.description#</textarea>
-
-	<div id="textDefaultValue">
-		<label for="default_value_text">Valor por defecto</label>
-		<textarea name="default_value" id="default_value_text" class="input-block-level" maxlength="1000" rows="3" <cfif field.field_type_id IS 6 OR field.field_type_id IS 7>disabled="disabled"</cfif>>#field.default_value#</textarea>
+	<div class="control-group">
+		<label for="label">Nombre *</label>
+		<cfinput type="text" name="label" id="label" value="#field.label#" maxlength="100" required="true" message="Nombre requerido" class="span5"/>
 	</div>
-	<div id="dateDefaultValue">
+
+	<div class="control-group">
+		<cfif page_type IS 2>
+			<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
+		</cfif>
+		<label for="field_type_id">Tipo *</label>
+		<select name="field_type_id" id="field_type_id" class="span5" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled="disabled"</cfif>>
+			<cfloop query="fieldTypes">
+				<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
+			</cfloop>
+		</select>
+		<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>
+	</div>
+
+	<div class="control-group" id="listAreaSelector">
+		<cfif isDefined("field.list_area_id") AND isNumeric(field.list_area_id)>
+			<!--- getArea --->
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="listArea">
+				<cfinvokeargument name="area_id" value="#field.list_area_id#">
+			</cfinvoke>
+			<cfset list_area_name = listArea.name>
+		<cfelse>
+			<cfset list_area_name = "">
+		</cfif>
+		<label for="default_value_text">Área a para generar la lista</label>
+		<div class="controls">
+			<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
+			<cfinput type="text" name="list_area_name" id="list_area_name" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" type="button" class="btn" lang="es">Seleccionar área</button>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label for="required" class="checkbox" id="requiredContainer">
+			<input type="checkbox" name="required" id="required" value="true" <cfif isDefined("field.required") AND field.required IS true>checked="checked"</cfif> /> Obligatorio<br/>
+		</label>
+		<small class="help-block">Indica si el campo deber rellenarse de forma obligatoria</small>
+	</div>
+
+	<div class="control-group">
+		<label for="description">Descripción</label>
+		<textarea name="description" id="description" class="input-block-level" maxlength="1000">#field.description#</textarea>
+	</div>
+
+	<div class="control-group" id="textDefaultValue">
+		<label for="default_value_text">Valor por defecto</label>
+		<textarea name="default_value" id="default_value_text" class="input-block-level" maxlength="1000" rows="4" <cfif field.field_type_id IS 6 OR field.field_type_id IS 7>disabled="disabled"</cfif>>#field.default_value#</textarea>
+	</div>
+	<div class="control-group" id="dateDefaultValue">
 		<label for="default_value_date">Valor por defecto</label>
 		<input type="text" name="default_value" id="default_value_date" value="#field.default_value#" maxlength="10" class="input_datepicker" <cfif field.field_type_id NEQ 6>disabled="disabled"</cfif>/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
 	</div>
-	<div id="booleanDefaultValue">
+	<div class="control-group" id="booleanDefaultValue">
 		<label for="default_value_boolean">Valor por defecto</label>
 		<select name="default_value" id="default_value_boolean" class="input-small" <cfif field.field_type_id NEQ 7>disabled="disabled"</cfif>>
 			<option value=""></option>
 			<option value="0" <cfif field.default_value IS false>selected="selected"</cfif>>No</option>
 			<option value="1" <cfif field.default_value IS true>selected="selected"</cfif>>Sí</option>
 		</select>
+	</div>
+
+	<div class="control-group" id="listDefaultValue">
+		<label for="default_value_boolean">Valor por defecto</label>
+		<select name="default_value" id="default_value_list" class="selectpicker span5" <cfif field.field_type_id NEQ 9 OR field.field_type_id NEQ 10>disabled="disabled"</cfif>><!---multiple---></select>
 	</div>
 	
 

@@ -823,6 +823,7 @@
 	
 	<!--- ----------------------- CREATE ITEM WITH ATTACHED -------------------------------- --->
 	
+	<!---
 	<cffunction name="createItemWithAttachedFile" returntype="struct" output="false" access="public">		
 		<!---<cfargument name="xmlItem" type="xml" required="yes">--->
 		<cfargument name="objectItem" type="struct" required="true">
@@ -934,6 +935,7 @@
 		<cfreturn response>
 	
 	</cffunction>
+	--->
 	
 	
 	

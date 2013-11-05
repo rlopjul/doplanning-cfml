@@ -56,7 +56,8 @@
 		<script>
 			function submitAreaModal(e){
 
-			    e.preventDefault();
+			    if(e.preventDefault)
+					e.preventDefault();
 
 				postModalForm("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateAreaImage", "#return_page#", "areaIframe");
 

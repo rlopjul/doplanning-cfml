@@ -31,32 +31,32 @@
 		
 			<cfprocessingdirective suppresswhitespace="true">
 			<cfsavecontent variable="xmlResult"><cfoutput><area id="#objectArea.id#"
-						 parent_id="#objectArea.parent_id#"
-						 user_in_charge="#objectArea.user_in_charge#"
-						 creation_date="#objectArea.creation_date#"
-						<cfif len(objectArea.image_id) GT 0>
-						 image_id="#objectArea.image_id#"
-						</cfif>
-						<cfif len(objectArea.with_image) GT 0>
-						 with_image="#objectArea.with_image#"
-						</cfif>
-						<cfif len(objectArea.link) GT 0>
-						 link="#objectArea.link#"
-						</cfif>
-						<cfif len(objectArea.with_link) GT 0>
-						 with_link="#objectArea.with_link#"
-						</cfif>
-						<cfif len(objectArea.type) GT 0>
-						 type="#objectArea.type#"
-						</cfif>
-						<cfif len(objectArea.default_typology_id) GT 0>
-						 default_typology_id="#objectArea.default_typology_id#"
-						</cfif>>
-						<name><![CDATA[#objectArea.name#]]></name>
-						<description><![CDATA[#objectArea.description#]]></description>
-						<cfif len(objectArea.user_full_name) GT 0>
-						<user_full_name><![CDATA[#objectArea.user_full_name#]]></user_full_name>
-						</cfif></area></cfoutput></cfsavecontent>
+				 parent_id="#objectArea.parent_id#"
+				 user_in_charge="#objectArea.user_in_charge#"
+				 creation_date="#objectArea.creation_date#"
+				<cfif len(objectArea.image_id) GT 0>
+				 image_id="#objectArea.image_id#"
+				</cfif>
+				<cfif len(objectArea.with_image) GT 0>
+				 with_image="#objectArea.with_image#"
+				</cfif>
+				<cfif len(objectArea.link) GT 0>
+				 link="#objectArea.link#"
+				</cfif>
+				<cfif len(objectArea.with_link) GT 0>
+				 with_link="#objectArea.with_link#"
+				</cfif>
+				<cfif len(objectArea.type) GT 0>
+				 type="#objectArea.type#"
+				</cfif>
+				<cfif len(objectArea.default_typology_id) GT 0>
+				 default_typology_id="#objectArea.default_typology_id#"
+				</cfif>>
+				<name><![CDATA[#objectArea.name#]]></name>
+				<description><![CDATA[#objectArea.description#]]></description>
+				<cfif len(objectArea.user_full_name) GT 0>
+				<user_full_name><![CDATA[#objectArea.user_full_name#]]></user_full_name>
+				</cfif></area></cfoutput></cfsavecontent>
 			</cfprocessingdirective>
 			<!---<cfif len(objectArea.image_background_color) GT 0>
 			 image_background_color="#objectArea.image_background_color#"
@@ -972,7 +972,6 @@
 		
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
-			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinvoke component="AreaManager" method="getRootAreaId" returnvariable="root_area_id">
@@ -1370,7 +1369,6 @@
 					<cfinvokeargument name="areaType" value="#curAreaType#">
 					
 					<cfinvokeargument name="parent_image_id" value="#image_id#">
-					<!---<cfinvokeargument name="parent_image_background_color" value="#image_background_color#">--->
 					<cfinvokeargument name="parent_link" value="#with_link#">
 					
 					<cfinvokeargument name="withSubSubAreas" value="#arguments.withSubSubAreas#">	
@@ -1420,14 +1418,6 @@
 		
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<!--- Sub areas --->
-			<!---<cfquery name="subAreasQuery" datasource="#client_dsn#">
-				SELECT id, name, parent_id, creation_date, user_in_charge, image_id, link
-				FROM #client_abb#_areas AS areas
-				WHERE areas.parent_id = <cfqueryparam value="#arguments.parent_id#" cfsqltype="cf_sql_integer">
-				ORDER BY areas.name ASC;
-			</cfquery>--->
-			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
 				<cfinvokeargument name="area_id" value="#arguments.parent_id#">				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -1467,6 +1457,39 @@
 			
 	</cffunction>
 	
+
+	<!--- ------------------------------------- getSubAreas ------------------------------------- --->
+	
+	<cffunction name="getSubAreas" output="false" access="public" returntype="struct">		
+		<cfargument name="area_id" type="numeric" required="true"/>
+		
+		<cfset var method = "getSubAreas">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+				
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset response = {result=true, areas=subAreasQuery}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
 	
 	
 	<!--- ------------------------------------- createArea ------------------------------------- --->
@@ -1559,7 +1582,7 @@
 			<!---Alerta al usuario que que es responsable de la misma--->
 			<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
 				<cfinvokeargument name="get_user_id" value="#arguments.user_in_charge#"/>
-				<cfinvokeargument name="return_type" value="object"/>
+				<cfinvokeargument name="return_type" value="query"/>
 			</cfinvoke>
 		
 			<cfinvoke component="AlertManager" method="assignUserToArea">
@@ -1952,7 +1975,7 @@
 	<cffunction name="getArea" returntype="any" access="public">		
 		<cfargument name="get_area_id" type="numeric" required="yes">
 		<cfargument name="format_content" type="string" required="no" default="default">
-        <cfargument name="return_type" type="string" required="no" default="xml">
+        <cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
 
 		<cfset var method = "getArea">
 		
@@ -1961,9 +1984,8 @@
 		<cfset var user_language = "">
 		
 		<cfset var xmlResponseContent = "">
-		<cfset var xmlResponse = "">
-		
-					
+		<cfset var response = "">
+			
 			<cfinclude template="includes/functionStart.cfm">
 			
 			<!---<cfinclude template="includes/checkAreaAccess.cfm">Un usuario aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
@@ -1975,41 +1997,46 @@
 			</cfinvoke>
 			
 			<cfif selectAreaQuery.recordCount GT 0>
-			
-				<cfinvoke component="AreaManager" method="objectArea" returnvariable="area">
-					<cfinvokeargument name="id" value="#selectAreaQuery.id#">
-					<cfinvokeargument name="name" value="#selectAreaQuery.area_name#">
-					<cfinvokeargument name="creation_date" value="#selectAreaQuery.creation_date#">
-					<cfinvokeargument name="parent_id" value="#selectAreaQuery.parent_id#">
-					<cfinvokeargument name="user_in_charge" value="#selectAreaQuery.user_in_charge#">
-					<cfinvokeargument name="description" value="#selectAreaQuery.description#">
-					<cfinvokeargument name="user_full_name" value="#selectAreaQuery.family_name# #selectAreaQuery.user_name#">
-					<cfinvokeargument name="image_id" value="#selectAreaQuery.area_image_id#">
-					<cfif arguments.format_content EQ "all">
-						<cfinvokeargument name="link" value="#selectAreaQuery.area_link#">
-					</cfif>
-					<cfinvokeargument name="type" value="#selectAreaQuery.type#">
-					<cfinvokeargument name="default_typology_id" value="#selectAreaQuery.default_typology_id#">
-					<cfinvokeargument name="hide_in_menu" value="#selectAreaQuery.hide_in_menu#">
-					<cfinvokeargument name="menu_type_id" value="#selectAreaQuery.menu_type_id#">
 
-				</cfinvoke>
-				
-                <cfif arguments.return_type EQ "object">
+				<cfif arguments.return_type EQ "query">
                     
-                    <cfset xmlResponse = area>
-                    
+                    <cfset response = selectAreaQuery>
+
                 <cfelse>
-                
-                	<cfinvoke component="AreaManager" method="xmlArea" returnvariable="xmlResponseContent">
-                        <cfinvokeargument name="objectArea" value="#area#">
-                    </cfinvoke>
-                    
-                    <cfset xmlResponse = xmlResponseContent>
-                
-                </cfif>
+			
+					<cfinvoke component="AreaManager" method="objectArea" returnvariable="area">
+						<cfinvokeargument name="id" value="#selectAreaQuery.id#">
+						<cfinvokeargument name="name" value="#selectAreaQuery.name#">
+						<cfinvokeargument name="creation_date" value="#selectAreaQuery.creation_date#">
+						<cfinvokeargument name="parent_id" value="#selectAreaQuery.parent_id#">
+						<cfinvokeargument name="user_in_charge" value="#selectAreaQuery.user_in_charge#">
+						<cfinvokeargument name="description" value="#selectAreaQuery.description#">
+						<cfinvokeargument name="user_full_name" value="#selectAreaQuery.user_full_name#">
+						<cfinvokeargument name="image_id" value="#selectAreaQuery.image_id#">
+						<cfif arguments.format_content EQ "all">
+							<cfinvokeargument name="link" value="#selectAreaQuery.link#">
+						</cfif>
+						<cfinvokeargument name="type" value="#selectAreaQuery.type#">
+						<cfinvokeargument name="default_typology_id" value="#selectAreaQuery.default_typology_id#">
+						<cfinvokeargument name="hide_in_menu" value="#selectAreaQuery.hide_in_menu#">
+						<cfinvokeargument name="menu_type_id" value="#selectAreaQuery.menu_type_id#">
+					</cfinvoke>
+					
+	                <cfif arguments.return_type EQ "object">
+	                    
+	                    <cfset response = area>
+	                    
+	                <cfelse>
+	                
+	                	<cfinvoke component="AreaManager" method="xmlArea" returnvariable="xmlResponseContent">
+	                        <cfinvokeargument name="objectArea" value="#area#">
+	                    </cfinvoke>
+	                    
+	                    <cfset response = xmlResponseContent>
+	                
+	                </cfif>
 				
-				
+				</cfif>
 				
 			<cfelse><!---The area does not exist--->
 				
@@ -2018,9 +2045,8 @@
 				<cfthrow errorcode="#error_code#">
 			
 			</cfif>
-				
-		
-		<cfreturn xmlResponse>
+			
+		<cfreturn response>
 					
 	</cffunction>
 	

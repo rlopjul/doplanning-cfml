@@ -377,7 +377,7 @@
 				<div class="form-inline" style="padding-bottom:5px;">
 										
 					<div class="input-append">
-						<input type="text" name="text" id="searchText" value="" class="input-medium" on/>
+						<input type="text" name="text" id="searchText" value="" class="input-medium" />
 						<button onClick="searchTextInTree()" class="btn" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
 					</div>					
 					

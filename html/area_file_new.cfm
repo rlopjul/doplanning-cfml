@@ -114,6 +114,7 @@
 <cfset page_type = 1>
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form.cfm">
 
+<cfset return_page = "area_items.cfm?area=#area_id#">
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
 </cfinvoke>

@@ -1587,7 +1587,14 @@
 					
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<!---<cfinclude template="includes/checkAreaAccess.cfm">Un usuario aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
+			<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
+				<cfinvokeargument name="get_user_id" value="#user_id#"> 
+			</cfinvoke>			
+			<!---Un usuario interno, aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
+			<cfif internal_user IS false>
+				<cfinclude template="includes/checkAreaAccess.cfm">
+			</cfif>
+			
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="selectAreaQuery">
 				<cfinvokeargument name="area_id" value="#arguments.get_area_id#">
@@ -1599,15 +1606,15 @@
 			
 				<cfinvoke component="AreaManager" method="objectArea" returnvariable="area">
 					<cfinvokeargument name="id" value="#selectAreaQuery.id#">
-					<cfinvokeargument name="name" value="#selectAreaQuery.area_name#">
+					<cfinvokeargument name="name" value="#selectAreaQuery.name#">
 					<cfinvokeargument name="creation_date" value="#selectAreaQuery.creation_date#">
 					<cfinvokeargument name="parent_id" value="#selectAreaQuery.parent_id#">
 					<cfinvokeargument name="user_in_charge" value="#selectAreaQuery.user_in_charge#">
 					<cfinvokeargument name="description" value="#selectAreaQuery.description#">
-					<cfinvokeargument name="user_full_name" value="#selectAreaQuery.family_name# #selectAreaQuery.user_name#">
-					<cfinvokeargument name="image_id" value="#selectAreaQuery.area_image_id#">
+					<cfinvokeargument name="user_full_name" value="#selectAreaQuery.user_full_name#">
+					<cfinvokeargument name="image_id" value="#selectAreaQuery.image_id#">
 					<cfif arguments.format_content EQ "all">
-						<cfinvokeargument name="link" value="#selectAreaQuery.area_link#">
+						<cfinvokeargument name="link" value="#selectAreaQuery.link#">
 					</cfif>
 					<cfinvokeargument name="type" value="#selectAreaQuery.type#">					
 				</cfinvoke>

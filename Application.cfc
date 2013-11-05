@@ -108,8 +108,8 @@
 		<cfset APPLICATION.alternateUrl = "">
 		<cfset APPLICATION.signOutUrl = "http://software.doplanning.net">
 		<cfset APPLICATION.helpUrl = "http://doplanning.net/es/page.cfm?id=9&title=tutoriales">
-		<cfset APPLICATION.communityUrl = "http://www.doplanning.net/">
-		<cfset APPLICATION.webUrl = "http://www.doplanning.net/">
+		<cfset APPLICATION.communityUrl = "http://doplanning.net/">
+		<cfset APPLICATION.webUrl = "http://doplanning.net/">
 		
 		<cfset APPLICATION.termsOfUseUrl = APPLICATION.mainUrl&"/web/terms_of_use.cfm">
 

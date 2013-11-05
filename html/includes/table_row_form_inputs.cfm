@@ -1,5 +1,36 @@
 <cfoutput>
 
+<!---<script type="text/javascript">
+
+	function loadFieldAreaList(fieldId, areaId, selectedValue) {
+
+		var fieldInputId = "##"+fieldId;
+
+		if(!isNaN(areaId)){
+
+			$(fieldInputId).show();
+
+			var areaListPage = "#APPLICATION.htmlPath#/html_content/area_list_input_options.cfm?area="+areaId;
+
+			if(selectedValue.length > 0){
+				areaListPage = areaListPage+"&selected="+selectedValue;
+			}
+
+			$(fieldInputId).load(areaListPage, function() {
+
+				$("##areaLoading").hide();
+
+				//$('.selectpicker').selectpicker('refresh');
+			});
+
+		} else {
+
+			$(fieldInputId).empty();
+		}
+	}
+
+</script>--->
+
 <input type="hidden" name="tableTypeId" value="#tableTypeId#"/>
 <input type="hidden" name="table_id" value="#table_id#"/>
 
@@ -24,7 +55,6 @@
 		<cfset field_required_att = "">
 	</cfif>
 	
-
 	<!---
 	<cfif fields.input_type IS "check"><!--- BOOLEAN --->
 
@@ -41,14 +71,18 @@
 
 	<cfelse>--->
 
-	<cfset field_value = row[field_name]>
+	<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS SELECT --->
+		<cfset field_value = row[field_name]>
+	</cfif>
+
+	<div class="control-group">
 
 	<label for="#field_name#">#field_label# <cfif fields.required IS true>*</cfif></label>
 	<cfif len(fields.description) GT 0><small class="help-block">#fields.description#</small></cfif>
 
 	<cfif fields.input_type IS "textarea"><!--- TEXTAREA --->
 
-		<textarea name="#field_name#" id="#field_name#" class="input-block-level" #field_required_att# maxlength="#fields.max_length#">#field_value#</textarea>
+		<textarea name="#field_name#" id="#field_name#" class="input-block-level" #field_required_att# maxlength="#fields.max_length#" <cfif fields.field_type_id IS 2>rows="4"<cfelse>rows="10"</cfif>>#field_value#</textarea>
 
 		<cfif fields.required IS true>
 			<script type="text/javascript">
@@ -80,11 +114,11 @@
 
 	<cfelseif fields.input_type IS "date"><!--- DATE --->
 		
-		<cfif action EQ "create" AND NOT isDefined("FORM.tableTypeId") AND isDate(field_value)>
+		<cfif action NEQ "create" AND NOT isDefined("FORM.tableTypeId") AND isDate(field_value)>
 			<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
 		</cfif>
 
-		<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="input_datepicker"/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
+		<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="input_datepicker"/> <small class="help-inline">Fecha formato DD-MM-AAAA</small>
 
 		<script type="text/javascript">
 			<cfif fields.required IS true>
@@ -115,7 +149,7 @@
 
 		<cfelse><!--- TEXT --->
 
-			<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="input-block-level"/>
+			<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="input-block-level" />
 
 			<cfif fields.required IS true>
 				<script type="text/javascript">
@@ -134,21 +168,75 @@
 				<option value="1" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
 				<option value="0" <cfif field_value IS false>selected="selected"</cfif>>No</option>
 			</select>
-
-			<cfif fields.required IS true>
-				<script type="text/javascript">
-					addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
-				</script>
-			</cfif>	
 		
 		<cfelse><!--- LISTS --->
 
-			<!---<select name="#field_name#" id="#field_name#"></select>--->
+			<cfif NOT isDefined("FORM.tableTypeId")>
+
+				<cfif action EQ "create">
+					
+					<cfset selectedAreasList = row[field_name]>
+
+				<cfelse>
+
+					<!--- Get selected areas --->
+					<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="getRowSelectedAreas" returnvariable="getRowSelectedAreasResponse">
+						<cfinvokeargument name="table_id" value="#table_id#">
+						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+						<cfinvokeargument name="field_id" value="#fields.field_id#">
+						<cfinvokeargument name="row_id" value="#row_id#">
+					</cfinvoke>
+
+					<cfif getRowSelectedAreasResponse.result IS false>
+						<cfthrow message="#getRowSelectedAreasResponse.message#">
+					</cfif>
+
+					<cfset selectedAreas = getRowSelectedAreasResponse.areas>
+					<cfset selectedAreasList = valueList(selectedAreas.area_id)>
+
+				</cfif>
+
+			<cfelse><!---FORM is Defined--->
+
+				<cfif isDefined("FORM.#field_name#")>
+					<cfset selectedAreasList = arrayToList(FORM[field_name])>
+				<cfelse>
+					<cfset selectedAreasList = "">
+				</cfif>
+				
+			</cfif>
+
+			<select name="#field_name#[]" id="#field_name#" #field_required_att# class="selectpicker span5" <cfif fields.field_type_id IS 10>multiple style="height:90px"</cfif>>
+				<cfif fields.field_type_id IS 9 AND fields.required IS false>
+					<option value=""></option>
+				</cfif>
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="outputSubAreasSelect">
+					<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+					<cfif len(selectedAreasList) GT 0>
+						<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+					</cfif>
+					<cfinvokeargument name="recursive" value="false">
+				</cfinvoke>	
+			</select>
+			<cfif fields.field_type_id IS 10>
+				<small class="help-block">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
+			</cfif>
+
+			<!---<script type="text/javascript">
+				loadFieldAreaList("#field_name#", "#fields.list_area_id#", "#selectedAreasList#");
+			</script>--->
 
 		</cfif>
 
+		<cfif fields.required IS true>
+			<script type="text/javascript">
+				addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
+			</script>
+		</cfif>	
+
 	</cfif>
 
+	</div><!---END div class="control-group"--->
 	<!---</cfif>--->		
 	
 	<!---<cfif len(fields.description) GT 0>

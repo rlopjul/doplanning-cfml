@@ -56,7 +56,8 @@
 		<script>
 			function submitAssociateModal(e){
 
-			    e.preventDefault();
+			    if(e.preventDefault)
+					e.preventDefault();
 
 				postModalForm("##associateForm", "#APPLICATION.htmlComponentsPath#/User.cfc?method=assignUserToArea", "#return_page#", "areaIframe");
 

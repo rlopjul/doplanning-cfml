@@ -29,7 +29,8 @@
 		<script>
 			function submitAreaModal(e){
 
-			    e.preventDefault();
+			    if(e.preventDefault)
+					e.preventDefault();
 			      
 				<!--- postModalForm("##areaForm", "##areaModal", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea", "#return_page#", "areaIframe"); --->
 

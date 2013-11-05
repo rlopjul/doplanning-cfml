@@ -424,14 +424,14 @@
 
 			<cfif arguments.full_content IS true>
 
-				<cfset commonColums = commonColums&", link, NULL AS file_size, NULL AS file_type">
+				<cfset commonColums = commonColums&", attached_file_name, link, NULL AS file_size, NULL AS file_type">
 				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS end_date, NULL AS identifier">
 
 				<cfset eventColums = eventColums&", place, start_date, end_date, NULL AS identifier">
 				<cfset taskColums = taskColums&", NULL AS place, start_date, end_date, NULL AS identifier">
 				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, NULL AS end_date, identifier">
 
-				<cfset fileColums = fileColums&", NULL AS link, file_size, file_type">
+				<cfset fileColums = fileColums&", NULL AS attached_file_name, NULL AS link, file_size, file_type">
 				
 				<cfset webColums = webColums&", link_target">
 				<cfset webColumsNull = webColumsNull&", NULL AS link_target">

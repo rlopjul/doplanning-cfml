@@ -1,3 +1,7 @@
+<cfoutput>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+</cfoutput>
+
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
 <cfif isDefined("URL.row") AND isNumeric(URL.row) AND isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
