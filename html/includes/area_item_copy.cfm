@@ -173,7 +173,7 @@
 
 <script type="text/javascript">
 	
-	function treeLoaded () { 
+	function treeLoaded() { 
 
 		$("#loadingContainer").hide();
 		<!---$("#mainContainer").show();--->
@@ -190,10 +190,27 @@
 			toggleCheckboxChecked(checkBoxId);
 
 	}
+
+	function searchTextInTree(){
+		searchInTree(document.getElementById('searchText').value);	
+	}
 	
 	$(window).load( function() {		
 		<!--- $("#accordion").accordion({ active: 1, autoHeight: false }); --->
 		$("#accordion").accordion({ active: 1 , heightStyle: "content"});
+
+		$("#searchText").on("keydown", function(e) { 
+			
+			if(e.which == 13) { //Enter key
+
+				if(e.preventDefault)
+				e.preventDefault();
+
+				searchTextInTree();
+
+			}
+			
+		});
 
 		showTree(true);
 		
@@ -300,6 +317,19 @@ function onSubmitForm()
 		<div style="padding-left:10px;"><!---Tab2--->
 			
 			<div class="alert alert-info"><span lang="es">Seleccione las áreas a las que desea copiar <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs#:</span></div>
+
+			<div class="form-inline">
+
+				<div class="input-append">
+					<input type="text" name="text" id="searchText" value="" class="input-medium" />
+					<button onClick="searchTextInTree()" class="btn" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+				</div>
+
+				<!---<a onClick="expandTree();" class="btn" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+				<a onClick="collapseTree();" class="btn" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>--->
+
+			</div>
+
 			<div id="areasTreeContainer" style="clear:both; margin-bottom:2px;">
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
 				<cfinvokeargument name="with_input_type" value="checkbox">

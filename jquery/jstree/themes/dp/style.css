@@ -12,6 +12,8 @@
 .jstree-dp .jstree-closed > ins { background-position:-54px 0; }
 .jstree-dp .jstree-leaf > ins { background-position:-36px 0; }
 
+.jstree-dp .jstree-search { background-color:#FFFF99; }
+
 .jstree-dp .jstree-hovered { background-color:#E0E0E0; }
 .jstree-dp .jstree-clicked { background-color:#DFE7BE; }
 /*.jstree-dp .jstree-hovered { background-color:#F4DCBB; border:1px solid #e7f4f9; padding:0 2px 0 1px; }
@@ -46,7 +48,6 @@
 #jstree-marker.jstree-dp { background:url("d.png") -41px -57px no-repeat !important; text-indent:-100px; }
 
 /*.jstree-dp a.jstree-search { color:aqua; }*/
-.jstree-dp a.jstree-search { background-color:#FFFF99; }
 .jstree-dp .jstree-locked a { color:silver; cursor:default; }
 
 #vakata-contextmenu.jstree-dp-context, 

@@ -104,7 +104,7 @@ function loadTableFields(tableId) {
 
 		<label for="copy_from_table_id">#tableTypeNameEs# de la que copiar los campos:</label>
 		<select name="copy_from_table_id" id="copy_from_table_id" class="span5" onchange="loadTableFields($('##copy_from_table_id').val());">
-			<cfloop query="#tables#">
+			<cfloop query="tables">
 				<option value="#tables.id#">#tables.title#</option>
 			</cfloop>
 		</select>

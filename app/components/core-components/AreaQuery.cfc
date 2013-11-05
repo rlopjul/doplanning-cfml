@@ -1,16 +1,16 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2013
 
 	Date of file creation: 25-04-2012
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 15-11-2012
 	
 --->
 <cfcomponent output="false">
 
 	<cfset component = "AreaQuery">	
 	
+	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
 	
 	<!---getArea--->
 		
@@ -25,9 +25,10 @@
 		<cfset var method = "getArea">
 			
 			<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-				SELECT areas.id, areas.name AS area_name, areas.creation_date, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id AS area_image_id, areas.link AS area_link, areas.type, areas.default_typology_id, areas.hide_in_menu, areas.menu_type_id
+				SELECT areas.id, areas.name, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id, areas.link, areas.type, areas.default_typology_id, areas.hide_in_menu, areas.menu_type_id
+				, DATE_FORMAT(areas.creation_date, '#dateTimeFormat#') AS creation_date
 				<cfif arguments.with_user IS true>
-				, users.family_name, users.name AS user_name
+				, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				</cfif>
 				FROM #client_abb#_areas AS areas
 				<cfif arguments.with_user IS true>
@@ -39,13 +40,6 @@
 				</cfif>--->	
 				LIMIT 1;
 			</cfquery>
-								
-			<!---<cfquery name="rootAreaQuery" datasource="#client_dsn#">
-				SELECT areas.id, areas.name
-				FROM #client_abb#_areas AS areas
-				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				LIMIT 1;
-			</cfquery>--->	
 		
 		<cfreturn selectAreaQuery>
 		

@@ -44,7 +44,8 @@ function confirmAction(actionText) {
 }
 
 function toggleCheckboxChecked(checkboxId) {
-	$(checkboxId).attr('checked',!($(checkboxId).attr('checked')=="checked"));
+	//$(checkboxId).attr('checked',!($(checkboxId).attr('checked')=="checked"));
+	$(checkboxId).prop("checked",!($(checkboxId).is(":checked")));
 }
 		
 function toggleCheckboxesChecked(checked) {

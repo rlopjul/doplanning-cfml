@@ -231,68 +231,47 @@
 					<cfinvokeargument name="file_type" value="pending">
 					<cfinvokeargument name="name" value=" ">
 					<cfinvokeargument name="description" value=" ">
+					<cfinvokeargument name="file_size" value="0">
 					
 					<cfinvokeargument name="return_type" value="object">
 				</cfinvoke>
 				
-				<cfset objectFile.file_size = "0">
+				<!---<cfset objectFile.file_size = "0">--->
 				
-				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="xmlFile" returnvariable="xmlFileResult">		
+				<!---<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="xmlFile" returnvariable="xmlFileResult">		
 						<cfinvokeargument name="objectFile" value="#objectFile#">
-				</cfinvoke>
+				</cfinvoke>--->
             </cfif>
             
-			<!---<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					#xmlResultItem#
-                    <cfif with_attached IS true>
-                    #xmlFileResult#
-                    </cfif>
-				</cfoutput>
-			</cfsavecontent>--->
 			
-            <cfif with_attached IS false><!---No hay archivo para subir--->
+            <!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->
+            <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" returnvariable="createItemResponse">
+				<cfinvokeargument name="objectItem" value="#objectItem#"/>
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<cfif with_attached IS true OR with_image IS true><!---Hay archivo para subir--->
+					<cfinvokeargument name="status" value="pending"/>
+				</cfif>	
+			</cfinvoke>
+
+			<cfif createItemResponse.result IS true>
+				<cfset createdItemId = createItemResponse.objectItem.id>					
+			<cfelse>
+				<cfthrow message="#createItemResponse.message#">
+			</cfif>
 			
-				<!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->
-                <!---<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-                    <cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
-                    <cfinvokeargument name="request_method" value="create#itemTypeNameU#">
-                    <cfinvokeargument name="request_parameters" value="#request_parameters#">
-                </cfinvoke>
-
-            	<cfset createdItemId = xmlResponse.response.result[#itemTypeName#].xmlAttributes.id>--->
-
-                <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" returnvariable="createItemResponse">
-					<!---<cfinvokeargument name="xmlItem" value="#xmlResultItem#"/>--->
-					<cfinvokeargument name="objectItem" value="#objectItem#"/>
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>	
-				</cfinvoke>
-
-				<cfif createItemResponse.result IS true>
-					<cfset createdItemId = createItemResponse.objectItem.id>					
+			<cfif itemTypeId IS NOT 7 OR arguments.parent_kind EQ "area">
+				<cfif itemTypeGender EQ "male">
+					<cfset response_message = "#itemTypeNameEs# insertado.">
 				<cfelse>
-					<cfthrow message="#createItemResponse.message#">
+					<cfset response_message = "#itemTypeNameEs# insertada.">
 				</cfif>
-				
-				<cfif itemTypeId IS NOT 7 OR arguments.parent_kind EQ "area">
-					<cfif itemTypeGender EQ "male">
-						<cfset response_message = "#itemTypeNameEs# insertado.">
-					<cfelse>
-						<cfset response_message = "#itemTypeNameEs# insertada.">
-					</cfif>
-				<cfelse><!---Consultation--->
-					<cfset response_message = "Respuesta a #itemTypeNameEs# insertada.">
-				</cfif>
-				
-			<cfelse><!---Hay archivo para subir--->
-			
-            	<!---<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-                    <cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
-                    <cfinvokeargument name="request_method" value="create#itemTypeNameU#WithAttachedFile">
-                    <cfinvokeargument name="request_parameters" value="#request_parameters#">
-                </cfinvoke>--->
-				
-				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItemWithAttachedFile" returnvariable="createItemWithAttachedResponse">
+			<cfelse><!---Consultation--->
+				<cfset response_message = "Respuesta a #itemTypeNameEs# insertada.">
+			</cfif>
+
+            <cfif with_attached IS true><!---Hay archivo para subir--->
+
+				<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItemWithAttachedFile" returnvariable="createItemWithAttachedResponse">
 					<!---<cfinvokeargument name="xmlItem" value="#xmlResultItem#"/>--->
 					<cfinvokeargument name="objectItem" value="#objectItem#"/>
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>	
@@ -310,18 +289,51 @@
 				</cfif>
 
 				<cfset file_id = createItemWithAttachedResponse.objectFile.id>
-				<cfset file_physical_name = createItemWithAttachedResponse.objectFile.physical_name>
+				<cfset file_physical_name = createItemWithAttachedResponse.objectFile.physical_name>--->
+
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="createFileResponse">
+					<cfinvokeargument name="name" value="#objectFile.name#">		
+					<cfinvokeargument name="file_name" value="#objectFile.file_name#">
+					<cfinvokeargument name="file_type" value="#objectFile.file_type#">
+					<cfinvokeargument name="file_size" value="#objectFile.file_size_full#">
+					<cfinvokeargument name="description" value="#objectFile.description#">
+				</cfinvoke>			
+			
+				<cfif createFileResponse.result IS true>
+			
+					<cfset file_id = createFileResponse.objectFile.id>
+					<cfset file_physical_name = createFileResponse.objectFile.physical_name>
+					
+					<cftry>
+					
+						<!---Aquí el archivo se sube, pero no se marca como que se ha completado (eso se hace después en la llamada a getItemFileStatus--->
+						<cfinvoke component="AreaItemFile" method="uploadItemFile">
+		                    <cfinvokeargument name="item_id" value="#createdItemId#">
+		                    <cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+		                    <cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+							<cfinvokeargument name="file_type" value="item_file_html">
+							<cfinvokeargument name="file_id" value="#file_id#">
+							<cfinvokeargument name="file_physical_name" value="#file_physical_name#">
+							<cfinvokeargument name="Filedata" value="#arguments.Filedata#">
+		                </cfinvoke>
+						
+						<cfcatch><!---Este catch se utiliza para cuando un archivo no es una imagen--->
+						
+							<cfset response = {result="false", message="El archivo no es una imagen. "&#cfcatch.Message#, item_id=#createdItemId#}>	
+							<cfreturn response>
+						
+						</cfcatch>
+						
+					</cftry>
+					
+				<cfelse>
 				
-				<!---Aquí el archivo se sube, pero no se marca como que se ha completado (eso se hace después en la llamada a getItemFileStatus--->
-				<cfinvoke component="AreaItemFile" method="uploadItemFile">
-                    <cfinvokeargument name="item_id" value="#createdItemId#">
-                    <cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-                    <cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-					<cfinvokeargument name="file_type" value="item_file_html">
-					<cfinvokeargument name="file_id" value="#file_id#">
-					<cfinvokeargument name="file_physical_name" value="#file_physical_name#">
-					<cfinvokeargument name="Filedata" value="#arguments.Filedata#">
-                </cfinvoke>
+					<cfset response_message = "Error al crear el archivo.">
+
+					<cfset response = {result=false, message=#response_message#}>	
+					<cfreturn response>
+					
+				</cfif>
 				
 					
 			</cfif>
@@ -338,30 +350,8 @@
 					
 					<cfinvokeargument name="return_type" value="object">
 				</cfinvoke>
-				
-				
-				<!---<cfsavecontent variable="xmlRequest">
-					<request>
-						<parameters>
-						<cfoutput>
-							#xmlImageFile#
-						</cfoutput>
-						</parameters>
-					</request>
-				</cfsavecontent>
-				
-				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="resultFile">
-					<cfinvokeargument name="request" value="#xmlRequest#">
-					<cfinvokeargument name="status" value="pending">
-				</cfinvoke>
-	
-				<cfxml variable="xmlResultFile">
-					<cfoutput>
-						#resultFile#
-					</cfoutput>					
-				</cfxml>--->
 
-				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="createFileResponse">
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="createImageResponse">
 					<cfinvokeargument name="name" value="#objectFileImage.name#">		
 					<cfinvokeargument name="file_name" value="#objectFileImage.file_name#">
 					<cfinvokeargument name="file_type" value="#objectFileImage.file_type#">
@@ -369,10 +359,10 @@
 					<cfinvokeargument name="description" value="#objectFileImage.description#">
 				</cfinvoke>			
 			
-				<cfif createFileResponse.result IS true>
+				<cfif createImageResponse.result IS true>
 			
-					<cfset image_id = createFileResponse.objectFile.id>
-					<cfset image_physical_name = createFileResponse.objectFile.physical_name>
+					<cfset image_id = createImageResponse.objectFile.id>
+					<cfset image_physical_name = createImageResponse.objectFile.physical_name>
 					
 					<cftry>
 					
@@ -396,14 +386,6 @@
 						
 					</cftry>
 					
-					<!---<cfif xmlGetFileResponse.response.result.file.xmlAttributes.status NEQ "ok">
-						
-						<cfset response_message = "Error al subir la imagen">
-						<cfset response_message = URLEncodedFormat(response_message)>
-						<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&msg=#response_message#&res=0" addtoken="no">
-						
-					</cfif>--->
-					
 				<cfelse>
 				
 					<cfset response_message = "Error al crear la imagen.">
@@ -419,11 +401,6 @@
 			<!---Ahora se marca que el archivo y/o la imagen se han subido--->		
 			<cfif with_attached IS true>
 				<!---Obtiene el status de la subida del archivo para comprobar que se ha subido correctamente. Si se ha completado la subida, se marca el archivo y el elemento que lo lleva adjunto como subido.--->
-				<!---<cfinvoke component="Request" method="doRequest" returnvariable="xmlGetFileResponse">
-					<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
-					<cfinvokeargument name="request_method" value="get#itemTypeNameU#FileStatus">
-					<cfinvokeargument name="request_parameters" value='<file id="#file_id#"/>'>
-				</cfinvoke>--->
 
 				<cftry>
 
@@ -497,10 +474,6 @@
 				
 				
 			</cfif>
-			
-			
-			<!---<cfset response_message = URLEncodedFormat(response_message)>
-			<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&response_message=#response_message#&res=1" addtoken="no">--->
 			
 			<cfset response = {result="true", message=#response_message#, item_id=#createdItemId#}>
 
@@ -682,9 +655,9 @@
 				
 				<cfset objectFile.file_size = "0">
 				
-				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="xmlFile" returnvariable="xmlFileResult">		
+				<!---<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="xmlFile" returnvariable="xmlFileResult">		
 					<cfinvokeargument name="objectFile" value="#objectFile#">
-				</cfinvoke>
+				</cfinvoke>--->
 			
             </cfif>
 			
@@ -2389,7 +2362,7 @@
 									<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img" alt="#itemTypeNameEs#" title="#itemTypeNameEs#"/>
 										
 								<cfelse><!---style="max-width:none;" Requerido para corregir un bug con Bootstrap en Chrome--->
-									<a href="#APPLICATION.htmlPath#/go_to_link_link.cfm?#itemTypeName#=#itemsQuery.id#" style="float:left;" target="_blank" title="Visitar el enlace" onclick="event.stopPropagation()"><img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img"/></a>
+									<a href="#APPLICATION.htmlPath#/go_to_link_link.cfm?#itemTypeName#=#itemsQuery.id#" style="float:left;" target="_blank" title="Visitar el enlace" onclick="openUrl('#APPLICATION.htmlPath#/go_to_link_link.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)"><img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img"/></a>
 								</cfif>
 								<span class="hidden">#itemTypeId#</span>								
 							</td>							
@@ -2398,7 +2371,7 @@
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 									<!---<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>--->
 
-									<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
+									<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
 								</cfif>
 
 								<!---Attached files--->

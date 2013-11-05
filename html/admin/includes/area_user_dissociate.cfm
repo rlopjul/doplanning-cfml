@@ -56,7 +56,8 @@
 		<script>
 			function submitAssociateModal(e){
 
-			    e.preventDefault();
+			    if(e.preventDefault)
+					e.preventDefault();
 
 				postModalForm("##dissociateForm", "#APPLICATION.htmlComponentsPath#/User.cfc?method=dissociateUserFromArea", "#return_page#", "areaIframe");
 

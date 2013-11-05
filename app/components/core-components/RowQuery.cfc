@@ -113,4 +113,39 @@
 	</cffunction>
 	
 
+	<!---getRowSelectedAreas--->
+		
+	<cffunction name="getRowSelectedAreas" output="false" returntype="query" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="field_id" type="numeric" required="false">
+		<cfargument name="row_id" type="numeric" required="false">
+
+		<cfargument name="with_types" type="boolean" required="false" default="false">
+		<cfargument name="with_table" type="boolean" required="false" default="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
+				
+		<cfset var method = "getRowSelectedAreas">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+			
+			<cfquery name="getTableRowAreas" datasource="#client_dsn#">
+				SELECT row_areas.*,	areas.name
+				FROM `#client_abb#_#tableTypeTable#_rows_areas` AS row_areas
+				INNER JOIN #client_abb#_areas AS areas ON row_areas.area_id = areas.id
+				AND	row_areas.#tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				<cfif isDefined("arguments.field_id")>
+					AND row_areas.field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif isDefined("arguments.row_id")>
+					AND row_areas.row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
+				</cfif>;
+			</cfquery>
+		
+		<cfreturn getTableRowAreas>
+		
+	</cffunction>
+
 </cfcomponent>

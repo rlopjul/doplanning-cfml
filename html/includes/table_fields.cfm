@@ -34,12 +34,12 @@
 
 	<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-small"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Añadir campo</span></a>
 
-	<a href="#tableTypeName#_fields_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Copiar de plantilla" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar de plantilla<span></a>
+	<a href="#tableTypeName#_fields_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Copiar de plantilla" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar de plantilla</span></a>
 
 	<cfif tableTypeId IS NOT 3>
 		<span class="divider">&nbsp;</span>
 
-		<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros<span></a>
+		<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
 	</cfif>
 
 	<span class="divider">&nbsp;</span>

@@ -39,24 +39,50 @@
 
 <script type="text/javascript">
 	
+	function treeLoaded() { 
+		
+		$("#loadingContainer").hide();
+		$("#mainContainer").show();
+	}
+
 	function areaSelected(areaId)  {
 		var checkBoxId = "#area"+areaId;
 		if($(checkBoxId).attr('disabled')!='disabled')
 			toggleCheckboxChecked(checkBoxId);
 	}
 	
-	function treeLoaded (event, data) { //JStree loaded
-		$("#areasTreeContainer").bind("select_node.jstree", function (e, data) {
-			var $obj = data.rslt.obj;
-			areaSelected($obj.attr("id"));
-		});
-		
-		$("#loadingContainer").hide();
-		$("#mainContainer").show();
+	function searchTextInTree(){
+		searchInTree(document.getElementById('searchText').value);	
+	}
+
+	function onSubmitForm()
+	{
+		if(check_custom_form())
+		{
+			//document.getElementById("submitDiv").innerHTML = "Enviando...";
+
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	$(window).load( function() {
-		showTree(true);/*,""*/
+		showTree(true);
+
+		$("#searchText").on("keydown", function(e) { 
+			
+			if(e.which == 13) { //Enter key
+
+				if(e.preventDefault)
+				e.preventDefault();
+
+				searchTextInTree();
+
+			}
+			
+		});
+
 	});
 
 </script>
@@ -96,23 +122,9 @@ Asociar archivo a áreas
 <div class="alert alert-info" style="margin:5px;">Seleccione las áreas a las que desea asociar el archivo:</div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
-
-<script type="text/javascript">
-function onSubmitForm()
-{
-	if(check_custom_form())
-	{
-		//document.getElementById("submitDiv").innerHTML = "Enviando...";
-
-		return true;
-	}
-	else
-		return false;
-}
-</script>
 			
 <div id="mainContainer" style="clear:both;display:none;padding-left:5px;">
-<cfform name="add_file_to_areas" method="post" action="#CGI.SCRIPT_NAME#" style="clear:both;" onsubmit="return onSubmitForm();">
+<cfform name="add_file_to_areas" method="post" action="#CGI.SCRIPT_NAME#" class="form-inline" style="clear:both;" onsubmit="return onSubmitForm();">
 	<cfoutput>
 	
 	<script type="text/javascript">
@@ -151,6 +163,18 @@ function onSubmitForm()
 	
 	<a href="#return_page#" class="btn" style="float:right;">Cancelar</a>
 	
+	<div style="margin-top:2px;">
+
+		<div class="input-append">
+			<input type="text" name="text" id="searchText" value="" class="input-medium" />
+			<button onClick="searchTextInTree()" class="btn" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+		</div>
+
+		<!---<a onClick="expandTree();" class="btn" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+		<a onClick="collapseTree();" class="btn" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>--->
+
+	</div>
+
 	<div id="areasTreeContainer" style="clear:both; margin-top:2px; margin-bottom:2px;">
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
 		<cfif APPLICATION.identifier EQ "dp">

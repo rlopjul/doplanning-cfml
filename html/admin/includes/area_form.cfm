@@ -61,7 +61,7 @@
 				<div class="control-group">		
 					<div class="controls">					
 						<input style="margin-top:-2px;" id="hide_in_menu" name="hide_in_menu" type="checkbox" value="true" <cfif objectArea.hide_in_menu IS true>checked="checked"</cfif>  />
-						<label class="control-label" for="hide_in_menu" lang="es" style="margin-top:5px;">Ocultar del menú de la web las áreas inferiores a esta</label>		
+						<label class="control-label" for="hide_in_menu" lang="es" style="margin-top:5px;">Ocultar del menú (no se mostrará esta área ni sus áreas inferiores)</label>		
 					</div>
 				</div>	
 				
