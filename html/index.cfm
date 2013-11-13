@@ -6,7 +6,7 @@
 	<cflocation url="#APPLICATION.mainUrl#" addtoken="no">
 </cfif>
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="isMobileBrowser" returnvariable="isMobileBrowser">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="isMobileBrowser" returnvariable="isMobileBrowser">
 </cfinvoke>
 
 <cfif isMobileBrowser IS true OR ( (FindNoCase('MSIE 6',CGI.HTTP_USER_AGENT) GT 0 OR FindNoCase('MSIE 7',CGI.HTTP_USER_AGENT) GT 0 ) AND FindNoCase('Opera',CGI.HTTP_USER_AGENT) LT 1)><!---Mobile version--->

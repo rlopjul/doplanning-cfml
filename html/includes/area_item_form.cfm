@@ -61,19 +61,21 @@ var editor;
 
 var preventClose = false;
 	
-$(window).on('beforeunload', function(){
-	
-	//editor.updateElement();	//Update CKEditor state to update preventClose value
+$(window).on('beforeunload', function(event){
+
+	<!---
+	ESTO DA PROBLEMAS EN CHROME (cuando se envía un formulario aparece la ventana de abandonar página)
+	editor.updateElement();	//Update CKEditor state to update preventClose value
 	
 	if(preventClose){
 		
-		var alerMessage = window.lang.convert('Tiene texto sin enviar, si abandona esta página lo perderá');
+		showLoadingPage(false);
+
+		var alertMessage = window.lang.convert('Tiene texto sin enviar, si abandona esta página lo perderá');
 		
 		return alertMessage;
 	
-	}
-	else 
-		return;
+	}--->
 
 });
 

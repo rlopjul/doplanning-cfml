@@ -59,7 +59,7 @@
 
 	function sendUsersForm(){
 
-		<!---onUnloadPage();--->
+		showLoadingPage(true);
 
 		var requestUrl = "#APPLICATION.htmlComponentsPath#/Table.cfc?method=addUsersToTable";
 		var responseUrl = "#tableTypeName#_users.cfm?#tableTypeName#="+tableId;
@@ -81,6 +81,8 @@
 		  		showAlertMessage(message, data.result);--->
 
 		  	}else{
+
+		  		showLoadingIframe(false);
 
 		  		alert(status);
 		  		newUsers = [];

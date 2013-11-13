@@ -23,8 +23,8 @@
 
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 
-<script type="text/javascript" src="../html/scripts/functions.min.js"></script>
-<script type="text/javascript" src="../html/scripts/iframesFunctions.min.js"></script>
+<script type="text/javascript" src="../html/scripts/functions.min.js?v=2"></script>
+<script type="text/javascript" src="../html/scripts/iframesFunctions.min.js?v=2"></script>
 
 <script type="text/javascript">
 	//Language
@@ -36,7 +36,6 @@
 	window.lang = new jquery_lang_js();
 	
 	$().ready(function () {
-		//Language
    		window.lang.run();
 		
 		<!---<cfif page_language NEQ "es">
@@ -53,9 +52,9 @@
 <!-- TemplateEndEditable -->
 </head>
 
-<body onbeforeunload="onUnloadPage()" onLoad="onLoadPage()">
+<body onBeforeUnload="onUnloadPage()" onLoad="onLoadPage()">
 <!---divLoading--->
-<cfinclude template="#APPLICATION.htmlPath#/includes/loading_iframe_div.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/loading_page_div.cfm">
 
 <!-- TemplateBeginEditable name="content" -->
 <!-- TemplateEndEditable -->

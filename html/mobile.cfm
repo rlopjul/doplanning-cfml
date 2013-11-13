@@ -51,7 +51,7 @@
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="scripts/functions.min.js"></script>
+<script type="text/javascript" src="scripts/functions.min.js?v=2"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -61,7 +61,6 @@
 	window.lang = new jquery_lang_js();
 	
 	$().ready(function () {
-		//Language
 		window.lang.run();
 	});
 </script>
@@ -70,7 +69,9 @@
 <!-- InstanceEndEditable -->
 </head>
 
-<body class="body_global">
+<body onBeforeUnload="onUnloadPage()" onLoad="onLoadPage()" class="body_global">
+<!---divLoading--->
+<cfinclude template="#APPLICATION.htmlPath#/includes/loading_page_div.cfm">
 <cfif APPLICATION.identifier NEQ "dp">
 	<div class="div_header">
 		<a href="../html/"><div class="div_header_content"><!-- --></div></a>
@@ -144,7 +145,7 @@
 		
 		<li><a href="search.cfm?return_page=#current_page#"><img src="assets/icons/search.png" alt="Búsqueda" title="Buscar"/>&nbsp;&nbsp;<span lang="es">Buscar</span></a></li>
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="isMobileBrowser" returnvariable="isMobileBrowser">
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="isMobileBrowser" returnvariable="isMobileBrowser">
 		</cfinvoke>
 
 		<cfif NOT isMobileBrowser><!--- Is not mobile version --->

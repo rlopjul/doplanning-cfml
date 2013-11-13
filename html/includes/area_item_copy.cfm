@@ -89,16 +89,16 @@
 	<cfset msg = resultCopyItem.message>
 	<cfset res = resultCopyItem.result>
 	
+	<!---
 	<cfif NOT isDefined("FORM.sourceItemTypeId")>
 		<cflocation url="#return_path##itemTypeNameP#.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 	<cfelse><!---Devuelve a la lista de mensajes porque se ha copiado desde un elemento distinto del elemento de destino--->
-		
 		<cfset itemTypeId = FORM.sourceItemTypeId>
 		<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 	
 		<cflocation url="#return_path##itemTypeNameP#.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
-	</cfif>
-
+	</cfif>--->
+	<cflocation url="#return_path#area_items.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 
 </cfif>
 

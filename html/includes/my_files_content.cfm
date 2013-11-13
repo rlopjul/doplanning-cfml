@@ -77,11 +77,11 @@
 	<cfelse>
 		<cfset return_page = "files.cfm?area=#area_id#">
 	</cfif>
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
 		<cfinvokeargument name="return_page" value="#return_page#">
 	</cfinvoke>
 <cfelse>
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="goUpElement">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="goUpElement">
 		<cfinvokeargument name="return_page" value="#return_page#">
 	</cfinvoke>
 </cfif>

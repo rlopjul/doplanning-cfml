@@ -68,7 +68,13 @@
 
 		</cfif>
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_form_inputs.cfm">
+		<!--- outputRowFormInputs --->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowFormInputs">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			<cfinvokeargument name="row" value="#row#">
+			<cfinvokeargument name="fields" value="#fields#">
+		</cfinvoke>
 
 	</cfif>
 

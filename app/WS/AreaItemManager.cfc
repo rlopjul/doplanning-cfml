@@ -1793,7 +1793,8 @@
 				<cfinclude template="includes/checkAreaAccess.cfm">
 				
 				<cfif getItemQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
-					<!---<cfset error_code = 103><!---Access denied--->
+					<!---
+					<cfset error_code = 103><!---Access denied--->
 					<cfthrow errorcode="#error_code#">--->
 					<cfinclude template="includes/checkAreaAdminAccess.cfm">
 				</cfif>

@@ -36,7 +36,10 @@
 	<cfinclude template="area_menu.cfm">
 	
 	 <cfif area_allowed NEQ true>
-	 <div class="div_text_result"><span lang="es">No tiene acceso a los contenidos de esta área.</span></div>
+	 	<script type="text/javascript">
+			openUrlHtml2('empty.cfm','itemIframe');
+		</script>	
+	 	<div class="div_text_result"><span lang="es">No tiene acceso a los contenidos de esta área.</span></div>
 	 </cfif>
 	
 </cfif>

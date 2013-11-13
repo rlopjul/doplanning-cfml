@@ -77,7 +77,14 @@
 			</cfinvoke>
 
 			<cfif response.result IS true>
-				<cfset response = {result=true, message="#tableTypeNameEs# creada, defina ahora los campos.", table_id=response.item_id, area_id=#arguments.area_id#}>
+
+				<cfif tableTypeGender EQ "male">
+					<cfset response_message = "#tableTypeNameEs# creado, defina ahora los campos.">
+				<cfelse>
+					<cfset response_message = "#tableTypeNameEs# creada, defina ahora los campos.">
+				</cfif>
+
+				<cfset response = {result=true, message=response_message, table_id=response.item_id, area_id=#arguments.area_id#}>
 			</cfif>	
 
 			<cfcatch>
@@ -122,7 +129,14 @@
 			</cfinvoke>
 			
 			<cfif response.result IS true>
-				<cfset response = {result=true, message="#tableTypeNameEs# modificada.", table_id=arguments.table_id, area_id=#arguments.area_id#}>
+
+				<cfif tableTypeGender EQ "male">
+					<cfset response_message = "#tableTypeNameEs# modificado.">
+				<cfelse>
+					<cfset response_message = "#itemTypeNameEs# modificada.">
+				</cfif>
+
+				<cfset response = {result=true, message=response_message, table_id=arguments.table_id, area_id=#arguments.area_id#}>
 			</cfif>
             
 			<cfcatch>

@@ -1,14 +1,3 @@
-function onUnloadPage(){
-	if(showLoading)
-		document.getElementById("areaLoading").style.display = "block";
-	
-	showLoading = true;
-}
-
-function onLoadPage(){
-	document.getElementById("areaLoading").style.display = "none";
-}
-
 function openUrlLite(url,target){
 	
 	if(target == "_self")

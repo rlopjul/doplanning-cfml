@@ -101,7 +101,7 @@
 
 		if(!isNaN(typologyId)){
 
-			$("##areaLoading").show();
+			showLoadingPage(true);
 
 			var typologyPage = "#APPLICATION.htmlPath#/html_content/typology_row_form_inputs.cfm?typology="+typologyId;
 
@@ -111,7 +111,7 @@
 
 			$("##typologyContainer").load(typologyPage, function() {
 
-				$("##areaLoading").hide();
+				showLoadingPage(false);
 
 			});
 

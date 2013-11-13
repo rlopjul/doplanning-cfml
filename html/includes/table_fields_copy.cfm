@@ -74,13 +74,13 @@ function loadTableFields(tableId) {
 
 	if(!isNaN(tableId)){
 
-		$("##areaLoading").show();
+		showLoadingPage(true);
 
 		var tablePage = "#APPLICATION.htmlPath#/html_content/#tableTypeName#_fields.cfm?#tableTypeName#="+tableId;
 
 		$("##fieldsContainer").load(tablePage, function() {
 
-			$("##areaLoading").hide();
+			showLoadingPage(false);
 
 		});
 
@@ -102,7 +102,7 @@ function loadTableFields(tableId) {
 	<div style="padding-left:2px; margin-top:5px;">
 	<cfif tables.recordCount GT 0>
 
-		<label for="copy_from_table_id">#tableTypeNameEs# de la que copiar los campos:</label>
+		<label for="copy_from_table_id">#tableTypeNameEs# <cfif tableTypeGender IS "male">del<cfelse>de la</cfif> que copiar los campos:</label>
 		<select name="copy_from_table_id" id="copy_from_table_id" class="span5" onchange="loadTableFields($('##copy_from_table_id').val());">
 			<cfloop query="tables">
 				<option value="#tables.id#">#tables.title#</option>

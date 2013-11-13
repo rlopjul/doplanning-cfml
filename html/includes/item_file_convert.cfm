@@ -35,6 +35,6 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/file_convert.cfm">
 
 <cfset return_page = "#itemTypeName#.cfm?#itemTypeName#=#item_id#">
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
 </cfinvoke>

@@ -61,7 +61,7 @@
 </div>
 
 <cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
 		<cfinvokeargument name="return_page" value="#URL.return_page#">
 	</cfinvoke>
 </cfif>
