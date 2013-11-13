@@ -75,7 +75,7 @@
 		<span class="divider">&nbsp;</span>
 	</cfif>
 
-	<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-small" title="#itemTypeNameEsP# del área" lang="es"><!---<i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i>---> <span lang="es">#itemTypeNameEsP# del área</span></a>
+	<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-small" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>
 
 	<span class="divider">&nbsp;</span>
 
@@ -100,14 +100,14 @@
 				
 				$("##dataTable").tablesorter({ 
 					widgets: ['zebra','filter','select'],
-					sortList: [[1,1]] ,
+					sortList: [[0,1]] ,
 					headers: { 
 						1: { 
 							sorter: "datetime" 
 						},
-						2: { 
+						<!---2: { 
 							sorter: "datetime" 
-						}
+						}--->
 					},
 
 					widgetOptions : {
@@ -142,17 +142,14 @@
 			<thead>
 				<tr>
 					<th style="width:25px;">##</th>
-					<th>Fecha inserción</th>
+					<!--- <th>Fecha inserción</th> --->
 					<th>Fecha última modificación</th>
 					<cfloop query="fields">
-						<cfif fields.field_type_id IS NOT 3><!--- IS NOT long text --->	
-							<th>#fields.label#</th>
-						</cfif>
+						<th>#fields.label#</th>
 						<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10>
 							<cfset listFields = true>
 						</cfif>
 					</cfloop>
-					<!---<th class="filter-false">Acciones</th>--->
 				</tr>
 			</thead>
 			<tbody>
@@ -201,52 +198,84 @@
 
 				<tr <cfif dataSelected IS true>class="selected"</cfif> onclick="openUrl('#row_page_url#','itemIframe',event)">
 					<td>#tableRows.row_id#</td>
-					<td>#DateFormat(tableRows.creation_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>
+					<!---<td>#DateFormat(tableRows.creation_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>--->
 					<td><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
 					<cfset row_id = tableRows.row_id>
 					<cfloop query="fields">
-						<cfif fields.field_type_id IS NOT 3><!--- IS NOT long text --->	
 
-							<cfset field_value = "">
+						<cfset field_value = "">
 
-							<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS LIST --->
+						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS LIST --->
 
-								<cfif selectedAreas.recordCount GT 0>
+							<cfif selectedAreas.recordCount GT 0>
 
-									<cfquery dbtype="query" name="rowSelectedAreas">
-										SELECT name
-										FROM selectedAreas
-										WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
-										AND row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">;
-									</cfquery>
+								<cfquery dbtype="query" name="rowSelectedAreas">
+									SELECT name
+									FROM selectedAreas
+									WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
+									AND row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">;
+								</cfquery>
 
-									<cfif rowSelectedAreas.recordCount GT 0>
-										<cfset field_value = valueList(rowSelectedAreas.name, "<br/>")>
-									</cfif>
-
-								</cfif>
-								
-							<cfelse><!--- IS NOT LIST --->
-
-								<cfset field_value = tableRows['field_#fields.field_id#']>
-
-								<cfif len(field_value) GT 0>
-									<cfif fields.field_type_id IS 6><!--- DATE --->
-										<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
-									<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
-										<cfif field_value IS true>
-											<cfset field_value = "Sí">
-										<cfelseif field_value IS false>
-											<cfset field_value = "No">
-										</cfif>
-									</cfif>
+								<cfif rowSelectedAreas.recordCount GT 0>
+									<cfset field_value = valueList(rowSelectedAreas.name, "<br/>")>
 								</cfif>
 
 							</cfif>
+							
+						<cfelse><!--- IS NOT LIST --->
 
-							<td>#field_value#</td>
+							<cfset field_value = tableRows['field_#fields.field_id#']>
+
+							<cfif len(field_value) GT 0>
+								<cfif fields.field_type_id IS 6><!--- DATE --->
+									<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
+								<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
+									<cfif field_value IS true>
+										<cfset field_value = "Sí">
+									<cfelseif field_value IS false>
+										<cfset field_value = "No">
+									</cfif>
+								<cfelse>
+
+									<cfif fields.field_type_id IS 2 OR fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- TEXTAREA --->
+										
+										<cfif len(field_value) GT 200>
+
+											<cfif fields.field_type_id IS NOT 2>
+
+												<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="replaceP" returnvariable="field_value">
+													<cfinvokeargument name="string" value="#field_value#">
+												</cfinvoke>--->
+
+												<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="removeHTML" returnvariable="field_value">
+													<cfinvokeargument name="string" value="#field_value#">
+												</cfinvoke>
+							
+											</cfif>
+
+											<cfset field_value = left(field_value, 180)&"...">
+
+											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
+												<cfinvokeargument name="string" value="#field_value#">
+											</cfinvoke>
+
+										<cfelseif fields.field_type_id IS 2>
+
+											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
+												<cfinvokeargument name="string" value="#field_value#">
+											</cfinvoke>
+
+										</cfif>
+
+									</cfif>
+									
+								</cfif>
+							</cfif>
 
 						</cfif>
+
+						<td>#field_value#</td>
+
 					</cfloop>
 				</tr>
 			</cfloop>

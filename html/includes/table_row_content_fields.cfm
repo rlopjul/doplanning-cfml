@@ -35,6 +35,13 @@
 
 			<div class="div_message_page_label">#field_label#</div>
 			<cfif len(field_value) GT 0>
+
+				<cfif fields.field_type_id IS 2>
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
+						<cfinvokeargument name="string" value="#field_value#">
+					</cfinvoke>
+				</cfif>
+
 				<div class="div_message_page_description">#field_value#</div>
 			</cfif> 
 

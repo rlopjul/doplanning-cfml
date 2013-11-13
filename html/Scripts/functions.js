@@ -1,3 +1,24 @@
+var showLoading = true;
+
+function onUnloadPage(){
+	if(showLoading)
+		showLoadingPage(true);
+	
+	showLoading = true;
+}
+
+function onLoadPage(){
+	showLoadingPage(false);
+}
+
+function showLoadingPage(value){
+
+	if(value)
+		document.getElementById("pageLoadingContainer").style.display = "block";
+	else
+		document.getElementById("pageLoadingContainer").style.display = "none";
+}
+
 function submitForm(formName){
 	var form = eval("document.forms."+formName);
 	form.submit();
@@ -54,8 +75,6 @@ function toggleCheckboxesChecked(checked) {
 	})*/
 	$("input:checkbox").prop("checked",checked); 
 }
-
-var showLoading = true;
 
 /**
 Esta función no se debe usar porque no funciona en los accesos externos del SAS

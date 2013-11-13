@@ -24,19 +24,23 @@
 	No hay campos definidos para rellenar.
 
 <cfelse>
-
+	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js" type="text/javascript"></script>
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
 	<script type="text/javascript">
-		function confirmDeleteField() {
-		
-			var message_delete = "Si ELIMINA el campo, se borrarán definitivamente todos los contenidos que almacena. ¿Seguro que desea eliminar el campo?";
-			return confirm(message_delete);
-		}
 
 		function onSubmitForm(){
+
+			// Update textareas content from ckeditor
+			for (var i in CKEDITOR.instances) {
+
+			    (function(i){
+			        CKEDITOR.instances[i].updateElement();
+			    })(i);
+
+			}
 
 			if(check_custom_form())	{
 				document.getElementById("submitDiv1").innerHTML = 'Enviando...';
@@ -79,7 +83,13 @@
 		<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
 		<input type="hidden" name="area_id" value="#area_id#"/>
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_form_inputs.cfm">
+		<!--- outputRowFormInputs --->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowFormInputs">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			<cfinvokeargument name="row" value="#row#">
+			<cfinvokeargument name="fields" value="#fields#">
+		</cfinvoke>	
 		
 		<div id="submitDiv2" style="margin-top:20px;">
 			<input type="submit" value="Guardar" class="btn btn-primary"/>

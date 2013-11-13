@@ -1,7 +1,3 @@
-<!--- 
-Esta página ya no se debe usar, se mantiene por si es requerida esta funcionalidad de nuevo para ciertos clientes
- --->
-
 <cfprocessingdirective suppresswhitespace="true">
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
@@ -55,7 +51,7 @@ Esta página ya no se debe usar, se mantiene por si es requerida esta funcionali
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="scripts/functions.min.js"></script>
+<script type="text/javascript" src="scripts/functions.min.js?v=2"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -65,7 +61,6 @@ Esta página ya no se debe usar, se mantiene por si es requerida esta funcionali
 	window.lang = new jquery_lang_js();
 	
 	$().ready(function () {
-		//Language
 		window.lang.run();
 	});
 </script>
@@ -92,7 +87,9 @@ Esta página ya no se debe usar, se mantiene por si es requerida esta funcionali
 <!-- InstanceEndEditable -->
 </head>
 
-<body class="body_global">
+<body onBeforeUnload="onUnloadPage()" onLoad="onLoadPage()" class="body_global">
+<!---divLoading--->
+<cfinclude template="#APPLICATION.htmlPath#/includes/loading_page_div.cfm">
 <cfif APPLICATION.identifier NEQ "dp">
 	<div class="div_header">
 		<a href="../html/"><div class="div_header_content"><!-- --></div></a>
@@ -186,7 +183,7 @@ function onSubmitForm()
 </cfoutput>
 
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
 </cfinvoke>
 <!-- InstanceEndEditable -->

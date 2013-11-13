@@ -1665,6 +1665,7 @@
 			
 			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
 			
+			<!---
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 			
 			<!---getRootAreaId--->
@@ -1820,7 +1821,7 @@
 			
 			<cfquery name="commitQuery" datasource="#client_dsn#">
 				COMMIT;
-			</cfquery>	
+			</cfquery>
 					
 			<cfsavecontent variable="xmlResponseContent">
 				<cfoutput>
@@ -1836,6 +1837,31 @@
 					ROLLBACK;
 				</cfquery>
 				
+				<cfset xmlResponseContent = arguments.request>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>--->
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="deleteArea" returnvariable="deleteAreaResponse">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+
+			<cfif deleteAreaResponse.result IS true>
+
+				<cfsavecontent variable="xmlResponseContent">
+					<cfoutput><area id="#area_id#"></area></cfoutput>
+				</cfsavecontent>
+
+				<cfinclude template="includes/functionEndNoLog.cfm">	
+
+			<cfelse>
+
+				<cfthrow message="#deleteAreaResponse.message#">
+
+			</cfif>
+
+			<cfcatch>
 				<cfset xmlResponseContent = arguments.request>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										

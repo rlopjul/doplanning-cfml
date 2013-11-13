@@ -56,6 +56,6 @@ function onSubmitForm()
 
 </div>
 
-<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="returnElement">
+<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
 </cfinvoke>--->

@@ -242,6 +242,44 @@
 	</cffunction>
 
 
+	<!--- -------------------------------outputRowFormInputs-------------------------------------- --->
+	
+    <cffunction name="outputRowFormInputs" returntype="void" access="public" output="true">
+    	<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="row" type="object" required="true">
+		<cfargument name="fields" type="query" required="true">
+		
+		<cfset var method = "outputRowFormInputs">
+		
+		<cftry>
+					
+			<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowFormInputs">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="row" value="#arguments.row#">
+				<cfinvokeargument name="fields" value="#arguments.fields#">
+
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfcatch>
+				<cfoutput>
+					<div class="alert alert-error">
+						<i class="icon-warning-sign"></i> <span lang="es">#cfcatch.message#</span>
+					</div>
+				</cfoutput>
+				<cfinclude template="includes/errorHandlerNoRedirect.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
 
 
 </cfcomponent>

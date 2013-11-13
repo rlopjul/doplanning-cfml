@@ -23,17 +23,6 @@ function areaIframeLoaded() {
 	//setLoadingArea(false);
 }
 
-/*function setLoadingArea(value) {
-	
-	if(value){
-		$("#areaIframe").hide();
-		$("#areaLoading").show();
-	} else {
-		$("#areaLoading").hide();
-		$("#areaIframe").show();
-	}
-}*/
-
 function loadAreaImage(areaId) {
 	if(applicationId != "vpnet") { //Esto solo está habilitado para DP ya que en la otra versión no se utiliza y carga la aplicación
 		$("#areaImage").attr('src', "../app/downloadAreaImage.cfm?id="+areaId);

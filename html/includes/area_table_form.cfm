@@ -13,12 +13,6 @@
 
 <script type="text/javascript">
 
-	function confirmDeleteField() {
-	
-		var message_delete = "Si ELIMINA, se borrarán definitivamente todos los contenidos que almacena. ¿Seguro que desea eliminar todos sus registros?";
-		return confirm(message_delete);
-	}
-
 	function onSubmitForm(){
 
 		<!---document.getElementById("submitDiv1").innerHTML = 'Enviando...';--->
@@ -31,7 +25,7 @@
 <cfoutput>
 
 <div class="div_head_subtitle">
-	<span lang="es"><cfif page_type IS 1>Nueva<cfelse>Modificar</cfif> #tableTypeNameEs#</span>
+	<span lang="es"><cfif page_type IS 1><cfif tableTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif><cfelse>Modificar</cfif> #tableTypeNameEs#</span>
 </div>
 
 <!---<div class="div_message_page_title">#table.label#</div>--->
@@ -65,8 +59,8 @@
 	<textarea name="description" id="description" class="input-block-level" maxlength="1000">#table.description#</textarea>
 
 	<label for="structure_available" class="checkbox">
-		<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> Permitir copiar la estructura de campos de esta #lCase(tableTypeNameEs)#<br/>
-		<small class="help-block">Indica si la definición de campos de esta #lCase(tableTypeNameEs)# está disponible para ser usada por cualquier usuario de la organización.</small>
+		<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> Permitir copiar la estructura de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)#<br/>
+		<small class="help-block">Indica si la definición de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# está disponible para ser usada como plantilla por cualquier usuario de la organización.</small>
 	</label>
 	
 	<cfif tableTypeId IS 3 AND SESSION.client_administrator EQ SESSION.user_id>

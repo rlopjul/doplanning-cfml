@@ -37,6 +37,6 @@ a:hover{text-decoration:none}.body_global{margin:auto}@media(max-width:767px){bo
 .div_search_label{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666;line-height:16px;padding-right:5px;float:left;width:110px;padding-top:2px;clear:left}
 .table_incidences{width:100%;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:12px;color:#000}.table_incidences tr.incidence{height:22px;background-color:#fff}
 .more_info_img{float:left;margin-right:3px;margin-top:12px;cursor:pointer}.more_info_content{clear:both;background-color:#fff;padding:5px;display:none;margin-bottom:2px}
-.input_datepicker{width:100px}.hidden{display:none}.highlight{font-weight:bold}.navbar_brand{display:block;padding-top:10px;float:left}#listTable td{font-size:11px;color:#666}
-#dataTable td{font-size:11px}#dataTable tr{height:28px}.field_label{font-size:12px}.navbar{margin-bottom:4px}.navbar .nav>li>a{padding:5px 8px}.navbar-inner{padding-left:10px;padding-right:10px}
-.navbar-static-top{margin-left:0;margin-right:0}
+.input_datepicker{width:100px}.hidden{display:none}.highlight{font-weight:bold}.navbar_brand{display:block;padding-top:10px;float:left}.loading_position{position:absolute;top:50%;left:50%;margin:-12px 0 0 -12px;width:200px;margin-left:-100px}
+#listTable td{font-size:11px;color:#666}#dataTable td{font-size:11px}#dataTable tr{height:28px}.field_label{font-size:12px}.navbar{margin-bottom:4px}.navbar .nav>li>a{padding:5px 8px}
+.navbar-inner{padding-left:10px;padding-right:10px}.navbar-static-top{margin-left:0;margin-right:0}

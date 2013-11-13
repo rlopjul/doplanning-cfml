@@ -325,66 +325,6 @@
 	</cffunction>
 
 
-
-	<!--- ----------------------------------- getSubAreasSelect ------------------------------------- --->
-	
-	<cffunction name="outputSubAreasSelect" output="true" access="public" returntype="void">
-		<cfargument name="area_id" type="numeric" required="true">
-		<cfargument name="selected_areas_ids" type="string" required="false">
-		<cfargument name="level" type="numeric" required="false" default="1">
-		<cfargument name="recursive" type="boolean" required="false" default="false">
-		
-		<cfset var method = "outputSubAreasSelect">
-
-		<cfset var areas = "">
-		<cfset var spaces = "">
-				
-		<cftry>
-
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getSubAreas" returnvariable="getSubAreasResponse">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
-			</cfinvoke>
-
-			<cfif getSubAreasResponse.result IS false>
-				<cfthrow message="#getSubAreasResponse.message#">
-			</cfif>
-			
-			<cfset areas = getSubAreasResponse.areas>
-
-			<cfloop from="2" to="#arguments.level#" step="1" index="index">
-				<cfset spaces = spaces&"&nbsp;&nbsp;&nbsp;">				
-			</cfloop>
-
-			<cfoutput>
-			<cfloop query="areas">
-				<cfif isDefined("selected_areas_ids") AND listFind(arguments.selected_areas_ids, areas.id) GT 0>
-					<cfset area_selected = true>
-				<cfelse>
-					<cfset area_selected = false>
-				</cfif>
-				<option value="#areas.id#" <cfif area_selected>selected</cfif>>#spaces##areas.name#</option>
-				<cfif arguments.recursive IS true>
-					<cfinvoke component="Area" method="outputSubAreasSelect">
-						<cfinvokeargument name="area_id" value="#areas.id#"/>
-						<cfif isDefined("arguments.selected_areas_ids")>
-							<cfinvokeargument name="selected_areas_ids" value="#arguments.selected_areas_ids#">
-						</cfif>
-						<cfinvokeargument name="level" value="#arguments.level+1#">
-						<cfinvokeargument name="recursive" value="true">
-					</cfinvoke>
-				</cfif>				
-			</cfloop>
-			</cfoutput>
-
-			<cfcatch>
-				<cfinclude template="includes/errorHandlerNoRedirect.cfm">
-			</cfcatch>				
-																							
-		</cftry>			
-		
-	</cffunction>
-
-
 	<!--- ----------------------------------- createArea -------------------------------------- --->
 
 	<cffunction name="createArea" output="false" returntype="struct" returnformat="json" access="remote">
@@ -528,6 +468,40 @@
 		
 		<cfreturn response>
 			
+	</cffunction>
+
+
+
+	<!--- ----------------------------------- outputSubAreasSelect ------------------------------------- --->
+	
+	<cffunction name="outputSubAreasSelect" output="true" access="public" returntype="void">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="selected_areas_ids" type="string" required="false">
+		<cfargument name="level" type="numeric" required="false" default="1">
+		<cfargument name="recursive" type="boolean" required="false" default="false">
+		
+		<cfset var method = "outputSubAreasSelect">
+				
+		<cftry>
+
+			<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasSelect">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="selected_areas_ids" value="#arguments.selected_areas_ids#">
+				<cfinvokeargument name="level" value="#arguments.level#">
+				<cfinvokeargument name="recursive" value="#arguments.recursive#">
+
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirect.cfm">
+			</cfcatch>				
+																							
+		</cftry>			
+		
 	</cffunction>
 
 	

@@ -22,9 +22,6 @@
 
 		<cfset var row_id = "">
 
-		<cfset var field_value = "">
-		<cfset var selectFields = false>
-
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
@@ -60,142 +57,15 @@
 			</cfinvoke>
 			<cfset fields = fieldsResult.tableFields>
 
-			<cftransaction>
+			<!--- saveRow --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="saveRow" argumentcollection="#arguments#" returnvariable="row_id">
 
-				<cfif arguments.action IS "create">
+				<cfinvokeargument name="fields" value="#fields#">
+				<cfinvokeargument name="user_id" value="#user_id#">
 
-					<cfset sqlAction = "INSERT INTO">
-
-					<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>
-				
-						<!---getRowLastPosition--->
-						<cfinvoke component="RowManager" method="getRowLastPosition" returnvariable="rowLastPosition">
-							<cfinvokeargument name="table_id" value="#table_id#">
-							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-						</cfinvoke>
-						
-						<cfset arguments.position = rowLastPosition+1>
-						
-					</cfif>
-
-				<cfelse>
-						
-					<cfset sqlAction = "UPDATE">
-
-				</cfif>
-
-				<cfset selectFields = false>
-
-				<cfquery name="saveRow" datasource="#client_dsn#">
-					#sqlAction# `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
-					SET 
-					<cfif arguments.action IS "create">
-						insert_user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-						position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">,
-						creation_date = NOW(),
-					<cfelse>
-						last_update_user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-					</cfif>
-					last_update_date = NOW()
-
-					<cfloop query="fields">
-
-						<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- SELECT --->
-
-							<cfset field_name = "field_#fields.field_id#">
-							<cfset field_value = arguments[field_name]>
-
-							, field_#fields.field_id# = 	
-
-							<cfif fields.mysql_type IS "DATE"><!--- DATE --->
-								<cfif len(field_value) GT 0>
-									STR_TO_DATE('#field_value#','#dateFormat#')
-								<cfelse>
-									<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">
-								</cfif>
-							<cfelseif fields.field_type_id IS 7 AND len(field_value) IS 0><!--- BOOLEAN --->	
-								<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">
-							<cfelse>														
-								<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
-							</cfif>
-
-						<cfelse><!---SELECT FIELDS--->
-							<cfset selectFields = true>
-						</cfif>
-
-					</cfloop>
-
-					<cfif arguments.action NEQ "create">
-						WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
-					</cfif>;
-				</cfquery>
-
-				<cfif arguments.action IS "create">
-
-					<cfquery name="getLastInsertId" datasource="#client_dsn#">
-						SELECT LAST_INSERT_ID() AS last_insert_id FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
-					</cfquery>
-
-					<cfset row_id = getLastInsertId.last_insert_id>
-
-				<cfelse>
-
-					<cfset row_id = arguments.row_id>
-
-				</cfif>
-
-				<cfif selectFields IS true><!--- Select fields values ---->
-					
-					<cfloop query="fields">
-
-						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- SELECT --->
-
-							<cfif arguments.action NEQ "create">
-								
-								<!--- Delete old values --->
-								<cfquery name="deleteEntitySectors" datasource="#client_dsn#">
-									DELETE FROM `#client_abb#_#tableTypeTable#_rows_areas`
-									WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-									AND row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
-									AND field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">;
-								</cfquery>
-
-							</cfif>
-
-							<cfset field_name = "field_#fields.field_id#">
-							
-							<cfif isDefined("arguments.#field_name#")>
-								
-								<cfset field_values = arguments[field_name]>
-
-								<!--- Save new values --->
-								<cfloop array="#field_values#" index="select_value">
-
-									<cfif isNumeric(select_value)>
-										
-										<cfquery name="addValueToTable" datasource="#client_dsn#">
-											INSERT INTO `#client_abb#_#tableTypeTable#_rows_areas` (#tableTypeName#_id, row_id, field_id, area_id)
-											VALUES (<cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">,
-												<cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">,
-												<cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">,
-												<cfqueryparam value="#select_value#" cfsqltype="cf_sql_integer">);
-										</cfquery>
-
-									</cfif>
-
-								</cfloop>
-
-							<cfelseif fields.required IS true>
-								<cfthrow message="Campo lista sin valor requerido seleccionado">
-							</cfif>
-
-						</cfif>
-
-					</cfloop>
-
-				</cfif>
-				
-			</cftransaction>
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 			
 			<cfinclude template="includes/logRecord.cfm">
 
@@ -266,7 +136,7 @@
 
 	<!---  ---------------------- getRowLastPosition -------------------------------- --->
 	
-	<cffunction name="getRowLastPosition" returntype="numeric" access="public">
+	<!---<cffunction name="getRowLastPosition" returntype="numeric" access="public">
 		<cfargument name="table_id" type="numeric" required="yes">
 		<cfargument name="tableTypeId" type="numeric" required="yes">
 		
@@ -288,7 +158,7 @@
 			<cfreturn 0>
 		</cfif>
 		
-	</cffunction>
+	</cffunction>--->
 	<!---  ------------------------------------------------------------------------ --->
 
 
@@ -344,10 +214,22 @@
 
 			<cfset row = getRowResponse.row>
 
-			<cfquery name="deleteRow" datasource="#client_dsn#">
-				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
-				WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
+			<cftransaction>
+				
+				<!---Delete row--->
+				<cfquery name="deleteRow" datasource="#client_dsn#">
+					DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+					WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+				<!---Delete selected areas--->
+				<cfquery name="deleteSelectedAreasQuery" datasource="#client_dsn#">
+					DELETE FROM `#client_abb#_#tableTypeTable#_rows_areas`
+					WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+					AND row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+			</cftransaction>
 
 			<cfinclude template="includes/logRecord.cfm">
 			
@@ -377,10 +259,17 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<cfquery name="deleteRow" datasource="#client_dsn#">
+			<!---Delete rows--->
+			<cfquery name="deleteRows" datasource="#client_dsn#">
 				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
 			</cfquery>
 			
+			<!---Delete selected areas--->
+			<cfquery name="deleteSelectedAreasQuery" datasource="#client_dsn#">
+				DELETE FROM `#client_abb#_#tableTypeTable#_rows_areas`
+				WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
 	</cffunction>
 
 
@@ -545,15 +434,15 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
-			<cfquery name="getRowQuery" datasource="#client_dsn#">
-				SELECT *
-				FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
-				WHERE row_id = -1;
-			</cfquery>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getEmptyRow" returnvariable="getEmptyRowQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 
-			<cfset response = {result=true, row=#getRowQuery#}>
+			<cfset response = {result=true, row=#getEmptyRowQuery#}>
 
 			<cfcatch>
 
@@ -580,18 +469,11 @@
 
 		<cftry>
 
-			<cfset queryAddRow(emptyRow, 1)>
-			
-			<cfloop query="fields">
-
-				<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS SELECT --->
-					<!---Se crean los campos para poder definir en ellos los valores por defecto--->
-					<cfset queryAddColumn(emptyRow, "field_#fields.field_id#")>
-				</cfif>
-				
-				<cfset querySetCell(emptyRow, "field_#fields.field_id#", fields.default_value, 1)>
-
-			</cfloop>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="fillEmptyRow" returnvariable="emptyRow">
+				<cfinvokeargument name="emptyRow" value="#arguments.emptyRow#">
+				<cfinvokeargument name="fields" value="#arguments.fields#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
 
 			<cfset response = {result=true, row=#emptyRow#}>
 
