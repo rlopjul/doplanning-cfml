@@ -509,7 +509,7 @@
 					WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
-				<cfif field.field_type_id NEQ 9 AND field.field_type_id NEQ 10><!--- IS NOT SELECT --->
+				<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT --->
 
 					<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
 						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 

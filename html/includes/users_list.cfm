@@ -117,7 +117,7 @@ Selección de contactos
 
 <div class="div_users">
 <cfif numUsers GT 0>
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interfaz" method="userListHeader">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="userListHeader">
 		<cfinvokeargument name="current_page" value="#current_page#">
 		<cfinvokeargument name="order_by" value="#order_by#">
 		<cfinvokeargument name="order_type" value="#order_type#">

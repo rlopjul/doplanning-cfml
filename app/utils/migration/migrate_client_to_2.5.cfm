@@ -191,17 +191,19 @@ ALTER TABLE `dp_software7`.`software7_areas` ADD COLUMN `default_typology_id` IN
 
 
 
-INSERT INTO `software7_tables_fields_types` (`field_type_id`,`input_type`,`name`,`max_length`,`mysql_type`,`cf_sql_type`,`enabled`) VALUES
- (1,'text','Texto plano 1 línea (máx. 255 caracteres)',255,'VARCHAR(255)','cf_sql_varchar',1),
- (2,'textarea','Texto plano varias líneas (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1),
- (3,'textarea','Texto de varias líneas grande',1000000,'MEDIUMTEXT','cf_sql_longvarchar',1),
- (4,'number','Número entero',20,'BIGINT(20)','cf_sql_bigint',1),
- (5,'text','Número decimal',30,'DECIMAL(30,5)','cf_sql_decimal',1),
- (6,'date','Fecha (formato DD-MM-AAAA)',10,'DATE','cf_sql_date',1),
- (7,'select','Booleano (Sí/No)',1,'TINYINT(1)','cf_sql_bit',1),
- (8,'url','URL',2000,'VARCHAR(2000)','cf_sql_varchar',1),
- (9,'select','Lista desplegable con selección simple',11,'INT(11)','cf_sql_integer',1),
- (10,'select','Lista con selección múltiple',11,'INT(11)','cf_sql_integer',1);
+INSERT INTO `software7_tables_fields_types` (`field_type_id`,`field_type_group`,`input_type`,`name`,`max_length`,`mysql_type`,`cf_sql_type`,`enabled`,`position`) VALUES 
+ (1,'short_text','text','Texto plano 1 línea (máx. 255 caracteres)',255,'VARCHAR(255)','cf_sql_varchar',1,1),
+ (2,'long_text','textarea','Texto plano varias líneas (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1,2),
+ (3,'long_text','textarea','Texto varias líneas con formato (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1,3),
+ (4,'integer','number','Número entero',20,'BIGINT(20)','cf_sql_bigint',1,5),
+ (5,'decimal','text','Número decimal',30,'DECIMAL(30,5)','cf_sql_decimal',1,6),
+ (6,'date','date','Fecha (formato DD-MM-AAAA)',10,'DATE','cf_sql_date',1,7),
+ (7,'boolean','select','Booleano (Sí/No)',1,'TINYINT(1)','cf_sql_bit',1,8),
+ (8,'url','url','URL',2000,'VARCHAR(2000)','cf_sql_varchar',1,9),
+ (9,'list','select','Lista desplegable con selección simple',11,'INT(11)','cf_sql_integer',1,10),
+ (10,'list','select','Lista con selección múltiple',11,'INT(11)','cf_sql_integer',1,11),
+ (11,'very_long_text','textarea','Texto muy grande con formato',1000000,'MEDIUMTEXT','cf_sql_longvarchar',1,4),
+ (12,'doplanning_file','number','Archivo de DoPlanning',11,'INT(11)','cf_sql_integer',0,12);
 
 
 CREATE TABLE  `dp_software7`.`software7_lists_users` (
@@ -252,6 +254,24 @@ CREATE TABLE  `dp_software7`.`software7_typologies_rows_areas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+ALTER TABLE `dp_software7`.`software7_forms_fields` ADD COLUMN `list_area_id` INTEGER AFTER `default_value`,
+ ADD CONSTRAINT `FK_software7_forms_fields_3` FOREIGN KEY `FK_software7_forms_fields_3` (`list_area_id`)
+    REFERENCES `software7_areas` (`id`)
+    ON DELETE SET NULL
+    ON UPDATE RESTRICT;
+
+CREATE TABLE  `dp_software7`.`software7_forms_rows_areas` (
+  `form_id` int(10) unsigned NOT NULL,
+  `row_id` int(10) unsigned NOT NULL,
+  `field_id` int(10) unsigned NOT NULL,
+  `area_id` int(11) NOT NULL,
+  PRIMARY KEY (`form_id`,`row_id`,`area_id`,`field_id`) USING BTREE,
+  KEY `FK_software7_forms_rows_areas_2` (`field_id`),
+  KEY `FK_software7_forms_rows_areas_3` (`area_id`),
+  CONSTRAINT `FK_software7_forms_rows_areas_1` FOREIGN KEY (`form_id`) REFERENCES `software7_forms` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_software7_forms_rows_areas_2` FOREIGN KEY (`field_id`) REFERENCES `software7_forms_fields` (`field_id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_software7_forms_rows_areas_3` FOREIGN KEY (`area_id`) REFERENCES `software7_areas` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 

@@ -20,7 +20,8 @@
 			<cfquery name="getFieldTypesQuery" datasource="#client_dsn#">
 				SELECT field_type_id, input_type, name, max_length, mysql_type, cf_sql_type
 				FROM `#client_abb#_#fieldsTypesTable#`
-				WHERE enabled = true;
+				WHERE enabled = true
+				ORDER BY position ASC;
 			</cfquery>
 		
 		<cfreturn getFieldTypesQuery>
@@ -119,7 +120,7 @@
 					INNER JOIN `#client_abb#_#tableTypeTable#` AS tables ON table_fields.table_id = tables.id
 				</cfif>
 				WHERE table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-				ORDER BY position ASC;
+				ORDER BY table_fields.position ASC;
 			</cfquery>
 				
 		<cfreturn getTableFieldsQuery>

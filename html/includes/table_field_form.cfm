@@ -64,7 +64,7 @@
 
 		if(!isNaN(areaId)){
 
-			$("##areaLoading").show();
+			showLoadingPage(true);
 
 			var areaListPage = "#APPLICATION.htmlPath#/html_content/area_list_input_options.cfm?area="+areaId;
 
@@ -74,7 +74,7 @@
 
 			$("##default_value_list").load(areaListPage, function() {
 
-				$("##areaLoading").hide();
+				showLoadingPage(false);
 
 				//$('.selectpicker').selectpicker('refresh');
 			});
