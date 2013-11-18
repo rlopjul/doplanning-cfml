@@ -1154,18 +1154,9 @@
 		
 		<cfset var method = "deleteItem">
 		
-		<cfset var response_page= "">
-		<cfset var request_parameters = "">
-		
 		<cftry>
 			
 			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
-			
-			<!---<cfif isDefined("arguments.return_page")>
-				<cfset response_page = arguments.return_page>
-			<cfelse>
-				<cfset response_page = "#itemTypeNameP#.cfm?area=#arguments.area_id#">
-			</cfif>--->
 			
 			<cfif len(arguments.item_id) IS 0 OR NOT isValid("integer",arguments.item_id)>
 			
@@ -1174,14 +1165,6 @@
 				<cflocation url="#APPLICATION.htmlPath#/#arguments.return_page#&item=#item#" addtoken="no">
 			
 			</cfif>
-			
-			<!---<cfset request_parameters = '<#itemTypeName# id="#arguments.item_id#"/>'>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
-				<cfinvokeargument name="request_method" value="delete#itemTypeNameU#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>--->	
 			
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="deleteItem" returnvariable="deleteItemResponse">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
@@ -1719,7 +1702,7 @@
 								<cfif arguments.full_content IS false>
 								sortList: [[8,1]] ,
 								<cfelse>
-								sortList: [[8,0],[9,0]] ,
+								sortList: [[8,0]] , <!---[9,0]] ,--->
 								</cfif>
 							<cfelseif arguments.full_content IS true>
 								sortList: [[4,1]] ,							
@@ -2352,11 +2335,14 @@
 								
 									<i class="icon-exchange" style="font-size:25px; color:##0088CC"></i>
 
-								<!---
-								<cfelseif itemTypeId IS 11><!--- List --->
+								<cfelseif itemTypeId IS 10><!--- File --->
 
-									<i class="icon-table" style="font-size:27px; color:##7A7A7A"></i>--->
-									
+									<cfif itemsQuery.file_type_id IS 1><!--- User file --->
+										<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img" alt="#itemTypeNameEs#" title="#itemTypeNameEs#"/>
+									<cfelse><!--- Area file --->
+										<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_area.png" class="item_img" alt="#itemTypeNameEs# del área" title="#itemTypeNameEs# del área"/>
+									</cfif>
+
 								<cfelseif itemTypeId IS NOT 3><!---No es link--->
 								
 									<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img" alt="#itemTypeNameEs#" title="#itemTypeNameEs#"/>
@@ -2369,8 +2355,6 @@
 							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
 							<td>
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
-									<!---<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>--->
-
 									<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
 								</cfif>
 
@@ -2385,12 +2369,17 @@
 								
 								</cfif>
 							</td>
-							<td><cfif len(itemsQuery.user_image_type) GT 0>
-									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemsQuery.user_in_charge#&type=#itemsQuery.user_image_type#&small=" alt="#itemsQuery.user_full_name#" class="item_img"/>									
-								<cfelse>							
-									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#itemsQuery.user_full_name#" class="item_img_default" />
-								</cfif>
-								<span>#itemsQuery.user_full_name#</span>
+							<td>
+								<cfif itemsQuery.itemTypeId IS NOT 10 OR itemsQuery.file_type_id IS 1>
+									<cfif len(itemsQuery.user_image_type) GT 0>
+										<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemsQuery.user_in_charge#&type=#itemsQuery.user_image_type#&small=" alt="#itemsQuery.user_full_name#" class="item_img"/>									
+									<cfelse>							
+										<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#itemsQuery.user_full_name#" class="item_img_default" />
+									</cfif>
+									<span>#itemsQuery.user_full_name#</span>
+								<cfelse><!--- Area files --->
+									<i><span lang="es">Área</span></i>
+								</cfif>	
 							</td>
 							<td>
 							

@@ -260,17 +260,16 @@
 	
 	<!--- ----------------------------------- getAreaFiles ------------------------------------- --->
 	
-	<cffunction name="getAreaFiles" returntype="xml" access="public">
+	<cffunction name="getAreaFiles" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		
 		<cfset var method = "getAreaFiles">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<cfset var response = structNew()>
 		
 		<cftry>
 			
-			<cfsavecontent variable="request_parameters">
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					<area id="#arguments.area_id#"/>
 				</cfoutput>
@@ -280,21 +279,27 @@
 				<cfinvokeargument name="request_component" value="#request_component#">
 				<cfinvokeargument name="request_method" value="#method#">
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>
+			</cfinvoke>--->
 			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaFiles" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+			</cfinvoke>
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
 			
 		</cftry>
 		
-		<cfreturn xmlResponse>
+		<cfreturn response>
 		
 	</cffunction>
 	
 	<!--- ----------------------------------- getAreaMembers ------------------------------------- --->
 	
-	<cffunction name="getAreaMembers" returntype="xml" access="public">
+	<cffunction name="getAreaMembers" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="order_by" type="string" required="false" default="">
 		<cfargument name="order_type" type="string" required="false" default="asc">

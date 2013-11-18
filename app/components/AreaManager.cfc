@@ -1986,7 +1986,7 @@
 		<cfset var xmlResponseContent = "">
 		<cfset var response = "">
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<!---<cfinclude template="includes/checkAreaAccess.cfm">Un usuario aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
 			
@@ -2455,30 +2455,35 @@
 	
 	
 	<!---  --------------------GET AREA FILES-------------------------------------  --->
-	<cffunction name="getAreaFiles" output="false" returntype="string" access="public">
-		<cfargument name="request" type="string">
+	<cffunction name="getAreaFiles" output="false" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
 		
 		<cfset var method = "getAreaFiles">
 		
-		<cfset var area_id = "">
+		<cfset var response = structNew()>
 		
 		<cftry>
 			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset area_id = xmlRequest.request.parameters.area.xmlAttributes.id>	
-			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+						
+			<!--- checkAreaAccess --->
 			<cfinclude template="includes/checkAreaAccess.cfm">
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
-				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="parse_dates" value="true">
+
+				<!---<cfif APPLICATION.moduleAreaFilesLite IS true>
+					<cfinvokeargument name="with_area_files_lite" value="true">
+				</cfif>--->
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 			
-			<cfset filesQuery = getAreaFilesResult.query>
+			<cfset response = {result=true, files=#getAreaFilesResult.query#}>
 			
-			<cfset xmlObject='<files label="files">'>	
+			<!---<cfset xmlObject='<files label="files">'>	
 			<cfif filesQuery.recordCount GT 0>
 				<cfloop query="filesQuery">
 					<cfinvoke component="FileManager" method="objectFile" returnvariable="xmlFile">
@@ -2509,11 +2514,16 @@
 			<cfcatch>
 				<cfset xmlResponseContent = arguments.request>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
+			</cfcatch>--->
 			
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
 		</cftry>
-		
-		<cfreturn xmlResponse>
+
+		<cfreturn response>
 			
 	</cffunction>
 	<!--- -----------------------------------------------------------------------  --->

@@ -8,7 +8,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_37'>
+	<cfset this.name = 'dp_beta_aws_39'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
@@ -39,6 +39,7 @@
 		<cfset APPLICATION.moduleForms = true>
 		<cfset APPLICATION.modulePubMedComments = true>
 		<cfset APPLICATION.moduleListsWithPermissions = true>
+		<cfset APPLICATION.moduleAreaFilesLite = true>
 
 		<cfset APPLICATION.openTokApiKey = 28563472>
 		<cfset APPLICATION.openTokApiSecret = "155e13718a36a6077960595721274bd23b1089d7">
@@ -127,7 +128,7 @@
 			<cfset APPLICATION.dpWebClientDsn = APPLICATION.identifier&"_"&APPLICATION.dpWebClientAbb>
 			<cfset APPLICATION.dpWebClientTitle = "DoPlanning">
 
-			<cfset APPLICATION.dpUrl = "http://software.doplanning.net">
+			<cfset APPLICATION.dpUrl = "https://software.doplanning.net">
 
 			<cfset APPLICATION.addThisProfileId = "">
 

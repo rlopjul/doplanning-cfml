@@ -3,6 +3,12 @@
 2 Modify file
 --->
 
+<cfif isDefined("URL.fileTypeId") AND isNumeric(URL.fileTypeId)>
+	<cfset fileTypeId = URL.fileTypeId>
+<cfelse>
+	<cflocation url="empty.cfm" addtoken="no">
+</cfif>
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form_query.cfm">
 
 <cfoutput>
@@ -12,7 +18,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <div class="div_head_subtitle"><span lang="es"><cfif page_type IS 1>Nuevo Archivo
-<cfelse>Modificar archivo</cfif></span></div>
+<cfelse>Modificar archivo</cfif><cfif fileTypeId IS 2> de área</cfif></span></div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
@@ -151,6 +157,24 @@
 		<input type="hidden" name="file_id" value="#file_id#" />
 	</cfif>
 	<input type="hidden" name="area_id" value="#area_id#"/>
+	<input type="hidden" name="fileTypeId" value="#fileTypeId#"/>
+
+	<cfif fileTypeId IS 2 AND page_type IS 1><!---Area files--->
+		<div class="alert alert-info">
+			<small>Este archivo pertenecerá a esta área y podrá ser modificado por cualquier usuario con acceso la misma.</small>
+		</div>
+	</cfif>
+
+	<!---<cfif APPLICATION.moduleAreaFiles IS true>
+		<div class="control-group">
+			<label for="fileTypeId">Tipo de archivo</label>
+			<select name="fileTypeId" id="fileTypeId" class="span3">
+				<option value="1" <cfif file.fileTypeId IS 1>selected="selected"</cfif>>Documento de usuario</option>
+				<option value="2" <cfif file.fileTypeId IS 2>selected="selected"</cfif>>Documento de área</option>
+				<option value="3" <cfif file.fileTypeId IS 3>selected="selected"</cfif>>Documento de área con circuito de calidad</option>
+			</select>
+		</div>
+	</cfif>--->
 
 	<!--- Typologies --->
 	<cfif APPLICATION.modulefilesWithTables IS true>

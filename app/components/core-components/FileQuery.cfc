@@ -18,41 +18,87 @@
 	<!---getFile--->
 	
 	<cffunction name="getFile" output="false" returntype="query" access="public">
-		<cfargument name="file_id" type="numeric" required="yes">
-		<cfargument name="area_id" type="numeric" required="no">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="with_lock" type="boolean" required="false" default="false">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
-		
-		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">		
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
 		
 		<cfset var method = "getFile">
 					
-		
+
 		<cfquery name="selectFileQuery" datasource="#client_dsn#">		
-			SELECT physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, files.id, files.id AS file_id, users.image_type AS user_image_type, files.typology_id, files.typology_row_id,
-				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
+			SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id
+				, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 			<cfif isDefined("arguments.area_id")>
 			, areas_files.association_date
 			</cfif>
+			<cfif arguments.with_lock IS true>
+			, locks.user_id AS lock_user_id, locks.lock_user_full_name
+			</cfif>
 			<cfif arguments.parse_dates IS true>
 				, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
-				, DATE_FORMAT(files.replacement_date, '#dateTimeFormat#') AS replacement_date 
+				, DATE_FORMAT(files.replacement_date, '#dateTimeFormat#') AS replacement_date
+				<cfif arguments.with_lock IS true> 
+				, DATE_FORMAT(locks.lock_date, '#dateTimeFormat#') AS lock_date
+				</cfif>
 			<cfelse>
 				, files.uploading_date
 				, files.replacement_date
+				<cfif arguments.with_lock IS true> 
+				, locks.lock_date, 
+				</cfif>
 			</cfif>
 			FROM #client_abb#_files AS files
 			INNER JOIN #client_abb#_users AS users 
 			ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> AND files.user_in_charge = users.id
-			<cfif isDefined("arguments.area_id")>
-			INNER JOIN #client_abb#_areas_files AS areas_files 
-			ON areas_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = areas_files.file_id
+			AND status = 'ok'
+			<cfif arguments.with_lock IS true>
+			LEFT JOIN (
+				SELECT files_locks.file_id, files_locks.lock_date, files_locks.lock, files_locks.user_id,
+				CONCAT_WS(' ', users_locks.family_name, users_locks.name) AS lock_user_full_name 
+				FROM #client_abb#_files_locks AS files_locks
+				INNER JOIN #client_abb#_users AS users_locks ON files_locks.file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> AND files_locks.user_id = users_locks.id
+				ORDER BY lock_date DESC
+				LIMIT 1
+			) AS locks ON locks.file_id = files.id
 			</cfif>
-			AND status = 'ok';
+			<cfif isDefined("arguments.area_id")>
+			LEFT JOIN #client_abb#_areas_files AS areas_files 
+			ON files.id = areas_files.file_id
+			WHERE areas_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> OR files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+			</cfif>;
 		</cfquery>	
 			
 		
 		<cfreturn selectFileQuery>
+		
+	</cffunction>
+
+
+	<!---getFileLocks--->
+	
+	<cffunction name="getFileLocks" output="false" returntype="query" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
+		
+		<cfset var method = "getFileLocks">
+					
+		<cfquery name="getFileLocksQuery" datasource="#client_dsn#">		
+			SELECT files_locks.file_id, files_locks.user_id, files_locks.lock
+			, DATE_FORMAT(files.date, '#dateTimeFormat#') AS date 
+			, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name 
+			FROM `#client_abb#_files_locks` AS files_locks
+			INNER JOIN `#client_abb#_users` AS users
+			ON files_locks.file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> AND files_locks.user_id = users.id 
+			ORDER BY date DESC;
+		</cfquery>	
+			
+		<cfreturn getFileLocksQuery>
 		
 	</cffunction>
 	
@@ -66,7 +112,9 @@
 		<cfargument name="search_text" type="string" required="no">
 		<cfargument name="user_in_charge" type="numeric" required="no">
 		<cfargument name="limit" type="numeric" required="no">
-		<cfargument name="with_area" type="boolean" required="no" default="false">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+		<cfargument name="with_area" type="boolean" required="false" default="false">
+		<cfargument name="with_area_files_lite" type="boolean" required="false" default="false">
 		
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
@@ -89,21 +137,54 @@
 		
 		<cfquery name="areaFilesQuery" datasource="#client_dsn#">
 			SELECT <cfif isDefined("arguments.limit")>SQL_CALC_FOUND_ROWS</cfif>
-			files.id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, a.association_date, files.replacement_date, files.name, files.file_name, files.description, users.family_name, a.area_id, users.name AS user_name, IF(replacement_date IS NULL,association_date,replacement_date) AS last_version_date
+			files.id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.name, files.file_name, files.description, files.file_type_id,
+				users.family_name, users.name AS user_name, users.image_type AS user_image_type,
+				CONCAT_WS(' ', users.family_name, users.name) AS user_full_name,
+				IF( replacement_date IS NULL, IF(association_date IS NULL, uploading_date, association_date), replacement_date ) AS last_version_date,
+				IF( a.area_id IS NULL, files.area_id, a.area_id ) AS area_id
+			<cfif arguments.parse_dates IS true>
+				, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
+				, DATE_FORMAT(files.replacement_date, '#dateTimeFormat#') AS replacement_date 
+				, DATE_FORMAT(a.association_date, '#dateTimeFormat#') AS association_date
+			<cfelse>
+				, files.uploading_date
+				, files.replacement_date
+				, a.association_date
+			</cfif>
 			<cfif arguments.with_area IS true>
 			, areas.name AS area_name
 			</cfif>
-			FROM #client_abb#_areas_files AS a
-			INNER JOIN #client_abb#_files AS files ON a.file_id = files.id
+			<cfif arguments.with_area_files_lite IS false>
+				FROM #client_abb#_areas_files AS a
+				INNER JOIN #client_abb#_files AS files ON a.file_id = files.id
+			<cfelse>
+				FROM #client_abb#_files AS files
+				LEFT JOIN #client_abb#_areas_files AS a ON a.file_id = files.id
+			</cfif>
 			INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
 			<cfif arguments.with_area IS true>
-			INNER JOIN #client_abb#_areas AS areas ON a.area_id = areas.id
+				<cfif arguments.with_area_files_lite IS false>
+					INNER JOIN #client_abb#_areas AS areas ON a.area_id = areas.id
+				<cfelse>
+					<!---Esto impide que salgan los archivos que son propiedad de un área y que además están asociados a otras áreas (sólo salen los asociados)--->
+					INNER JOIN #client_abb#_areas AS areas ON IF( a.area_id IS NULL, files.area_id, a.area_id ) = areas.id
+				</cfif>
 			</cfif>
 			WHERE 
 			<cfif isDefined("arguments.areas_ids")>
-			a.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
+				<cfif arguments.with_area_files_lite IS false>
+					a.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
+				<cfelse>
+					( a.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">) 
+						OR files.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">) )
+				</cfif>
 			<cfelse>
-			a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				<cfif arguments.with_area_files_lite IS false> 
+					a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				<cfelse>
+					( a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+						OR files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> )
+				</cfif>
 			</cfif>
 			<cfif isDefined("arguments.user_in_charge")>
 			AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">

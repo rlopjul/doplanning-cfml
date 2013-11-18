@@ -1587,14 +1587,16 @@
 					
 			<cfinclude template="includes/functionStart.cfm">
 			
-			<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
+			<!---<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
 				<cfinvokeargument name="get_user_id" value="#user_id#"> 
 			</cfinvoke>			
-			<!---Un usuario interno, aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
 			<cfif internal_user IS false>
-				<cfinclude template="includes/checkAreaAccess.cfm">
-			</cfif>
-			
+				<!--- checkAreaAccess --->
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAccess">
+					<cfinvokeargument name="area_id" value="#arguments.get_area_id#">
+				</cfinvoke>
+			</cfif>--->
+			<!---Un usuario aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="selectAreaQuery">
 				<cfinvokeargument name="area_id" value="#arguments.get_area_id#">

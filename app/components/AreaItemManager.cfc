@@ -1898,6 +1898,30 @@
 		
 	</cffunction>
 
+
+	<!---  ---------------------- deleteItemPosition -------------------------------- --->
+
+	<cffunction name="deleteItemPosition" returntype="void" access="package">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+		
+		<cfset var method = "deleteItemPosition">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+						
+			<cfquery name="deleteItemPosition" datasource="#client_dsn#">
+				DELETE FROM #client_abb#_items_position
+				WHERE item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+				AND item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+				<cfif isDefined("arguments.area_id")>
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>;
+			</cfquery>
+						
+		
+	</cffunction>
+
 	
 	<!---  ---------------------- changeAreaItemPosition -------------------------------- --->
 
@@ -2126,9 +2150,10 @@
 		<cfargument name="state" type="string" required="yes"><!---closed--->
 		
 		<cfset var method = "changeAreaItemState">
+
 		<cfset var response = structNew()>
 		
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
@@ -2172,19 +2197,17 @@
 
 					<cfinclude template="includes/logRecord.cfm">
 									
-					<cfset response = {result="true", area_id=getItem.area_id, message="#itemTypeNameEs# cerrada"}>
+					<cfset response = {result=true, area_id=getItem.area_id, message="#itemTypeNameEs# cerrada"}>
 										
 				<cfelse>
 				
-					<cfset response = {result="false", message="Error: estado de #itemTypeNameEs# incorrecto"}>
-					
-					<cfreturn response>
+					<cfset response = {result=false, message="Error: estado de #itemTypeNameEs# incorrecto"}>
 					
 				</cfif>
 			
 			<cfelse>
 			
-				<cfset response = {result="false", message="Error: no se ha encontrado la #itemTypeNameEs#"}>
+				<cfset response = {result=false, message="Error: no se ha encontrado la #itemTypeNameEs#"}>
 			
 			</cfif>
 			
@@ -2203,9 +2226,10 @@
 		<cfargument name="done" type="boolean" required="yes"><!---1--->
 		
 		<cfset var method = "changeAreaItemDone">
+
 		<cfset var response = structNew()>
 		
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
@@ -2222,9 +2246,9 @@
 				<!---checkAreaAccess--->
 				<cfinclude template="includes/checkAreaAccess.cfm">
 			
-				<cfif getItem.user_in_charge EQ user_id OR getItem.recipient_user EQ user_id AND getItem.done NEQ arguments.done AND getItem.done IS 0 AND arguments.done IS 1><!---Solo se pueden marcar como hechas--->
+				<cfif (getItem.user_in_charge EQ user_id OR getItem.recipient_user EQ user_id) AND getItem.done NEQ arguments.done AND getItem.done IS 0 AND arguments.done IS 1><!---Solo se pueden marcar como hechas--->
 				
-					<cfquery name="addReadToItem" datasource="#client_dsn#">		
+					<cfquery name="changeItemDone" datasource="#client_dsn#">		
 						UPDATE #client_abb#_#itemTypeTable#
 						SET	done = <cfqueryparam value="#arguments.done#" cfsqltype="cf_sql_bit">,
 						last_update_date = NOW()
@@ -2249,19 +2273,17 @@
 
 					<cfinclude template="includes/logRecord.cfm">
 									
-					<cfset response = {result="true", area_id=getItem.area_id, message="#itemTypeNameEs# marcada como realizada"}>
+					<cfset response = {result=true, area_id=getItem.area_id, message="#itemTypeNameEs# marcada como realizada"}>
 										
 				<cfelse>
 				
-					<cfset response = {result="false", message="Error, estado de #itemTypeNameEs# incorrecto"}>
-					
-					<cfreturn response>
-					
+					<cfset response = {result=false, message="Error, estado de #itemTypeNameEs# incorrecto"}>
+										
 				</cfif>
 			
 			<cfelse>
 			
-				<cfset response = {result="false", message="Error, no se ha encontrado la #itemTypeNameEs#"}>
+				<cfset response = {result=false, message="Error, no se ha encontrado la #itemTypeNameEs#"}>
 			
 			</cfif>
 			
@@ -2437,11 +2459,10 @@
 					</cfquery>
 
 					<!---DELETE ITEM POSITION--->
-					<cfquery name="deleteItemPosition" datasource="#client_dsn#">
-						DELETE FROM #client_abb#_items_position
-						WHERE item_id = <cfqueryparam value="#getItemQuery.id#" cfsqltype="cf_sql_integer">
-						AND item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">;
-					</cfquery>
+					<cfinvoke component="AreaItemManager" method="deleteItemPosition">
+						<cfinvokeargument name="item_id" value="#getItemQuery.id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					</cfinvoke>
 					
 					<!---DELETE ITEM--->
 					<cfquery name="deleteItemQuery" datasource="#client_dsn#">	
@@ -3267,6 +3288,11 @@
 				<cfif isDefined("arguments.limit")>
 				<cfinvokeargument name="limit" value="#arguments.limit#">
 				</cfif>
+
+				<cfinvokeargument name="withConsultations" value="#APPLICATION.moduleConsultations#">
+				<cfinvokeargument name="withPubmedsComments" value="#APPLICATION.modulePubMedComments#">
+				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
+				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
