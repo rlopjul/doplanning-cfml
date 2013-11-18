@@ -66,9 +66,9 @@
 	
 </script>
 
-<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsmx,ppt,pptx,pps,ppsx,odt">
+<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">
 
-<cfset numFiles = ArrayLen(xmlFiles.files.XmlChildren)>
+<cfset numFiles = files.recordCount>
 <div class="div_items">
 <!---<div class="div_separator"><!-- --></div>--->
 <cfset page_type = 3>
@@ -102,19 +102,20 @@
 	
 	<cfset alreadySelected = false>
 	
+	<!---
 	<cfloop index="xmlIndex" from="1" to="#numFiles#" step="1">
 			
 		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
 				<cfinvokeargument name="xml" value="#xmlFiles.files.file[xmlIndex]#">
 				<cfinvokeargument name="return_type" value="object">
 		</cfinvoke>	
-		<!---Importante: en este xml no viene user_full_name--->
-		
-		<!---<cfinclude template="#APPLICATION.htmlPath#/includes/element_file.cfm">--->
+		<!---Importante: en este xml no viene user_full_name--->--->
 
-		<cfif isDefined("area_id")>
+	<cfloop query="files">		
+
+		<!---<cfif isDefined("area_id")>
 			<cfset objectFile.area_id = area_id>
-		</cfif>
+		</cfif>--->
 
 		<!---File selection--->
 		<cfset itemSelected = false>
@@ -123,19 +124,19 @@
 		
 			<cfif isDefined("URL.file")>
 			
-				<cfif URL.file IS objectFile.id>
+				<cfif URL.file IS files.id>
 					<!---Esta acción solo se completa si está en la versión HTML2--->
 					<script type="text/javascript">
-						openUrlHtml2('file.cfm?area=#objectFile.area_id#&file=#objectFile.id#','itemIframe');
+						openUrlHtml2('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe');
 					</script>
 					<cfset itemSelected = true>
 				</cfif>
 				
-			<cfelseif xmlIndex IS 1>
+			<cfelseif files.currentRow IS 1>
 			
 				<!---Esta acción solo se completa si está en la versión HTML2--->
 				<script type="text/javascript">
-					openUrlHtml2('file.cfm?area=#objectFile.area_id#&file=#objectFile.id#','itemIframe');
+					openUrlHtml2('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe');
 				</script>
 				<cfset itemSelected = true>
 				
@@ -150,63 +151,78 @@
 		
 		<tr <cfif itemSelected IS true>class="selected"</cfif>
 			<!---<cfif page_type IS 1>
-				onclick="goToUrl('my_files_file.cfm?folder=#folder_id#&file=#objectFile.id#')"--->
+				onclick="goToUrl('my_files_file.cfm?folder=#folder_id#&file=#files.id#')"--->
 			<cfif page_type IS 2>
-				onclick="submitForm('file_#objectFile.id#')"
+				onclick="submitForm('file_#files.id#')"
 			<cfelseif page_type IS 3>
-				<!---onclick="goToUrl('file.cfm?area=#area_id#&file=#objectFile.id#')"--->
-				onclick="openUrl('file.cfm?area=#objectFile.area_id#&file=#objectFile.id#','itemIframe',event)"
+				<!---onclick="goToUrl('file.cfm?area=#area_id#&file=#files.id#')"--->
+				onclick="openUrl('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe',event)"
 			</cfif>
 			>
 			<td style="text-align:center"><cfif isDefined("page_type") AND page_type IS 2>
-					<form name="file_#objectFile.id#" action="#APPLICATION.htmlComponentsPath#/File.cfc?method=associateFile" method="post" style="float:left;">
-						<input type="hidden" name="area_id" value="#objectFile.area_id#" />
-						<input type="hidden" name="file_id" value="#objectFile.id#" />
+					<form name="file_#files.id#" action="#APPLICATION.htmlComponentsPath#/File.cfc?method=associateFile" method="post" style="float:left;">
+						<input type="hidden" name="area_id" value="#files.area_id#" />
+						<input type="hidden" name="file_id" value="#files.id#" />
 						<input type="hidden" name="return_path" value="#return_path#" />
 						<input type="image" src="#APPLICATION.htmlPath#/assets/icons/new_file.gif" class="img_file" title="Añadir archivo"/>
 					</form>
 				<cfelse>
 
-					<cfset fileType = replace(objectFile.file_type,".","")>
+					<cfset fileType = lCase(replace(files.file_type,".",""))>
 					<cfif listFind (iconTypes, fileType)>
 						<cfset fileIcon = "_"&fileType>
 					<cfelse>
 						<cfset fileIcon = "">
 					</cfif>
 
-					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file#fileIcon#.png" class="img_file" style="max-width:none;"/></a>
-					<!---<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" class="img_file" style="max-width:none;"/></a>--->
+					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file#fileIcon#.png" class="img_file" style="max-width:none;"/></a>
+					<!---<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" class="img_file" style="max-width:none;"/></a>--->
 				</cfif><!---style="max-width:none;" Requerido para corregir un bug con Bootstrap en Chrome--->
 			</td>
 			<td><cfif isDefined("page_type")>
 					<cfif page_type IS 1>
-					<a href="my_files_file.cfm?folder=#folder_id#&file=#objectFile.id#" class="text_item"><cfif len(objectFile.name) GT 0>#objectFile.name#<cfelse><i><span lang="es">Archivo sin nombre</span></i></cfif></a>
+					<a href="my_files_file.cfm?folder=#folder_id#&file=#files.id#" class="text_item"><cfif len(files.name) GT 0>#files.name#<cfelse><i><span lang="es">Archivo sin nombre</span></i></cfif></a>
 					<cfelseif page_type IS 2>
-						<span class="text_item">#objectFile.name#</span>
+						<span class="text_item">#files.name#</span>
 					<cfelseif page_type IS 3>
-						<a href="file.cfm?area=#objectFile.area_id#&file=#objectFile.id#" class="text_item">#objectFile.name#</a>
+						<a href="file.cfm?area=#files.area_id#&file=#files.id#" class="text_item">#files.name#</a>
 					</cfif>
 			</cfif></td>
-			<td><span>#objectFile.file_type#</span></td>
-			<td><span>#objectFile.user_full_name#</span></td>
-			<!---<td><span>#objectFile.file_size#</span></td>--->
-			<td>
-				<cfset spacePos = findOneOf(" ", objectFile.association_date)>
-				<span>#left(objectFile.association_date, spacePos)#</span>
-				<span class="hidden">#right(objectFile.association_date, len(objectFile.association_date)-spacePos)#</span>
+			<td><span>#files.file_type#</span></td>
+			<td><cfif files.file_type_id IS 1>
+
+				<cfif len(files.user_image_type) GT 0>
+					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#files.user_in_charge#&type=#files.user_image_type#&small=" alt="#files.user_full_name#" class="item_img"/>									
+				<cfelse>							
+					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#files.user_full_name#" class="item_img_default" />
+				</cfif>
+				<span>#files.user_full_name#</span>
+
+			<cfelse><i><span lang="es">Área</span></i></cfif>
 			</td>
-			<td><cfif len(objectFile.replacement_date) GT 0>				
-				<cfset spacePos2 = findOneOf(" ", objectFile.replacement_date)>
-				<span>#left(objectFile.replacement_date, spacePos2)#</span>
-				<span class="hidden">#right(objectFile.replacement_date, len(objectFile.replacement_date)-spacePos2)#</span>
+			<!---<td><span>#files.file_size#</span></td>--->
+			<cfif len(files.association_date) GT 0>
+				<cfset addedDate = files.association_date>				
 			<cfelse>
-				<span>#left(objectFile.association_date, spacePos)#</span>
-				<span class="hidden">#right(objectFile.association_date, len(objectFile.association_date)-spacePos)#</span>
+				<cfset addedDate = files.uploading_date>
+			</cfif>
+			<cfset spacePos = findOneOf(" ", addedDate)>
+			<td>
+				<span>#left(addedDate, spacePos)#</span>
+				<span class="hidden">#right(addedDate, len(addedDate)-spacePos)#</span>
+			</td>
+			<td><cfif len(files.replacement_date) GT 0>				
+				<cfset spacePos2 = findOneOf(" ", files.replacement_date)>
+				<span>#left(files.replacement_date, spacePos2)#</span>
+				<span class="hidden">#right(files.replacement_date, len(files.replacement_date)-spacePos2)#</span>
+			<cfelse>
+				<span>#left(addedDate, spacePos)#</span>
+				<span class="hidden">#right(addedDate, len(addedDate)-spacePos)#</span>
 			</cfif></td>
 			
 			<cfif full_content IS true>
 				<td>
-				<a onclick="openUrl('files.cfm?area=#objectFile.area_id#&file=#objectFile.id#','areaIframe',event)" class="link_blue">#objectFile.area_name#</a>
+				<a onclick="openUrl('files.cfm?area=#files.area_id#&file=#files.id#','areaIframe',event)" class="link_blue">#files.area_name#</a>
 				</td>
 			</cfif>
 		</tr>		

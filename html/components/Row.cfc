@@ -261,6 +261,7 @@
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="row" value="#arguments.row#">
 				<cfinvokeargument name="fields" value="#arguments.fields#">
+				<cfinvokeargument name="language" value="#SESSION.user_language#">
 
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

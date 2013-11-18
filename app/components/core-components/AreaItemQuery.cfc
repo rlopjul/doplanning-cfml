@@ -398,14 +398,19 @@
 		<cfargument name="area_type" type="string" required="false">
 		<cfargument name="limit" type="numeric" required="false">
 		<cfargument name="full_content" type="boolean" required="false" default="false">
+
+		<cfargument name="withConsultations" type="boolean" required="false" default="false">
+		<cfargument name="withPubmedsComments" type="boolean" required="false" default="false">
+		<cfargument name="withLists" type="boolean" required="false" default="false">
+		<cfargument name="withForms" type="boolean" required="false" default="false">
 		
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
 		
 		<cfset var method = "listAllAreaItems">
 			
-			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, attached_file_id">
-			<cfset var fileColums = "id, name, association_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id">
+			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, attached_file_id, NULL AS file_type_id">
+			<cfset var fileColums = "id, name, ( CASE WHEN association_date IS NULL THEN uploading_date ELSE association_date END ) AS creation_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id, file_type_id">
 
 			<cfset var commonColumsNull = "NULL AS done">
 
@@ -464,7 +469,8 @@
 					FROM #client_abb#_tasks AS tasks
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
-					<cfif APPLICATION.moduleConsultations IS true>
+					<!---<cfif APPLICATION.moduleConsultations IS true>--->
+					<cfif arguments.withConsultations IS true>
 					UNION ALL <!--- Consultations --->
 					( SELECT #commonColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 7 AS itemTypeId
 					FROM #client_abb#_consultations AS consultations
@@ -500,21 +506,24 @@
 				FROM #client_abb#_events AS events
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
-				<cfif APPLICATION.modulePubMedComments IS true><!--- Pubmeds --->
+				<!--- <cfif APPLICATION.modulePubMedComments IS true> --->
+				<cfif arguments.withPubmedsComments IS true><!--- Pubmeds --->
 				UNION ALL
 				( SELECT #commonColums#, #webColums#, #pubmedColums#, #iframeColumsNull# #displayColumsNull# 8 AS itemTypeId
 				FROM #client_abb#_pubmeds AS pubmeds
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				</cfif>
-				<cfif APPLICATION.moduleLists IS true><!--- Lists --->
+				<!--- <cfif APPLICATION.moduleLists IS true> --->
+				<cfif arguments.withLists IS true><!--- Lists --->
 				UNION ALL
 				( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 11 AS itemTypeId
 				FROM #client_abb#_lists AS lists
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				</cfif>
-				<cfif APPLICATION.moduleForms IS true><!--- Forms --->
+				<!---<cfif APPLICATION.moduleForms IS true>--->
+				<cfif arguments.withForms IS true><!--- Forms --->
 				UNION ALL
 				( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 12 AS itemTypeId
 				FROM #client_abb#_forms AS forms
@@ -525,7 +534,16 @@
 				UNION ALL
 				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 10 AS itemTypeId
 				FROM #client_abb#_files AS files
-				INNER JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id AND files.status='ok') 
+				<!---
+				<cfif len(arguments.area_type) IS 0><!--- IS NOT WEB --->
+				LEFT JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id 
+				WHERE (files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> OR area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">) 
+					AND files.status='ok'
+				<cfelse>--->
+				INNER JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id 
+					AND area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND files.status='ok'
+				<!---</cfif>--->)
 				) AS items
 				INNER JOIN #client_abb#_users AS users
 				ON items.user_in_charge = users.id
@@ -649,7 +667,7 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">		
 					
 			<cfquery name="addReadToItem" datasource="#client_dsn#">		
-				INSERT INTO #client_abb#_#itemTypeTable#_readings
+				INSERT INTO `#client_abb#_#itemTypeTable#_readings`
 				SET #itemTypeName#_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">,
 				user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">,
 				date = NOW();			
@@ -768,6 +786,5 @@
 			
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
-	
   
 </cfcomponent>

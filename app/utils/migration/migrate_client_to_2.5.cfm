@@ -281,3 +281,27 @@ Script que copie todos los position de las tablas de items (áreas web: entradas
 Las entradas habría que migrarlas con un orden inverso, es decir la última se pone la primera, porque a las entradas se les aplicaba en la versión anterior un orden inverso que a las noticias
 Antes sólo se ordenaban: las noticias y las entradas, pero con órdenes distintos.
 --->
+
+
+
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `area_id` INTEGER UNSIGNED AFTER `typology_row_id`;
+
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `file_type_id` INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER `area_id`;
+
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `locked` BOOLEAN NOT NULL DEFAULT 0 AFTER `file_type_id`;
+
+DROP TABLE IF EXISTS `dp_software7`.`software7_files_locks`;
+CREATE TABLE  `dp_software7`.`software7_files_locks` (
+  `file_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `lock_date` datetime NOT NULL,
+  `lock` tinyint(1) NOT NULL,
+  PRIMARY KEY (`file_id`,`user_id`,`lock_date`),
+  KEY `FK_software7_files_locks_2` (`user_id`),
+  CONSTRAINT `FK_software7_files_locks_1` FOREIGN KEY (`file_id`) REFERENCES `software7_files` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_software7_files_locks_2` FOREIGN KEY (`user_id`) REFERENCES `software7_users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+

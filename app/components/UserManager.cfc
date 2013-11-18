@@ -1549,47 +1549,43 @@
 
 		<cfset var response = "">
 		
+			<cfinclude template="includes/functionStartOnlySession.cfm"> 
 		
-			<cfinclude template="includes/functionStart.cfm"> 
-		
-			<cfquery name="selectUserQuery" datasource="#client_dsn#">
-				SELECT id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, internal_user AS whole_tree_visible, image_file, image_type, dni, language,
-				CONCAT_WS(' ', family_name, name) AS user_full_name
-				<cfif arguments.format_content EQ "all">
-				, space_used, number_of_connections, last_connection, connected, session_id, creation_date, root_folder_id, sms_allowed
-				</cfif> 
-				<cfif APPLICATION.moduleLdapUsers EQ true>
-				, login_ldap, login_diraya
-				</cfif>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
+				<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
+				<cfinvokeargument name="format_content" value="#arguments.format_content#">
+				<cfinvokeargument name="with_ldap" value="#APPLICATION.moduleLdapUsers#">
 				<cfif APPLICATION.identifier EQ "vpnet">
-				, center_id, category_id, service_id, service, other_1, other_2
+					<cfinvokeargument name="with_vpnet" value="true">
 				</cfif>
-				FROM #client_abb#_users
-				WHERE id = #arguments.get_user_id#;
-			</cfquery>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 			
-			<cfquery name="checkClientAdministrator" datasource="#APPLICATION.dsn#">
-				SELECT id 
-				FROM APP_clients				
-				WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">
-				AND administrator_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;			
-			</cfquery>
-			
-			<cfif checkClientAdministrator.recordCount GT 0>
-				<!---<cfset general_administrator = true>--->
-				<cfset general_administrator = 1>
-			<cfelse>
-				<!---<cfset general_administrator = false>--->
-				<cfset general_administrator = 0>
-				
-				<cfquery name="checkAreaAdministrator" datasource="#client_dsn#">
-					SELECT user_id, area_id 
-					FROM #client_abb#_areas_administrators		
-					WHERE user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;			
+			<cfif selectUserQuery.recordCount GT 0>
+
+				<cfquery name="checkClientAdministrator" datasource="#APPLICATION.dsn#">
+					SELECT id 
+					FROM APP_clients				
+					WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">
+					AND administrator_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;			
 				</cfquery>
 				
-			</cfif>
-			<cfif selectUserQuery.recordCount GT 0>
+				<cfif checkClientAdministrator.recordCount GT 0>
+					<!---<cfset general_administrator = true>--->
+					<cfset general_administrator = 1>
+				<cfelse>
+					<!---<cfset general_administrator = false>--->
+					<cfset general_administrator = 0>
+					
+					<cfquery name="checkAreaAdministrator" datasource="#client_dsn#">
+						SELECT user_id, area_id 
+						FROM #client_abb#_areas_administrators		
+						WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;			
+					</cfquery>
+					
+				</cfif>
 
 				<cfif arguments.return_type EQ "query">
                     
@@ -1645,8 +1641,6 @@
 								<cfinvokeargument name="login_diraya" value="#selectUserQuery.login_diraya#">
 							</cfif>
 							<cfif APPLICATION.identifier EQ "vpnet">
-								<!---<cfinvokeargument name="center" value="#selectUserQuery.center#">
-								<cfinvokeargument name="category" value="#selectUserQuery.category#">--->
 								<cfinvokeargument name="center_id" value="#selectUserQuery.center_id#">
 								<cfinvokeargument name="category_id" value="#selectUserQuery.category_id#">
 								<cfinvokeargument name="service_id" value="#selectUserQuery.service_id#">

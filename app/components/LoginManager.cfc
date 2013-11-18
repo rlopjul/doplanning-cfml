@@ -66,6 +66,10 @@
 				<cfif isDefined("SESSION.client_email_from")>
 					<cfset StructDelete(SESSION, "client_email_from")>
 				</cfif>
+
+				<!---<cfif isDefined("SESSION.app_modules")>
+					
+				</cfif>--->
 			</cfif>	
 			
 			<cfif APPLICATION.moduleLdapUsers IS false OR arguments.ldap_id EQ "doplanning">

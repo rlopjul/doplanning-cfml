@@ -11,6 +11,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row" type="object" required="true">
 		<cfargument name="fields" type="query" required="true">
+		<cfargument name="language" type="string" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">	
@@ -67,7 +68,7 @@
 						<cfinvokeargument name="language" value="#SESSION.user_language#"/>
 					</cfinvoke>--->
 					<script type="text/javascript">
-						CKEDITOR.replace('#field_name#', {toolbar:'DP', toolbarStartupExpanded:true, language:'#SESSION.user_language#'});
+						CKEDITOR.replace('#field_name#', {toolbar:'DP', toolbarStartupExpanded:true, language:'#arguments.language#'});
 					</script>
 				</cfif>
 

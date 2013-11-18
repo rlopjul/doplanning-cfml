@@ -125,14 +125,24 @@ curLangText["es"] = {
 		
 		"new_file": {
 			
-			"access_to_file" : "Acceda directamente al archivo mediante el siguiente enlace",
-			"access_to_download_file" : "Descargue el archivo mediante el siguiente enlace",
+			"access_to_file" : "Acceda directamente al archivo",
+			"access_to_download_file" : "Descargue el archivo",
 			"access_to_file_links" : "Acceda directamente al archivo mediante los siguientes enlaces",
 			"file" : "Archivo",
-			"replaced_file" : "Archivo Reemplazado",
+			"area_file" : "Archivo de área",
+			"replaced_file" : "Archivo reemplazado",
+			"dissociated_file" : "Archivo quitado",
+			"deleted_file" : "Archivo eliminado",
+			"locked_file" : "Archivo bloqueado",
+			"unlocked_file" : "Archivo desbloqueado",
 			
+			"created" : "creado",
 			"added" : "añadido",
 			"replaced" : "reemplazado",
+			"dissociated" : "quitado",
+			"deleted" : "eliminado",
+			"locked" : "bloqueado",
+			"unlocked" : "desbloqueado",
 			
 			"it_has" : "Se ha",
 			"a_file_on_the_area" : "un archivo en el área",
@@ -348,14 +358,24 @@ curLangText["en"] = {
 		
 		"new_file": {
 			
-			"access_to_file" : "Go directly to the file through the following link",
-			"access_to_download_file" : "Download the file with the following link",
+			"access_to_file" : "Go directly to the file",
+			"access_to_download_file" : "Download the file",
 			"access_to_file_links" : "Go directly to the file through the following links",
 			"file" : "File",
+			"area_file" : "Area File",
 			"replaced_file" : "Replaced file",
+			"dissociated_file" : "Dissociated file",
+			"deleted_file" : "Deleted file",
+			"locked_file" : "Locked file",
+			"unlocked_file" : "Unlocked file",
 			
+			"created" : "created",
 			"added" : "added",
 			"replaced" : "replaced",
+			"dissociated" : "dissociated",
+			"deleted" : "deleted",
+			"locked" : "locked",
+			"unlocked" : "unlocked",
 			
 			"it_has" : "A user has",
 			"a_file_on_the_area" : "a file in the area",

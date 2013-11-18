@@ -12,7 +12,7 @@
 
 <cfif isDefined("URL.search")>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getAllAreasFiles" returnvariable="xmlResponseContent">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getAllAreasFiles" returnvariable="getAllAreasFilesResponse">
 		<cfif len(search_text) GT 0>
 		<cfinvokeargument name="search_text" value="#search_text#">	
 		</cfif>
@@ -30,15 +30,14 @@
 		<cfif len(end_date) GT 0>
 			<cfinvokeargument name="end_date" value="#end_date#">
 		</cfif>			
-		
-		
 	</cfinvoke>
 		
-	<cfxml variable="xmlFiles">
+	<!---<cfxml variable="xmlFiles">
 	<cfoutput>
 	#xmlResponseContent#
 	</cfoutput>
-	</cfxml>
+	</cfxml>--->
+	<cfset files = getAllAreasFilesResponse.files>
 	
 	<cfset full_content = true>
 	<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">
