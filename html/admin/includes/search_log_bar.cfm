@@ -1,16 +1,7 @@
-
-
-
-
 <cfoutput>
-
-
-
-
 <!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>--->
-
 
 <script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
@@ -62,24 +53,18 @@
 	<cfset logActions = getLogActionsResponse.query>
 <!---	<cfset numLogActions = logActions.RecordCount>--->
 
-
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">	
 		<cfinvokeargument name="order_by" value="name">
 		<cfinvokeargument name="order_type" value="asc">
 	</cfinvoke>
 	
-	<cfxml variable="xmlUsers">
-		<cfoutput>
-		#getUsersResponse.usersXml#
-		</cfoutput>
-	</cfxml>
-	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
+	<cfset users = getUsersResponse.users>
+	<cfset numUsers = ArrayLen(users)>
 	
 
 </cfif>
 
 <script type="text/javascript">
-
 	
 	$(function() {
 
@@ -88,8 +73,6 @@
 		  autoclose: true		  
 		});--->
 			
-
-	
 	
 		$('#from_date').datepicker({
 		  format: 'dd-mm-yyyy', 
@@ -98,8 +81,6 @@
 		});
 		
 		
-			
-	
 		$('#end_date').datepicker({
 		  format: 'dd-mm-yyyy', 
 		  autoclose: true
@@ -152,17 +133,12 @@
 		&nbsp;<label for="from_user" lang="es">De</label> 
 		<select name="from_user" id="from_user">
 		<option value="" lang="es">Todos</option>
-		<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">				
-			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="objectUser">
-				<cfinvokeargument name="xml" value="#xmlUsers.users.user[xmlIndex]#">
-				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>	
+		<cfloop index="objectUser" array="#users#">	
 			
 			<option value="#objectUser.id#" <cfif objectUser.id EQ user_log>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
 			
 		</cfloop>
 		</select>
-		
 		
 		&nbsp;<label for="from_user" lang="es">Acción</label> 
 		<select name="action" id="action" style="width:350px;">

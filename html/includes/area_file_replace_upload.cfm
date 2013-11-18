@@ -39,7 +39,7 @@
 				
 		<cfelse>
 			
-			<cfset message = "Ha ocurrido un error al subir el archivo.">
+			<cfset message = replaceFileResponse.message>
 			<cfset message = URLEncodedFormat(message)>
 			<cflocation url="#fail_page#&res=0&msg=#message#" addtoken="no">				
 		</cfif>

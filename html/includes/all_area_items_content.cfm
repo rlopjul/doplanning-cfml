@@ -33,7 +33,11 @@
 	<a href="image_new.cfm?area=#area_id#" onclick="openUrl('image_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nueva Imagen" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<img src="#APPLICATION.htmlPath#/assets/icons/image.png" style="height:22px;"/></a>
 	</cfif>
 
-	<a href="area_file_new.cfm?area=#area_id#" onclick="openUrl('area_file_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo Archivo" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file.png" style="height:22px;"/></a>
+	<a href="area_file_new.cfm?area=#area_id#&fileTypeId=1" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe', event)" class="btn btn-small" title="Nuevo Archivo" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file.png" style="height:22px;"/></a>
+
+	<cfif APPLICATION.moduleAreaFilesLite IS true AND len(area_type) IS 0>
+	<a href="area_file_new.cfm?area=#area_id#&fileTypeId=2" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe', event)" class="btn btn-small" title="Nuevo Archivo de área" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" style="height:22px;"/></a>
+	</cfif>
 	
 	
 	<a href="event_new.cfm?area=#area_id#" onclick="openUrl('event_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo Evento" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/event.png" style="height:22px;"/></a>

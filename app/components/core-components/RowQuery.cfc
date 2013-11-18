@@ -281,7 +281,7 @@
 				CONCAT_WS(' ', insert_users.family_name, insert_users.name) AS insert_user_full_name, insert_users.image_type AS insert_user_image_type,
 				CONCAT_WS(' ', update_users.family_name, update_users.name) AS update_user_full_name, update_users.image_type AS update_user_image_type
 				FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AS table_row
-				INNER JOIN #client_abb#_users AS insert_users ON table_row.insert_user_id = insert_users.id
+				LEFT JOIN #client_abb#_users AS insert_users ON table_row.insert_user_id = insert_users.id
 				LEFT JOIN #client_abb#_users AS update_users ON table_row.last_update_user_id = update_users.id
 				<cfif isDefined("arguments.row_id")>
 					WHERE table_row.row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">

@@ -20,7 +20,11 @@
 			<cfquery name="createTable" datasource="#client_dsn#">
 				CREATE TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` (
 				  `row_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-				  `insert_user_id` int(11) NOT NULL,
+				  <cfif arguments.tableTypeId IS 2><!--- Forms --->
+				   `insert_user_id` int(11) DEFAULT NULL,
+				  <cfelse>
+				   `insert_user_id` int(11) NOT NULL,
+				  </cfif>
 				  `last_update_user_id` int(11) DEFAULT NULL,
 				  `creation_date` datetime NOT NULL,
 				  `last_update_date` datetime DEFAULT NULL,

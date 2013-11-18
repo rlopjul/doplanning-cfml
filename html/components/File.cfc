@@ -49,7 +49,7 @@
 	
 	<!--- ---------------------------------- getFile -------------------------------------- --->
 	
-	<cffunction name="getFile" returntype="struct" access="public">
+	<cffunction name="getFile" returntype="query" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="item_id" type="numeric" required="false">
@@ -75,7 +75,7 @@
 				<cfif isDefined("arguments.itemTypeId")>
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				</cfif>
-				<cfinvokeargument name="return_type" value="object">
+				<cfinvokeargument name="return_type" value="query">
 			</cfinvoke>
 			
 			<cfcatch>
@@ -292,26 +292,13 @@
 	<cffunction name="dissociateFile" returntype="void" access="remote">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
-		<cfargument name="return_path" type="string" required="yes">
+		<cfargument name="return_path" type="string" required="true">
 		
 		<cfset var method = "dissociateFile">
 
 		<cfset var response = structNew()>
 
 		<cftry>
-			
-			<!---<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<file id="#arguments.file_id#"/>
-					<area id="#arguments.area_id#"/>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>--->
 
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="dissociateFile" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
@@ -340,6 +327,7 @@
 	<!--- ---------------------------------- createFile -------------------------------------- --->
 	
 	<cffunction name="createFile" access="public" returntype="struct">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="Filedata" type="string" required="true">
@@ -360,27 +348,6 @@
 			<cfif response.result IS true>
 				<cfset response.message = "Archivo añadido al área.">
 			</cfif>
-
-			<!---<cfif uploadNewFileResponse.result IS true>
-				<cfset file_id = uploadNewFileResponse.file_id>
-				
-				<cfset areas_ids = arrayNew(1)>
-				<cfset arrayAppend(areas_ids, FORM.area_id)>
-				
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="associateFileToAreas" returnvariable="resultAddFile">
-					<cfinvokeargument name="file_id" value="#file_id#">
-					<cfinvokeargument name="areas_ids" value="#areas_ids#">
-				</cfinvoke>
-				
-				<cfset response_message = resultAddFile.message>
-				
-				<cfset response = {result=#resultAddFile.result#, message=#response_message#, file_id=#file_id#}>
-					
-			<cfelse>
-				
-				<cfset response = {result=false, message=#uploadNewFileResponse.message#}>
-
-			</cfif>--->
 			
 			<cfcatch>
 
@@ -466,6 +433,47 @@
 	</cffunction>
 
 
+	<!--- lockFile --->
+
+	<cffunction name="lockFile" returntype="void" access="remote">
+		<cfargument name="file_id" type="string" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="lock" type="boolean" required="true">
+		<cfargument name="return_path" type="string" required="true">
+		
+		<cfset var method = "deleteItem">
+
+		<cfset var response = structNew()>
+				
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeAreaFileLock" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="lock" value="#arguments.lock#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfif arguments.lock IS true>
+					<cfset msg = "Archivo bloqueado.">
+				<cfelse>
+					<cfset msg = "Archivo desbloqueado.">
+				</cfif>
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+	
+
 	
 	<!--- ---------------------------------- updateFile -------------------------------------- --->
 	<!---Este método solo se usa desde Mis documentos y debe dejar de usarse en futuras versiones--->
@@ -513,65 +521,7 @@
 		<cfreturn xmlResponse>
 		
 	</cffunction>--->
-	
-	
-	<!--- ---------------------------------- updateFileRemote -------------------------------------- --->
-	
-	<!---<cffunction name="updateFileRemote" returntype="void" access="remote">
-		<cfargument name="file_id" type="numeric" required="true">
-		<cfargument name="area_id" type="numeric" required="true">
-		<cfargument name="name" type="string" required="true">
-		<cfargument name="description" type="string" required="true">
-		<cfargument name="return_path" type="string" required="true">
 		
-		<cfset var method = "updateFileRemote">
-		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-		
-		<cftry>
-			
-			<!---<cfset response_page = "files.cfm?area=#arguments.area_id#&file=#arguments.file_id#">--->
-			<cfset response_page = "area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#">
-
-			<!---<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<file id="#arguments.file_id#">
-						<name><![CDATA[#arguments.name#]]></name>
-						<description><![CDATA[#arguments.description#]]></description>
-					</file>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="updateFile">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>--->
-
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="updateFile" returnvariable="response">
-				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
-				<cfinvokeargument name="name" value="#arguments.name#"/>
-				<cfinvokeargument name="description" value="#arguments.description#"/>
-			</cfinvoke>
-			
-			<cfif response.result IS true>
-				<cfset msg = "Archivo modificado.">
-			<cfelse>
-				<cfset msg = response.message>
-			</cfif>
-			
-			<cfset msg = URLEncodedFormat(msg)>
-            
-            <cflocation url="#arguments.return_path##response_page#&msg=#msg#&res=#response.result#" addtoken="no">
-			
-			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-				
-	</cffunction>--->
 	
 	
 	<!--- ---------------------------------- deleteFile -------------------------------------- --->
@@ -584,32 +534,27 @@
 		
 		<cfset var method = "deleteFile">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<cfset var response = structNew()>
 		
 		<cftry>
 			
 			<cfset response_page = "my_files.cfm?folder=#arguments.folder_id#">
 			
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<file id="#arguments.file_id#"/>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="deleteFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
 			</cfinvoke>
 			
-			<cfset message = "Archivo eliminado.">
-			<cfset message = URLEncodedFormat(message)>
-            
-            <cflocation url="#APPLICATION.htmlPath#/#response_page#&msg=#message#&res=1" addtoken="no">
+			<cfif response.result IS true>
+				<cfset msg = "Archivo eliminado.">
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+			
+			<cfset msg = URLEncodedFormat(msg)>
+            <cflocation url="#APPLICATION.htmlPath#/#response_page#&msg=#msg#&res=#response.result#" addtoken="no">
 			
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
@@ -627,32 +572,25 @@
 		
 		<cfset var method = "deleteFileRemote">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-		
+		<cfset var response = structNew()>
+
 		<cftry>
 			
-			<cfset response_page = "area_items.cfm?area=#arguments.area_id#">
-			
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<file id="#arguments.file_id#"/>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="deleteFile">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="deleteFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
 			</cfinvoke>
 			
-			<cfset message = "Archivo eliminado.">
-			<cfset message = URLEncodedFormat(message)>
-            
-            <cflocation url="#arguments.return_path##response_page#&msg=#message#&res=1" addtoken="no">
-			
+			<cfif response.result IS true>
+				<cfset msg = "Archivo eliminado.">
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+						
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
@@ -663,7 +601,7 @@
 	
 	<!--- ----------------------- GET ALL AREAS FILES -------------------------------- --->
 	
-	<cffunction name="getAllAreasFiles" returntype="string" access="public">
+	<cffunction name="getAllAreasFiles" returntype="struct" output="false" access="public">
 		<cfargument name="search_text" type="string" required="no">
 		<cfargument name="user_in_charge" type="numeric" required="no">
 		<cfargument name="limit" type="numeric" required="no">
@@ -672,12 +610,11 @@
 				
 		<cfset var method = "getAllAreasFiles">
 		
-		<cfset var request_parameters = "">
+		<cfset var response = structNew()>
 		
 		<cftry>
 			
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAllAreasFiles" returnvariable="xmlResponseContent">
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAllAreasFiles" returnvariable="response">
 				<cfif isDefined("arguments.search_text")>
 				<cfinvokeargument name="search_text" value="#arguments.search_text#">
 				</cfif>
@@ -695,14 +632,16 @@
 				<cfinvokeargument name="end_date" value="#arguments.end_date#">
 				</cfif>				
 			</cfinvoke>	
-			
-			<cfreturn xmlResponseContent>
-            
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+			            
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 	
