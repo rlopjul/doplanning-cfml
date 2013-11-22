@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>#APPLICATION.title#-Buscar</title>
+<title>#APPLICATION.title#</title>
 <!-- InstanceEndEditable -->
 <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
@@ -107,23 +107,14 @@
 
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
+
 <cfinclude template="includes/search_head.cfm">
 
-<cfset return_page = "index.cfm">
-<div style="clear:both; padding-top:30px; padding-bottom:30px;">
+<cfinclude template="#APPLICATION.htmlPath#/includes/search_menu.cfm">
 
-	<ul class="nav nav-list">
-	  <li><a href="search_messages.cfm">Buscar mensajes</a></li>
-	  <li><a href="search_files.cfm">Buscar archivos</a></li>
-	  <li><a href="search_users.cfm">Buscar usuarios</a></li>
-	  <li><a href="search_areas.cfm">Buscar áreas</a></li>
-	</ul>
+<cfset itemTypeId = 12>
+<cfinclude template="#APPLICATION.htmlPath#/includes/all_areas_items_content.cfm">
 
-</div>
-
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
-	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>
 <!-- InstanceEndEditable -->
 </div>
 </body>

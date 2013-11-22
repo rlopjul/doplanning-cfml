@@ -18,7 +18,7 @@
 </cfif>
 <cfoutput>
 <div style="clear:both; padding-top:10px; padding-bottom:10px;">
-	<form action="#CGI.SCRIPT_NAME#" method="get">
+	<form action="#CGI.SCRIPT_NAME#" method="get" class="form-inline">
 		<input type="text" name="text" value="#text_value#" />
 		<input type="submit" class="btn btn-primary" name="search" value="Buscar" />
 	</form>

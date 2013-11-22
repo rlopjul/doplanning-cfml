@@ -8,45 +8,6 @@
 
 	<!--- -------------------------------createTable-------------------------------------- --->
 	
-    <!---<cffunction name="createTable" returntype="struct" access="public">
-    	<cfargument name="table_id" type="numeric" required="true">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-				
-		<cfset var method = "createTable">
-
-		<cfset var response = structNew()>
-		
-		<cftry>
-
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-					
-			<cfinvoke component="AreaItem" method="createItem" returnvariable="createItemResponse">
-				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-				<cfinvokeargument name="title" value="#arguments.title#">
-				<cfinvokeargument name="link" value="">
-				<cfinvokeargument name="description" value="#arguments.description#">
-				<cfinvokeargument name="parent_id" value="#arguments.area_id#">
-				<cfinvokeargument name="parent_kind" value="area">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-			</cfinvoke>
-			
-			<cfif createItemResponse.result IS true>
-				<cfset response = {result=true, message="Tabla creada", table_id=createItemResponse.item_id}>
-			</cfif>
-
-			<cfcatch>
-				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
-		</cftry>
-
-		<cfreturn response>
-		
-	</cffunction>--->
-
-
-	<!--- -------------------------------createTable-------------------------------------- --->
-	
     <cffunction name="createTable" returntype="struct" access="public">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="title" type="string" required="true">
@@ -678,6 +639,9 @@
 							<cfif tableTypeId IS 3><!---Typologies--->
 							<th>General</th>	
 							</cfif>
+							<cfif arguments.full_content IS true>
+							<th lang="es">Área</th>
+							</cfif>
 						</tr>
 					</thead>
 					
@@ -739,12 +703,16 @@
 						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','itemIframe',event)">													
 							<td><a href="#item_page_url#" class="text_item" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
 							<td>
-							<!---
-							<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Typologies, Forms--->
-								<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" onclick="event.stopPropagation()" title="Campos" class="btn btn-mini"><i class="icon-wrench"></i></a>
-							</cfif>--->
+
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
-								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
+
+								<cfif arguments.full_content IS true><!--- Search page --->
+									<cfset rowsOnClick = "openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#','areaIframe',event)">
+								<cfelse>
+									<cfset rowsOnClick = "openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)">
+								</cfif>
+								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="#rowsOnClick#" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
+
 							</cfif>
 							</td>
 							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>
@@ -754,6 +722,10 @@
 							<td><cfif itemsQuery.structure_available IS true>Sí<cfelse>No</cfif></td>
 							<cfif tableTypeId IS 3><!---Typologies--->
 							<td><span lang="es"><cfif itemsQuery.general IS true>Sí<cfelse>No</cfif></span></td>
+							</cfif>
+
+							<cfif arguments.full_content IS true><!--- Search page --->
+								<td><a onclick="openUrl('#itemTypeNameP#.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="link_blue">#itemsQuery.area_name#</a></td>
 							</cfif>							
 						</tr>
 					</cfloop>

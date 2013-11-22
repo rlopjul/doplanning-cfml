@@ -284,13 +284,13 @@ Antes sólo se ordenaban: las noticias y las entradas, pero con órdenes distint
 
 
 
-ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `area_id` INTEGER UNSIGNED AFTER `typology_row_id`;
 
-ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `file_type_id` INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER `area_id`;
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `file_type_id` INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER `typology_row_id`;
 
-ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `locked` BOOLEAN NOT NULL DEFAULT 0 AFTER `file_type_id`;
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `area_id` INTEGER UNSIGNED AFTER `file_type_id`;
 
-DROP TABLE IF EXISTS `dp_software7`.`software7_files_locks`;
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `locked` BOOLEAN NOT NULL DEFAULT 0 AFTER `area_id`;
+
 CREATE TABLE  `dp_software7`.`software7_files_locks` (
   `file_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -302,6 +302,10 @@ CREATE TABLE  `dp_software7`.`software7_files_locks` (
   CONSTRAINT `FK_software7_files_locks_2` FOREIGN KEY (`user_id`) REFERENCES `software7_users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+ALTER TABLE `dp_software7`.`software7_users` 
+ ADD COLUMN `notify_delete_file` BOOLEAN NOT NULL DEFAULT 1 AFTER `notify_new_typology`,
+ ADD COLUMN `notify_lock_file` BOOLEAN NOT NULL DEFAULT 1 AFTER `notify_delete_file`;
 
 
 

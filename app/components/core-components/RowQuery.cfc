@@ -56,7 +56,7 @@
 					<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>
 				
 						<!---getRowLastPosition--->
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getRowLastPosition" returnvariable="rowLastPosition">
+						<cfinvoke component="RowQuery" method="getRowLastPosition" returnvariable="rowLastPosition">
 							<cfinvokeargument name="table_id" value="#arguments.table_id#">
 							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 							
@@ -195,7 +195,22 @@
 				</cfif>
 				
 			</cftransaction>
-			
+
+			<cfif arguments.tableTypeId IS NOT 3><!--- IS NOT typology --->
+				
+				<!--- Alert --->
+				<cfinvoke component="AlertManager" method="newTableRow">
+					<cfinvokeargument name="row_id" value="#row_id#">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
+					<cfinvokeargument name="action" value="#arguments.action#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+			</cfif>
 		
 		<cfreturn row_id>
 		

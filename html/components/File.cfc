@@ -433,6 +433,38 @@
 	</cffunction>
 
 
+	<!--- ---------------------------------- changeFileArea -------------------------------------- --->
+	
+	<cffunction name="changeFileArea" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="new_area_id" type="numeric" required="true">
+		
+		<cfset var method = "changeFileArea">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileArea" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Archivo cambiado de área">
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
+	</cffunction>
+
+
 	<!--- lockFile --->
 
 	<cffunction name="lockFile" returntype="void" access="remote">

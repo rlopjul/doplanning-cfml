@@ -192,26 +192,57 @@
 			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">
 			
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaTablesResult">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfif isDefined("arguments.user_in_charge")>
-					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
-				</cfif>
-				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-				<cfinvokeargument name="listFormat" value="true">
-				<cfinvokeargument name="format_content" value="default">
-				<cfinvokeargument name="with_user" value="false">
-				<cfinvokeargument name="parse_dates" value="true"/>
-				<cfif isDefined("arguments.limit")>
-					<cfinvokeargument name="limit" value="#arguments.limit#">
-				</cfif>
-				<cfif isDefined("arguments.structure_available") AND arguments.structure_available IS true>
-					<cfinvokeargument name="structure_available" value="true"/>
-				</cfif>		
+			<!---<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true>
+
+
+
+
+			</cfif>--->
 				
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaTablesResult">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfif isDefined("arguments.user_in_charge")>
+						<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
+					</cfif>
+					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+					<cfinvokeargument name="listFormat" value="true">
+					<cfinvokeargument name="format_content" value="default">
+					<cfinvokeargument name="with_user" value="false">
+					<cfinvokeargument name="parse_dates" value="true"/>
+					<cfif isDefined("arguments.limit")>
+						<cfinvokeargument name="limit" value="#arguments.limit#">
+					</cfif>
+					<cfif isDefined("arguments.structure_available") AND arguments.structure_available IS true>
+						<cfinvokeargument name="structure_available" value="true"/>
+					</cfif>		
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			<!---<cfelse>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getAreaTablesInherited" returnvariable="getAreaTablesResult">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfif isDefined("arguments.user_in_charge")>
+						<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
+					</cfif>
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeid#">
+					<cfinvokeargument name="format_content" value="default">
+					<cfinvokeargument name="with_user" value="false">
+					<cfinvokeargument name="parse_dates" value="true"/>
+					<cfif isDefined("arguments.limit")>
+						<cfinvokeargument name="limit" value="#arguments.limit#">
+					</cfif>
+					<cfif isDefined("arguments.structure_available") AND arguments.structure_available IS true>
+						<cfinvokeargument name="structure_available" value="true"/>
+					</cfif>		
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfif>--->
 						
 			<cfset areaTablesQuery = getAreaTablesResult.query>
 

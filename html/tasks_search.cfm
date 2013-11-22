@@ -107,85 +107,14 @@
 
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
+
 <cfinclude template="includes/search_head.cfm">
 
-<div class="div_head_subtitle">
-Buscar usuarios
-</div>
+<cfinclude template="#APPLICATION.htmlPath#/includes/search_menu.cfm">
 
-<cfset return_page = "search.cfm">
+<cfset itemTypeId = 6>
+<cfinclude template="#APPLICATION.htmlPath#/includes/all_areas_items_content.cfm">
 
-<cfinclude template="includes/search_bar.cfm">
-
-<cfif isDefined("search_text")>
-
-
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Search" method="searchUsers" returnvariable="xmlResponse">
-		<cfinvokeargument name="text" value="#search_text#">
-		<cfinvokeargument name="page" value="#search_page#">
-	</cfinvoke>
-	
-	<!---PROVISIONAL--->
-	<cfset area_id = 0>
-	<cfset URL.area= 0>
-	
-	<cfxml variable="xmlUsers">
-		<cfoutput>
-		#xmlResponse.response.result.search.users#
-		</cfoutput>
-	</cfxml>
-	
-	<cfset page = xmlUsers.users.xmlAttributes.page>
-	<cfset pages = xmlUsers.users.xmlAttributes.pages>
-	<cfset total = xmlUsers.users.xmlAttributes.total>
-	
-	<cfinclude template="includes/search_result_text.cfm">
-	
-	<cfinclude template="includes/search_pages.cfm">
-	
-	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>
-	
-	<cfoutput>
-
-		<form action="users.cfm?area=#area_id#" method="post" style="padding:0; margin:0; clear:none;">
-		<div class="div_element_menu">
-			<div class="div_icon_menus"><input type="image" name="notification" src="assets/icons/notifications.gif" title="Enviar notificación a usuarios seleccionados" /></div>
-			<div class="div_text_menus"><span class="span_text_menus">Enviar <br /> notificación</span></div>	
-		</div>
-		<div class="div_element_menu">
-			<div class="div_icon_menus"><input type="image" name="sms" src="assets/icons/sms.png" title="Enviar SMS a usuarios seleccionados" /></div>
-			<div class="div_text_menus"><span class="span_text_menus">Enviar<br />SMS</span></div>
-		</div>
-	</div>
-	</cfoutput>
-	<div class="div_items">
-	<div class="div_separator"><!-- --></div>
-	<cfif numUsers GT 0>
-	
-		<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">
-
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserList">
-					<cfinvokeargument name="xmlUser" value="#xmlUsers.users.user[xmlIndex]#">
-					<cfinvokeargument name="page_type" value="6">
-			</cfinvoke>
-			
-		</cfloop>
-	
-	</div>
-	<cfinclude template="includes/search_pages.cfm">
-	<cfelse>
-		No hay usuarios con el texto buscado.
-	</div>
-	</cfif>
-	
-	
-	</form>
-
-</cfif>
-
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
-	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>
 <!-- InstanceEndEditable -->
 </div>
 </body>

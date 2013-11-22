@@ -195,12 +195,22 @@
 	
 	<cfif itemTypeId IS 5>
 		
-		<cfif len(objectItem.start_time) IS 0>
-			<cfset objectItem.start_time = createTime(0,0,0)>
+		<cfif isDefined("objectItem.start_time")>
+			
+			<cfif len(objectItem.start_time) IS 0>
+				<cfset objectItem.start_time = createTime(0,0,0)>
+			</cfif>
+			
+			<cfset start_hour = hour(objectItem.start_time)>
+			<cfset start_minute = minute(objectItem.start_time)>
+
+		<cfelse><!--- After send FORM --->
+
+			<cfset start_hour = objectItem.start_hour>
+			<cfset start_minute = objectItem.start_minute>
+
 		</cfif>
 		
-		<cfset start_hour = hour(objectItem.start_time)>
-		<cfset start_minute = minute(objectItem.start_time)>
 		
 		<!---<label class="control-label">#t_start_time#</label>&nbsp;--->
 		<select name="start_hour" style="width:55px;">
@@ -228,13 +238,22 @@
 	<cfinput type="text" name="end_date" id="end_date" class="input_datepicker" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 
 	<cfif itemTypeId IS 5>
-	
-		<cfif len(objectItem.end_time) IS 0>
-			<cfset objectItem.end_time = createTime(0,0,0)>
+		
+		<cfif isDefined("objectItem.end_time")>
+
+			<cfif len(objectItem.end_time) IS 0>
+				<cfset objectItem.end_time = createTime(0,0,0)>
+			</cfif>
+		
+			<cfset end_hour = hour(objectItem.end_time)>
+			<cfset end_minute = minute(objectItem.end_time)>
+
+		<cfelse><!--- After send FORM --->
+
+			<cfset end_hour = objectItem.end_hour>
+			<cfset end_minute = objectItem.end_minute>
+
 		</cfif>
-	
-		<cfset end_hour = hour(objectItem.end_time)>
-		<cfset end_minute = minute(objectItem.end_time)>
 		
 		<select name="end_hour" style="width:55px;">
 			<cfloop from="0" to="23" index="hour">

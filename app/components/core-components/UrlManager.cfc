@@ -31,11 +31,13 @@
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeName" type="string" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">
+
+		<cfargument name="client_abb" type="string" required="true">
 		
 		<cfset var itemUrl = "">
 		
 		<!---<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">--->
-		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#">		
+		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#">		
 		
 		<cfreturn itemUrl>
 	</cffunction>

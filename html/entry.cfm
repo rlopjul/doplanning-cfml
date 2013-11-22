@@ -112,6 +112,8 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_content.cfm">
 
 
+<!---
+Esto se quita porque en los resultados de las búsquedas no devuelve a la página de búsqueda
 <cfif isDefined("URL.return_page")>
 	<cfset return_page = URLDecode(URL.return_page)>
 <cfelse>
@@ -119,7 +121,7 @@
 </cfif>
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>
+</cfinvoke>--->
 <!-- InstanceEndEditable -->
 </div>
 </body>
