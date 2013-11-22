@@ -35,6 +35,7 @@
 		<cfset APPLICATION.showDniTitle = false>
 		<cfset APPLICATION.twoUrlsToAccess = false>
 		<cfset APPLICATION.modulefilesWithTables = true>
+		<cfset APPLICATION.filesTablesInheritance = true>
 		<cfset APPLICATION.moduleLists = true>
 		<cfset APPLICATION.moduleForms = true>
 		<cfset APPLICATION.modulePubMedComments = true>

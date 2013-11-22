@@ -80,26 +80,33 @@
 			<cfset current_url = "#lCase(itemTypeNameP)#_search.cfm?from_user=#user_in_charge#&to_user=#recipient_user#&limit=#limit_to#">
 		</cfif>--->
 		
-		<cfif itemTypeId IS NOT 7>
-	
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItemsList">
-				<!---<cfinvokeargument name="xmlItems" value="#xmlItems#">--->
-				<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
-				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-				<cfinvokeargument name="full_content" value="true">
-				<cfinvokeargument name="app_version" value="html2">
-			</cfinvoke>
-		
-		<cfelse><!---Consultations--->
-		
+		<cfif itemTypeId IS 7><!---Consultations--->
+
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputConsultationsList">
-				<!---<cfinvokeargument name="xmlItems" value="#xmlItems#">--->
 				<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				<cfinvokeargument name="full_content" value="true">
 				<cfinvokeargument name="app_version" value="html2">
 			</cfinvoke>
-			
+
+		<cfelseif itemTypeId IS 11 OR itemTypeId IS 12><!--- List AND Forms --->
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="outputTablesList">
+				<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="full_content" value="true">
+				<cfinvokeargument name="app_version" value="html2">
+			</cfinvoke>
+	
+		<cfelse>
+		
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItemsList">
+				<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="full_content" value="true">
+				<cfinvokeargument name="app_version" value="html2">
+			</cfinvoke>
+		
 		</cfif>
 		
 		</div>

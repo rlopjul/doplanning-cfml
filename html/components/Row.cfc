@@ -189,7 +189,7 @@
 			</cfinvoke>
 			
 			<cfif response.result IS true>
-				<cfset response.message = "Campo modificado">
+				<cfset response.message = "Registro modificado">
 			</cfif>
             
 			<cfcatch>
@@ -226,7 +226,7 @@
 			</cfinvoke>
 			
 			<cfif response.result IS true>
-				<cfset response.message = "Campo eliminado">
+				<cfset response.message = "Registro eliminado">
 			</cfif>
 			
 			<cfset msg = URLEncodedFormat(response.message)>

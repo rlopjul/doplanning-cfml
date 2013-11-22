@@ -107,13 +107,24 @@
 
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
-<cfinclude template="includes/search_head.cfm">
 
-<div class="div_head_subtitle">
-Buscar áreas 
+
+<div class="div_head_title">
+<cfoutput>
+<div class="icon_title">
+<a href="search_areas.cfm"><img src="assets/icons/search.png" alt="Búsqueda"/></a></div>
+<div class="head_title" style="padding-top:8px;"><a href="search_areas.cfm">Buscar áreas</a></div>
+</cfoutput>
 </div>
 
-<cfset return_page = "search.cfm">
+<!---<cfinclude template="includes/search_head.cfm">
+<div class="div_head_subtitle">
+Buscar áreas 
+</div>--->
+
+<!--- <cfset return_page = "search.cfm"> --->
+
+<cfset return_page = "mobile.cfm">
 
 <cfinclude template="includes/search_bar.cfm">
 

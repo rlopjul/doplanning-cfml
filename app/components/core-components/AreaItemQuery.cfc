@@ -410,7 +410,7 @@
 		<cfset var method = "listAllAreaItems">
 			
 			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, attached_file_id, NULL AS file_type_id">
-			<cfset var fileColums = "id, name, ( CASE WHEN association_date IS NULL THEN uploading_date ELSE association_date END ) AS creation_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id, file_type_id">
+			<cfset var fileColums = "id, name, IFNULL(files.replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id, file_type_id">
 
 			<cfset var commonColumsNull = "NULL AS done">
 

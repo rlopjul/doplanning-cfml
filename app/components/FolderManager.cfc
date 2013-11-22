@@ -649,8 +649,9 @@
 			</cfquery>
 			<cfif filesQuery.recordCount GT 0>
 				<cfloop query="filesQuery">
-					<cfinvoke component="FileManager" method="deleteFile">
-						<cfinvokeargument name="request" value='<request><parameters><file id="#filesQuery.file_id#"/></parameters></request>'>
+					<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
+						<!---<cfinvokeargument name="request" value='<request><parameters><file id="#filesQuery.file_id#"/></parameters></request>'>--->
+						<cfinvokeargument name="file_id" value="#filesQuery.file_id#">
 					</cfinvoke>
 				</cfloop>
 			</cfif>

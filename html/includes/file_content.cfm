@@ -96,12 +96,13 @@ function confirmLockFile(value) {
 			
 			<cfif (fileTypeId IS 1 AND objectFile.user_in_charge EQ SESSION.user_id) OR (fileTypeId IS 2 AND file_area_allowed IS true)>
 
-				<cfif fileTypeId IS 1 || (fileTypeId IS 2 AND objectFile.locked IS false)>
+				<cfif fileTypeId IS 1 || (fileTypeId IS 2 AND objectFile.locked IS true AND objectFile.lock_user_id IS SESSION.user_id)>
 					<a href="area_file_replace.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-small"><i class="icon-repeat"></i> <span lang="es">Reemplazar</span></a>
+					<a href="area_file_modify.cfm?file=#objectFile.id#&area=#area_id#&fileTypeId=#fileTypeId#" class="btn btn-small"><i class="icon-edit"></i> <span lang="es">Modificar datos</span></a>
 				</cfif>
 				
 				<cfif app_version NEQ "mobile">
-				<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+					<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 				</cfif>
 				
 				<a href="area_file_associate_areas.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-small"><i class="icon-plus-sign"></i> <span lang="es">Asociar a áreas</span></a>
@@ -124,19 +125,23 @@ function confirmLockFile(value) {
 				
 				<cfif fileTypeId IS 1 || (fileTypeId IS 2 AND objectFile.locked IS false)>
 					<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFileRemote&file_id=#objectFile.id#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmDeleteFile();" class="btn btn-danger btn-small"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+				</cfif>
 
-					<a href="area_file_modify.cfm?file=#objectFile.id#&area=#area_id#&fileTypeId=#fileTypeId#" class="btn btn-small"><i class="icon-edit"></i> <span lang="es">Modificar datos</span></a>
+			</cfif>
+
+			<cfif ( fileTypeId IS 1 || (fileTypeId IS 2 AND objectFile.locked IS false) ) AND ( objectFile.user_in_charge EQ SESSION.user_id OR is_user_area_responsible )>
+			
+				<a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-small"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
+
+				<cfif fileTypeId IS 2>
+					<a href="file_change_area.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-small"><i class="icon-cut"></i> <span lang="es">Cambiar área</span></a>	
 				</cfif>
 
 			</cfif>
 
 		</cfif>
 
-		<cfif page_type IS 2 AND (objectFile.user_in_charge EQ SESSION.user_id OR is_user_area_responsible)>
-			
-			<a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-small"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>	
-
-		</cfif>
+		
 		
 		<cfif APPLICATION.moduleConvertFiles EQ true>
 			<cfif objectFile.file_types_conversion.recordCount GT 0>
@@ -184,6 +189,10 @@ function confirmLockFile(value) {
 			<cfif objectFile.locked IS true>
 				<div class="alert">
 					<span>Archivo bloqueado por el usuario <a href="area_user.cfm?area=#objectFile.area_id#&user=#objectFile.lock_user_id#">#objectFile.lock_user_full_name#</a>.</span>
+				</div>
+			<cfelseif objectFile.file_type_id IS 2>
+				<div class="alert alert-info">
+					<span>Debe bloquear el archivo para poder modificarlo o reemplazarlo.</span>
 				</div>
 			</cfif>
 

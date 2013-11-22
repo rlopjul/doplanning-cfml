@@ -9,6 +9,12 @@
 
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
 
+<cfoutput>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js" type="text/javascript"></script>
+</cfoutput>
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <script type="text/javascript">
@@ -52,23 +58,31 @@
 		<input type="hidden" name="table_id" value="#table_id#"/>
 	</cfif>
 
-	<label for="label">Nombre</label>
-	<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="100" required="true" message="Nombre requerido" class="input-block-level"/>
+	<div class="control-group">
+		<label for="label">Nombre</label>
+		<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="100" required="true" message="Nombre requerido" class="input-block-level"/>
+	</div>
 
-	<label for="description">Descripción</label>
-	<textarea name="description" id="description" class="input-block-level" maxlength="1000">#table.description#</textarea>
+	<div class="control-group">
+		<label for="description">Descripción</label>
+		<textarea name="description" id="description" class="input-block-level" maxlength="1000">#table.description#</textarea>
+	</div>
 
-	<label for="structure_available" class="checkbox">
-		<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> Permitir copiar la estructura de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)#<br/>
-		<small class="help-block">Indica si la definición de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# está disponible para ser usada como plantilla por cualquier usuario de la organización.</small>
-	</label>
+	<div class="control-group">
+		<label for="structure_available" class="checkbox">
+			<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> Permitir copiar la estructura de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)#<br/>
+			<small class="help-block">Indica si la definición de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# está disponible para ser usada como plantilla por cualquier usuario de la organización.</small>
+		</label>
+	</div>
 	
 	<cfif tableTypeId IS 3 AND SESSION.client_administrator EQ SESSION.user_id>
 		
-		<label for="general" class="checkbox">
-			<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> Habilitar como #lCase(tableTypeNameEs)# general<br/>
-			<small class="help-block">Se podrá utilizar esta tipología en cualquier área de la organización.</small>
-		</label>
+		<div class="control-group">
+			<label for="general" class="checkbox">
+				<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> Habilitar como #lCase(tableTypeNameEs)# general<br/>
+				<small class="help-block">Se podrá utilizar esta tipología en cualquier área de la organización.</small>
+			</label>
+		</div>
 
 	</cfif>
 
@@ -82,3 +96,8 @@
 </cfform>
 </cfoutput>
 </div>
+
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+	<cfinvokeargument name="name" value="description">
+	<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+</cfinvoke>

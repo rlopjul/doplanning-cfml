@@ -1240,6 +1240,7 @@
 					<cfinvokeargument name="file_type" value="#arguments.file_type#">
 					<cfinvokeargument name="file_size" value="#arguments.file_size#">
 					<cfinvokeargument name="description" value="#arguments.file_description#">
+					<cfinvokeargument name="fileTypeId" value="1">
 				</cfinvoke>				
 				
 				<cfif createFileResponse.result IS true>
@@ -1361,37 +1362,55 @@
 				<cfthrow message="El usuario seleccionado es el propietario">
 
 			</cfif>			
-
-			<cftransaction>
 				
-				<cfquery datasource="#client_dsn#" name="changeItemUserInCharge">
-					UPDATE #client_abb#_#itemTypeTable#
+			<cfquery datasource="#client_dsn#" name="changeItemUserInCharge">
+				UPDATE #client_abb#_#itemTypeTable#
+				SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfif isNumeric(itemQuery.attached_file_id) AND itemQuery.attached_file_id GT 0>
+
+				<!---<cfquery datasource="#client_dsn#" name="changeItemUserFile">
+					UPDATE #client_abb#_files
 					SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
-					WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+					WHERE id = <cfqueryparam value="#itemQuery.attached_file_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>--->
 
-				<cfif isNumeric(itemQuery.attached_file_id) AND itemQuery.attached_file_id GT 0>
+				<cfinvoke component="FileManager" method="changeFileUser" returnvariable="changeFileUserResult">
+					<cfinvokeargument name="file_id" value="#itemQuery.attached_file_id#">
+					<cfinvokeargument name="new_user_in_charge" value="#arguments.new_user_in_charge#">
+				</cfinvoke>
 
-					<cfquery datasource="#client_dsn#" name="changeItemUserFile">
-						UPDATE #client_abb#_files
-						SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
-						WHERE id = <cfqueryparam value="#itemQuery.attached_file_id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
-
-				</cfif>
-
-				<cfif isNumeric(itemQuery.attached_image_id) AND itemQuery.attached_image_id GT 0>
-
-					<cfquery datasource="#client_dsn#" name="changeItemUserImage">
-						UPDATE #client_abb#_files
-						SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
-						WHERE id = <cfqueryparam value="#itemQuery.attached_image_id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
+				<cfif changeFileUserResult.result IS false>
+					
+					<cfreturn changeFileUserResult>
 
 				</cfif>
 
-			</cftransaction>
-			
+			</cfif>
+
+			<cfif isNumeric(itemQuery.attached_image_id) AND itemQuery.attached_image_id GT 0>
+
+				<!---<cfquery datasource="#client_dsn#" name="changeItemUserImage">
+					UPDATE #client_abb#_files
+					SET user_in_charge = <cfqueryparam value="#arguments.new_user_in_charge#" cfsqltype="cf_sql_integer">
+					WHERE id = <cfqueryparam value="#itemQuery.attached_image_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>--->
+
+				<cfinvoke component="FileManager" method="changeFileUser" returnvariable="changeImageUserResult">
+					<cfinvokeargument name="file_id" value="#itemQuery.attached_image_id#">
+					<cfinvokeargument name="new_user_in_charge" value="#arguments.new_user_in_charge#">
+				</cfinvoke>
+
+				<cfif changeImageUserResult.result IS false>
+					
+					<cfreturn changeFileUserResult>
+
+				</cfif>
+
+			</cfif>
+
 
 			<!---Send Alert--->
 			<cfinvoke component="AlertManager" method="changeItemUser">
@@ -2484,20 +2503,17 @@
 				<cfif getItemQuery.attached_file_id NEQ "NULL" AND getItemQuery.attached_file_id NEQ "" AND getItemQuery.attached_file_id NEQ "-1">
 				
 					<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-						<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_file_id#"/></parameters></request>'>
+						<!---<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_file_id#"/></parameters></request>'>--->
+						<cfinvokeargument name="file_id" value="#getItemQuery.attached_file_id#">
 					</cfinvoke>
 					
-					<cfxml variable="xmlResultDeleteFile">
+					<!---<cfxml variable="xmlResultDeleteFile">
 						<cfoutput>
 							#resultDeleteFile#
 						</cfoutput>
-					</cfxml>
+					</cfxml>--->
 					
-					<cfif xmlResultDeleteFile.response.xmlAttributes.status NEQ "ok"><!---File delete failed--->
-						<!--- RollBack the transaction --->
-						<!---<cfquery name="rollBackTransaction" datasource="#client_dsn#">
-							ROLLBACK;
-						</cfquery>--->
+					<cfif resultDeleteFile.result IS false><!---File delete failed--->
 						
 						<cfset error_code = 605>
 	
@@ -2512,21 +2528,18 @@
 					<!---DELETE ATTACHED_IMAGE FILE--->
 					<cfif getItemQuery.attached_image_id NEQ "NULL" AND getItemQuery.attached_image_id NEQ "" AND getItemQuery.attached_image_id NEQ "-1">
 					
-						<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-							<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_image_id#"/></parameters></request>'>
+						<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteImage">
+							<!---<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_image_id#"/></parameters></request>'>--->
+							<cfinvokeargument name="file_id" value="#getItemQuery.attached_image_id#">
 						</cfinvoke>
 						
-						<cfxml variable="xmlResultDeleteFile">
+						<!---<cfxml variable="xmlResultDeleteFile">
 							<cfoutput>
 								#resultDeleteFile#
 							</cfoutput>
-						</cfxml>
+						</cfxml>--->
 						
-						<cfif xmlResultDeleteFile.response.xmlAttributes.status NEQ "ok"><!---File delete failed--->
-							<!--- RollBack the transaction --->
-							<!---<cfquery name="rollBackTransaction" datasource="#client_dsn#">
-								ROLLBACK;
-							</cfquery>--->
+						<cfif resultDeleteImage.result IS false><!---File delete failed--->
 							
 							<cfset error_code = 605>
 		
@@ -2626,16 +2639,17 @@
 				<cfif getItemQuery.attached_file_id NEQ "NULL" AND getItemQuery.attached_file_id NEQ "" AND getItemQuery.attached_file_id NEQ "-1">
 				
 					<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-						<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_file_id#"/></parameters></request>'>
+						<!---<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_file_id#"/></parameters></request>'>--->
+						<cfinvokeargument name="file_id" value="#getItemQuery.attached_file_id#">
 					</cfinvoke>
 					
-					<cfxml variable="xmlResultDeleteFile">
+					<!---<cfxml variable="xmlResultDeleteFile">
 						<cfoutput>
 							#resultDeleteFile#
 						</cfoutput>
-					</cfxml>
+					</cfxml>--->
 					
-					<cfif xmlResultDeleteFile.response.xmlAttributes.status NEQ "ok"><!---File delete failed--->
+					<cfif resultDeleteFile. result IS false><!---File delete failed--->
 						<cfset error_code = 605>
 	
 						<cfthrow errorcode="#error_code#">
@@ -2732,16 +2746,17 @@
 				<cfif getItemQuery.attached_image_id NEQ "NULL" AND getItemQuery.attached_image_id NEQ "" AND getItemQuery.attached_image_id NEQ "-1">
 				
 					<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-						<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_image_id#"/></parameters></request>'>
+						<!---<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_image_id#"/></parameters></request>'>--->
+						<cfinvokeargument name="file_id" value="#getItemQuery.attached_image_id#">
 					</cfinvoke>
 					
-					<cfxml variable="xmlResultDeleteFile">
+					<!---<cfxml variable="xmlResultDeleteFile">
 						<cfoutput>
 							#resultDeleteFile#
 						</cfoutput>
-					</cfxml>
+					</cfxml>--->
 					
-					<cfif xmlResultDeleteFile.response.xmlAttributes.status NEQ "ok"><!---File delete failed--->
+					<cfif resultDeleteFile.result IS false><!---File delete failed--->
 						<cfset error_code = 605>
 	
 						<cfthrow errorcode="#error_code#">

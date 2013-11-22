@@ -162,7 +162,7 @@
 					
 			
 			<cfquery datasource="#client_dsn#" name="filesQuery">
-				SELECT SQL_CALC_FOUND_ROWS files.id, physical_name, files.user_in_charge, file_size, file_type, association_date, replacement_date, files.name, file_name, files.description, family_name, area_id, users.name AS user_name, IF(replacement_date IS NULL,association_date,replacement_date) AS last_version_date
+				SELECT SQL_CALC_FOUND_ROWS files.id, physical_name, files.user_in_charge, file_size, file_type, association_date, replacement_date, files.name, file_name, files.description, family_name, a.area_id, users.name AS user_name, IF(replacement_date IS NULL,association_date,replacement_date) AS last_version_date
 				FROM #client_abb#_areas_files AS a
 				INNER JOIN #client_abb#_files AS files ON a.file_id = files.id
 				INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id

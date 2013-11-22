@@ -63,7 +63,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/search_menu.cfm">
 
-<cfset itemTypeId = 7>
+<cfset itemTypeId = 8>
 <cfinclude template="#APPLICATION.htmlPath#/includes/all_areas_items_content.cfm">
 
 <!-- InstanceEndEditable -->

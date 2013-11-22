@@ -166,15 +166,15 @@
 		</cfif>
 	</cfif>
 
-
+	<!---En estos enlaces, el valor de area es necesario para seleccionarla cuando el elemento es el resultado de una búsqueda--->
 	<cfif itemTypeId IS 11 OR itemTypeId IS 12>
-		<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#table_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
+		<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
 	</cfif>
 	<cfif is_user_table_area_responsible IS true>
-		<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#table_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos</span></a>
+		<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos</span></a>
 
 		<cfif APPLICATION.moduleListsWithPermissions IS true AND itemTypeId IS 11><!---List with permissions--->
-			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#" class="btn btn-small" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores</span></a>
+			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-small" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores</span></a>
 		</cfif>
 
 	</cfif>

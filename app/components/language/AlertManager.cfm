@@ -156,6 +156,16 @@ curLangText["es"] = {
 		},
 
 
+		"new_table_row": {
+			
+			"new_row" : "Nuevo registro en",
+			"modify_row" : "Registro modificado en",
+			"delete_row" : "Registro eliminado en",	
+
+			"register_number" : "Número de registro",					
+		},
+
+
 		"change_owner_item": {
 			
 			"owner_changed_male" : "cambiado de propietario",
@@ -388,6 +398,14 @@ curLangText["en"] = {
 
 		},
 
+		"new_table_row": {
+			
+			"new_row" : "New entry in",
+			"modify_row" : "Entry modified in",
+			"delete_row" : "Entry deleted in",
+
+			"register_number" : "Entry number",						
+		},
 
 		"change_owner_item": {
 			

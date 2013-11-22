@@ -376,42 +376,20 @@
 		<cfargument name="notify_new_image" type="string" required="false" default="false">
 		<cfargument name="notify_new_typology" type="string" required="false" default="false">
 		<cfargument name="notify_new_list" type="string" required="false" default="false">
+		<cfargument name="notify_new_list_row" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_form" type="string" required="false" default="false">
+		<cfargument name="notify_new_form_row" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_pubmed" type="string" required="false" default="false">
+
+		<!--- <cfargument name="notify_dissociate_file" type="boolean" required="false" default="false"> --->
+		<cfargument name="notify_delete_file" type="boolean" required="false" default="false">
+		<cfargument name="notify_lock_file" type="boolean" required="false" default="false">
 		
 		<cfset var method = "updateUserPreferences">
 		
 		<cfset var response = structNew()>
 		
 		<cftry>
-					
-			<!---<cfsavecontent variable="request_parameters">
-				<cfoutput>
-				<preferences user_id="#SESSION.user_id#"
-					notify_new_message="#arguments.notify_new_message#"
-					notify_new_file="#arguments.notify_new_file#"
-					notify_replace_file="#arguments.notify_replace_file#"
-					notify_new_area="#arguments.notify_new_area#"
-					
-					<cfif APPLICATION.moduleWeb EQ true>
-						<cfif APPLICATION.identifier EQ "vpnet">
-						notify_new_link="#arguments.notify_new_link#"
-						</cfif>
-					notify_new_entry="#arguments.notify_new_entry#"
-					notify_new_news="#arguments.notify_new_news#"
-					</cfif>
-					notify_new_event="#arguments.notify_new_event#"
-					notify_new_task="#arguments.notify_new_task#"
-					notify_new_consultation="#arguments.notify_new_consultation#"
-					/>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>--->
 
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUserPreferences" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
