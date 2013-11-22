@@ -22,6 +22,7 @@
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+		<cfargument name="status" type="string" required="false" default="ok"><!--- ok --->
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -54,7 +55,7 @@
 			FROM #client_abb#_files AS files
 			INNER JOIN #client_abb#_users AS users 
 			ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> AND files.user_in_charge = users.id
-			AND status = 'ok'
+			AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 			<cfif arguments.with_lock IS true>
 			LEFT JOIN (
 				SELECT files_locks.file_id, files_locks.lock_date, files_locks.lock, files_locks.user_id,
@@ -114,7 +115,6 @@
 		<cfargument name="limit" type="numeric" required="no">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="with_area" type="boolean" required="false" default="false">
-		<cfargument name="with_area_files_lite" type="boolean" required="false" default="false">
 		
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
@@ -154,37 +154,17 @@
 			<cfif arguments.with_area IS true>
 			, areas.name AS area_name
 			</cfif>
-			<cfif arguments.with_area_files_lite IS false>
-				FROM #client_abb#_areas_files AS a
-				INNER JOIN #client_abb#_files AS files ON a.file_id = files.id
-			<cfelse>
-				FROM #client_abb#_files AS files
-				LEFT JOIN #client_abb#_areas_files AS a ON a.file_id = files.id
-			</cfif>
+			FROM #client_abb#_areas_files AS a
+			INNER JOIN #client_abb#_files AS files ON a.file_id = files.id
 			INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
 			<cfif arguments.with_area IS true>
-				<cfif arguments.with_area_files_lite IS false>
-					INNER JOIN #client_abb#_areas AS areas ON a.area_id = areas.id
-				<cfelse>
-					<!---Esto impide que salgan los archivos que son propiedad de un área y que además están asociados a otras áreas (sólo salen los asociados)--->
-					INNER JOIN #client_abb#_areas AS areas ON IF( a.area_id IS NULL, files.area_id, a.area_id ) = areas.id
-				</cfif>
+				INNER JOIN #client_abb#_areas AS areas ON a.area_id = areas.id
 			</cfif>
 			WHERE 
 			<cfif isDefined("arguments.areas_ids")>
-				<cfif arguments.with_area_files_lite IS false>
-					a.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
-				<cfelse>
-					( a.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">) 
-						OR files.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">) )
-				</cfif>
+				a.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
 			<cfelse>
-				<cfif arguments.with_area_files_lite IS false> 
-					a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				<cfelse>
-					( a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-						OR files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> )
-				</cfif>
+				a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 			</cfif>
 			<cfif isDefined("arguments.user_in_charge")>
 			AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">

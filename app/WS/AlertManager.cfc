@@ -99,6 +99,8 @@
 			<cfinvokeargument name="item_id" value="#objectItem.id#">
 			<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 			<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 		
 		<!---fileDownloadUrl--->

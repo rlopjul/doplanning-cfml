@@ -160,16 +160,18 @@
 						
 				<cfif arguments.action NEQ "delete"><!---Si el elemento no se elimina--->
 					
-					<cfinvoke component="AlertManager" method="getItemAccessContent" returnvariable="access_content">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemAccessContent" returnvariable="access_content">
 						<cfinvokeargument name="language" value="#curLang#">
 						<cfinvokeargument name="item_id" value="#objectItem.id#"/>
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="area_id" value="#objectItem.area_id#"/>
+
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 					</cfinvoke>
 
 				</cfif>
 				
-				<cfinvoke component="AlertManager" method="getItemFootContent" returnvariable="foot_content">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemFootContent" returnvariable="foot_content">
 					<cfinvokeargument name="language" value="#curLang#">
 				</cfinvoke>
 				
@@ -641,11 +643,13 @@
 		<cfset var alertContent = "">
 		<cfset var footContent = "">
 
-		<cfinvoke component="AlertManager" method="getItemAccessContent" returnvariable="accessContent">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemAccessContent" returnvariable="accessContent">
 			<cfinvokeargument name="item_id" value="#objectItem.id#"/>
 			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
 			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			<cfinvokeargument name="language" value="#arguments.language#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 
 		<cfsavecontent variable="alertContent">
@@ -663,7 +667,7 @@
 			</cfoutput>
 		</cfsavecontent>
 
-		<cfinvoke component="AlertManager" method="getItemFootContent" returnvariable="footContent">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemFootContent" returnvariable="footContent">
 			<cfinvokeargument name="language" value="#arguments.language#">
 		</cfinvoke>
 
@@ -671,120 +675,13 @@
 
 	</cffunction>
 
-
-
-
-	<!--- --------------------------- getItemAccessContent --------------------------- --->
-	
-	<cffunction name="getItemAccessContent" access="private" returntype="string">
-		<cfargument name="item_id" type="numeric" required="true">
-		<cfargument name="itemTypeId" type="numeric" required="true">
-		<cfargument name="area_id" type="numeric" required="true">
-		<cfargument name="language" type="string" required="true">
- 				
-		<cfset var method = "getItemAccessContent">
-
-		<cfset var accessContent = "">
-
-		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-
-		<!---itemUrl--->
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
-			<cfinvokeargument name="item_id" value="#arguments.item_id#">
-			<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-			<cfinvokeargument name="area_id" value="#arguments.area_id#">
-		</cfinvoke>
-
-		<cfif APPLICATION.twoUrlsToAccess IS false>
-					
-			<cfsavecontent variable="accessContent">
-			<cfoutput>
-			<cfif itemTypeId EQ 1 OR itemTypeId EQ 7><!--- Messages or Interconsultations --->
-				-&nbsp;<b>#langText[arguments.language].new_item.access_to_reply#</b> <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a>
-
-<!--- Google Go-To Action --->
-<!--- 
-<script type="application/ld+json">
-{
-"@context": "http://schema.org",
-"@type": "EmailMessage",
-"action": {
-"@type": "ViewAction",
-"url": "#areaItemUrl#"
-},
-"description": "#langText[arguments.language].new_item.reply_in# #APPLICATION.title#"
-}
-</script> --->
-
-
-			<cfelse>
-				-&nbsp;<cfif itemTypeGender EQ "male">#langText[arguments.language].new_item.access_to_item_male#<cfelse>#langText[arguments.language].new_item.access_to_item_female#</cfif> #langText[arguments.language].item[itemTypeId].name# #langText[arguments.language].new_item.access_to_item_link#: <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a>
-			</cfif>					
-
-			
-			<br/>-&nbsp;#langText[arguments.language].common.access_to_application#:
-			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#</a>
-			
-			</cfoutput>
-			</cfsavecontent>
-			
-			
-		<cfelse><!---VPNET/AGSNA--->
-		
-			<cfsavecontent variable="accessContent">
-			<cfoutput>
-				<cfif itemTypeId EQ 1 OR itemTypeId EQ 7><!--- Messages or Interconsultations --->
-					<b>#langText[arguments.language].new_item.access_to_reply#</b>:
-				<cfelse>
-					<cfif itemTypeGender EQ "male">#langText[arguments.language].new_item.access_to_item_male#
-					<cfelse>#langText[arguments.language].new_item.access_to_item_female#</cfif> #langText[arguments.language].item[itemTypeId].name# #langText[arguments.language].new_item.access_to_item_links#:
-				</cfif><br/>
-			<!----&nbsp;Acceso interno <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#itemTypeName#.cfm?#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">#APPLICATION.mainUrl##APPLICATION.path#/#itemTypeName#.cfm?#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#</a><br/>
-			-&nbsp;Acceso externo <a target="_blank" href="#APPLICATION.alternateUrl##itemTypeName#.cfm?#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">#APPLICATION.alternateUrl##itemTypeName#.cfm?#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#</a>--->
-			-&nbsp;#langText[arguments.language].common.access_internal# <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a><br/>
-			-&nbsp;#langText[arguments.language].common.access_external#  <a target="_blank" href="#APPLICATION.alternateUrl#/?area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">#APPLICATION.alternateUrl#/?area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#</a>
-			</cfoutput>
-			</cfsavecontent>
-			
-			
-			<!---<cfset access_default = '<br/><br/>Puede contestar al mensaje accediendo a la aplicación a través de: '>
-		
-			<cfsavecontent variable="access_content">
-			<cfoutput>
-			#access_default#<br/>
-			-&nbsp;Acceso interno <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/">#APPLICATION.mainUrl##APPLICATION.path#/</a><br/>
-			-&nbsp;Acceso externo <a target="_blank" href="#APPLICATION.alternateUrl#">#APPLICATION.alternateUrl#</a>
-			</cfoutput>
-			</cfsavecontent>--->	
-		</cfif>
-		
-		<cfreturn accessContent>
-
-	</cffunction>
-
-
-	<!--- --------------------------- getItemFootContent --------------------------- --->
-	
-	<cffunction name="getItemFootContent" access="private" returntype="string">
-		<cfargument name="language" type="string" required="true">
- 				
-		<cfset var method = "getItemFootContent">
-
-		<cfset var footContent = "">
-
-		<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #APPLICATION.title# #langText[arguments.language].new_item.foot_content_2# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p>'>
-		
-		<cfreturn footContent>
-
-	</cffunction>
-	
 	
 	<!--- -------------------------------------- newFile ------------------------------------ --->
 	<!---new/associate/replace file--->
 	<cffunction name="newFile" access="public" returntype="void">
 		<cfargument name="objectFile" type="query" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="action" type="string" required="yes"><!---new/associate/replace/lock/unlock--->
+		<cfargument name="action" type="string" required="yes"><!---new/associate/replace/dissociate/delete/lock/unlock--->
 				
 		<cfset var method = "newFile">
 		
@@ -838,7 +735,11 @@
 				<order parameter="family_name" order_type="asc" />
 				<preferences 
 				<cfif arguments.action EQ "replace">
-					notify_replace_file="true"		
+					notify_replace_file="true"
+				<cfelseif arguments.action EQ "dissociate" OR arguments.action EQ "delete">
+					notify_delete_file="true"		
+				<cfelseif arguments.action EQ "lock" OR arguments.action EQ "unlock">
+					notify_lock_file="true"
 				<cfelse>
 					notify_new_file="true"
 				</cfif>>				
@@ -1017,7 +918,7 @@
 	<!--- -------------------------------------- replaceFile ------------------------------------ --->
 	
 	<cffunction name="replaceFile" access="public" returntype="void">
-		<cfargument name="objectFile" type="struct" required="yes">
+		<cfargument name="objectFile" type="query" required="true">
 				
 		<cfset var method = "replaceFile">
 		
@@ -1334,7 +1235,7 @@
 	</cffunction>
 
 
-	
+
     <!--- -------------------------------------- newArea ------------------------------------ --->
 	
 	<cffunction name="newArea" access="public" returntype="void">
@@ -1654,11 +1555,13 @@
 
 		</cfif>
 				
-		<cfinvoke component="AlertManager" method="getItemAccessContent" returnvariable="access_content">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemAccessContent" returnvariable="access_content">
 			<cfinvokeargument name="language" value="#curLang#">
 			<cfinvokeargument name="item_id" value="#tableQuery.table_id#"/>
 			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 			<cfinvokeargument name="area_id" value="#area_id#"/>
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 		
 		<cfsavecontent variable="html_text">

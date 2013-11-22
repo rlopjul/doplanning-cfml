@@ -232,6 +232,21 @@
 			</cftransaction>
 
 			<cfinclude template="includes/logRecord.cfm">
+
+			<cfif arguments.tableTypeId IS NOT 3><!--- IS NOT typology --->
+
+				<!--- Alert --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newTableRow">
+					<cfinvokeargument name="row_id" value="#row_id#">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="action" value="delete">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+				
+			</cfif>
 			
 			<cfset response = {result=true, row_id=#arguments.row_id#, table_id=#arguments.table_id#}>
 

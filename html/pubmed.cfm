@@ -112,14 +112,14 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_content.cfm">
 
 
-<cfif isDefined("URL.return_page")>
+<!---<cfif isDefined("URL.return_page")>
 	<cfset return_page = URLDecode(URL.return_page)>
 <cfelse>
 	<cfset return_page = "#lCase(itemTypeNameP)#.cfm?area=#area_id#">
 </cfif>
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>
+</cfinvoke>--->
 <!-- InstanceEndEditable -->
 </div>
 </body>

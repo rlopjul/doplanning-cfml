@@ -201,11 +201,12 @@
 			<cfelse><i><span lang="es">Área</span></i></cfif>
 			</td>
 			<!---<td><span>#files.file_size#</span></td>--->
-			<cfif len(files.association_date) GT 0>
+			<!---<cfif len(files.association_date) GT 0>
 				<cfset addedDate = files.association_date>				
 			<cfelse>
 				<cfset addedDate = files.uploading_date>
-			</cfif>
+			</cfif>--->
+			<cfset addedDate = files.association_date>	
 			<cfset spacePos = findOneOf(" ", addedDate)>
 			<td>
 				<span>#left(addedDate, spacePos)#</span>

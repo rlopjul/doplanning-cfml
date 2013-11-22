@@ -12,35 +12,10 @@ Preferencias de notificaciones
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUserPreferences" returnvariable="preferences">
 </cfinvoke>
 
-<!---<cfxml variable="xmlPreferences">
-	<cfoutput>
-	#xmlResponse.response.result.preferences#
-	</cfoutput>
-</cfxml>
-<cfset notify_new_message = xmlPreferences.preferences.xmlAttributes.notify_new_message>
-<cfset notify_new_file = xmlPreferences.preferences.xmlAttributes.notify_new_file>
-<cfset notify_replace_file = xmlPreferences.preferences.xmlAttributes.notify_replace_file>
-<cfset notify_new_area = xmlPreferences.preferences.xmlAttributes.notify_new_area>
-
-<cfif APPLICATION.moduleWeb EQ true>
-	<cfif APPLICATION.identifier EQ "vpnet">
-		<cfset notify_new_link = xmlPreferences.preferences.xmlAttributes.notify_new_link>
-	</cfif>
-	<cfset notify_new_entry = xmlPreferences.preferences.xmlAttributes.notify_new_entry>
-	<cfset notify_new_news = xmlPreferences.preferences.xmlAttributes.notify_new_news>
-</cfif>
-
-<cfset notify_new_event = xmlPreferences.preferences.xmlAttributes.notify_new_event>
-<cfset notify_new_task = xmlPreferences.preferences.xmlAttributes.notify_new_task>
-
-<cfif APPLICATION.moduleConsultations IS true>
-	<cfset notify_new_consultation = xmlPreferences.preferences.xmlAttributes.notify_new_consultation>
-</cfif>--->
-
 <p style="padding-left:15px;"><span lang="es">Enviar un email cuando:</span></p>
 
 <cfoutput>
-<form action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUserPreferences" method="post" style="margin-left:15px;">
+<form action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUserPreferences" method="post" class="form-inline" style="margin-left:15px;">
 	
 	<div class="control-group">
 	<label class="checkbox">
@@ -123,26 +98,6 @@ Preferencias de notificaciones
 	</div>	
 </cfif>
 
-<cfif APPLICATION.moduleLists IS true>
-	<div class="control-group">
-	<label class="checkbox">
-		<input type="checkbox" name="notify_new_list" value="true" <cfif preferences.notify_new_list IS true>checked="checked"</cfif> />
-		<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="Nueva lista" />
-		<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
-	</label>
-	</div>	
-</cfif>
-
-<cfif APPLICATION.moduleForms IS true>
-	<div class="control-group">
-	<label class="checkbox">
-		<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
-		<img src="#APPLICATION.htmlPath#/assets/icons/form.png" alt="Nuevo formulario" />
-		<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
-	</label>
-	</div>	
-</cfif>
-
 <cfif APPLICATION.moduleConsultations IS true>
 	<div class="control-group">
 	<label class="checkbox">
@@ -164,28 +119,197 @@ Preferencias de notificaciones
 </cfif>
 
 	<div class="control-group">
-	<label class="checkbox">
-		<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
-		<img src="#APPLICATION.htmlPath#/assets/icons/file_new.png" alt="Archivo asociado" />
-		<span lang="es">Un fichero ha sido asociado a un área</span>
-	</label>
+		<label class="checkbox">
+			<input type="checkbox" name="notify_new_area" value="true" <cfif preferences.notify_new_area IS true>checked="checked"</cfif> />
+			<img src="#APPLICATION.htmlPath#/assets/icons/area_new.png" alt="Crear area" />
+			<span lang="es">Un área nueva ha sido creada</span>
+		</label>
 	</div>
 
-	<div class="control-group">
+	<div class="container" style="padding-left:0px;"><!--- div container --->
+
+		<div class="form_separator"></div>
+
+		<!--- Files --->
+		  <div class="row">
+		    <div class="span1" style="text-align:center;">
+
+		    	<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" />
+
+		    </div>
+		    <div class="span11" style="margin-left:0px;">
+
+		    	<div class="row">
+		          <div class="span5">
+			    	<label class="checkbox">
+						<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
+						<!--- <img src="#APPLICATION.htmlPath#/assets/icons/file_new.png" alt="Archivo asociado" /> --->
+						<span lang="es">Archivo ha sido asociado a un área</span>
+					</label>
+		          </div>
+		          <div class="span5">
+		          	<label class="checkbox">
+						<input type="checkbox" name="notify_replace_file" value="true" <cfif preferences.notify_replace_file IS true>checked="checked"</cfif> />
+						<!--- <img src="#APPLICATION.htmlPath#/assets/icons/file_replace.png" alt="Archivo reemplazado" /> --->
+						<span lang="es">Archivo ha sido reemplazado</span>
+					</label>
+		          </div>
+	          	</div>
+
+	          	<div class="row">
+		          <!---<div class="span5">
+		          	<label class="checkbox">
+						<input type="checkbox" name="notify_dissociate_file" value="true" <cfif preferences.notify_dissociate_file IS true>checked="checked"</cfif> />
+						<span lang="es">Archivo ha sido quitado de un área</span>
+					</label>
+				  </div>--->
+		          <div class="span5">
+		          	<label class="checkbox">
+						<input type="checkbox" name="notify_delete_file" value="true" <cfif preferences.notify_delete_file IS true>checked="checked"</cfif> />
+						<span lang="es">Archivo ha sido eliminado/quitado de un área</span>
+					</label>
+		          </div>
+
+		          <cfif APPLICATION.moduleAreaFilesLite>
+		          	<div class="span5">
+			          	<label class="checkbox">
+							<input type="checkbox" name="notify_lock_file" value="true" <cfif preferences.notify_lock_file IS true>checked="checked"</cfif> />
+							<span lang="es">Archivo de área ha sido bloqueado/desbloqueado</span>
+						</label>
+					</div>
+		          </cfif>
+	          	</div>
+	          		
+	      		<!---<div class="row">
+		          <div class="span5">
+		          	<label class="checkbox">
+						<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
+						<span lang="es">Archivo de área ha sido desbloqueado</span>
+					</label>
+		          </div>
+	          	</div>--->
+		    </div>
+		  </div>
+
+
+<cfif APPLICATION.moduleLists IS true>
+
+	  <div class="form_separator"></div>
+
+	  <div class="row">
+	    <div class="span1" style="text-align:center;">
+
+	    	<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="Lista" />
+
+	    </div>
+	    <div class="span11" style="margin-left:0px;">
+
+	    	<div class="row">
+	          <div class="span5">
+		    	<label class="checkbox">
+					<input type="checkbox" name="notify_new_list" value="true" <cfif preferences.notify_new_list IS true>checked="checked"</cfif> />
+					<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
+				</label>
+			  </div>
+
+			  <div class="span5">
+			  	<label class="checkbox">
+					<input type="checkbox" name="notify_new_list_row" value="true" <cfif preferences.notify_new_list_row IS true>checked="checked"</cfif> />
+					<span lang="es">Un registro de lista ha sido creado, modificado o eliminado</span>
+				</label>
+			  </div>
+			</div>
+
+	    </div>
+	  </div>
+
+	<!---<div class="control-group">
 	<label class="checkbox">
-		<input type="checkbox" name="notify_replace_file" value="true" <cfif preferences.notify_replace_file IS true>checked="checked"</cfif> />
-		<img src="#APPLICATION.htmlPath#/assets/icons/file_replace.png" alt="Archivo reemplazado" />
-		<span lang="es">Un fichero asociado a un área ha sido reemplazado</span>
+		<input type="checkbox" name="notify_new_list" value="true" <cfif preferences.notify_new_list IS true>checked="checked"</cfif> />
+		<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="Nueva lista" />
+		<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
 	</label>
-	</div>
-	
-	<div class="control-group">
-	<label class="checkbox">
-		<input type="checkbox" name="notify_new_area" value="true" <cfif preferences.notify_new_area IS true>checked="checked"</cfif> />
-		<img src="#APPLICATION.htmlPath#/assets/icons/area_new.png" alt="Crear area" />
-		<span lang="es">Un área nueva ha sido creada</span>
-	</label>
-	</div>
+	</div>--->	
+</cfif>
+
+
+<cfif APPLICATION.moduleForms IS true>
+
+	<div class="form_separator"></div>
+
+	  <div class="row">
+	    <div class="span1" style="text-align:center;">
+
+	    	<img src="#APPLICATION.htmlPath#/assets/icons/form.png" alt="Formulario" />
+
+	    </div>
+	    <div class="span11" style="margin-left:0px;">
+
+	    	<div class="row">
+	          <div class="span5">
+		    	<label class="checkbox">
+					<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
+					<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
+				</label>
+			  </div>
+
+			  <div class="span5">
+			  	<label class="checkbox">
+					<input type="checkbox" name="notify_new_form_row" value="true" <cfif preferences.notify_new_form_row IS true>checked="checked"</cfif> />
+					<span lang="es">Un registro de formulario ha sido creado, modificado o eliminado</span>
+				</label>
+			  </div>
+			</div>
+
+	    </div>
+	  </div>
+	<!---<label class="checkbox">
+		<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
+		<img src="#APPLICATION.htmlPath#/assets/icons/form.png" alt="Nuevo formulario" />
+		<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
+	</label>--->
+</cfif>
+
+	</div><!--- END div container --->
+
+	<!---<table  class="table table-bordered">
+
+		<tr>
+			<td rowspan="3">
+				<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" />
+			</td>
+			<td>
+				<label class="checkbox">
+					<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
+					<span lang="es">Archivo ha sido asociado a un área</span>
+				</label>
+			</td>
+			<td>
+				<label class="checkbox">
+					<input type="checkbox" name="notify_replace_file" value="true" <cfif preferences.notify_replace_file IS true>checked="checked"</cfif> />
+					<span lang="es">Archivo ha sido reemplazado</span>
+				</label>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label class="checkbox">
+					<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
+					<span lang="es">Archivo ha sido quitado de un área</span>
+				</label>
+			</td>
+			<td>
+				<label class="checkbox" style="margin-right:10px;">
+					<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
+					<span lang="es">Archivo ha sido eliminado</span>
+				</label>					
+			</td>
+		</tr>
+
+	</table>--->
+
+	<div style="height:10px;"></div>
+
 	<input type="submit" class="btn btn-primary" name="modify" value="Guardar" lang="es"/>
 </form>
 </cfoutput>

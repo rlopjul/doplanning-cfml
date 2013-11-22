@@ -297,6 +297,7 @@
 					<cfinvokeargument name="file_type" value="#objectFile.file_type#">
 					<cfinvokeargument name="file_size" value="#objectFile.file_size_full#">
 					<cfinvokeargument name="description" value="#objectFile.description#">
+					<cfinvokeargument name="fileTypeId" value="1">
 				</cfinvoke>			
 			
 				<cfif createFileResponse.result IS true>
@@ -319,7 +320,7 @@
 						
 						<cfcatch><!---Este catch se utiliza para cuando un archivo no es una imagen--->
 						
-							<cfset response = {result="false", message="El archivo no es una imagen. "&#cfcatch.Message#, item_id=#createdItemId#}>	
+							<cfset response = {result="false", message="El archivo no es una imagen. "&#cfcatch.message#, item_id=#createdItemId#}>	
 							<cfreturn response>
 						
 						</cfcatch>
@@ -357,6 +358,7 @@
 					<cfinvokeargument name="file_type" value="#objectFileImage.file_type#">
 					<cfinvokeargument name="file_size" value="#objectFileImage.file_size_full#">
 					<cfinvokeargument name="description" value="#objectFileImage.description#">
+					<cfinvokeargument name="fileTypeId" value="1">
 				</cfinvoke>			
 			
 				<cfif createImageResponse.result IS true>
@@ -379,7 +381,7 @@
 						
 						<cfcatch><!---Este catch se utiliza para cuando un archivo no es una imagen--->
 						
-							<cfset response = {result="false", message="El archivo no es una imagen. "&#cfcatch.Message#, item_id=#createdItemId#}>	
+							<cfset response = {result="false", message="El archivo no es una imagen. "&#cfcatch.message#, item_id=#createdItemId#}>	
 							<cfreturn response>
 						
 						</cfcatch>
@@ -402,41 +404,24 @@
 			<cfif with_attached IS true>
 				<!---Obtiene el status de la subida del archivo para comprobar que se ha subido correctamente. Si se ha completado la subida, se marca el archivo y el elemento que lo lleva adjunto como subido.--->
 
-				<cftry>
-
-					<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAreaItemFileStatus" returnvariable="xmlGetFileResponseContent">
-						<cfinvokeargument name="file_id" value="#file_id#">
-						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-						<cfinvokeargument name="file_type" value="file">
-					</cfinvoke>
-					
-					<!---<cfif itemTypeGender EQ "male">
-							<cfset response_message = "#itemTypeNameEs# con adjunto enviado.">
-						<cfelse>
-							<cfset response_message = "#itemTypeNameEs# con adjunto enviada.">
-						</cfif>--->
-					<cfif itemTypeGender EQ "male">
-						<cfset response_message = "#itemTypeNameEs# insertado.">
-					<cfelse>
-						<cfset response_message = "#itemTypeNameEs# insertada.">
-					</cfif>
-					
-					<cfcatch>
-						
-						<cfset response_message = "Ha ocurrido un error al subir el archivo adjunto.">
-
-						<cfset response = {result=false, message=#response_message#}>	
-						<cfreturn response>
-					
-					</cfcatch>
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAreaItemFileStatus" returnvariable="xmlGetFileResponseContent">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+					<cfinvokeargument name="file_type" value="file">
+				</cfinvoke>
 				
-				</cftry>
+				<cfif itemTypeGender EQ "male">
+					<cfset response_message = "#itemTypeNameEs# insertado.">
+				<cfelse>
+					<cfset response_message = "#itemTypeNameEs# insertada.">
+				</cfif>
+					
 
 			</cfif>
 			
 			<cfif with_image IS true>
 				
-				<cftry>
+				<!---<cftry>--->
 				
 					<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAreaItemFileStatus" returnvariable="xmlGetImageResponseContent">
 						<cfinvokeargument name="file_id" value="#image_id#">
@@ -449,19 +434,13 @@
 						</cfif>
 					</cfinvoke>
 					
-						
-					<!---<cfif itemTypeGender EQ "male">
-						<cfset response_message = "#itemTypeNameEs# con imagen enviado.">
-					<cfelse>
-						<cfset response_message = "#itemTypeNameEs# con imagen enviada.">
-					</cfif>--->
 					<cfif itemTypeGender EQ "male">
 						<cfset response_message = "#itemTypeNameEs# insertado.">
 					<cfelse>
 						<cfset response_message = "#itemTypeNameEs# insertada.">
 					</cfif>
 					
-					<cfcatch>
+					<!---<cfcatch>
 						
 						<cfset response_message = "Ha ocurrido un error al subir la imagen.">
 
@@ -470,7 +449,7 @@
 					
 					</cfcatch>
 				
-				</cftry>
+				</cftry>--->
 				
 				
 			</cfif>
@@ -736,6 +715,7 @@
 					<cfinvokeargument name="file_type" value="#objectFileImage.file_type#">
 					<cfinvokeargument name="file_size" value="#objectFileImage.file_size_full#">
 					<cfinvokeargument name="description" value="#objectFileImage.description#">
+					<cfinvokeargument name="fileTypeId" value="1">
 				</cfinvoke>			
 			
 				<cfif createImageFileResponse.result IS true>
@@ -771,10 +751,6 @@
 					</cftry>
 					
 				<cfelse>
-								
-					<!---<cfset response_message = "Error al crear la imagen.">
-					<cfset response_message = URLEncodedFormat(response_message)>
-					<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&msg=#response_message#&res=0" addtoken="no">--->
 
 					<cfset response_message = "Error al crear la imagen.">
 
@@ -792,41 +768,20 @@
 			<cfif with_attached IS true>
 				<!---Obtiene el status de la subida del archivo para comprobar que se ha subido correctamente. Si se ha completado la subida, se marca el archivo y el elemento que lo lleva adjunto como subido.--->
 				
-				<cftry>
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAreaItemFileStatus" returnvariable="xmlGetFileResponseContent">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+					<cfinvokeargument name="file_type" value="file">
+					<cfinvokeargument name="send_alert" value="true">
+					<cfinvokeargument name="action" value="update">
+				</cfinvoke>
 				
-					<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAreaItemFileStatus" returnvariable="xmlGetFileResponseContent">
-						<cfinvokeargument name="file_id" value="#file_id#">
-						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-						<cfinvokeargument name="file_type" value="file">
-						<cfinvokeargument name="send_alert" value="true">
-						<cfinvokeargument name="action" value="update">
-					</cfinvoke>
 					
-						
-					<!---<cfif itemTypeGender EQ "male">
-						<cfset response_message = "#itemTypeNameEs# con adjunto modificado.">
-					<cfelse>
-						<cfset response_message = "#itemTypeNameEs# con adjunto modificada.">
-					</cfif>--->
-					<cfif itemTypeGender EQ "male">
-						<cfset response_message = "#itemTypeNameEs# modificado.">
-					<cfelse>
-						<cfset response_message = "#itemTypeNameEs# modificada.">
-					</cfif>
-					
-					<cfcatch>
-						<!---IMPORTANTE: aquí da error si la sesión ha caducado--->
-						<cfset response_message = "Ha ocurrido un error al subir el archivo.">
-
-						<!---<cfset response_message = URLEncodedFormat(response_message)>
-						<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&msg=#response_message#&res=0" addtoken="no">--->
-						
-						<cfset response = {result=false, message=#response_message#}>	
-						<cfreturn response>
-					
-					</cfcatch>
-				
-				</cftry>
+				<cfif itemTypeGender EQ "male">
+					<cfset response_message = "#itemTypeNameEs# modificado.">
+				<cfelse>
+					<cfset response_message = "#itemTypeNameEs# modificada.">
+				</cfif>
 				
 			</cfif>
 			
@@ -834,13 +789,7 @@
 			<cfif with_image IS true>
 				<!---Obtiene el status de la subida de la imagen para comprobar que se ha subido correctamente. Si se ha completado la subida, se marca el archivo y el elemento que lo lleva adjunto como subido.--->
 				
-				<!---<cfinvoke component="Request" method="doRequest" returnvariable="xmlGetImageResponse">
-					<cfinvokeargument name="request_component" value="#itemTypeNameU#Manager">
-					<cfinvokeargument name="request_method" value="get#itemTypeNameU#ImageStatus">
-					<cfinvokeargument name="request_parameters" value='<file id="#image_id#"/>'>
-				</cfinvoke>--->
-				
-				<cftry>
+				<!---<cftry>--->
 				
 					<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAreaItemFileStatus" returnvariable="xmlGetImageResponseContent">
 						<cfinvokeargument name="file_id" value="#image_id#">
@@ -854,36 +803,27 @@
 						<cfinvokeargument name="action" value="update">
 					</cfinvoke>
 					
-					<!---<cfif itemTypeGender EQ "male">
-						<cfset response_message = "#itemTypeNameEs# con imagen modificado.">
-					<cfelse>
-						<cfset response_message = "#itemTypeNameEs# con imagen modificada.">
-					</cfif>--->
 					<cfif itemTypeGender EQ "male">
 						<cfset response_message = "#itemTypeNameEs# modificado.">
 					<cfelse>
 						<cfset response_message = "#itemTypeNameEs# modificada.">
 					</cfif>
 					
-					<cfcatch>
+					<!---<cfcatch>
 						
-						<cfset response_message = "Ha ocurrido un error al subir la imagen.">
+						<!---IMPORTANTE: aquí da error si la sesión ha caducado--->
 
-						<!---<cfset response_message = URLEncodedFormat(response_message)>
-						<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&res=0&msg=#response_message#" addtoken="no">--->
+						<cfset response_message = "Ha ocurrido un error al subir la imagen.">
 
 						<cfset response = {result=false, message=#response_message#}>	
 						<cfreturn response>
 					
 					</cfcatch>
 				
-				</cftry>
+				</cftry>--->
 				
 			</cfif>
-			
-			<!---<cfset response_message = URLEncodedFormat(response_message)>
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#&res=1&msg=#response_message#" addtoken="no">--->
-            
+			 
 			<cfset response = {result=true, message=#response_message#, item_id=#arguments.item_id#}>
 
 			<cfcatch>
@@ -1617,6 +1557,8 @@
 						<cfinvokeargument name="item_id" value="#objectItem.id#">
 						<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 					</cfinvoke>
 
 					<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>

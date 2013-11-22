@@ -234,7 +234,7 @@
 		
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
-		<cfinclude template="includes/functionStart.cfm">
+		<cfinclude template="includes/functionStartOnlySession.cfm">
 		
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaPath" returnvariable="area_path">
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -1794,6 +1794,7 @@
 							<cfinvokeargument name="file_type" value=" ">
 							<cfinvokeargument name="file_size" value="0">
 							<cfinvokeargument name="description" value="">
+							<cfinvokeargument name="fileTypeId" value="1">
 						</cfinvoke>
 
 						<cfif createImageFileResponse.result IS true>
@@ -1988,7 +1989,16 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<!---<cfinclude template="includes/checkAreaAccess.cfm">Un usuario aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
+			<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
+				<cfinvokeargument name="get_user_id" value="#user_id#"> 
+			</cfinvoke>			
+			<cfif internal_user IS false>
+				<!--- checkAreaAccess --->
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAccess">
+					<cfinvokeargument name="area_id" value="#arguments.get_area_id#">
+				</cfinvoke>
+			</cfif>
+			<!---Un usuario interno aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="selectAreaQuery">
 				<cfinvokeargument name="area_id" value="#arguments.get_area_id#">

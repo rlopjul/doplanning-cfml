@@ -143,7 +143,9 @@
 		<li><a href="saved_conversations.cfm?return_page=#current_page#"><img src="assets/icons/saved_conversations.png" alt="Conversaciones guardadas" title="Conversaciones guardadas"/>&nbsp;&nbsp;Conversaciones guardadas</a></li>
 		</cfif>
 		
-		<li><a href="search.cfm?return_page=#current_page#"><img src="assets/icons/search.png" alt="Búsqueda" title="Buscar"/>&nbsp;&nbsp;<span lang="es">Buscar</span></a></li>
+		<li><a href="messages_search.cfm?return_page=#current_page#"><img src="assets/icons/search.png" alt="Búsqueda" title="Buscar"/>&nbsp;&nbsp;<span lang="es">Buscar</span></a></li>
+
+		<li><a href="search_areas.cfm?return_page=#current_page#"><img src="assets/icons/search.png" alt="Búsqueda" title="Buscar"/>&nbsp;&nbsp;<span lang="es">Buscar área</span></a></li>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="isMobileBrowser" returnvariable="isMobileBrowser">
 		</cfinvoke>
