@@ -12,7 +12,7 @@
 
 <cfif isDefined("URL.search")>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getAllAreasFiles" returnvariable="getAllAreasFilesResponse">
+	<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getAllAreasFiles" returnvariable="getAllAreasFilesResponse">
 		<cfif len(search_text) GT 0>
 		<cfinvokeargument name="search_text" value="#search_text#">	
 		</cfif>
@@ -30,15 +30,22 @@
 		<cfif len(end_date) GT 0>
 			<cfinvokeargument name="end_date" value="#end_date#">
 		</cfif>			
-	</cfinvoke>
+	</cfinvoke>--->
 		
-	<!---<cfxml variable="xmlFiles">
-	<cfoutput>
-	#xmlResponseContent#
-	</cfoutput>
-	</cfxml>--->
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getAllAreasFiles" argumentcollection="#URL#" returnvariable="getAllAreasFilesResponse">
+		<cfif isNumeric(user_in_charge)>
+		<cfinvokeargument name="user_in_charge" value="#user_in_charge#">
+		</cfif>
+	</cfinvoke>
+
 	<cfset files = getAllAreasFilesResponse.files>
+
+	<cfset numItems = files.recordCount>
 	
+	<cfoutput>
+	<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numItems# <span lang="es"><cfif numItems IS 1>Archivo<cfelse>Archivos</cfif></span></div>
+	</cfoutput>
+
 	<cfset full_content = true>
 	<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">
 	

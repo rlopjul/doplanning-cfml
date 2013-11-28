@@ -3,6 +3,8 @@
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
+
 </cfoutput>
 
 <cfif NOT isDefined("itemTypeId")>
@@ -72,11 +74,16 @@
 </cfif>
 
 
+<cfif isDefined("URL.typology_id")>
+	<cfset selected_typology_id = URL.typology_id>
+<cfelse>
+	<cfset selected_typology_id = "">
+</cfif>
+
+
 <cfif NOT isDefined("curElement") OR curElement NEQ "users">
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">	
-		<cfinvokeargument name="order_by" value="name">
-		<cfinvokeargument name="order_type" value="asc">
 	</cfinvoke>
 	
 	<!---<cfxml variable="xmlUsers">
@@ -124,22 +131,179 @@
 		$('#end_date').datepicker('setStartDate', $('#from_date').val());
 	}
 
+
+	function onSubmitForm() {
+
+		// Update textareas content from ckeditor
+		/*for (var i in CKEDITOR.instances) {
+
+		    (function(i){
+		        CKEDITOR.instances[i].updateElement();
+		    })(i);
+
+		}*/
+
+		if(check_custom_form())	{
+			//document.getElementById("submitDiv").innerHTML = window.lang.convert("Enviando archivo...");
+
+			return true;
+		}
+		else
+			return false;
+	}
+
+	<cfoutput>
+	<!---function loadTypology(typologyId,rowId) {
+
+		if(!isNaN(typologyId)){
+
+			showLoadingPage(true);
+
+			var typologyPage = "#APPLICATION.htmlPath#/html_content/typology_row_form_inputs.cfm?typology="+typologyId;
+
+			if(!isNaN(rowId)){
+				typologyPage = typologyPage+"&row="+rowId;
+			}
+
+			$("##typologyContainer").load(typologyPage, function() {
+
+				showLoadingPage(false);
+
+			});
+
+		} else {
+
+			$("##typologyContainer").empty();
+		}
+	}--->
+	function loadTypology(typologyId) {
+
+		goToUrl("#CGI.SCRIPT_NAME#?typology_id="+typologyId);
+	}
+	</cfoutput>
 	
 </script>
 
 
 <cfoutput>
-<div style="clear:both; padding-left:2px;">
-<form method="get" class="form-inline" action="#CGI.SCRIPT_NAME#">
+<div style="clear:both; padding-left:5px;">
+<cfform method="get" name="search_form" class="form-inline" action="#CGI.SCRIPT_NAME#" onsubmit="return onSubmitForm();">
 	
-	<div class="input-prepend">
-	  <span class="add-on"><i class="icon-search"></i></span>
-	  <input type="text" name="text" value="#HTMLEditFormat(search_text)#" class="input-medium"/>
-	</div>
+	<script type="text/javascript">
+		var railo_custom_form=new RailoForms('search_form');
+	</script>
+
+	<cfif APPLICATION.modulefilesWithTables IS true AND isDefined("curElement") AND curElement IS "files"><!--- Files Typologies --->
+			
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAllAreasTypologies" returnvariable="getAreaTypologiesResponse">
+		</cfinvoke>
+		<cfset areasTypologies = getAreaTypologiesResponse.query>	
+
+		<div class="control-group">
+			<label for="typology_id">Tipología</label>
+			<select name="typology_id" id="typology_id" class="span5" onchange="loadTypology($('##typology_id').val(),'');">
+				<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif>>Todas</option>
+				<cfif areasTypologies.recordCount GT 0>
+					<cfloop query="#areasTypologies#">
+						<option value="#areasTypologies.id#" <cfif areasTypologies.id IS selected_typology_id>selected="selected"</cfif>>#areasTypologies.title#</option>
+					</cfloop>
+				</cfif>
+			</select>
+			&nbsp;<span class="help-inline" style="font-size:10px" lang="es">Se muestran las tipologías usadas en al menos un archivo</span>
+		</div>
+
+		<cfif isDefined("URL.name")>
+			<cfset file_name = URL.name>
+		<cfelse>
+			<cfset file_name = "">
+		</cfif>
+
+		<cfif isDefined("URL.file_name")>
+			<cfset file_file_name = URL.file_name>
+		<cfelse>
+			<cfset file_file_name = "">
+		</cfif>
+
+		<cfif isDefined("URL.description")>
+			<cfset file_description = URL.description>
+		<cfelse>
+			<cfset file_description = "">
+		</cfif>
+
+		<div class="control-group">
+			<label for="name" lang="es">Nombre</label>
+			<input type="text" name="name" id="name" value="#file_name#" class="span5">
+		</div>
+
+		<div class="control-group">
+			<label for="file_name" lang="es">Nombre físico del archivo</label>
+			<input type="text" name="file_name" id="file_name" value="#file_file_name#" class="span5">
+		</div>
+
+		<div class="control-group">
+			<label for="description" lang="es">Descripción</label>
+			<input type="text" name="description" id="description" value="#file_description#" class="span5">
+		</div>
+
+		<cfif isNumeric(selected_typology_id)>
+
+			<!--- Typology fields --->
+			<cfset tableTypeId = 3>
+
+			<!---Table fields--->
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="getFieldsResponse">
+				<cfinvokeargument name="table_id" value="#selected_typology_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
+				<cfinvokeargument name="with_types" value="true"/>
+			</cfinvoke>
+
+			<cfset fields = getFieldsResponse.tableFields>
+
+			<cfif isDefined("URL.name") AND isDefined("URL.typology_id") AND URL.typology_id IS selected_typology_id>
+				
+				<cfset row = URL>
+
+			<cfelse>
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
+					<cfinvokeargument name="table_id" value="#selected_typology_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="fields" value="#fields#">
+				</cfinvoke>
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="fillEmptyRow" returnvariable="row">
+					<cfinvokeargument name="emptyRow" value="#emptyRow#">
+					<cfinvokeargument name="fields" value="#fields#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="withDefaultValues" value="false">
+				</cfinvoke>
+
+			</cfif>
+			
+				
+			<!--- outputRowFormInputs --->
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowFormInputs">
+				<cfinvokeargument name="table_id" value="#selected_typology_id#">
+				<cfinvokeargument name="tableTypeId" value="3">
+				<cfinvokeargument name="row" value="#row#">
+				<cfinvokeargument name="fields" value="#fields#">
+				<cfinvokeargument name="search_inputs" value="true">
+			</cfinvoke>
+
+		</cfif>
+
+	<cfelse>
+
+		<div class="input-prepend">
+		  <span class="add-on"><i class="icon-search"></i></span>
+		  <input type="text" name="text" value="#HTMLEditFormat(search_text)#" class="input-medium"/>
+		</div>&nbsp;
+
+	</cfif>
 
 	<cfif NOT isDefined("curElement") OR curElement NEQ "users">
 	
-		&nbsp;<label for="from_user" lang="es">De</label> <select name="from_user" id="from_user">
+		<label for="from_user" lang="es">De</label> <select name="from_user" id="from_user">
 		<option value="" lang="es">Todos</option>
 		<!---<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">				
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="objectUser">
@@ -153,8 +317,9 @@
 		</cfloop>
 		</select>
 		
-		<br/>	
-		&nbsp;<label for="from_user" lang="es">Fecha desde</label> 		
+		<div style="height:8px;"></div>
+
+		<label for="from_user" lang="es">Fecha desde</label> 		
 		<input type="text" name="from_date" id="from_date" class="input_datepicker" value="#from_date#" onchange="setFromDate()">
 
 		&nbsp;<label for="end_user" lang="es">Fecha hasta</label> 
@@ -177,7 +342,7 @@
 		
 		<cfif itemTypeId IS 7><!---Consultations--->
 			<br/>
-			&nbsp;<label for="done" lang="es">Estado actual</label> <select name="state" id="state" class="input-medium">
+			<label for="done" lang="es">Estado actual</label> <select name="state" id="state" class="input-medium">
 				<option value="" lang="es">Todos</option>
 				<option value="created" <cfif cur_state EQ "created">selected="selected"</cfif> lang="es">Enviada</option>
 				<option value="read" <cfif cur_state EQ "read">selected="selected"</cfif> lang="es">Leída</option>
@@ -196,7 +361,10 @@
 	</select>
 	<input type="submit" name="search" class="btn btn-primary" lang="es" value="Buscar" />
 	
-	<br/>&nbsp;<span style="font-size:10px" lang="es">Formato DD-MM-AAAA. Ejemplo:</span><span style="font-size:10px"> #DateFormat(now(), "DD-MM-YYYY")#</span>
-</form>
+	<cfif NOT isDefined("curElement") OR curElement NEQ "users">
+		<span class="help-block" style="font-size:10px" lang="es">Formato fecha DD-MM-AAAA. Ejemplo: #DateFormat(now(), "DD-MM-YYYY")#</span>
+	</cfif>
+
+</cfform>
 </div>
 </cfoutput>

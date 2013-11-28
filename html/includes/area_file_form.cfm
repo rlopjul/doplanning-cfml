@@ -26,6 +26,7 @@
 
 <cfoutput>
 
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js" type="text/javascript"></script>
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
@@ -92,6 +93,15 @@
 
 	function onSubmitForm() {
 
+		// Update textareas content from ckeditor
+		for (var i in CKEDITOR.instances) {
+
+		    (function(i){
+		        CKEDITOR.instances[i].updateElement();
+		    })(i);
+
+		}
+
 		if(check_custom_form())	{
 			document.getElementById("submitDiv").innerHTML = window.lang.convert("Enviando archivo...");
 
@@ -127,7 +137,7 @@
 		}
 	}
 
-	function enableDatePicker(selector){
+	<!---function enableDatePicker(selector){
 
 		$(selector).datepicker({
 		  format: 'dd-mm-yyyy', 
@@ -136,7 +146,7 @@
 		  language: 'es',
 		  todayBtn: 'linked'
 		});
-	}
+	}--->
 
 	</cfif>
 </script>
@@ -187,10 +197,12 @@
 		<div class="control-group">
 			<label for="typology_id">Tipología *</label>
 			<select name="typology_id" id="typology_id" class="span3" onchange="loadTypology($('##typology_id').val(),'');">
-				<option value="" <cfif NOT isNumeric(file.typology_id)>selected="selected"</cfif>>Básica</option>
-				<cfloop query="#areaTables#">
-					<option value="#areaTables.id#" <cfif areaTables.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS areaTables.id>style="font-weight:bold"</cfif>>#areaTables.title#</option>
-				</cfloop>
+				<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif>>Básica</option>
+				<cfif areaTables.recordCount GT 0>
+					<cfloop query="#areaTables#">
+						<option value="#areaTables.id#" <cfif areaTables.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS areaTables.id>style="font-weight:bold"</cfif>>#areaTables.title#</option>
+					</cfloop>
+				</cfif>
 			</select>
 		</div>
 

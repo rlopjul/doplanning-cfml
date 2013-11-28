@@ -28,13 +28,6 @@
 		<!---<cfinvokeargument name="order_by" value="#order_by#">
 		<cfinvokeargument name="order_type" value="#order_type#">--->
 	</cfinvoke>
-	
-	<!---<cfxml variable="xmlUsers">
-		<cfoutput>
-		#response.usersXml#
-		</cfoutput>
-	</cfxml>
-	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>--->
 
 	<cfset areaUsers = areaUsersResponse.users>
 	<cfset numUsers = ArrayLen(areaUsers)>

@@ -77,6 +77,7 @@
 		<cfargument name="emptyRow" type="query" required="true"/>
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="withDefaultValues" type="boolean" required="false">
 
 		<cfset var method = "fillEmptyRow">
 
@@ -88,6 +89,7 @@
 				<cfinvokeargument name="emptyRow" value="#arguments.emptyRow#">
 				<cfinvokeargument name="fields" value="#arguments.fields#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="withDefaultValues" value="#arguments.withDefaultValues#">
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -249,6 +251,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row" type="object" required="true">
 		<cfargument name="fields" type="query" required="true">
+		<cfargument name="search_inputs" type="boolean" required="false">
 		
 		<cfset var method = "outputRowFormInputs">
 		
@@ -262,6 +265,7 @@
 				<cfinvokeargument name="row" value="#arguments.row#">
 				<cfinvokeargument name="fields" value="#arguments.fields#">
 				<cfinvokeargument name="language" value="#SESSION.user_language#">
+				<cfinvokeargument name="search_inputs" value="#arguments.search_inputs#">
 
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

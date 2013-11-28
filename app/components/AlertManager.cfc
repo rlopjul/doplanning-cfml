@@ -836,8 +836,8 @@
 					<cfif arguments.action NEQ "new" AND arguments.action NEQ "associate">
 						#subject_action#:<br/>
 					</cfif>
-					#langText[curLang].new_file.file_name#: <strong>#objectFile.name#</strong><br />
 					#langText[curLang].new_file.user#: <strong><!---#objectFile.user_full_name#--->#actionUserName#</strong><br />
+					#langText[curLang].new_file.file_name#: <strong>#objectFile.name#</strong><br />
 					#langText[curLang].new_file.upload_date#: <strong>#objectFile.uploading_date#</strong><br/>
 					<cfif len(objectFile.replacement_date) GT 0>
 					#langText[curLang].new_file.replacement_date#: <strong>#objectFile.replacement_date#</strong><br/>

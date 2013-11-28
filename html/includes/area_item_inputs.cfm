@@ -306,7 +306,7 @@
 
 </cfif>
 
-<div style="margin-bottom:10px; margin-top:5px;"><textarea name="description" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea></div>
+<div style="margin-bottom:10px; margin-top:5px;"><textarea name="description" class="input-block-level" style="height:200px;" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea></div>
 
 <cfif itemTypeId IS 7 OR itemTypeId IS 8>
 

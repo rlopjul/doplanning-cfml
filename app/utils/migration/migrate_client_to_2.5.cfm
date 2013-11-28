@@ -300,7 +300,7 @@ CREATE TABLE  `dp_software7`.`software7_files_locks` (
   KEY `FK_software7_files_locks_2` (`user_id`),
   CONSTRAINT `FK_software7_files_locks_1` FOREIGN KEY (`file_id`) REFERENCES `software7_files` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_software7_files_locks_2` FOREIGN KEY (`user_id`) REFERENCES `software7_users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 ALTER TABLE `dp_software7`.`software7_users` 

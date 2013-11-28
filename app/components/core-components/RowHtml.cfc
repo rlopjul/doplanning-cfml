@@ -12,9 +12,16 @@
 		<cfargument name="row" type="object" required="true">
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="language" type="string" required="true">
+		<cfargument name="search_inputs" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">	
+
+		<cfif arguments.search_inputs IS true>
+			<cfset text_input_class = "span5">
+		<cfelse>
+			<cfset text_input_class = "input-block-level">
+		</cfif>
 
 		<cfoutput>
 
@@ -36,7 +43,7 @@
 
 			<cfset field_label = fields.label&"">
 			<cfset field_name = "field_#fields.field_id#">
-			<cfif fields.required IS true>
+			<cfif fields.required IS true AND arguments.search_inputs IS false>
 				<cfset field_required_att = 'required="required"'>
 			<cfelse>
 				<cfset field_required_att = "">
@@ -48,28 +55,36 @@
 
 			<div class="control-group">
 
-			<label for="#field_name#">#field_label# <cfif fields.required IS true>*</cfif></label>
-			<cfif len(fields.description) GT 0><small class="help-block">#fields.description#</small></cfif>
+			<label for="#field_name#">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
+			<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
 
 			<cfif fields.input_type IS "textarea"><!--- TEXTAREA --->
 
-				<textarea name="#field_name#" id="#field_name#" class="input-block-level" #field_required_att# maxlength="#fields.max_length#" <cfif fields.field_type_id IS 2>rows="4"<cfelse>rows="10"</cfif>>#field_value#</textarea>
+				<cfif arguments.search_inputs IS false>
+					
+					<textarea name="#field_name#" id="#field_name#" class="input-block-level" #field_required_att# maxlength="#fields.max_length#" <cfif fields.field_type_id IS 2>rows="4"<cfelse>rows="10"</cfif>>#field_value#</textarea>
 
-				<cfif fields.required IS true>
-					<script type="text/javascript">
-						addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
-					</script>
-				</cfif>	
+					<cfif fields.required IS true>
+						<script type="text/javascript">
+							addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
+						</script>
+					</cfif>	
 
-				<cfif fields.field_type_id IS 3 OR fields.field_type_id IS 11>
-					<!--- CKEditor --->
-					<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
-						<cfinvokeargument name="name" value="#field_name#">
-						<cfinvokeargument name="language" value="#SESSION.user_language#"/>
-					</cfinvoke>--->
-					<script type="text/javascript">
-						CKEDITOR.replace('#field_name#', {toolbar:'DP', toolbarStartupExpanded:true, language:'#arguments.language#'});
-					</script>
+					<cfif fields.field_type_id IS 3 OR fields.field_type_id IS 11>
+						<!--- CKEditor --->
+						<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+							<cfinvokeargument name="name" value="#field_name#">
+							<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+						</cfinvoke>--->
+						<script type="text/javascript">
+							CKEDITOR.replace('#field_name#', {toolbar:'DP', toolbarStartupExpanded:true, language:'#arguments.language#'});
+						</script>
+					</cfif>
+
+				<cfelse><!--- Search --->
+
+					<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" />
+
 				</cfif>
 
 			<cfelseif fields.input_type IS "number"><!--- INTEGER --->
@@ -77,7 +92,7 @@
 				<input type="number" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="span2"/>
 
 				<script type="text/javascript">
-					<cfif fields.required IS true>
+					<cfif fields.required IS true AND arguments.search_inputs IS false>
 						addRailoRequiredInteger("#field_name#", "El campo '#field_label#' debe ser numérico y es obligatorio");
 					<cfelse>
 						addRailoValidateInteger("#field_name#", "El campo '#field_label#' debe ser numérico");
@@ -86,9 +101,9 @@
 
 			<cfelseif fields.input_type IS "url"><!--- URL --->
 
-				<input type="url" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="input-block-level"/>
+				<input type="url" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
 
-				<cfif fields.required IS true>
+				<cfif fields.required IS true AND arguments.search_inputs IS false>
 					<script type="text/javascript">
 						addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
 					</script>
@@ -103,7 +118,7 @@
 				<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="input_datepicker"/> <small class="help-inline">Fecha formato DD-MM-AAAA</small>
 
 				<script type="text/javascript">
-					<cfif fields.required IS true>
+					<cfif fields.required IS true AND arguments.search_inputs IS false>
 						addRailoRequiredDate("#field_name#", "El campo '#field_label#' debe ser una fecha con formato DD-MM-AAAA y es obligatorio");
 					<cfelse>
 						addRailoValidateDate("#field_name#", "El campo '#field_label#' debe ser una fecha con formato DD-MM-AAAA");
@@ -121,7 +136,7 @@
 					<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="span2"/>
 
 					<script type="text/javascript">
-						<cfif fields.required IS true>
+						<cfif fields.required IS true AND arguments.search_inputs IS false>
 							addRailoRequiredFloat("#field_name#", "El campo '#field_label#' debe ser numérico y es obligatorio");
 						<cfelse>
 							addRailoValidateFloat("#field_name#", "El campo '#field_label#' debe ser numérico");
@@ -130,9 +145,9 @@
 
 				<cfelse><!--- TEXT --->
 
-					<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="input-block-level" />
+					<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" />
 
-					<cfif fields.required IS true>
+					<cfif fields.required IS true AND arguments.search_inputs IS false>
 						<script type="text/javascript">
 							addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
 						</script>
@@ -157,6 +172,10 @@
 						<cfif action EQ "create">
 							
 							<cfset selectedAreasList = row[field_name]>
+
+							<cfif isArray(selectedAreasList)>
+								<cfset selectedAreasList = arrayToList(selectedAreasList)>
+							</cfif>
 
 						<cfelse>
 
@@ -186,8 +205,8 @@
 						
 					</cfif>
 
-					<select name="#field_name#[]" id="#field_name#" #field_required_att# class="selectpicker span5" <cfif fields.field_type_id IS 10>multiple style="height:90px"</cfif>>
-						<cfif fields.field_type_id IS 9 AND fields.required IS false>
+					<select name="#field_name#[]" id="#field_name#" #field_required_att# class="selectpicker span5" <cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>multiple style="height:90px"</cfif>>
+						<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
 							<option value=""></option>
 						</cfif>
 
@@ -202,13 +221,13 @@
 							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 						</cfinvoke>
 					</select>
-					<cfif fields.field_type_id IS 10>
+					<cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>
 						<small class="help-block">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
 					</cfif>
 
 				</cfif>
 
-				<cfif fields.required IS true>
+				<cfif fields.required IS true AND arguments.search_inputs IS false>
 					<script type="text/javascript">
 						addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
 					</script>

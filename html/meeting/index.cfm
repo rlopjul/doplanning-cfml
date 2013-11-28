@@ -51,7 +51,7 @@
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
-<script type="text/javascript" src="../scripts/functions.min.js?v=2"></script>
+<script type="text/javascript" src="../scripts/functions.min.js?v=2.1"></script>
 </cfoutput>
 
 <script type="text/javascript">

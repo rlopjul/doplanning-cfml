@@ -44,5 +44,5 @@
 	<cfset redirect_area_page = "area_items.cfm?form=#URL.form#&area=#URL.area#">
 <cfelseif APPLICATION.modulefilesWithTables IS true AND isDefined("URL.typology")>
 	<cfset redirect_page = "typology.cfm?typology=#URL.typology#">
-	<cfset redirect_area_page = "area_items.cfm?typology=#URL.typology#&area=#URL.area#">
+	<cfset redirect_area_page = "typologies.cfm?typology=#URL.typology#&area=#URL.area#">
 </cfif>

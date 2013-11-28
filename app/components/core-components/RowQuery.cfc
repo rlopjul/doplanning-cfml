@@ -30,7 +30,6 @@
 		<cfset var field_value = "">
 		<cfset var selectFields = false>
 
-
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
 			<cfif NOT isDefined("arguments.fields")>
@@ -38,7 +37,7 @@
 				<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-					<cfinvokeargument name="with_types" value="#arguments.with_types#">
+					<cfinvokeargument name="with_types" value="true">
 					<cfinvokeargument name="with_table" value="false">
 					
 					<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -99,7 +98,7 @@
 
 					<cfloop query="fields">
 
-						<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- SELECT --->
+						<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT --->
 
 							<cfset field_name = "field_#fields.field_id#">
 							<cfset field_value = arguments[field_name]>
@@ -247,6 +246,7 @@
 		<cfargument name="emptyRow" type="query" required="true">
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="withDefaultValues" type="boolean" required="false" default="true">
 				
 		<cfset var method = "fillEmptyRow">
 			
@@ -261,7 +261,9 @@
 					<cfset queryAddColumn(emptyRow, "field_#fields.field_id#")>
 				</cfif>
 				
-				<cfset querySetCell(emptyRow, "field_#fields.field_id#", fields.default_value, 1)>
+				<cfif arguments.withDefaultValues IS true>
+					<cfset querySetCell(emptyRow, "field_#fields.field_id#", fields.default_value, 1)>
+				</cfif>
 
 			</cfloop>
 		
@@ -276,10 +278,6 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="false">
-		<!---<cfargument name="parse_dates" type="boolean" required="false" default="false">--->
-
-		<cfargument name="with_types" type="boolean" required="false" default="false">
-		<cfargument name="with_table" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -287,12 +285,9 @@
 		<cfset var method = "getTableRow">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfquery name="getTableRow" datasource="#client_dsn#">
 				SELECT table_row.*,
-				<!---<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(table_row.creation_date, '#datetimeFormat#') AS creation_date 
-				</cfif>--->
 				CONCAT_WS(' ', insert_users.family_name, insert_users.name) AS insert_user_full_name, insert_users.image_type AS insert_user_image_type,
 				CONCAT_WS(' ', update_users.family_name, update_users.name) AS update_user_full_name, update_users.image_type AS update_user_image_type
 				FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AS table_row
@@ -306,6 +301,215 @@
 			</cfquery>
 		
 		<cfreturn getTableRow>
+		
+	</cffunction>
+
+
+	<!---getTypologiesRowsSearch--->
+		
+	<cffunction name="getTypologiesRowsSearch" output="false" returntype="struct" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfargument name="area_id" type="numeric" required="no">
+		<cfargument name="areas_ids" type="string" required="no">
+
+		<cfargument name="name" type="string" required="false">
+		<cfargument name="file_name" type="string" required="false">
+		<cfargument name="description" type="string" required="false">
+		<cfargument name="user_in_charge" type="numeric" required="false">
+		<cfargument name="limit" type="numeric" required="false">
+
+		<cfargument name="from_date" type="string" required="no">
+		<cfargument name="end_date" type="string" required="no">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
+				
+		<cfset var method = "getTypologiesRowsSearch">
+
+		<cfset var count = 0>
+		<cfset var name_re = "">
+		<cfset var file_name_re = "">
+		<cfset var description_re = "">
+
+		<cfset var selectFields = false>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+
+			<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_types" value="true">
+				<cfinvokeargument name="with_table" value="false">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<!---<cfquery dbtype="query" name="selectFieldsCount">
+				SELECT field_id
+				FROM fields
+				WHERE field_type_id = 9 OR field_type_id = 10;
+			</cfquery>
+			<cffif selectFieldsCount.recordCount GT 0>
+				<cfset selectFields = true>
+			</cffif>--->
+
+			<cfif isDefined("arguments.name") AND len(arguments.name) GT 0>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="name_re">
+					<cfinvokeargument name="text" value="#arguments.name#">
+				</cfinvoke>	
+			</cfif>		
+			
+			<cfif isDefined("arguments.file_name") AND len(arguments.file_name) GT 0>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="file_name_re">
+					<cfinvokeargument name="text" value="#arguments.file_name#">
+				</cfinvoke>	
+			</cfif>
+
+			<cfif isDefined("arguments.description") AND len(arguments.description) GT 0>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="description_re">
+					<cfinvokeargument name="text" value="#arguments.description#">
+				</cfinvoke>	
+			</cfif>			
+
+			<cftransaction>
+				
+				<cfquery name="getTableRows" datasource="#client_dsn#">
+					SELECT table_row.row_id
+					, files.id, files.file_name, files.user_in_charge, files.file_size, files.file_type, files.name, files.file_name, files.description, files.file_type_id,
+					IF( replacement_date IS NULL, IF(association_date IS NULL, uploading_date, association_date), replacement_date ) AS last_version_date,
+					IF( a.area_id IS NULL, files.area_id, a.area_id ) AS area_id
+					, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
+					, DATE_FORMAT(files.replacement_date, '#dateTimeFormat#') AS replacement_date 
+					, DATE_FORMAT(a.association_date, '#dateTimeFormat#') AS association_date
+					, users.family_name, users.name AS user_name, users.image_type AS user_image_type,
+					CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
+					, areas.name AS area_name
+					FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AS table_row
+					<!---LEFT JOIN #client_abb#_users AS insert_users ON table_row.insert_user_id = insert_users.id
+					LEFT JOIN #client_abb#_users AS update_users ON table_row.last_update_user_id = update_users.id--->
+					INNER JOIN #client_abb#_files AS files ON table_row.row_id = files.typology_row_id
+					AND files.typology_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+					INNER JOIN #client_abb#_areas_files AS a ON files.id = a.file_id
+					<cfif isDefined("arguments.areas_ids")>
+						AND a.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
+					<cfelse>
+						AND a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
+					INNER JOIN #client_abb#_areas AS areas ON a.area_id = areas.id
+					WHERE files.status = 'ok'
+					<cfif isDefined("arguments.user_in_charge")>
+						AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif isDefined("arguments.from_date") AND len(arguments.from_date) GT 0>
+						AND ( files.uploading_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+							OR files.replacement_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#') )
+					</cfif>
+					<cfif isDefined("arguments.end_date") AND len(arguments.end_date) GT 0>
+						AND ( files.uploading_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
+							OR files.replacement_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') )
+					</cfif>	
+					<cfif len(name_re) GT 0>
+						AND	files.name REGEXP <cfqueryparam value="#name_re#" cfsqltype="cf_sql_varchar">
+					</cfif>
+					<cfif len(file_name_re) GT 0>
+						AND	files.file_name REGEXP <cfqueryparam value="#file_name_re#" cfsqltype="cf_sql_varchar">
+					</cfif>
+					<cfif len(description_re) GT 0>
+						AND	files.description REGEXP <cfqueryparam value="#description_re#" cfsqltype="cf_sql_varchar">
+					</cfif>
+					<cfloop query="fields">
+						
+						<cfset field_name = "field_#fields.field_id#">
+							
+						<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT FIELD--->
+
+							<cfset field_value = arguments[field_name]>
+							
+							<cfif len(field_value) GT 0>
+								<cfif fields.cf_sql_type IS "cf_sql_varchar" OR fields.cf_sql_type IS "cf_sql_longvarchar">
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="field_value_re">
+										<cfinvokeargument name="text" value="#field_value#">
+									</cfinvoke>
+
+									AND field_#fields.field_id# REGEXP 
+									<cfif fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- Text with HTML format --->
+										<cfqueryparam value=">.*#field_value_re#.*<" cfsqltype="cf_sql_varchar">
+									<cfelse>
+										<cfqueryparam value="#field_value_re#" cfsqltype="cf_sql_varchar">
+									</cfif>
+									
+								<cfelse>
+
+									AND field_#fields.field_id# = 
+									<cfif fields.mysql_type IS "DATE"><!--- DATE --->
+										STR_TO_DATE('#field_value#','#dateFormat#')
+									<cfelse>
+										<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
+									</cfif>
+
+								</cfif>
+							</cfif>
+
+						<cfelse><!--- SELECT FIELDS --->
+
+							<cfif isDefined("arguments.#field_name#")>
+								<!---<cfset selectFields = true>--->
+								<cfset field_values = arguments[field_name]>
+								<cfloop array="#field_values#" index="select_value">
+									<cfif isNumeric(select_value)>
+									AND table_row.row_id IN ( SELECT row_id FROM `#client_abb#_#tableTypeTable#_rows_areas` 
+										WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+										AND field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer"> 
+										AND area_id = <cfqueryparam value="#select_value#" cfsqltype="cf_sql_integer"> ) 
+									</cfif>
+								</cfloop>
+							</cfif>
+
+						</cfif>
+
+					</cfloop>
+
+					<!---
+					<cfif selectFields IS true><!--- Select fields values ---->
+						AND table_row.row_id IS IN ( SELECT row_id FROM `#client_abb#_#tableTypeTable#_rows_areas` 
+										WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+										<cfloop query="fields">
+
+											<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- SELECT --->
+												<cfif isDefined("arguments.#field_name#") AND isNumeric(arguments[field_name])>
+
+													AND ( field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
+													AND area_id = <cfqueryparam value="#arguments[field_name]#" cfsqltype="cf_sql_integer"> ) 
+
+												</cfif>
+
+											</cfif>
+
+										</cfloop>)
+
+					</cfif>--->
+					ORDER BY last_version_date DESC
+					<cfif isDefined("arguments.limit")>
+					LIMIT #arguments.limit#
+					</cfif>;
+				</cfquery>
+
+				<cfif isDefined("arguments.limit")>
+					<cfquery datasource="#client_dsn#" name="getCount">
+						SELECT FOUND_ROWS() AS count;
+					</cfquery>
+					<cfset count = getCount.count>
+				</cfif>
+
+			</cftransaction>
+
+		<cfreturn {query=getTableRows, count=count}>
 		
 	</cffunction>
 

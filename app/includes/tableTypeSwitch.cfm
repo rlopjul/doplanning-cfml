@@ -36,7 +36,7 @@
 		
 		<cfset tableTypeNameEs = "Tipología">
 
-		<cfset tableTypeGender = "male">
+		<cfset tableTypeGender = "female">
 
 		<cfset itemTypeId = 13>
 	

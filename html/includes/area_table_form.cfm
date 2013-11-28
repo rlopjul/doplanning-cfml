@@ -5,7 +5,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_table_form_query.cfm">
 
-<cfset return_page = "#tableTypeNameP#.cfm?area=#area_id#">
+<cfset return_page = "#tableTypeNameP#.cfm?area=#table.area_id#">
 
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
 
@@ -53,7 +53,7 @@
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
 	<input type="hidden" name="tableTypeId" value="#tableTypeId#"/>
 	
-	<input type="hidden" name="area_id" value="#area_id#"/>
+	<input type="hidden" name="area_id" value="#table.area_id#"/>
 	<cfif page_type IS 2>
 		<input type="hidden" name="table_id" value="#table_id#"/>
 	</cfif>
@@ -88,8 +88,8 @@
 
 	<div id="submitDiv2" style="margin-top:20px;">
 		<input type="submit" value="Guardar" class="btn btn-primary"/>
-		<cfif page_type IS 2>
-			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#" class="btn" style="float:right">Cancelar</a>
+		<cfif page_type IS 2 AND isDefined("URL.area") AND isNumeric(URL.area)>
+			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#URL.area#" class="btn" style="float:right">Cancelar</a>
 		</cfif>
 	</div>
 	

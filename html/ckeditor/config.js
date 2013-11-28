@@ -43,4 +43,9 @@ CKEDITOR.editorConfig = function( config ) {
 	
 	//Para que solo se pueda introducir texto plano
 	config.forcePasteAsPlainText = true;
+
+	//Para que no se conviertan los caracteres especiales en entidades HTML
+	config.entities_greek = false;
+	config.entities_latin = false;
+	config.entities_processNumerical = false;
 };

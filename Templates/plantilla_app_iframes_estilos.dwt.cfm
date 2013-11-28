@@ -23,7 +23,7 @@
 
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 
-<script type="text/javascript" src="../html/scripts/functions.min.js?v=2"></script>
+<script type="text/javascript" src="../html/scripts/functions.min.js?v=2.1"></script>
 <script type="text/javascript" src="../html/scripts/iframesFunctions.min.js?v=2"></script>
 
 <script type="text/javascript">

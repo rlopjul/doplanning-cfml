@@ -72,7 +72,7 @@
 	
 	<!---getRootArea--->
 	
-	<!---Devuelve las áreas raices visibles en el árbol--->
+	<!---Devuelve las áreas raices visibles en el árbol del usuario--->
 	
 	<cffunction name="getVisibleRootAreas" output="false" returntype="query" access="public">
 		<cfargument name="root_area_id" type="numeric" required="yes">		
@@ -130,6 +130,7 @@
 		<cfargument name="client_dsn" type="string" required="yes">		
 		
 		<cfset var method = "geSubAreasIds">
+
 		<cfset var areas_list = "">
 		<cfset var new_areas_list = "">
 								
@@ -157,6 +158,55 @@
 			</cfloop>
 			
 		<cfreturn areas_list>
+		
+	</cffunction>
+
+
+
+	<!---getParentAreasIds--->
+	
+	<cffunction name="getParentAreasIds" output="false" returntype="string" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="areas_list" type="string" required="false" default="">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
+		
+		<cfset var method = "getParentAreasIds">
+
+		<cfset var new_areas_list = arguments.areas_list>
+								
+			<cfquery name="parentAreaQuery" datasource="#client_dsn#">
+				SELECT parent_id
+				FROM #client_abb#_areas AS areas
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>	
+
+			<cfif parentAreaQuery.recordCount GT 0>
+
+				<cfif isNumeric(parentAreaQuery.parent_id)>
+					
+					<cfset new_areas_list = ListAppend(new_areas_list,parentAreaQuery.parent_id)>
+				
+					<cfinvoke component="AreaQuery" method="getParentAreasIds" returnvariable="new_areas_list">
+						<cfinvokeargument name="area_id" value="#parentAreaQuery.parent_id#">
+						<cfinvokeargument name="areas_list" value="#new_areas_list#">
+						
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+
+				<cfreturn new_areas_list>
+				
+			<cfelse><!---The area does not exist--->
+				
+				<cfset error_code = 401>
+				
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
 		
 	</cffunction>
 	
@@ -211,28 +261,19 @@
 					<cfelse>
 						<cfset arguments.path = cur_area>
 					</cfif>
-				
-					
-					<!---<cfif NOT isDefined("arguments.from_area_id") OR getAreaQuery.parent_id NEQ arguments.from_area_id><!---Si no es el área hasta la que hay que mostrar la ruta--->--->
 						
-						<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
-							<cfinvokeargument name="area_id" value="#getAreaQuery.parent_id#">
-							<cfif isDefined("arguments.from_area_id")>
-							<cfinvokeargument name="from_area_id" value="#arguments.from_area_id#">
-							</cfif>
-							<cfinvokeargument name="path" value="#arguments.path#">
-							<cfinvokeargument name="separator" value="#arguments.separator#">
-							<cfinvokeargument name="with_base_link" value="#arguments.with_base_link#">
-							
-							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-						</cfinvoke>
-					
-					<!---<cfelse>
+					<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
+						<cfinvokeargument name="area_id" value="#getAreaQuery.parent_id#">
+						<cfif isDefined("arguments.from_area_id")>
+						<cfinvokeargument name="from_area_id" value="#arguments.from_area_id#">
+						</cfif>
+						<cfinvokeargument name="path" value="#arguments.path#">
+						<cfinvokeargument name="separator" value="#arguments.separator#">
+						<cfinvokeargument name="with_base_link" value="#arguments.with_base_link#">
 						
-						<cfset area_path = arguments.path>
-					
-					</cfif>--->
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
 					
 				<cfelse>
 					
@@ -313,10 +354,6 @@
 		<cfreturn response>
 		
 	</cffunction>
-	
-
-	
-	
 	
 	
 

@@ -158,7 +158,7 @@
 		}
 	}
 
-	function enableDatePicker(selector){
+	<!---function enableDatePicker(selector){
 
 		$(selector).datepicker({
 		  format: 'dd-mm-yyyy', 
@@ -167,7 +167,7 @@
 		  language: 'es',
 		  todayBtn: 'linked'
 		});
-	}
+	}--->
 
 	$(document).ready(function() { 
 

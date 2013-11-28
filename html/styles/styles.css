@@ -103,13 +103,18 @@ a:hover {text-decoration:none; }
 	
 }
 .div_head_subtitle_area{
-	clear:left;
+	/*clear:left;*/
+	clear:both;
 	color:#333333;
 	font-size:14px;
-	height:35px;
+	/*height:35px;*/
 	padding-top:2px;
 	padding-bottom:2px;
 	padding-left:2px;
+	display:table-cell; /*para que los botones se muestren en dos líneas en la versión móvil sin pisar otros elementos y haya un margen entre cada botón*/
+}
+.div_head_subtitle_area a{
+	white-space:nowrap; /*Para mostrar los iconos y las imágenes de los botones en la misma línea en IE*/
 }
 /*.div_head_subtitle_area_text{
 	float:left;
@@ -175,6 +180,10 @@ a:hover {text-decoration:none; }
 }
 .text_item a:visited{
  	color:#0066CC;
+}
+.text_red{
+	color:#E80000;
+	font-weight: bold;
 }
 /*.text_message_data{
 	font-size:11px; 
