@@ -711,11 +711,8 @@
 			<cfif getUserAreas.RecordCount GT 0>
 				
 				<cfloop query="getUserAreas">
-					<cfscript>
-						ArrayAppend(areasArray,#getUserAreas.area_id#);
-					</cfscript>
+					<cfset ArrayAppend(areasArray,#getUserAreas.area_id#)>
 				</cfloop>
-				
 				
 			<cfelse><!---The user has no areas--->
 			
@@ -744,18 +741,16 @@
 		<cfset var method = "loopUserAreas">
 		
 		<cfset var userBelongsToArea = false>
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+					
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfif arguments.allowed EQ true>
 				<cfset userBelongsToArea = true>
 			<cfelse>
 				<cfset list = ArrayToList(#arguments.areasArray#,",")>
-				<cfset temp = ListFind(list, #arguments.area_id#)>
+				<cfset findAreaInList = ListFind(list, #arguments.area_id#)>
 				 
-				<cfif temp GT 0>
+				<cfif findAreaInList GT 0>
 					<cfset userBelongsToArea = true>
 				<cfelse>
 					<cfset userBelongsToArea = false>
@@ -773,7 +768,7 @@
 			<cfquery name="subAreasQuery" datasource="#client_dsn#">
 				SELECT id 
 				FROM #client_abb#_areas
-				WHERE parent_id = #arguments.area_id#
+				WHERE parent_id = #arguments.area_id#;
 			</cfquery>
 			
 			<cfset hasSubAreas = (#subAreasQuery.recordCount# GT 0)>
@@ -827,14 +822,15 @@
 				
 				<cfquery name="getAllAreasQuery" datasource="#client_dsn#">
 					SELECT id
-					FROM #client_abb#_areas
+					FROM #client_abb#_areas;
 				</cfquery>			
 				
 				<cfif getAllAreasQuery.RecordCount GT 0>
 					
-					<cfloop query="getAllAreasQuery">
+					<!---<cfloop query="getAllAreasQuery">
 						<cfset allAreasList = listAppend(allAreasList,getAllAreasQuery.id)>
-					</cfloop>
+					</cfloop>--->
+					<cfset allAreasList = valueList(getAllAreasQuery.id)>
 					
 				</cfif>
 			
@@ -2135,6 +2131,12 @@
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 					<cfinvokeargument name="itemTypeId" value="4">
 				</cfinvoke>
+
+				<!--- -----------------DELETE AREA IMAGES------------------------- --->
+				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="itemTypeId" value="9">
+				</cfinvoke>
 				
 			</cfif>
 			
@@ -2168,15 +2170,62 @@
 				</cfinvoke>
 			
 			</cfif>
-			
-			
+
+			<cfif APPLICATION.modulePubMedComments IS true>
+				
+				<!--- -----------------DELETE AREA PUBMEDS------------------------- --->
+				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="itemTypeId" value="8">
+				</cfinvoke>
+
+			</cfif>
+
+			<cfif APPLICATION.moduleLists IS true>
+				
+				<!--- -----------------DELETE AREA LISTS------------------------- --->
+				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="itemTypeId" value="11">
+				</cfinvoke>
+
+			</cfif>
+
+			<cfif APPLICATION.moduleForms IS true>
+				
+				<!--- -----------------DELETE AREA FORMS------------------------- --->
+				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="itemTypeId" value="12">
+				</cfinvoke>
+
+			</cfif>			
 			
 			<!--- -------------------DELETE AREAS_FILES------------------------ --->
-			<cfquery name="deleteAreasFiles" datasource="#client_dsn#">
+
+			<!---<cfquery name="deleteAreasFiles" datasource="#client_dsn#">
 				DELETE 
 				FROM #client_abb#_areas_files
 				WHERE area_id = #arguments.area_id#;
-			</cfquery>
+			</cfquery>--->
+
+			<cfinvoke component="FileManager" method="deleteAreaFiles" returnvariable="deleteAreaFilesResult">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+			<cfif deleteAreaFilesResult.result IS false>
+				<cfthrow message="#deleteAreaFilesResult.message#">
+			</cfif>
+
+
+			<cfif APPLICATION.modulefilesWithTables IS true>
+				
+				<!--- -----------------DELETE AREA TYPOLOGIES------------------------- --->
+				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="itemTypeId" value="13">
+				</cfinvoke>
+
+			</cfif>
 			
 			<!--- --------------------DELETE AREAS USERS---------------------  --->
 			<cfquery name="membersQuery" datasource="#client_dsn#">
@@ -2483,6 +2532,7 @@
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="parse_dates" value="true">
 
+				<cfinvokeargument name="with_user" value="true"/>
 				<!---<cfif APPLICATION.moduleAreaFilesLite IS true>
 					<cfinvokeargument name="with_area_files_lite" value="true">
 				</cfif>--->

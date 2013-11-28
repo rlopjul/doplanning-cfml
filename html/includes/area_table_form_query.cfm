@@ -35,7 +35,7 @@
 
 		<cfset table = FORM>
 
-		<cfset area_id = FORM.area_id>
+		<!---<cfset area_id = FORM.area_id>--->
 		
 	</cfif> 
 
@@ -52,6 +52,9 @@
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getEmptyTable" returnvariable="table">
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 		</cfinvoke>
+
+		<cfset queryAddRow(table, 1)>
+		<cfset table.area_id = area_id>
 		
 	<cfelse><!--- MODIFY --->
 
@@ -66,7 +69,7 @@
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 		</cfinvoke>
 
-		<cfset area_id = table.area_id>
+		<!---<cfset area_id = table.area_id>--->
 
 	</cfif>
 

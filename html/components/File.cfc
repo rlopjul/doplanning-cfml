@@ -646,8 +646,9 @@
 		
 		<cftry>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAllAreasFiles" returnvariable="response">
-				<cfif isDefined("arguments.search_text")>
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getAllAreasFiles" argumentcollection="#arguments#" returnvariable="response">
+				<cfinvokeargument name="with_area" value="true">
+				<!---<cfif isDefined("arguments.search_text")>
 				<cfinvokeargument name="search_text" value="#arguments.search_text#">
 				</cfif>
 				<cfif isDefined("arguments.user_in_charge")>
@@ -656,13 +657,12 @@
 				<cfif isDefined("arguments.limit")>
 				<cfinvokeargument name="limit" value="#arguments.limit#">
 				</cfif>
-				<cfinvokeargument name="with_area" value="true">
 				<cfif isDefined("arguments.from_date")>
 				<cfinvokeargument name="from_date" value="#arguments.from_date#">
 				</cfif>
 				<cfif isDefined("arguments.end_date")>
 				<cfinvokeargument name="end_date" value="#arguments.end_date#">
-				</cfif>				
+				</cfif>--->				
 			</cfinvoke>	
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">

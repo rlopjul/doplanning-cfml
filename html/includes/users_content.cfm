@@ -72,16 +72,14 @@
 <!---<cfif all_users IS true>--->
 <cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">	
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
 
 <cfelse>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaMembers" returnvariable="xmlResponse">	
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaMembers" returnvariable="usersResponse">	
 		<cfinvokeargument name="area_id" value="#area_id#">
-		<!---<cfinvokeargument name="order_by" value="#order_by#">
-		<cfinvokeargument name="order_type" value="#order_type#">--->
 	</cfinvoke>
 	
 </cfif>

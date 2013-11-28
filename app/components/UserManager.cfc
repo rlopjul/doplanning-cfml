@@ -1022,13 +1022,6 @@
 			
 			<cfif getUserQuery.recordCount GT 0>
 				
-				<!--- 
-				<cfif SESSION.client_administrator NEQ user_id><!---The user is not the organization administrator--->
-					<cfset error_code = 206>
-				
-					<cfthrow errorcode="#error_code#">
-				</cfif> --->	
-				
 				<cfquery name="beginQuery" datasource="#client_dsn#">		
 					BEGIN;		
 				</cfquery>
@@ -1079,6 +1072,12 @@
 						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 						<cfinvokeargument name="itemTypeId" value="4">
 					</cfinvoke>
+
+					<!--- -----------------DELETE USER IMAGES------------------------- --->
+					<cfinvoke component="AreaItemManager" method="deleteUserItems">
+						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
+						<cfinvokeargument name="itemTypeId" value="9">
+					</cfinvoke>
 				
 				</cfif>
 				
@@ -1112,8 +1111,46 @@
 					</cfinvoke>
 				
 				</cfif>	
+
+				<cfif APPLICATION.modulePubMedComments IS true>
 				
-				<!---DELETE USERS FOLDERS AND FILES--->
+					<!--- -----------------DELETE USER PUBMEDS------------------------- --->
+					<cfinvoke component="AreaItemManager" method="deleteUserItems">
+						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
+						<cfinvokeargument name="itemTypeId" value="8">
+					</cfinvoke>
+
+				</cfif>
+
+				<!---
+
+				Esto deshabilitado porque las listas y formularios son elementos que TIENEN REGISTROS DE OTROS USUARIOS
+
+				UNA SOLUCIÓN PARA ESTO PODRÍA SER PONER EL ADMINISTRADOR GENERAL DE PROPIETARIO DE LOS ELEMENTOS QUE NO SE DEBEN ELIMINAR
+
+				<cfif APPLICATION.moduleLists IS true>
+					
+					<!--- -----------------DELETE USER LISTS------------------------- --->
+					<cfinvoke component="AreaItemManager" method="deleteUserItems">
+						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
+						<cfinvokeargument name="itemTypeId" value="11">
+					</cfinvoke>
+
+				</cfif>
+
+				<cfif APPLICATION.moduleForms IS true>
+					
+					<!--- -----------------DELETE USER FORMS------------------------- --->
+					<cfinvoke component="AreaItemManager" method="deleteUserItems">
+						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
+						<cfinvokeargument name="itemTypeId" value="12">
+					</cfinvoke>
+
+				</cfif>
+
+				--->					
+				
+				<!---DELETE USER FOLDERS AND FILES--->
 				<cfinvoke component="FolderManager" method="deleteFolder" returnvariable="deleteFolderResult">
 					<cfinvokeargument name="request" value='<request><parameters><folder id="#getUserQuery.root_folder_id#"/></parameters></request>'>
 				</cfinvoke>
@@ -1135,6 +1172,35 @@
 					<cfthrow errorcode="#error_code#">
 											
 				</cfif>
+
+				<!--- DELETE USER FILES --->
+				<!---En las versiones más recientes de la aplicación los archivos ya no se añaden a un directorio del usuario--->
+				<cfquery name="filesQuery" datasource="#client_dsn#">
+					SELECT id 
+					FROM #client_abb#_files 
+					WHERE user_in_charge = <cfqueryparam value="#arguments.delete_user_id#" cfsqltype="cf_sql_integer">
+					AND status = 'ok'
+					AND file_type_id = 1;
+				</cfquery>
+
+				<cfloop query="filesQuery">
+					
+					<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
+						<cfinvokeargument name="file_id" value="#filesQuery.id#">
+					</cfinvoke>
+
+					<cfif deleteFileResult.result IS false>
+
+						<!--- RollBack the transaction --->
+						<cfquery name="rollBackTransaction" datasource="#client_dsn#">
+							ROLLBACK;
+						</cfquery>
+							
+						<cfthrow message="#deleteFileResult.message#">
+
+					</cfif>
+
+				</cfloop>
 				
 				
 				<!---DELETE USER IMAGE--->
@@ -1146,12 +1212,12 @@
 				</cfif>	
 				
 				
-				
 				<!--- ------------------DELETE OTHER FILES (PENDING/CANCELED FILES)---------------------------- --->
 				<cfquery name="otherFilesQuery" datasource="#client_dsn#">
 					DELETE
 					FROM #client_abb#_files 
-					WHERE user_in_charge = <cfqueryparam value="#getUserQuery.id#" cfsqltype="cf_sql_integer">;
+					WHERE user_in_charge = <cfqueryparam value="#getUserQuery.id#" cfsqltype="cf_sql_integer">
+					AND file_type_id = 1;
 				</cfquery>
 				
 				<!--- --------------------------------------------------------------------------------- --->
@@ -2115,7 +2181,7 @@
 			
 			<!---SEARCH--->
 			<cfif isDefined("arguments.search_text") AND len(arguments.search_text) GT 0>
-				<cfinvoke component="SearchManager" method="generateSearchText" returnvariable="search_text_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
 					<cfinvokeargument name="text" value="#arguments.search_text#">
 				</cfinvoke>
 			</cfif>
@@ -2321,7 +2387,7 @@
 			</cfif>--->
 
 			<cfif isDefined("arguments.search_text") AND len(arguments.search_text) GT 0>
-				<cfinvoke component="SearchManager" method="generateSearchText" returnvariable="search_text_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
 					<cfinvokeargument name="text" value="#arguments.search_text#">
 				</cfinvoke>
 			</cfif>

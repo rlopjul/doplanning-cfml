@@ -15,44 +15,6 @@
 	<cfset date_format = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset datetime_format = "%d-%m-%Y %H:%i:%s">
 	
-	<!----------------------------------------- generateSearchText -------------------------------------------------->
-	
-	<cffunction name="generateSearchText" access="public" output="false" returntype="string">
-		<cfargument name="text" type="string" required="yes">
-		
-		<cfset var method = "generateSearchText">
-		
-		<cfset var text_re = "">
-		
-		<cfinclude template="includes/functionStartOnlySession.cfm">
-		
-		<!---<cfset text_search = replaceList(lCase(text), "a,e,i,o,u", "[aàáäåãæâ],[eèéêë],[iìíîï],[oöôõðòóø],[uüûùú]"))>--->
-		
-		<cfset text_re = Trim(arguments.text)><!---Remove white space from the beginning and the end--->	
-		<cfset text_re = "(#text_re#">
-		<!---<cfset text_re = ReplaceNoCase(text_re," ","|","ALL")>--->
-		<cfset text_re = ReplaceNoCase(text_re," ",".*","ALL")><!---* --> El caracter que le precede debe aparecer cero, una o más veces--->
-		
-		<!---<cfset text_re = REReplaceNoCase(text_re,"[aàáäåãæâ]","[aàáäåãæâ]+", "ALL")>--->
-		<cfset text_re = REReplaceNoCase(text_re,"[aàáäâ]","[aàáäâ]+", "ALL")>
-		<cfset text_re = REReplaceNoCase(text_re,"[eèéêë]","[eèéêë]+", "ALL")>
-		<cfset text_re = REReplaceNoCase(text_re,"[iìíîï]","[iìíîï]+", "ALL")>
-		<!---<cfset text_re = REReplaceNoCase(text_re,"[oöôõðòóø]","[oöôõðòóø]+", "ALL")>--->
-		<cfset text_re = REReplaceNoCase(text_re,"[oöôòó]","[oöôòó]+", "ALL")>
-		<cfset text_re = REReplaceNoCase(text_re,"[uüûùú]","[uüûùú]+", "ALL")>
-	
-		<cfset last_char = Right(text_re,1)>
-		<cfif last_char EQ "+">
-			<cfset text_len = len(text_re)>
-			<cfset text_re = Left(text_re,text_len-1)>		
-		</cfif>
-		
-		<cfset text_re = "#text_re#)">
-		
-		<cfreturn text_re>
-				
-	</cffunction>
-	
 	
 	<!--- ----------------------- searchFiles -------------------------------- --->
 	
@@ -111,19 +73,19 @@
 			
 			<cfif isDefined("xmlFile.file.name")>
 				<cfset name = xmlFile.file.name.xmlText>
-				<cfinvoke component="SearchManager" method="generateSearchText" returnvariable="name_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="name_re">
 					<cfinvokeargument name="text" value="#name#">
 				</cfinvoke>
 			</cfif>
 			<cfif isDefined("xmlFile.file.file_name")>
 				<cfset file_name = xmlFile.file.file_name.xmlText>
-				<cfinvoke component="SearchManager" method="generateSearchText" returnvariable="file_name_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="file_name_re">
 					<cfinvokeargument name="text" value="#file_name#">
 				</cfinvoke>
 			</cfif>
 			<cfif isDefined("xmlFile.file.description")>
 				<cfset description = xmlFile.file.description.xmlText>
-				<cfinvoke component="SearchManager" method="generateSearchText" returnvariable="description_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="description_re">
 					<cfinvokeargument name="text" value="#description#">
 				</cfinvoke>
 			</cfif>
@@ -155,7 +117,7 @@
 			
 			<cfif isDefined("xmlFile.file.xmlAttributes.file_type")>
 				<cfset file_type = xmlFile.file.xmlAttributes.file_type>
-				<cfinvoke component="SearchManager" method="generateSearchText" returnvariable="file_type_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="file_type_re">
 					<cfinvokeargument name="text" value="#file_type#">
 				</cfinvoke>		
 			</cfif>
@@ -316,13 +278,13 @@
 		
 			<cfif isDefined("xmlMessage.message.title")>
 				<cfset title = xmlMessage.message.title.xmlText>
-				<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="title_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="title_re">
 					<cfinvokeargument name="text" value="#title#">
 				</cfinvoke>
 			</cfif>
 			<cfif isDefined("xmlMessage.message.description")>
 				<cfset description = xmlMessage.message.description.xmlText>
-				<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="description_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="description_re">
 					<cfinvokeargument name="text" value="#description#">
 				</cfinvoke>
 			</cfif>
@@ -502,19 +464,19 @@
 			
 			<cfif isDefined("xmlUser.user.family_name")>
 				<cfset family_name = xmlUser.user.family_name.xmlText>
-				<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="family_name_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="family_name_re">
 					<cfinvokeargument name="text" value="#family_name#">
 				</cfinvoke>
 			</cfif>
 			<cfif isDefined("xmlUser.user.name")>
 				<cfset name = xmlUser.user.name.xmlText>
-				<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="name_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="name_re">
 					<cfinvokeargument name="text" value="#name#">
 				</cfinvoke>
 			</cfif>
 			<cfif isDefined("xmlUser.user.xmlAttributes.email")>
 				<cfset email = xmlUser.user.xmlAttributes.email>
-				<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="email_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="email_re">
 					<cfinvokeargument name="text" value="#email#">
 				</cfinvoke>
 			</cfif>
@@ -533,21 +495,21 @@
 			
 			<cfif isDefined("xmlUser.user.service.xmlText")>
 				<cfset service = xmlUser.user.service.xmlText>
-				<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="service_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="service_re">
 					<cfinvokeargument name="text" value="#service#">
 				</cfinvoke>
 			</cfif>
 			
 			<cfif isDefined("xmlUser.user.other_1.xmlText")>
 				<cfset other_1 = xmlUser.user.other_1.xmlText>
-				<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="other_1_re">
+				<cfinvoke component="SearchManagerSearchManager" method="generateSearchText" returnvariable="other_1_re">
 					<cfinvokeargument name="text" value="#other_1#">
 				</cfinvoke>
 			</cfif>
 			
 			<cfif isDefined("xmlUser.user.other_2.xmlText")>
 				<cfset other_2 = xmlUser.user.other_2.xmlText>
-				<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="other_2_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="other_2_re">
 					<cfinvokeargument name="text" value="#other_2#">
 				</cfinvoke>
 			</cfif>
@@ -680,7 +642,7 @@
 			
 			<cfset text = xmlRequest.request.parameters.search.text.xmlText>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="text_re">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="text_re">
 				<cfinvokeargument name="text" value="#text#">
 			</cfinvoke>
 						

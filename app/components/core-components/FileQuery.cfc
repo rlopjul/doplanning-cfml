@@ -112,9 +112,15 @@
 		<cfargument name="areas_ids" type="string" required="no">
 		<cfargument name="search_text" type="string" required="no">
 		<cfargument name="user_in_charge" type="numeric" required="no">
-		<cfargument name="limit" type="numeric" required="no">
+		<cfargument name="typology_id" type="numeric" required="false">
+		<cfargument name="name" type="string" required="false">
+		<cfargument name="file_name" type="string" required="false">
+		<cfargument name="description" type="string" required="false">
+		<cfargument name="limit" type="numeric" required="false">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+		<cfargument name="with_user" type="boolean" required="true" default="false">
 		<cfargument name="with_area" type="boolean" required="false" default="false">
+		<cfargument name="with_typology" type="boolean" required="false" default="false">
 		
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
@@ -126,77 +132,126 @@
 		<cfset var count = 0>
 		
 		<cfset var search_text_re = "">
+		<cfset var name_re = "">
+		<cfset var file_name_re = "">
+		<cfset var description_re = "">
 		
 		<cfif isDefined("arguments.search_text") AND len(arguments.search_text) GT 0>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
 				<cfinvokeargument name="text" value="#arguments.search_text#">
 			</cfinvoke>
 			
 		</cfif>
+
+		<cfif isDefined("arguments.name") AND len(arguments.name) GT 0>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="name_re">
+				<cfinvokeargument name="text" value="#arguments.name#">
+			</cfinvoke>	
+		</cfif>		
 		
-		<cfquery name="areaFilesQuery" datasource="#client_dsn#">
-			SELECT <cfif isDefined("arguments.limit")>SQL_CALC_FOUND_ROWS</cfif>
-			files.id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.name, files.file_name, files.description, files.file_type_id,
-				users.family_name, users.name AS user_name, users.image_type AS user_image_type,
-				CONCAT_WS(' ', users.family_name, users.name) AS user_full_name,
-				IF( replacement_date IS NULL, IF(association_date IS NULL, uploading_date, association_date), replacement_date ) AS last_version_date,
-				IF( a.area_id IS NULL, files.area_id, a.area_id ) AS area_id
-			<cfif arguments.parse_dates IS true>
-				, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
-				, DATE_FORMAT(files.replacement_date, '#dateTimeFormat#') AS replacement_date 
-				, DATE_FORMAT(a.association_date, '#dateTimeFormat#') AS association_date
-			<cfelse>
-				, files.uploading_date
-				, files.replacement_date
-				, a.association_date
-			</cfif>
-			<cfif arguments.with_area IS true>
-			, areas.name AS area_name
-			</cfif>
-			FROM #client_abb#_areas_files AS a
-			INNER JOIN #client_abb#_files AS files ON a.file_id = files.id
-			INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
-			<cfif arguments.with_area IS true>
-				INNER JOIN #client_abb#_areas AS areas ON a.area_id = areas.id
-			</cfif>
-			WHERE 
-			<cfif isDefined("arguments.areas_ids")>
-				a.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
-			<cfelse>
-				a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-			</cfif>
-			<cfif isDefined("arguments.user_in_charge")>
-			AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
-			</cfif>
-			<cfif len(search_text_re) GT 0><!---Search--->
-			AND (files.name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-			OR files.physical_name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-			OR files.description REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-			)
-			</cfif>
-			AND files.status = 'ok'
-			
-			<cfif isDefined("arguments.from_date")>
-			AND files.uploading_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
-			</cfif>
-			<cfif isDefined("arguments.end_date")>
-			AND files.uploading_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
-			</cfif>			
-			
-			ORDER BY last_version_date DESC
-			<cfif isDefined("arguments.limit")>
-			LIMIT #arguments.limit#
-			</cfif>;
-		</cfquery>
-		
-		<cfif isDefined("arguments.limit")>
-			<cfquery datasource="#client_dsn#" name="getCount">
-				SELECT FOUND_ROWS() AS count;
-			</cfquery>
-			<cfset count = getCount.count>
+		<cfif isDefined("arguments.file_name") AND len(arguments.file_name) GT 0>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="file_name_re">
+				<cfinvokeargument name="text" value="#arguments.file_name#">
+			</cfinvoke>	
 		</cfif>
+
+		<cfif isDefined("arguments.description") AND len(arguments.description) GT 0>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="description_re">
+				<cfinvokeargument name="text" value="#arguments.description#">
+			</cfinvoke>	
+		</cfif>			
+
+		<cftransaction>
 		
+			<cfquery name="areaFilesQuery" datasource="#client_dsn#">
+				SELECT <cfif isDefined("arguments.limit")>SQL_CALC_FOUND_ROWS</cfif>
+				files.id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.name, files.file_name, files.description, files.file_type_id,
+					IF( replacement_date IS NULL, IF(association_date IS NULL, uploading_date, association_date), replacement_date ) AS last_version_date,
+					IF( a.area_id IS NULL, files.area_id, a.area_id ) AS area_id
+				<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
+					, DATE_FORMAT(files.replacement_date, '#dateTimeFormat#') AS replacement_date 
+					, DATE_FORMAT(a.association_date, '#dateTimeFormat#') AS association_date
+				<cfelse>
+					, files.uploading_date
+					, files.replacement_date
+					, a.association_date
+				</cfif>
+				<cfif arguments.with_user IS true>
+					, users.family_name, users.name AS user_name, users.image_type AS user_image_type,
+					CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
+				</cfif>
+				<cfif arguments.with_area IS true>
+					, areas.name AS area_name
+				</cfif>
+				<cfif arguments.with_typology IS true>
+					, files.typology_id, typologies.title AS typology_title 
+				</cfif>
+				FROM #client_abb#_areas_files AS a
+				INNER JOIN #client_abb#_files AS files ON a.file_id = files.id
+				<cfif isDefined("arguments.areas_ids")>
+					AND a.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
+				<cfelse>
+					AND a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif arguments.with_user IS true>
+					INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
+				</cfif>
+				<cfif isDefined("arguments.user_in_charge")>
+					AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif arguments.with_area IS true>
+					INNER JOIN #client_abb#_areas AS areas ON a.area_id = areas.id
+				</cfif>
+				<cfif arguments.with_typology IS true>
+					INNER JOIN #client_abb#_typologies AS typologies ON files.typology_id = typologies.id
+					<cfif isDefined("arguments.typology_id")>
+						AND files.typology_id = <cfqueryparam value="#arguments.typology_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+				</cfif>
+				WHERE files.status = 'ok'
+				<cfif arguments.with_typology IS false AND isDefined("arguments.typology_id")>
+					AND files.typology_id = <cfqueryparam value="#arguments.typology_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif len(search_text_re) GT 0><!---Search--->
+				AND (files.name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
+				OR files.file_name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
+				OR files.description REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
+				)
+				</cfif>
+				<cfif len(name_re) GT 0>
+					AND	files.name REGEXP <cfqueryparam value="#name_re#" cfsqltype="cf_sql_varchar">
+				</cfif>
+				<cfif len(file_name_re) GT 0>
+					AND	files.file_name REGEXP <cfqueryparam value="#file_name_re#" cfsqltype="cf_sql_varchar">
+				</cfif>
+				<cfif len(description_re) GT 0>
+					AND	files.description REGEXP <cfqueryparam value="#description_re#" cfsqltype="cf_sql_varchar">
+				</cfif>
+				<cfif isDefined("arguments.from_date") AND len(arguments.from_date) GT 0>
+				AND ( files.uploading_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+					OR files.replacement_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#') )
+				</cfif>
+				<cfif isDefined("arguments.end_date") AND len(arguments.end_date) GT 0>
+				AND ( files.uploading_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
+					OR files.replacement_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') )
+				</cfif>			
+				
+				ORDER BY last_version_date DESC
+				<cfif isDefined("arguments.limit")>
+				LIMIT #arguments.limit#
+				</cfif>;
+			</cfquery>
+			
+			<cfif isDefined("arguments.limit")>
+				<cfquery datasource="#client_dsn#" name="getCount">
+					SELECT FOUND_ROWS() AS count;
+				</cfquery>
+				<cfset count = getCount.count>
+			</cfif>
+
+		</cftransaction>
 		
 		<!---<cfreturn areaFilesQuery>--->
 		

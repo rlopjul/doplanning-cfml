@@ -1854,7 +1854,17 @@
 									<a href="#APPLICATION.htmlPath#/go_to_link_link.cfm?#itemTypeName#=#itemsQuery.id#" style="float:left;" target="_blank" title="Visitar el enlace" onclick="event.stopPropagation()"><img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img"/></a>
 								</cfif>
 							</td>							
-							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
+							<td>
+								<cfset titleClass = "text_item">
+								<cfif itemTypeId IS 6 AND itemsQuery.done IS false><!--- Task not done --->
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/DateManager" method="createDateFromString" returnvariable="endDate">
+										<cfinvokeargument name="strDate" value="#itemsQuery.end_date#">
+									</cfinvoke>
+									<cfif dateCompare(now(), endDate, "d") IS 1>
+										<cfset titleClass = titleClass&" text_red"> 
+									</cfif>
+								</cfif>
+								<a href="#item_page_url#" class="#titleClass#">#itemsQuery.title#</a></td>
 							<td><!---Attached files--->
 								<cfif isNumeric(itemsQuery.attached_file_id)>
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
@@ -2199,7 +2209,6 @@
 					}); 
 				</script>
 				
-				
 				<cfoutput>
 				
 				<table id="listTable" class="tablesorter">
@@ -2294,7 +2303,15 @@
 								</cfif>
 								<span class="hidden">#itemTypeId#</span>								
 							</td>							
-							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
+							<td>
+								<cfset titleClass = "text_item">
+								<cfif itemTypeId IS 6 AND itemsQuery.done IS false><!--- Task not done --->
+									<cfif dateCompare(now(), itemsQuery.end_date, "d") IS 1>
+										<cfset titleClass = titleClass&" text_red"> 
+									</cfif>
+								</cfif>
+								<a href="#item_page_url#" class="#titleClass#">#itemsQuery.title#</a>
+							</td>
 							<td>
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 									<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>

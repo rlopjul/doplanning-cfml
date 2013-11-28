@@ -235,7 +235,17 @@ function confirmLockFile(value) {
 		
 		<div class="div_file_page_label"><span lang="es">Tipo de archivo:</span> <span class="text_file_page">#objectFile.file_type#</span></div>
 		
-		<div class="div_file_page_size"><div class="div_file_page_label"><span lang="es">Tamaño:</span> <span class="text_file_page">#objectFile.file_size#</span></div></div>
+
+		<cfif isNumeric(objectFile.file_size)>
+			<!---fileUrl--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="trasnformFileSize" returnvariable="file_size">
+				<cfinvokeargument name="file_size_full" value="#objectFile.file_size#">
+			</cfinvoke>
+		<cfelse>
+			<cfset file_size = objectFile.file_size>
+		</cfif>
+
+		<div class="div_file_page_size"><div class="div_file_page_label"><span lang="es">Tamaño:</span> <span class="text_file_page">#file_size#</span></div></div>
 		
 		<div class="div_file_page_label"><span lang="es">Descripción:</span></div>
 		<div class="div_file_page_description">#objectFile.description#</div>
@@ -272,7 +282,7 @@ function confirmLockFile(value) {
 
 				<cfset row = getRowResponse.row>
 
-				<div class="div_message_page_label">Tipología: <span class="text_message_page">#table.title#</span></div>
+				<div class="div_message_page_label">Tipología: <span class="text_message_page"><strong>#table.title#</strong></span></div>
 
 				<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">
 				

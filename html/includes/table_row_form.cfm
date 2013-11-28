@@ -51,16 +51,6 @@
 				return false;
 		}
 
-		function enableDatePicker(selector){
-
-			$(selector).datepicker({
-			  format: 'dd-mm-yyyy', 
-			  autoclose: true,
-			  weekStart: 1,
-			  language: 'es',
-			  todayBtn: 'linked'
-			});
-		}
 	</script>
 
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>

@@ -34,7 +34,7 @@
 				  KEY `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` (`last_update_user_id`),
 				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` FOREIGN KEY (`last_update_user_id`) REFERENCES `#client_abb#_users` (`id`),
 				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_1` FOREIGN KEY (`insert_user_id`) REFERENCES `#client_abb#_users` (`id`)
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 			</cfquery>
 			
 	</cffunction>
@@ -102,10 +102,20 @@
 
 			<cfif getTableQuery.recordCount GT 0>
 
-				<cfif arguments.tableTypeId IS NOT 3 OR getTableQuery.general IS NOT true><!---No es tipología general--->
-					
-					<cfset area_id = getTableQuery.area_id>
+				<cfset area_id = getTableQuery.area_id>
 
+				<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
+
+					<!--- checkTableWithInheritanceAccess --->
+					<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
+						<cfinvokeargument name="table_id" value="#arguments.table_id#">
+						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+						<cfinvokeargument name="table_area_id" value="#area_id#">
+					</cfinvoke>		
+
+				<cfelseif arguments.tableTypeId IS NOT 3 OR getTableQuery.general IS NOT true><!---No es tipología general--->
+					
 					<!---checkAreaAccess--->
 					<cfinclude template="includes/checkAreaAccess.cfm">
 
@@ -131,6 +141,38 @@
 		<cfreturn response>
 			
 	</cffunction>
+
+
+	<!--- ------------------------------------- checkTableWithInheritanceAccess -------------------------------------  --->
+	
+	<cffunction name="checkTableWithInheritanceAccess" output="false" access="public" returntype="void">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="table_area_id" type="numeric" required="true">
+
+		<cfset var method = "checkTableAccess">
+
+		<cfset var subAreasIds = "">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+		
+			<!--- Get table sub areas list --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="geSubAreasIds" returnvariable="subAreasIds">
+				<cfinvokeargument name="area_id" value="#arguments.table_area_id#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset subAreasIds = listAppend(subAreasIds, arguments.table_area_id)>
+
+			<!--- checkAreasAccess --->
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreasAccess">
+				<cfinvokeargument name="areasList" value="#subAreasIds#">
+			</cfinvoke>
+			
+	</cffunction>
+
 
 
 
@@ -183,6 +225,8 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var parentAreasIds = "">
+
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
@@ -192,61 +236,148 @@
 			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">
 			
-			<!---<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true>
+			<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
 
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getParentAreasIds" returnvariable="parentAreasIds">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="areas_list" value="#arguments.area_id#">
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
-
-
-			</cfif>--->
+			</cfif>
 				
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaTablesResult">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaTablesResult">
+				<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true>
+					<cfinvokeargument name="areas_ids" value="#parentAreasIds#">
+				<cfelse>
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
-					<cfif isDefined("arguments.user_in_charge")>
-						<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
-					</cfif>
-					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-					<cfinvokeargument name="listFormat" value="true">
-					<cfinvokeargument name="format_content" value="default">
-					<cfinvokeargument name="with_user" value="false">
-					<cfinvokeargument name="parse_dates" value="true"/>
-					<cfif isDefined("arguments.limit")>
-						<cfinvokeargument name="limit" value="#arguments.limit#">
-					</cfif>
-					<cfif isDefined("arguments.structure_available") AND arguments.structure_available IS true>
-						<cfinvokeargument name="structure_available" value="true"/>
-					</cfif>		
-					
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
+				</cfif>
+				<cfif isDefined("arguments.user_in_charge")>
+					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
+				</cfif>
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="listFormat" value="true">
+				<cfinvokeargument name="format_content" value="default">
+				<cfinvokeargument name="with_user" value="false">
+				<cfinvokeargument name="parse_dates" value="true"/>
+				<cfif isDefined("arguments.limit")>
+					<cfinvokeargument name="limit" value="#arguments.limit#">
+				</cfif>
+				<cfif isDefined("arguments.structure_available") AND arguments.structure_available IS true>
+					<cfinvokeargument name="structure_available" value="true"/>
+				</cfif>		
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 
-			<!---<cfelse>
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getAreaTablesInherited" returnvariable="getAreaTablesResult">
-					<cfinvokeargument name="area_id" value="#arguments.area_id#">
-					<cfif isDefined("arguments.user_in_charge")>
-						<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
-					</cfif>
-					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeid#">
-					<cfinvokeargument name="format_content" value="default">
-					<cfinvokeargument name="with_user" value="false">
-					<cfinvokeargument name="parse_dates" value="true"/>
-					<cfif isDefined("arguments.limit")>
-						<cfinvokeargument name="limit" value="#arguments.limit#">
-					</cfif>
-					<cfif isDefined("arguments.structure_available") AND arguments.structure_available IS true>
-						<cfinvokeargument name="structure_available" value="true"/>
-					</cfif>		
-					
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
-
-			</cfif>--->
-						
 			<cfset areaTablesQuery = getAreaTablesResult.query>
 
 			<cfset response = {result=true, areaTables=#areaTablesQuery#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+	<!--- ------------------------------------- getAllAreasTables -------------------------------------  --->
+	
+	<cffunction name="getAllAreasTypologies" output="false" access="public" returntype="struct">
+		<!---<cfargument name="search_text" type="string" required="no">
+		<cfargument name="user_in_charge" type="numeric" required="false">
+		<cfargument name="format_content" type="string" required="no" default="default">
+		<cfargument name="with_area" type="boolean" required="no" default="false">
+		<cfargument name="limit" type="numeric" required="false">
+		<cfargument name="from_date" type="string" required="no">
+		<cfargument name="end_date" type="string" required="no">
+
+		<cfargument name="structure_available" type="boolean" required="false">--->
+
+
+		<cfset var method = "getAreaTables">
+
+		<cfset var response = structNew()>
+
+		<!---<cfset var tableTypeId = 3>--->
+		<cfset var user_areas_ids = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="user_areas_ids">
+				<cfinvokeargument name="get_user_id" value="#user_id#">
+			</cfinvoke>
+
+			<!--- 
+			<cfif APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante ---> --->
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
+					<cfinvokeargument name="areas_ids" value="#user_areas_ids#">
+					<cfinvokeargument name="parse_dates" value="false">
+					<cfinvokeargument name="with_user" value="false">
+					<cfinvokeargument name="with_area" value="false">
+					<cfinvokeargument name="with_typology" value="true">		
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset filesQuery = getAreaFilesResult.query>
+
+				<cfquery dbtype="query" name="typologiesQuery">
+					SELECT DISTINCT typology_id AS id, typology_title AS title
+					FROM filesQuery
+					ORDER BY title ASC;
+				</cfquery>
+
+				<cfset response = {result=true, query=#typologiesQuery#}>
+
+			<!---
+			<cfelse>
+				<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+					<cfinvokeargument name="areas_ids" value="#user_areas_ids#">
+					<!---<cfif isDefined("arguments.search_text")>
+						<cfinvokeargument name="search_text" value="#arguments.search_text#">
+					</cfif>
+					<cfif isDefined("arguments.user_in_charge")>
+						<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
+					</cfif>--->
+					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+					<cfinvokeargument name="listFormat" value="true">
+					<cfinvokeargument name="format_content" value="default">
+					<cfinvokeargument name="with_user" value="true">
+					<!---<cfinvokeargument name="with_area" value="#arguments.with_area#">--->
+					<cfinvokeargument name="parse_dates" value="true"/>
+					<!---<cfif isDefined("arguments.limit")>
+					<cfinvokeargument name="limit" value="#arguments.limit#">
+					</cfif>
+					<cfif isDefined("arguments.from_date")>
+					<cfinvokeargument name="from_date" value="#arguments.from_date#">
+					</cfif>
+					<cfif isDefined("arguments.end_date")>
+					<cfinvokeargument name="end_date" value="#arguments.end_date#">
+					</cfif>--->
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+
+				<cfset response = {result=true, query=#getAreaItemsResult.query#}>
+
+			</cfif>--->
 		
 			<cfcatch>
 
@@ -329,11 +460,22 @@
 			</cfinvoke>
 
 			<cfif getTableFieldsQuery.recordCount GT 0>
-				<cfif getTableFieldsQuery.structure_available IS false AND getTableFieldsQuery.general IS false>
 
-					<cfset area_id = getTableFieldsQuery.area_id>
+				<cfset area_id = getTableFieldsQuery.area_id>
 
-					<!---checkAreaAccess--->
+				<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
+
+					<!--- checkTableWithInheritanceAccess --->
+					<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
+						<cfinvokeargument name="table_id" value="#arguments.table_id#">
+						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+						<cfinvokeargument name="table_area_id" value="#area_id#">
+					</cfinvoke>					
+
+				<cfelseif getTableFieldsQuery.structure_available IS false AND getTableFieldsQuery.general IS false>
+
+					<!--- checkAreaAccess --->
 					<cfinclude template="includes/checkAreaAccess.cfm">
 
 				</cfif>
@@ -364,19 +506,11 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-	
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="getTableRowsQuery">
+				
+			<cfinvoke component="RowManager" method="getTableRows" returnvariable="response">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<!---<cfinvokeargument name="parse_dates" value="false"/>--->
-				
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-
-			<cfset response = {result=true, tableRows=getTableRowsQuery}>
 								
 			<cfcatch>
 
@@ -401,9 +535,35 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var area_id = "">
+
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="parse_dates" value="false">		
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif tableQuery.recordCount IS 0><!---Item does not exist--->
+			
+				<cfset error_code = 501>
+			
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cfset area_id = tableQuery.area_id>
+
+			<!---checkAreaResponsibleAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
 	
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTableUsers" returnvariable="getTableUsersQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
@@ -464,19 +624,35 @@
 
 			<cfset table = getTableResponse.table>
 
-			<cfif table.area_id IS arguments.area_id OR table.general IS true>
+			<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
 
-				<cfquery datasource="#client_dsn#" name="setAreaDefaultTable">
-					UPDATE #client_abb#_areas
-					SET default_#tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-					WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+				<!--- Get table sub areas list --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="geSubAreasIds" returnvariable="subAreasIds">
+					<cfinvokeargument name="area_id" value="#table.area_id#">
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
-			<cfelse>
+				<cfset subAreasIds = listAppend(subAreasIds, table.area_id)>
+
+				<cfif listFind(subAreasIds, arguments.area_id) IS 0>
+					
+					<cfthrow message="Tabla no disponible en esta área">
+
+				</cfif>
+
+			<cfelseif table.area_id NEQ arguments.area_id AND table.general IS false>
 
 				<cfthrow message="Tabla no disponible en esta área">
 
 			</cfif>
+
+			<cfquery datasource="#client_dsn#" name="setAreaDefaultTable">
+				UPDATE #client_abb#_areas
+				SET default_#tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
 		
 			<cfinclude template="includes/logRecord.cfm">
 

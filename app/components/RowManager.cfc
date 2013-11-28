@@ -27,23 +27,33 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-
-			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="parse_dates" value="false">		
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
+
+			<cfif tableQuery.recordCount IS 0><!---Item does not exist--->
 			
-			<cfif getTableResponse.result IS false>
-				<cfreturn getTableResponse>
+				<cfset error_code = 501>
+			
+				<cfthrow errorcode="#error_code#">
+
 			</cfif>
 
-			<cfset table = getTableResponse.table>
+			<cfif arguments.tableTypeId IS 2 AND arguments.action EQ "modify"><!--- Modify Form --->
+				<cfthrow message="No se puede modificar un registro de #tableTypeNameEs#">				
+			</cfif>
 
 			<!---canUserModifyRow--->
 			<cfinvoke component="RowManager" method="canUserModifyRow" returnvariable="canUserModifyRow">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="table" value="#table#">
+				<cfinvokeargument name="table" value="#tableQuery#">
 			</cfinvoke>
 			<cfif canUserModifyRow IS false>
 				<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">
@@ -92,14 +102,22 @@
 
 		<cfset var method = "canUserModifyRow">
 
-		<cfset var area_id = "">
+		<cfset var area_id = table.area_id>
 
 		<cfinclude template="includes/functionStartOnlySession.cfm">
+		
+		<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
 
-		<cfif arguments.tableTypeId NEQ 3 OR arguments.table.general IS NOT true><!---IS NOT typology OR IS NOT general typology--->
+			<!--- checkTableWithInheritanceAccess --->
+			<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 
-			<cfset area_id = table.area_id>
+				<cfinvokeargument name="table_area_id" value="#area_id#">
+			</cfinvoke>		
 
+		<cfelseif arguments.tableTypeId IS NOT 3 OR arguments.table.general IS NOT true><!---IS NOT typology OR IS NOT general typology--->
+			
 			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">
 
@@ -174,31 +192,52 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var area_id = "">
+
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="parse_dates" value="false">		
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
+
+			<cfif tableQuery.recordCount IS 0><!---Item does not exist--->
 			
-			<cfif getTableResponse.result IS false>
-				<cfreturn getTableResponse>
+				<cfset error_code = 501>
+			
+				<cfthrow errorcode="#error_code#">
+
 			</cfif>
 
-			<cfset table = getTableResponse.table>
+			<cfif arguments.tableTypeId IS 2><!--- Form --->
 
-			<!---canUserModifyRow--->
-			<cfinvoke component="RowManager" method="canUserModifyRow" returnvariable="canUserModifyRow">
-				<cfinvokeargument name="table_id" value="#table_id#">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-				<cfinvokeargument name="table" value="#table#">
-			</cfinvoke>
-			<cfif canUserModifyRow IS false>
-				<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">
+				<cfset area_id = tableQuery.area_id>
+				
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+			<cfelse>
+
+				<!---canUserModifyRow--->
+				<cfinvoke component="RowManager" method="canUserModifyRow" returnvariable="canUserModifyRow">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="table" value="#tableQuery#">
+				</cfinvoke>
+				<cfif canUserModifyRow IS false>
+					<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">
+				</cfif>
+
 			</cfif>
 
 			<!--- getRow --->
@@ -295,7 +334,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="false">
 
-		<cfset var method = "getRow">
+		<cfset var method = "getTableRows">
 
 		<cfset var response = structNew()>
 
@@ -307,6 +346,7 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
+			<!---checkAreaAccess in getTable--->
 			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
@@ -318,23 +358,18 @@
 
 			<cfset table = getTableResponse.table>
 
-			<cfset area_id = table.area_id>
-
-			<!---checkAreaAccess--->
-			<cfinclude template="includes/checkAreaAccess.cfm">
-
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="getRowsQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfif isDefined("arguments.row_id")>
 				<cfinvokeargument name="row_id" value="#arguments.row_id#">
 				</cfif>
-				<!---<cfinvokeargument name="parse_dates" value="true"/>--->
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 			
-			<cfif getRowsQuery.recordCount GT 0>
+			<cfif getRowsQuery.recordCount GT 0 OR NOT isDefined("arguments.row_id")>
 
 				<cfset response = {result=true, rows=#getRowsQuery#, table=#table#}>
 
@@ -345,6 +380,65 @@
 				<cfthrow errorcode="#error_code#">
 
 			</cfif>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+	<!--- ------------------------------------- getTableRowsSearch -------------------------------------  --->
+	
+	<cffunction name="getTypologiesRowsSearch" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfargument name="name" type="string" required="false">
+		<cfargument name="file_name" type="string" required="false">
+		<cfargument name="description" type="string" required="false">
+		<cfargument name="user_in_charge" type="string" required="no">
+		<cfargument name="limit" type="numeric" required="true">
+
+		<cfargument name="areas_ids" type="string" required="true">
+
+		<cfset var method = "getTypologiesRowsSearch">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<!---checkAreaAccess in getTable--->
+			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+			
+			<cfif getTableResponse.result IS false>
+				<cfreturn getTableResponse>
+			</cfif>
+
+			<cfset table = getTableResponse.table>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTypologiesRowsSearch" argumentcollection="#arguments#" returnvariable="getRowsQuery">
+				<cfinvokeargument name="with_files" value="true">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfset response = {result=true, rows=#getRowsQuery.query#, table=#table#}>
 		
 			<cfcatch>
 
@@ -477,6 +571,7 @@
 		<cfargument name="emptyRow" type="query" required="true">
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="withDefaultValues" type="boolean" required="false">
 
 		<cfset var method = "fillEmptyRow">
 
@@ -488,6 +583,7 @@
 				<cfinvokeargument name="emptyRow" value="#arguments.emptyRow#">
 				<cfinvokeargument name="fields" value="#arguments.fields#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="withDefaultValues" value="#arguments.withDefaultValues#">
 			</cfinvoke>
 
 			<cfset response = {result=true, row=#emptyRow#}>

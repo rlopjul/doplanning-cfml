@@ -55,21 +55,22 @@
 
 
 <!---checkListPermissions--->
-<cfset table_edit_permission = true>
+<cfset table_edit_permission = false>
 
 <cfif is_user_area_responsible IS false>
 	
 	<cfif tableTypeId IS 1 AND APPLICATION.moduleListsWithPermissions IS true><!---IS List and list permissions is enabled--->
-
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="isUserInTable" returnvariable="isUserInTable">
 			<cfinvokeargument name="table_id" value="#table_id#">
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 		</cfinvoke>	
 
-		<cfif isUserInTable IS false>
-			<cfset table_edit_permission = false>
+		<cfif isUserInTable IS true>
+			<cfset table_edit_permission = true>
 		</cfif>
 
+	<cfelseif tableTypeId IS NOT 2><!--- IS NOT Form --->
+		<cfset table_edit_permission = true>
 	</cfif>
 
 </cfif>
@@ -78,7 +79,10 @@
 <div class="div_elements_menu"><!---div_elements_menu--->
 	
 	<cfif is_user_area_responsible OR table_edit_permission IS true>
-		<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-small btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+
+		<cfif tableTypeId IS NOT 2><!--- IS NOT Form --->
+			<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-small btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+		</cfif>
 		
 		<a href="#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowRemote&table_id=#table_id#&row_id=#row_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteRow();" title="Eliminar registro" class="btn btn-danger btn-small"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 	</cfif>
