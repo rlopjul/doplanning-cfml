@@ -43,9 +43,9 @@
 					<cfif len(objectFile.file_size_full) GT 0>
 						file_size_full="#objectFile.file_size_full#"
 					</cfif>
-					<cfif len(objectFile.file_size_kb) GT 0>
+					<!---<cfif len(objectFile.file_size_kb) GT 0>
 						file_size_kb="#objectFile.file_size_kb#"
-					</cfif>
+					</cfif>--->
 					<cfif len(objectFile.file_size) GT 0>
 						file_size="#objectFile.file_size#"
 					</cfif>
@@ -241,6 +241,13 @@
 			<!---file_size in kilobytes or megabytes--->
 			<cfif NOT isDefined("file_size_full") AND len("#file_size#") GT 0>
 				<cfset file_size_full = file_size><!---file_size_full is the file_size from database without parse to kilobytes--->
+				
+				<!---fileUrl--->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="trasnformFileSize" returnvariable="file_size">
+					<cfinvokeargument name="file_size_full" value="#file_size_full#">
+				</cfinvoke>
+
+				<!---
 				<!---Get the file size in KB--->
 				<cfset file_size_kb = Fix(file_size/1024)>
 				<cfif file_size_kb IS 0>
@@ -260,10 +267,10 @@
 					
 					<cfset file_size = file_size&" MB">
 					
-				</cfif>
+				</cfif>--->
 			<cfelse>
 				<cfset file_size_full = "">
-				<cfset file_size_kb = "">
+				<!--- <cfset file_size_kb = ""> --->
 			</cfif>
 					
 			<cfset object = {
@@ -271,7 +278,7 @@
 				physical_name="#physical_name#",
 				user_in_charge="#user_in_charge#",
 				file_size_full="#file_size_full#",
-				file_size_kb="#file_size_kb#",
+				<!--- file_size_kb="#file_size_kb#", --->
 				file_size="#file_size#",
 				file_type="#file_type#",
 				uploading_date="#uploading_date#",
@@ -364,10 +371,91 @@
 	</cffunction>
 
 
+	<!--- ----------------------- DELETE AREA FILES -------------------------------- --->
+	
+	<cffunction name="deleteAreaFiles" returntype="struct" access="package">
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfset var response = structNew()>
+
+		<cfset var cur_file_id = "">
+
+		<cftry>
+		
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinclude template="includes/checkAreaAdminAccess.cfm">
+			
+			<!--- Get files to delete --->			
+			<cfquery name="filesQuery" datasource="#client_dsn#">
+				SELECT file_id 
+				FROM #client_abb#_areas_files 
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif filesQuery.recordCount GT 0>
+			
+				<cfloop query="filesQuery">
+
+					<cfset cur_file_id = filesQuery.file_id>
+
+					<cfquery name="fileAreasQuery" datasource="#client_dsn#">
+						SELECT area_id 
+						FROM #client_abb#_areas_files
+						WHERE file_id = <cfqueryparam value="#cur_file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+					
+					<cfif fileAreasQuery.recordCount IS 1><!--- The file is only in 1 area --->
+
+						<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
+							<cfinvokeargument name="file_id" value="#cur_file_id#">
+							<cfinvokeargument name="area_id" value="#arguments.area_id#">
+						</cfinvoke>
+
+						<cfif deleteFileResult.result IS false>
+							
+							<cfreturn deleteFileResult>
+
+						</cfif>
+
+					<cfelse>
+
+						<cfinvoke component="FileManager" method="dissociateFile" returnvariable="dissociateFileResult">
+							<cfinvokeargument name="file_id" value="#cur_file_id#">
+							<cfinvokeargument name="area_id" value="#arguments.area_id#">
+						</cfinvoke>
+
+						<cfif dissociateFileResult.result IS false>
+							
+							<cfreturn dissociateFileResult>
+
+						</cfif>
+						
+					</cfif>
+
+				</cfloop>
+				
+			</cfif>
+
+			<cfset response = {result=true, area_id=#arguments.area_id#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
 	<!--- ----------------------- DELETE FILE -------------------------------- --->
 	
 	<cffunction name="deleteFile" returntype="struct" output="false" access="public">		
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
 		
 		<cfset var method = "deleteFile">
 		
@@ -389,15 +477,10 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<!---<cfquery name="getFileQuery" datasource="#client_dsn#">				
-				SELECT physical_name, file_size, user_in_charge, status, typology_id, typology_row_id, file_type_id, area_id, locked
-				FROM #client_abb#_files
-				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>--->
-
 			<cfif getFileQuery.recordCount GT 0>
 
-				<cfif getFileQuery.file_type_id IS 2><!---Area file--->
+				<!---checkAccess--->
+				<cfif getFileQuery.file_type_id IS 2><!---Area file (all area users can delete the file)--->
 					
 					<cfset area_id = getFileQuery.area_id>
 
@@ -405,11 +488,22 @@
 					<cfinclude template="includes/checkAreaAccess.cfm">
 
 				<cfelse><!--- User file --->
-
-					<!---checkAccess--->
+			
 					<cfif getFileQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
-						<cfinclude template="includes/checkAdminAccess.cfm">
-					</cfif>					
+
+						<cfif isDefined("arguments.area_id")>
+						
+							<cfset area_id = arguments.area_id>
+
+							<cfinclude template="includes/checkAreaAdminAccess.cfm">
+
+						<cfelse>
+
+							<cfinclude template="includes/checkAdminAccess.cfm">
+
+						</cfif>
+
+					</cfif>			
 
 				</cfif>
 
@@ -443,7 +537,7 @@
 
 						</cfif>
 
-						<!--- Delete association area --->
+						<!--- Delete association areas --->
 						<cfquery name="deleteAssociationAreaQuery" datasource="#client_dsn#">
 							DELETE 
 							FROM #client_abb#_areas_files
@@ -1626,8 +1720,7 @@
 							<cfif itemTypeId IS NOT 1>OR attached_image_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer"></cfif>)
 							<cfif isDefined("arguments.item_id")>
 							AND items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
-							</cfif>
-							;
+							</cfif>;
 						</cfquery>
 						
 					
@@ -1765,35 +1858,6 @@
 		<cfreturn response>
 			
 	</cffunction>
-	<!---  -------------------------------------------------------------------------------- --->
-
-
-	<!--- ----------------------------------- getFileLocks ----------------------------------  --->
-	
-	<!---<cffunction name="getFileLocks" output="false" access="public" returntype="struct">
-		<cfargument name="file_id" type="numeric" required="true">
-
-		<cfset var method = "getFileLocks">
-
-		<cfset var response = structNew()>
-		
-		<cftry>
-			
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-		
-			
-			<cfset response = {result=true, file=#file#}>
-
-			<cfcatch>
-
-				<cfinclude template="includes/errorHandlerStruct.cfm">
-
-			</cfcatch>
-		</cftry>
-
-		<cfreturn response>
-			
-	</cffunction>--->
 	<!---  -------------------------------------------------------------------------------- --->
 
 	
@@ -2282,134 +2346,6 @@
 	</cffunction>
 	
 	
-	<!--- ----------------------- getReplaceFileStatus -------------------------------- --->
-	
-	<!---Devuelve el campo status del archivo en la base de datos, que representa el estado de la subida del archivo al servidor. Si el archivo tiene el status ok, devuelve sus datos--->
-	
-	<!---
-	request:
-	<request>
-		<parameters>
-			<file id=""/>
-		</parameters>
-	</request>
-	response:
-	<response component="FileManager" method="getFileStatus" status="ok">
-		<result>
-			<file id="" status="pending/uploading/ok/error"/>	
-		</result>
-	</response>
-	--->
-	
-	
-	<!---
-	<cffunction name="getReplaceFileStatus" returntype="string" output="false" access="public">		
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "getReplaceFileStatus">
-		
-		<cfset var file_id = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
-		<cftry>
-			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
-
-			
-			<cfquery datasource="#client_dsn#" name="getFile">				
-				SELECT files.status_replacement, files.id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.uploading_date, files.replacement_date, files.name, files.file_name, files.description, users.name AS user_name, users.family_name AS family_name
-				FROM #client_abb#_files AS files,
-				#client_abb#_users AS users
-				WHERE files.id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">
-				AND files.user_in_charge = users.id;
-			</cfquery>
-			
-			<cfif getFile.recordCount GT 0>
-				
-				<!---En la base de datos si status_replacement está definido y no es "ok"
-				significa que se ha solicitado reeplazar ese archivo
-				Si es "pending" está pendiente de ser subido, y si es "uploaded" se ha subido,
-				pero no se ha notificado el reemplazo--->
-				
-				<cfif getFile.status_replacement EQ "ok" OR getFile.status_replacement EQ "uploaded"><!---El estado uploaded indica que se ha subido el archivo pero que no se ha notificado de reemplazo--->
-					
-					<!---Aquí hay que poner user_full_name para pasarlo a AlerManager--->
-					<cfinvoke component="FileManager" method="objectFile" returnvariable="objectFile">
-						<cfinvokeargument name="id" value="#getFile.id#">
-						<cfinvokeargument name="physical_name" value="#getFile.physical_name#">		
-						<cfinvokeargument name="user_in_charge" value="#getFile.user_in_charge#">		
-						<cfinvokeargument name="file_size" value="#getFile.file_size#">
-						<cfinvokeargument name="file_type" value="#getFile.file_type#">
-						<cfinvokeargument name="uploading_date" value="#getFile.uploading_date#">
-						<cfinvokeargument name="replacement_date" value="#getFile.replacement_date#">
-						<cfinvokeargument name="name" value="#getFile.name#">
-						<cfinvokeargument name="file_name" value="#getFile.file_name#">
-						<cfinvokeargument name="description" value="#getFile.description#">
-						<cfinvokeargument name="status" value="ok">
-						<cfinvokeargument name="user_full_name" value="#getFile.family_name# #getFile.user_name#">
-						
-						<cfinvokeargument name="return_type" value="object">
-					</cfinvoke>
-					
-					<!---<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">
-						<cfinvokeargument name="get_file_id" value="#file_id#">
-						<cfinvokeargument name="return_type" value="object">
-					</cfinvoke>--->
-					
-					
-					<cfif getFile.status_replacement EQ "uploaded">
-						<cfinvoke component="AlertManager" method="replaceFile">
-							<cfinvokeargument name="objectFile" value="#objectFile#">
-						</cfinvoke>
-						<cfquery datasource="#client_dsn#" name="updateFileStatus">				
-							UPDATE #client_abb#_files
-							SET status_replacement = 'ok'
-							WHERE id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
-					</cfif>	
-					
-					
-					<cfinvoke component="FileManager" method="xmlFile" returnvariable="xmlResult">						
-						<cfinvokeargument name="objectFile" value="#objectFile#">
-					</cfinvoke>
-				
-				
-				<cfelse>
-					
-					<cfset xmlResult = '<file id="#file_id#" status="#getFile.status_replacement#" />'>
-					
-				</cfif>
-				
-				
-				<cfset xmlResponseContent = xmlResult>
-				
-				<cfinclude template="includes/functionEndNoLog.cfm">
-			
-			<cfelse><!---The file does not exist (is not found)--->
-				
-				<cfset xmlResponseContent = arguments.request>
-				<cfset error_code = 601>
-				
-				<cfthrow errorcode="#error_code#">
-							
-			</cfif>		
-		
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn xmlResponse>		
-		
-	</cffunction>--->
-	
-	
-	
 	<!--- ----------------------- getImageFileStatus -------------------------------- --->
 	
 	<!---Devuelve el campo status del archivo en la base de datos, que representa el estado de la subida del archivo al servidor. Si el archivo tiene el status ok, devuelve sus datos.
@@ -2559,6 +2495,7 @@
 	--->
 	
 	
+	<!---
 	<cffunction name="cancelUserFileUpload" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		
@@ -2593,7 +2530,6 @@
 					<cfelseif len(getFileStatus.status_replacement) IS 0><!---Se ha subido un nuevo archivo--->
 						<!---deleteFile--->
 						<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-							<!---<cfinvokeargument name="request" value='<request><parameters><file id="#file_id#"/></parameters></request>'>--->
 							<cfinvokeargument name="file_id" value="#file_id#">
 						</cfinvoke>
 						<cfif resultDeleteFile.result IS false>
@@ -2631,7 +2567,7 @@
 		
 		<cfreturn xmlResponse>		
 		
-	</cffunction>
+	</cffunction>--->
 	
 	
 	<!--- ----------------------- cancelImageFileUpload -------------------------------- --->
@@ -2655,10 +2591,11 @@
 	--->
 	
 	
+	<!---
 	<cffunction name="cancelImageFileUpload" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		
-		<cfset var method = "cancelUserFileUpload">
+		<cfset var method = "cancelImageFileUpload">
 		
 		<cfset var file_id = "">
 		<cfset var type = "">
@@ -2734,7 +2671,7 @@
 		
 		<cfreturn xmlResponse>		
 		
-	</cffunction>
+	</cffunction>--->
 
 
 
@@ -2917,6 +2854,7 @@
 	--->
 	
 	
+	<!---
 	<cffunction name="createUserFileTicket" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		<!---Este parametro se le pasa cuando se adjunta un archivo a un mensaje, que primero se crea el mensaje y luego se sube--->
@@ -3057,7 +2995,7 @@
 		
 		<cfreturn xmlResponse>		
 		
-	</cffunction>
+	</cffunction>--->
 	
 	
 	
@@ -3085,6 +3023,7 @@
 	--->
 	
 	
+	<!---
 	<cffunction name="createUserReplaceFileTicket" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		<!---Este parametro se le pasa cuando se adjunta un archivo a un mensaje, que primero se crea el mensaje y luego se sube--->
@@ -3122,7 +3061,7 @@
 		
 		<cfreturn xmlResponse>		
 		
-	</cffunction>
+	</cffunction>--->
 	
 	
 		
@@ -3253,13 +3192,20 @@
 		<cfargument name="user_in_charge" type="numeric" required="no">
 		<cfargument name="format_content" type="string" required="no" default="default">
 		<cfargument name="with_area" type="boolean" required="no" default="false">
+
+		<cfargument name="name" type="string" required="false">
+		<cfargument name="file_name" type="string" required="false">
+		<cfargument name="description" type="string" required="false">
 		<cfargument name="limit" type="numeric" required="no">
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
+		<cfargument name="typology_id" type="string" required="false">
 		
 		<cfset var method = "getAllAreasFiles">
 
 		<cfset var response = structNew()>
+
+		<cfset var user_areas_ids = "">
 
 		<cftry>
 				
@@ -3268,38 +3214,62 @@
 			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="user_areas_ids">
 				<cfinvokeargument name="get_user_id" value="#user_id#">
 			</cfinvoke>
-			
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
-				<cfinvokeargument name="areas_ids" value="#user_areas_ids#">
-				<cfinvokeargument name="parse_dates" value="true">
-				<cfif isDefined("arguments.search_text")>
-					<cfinvokeargument name="search_text" value="#arguments.search_text#">
-				</cfif>
-				<cfif isDefined("arguments.user_in_charge")>
-					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
-				</cfif>
-				<cfinvokeargument name="with_user" value="true">
-				<cfinvokeargument name="with_area" value="#arguments.with_area#">
-				<cfif isDefined("arguments.limit")>
-				<cfinvokeargument name="limit" value="#arguments.limit#">
-				</cfif>
-				
-				<cfif isDefined("arguments.from_date")>
-				<cfinvokeargument name="from_date" value="#arguments.from_date#">
-				</cfif>
-				<cfif isDefined("arguments.end_date")>
-				<cfinvokeargument name="end_date" value="#arguments.end_date#">
-				</cfif>				
-				
-				<!---<cfif APPLICATION.moduleAreaFilesLite IS true>
-					<cfinvokeargument name="with_area_files_lite" value="true">
-				</cfif>--->
 
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
+			<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+					
+				<!--- getTypologiesRowsSearch --->
+				<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="getTypologiesRowsSearch" argumentcollection="#arguments#" returnvariable="getTableRowsResult">
+					<cfinvokeargument name="table_id" value="#arguments.typology_id#"/>
+					<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
+
+					<cfinvokeargument name="areas_ids" value="#user_areas_ids#">
+				</cfinvoke>
+
+				<cfif getTableRowsResult.result IS true>
+					<cfset response = {result=true, files=#getTableRowsResult.rows#}>
+				<cfelse>
+					<cfset response = getTableRowsResult>
+				</cfif>
+				
+			<cfelse>
 			
-			<cfset response = {result=true, files=#getAreaFilesResult.query#}>	
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
+					<cfinvokeargument name="areas_ids" value="#user_areas_ids#">
+					<cfinvokeargument name="parse_dates" value="true">
+					<cfif isDefined("arguments.search_text")>
+						<cfinvokeargument name="search_text" value="#arguments.search_text#">
+					</cfif>
+					<cfif isDefined("arguments.user_in_charge") AND isNumeric(arguments.user_in_charge)>
+						<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
+					</cfif>
+					<cfinvokeargument name="with_user" value="true">
+					<cfinvokeargument name="with_area" value="#arguments.with_area#">
+					<cfinvokeargument name="with_typology" value="false">
+					<cfif isDefined("arguments.limit")>
+					<cfinvokeargument name="limit" value="#arguments.limit#">
+					</cfif>
+					
+					<cfinvokeargument name="name" value="#arguments.name#">
+					<cfinvokeargument name="file_name" value="#arguments.file_name#">
+					<cfinvokeargument name="description" value="#arguments.description#">
+					<cfif isDefined("arguments.from_date")>
+					<cfinvokeargument name="from_date" value="#arguments.from_date#">
+					</cfif>
+					<cfif isDefined("arguments.end_date")>
+					<cfinvokeargument name="end_date" value="#arguments.end_date#">
+					</cfif>				
+					
+					<!---<cfif APPLICATION.moduleAreaFilesLite IS true>
+						<cfinvokeargument name="with_area_files_lite" value="true">
+					</cfif>--->
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset response = {result=true, files=#getAreaFilesResult.query#}>
+
+			</cfif>
 
 			<!---<cfset areaFilesQuery = getAreaFilesResult.query>
 			

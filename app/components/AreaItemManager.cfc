@@ -503,7 +503,13 @@
 	<cffunction name="createDateFromString" returntype="date" output="false" access="public">
 		<cfargument name="strDate" type="string" required="yes">
 		
-		<cfset date = createDate(listGetAt(strDate,3,'-'), listGetAt(strDate,2,"-"), listGetAt(strDate,1,"-"))>
+		<!---<cfset date = createDate(listGetAt(strDate,3,'-'), listGetAt(strDate,2,"-"), listGetAt(strDate,1,"-"))>
+		<cfreturn date>--->
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/DateManager" method="createDateFromString" returnvariable="date">
+			<cfinvokeargument name="strDate" value="#arguments.strDate#">
+		</cfinvoke>
+
 		<cfreturn date>
 		
 	</cffunction>
@@ -2315,11 +2321,11 @@
 	
 	<!--- ----------------------- DELETE AREA ITEMS -------------------------------- --->
 	
-	<cffunction name="deleteAreaItems" returntype="string" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
+	<cffunction name="deleteAreaItems" returntype="void" access="package">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
 		
-		<cfinclude template="includes/functionStart.cfm">
+		<cfinclude template="includes/functionStartOnlySession.cfm">
 		
 		<cfinclude template="includes/checkAreaAdminAccess.cfm">
 		
@@ -2336,10 +2342,14 @@
 		
 			<cfloop query="itemsQuery">
 			
-				<cfinvoke component="AreaItemManager" method="deleteItem">
+				<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="deleteItemResult">
 					<cfinvokeargument name="item_id" value="#itemsQuery.id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				</cfinvoke>
+
+				<cfif deleteItemResult.result IS false>
+					<cfthrow message="#deleteItemResult.message#">
+				</cfif>
 				
 			</cfloop>
 			
@@ -2351,11 +2361,11 @@
 	
 	<!--- ----------------------- DELETE USER ITEMS -------------------------------- --->
 	
-	<cffunction name="deleteUserItems" returntype="string" access="public">
+	<cffunction name="deleteUserItems" returntype="void" access="public">
 		<cfargument name="delete_user_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		
-		<cfinclude template="includes/functionStart.cfm">
+		<cfinclude template="includes/functionStartOnlySession.cfm">
 				
 		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 		
@@ -2377,10 +2387,14 @@
 		
 			<cfloop query="userItemsQuery">
 			
-				<cfinvoke component="AreaItemManager" method="deleteItem">
+				<cfinvoke component="AreaItemManager" method="deleteItemResult">
 					<cfinvokeargument name="item_id" value="#userItemsQuery.id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				</cfinvoke>
+
+				<cfif deleteItemResult.result IS false>
+					<cfthrow message="#deleteItemResult.message#">
+				</cfif>
 				
 			</cfloop>
 			
@@ -2425,16 +2439,15 @@
 				<cfinclude template="includes/checkAreaAccess.cfm">
 				
 				<cfif getItemQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
+
+					<cfinclude template="includes/checkAreaAdminAccess.cfm">
+				
+				<cfelseif arguments.itemTypeId IS 7 AND getItemQuery.state NEQ "created"><!---Consultations--->
+					<!---Las interconsultas solo se pueden eliminar si están en estado creadas (enviadas)--->
 					<!---
 					<cfset error_code = 103><!---Access denied--->
 					<cfthrow errorcode="#error_code#">--->
-					<cfinclude template="includes/checkAreaAdminAccess.cfm">
-				</cfif>
-				
-				<cfif arguments.itemTypeId IS 7 AND getItemQuery.state NEQ "created"><!---Consultations--->
-					<!---Las interconsultas solo se pueden eliminar si están en estado creadas (enviadas)--->
-					<!---<cfset error_code = 103><!---Access denied--->
-					<cfthrow errorcode="#error_code#">--->
+
 					<!---Los administradores sí pueden borrar las interconsultas cuando borran un área--->
 					<cfinclude template="includes/checkAreaAdminAccess.cfm">
 				</cfif>
@@ -2445,6 +2458,23 @@
 					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
 						<cfinvokeargument name="area_id" value="#area_id#">
 					</cfinvoke>
+
+					<cfif itemTypeId IS 13><!--- Typology --->
+						
+						<!--- Get typology files --->			
+						<cfquery name="tableFilesQuery" datasource="#client_dsn#">
+							SELECT id 
+							FROM #client_abb#_files 
+							WHERE #itemTypeName#_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+						<cfif tableFilesQuery.recordCount GT 0>
+							
+							<cfthrow message="No se puede borrar una tipología que está usada en archivos. Debe eliminar los archivos o cambiar su tipología para poder eliminarla.">
+
+						</cfif>
+
+					</cfif>
 
 				</cfif>				
 					
@@ -2503,15 +2533,9 @@
 				<cfif getItemQuery.attached_file_id NEQ "NULL" AND getItemQuery.attached_file_id NEQ "" AND getItemQuery.attached_file_id NEQ "-1">
 				
 					<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-						<!---<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_file_id#"/></parameters></request>'>--->
 						<cfinvokeargument name="file_id" value="#getItemQuery.attached_file_id#">
+						<cfinvokeargument name="area_id" value="#area_id#">
 					</cfinvoke>
-					
-					<!---<cfxml variable="xmlResultDeleteFile">
-						<cfoutput>
-							#resultDeleteFile#
-						</cfoutput>
-					</cfxml>--->
 					
 					<cfif resultDeleteFile.result IS false><!---File delete failed--->
 						
@@ -2529,15 +2553,9 @@
 					<cfif getItemQuery.attached_image_id NEQ "NULL" AND getItemQuery.attached_image_id NEQ "" AND getItemQuery.attached_image_id NEQ "-1">
 					
 						<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteImage">
-							<!---<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_image_id#"/></parameters></request>'>--->
 							<cfinvokeargument name="file_id" value="#getItemQuery.attached_image_id#">
+							<cfinvokeargument name="area_id" value="#area_id#">
 						</cfinvoke>
-						
-						<!---<cfxml variable="xmlResultDeleteFile">
-							<cfoutput>
-								#resultDeleteFile#
-							</cfoutput>
-						</cfxml>--->
 						
 						<cfif resultDeleteImage.result IS false><!---File delete failed--->
 							
@@ -2639,15 +2657,9 @@
 				<cfif getItemQuery.attached_file_id NEQ "NULL" AND getItemQuery.attached_file_id NEQ "" AND getItemQuery.attached_file_id NEQ "-1">
 				
 					<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-						<!---<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_file_id#"/></parameters></request>'>--->
 						<cfinvokeargument name="file_id" value="#getItemQuery.attached_file_id#">
+						<cfinvokeargument name="area_id" value="#area_id#">
 					</cfinvoke>
-					
-					<!---<cfxml variable="xmlResultDeleteFile">
-						<cfoutput>
-							#resultDeleteFile#
-						</cfoutput>
-					</cfxml>--->
 					
 					<cfif resultDeleteFile. result IS false><!---File delete failed--->
 						<cfset error_code = 605>
@@ -2746,15 +2758,9 @@
 				<cfif getItemQuery.attached_image_id NEQ "NULL" AND getItemQuery.attached_image_id NEQ "" AND getItemQuery.attached_image_id NEQ "-1">
 				
 					<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-						<!---<cfinvokeargument name="request" value='<request><parameters><file id="#getItemQuery.attached_image_id#"/></parameters></request>'>--->
 						<cfinvokeargument name="file_id" value="#getItemQuery.attached_image_id#">
+						<cfinvokeargument name="area_id" value="#area_id#">
 					</cfinvoke>
-					
-					<!---<cfxml variable="xmlResultDeleteFile">
-						<cfoutput>
-							#resultDeleteFile#
-						</cfoutput>
-					</cfxml>--->
 					
 					<cfif resultDeleteFile.result IS false><!---File delete failed--->
 						<cfset error_code = 605>

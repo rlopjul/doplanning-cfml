@@ -117,3 +117,13 @@ function openPopUp(url) {
 	return false;
 }
 	
+function enableDatePicker(selector){
+
+	$(selector).datepicker({
+	  format: 'dd-mm-yyyy', 
+	  autoclose: true,
+	  weekStart: 1,
+	  language: 'es',
+	  todayBtn: 'linked'
+	});
+}

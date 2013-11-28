@@ -130,7 +130,7 @@
 			
 			<cfif isDefined("arguments.search_text") AND len(arguments.search_text) GT 0>
 			
-				<cfinvoke component="#APPLICATION.componentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
 					<cfinvokeargument name="text" value="#arguments.search_text#">
 				</cfinvoke>
 				
@@ -264,12 +264,19 @@
 					<cfelseif arguments.itemTypeId IS 4 AND NOT isDefined("arguments.areas_ids")><!---News--->
 					ORDER BY items.position DESC
 					<cfelse>--->
-					<cfif isDefined("arguments.area_id")>
-						ORDER BY items_position.position DESC, items.creation_date DESC
-					<cfelse>
-						ORDER BY items.creation_date DESC		
-					</cfif>		
-					<!---</cfif>--->
+					<cfif arguments.itemTypeId IS NOT 6>
+						<cfif isDefined("arguments.area_id")>
+							ORDER BY items_position.position DESC, items.creation_date DESC
+						<cfelse>
+							ORDER BY items.creation_date DESC		
+						</cfif>	
+					<cfelse><!--- Tasks --->
+						<cfif isDefined("arguments.area_id")>
+							ORDER BY items.end_date DESC
+						<cfelse>
+							ORDER BY items.end_date ASC
+						</cfif>		
+					</cfif>						
 					
 					<cfif isDefined("arguments.limit")>
 					LIMIT <cfif isDefined("arguments.offset")>#arguments.offset#, </cfif>#arguments.limit#
@@ -412,11 +419,11 @@
 			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, attached_file_id, NULL AS file_type_id">
 			<cfset var fileColums = "id, name, IFNULL(files.replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id, file_type_id">
 
-			<cfset var commonColumsNull = "NULL AS done">
+			<cfset var commonColumsNull = "NULL AS end_date, NULL AS done">
 
-			<cfset var eventColums = "NULL AS done">
-			<cfset var taskColums = "done">
-			<cfset var pubmedColums = "NULL AS done">
+			<cfset var eventColums = "end_date, NULL AS done">
+			<cfset var taskColums = "end_date, done">
+			<cfset var pubmedColums = "NULL AS end_date, NULL AS done">
 
 			<cfset var webColums = "attached_image_id">
 			<cfset var webColumsNull = "NULL AS attached_image_id">
@@ -430,11 +437,11 @@
 			<cfif arguments.full_content IS true>
 
 				<cfset commonColums = commonColums&", attached_file_name, link, NULL AS file_size, NULL AS file_type">
-				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS end_date, NULL AS identifier">
+				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS identifier">
 
-				<cfset eventColums = eventColums&", place, start_date, end_date, NULL AS identifier">
-				<cfset taskColums = taskColums&", NULL AS place, start_date, end_date, NULL AS identifier">
-				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, NULL AS end_date, identifier">
+				<cfset eventColums = eventColums&", place, start_date, NULL AS identifier">
+				<cfset taskColums = taskColums&", NULL AS place, start_date, NULL AS identifier">
+				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, identifier">
 
 				<cfset fileColums = fileColums&", NULL AS attached_file_name, NULL AS link, file_size, file_type">
 				

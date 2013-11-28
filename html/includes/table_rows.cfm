@@ -18,7 +18,7 @@
 	<cfinvokeargument name="table_id" value="#table_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
-<cfset tableRows = tableRowsResult.tableRows>
+<cfset tableRows = tableRowsResult.rows>
 
 <!---Table fields--->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">

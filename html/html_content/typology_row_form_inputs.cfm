@@ -7,9 +7,9 @@
 		<cfset table_id = URL.typology>
 
 		<!---Table fields--->
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="getFieldsResponse">
-			<cfinvokeargument name="table_id" value="#table_id#">
-			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableFields" returnvariable="getFieldsResponse">
+			<cfinvokeargument name="table_id" value="#table_id#"/>
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
 			<cfinvokeargument name="with_types" value="true"/>
 		</cfinvoke>
 

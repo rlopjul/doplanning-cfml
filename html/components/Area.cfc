@@ -301,7 +301,7 @@
 	
 	<cffunction name="getAreaMembers" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-		<cfargument name="order_by" type="string" required="false" default="">
+		<cfargument name="order_by" type="string" required="false" default="family_name">
 		<cfargument name="order_type" type="string" required="false" default="asc">
 		
 		<cfset var method = "getAreaMembers">

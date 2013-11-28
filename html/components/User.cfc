@@ -123,7 +123,7 @@
 	
 	<cffunction name="getUsers" returntype="struct" output="false" access="public">
 		<cfargument name="search_text" type="string" required="false" default="">
-		<cfargument name="order_by" type="string" required="false" default="">
+		<cfargument name="order_by" type="string" required="false" default="family_name">
 		<cfargument name="order_type" type="string" required="false" default="asc">
 		<cfargument name="limit" type="numeric" required="false">
 		
@@ -198,8 +198,8 @@
 	
 	<cffunction name="getAllAreaUsers" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-		<!---<cfargument name="order_by" type="string" required="false" default="">
-		<cfargument name="order_type" type="string" required="false" default="asc">--->
+		<cfargument name="order_by" type="string" required="false" default="family_name">
+		<cfargument name="order_type" type="string" required="false" default="asc">
 		
 		<cfset var method = "getAllAreaUsers">
 		
@@ -219,6 +219,8 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getAllAreaUsers" returnvariable="response">
 				<cfinvokeargument name="xmlUser" value="#xmlUser#"/>
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="order_by" value="#arguments.order_by#"/>
+				<cfinvokeargument name="order_type" value="#arguments.order_type#"/>
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -753,7 +755,7 @@
 							<!---<cfelse>
 							widgets: ['zebra','select'],
 							</cfif>--->
-							/*sortList: [[1,1]] ,*/
+							sortList: [[1,0]] ,
 							headers: { 
 								0: { 
 									sorter: false 
@@ -991,7 +993,7 @@
 							<cfelse>
 							widgets: ['zebra','select'],
 							</cfif>
-							sortList: [[2,0]] ,
+							sortList: [[1,0]] ,
 							headers: { 
 								0: { 
 									sorter: false 

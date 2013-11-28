@@ -203,6 +203,33 @@
 
 
 
+	<!--- ----------------------------------- getAllAreasTables ------------------------------------- --->
+	
+	<cffunction name="getAllAreasTypologies" returntype="struct" access="public">
+		
+		<cfset var method = "getAllAreasTables">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getAllAreasTypologies" returnvariable="response">
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
+
+
 	<!--- ---------------------------- getTablesWithStructureAvailable ---------------------------------- --->
 	
 	<cffunction name="getTablesWithStructureAvailable" returntype="struct" access="public">
@@ -637,6 +664,7 @@
 							<th style="width:20%;" lang="es">Fecha</th>
 							<th>Estructura compartida</th>
 							<cfif tableTypeId IS 3><!---Typologies--->
+							<th>De esta área</th>
 							<th>General</th>	
 							</cfif>
 							<cfif arguments.full_content IS true>
@@ -719,8 +747,9 @@
 								<span>#left(itemsQuery.creation_date, spacePos)#</span>
 								<span class="hidden">#right(itemsQuery.creation_date, len(itemsQuery.creation_date)-spacePos)#</span>
 							</td>
-							<td><cfif itemsQuery.structure_available IS true>Sí<cfelse>No</cfif></td>
+							<td><span lang="es"><cfif itemsQuery.structure_available IS true>Sí<cfelse>No</cfif></span></td>
 							<cfif tableTypeId IS 3><!---Typologies--->
+							<td><span lang="es"><cfif itemsQuery.area_id EQ arguments.area_id>Sí<cfelse>No</cfif></span></td>
 							<td><span lang="es"><cfif itemsQuery.general IS true>Sí<cfelse>No</cfif></span></td>
 							</cfif>
 

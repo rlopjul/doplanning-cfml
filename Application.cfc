@@ -8,7 +8,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_39'>
+	<cfset this.name = 'dp_beta_aws_47'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">

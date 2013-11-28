@@ -280,46 +280,52 @@
 		  </ul>
 		  
 		  <cfoutput>
-		  <div style="float:right; clear:none;">
+		  <div style="clear:none; text-align:center"><!---float:right; --->
+
+		  	<span style="line-height:35px; color:##666666; font-size:12px; font-weight:bold">#SESSION.client_name#</span>
 		  
-		  	<div style="float:right; text-align:right; clear:none;">
-				<a href="preferences.cfm" title="Preferencias del usuario" class="link_user_logged" lang="es">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
-				
-				<a href="logout.cfm" title="Cerrar sesión" class="link_user_logout" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
-	
-			</div>
-			
-			<cfif APPLICATION.identifier NEQ "vpnet">
-				<div style="float:right; padding-top:1px; padding-right:6px; width:80px; text-align:right;">
+		  	<div style="float:right">
+
+			  	<div style="float:right; text-align:right; clear:none;">
+					<a href="preferences.cfm" title="Preferencias del usuario" class="link_user_logged" lang="es">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
 					
-					<cfif objectUser.general_administrator EQ true>
-						<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-right:3px;" lang="es"/></a>
-					<cfelse>
-						<cfxml variable="areasAdminXml">
-							#objectUser.areas_administration#
-						</cfxml>
-						<cfif isDefined("areasAdminXml.areas_administration.area")>
-							<cfset nAreasAdmin = arrayLen(areasAdminXml.areas_administration.area)>
-						<cfelse>
-							<cfset nAreasAdmin = 0>
-						</cfif>
-						<cfif nAreasAdmin GT 0>
-							<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>
-						</cfif>
-					</cfif>
-				
-					<a href="preferences.cfm" title="Preferencias del usuario" lang="es">
-					<cfif len(objectUser.image_file) GT 0>
-						<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
-					<cfelse>
-						<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
-					</cfif>
-					</a>
+					<a href="logout.cfm" title="Cerrar sesión" class="link_user_logout" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+		
 				</div>
-			</cfif>
-		  
+				
+				<cfif APPLICATION.identifier NEQ "vpnet">
+					<div style="float:right; padding-top:1px; padding-right:6px; width:80px; text-align:right;">
+						
+						<cfif objectUser.general_administrator EQ true>
+							<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-right:3px;" lang="es"/></a>
+						<cfelse>
+							<cfxml variable="areasAdminXml">
+								#objectUser.areas_administration#
+							</cfxml>
+							<cfif isDefined("areasAdminXml.areas_administration.area")>
+								<cfset nAreasAdmin = arrayLen(areasAdminXml.areas_administration.area)>
+							<cfelse>
+								<cfset nAreasAdmin = 0>
+							</cfif>
+							<cfif nAreasAdmin GT 0>
+								<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>
+							</cfif>
+						</cfif>
+					
+						<a href="preferences.cfm" title="Preferencias del usuario" lang="es">
+						<cfif len(objectUser.image_file) GT 0>
+							<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
+						<cfelse>
+							<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
+						</cfif>
+						</a>
+					</div>
+				</cfif>
+			  
+			  </div>
+			  </cfoutput>
+
 		  </div>
-		  </cfoutput>
 		  
 		  <div class="tab-content" style="clear:both;">
 		  
