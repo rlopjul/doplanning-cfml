@@ -368,6 +368,7 @@
 	
 	<cffunction name="updateFile" returntype="struct" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">

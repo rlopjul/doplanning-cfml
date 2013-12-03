@@ -175,13 +175,13 @@
 
    	</cfcase>
 
-   	<cfcase value="15"><!---Area files--->
+   	<cfcase value="15"><!---Files edited--->
 
 		<cfset itemTypeName = "file">
 		<cfset itemTypeNameP = "files">
-		<cfset itemTypeTable = itemTypeNameP>
+		<cfset itemTypeTable = itemTypeNameP&"_edited">
 		
-		<cfset itemTypeNameEs = "Archivo de área">
+		<cfset itemTypeNameEs = "Archivo en edición">
 
 		<cfset itemTypeGender = "male">
 	
