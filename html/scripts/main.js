@@ -45,7 +45,7 @@ function showAlertMessage(msg, res){
 	if(res == true)
 		$("#alertContainer").attr("class", "alert alert-success");
 	else
-		$("#alertContainer").attr("class", "alert alert-error");
+		$("#alertContainer").attr("class", "alert alert-danger");
 	
 	$("#alertContainer button").after('<span>'+msg+'</span>');
 

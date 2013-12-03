@@ -541,16 +541,16 @@
 				UNION ALL
 				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 10 AS itemTypeId
 				FROM #client_abb#_files AS files
-				<!---
-				<cfif len(arguments.area_type) IS 0><!--- IS NOT WEB --->
-				LEFT JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id 
-				WHERE (files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> OR area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">) 
-					AND files.status='ok'
-				<cfelse>--->
+
 				INNER JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id 
 					AND area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
-					AND files.status='ok'
-				<!---</cfif>--->)
+					AND files.status='ok')
+				<!--- Area files --->
+				UNION ALL
+				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 10 AS itemTypeId
+				FROM #client_abb#_files_areas AS files_areas
+					AND files_areas.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND files_areas.status='ok')
 				) AS items
 				INNER JOIN #client_abb#_users AS users
 				ON items.user_in_charge = users.id

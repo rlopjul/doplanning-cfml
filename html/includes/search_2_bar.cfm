@@ -199,9 +199,9 @@
 		</cfinvoke>
 		<cfset areasTypologies = getAreaTypologiesResponse.query>	
 
-		<div class="control-group">
+		<div class="form-group">
 			<label for="typology_id">Tipología</label>
-			<select name="typology_id" id="typology_id" class="span5" onchange="loadTypology($('##typology_id').val(),'');">
+			<select name="typology_id" id="typology_id" class="col-md-5" onchange="loadTypology($('##typology_id').val(),'');">
 				<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif>>Todas</option>
 				<cfif areasTypologies.recordCount GT 0>
 					<cfloop query="#areasTypologies#">
@@ -230,19 +230,19 @@
 			<cfset file_description = "">
 		</cfif>
 
-		<div class="control-group">
+		<div class="form-group">
 			<label for="name" lang="es">Nombre</label>
-			<input type="text" name="name" id="name" value="#file_name#" class="span5">
+			<input type="text" name="name" id="name" value="#file_name#" class="col-md-5">
 		</div>
 
-		<div class="control-group">
+		<div class="form-group">
 			<label for="file_name" lang="es">Nombre físico del archivo</label>
-			<input type="text" name="file_name" id="file_name" value="#file_file_name#" class="span5">
+			<input type="text" name="file_name" id="file_name" value="#file_file_name#" class="col-md-5">
 		</div>
 
-		<div class="control-group">
+		<div class="form-group">
 			<label for="description" lang="es">Descripción</label>
-			<input type="text" name="description" id="description" value="#file_description#" class="span5">
+			<input type="text" name="description" id="description" value="#file_description#" class="col-md-5">
 		</div>
 
 		<cfif isNumeric(selected_typology_id)>
@@ -294,8 +294,8 @@
 
 	<cfelse>
 
-		<div class="input-prepend">
-		  <span class="add-on"><i class="icon-search"></i></span>
+		<div class="input-group">
+		  <span class="input-group-addon"><i class="icon-search"></i></span>
 		  <input type="text" name="text" value="#HTMLEditFormat(search_text)#" class="input-medium"/>
 		</div>&nbsp;
 
@@ -353,7 +353,7 @@
 		
 	</cfif>
 	
-	&nbsp;<label for="limit" lang="es">Nº resultados</label> <select name="limit" id="limit" class="input-small">
+	&nbsp;<label for="limit" lang="es">Nº resultados</label> <select name="limit" id="limit" class="input-sm">
 	<!---<option value="1" <cfif limit_to IS 1>selected="selected"</cfif>>1</option>--->
 	<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
 	<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>

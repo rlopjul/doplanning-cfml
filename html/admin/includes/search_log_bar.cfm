@@ -158,7 +158,7 @@
 		
 	</cfif>
 	
-	&nbsp;<label for="limit" lang="es">Nº resultados</label> <select name="limit" id="limit" class="input-small" >
+	&nbsp;<label for="limit" lang="es">Nº resultados</label> <select name="limit" id="limit" class="input-sm" >
 	<!---<option value="1" <cfif limit_to IS 1>selected="selected"</cfif>>1</option>--->
 	<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
 	<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>

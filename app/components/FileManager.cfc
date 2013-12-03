@@ -385,7 +385,9 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
-			
+
+			<!---ESTE MÉTODO HAY QUE CAMBIARLO para que pase fileTypeId y borre todos los tipos de archivos de un área--->
+
 			<!--- Get files to delete --->			
 			<cfquery name="filesQuery" datasource="#client_dsn#">
 				SELECT file_id 
@@ -409,6 +411,7 @@
 
 						<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
 							<cfinvokeargument name="file_id" value="#cur_file_id#">
+							<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 							<cfinvokeargument name="area_id" value="#arguments.area_id#">
 						</cfinvoke>
 
@@ -455,6 +458,7 @@
 	
 	<cffunction name="deleteFile" returntype="struct" output="false" access="public">		
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="false">
 		<cfargument name="area_id" type="numeric" required="false">
 		
 		<cfset var method = "deleteFile">
@@ -466,12 +470,15 @@
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 						
 			<!--- getFile --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="getFileQuery">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="with_lock" value="false">
-				<cfinvokeargument name="parse_dates" value="true">		
+				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -631,6 +638,7 @@
 	
 	<cffunction name="updateFile" returntype="struct" output="false" access="public">		
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		
@@ -644,6 +652,8 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
 			<!---checkAccess--->
 			<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">				
 				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
@@ -651,7 +661,7 @@
 				<cfinvokeargument name="return_type" value="query">
 			</cfinvoke>			
 
-			<cfif objectFile.file_type_id IS 2><!---Area file--->
+			<cfif objectFile.file_type_id IS NOT 1><!---Area file--->
 
 				<cfset area_id = objectFile.area_id>
 				
@@ -680,7 +690,7 @@
 				<!---<cftransaction> No se puede usar aquí transacción porque dentro de setFileTypology hay transacciones--->
 
 				<cfquery name="updateFileQuery" datasource="#client_dsn#">
-					UPDATE `#client_abb#_files`
+					UPDATE `#client_abb#_#fileTypeTable#`
 					SET name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
 					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">
 					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
@@ -1181,6 +1191,7 @@
 	
 	<cffunction name="changeAreaFileLock" returntype="struct" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="lock" type="boolean" required="true">
 		
 		<cfset var method = "changeAreaFileLock">
@@ -1190,9 +1201,12 @@
 		<cftry>
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 						
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="getFile">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 				<cfinvokeargument name="with_lock" value="true">
 				<cfinvokeargument name="parse_dates" value="true">		
 
@@ -1677,6 +1691,7 @@
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="selectFileQuery">
 				<cfinvokeargument name="file_id" value="#file_id#">
+				<cfinovkeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 				<cfif area_passed IS true>
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfif>
@@ -2704,24 +2719,15 @@
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 				
-			<cfif arguments.fileTypeId IS 2><!--- area_id required in fileTypeId 2 --->
+			<cfif arguments.fileTypeId IS NOT 1><!--- area_id required in fileTypeId 2 OR fileTypeId 3 --->
 				
 				<!---checkAreaAccess--->
 				<cfinclude template="includes/checkAreaAccess.cfm">
 
 			</cfif>
-
-			<!---<cfinvoke component="FileManager" method="objectFile" returnvariable="objectFile">
-				<cfinvokeargument name="name" value="#arguments.name#">
-				<cfinvokeargument name="file_name" value="#arguments.file_name#">
-				<cfinvokeargument name="file_size" value="#arguments.file_size#">
-				<!---<cfinvokeargument name="file_size_full" value="#arguments.file_size_full#">--->
-				<cfinvokeargument name="file_type" value="#arguments.file_type#">
-				<cfinvokeargument name="description" value="#arguments.description#"/>
-
-				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>--->
 			
 			<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
 			</cfinvoke>
@@ -2752,7 +2758,7 @@
 			<cftransaction>
 			
 				<cfquery name="createFileQuery" datasource="#client_dsn#" result="createFileResult">
-					INSERT INTO `#client_abb#_files`
+					INSERT INTO `#client_abb#_#fileTypeTable#`
 					SET name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
 					file_name = <cfqueryparam value="#arguments.file_name#" cfsqltype="cf_sql_varchar">,
 					user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
@@ -2762,33 +2768,38 @@
 					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_varchar">,
 					status = <cfqueryparam value="pending" cfsqltype="cf_sql_varchar">,
 					file_type_id = <cfqueryparam value="#arguments.fileTypeId#" cfsqltype="cf_sql_integer">
-					<cfif arguments.fileTypeId IS 2>
+					<cfif arguments.fileTypeId IS NOT 1>
 					, area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>;
 				</cfquery>
 
 				<cfquery name="getLastInsertId" datasource="#client_dsn#">
-					SELECT LAST_INSERT_ID() AS insert_file_id FROM #client_abb#_files;
+					SELECT LAST_INSERT_ID() AS insert_file_id FROM #client_abb#_#fileTypeTable#;
 				</cfquery>
 				<cfset file_id = getLastInsertId.insert_file_id>
-				<!---<cfset objectFile.id = getLastInsertId.insert_file_id>
-				<cfset objectFile.physical_name = objectFile.id>--->
 				
 				<cfquery name="updateFileQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_files
+					UPDATE #client_abb#_#fileTypeTable#
 					SET physical_name = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_varchar">,
 					status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 					WHERE id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
-				
-				<!---<cfif isDefined("arguments.folder_id")>			
-					<cfquery name="associateToFolderFileQuery" datasource="#client_dsn#">
-						INSERT INTO #client_abb#_folders_files					
-						VALUES(<cfqueryparam value="#arguments.folder_id#" cfsqltype="cf_sql_integer">,
-								<cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">
-							);
+
+				<cfif arguments.fileTypeId IS 3><!--- File edited version --->
+					
+					<cfquery name="createFileVersionQuery" datasource="#client_dsn#">
+						INSERT INTO `#client_abb#_#fileTypeTable#_versions`
+						SET file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">,
+						physical_name = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_varchar">,
+						file_name = <cfqueryparam value="#arguments.file_name#" cfsqltype="cf_sql_varchar">,
+						user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
+						file_size = <cfqueryparam value="#arguments.file_size#" cfsqltype="cf_sql_integer">,
+						file_type = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">,
+						uploading_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,	
+						status = <cfqueryparam value="pending" cfsqltype="cf_sql_varchar">;
 					</cfquery>
-				</cfif>--->
+
+				</cfif>
 				
 				<!--- ------------------ Update User Space Used --------------------- --->
 				<!---Esto se hace en la página donde se sube realmente el archivo--->			
@@ -3343,12 +3354,14 @@
 
 		<cfset var response = structNew()>
 
-		<!---<cfset var folder_id = "">--->
+		<cfset var destination = "#APPLICATION.filesPath#/#client_abb#/">
 		<cfset var upload_file_id = "">
 					
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 		
 			<!---Esto es para la asociación de archivos directamente desde las áreas--->
 			<!---
@@ -3357,8 +3370,8 @@
 			</cfinvoke>		
 			<cfset folder_id = root_folder_id>--->
 
-			<cfset destination = '#APPLICATION.filesPath#/#client_abb#/files/'>
-
+			<cfset destination = destination&"#fileTypeNameP#/">
+			
 			<cffile action="upload" filefield="Filedata" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
 		
 			<cfset temp_file="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">	
@@ -3373,7 +3386,6 @@
 				<cfinvokeargument name="status" value="ok">
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
-				<!---<cfinvokeargument name="folder_id" value="#folder_id#"/>--->
 			</cfinvoke>	
 
 			<cfif createFileResult.result IS true AND isDefined("createFileResult.objectFile.id") AND isNumeric(createFileResult.objectFile.id)>
@@ -3401,13 +3413,15 @@
 					</cfif>		
 
 
-					<!--- associateFileToArea --->
-					<cfinvoke component="FileManager" method="associateFileToArea">
-						<cfinvokeargument name="objectFile" value="#objectFile#"/>
-						<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
-					</cfinvoke>
+					<cfif arguments.fileTypeId IS NOT 3>
 
-					<!---<cfif arguments.fileTypeId IS 2>
+						<!--- associateFileToArea --->
+						<cfinvoke component="FileManager" method="associateFileToArea">
+							<cfinvokeargument name="objectFile" value="#objectFile#"/>
+							<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+						</cfinvoke>
+
+					<cfelse><!--- File edited --->
 
 						<!--- newAreaFile --->
 						<cfinvoke component="AlertManager" method="newFile">
@@ -3417,7 +3431,7 @@
 							<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 						</cfinvoke>
 
-					</cfif>--->
+					</cfif>
 							
 					<!--- ------------------ Update User Space Used --------------------- --->
 					<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
@@ -3432,7 +3446,7 @@
 
 						<cfif isDefined("upload_file_id")>
 							<cfquery datasource="#client_dsn#" name="changeFileStatus">
-								UPDATE #client_abb#_files
+								UPDATE #client_abb#_#fileTypeTable#
 								SET status = <cfqueryparam value="failed" cfsqltype="cf_sql_varchar">
 								WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
 							</cfquery>
@@ -3663,6 +3677,7 @@
 
 	<cffunction name="setFileTypology" output="false" returntype="struct" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="action" type="string" required="true">
@@ -3675,13 +3690,15 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
 			<cfinvoke component="RowManager" method="saveRow" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
 
 			<cfif response.result IS true AND arguments.action IS "create">
 
 				<cfquery datasource="#client_dsn#" name="setFileTypology">
-					UPDATE #client_abb#_files
+					UPDATE #client_abb#_#fileTypeTable#
 					SET typology_id = <cfqueryparam value="#response.table_id#" cfsqltype="cf_sql_integer">,
 					typology_row_id = <cfqueryparam value="#response.row_id#" cfsqltype="cf_sql_integer">
 					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;

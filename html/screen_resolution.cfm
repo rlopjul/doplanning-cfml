@@ -13,6 +13,7 @@
 <!-- InstanceEndEditable -->
 <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
 <link href="styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
@@ -112,7 +113,7 @@ Su resolución de pantalla es menor de 1024x768.<br/>
 Para poder utilizar la versión Flash de la DoPlanning debe tener una resolución igual o mayor a 1024x768.<br/>
 Puede cambiar su resolución de pantalla y volver a acceder, o utilizar la versión HTML de la aplicación.<br /><br />
 
-<a href="index.cfm" class="btn btn-small">Utilizar la versión HTML</a>
+<a href="index.cfm" class="btn btn-default btn-sm">Utilizar la versión HTML</a>
 </div>
 
 <!-- InstanceEndEditable -->

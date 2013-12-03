@@ -161,17 +161,17 @@ Asociar archivo a áreas
 	
 	<input type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas" />
 	
-	<a href="#return_page#" class="btn" style="float:right;">Cancelar</a>
+	<a href="#return_page#" class="btn btn-default" style="float:right;">Cancelar</a>
 	
 	<div style="margin-top:2px;">
 
-		<div class="input-append">
+		<div class="input-group">
 			<input type="text" name="text" id="searchText" value="" class="input-medium" />
-			<button onClick="searchTextInTree()" class="btn" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+			<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
 		</div>
 
-		<!---<a onClick="expandTree();" class="btn" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
-		<a onClick="collapseTree();" class="btn" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>--->
+		<!---<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+		<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>--->
 
 	</div>
 
@@ -189,7 +189,7 @@ Asociar archivo a áreas
 	</script>
 	
 	<cfinput name="submit" type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas"/>
-	<a href="#return_page#" class="btn" style="float:right;">Cancelar</a>
+	<a href="#return_page#" class="btn btn-default" style="float:right;">Cancelar</a>
 	</cfoutput>
 </cfform>
 	

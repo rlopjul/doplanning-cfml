@@ -13,6 +13,7 @@
 <!-- InstanceEndEditable -->
 <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
 <link href="styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
@@ -110,7 +111,7 @@
 <cfinclude template="includes/my_files_head.cfm">
 
 <cfif APPLICATION.identifier NEQ "vpnet">
-<div class="alert text-error" style="clear:both">
+<div class="alert text-danger" style="clear:both">
 <h4>IMPORTANTE</h4> El apartado de Mis Documentos ha cambiado y no estará disponible en futuras versiones de la aplicación.<br/><br/>
 
 Desde aquí ya no se pueden crear nuevos documentos ni directorios, solo modificar los existentes.<br/>

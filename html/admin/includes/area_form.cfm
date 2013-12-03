@@ -6,31 +6,31 @@
 	<cfif isDefined("parent_area_id")>
 		<input type="hidden" name="parent_id" id="parent_id" value="#parent_area_id#" />		
 	</cfif>
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label" for="name" lang="es">Nombre</label>
-		<div class="control-group">
+		<div class="form-group">
 			<input type="text" name="name" id="name" value="#objectArea.name#" required="true" message="Nombre de área requerida" class="input-block-level" />
 		</div>
 	</div>
 
 	<cfif isDefined("objectParentArea")>
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label" for="name" lang="es">Área padre</label>
-		<div class="control-group">
+		<div class="form-group">
 			<input type="text" name="parent_name" id="parent_name" value="#objectParentArea.name#" class="input-block-level" readonly="true" />
 		</div>
 	</div>
 	</cfif>
 
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label" for="user_full_name" lang="es">Responsable</label>
 		<div class="controls">
 			<input type="hidden" name="user_in_charge" id="user_in_charge" value="#objectArea.user_in_charge#" validate="integer" required="true"/>
-			<input type="text" name="user_in_charge_full_name" id="user_in_charge_full_name" value="#objectArea.user_full_name#" required="true" readonly="true" class="input-large" /> <button type="button" class="btn" onclick="showSelectUserModal()">Seleccionar usuario</button>
+			<input type="text" name="user_in_charge_full_name" id="user_in_charge_full_name" value="#objectArea.user_full_name#" required="true" readonly="true" class="input-lg" /> <button type="button" class="btn btn-default" onclick="showSelectUserModal()">Seleccionar usuario</button>
 		</div>
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label" for="description" lang="es">Descripción</label>
 		<div class="controls">
 			<textarea type="text" name="description" id="description" class="input-block-level" rows="2">#objectArea.description#</textarea>
@@ -58,7 +58,7 @@
 			
 			<cfif area_type EQ "web" OR area_type EQ "intranet">
 				
-				<div class="control-group">		
+				<div class="form-group">		
 					<div class="controls">					
 						<input style="margin-top:-2px;" id="hide_in_menu" name="hide_in_menu" type="checkbox" value="true" <cfif objectArea.hide_in_menu IS true>checked="checked"</cfif>  />
 						<label class="control-label" for="hide_in_menu" lang="es" style="margin-top:5px;">Ocultar del menú (no se mostrará esta área ni sus áreas inferiores)</label>		
@@ -95,7 +95,7 @@
 					
 				<cfif show_type_menu>
 					
-					<div class="control-group">		
+					<div class="form-group">		
 						<div class="controls">
 							<label class="control-label" for="type_menu" lang="es">Tipo de menú</label>
 							
@@ -137,7 +137,7 @@
  	</div>
 
 	<!---<div class="modal-footer">
-	    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+	    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
 	    <button class="btn btn-primary" id="selectUser">Guardar cambios</button>
 	</div>--->
 

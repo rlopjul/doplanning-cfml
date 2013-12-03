@@ -160,7 +160,7 @@
 	
    	</cfcase>
 
-   	 <cfcase value="13"><!---typologies (files)--->
+   	<cfcase value="13"><!---typologies (files)--->
 
 		<cfset itemTypeName = "typology">
 		<cfset itemTypeNameP = "typologies">
@@ -174,5 +174,17 @@
 		<cfset tableTypeId = 3>
 
    	</cfcase>
+
+   	<cfcase value="15"><!---Area files--->
+
+		<cfset itemTypeName = "file">
+		<cfset itemTypeNameP = "files">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Archivo de área">
+
+		<cfset itemTypeGender = "male">
+	
+   	</cfcase> 
 
 </cfswitch>
