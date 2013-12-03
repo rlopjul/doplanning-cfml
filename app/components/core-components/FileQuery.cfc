@@ -19,6 +19,7 @@
 	
 	<cffunction name="getFile" output="false" returntype="query" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
@@ -29,6 +30,7 @@
 		
 		<cfset var method = "getFile">
 					
+		<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
 		<cfquery name="selectFileQuery" datasource="#client_dsn#">		
 			SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id
@@ -52,7 +54,7 @@
 				, locks.lock_date, 
 				</cfif>
 			</cfif>
-			FROM #client_abb#_files AS files
+			FROM #client_abb#_#fileTypeTable# AS files
 			INNER JOIN #client_abb#_users AS users 
 			ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> AND files.user_in_charge = users.id
 			AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">

@@ -82,7 +82,7 @@
 	<cfcatch>
 
 		<cfoutput>
-			<div class="alert alert-error">
+			<div class="alert alert-danger">
 				<i class="icon-warning-sign"></i> <span lang="es">#cfcatch.message#</span>
 			</div>
 		</cfoutput>

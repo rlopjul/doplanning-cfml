@@ -22,7 +22,7 @@
 				<a href="#arguments.return_page#" class="a_return"><img src="#APPLICATION.htmlPath#/assets/icons/return.gif" title="Volver" alt="Volver" />
 				Volver</a>
 			</div>--->
-			<a href="#arguments.return_page#" class="btn btn-small" style="margin-left:5px; margin-bottom:5px;"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
+			<a href="#arguments.return_page#" class="btn btn-default btn-sm" style="margin-left:5px; margin-bottom:5px;"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
 		</cfoutput>
 		
 		<cftry>
@@ -43,7 +43,7 @@
 		
 		<cfoutput>
 			<div class="div_return">
-				<a href="#arguments.return_page#" class="btn btn-small" lang="es">Ir a nivel superior</a>
+				<a href="#arguments.return_page#" class="btn btn-default btn-sm" lang="es">Ir a nivel superior</a>
 			</div>
 		</cfoutput>
 		

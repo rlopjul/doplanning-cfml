@@ -51,6 +51,7 @@
 	
 	<cffunction name="getFile" returntype="query" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="false">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="item_id" type="numeric" required="false">
 		<cfargument name="itemTypeId" type="numeric" required="false">
@@ -66,6 +67,7 @@
 			
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFile" returnvariable="objectFile">				
 				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 				<cfif isDefined("arguments.area_id")>
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfif>

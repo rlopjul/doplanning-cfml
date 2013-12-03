@@ -53,7 +53,7 @@
 				<cfset field_value = row[field_name]>
 			</cfif>
 
-			<div class="control-group">
+			<div class="form-group">
 
 			<label for="#field_name#">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
 			<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
@@ -89,7 +89,7 @@
 
 			<cfelseif fields.input_type IS "number"><!--- INTEGER --->
 
-				<input type="number" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="span2"/>
+				<input type="number" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="col-md-2"/>
 
 				<script type="text/javascript">
 					<cfif fields.required IS true AND arguments.search_inputs IS false>
@@ -133,7 +133,7 @@
 
 				<cfelseif fields.cf_sql_type IS "cf_sql_decimal"><!--- DECIMAL --->
 
-					<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="span2"/>
+					<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="col-md-2"/>
 
 					<script type="text/javascript">
 						<cfif fields.required IS true AND arguments.search_inputs IS false>
@@ -159,7 +159,7 @@
 
 				<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
 
-					<select name="#field_name#" id="#field_name#" #field_required_att# class="input-small">
+					<select name="#field_name#" id="#field_name#" #field_required_att# class="input-sm">
 						<option value=""></option>
 						<option value="1" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
 						<option value="0" <cfif field_value IS false>selected="selected"</cfif>>No</option>
@@ -235,7 +235,7 @@
 
 			</cfif>
 
-			</div><!---END div class="control-group"--->
+			</div><!---END div class="form-group"--->
 			
 		</cfloop>
 		</cfoutput>

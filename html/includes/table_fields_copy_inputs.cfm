@@ -27,7 +27,7 @@
 		<cfif fields.recordCount GT 0>
 
 			<div id="submitDiv1" style="padding-left:2px;"><input type="submit" class="btn btn-primary" name="copy" value="Copiar campos" lang="es"/>
-				<!---<span class="divider">&nbsp;</span><a href="#return_page#" class="btn" lang="es">Cancelar</a>--->
+				<!---<span class="divider">&nbsp;</span><a href="#return_page#" class="btn btn-default" lang="es">Cancelar</a>--->
 			</div>
 
 			<cfset fields_selectable = true>
@@ -37,7 +37,7 @@
 			<div style="height:10px;"><!--- ---></div>
 
 			<div id="submitDiv2" style="padding-left:2px;"><input type="submit" class="btn btn-primary" name="copy" value="Copiar campos" lang="es"/>
-				<!---<span class="divider">&nbsp;</span><a href="#return_page#" class="btn" lang="es">Cancelar</a>--->
+				<!---<span class="divider">&nbsp;</span><a href="#return_page#" class="btn btn-default" lang="es">Cancelar</a>--->
 			</div>
 
 		<cfelse>				
@@ -53,7 +53,7 @@
 	<cfcatch>
 
 		<cfoutput>
-			<div class="alert alert-error">
+			<div class="alert alert-danger">
 				<i class="icon-warning-sign"></i> <span lang="es">#cfcatch.message#</span>
 			</div>
 		</cfoutput>

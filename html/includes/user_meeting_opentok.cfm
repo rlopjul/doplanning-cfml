@@ -104,13 +104,13 @@
 	</div>
 	
 	<div>
-		<button onClick="unpublish()" id="unpublishButton" class="btn btn-small" lang="es"><i class="icon-stop"></i> Detener retransmisión</button>
-		<button onClick="publish()" id="publishButton" class="btn btn-small btn-primary" style="display:none"  lang="es"><i class="icon-play"></i> Iniciar retransmisión</button>
-		<button onClick="stopPublishVideo()" id="stopVideoButton" class="btn btn-small" title="Detener webcam" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/webcam_stop.png" alt="Detener webcam" lang="es" width="20"/></button>
-		<button onClick="startPublishVideo()" id="startVideoButton" style="display:none" class="btn btn-small" title="Retransmitir webcam" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/webcam_start.png" alt="Retransmitir webcam" lang="es" width="20"/></button>
+		<button onClick="unpublish()" id="unpublishButton" class="btn btn-default btn-sm" lang="es"><i class="icon-stop"></i> Detener retransmisión</button>
+		<button onClick="publish()" id="publishButton" class="btn btn-sm btn-primary" style="display:none"  lang="es"><i class="icon-play"></i> Iniciar retransmisión</button>
+		<button onClick="stopPublishVideo()" id="stopVideoButton" class="btn btn-default btn-sm" title="Detener webcam" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/webcam_stop.png" alt="Detener webcam" lang="es" width="20"/></button>
+		<button onClick="startPublishVideo()" id="startVideoButton" style="display:none" class="btn btn-default btn-sm" title="Retransmitir webcam" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/webcam_start.png" alt="Retransmitir webcam" lang="es" width="20"/></button>
 		
-		<button onClick="stopPublishAudio()" id="stopAudioButton" class="btn btn-small" title="Desactivar micrófono" lang="es"><i class="icon-microphone-off icon-large"></i></button>
-		<button onClick="startPublishAudio()" id="startAudioButton" class="btn btn-small" style="display:none" title="Activar micrófono" lang="es"><i class="icon-microphone icon-large"></i></button>
+		<button onClick="stopPublishAudio()" id="stopAudioButton" class="btn btn-default btn-sm" title="Desactivar micrófono" lang="es"><i class="icon-microphone-off icon-large"></i></button>
+		<button onClick="startPublishAudio()" id="startAudioButton" class="btn btn-default btn-sm" style="display:none" title="Activar micrófono" lang="es"><i class="icon-microphone icon-large"></i></button>
 		<div id="publisherNoStreamAlert" class="alert alert-block" style="margin-top:8px; display:none;">
 			<span lang="es">No está retransmitiendo su webcam, sólo está retransmitiento su audio.</span><br/>
 			<span lang="es">Para retransmitir su webcam, haga clic en el botón Retransmitir webcam.</span>

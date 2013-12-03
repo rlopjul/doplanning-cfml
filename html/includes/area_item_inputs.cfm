@@ -9,7 +9,7 @@
 	
 	<cfif read_only IS false>
 	
-	$(function() {
+	<!---$(function() {
 		$.datepicker.setDefaults($.datepicker.regional['es']);
 		
 		var dates = $( ".input_datepicker" ).datepicker({ 
@@ -33,7 +33,38 @@
 			</cfif>
 			});
 		
+	});--->
+
+	$(function() {
+
+		$('##start_date').datepicker({
+		  format: 'dd-mm-yyyy', 
+		  autoclose: true,
+		  weekStart: 1,
+		  language: 'es',
+		  todayBtn: 'linked',
+		  endDate: $('##end_date').val()  
+		});
+	
+		$('##end_date').datepicker({
+		  format: 'dd-mm-yyyy',
+		  weekStart: 1,
+		  language: 'es',
+		  todayBtn: 'linked', 
+		  autoclose: true
+		});
+
 	});
+	
+	
+	function setEndDate(){
+		$('##start_date').datepicker('setEndDate', $('##end_date').val());
+	}
+
+	function setStartDate(){
+		$('##end_date').datepicker('setStartDate', $('##start_date').val());
+	}
+
 	
 	</cfif>
 	
@@ -151,10 +182,10 @@
 </cfif>
 
 <cfif itemTypeId IS NOT 7 OR NOT isDefined("parent_kind") OR parent_kind EQ "area">
-<div class="control-group">
+<div class="form-group">
 	<label class="control-label" for="item_title" lang="es">#t_title# <cfif title_required IS true>*</cfif></label>
 	<div class="controls">
-		<cfinput type="text" name="title" id="item_title" value="#objectItem.title#" required="#title_required#" message="#t_title# requerido" passthrough="#passthrough#" class="span5">
+		<cfinput type="text" name="title" id="item_title" value="#objectItem.title#" required="#title_required#" message="#t_title# requerido" passthrough="#passthrough#" class="col-md-5">
 	</div>
 </div>
 <cfelse><!---Consultations--->
@@ -163,7 +194,7 @@
 
 <cfif itemTypeId IS 4><!---News--->
 
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label" lang="es">#t_creation_date#</label>
 		<div class="controls">
 			<cfif len(objectItem.creation_date) GT 10>
@@ -180,18 +211,18 @@
 <cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
 
 <cfif itemTypeId IS 6><!---Tasks--->
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label" lang="es">#t_recipient_user#</label>
 		<div class="controls">
-			<cfinput type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" validate="integer" required="true" message="Usuario destinatario requerido"/><cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes" required="true" onclick="openUserSelector()"><cfif read_only IS false> <button onclick="return openUserSelector();" class="btn" lang="es">Seleccionar usuario</button><br/><span style="font-size:10px" lang="es">Usuario al que se le asignará la tarea</span></cfif>
+			<cfinput type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" validate="integer" required="true" message="Usuario destinatario requerido"/><cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes" required="true" onclick="openUserSelector()"><cfif read_only IS false> <button onclick="return openUserSelector();" class="btn btn-default" lang="es">Seleccionar usuario</button><br/><span style="font-size:10px" lang="es">Usuario al que se le asignará la tarea</span></cfif>
 		</div>
 	</div>
 </cfif>
 
-<div class="control-group">
+<div class="form-group">
 	<label class="control-label" for="start_date" lang="es">#t_start_date# *</label>
 	
-	<cfinput type="text" name="start_date" id="start_date" class="input_datepicker" value="#objectItem.start_date#" required="true" message="#t_start_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+	<cfinput type="text" name="start_date" id="start_date" class="input_datepicker" value="#objectItem.start_date#" required="true" message="#t_start_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#" onchange="setStartDate()">
 	
 	<cfif itemTypeId IS 5>
 		
@@ -232,10 +263,10 @@
 
 </div>
 
-<div class="control-group">
+<div class="form-group">
 	<label class="control-label" for="end_date" lang="es">#t_end_date# *</label>
 	
-	<cfinput type="text" name="end_date" id="end_date" class="input_datepicker" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+	<cfinput type="text" name="end_date" id="end_date" class="input_datepicker" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#" onchange="setEndDate()">
 
 	<cfif itemTypeId IS 5>
 		
@@ -273,7 +304,7 @@
 </cfif>
 
 <cfif itemTypeId IS 5><!---Events--->
-<div class="control-group">
+<div class="form-group">
 	<label class="control-label" for="place" lang="es">#t_place# *</label>
 	<div class="controls">
 		<cfinput type="text" name="place" id="place" value="#objectItem.place#" required="true" message="#t_place# requerido" passthrough="#passthrough#">
@@ -281,7 +312,7 @@
 </div>
 <cfelseif itemTypeId IS 6><!---Tasks--->
 
-<div class="control-group">
+<div class="form-group">
 	<label class="control-label" for="estimated_value" lang="es">#t_estimated_value# *</label>
 		<cfinput type="text" name="estimated_value" id="estimated_value" value="#objectItem.estimated_value#" required="true" validate="float" message="#t_estimated_value# debe ser un decimal" style="width:50px;" passthrough="#passthrough#"><!---&nbsp;<span style="font-size:10px">Valor (tiempo, coste, ...) estimado para la tarea.</span>--->
 
@@ -291,7 +322,7 @@
 
 </div>
 
-<div class="control-group">
+<div class="form-group">
     <div class="controls">
 		<label class="checkbox">
 			
@@ -329,7 +360,7 @@
 				
 				<div><label class="control-label" lang="es">Archivo adjunto</label> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_file_name#</a>
 				
-				<button onclick="return deleteAttachedFile()" class="btn btn-mini btn-danger" lang="es">Eliminar archivo adjunto</button>
+				<button onclick="return deleteAttachedFile()" class="btn btn-xs btn-danger" lang="es">Eliminar archivo adjunto</button>
 				
 				</div>
 			
@@ -346,7 +377,7 @@
 
 			
 		<cfelse>
-			<div class="control-group">
+			<div class="form-group">
 				<!---<label class="control-label">Archivo</label>--->
 				<div class="controls">
     				<i class="icon-file icon-large" title="Archivo" lang="es"></i>
@@ -363,11 +394,11 @@
 		
 			<cfif isNumeric(objectItem.id)><!---No es para copiar elemento--->
 			
-				<div class="control-group">
+				<div class="form-group">
 				
 					<label class="control-label" lang="es">Imagen adjunta</label> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_image_name#</a>
 					
-					<button onclick="return deleteAttachedImage()" class="btn btn-mini btn-danger" lang="es">Eliminar imagen adjunta</button>
+					<button onclick="return deleteAttachedImage()" class="btn btn-xs btn-danger" lang="es">Eliminar imagen adjunta</button>
 				
 				</div>
 			
@@ -382,7 +413,7 @@
 			
 			</cfif>
 		<cfelse>
-			<div class="control-group">
+			<div class="form-group">
 				<div class="controls">
 					<i class="icon-camera icon-large" title="Imagen (jpg, png, gif)" lang="es"></i> <cfif itemTypeId IS 9>*</cfif>
 					<cfif itemTypeId IS NOT 9>
@@ -398,18 +429,18 @@
 </cfif>
 
 
-<div class="control-group">
+<div class="form-group">
 
 	<label class="control-label" for="link" lang="es">#t_link# <cfif link_required IS true>*</cfif></label>
 	<div class="controls">
-		<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="span5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+		<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
 	</div>
 	
 </div>
 
 <cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7><!---IS NOT Messages, Tasks OR Consultations--->
 	
-<div class="control-group">
+<div class="form-group">
 
 	<label class="control-label" for="link_target" lang="es">Abrir URL en</label>
 	
@@ -427,16 +458,16 @@
 
 	<cfif APPLICATION.moduleWeb EQ true>
 		
-	<div class="control-group">
+	<div class="form-group">
 
 		<label class="control-label" for="iframe_url" lang="es">#t_iframe_url#</label> <small lang="es">(Sólo para publicar en web)</small>
 		<div class="controls">
-			<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="#t_iframe_url# válida con http:// requerida" class="span5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+			<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="#t_iframe_url# válida con http:// requerida" class="col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
 		</div>
 		
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 
 		<label class="control-label" for="iframe_display_type_id" lang="es">#t_iframe_display_type#</label>
 		
@@ -460,7 +491,7 @@
 	<!---<cfset t_iframe_width = "Ancho">
 	<cfset t_iframe_height = "Alto">
 
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label" for="iframe_width">#t_iframe_width#</label>
 		
 		<cfinput type="text" name="iframe_width" id="iframe_width" value="" required="true" message="#t_iframe_width# válido requerido" validate="integer" passthrough="#passthrough#" style="width:55px;"><!---#objectItem.iframe_width#--->
@@ -482,7 +513,7 @@
 </cfif>
 
 <cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-<!---<div class="control-group">
+<!---<div class="form-group">
 
 	<label class="control-label" lang="es">#t_position#</label>
 	
@@ -493,7 +524,7 @@
 </div>--->
 
 	<cfif itemTypeId IS 2>
-	<div class="control-group">
+	<div class="form-group">
 	
 		<label class="control-label" lang="es">#t_display_type#</label>
 		
@@ -527,7 +558,7 @@
 	<cfif objectUser.sms_allowed IS true>
 		<cfoutput>
 		
-		<div class="control-group">
+		<div class="form-group">
 			<div class="controls">
 			  <label class="checkbox">
 				<img src="#APPLICATION.htmlPath#/assets/icons/sms.png" alt="Enviar SMS"/> <cfinput type="checkbox" name="notify_by_sms" value="true" title="Enviar notificación por SMS"> Enviar notificación por SMS

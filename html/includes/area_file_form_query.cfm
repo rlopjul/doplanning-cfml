@@ -46,6 +46,17 @@
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getEmptyFile" returnvariable="file">
 		</cfinvoke>
 
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+			<cfinvokeargument name="format_content" value="default">
+			<cfinvokeargument name="return_type" value="query">
+		</cfinvoke>
+
+		<cfset file.reviser_user = userQuery.id>
+		<cfset file.reviser_user_full_name = userQuery.user_full_name>
+		<cfset file.approver_user = userQuery.id>
+		<cfset file.approver_user_full_name = userQuery.user_full_name>
+
 	<cfelse>
 
 		<cfif isDefined("URL.file") AND isNumeric(URL.file)>

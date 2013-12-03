@@ -9,6 +9,7 @@
 <cfoutput>
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
 <link href="../../styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">

@@ -22,6 +22,7 @@
 
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
 
@@ -247,7 +248,7 @@
 			
 		});
 		
-		$('a[data-toggle="tab"]').on('shown', function (e) { //On show tab
+		$('a[data-toggle="tab"]').on('show.bs.tab', function (e) { //On show tab
 			
 			var pattern=/#.+/gi //use regex to get anchor(==selector)
 			currentTab = e.target.toString().match(pattern)[0];
@@ -317,7 +318,7 @@
 		
 		<div class="tabbable"><!---Tab Panel--->
 	
-		  <ul class="nav nav-pills" id="dpTab" style="margin-bottom:0px; clear:none;">
+		  <ul class="nav nav-pills" id="dpTab" style="clear:none;padding-bottom:5px;">
 			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
@@ -376,14 +377,14 @@
 				
 				<div class="form-inline" style="padding-bottom:5px;">
 										
-					<div class="input-append">
+					<div class="input-group">
 						<input type="text" name="text" id="searchText" value="" class="input-medium" />
-						<button onClick="searchTextInTree()" class="btn" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+						<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
 					</div>					
 					
-					<a onClick="updateTree();" class="btn" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
-					<a onClick="expandTree();" class="btn" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
-					<a onClick="collapseTree();" class="btn" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+					<a onClick="updateTree();" class="btn btn-default" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
+					<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+					<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
 					
 					<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
 

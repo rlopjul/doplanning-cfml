@@ -60,20 +60,20 @@
 	<input type="hidden" name="itemTypeId" value="#itemTypeId#"/>
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
-	<div class="control-group">
+	<div class="form-group">
 		<span>#itemTypeNameEs#:</span>
 		<strong>#item.title#</strong>
 	</div>
-	<div class="control-group">
+	<div class="form-group">
 		<span>Propietario actual:</span>
 		<strong>#item.user_full_name#</strong>
 	</div>
 	
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label" for="new_user_full_name" lang="es">Nuevo propietario</label>
 		<div class="controls">
 			<input type="hidden" name="new_user_in_charge" id="new_user_in_charge" value="#newUser.new_user_in_charge#" validate="integer" required="true"/>
-			<cfinput type="text" name="new_user_full_name" id="new_user_full_name" value="#newUser.new_user_full_name#" readonly="true" required="true" message="Debe seleccionar un nuevo propietario" onclick="openUserSelector()" /> <button onclick="return openUserSelector()" type="button" class="btn" lang="es">Seleccionar usuario</button>
+			<cfinput type="text" name="new_user_full_name" id="new_user_full_name" value="#newUser.new_user_full_name#" readonly="true" required="true" message="Debe seleccionar un nuevo propietario" onclick="openUserSelector()" /> <button onclick="return openUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
 		</div>
 	</div>
 	
@@ -82,7 +82,7 @@
 	<div id="submitDiv">
 		<input type="submit" class="btn btn-primary" name="modify" value="Cambiar propietario" lang="es"/>
 
-		<a href="#itemTypeName#.cfm?#itemTypeName#=#item_id#&area=#area#" class="btn" style="float:right">Cancelar</a>
+		<a href="#itemTypeName#.cfm?#itemTypeName#=#item_id#&area=#area#" class="btn btn-default" style="float:right">Cancelar</a>
 	</div>
 
 	<br/>

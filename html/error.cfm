@@ -13,6 +13,7 @@
 <!-- InstanceEndEditable -->
 <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
 <link href="styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
@@ -138,7 +139,7 @@
 </cfif>
 </div>
 <div class="div_return">
-	<a href="" onClick="history.go(-1); return false;" class="btn btn-small"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
+	<a href="" onClick="history.go(-1); return false;" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
 </div>
 </cfoutput>
 <!-- InstanceEndEditable -->

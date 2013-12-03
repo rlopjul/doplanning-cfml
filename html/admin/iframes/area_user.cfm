@@ -9,6 +9,7 @@
 <cfoutput>
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
 <link href="../../styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
@@ -69,7 +70,7 @@
 		<div class="container">
 
  			<cfif isDefined("user_id") AND isDefined("area_id")>
- 			<a class="btn btn-warning btn-small" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de esta área</span></a>
+ 			<a class="btn btn-warning btn-sm" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de esta área</span></a>
 
  			</cfif>
 
@@ -82,7 +83,7 @@
 
 				<cfif isAdministratorResponse.result IS false>--->
 					
-					<a class="btn btn-info  btn-small disabled" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>
+					<a class="btn btn-info  btn-sm disabled" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>
 
 				<!---</cfif>--->
 

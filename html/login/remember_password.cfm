@@ -40,6 +40,7 @@
 <!-- InstanceEndEditable -->
 <link href="../assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
 <link href="../styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
@@ -110,22 +111,22 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 <cfoutput>
-<div class="container-fluid"><!---login_container--->
+<div class="container"><!---login_container--->
 
-	<div class="row-fluid">
+	<div class="row">
 	
-		<div class="span2"><!---class="div_login_logo"--->
+		<div class="col-md-2"><!---class="div_login_logo"--->
 			<cfif APPLICATION.identifier EQ "dp"><a href="http://www.doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a></cfif>
 		</div>
 		
 		<cfif APPLICATION.identifier EQ "dp">
-		<div class="span8" style="text-align:center">
+		<div class="col-md-8" style="text-align:center">
 			<img src="download_login_image.cfm?abb=#client_abb#" alt="DoPlanning Banner" />
 		</div>
 		</cfif>
 		
 		<cfif APPLICATION.identifier EQ "dp">
-		<div class="span1 offset1" style="text-align:right;"><!---class="div_login_help"--->
+		<div class="col-md-2" style="text-align:right;"><!---class="div_login_help"--->
 			<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" lang="es"><i class="icon-question-sign"></i></a>
 		</div>
 		</cfif>
