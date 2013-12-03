@@ -8,7 +8,7 @@
 				<span lang="es">#msg#</span>
 			</div>
 		<cfelse>
-			<div class="alert alert-error">
+			<div class="alert alert-danger">
 				<!---<button type="button" class="close" data-dismiss="alert">&times;</button>--->
 				<i class="icon-warning-sign"></i> <span lang="es">#msg#</span>
 			</div>

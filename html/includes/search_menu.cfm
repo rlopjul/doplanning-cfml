@@ -74,7 +74,7 @@
 <div style="clear:both"></div>
 <div class="navbar navbar-static-top">
   <div class="navbar-inner">
-	<!---<a class="brand" href="##">Mensajes</a>--->
+	<!---<a class="navbar-brand" href="##">Mensajes</a>--->
 	
 	<span class="navbar_brand" lang="es">#curTitle#</span>
 	

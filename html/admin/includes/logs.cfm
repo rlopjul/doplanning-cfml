@@ -83,7 +83,7 @@
 	<cfelse>
 		<cfset message = getLogsResponse.message>
 			<cfoutput>
-			<div class="alert alert-error" style="margin:10px;">&nbsp;<span lang="es">#message#</span></div>
+			<div class="alert alert-danger" style="margin:10px;">&nbsp;<span lang="es">#message#</span></div>
 			</cfoutput>
 	
 	</cfif>

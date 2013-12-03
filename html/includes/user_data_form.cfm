@@ -11,20 +11,20 @@
 		<cfif APPLICATION.identifier NEQ "vpnet">
 	
 		<!---<div style="float:right; margin-right:5px; margin-top:5px;">--->
-		<div class="span3">
+		<div class="col-md-3">
 
 				<div style="text-align:left;">
 				<cfif len(objectUser.image_file) GT 0 AND len(objectUser.image_type)>
-					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&medium=" alt="Imagen del usuario" class="img-polaroid" style="text-align:right; margin-bottom:3px;" />
+					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&medium=" alt="Imagen del usuario" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" />
 					<br/>
 					
 					<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/iframes/preferences_user_data.cfm")>
-					<a href="#APPLICATION.htmlComponentsPath#/User.cfc?method=deleteUserImage#url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar imagen" class="btn btn-danger btn-mini" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+					<a href="#APPLICATION.htmlComponentsPath#/User.cfc?method=deleteUserImage#url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar imagen" class="btn btn-danger btn-xs" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 					
 					
 				<cfelse>
 					
-					<img src="#APPLICATION.htmlPath#/assets/icons/user_default_medium.png" class="img-polaroid" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
+					<img src="#APPLICATION.htmlPath#/assets/icons/user_default_medium.png" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
 					
 				</cfif>
 				</div>			
@@ -44,7 +44,7 @@
 		</div>
 			
 		<!---<div class="fileupload fileupload-new" data-provides="fileupload">
-		  <div class="input-append">
+		  <div class="input-group">
 			<div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="##" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
 		  </div>
 		</div>--->
@@ -52,7 +52,7 @@
 		</cfif>
 		
 		
-		<div class="span3">
+		<div class="col-md-3">
 		
 			<label for="email" lang="es">Email:</label>
 			<cfinput type="text" name="email" id="email" value="#objectUser.email#" required="true" validate="email" message="Dirección de email válida requerida" />

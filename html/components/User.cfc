@@ -53,7 +53,8 @@
 	
 	<cffunction name="getUser" output="false" returntype="struct" access="public">
 		<cfargument name="user_id" type="numeric" required="true">
-		<cfargument name="format_content" type="string" required="no" default="default">
+		<cfargument name="format_content" type="string" required="false" default="default">
+		<cfargument name="return_type" type="string" required="false" default="object">
 		
 		<cfset var method = "getUser">
 		
@@ -64,7 +65,7 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUser" returnvariable="objectUser">				
 				<cfinvokeargument name="get_user_id" value="#arguments.user_id#">
 				<cfinvokeargument name="format_content" value="#arguments.format_content#">
-				<cfinvokeargument name="return_type" value="object">
+				<cfinvokeargument name="return_type" value="#arguments.return_type#">
 			</cfinvoke>
 			
 			<cfcatch>
@@ -618,7 +619,7 @@
 					<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/user_meeting.png" width="20" alt="Reunión virtual" lang="es"/>--->
 					
 					<div>
-					<a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es" class="btn btn-small btn-info"><i class="icon-facetime-video"></i>&nbsp; <span lang="es">Reunión virtual</span></a>
+					<a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es" class="btn btn-sm btn-info"><i class="icon-facetime-video"></i>&nbsp; <span lang="es">Reunión virtual</span></a>
 					</div>
 					<div class="div_user_page_label"><span lang="es">URL de acceso a reunión virtual con este usuario:</span></div>
 					<textarea class="input-block-level" readonly="readonly" style="height:50px; cursor:text">#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#</textarea>

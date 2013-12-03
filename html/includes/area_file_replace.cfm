@@ -47,7 +47,7 @@ function onSubmitForm()
 	
 	<div id="submitDiv"><input type="submit" class="btn btn-primary" name="modify" value="Guardar" lang="es"/>
 	
-	<a href="#return_page#" class="btn" style="float:right;" lang="es">Cancelar</a>	
+	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>	
 	</div>
 	<small lang="es">Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.</small>
 </cfform>

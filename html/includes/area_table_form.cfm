@@ -47,7 +47,7 @@
 		<input type="submit" value="Guardar" class="btn btn-primary"/>
 
 		<cfif page_type IS 2>
-			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#" class="btn" style="float:right">Cancelar</a>
+			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#" class="btn btn-default" style="float:right">Cancelar</a>
 		</cfif>
 	</div>--->
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
@@ -58,17 +58,17 @@
 		<input type="hidden" name="table_id" value="#table_id#"/>
 	</cfif>
 
-	<div class="control-group">
+	<div class="form-group">
 		<label for="label">Nombre</label>
 		<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="100" required="true" message="Nombre requerido" class="input-block-level"/>
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 		<label for="description">Descripción</label>
 		<textarea name="description" id="description" class="input-block-level" maxlength="1000">#table.description#</textarea>
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 		<label for="structure_available" class="checkbox">
 			<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> Permitir copiar la estructura de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)#<br/>
 			<small class="help-block">Indica si la definición de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# está disponible para ser usada como plantilla por cualquier usuario de la organización.</small>
@@ -77,7 +77,7 @@
 	
 	<cfif tableTypeId IS 3 AND SESSION.client_administrator EQ SESSION.user_id>
 		
-		<div class="control-group">
+		<div class="form-group">
 			<label for="general" class="checkbox">
 				<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> Habilitar como #lCase(tableTypeNameEs)# general<br/>
 				<small class="help-block">Se podrá utilizar esta tipología en cualquier área de la organización.</small>
@@ -89,7 +89,7 @@
 	<div id="submitDiv2" style="margin-top:20px;">
 		<input type="submit" value="Guardar" class="btn btn-primary"/>
 		<cfif page_type IS 2 AND isDefined("URL.area") AND isNumeric(URL.area)>
-			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#URL.area#" class="btn" style="float:right">Cancelar</a>
+			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#URL.area#" class="btn btn-default" style="float:right">Cancelar</a>
 		</cfif>
 	</div>
 	

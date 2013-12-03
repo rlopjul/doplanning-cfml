@@ -59,7 +59,7 @@
 
 		<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Solo para mensajes y consultas--->
 			<cfif itemTypeId IS 1 OR objectItem.state NEQ "closed">
-				<a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#" class="btn btn-small btn-info"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
+				<a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#" class="btn btn-sm btn-info"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
 			</cfif>
 	
 		<cfelse><!---Si no es mensaje--->
@@ -67,7 +67,7 @@
 			<!---En las áreas web o intranet se pueden modificar los elementos--->
 			<cfif area_type EQ "web" OR area_type EQ "intranet" OR objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND objectItem.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma--->
 							
-				<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-small btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+				<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 								
 			</cfif>
 			
@@ -103,7 +103,7 @@
 				
 				<cfif close_user_in_charge EQ SESSION.user_id>
 				
-					<a href="area_item_close.cfm?item=#close_item_id#&type=#itemTypeId#&area=#area_id##url_return_page#" onclick="return confirmAction('cerrar la #itemTypeNameEs#');" title="Cerrar #itemTypeNameEs#" class="btn btn-warning btn-small" lang="es"><i class="icon-lock"></i> <span lang="es">Cerrar</span></a>
+					<a href="area_item_close.cfm?item=#close_item_id#&type=#itemTypeId#&area=#area_id##url_return_page#" onclick="return confirmAction('cerrar la #itemTypeNameEs#');" title="Cerrar #itemTypeNameEs#" class="btn btn-warning btn-sm" lang="es"><i class="icon-lock"></i> <span lang="es">Cerrar</span></a>
 				
 				</cfif>
 				
@@ -118,7 +118,7 @@
 			
 				<cfif objectItem.user_in_charge EQ SESSION.user_id OR objectItem.recipient_user EQ SESSION.user_id>
 				
-					<a href="area_item_done.cfm?item=#objectItem.id#&type=#itemTypeId#&area=#area_id#&done=1#url_return_page#" <!---onclick="return confirmAction('marcar la #itemTypeNameEs# como realizada');"---> title="Marcar la #itemTypeNameEs# como realizada" class="btn btn-info btn-small" lang="es"><i class="icon-ok"></i> <span lang="es">Realizada</span></a>
+					<a href="area_item_done.cfm?item=#objectItem.id#&type=#itemTypeId#&area=#area_id#&done=1#url_return_page#" <!---onclick="return confirmAction('marcar la #itemTypeNameEs# como realizada');"---> title="Marcar la #itemTypeNameEs# como realizada" class="btn btn-info btn-sm" lang="es"><i class="icon-ok"></i> <span lang="es">Realizada</span></a>
 				
 				</cfif>
 				
@@ -130,7 +130,7 @@
 
 			<cfif objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 1 AND SESSION.user_id IS SESSION.client_administrator)>
 		
-				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-small"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 		
 			</cfif>
 
@@ -138,18 +138,18 @@
 
 		<cfif itemTypeId IS NOT 1 AND (objectItem.user_in_charge EQ SESSION.user_id OR is_user_area_responsible)>
 			
-			<a href="item_change_user.cfm?item=#item_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-small"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>	
+			<a href="item_change_user.cfm?item=#item_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>	
 
 		</cfif>
 
 		
 		<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+		<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 		</cfif>
 		
 		<!---<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">--->
 		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
-			<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-small"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
+			<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
 			<cfif APPLICATION.moduleConvertFiles EQ true>
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 					<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
@@ -180,14 +180,14 @@
 			</cfif>
 		</cfif>
 		
-		<!---<a href="#itemTypeName#_copy.cfm?#itemTypeName#=#item_id#" title="Copiar #itemTypeNameEs# a otras áreas" class="btn btn-small"><i class="icon-copy"></i> Copiar</a>--->
+		<!---<a href="#itemTypeName#_copy.cfm?#itemTypeName#=#item_id#" title="Copiar #itemTypeNameEs# a otras áreas" class="btn btn-default btn-sm"><i class="icon-copy"></i> Copiar</a>--->
 
 		<!---<br/>
 		<form name="copy_item_to" id="copy_item_to" method="get" action="" style="display:inline; padding:0; margin:0;">
 			<input type="hidden" name="sourceItemTypeId" value="#itemTypeId#"/>
 			<input type="hidden" name="#itemTypeName#" value="#objectItem.id#"/>
 				
-			<button type="submit" class="btn btn-small" style="margin-right:0;" onclick="submitCopyItemForm();">
+			<button type="submit" class="btn btn-default btn-sm" style="margin-right:0;" onclick="submitCopyItemForm();">
             	<i class="icon-copy"></i> Copiar como
             </button>		
 			<select name="item_type" style="width:100px; margin:0;" onchange="submitCopyItemForm();">
@@ -220,7 +220,7 @@
 			
 			<cfset copy_query_string = "sourceItemTypeId=#itemTypeId#&#itemTypeName#=#objectItem.id#">
 			<div class="btn-group">
-				<a href="##" class="btn btn-small dropdown-toggle" data-toggle="dropdown" title="Copiar a otras áreas"> 
+				<a href="##" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Copiar a otras áreas"> 
 				<i class="icon-copy"></i> <span lang="es">Copiar como</span> <span class="caret"></span></a>
 				<ul class="dropdown-menu">
 					<!---<cfif itemTypeId IS NOT 1>--->
@@ -256,7 +256,7 @@
 		
 		
 		<cfif APPLICATION.moduleWeb EQ true AND APPLICATION.moduleTwitter IS true AND area_type EQ "web">
-		<a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#" class="btn btn-small"><i class="icon-twitter"></i> Publicar en Twitter</a>
+		<a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#" class="btn btn-default btn-sm"><i class="icon-twitter"></i> Publicar en Twitter</a>
 		
 		</cfif>
 		

@@ -14,7 +14,7 @@
 <cfif app_version NEQ "mobile">
 <div class="div_elements_menu">
 	<cfif isDefined("area_id")>
-	<a href="#APPLICATION.htmlPath#/area_file_view.cfm?file=#file_id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+	<a href="#APPLICATION.htmlPath#/area_file_view.cfm?file=#file_id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 	</cfif>
 </div>
 </cfif>

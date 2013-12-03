@@ -9,6 +9,7 @@
 <cfoutput>
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
 <link href="../../styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
@@ -68,15 +69,15 @@
 		<div class="container">
 
 			<cfif isDefined("user_id")>
-			<a class="btn btn-info btn-small" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar a esta área</a>
+			<a class="btn btn-info btn-sm" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar a esta área</a>
 			</cfif>
 
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 				
-				<a class="btn btn-info btn-small disabled" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white"></i> Nuevo usuario</a>
+				<a class="btn btn-info btn-sm disabled" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white"></i> Nuevo usuario</a>
 	 			<cfif isDefined("user_id")>
-	 			<a class="btn btn-info btn-small disabled" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');" ><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
-	 			<a class="btn btn-danger btn-small" title="Eliminar Usuario" onClick="return confirmAction('eliminar');" href="user_delete.cfm?user=#user_id#" lange="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+	 			<a class="btn btn-info btn-sm disabled" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');" ><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+	 			<a class="btn btn-danger btn-sm" title="Eliminar Usuario" onClick="return confirmAction('eliminar');" href="user_delete.cfm?user=#user_id#" lange="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 	 			</cfif>
 
 			</cfif>

@@ -111,6 +111,47 @@
 			return false;
 	}
 
+	function setFileTypeId(fileTypeId) {
+
+		if(fileTypeId == 3){
+
+			$("##documentUsersContainer").show();
+
+		}else{
+
+			$("##documentUsersContainer").hide();
+		}
+
+	}
+
+	var selectUserType = "";
+
+	function openUserSelector(){
+
+		 return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
+	}
+
+	function openReviserUserSelector(){
+
+		selectuserType = "reviser";
+		openUserSelector();
+	}
+
+	function openApproverUserSelector(){
+
+		selectuserType = "approver";
+		openUserSelector();
+	}
+
+	function setSelectedUser(userId, userName) {
+
+		document.getElementById(selectuserType+"_user").value = userId;
+		document.getElementById(selectuserType+"_user_full_name").value = userName;
+
+		selectuserType = "";				
+	}
+
+
 	<cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
 
 	function loadTypology(typologyId,rowId) {
@@ -156,7 +197,7 @@
 
 <div class="contenedor_fondo_blanco">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-inline" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('file_form');
@@ -167,18 +208,79 @@
 		<input type="hidden" name="file_id" value="#file_id#" />
 	</cfif>
 	<input type="hidden" name="area_id" value="#area_id#"/>
-	<input type="hidden" name="fileTypeId" value="#fileTypeId#"/>
 
-	<cfif fileTypeId IS 2 AND page_type IS 1><!---Area files--->
-		<div class="alert alert-info">
-			<small>Este archivo pertenecerá a esta área y podrá ser modificado por cualquier usuario con acceso la misma.</small>
+	<cfif fileTypeId IS 2 OR fileTypeId IS 3><!---Area files--->
+
+		<cfif page_type IS 1>
+
+			<div class="alert alert-info">
+				<small>Este archivo pertenecerá a esta área y podrá ser modificado por cualquier usuario con acceso a la misma.</small>
+			</div>
+
+		</cfif>
+
+		<cfif APPLICATION.moduleAreaFilesLite IS true AND page_type IS 1>
+
+			<div class="form-group">
+				<label for="fileTypeId">Tipo de documento de área</label>
+				<select name="fileTypeId" id="fileTypeId" class="form-control" onchange="setFileTypeId($('##fileTypeId').val());">
+					<option value="2">Sin circuito de calidad</option>
+					<option value="3">Con circuito de calidad</option>
+				</select>
+				<span class="help-block">Esta opción no se puede cambiar una vez creado el documento</span>
+
+			    <!---
+				<cfif isDefined("FORM.phases_enabled") IS true>
+					<cfset phases_enabled = true>
+				<cfelse>
+					<cfset phases_enabled = false>
+				</cfif>
+			    <div class="checkbox">
+			       	<label>
+			          <input type="checkbox" name="phases_enabled" value="true" <cfif phases_enabled IS true>checked="checked"
+			          </cfif>/> Circuito de calidad
+			        </label>
+			    </div>--->
+			</div>
+
+		<cfelse>
+
+			<input type="hidden" name="fileTypeId" value="3"/>
+			
+		</cfif>
+
+		<div id="documentUsersContainer">
+			<div class="form-group">
+				<label class="control-label" for="reviser_user" lang="es">Usuario revisor</label>
+				<input type="hidden" name="reviser_user" id="reviser_user" value="#file.reviser_user#" validate="integer" required="true" />
+				<div class="container" style="width:100%">
+					<div class="row">
+						<div class="col-sm-6" style="padding:0;">
+							<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#file.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" /> 
+						</div>
+						<div class="col-sm-5"><button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label" for="approver_user" lang="es">Usuario aprobador</label>
+				
+				<input type="hidden" name="approver_user" id="approver_user" value="#file.approver_user#" validate="integer" required="true"/>
+				<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#file.approver_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" /> <button onclick="openApproverUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+			</div>
 		</div>
+
+	<cfelse>
+
+		<input type="hidden" name="fileTypeId" value="#fileTypeId#"/>
+
 	</cfif>
 
 	<!---<cfif APPLICATION.moduleAreaFiles IS true>
-		<div class="control-group">
+		<div class="form-group">
 			<label for="fileTypeId">Tipo de archivo</label>
-			<select name="fileTypeId" id="fileTypeId" class="span3">
+			<select name="fileTypeId" id="fileTypeId" class="col-md-3">
 				<option value="1" <cfif file.fileTypeId IS 1>selected="selected"</cfif>>Documento de usuario</option>
 				<option value="2" <cfif file.fileTypeId IS 2>selected="selected"</cfif>>Documento de área</option>
 				<option value="3" <cfif file.fileTypeId IS 3>selected="selected"</cfif>>Documento de área con circuito de calidad</option>
@@ -194,9 +296,9 @@
 		<cfelse>
 			<cfset selected_typology_id = default_typology_id>
 		</cfif>
-		<div class="control-group">
-			<label for="typology_id">Tipología *</label>
-			<select name="typology_id" id="typology_id" class="span3" onchange="loadTypology($('##typology_id').val(),'');">
+		<div class="form-group">
+			<label for="typology_id" class="control-label">Tipología *</label>
+			<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val(),'');">
 				<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif>>Básica</option>
 				<cfif areaTables.recordCount GT 0>
 					<cfloop query="#areaTables#">
@@ -209,7 +311,7 @@
 	</cfif>
 	
 	<cfif page_type IS 1>
-		<div class="control-group">
+		<div class="form-group">
 			<label for="formFile" lang="es">Archivo *</label>
 			<input type="file" name="Filedata" value="" id="formFile" required="required" />
 
@@ -219,7 +321,7 @@
 		</div>
 	</cfif>
 	
-	<div class="control-group">
+	<div class="form-group">
 		<label for="formFileName" lang="es">Nombre *</label>
 		<input type="text" name="name" value="#file.name#" id="formFileName" class="input-block-level" required="required" />
 
@@ -228,7 +330,7 @@
 		</script>
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 		<label for="description" lang="es">Descripción</label> 
 		<textarea name="description" id="description" class="input-block-level">#file.description#</textarea>
 	</div>
@@ -242,7 +344,7 @@
 		<input type="submit" class="btn btn-primary" name="modify" value="Enviar" lang="es"/>
 
 		<cfif page_type IS 2>
-			<a href="file.cfm?file=#file_id#&area=#area#" class="btn" style="float:right">Cancelar</a>
+			<a href="file.cfm?file=#file_id#&area=#area#" class="btn btn-default" style="float:right">Cancelar</a>
 		</cfif>
 	</div>
 	<br/>

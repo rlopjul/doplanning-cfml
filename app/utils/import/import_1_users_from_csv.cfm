@@ -13,6 +13,7 @@
 <!-- InstanceEndEditable -->
 <link href="../../../html/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 
 <link href="../../../html/styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
@@ -102,7 +103,7 @@
 		<cfelse><!---There is an error in the insert--->
 		
 			<cfset message = #result.message#>
-			<cfset alert_class = "alert-error">
+			<cfset alert_class = "alert-danger">
 			
 		</cfif>
 		
@@ -118,7 +119,7 @@
 		
 		<cfdump var="#getImportedUsersQuery#" label="#SESSION.client_abb#_users_to_import" metainfo="no">
 
-		<div style="margin-top:10px"><a href="#CGI.SCRIPT_NAME#" class="btn">Volver</a></div>
+		<div style="margin-top:10px"><a href="#CGI.SCRIPT_NAME#" class="btn btn-default">Volver</a></div>
 
 		</cfoutput>
 <cfelse>

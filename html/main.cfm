@@ -22,6 +22,7 @@
 
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
 <cfif APPLICATION.identifier EQ "dp">
 <link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp2.min.css"/>
@@ -100,7 +101,7 @@
 <script type="text/javascript">
 	
 	function resizeIframe() {
-		var newHeight = windowHeight()-56;
+		var newHeight = windowHeight()-66;
 		$(".iframes").height(newHeight);
 		
 		$("#itemIframe").height(newHeight-areaImgHeight);
@@ -216,7 +217,7 @@
 			
 		});
 		
-		$('a[data-toggle="tab"]').on('shown', function (e) { //On show tab
+		$('a[data-toggle="tab"]').on('show.bs.tab', function (e) { //On show tab
 			
 			var pattern=/#.+/gi //use regex to get anchor(==selector)
 			currentTab = e.target.toString().match(pattern)[0];
@@ -273,7 +274,7 @@
 		
 		<div class="tabbable"><!---Tab Panel--->
 	
-		  <ul class="nav nav-pills" id="dpTab" style="margin-bottom:0px; clear:none;">
+		  <ul class="nav nav-pills" id="dpTab" style="clear:none;padding-bottom:5px;">
 			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Búsqueda</a></li>
@@ -329,47 +330,61 @@
 		  
 		  <div class="tab-content" style="clear:both;">
 		  
-		  
 			<div class="tab-pane active" id="tab1"><!---Tab Tree--->
 				
-				<div class="form-inline" style="padding-bottom:5px;">
-										
-					<div class="input-append">
-						<input type="text" name="text" id="searchText" value="" class="input-medium" />
-						<button onClick="searchTextInTree()" class="btn" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
-					</div>					
-					
-					<a onClick="updateTree();" class="btn" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
-					<a onClick="expandTree();" class="btn" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
-					<a onClick="collapseTree();" class="btn" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+				<div class="container" style="width:100%;">
+					<div class="row" style="padding-bottom:5px;">
+						
+						<div class="col-sm-11" style="padding:0;">
+							<div class="btn-toolbar">
+								<div class="btn-group">
+									<div class="input-group" style="width:260px;" >
+										<input type="text" name="text" id="searchText" value="" class="form-control"/>
+										<span class="input-group-btn">
+											<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+										</span>
+									</div>
+								</div>
+								<div class="btn-group">
+									<a onClick="updateTree();" class="btn btn-default" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
+								</div>
+								<div class="btn-group">
+									<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+									<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+								</div>									
+								<!---<a onclick="expandTree();" class="btn btn-xs" title="Abrir nodos del árbol"><i class="icon-plus"></i> Expandir</a>
+								<a onclick="collapseTree();" class="btn btn-xs" title="Abrir nodos del árbol"><i class="icon-minus"></i> Colapsar</a>--->
+								
+							</div>
+							<input type="hidden" id="changeTabDisabled" value="true"/><!---No cambiar de pestaña al seleccionar área--->
+						</div>
 
-					<input type="hidden" id="changeTabDisabled" value="true"/><!---No cambiar de pestaña al seleccionar área--->
-					
-					<!---<a onclick="expandTree();" class="btn btn-mini" title="Abrir nodos del árbol"><i class="icon-plus"></i> Expandir</a>
-					<a onclick="collapseTree();" class="btn btn-mini" title="Abrir nodos del árbol"><i class="icon-minus"></i> Colapsar</a>--->
+						<div class="col-sm-1" style="padding:0;">	
 
+						<cfif objectUser.general_administrator EQ true>
+							<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-right:3px;" lang="es"/></a>--->
 
-					<cfif objectUser.general_administrator EQ true>
-						<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-right:3px;" lang="es"/></a>--->
-
-						<a href="admin/" class="btn btn-info" style="float:right" title="Administración general"><i class="icon-wrench"></i> <span lang="es"></span></a>
-					<cfelse>
-						<!--- PROVISIONAL MIENTRAS ESTÉ EL ICONO TAMBIÉN ANTES
-						<cfxml variable="areasAdminXml">
-							#objectUser.areas_administration#
-						</cfxml>
-						<cfif isDefined("areasAdminXml.areas_administration.area")>
-							<cfset nAreasAdmin = arrayLen(areasAdminXml.areas_administration.area)>
+							<a href="admin/" class="btn btn-info" style="float:right" title="Administración general"><i class="icon-wrench"></i> <span lang="es"></span></a>
 						<cfelse>
-							<cfset nAreasAdmin = 0>
-						</cfif> --->
-						<cfif nAreasAdmin GT 0>
-							<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>--->
+							<!--- PROVISIONAL MIENTRAS ESTÉ EL ICONO TAMBIÉN ANTES
+							<cfxml variable="areasAdminXml">
+								#objectUser.areas_administration#
+							</cfxml>
+							<cfif isDefined("areasAdminXml.areas_administration.area")>
+								<cfset nAreasAdmin = arrayLen(areasAdminXml.areas_administration.area)>
+							<cfelse>
+								<cfset nAreasAdmin = 0>
+							</cfif> --->
+							<cfif nAreasAdmin GT 0>
+								<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>--->
 
-							<a href="admin/" class="btn btn-info" style="float:right" title="Administración de áreas"><i class="icon-wrench"></i></a>
+								<a href="admin/" class="btn btn-info" style="float:right" title="Administración de áreas"><i class="icon-wrench"></i></a>
+							</cfif>
 						</cfif>
-					</cfif>
 
+						</div>
+
+					</div>
 				</div>
 				
 				<!---treeContainer--->

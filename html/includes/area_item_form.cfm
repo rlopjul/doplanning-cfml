@@ -47,9 +47,12 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 6><!---News, Events, Tasks--->
 
 <cfoutput>
-<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
+<!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>--->
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 </cfoutput>
 
 </cfif>
@@ -157,7 +160,7 @@ function onSubmitForm()
 	<div id="submitDiv1" style="margin-bottom:5px;"><input type="submit" name="submit1" value="Enviar" class="btn btn-primary" lang="es"/>
 		<cfif page_type IS 2 OR isDefined("URL.message")>
 			<cfoutput>
-			<a href="#return_page#" class="btn" style="float:right;" lang="es">Cancelar</a>
+			<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 			</cfoutput>
 		</cfif>
 	</div>
@@ -166,7 +169,7 @@ function onSubmitForm()
 	
 	<cfif APPLICATION.moduleTwitter IS true AND area_type IS "web">
 	<cfoutput>
-	<div class="control-group">
+	<div class="form-group">
 		<div class="controls">
 			<label class="checkbox">
 				<img src="#APPLICATION.htmlPath#/assets/icons/twitter_icon.png" alt="Twitter"/> <cfinput type="checkbox" name="post_to_twitter" value="true" title="Enviar #itemTypeNameEs# a Twitter"> Publicar #itemTypeNameEs# en Twitter
@@ -181,7 +184,7 @@ function onSubmitForm()
     <div id="submitDiv2"><input type="submit" name="submit2" value="Enviar" class="btn btn-primary" lang="es"/>
 		<cfif page_type IS 2 OR isDefined("URL.message")>
 			<cfoutput>
-			<a href="#return_page#" class="btn" style="float:right;" lang="es">Cancelar</a>
+			<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 			</cfoutput>
 		</cfif>
 	</div>

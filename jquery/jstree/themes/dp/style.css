@@ -82,7 +82,7 @@
 
 /*DOPLANNING*/
 .jstree-dp li { font-size:12px; margin-left:26px; }
-.jstree-dp li a { padding-top:5px; padding-bottom:5px; font-family:Verdana, Arial; }
+.jstree-dp li a { padding-top:5px; padding-bottom:5px; font-family:Verdana, Arial; height: 26px; }
 .jstree-dp li .jstree-node .jstree-icon { height:20px; width:23px; background-position:top; padding-top:0; margin-top:0; margin-right:2px;}
 
 .jstree-dp li[rel="allowed"] > a > .jstree-icon {

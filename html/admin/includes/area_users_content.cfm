@@ -37,11 +37,11 @@
 	
 	<!---<div class="div_head_subtitle_area_text"><strong>USUARIOS</strong><br/> del área</div>--->
 
-	<a class="btn btn-info btn-small" onclick="parent.loadModal('html_content/area_modify.cfm?area=#area_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
+	<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/area_modify.cfm?area=#area_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
 	
-	<a class="btn btn-info btn-small disabled"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a><!---ESTO ESTÁ EMPEZADO PERO NO TERMINADO (falta solucionar lo de la subida de archivos) onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');" --->
+	<a class="btn btn-info btn-sm disabled"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a><!---ESTO ESTÁ EMPEZADO PERO NO TERMINADO (falta solucionar lo de la subida de archivos) onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');" --->
 
-	<a href="area_users.cfm?area=#area_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
+	<a href="area_users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
 
 </div>
 
