@@ -3,12 +3,6 @@
 2 Modify file
 --->
 
-<cfif isDefined("URL.fileTypeId") AND isNumeric(URL.fileTypeId)>
-	<cfset fileTypeId = URL.fileTypeId>
-<cfelse>
-	<cflocation url="empty.cfm" addtoken="no">
-</cfif>
-
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form_query.cfm">
 
 <cfoutput>
@@ -88,6 +82,9 @@
 				</cfif>
 
 			</cfif>
+
+			setFileTypeId("#fileTypeId#");
+
 		</cfif>		
 	});
 
@@ -258,7 +255,7 @@
 						<div class="col-sm-6" style="padding:0;">
 							<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#file.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" /> 
 						</div>
-						<div class="col-sm-5"><button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button></div>
+						<div class="col-sm-5" style="padding:0;"><button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button></div>
 					</div>
 				</div>
 			</div>
@@ -323,7 +320,7 @@
 	
 	<div class="form-group">
 		<label for="formFileName" lang="es">Nombre *</label>
-		<input type="text" name="name" value="#file.name#" id="formFileName" class="input-block-level" required="required" />
+		<input type="text" name="name" value="#file.name#" id="formFileName" class="form-control" required="required" />
 
 		<script type="text/javascript">
 			addRailoRequiredTextInput("name", "Debe especificar un nombre para el archivo");
@@ -332,7 +329,7 @@
 
 	<div class="form-group">
 		<label for="description" lang="es">Descripción</label> 
-		<textarea name="description" id="description" class="input-block-level">#file.description#</textarea>
+		<textarea name="description" id="description" class="form-control">#file.description#</textarea>
 	</div>
 
 	<!--- Typology fields --->

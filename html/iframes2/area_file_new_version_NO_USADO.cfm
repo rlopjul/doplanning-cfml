@@ -53,6 +53,9 @@
 
 </cfoutput>
 <!-- InstanceBeginEditable name="head" -->
+<!---<cfoutput>
+<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
+</cfoutput>--->
 <!-- InstanceEndEditable -->
 </head>
 
@@ -62,8 +65,7 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfset return_path = "#APPLICATION.htmlPath#/iframes2/">
-<cfinclude template="#APPLICATION.htmlPath#/includes/file_edited_content.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_replace.cfm">
 
 <!-- InstanceEndEditable -->
 </body>
