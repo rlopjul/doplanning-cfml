@@ -177,8 +177,8 @@
 
    	<cfcase value="15"><!---Files edited--->
 
-		<cfset itemTypeName = "file">
-		<cfset itemTypeNameP = "files">
+		<cfset itemTypeName = "file_edited">
+		<cfset itemTypeNameP = "files_edited">
 		<cfset itemTypeTable = itemTypeNameP&"_edited">
 		
 		<cfset itemTypeNameEs = "Archivo en edición">

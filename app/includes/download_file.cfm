@@ -3,7 +3,6 @@
     File created by: alucena
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 25-05-2009
 	
 --->
 <cfset component = "downloadFile">
@@ -53,9 +52,16 @@
 		<cfinvokeargument name="item_id" value="#item_id#">
 		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 	</cfif>
-	<cfinvokeargument name="return_type" value="object">
+	<cfif isDefined("URL.fileTypeId")>
+		<cfinvokeargument name="fileTypeId" value="#URL.fileTypeId#"/>
+	</cfif>
+	<cfinvokeargument name="return_type" value="query">
 </cfinvoke>		
 
-<cfset files_directory = "files">
+<cfset fileTypeId = objectFile.file_type_id>
+<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
+<cfset files_directory = fileTypeNameP>
+
 
 <cfinclude template="get_file.cfm">

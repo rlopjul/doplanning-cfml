@@ -258,12 +258,12 @@
 
 	<div class="form-group">
 		<label for="description">Descripción</label>
-		<textarea name="description" id="description" class="input-block-level" maxlength="1000">#field.description#</textarea>
+		<textarea name="description" id="description" class="form-control" maxlength="1000">#field.description#</textarea>
 	</div>
 
 	<div class="form-group" id="textDefaultValue">
 		<label for="default_value_text">Valor por defecto</label>
-		<textarea name="default_value" id="default_value_text" class="input-block-level" maxlength="1000" rows="4" <cfif field.field_type_id IS 6 OR field.field_type_id IS 7>disabled="disabled"</cfif>>#field.default_value#</textarea>
+		<textarea name="default_value" id="default_value_text" class="form-control" maxlength="1000" rows="4" <cfif field.field_type_id IS 6 OR field.field_type_id IS 7>disabled="disabled"</cfif>>#field.default_value#</textarea>
 	</div>
 	<div class="form-group" id="dateDefaultValue">
 		<label for="default_value_date">Valor por defecto</label>

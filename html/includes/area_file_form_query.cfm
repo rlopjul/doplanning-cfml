@@ -8,6 +8,12 @@
 <cfelse>
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
+
+<cfif isDefined("URL.fileTypeId") AND isNumeric(URL.fileTypeId)>
+	<cfset fileTypeId = URL.fileTypeId>
+<cfelse>
+	<cflocation url="empty.cfm" addtoken="no">
+</cfif>
 	
 <cfif isDefined("FORM.page")>
 
@@ -69,6 +75,7 @@
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
 			<cfinvokeargument name="file_id" value="#file_id#">
+			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 		</cfinvoke>
 
 

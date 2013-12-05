@@ -417,7 +417,7 @@
 		<cfset var method = "listAllAreaItems">
 			
 			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, attached_file_id, NULL AS file_type_id">
-			<cfset var fileColums = "id, name, IFNULL(files.replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id, file_type_id">
+			<cfset var fileColums = "id, name, IFNULL(replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id, file_type_id">
 
 			<cfset var commonColumsNull = "NULL AS end_date, NULL AS done">
 
@@ -548,8 +548,8 @@
 				<!--- Area files edited --->
 				UNION ALL
 				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 15 AS itemTypeId
-				FROM #client_abb#_files_edition AS files_edited
-					AND files_edited.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+				FROM #client_abb#_files_edited AS files_edited
+					WHERE files_edited.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					AND files_edited.status='ok')
 				) AS items
 				INNER JOIN #client_abb#_users AS users
