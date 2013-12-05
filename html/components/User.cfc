@@ -51,7 +51,7 @@
 	
 	<!--- ----------------------------------- getUser ------------------------------------- --->
 	
-	<cffunction name="getUser" output="false" returntype="struct" access="public">
+	<cffunction name="getUser" output="false" returntype="any" access="public">
 		<cfargument name="user_id" type="numeric" required="true">
 		<cfargument name="format_content" type="string" required="false" default="default">
 		<cfargument name="return_type" type="string" required="false" default="object">

@@ -1,3 +1,4 @@
+<cfoutput>
 <div class="div_element_menu">
 	<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" onclick="return downloadFileLinked(this,event)"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" title="Descargar archivo" alt="Descargar archivo"/></a></div>
 	<div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" onclick="return downloadFileLinked(this,event)" class="text_menus"><br />Descargar</a></div>
@@ -42,8 +43,8 @@
 		<cfif APPLICATION.identifier EQ "dp"><!---Solo para DoPlanning--->
 		
 			<div class="div_element_menu">
-				<div class="div_icon_menus"><a href="area_file_replace.cfm?file=#objectFile.id#&area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/file_replace.png" title="Reemplazar archivo" alt="Reemplazar archivo" /></a></div>
-				<div class="div_text_menus"><a href="area_file_replace.cfm?file=#objectFile.id#&area=#area_id#" class="text_menus">Reemplazar<br />archivo</a></div>
+				<div class="div_icon_menus"><a href="area_file_replace.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/file_replace.png" title="Reemplazar archivo" alt="Reemplazar archivo" /></a></div>
+				<div class="div_text_menus"><a href="area_file_replace.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#" class="text_menus">Reemplazar<br />archivo</a></div>
 			</div>
 			<div class="div_element_menu">
 				<div class="div_icon_menus"><a href="area_file_modify.cfm?file=#objectFile.id#&area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/file_modify.png" title="Modificar archivo" alt="Modificar archivo" /></a></div>
@@ -96,3 +97,4 @@
 		</div>
 	</cfif> 
 </cfif>
+</cfoutput>

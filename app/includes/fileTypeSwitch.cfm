@@ -19,6 +19,6 @@
 		<cfset fileTypeNameP = "files_edited">
 		<cfset fileTypeTable = fileTypeNameP>
 	
-   	</cfcase> 
+   	</cfcase>
 
 </cfswitch>

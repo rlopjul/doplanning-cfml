@@ -1691,7 +1691,7 @@
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="selectFileQuery">
 				<cfinvokeargument name="file_id" value="#file_id#">
-				<cfinovkeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 				<cfif area_passed IS true>
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfif>
@@ -2702,6 +2702,8 @@
 		<cfargument name="file_type" type="string" required="true"/>
 		<cfargument name="description" type="string" required="true"/>
 		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="reviser_user" type="numeric" required="false">
+		<cfargument name="approver_user" type="numeric" required="false">
 
 		<!---<cfargument name="folder_id" type="numeric" required="false"/>--->
 		
@@ -2769,7 +2771,11 @@
 					status = <cfqueryparam value="pending" cfsqltype="cf_sql_varchar">,
 					file_type_id = <cfqueryparam value="#arguments.fileTypeId#" cfsqltype="cf_sql_integer">
 					<cfif arguments.fileTypeId IS NOT 1>
-					, area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+						, area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif arguments.fileTypeId IS 3>
+						, reviser_user = <cfqueryparam value="#arguments.reviser_user#" cfsqltype="cf_sql_integer">
+						, approver_user = <cfqueryparam value="#arguments.approver_user#" cfsqltype="cf_sql_integer">
 					</cfif>;
 				</cfquery>
 
@@ -2796,7 +2802,7 @@
 						file_size = <cfqueryparam value="#arguments.file_size#" cfsqltype="cf_sql_integer">,
 						file_type = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">,
 						uploading_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,	
-						status = <cfqueryparam value="pending" cfsqltype="cf_sql_varchar">;
+						status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">;
 					</cfquery>
 
 				</cfif>
@@ -3349,12 +3355,14 @@
 		<cfargument name="Filedata" type="string" required="true"/>
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="reviser_user" type="numeric" required="false">
+		<cfargument name="approver_user" type="numeric" required="false">
 
 		<cfset var method = "uploadNewFile">
 
 		<cfset var response = structNew()>
 
-		<cfset var destination = "#APPLICATION.filesPath#/#client_abb#/">
+		<cfset var destination = "">
 		<cfset var upload_file_id = "">
 					
 		<cftry>
@@ -3370,6 +3378,7 @@
 			</cfinvoke>		
 			<cfset folder_id = root_folder_id>--->
 
+			<cfset destination = "#APPLICATION.filesPath#/#client_abb#/">
 			<cfset destination = destination&"#fileTypeNameP#/">
 			
 			<cffile action="upload" filefield="Filedata" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
@@ -3383,6 +3392,8 @@
 				<cfinvokeargument name="file_type" value=".#uploadedFile.clientFileExt#"/>
 				<cfinvokeargument name="file_size" value="#uploadedFile.fileSize#"/>
 				<cfinvokeargument name="description" value="#arguments.description#"/>
+				<cfinvokeargument name="reviser_user" value="#arguments.reviser_user#"/>
+				<cfinvokeargument name="approver_user" value="#arguments.approver_user#"/>
 				<cfinvokeargument name="status" value="ok">
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
@@ -3490,34 +3501,29 @@
 
 	<cffunction name="replaceFile" output="false" returntype="struct" access="public">
 		<cfargument name="file_id" type="string" required="true"/>
+		<cfargument name="fieTypeId" type="numeric" required="true" />
 		<cfargument name="Filedata" type="string" required="true"/>
 		
 		<cfset var method = "replaceFile">
 
 		<cfset var response = structNew()>
 
-		<cfset var destination = '#APPLICATION.filesPath#/#client_abb#/files/'>
+		<cfset var destination = "">
+		<cfset var new_physical_name = "">
 					
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<!---<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
-				<cfinvokeargument name="id" value="#arguments.file_id#"/>
-				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
-			<cfquery name="getFile" datasource="#client_dsn#">
-				SELECT *
-				FROM #client_abb#_files
-				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
-				AND status = 'ok';
-				<!---AND user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">--->
-			</cfquery>--->
-
+			<cfset destination = "#APPLICATION.filesPath#/#client_abb#/">
+			<cfset destination = destination&"#fileTypeNameP#/">
+			
 			<!--- getFile --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="getFile">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 				<cfif APPLICATION.moduleAreaFilesLite IS true>
 					<cfinvokeargument name="with_lock" value="true">
 				</cfif>
@@ -3583,15 +3589,52 @@
 						<cfset file_size_full = "#uploadedFile.fileSize#">
 						
 						<cfset temp_file="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">
+
+						<cfif arguments.fileTypeId IS 3><!--- Save version --->
+
+							<cfquery name="insertFileVersionQuery" datasource="#client_dsn#">
+								INSERT INTO `#client_abb#_#fileTypeTable#_versions`
+								SET file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">,
+								file_name = <cfqueryparam value="#file_name#" cfsqltype="cf_sql_varchar">,
+								user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
+								file_size = <cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">,
+								file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">,
+								uploading_date = NOW(),	
+								status = <cfqueryparam value="pending" cfsqltype="cf_sql_varchar">;
+							</cfquery>
+
+							<cfquery name="getLastInsertId" datasource="#client_dsn#">
+								SELECT LAST_INSERT_ID() AS insert_version_id FROM `#client_abb#_#fileTypeTable#_versions`;
+							</cfquery>
+							<cfset version_id = getLastInsertId.insert_version_id>
+
+							<cfset new_physical_name = "#file_id#_#version_id#">
+
+							<cfquery name="updateFileVersionQuery" datasource="#client_dsn#">
+								UPDATE `#client_abb#_#fileTypeTable#_versions`
+								SET physical_name = <cfqueryparam value="#new_physical_name#" cfsqltype="cf_sql_varchar">,
+								status = <cfqueryparam value="ok" cfsqltype="cf_sql_varchar">
+								WHERE version_id = <cfqueryparam value="#version_id#" cfsqltype="cf_sql_integer">;
+							</cfquery>
+
+						<cfelse>
+
+							<cfset new_physical_name = getFile.physical_name>
+							
+						</cfif>
+						
 						
 						<cfquery name="updateUploadingFile" datasource="#client_dsn#">
-							UPDATE #client_abb#_files
+							UPDATE #client_abb#_#fileTypeTable#
 							SET replacement_date = NOW(), 
 							file_size = <cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">,
 							file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">,
 							file_name = <cfqueryparam value="#file_name#" cfsqltype="cf_sql_varchar">,
 							status = 'ok',
 							status_replacement = 'uploaded'
+							<cfif arguments.fileTypeId IS 3>
+							, physical_name = <cfqueryparam value="#new_physical_name#" cfsqltype="cf_sql_integer">,
+							</cfif>
 							WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
 						
@@ -3606,11 +3649,12 @@
 
 					<cftry>
 						
-						<cffile action="rename" source="#destination##temp_file#" destination="#destination##getFile.physical_name#">
+						<cffile action="rename" source="#destination##temp_file#" destination="#destination##new_physical_name#">
 
 						<!--- getFile --->
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileReplacedQuery">
 							<cfinvokeargument name="file_id" value="#arguments.file_id#">
+							<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 							<cfinvokeargument name="with_lock" value="false">
 							<cfinvokeargument name="parse_dates" value="true">		
 
