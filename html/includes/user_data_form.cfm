@@ -68,20 +68,20 @@
 				</select>
 			</div>
 			
-			<label for="mobile_phone" lang="es">Teléfono móvil:</label>
-			<div style="float:left; width:35px;"><input type="text" name="mobile_phone_ccode" value="#objectUser.mobile_phone_ccode#" style="width:22px;"/></div> 		
-			<div style="float:left; width:75px;"><input type="text" name="mobile_phone" id="mobile_phone" value="#objectUser.mobile_phone#" style="width:100%;"/></div>
+			<label for="mobile_phone" style="float:left;" lang="es">Teléfono móvil:</label>
+			<div style="float:left; width:55px;"><input type="text" name="mobile_phone_ccode" value="#objectUser.mobile_phone_ccode#" style="width:42px;"/></div> 		
+			<div style="float:left; width:100px;"><input type="text" name="mobile_phone" id="mobile_phone" value="#objectUser.mobile_phone#" style="width:100%;"/></div>
 			
 			<div style="clear:left"></div>
 			
-			<label for="telephone" lang="es">Teléfono:</label>
-			<div style="float:left; width:35px;"><input type="text" name="telephone_ccode" value="#objectUser.telephone_ccode#" style="width:22px;"/></div>
-			<div style="float:left; width:75px;"><input type="text" name="telephone" id="telephone" value="#objectUser.telephone#" style="width:100%" /></div>
+			<label for="telephone" style="float:left;" lang="es">Teléfono:</label>
+			<div style="float:left; width:55px;"><input type="text" name="telephone_ccode" value="#objectUser.telephone_ccode#" style="width:42px;"/></div>
+			<div style="float:left; width:100px;"><input type="text" name="telephone" id="telephone" value="#objectUser.telephone#" style="width:100%" /></div>
 		
 			<div style="clear:left;"></div>
 				
 			<label for="address" lang="es">Dirección:</label>
-			<textarea type="text" name="address" id="address" class="input-block-level" rows="2"/>#objectUser.address#</textarea>
+			<textarea type="text" name="address" id="address" class="form-control" rows="2"/>#objectUser.address#</textarea>
 			
 			<label for="password" lang="es">Nueva contraseña:</label>
 			<input type="password" name="password" id="password" value="" autocomplete="false" />

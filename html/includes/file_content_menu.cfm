@@ -55,7 +55,9 @@
 			<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 		</cfif>
 		
-		<a href="area_file_associate_areas.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-plus-sign"></i> <span lang="es">Asociar a áreas</span></a>
+		<cfif fileTypeId IS 1 OR fileTypeId IS 2>
+			<a href="area_file_associate_areas.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-plus-sign"></i> <span lang="es">Asociar a áreas</span></a>
+		</cfif>
 		
 		<cfif fileTypeId IS 1 OR (fileTypeId IS 2 AND area_id NEQ objectFile.area_id)>
 			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=dissociateFile&file_id=#objectFile.id#&area_id=#area_id#&return_path=#return_path#" class="btn btn-warning btn-sm"><i class="icon-minus-sign"></i> <span lang="es">Quitar del área</span></a>
@@ -65,21 +67,21 @@
 			
 			<cfif objectFile.locked IS true>
 				<cfif objectFile.lock_user_id IS SESSION.user_id OR is_user_area_responsible>
-					<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=lockFile&file_id=#objectFile.id#&area_id=#area_id#&lock=false&return_path=#return_path#" class="btn btn-warning btn-sm" onclick="return confirmLockFile(false);"><i class="icon-unlock"></i> <span lang="es">Desbloquear</span></a>
+					<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=lockFile&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&lock=false&return_path=#return_path#" class="btn btn-warning btn-sm" onclick="return confirmLockFile(false);"><i class="icon-unlock"></i> <span lang="es">Desbloquear</span></a>
 				</cfif>
 			<cfelse>
-				<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=lockFile&file_id=#objectFile.id#&area_id=#area_id#&lock=true&return_path=#return_path#" class="btn btn-warning btn-sm" onclick="return confirmLockFile(true);"><i class="icon-lock"></i> <span lang="es">Bloquear</span></a>
+				<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=lockFile&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&lock=true&return_path=#return_path#" class="btn btn-warning btn-sm" onclick="return confirmLockFile(true);"><i class="icon-lock"></i> <span lang="es">Bloquear</span></a>
 
 				<cfif fileTypeId IS 3 AND is_user_area_responsible IS true>
 					
-					<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=lockFile&file_id=#objectFile.id#&area_id=#area_id#&lock=true&return_path=#return_path#" class="btn btn-default btn-sm" onclick="return confirmLockFile(true);"><i class="icon-check"></i> <span lang="es">Solicitar aprobación</span></a>
+					<a href="file_request_approval.cfm?file=#objectFile.id#" class="btn btn-default btn-sm"><i class="icon-check"></i> <span lang="es">Solicitar aprobación</span></a>
 
 				</cfif>
 			</cfif>
 
 			<cfif fileTypeId IS 3>
 				
-				<a href="area_file_modify.cfm?file=#objectFile.id#&area=#area_id#&fileTypeId=#fileTypeId#" class="btn btn-default btn-sm"><i class="icon-list-alt"></i> <span lang="es">Versiones</span></a>
+				<a href="file_versions.cfm?file=#objectFile.id#" class="btn btn-default btn-sm"><i class="icon-list-alt"></i> <span lang="es">Versiones</span></a>
 
 			</cfif>
 

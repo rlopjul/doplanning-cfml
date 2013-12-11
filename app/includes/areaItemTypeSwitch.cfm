@@ -91,7 +91,6 @@
 	
    	</cfcase> 
 
-
    	<cfcase value="8"><!---pubmed article--->
 
 		<cfset itemTypeName = "pubmed">
@@ -175,6 +174,7 @@
 
    	</cfcase>
 
+   	<!---
    	<cfcase value="15"><!---Files edited--->
 
 		<cfset itemTypeName = "file_edited">
@@ -185,6 +185,6 @@
 
 		<cfset itemTypeGender = "male">
 	
-   	</cfcase> 
+   	</cfcase>--->
 
 </cfswitch>

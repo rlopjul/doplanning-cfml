@@ -72,10 +72,10 @@ function confirmLockFile(value) {
 		<cfif page_type NEQ 1>
 
 			<cfif objectFile.locked IS true>
-				<div class="alert">
+				<div class="alert alert-warning">
 					<span>Archivo bloqueado por el usuario <a href="area_user.cfm?area=#objectFile.area_id#&user=#objectFile.lock_user_id#">#objectFile.lock_user_full_name#</a>.</span>
 				</div>
-			<cfelseif objectFile.file_type_id IS 2>
+			<cfelseif objectFile.file_type_id IS 2 OR objectFile.file_type_id IS 3>
 				<div class="alert alert-info">
 					<span>Debe bloquear el archivo para poder modificarlo o reemplazarlo.</span>
 				</div>
@@ -112,11 +112,26 @@ function confirmLockFile(value) {
 			</div>
 			<!---<div class="div_file_page_user">#objectFile.user_full_name#</div>--->
 		</cfif>
+		<cfif objectFile.file_type_id IS 3>
+			
+			<div class="div_file_page_label">
+				<span>Usuario revisor: </span>			
+				<a href="area_user.cfm?area=#area_id#&user=#objectFile.reviser_user#">#objectFile.reviser_user_full_name#</a>
+			</div>
+
+			<div class="div_file_page_label">
+				<span>Usuario aprobador: </span>			
+				<a href="area_user.cfm?area=#area_id#&user=#objectFile.approver_user#">#objectFile.approver_user_full_name#</a>
+			</div>
+
+		</cfif>
 		<div class="div_file_page_label"><span lang="es">Nombre de archivo:</span></div>
 		<div class="div_file_page_user">#objectFile.file_name#</div>
 		
-		<div class="div_file_page_label"><span lang="es">Fecha de subida:</span> <span class="text_file_page">#objectFile.uploading_date#</span></div>	
-		<div class="div_file_page_label"><span lang="es">Fecha de reemplazo:</span> <span class="text_file_page"><cfif len(objectFile.replacement_date) GT 0>#objectFile.replacement_date#<cfelse>-</cfif></span></div> 
+		<div class="div_file_page_label"><span lang="es">Fecha de subida:</span> <span class="text_file_page">#objectFile.uploading_date#</span></div>
+		<cfif len(objectFile.replacement_date) GT 0 OR objectFile.file_type_id IS NOT 3>	
+		<div class="div_file_page_label"><span lang="es"><cfif objectFile.file_type_id IS 3>Fecha de última versión:<cfelse>Fecha de reemplazo:</cfif></span> <span class="text_file_page"><cfif len(objectFile.replacement_date) GT 0>#objectFile.replacement_date#<cfelse>-</cfif></span></div>
+		</cfif>
 		
 		<div class="div_file_page_label"><span lang="es">Tipo de archivo:</span> <span class="text_file_page">#objectFile.file_type#</span></div>
 		
@@ -138,6 +153,7 @@ function confirmLockFile(value) {
 		<!---fileUrl--->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
 			<cfinvokeargument name="file_id" value="#objectFile.id#">
+			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 			<cfinvokeargument name="area_id" value="#area_id#">
 		</cfinvoke>
 

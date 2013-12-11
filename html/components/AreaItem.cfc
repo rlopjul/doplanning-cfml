@@ -2290,8 +2290,10 @@
 
 									<cfif itemsQuery.file_type_id IS 1><!--- User file --->
 										<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img" alt="#itemTypeNameEs#" title="#itemTypeNameEs#"/>
-									<cfelse><!--- Area file --->
+									<cfelseif itemsQuery.file_type_id IS 2><!--- Area file --->
 										<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_area.png" class="item_img" alt="#itemTypeNameEs# del área" title="#itemTypeNameEs# del área"/>
+									<cfelseif itemsQuery.file_type_id IS 3>
+										<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_edited.png" class="item_img" alt="#itemTypeNameEs# del área en edición" title="#itemTypeNameEs# del área en edición"/>
 									</cfif>
 
 								<cfelseif itemTypeId IS NOT 3><!---No es link--->
@@ -2318,7 +2320,7 @@
 								</cfif>
 
 								<!---Attached files--->
-								<cfif itemTypeId IS 10 OR itemTypeId IS 15>
+								<cfif itemTypeId IS 10>
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i><span class="hidden">3</span></a>
 								<cfelseif isNumeric(itemsQuery.attached_file_id)>
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip" style="font-size:14px;"></i><span class="hidden">1</span></a>

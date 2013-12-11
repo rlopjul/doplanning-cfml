@@ -13,21 +13,23 @@
 			  PRIMARY KEY (`item_id`,`item_type_id`,`area_id`) USING BTREE,
 			  KEY `FK_#client_abb#_items_position_1` (`area_id`),
 			  CONSTRAINT `FK_#client_abb#_items_position_1` FOREIGN KEY (`area_id`) REFERENCES `#client_abb#_areas` (`id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		</cfquery>
 		
 		<!--- TABLA DE TIPOS DE CAMPOS --->
 		<cfquery datasource="#client_dsn#">	
-			CREATE TABLE `#client_abb#_tables_fields_types` (
+			CREATE TABLE  `#client_abb#_tables_fields_types` (
 			  `field_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `field_type_group` varchar(45) NOT NULL,
 			  `input_type` varchar(45) NOT NULL,
-			  `name` varchar(50) NOT NULL,
+			  `name` varchar(100) NOT NULL,
 			  `max_length` int(10) unsigned DEFAULT NULL,
 			  `mysql_type` varchar(45) DEFAULT NULL,
 			  `cf_sql_type` varchar(45) DEFAULT NULL,
 			  `enabled` tinyint(1) NOT NULL,
+			  `position` int(10) unsigned NOT NULL,
 			  PRIMARY KEY (`field_type_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		</cfquery>		
 	
 		<!--- TABLAS DE LISTAS --->
@@ -80,7 +82,7 @@
 			  KEY `FK_#client_abb#_lists_fields_2` (`table_id`),
 			  CONSTRAINT `FK_#client_abb#_lists_fields_2` FOREIGN KEY (`table_id`) REFERENCES `#client_abb#_lists` (`id`),
 			  CONSTRAINT `FK_#client_abb#_lists_fields_1` FOREIGN KEY (`field_type_id`) REFERENCES `#client_abb#_tables_fields_types` (`field_type_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		</cfquery>		
 		
 			
@@ -135,7 +137,7 @@
 			  KEY `FK_#client_abb#_forms_fields_2` (`table_id`),
 			  CONSTRAINT `FK_#client_abb#_forms_fields_2` FOREIGN KEY (`table_id`) REFERENCES `#client_abb#_forms` (`id`),
 			  CONSTRAINT `FK_#client_abb#_forms_fields_1` FOREIGN KEY (`field_type_id`) REFERENCES `#client_abb#_tables_fields_types` (`field_type_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		</cfquery>	
 		
 		<!--- TABLAS DE TIPOLOGÍAS --->	
@@ -189,7 +191,7 @@
 			  KEY `FK_#client_abb#_typologies_fields_2` (`table_id`),
 			  CONSTRAINT `FK_#client_abb#_typologies_fields_2` FOREIGN KEY (`table_id`) REFERENCES `#client_abb#_typologies` (`id`),
 			  CONSTRAINT `FK_#client_abb#_typologies_fields_1` FOREIGN KEY (`field_type_id`) REFERENCES `#client_abb#_tables_fields_types` (`field_type_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		</cfquery>		
 		
 		
@@ -302,17 +304,19 @@
 		<!--- INSERT --->
 		
 		<cfquery datasource="#client_dsn#">				 
-			 INSERT INTO `#client_abb#_tables_fields_types` (`field_type_id`,`input_type`,`name`,`max_length`,`mysql_type`,`cf_sql_type`,`enabled`) VALUES
-				 (1,'text','Texto plano 1 línea (máx. 255 caracteres)',255,'VARCHAR(255)','cf_sql_varchar',1),
-				 (2,'textarea','Texto plano varias líneas (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1),
-				 (3,'textarea','Texto de varias líneas grande',1000000,'MEDIUMTEXT','cf_sql_longvarchar',1),
-				 (4,'number','Número entero',20,'BIGINT(20)','cf_sql_bigint',1),
-				 (5,'text','Número decimal',30,'DECIMAL(30,5)','cf_sql_decimal',1),
-				 (6,'date','Fecha (formato DD-MM-AAAA)',10,'DATE','cf_sql_date',1),
-				 (7,'select','Booleano (Sí/No)',1,'TINYINT(1)','cf_sql_bit',1),
-				 (8,'url','URL',2000,'VARCHAR(2000)','cf_sql_varchar',1),
-				 (9,'select','Lista desplegable con selección simple',11,'INT(11)','cf_sql_integer',0),
-				 (10,'select','Lista desplegable con selección múltiple',11,'INT(11)','cf_sql_integer',0);
+			INSERT INTO `#client_abb#_tables_fields_types` (`field_type_id`,`field_type_group`,`input_type`,`name`,`max_length`,`mysql_type`,`cf_sql_type`,`enabled`,`position`) VALUES 
+			 (1,'short_text','text','Texto plano 1 línea (máx. 255 caracteres)',255,'VARCHAR(255)','cf_sql_varchar',1,1),
+			 (2,'long_text','textarea','Texto plano varias líneas (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1,2),
+			 (3,'long_text','textarea','Texto varias líneas con formato (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1,3),
+			 (4,'integer','number','Número entero',20,'BIGINT(20)','cf_sql_bigint',1,5),
+			 (5,'decimal','text','Número decimal',30,'DECIMAL(30,5)','cf_sql_decimal',1,6),
+			 (6,'date','date','Fecha (formato DD-MM-AAAA)',10,'DATE','cf_sql_date',1,7),
+			 (7,'boolean','select','Booleano (Sí/No)',1,'TINYINT(1)','cf_sql_bit',1,8),
+			 (8,'url','url','URL',2000,'VARCHAR(2000)','cf_sql_varchar',1,9),
+			 (9,'list','select','Lista desplegable con selección simple',11,'INT(11)','cf_sql_integer',1,10),
+			 (10,'list','select','Lista con selección múltiple',11,'INT(11)','cf_sql_integer',1,11),
+			 (11,'very_long_text','textarea','Texto muy grande con formato',1000000,'MEDIUMTEXT','cf_sql_longvarchar',1,4),
+			 (12,'doplanning_file','number','Archivo de DoPlanning',11,'INT(11)','cf_sql_integer',0,12);
 		</cfquery>			
 		
 		
@@ -354,7 +358,7 @@
 			  `menu_type_id` int(10) unsigned NOT NULL,
 			  `menu_type_title_es` varchar(255) NOT NULL,
 			  PRIMARY KEY (`menu_type_id`) USING BTREE
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		</cfquery>
 		
 		<cfquery datasource="#client_dsn#">	
@@ -362,7 +366,8 @@
 			 (1,'Menú principal'),
 			 (2,'Pie'),
 			 (3,'Otros'),
-			 (4,'Centros');
+			 (4,'Centros'),
+			 (5,'Imágenes');
 		</cfquery>	
 		
 		
@@ -374,6 +379,8 @@
 		</cfquery>		
 		
 		
+		
+		<!--- Tipologías --->
 		<cfquery datasource="#client_dsn#">	
 		ALTER TABLE `#client_abb#_areas` ADD COLUMN `default_typology_id` INTEGER UNSIGNED AFTER `menu_type_id`,
 			 ADD CONSTRAINT `FK_#client_abb#_areas_5` FOREIGN KEY `FK_#client_abb#_areas_5` (`default_typology_id`)
@@ -383,9 +390,129 @@
 		</cfquery>				
 		
 		
+		<!--- Tipologías --->
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_areas` ADD COLUMN `hide_in_menu` BOOLEAN NOT NULL DEFAULT 0 AFTER `menu_type_id`;
+		</cfquery>	
+		
+		
+		<!--- List --->
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_lists_users` (
+			  `list_id` int(10) unsigned NOT NULL,
+			  `user_id` int(11) NOT NULL,
+			  PRIMARY KEY (`list_id`,`user_id`),
+			  KEY `FK_#client_abb#_lists_users_2` (`user_id`),
+			  CONSTRAINT `FK_#client_abb#_lists_users_1` FOREIGN KEY (`list_id`) REFERENCES `#client_abb#_lists` (`id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_lists_users_2` FOREIGN KEY (`user_id`) REFERENCES `#client_abb#_users` (`id`) ON DELETE CASCADE
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+		</cfquery>	
 
 
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_lists_fields` ADD COLUMN `list_area_id` INTEGER AFTER `default_value`,
+			 	ADD CONSTRAINT `FK_#client_abb#_lists_fields_3` FOREIGN KEY `FK_#client_abb#_lists_fields_3` (`list_area_id`)
+				REFERENCES `#client_abb#_areas` (`id`)
+				ON DELETE SET NULL
+				ON UPDATE RESTRICT;
+		</cfquery>	
 				
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_lists_rows_areas` (
+			  `list_id` int(10) unsigned NOT NULL,
+			  `row_id` int(10) unsigned NOT NULL,
+			  `field_id` int(10) unsigned NOT NULL,
+			  `area_id` int(11) NOT NULL,
+			  PRIMARY KEY (`list_id`,`row_id`,`area_id`,`field_id`) USING BTREE,
+			  KEY `FK_#client_abb#_lists_rows_areas_2` (`field_id`),
+			  KEY `FK_#client_abb#_lists_rows_areas_3` (`area_id`),
+			  CONSTRAINT `FK_#client_abb#_lists_rows_areas_1` FOREIGN KEY (`list_id`) REFERENCES `#client_abb#_lists` (`id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_lists_rows_areas_2` FOREIGN KEY (`field_id`) REFERENCES `#client_abb#_lists_fields` (`field_id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_lists_rows_areas_3` FOREIGN KEY (`area_id`) REFERENCES `#client_abb#_areas` (`id`) ON DELETE CASCADE
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+		</cfquery>					
+				
+				
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_typologies_fields` ADD COLUMN `list_area_id` INTEGER AFTER `default_value`,
+			 	ADD CONSTRAINT `FK_#client_abb#_typologies_fields_3` FOREIGN KEY `FK_#client_abb#_typologies_fields_3` (`list_area_id`)
+				REFERENCES `#client_abb#_areas` (`id`)
+				ON DELETE SET NULL
+				ON UPDATE RESTRICT;
+		</cfquery>					
+				
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_typologies_rows_areas` (
+			  `typology_id` int(10) unsigned NOT NULL,
+			  `row_id` int(10) unsigned NOT NULL,
+			  `field_id` int(10) unsigned NOT NULL,
+			  `area_id` int(11) NOT NULL,
+			  PRIMARY KEY (`typology_id`,`row_id`,`area_id`,`field_id`) USING BTREE,
+			  KEY `FK_#client_abb#_typologies_rows_areas_2` (`field_id`),
+			  KEY `FK_#client_abb#_typologies_rows_areas_3` (`area_id`),
+			  CONSTRAINT `FK_#client_abb#_typologies_rows_areas_1` FOREIGN KEY (`typology_id`) REFERENCES `#client_abb#_typologies` (`id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_typologies_rows_areas_2` FOREIGN KEY (`field_id`) REFERENCES `#client_abb#_typologies_fields` (`field_id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_typologies_rows_areas_3` FOREIGN KEY (`area_id`) REFERENCES `#client_abb#_areas` (`id`) ON DELETE CASCADE
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+		</cfquery>						
+				
+		<!--- Form fields --->
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_forms_fields` ADD COLUMN `list_area_id` INTEGER AFTER `default_value`,
+		 		ADD CONSTRAINT `FK_#client_abb#_forms_fields_3` FOREIGN KEY `FK_#client_abb#_forms_fields_3` (`list_area_id`)		
+				REFERENCES `#client_abb#_areas` (`id`)
+				ON DELETE SET NULL
+				ON UPDATE RESTRICT;
+		</cfquery>							
+				
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_forms_rows_areas` (
+			  `form_id` int(10) unsigned NOT NULL,			
+			  `row_id` int(10) unsigned NOT NULL,
+			  `field_id` int(10) unsigned NOT NULL,
+			  `area_id` int(11) NOT NULL,
+			  PRIMARY KEY (`form_id`,`row_id`,`area_id`,`field_id`) USING BTREE,
+			  KEY `FK_#client_abb#_forms_rows_areas_2` (`field_id`),
+			  KEY `FK_#client_abb#_forms_rows_areas_3` (`area_id`),
+			  CONSTRAINT `FK_#client_abb#_forms_rows_areas_1` FOREIGN KEY (`form_id`) REFERENCES `#client_abb#_forms` (`id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_forms_rows_areas_2` FOREIGN KEY (`field_id`) REFERENCES `#client_abb#_forms_fields` (`field_id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_forms_rows_areas_3` FOREIGN KEY (`area_id`) REFERENCES `#client_abb#_areas` (`id`) ON DELETE CASCADE
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+		</cfquery>	
+		
+		<!--- 28/11/2013 --->	
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_files` ADD COLUMN `file_type_id` INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER `typology_row_id`;
+		</cfquery>	
+		
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_files`  ADD COLUMN `area_id` INTEGER UNSIGNED AFTER `file_type_id`;
+		</cfquery>
+		
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_files`  ADD COLUMN `locked` BOOLEAN NOT NULL DEFAULT 0 AFTER `area_id`;
+		</cfquery>
+		
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_files_locks` (
+			  `file_id` int(11) NOT NULL,
+			  `user_id` int(11) NOT NULL,
+			  `lock_date` datetime NOT NULL,
+			  `lock` tinyint(1) NOT NULL,
+			  PRIMARY KEY (`file_id`,`user_id`,`lock_date`),
+			  KEY `FK_#client_abb#_files_locks_2` (`user_id`),
+			  CONSTRAINT `FK_#client_abb#_files_locks_1` FOREIGN KEY (`file_id`) REFERENCES `#client_abb#_files` (`id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_files_locks_2` FOREIGN KEY (`user_id`) REFERENCES `#client_abb#_users` (`id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+		</cfquery>
+		
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_users` 
+				 ADD COLUMN `notify_delete_file` BOOLEAN NOT NULL DEFAULT 1 AFTER `notify_new_typology`,
+				 ADD COLUMN `notify_lock_file` BOOLEAN NOT NULL DEFAULT 1 AFTER `notify_delete_file`;	
+		</cfquery>
+
+		
 	</cftransaction>
 
 	

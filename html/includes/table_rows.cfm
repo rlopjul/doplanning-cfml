@@ -235,17 +235,14 @@
 									<cfelseif field_value IS false>
 										<cfset field_value = "No">
 									</cfif>
+									<cfset field_value = '<span lang="es">#field_value#</span>'>
 								<cfelse>
 
 									<cfif fields.field_type_id IS 2 OR fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- TEXTAREA --->
 										
-										<cfif len(field_value) GT 200>
+										<cfif len(field_value) GT 60><!---200--->
 
 											<cfif fields.field_type_id IS NOT 2>
-
-												<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="replaceP" returnvariable="field_value">
-													<cfinvokeargument name="string" value="#field_value#">
-												</cfinvoke>--->
 
 												<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="removeHTML" returnvariable="field_value">
 													<cfinvokeargument name="string" value="#field_value#">
@@ -253,11 +250,18 @@
 							
 											</cfif>
 
-											<cfset field_value = left(field_value, 180)&"...">
+											<!---<cfset field_value = left(field_value, 180)&"...">ANTES ESTABA ASÍ--->
+											<cfset summary_value = left(field_value, 55)&"...">
 
-											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
-												<cfinvokeargument name="string" value="#field_value#">
+											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="summary_value">
+												<cfinvokeargument name="string" value="#summary_value#">
 											</cfinvoke>
+
+											<cfif fields.field_type_id IS NOT 11><!--- IS NOT Very long text --->
+												<cfset field_value = '#summary_value#<span class="hidden">#field_value#</span>'>
+											<cfelse>
+												<cfset field_value = summary_value>
+											</cfif>											
 
 										<cfelseif fields.field_type_id IS 2>
 
