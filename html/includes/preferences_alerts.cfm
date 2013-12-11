@@ -132,22 +132,22 @@ Preferencias de notificaciones
 
 		<!--- Files --->
 		  <div class="row">
-		    <div class="col-md-1" style="text-align:center;">
+		    <div class="col-sm-1" style="text-align:center;">
 
 		    	<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" />
 
 		    </div>
-		    <div class="col-md-11" style="margin-left:0px;">
+		    <div class="col-sm-11" style="margin-left:0px;">
 
 		    	<div class="row">
-		          <div class="col-md-5">
+		          <div class="col-sm-6">
 			    	<label class="checkbox">
 						<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
 						<!--- <img src="#APPLICATION.htmlPath#/assets/icons/file_new.png" alt="Archivo asociado" /> --->
 						<span lang="es">Archivo ha sido asociado a un área</span>
 					</label>
 		          </div>
-		          <div class="col-md-5">
+		          <div class="col-sm-6">
 		          	<label class="checkbox">
 						<input type="checkbox" name="notify_replace_file" value="true" <cfif preferences.notify_replace_file IS true>checked="checked"</cfif> />
 						<!--- <img src="#APPLICATION.htmlPath#/assets/icons/file_replace.png" alt="Archivo reemplazado" /> --->
@@ -157,13 +157,13 @@ Preferencias de notificaciones
 	          	</div>
 
 	          	<div class="row">
-		          <!---<div class="col-md-5">
+		          <!---<div class="col-sm-5">
 		          	<label class="checkbox">
 						<input type="checkbox" name="notify_dissociate_file" value="true" <cfif preferences.notify_dissociate_file IS true>checked="checked"</cfif> />
 						<span lang="es">Archivo ha sido quitado de un área</span>
 					</label>
 				  </div>--->
-		          <div class="col-md-5">
+		          <div class="col-sm-6">
 		          	<label class="checkbox">
 						<input type="checkbox" name="notify_delete_file" value="true" <cfif preferences.notify_delete_file IS true>checked="checked"</cfif> />
 						<span lang="es">Archivo ha sido eliminado/quitado de un área</span>
@@ -171,7 +171,7 @@ Preferencias de notificaciones
 		          </div>
 
 		          <cfif APPLICATION.moduleAreaFilesLite>
-		          	<div class="col-md-5">
+		          	<div class="col-sm-6">
 			          	<label class="checkbox">
 							<input type="checkbox" name="notify_lock_file" value="true" <cfif preferences.notify_lock_file IS true>checked="checked"</cfif> />
 							<span lang="es">Archivo de área ha sido bloqueado/desbloqueado</span>
@@ -181,7 +181,7 @@ Preferencias de notificaciones
 	          	</div>
 	          		
 	      		<!---<div class="row">
-		          <div class="col-md-5">
+		          <div class="col-sm-5">
 		          	<label class="checkbox">
 						<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
 						<span lang="es">Archivo de área ha sido desbloqueado</span>
@@ -197,22 +197,22 @@ Preferencias de notificaciones
 	  <div class="form_separator"></div>
 
 	  <div class="row">
-	    <div class="col-md-1" style="text-align:center;">
+	    <div class="col-sm-1" style="text-align:center;">
 
 	    	<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="Lista" />
 
 	    </div>
-	    <div class="col-md-11" style="margin-left:0px;">
+	    <div class="col-sm-11" style="margin-left:0px;">
 
 	    	<div class="row">
-	          <div class="col-md-5">
+	          <div class="col-sm-6">
 		    	<label class="checkbox">
 					<input type="checkbox" name="notify_new_list" value="true" <cfif preferences.notify_new_list IS true>checked="checked"</cfif> />
 					<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
 				</label>
 			  </div>
 
-			  <div class="col-md-5">
+			  <div class="col-sm-6">
 			  	<label class="checkbox">
 					<input type="checkbox" name="notify_new_list_row" value="true" <cfif preferences.notify_new_list_row IS true>checked="checked"</cfif> />
 					<span lang="es">Un registro de lista ha sido creado, modificado o eliminado</span>
@@ -238,22 +238,22 @@ Preferencias de notificaciones
 	<div class="form_separator"></div>
 
 	  <div class="row">
-	    <div class="col-md-1" style="text-align:center;">
+	    <div class="col-sm-1" style="text-align:center;">
 
 	    	<img src="#APPLICATION.htmlPath#/assets/icons/form.png" alt="Formulario" />
 
 	    </div>
-	    <div class="col-md-11" style="margin-left:0px;">
+	    <div class="col-sm-11" style="margin-left:0px;">
 
 	    	<div class="row">
-	          <div class="col-md-5">
+	          <div class="col-sm-6">
 		    	<label class="checkbox">
 					<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
 					<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
 				</label>
 			  </div>
 
-			  <div class="col-md-5">
+			  <div class="col-sm-6">
 			  	<label class="checkbox">
 					<input type="checkbox" name="notify_new_form_row" value="true" <cfif preferences.notify_new_form_row IS true>checked="checked"</cfif> />
 					<span lang="es">Un registro de formulario ha sido creado, modificado o eliminado</span>

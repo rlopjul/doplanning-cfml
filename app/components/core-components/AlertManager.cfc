@@ -130,7 +130,7 @@
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">	
 				
-		<cfset var method = "newFile">
+		<cfset var method = "newTableRow">
 		
 		<cfset var internalUsersEmails = "">
 		<cfset var externalUsersEmails = "">

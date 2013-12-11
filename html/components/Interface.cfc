@@ -174,7 +174,7 @@
 	<cffunction name="removeHTML" returntype="string" access="public">
 		<cfargument name="string" type="string" required="true">
 
-		<cfset string = REReplace(string,"<[^>]*>","","ALL")>>
+		<cfset string = REReplace(string,"<[^>]*>","","ALL")>
 
 		<cfreturn string>
 

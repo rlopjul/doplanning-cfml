@@ -9,7 +9,9 @@
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
 
-<cfif isDefined("URL.fileTypeId") AND isNumeric(URL.fileTypeId)>
+<cfif isDefined("FORM.fileTypeId") AND isNumeric(FORM.fileTypeId)>
+	<cfset fileTypeId = FORM.fileTypeId>
+<cfelseif isDefined("URL.fileTypeId") AND isNumeric(URL.fileTypeId)>
 	<cfset fileTypeId = URL.fileTypeId>
 <cfelse>
 	<cflocation url="empty.cfm" addtoken="no">
@@ -78,6 +80,27 @@
 			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 		</cfinvoke>
 
+		<!---<cfif isNumeric(file.reviser_user)>
+			
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="reviserUserQuery">
+				<cfinvokeargument name="user_id" value="#file.reviser_user#">
+				<cfinvokeargument name="format_content" value="default">
+				<cfinvokeargument name="return_type" value="query">
+			</cfinvoke>
+			<cfset file.reviser_user_full_name = reviserUserQuery.user_full_name>
+
+		</cfif>
+
+		<cfif isNumeric(file.approver_user)>
+			
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="approverUserQuery">
+				<cfinvokeargument name="user_id" value="#file.approver_user#">
+				<cfinvokeargument name="format_content" value="default">
+				<cfinvokeargument name="return_type" value="query">
+			</cfinvoke>
+			<cfset file.approver_user_full_name = approverUserQuery.user_full_name>
+
+		</cfif>--->
 
 	</cfif>
 

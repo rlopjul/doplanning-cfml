@@ -545,12 +545,13 @@
 				INNER JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id 
 					AND area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					AND files.status='ok')
+				<!---
 				<!--- Area files edited --->
 				UNION ALL
 				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 15 AS itemTypeId
 				FROM #client_abb#_files_edited AS files_edited
 					WHERE files_edited.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
-					AND files_edited.status='ok')
+					AND files_edited.status='ok')--->
 				) AS items
 				INNER JOIN #client_abb#_users AS users
 				ON items.user_in_charge = users.id
