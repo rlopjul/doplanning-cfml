@@ -70,10 +70,10 @@ Archivo en edición
 	<div class="div_file_page_file">
 
 		<cfif objectFile.locked IS true>
-			<div class="alert">
+			<div class="alert alert-warning">
 				<span>Archivo bloqueado por el usuario <a href="area_user.cfm?area=#objectFile.area_id#&user=#objectFile.lock_user_id#">#objectFile.lock_user_full_name#</a>.</span>
 			</div>
-		<cfelseif objectFile.file_type_id IS 2>
+		<cfelse>
 			<div class="alert alert-info">
 				<span>Debe bloquear el archivo para poder modificarlo o reemplazarlo.</span>
 			</div>
@@ -136,6 +136,7 @@ Archivo en edición
 		<!---fileUrl--->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
 			<cfinvokeargument name="file_id" value="#objectFile.id#">
+			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 			<cfinvokeargument name="area_id" value="#area_id#">
 		</cfinvoke>
 

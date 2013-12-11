@@ -29,6 +29,9 @@
 <cfelseif isDefined("URL.image")>
 	<cfset redirect_page = "image.cfm?image=#URL.image#">
 	<cfset redirect_area_page = "area_items.cfm?image=#URL.image#&area=#URL.area#">
+<cfelseif isDefined("URL.file_edited")>
+	<cfset redirect_page = "file_edited.cfm?file_edited=#URL.file_edited#">
+	<cfset redirect_area_page = "area_items.cfm?file_edited=#URL.file_edited#&area=#URL.area#">
 <cfelseif APPLICATION.moduleConsultations AND isDefined("URL.consultation")>
 	<cfset redirect_page = "consultation.cfm?consultation=#URL.consultation#">
 	<!---<cfset redirect_area_page = "consultations.cfm?consultation=#URL.consultation#&area=#URL.area#">--->

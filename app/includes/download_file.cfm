@@ -1,10 +1,5 @@
-<!---Copyright Era7 Information Technologies 2007-2008
+<!--- Copyright Era7 Information Technologies 2007-2013 --->
 
-    File created by: alucena
-    ColdFusion version required: 8
-    Last file change by: alucena
-	
---->
 <cfset component = "downloadFile">
 <cfset method = "downloadFile">
 
@@ -42,6 +37,12 @@
 <cfelseif isDefined("URL.consultation") AND isNumeric(URL.consultation)>
 	<cfset item_id = URL.consultation>
 	<cfset itemTypeId = 7>
+<cfelseif isDefined("URL.pubmed") AND isNumeric(URL.pubmed)>
+	<cfset item_id = URL.pubmed>
+	<cfset itemTypeId = 8>
+<cfelseif isDefined("URL.image") AND isNumeric(URL.image)>
+	<cfset item_id = URL.image>
+	<cfset itemTypeId = 9>
 </cfif>
 	
 
@@ -61,7 +62,7 @@
 <cfset fileTypeId = objectFile.file_type_id>
 <cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
-<cfset files_directory = fileTypeNameP>
+<cfset files_directory = fileTypeDirectory>
 
 
 <cfinclude template="get_file.cfm">

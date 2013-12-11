@@ -357,7 +357,7 @@
 										</cfif> --->
 					
 				
-					<a href="preferences.cfm" title="Preferencias del usuario" lang="es">
+					<a href="../preferences.cfm" title="Preferencias del usuario" lang="es">
 					<cfif len(objectUser.image_file) GT 0>
 						<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
 					<cfelse>

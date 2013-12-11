@@ -135,6 +135,7 @@ curLangText["es"] = {
 			"deleted_file" : "Archivo eliminado",
 			"locked_file" : "Archivo bloqueado",
 			"unlocked_file" : "Archivo desbloqueado",
+			"new_version" : "Nueva versión de archivo",
 			
 			"created" : "creado",
 			"added" : "añadido",
@@ -149,8 +150,9 @@ curLangText["es"] = {
 			
 			"file_name" : "Nombre del archivo",
 			"user" : "Usuario",
-			"upload_date" : "Fecha de subida del archivo",
+			"upload_date" : "Fecha de creación del archivo",
 			"replacement_date" : "Fecha de reemplazo del archivo",
+			"last_version_date" : "Fecha de última versión",
 			"description" : "Descripción",
 
 		},
@@ -378,6 +380,7 @@ curLangText["en"] = {
 			"deleted_file" : "Deleted file",
 			"locked_file" : "Locked file",
 			"unlocked_file" : "Unlocked file",
+			"new_version" : "New file version",
 			
 			"created" : "created",
 			"added" : "added",
@@ -392,8 +395,9 @@ curLangText["en"] = {
 			
 			"file_name" : "File name",
 			"user" : "User",
-			"upload_date" : "Upload date",
+			"upload_date" : "Creation date",
 			"replacement_date" : "Replacement date",
+			"last_version_date" : "Last version date",
 			"description" : "Description",
 
 		},

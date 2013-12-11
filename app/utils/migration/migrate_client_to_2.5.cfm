@@ -309,3 +309,34 @@ ALTER TABLE `dp_software7`.`software7_users`
 
 
 
+<!--- Area files --->
+
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `reviser_user` INTEGER AFTER `locked`,
+ ADD COLUMN `approver_user` INTEGER AFTER `reviser_user`,
+ ADD CONSTRAINT `FK_software7_files_3` FOREIGN KEY `FK_software7_files_3` (`reviser_user`)
+    REFERENCES `software7_users` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+ ADD CONSTRAINT `FK_software7_files_4` FOREIGN KEY `FK_software7_files_4` (`approver_user`)
+    REFERENCES `software7_users` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT;
+
+
+CREATE TABLE  `dp_software7`.`software7_files_versions` (
+  `version_id` int(11) NOT NULL AUTO_INCREMENT,
+  `file_id` int(11) NOT NULL,
+  `physical_name` text COLLATE utf8_unicode_ci,
+  `user_in_charge` int(11) NOT NULL,
+  `file_size` int(11) DEFAULT NULL,
+  `file_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `uploading_date` datetime NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `file_name` text COLLATE utf8_unicode_ci,
+  `status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`version_id`) USING BTREE,
+  KEY `user_in_charge` (`user_in_charge`),
+  KEY `FK_software7_files_versions_2` (`file_id`),
+  CONSTRAINT `FK_software7_files_versions_1` FOREIGN KEY (`user_in_charge`) REFERENCES `software7_users` (`id`),
+  CONSTRAINT `FK_software7_files_versions_2` FOREIGN KEY (`file_id`) REFERENCES `software7_files` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

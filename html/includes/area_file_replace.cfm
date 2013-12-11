@@ -6,7 +6,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<div class="div_head_subtitle"><span lang="es">Reemplazar Archivo</span></div>
+<div class="div_head_subtitle"><span lang="es"><cfif fileTypeId IS 3>Subir nueva versión de<cfelse>Reemplazar</cfif> Archivo</span></div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
@@ -36,7 +36,7 @@ function onSubmitForm()
 	<input type="hidden" name="area_id" value="#area_id#" />
 
 	<div class="form-group">
-		<label lang="es">Archivo a reemplazar:</label>
+		<label lang="es"><cfif fileTypeId IS 3>Nueva versión de archivo:<cfelse>Archivo a reemplazar:</cfif></label>
 		<span>#file.name#</span>
 	</div>
 
@@ -44,6 +44,16 @@ function onSubmitForm()
 		<label lang="es">Archivo:</label>
 		<cfinput type="file" name="Filedata" value="" required="yes" message="Debe seleccionar un archivo"/>
 	</div>
+
+	<cfif fileTypeId IS NOT 1>
+		
+		<div class="checkbox">
+		    <label>
+		    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras subir nueva versión
+		    </label>
+	  	</div>
+
+	</cfif>
 	
 	<div style="height:12px;"></div>
 	

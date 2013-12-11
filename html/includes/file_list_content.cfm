@@ -113,10 +113,6 @@
 
 	<cfloop query="files">		
 
-		<!---<cfif isDefined("area_id")>
-			<cfset objectFile.area_id = area_id>
-		</cfif>--->
-
 		<!---File selection--->
 		<cfset itemSelected = false>
 		

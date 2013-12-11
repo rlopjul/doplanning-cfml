@@ -46,12 +46,15 @@
 	<!--- ----------------------- getAreaFileUrl -------------------------------- --->
 	<cffunction name="getAreaFileUrl" access="public" returntype="string">
 		<cfargument name="file_id" type="numeric" required="yes">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="yes">
 		
 		<cfset var fileUrl = "">
+
+		<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 		
 		<!---<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&file=#arguments.file_id#&abb=#SESSION.client_abb#">--->
-		<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&file=#arguments.file_id#">
+		<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#">
 		
 		<cfreturn fileUrl>
 	</cffunction>
@@ -60,16 +63,19 @@
 	<!--- ----------------------- getDownloadFileUrl -------------------------------- --->
 	<cffunction name="getDownloadFileUrl" access="public" returntype="string">
 		<cfargument name="file_id" type="numeric" required="yes">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="item_id" type="numeric" required="no">
 		<cfargument name="itemTypeName" type="string" required="no">
 		
 		<cfset var fileUrl = "">
+
+		<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 		
 		<cfif isDefined("arguments.item_id") AND isDefined("arguments.itemTypeName")>
 			<!---<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?fileDownload=#arguments.file_id#&#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">--->
-			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&fileDownload=#arguments.file_id#&#itemTypeName#=#arguments.item_id#">
+			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&fileDownload=#arguments.file_id#&fileTypeId=#arguments.fileTypeId#&#itemTypeName#=#arguments.item_id#">
 		<cfelse>
-			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&fileDownload=#arguments.file_id#">		
+			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#SESSION.client_abb#&fileDownload=#arguments.file_id#&fileTypeId=#arguments.fileTypeId#">		
 		</cfif>
 		
 		<cfreturn fileUrl>

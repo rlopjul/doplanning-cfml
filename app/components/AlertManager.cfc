@@ -97,6 +97,7 @@
 		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
 				<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
+				<cfinvokeargument name="fileTypeId" value="1">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 			</cfinvoke>
@@ -106,6 +107,7 @@
 		<cfif isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadImageUrl">
 				<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
+				<cfinvokeargument name="fileTypeId" value="1">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 			</cfinvoke>			
@@ -680,8 +682,9 @@
 	<!---new/associate/replace file--->
 	<cffunction name="newFile" access="public" returntype="void">
 		<cfargument name="objectFile" type="query" required="yes">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="action" type="string" required="yes"><!---new/associate/replace/dissociate/delete/lock/unlock--->
+		<cfargument name="action" type="string" required="yes"><!---new/associate/replace/dissociate/delete/lock/unlock/new_version--->
 				
 		<cfset var method = "newFile">
 		
@@ -734,7 +737,7 @@
 				<area id="#area_id#"/> 
 				<order parameter="family_name" order_type="asc" />
 				<preferences 
-				<cfif arguments.action EQ "replace">
+				<cfif arguments.action EQ "replace" OR arguments.action EQ "new_version">
 					notify_replace_file="true"
 				<cfelseif arguments.action EQ "dissociate" OR arguments.action EQ "delete">
 					notify_delete_file="true"		
@@ -811,6 +814,11 @@
 						<cfset action_value = langText[curLang].new_file.unlocked>
 					</cfcase>
 
+					<cfcase value="new_version"><!--- new_version --->
+						<cfset subject_action = langText[curLang].new_file.new_version>
+						<cfset action_value = langText[curLang].new_file.replaced>
+					</cfcase>
+
 				</cfswitch>
 
 				<cfset subject = "[#root_area.name#][#subject_action#] "&objectFile.name>
@@ -819,6 +827,7 @@
 					
 					<cfinvoke component="AlertManager" method="getFileAccessContent" returnvariable="access_content">
 						<cfinvokeargument name="file_id" value="#objectFile.id#"/>
+						<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 						<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 						<cfinvokeargument name="language" value="#curLang#">
 					</cfinvoke>
@@ -840,7 +849,11 @@
 					#langText[curLang].new_file.file_name#: <strong>#objectFile.name#</strong><br />
 					#langText[curLang].new_file.upload_date#: <strong>#objectFile.uploading_date#</strong><br/>
 					<cfif len(objectFile.replacement_date) GT 0>
-					#langText[curLang].new_file.replacement_date#: <strong>#objectFile.replacement_date#</strong><br/>
+						<cfif arguments.fileTypeId IS NOT 3>
+							#langText[curLang].new_file.replacement_date#: <strong>#objectFile.replacement_date#</strong><br/>
+						<cfelse>
+							#langText[curLang].new_file.last_version_date#: <strong>#objectFile.replacement_date#</strong><br/>
+						</cfif>
 					</cfif>
 					#langText[curLang].new_file.description#:<br/><br/>
 					<div style="padding-left:15px;">#objectFile.description#</div>
@@ -935,6 +948,7 @@
 				
 				<cfinvoke component="AlertManager" method="newFile">
 					<cfinvokeargument name="objectFile" value="#arguments.objectFile#">
+					<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#"/>
 					<cfinvokeargument name="area_id" value="#getFileAreas.area_id#">
 					<cfinvokeargument name="action" value="replace">
 				</cfinvoke>	
@@ -1125,7 +1139,7 @@
 	
 	<cffunction name="getChangeFileUserAlertContents" access="private" returntype="struct">
 		<cfargument name="language" type="string" required="true">
-		<cfargument name="objectFile" type="any" required="true">
+		<cfargument name="objectFile" type="query" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="new_user_full_name" type="string" required="true">
  				
@@ -1137,6 +1151,7 @@
 
 		<cfinvoke component="AlertManager" method="getFileAccessContent" returnvariable="accessContent">
 			<cfinvokeargument name="file_id" value="#objectFile.id#"/>
+			<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#"/>
 			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			<cfinvokeargument name="language" value="#arguments.language#">
 		</cfinvoke>
@@ -1171,6 +1186,7 @@
 	
 	<cffunction name="getFileAccessContent" access="private" returntype="string">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="language" type="string" required="true">
  				
@@ -1180,11 +1196,13 @@
 
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
 			<cfinvokeargument name="file_id" value="#arguments.file_id#">
+			<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
 		</cfinvoke>
 		
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
 			<cfinvokeargument name="file_id" value="#arguments.file_id#">
+			<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 		</cfinvoke>
 
 		<cfif APPLICATION.twoUrlsToAccess IS false>

@@ -83,9 +83,10 @@
 
 			</cfif>
 
-			setFileTypeId("#fileTypeId#");
+		</cfif>	
 
-		</cfif>		
+		setFileTypeId("#fileTypeId#");
+
 	});
 
 	function onSubmitForm() {
@@ -221,8 +222,8 @@
 			<div class="form-group">
 				<label for="fileTypeId">Tipo de documento de área</label>
 				<select name="fileTypeId" id="fileTypeId" class="form-control" onchange="setFileTypeId($('##fileTypeId').val());">
-					<option value="2">Sin circuito de calidad</option>
-					<option value="3">Con circuito de calidad</option>
+					<option value="2" <cfif fileTypeId IS 2>selected="selected"</cfif>>Sin circuito de calidad</option>
+					<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif>>Con circuito de calidad</option>
 				</select>
 				<span class="help-block">Esta opción no se puede cambiar una vez creado el documento</span>
 
@@ -298,7 +299,7 @@
 			<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val(),'');">
 				<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif>>Básica</option>
 				<cfif areaTables.recordCount GT 0>
-					<cfloop query="#areaTables#">
+					<cfloop query="areaTables">
 						<option value="#areaTables.id#" <cfif areaTables.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS areaTables.id>style="font-weight:bold"</cfif>>#areaTables.title#</option>
 					</cfloop>
 				</cfif>

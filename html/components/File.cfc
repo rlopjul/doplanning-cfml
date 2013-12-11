@@ -115,6 +115,66 @@
 		<cfreturn response.file>
 			
 	</cffunction>
+
+
+	<!--- ----------------------------------- getFileVersion ------------------------------------- --->
+	
+	<cffunction name="getFileVersion" returntype="query" access="public">
+		<cfargument name="version_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		
+		<cfset var method = "getFileVersion">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFileVersion" returnvariable="response">
+				<cfinvokeargument name="version_id" value="#arguments.version_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response.version>
+		
+	</cffunction>
+
+
+	<!--- ----------------------------------- getFileVersions ------------------------------------- --->
+	
+	<cffunction name="getFileVersions" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		
+		<cfset var method = "getFileVersions">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFileVersions" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
 	
 	
 	<!--- ---------------------------------- convertFile -------------------------------------- --->
@@ -373,6 +433,8 @@
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="reviser_user" type="numeric" required="false">
+		<cfargument name="approver_user" type="numeric" required="false">
 		
 		<cfset var method = "updateFile">
 		
@@ -388,6 +450,44 @@
 			
 			<cfif response.result IS true>
 				<cfset response.message = "Datos modificados">
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
+	</cffunction>
+
+
+	<!--- ---------------------------------- updateFile -------------------------------------- --->
+	
+	<cffunction name="replaceFile" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="Filedata" type="string" required="true">
+		<cfargument name="unlock" type="boolean" required="false">
+		
+		<cfset var method = "replaceFile">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="replaceFile" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfif fileTypeId IS NOT 3>
+					<cfset response.message = "Archivo reemplazado.">
+				<cfelse>
+					<cfset response.message = "Nueva versión guardada.">
+				</cfif>
 			</cfif>
 
 			<cfcatch>
@@ -472,6 +572,7 @@
 
 	<cffunction name="lockFile" returntype="void" access="remote">
 		<cfargument name="file_id" type="string" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="lock" type="boolean" required="true">
 		<cfargument name="return_path" type="string" required="true">
@@ -481,9 +582,12 @@
 		<cfset var response = structNew()>
 				
 		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 			
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeAreaFileLock" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 				<cfinvokeargument name="lock" value="#arguments.lock#"/>
 			</cfinvoke>
 			
@@ -498,7 +602,7 @@
 			</cfif>
 				
 			<cfset msg = URLEncodedFormat(msg)>
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">

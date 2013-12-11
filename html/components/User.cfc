@@ -287,7 +287,7 @@
 			
 			<cfif arguments.password NEQ arguments.password_confirmation>
 		
-				<cfset message = "El nuevo password y su confirmación deben ser iguales.">
+				<cfset message = "La nueva contraseña y su confirmación deben ser iguales.">
 				<cfset message = URLEncodedFormat(message)>
 				<cflocation url="#APPLICATION.htmlPath#/#response_page#?message=#message#" addtoken="no">
 			
@@ -622,7 +622,7 @@
 					<a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es" class="btn btn-sm btn-info"><i class="icon-facetime-video"></i>&nbsp; <span lang="es">Reunión virtual</span></a>
 					</div>
 					<div class="div_user_page_label"><span lang="es">URL de acceso a reunión virtual con este usuario:</span></div>
-					<textarea class="input-block-level" readonly="readonly" style="height:50px; cursor:text">#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#</textarea>
+					<textarea class="form-control" readonly="readonly" style="height:50px; cursor:text">#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#</textarea>
 													
 				</div>
 				</cfif>
