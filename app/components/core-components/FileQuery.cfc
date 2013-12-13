@@ -34,7 +34,7 @@
 		<cfset fileTypeTable = "files">
 
 		<cfquery name="selectFileQuery" datasource="#client_dsn#">		
-			SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user
+			SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval
 				, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 			<cfif isDefined("arguments.area_id")>
 			, areas_files.association_date
@@ -291,8 +291,12 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">	
 							
 			<cfquery name="getFileVersionsQuery" datasource="#client_dsn#">
-				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description
+				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
 					, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
+					, DATE_FORMAT(files.revision_request_date, '#dateTimeFormat#') AS revision_request_date
+					, DATE_FORMAT(files.approval_request_date, '#dateTimeFormat#') AS approval_request_date  
+					, DATE_FORMAT(files.revision_date, '#dateTimeFormat#') AS revision_date 
+					, DATE_FORMAT(files.approval_date, '#dateTimeFormat#') AS approval_date 
 					, users.family_name, users.name AS user_name, users.image_type AS user_image_type,
 					CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				FROM #client_abb#_#fileTypeTable#_versions AS files
@@ -310,6 +314,7 @@
 	<cffunction name="getFileVersions" output="false" returntype="query" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="limit" type="numeric" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -319,14 +324,20 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">	
 							
 			<cfquery name="getFileVersionsQuery" datasource="#client_dsn#">
-				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description
-					, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
+				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
+					, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date
+					, DATE_FORMAT(files.revision_request_date, '#dateTimeFormat#') AS revision_request_date
+					, DATE_FORMAT(files.approval_request_date, '#dateTimeFormat#') AS approval_request_date  
+					, DATE_FORMAT(files.revision_date, '#dateTimeFormat#') AS revision_date 
 					, users.family_name, users.name AS user_name, users.image_type AS user_image_type,
 					CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				FROM #client_abb#_#fileTypeTable#_versions AS files
 				INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
 				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
-				ORDER BY files.uploading_date DESC;
+				ORDER BY files.uploading_date DESC
+				<cfif isDefined("arguments.limit")>
+				LIMIT #arguments.limit#
+				</cfif>;
 			</cfquery>
 				
 		<cfreturn getFileVersionsQuery>

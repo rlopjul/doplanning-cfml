@@ -1,6 +1,6 @@
 <cfif isDefined("FORM.page")>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="requestApproval" argumentcollection="#FORM#" returnvariable="actionResponse">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="requestRevision" argumentcollection="#FORM#" returnvariable="actionResponse">
 	</cfinvoke>	
 
 	<cfif actionResponse.result IS true>
@@ -35,6 +35,13 @@
 </cfinvoke>
 
 <cfset area_id = file.area_id>
+
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileVersions" returnvariable="fileVersionsResult">
+	<cfinvokeargument name="file_id" value="#file_id#">
+	<cfinvokeargument name="fileTypeId" value="#file.file_type_id#">
+</cfinvoke>
+
+<cfset versions = fileVersionsResult.fileVersions>
 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/file_content_en.js" charset="utf-8" type="text/javascript"></script>
@@ -80,6 +87,11 @@
 	<div class="form-group">
 		<span>Nombre del archivo:</span>
 		<strong>#file.name#</strong>
+	</div>
+
+	<div class="form-group">
+		<span>Fecha de versión:</span>
+		<strong>#versions.uploading_date#</strong>
 	</div>
 
 	<div class="form-group">

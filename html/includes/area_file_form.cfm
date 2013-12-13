@@ -12,7 +12,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <div class="div_head_subtitle"><span lang="es"><cfif page_type IS 1>Nuevo Archivo
-<cfelse>Modificar archivo</cfif><cfif fileTypeId IS 2> de área</cfif></span></div>
+<cfelseif page_type IS 2>Modificar archivo<cfelseif page_type IS 3>Publicar versión de archivo</cfif><cfif fileTypeId IS 2> de área</cfif></span></div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
@@ -149,6 +149,25 @@
 		selectuserType = "";				
 	}
 
+	function openAreaSelector(){
+		
+		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
+		
+	}
+
+	function setSelectedArea(areaId, areaName) {
+
+		<!---var curAreaId = "#file_area_id#";
+				
+				if(curAreaId != areaId) { --->
+		
+			$("##publication_area_id").val(areaId);
+			$("##publication_area_name").val(areaName);
+
+		<!---} else {
+			alert("Debe seleccionar una área distinta a la actual");
+		}--->
+	}
 
 	<cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
 
@@ -202,10 +221,16 @@
 	</script>
 	
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
-	<cfif page_type IS 2>
+	<cfif page_type IS 1>
+		<input type="hidden" name="area_id" value="#area_id#"/>
+	<cfelse>
 		<input type="hidden" name="file_id" value="#file_id#" />
 	</cfif>
-	<input type="hidden" name="area_id" value="#area_id#"/>
+	
+	<cfif page_type IS 3>
+		<input type="hidden" name="version_id" value="#version_id#"/>
+	</cfif>
+
 
 	<cfif fileTypeId IS 2 OR fileTypeId IS 3><!---Area files--->
 
@@ -213,6 +238,20 @@
 
 			<div class="alert alert-info">
 				<small>Este archivo pertenecerá a esta área y podrá ser modificado por cualquier usuario con acceso a la misma.</small>
+			</div>
+
+		<cfelseif page_type IS 3>
+
+			<!---<div class="alert alert-info">
+				<small>Este archivo pertenecerá al área de la que procede.</small>
+			</div>--->
+
+			<div class="form-group">
+				<label class="control-label" for="publication_area_name" lang="es">Área de publicación</label>
+				<div class="controls">
+					<input type="hidden" name="publication_area_id" id="publication_area_id" value="#publicationArea.publication_area_id#" validate="integer" required="true"/>
+					<cfinput type="text" name="publication_area_name" id="publication_area_name" value="#publicationArea.publication_area_name#" readonly="true" required="true" message="Debe seleccionar una área para publicar" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
+				</div>
 			</div>
 
 		</cfif>
@@ -226,47 +265,44 @@
 					<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif>>Con circuito de calidad</option>
 				</select>
 				<span class="help-block">Esta opción no se puede cambiar una vez creado el documento</span>
-
-			    <!---
-				<cfif isDefined("FORM.phases_enabled") IS true>
-					<cfset phases_enabled = true>
-				<cfelse>
-					<cfset phases_enabled = false>
-				</cfif>
-			    <div class="checkbox">
-			       	<label>
-			          <input type="checkbox" name="phases_enabled" value="true" <cfif phases_enabled IS true>checked="checked"
-			          </cfif>/> Circuito de calidad
-			        </label>
-			    </div>--->
 			</div>
 
 		<cfelse>
 
-			<input type="hidden" name="fileTypeId" value="3"/>
+			<cfif page_type IS 1>
+				<cfif fileTypeId IS 2>
+					<input type="hidden" name="fileTypeId" value="3"/>
+				<cfelse>
+					<input type="hidden" name="fileTypeId" value="#fileTypeId#"/>
+				</cfif>
+			<cfelse>
+				<input type="hidden" name="fileTypeId" value="#fileTypeId#"/>
+			</cfif>
 			
-		</cfif>
-
+		</cfif>		
+			
 		<div id="documentUsersContainer">
-			<div class="form-group">
-				<label class="control-label" for="reviser_user" lang="es">Usuario revisor</label>
-				<input type="hidden" name="reviser_user" id="reviser_user" value="#file.reviser_user#" validate="integer" required="true" />
-				<div class="container" style="width:100%">
-					<div class="row">
-						<div class="col-sm-6" style="padding:0;">
-							<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#file.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" /> 
+			<cfif page_type IS NOT 3>
+				<div class="form-group">
+					<label class="control-label" for="reviser_user" lang="es">Usuario revisor</label>
+					<input type="hidden" name="reviser_user" id="reviser_user" value="#file.reviser_user#" validate="integer" required="true" />
+					<div class="container" style="width:100%">
+						<div class="row">
+							<div class="col-sm-6" style="padding:0;">
+								<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#file.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" /> 
+							</div>
+							<div class="col-sm-5" style="padding:0;"><button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button></div>
 						</div>
-						<div class="col-sm-5" style="padding:0;"><button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button></div>
 					</div>
 				</div>
-			</div>
 
-			<div class="form-group">
-				<label class="control-label" for="approver_user" lang="es">Usuario aprobador</label>
-				
-				<input type="hidden" name="approver_user" id="approver_user" value="#file.approver_user#" validate="integer" required="true"/>
-				<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#file.approver_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" /> <button onclick="openApproverUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
-			</div>
+				<div class="form-group">
+					<label class="control-label" for="approver_user" lang="es">Usuario aprobador</label>
+					
+					<input type="hidden" name="approver_user" id="approver_user" value="#file.approver_user#" validate="integer" required="true"/>
+					<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#file.approver_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" /> <button onclick="openApproverUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+				</div>
+			</cfif>
 		</div>
 
 	<cfelse>

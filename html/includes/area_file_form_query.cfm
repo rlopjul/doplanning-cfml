@@ -1,6 +1,7 @@
 <!---page_types
 1 Create new file
 2 Modify file
+3 Publish area file
 --->
 
 <cfif isDefined("URL.area") AND isValid("integer",URL.area)>
@@ -16,13 +17,15 @@
 <cfelse>
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
-	
+
 <cfif isDefined("FORM.page")>
 
 	<cfif page_type IS 1>
 		<cfset methodAction = "createFile">
-	<cfelse>
+	<cfelseif page_type IS 2>
 		<cfset methodAction = "updateFile">
+	<cfelseif page_type IS 3>
+		<cfset methodAction = "publishFileVersion">
 	</cfif>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="#methodAction#" argumentcollection="#FORM#" returnvariable="actionResponse">
@@ -43,13 +46,15 @@
 
 		<cfset file = FORM>
 
+		<cfif page_type IS 3>
+			<cfset publicationArea = FORM>
+		</cfif>
+
 	</cfif>
 
 <cfelse>
 
 	<cfif page_type IS 1><!--- New file --->
-
-		<!---<cfset return_page = "files.cfm?area=#area_id#">--->
 		
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getEmptyFile" returnvariable="file">
 		</cfinvoke>
@@ -73,7 +78,13 @@
 			<cflocation url="empty.cfm" addtoken="no">
 		</cfif>
 
-		<!---<cfset return_page = "file.cfm?area=#area_id#&file=#file_id#">--->
+		<cfif page_type IS 3>
+			<cfif isDefined("URL.version") AND isNumeric(URL.version)>
+				<cfset version_id = URL.version>
+			<cfelse>
+				<cflocation url="empty.cfm" addtoken="no">				
+			</cfif>
+		</cfif>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
 			<cfinvokeargument name="file_id" value="#file_id#">
@@ -101,6 +112,14 @@
 			<cfset file.approver_user_full_name = approverUserQuery.user_full_name>
 
 		</cfif>--->
+
+		<cfif page_type IS 3>
+			
+			<cfset publicationArea = structNew()>
+			<cfset publicationArea.publication_area_id = "">
+			<cfset publicationArea.publication_area_name = "">
+
+		</cfif>
 
 	</cfif>
 

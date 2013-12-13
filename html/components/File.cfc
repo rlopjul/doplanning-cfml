@@ -147,6 +147,36 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- getFileLastVersion ------------------------------------- --->
+	
+	<cffunction name="getFileLastVersion" returntype="query" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		
+		<cfset var method = "getFileLastVersion">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFileLastVersion" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response.version>
+		
+	</cffunction>
+
+
 	<!--- ----------------------------------- getFileVersions ------------------------------------- --->
 	
 	<cffunction name="getFileVersions" returntype="struct" access="public">
@@ -429,7 +459,7 @@
 	<cffunction name="updateFile" returntype="struct" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
-		<cfargument name="area_id" type="numeric" required="true">
+		<!--- <cfargument name="area_id" type="numeric" required="true"> --->
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
@@ -443,13 +473,46 @@
 		<cftry>
 			
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="updateFile" argumentcollection="#arguments#" returnvariable="response">
-				<!---<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
-				<cfinvokeargument name="name" value="#arguments.name#"/>
-				<cfinvokeargument name="description" value="#arguments.description#"/>--->
 			</cfinvoke>
 			
 			<cfif response.result IS true>
 				<cfset response.message = "Datos modificados">
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
+	</cffunction>
+
+
+	<!--- ---------------------------------- publishFileVersion -------------------------------------- --->
+	
+	<cffunction name="publishFileVersion" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="publication_area_id" type="numeric" required="true">
+		<cfargument name="name" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
+		<cfargument name="typology_id" type="string" required="false">
+		
+		<cfset var method = "publishFileVersion">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="publishFileVersion" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Archivo publicado">
 			</cfif>
 
 			<cfcatch>
@@ -552,7 +615,7 @@
 			</cfinvoke>
 			
 			<cfif response.result IS true>
-				<cfset response.message = "Archivo cambiado de área">
+				<cfset response.message = "Archivo cambiado de área.">
 			</cfif>
 
 			<cfcatch>
@@ -577,7 +640,7 @@
 		<cfargument name="lock" type="boolean" required="true">
 		<cfargument name="return_path" type="string" required="true">
 		
-		<cfset var method = "deleteItem">
+		<cfset var method = "lockFile">
 
 		<cfset var response = structNew()>
 				
@@ -611,7 +674,130 @@
 		</cftry>
 		
 	</cffunction>
+
+
+	<!--- validateFileVersion --->
+
+	<cffunction name="validateFileVersion" returntype="void" access="remote">
+		<cfargument name="file_id" type="string" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="valid" type="boolean" required="true">
+		<cfargument name="return_path" type="string" required="true">
+		
+		<cfset var method = "validateFileVersion">
+
+		<cfset var response = structNew()>
+				
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="validateFileVersion" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+				<cfinvokeargument name="valid" value="#arguments.valid#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfif arguments.valid IS true>
+					<cfset msg = "Versión validada.">
+				<cfelse>
+					<cfset msg = "Versión rechazada.">
+				</cfif>
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
+
+	<!--- approveFileVersion --->
+
+	<cffunction name="approveFileVersion" returntype="void" access="remote">
+		<cfargument name="file_id" type="string" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="approve" type="boolean" required="true">
+		<cfargument name="return_path" type="string" required="true">
+		
+		<cfset var method = "approveFileVersion">
+
+		<cfset var response = structNew()>
+				
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="approveFileVersion" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+				<cfinvokeargument name="approve" value="#arguments.approve#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfif arguments.approve IS true>
+					<cfset msg = "Versión aprobada.">
+				<cfelse>
+					<cfset msg = "Versión rechazada.">
+				</cfif>
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
+
+	<!--- ---------------------------------- requestRevision -------------------------------------- --->
 	
+	<cffunction name="requestRevision" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		
+		<cfset var method = "requestRevision">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="requestRevision" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Proceso de aprobación iniciado.">
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
+	</cffunction>
+
 
 	
 	<!--- ---------------------------------- updateFile -------------------------------------- --->
@@ -781,6 +967,49 @@
 		</cftry>
 
 		<cfreturn response>
+		
+	</cffunction>
+
+
+
+	<!--- ----------------------- outputFileVersionStatus -------------------------------- --->
+	
+	<cffunction name="outputFileVersionStatus" returntype="void" output="true" access="public">
+		<cfargument name="version" type="query" required="true">
+	
+		<cfset var method = "outputFileVersionStatus">
+		
+		<cfif version.revised IS true>
+			
+			<div>
+			<cfif version.revision_result IS true>
+
+				<cfif version.approved IS true>
+					
+					<div class="label label-success">Versión de archivo aprobada</div>
+
+					<cfif isNumeric(version.publication_file_id)>
+						<div class="label label-info">Versión de archivo publicada</div>
+					</cfif>
+
+				<cfelseif version.approved IS false>
+
+					<div class="label label-warning">Versión de archivo rechazada en la aprobación</div>
+
+				<cfelse>
+
+					<div class="label label-warning">Versión de archivo revisada pendiente de aprobación</div>
+
+				</cfif>
+				
+			<cfelse>
+
+				<div class="label label-warning">Versión de archivo rechazada en la revisión</div>
+
+			</cfif>
+			</div>
+
+		</cfif>
 		
 	</cffunction>
 	

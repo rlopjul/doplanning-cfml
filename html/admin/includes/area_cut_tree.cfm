@@ -63,13 +63,19 @@
 
 	<div class="form-inline" style="margin-top:2px;">
 
-		<div class="input-group">
-			<input type="text" name="text" id="searchText" value="" class="input-medium" />
-			<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+		<div class="btn-group">
+			<div class="input-group" style="width:260px;" >
+				<input type="text" name="text" id="searchText" value="" class="form-control"/>
+				<span class="input-group-btn">
+					<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+				</span>
+			</div>
 		</div>
 
-		<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
-		<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+		<div class="btn-group">
+			<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+			<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+		</div>
 
 	</div>
 
