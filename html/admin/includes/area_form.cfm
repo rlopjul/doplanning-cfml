@@ -1,5 +1,5 @@
 <cfoutput>
-<form id="areaForm" method="post" enctype="multipart/form-data" class="form-inline">
+<form id="areaForm" method="post" enctype="multipart/form-data"><!---class="form-inline"--->
 	<cfif isDefined("area_id")>
 		<input type="hidden" name="area_id" id="area_id" value="#area_id#" />
 	</cfif>
@@ -9,7 +9,7 @@
 	<div class="form-group">
 		<label class="control-label" for="name" lang="es">Nombre</label>
 		<div class="form-group">
-			<input type="text" name="name" id="name" value="#objectArea.name#" required="true" message="Nombre de área requerida" class="input-block-level" />
+			<input type="text" name="name" id="name" value="#objectArea.name#" required="true" message="Nombre de área requerida" class="form-control" />
 		</div>
 	</div>
 
@@ -17,7 +17,7 @@
 	<div class="form-group">
 		<label class="control-label" for="name" lang="es">Área padre</label>
 		<div class="form-group">
-			<input type="text" name="parent_name" id="parent_name" value="#objectParentArea.name#" class="input-block-level" readonly="true" />
+			<input type="text" name="parent_name" id="parent_name" value="#objectParentArea.name#" class="form-control" readonly="true" />
 		</div>
 	</div>
 	</cfif>
@@ -25,15 +25,15 @@
 	<div class="form-group">
 		<label class="control-label" for="user_full_name" lang="es">Responsable</label>
 		<div class="controls">
-			<input type="hidden" name="user_in_charge" id="user_in_charge" value="#objectArea.user_in_charge#" validate="integer" required="true"/>
-			<input type="text" name="user_in_charge_full_name" id="user_in_charge_full_name" value="#objectArea.user_full_name#" required="true" readonly="true" class="input-lg" /> <button type="button" class="btn btn-default" onclick="showSelectUserModal()">Seleccionar usuario</button>
+			<input type="hidden" name="user_in_charge" id="user_in_charge" value="#objectArea.user_in_charge#" required="true"/>
+			<input type="text" name="user_in_charge_full_name" id="user_in_charge_full_name" value="#objectArea.user_full_name#" required="true" readonly="true" class="form-control" /> <button type="button" class="btn btn-default" onclick="showSelectUserModal()">Seleccionar usuario</button>
 		</div>
 	</div>
 
 	<div class="form-group">
 		<label class="control-label" for="description" lang="es">Descripción</label>
 		<div class="controls">
-			<textarea type="text" name="description" id="description" class="input-block-level" rows="2">#objectArea.description#</textarea>
+			<textarea type="text" name="description" id="description" class="form-control" rows="2">#objectArea.description#</textarea>
 		</div>
 	</div>	
 	
@@ -121,7 +121,7 @@
 
 
 <!--- Select user modal --->
-<div id="selectUserModal" class="modal hide fade" tabindex="-1">
+<div id="selectUserModal" class="modal fade" tabindex="-1"><!---hide no fuciona en bs3--->
 
 	<div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

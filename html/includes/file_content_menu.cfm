@@ -66,22 +66,32 @@
 		<cfif fileTypeId IS NOT 1><!--- Area file --->
 			
 			<cfif objectFile.locked IS true>
+
 				<cfif objectFile.lock_user_id IS SESSION.user_id OR is_user_area_responsible>
 					<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=lockFile&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&lock=false&return_path=#return_path#" class="btn btn-warning btn-sm" onclick="return confirmLockFile(false);"><i class="icon-unlock"></i> <span lang="es">Desbloquear</span></a>
 				</cfif>
-			<cfelse>
+
+			<cfelseif objectFile.in_approval IS false>
+
 				<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=lockFile&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&lock=true&return_path=#return_path#" class="btn btn-warning btn-sm" onclick="return confirmLockFile(true);"><i class="icon-lock"></i> <span lang="es">Bloquear</span></a>
 
-				<cfif fileTypeId IS 3 AND is_user_area_responsible IS true>
+				<cfif fileTypeId IS 3 AND len(version.revision_request_date) IS 0 AND is_user_area_responsible IS true>
 					
 					<a href="file_request_approval.cfm?file=#objectFile.id#" class="btn btn-default btn-sm"><i class="icon-check"></i> <span lang="es">Solicitar aprobación</span></a>
 
 				</cfif>
+
 			</cfif>
 
 			<cfif fileTypeId IS 3>
 				
 				<a href="file_versions.cfm?file=#objectFile.id#" class="btn btn-default btn-sm"><i class="icon-list-alt"></i> <span lang="es">Versiones</span></a>
+
+				<cfif version.approved IS true AND NOT isNumeric(version.publication_file_id) AND is_user_area_responsible>
+				
+					<a href="file_publish.cfm?file=#objectFile.id#&area=#area_id#&fileTypeId=#fileTypeId#&version=#version.version_id#" class="btn btn-default btn-sm"><i class="icon-share"></i> <span lang="es">Publicar versión</span></a>
+
+				</cfif>
 
 			</cfif>
 
@@ -93,7 +103,7 @@
 
 	</cfif>
 
-	<cfif ( fileTypeId IS 1 || (fileTypeId IS NOT 1 AND objectFile.locked IS false) ) AND ( objectFile.user_in_charge EQ SESSION.user_id OR is_user_area_responsible )>
+	<cfif ( fileTypeId IS 1 || (fileTypeId IS NOT 1 AND objectFile.locked IS true AND objectFile.lock_user_id EQ SESSION.user_id) ) AND ( objectFile.user_in_charge EQ SESSION.user_id OR is_user_area_responsible )>
 	
 		<a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
 

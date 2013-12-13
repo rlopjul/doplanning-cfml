@@ -1448,7 +1448,7 @@
 	
 	<!---Añade un archivo existente (duplicándolo y creando uno nuevo) a un mensaje, noticia, entrada etc.--->
 	
-	<cffunction name="addFileToItem" output="false" returntype="struct" access="public">		
+	<cffunction name="addFileToItem" output="false" returntype="query" access="public">		
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="file_id" type="numeric" required="yes">

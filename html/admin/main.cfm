@@ -24,6 +24,7 @@
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
+<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
 
 <cfif APPLICATION.identifier EQ "dp">
@@ -375,26 +376,57 @@
 		  
 			<div class="tab-pane active" id="tab1"><!---Tab Tree--->
 				
-				<div class="form-inline" style="padding-bottom:5px;">
-										
-					<div class="input-group">
-						<input type="text" name="text" id="searchText" value="" class="input-medium" />
-						<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
-					</div>					
-					
-					<a onClick="updateTree();" class="btn btn-default" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
-					<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
-					<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
-					
-					<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
+				<!---<div class="form-inline" style="padding-bottom:5px;">--->
+				<div class="container" style="width:100%;">
+					<div class="row" style="padding-bottom:5px;">
+						
+						<div class="col-sm-11" style="padding:0;">
 
-					<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover área</span></a>
+							<div class="btn-toolbar">
 
-					<a onclick="openAreaModifyModal()" class="btn btn-info" title="Modificar área" lang="es"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
+								<div class="btn-group">
+									<div class="input-group" style="width:260px;" >
+										<input type="text" name="text" id="searchText" value="" class="form-control"/>
+										<span class="input-group-btn">
+											<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+										</span>
+									</div>
+								</div>
 
-					<a onClick="loadModal('html_content/area_delete.cfm?area='+curAreaId);" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
+								<div class="btn-group">
+									<a onClick="updateTree();" class="btn btn-default" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
+								</div>
 
-					<a href="../main.cfm" class="btn btn-info" style="float:right"><i class="icon-arrow-left"></i> <span>Volver</span></a>
+								<div class="btn-group">
+									<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+									<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+								</div>
+
+								<div class="btn-group">
+									<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
+								</div>
+								<div class="btn-group">
+									<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover área</span></a>
+								</div>
+								<div class="btn-group">
+									<a onclick="openAreaModifyModal()" class="btn btn-info" title="Modificar área" lang="es"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
+								</div>
+
+								<div class="btn-group">
+									<a onClick="loadModal('html_content/area_delete.cfm?area='+curAreaId);" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
+								</div>
+
+							</div>
+
+						</div>
+
+						<div class="col-sm-1" style="padding:0;">	
+
+							<a href="../main.cfm" class="btn btn-info" style="float:right"><i class="icon-arrow-left"></i> <span>Volver</span></a>
+
+						</div>
+
+					</div>
 				</div>
 
 				<div class="form-inline" style="padding-bottom:5px; padding-left:5px;">
@@ -517,7 +549,7 @@
 	</div>
 
 	<!--- Modal Window --->
-	<div id="ajax-modal" class="modal hide fade" tabindex="-1"></div>
+	<div id="ajax-modal" class="modal fade" tabindex="-1"></div><!---hide funcionaba en bs2--->
 
 	<div style="clear:both"><!-- --></div>
 	<div class="msg_div_error" id="errorMessage"></div>

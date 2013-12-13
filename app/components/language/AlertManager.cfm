@@ -136,6 +136,9 @@ curLangText["es"] = {
 			"locked_file" : "Archivo bloqueado",
 			"unlocked_file" : "Archivo desbloqueado",
 			"new_version" : "Nueva versión de archivo",
+			"validated_version" : "Versión de archivo validada",
+			"rejected_version" : "Versión de archivo rechazada",
+			"approved_version" : "Versión de archivo aprobada",
 			
 			"created" : "creado",
 			"added" : "añadido",
@@ -144,6 +147,9 @@ curLangText["es"] = {
 			"deleted" : "eliminado",
 			"locked" : "bloqueado",
 			"unlocked" : "desbloqueado",
+			"validated" : "validado",
+			"rejected" : "rechazado",
+			"approved" : "aprobado",
 			
 			"it_has" : "Se ha",
 			"a_file_on_the_area" : "un archivo en el área",
@@ -186,6 +192,22 @@ curLangText["es"] = {
 
 			"your_file_was_changed" : "Este archivo que era de su propiedad ha pasado a ser de otro usuario.",
 			"you_have_new_file" : "Este archivo que era de otro usuario ha pasado a ser suyo.",
+
+		},
+
+		"file_revision": {
+			
+			"file_revision_request" : "Solicitud de revisión de documento",
+
+			"you_have_to_revise" : "Le han enviado el siguiente archivo para que lo revise.<br/><br/><b>IMPORTANTE: Debe validar o rechazar la versión del archivo para poder continuar con el proceso de aprobación del documento.</b>",
+
+		},
+
+		"file_approval": {
+			
+			"file_approval_request" : "Solicitud de aprobación de documento",
+
+			"you_have_to_approve" : "Le han enviado el siguiente archivo para que lo <b>apruebe</b>.<br/><br/><b>IMPORTANTE: Debe aprobar o rechazar la versión del archivo.</b>",
 
 		},
 		
@@ -381,6 +403,9 @@ curLangText["en"] = {
 			"locked_file" : "Locked file",
 			"unlocked_file" : "Unlocked file",
 			"new_version" : "New file version",
+			"validated_version" : "File version validated",
+			"rejected_version" : "File version rejected",
+			"approved_version" : "File version approved",
 			
 			"created" : "created",
 			"added" : "added",
@@ -389,6 +414,9 @@ curLangText["en"] = {
 			"deleted" : "deleted",
 			"locked" : "locked",
 			"unlocked" : "unlocked",
+			"validated" : "validated",
+			"rejected" : "rejected",
+			"approved" : "approved",
 			
 			"it_has" : "A user has",
 			"a_file_on_the_area" : "a file in the area",
@@ -429,6 +457,22 @@ curLangText["en"] = {
 
 			"your_file_was_changed" : "This file that was your property has changed to another user.",
 			"you_have_new_file" : "This file from another user is now yours.",
+		},
+
+		"file_revision": {
+			
+			"file_revision_request" : "Request for document review",
+
+			"you_have_to_revise" : "You have to review the following file.<br/><br/><b>NOTE: You must accept or reject the file version to continue the process of approving the document.</b>",
+
+		},
+
+		"file_approval": {
+			
+			"file_approval_request" : "Request for document approval",
+
+			"you_have_to_approve" : "You have a pending approval document.<br/><br/><b>NOTE: You must approve o reject this file version.</b>",
+
 		},
 		
 		"new_area": {

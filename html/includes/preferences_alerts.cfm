@@ -15,7 +15,7 @@ Preferencias de notificaciones
 <p style="padding-left:15px;"><span lang="es">Enviar un email cuando:</span></p>
 
 <cfoutput>
-<form action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUserPreferences" method="post" class="form-inline" style="margin-left:15px;">
+<form action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUserPreferences" method="post" style="margin-left:15px;">
 	
 	<div class="form-group">
 	<label class="checkbox">
@@ -108,34 +108,44 @@ Preferencias de notificaciones
 	</div>
 </cfif>
 
-<cfif APPLICATION.modulePubMedComments IS true>
-	<div class="form-group">
-	<label class="checkbox">
-		<input type="checkbox" name="notify_new_pubmed" value="true" <cfif preferences.notify_new_pubmed IS true>checked="checked"</cfif> />
-		<img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" alt="Nuevo comentario de PubMed" />
-		<span lang="es">Un comentario de PubMed ha sido creado, modificado o eliminado</span>
-	</label>
-	</div>	
-</cfif>
-
-	<div class="form-group">
-		<label class="checkbox">
-			<input type="checkbox" name="notify_new_area" value="true" <cfif preferences.notify_new_area IS true>checked="checked"</cfif> />
-			<img src="#APPLICATION.htmlPath#/assets/icons/area_new.png" alt="Crear area" />
-			<span lang="es">Un área nueva ha sido creada</span>
-		</label>
-	</div>
-
 	<div class="container" style="padding-left:0px;"><!--- div container --->
+
+		<cfif APPLICATION.modulePubMedComments IS true>
+		<div class="row">
+			<div class="col-sm-1" style="text-align:center;">
+				<img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" alt="Nuevo comentario de PubMed" />
+			</div>
+
+			<div class="col-sm-11" style="margin-left:0px;">
+				<label class="checkbox">
+					<input type="checkbox" name="notify_new_pubmed" value="true" <cfif preferences.notify_new_pubmed IS true>checked="checked"</cfif> />
+					<span lang="es">Un comentario de PubMed ha sido creado, modificado o eliminado</span>
+				</label>
+			</div>
+		</div>	
+		</cfif>
+
+		<div class="form_separator"></div>
+
+		<div class="row">
+			<div class="col-sm-1" style="text-align:center;">
+				<img src="#APPLICATION.htmlPath#/assets/icons/area_new.png" alt="Crear area" />	
+			</div>
+
+			<div class="col-sm-11" style="margin-left:0px;">
+				<label class="checkbox">
+					<input type="checkbox" name="notify_new_area" value="true" <cfif preferences.notify_new_area IS true>checked="checked"</cfif> />
+					<span lang="es">Un área nueva ha sido creada</span>
+				</label>
+			</div>			
+		</div>
 
 		<div class="form_separator"></div>
 
 		<!--- Files --->
-		  <div class="row">
+		<div class="row">
 		    <div class="col-sm-1" style="text-align:center;">
-
 		    	<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" />
-
 		    </div>
 		    <div class="col-sm-11" style="margin-left:0px;">
 
@@ -189,7 +199,7 @@ Preferencias de notificaciones
 		          </div>
 	          	</div>--->
 		    </div>
-		  </div>
+		</div>
 
 
 <cfif APPLICATION.moduleLists IS true>
@@ -198,9 +208,7 @@ Preferencias de notificaciones
 
 	  <div class="row">
 	    <div class="col-sm-1" style="text-align:center;">
-
 	    	<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="Lista" />
-
 	    </div>
 	    <div class="col-sm-11" style="margin-left:0px;">
 
@@ -239,9 +247,7 @@ Preferencias de notificaciones
 
 	  <div class="row">
 	    <div class="col-sm-1" style="text-align:center;">
-
 	    	<img src="#APPLICATION.htmlPath#/assets/icons/form.png" alt="Formulario" />
-
 	    </div>
 	    <div class="col-sm-11" style="margin-left:0px;">
 
