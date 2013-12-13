@@ -28,7 +28,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-<script type="text/javascript">
+<!---<script type="text/javascript">
 
 function confirmDeleteFile() {
 	
@@ -48,11 +48,11 @@ function confirmLockFile(value) {
 	return confirm(messageLock);
 }
 
-</script>
+</script>--->
 
 <cfif app_version NEQ "html2">
 <div class="div_head_subtitle">
-Archivo en edición
+Versión de archivo
 </div>
 </cfif>
 
@@ -70,6 +70,36 @@ Archivo en edición
 <cfoutput>
 
 	<div class="div_file_page_file">
+
+		<cfif version.revised IS true>
+			
+			<!--- outputFileVersionStatus --->
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileVersionStatus">
+				<cfinvokeargument name="version" value="#version#">
+			</cfinvoke>
+
+		<cfelse>
+			<div>
+				<div class="label label-info">Versión no revisada</div>
+			</div>
+		</cfif>
+
+		<cfif len(version.revision_request_date) GT 0>
+			<div class="div_file_page_label"><span lang="es">Fecha de envío a revisión:</span> <span class="text_file_page">#version.revision_request_date#</span></div>	
+		</cfif>
+
+		<cfif len(version.revision_date) GT 0>
+			<div class="div_file_page_label"><span lang="es">Fecha de revision:</span> <span class="text_file_page">#version.revision_date#</span></div>	
+		</cfif>
+
+		<cfif len(version.approval_request_date) GT 0>
+			<div class="div_file_page_label"><span lang="es">Fecha de envío a aprobación:</span> <span class="text_file_page">#version.approval_request_date#</span></div>	
+		</cfif>
+
+		<cfif len(version.approval_date) GT 0>
+			<div class="div_file_page_label"><span lang="es">Fecha de aprobación:</span> <span class="text_file_page">#version.approval_date#</span></div>	
+		</cfif>
+
 
 		<div class="div_file_page_label">
 			<a href="area_user.cfm?area=#area_id#&user=#version.user_in_charge#">

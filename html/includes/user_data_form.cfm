@@ -13,33 +13,33 @@
 		<!---<div style="float:right; margin-right:5px; margin-top:5px;">--->
 		<div class="col-md-3">
 
-				<div style="text-align:left;">
-				<cfif len(objectUser.image_file) GT 0 AND len(objectUser.image_type)>
-					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&medium=" alt="Imagen del usuario" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" />
-					<br/>
-					
-					<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/iframes/preferences_user_data.cfm")>
-					<a href="#APPLICATION.htmlComponentsPath#/User.cfc?method=deleteUserImage#url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar imagen" class="btn btn-danger btn-xs" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
-					
-					
-				<cfelse>
-					
-					<img src="#APPLICATION.htmlPath#/assets/icons/user_default_medium.png" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
-					
-				</cfif>
-				</div>			
-				<div>
-					<label class="control-label" for="imagedata" lang="es">Imagen del usuario:</label>
-					<div class="controls">
-						<input type="file" name="imagedata" id="imagedata" accept="image/*"/>
-					</div>
+			<div style="text-align:left;">
+			<cfif len(objectUser.image_file) GT 0 AND len(objectUser.image_type)>
+				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&medium=" alt="Imagen del usuario" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" />
+				<br/>
+				
+				<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/iframes/preferences_user_data.cfm")>
+				<a href="#APPLICATION.htmlComponentsPath#/User.cfc?method=deleteUserImage#url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar imagen" class="btn btn-danger btn-xs" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+				
+				
+			<cfelse>
+				
+				<img src="#APPLICATION.htmlPath#/assets/icons/user_default_medium.png" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
+				
+			</cfif>
+			</div>			
+			<div>
+				<label class="control-label" for="imagedata" lang="es">Imagen del usuario:</label>
+				<div class="controls">
+					<input type="file" name="imagedata" id="imagedata" accept="image/*"/>
 				</div>
-				
-				<label for="family_name" lang="es">Nombre:</label>
-				<input type="text" name="family_name" id="family_name" value="#objectUser.family_name#"/>
-				
-				<label for="name" lang="es">Apellidos:</label> 
-				<input type="text" name="name" id="name" value="#objectUser.name#" />
+			</div>
+			
+			<label for="family_name" lang="es">Nombre:</label>
+			<input type="text" name="family_name" id="family_name" value="#objectUser.family_name#"/>
+			
+			<label for="name" lang="es">Apellidos:</label> 
+			<input type="text" name="name" id="name" value="#objectUser.name#" />
 				
 		</div>
 			
@@ -62,7 +62,7 @@
 		
 			<label class="control-label" for="language" lang="es">Idioma:</label>
 			<div class="controls">
-				<select name="language" id="language">
+				<select name="language" id="language" class="form-control">
 					<option value="es" <cfif objectUser.language EQ "es">selected="selected"</cfif>>Español</option>
 					<option value="en" <cfif objectUser.language EQ "en">selected="selected"</cfif>>English</option>
 				</select>
@@ -84,10 +84,10 @@
 			<textarea type="text" name="address" id="address" class="form-control" rows="2"/>#objectUser.address#</textarea>
 			
 			<label for="password" lang="es">Nueva contraseña:</label>
-			<input type="password" name="password" id="password" value="" autocomplete="false" />
+			<input type="password" name="password" id="password" class="form-control" value="" autocomplete="false" />
 			
 			<label for="password_confirmation" lang="es">Confirmar nueva contraseña:</label>
-			<input type="password" name="password_confirmation" id="password_confirmation" value="" autocomplete="false" />
+			<input type="password" name="password_confirmation" class="form-control" id="password_confirmation" value="" autocomplete="false" />
 		
 		</div>
 		

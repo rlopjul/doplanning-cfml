@@ -7,6 +7,9 @@
 	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset datetimeFormat = "%d-%m-%Y %H:%i:%s">
 
+	<cfset CREATE_ROW = "create">
+	<cfset MODIFY_ROW = "modify">
+
 	<!---saveRow--->
 		
 	<cffunction name="saveRow" output="false" returntype="numeric" access="public">
@@ -48,7 +51,7 @@
 
 			<cftransaction>
 
-				<cfif arguments.action IS "create">
+				<cfif arguments.action IS CREATE_ROW>
 
 					<cfset sqlAction = "INSERT INTO">
 
@@ -67,13 +70,19 @@
 						
 					</cfif>
 
-					<cfif NOT isDefined("arguments.user_id") AND ( arguments.tableTypeId IS NOT 2 OR arguments.action IS "update" )><!---User IS NOT defined AND IS NOT forms--->
+					<cfif NOT isDefined("arguments.user_id") AND ( arguments.tableTypeId IS NOT 2 OR arguments.action IS MODIFY_ROW )><!---User IS NOT defined AND IS NOT forms--->
 						<cfthrow message="Usuario requerido para guardar un registro">						
 					</cfif>
 
 				<cfelse>
 						
 					<cfset sqlAction = "UPDATE">
+
+					<cfif NOT isDefined("arguments.row_id") OR NOT isNumeric(arguments.row_id)>
+						
+						<cfthrow message="Error al obtener el registro a modificar">
+
+					</cfif>
 
 				</cfif>
 
@@ -82,7 +91,7 @@
 				<cfquery name="saveRow" datasource="#client_dsn#">
 					#sqlAction# `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
 					SET 
-					<cfif arguments.action IS "create">
+					<cfif arguments.action IS CREATE_ROW>
 						insert_user_id = 
 						<cfif isDefined("arguments.user_id")>
 							<cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
@@ -123,12 +132,12 @@
 
 					</cfloop>
 
-					<cfif arguments.action NEQ "create">
+					<cfif arguments.action NEQ CREATE_ROW>
 						WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
 					</cfif>;
 				</cfquery>
 
-				<cfif arguments.action IS "create">
+				<cfif arguments.action IS CREATE_ROW>
 
 					<cfquery name="getLastInsertId" datasource="#client_dsn#">
 						SELECT LAST_INSERT_ID() AS last_insert_id FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
@@ -148,7 +157,7 @@
 
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- SELECT --->
 
-							<cfif arguments.action NEQ "create">
+							<cfif arguments.action NEQ CREATE_ROW>
 								
 								<!--- Delete old values --->
 								<cfquery name="deleteEntitySectors" datasource="#client_dsn#">

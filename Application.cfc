@@ -8,7 +8,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_49'>
+	<cfset this.name = 'dp_beta_aws_50'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
@@ -27,7 +27,7 @@
 		<cfset APPLICATION.moduleLdapUsers = false>
 		<cfset APPLICATION.moduleConvertFiles = false>
 		<cfset APPLICATION.moduleWeb = true>
-		<cfset APPLICATION.moduleTwitter = true>
+		<cfset APPLICATION.moduleTwitter = false>
 		<cfset APPLICATION.moduleConsultations = true>
 		<cfset APPLICATION.includeConsultationsInAlerts = true>
 		<cfset APPLICATION.moduleVirtualMeetings = false>

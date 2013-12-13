@@ -187,11 +187,48 @@
 
 <cfoutput>
 <div style="clear:both; padding-left:5px;">
-<cfform method="get" name="search_form" class="form-inline" action="#CGI.SCRIPT_NAME#" onsubmit="return onSubmitForm();">
+<cfform method="get" name="search_form" action="#CGI.SCRIPT_NAME#" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('search_form');
 	</script>
+
+	<div class="form-group">
+    	<label for="search_page">Buscar en</label>
+    	<select name="search_page" id="search_page" class="form-control" onchange="goToUrl($('##search_page').val(),'');">
+    		<option value="messages_search.cfm" <cfif curElement EQ "messages">selected="selected"</cfif>><span lang="es">Mensajes</span></option>
+    		<option value="files_search.cfm" <cfif curElement EQ "files">selected="selected"</cfif>><span lang="es">Archivos</span></option>
+    		<option value="events_search.cfm" <cfif curElement EQ "events">selected="selected"</cfif>><span lang="es">Eventos</span></option>
+    		<option value="tasks_search.cfm" <cfif curElement EQ "tasks">selected="selected"</cfif>><span lang="es">Tareas</span></option>
+    		<cfif APPLICATION.moduleLists IS true>
+    			<option value="lists_search.cfm" <cfif curElement EQ "lists">selected="selected"</cfif>><span lang="es">Listas</span></option>
+    		</cfif>
+
+    		<cfif APPLICATION.moduleForms IS true>
+    			<option value="forms_search.cfm" <cfif curElement EQ "forms">selected="selected"</cfif>><span lang="es">Formularios</span></option>
+    		</cfif>
+    		
+    		<cfif APPLICATION.moduleConsultations IS true>
+    			<option value="consultations_search.cfm" <cfif curElement EQ "consultations">selected="selected"</cfif>><span lang="es">Interconsultas</span></option>
+			</cfif>
+		
+			<cfif APPLICATION.modulePubMedComments IS true>
+				<option value="pubmeds_search.cfm" <cfif curElement EQ "pubmeds">selected="selected"</cfif>><span lang="es">Comentarios de PubMed</span></option>
+			</cfif>
+		
+			<cfif APPLICATION.moduleWeb EQ true>
+				<option value="entries_search.cfm" <cfif curElement EQ "entries">selected="selected"</cfif>><span lang="es">Elementos de contenidos web</span></option>
+
+				<option value="newss_search.cfm" <cfif curElement EQ "news">selected="selected"</cfif>><span lang="es">Noticias</span></option>
+
+				<option value="images_search.cfm" <cfif curElement EQ "images">selected="selected"</cfif>><span lang="es">Imágenes</span></option>
+			</cfif>
+
+			<option value="users_search.cfm" <cfif curElement EQ "users">selected="selected"</cfif>><span lang="es">Usuarios</span></option>
+	
+    	</select>
+  	</div>
+
 
 	<cfif APPLICATION.modulefilesWithTables IS true AND isDefined("curElement") AND curElement IS "files"><!--- Files Typologies --->
 			
@@ -204,7 +241,7 @@
 			<select name="typology_id" id="typology_id" class="col-md-5" onchange="loadTypology($('##typology_id').val(),'');">
 				<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif>>Todas</option>
 				<cfif areasTypologies.recordCount GT 0>
-					<cfloop query="#areasTypologies#">
+					<cfloop query="areasTypologies">
 						<option value="#areasTypologies.id#" <cfif areasTypologies.id IS selected_typology_id>selected="selected"</cfif>>#areasTypologies.title#</option>
 					</cfloop>
 				</cfif>

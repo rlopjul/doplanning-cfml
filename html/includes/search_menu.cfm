@@ -72,7 +72,7 @@
 
 <cfoutput>
 <div style="clear:both"></div>
-<div class="navbar navbar-static-top">
+<!---<div class="navbar navbar-static-top">
   <div class="navbar-inner">
 	<!---<a class="navbar-brand" href="##">Mensajes</a>--->
 	
@@ -120,6 +120,6 @@
 
 	</ul>
   </div>
-</div>
+</div>--->
 <div style="height:4px; clear:both;"><!-- --></div>
 </cfoutput>

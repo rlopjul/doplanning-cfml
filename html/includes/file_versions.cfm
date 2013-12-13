@@ -29,6 +29,13 @@
 
 <div class="div_head_subtitle_area">
 
+	<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Archivo" lang="es"> <img style="height:22px;" src="/html/assets/icons/file_edited.png">&nbsp;&nbsp;<span lang="es">Archivo</span></a>
+
+	<span class="divider">&nbsp;</span>
+
+	<cfif app_version NEQ "mobile">
+		<a href="#APPLICATION.htmlPath#/file_versions.cfm?file=#file_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+	</cfif>
 
 </div>
 

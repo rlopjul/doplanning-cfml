@@ -20,7 +20,7 @@
 		<cfif arguments.search_inputs IS true>
 			<cfset text_input_class = "span5">
 		<cfelse>
-			<cfset text_input_class = "input-block-level">
+			<cfset text_input_class = "form-control">
 		</cfif>
 
 		<cfoutput>
@@ -89,7 +89,7 @@
 
 			<cfelseif fields.input_type IS "number"><!--- INTEGER --->
 
-				<input type="number" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="col-md-2"/>
+				<input type="number" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="form-control"/>
 
 				<script type="text/javascript">
 					<cfif fields.required IS true AND arguments.search_inputs IS false>

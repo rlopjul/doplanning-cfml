@@ -85,9 +85,9 @@
 			 (1,1,'Por defecto','By default'),
 			 (2,1,'Listado de elementos','Elements list'),
 			 (3,1,'Imagen a la derecha','Image to right'),
-			 (4,1,'Imagen a la izquierda','Image to left'),
-			 (5,1,'Figura con pie','Image with footnote');
+			 (4,1,'Imagen a la izquierda','Image to left');
 		</cfquery>
+		<!---, (5,1,'Figura con pie','Image with footnote')--->
 		
 		
 		<cfquery datasource="#client_dsn#">

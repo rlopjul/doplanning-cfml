@@ -37,9 +37,9 @@
 
 			<cfset row = getRowResponse.row>
 
-			<cfoutput>
+			<!---<cfoutput>
 				<input type="hidden" name="typology_row_id" value="#row.row_id#"/>
-			</cfoutput>
+			</cfoutput>--->
 
 		<cfelse><!--- NEW ROW --->
 

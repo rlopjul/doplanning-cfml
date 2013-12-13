@@ -214,7 +214,8 @@
 	<div class="form-group">
 		<label class="control-label" lang="es">#t_recipient_user#</label>
 		<div class="controls">
-			<cfinput type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" validate="integer" required="true" message="Usuario destinatario requerido"/><cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes" required="true" onclick="openUserSelector()"><cfif read_only IS false> <button onclick="return openUserSelector();" class="btn btn-default" lang="es">Seleccionar usuario</button><br/><span style="font-size:10px" lang="es">Usuario al que se le asignará la tarea</span></cfif>
+			<input type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#"  required="true" />
+			<cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes" required="true" message="Usuario destinatario requerido" onclick="openUserSelector()"><cfif read_only IS false> <button onclick="return openUserSelector();" class="btn btn-default" lang="es">Seleccionar usuario</button><br/><span style="font-size:10px" lang="es">Usuario al que se le asignará la tarea</span></cfif>
 		</div>
 	</div>
 </cfif>
