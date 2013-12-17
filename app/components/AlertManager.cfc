@@ -863,7 +863,7 @@
 				<cfsavecontent variable="alertContent">
 					<cfoutput>
 					<cfif arguments.action NEQ "new" AND arguments.action NEQ "associate">
-						#subject_action#:<br/>
+						<strong>#subject_action#</strong>:<br/><br/>
 					</cfif>
 					#langText[curLang].new_file.user#: <strong><!---#objectFile.user_full_name#--->#actionUserName#</strong><br />
 
@@ -1219,6 +1219,7 @@
 		<cfsavecontent variable="alertContent">
 			<cfoutput>
 			#langText[arguments.language].new_file.file_name#: <strong>#objectFile.name#</strong><br />
+			#langText[arguments.language].new_file.file#: <strong>#objectFile.file_name#</strong><br />
 			#langText[arguments.language].new_file.upload_date#: <strong>#objectFile.uploading_date#</strong><br/>
 			<cfif len(objectFile.replacement_date) GT 0>
 				<cfif objectFile.file_type_id IS NOT 3>

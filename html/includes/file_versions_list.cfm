@@ -49,6 +49,8 @@
 			<th>Usuario</th>
 			<th>Fecha</th>
 			<th>Tamaño</th>
+			<th>Aprobada</th>
+			<th>Publicada</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -84,7 +86,7 @@
 		</cfif>
 
 
-		<tr <cfif fieldSelected IS true>class="selected"</cfif> onclick="openUrl('#version_page_url#','itemIframe',event)">
+		<tr <cfif fieldSelected IS true>class="selected"</cfif> <cfif versions.currentRow IS 1>style="font-weight:bold"</cfif> onclick="openUrl('#version_page_url#','itemIframe',event)">
 			<!---<td>#versions.currentRow#</td>--->		
 			<td>#versions.file_name#</td>
 			<cfset uploadDate = versions.uploading_date>	
@@ -108,8 +110,18 @@
 				</cfinvoke>
 				<span>#fileSize#</span>
 			</td>
+			<td>
+				<span lang="es"><cfif versions.approved IS true>Sí<cfelse>No</cfif></span>
+			</td>
+			<td>
+				<span lang="es"><cfif isNumeric(versions.publication_file_id)>Sí<cfelse>No</cfif></span>
+			</td>
 		</tr>
 	</cfloop>
 	</tbody>
 </table>
 </cfoutput>
+
+<div style="margin-top:10px">
+	<small class="help-block" lang="es">Se muestra en negrita la versión vigente (última versión) del archivo.</small>
+</div>

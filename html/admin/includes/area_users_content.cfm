@@ -10,14 +10,30 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
 
+<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
+	<cfinvokeargument name="area_id" value="#area_id#">
+	<cfinvokeargument name="separator" value=" / ">
+</cfinvoke>
+<cfif SESSION.client_id NEQ "hcs">
+						
+	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isInternalUser" returnvariable="internal_user">
+		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
+	</cfinvoke>
+
+</cfif>
 <cfoutput>
-<div class="navbar navbar-static-top">
-	<div class="navbar-inner">
+<div class="div_head_menu">
+	<div class="navbar navbar-default navbar-static-top">
+		<div class="navbar-header">
 
-		<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
-		<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
+			<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
+			<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
 
-		<span class="navbar_brand">#area_name#</span>
+			<p class="navbar_brand">#area_name#<br/>
+			<cfif SESSION.client_id EQ "hcs" OR internal_user IS true>
+				<span style="font-size:12px; color:##737373">Ruta: #area_path#</span></p>
+			</cfif>
+		</div>
 	</div>
 </div>
 

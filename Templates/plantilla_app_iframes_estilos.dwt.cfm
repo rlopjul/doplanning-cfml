@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- TemplateInfo codeOutsideHTMLIsLocked="true" --><!DOCTYPE html>
 <html lang="es">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -11,7 +11,15 @@
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
-<link href="../html/styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<!--[if lt IE 9]>
+	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+    <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+    <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
+<![endif]-->
+
+<link href="../html/styles/styles.min.css?v=2" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../html/styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>

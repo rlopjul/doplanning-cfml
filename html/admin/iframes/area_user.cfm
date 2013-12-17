@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="false" -->
+<html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
@@ -11,7 +11,15 @@
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
-<link href="../../styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<!--[if lt IE 9]>
+	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+    <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+    <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
+<![endif]-->
+
+<link href="../../styles/styles.min.css?v=2" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
@@ -65,31 +73,28 @@
 </cfif>
 
 <cfoutput>
-<div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
+<div class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
 
- 			<cfif isDefined("user_id") AND isDefined("area_id")>
- 			<a class="btn btn-warning btn-sm" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de esta área</span></a>
+		<cfif isDefined("user_id") AND isDefined("area_id")>
+		<a class="btn btn-warning btn-sm navbar-btn" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de esta área</span></a>
+		</cfif>
 
- 			</cfif>
+		<cfif SESSION.client_administrator IS SESSION.user_id>
 
- 			<cfif SESSION.client_administrator IS SESSION.user_id>
+			<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
+			<cfinvokeargument name="area_id" value="#area_id#"/>
+			<cfinvokeargument name="user_id" value="#user_id#"/>
+		</cfinvoke>
 
- 				<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
-					<cfinvokeargument name="area_id" value="#area_id#"/>
-					<cfinvokeargument name="user_id" value="#user_id#"/>
-				</cfinvoke>
+		<cfif isAdministratorResponse.result IS false>--->
+			
+			<a class="btn btn-info btn-sm disabled navbar-btn" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>
 
-				<cfif isAdministratorResponse.result IS false>--->
-					
-					<a class="btn btn-info  btn-sm disabled" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>
+		<!---</cfif>--->
 
-				<!---</cfif>--->
-
- 			</cfif>
- 			
-		</div>
+		</cfif>
+			
 	</div>
 </div>
 </cfoutput>
