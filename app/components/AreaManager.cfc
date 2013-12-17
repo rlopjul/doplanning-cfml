@@ -227,7 +227,8 @@
 	<!---A este método accede cualquier usuario, sea interno o no, ya que de él se obtiene el path para enviar las notificaciones por email--->
 	
 	<cffunction name="getAreaPath" returntype="string" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="separator" type="string" required="false" default="/">
 		<!---<cfargument name="path" type="string" required="no" default="">--->
 		
 		<cfset var method = "getAreaPath">
@@ -238,6 +239,7 @@
 		
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaPath" returnvariable="area_path">
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfinvokeargument name="separator" value="#arguments.separator#"/>
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>

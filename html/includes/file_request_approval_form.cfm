@@ -104,13 +104,13 @@
 		<strong>#file.approver_user_full_name#</strong>
 	</div>
 
-	<p class="help-block">
+	<p class="help-block" style="font-size:12px;">
 		Proceso de aprobación:<br/>
 		1º Se enviará el archivo al usuario revisor.<br/>
 		2º El usuario revisor debe validar el documento.<br/>
 		3º Si el usuario revisor valida el documento, se envía el documento al usuario aprobador.<br/>
 		4º El usuario aprobador debe validar el documento.<br/>
-		Si el documento no es validado por el revisor o el aprobador, se debe iniciar de nuevo el proceso de aprobación.
+		Si el documento no es validado por el revisor o el aprobador, se debe iniciar de nuevo el proceso de aprobación con una nueva versión del archivo.
 	</p>
 	
 	<div style="height:10px;"><!--- ---></div>

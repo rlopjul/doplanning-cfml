@@ -47,17 +47,7 @@
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/file_versions_list.cfm">
 		<!---<cfset full_content = false>
-		<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">--->
-
-	<cfelse>
-	
-		<script type="text/javascript">
-			openUrlHtml2('empty.cfm','itemIframe');
-		</script>				
-
-		<cfoutput>
-		<div class="div_text_result"><span lang="es">Haga clic en Añadir campo parar crear un nuevo campo.</span></div>
-		</cfoutput>
+		<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">--->		
 
 	</cfif>
 

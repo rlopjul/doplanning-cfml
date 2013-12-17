@@ -20,7 +20,7 @@
 
 <cfif fileTypeId IS 3>
 	
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileLastVersion" returnvariable="version">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="version">
 		<cfinvokeargument name="file_id" value="#file_id#">
 		<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 	</cfinvoke>

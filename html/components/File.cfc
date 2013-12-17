@@ -147,19 +147,19 @@
 	</cffunction>
 
 
-	<!--- ----------------------------------- getFileLastVersion ------------------------------------- --->
+	<!--- ----------------------------------- getLastFileVersion ------------------------------------- --->
 	
-	<cffunction name="getFileLastVersion" returntype="query" access="public">
+	<cffunction name="getLastFileVersion" returntype="query" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
 		
-		<cfset var method = "getFileLastVersion">
+		<cfset var method = "getLastFileVersion">
 
 		<cfset var response = structNew()>
 					
 		<cftry>
 	
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFileLastVersion" returnvariable="response">
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getLastFileVersion" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
 				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 			</cfinvoke>
