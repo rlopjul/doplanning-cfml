@@ -199,7 +199,7 @@ curLangText["es"] = {
 			
 			"file_revision_request" : "Solicitud de revisión de documento",
 
-			"you_have_to_revise" : "Le han enviado el siguiente archivo para que lo revise.<br/><br/><b>IMPORTANTE: Debe validar o rechazar la versión del archivo para poder continuar con el proceso de aprobación del documento.</b>",
+			"you_have_to_revise" : "Le han enviado el siguiente archivo para que lo revise.<br/><b>IMPORTANTE: Debe validar o rechazar la versión del archivo para poder continuar con el proceso de aprobación del documento.</b>",
 
 		},
 
@@ -207,7 +207,7 @@ curLangText["es"] = {
 			
 			"file_approval_request" : "Solicitud de aprobación de documento",
 
-			"you_have_to_approve" : "Le han enviado el siguiente archivo para que lo <b>apruebe</b>.<br/><br/><b>IMPORTANTE: Debe aprobar o rechazar la versión del archivo.</b>",
+			"you_have_to_approve" : "Le han enviado el siguiente archivo para que lo <b>apruebe</b>.<br/><b>IMPORTANTE: Debe aprobar o rechazar la versión del archivo.</b>",
 
 		},
 		
@@ -463,7 +463,7 @@ curLangText["en"] = {
 			
 			"file_revision_request" : "Request for document review",
 
-			"you_have_to_revise" : "You have to review the following file.<br/><br/><b>NOTE: You must accept or reject the file version to continue the process of approving the document.</b>",
+			"you_have_to_revise" : "You have to review the following file.<br/><b>NOTE: You must accept or reject the file version to continue the process of approving the document.</b>",
 
 		},
 
@@ -471,7 +471,7 @@ curLangText["en"] = {
 			
 			"file_approval_request" : "Request for document approval",
 
-			"you_have_to_approve" : "You have a pending approval document.<br/><br/><b>NOTE: You must approve o reject this file version.</b>",
+			"you_have_to_approve" : "You have a pending approval document.<br/><b>NOTE: You must approve o reject this file version.</b>",
 
 		},
 		

@@ -63,7 +63,18 @@ Versión de archivo
 <div class="div_elements_menu"><!---div_elements_menu--->
 	
 	<a href="#APPLICATION.htmlPath#/file_version_download.cfm?id=#version.version_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-info"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
-		
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="lastVersion">
+		<cfinvokeargument name="file_id" value="#version.file_id#">
+		<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+	</cfinvoke>
+
+	<cfif lastVersion.version_id NEQ version_id>
+
+		<a href="" class="btn btn-warning btn-sm disabled"><i class="icon-level-up"></i> <span lang="es">Definir como versión vigente</span></a>
+
+	</cfif>
+
 </div>
 </cfoutput>
 
@@ -80,7 +91,11 @@ Versión de archivo
 
 		<cfelse>
 			<div>
-				<div class="label label-info">Versión no revisada</div>
+				<cfif len(version.revision_request_date) GT 0>
+					<div class="label label-warning">Versión de archivo enviada a revisión</div>
+				<cfelse>
+					<div class="label label-info">Versión no revisada</div>
+				</cfif>
 			</div>
 		</cfif>
 

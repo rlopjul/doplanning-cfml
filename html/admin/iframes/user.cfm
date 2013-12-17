@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="false" -->
+<html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
@@ -11,7 +11,15 @@
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
-<link href="../../styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<!--[if lt IE 9]>
+	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+    <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+    <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
+<![endif]-->
+
+<link href="../../styles/styles.min.css?v=2" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
@@ -64,25 +72,23 @@
 </cfif>
 
 <cfoutput>
-<div class="navbar navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
+<div class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
 
-			<cfif isDefined("user_id")>
-			<a class="btn btn-info btn-sm" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar a esta área</a>
-			</cfif>
+		<cfif isDefined("user_id")>
+		<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar a esta área</a>
+		</cfif>
 
-			<cfif SESSION.client_administrator IS SESSION.user_id>
-				
-				<a class="btn btn-info btn-sm disabled" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white"></i> Nuevo usuario</a>
-	 			<cfif isDefined("user_id")>
-	 			<a class="btn btn-info btn-sm disabled" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');" ><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
-	 			<a class="btn btn-danger btn-sm" title="Eliminar Usuario" onClick="return confirmAction('eliminar');" href="user_delete.cfm?user=#user_id#" lange="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
-	 			</cfif>
+		<cfif SESSION.client_administrator IS SESSION.user_id>
+			
+			<a class="btn btn-info btn-sm disabled navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white"></i> Nuevo usuario</a>
+ 			<cfif isDefined("user_id")>
+ 			<a class="btn btn-info btn-sm disabled navbar-btn" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');" ><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+ 			<a class="btn btn-danger btn-sm" title="Eliminar Usuario" onClick="return confirmAction('eliminar');" href="user_delete.cfm?user=#user_id#" lange="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+ 			</cfif>
 
-			</cfif>
- 			
-		</div>
+		</cfif>
+			
 	</div>
 </div>
 </cfoutput>

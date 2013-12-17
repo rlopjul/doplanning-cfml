@@ -24,6 +24,14 @@
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
+<!--[if lt IE 9]>
+	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+    <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+    <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
+<![endif]-->
+
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
 
@@ -32,7 +40,6 @@
 <cfelse>
 <link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
-<!--- <link rel="stylesheet" type="text/css" href="../jquery/jstree/themes/dp/style.css"/> --->
 
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
@@ -41,6 +48,16 @@
 
 <script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modal.js"></script>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
+
+<script type="text/javascript">
+	<!---To enable the loading spinner in Bootstrap 3--->
+	$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
+    '<div class="loading-spinner" style="width: 200px; margin-left: -100px;">' +
+        '<div class="progress progress-striped active">' +
+            '<div class="progress-bar" style="width: 100%;"></div>' +
+        '</div>' +
+    '</div>';
+</script>
 
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8" type="text/javascript"></script>
@@ -99,7 +116,7 @@
 <script type="text/javascript">
 	
 	function resizeIframe() {
-		var newHeight = windowHeight()-56;
+		var newHeight = windowHeight()-66;
 		$(".iframes").height(newHeight);
 		
 		var userIframeHeight = 300;
@@ -328,7 +345,9 @@
 		  </ul>
 		  
 		  <cfoutput>
-		  <div style="float:right; clear:none;">
+		  <div style="clear:none; text-align:center">
+
+		  	<span style="line-height:35px; color:##666666; font-size:12px"><b>Administración</b> beta</span>
 		  
 		  	<div style="float:right; text-align:right; clear:none;">
 				<a href="../preferences.cfm" title="Preferencias del usuario" class="link_user_logged" lang="es">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>

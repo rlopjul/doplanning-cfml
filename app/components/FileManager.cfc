@@ -386,11 +386,9 @@
 			
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 
-			<!---ESTE MÉTODO HAY QUE CAMBIARLO para que pase fileTypeId y borre todos los tipos de archivos de un área--->
-
 			<!--- Get files to delete --->			
 			<cfquery name="filesQuery" datasource="#client_dsn#">
-				SELECT file_id 
+				SELECT file_id, file_type_id 
 				FROM #client_abb#_areas_files 
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
@@ -411,7 +409,7 @@
 
 						<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
 							<cfinvokeargument name="file_id" value="#cur_file_id#">
-							<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+							<!---<cfinvokeargument name="fileTypeId" value="#filesQuery.file_type_id#">--->
 							<cfinvokeargument name="area_id" value="#arguments.area_id#">
 						</cfinvoke>
 
@@ -458,7 +456,6 @@
 	
 	<cffunction name="deleteFile" returntype="struct" output="false" access="public">		
 		<cfargument name="file_id" type="numeric" required="true">
-		<cfargument name="fileTypeId" type="numeric" required="false">
 		<cfargument name="area_id" type="numeric" required="false">
 		
 		<cfset var method = "deleteFile">
@@ -467,19 +464,19 @@
 
 		<cfset var area_id = "">
 		<cfset var fileQuery = "">
+		<cfset var fileTypeId = "">
+		<cfset var path = "">
+		<cfset var filePath ="">
 					
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
-			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
-						
+									
 			<!--- getFile --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="with_lock" value="false">
 				<cfinvokeargument name="parse_dates" value="true">
-				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -491,7 +488,11 @@
 				
 				<cfthrow errorcode="#error_code#">
 							
-			</cfif>		
+			</cfif>	
+
+			<cfset fileTypeId = fileQuery.file_type_id>
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+	
 
 			<!---checkAccess--->
 			<cfif fileQuery.file_type_id IS 2><!---Area file (all area users can delete the file)--->
@@ -551,6 +552,33 @@
 
 					</cfif>
 
+					<!--- Delete file versions --->
+					<cfif fileQuery.file_type_id IS 3><!--- Area file with versions --->
+					
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersions" returnvariable="fileVersionsQuery">
+							<cfinvokeargument name="file_id" value="#arguments.file_id#">
+							<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+							
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfloop query="fileVersionsQuery">
+							
+							<cfinvoke component="FileManager" method="deleteFileVersion" returnvariable="deleteFileVersionResponse">
+								<cfinvokeargument name="version_id" value="#fileVersionsQuery.version_id#"/>
+								<cfinvokeargument name="fileQuery" value="#fileQuery#"/>
+							</cfinvoke>
+
+							<cfif deleteFileVersionResponse.result IS false>
+								<cfthrow message="#deleteFileVersionResponse.message#">
+							</cfif>
+
+						</cfloop>
+
+					</cfif>
+
+
 					<!--- Delete association areas --->
 					<cfquery name="deleteAssociationAreaQuery" datasource="#client_dsn#">
 						DELETE 
@@ -578,24 +606,28 @@
 						WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 					
-					<cfset path = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#/'>	
-					<cfset filePath = path & "#fileQuery.physical_name#">			
-					
-					<!--- Now we delete physically the file on the server --->
-					<cfif FileExists(filePath)><!---If the physical file exist--->
-						<cffile action="delete" file="#filePath#">
-					<cfelse><!---The physical file does not exist--->
-						<!---<cfset error_code = 608>
-						<cfthrow errorcode="#error_code#">--->
-					</cfif>
-					
-					<!---Update User Space Used--->
-					<cfif fileQuery.status EQ "ok">
-						<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
-							UPDATE #client_abb#_users
-							SET space_used = space_used-#fileQuery.file_size#
-							WHERE id = <cfqueryparam value="#fileQuery.user_in_charge#" cfsqltype="cf_sql_integer">;
-						</cfquery>
+					<cfif fileQuery.file_type_id IS NOT 3><!--- IS NOT file with versions --->
+
+						<cfset path = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#/'>	
+						<cfset filePath = path & fileQuery.physical_name>			
+						
+						<!--- Now we delete physically the file on the server --->
+						<cfif FileExists(filePath)><!---If the physical file exist--->
+							<cffile action="delete" file="#filePath#">
+						<cfelse><!---The physical file does not exist--->
+							<!---<cfset error_code = 608>
+							<cfthrow errorcode="#error_code#">--->
+						</cfif>
+						
+						<!---Update User Space Used--->
+						<cfif fileQuery.status EQ "ok">
+							<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
+								UPDATE #client_abb#_users
+								SET space_used = space_used-#fileQuery.file_size#
+								WHERE id = <cfqueryparam value="#fileQuery.user_in_charge#" cfsqltype="cf_sql_integer">;
+							</cfquery>
+						</cfif>
+
 					</cfif>
 				
 				</cftransaction>
@@ -609,7 +641,7 @@
 						<!--- Alert --->
 						<cfinvoke component="AlertManager" method="newFile">
 							<cfinvokeargument name="objectFile" value="#fileQuery#">
-							<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+							<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
 							<cfinvokeargument name="area_id" value="#getFileAreasQuery.area_id#">
 							<cfinvokeargument name="action" value="delete">
 						</cfinvoke>
@@ -633,7 +665,138 @@
 		
 	</cffunction>
 
+
 	
+	<!--- ----------------------- DELETE FILE VERSION -------------------------------- --->
+	
+	<cffunction name="deleteFileVersion" returntype="struct" output="false" access="private">		
+		<cfargument name="version_id" type="numeric" required="true">
+		<cfargument name="fileQuery" type="query" required="true">
+		
+		<cfset var method = "deleteFileVersion">
+		
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var fileTypeId = "">
+		<cfset var path = "">
+		<cfset var filePath ="">
+
+		<!--- Las consultas de este método no se pueden meter dentro de otra transacción porque este método se llama desde deleteFile --->
+								
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+									
+			<!---
+			<!--- getFile --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="with_lock" value="false">
+				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif fileQuery.recordCount IS 0><!---The file does not exist (is not found)--->
+				
+				<cfset error_code = 601>
+				
+				<cfthrow errorcode="#error_code#">
+							
+			</cfif>	
+
+			<cfset fileTypeId = fileQuery.file_type_id>
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+			
+			<cfset area_id = fileQuery.area_id>
+
+			<!---checkAreaAccess--->
+			<cfinclude template="includes/checkAreaAccess.cfm">
+		--->
+
+			<cfset fileTypeId = fileQuery.file_type_id>
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
+			<cfif fileQuery.locked IS true>
+
+				<cfset response = {result=false, version_id=#arguments.version_id#, message="El archivo está bloqueado y no puede ser eliminado"}>
+
+			<cfelse>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersion" returnvariable="fileVersionQuery">
+					<cfinvokeargument name="version_id" value="#arguments.version_id#">
+					<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif fileVersionQuery.recordCount IS 0>
+					
+					<cfset error_code = 601>
+				
+					<cfthrow errorcode="#error_code#">
+
+				</cfif>
+
+				<!--- <cftransaction> --->
+				
+					<!--- Deletion of the row representing the file version --->
+					<cfquery name="deleteFileVersionQuery" datasource="#client_dsn#">		
+						DELETE
+						FROM #client_abb#_files_versions
+						WHERE version_id = <cfqueryparam value="#arguments.version_id#" cfsqltype="cf_sql_integer">
+						AND file_id = <cfqueryparam value="#fileQuery.file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+					
+					<cfset path = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#/'>	
+					<cfset filePath = path & fileVersionQuery.physical_name>			
+					
+					<!--- Now we delete physically the file on the server --->
+					<!---<cfif FileExists(filePath)>---><!---If the physical file exist--->
+						<cffile action="delete" file="#filePath#">
+					<!---</cfif>--->
+					
+					<!---Update User Space Used--->
+					<cfif fileQuery.status EQ "ok">
+						<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
+							UPDATE #client_abb#_users
+							SET space_used = space_used-#fileVersionQuery.file_size#
+							WHERE id = <cfqueryparam value="#fileVersionQuery.user_in_charge#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+					</cfif>
+				
+				<!--- </cftransaction> --->
+
+				<cfinclude template="includes/logRecord.cfm">
+
+				<!---<cfif getFileAreasQuery.recordCount GT 0>
+					
+					<cfloop query="getFileAreasQuery">
+
+						<!--- Alert --->
+						<cfinvoke component="AlertManager" method="newFile">
+							<cfinvokeargument name="objectFile" value="#fileVersionQuery#">
+							<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+							<cfinvokeargument name="area_id" value="#getFileAreasQuery.area_id#">
+							<cfinvokeargument name="action" value="delete">
+						</cfinvoke>
+						
+					</cfloop>
+
+				</cfif>--->
+
+				<cfset response = {result=true, version_id=#arguments.version_id#}>
+
+			</cfif>
+
+		<cfreturn response>	
+		
+	</cffunction>
+
+
+
 	
 	<!--- ----------------------- MOVE FILE TO FOLDER -------------------------------- --->
 	
@@ -1678,7 +1841,13 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<cfif getFileVersionQuery.recordCount GT 0>
+			<cfif getFileVersionQuery.recordCount IS 0><!---File does not exist--->
+				
+				<cfset error_code = 601>
+				
+				<cfthrow errorcode="#error_code#">
+
+			<cfelse>
 				
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
 					<cfinvokeargument name="file_id" value="#getFileVersionQuery.file_id#">
@@ -1724,11 +1893,11 @@
 
 	<!--- ------------------------------------- getFileLastVersion -------------------------------------  --->
 	
-	<cffunction name="getFileLastVersion" output="false" access="public" returntype="struct">
+	<cffunction name="getLastFileVersion" output="false" access="public" returntype="struct">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
 
-		<cfset var method = "getFileLastVersion">
+		<cfset var method = "getLastFileVersion">
 
 		<cfset var response = structNew()>
 
@@ -2953,6 +3122,12 @@
 			<cfset destination = "#APPLICATION.filesPath#/#client_abb#/">
 			<cfset destination = destination&"#fileTypeDirectory#/">
 			
+			<cfif directoryExists(destination) IS false>
+				
+				 <cfdirectory action="create" directory="#destination#">
+
+			</cfif>
+
 			<cffile action="upload" filefield="Filedata" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
 		
 			<cfset temp_file="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">	
@@ -3001,8 +3176,15 @@
 	
 					</cfif>
 
-				</cfif>		
+				</cfif>	
 
+				
+				<!--- ------------------ Update User Space Used --------------------- --->
+				<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
+					UPDATE #client_abb#_users
+					SET space_used = space_used+<cfqueryparam value="#uploadedFile.fileSize#" cfsqltype="cf_sql_integer">
+					WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>	
 
 				<!--- associateFileToArea --->
 				<cfinvoke component="FileManager" method="associateFileToArea">
@@ -3019,14 +3201,6 @@
 					<cfinvokeargument name="action" value="new">
 					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 				</cfinvoke>--->
-
-						
-				<!--- ------------------ Update User Space Used --------------------- --->
-				<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
-					UPDATE #client_abb#_users
-					SET space_used = space_used+<cfqueryparam value="#uploadedFile.fileSize#" cfsqltype="cf_sql_integer">
-					WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
 
 				<cffile action="rename" source="#destination##temp_file#" destination="#destination##upload_file_id#">
 

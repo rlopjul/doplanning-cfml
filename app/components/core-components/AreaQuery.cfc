@@ -221,6 +221,7 @@
 		<cfargument name="path" type="string" required="no" default="">
 		<cfargument name="separator" type="string" required="no" default="/">
 		<cfargument name="with_base_link" type="string" required="no" default=""><!---Define si se debe enlazar el área y cuál es la url base a la que se añadirá el id del área--->
+		<cfargument name="hide_menu_type_area" type="boolean" required="false" default="false">
 		
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">	
@@ -234,34 +235,38 @@
 		<cfif NOT isDefined("arguments.from_area_id") OR arguments.area_id NEQ arguments.from_area_id><!---Si el área de inicio no es el área actual (no se incluye el área de inicio en la ruta)--->
 						
 			<cfquery name="getAreaQuery" datasource="#client_dsn#">
-				SELECT name, parent_id
+				SELECT name, parent_id, menu_type_id
 				FROM #client_abb#_areas
 				WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
 			<cfif getAreaQuery.recordCount GT 0>
 				
-				<cfif isValid("integer",getAreaQuery.parent_id)>
-					
-					<cfset cur_area = getAreaQuery.name>
-					
-					<cfif len(arguments.with_base_link) GT 0>
-					
-						<cfset area_dot = find(".-",cur_area)>
+				<cfif isNumeric(getAreaQuery.parent_id)>
+										
+					<cfif arguments.hide_menu_type_area IS false OR getAreaQuery.menu_type_id IS 1 OR len(getAreaQuery.menu_type_id) IS 0><!---Si no es un área especial de las que NO se deben mostrar en la ruta--->
+
+						<cfset cur_area = getAreaQuery.name>
 						
-						<cfif area_dot GT 0>
-							<cfset cur_area = right(cur_area, len(cur_area)-(area_dot+1))>
+						<cfif len(arguments.with_base_link) GT 0>
+						
+							<cfset area_dot = find(".-",cur_area)>
+							
+							<cfif area_dot GT 0>
+								<cfset cur_area = right(cur_area, len(cur_area)-(area_dot+1))>
+							</cfif>
+							
+							<cfset cur_area = '<a href="'&arguments.with_base_link&arguments.area_id&'">'&cur_area&'</a>'>
 						</cfif>
 						
-						<cfset cur_area = '<a href="'&arguments.with_base_link&arguments.area_id&'">'&cur_area&'</a>'>
+						<cfif len(arguments.path) GT 0>
+							<cfset arguments.path = cur_area&separator&arguments.path>
+						<cfelse>
+							<cfset arguments.path = cur_area>
+						</cfif>
+							
 					</cfif>
-					
-					<cfif len(arguments.path) GT 0>
-						<cfset arguments.path = cur_area&separator&arguments.path>
-					<cfelse>
-						<cfset arguments.path = cur_area>
-					</cfif>
-						
+
 					<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
 						<cfinvokeargument name="area_id" value="#getAreaQuery.parent_id#">
 						<cfif isDefined("arguments.from_area_id")>
@@ -270,11 +275,13 @@
 						<cfinvokeargument name="path" value="#arguments.path#">
 						<cfinvokeargument name="separator" value="#arguments.separator#">
 						<cfinvokeargument name="with_base_link" value="#arguments.with_base_link#">
+						<cfinvokeargument name="hide_menu_type_area" value="#arguments.hide_menu_type_area#">
 						
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 					</cfinvoke>
 					
+
 				<cfelse>
 					
 					<cfset area_path = arguments.path>
