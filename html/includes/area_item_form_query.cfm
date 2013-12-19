@@ -54,7 +54,8 @@
 			
 			<cfset title_default = "">
 			
-			<cfset return_page = "#itemTypeNameP#.cfm?area=#parent_id#">
+			<!---<cfset return_page = "#itemTypeNameP#.cfm?area=#parent_id#">--->
+			<cfset return_page = "area_items.cfm?area=#parent_id#">
 			
 		<cfelseif isDefined("URL.#itemTypeName#")>
 			<cfset parent_id = URL[#itemTypeName#]>

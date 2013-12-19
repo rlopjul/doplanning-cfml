@@ -37,7 +37,7 @@
 <cfset phone_list_enc = URLEncodedFormat(phone_list)>
 
 <div class="contenedor_fondo_blanco">
-<div class="div_send_message">
+<!--- <div class="div_send_message"> --->
 <cfoutput>
 <form action="#current_page#" method="post">
 	<div class="div_recipients_input">
@@ -56,7 +56,7 @@
     
     <div><input type="submit" class="btn btn-primary" name="submit" value="Enviar"></div>
 </form>
-</div>
+<!--- </div> ---><!--- END div_send_message --->
 
 </div>
 

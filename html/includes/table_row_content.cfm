@@ -122,6 +122,20 @@
 		<div class="div_message_page_label"><span lang="es">Fecha de última modificación:</span> <span class="text_message_page">#DateFormat(row.last_update_date, APPLICATION.dateFormat)# #TimeFormat(row.last_update_date, "HH:mm")#</span></div>
 	</cfif>
 
+	<!---tableRowUrl--->
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="tableRowUrl">
+		<cfinvokeargument name="table_id" value="#table_id#">
+		<cfinvokeargument name="tableTypeName" value="#tableTypeName#">
+		<cfinvokeargument name="row_id" value="#row_id#">
+		<cfinvokeargument name="area_id" value="#area_id#">
+
+		<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+	</cfinvoke>
+
+	<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
+	<input type="text" value="#tableRowUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
+
+
 	<div style="height:10px;clear:both"></div>
 
 	<!--- Fields --->

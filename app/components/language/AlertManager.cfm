@@ -136,6 +136,7 @@ curLangText["es"] = {
 			"locked_file" : "Archivo bloqueado",
 			"unlocked_file" : "Archivo desbloqueado",
 			"new_version" : "Nueva versión de archivo",
+			"new_current_version" : "Cambiada versión vigente de archivo",
 			"validated_version" : "Versión de archivo validada",
 			"rejected_version" : "Versión de archivo rechazada",
 			"approved_version" : "Versión de archivo aprobada",
@@ -165,6 +166,9 @@ curLangText["es"] = {
 
 
 		"new_table_row": {
+
+			"access_to_row_male" : "Acceda directamente al registro del",
+			"access_to_row_female": "Acceda directamente al registro de la",
 			
 			"new_row" : "Nuevo registro en",
 			"modify_row" : "Registro modificado en",
@@ -403,6 +407,7 @@ curLangText["en"] = {
 			"locked_file" : "Locked file",
 			"unlocked_file" : "Unlocked file",
 			"new_version" : "New file version",
+			"new_current_version" : "Current file version changed",
 			"validated_version" : "File version validated",
 			"rejected_version" : "File version rejected",
 			"approved_version" : "File version approved",
@@ -432,6 +437,9 @@ curLangText["en"] = {
 
 		"new_table_row": {
 			
+			"access_to_row_male" : "Go directly to the record of the",
+			"access_to_row_female": "Go directly to the record of the",
+
 			"new_row" : "New entry in",
 			"modify_row" : "Entry modified in",
 			"delete_row" : "Entry deleted in",

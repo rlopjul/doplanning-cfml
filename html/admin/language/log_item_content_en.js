@@ -8,8 +8,7 @@ var log_item_content_en = {
 	'Usuario:':'User:',
 	'Fecha:':'Date:',
 	'Petición:':'Request:',
-	'No se ha seleccionado ningún log':'There is no log selected',
-	
+	'No se ha seleccionado ningún log':'There is no log selected'	
 
 }
 

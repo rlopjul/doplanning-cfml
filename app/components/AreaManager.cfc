@@ -2535,9 +2535,6 @@
 				<cfinvokeargument name="parse_dates" value="true">
 
 				<cfinvokeargument name="with_user" value="true"/>
-				<!---<cfif APPLICATION.moduleAreaFilesLite IS true>
-					<cfinvokeargument name="with_area_files_lite" value="true">
-				</cfif>--->
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

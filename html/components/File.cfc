@@ -767,6 +767,46 @@
 	</cffunction>
 
 
+	<!--- duplicateFileVersion --->
+
+	<cffunction name="duplicateFileVersion" returntype="void" access="remote">
+		<cfargument name="file_id" type="string" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="version_id" type="numeric" required="true">
+		<cfargument name="return_path" type="string" required="true">
+		
+		<cfset var method = "duplicateFileVersion">
+
+		<cfset var response = structNew()>
+				
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="duplicateFileVersion" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+				<cfinvokeargument name="version_id" value="#arguments.version_id#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset msg = "Versión definida como versión vigente.">
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#file_versions.cfm?#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
 
 	<!--- ---------------------------------- requestRevision -------------------------------------- --->
 	

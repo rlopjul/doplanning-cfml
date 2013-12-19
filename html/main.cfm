@@ -55,7 +55,7 @@
 
 <script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8" type="text/javascript"></script>
 
 </cfoutput>
@@ -345,7 +345,7 @@
 						<div class="col-sm-11" style="padding:0;">
 							<div class="btn-toolbar">
 								<div class="btn-group">
-									<div class="input-group" style="width:260px;" >
+									<div class="input-group" style="width:260px;">
 										<input type="text" name="text" id="searchText" value="" class="form-control"/>
 										<span class="input-group-btn">
 											<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>

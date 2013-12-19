@@ -99,7 +99,7 @@
 			$(document).ready(function() { 
 				
 				$("##dataTable").tablesorter({ 
-					widgets: ['zebra','filter','select'],
+					widgets: ['zebra','filter','select','stickyHeaders'],
 					sortList: [[0,1]] ,
 					headers: { 
 						1: { 
@@ -124,7 +124,7 @@
 						filter_searchDelay : 300,
 						filter_serversideFiltering: false,
 						filter_startsWith : false,
-						filter_useParsedRow : false,
+						filter_useParsedRow : false
 				    }
 				});
 				
@@ -182,7 +182,7 @@
 				
 				<cfif alreadySelected IS false>
 
-					<cfif ( isDefined("URL.data") AND (URL.data IS tableRows.row_id) ) OR ( selectFirst IS true AND tableRows.currentrow IS tableRows.recordCount AND app_version NEQ "mobile" ) >
+					<cfif ( isDefined("URL.row") AND (URL.row IS tableRows.row_id) ) OR ( selectFirst IS true AND tableRows.currentrow IS tableRows.recordCount AND app_version NEQ "mobile" ) >
 
 						<!---Esta acción solo se completa si está en la versión HTML2--->
 						<script type="text/javascript">

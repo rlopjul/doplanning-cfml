@@ -10,6 +10,6 @@ var preferences_alerts_en = {
 	'Un archivo ha sido asociado a un área':'A file has been added to an area',
 	'Un archivo asociado a un área ha sido reemplazado':'A file has been replaced',
 	'Un área nueva ha sido creada':'A new area has been created',
-	'Guardar':'Save',
+	'Guardar':'Save'
 }
 $.extend(jquery_lang_js.prototype.lang.en, preferences_alerts_en);

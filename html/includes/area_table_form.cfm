@@ -60,12 +60,12 @@
 
 	<div class="form-group">
 		<label for="label">Nombre</label>
-		<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="100" required="true" message="Nombre requerido" class="input-block-level"/>
+		<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
 	</div>
 
 	<div class="form-group">
 		<label for="description">Descripción</label>
-		<textarea name="description" id="description" class="input-block-level" maxlength="1000">#table.description#</textarea>
+		<textarea name="description" id="description" class="form-control" maxlength="1000">#table.description#</textarea>
 	</div>
 
 	<div class="form-group">

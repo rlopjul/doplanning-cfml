@@ -28,27 +28,16 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-<!---<script type="text/javascript">
+<script type="text/javascript">
 
-function confirmDeleteFile() {
+function confirmDuplicateVersion() {
 	
-	var messageDelete = window.lang.convert("Si ELIMINA el archivo, se borrará de definitivamente y podrá ser recuperado. ¿Seguro que desea borrar el archivo?");
-	return confirm(messageDelete);
+	var messageDuplicate = "¿Seguro que desea duplicar y marcar esta versión como vigente?";
+	
+	return confirm(messageDuplicate);
 }
 
-function confirmLockFile(value) {
-	
-	var messageLock = "";
-
-	if(value)
-		messageLock = "¿Seguro que desea bloquear el archivo?. No podrá ser modificado por otros usuarios.";
-	else
-		messageLock = "¿Seguro que desea desbloquear el archivo?.";
-	
-	return confirm(messageLock);
-}
-
-</script>--->
+</script>
 
 <cfif app_version NEQ "html2">
 <div class="div_head_subtitle">
@@ -64,14 +53,18 @@ Versión de archivo
 	
 	<a href="#APPLICATION.htmlPath#/file_version_download.cfm?id=#version.version_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-info"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="lastVersion">
-		<cfinvokeargument name="file_id" value="#version.file_id#">
-		<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
-	</cfinvoke>
+	<cfif objectFile.in_approval IS false AND objectFile.locked IS true AND objectFile.lock_user_id IS SESSION.user_id>
+		
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="lastVersion">
+			<cfinvokeargument name="file_id" value="#version.file_id#">
+			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+		</cfinvoke>
 
-	<cfif lastVersion.version_id NEQ version_id>
+		<cfif lastVersion.version_id NEQ version_id OR ( len(version.revision_request_date) GT 0 AND version.approved IS NOT true )>
 
-		<a href="" class="btn btn-warning btn-sm disabled"><i class="icon-level-up"></i> <span lang="es">Definir como versión vigente</span></a>
+			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=duplicateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&version_id=#version_id#&return_path=#return_path#" onclick="return confirmDuplicateVersion();" class="btn btn-warning btn-sm"><i class="icon-copy"></i> <span lang="es">Duplicar y definir como versión vigente</span></a>
+
+		</cfif>
 
 	</cfif>
 
@@ -99,6 +92,14 @@ Versión de archivo
 			</div>
 		</cfif>
 
+		<cfif isNumeric(version.publication_area_id) AND isNumeric(version.publication_file_id)>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="publicationArea">
+				<cfinvokeargument name="area_id" value="#version.publication_area_id#">
+			</cfinvoke>
+			<div class="div_file_page_label"><span lang="es">Archivo publicado en el área:</span> <a onclick="openUrl('area_items.cfm?area=#version.publication_area_id#&file=#version.publication_file_id#','areaIframe',event)" style="cursor:pointer">#publicationArea.name#</a></div>
+
+		</cfif>
 		<cfif len(version.revision_request_date) GT 0>
 			<div class="div_file_page_label"><span lang="es">Fecha de envío a revisión:</span> <span class="text_file_page">#version.revision_request_date#</span></div>	
 		</cfif>
@@ -148,7 +149,7 @@ Versión de archivo
 		</cfinvoke>
 
 		<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
-		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>--->
+		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>--->
 
 	</div>
 </cfoutput>

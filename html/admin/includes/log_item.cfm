@@ -39,7 +39,6 @@
 	</cfif>
 
 <!---<cfelse>
-
 	<script type="text/javascript">
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>--->
