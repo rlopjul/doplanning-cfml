@@ -214,7 +214,7 @@
 
 <div class="contenedor_fondo_blanco">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('file_form');
@@ -246,11 +246,13 @@
 				<small>Este archivo pertenecerá al área de la que procede.</small>
 			</div>--->
 
-			<div class="form-group">
-				<label class="control-label" for="publication_area_name" lang="es">Área de publicación</label>
-				<div class="controls">
-					<input type="hidden" name="publication_area_id" id="publication_area_id" value="#publicationArea.publication_area_id#" validate="integer" required="true"/>
-					<cfinput type="text" name="publication_area_name" id="publication_area_name" value="#publicationArea.publication_area_name#" readonly="true" required="true" message="Debe seleccionar una área para publicar" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
+			<div class="row">
+				<div class="col-sm-12">
+					<label for="publication_area_name" class="control-label" lang="es">Área de publicación</label>
+					<div class="controls">
+						<input type="hidden" name="publication_area_id" id="publication_area_id" value="#publicationArea.publication_area_id#" validate="integer" required="true"/>
+						<cfinput type="text" name="publication_area_name" id="publication_area_name" value="#publicationArea.publication_area_name#" readonly="true" required="true" message="Debe seleccionar una área para publicar" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
+					</div>
 				</div>
 			</div>
 
@@ -258,13 +260,15 @@
 
 		<cfif APPLICATION.moduleAreaFilesLite IS true AND page_type IS 1>
 
-			<div class="form-group">
-				<label for="fileTypeId">Tipo de documento de área</label>
-				<select name="fileTypeId" id="fileTypeId" class="form-control" onchange="setFileTypeId($('##fileTypeId').val());">
-					<option value="2" <cfif fileTypeId IS 2>selected="selected"</cfif>>Sin circuito de calidad</option>
-					<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif>>Con circuito de calidad</option>
-				</select>
-				<span class="help-block">Esta opción no se puede cambiar una vez creado el documento</span>
+			<div class="row">
+				<div class="col-sm-12">
+					<label for="fileTypeId" class="control-label">Tipo de documento de área</label>
+					<select name="fileTypeId" id="fileTypeId" class="form-control" onchange="setFileTypeId($('##fileTypeId').val());">
+						<option value="2" <cfif fileTypeId IS 2>selected="selected"</cfif>>Sin circuito de calidad</option>
+						<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif>>Con circuito de calidad</option>
+					</select>
+					<span class="help-block">Esta opción no se puede cambiar una vez creado el documento</span>
+				</div>
 			</div>
 
 		<cfelse>
@@ -283,24 +287,39 @@
 			
 		<div id="documentUsersContainer">
 			<cfif page_type IS NOT 3>
-				<div class="form-group">
-					<label class="control-label" for="reviser_user" lang="es">Usuario revisor</label>
-					<input type="hidden" name="reviser_user" id="reviser_user" value="#file.reviser_user#" validate="integer" required="true" />
-					<div class="container" style="width:100%">
+				<div class="row">
+					<div class="col-sm-12">
+
+						<label class="control-label" for="reviser_user" lang="es">Usuario revisor</label>
+
 						<div class="row">
-							<div class="col-sm-6" style="padding:0;">
+							<div class="col-sm-5" style="padding-right:0;">
+								<input type="hidden" name="reviser_user" id="reviser_user" value="#file.reviser_user#" validate="integer" required="true" />
 								<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#file.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" /> 
 							</div>
-							<div class="col-sm-5" style="padding:0;"><button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button></div>
+							<div class="col-sm-7">
+								<button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+							</div>
 						</div>
+
 					</div>
 				</div>
 
-				<div class="form-group">
-					<label class="control-label" for="approver_user" lang="es">Usuario aprobador</label>
-					
-					<input type="hidden" name="approver_user" id="approver_user" value="#file.approver_user#" validate="integer" required="true"/>
-					<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#file.approver_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" /> <button onclick="openApproverUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+				<div class="row">
+					<div class="col-sm-12">
+
+						<label class="control-label" for="approver_user" lang="es">Usuario aprobador</label>
+						
+						<div class="row">
+							<div class="col-sm-5" style="padding-right:0;">
+								<input type="hidden" name="approver_user" id="approver_user" value="#file.approver_user#" validate="integer" required="true"/>
+								<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#file.approver_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" />
+							</div>
+							<div class="col-sm-7">
+								<button onclick="openApproverUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			</cfif>
 		</div>
@@ -330,43 +349,51 @@
 		<cfelse>
 			<cfset selected_typology_id = default_typology_id>
 		</cfif>
-		<div class="form-group">
-			<label for="typology_id" class="control-label">Tipología *</label>
-			<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val(),'');">
-				<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif>>Básica</option>
-				<cfif areaTables.recordCount GT 0>
-					<cfloop query="areaTables">
-						<option value="#areaTables.id#" <cfif areaTables.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS areaTables.id>style="font-weight:bold"</cfif>>#areaTables.title#</option>
-					</cfloop>
-				</cfif>
-			</select>
+		<div class="row">
+			<div class="col-sm-12">
+				<label for="typology_id" class="control-label">Tipología *</label>
+				<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val(),'');" class="form-control">
+					<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif>>Básica</option>
+					<cfif areaTables.recordCount GT 0>
+						<cfloop query="areaTables">
+							<option value="#areaTables.id#" <cfif areaTables.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS areaTables.id>style="font-weight:bold"</cfif>>#areaTables.title#</option>
+						</cfloop>
+					</cfif>
+				</select>
+			</div>
 		</div>
 
 	</cfif>
 	
 	<cfif page_type IS 1>
-		<div class="form-group">
-			<label for="formFile" lang="es">Archivo *</label>
-			<input type="file" name="Filedata" value="" id="formFile" required="required" />
+		<div class="row">
+			<div class="col-sm-12">
+				<label for="formFile" class="control-label" lang="es">Archivo *</label>
+				<input type="file" name="Filedata" value="" id="formFile" required="required" />
 
-			<script type="text/javascript">
-				addRailoRequiredTextInput("Filedata", "Debe seleccionar un archivo para subir");
-			</script>
+				<script type="text/javascript">
+					addRailoRequiredTextInput("Filedata", "Debe seleccionar un archivo para subir");
+				</script>
+			</div>
 		</div>
 	</cfif>
 	
-	<div class="form-group">
-		<label for="formFileName" lang="es">Nombre *</label>
-		<input type="text" name="name" value="#file.name#" id="formFileName" class="form-control" required="required" />
+	<div class="row">
+		<div class="col-sm-12">
+			<label for="formFileName" class="control-label" lang="es">Nombre *</label>
+			<input type="text" name="name" value="#file.name#" id="formFileName" required="required" class="form-control"/>
 
-		<script type="text/javascript">
-			addRailoRequiredTextInput("name", "Debe especificar un nombre para el archivo");
-		</script>
+			<script type="text/javascript">
+				addRailoRequiredTextInput("name", "Debe especificar un nombre para el archivo");
+			</script>
+		</div>
 	</div>
 
-	<div class="form-group">
-		<label for="description" lang="es">Descripción</label> 
-		<textarea name="description" id="description" class="form-control">#file.description#</textarea>
+	<div class="row">
+		<div class="col-sm-12">
+			<label for="description" class="control-label" lang="es">Descripción</label> 
+			<textarea name="description" id="description" class="form-control">#file.description#</textarea>
+		</div>
 	</div>
 
 	<!--- Typology fields --->

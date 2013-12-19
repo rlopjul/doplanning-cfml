@@ -80,7 +80,16 @@ function confirmApproveFile(value) {
 </script>
 
 <cfoutput>
-<div class="div_file_page_name">#objectFile.name#</div>
+<div class="div_file_page_name">
+<cfif fileTypeId IS 1><!--- User file --->
+	<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" title="Archivo"/>
+<cfelseif fileTypeId IS 2><!--- Area file --->
+	<img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" alt="Archivo del área" title="Archivo del área"/>
+<cfelseif fileTypeId IS 3>
+	<img src="#APPLICATION.htmlPath#/assets/icons/file_edited.png" alt="Archivo del área en edición" title="Archivo del área en edición"/>
+</cfif>
+
+ #objectFile.name#</div>
 <div class="div_separator"><!-- --></div>
 
 <div class="div_elements_menu"><!---div_elements_menu--->
@@ -179,10 +188,19 @@ function confirmApproveFile(value) {
 						<cfinvokeargument name="area_id" value="#objectFile.area_id#">
 					</cfinvoke>
 
-					<span><b>Propiedad del área: </b></span>
+					<b><span lang="es">Propiedad del área:</span></b>
 					
 					<a onclick="openUrl('area_items.cfm?area=#objectFile.area_id#&file=#objectFile.id#','areaIframe',event)" style="cursor:pointer">#fileArea.name#</a>
 				</div>
+
+				<cfif objectFile.file_type_id IS 3 AND isNumeric(version.publication_area_id) AND isNumeric(version.publication_file_id)>
+
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="publicationArea">
+						<cfinvokeargument name="area_id" value="#version.publication_area_id#">
+					</cfinvoke>
+					<div class="div_file_page_label"><span lang="es">Versión de archivo publicada en el área:</span> <a onclick="openUrl('area_items.cfm?area=#version.publication_area_id#&file=#version.publication_file_id#','areaIframe',event)" style="cursor:pointer">#publicationArea.name#</a></div>
+
+				</cfif>
 
 			</cfif>
 
@@ -195,7 +213,7 @@ function confirmApproveFile(value) {
 						<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectFile.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 					</cfif></a>
 				<cfelse><!--- Area file --->	
-					<span>Creado por: </span>
+					<span lang="es">Creado por:</span>
 				</cfif>				
 				<a href="area_user.cfm?area=#area_id#&user=#objectFile.user_in_charge#">#objectFile.user_full_name#</a>
 			</div>
@@ -204,12 +222,12 @@ function confirmApproveFile(value) {
 		<cfif objectFile.file_type_id IS 3>
 			
 			<div class="div_file_page_label">
-				<span>Usuario revisor: </span>			
+				<span lang="es">Usuario revisor:</span>			
 				<a href="area_user.cfm?area=#area_id#&user=#objectFile.reviser_user#">#objectFile.reviser_user_full_name#</a>
 			</div>
 
 			<div class="div_file_page_label">
-				<span>Usuario aprobador: </span>			
+				<span lang="es">Usuario aprobador:</span>			
 				<a href="area_user.cfm?area=#area_id#&user=#objectFile.approver_user#">#objectFile.approver_user_full_name#</a>
 			</div>
 
@@ -217,7 +235,7 @@ function confirmApproveFile(value) {
 		<div class="div_file_page_label"><span lang="es">Nombre de archivo:</span></div>
 		<div class="div_file_page_user">#objectFile.file_name#</div>
 		
-		<div class="div_file_page_label"><span lang="es">Fecha de subida:</span> <span class="text_file_page">#objectFile.uploading_date#</span></div>
+		<div class="div_file_page_label"><span lang="es">Fecha de creación:</span> <span class="text_file_page">#objectFile.uploading_date#</span></div>
 		<cfif len(objectFile.replacement_date) GT 0 OR objectFile.file_type_id IS NOT 3>	
 		<div class="div_file_page_label"><span lang="es"><cfif objectFile.file_type_id IS 3>Fecha de última versión:<cfelse>Fecha de reemplazo:</cfif></span> <span class="text_file_page"><cfif len(objectFile.replacement_date) GT 0>#objectFile.replacement_date#<cfelse>-</cfif></span></div>
 		</cfif>
@@ -247,7 +265,7 @@ function confirmApproveFile(value) {
 		</cfinvoke>
 
 		<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
-		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
 		<!---Typology--->
 		<cfif APPLICATION.modulefilesWithTables IS true>
@@ -278,10 +296,7 @@ function confirmApproveFile(value) {
 				
 			</cfif>
 
-			
-
 		</cfif>
-
 	</div>
 </cfoutput>
 

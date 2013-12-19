@@ -684,7 +684,7 @@
 		<cfargument name="objectFile" type="query" required="yes">
 		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="action" type="string" required="yes"><!---new/associate/replace/dissociate/delete/lock/unlock/new_version--->
+		<cfargument name="action" type="string" required="yes"><!---new/associate/replace/dissociate/delete/lock/unlock/new_version/new_current_version/...--->
 				
 		<cfset var method = "newFile">
 		
@@ -817,6 +817,11 @@
 
 					<cfcase value="new_version"><!--- new_version --->
 						<cfset subject_action = langText[curLang].new_file.new_version>
+						<cfset action_value = langText[curLang].new_file.replaced>
+					</cfcase>
+
+					<cfcase value="new_current_version"><!--- new_current_version --->
+						<cfset subject_action = langText[curLang].new_file.new_current_version>
 						<cfset action_value = langText[curLang].new_file.replaced>
 					</cfcase>
 

@@ -19,6 +19,6 @@ jquery_lang_js.prototype.lang.en = {
 	
 	/*mobile.cfm*/
 	'Versión estándar':'Standard version',
-	'Preferencias':'Preferences',
+	'Preferencias':'Preferences'
 	/*END mobile.cfm*/
 };

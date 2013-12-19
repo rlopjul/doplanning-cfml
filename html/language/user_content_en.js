@@ -21,7 +21,7 @@ var user_content_en = {
 	'Nueva contraseña:':'New password:',
 	'Confirmar nueva contraseña:':'Confirm new password:',
 	'Guardar':'Save',
-	'Modificación guardada.':'Modification saved.',
+	'Modificación guardada.':'Modification saved.'
 	/*END preferences_user_data.cfm*/
 }
 $.extend(jquery_lang_js.prototype.lang.en, user_content_en);

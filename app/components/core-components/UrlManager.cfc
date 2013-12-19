@@ -26,23 +26,6 @@
 	</cffunction>
 	
 	
-	<!--- ----------------------- getAreaItemUrl -------------------------------- --->
-	<cffunction name="getAreaItemUrl" access="public" returntype="string">
-		<cfargument name="item_id" type="numeric" required="yes">
-		<cfargument name="itemTypeName" type="string" required="yes">
-		<cfargument name="area_id" type="numeric" required="yes">
-
-		<cfargument name="client_abb" type="string" required="true">
-		
-		<cfset var itemUrl = "">
-		
-		<!---<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">--->
-		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#">		
-		
-		<cfreturn itemUrl>
-	</cffunction>
-	
-	
 	<!--- ----------------------- getAreaFileUrl -------------------------------- --->
 	<cffunction name="getAreaFileUrl" access="public" returntype="string">
 		<cfargument name="file_id" type="numeric" required="yes">
@@ -80,7 +63,40 @@
 		
 		<cfreturn fileUrl>
 	</cffunction>
+
+
+	<!--- ----------------------- getAreaItemUrl -------------------------------- --->
+	<cffunction name="getAreaItemUrl" access="public" returntype="string">
+		<cfargument name="item_id" type="numeric" required="yes">
+		<cfargument name="itemTypeName" type="string" required="yes">
+		<cfargument name="area_id" type="numeric" required="yes">
+
+		<cfargument name="client_abb" type="string" required="true">
+		
+		<cfset var itemUrl = "">
+		
+		<!---<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">--->
+		<cfset itemUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.item_id#">		
+		
+		<cfreturn itemUrl>
+	</cffunction>
 	
+	
+	<!--- ----------------------- getTableRowUrl -------------------------------- --->
+	<cffunction name="getTableRowUrl" access="public" returntype="string">
+		<cfargument name="table_id" type="numeric" required="yes">
+		<cfargument name="tableTypeName" type="string" required="yes">
+		<cfargument name="row_id" type="numeric" required="yes">
+
+		<cfargument name="client_abb" type="string" required="true">
+		
+		<cfset var rowUrl = "">
+		
+		<cfset rowUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#arguments.area_id#&#arguments.tableTypeName#=#arguments.table_id#&row=#arguments.row_id#">		
+		
+		<cfreturn rowUrl>
+	</cffunction>
+
 
 	<!--- ----------------------- getAreaWebPage -------------------------------- --->
 

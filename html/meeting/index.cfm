@@ -23,14 +23,20 @@
     <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
 <![endif]-->
+<!--[if lt IE 8]>
+  	<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-ie7/bootstrap-ie7.css" rel="stylesheet" rel="stylesheet">
+<![endif]-->
+<!--[if IE 7]>
+  	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet" >
+<![endif]-->
 
-<link href="../styles/styles.min.css?v=2" rel="stylesheet" type="text/css" media="all" />
+<link href="../styles/styles.min.css?v=2.1" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
 <link href="../styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
-<!--using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"-->  
+<!---using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"--->  
 <link href="../styles/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
 <link href="../styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
 <!---<link href="../html/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
@@ -58,7 +64,7 @@
 
 <cfoutput>
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
 <script type="text/javascript" src="../scripts/functions.min.js?v=2.1"></script>
 </cfoutput>

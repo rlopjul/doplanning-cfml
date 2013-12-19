@@ -54,7 +54,7 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 Publicar #itemTypeNameEs# en Twitter
 </div>
 <div class="contenedor_fondo_blanco">
-<div class="div_send_message">
+<!---<div class="div_send_message">--->
 
 <p>Utilice esta opción para publicar <cfif itemTypeGender IS "male">este<cfelse>esta</cfif> #itemTypeNameEs# en Twitter. Puede editar el texto del tweet publicado, al que se le agregará de forma automática la dirección URL donde se encuentra el contenido que desea publicar.<br/><br/>
 </p>
@@ -102,6 +102,6 @@ function onSubmitForm()
 </cfoutput>
 
 
-</div>
+<!---</div>END div_send_message--->
 
 </div>

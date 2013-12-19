@@ -80,7 +80,7 @@
 			<!----&nbsp;Acceso interno <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#itemTypeName#.cfm?#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">#APPLICATION.mainUrl##APPLICATION.path#/#itemTypeName#.cfm?#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#</a><br/>
 			-&nbsp;Acceso externo <a target="_blank" href="#APPLICATION.alternateUrl##itemTypeName#.cfm?#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">#APPLICATION.alternateUrl##itemTypeName#.cfm?#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#</a>--->
 			-&nbsp;#langText[arguments.language].common.access_internal# <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a><br/>
-			-&nbsp;#langText[arguments.language].common.access_external#  <a target="_blank" href="#APPLICATION.alternateUrl#/?area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#">#APPLICATION.alternateUrl#/?area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#&abb=#SESSION.client_abb#</a>
+			-&nbsp;#langText[arguments.language].common.access_external#  <a target="_blank" href="#APPLICATION.alternateUrl#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#">#APPLICATION.alternateUrl#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#</a>
 			</cfoutput>
 			</cfsavecontent>
 			
@@ -99,6 +99,78 @@
 		<cfreturn accessContent>
 
 	</cffunction>
+
+
+	<!--- --------------------------- getTableRowAccessContent --------------------------- --->
+	
+	<cffunction name="getTableRowAccessContent" access="private" returntype="string">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="row_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="language" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+ 				
+		<cfset var method = "getRowAccessContent">
+
+		<cfset var accessContent = "">
+
+		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+		<!---itemUrl--->
+		<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+			<cfinvokeargument name="item_id" value="#arguments.item_id#">
+			<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+		</cfinvoke>--->
+
+		<!---tableRowUrl--->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="tableRowUrl">
+			<cfinvokeargument name="table_id" value="#arguments.item_id#">
+			<cfinvokeargument name="tableTypeName" value="#itemTypeName#">
+			<cfinvokeargument name="row_id" value="#arguments.row_id#">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+		</cfinvoke>
+
+		<cfif APPLICATION.twoUrlsToAccess IS false>
+					
+			<cfsavecontent variable="accessContent">
+			<cfoutput>
+			
+			-&nbsp;<cfif itemTypeGender EQ "male">#langText[arguments.language].new_table_row.access_to_row_male#<cfelse>#langText[arguments.language].new_table_row.access_to_row_female#</cfif> #langText[arguments.language].item[itemTypeId].name# #langText[arguments.language].new_item.access_to_item_link#:<br/><a target="_blank" href="#tableRowUrl#">#tableRowUrl#</a>
+
+			<cfif isDefined("SESSION.client_id")>
+				<br/>-&nbsp;#langText[arguments.language].common.access_to_application#:
+			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#</a>
+			</cfif>
+			
+			</cfoutput>
+			</cfsavecontent>
+			
+			
+		<cfelse><!---VPNET/AGSNA--->
+		
+			<cfsavecontent variable="accessContent">
+			<cfoutput>
+
+				<cfif itemTypeGender EQ "male">#langText[arguments.language].new_table_row.access_to_row_male#
+				<cfelse>#langText[arguments.language].new_table_row.access_to_row_female#</cfif> #langText[arguments.language].item[itemTypeId].name# #langText[arguments.language].new_item.access_to_item_links#:
+				<br/>
+			-&nbsp;#langText[arguments.language].common.access_internal# <a target="_blank" href="#tableRowUrl#">#tableRowUrl#</a><br/>
+			-&nbsp;#langText[arguments.language].common.access_external#  <a target="_blank" href="#APPLICATION.alternateUrl#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#&row=#arguments.row_id#">#APPLICATION.alternateUrl#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#&row=#arguments.row_id#</a>
+			</cfoutput>
+			</cfsavecontent>
+		</cfif>
+		
+		<cfreturn accessContent>
+
+	</cffunction>
+
 
 
 	<!--- --------------------------- getItemFootContent --------------------------- --->
@@ -264,9 +336,10 @@
 
 				<cfif arguments.action NEQ "delete">
 					
-					<cfinvoke component="AlertManager" method="getItemAccessContent" returnvariable="access_content">
+					<cfinvoke component="AlertManager" method="getTableRowAccessContent" returnvariable="access_content">
 						<cfinvokeargument name="item_id" value="#arguments.table_id#"/>
 						<cfinvokeargument name="itemTypeId" value="#itemTypeId#"/>
+						<cfinvokeargument name="row_id" value="#arguments.row_id#"/>
 						<cfinvokeargument name="area_id" value="#area_id#"/>
 						<cfinvokeargument name="language" value="#curLang#">
 

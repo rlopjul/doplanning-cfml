@@ -21,7 +21,7 @@ encrypt_key (remember_password_query.cfm)
 	<input name="language" type="hidden" id="languageInput" value="es" />
 	
 	<label for="email" lang="es">Email:</label>
-	<cfinput name="email" type="text" id="email" autofocus="true" required="true" validate="email" message="Introduzca un email válido" class="input-block-level" />
+	<cfinput name="email" type="text" id="email" autofocus="true" required="true" validate="email" message="Introduzca un email válido" class="form-control" />
 	
 	<cfset captcha_text = RandRange(100, 999)>
 	<cfset captcha_text_enc = encrypt(captcha_text,encrypt_key,"CFMX_COMPAT","HEX")>

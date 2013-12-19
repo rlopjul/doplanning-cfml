@@ -26,7 +26,7 @@
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
 	<div class="div_message_page_label"><span lang="es">URL del área en DoPlanning:</span></div>
-	<input type="text" value="#areaUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+	<input type="text" value="#areaUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
 	<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->
 		
@@ -39,7 +39,7 @@
 			</cfinvoke>
 			<cfset areaWebUrl = "/#area_type#/#areaPage#">
 			<div class="div_message_page_label"><span lang="es">URL relativa en la #area_type#:</span></div>
-			<input type="text" value="#areaWebUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+			<input type="text" value="#areaWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 		</cfif>
 
 	</cfif>

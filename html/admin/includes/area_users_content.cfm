@@ -28,11 +28,11 @@
 
 			<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
 			<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
+			<span class="navbar_brand">#area_name#</span><br/>
+			<p class="navbar_brand" style="padding-top:0px;clear:left;font-size:12px;color:##737373">
+				<cfif SESSION.client_id EQ "hcs" OR internal_user IS true>Ruta: #area_path#<cfelse>&nbsp;</cfif>
+			</p>
 
-			<p class="navbar_brand">#area_name#<br/>
-			<cfif SESSION.client_id EQ "hcs" OR internal_user IS true>
-				<span style="font-size:12px; color:##737373">Ruta: #area_path#</span></p>
-			</cfif>
 		</div>
 	</div>
 </div>

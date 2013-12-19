@@ -215,7 +215,7 @@
 	</cfif>
 
 	<div class="form-group">
-		<label for="label">Nombre *</label>
+		<label for="label" class="control-label">Nombre *</label>
 		<cfinput type="text" name="label" id="label" value="#field.label#" maxlength="100" required="true" message="Nombre requerido" class="col-md-5"/>
 	</div>
 
@@ -223,7 +223,7 @@
 		<cfif page_type IS 2>
 			<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
 		</cfif>
-		<label for="field_type_id">Tipo *</label>
+		<label for="field_type_id" class="control-label">Tipo *</label>
 		<select name="field_type_id" id="field_type_id" class="col-md-5" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled="disabled"</cfif>>
 			<cfloop query="fieldTypes">
 				<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
@@ -242,7 +242,7 @@
 		<cfelse>
 			<cfset list_area_name = "">
 		</cfif>
-		<label for="default_value_text">Área a para generar la lista</label>
+		<label for="default_value_text" class="control-label">Área a para generar la lista</label>
 		<div class="controls">
 			<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
 			<cfinput type="text" name="list_area_name" id="list_area_name" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" type="button" class="btn btn-default" lang="es">Seleccionar área</button>
@@ -257,7 +257,7 @@
 	</div>
 
 	<div class="form-group">
-		<label for="description">Descripción</label>
+		<label for="description" class="control-label">Descripción</label>
 		<textarea name="description" id="description" class="form-control" maxlength="1000">#field.description#</textarea>
 	</div>
 
@@ -266,11 +266,11 @@
 		<textarea name="default_value" id="default_value_text" class="form-control" maxlength="1000" rows="4" <cfif field.field_type_id IS 6 OR field.field_type_id IS 7>disabled="disabled"</cfif>>#field.default_value#</textarea>
 	</div>
 	<div class="form-group" id="dateDefaultValue">
-		<label for="default_value_date">Valor por defecto</label>
+		<label for="default_value_date" class="control-label">Valor por defecto</label>
 		<input type="text" name="default_value" id="default_value_date" value="#field.default_value#" maxlength="10" class="input_datepicker" <cfif field.field_type_id NEQ 6>disabled="disabled"</cfif>/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
 	</div>
 	<div class="form-group" id="booleanDefaultValue">
-		<label for="default_value_boolean">Valor por defecto</label>
+		<label for="default_value_boolean" class="control-label">Valor por defecto</label>
 		<select name="default_value" id="default_value_boolean" class="input-sm" <cfif field.field_type_id NEQ 7>disabled="disabled"</cfif>>
 			<option value=""></option>
 			<option value="0" <cfif field.default_value IS false>selected="selected"</cfif>>No</option>
@@ -279,7 +279,7 @@
 	</div>
 
 	<div class="form-group" id="listDefaultValue">
-		<label for="default_value_boolean">Valor por defecto</label>
+		<label for="default_value_boolean" class="control-label">Valor por defecto</label>
 		<select name="default_value" id="default_value_list" class="selectpicker span5" <cfif field.field_type_id NEQ 9 OR field.field_type_id NEQ 10>disabled="disabled"</cfif>><!---multiple---></select>
 	</div>
 	

@@ -22,7 +22,7 @@
 		
 		$("#dataTable").tablesorter({ 
 			widgets: ['zebra','select'],
-			sortList: [[2,1]] ,
+			sortList: [[0,1]] ,
 			headers: { 
 				1: { 
 					sorter: "datetime" 
@@ -44,7 +44,7 @@
 <table id="dataTable" class="table-hover" style="margin-top:5px;">
 	<thead>
 		<tr>
-			<!---<th style="width:25px;">##</th>--->
+			<th style="width:25px;">##</th>
 			<th>Archivo</th>
 			<th>Usuario</th>
 			<th>Fecha</th>
@@ -58,6 +58,8 @@
 	<cfset alreadySelected = false>
 
 	<cfloop query="versions">
+
+		<cfset versionIndex = versions.recordCount-versions.currentRow+1>
 
 		<!---<cfif isDefined("arguments.return_page")>
 			<cfset rpage = arguments.return_page>
@@ -85,9 +87,8 @@
 			
 		</cfif>
 
-
 		<tr <cfif fieldSelected IS true>class="selected"</cfif> <cfif versions.currentRow IS 1>style="font-weight:bold"</cfif> onclick="openUrl('#version_page_url#','itemIframe',event)">
-			<!---<td>#versions.currentRow#</td>--->		
+			<td>#versionIndex#</td>
 			<td>#versions.file_name#</td>
 			<cfset uploadDate = versions.uploading_date>	
 			<cfset spacePos = findOneOf(" ", uploadDate)>
