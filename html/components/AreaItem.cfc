@@ -1562,7 +1562,7 @@
 					</cfinvoke>
 
 					<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
-					<input type="text" value="#areaItemUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+					<input type="text" value="#areaItemUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
 					<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->
 
@@ -1577,7 +1577,7 @@
 							<cfset itemWebUrl = "/#area_type#/#itemPage#">
 
 							<div class="div_message_page_label"><span lang="es">URL relativa en la #area_type#:</span></div>
-							<input type="text" value="#itemWebUrl#" onClick="this.select();" class="input-block-level" readonly="readonly" style="cursor:text"/>
+							<input type="text" value="#itemWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 						</cfif>
 						
 					</cfif>
@@ -1677,9 +1677,9 @@
 									}
 									<!---</cfif>--->
 								</cfif>
-							},
+							}
 							<cfif arguments.full_content IS false>
-							widgetOptions : {
+							, widgetOptions : {
 								filter_childRows : false,
 								filter_columnFilters : true,
 								filter_cssFilter : 'tablesorter-filter',
@@ -1694,7 +1694,7 @@
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
 								filter_useParsedData : false,
-						    }, 
+						    }
 						   </cfif>
 						});
 						
@@ -1957,9 +1957,9 @@
 								1: { 
 									sorter: "datetime" 
 								}
-							},
+							}
 							<cfif arguments.full_content IS false>
-							widgetOptions : {
+							, widgetOptions : {
 								filter_childRows : false,
 								filter_columnFilters : true,
 								filter_cssFilter : 'tablesorter-filter',
@@ -1974,7 +1974,7 @@
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
 								filter_useParsedData : false,
-						    }, 
+						    } 
 						    </cfif> 
 						});
 						
@@ -2165,7 +2165,7 @@
 								filter_searchDelay : 300,
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
-								filter_useParsedData : false,
+								filter_useParsedData : false
 
 						     	<!---filter_formatter : {
 									

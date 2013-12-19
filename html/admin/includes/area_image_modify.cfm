@@ -24,7 +24,7 @@
 				<!---<div class="form-group">
 					<label class="control-label" for="name" lang="es">Nombre:</label>
 					<div class="form-group">
-						<cfinput type="text" name="name" id="name" value="#objectArea.name#" required="true" message="Nombre de área requerida" class="input-block-level" />
+						<cfinput type="text" name="name" id="name" value="#objectArea.name#" required="true" message="Nombre de área requerida" class="form-control" />
 					</div>
 				</div>--->
 				
@@ -39,7 +39,7 @@
 				<div class="form-group">
 					<label class="control-label" for="image_file" lang="es">URL:</label>
 					<div class="form-group">
-						<cfinput type="text" name="link" id="link" value="#objectArea.link#" required="false" class="input-block-level" /><br/>
+						<cfinput type="text" name="link" id="link" value="#objectArea.link#" required="false" class="form-control" /><br/>
 						<small>URL a la que se enlazará al hacer clic en la imagen.</small>
 					</div>
 				</div>

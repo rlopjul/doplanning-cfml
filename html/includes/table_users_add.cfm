@@ -29,7 +29,9 @@
 
 </cfif>
 
-<div style="clear:both">
+<div class="div_head_subtitle"><span lang="es">Añadir editores</span></div>
+
+<div style="clear:both; margin-top:5px;">
 	<cfset page_type = 2>
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_users_select.cfm">
 </div>

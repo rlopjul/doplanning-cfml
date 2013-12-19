@@ -103,16 +103,13 @@
 
 							headers: { 
 
-								0: { 
-									sorter: false 
-								},
 								2: { 
 									sorter: "datetime" 
 								}
 		
-							},
+							}
 							<cfif arguments.full_content IS false>
-							widgetOptions : {
+							, widgetOptions : {
 								filter_childRows : false,
 								filter_columnFilters : true,
 								filter_cssFilter : 'tablesorter-filter',
@@ -127,7 +124,7 @@
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
 								filter_useParsedData : false,
-						    }, 
+						    }
 						   </cfif>
 						});
 						
@@ -159,12 +156,10 @@
 				<table id="listTable" class="tablesorter">
 					<thead>
 						<tr>
-							<th style="width:35px" class="filter-false"></th>
+							<th style="width:40px" class="filter-false"></th>
 							<th lang="es">De</th>
 							<th style="width:150px;" lang="es">Fecha</th>	
 							<th style="width:39%" lang="es">Acción</th>		
-							
-							
 						</tr>
 					</thead>
 					
@@ -198,25 +193,11 @@
 						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','logItemIframe',event)">
 
 							<td style="text-align:center">								
-								<cfif APPLICATION.identifier NEQ "vpnet"><!---Message AND DP--->									
-								
-<!---									<cfif len(logs.user_image_type) GT 0>
-										<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectItem.user_in_charge#&type=#logs.user_image_type#&small=" alt="#objectItem.user_full_name#" class="item_img"/>									
-									<cfelse>							
-										<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#logs.user_full_name#" class="item_img_default" />
-									</cfif>--->
-								
-								<cfelse>
-									<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img" alt="#itemTypeNameEs#"/>									
-								</cfif>
-	
+								#logs.id#
 							</td>		
 							<td><span>#logs.name#</span></td>
 							<td><span>#DateFormat(logs.time, APPLICATION.dateFormat)# #TimeFormat(logs.time, "HH:mm:ss")#</span></td>					
 							<td><span>#logs.method#</span></td>
-							
-							
-							
 						</tr>
 					
 					</cfloop>
@@ -256,7 +237,7 @@
 		
 			<div class="div_user_page_title">
 				<cfif len(log.image_type) GT 0>
-					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#log.user_id#&type=#log.image_type#&medium=" alt="#log.name#" class="item_img" style="margin-right:2px;"/>									
+					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#log.user_id#&type=#log.image_type#&medium=" alt="#log.name#" class="item_img" style="margin-right:2px;"/>	
 				<cfelse>							
 					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#log.name#" class="item_img_default" style="margin-right:2px;"/>
 				</cfif><br/>
@@ -277,12 +258,12 @@
 				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Componente:</span> #log.component#</div>
 				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Fecha:</span> #DateFormat(log.time, APPLICATION.dateFormat)# #TimeFormat(log.time, "HH:mm:ss")#</div>
 				<div class="div_log_page_label">
-				<span lang="es" style="font-weight:bold">Petición:</span>
+					<span lang="es" style="font-weight:bold">Petición:</span>
 				</div> 
 				<!---<cfif IsXML(log.request_content)>
 					<cfdump var="#xmlParse(log.request_content)#">
 				<cfelse>--->
-					<textarea readonly="readonly" class="input-block-level" style="height:350px">#log.request_content#</textarea>
+					<textarea readonly="readonly" class="form-control" style="height:350px">#log.request_content#</textarea>
 				<!---</cfif>--->
 				
 			</div>

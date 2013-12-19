@@ -110,5 +110,5 @@
 	</cfoutput>
 
 <cfelse>
-<div class="div_text_result"><span lang="es">No hay más areas dentro de esta.</span></div>
+<div class="div_text_result"><span lang="es">No hay más áreas dentro de esta.</span></div>
 </cfif>

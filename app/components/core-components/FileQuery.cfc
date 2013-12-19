@@ -334,7 +334,7 @@
 				FROM #client_abb#_#fileTypeTable#_versions AS files
 				INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
 				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
-				ORDER BY files.uploading_date DESC
+				ORDER BY files.version_id DESC
 				<cfif isDefined("arguments.limit")>
 				LIMIT #arguments.limit#
 				</cfif>;

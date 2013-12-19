@@ -134,7 +134,7 @@ var area_item_content_en = {
 	
 	'Editar contenido':'Edit content',
 	'Áreas a las que copiar':'Áreas to copy',
-	'Debe seleccionar al menos un área':'You must select at least one area',
+	'Debe seleccionar al menos un área':'You must select at least one area'
 	/*END area_item_copy.cfm*/
 
 }

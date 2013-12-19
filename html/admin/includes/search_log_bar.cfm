@@ -22,7 +22,6 @@
 </cfif>
 
 
-<cfoutput>
 <cfif isDefined("URL.from_date")>
 	<cfset from_date = URL.from_date>
 <cfelse>
@@ -36,8 +35,6 @@
 	<cfset end_date = "#DateFormat(now(), "DD-MM-YYYY")#">
 </cfif>
 
-</cfoutput>
-
 
 <cfif isDefined("URL.limit") AND isNumeric(URL.limit)>
 	<cfset limit_to = URL.limit>
@@ -45,34 +42,24 @@
 	<cfset limit_to = 100>
 </cfif>
 
-<cfif NOT isDefined("curElement") OR curElement NEQ "users">
 
-	<cfinvoke component="#APPLICATION.componentsPath#/LogManager" method="getLogActions" returnvariable="getLogActionsResponse">	
-	</cfinvoke>
-	
-	<cfset logActions = getLogActionsResponse.query>
+<cfinvoke component="#APPLICATION.componentsPath#/LogManager" method="getLogActions" returnvariable="getLogActionsResponse">	
+</cfinvoke>
+
+<cfset logActions = getLogActionsResponse.query>
 <!---	<cfset numLogActions = logActions.RecordCount>--->
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">	
-		<cfinvokeargument name="order_by" value="name">
-		<cfinvokeargument name="order_type" value="asc">
-	</cfinvoke>
-	
-	<cfset users = getUsersResponse.users>
-	<cfset numUsers = ArrayLen(users)>
-	
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">	
+	<cfinvokeargument name="order_by" value="name">
+	<cfinvokeargument name="order_type" value="asc">
+</cfinvoke>
 
-</cfif>
-
+<cfset users = getUsersResponse.users>
+<cfset numUsers = ArrayLen(users)>
+	
 <script type="text/javascript">
 	
 	$(function() {
-
-<!---		$('.input_datepicker').datepicker({
-		  format: 'dd-mm-yyyy', 
-		  autoclose: true		  
-		});--->
-			
 	
 		$('#from_date').datepicker({
 		  format: 'dd-mm-yyyy', 
@@ -85,7 +72,6 @@
 		  format: 'dd-mm-yyyy', 
 		  autoclose: true
 		});
-			
 	
 <!---		$.datepicker.setDefaults($.datepicker.regional['es']);
 		
@@ -124,49 +110,79 @@
 
 
 <cfoutput>
-<div style="clear:both; padding-left:2px;">
-<form method="get" class="form-inline" action="#CGI.SCRIPT_NAME#">
+<div class="div_search_bar"><!---style="clear:both; padding-left:2px;"--->
+<form method="get" class="form-horizontal" action="#CGI.SCRIPT_NAME#">
 	
+	
+	<div class="row">
 
-	<cfif NOT isDefined("curElement") OR curElement NEQ "users">
-	
-		&nbsp;<label for="from_user" lang="es">De</label> 
-		<select name="from_user" id="from_user">
-		<option value="" lang="es">Todos</option>
-		<cfloop index="objectUser" array="#users#">	
-			
-			<option value="#objectUser.id#" <cfif objectUser.id EQ user_log>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
-			
-		</cfloop>
-		</select>
+		<label for="from_user" class="col-sm-2 control-label" lang="es">Usuario</label> 
 		
-		&nbsp;<label for="from_user" lang="es">Acción</label> 
-		<select name="action" id="action" style="width:350px;">
-		<option value="" lang="es">Todos</option>
-		<cfloop query="logActions">	
-			<option <cfif logActions.name EQ action>selected="selected"</cfif> value="#logActions.name#" >#logActions.action_es#</option>
-		</cfloop>
-		</select>		
-		<br/><br/>
-	
-	
-		&nbsp;<label for="from_user" lang="es">Fecha desde</label> 		
-		<input type="text" name="from_date" id="from_date" class="input_datepicker" value="#from_date#" onchange="setFromDate()">
+		<div class="col-sm-10">
+			<select name="from_user" id="from_user" class="form-control">
+				<option value="" lang="es">Todos</option>
+				<cfloop index="objectUser" array="#users#">	
+					
+					<option value="#objectUser.id#" <cfif objectUser.id EQ user_log>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
+					
+				</cfloop>
+			</select>
+		</div>
 
-		&nbsp;<label for="end_user" lang="es">Fecha hasta</label> 
-		<input type="text" name="end_date" id="end_date" value="#end_date#" class="input_datepicker" onchange="setEndDate()"/>
+	</div>
+	
+	<div class="row">
+
+		<label for="action" class="col-sm-2 control-label" lang="es">Acción</label> 
+
+		<div class="col-sm-10">
+			<select name="action" id="action" class="form-control">
+				<option value="" lang="es">Todas</option>
+				<cfloop query="logActions">	
+					<option <cfif logActions.name EQ action>selected="selected"</cfif> value="#logActions.name#" >#logActions.action_es#</option>
+				</cfloop>
+			</select>
+		</div>	
+
+	</div>
+
+	<div class="row">
+
+		<label for="from_date" class="col-xs-2 col-sm-2 control-label" lang="es">Fecha desde</label>
+
+		<div class="col-xs-4 col-sm-4">		 		
+			<input type="text" name="from_date" id="from_date" class="input_datepicker" value="#from_date#" onchange="setFromDate()">
+		</div>
+
+		<label for="end_date" class="col-xs-2 col-sm-2 control-label" lang="es">Fecha hasta</label> 
+
+		<div class="col-xs-4 col-sm-4">
+			<input type="text" name="end_date" id="end_date" value="#end_date#" class="input_datepicker" onchange="setEndDate()"/>
+		</div>
+
+	</div>
 		
-	</cfif>
-	
-	&nbsp;<label for="limit" lang="es">Nº resultados</label> <select name="limit" id="limit" class="input-sm" >
-	<!---<option value="1" <cfif limit_to IS 1>selected="selected"</cfif>>1</option>--->
-	<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
-	<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>
-	<option value="1000" <cfif limit_to IS 1000>selected="selected"</cfif>>1000</option>
-	</select>
-	<input type="submit" name="search" class="btn btn-primary" lang="es" value="Filtrar" /> <br/>
-	
-	&nbsp;<span style="font-size:10px" lang="es">Formato DD-MM-AAAA. Ejemplo:</span><span style="font-size:10px"> #DateFormat(now(), "DD-MM-YYYY")#</span>
+	<div class="row">
+
+		<label for="limit" class="col-xs-2 col-sm-2 control-label" lang="es">Nº resultados</label> 
+
+		<div class="col-xs-4 col-sm-2">
+			<select name="limit" id="limit" class="form-control">
+				<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
+				<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>
+				<option value="1000" <cfif limit_to IS 1000>selected="selected"</cfif>>1000</option>
+			</select>
+		</div>
+
+	</div>
+
+	<div class="row">
+		<div class="col-sm-offset-2 col-sm-10"> 
+			<input type="submit" name="search" class="btn btn-primary" lang="es" value="Filtrar" />
+		</div>
+	</div>
+
+	<!---<span style="font-size:10px" lang="es">Formato DD-MM-AAAA. Ejemplo:</span><span style="font-size:10px"> #DateFormat(now(), "DD-MM-YYYY")#</span>--->
 </form>
 </div>
 </cfoutput>

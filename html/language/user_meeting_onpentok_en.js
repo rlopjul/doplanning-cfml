@@ -16,6 +16,6 @@ var user_meeting_opentok_en = {
 	'Activar micrófono':'Unmute',
 	'No está retransmitiendo su webcam, sólo está retransmitiento su audio.':'You are not broadcasting your webcam, audio only.',
 	'Para retransmitir su webcam, haga clic en el botón Retransmitir webcam.':'To broadcast your webcam, click the Start webcam button.',
-	'El usuario está conectado a la reunión pero no está retransmitiendo su cámara ni su audio.':'The user is connected to the meeting but does not broadcast his camera and audio',
+	'El usuario está conectado a la reunión pero no está retransmitiendo su cámara ni su audio.':'The user is connected to the meeting but does not broadcast his camera and audio'
 }
 $.extend(jquery_lang_js.prototype.lang.en, user_meeting_opentok_en);

@@ -30,7 +30,7 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <div class="contenedor_fondo_blanco">
-<div class="div_send_message">
+<!---<div class="div_send_message">--->
 
 <cfif page_type IS 1 OR objectItem.user_in_charge EQ SESSION.user_id>
 	<cfset read_only = false>
@@ -146,7 +146,7 @@ function onSubmitForm()
 </cfoutput>
 
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-inline" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-horizontal"  onsubmit="return onSubmitForm();"><!--- class="form-horizontal" class="form-inline" --->
 	<cfinput type="hidden" name="itemTypeId" value="#itemTypeId#">
 	<cfinput type="hidden" name="area_id" value="#area_id#">
 	<cfinput type="hidden" name="return_path" value="#return_path#">
@@ -169,8 +169,8 @@ function onSubmitForm()
 	
 	<cfif APPLICATION.moduleTwitter IS true AND area_type IS "web">
 	<cfoutput>
-	<div class="form-group">
-		<div class="controls">
+	<div class="row">
+		<div class="col-sm-12">
 			<label class="checkbox">
 				<img src="#APPLICATION.htmlPath#/assets/icons/twitter_icon.png" alt="Twitter"/> <cfinput type="checkbox" name="post_to_twitter" value="true" title="Enviar #itemTypeNameEs# a Twitter"> Publicar #itemTypeNameEs# en Twitter
 			</label>			
@@ -195,6 +195,6 @@ function onSubmitForm()
 </cfform>
 
 
-</div>
+<!---</div>END div_send_message--->
 
 </div>
