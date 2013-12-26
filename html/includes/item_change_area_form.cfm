@@ -1,12 +1,14 @@
-<cfinclude template="#APPLICATION.htmlPath#/includes/file_change_area_query.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/item_change_area_query.cfm">
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/file_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<div class="div_head_subtitle"><span lang="es">Mover archivo a otra área</span></div>
+<cfoutput>
+<div class="div_head_subtitle"><span lang="es">Mover #itemTypeNameEs# a otra área</span></div>
+</cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
@@ -27,13 +29,25 @@
 
 	function openAreaSelector(){
 		
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
+		<cfif itemTypeWeb IS true>
+			<cfset webEnabled = 1>
+		<cfelse>
+			<cfset webEnabled = 0>
+		</cfif>
+
+		<cfif itemTypeNoWeb IS true>
+			<cfset noWebEnabled = 1>
+		<cfelse>
+			<cfset noWebEnabled = 0>
+		</cfif>
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=#webEnabled#&no_web_enabled=#noWebEnabled#');
 		
 	}
 
 	function setSelectedArea(areaId, areaName) {
 
-		var curAreaId = "#file_area_id#";
+		var curAreaId = "#item_area_id#";
 		
 		if(curAreaId != areaId) {
 			$("##new_area_id").val(areaId);
@@ -50,31 +64,32 @@
 
 <div class="contenedor_fondo_blanco">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
-		var railo_custom_form=new RailoForms('file_form');
+		var railo_custom_form=new RailoForms('item_form');
 	</script>
 	
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
-	<input type="hidden" name="file_id" value="#file_id#"/>
+	<input type="hidden" name="item_id" value="#item_id#"/>
+	<input type="hidden" name="itemTypeId" value="#itemTypeId#"/>
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
 	<div class="row">
 		<div class="col-sm-12">
-			<span lang="es">Nombre del archivo:</span>
-			<strong>#file.name#</strong>
+			<span lang="es">#itemTypeNameEs#:</span>
+			<strong>#item.title#</strong>
 		</div>
 	</div>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="fileArea">
-		<cfinvokeargument name="area_id" value="#file_area_id#">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="itemArea">
+		<cfinvokeargument name="area_id" value="#item_area_id#">
 	</cfinvoke>
 	
 	<div class="row">
 		<div class="col-sm-12">
 			<span>Área actual:</span>
-			<strong>#fileArea.name#</strong>
+			<strong>#itemArea.name#</strong>
 		</div>
 	</div>
 	
@@ -91,11 +106,11 @@
 	<div id="submitDiv">
 		<input type="submit" class="btn btn-primary" name="modify" value="Cambiar área" lang="es"/>
 
-		<a href="file.cfm?file=#file_id#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		<a href="#itemTypeName#.cfm?#itemTypeName#=#item_id#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 	</div>
 
 	<br/>
-	<small class="help-block" lang="es">Se enviará notificación por email del del cambio de área del archivo.</small>
+	<small class="help-block" lang="es">Se enviará notificación por email del del cambio de área del #itemTypeNameEs#.</small>
 </cfform>
 
 </div>

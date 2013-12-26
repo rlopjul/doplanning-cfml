@@ -770,7 +770,7 @@
 			<cfquery name="subAreasQuery" datasource="#client_dsn#">
 				SELECT id 
 				FROM #client_abb#_areas
-				WHERE parent_id = #arguments.area_id#;
+				WHERE parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
 			<cfset hasSubAreas = (#subAreasQuery.recordCount# GT 0)>
@@ -2258,7 +2258,7 @@
 			<cfquery name="subAreasQuery" datasource="#client_dsn#">
 				SELECT id 
 				FROM #client_abb#_areas
-				WHERE parent_id = #arguments.area_id#;
+				WHERE parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			<cfif subAreasQuery.recordCount GT 0>
 				<cfloop query="subAreasQuery">
@@ -2275,7 +2275,7 @@
 			<cfquery name="deleteAreaQuery" datasource="#client_dsn#">
 				DELETE 
 				FROM #client_abb#_areas
-				WHERE id = #arguments.area_id#;
+				WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>				
 			
 			<cfquery name="commitQuery" datasource="#client_dsn#">

@@ -9,32 +9,6 @@
 	
 	<cfif read_only IS false>
 	
-	<!---$(function() {
-		$.datepicker.setDefaults($.datepicker.regional['es']);
-		
-		var dates = $( ".input_datepicker" ).datepicker({ 
-			dateFormat: 'dd-mm-yy', 
-			changeMonth: true,
-			changeYear: true
-			<cfif itemTypeId IS NOT 4>
-			, onSelect: function( selectedDate ) {
-				var option = this.id == "start_date" ? "minDate" : "maxDate",
-				instance = $( this ).data( "datepicker" ),
-				date = $.datepicker.parseDate(
-					instance.settings.dateFormat ||
-					$.datepicker._defaults.dateFormat,
-					selectedDate, instance.settings );
-					//dates.not( this ).datepicker( "option", option, date );
-					if(this.id == "start_date")
-						$( "##end_date" ).datepicker( "option", option, date );
-					else if(this.id == "end_date")
-						$( "##start_date" ).datepicker( "option", option, date );
-				}
-			</cfif>
-			});
-		
-	});--->
-
 	$(function() {
 
 		$('##start_date').datepicker({
@@ -352,14 +326,14 @@
 	<div class="col-xs-5 col-md-2">
 
 		<label class="control-label" for="estimated_value" lang="es">#t_estimated_value# *</label>
-		<cfinput type="text" name="estimated_value" id="estimated_value" value="#objectItem.estimated_value#" required="true" validate="float" message="#t_estimated_value# debe ser un decimal" style="width:50px;" passthrough="#passthrough#"><!---&nbsp;<span style="font-size:10px">Valor (tiempo, coste, ...) estimado para la tarea.</span>--->
+		<cfinput type="text" name="estimated_value" id="estimated_value" value="#objectItem.estimated_value#" required="true" validate="float" message="#t_estimated_value# debe ser un decimal" passthrough="#passthrough#"><!---&nbsp;<span style="font-size:10px">Valor (tiempo, coste, ...) estimado para la tarea.</span>--->
 
 	</div>
 
-	<div class="col-xs-6 col-md-3">
+	<div class="col-xs-6 col-md-2">
 
 		<label class="control-label" for="real_value" lang="es">#t_real_value# *</label>
-		<cfinput type="text" name="real_value" id="real_value" value="#objectItem.real_value#" required="true" validate="float" message="#t_real_value# debe ser un decimal" style="width:50px;"><!---&nbsp;<span style="font-size:10px">Valor real de la tarea una vez realizada.</span>--->
+		<cfinput type="text" name="real_value" id="real_value" value="#objectItem.real_value#" required="true" validate="float" message="#t_real_value# debe ser un decimal"><!---&nbsp;<span style="font-size:10px">Valor real de la tarea una vez realizada.</span>--->
 
 	</div>
 

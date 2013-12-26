@@ -1,8 +1,4 @@
 <cfoutput>
-<!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>--->
-
 <script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 </cfoutput>

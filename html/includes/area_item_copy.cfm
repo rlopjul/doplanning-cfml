@@ -3,7 +3,7 @@
 	return_path
 
 --->
-<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 <cfif isDefined("FORM.areas_ids")>
 
@@ -151,12 +151,17 @@
 </cfif>
 
 <cfoutput>
-<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
+<!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>--->
 <script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
 
-<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>
+<cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 6><!---News, Events, Tasks--->
+
+<!--- <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script> --->
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+
 </cfif>
 
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
@@ -196,8 +201,11 @@
 	}
 	
 	$(window).load( function() {		
-		<!--- $("#accordion").accordion({ active: 1, autoHeight: false }); --->
-		$("#accordion").accordion({ active: 1 , heightStyle: "content"});
+		<!--- $("#accordion").accordion({ active: 1 , heightStyle: "content"}); --->
+
+		$('.collapse').collapse({
+			parent:"#accordion"
+		});
 
 		$("#searchText").on("keydown", function(e) { 
 			
@@ -218,11 +226,11 @@
 
 </script>
 
-<div class="div_head_subtitle">
+<!---<div class="div_head_subtitle">
 <cfoutput>
 <span lang="es">#itemTypeNameEs#</span>
 </cfoutput>
-</div>
+</div>--->
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="objectUser">
 	<cfinvokeargument name="user_id" value="#SESSION.user_id#">
@@ -239,13 +247,7 @@
 	</cfif>
 </cfinvoke>
 
-<!---<cfxml variable="xmlItem">
-	<cfoutput>
-	#xmlResponse.response.result.xmlChildren[1]#
-	</cfoutput>
-</cfxml>
-
-<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="objectItem" returnvariable="objectItem">
+<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="objectItem" returnvariable="objectItem">
 	<cfif isDefined("sourceItemTypeId")><!---Si se va a copiar de un mensaje o de otro tipo de elemento--->
 		<cfinvokeargument name="itemTypeId" value="#sourceItemTypeId#">
 	<cfelse>
@@ -259,6 +261,73 @@
 
 <cfset area_id = objectItem.area_id>
 
+<cfif itemTypeId IS 2><!--- Entries --->
+	
+	<cfif NOT isDefined("objectItem.display_type_id")>
+		<cfset queryAddColumn(objectItem, "display_type_id")>
+	</cfif>
+
+<cfelseif itemTypeId IS 5 OR itemTypeId IS 6><!--- Events, Tasks --->
+	
+	<cfif NOT isDefined("objectItem.start_date")>
+		<cfset QueryAddColumn(objectItem, "start_date")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.end_date")>
+		<cfset queryAddColumn(objectItem, "end_date")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.start_time")>
+		<cfset queryAddColumn(objectItem, "start_time")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.end_time")>
+		<cfset queryAddColumn(objectItem, "end_time")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.place")>
+		<cfset queryAddColumn(objectItem, "place")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.recipient_user")>
+		<cfset queryAddColumn(objectItem, "recipient_user")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.recipient_user_full_name")>
+		<cfset queryAddColumn(objectItem, "recipient_user_full_name")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.estimated_value")>
+		<cfset queryAddColumn(objectItem, "estimated_value")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.real_value")>
+		<cfset queryAddColumn(objectItem, "real_value")>
+	</cfif>
+
+<cfelseif itemTypeId IS 7 OR itemTypeId IS 8><!--- Consultations, Pubmed --->
+
+	<cfif NOT isDefined("objectItem.identifier")>
+		<cfset queryAddColumn(objectItem, "identifier")>
+	</cfif>
+
+</cfif>
+
+<cfif NOT isDefined("objectItem.link_target")>
+	<cfset queryAddColumn(objectItem, "link_target")>
+</cfif>
+
+<cfif NOT isDefined("objectItem.iframe_url")>
+	<cfset queryAddColumn(objectItem, "iframe_url")>
+</cfif>
+
+<cfif NOT isDefined("objectItem.iframe_display_type_id")>
+	<cfset queryAddColumn(objectItem, "iframe_display_type_id")>
+</cfif>
+
+<cfif NOT isDefined("objectItem.iframe_display_type_id")>
+	<cfset queryAddColumn(objectItem, "iframe_display_type_id")>
+</cfif>
 
 <cfoutput>
 <div class="div_file_page_name">#objectItem.title#</div>
@@ -304,52 +373,88 @@ function onSubmitForm()
 	
 	<a href="#return_page#" class="btn btn-default" lang="es" style="float:right;">Cancelar</a>
 	
-	<div id="accordion">
-		<h3><a href="##" lang="es">Editar contenido</a></h3>
-		<div style="padding-left:10px;"><!---Tab1--->
-			
-			<cfset read_only = false>
-			<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_inputs.cfm">
-			
-			
-		</div><!---END Tab1--->
-		<h3><a href="##" lang="es">Áreas a las que copiar</a></h3>
-		<div style="padding-left:10px;"><!---Tab2--->
-			
-			<div class="alert alert-info"><span lang="es">Seleccione las áreas a las que desea copiar <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs#:</span></div>
+	<div class="panel-group" id="accordion">
 
-			<div class="form-inline">
+		<div class="panel panel-default" style="width:100%;"><!---Tab1--->
 
-				<div class="btn-group">
-					<div class="input-group" style="width:260px;" >
-						<input type="text" name="text" id="searchText" value="" class="form-control"/>
-						<span class="input-group-btn">
-							<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
-						</span>
+			<div class="panel-heading">
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="##accordion" href="##collapseOne" lang="es">Editar contenido</a></h4>
+			</div>
+
+			<div id="collapseOne" class="panel-collapse collapse in">
+				
+				<div class="panel-body">
+
+					<div class="form-horizontal">
+						<cfset read_only = false>
+						<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_inputs.cfm">
 					</div>
+
 				</div>
-
-				<!---<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
-				<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>--->
-
+				
 			</div>
 
-			<div id="areasTreeContainer" style="clear:both; margin-bottom:2px;">
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
-				<cfinvokeargument name="with_input_type" value="checkbox">
-				<cfif itemTypeId IS 1 OR itemTypeId IS 6 OR itemTypeId IS 7><!---No se pueden copiar a web los mensajes, las tareas y las interconsultas--->
-					<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
-				<cfelseif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---No se pueden copiar a no web las entradas, enlaces y noticias--->
-					<cfinvokeargument name="disable_input_area" value="true"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
-				</cfif>
-			</cfinvoke>
+		</div><!---END Tab1--->
+
+		<div class="panel panel-default"><!---Tab2--->
+
+			<div class="panel-heading">
+				<h4 class="panel-title"><a data-toggle="collapse" data-parent="##accordion" href="##collapseTwo" lang="es">Áreas a las que copiar</a></h4>
 			</div>
-			
-			<script type="text/javascript">
-				addRailoRequiredCheckBox("areas_ids[]",window.lang.convert("Debe seleccionar al menos un área"));	
-			</script>
-			
+
+			<div id="collapseTwo" class="panel-collapse collapse">
+				
+				<div class="panel-body">
+
+					<div class="alert alert-info" style="margin-bottom:5px;">
+						<span lang="es">Seleccione las áreas a las que desea copiar <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs#:</span>
+					</div>
+
+					<div>
+
+						<div class="btn-group">
+							<div class="input-group" style="width:260px;" >
+								<input type="text" name="text" id="searchText" value="" class="form-control"/>
+								<span class="input-group-btn">
+									<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+								</span>
+							</div>
+						</div>
+
+						<!---<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+						<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>--->
+
+					</div>
+
+					<div id="areasTreeContainer" style="clear:both; margin-bottom:2px;">
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
+							<cfinvokeargument name="with_input_type" value="checkbox">
+							<cfif itemTypeWeb IS false>
+								<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
+							</cfif>
+							<cfif itemTypeNoWeb IS false>
+								<cfinvokeargument name="disable_input_area" value="true"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
+							</cfif>
+
+							<!---
+							<cfif itemTypeId IS 1 OR itemTypeId IS 6 OR itemTypeId IS 7><!---No se pueden copiar a web los mensajes, las tareas y las interconsultas--->
+								<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
+							<cfelseif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---No se pueden copiar a no web las entradas, enlaces y noticias--->
+								<cfinvokeargument name="disable_input_area" value="true"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
+							</cfif>--->
+						</cfinvoke>
+					</div>
+					
+					<script type="text/javascript">
+						addRailoRequiredCheckBox("areas_ids[]",window.lang.convert("Debe seleccionar al menos un área"));
+					</script>
+
+				</div>
+				
+			</div>
+
 		</div><!---END Tab2--->
+
 	</div><!---END accordion--->
 	<input name="submit" type="submit" class="btn btn-primary" value="Añadir #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-top:3px;"/>
 	

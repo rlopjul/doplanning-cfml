@@ -27,7 +27,7 @@
 	<!--- -------------------------------------- newAreaItem ----------------------------------- --->
 	
 	<cffunction name="newAreaItem" access="public" returntype="void">
-		<cfargument name="objectItem" type="struct" required="yes">
+		<cfargument name="objectItem" type="query" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="action" type="string" required="yes">
 		<cfargument name="send_sms" type="boolean" required="no" default="false">
@@ -51,13 +51,22 @@
 		<cfset var access_content = "">
 		<cfset var sms_message = "">
 		<cfset var alertContent = "">
-		<cfset var fromName = "">
+		<cfset var actionUser = "">
+		<cfset var actionUserName = "">
 		
 		<cfset var includeItemContent = true>
 		
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 		
 		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+		<cfif objectItem.recordCount IS 0><!---Item not found--->
+			
+			<cfset error_code = 501>
+		
+			<cfthrow errorcode="#error_code#">
+				
+		</cfif>		
 		
 		<cfif arguments.itemTypeId IS 7><!---Consultations--->
 			<!---<cfset includeItemContent = false>--->
@@ -104,7 +113,7 @@
 		</cfif>
 		
 		<!---imageDownloadUrl--->
-		<cfif isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
+		<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadImageUrl">
 				<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
 				<cfinvokeargument name="fileTypeId" value="1">
@@ -266,7 +275,7 @@
 						<cfelse>
 						#langText[curLang].new_item.link#: </cfif><a href="#objectItem.link#" target="_blank" style="font-weight:bold;">#objectItem.link#</a><br/>
 						</cfif>
-						<cfif len(objectItem.iframe_url) GT 0>
+						<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
 						#langText[curLang].new_item.iframe_url#: 
 						<a href="#objectItem.iframe_url#" target="_blank" style="font-weight:bold;">#objectItem.iframe_url#</a><br/>
 						</cfif>
@@ -288,7 +297,7 @@
 							#langText[curLang].new_item.attached_file#: #objectItem.attached_file_name#<br/>
 							</cfif>
 						</cfif>
-						<cfif isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
+						<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
 							<cfif arguments.action NEQ "delete">
 							#langText[curLang].new_item.attached_image#: <a href="#downloadImageUrl#" target="_blank">#objectItem.attached_image_name#</a><br/>
 							<cfelse>
@@ -329,7 +338,7 @@
 				</cfif>
 				
 				<!---fromName--->
-				<cfif action NEQ "delete">
+				<!---<cfif action NEQ "delete">
 					<cfif itemTypeId IS NOT 6>
 						<cfset fromName = objectItem.user_full_name>
 					<cfelse><!---Tasks--->
@@ -339,7 +348,15 @@
 							<cfset fromName = objectItem.user_full_name>
 						</cfif>
 					</cfif>
-				</cfif>
+				</cfif>--->
+
+				<cfinvoke component="UserManager" method="getUser" returnvariable="actionUser">
+					<cfinvokeargument name="get_user_id" value="#user_id#">
+					<cfinvokeargument name="format_content" value="default">
+					<cfinvokeargument name="return_type" value="query">
+				</cfinvoke>
+
+				<cfset actionUserName = actionUser.user_full_name>
 
 				<!---INTERNAL USERS--->
 				<cfif len(listInternalUsers) GT 0>
@@ -352,7 +369,12 @@
 				
 					<cfsavecontent variable="contentInternal">
 					<cfoutput>
-			<!--- #action_name# #langText[curLang].common.on_the_area# --->#langText[curLang].common.area#: <b>#area_name#</b>.<br/>
+			<cfif arguments.action EQ "delete">
+				#action_name# #langText[curLang].common.by_user# #actionUserName# #langText[curLang].common.on_the_area#
+			<cfelse>
+				#langText[curLang].common.area#: 
+			</cfif>
+			<b>#area_name#</b>.<br/>
 			#langText[curLang].common.area_path#: #area_path#<br/><br/>
 			
 			#alertContent#
@@ -361,9 +383,7 @@
 
 					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-						<cfif len(fromName) GT 0>
-							<cfinvokeargument name="from_name" value="#fromName#">
-						</cfif>
+						<cfinvokeargument name="from_name" value="#actionUserName#">
 						<cfif listLen(listInternalUsers,";") GT 1>
 							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
 							<cfinvokeargument name="bcc" value="#listInternalUsers#">
@@ -394,7 +414,7 @@
 					
 					<cfsavecontent variable="contentExternal">
 					<cfoutput>
-			#action_name# #langText[curLang].common.on_the_area# <b>#area_name#</b> #langText[curLang].common.of_the_organization# #root_area.name#.<br/><br/>
+			#action_name# <cfif arguments.action EQ "delete">#langText[curLang].common.by_user# #actionUserName# </cfif>#langText[curLang].common.on_the_area# <b>#area_name#</b> #langText[curLang].common.of_the_organization# #root_area.name#.<br/><br/>
 			
 			#alertContent#
 					</cfoutput>		
@@ -403,9 +423,7 @@
 					
 					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-						<cfif len(fromName) GT 0>
-							<cfinvokeargument name="from_name" value="#fromName#">
-						</cfif>
+						<cfinvokeargument name="from_name" value="#actionUserName#">
 						<cfif listLen(listExternalUsers,";") GT 1>
 							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
 							<cfinvokeargument name="bcc" value="#listExternalUsers#">
