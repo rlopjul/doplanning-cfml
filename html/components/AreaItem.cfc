@@ -16,7 +16,7 @@
 
 	<!---Este método no hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Item directamente del AreaItemManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
 
-	<cffunction name="getItem" output="false" returntype="struct" access="public">
+	<cffunction name="getItem" output="false" returntype="query" access="public">
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 
@@ -30,7 +30,8 @@
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				
-				<cfinvokeargument name="return_type" value="object">
+				<!---<cfinvokeargument name="return_type" value="object">--->
+				<cfinvokeargument name="return_type" value="query">
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -868,6 +869,45 @@
 		<cfreturn response>
 				
 	</cffunction>
+
+
+	<!--- ---------------------------------- changeItemArea -------------------------------------- --->
+	
+	<cffunction name="changeItemArea" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="new_area_id" type="numeric" required="true">
+		
+		<cfset var method = "changeItemArea">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeItemArea" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfif itemTypeGender EQ "male">
+					<cfset response.message = "#itemTypeNameEs# cambiado de área.">
+				<cfelse>
+					<cfset response.message = "#itemTypeNameEs# cambiada de área.">
+				</cfif>
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
+	</cffunction>
 	
 	
 	<!--- ---------------------------------copyItemToAreas------------------------------- --->
@@ -1531,7 +1571,7 @@
 					<cfif isNumeric(objectItem.attached_file_id)>
 					<div class="div_message_page_label"><span lang="es">Archivo:</span> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_file_name#</a></div>
 					</cfif>
-					<cfif isNumeric(objectItem.attached_image_id)>
+					<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id)>
 					<div class="div_message_page_label"><span lang="es">Imagen:</span> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_image_name#</a></div>
 					</cfif>
 					

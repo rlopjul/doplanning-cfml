@@ -13,6 +13,7 @@
 	
 	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
+	<cfset timeZoneTo = "+1:00">
 	
 	
 	<!---getFile--->
@@ -43,10 +44,10 @@
 			, locks.user_id AS lock_user_id, locks.lock_user_full_name
 			</cfif>
 			<cfif arguments.parse_dates IS true>
-				, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
-				, DATE_FORMAT(files.replacement_date, '#dateTimeFormat#') AS replacement_date
+				, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date 
+				, DATE_FORMAT(CONVERT_TZ(files.replacement_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS replacement_date
 				<cfif arguments.with_lock IS true> 
-				, DATE_FORMAT(locks.lock_date, '#dateTimeFormat#') AS lock_date
+				, DATE_FORMAT(CONVERT_TZ(locks.lock_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS lock_date
 				</cfif>
 			<cfelse>
 				, files.uploading_date

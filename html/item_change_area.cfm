@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>#APPLICATION.title#-Cambiar área de archivo</title>
+<title>#APPLICATION.title#-Cambiar área</title>
 <!-- InstanceEndEditable -->
 <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
@@ -123,7 +123,7 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/file_change_area_form.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/item_change_area_form.cfm">
 
 <!-- InstanceEndEditable -->
 </div>

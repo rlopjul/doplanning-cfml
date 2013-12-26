@@ -66,6 +66,7 @@ curLangText["es"] = {
 			"area_description" : "Descripción del área",
 			
 			"user" : "Usuario",
+			"by_user" : "por el usuario",
 			"your_access_email" : "Su usuario de acceso es",
 			"you_must_change_password" : 'Debe cambiar la contraseña en el apartado "Preferencias" de la aplicación',
 			
@@ -337,6 +338,7 @@ curLangText["en"] = {
 			"area_description" : "Area description",
 			
 			"user" : "User",
+			"by_user" : "by user",
 			"your_access_email" : "Your access email is",
 			"you_must_change_password" : 'You must change your password at the application preferences',
 			

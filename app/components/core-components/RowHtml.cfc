@@ -127,7 +127,7 @@
 					<div class="row">
 						<div class="col-xs-6 col-sm-3">
 
-							<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="input_datepicker"/>
+							<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="form-control input_datepicker"/>
 
 						</div>
 						<div class="col-xs-6 col-sm-9" style="padding-top:5px;">
@@ -266,7 +266,7 @@
 
 				</cfif>
 
-				</div>
+			</div><!---END col-md-12--->
 			</div><!---END div class="row"--->
 			
 		</cfloop>

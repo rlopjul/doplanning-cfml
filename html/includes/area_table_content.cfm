@@ -100,12 +100,13 @@
 		
 	</cfif>
 
-	<cfif is_user_table_area_responsible OR objectItem.user_in_charge EQ SESSION.user_id>
+	<cfif objectItem.user_in_charge EQ SESSION.user_id OR is_user_table_area_responsible>
 		
-		<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>	
+		<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
+
+		<a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>		
 
 	</cfif>
-
 
 	<cfif is_user_area_responsible><!--- Area Responsible --->
 		
