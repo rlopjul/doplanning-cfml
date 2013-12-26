@@ -33,8 +33,11 @@
 	</cfinvoke>--->
 		
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getAllAreasFiles" argumentcollection="#URL#" returnvariable="getAllAreasFilesResponse">
+		<cfif len(search_text) GT 0>
+			<cfinvokeargument name="search_text" value="#search_text#">	
+		</cfif>
 		<cfif isNumeric(user_in_charge)>
-		<cfinvokeargument name="user_in_charge" value="#user_in_charge#">
+			<cfinvokeargument name="user_in_charge" value="#user_in_charge#">
 		</cfif>
 	</cfinvoke>
 

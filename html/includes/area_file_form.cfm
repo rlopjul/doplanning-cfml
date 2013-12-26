@@ -1,6 +1,7 @@
 <!---page_types
 1 Create and upload new file
 2 Modify file
+3 Publish area file
 --->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form_query.cfm">
@@ -286,7 +287,7 @@
 		</cfif>		
 			
 		<div id="documentUsersContainer">
-			<cfif page_type IS NOT 3>
+			<cfif page_type IS NOT 3 AND (page_type IS NOT 2 OR file.file_type_id IS 3)>
 				<div class="row">
 					<div class="col-sm-12">
 

@@ -1191,7 +1191,7 @@
 		<cfargument name="objectFile" type="query" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">		
 		
-		<cfset var method = "associateFileToArea">
+		<cfset var method = "dissociateFileFromArea">
 		
 		<cfset var file_id = objectFile.file_id>
 		<cfset var fileTypeId = objectFile.file_type_id>
@@ -1220,7 +1220,7 @@
 				<cfquery name="dissociateFileQuery" datasource="#client_dsn#">		
 					DELETE FROM #client_abb#_areas_files 
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-						AND file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
+					AND file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
 				<!---DELETE ITEM POSITION--->
@@ -2365,6 +2365,7 @@
 		<cfset var method = "getAreaItemFileStatus">
 		
 		<cfset var item_id = "">
+		<cfset var itemQuery = "">
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
@@ -2406,13 +2407,13 @@
 								<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 									<cfinvokeargument name="item_id" value="#item_id#">
 									<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-									<cfinvokeargument name="return_type" value="object">
+									<cfinvokeargument name="return_type" value="query">
 								</cfinvoke>
 								
-								<cfset objectItem = getItemResponse.item>
+								<cfset itemQuery = getItemResponse.item>
 
 								<cfinvoke component="AlertManager" method="newAreaItem">
-									<cfinvokeargument name="objectItem" value="#objectItem#">
+									<cfinvokeargument name="objectItem" value="#itemQuery#">
 									<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 									<cfinvokeargument name="action" value="#arguments.action#">
 								</cfinvoke>
@@ -2708,11 +2709,11 @@
 			<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
 			</cfinvoke>
 			
-			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
+			<!---<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
 				<cfinvokeargument name="timestamp_date" value="#current_date#">
 			</cfinvoke>
 
-			<!---<cfset objectFile.user_in_charge = user_id>
+			<cfset objectFile.user_in_charge = user_id>
 			<cfset objectFile.uploading_date = stringCurrentDate>--->
 
 			<cfquery name="selectUserFileQuery" datasource="#client_dsn#">
@@ -4563,6 +4564,11 @@
 			<!---checkAreaResponsibleAccess--->
 			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
 				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+
+			<!--- checkAreaAccess publication area--->
+			<cfinvoke component="AreaManager" method="checkAreaAccess">
+				<cfinvokeargument name="area_id" value="#arguments.publication_area_id#">
 			</cfinvoke>
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersion" returnvariable="fileVersionQuery">

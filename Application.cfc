@@ -93,8 +93,8 @@
 		<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
 		
 		<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
-		<cfset APPLICATION.jqueryUIJSPath = "//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js">
-		<cfset APPLICATION.jqueryUICSSPath = APPLICATION.path&"/jquery/jquery-ui/css/jquery-ui-bootstrap/jquery-ui-1.10.0.custom.css">
+		<!---<cfset APPLICATION.jqueryUIJSPath = "//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js">
+		<cfset APPLICATION.jqueryUICSSPath = APPLICATION.path&"/jquery/jquery-ui/css/jquery-ui-bootstrap/jquery-ui-1.10.0.custom.css">--->
 		<!---<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js">--->
 		<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js">
 		<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">

@@ -10,6 +10,7 @@
 		
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
 
    	</cfcase> 
 	
@@ -23,6 +24,7 @@
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = false>
 	
    	</cfcase> 
 	
@@ -36,6 +38,7 @@
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = false>
 	
    	</cfcase> 
 	
@@ -49,6 +52,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = false>
 	
    	</cfcase> 
 
@@ -62,6 +66,7 @@
 
 		<cfset itemTypeGender = "male">	
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase>
 	
@@ -75,6 +80,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase> 
 	
@@ -88,6 +94,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase> 
 
@@ -101,6 +108,7 @@
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase> 
 	
@@ -114,6 +122,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = false>
 
    	</cfcase> 
 
@@ -126,6 +135,8 @@
 		<cfset itemTypeNameEs = "Archivo">
 
 		<cfset itemTypeGender = "male">
+		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase> 
 
@@ -139,6 +150,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 
 		<cfset tableTypeId = 1>
 	
@@ -154,6 +166,7 @@
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 
 		<cfset tableTypeId = 2>
 	
@@ -169,6 +182,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
 
 		<cfset tableTypeId = 3>
 
