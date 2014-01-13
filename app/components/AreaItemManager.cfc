@@ -499,7 +499,8 @@
 		
 	</cffunction>
 
-	
+	<!--- createDateFromString --->
+
 	<cffunction name="createDateFromString" returntype="date" output="false" access="public">
 		<cfargument name="strDate" type="string" required="yes">
 		
@@ -1475,6 +1476,11 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfif arguments.itemTypeId IS 13><!--- Typologies --->
+				<!--- Las tipologías no se pueden cambiar de área porque son usadas en áreas inferiores a la que pertenecen --->
+				<cfthrow message="Las tipologías no se pueden cambiar de área">
+			</cfif>
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">

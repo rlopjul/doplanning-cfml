@@ -11,7 +11,8 @@
  * 
  * Changelog:
  *  - Added support for title attribute and input types email and password
- * 
+ *	- Modificado para para habilitar compatibilidad con IE7 (localStorage)
+ *
  * Source: http://www.isogenicengine.com/documentation/jquery-multi-language-site-plugin/
 **/
 
@@ -201,11 +202,39 @@ jquery_lang_js.prototype.change = function (lang) {
 						// Not an input element
 						var currentText = langElem.html();
 						var defaultLangText = langElem.data('deftext');
-						
-						var newText = this.lang[lang][defaultLangText] || currentText;
+
+						// MODIFICADO para traducir IGNORANDO el caracter :
+											
+						var newText = this.lang[lang][defaultLangText];
+
+						if(!newText){
+
+							// Comprueba si el último caracter es :
+							var lastChar = defaultLangText.substr(defaultLangText.length - 1);
+
+							if(lastChar == ":") {
+
+								// Si el último caracter es : lo quita para obtener la traducción
+								defaultLangText = defaultLangText.substr(0, defaultLangText.length-1);
+								currentText = currentText.substr(0, currentText.length-1);
+
+								var newText = this.lang[lang][defaultLangText];
+
+								if(newText) // Si ha encontrado traducción, le añade el caracter :
+									newText = newText+":";
+								else
+									newText = currentText;
+
+							} else { // No se ha encontrado traduccción y el ultimo caracter no es :
+								newText = currentText;
+							}
+
+						}
+
 						var newHtml = currentText.replace(currentText, newText);
+
 						langElem.html(newHtml);
-						
+
 						if (currentText != newHtml) {
 							langElem.attr('lang', lang);
 						}

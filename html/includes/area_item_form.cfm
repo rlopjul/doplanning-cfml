@@ -14,16 +14,15 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 
 <div class="div_head_subtitle">
 	<cfoutput>
-	<span lang="es"><cfif page_type IS 1>
+	<cfif page_type IS 1>
 		<cfif itemTypeId IS NOT 7 OR parent_kind EQ "area">
-			<cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#
+			<span lang="es"><cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#</span>
 		<cfelse>
-			Respuesta a #itemTypeNameEs#
+			<span lang="es">Respuesta a #itemTypeNameEs#</span>
 		</cfif>
 	<cfelse>
-		Modificar #itemTypeNameEs#
+		<span lang="es">Modificar #itemTypeNameEs#</span>
 	</cfif> 
-	</span>
 	</cfoutput>
 </div>
 

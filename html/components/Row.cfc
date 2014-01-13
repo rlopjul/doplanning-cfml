@@ -185,8 +185,6 @@
 		
 		<cftry>
 			
-			<!---<cfset arguments.action = "update">--->
-
 			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="saveRow" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
 			
@@ -240,6 +238,69 @@
 			</cfcatch>										
 			
 		</cftry>
+		
+	</cffunction>
+
+
+	<!--- -------------------------------importRows-------------------------------------- --->
+	
+    <cffunction name="importRows" returntype="struct" access="public">
+    	<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="file" type="string" required="true">
+		<cfargument name="delimiter" type="string" required="true">
+		
+		<cfset var method = "importRows">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="importRows" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Registros importados">
+			</cfif>
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+	<!--- -------------------------------exportRows-------------------------------------- --->
+	
+    <cffunction name="exportRows" returntype="struct" access="public">
+    	<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="delimiter" type="string" required="true">
+		
+		<cfset var method = "exportRows">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="exportRows" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Registros exportados">
+			</cfif>
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 
