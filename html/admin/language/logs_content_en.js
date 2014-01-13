@@ -9,7 +9,7 @@ var logs_content_en = {
 	'De':'From',
 	'Todos':'All',
 	'Introduzca los parámetros que desee y haga click en "Filtrar".':'Enter the parameters and click the button "Filter".',
-	'No hay logs.':'There is no log.',
+	'No hay logs.':'There is no log.'
 
 }
 

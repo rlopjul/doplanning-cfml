@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- TemplateInfo codeOutsideHTMLIsLocked="true" --><!DOCTYPE html>
 <html lang="es">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,8 +9,23 @@
 <cfoutput>
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
-<link href="../html/styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<!--[if lt IE 9]>
+	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+    <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+    <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
+<![endif]-->
+<!--[if lt IE 8]>
+  	<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-ie7/bootstrap-ie7.css" rel="stylesheet" rel="stylesheet">
+<![endif]-->
+<!--[if IE 7]>
+  	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet" >
+<![endif]-->
+
+<link href="../html/styles/styles.min.css?v=2.1" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../html/styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
@@ -21,7 +36,7 @@
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 
 <script type="text/javascript" src="../html/scripts/functions.min.js?v=2.1"></script>
 <script type="text/javascript" src="../html/scripts/iframesFunctions.min.js?v=2"></script>
@@ -37,14 +52,7 @@
 	
 	$().ready(function () {
    		window.lang.run();
-		
-		<!---<cfif page_language NEQ "es">
-			<cfoutput>
-			window.lang.change('#page_language#');
-			</cfoutput>
-		</cfif>--->
 	});
-	
 </script>
 
 </cfoutput>

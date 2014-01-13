@@ -27,14 +27,14 @@
 				<option value="0" <cfif all_users IS false>selected="selected"</cfif>>Usuarios de esta área</option>
 				<option value="1" <cfif all_users IS true>selected="selected"</cfif>>Usuarios con acceso a esta área</option>
 			</select>
-			<button type="submit" class="btn btn-small" title="Actualizar"><i class="icon-refresh"></i> Actualizar</button>
+			<button type="submit" class="btn btn-default btn-sm" title="Actualizar"><i class="icon-refresh"></i> Actualizar</button>
 		</form>--->
 		
 		<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/users.cfm?area=#area_id#" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+		<a href="#APPLICATION.htmlPath#/users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
 		</cfif>
 
-		<a href="users.cfm?area=#area_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+		<a href="users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
 		
 	<cfelse><!---VPNET--->
 	

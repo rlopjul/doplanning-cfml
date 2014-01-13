@@ -10,6 +10,7 @@
 		
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
 
    	</cfcase> 
 	
@@ -23,6 +24,7 @@
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = false>
 	
    	</cfcase> 
 	
@@ -36,6 +38,7 @@
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = false>
 	
    	</cfcase> 
 	
@@ -49,6 +52,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = false>
 	
    	</cfcase> 
 
@@ -62,6 +66,7 @@
 
 		<cfset itemTypeGender = "male">	
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase>
 	
@@ -75,6 +80,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase> 
 	
@@ -88,9 +94,9 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase> 
-
 
    	<cfcase value="8"><!---pubmed article--->
 
@@ -102,6 +108,7 @@
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase> 
 	
@@ -115,6 +122,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = false>
 
    	</cfcase> 
 
@@ -127,6 +135,8 @@
 		<cfset itemTypeNameEs = "Archivo">
 
 		<cfset itemTypeGender = "male">
+		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 	
    	</cfcase> 
 
@@ -140,6 +150,7 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 
 		<cfset tableTypeId = 1>
 	
@@ -155,12 +166,13 @@
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
 
 		<cfset tableTypeId = 2>
 	
    	</cfcase>
 
-   	 <cfcase value="13"><!---typologies (files)--->
+   	<cfcase value="13"><!---typologies (files)--->
 
 		<cfset itemTypeName = "typology">
 		<cfset itemTypeNameP = "typologies">
@@ -170,9 +182,23 @@
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
 
 		<cfset tableTypeId = 3>
 
    	</cfcase>
+
+   	<!---
+   	<cfcase value="15"><!---Files edited--->
+
+		<cfset itemTypeName = "file_edited">
+		<cfset itemTypeNameP = "files_edited">
+		<cfset itemTypeTable = itemTypeNameP&"_edited">
+		
+		<cfset itemTypeNameEs = "Archivo en edición">
+
+		<cfset itemTypeGender = "male">
+	
+   	</cfcase>--->
 
 </cfswitch>

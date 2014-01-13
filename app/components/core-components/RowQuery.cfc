@@ -7,6 +7,9 @@
 	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset datetimeFormat = "%d-%m-%Y %H:%i:%s">
 
+	<cfset CREATE_ROW = "create">
+	<cfset MODIFY_ROW = "modify">
+
 	<!---saveRow--->
 		
 	<cffunction name="saveRow" output="false" returntype="numeric" access="public">
@@ -19,6 +22,8 @@
 
 		<cfargument name="fields" type="query" required="false">
 		<cfargument name="user_id" type="numeric" required="false">
+		<cfargument name="send_alert" type="boolean" required="false" default="true">
+		<cfargument name="with_transaction" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -40,15 +45,22 @@
 					<cfinvokeargument name="with_types" value="true">
 					<cfinvokeargument name="with_table" value="false">
 					
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 				</cfinvoke>
 
 			</cfif>
 
-			<cftransaction>
+			<cfif arguments.with_transaction IS true>
+				<!--- <cftransaction> --->
+				<cfquery datasource="#client_dsn#" name="startTransaction">
+					START TRANSACTION;
+				</cfquery>
+			</cfif>
 
-				<cfif arguments.action IS "create">
+			<cftry>
+						
+				<cfif arguments.action IS CREATE_ROW>
 
 					<cfset sqlAction = "INSERT INTO">
 
@@ -67,13 +79,19 @@
 						
 					</cfif>
 
-					<cfif NOT isDefined("arguments.user_id") AND ( arguments.tableTypeId IS NOT 2 OR arguments.action IS "update" )><!---User IS NOT defined AND IS NOT forms--->
+					<cfif NOT isDefined("arguments.user_id") AND ( arguments.tableTypeId IS NOT 2 OR arguments.action IS MODIFY_ROW )><!---User IS NOT defined AND IS NOT forms--->
 						<cfthrow message="Usuario requerido para guardar un registro">						
 					</cfif>
 
 				<cfelse>
 						
 					<cfset sqlAction = "UPDATE">
+
+					<cfif NOT isDefined("arguments.row_id") OR NOT isNumeric(arguments.row_id)>
+						
+						<cfthrow message="Error al obtener el registro a modificar">
+
+					</cfif>
 
 				</cfif>
 
@@ -82,7 +100,7 @@
 				<cfquery name="saveRow" datasource="#client_dsn#">
 					#sqlAction# `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
 					SET 
-					<cfif arguments.action IS "create">
+					<cfif arguments.action IS CREATE_ROW>
 						insert_user_id = 
 						<cfif isDefined("arguments.user_id")>
 							<cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
@@ -106,7 +124,7 @@
 							, field_#fields.field_id# = 	
 
 							<cfif fields.mysql_type IS "DATE"><!--- DATE --->
-								<cfif len(field_value) GT 0>
+								<cfif len(field_value) GT 0 AND validateDate(field_value)>
 									STR_TO_DATE('#field_value#','#dateFormat#')
 								<cfelse>
 									<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">
@@ -123,13 +141,14 @@
 
 					</cfloop>
 
-					<cfif arguments.action NEQ "create">
+					<cfif arguments.action NEQ CREATE_ROW>
 						WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
 					</cfif>;
 				</cfquery>
 
-				<cfif arguments.action IS "create">
+				<cfif arguments.action IS CREATE_ROW>
 
+					<!--- Get inserted id --->
 					<cfquery name="getLastInsertId" datasource="#client_dsn#">
 						SELECT LAST_INSERT_ID() AS last_insert_id FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
 					</cfquery>
@@ -148,10 +167,10 @@
 
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- SELECT --->
 
-							<cfif arguments.action NEQ "create">
+							<cfif arguments.action NEQ CREATE_ROW>
 								
-								<!--- Delete old values --->
-								<cfquery name="deleteEntitySectors" datasource="#client_dsn#">
+								<!--- Delete old selected values --->
+								<cfquery name="deleteRowAreas" datasource="#client_dsn#">
 									DELETE FROM `#client_abb#_#tableTypeTable#_rows_areas`
 									WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
 									AND row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
@@ -166,12 +185,12 @@
 								
 								<cfset field_values = arguments[field_name]>
 
-								<!--- Save new values --->
+								<!--- Save new selected values --->
 								<cfloop array="#field_values#" index="select_value">
 
 									<cfif isNumeric(select_value)>
 										
-										<cfquery name="addValueToTable" datasource="#client_dsn#">
+										<cfquery name="addRowAreas" datasource="#client_dsn#">
 											INSERT INTO `#client_abb#_#tableTypeTable#_rows_areas` (#tableTypeName#_id, row_id, field_id, area_id)
 											VALUES (<cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">,
 												<cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">,
@@ -192,10 +211,29 @@
 					</cfloop>
 
 				</cfif>
-				
-			</cftransaction>
 
-			<cfif arguments.tableTypeId IS NOT 3><!--- IS NOT typology --->
+				<cfcatch>
+
+					<cfif arguments.with_transaction IS true>
+						<cfquery datasource="#client_dsn#" name="rollbackTransaction">
+							ROLLBACK;
+						</cfquery>
+					</cfif>
+
+					<cfrethrow/>
+
+				</cfcatch>
+
+			</cftry>
+				
+			<cfif arguments.with_transaction IS true>
+				<!--- </cftransaction> --->
+				<cfquery datasource="#client_dsn#" name="endTransaction">
+					COMMIT;
+				</cfquery>
+			</cfif>
+
+			<cfif arguments.tableTypeId IS NOT 3 AND arguments.send_alert IS true><!--- IS NOT typology --->
 				
 				<!--- Alert --->
 				<cfinvoke component="AlertManager" method="newTableRow">
@@ -213,6 +251,20 @@
 		
 		<cfreturn row_id>
 		
+	</cffunction>
+
+
+	<!--- validateDate --->
+
+	<cffunction name="validateDate" returntype="boolean" output="false" access="public">
+		<cfargument name="strDate" type="string" required="yes">
+	
+		<cfinvoke component="DateManager" method="validateDate" returnvariable="result">
+			<cfinvokeargument name="strDate" value="#arguments.strDate#">
+		</cfinvoke>
+
+		<cfreturn result>
+
 	</cffunction>
 
 

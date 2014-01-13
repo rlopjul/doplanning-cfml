@@ -5,7 +5,10 @@
 	<!--- ----------------------- trasnformFileSize -------------------------------- --->
 	
 	<cffunction name="trasnformFileSize" returntype="string" output="false" access="public">	
-		<cfargument name="file_size_full" type="numeric" required="no"><!---file_size_full is the file_size from database without parse to kilobytes--->	
+		<cfargument name="file_size_full" type="numeric" required="true"><!---file_size_full is the file_size from database without parse to kilobytes--->
+
+		<cfset var file_size = "">
+		<cfset var file_size_kb = "">	
 			
 			<cfif arguments.file_size_full LT (1024*1024)><!---File size is LT a mega byte--->
 			

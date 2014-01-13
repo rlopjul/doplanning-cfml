@@ -10,7 +10,7 @@
 <div class="div_head_subtitle_area">
 	<cfoutput>
 	
-	<a href="area_items_full.cfm?area=#area_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+	<a href="area_items_full.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
 	
 	</cfoutput>
 </div>

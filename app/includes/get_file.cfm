@@ -7,7 +7,7 @@ files_directory
 <cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#objectFile.physical_name#'>		
 
 <cfif FileExists(source)>
-	<cfset file_size = objectFile.file_size_full>
+	<cfset file_size = objectFile.file_size>
 	
 	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUserDownloadedSpace">
 		<cfinvokeargument name="add_space" value="#file_size#">
