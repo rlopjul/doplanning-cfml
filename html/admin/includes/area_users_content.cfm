@@ -10,14 +10,30 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
 
+<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
+	<cfinvokeargument name="area_id" value="#area_id#">
+	<cfinvokeargument name="separator" value=" / ">
+</cfinvoke>
+<cfif SESSION.client_id NEQ "hcs">
+						
+	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isInternalUser" returnvariable="internal_user">
+		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
+	</cfinvoke>
+
+</cfif>
 <cfoutput>
-<div class="navbar navbar-static-top">
-	<div class="navbar-inner">
+<div class="div_head_menu">
+	<div class="navbar navbar-default navbar-static-top">
+		<div class="navbar-header">
 
-		<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
-		<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
+			<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
+			<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
+			<span class="navbar_brand">#area_name#</span><br/>
+			<p class="navbar_brand" style="padding-top:0px;clear:left;font-size:12px;color:##737373">
+				<cfif SESSION.client_id EQ "hcs" OR internal_user IS true>Ruta: #area_path#<cfelse>&nbsp;</cfif>
+			</p>
 
-		<span class="navbar_brand">#area_name#</span>
+		</div>
 	</div>
 </div>
 
@@ -37,11 +53,11 @@
 	
 	<!---<div class="div_head_subtitle_area_text"><strong>USUARIOS</strong><br/> del área</div>--->
 
-	<a class="btn btn-info btn-small" onclick="parent.loadModal('html_content/area_modify.cfm?area=#area_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
+	<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/area_modify.cfm?area=#area_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
 	
-	<a class="btn btn-info btn-small disabled"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a><!---ESTO ESTÁ EMPEZADO PERO NO TERMINADO (falta solucionar lo de la subida de archivos) onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');" --->
+	<a class="btn btn-info btn-sm disabled"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a><!---ESTO ESTÁ EMPEZADO PERO NO TERMINADO (falta solucionar lo de la subida de archivos) onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');" --->
 
-	<a href="area_users.cfm?area=#area_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
+	<a href="area_users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
 
 </div>
 

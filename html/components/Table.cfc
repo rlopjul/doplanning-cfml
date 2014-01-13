@@ -94,7 +94,7 @@
 				<cfif tableTypeGender EQ "male">
 					<cfset response_message = "#tableTypeNameEs# modificado.">
 				<cfelse>
-					<cfset response_message = "#itemTypeNameEs# modificada.">
+					<cfset response_message = "#tableTypeNameEs# modificada.">
 				</cfif>
 
 				<cfset response = {result=true, message=response_message, table_id=arguments.table_id, area_id=#arguments.area_id#}>

@@ -27,7 +27,7 @@
 
 	function openUserSelector(){
 
-		 return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
+		return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
 	}
 
 	function setSelectedUser(userId, userName) {
@@ -49,7 +49,7 @@
 
 <div class="contenedor_fondo_blanco">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-inline" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('item_form');
@@ -60,20 +60,25 @@
 	<input type="hidden" name="itemTypeId" value="#itemTypeId#"/>
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
-	<div class="control-group">
-		<span>#itemTypeNameEs#:</span>
-		<strong>#item.title#</strong>
+	<div class="row">
+		<div class="col-sm-12">
+			<span>#itemTypeNameEs#:</span>
+			<strong>#item.title#</strong>
+		</div>
 	</div>
-	<div class="control-group">
-		<span>Propietario actual:</span>
-		<strong>#item.user_full_name#</strong>
+
+	<div class="row">
+		<div class="col-sm-12">
+			<span>Propietario actual:</span>
+			<strong>#item.user_full_name#</strong>
+		</div>
 	</div>
 	
-	<div class="control-group">
-		<label class="control-label" for="new_user_full_name" lang="es">Nuevo propietario</label>
-		<div class="controls">
+	<div class="row">
+		<div class="col-xs-12 col-sm-6">
+			<label class="control-label" for="new_user_full_name" lang="es">Nuevo propietario</label>
 			<input type="hidden" name="new_user_in_charge" id="new_user_in_charge" value="#newUser.new_user_in_charge#" validate="integer" required="true"/>
-			<cfinput type="text" name="new_user_full_name" id="new_user_full_name" value="#newUser.new_user_full_name#" readonly="true" required="true" message="Debe seleccionar un nuevo propietario" onclick="openUserSelector()" /> <button onclick="return openUserSelector()" type="button" class="btn" lang="es">Seleccionar usuario</button>
+			<cfinput type="text" name="new_user_full_name" id="new_user_full_name" value="#newUser.new_user_full_name#" readonly="true" required="true" message="Debe seleccionar un nuevo propietario" onclick="openUserSelector()" /> <button onclick="return openUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
 		</div>
 	</div>
 	
@@ -82,7 +87,7 @@
 	<div id="submitDiv">
 		<input type="submit" class="btn btn-primary" name="modify" value="Cambiar propietario" lang="es"/>
 
-		<a href="#itemTypeName#.cfm?#itemTypeName#=#item_id#&area=#area#" class="btn" style="float:right">Cancelar</a>
+		<a href="#itemTypeName#.cfm?#itemTypeName#=#item_id#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 	</div>
 
 	<br/>

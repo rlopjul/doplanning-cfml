@@ -60,30 +60,35 @@
 	
 
 	<cfif is_user_area_responsible OR table_edit_permission IS true>
-		<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-small" title="Nuevo registro" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Nuevo registro</span></a>
+		<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo registro" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Nuevo registro</span></a>
 
-		<span class="divider">&nbsp;</span>
+		<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
 	</cfif>	
+	
+	<a href="#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Exportar</span></a>
+
+	<span class="divider">&nbsp;</span>
+	
 
 	<cfif is_user_area_responsible>
-		<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos</span></a>
+		<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos</span></a>
 
 		<cfif APPLICATION.moduleListsWithPermissions IS true AND itemTypeId IS 11><!---List with permissions--->
-			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#" class="btn btn-small" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores</span></a>
+			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#" class="btn btn-default btn-sm" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores</span></a>
 		</cfif>
 
 		<span class="divider">&nbsp;</span>
 	</cfif>
 
-	<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-small" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>
+	<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>
 
 	<span class="divider">&nbsp;</span>
 
 	<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+		<a href="#APPLICATION.htmlPath#/#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
 	</cfif>
 
-	<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-small" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+	<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
 
 </div>
 
@@ -99,7 +104,7 @@
 			$(document).ready(function() { 
 				
 				$("##dataTable").tablesorter({ 
-					widgets: ['zebra','filter','select'],
+					widgets: ['zebra','filter','select','stickyHeaders'],
 					sortList: [[0,1]] ,
 					headers: { 
 						1: { 
@@ -124,7 +129,7 @@
 						filter_searchDelay : 300,
 						filter_serversideFiltering: false,
 						filter_startsWith : false,
-						filter_useParsedRow : false,
+						filter_useParsedRow : false
 				    }
 				});
 				
@@ -146,7 +151,7 @@
 					<th>Fecha última modificación</th>
 					<cfloop query="fields">
 						<th>#fields.label#</th>
-						<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10>
+						<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10><!--- LISTS --->
 							<cfset listFields = true>
 						</cfif>
 					</cfloop>
@@ -182,7 +187,7 @@
 				
 				<cfif alreadySelected IS false>
 
-					<cfif ( isDefined("URL.data") AND (URL.data IS tableRows.row_id) ) OR ( selectFirst IS true AND tableRows.currentrow IS tableRows.recordCount AND app_version NEQ "mobile" ) >
+					<cfif ( isDefined("URL.row") AND (URL.row IS tableRows.row_id) ) OR ( selectFirst IS true AND tableRows.currentrow IS tableRows.recordCount AND app_version NEQ "mobile" ) >
 
 						<!---Esta acción solo se completa si está en la versión HTML2--->
 						<script type="text/javascript">
@@ -235,17 +240,14 @@
 									<cfelseif field_value IS false>
 										<cfset field_value = "No">
 									</cfif>
+									<cfset field_value = '<span lang="es">#field_value#</span>'>
 								<cfelse>
 
 									<cfif fields.field_type_id IS 2 OR fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- TEXTAREA --->
 										
-										<cfif len(field_value) GT 200>
+										<cfif len(field_value) GT 60><!---200--->
 
 											<cfif fields.field_type_id IS NOT 2>
-
-												<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="replaceP" returnvariable="field_value">
-													<cfinvokeargument name="string" value="#field_value#">
-												</cfinvoke>--->
 
 												<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="removeHTML" returnvariable="field_value">
 													<cfinvokeargument name="string" value="#field_value#">
@@ -253,11 +255,18 @@
 							
 											</cfif>
 
-											<cfset field_value = left(field_value, 180)&"...">
+											<!---<cfset field_value = left(field_value, 180)&"...">ANTES ESTABA ASÍ--->
+											<cfset summary_value = left(field_value, 55)&"...">
 
-											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
-												<cfinvokeargument name="string" value="#field_value#">
+											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="summary_value">
+												<cfinvokeargument name="string" value="#summary_value#">
 											</cfinvoke>
+
+											<cfif fields.field_type_id IS NOT 11><!--- IS NOT Very long text --->
+												<cfset field_value = '#summary_value#<span class="hidden">#field_value#</span>'>
+											<cfelse>
+												<cfset field_value = summary_value>
+											</cfif>											
 
 										<cfelseif fields.field_type_id IS 2>
 

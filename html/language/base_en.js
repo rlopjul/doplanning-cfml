@@ -20,6 +20,6 @@ jquery_lang_js.prototype.lang.en = {
 	'Introduzca los siguientes números:':'Enter the following numbers:',
 	'Su nueva contraseña ha sido enviada a su dirección de email':'Your new password has been sent to your email address',
 	'Enviar':'Send',
-	'Cancelar':'Cancel',
+	'Cancelar':'Cancel'
 	/*END remember_password.cfm*/
 }

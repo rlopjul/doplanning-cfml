@@ -41,14 +41,29 @@
 <link href="../assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
-<link href="../styles/styles.min.css" rel="stylesheet" type="text/css" media="all" />
+<!--[if lt IE 9]>
+	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+    <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+    <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
+<![endif]-->
+<!--[if lt IE 8]>
+  	<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-ie7/bootstrap-ie7.css" rel="stylesheet" rel="stylesheet">
+<![endif]-->
+<!--[if IE 7]>
+  	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet" >
+<![endif]-->
+
+<link href="../styles/styles.min.css?v=2.1" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
 <link href="../styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
-<!--using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"-->  
+<!---using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"--->  
 <link href="../styles/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
 <link href="../styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
 <!---<link href="../html/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
@@ -76,7 +91,7 @@
 
 <cfoutput>
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8" type="text/javascript"></script>
 <script type="text/javascript" src="../scripts/functions.min.js?v=2.1"></script>
 </cfoutput>
@@ -110,22 +125,22 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 <cfoutput>
-<div class="container-fluid"><!---login_container--->
+<div class="container"><!---login_container--->
 
-	<div class="row-fluid">
+	<div class="row">
 	
-		<div class="span2"><!---class="div_login_logo"--->
+		<div class="col-md-2"><!---class="div_login_logo"--->
 			<cfif APPLICATION.identifier EQ "dp"><a href="http://www.doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a></cfif>
 		</div>
 		
 		<cfif APPLICATION.identifier EQ "dp">
-		<div class="span8" style="text-align:center">
+		<div class="col-md-8" style="text-align:center">
 			<img src="download_login_image.cfm?abb=#client_abb#" alt="DoPlanning Banner" />
 		</div>
 		</cfif>
 		
 		<cfif APPLICATION.identifier EQ "dp">
-		<div class="span1 offset1" style="text-align:right;"><!---class="div_login_help"--->
+		<div class="col-md-2" style="text-align:right;"><!---class="div_login_help"--->
 			<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" lang="es"><i class="icon-question-sign"></i></a>
 		</div>
 		</cfif>

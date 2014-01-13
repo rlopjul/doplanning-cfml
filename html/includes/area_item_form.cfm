@@ -14,23 +14,22 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 
 <div class="div_head_subtitle">
 	<cfoutput>
-	<span lang="es"><cfif page_type IS 1>
+	<cfif page_type IS 1>
 		<cfif itemTypeId IS NOT 7 OR parent_kind EQ "area">
-			<cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#
+			<span lang="es"><cfif itemTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#</span>
 		<cfelse>
-			Respuesta a #itemTypeNameEs#
+			<span lang="es">Respuesta a #itemTypeNameEs#</span>
 		</cfif>
 	<cfelse>
-		Modificar #itemTypeNameEs#
+		<span lang="es">Modificar #itemTypeNameEs#</span>
 	</cfif> 
-	</span>
 	</cfoutput>
 </div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <div class="contenedor_fondo_blanco">
-<div class="div_send_message">
+<!---<div class="div_send_message">--->
 
 <cfif page_type IS 1 OR objectItem.user_in_charge EQ SESSION.user_id>
 	<cfset read_only = false>
@@ -47,9 +46,12 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 6><!---News, Events, Tasks--->
 
 <cfoutput>
-<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
+<!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>--->
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 </cfoutput>
 
 </cfif>
@@ -143,7 +145,7 @@ function onSubmitForm()
 </cfoutput>
 
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-inline" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-horizontal"  onsubmit="return onSubmitForm();"><!--- class="form-horizontal" class="form-inline" --->
 	<cfinput type="hidden" name="itemTypeId" value="#itemTypeId#">
 	<cfinput type="hidden" name="area_id" value="#area_id#">
 	<cfinput type="hidden" name="return_path" value="#return_path#">
@@ -157,7 +159,7 @@ function onSubmitForm()
 	<div id="submitDiv1" style="margin-bottom:5px;"><input type="submit" name="submit1" value="Enviar" class="btn btn-primary" lang="es"/>
 		<cfif page_type IS 2 OR isDefined("URL.message")>
 			<cfoutput>
-			<a href="#return_page#" class="btn" style="float:right;" lang="es">Cancelar</a>
+			<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 			</cfoutput>
 		</cfif>
 	</div>
@@ -166,8 +168,8 @@ function onSubmitForm()
 	
 	<cfif APPLICATION.moduleTwitter IS true AND area_type IS "web">
 	<cfoutput>
-	<div class="control-group">
-		<div class="controls">
+	<div class="row">
+		<div class="col-sm-12">
 			<label class="checkbox">
 				<img src="#APPLICATION.htmlPath#/assets/icons/twitter_icon.png" alt="Twitter"/> <cfinput type="checkbox" name="post_to_twitter" value="true" title="Enviar #itemTypeNameEs# a Twitter"> Publicar #itemTypeNameEs# en Twitter
 			</label>			
@@ -181,7 +183,7 @@ function onSubmitForm()
     <div id="submitDiv2"><input type="submit" name="submit2" value="Enviar" class="btn btn-primary" lang="es"/>
 		<cfif page_type IS 2 OR isDefined("URL.message")>
 			<cfoutput>
-			<a href="#return_page#" class="btn" style="float:right;" lang="es">Cancelar</a>
+			<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 			</cfoutput>
 		</cfif>
 	</div>
@@ -192,6 +194,6 @@ function onSubmitForm()
 </cfform>
 
 
-</div>
+<!---</div>END div_send_message--->
 
 </div>

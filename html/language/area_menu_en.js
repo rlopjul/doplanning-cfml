@@ -38,6 +38,6 @@ var area_menu_en = {
 	'Modo árbol':'Tree mode',
 	'Modo lista':'List mode',
 	'Actualizar':'Refresh',
-	'Abrir en nueva ventana':'Open in new window',
+	'Abrir en nueva ventana':'Open in new window'
 }
 $.extend(jquery_lang_js.prototype.lang.en, area_menu_en);

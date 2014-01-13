@@ -34,12 +34,11 @@
 	<cfelse>
 		<cfset message = getLogResponse.message>
 		<cfoutput>
-		<div class="alert alert-error" style="margin:10px;">&nbsp;<span lang="es">#message#</span></div>
+		<div class="alert alert-danger" style="margin:10px;">&nbsp;<span lang="es">#message#</span></div>
 		</cfoutput>
 	</cfif>
 
 <!---<cfelse>
-
 	<script type="text/javascript">
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>--->

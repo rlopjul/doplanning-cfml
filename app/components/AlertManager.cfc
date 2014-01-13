@@ -27,7 +27,7 @@
 	<!--- -------------------------------------- newAreaItem ----------------------------------- --->
 	
 	<cffunction name="newAreaItem" access="public" returntype="void">
-		<cfargument name="objectItem" type="struct" required="yes">
+		<cfargument name="objectItem" type="query" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="action" type="string" required="yes">
 		<cfargument name="send_sms" type="boolean" required="no" default="false">
@@ -51,13 +51,22 @@
 		<cfset var access_content = "">
 		<cfset var sms_message = "">
 		<cfset var alertContent = "">
-		<cfset var fromName = "">
+		<cfset var actionUser = "">
+		<cfset var actionUserName = "">
 		
 		<cfset var includeItemContent = true>
 		
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 		
 		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+		<cfif objectItem.recordCount IS 0><!---Item not found--->
+			
+			<cfset error_code = 501>
+		
+			<cfthrow errorcode="#error_code#">
+				
+		</cfif>		
 		
 		<cfif arguments.itemTypeId IS 7><!---Consultations--->
 			<!---<cfset includeItemContent = false>--->
@@ -97,15 +106,17 @@
 		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
 				<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
+				<cfinvokeargument name="fileTypeId" value="1">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 			</cfinvoke>
 		</cfif>
 		
 		<!---imageDownloadUrl--->
-		<cfif isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
+		<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadImageUrl">
 				<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
+				<cfinvokeargument name="fileTypeId" value="1">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 			</cfinvoke>			
@@ -264,7 +275,7 @@
 						<cfelse>
 						#langText[curLang].new_item.link#: </cfif><a href="#objectItem.link#" target="_blank" style="font-weight:bold;">#objectItem.link#</a><br/>
 						</cfif>
-						<cfif len(objectItem.iframe_url) GT 0>
+						<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
 						#langText[curLang].new_item.iframe_url#: 
 						<a href="#objectItem.iframe_url#" target="_blank" style="font-weight:bold;">#objectItem.iframe_url#</a><br/>
 						</cfif>
@@ -286,7 +297,7 @@
 							#langText[curLang].new_item.attached_file#: #objectItem.attached_file_name#<br/>
 							</cfif>
 						</cfif>
-						<cfif isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
+						<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
 							<cfif arguments.action NEQ "delete">
 							#langText[curLang].new_item.attached_image#: <a href="#downloadImageUrl#" target="_blank">#objectItem.attached_image_name#</a><br/>
 							<cfelse>
@@ -327,7 +338,7 @@
 				</cfif>
 				
 				<!---fromName--->
-				<cfif action NEQ "delete">
+				<!---<cfif action NEQ "delete">
 					<cfif itemTypeId IS NOT 6>
 						<cfset fromName = objectItem.user_full_name>
 					<cfelse><!---Tasks--->
@@ -337,7 +348,15 @@
 							<cfset fromName = objectItem.user_full_name>
 						</cfif>
 					</cfif>
-				</cfif>
+				</cfif>--->
+
+				<cfinvoke component="UserManager" method="getUser" returnvariable="actionUser">
+					<cfinvokeargument name="get_user_id" value="#user_id#">
+					<cfinvokeargument name="format_content" value="default">
+					<cfinvokeargument name="return_type" value="query">
+				</cfinvoke>
+
+				<cfset actionUserName = actionUser.user_full_name>
 
 				<!---INTERNAL USERS--->
 				<cfif len(listInternalUsers) GT 0>
@@ -350,7 +369,12 @@
 				
 					<cfsavecontent variable="contentInternal">
 					<cfoutput>
-			<!--- #action_name# #langText[curLang].common.on_the_area# --->#langText[curLang].common.area#: <b>#area_name#</b>.<br/>
+			<cfif arguments.action EQ "delete">
+				#action_name# #langText[curLang].common.by_user# #actionUserName# #langText[curLang].common.on_the_area#
+			<cfelse>
+				#langText[curLang].common.area#: 
+			</cfif>
+			<b>#area_name#</b>.<br/>
 			#langText[curLang].common.area_path#: #area_path#<br/><br/>
 			
 			#alertContent#
@@ -359,9 +383,7 @@
 
 					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-						<cfif len(fromName) GT 0>
-							<cfinvokeargument name="from_name" value="#fromName#">
-						</cfif>
+						<cfinvokeargument name="from_name" value="#actionUserName#">
 						<cfif listLen(listInternalUsers,";") GT 1>
 							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
 							<cfinvokeargument name="bcc" value="#listInternalUsers#">
@@ -392,7 +414,7 @@
 					
 					<cfsavecontent variable="contentExternal">
 					<cfoutput>
-			#action_name# #langText[curLang].common.on_the_area# <b>#area_name#</b> #langText[curLang].common.of_the_organization# #root_area.name#.<br/><br/>
+			#action_name# <cfif arguments.action EQ "delete">#langText[curLang].common.by_user# #actionUserName# </cfif>#langText[curLang].common.on_the_area# <b>#area_name#</b> #langText[curLang].common.of_the_organization# #root_area.name#.<br/><br/>
 			
 			#alertContent#
 					</cfoutput>		
@@ -401,9 +423,7 @@
 					
 					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-						<cfif len(fromName) GT 0>
-							<cfinvokeargument name="from_name" value="#fromName#">
-						</cfif>
+						<cfinvokeargument name="from_name" value="#actionUserName#">
 						<cfif listLen(listExternalUsers,";") GT 1>
 							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
 							<cfinvokeargument name="bcc" value="#listExternalUsers#">
@@ -680,8 +700,9 @@
 	<!---new/associate/replace file--->
 	<cffunction name="newFile" access="public" returntype="void">
 		<cfargument name="objectFile" type="query" required="yes">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="action" type="string" required="yes"><!---new/associate/replace/dissociate/delete/lock/unlock--->
+		<cfargument name="action" type="string" required="yes"><!---new/associate/replace/dissociate/delete/lock/unlock/new_version/new_current_version/...--->
 				
 		<cfset var method = "newFile">
 		
@@ -694,6 +715,7 @@
         <cfset var root_area = structNew()>
 		<cfset var access_content = "">
 		<cfset var foot_content = "">
+		<cfset var fileAlertContent = "">
 		<cfset var alertContent = "">
 		<cfset var actionUserName = "">
 		
@@ -734,7 +756,7 @@
 				<area id="#area_id#"/> 
 				<order parameter="family_name" order_type="asc" />
 				<preferences 
-				<cfif arguments.action EQ "replace">
+				<cfif arguments.action EQ "replace" OR arguments.action EQ "new_version">
 					notify_replace_file="true"
 				<cfelseif arguments.action EQ "dissociate" OR arguments.action EQ "delete">
 					notify_delete_file="true"		
@@ -811,6 +833,31 @@
 						<cfset action_value = langText[curLang].new_file.unlocked>
 					</cfcase>
 
+					<cfcase value="new_version"><!--- new_version --->
+						<cfset subject_action = langText[curLang].new_file.new_version>
+						<cfset action_value = langText[curLang].new_file.replaced>
+					</cfcase>
+
+					<cfcase value="new_current_version"><!--- new_current_version --->
+						<cfset subject_action = langText[curLang].new_file.new_current_version>
+						<cfset action_value = langText[curLang].new_file.replaced>
+					</cfcase>
+
+					<cfcase value="validate_version"><!--- validate_version --->
+						<cfset subject_action = langText[curLang].new_file.validated_version>
+						<cfset action_value = langText[curLang].new_file.validated>
+					</cfcase>
+
+					<cfcase value="reject_version"><!--- reject_version --->
+						<cfset subject_action = langText[curLang].new_file.rejected_version>
+						<cfset action_value = langText[curLang].new_file.rejected>
+					</cfcase>
+
+					<cfcase value="approve_version"><!--- approve_version --->
+						<cfset subject_action = langText[curLang].new_file.approved_version>
+						<cfset action_value = langText[curLang].new_file.approved>
+					</cfcase>
+
 				</cfswitch>
 
 				<cfset subject = "[#root_area.name#][#subject_action#] "&objectFile.name>
@@ -819,6 +866,7 @@
 					
 					<cfinvoke component="AlertManager" method="getFileAccessContent" returnvariable="access_content">
 						<cfinvokeargument name="file_id" value="#objectFile.id#"/>
+						<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 						<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 						<cfinvokeargument name="language" value="#curLang#">
 					</cfinvoke>
@@ -829,21 +877,34 @@
 					<cfinvokeargument name="language" value="#curLang#">
 				</cfinvoke>
 
-				
+				<cfinvoke component="AlertManager" method="getFileAlertContent" returnvariable="fileAlertContent">
+					<cfinvokeargument name="objectFile" value="#objectFile#">
+					<cfinvokeargument name="language" value="#curLang#">
+				</cfinvoke>
 
+			
 				<cfsavecontent variable="alertContent">
 					<cfoutput>
 					<cfif arguments.action NEQ "new" AND arguments.action NEQ "associate">
-						#subject_action#:<br/>
+						<strong>#subject_action#</strong>:<br/><br/>
 					</cfif>
 					#langText[curLang].new_file.user#: <strong><!---#objectFile.user_full_name#--->#actionUserName#</strong><br />
-					#langText[curLang].new_file.file_name#: <strong>#objectFile.name#</strong><br />
-					#langText[curLang].new_file.upload_date#: <strong>#objectFile.uploading_date#</strong><br/>
-					<cfif len(objectFile.replacement_date) GT 0>
-					#langText[curLang].new_file.replacement_date#: <strong>#objectFile.replacement_date#</strong><br/>
-					</cfif>
-					#langText[curLang].new_file.description#:<br/><br/>
-					<div style="padding-left:15px;">#objectFile.description#</div>
+
+					#fileAlertContent#
+					<!--- 
+					#langText[curLang].new_file.user#: <strong><!---#objectFile.user_full_name#--->#actionUserName#</strong><br />
+										#langText[curLang].new_file.file_name#: <strong>#objectFile.name#</strong><br />
+										#langText[curLang].new_file.upload_date#: <strong>#objectFile.uploading_date#</strong><br/>
+										<cfif len(objectFile.replacement_date) GT 0>
+											<cfif arguments.fileTypeId IS NOT 3>
+												#langText[curLang].new_file.replacement_date#: <strong>#objectFile.replacement_date#</strong><br/>
+											<cfelse>
+												#langText[curLang].new_file.last_version_date#: <strong>#objectFile.replacement_date#</strong><br/>
+											</cfif>
+										</cfif>
+										#langText[curLang].new_file.description#:<br/><br/>
+										<div style="padding-left:15px;">#objectFile.description#</div> --->
+					
 					<cfif len(access_content) GT 0>
 						<br/>
 						<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>
@@ -935,6 +996,7 @@
 				
 				<cfinvoke component="AlertManager" method="newFile">
 					<cfinvokeargument name="objectFile" value="#arguments.objectFile#">
+					<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#"/>
 					<cfinvokeargument name="area_id" value="#getFileAreas.area_id#">
 					<cfinvokeargument name="action" value="replace">
 				</cfinvoke>	
@@ -945,6 +1007,7 @@
 		
 	</cffunction>
 	
+
 
 	<!--- -------------------------------------- changeFileUser ------------------------------------ --->
 
@@ -1117,7 +1180,6 @@
 		</cfinvoke>	
 		
 				
-
 	</cffunction>
 
 
@@ -1125,7 +1187,7 @@
 	
 	<cffunction name="getChangeFileUserAlertContents" access="private" returntype="struct">
 		<cfargument name="language" type="string" required="true">
-		<cfargument name="objectFile" type="any" required="true">
+		<cfargument name="objectFile" type="query" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="new_user_full_name" type="string" required="true">
  				
@@ -1137,6 +1199,7 @@
 
 		<cfinvoke component="AlertManager" method="getFileAccessContent" returnvariable="accessContent">
 			<cfinvokeargument name="file_id" value="#objectFile.id#"/>
+			<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#"/>
 			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			<cfinvokeargument name="language" value="#arguments.language#">
 		</cfinvoke>
@@ -1166,11 +1229,43 @@
 	</cffunction>
 
 
+	<!--- --------------------------- getFileAlertContent --------------------------- --->
+	
+	<cffunction name="getFileAlertContent" access="private" returntype="string">
+		<cfargument name="objectFile" type="query" required="true">
+		<cfargument name="language" type="string" required="true">
+ 				
+		<cfset var method = "getFileAlertContent">
+
+		<cfset var alertContent = "">
+
+		<cfsavecontent variable="alertContent">
+			<cfoutput>
+			#langText[arguments.language].new_file.file_name#: <strong>#objectFile.name#</strong><br />
+			#langText[arguments.language].new_file.file#: <strong>#objectFile.file_name#</strong><br />
+			#langText[arguments.language].new_file.upload_date#: <strong>#objectFile.uploading_date#</strong><br/>
+			<cfif len(objectFile.replacement_date) GT 0>
+				<cfif objectFile.file_type_id IS NOT 3>
+					#langText[arguments.language].new_file.replacement_date#: <strong>#objectFile.replacement_date#</strong><br/>
+				<cfelse>
+					#langText[arguments.language].new_file.last_version_date#: <strong>#objectFile.replacement_date#</strong><br/>
+				</cfif>
+			</cfif>
+			#langText[arguments.language].new_file.description#:<br/><br/>
+			<div style="padding-left:15px;">#objectFile.description#</div>
+			</cfoutput>
+		</cfsavecontent>
+		
+		<cfreturn alertContent>
+
+	</cffunction>
+
 
 	<!--- --------------------------- getFileAccessContent --------------------------- --->
 	
 	<cffunction name="getFileAccessContent" access="private" returntype="string">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="language" type="string" required="true">
  				
@@ -1180,11 +1275,13 @@
 
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
 			<cfinvokeargument name="file_id" value="#arguments.file_id#">
+			<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
 		</cfinvoke>
 		
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
 			<cfinvokeargument name="file_id" value="#arguments.file_id#">
+			<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 		</cfinvoke>
 
 		<cfif APPLICATION.twoUrlsToAccess IS false>
@@ -1233,6 +1330,152 @@
 		<cfreturn footContent>
 
 	</cffunction>
+
+
+
+
+
+	<!--- -------------------------------------- requestFileApproval ------------------------------------ --->
+
+	<cffunction name="requestFileApproval" access="public" returntype="void">
+		<cfargument name="objectFile" type="query" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="action" type="string" required="true"><!--- revision/approval --->
+				
+		<cfset var method = "requestFileApproval">
+		
+		<cfset var area_name = "">
+		<cfset var area_path = "">
+        <cfset var root_area = structNew()>
+        <cfset var action_user_id = "">
+        <cfset var actionSubject = "">
+        <cfset var actionText = "">
+        <cfset var fileAlertContent = "">
+		
+		<cfinclude template="includes/functionStartOnlySession.cfm">
+		
+		<!---Get area name--->
+		<cfquery name="selectAreaQuery" datasource="#client_dsn#">
+			SELECT id, name 
+			FROM #client_abb#_areas
+			WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+		
+		<cfif selectAreaQuery.recordCount GT 0>
+		
+			<cfset area_name = selectAreaQuery.name>
+			
+		<cfelse><!---The area does not exist--->
+			
+			<cfset error_code = 301>
+			
+			<cfthrow errorcode="#error_code#">
+		
+		</cfif>
+		
+		<cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
+		</cfinvoke>
+		<!---En el asunto se pone el nombre del área raiz--->
+		
+		<cfif arguments.action IS "revision">
+			<cfset action_user_id = objectFile.reviser_user>
+		<cfelse>
+			<cfset action_user_id = objectFile.approver_user>
+		</cfif>
+
+		<cfinvoke component="UserManager" method="getUser" returnvariable="actionUser">
+			<cfinvokeargument name="get_user_id" value="#action_user_id#">
+			<cfinvokeargument name="format_content" value="default">
+			<cfinvokeargument name="return_type" value="query">
+		</cfinvoke>
+
+		<cfset actionUserFullName = actionUser.user_full_name>
+
+		<cfif arguments.action IS "revision">
+			<cfset actionSubject = langText[actionUser.language].file_revision.file_revision_request>
+			<cfset actionText = langText[actionUser.language].file_revision.you_have_to_revise>
+		<cfelse>
+			<cfset actionSubject = langText[actionUser.language].file_approval.file_approval_request>
+			<cfset actionText = langText[actionUser.language].file_approval.you_have_to_approve>
+		</cfif>
+
+		<!---ACTION USER--->
+		<cfset actionUserSubject = "[#root_area.name#][#actionSubject#] "&objectFile.name>
+					
+		<cfinvoke component="AlertManager" method="getFileAccessContent" returnvariable="accessContent">
+			<cfinvokeargument name="file_id" value="#objectFile.id#"/>
+			<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#"/>
+			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+			<cfinvokeargument name="language" value="#actionUser.language#">
+		</cfinvoke>
+
+		<cfinvoke component="AlertManager" method="getFileFootContent" returnvariable="footContent">
+			<cfinvokeargument name="language" value="#actionUser.language#">
+		</cfinvoke>
+
+		<cfinvoke component="AlertManager" method="getFileAlertContent" returnvariable="fileAlertContent">
+			<cfinvokeargument name="objectFile" value="#arguments.objectFile#">
+			<cfinvokeargument name="language" value="#actionUser.language#">
+		</cfinvoke>
+
+		<cfsavecontent variable="commonContent">
+			<cfoutput>
+			#fileAlertContent#
+			<br/>
+			<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#accessContent#</div>
+			</cfoutput>
+		</cfsavecontent>
+
+		<cfif actionUser.internal_user IS true><!---INTERNAL USER--->
+			
+			<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+			
+			<cfprocessingdirective suppresswhitespace="true">
+			<cfsavecontent variable="actionUserContentInternal">
+			<cfoutput>
+	#actionText#<br/><br/>
+
+	#langText[actionUser.language].common.area#: <strong>#area_name#</strong>.<br/>
+	#langText[actionUser.language].common.area_path#: #area_path#.<br/><br/>
+	
+	#commonContent#
+			</cfoutput>
+			</cfsavecontent>
+			</cfprocessingdirective>				
+
+		<cfelse><!---EXTERNAL USER--->
+
+			<cfprocessingdirective suppresswhitespace="true">
+			<cfsavecontent variable="actionUserContentExternal">
+			<cfoutput>
+	#actionText#<br/><br/>
+
+	#langText[actionUser.language].common.area#: <strong>#area_name#</strong> #langText[actionUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
+	
+	#commonContent#
+			</cfoutput>
+			</cfsavecontent>
+			</cfprocessingdirective>
+
+		</cfif>
+		
+		<cfinvoke component="EmailManager" method="sendEmail">
+			<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+			<cfinvokeargument name="to" value="#actionUser.email#">
+			<cfinvokeargument name="subject" value="#actionUserSubject#">
+			<cfif actionUser.internal_user IS true><!---INTERNAL USER--->
+				<cfinvokeargument name="content" value="#actionUserContentInternal#">
+			<cfelse>
+				<cfinvokeargument name="content" value="#actionUserContentExternal#">
+			</cfif>
+			<cfinvokeargument name="foot_content" value="#footContent#">
+		</cfinvoke>	
+		
+				
+	</cffunction>
+
 
 
 

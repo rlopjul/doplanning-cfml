@@ -10,7 +10,7 @@
 
 	
 	<cfif isDefined("cfcatch")>
-		<cfset error_message = "#cfcatch.Message#">
+		<cfset error_message = cfcatch.Message>
 		<cfif NOT isDefined("error_code")>
 			<cfif isDefined("cfcatch.errorcode") AND isValid("integer",cfcatch.errorcode)>
 				<cfset error_code = cfcatch.errorcode>

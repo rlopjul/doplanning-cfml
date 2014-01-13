@@ -104,22 +104,27 @@
 
 				<cfset area_id = getTableQuery.area_id>
 
-				<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
+				<cfif arguments.tableTypeId IS NOT 3 OR getTableQuery.general IS false><!---No es tipología general--->
 
-					<!--- checkTableWithInheritanceAccess --->
-					<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
-						<cfinvokeargument name="table_id" value="#arguments.table_id#">
-						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
 
-						<cfinvokeargument name="table_area_id" value="#area_id#">
-					</cfinvoke>		
+						<!--- checkTableWithInheritanceAccess --->
+						<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
+							<cfinvokeargument name="table_id" value="#arguments.table_id#">
+							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 
-				<cfelseif arguments.tableTypeId IS NOT 3 OR getTableQuery.general IS NOT true><!---No es tipología general--->
+							<cfinvokeargument name="table_area_id" value="#area_id#">
+						</cfinvoke>		
+
+					<cfelse>
+						
+						<!---checkAreaAccess--->
+						<cfinclude template="includes/checkAreaAccess.cfm">
+
+					</cfif>
 					
-					<!---checkAreaAccess--->
-					<cfinclude template="includes/checkAreaAccess.cfm">
-
 				</cfif>
+				
 
 				<cfset response = {result=true, table=#getTableQuery#}>
 
@@ -463,22 +468,27 @@
 
 				<cfset area_id = getTableFieldsQuery.area_id>
 
-				<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
+				<cfif arguments.tableTypeId IS NOT 3 OR getTableFieldsQuery.general IS false><!---No es tipología general--->
 
-					<!--- checkTableWithInheritanceAccess --->
-					<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
-						<cfinvokeargument name="table_id" value="#arguments.table_id#">
-						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
 
-						<cfinvokeargument name="table_area_id" value="#area_id#">
-					</cfinvoke>					
+						<!--- checkTableWithInheritanceAccess --->
+						<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
+							<cfinvokeargument name="table_id" value="#arguments.table_id#">
+							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 
-				<cfelseif getTableFieldsQuery.structure_available IS false AND getTableFieldsQuery.general IS false>
+							<cfinvokeargument name="table_area_id" value="#area_id#">
+						</cfinvoke>					
 
-					<!--- checkAreaAccess --->
-					<cfinclude template="includes/checkAreaAccess.cfm">
+					<cfelseif getTableFieldsQuery.structure_available IS false><!--- La estructura no está compartida --->
+
+						<!--- checkAreaAccess --->
+						<cfinclude template="includes/checkAreaAccess.cfm">
+
+					</cfif>
 
 				</cfif>
+
 			</cfif>
 
 			<cfset response = {result=true, tableFields=getTableFieldsQuery}>

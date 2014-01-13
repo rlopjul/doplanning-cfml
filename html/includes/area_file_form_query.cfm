@@ -1,6 +1,7 @@
 <!---page_types
 1 Create new file
 2 Modify file
+3 Publish area file
 --->
 
 <cfif isDefined("URL.area") AND isValid("integer",URL.area)>
@@ -8,13 +9,23 @@
 <cfelse>
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
-	
+
+<cfif isDefined("FORM.fileTypeId") AND isNumeric(FORM.fileTypeId)>
+	<cfset fileTypeId = FORM.fileTypeId>
+<cfelseif isDefined("URL.fileTypeId") AND isNumeric(URL.fileTypeId)>
+	<cfset fileTypeId = URL.fileTypeId>
+<cfelse>
+	<cflocation url="empty.cfm" addtoken="no">
+</cfif>
+
 <cfif isDefined("FORM.page")>
 
 	<cfif page_type IS 1>
 		<cfset methodAction = "createFile">
-	<cfelse>
+	<cfelseif page_type IS 2>
 		<cfset methodAction = "updateFile">
+	<cfelseif page_type IS 3>
+		<cfset methodAction = "publishFileVersion">
 	</cfif>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="#methodAction#" argumentcollection="#FORM#" returnvariable="actionResponse">
@@ -35,16 +46,29 @@
 
 		<cfset file = FORM>
 
+		<cfif page_type IS 3>
+			<cfset publicationArea = FORM>
+		</cfif>
+
 	</cfif>
 
 <cfelse>
 
 	<cfif page_type IS 1><!--- New file --->
-
-		<!---<cfset return_page = "files.cfm?area=#area_id#">--->
 		
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getEmptyFile" returnvariable="file">
 		</cfinvoke>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+			<cfinvokeargument name="format_content" value="default">
+			<cfinvokeargument name="return_type" value="query">
+		</cfinvoke>
+
+		<cfset file.reviser_user = userQuery.id>
+		<cfset file.reviser_user_full_name = userQuery.user_full_name>
+		<cfset file.approver_user = userQuery.id>
+		<cfset file.approver_user_full_name = userQuery.user_full_name>
 
 	<cfelse>
 
@@ -54,12 +78,48 @@
 			<cflocation url="empty.cfm" addtoken="no">
 		</cfif>
 
-		<!---<cfset return_page = "file.cfm?area=#area_id#&file=#file_id#">--->
+		<cfif page_type IS 3>
+			<cfif isDefined("URL.version") AND isNumeric(URL.version)>
+				<cfset version_id = URL.version>
+			<cfelse>
+				<cflocation url="empty.cfm" addtoken="no">				
+			</cfif>
+		</cfif>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
 			<cfinvokeargument name="file_id" value="#file_id#">
+			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 		</cfinvoke>
 
+		<!---<cfif isNumeric(file.reviser_user)>
+			
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="reviserUserQuery">
+				<cfinvokeargument name="user_id" value="#file.reviser_user#">
+				<cfinvokeargument name="format_content" value="default">
+				<cfinvokeargument name="return_type" value="query">
+			</cfinvoke>
+			<cfset file.reviser_user_full_name = reviserUserQuery.user_full_name>
+
+		</cfif>
+
+		<cfif isNumeric(file.approver_user)>
+			
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="approverUserQuery">
+				<cfinvokeargument name="user_id" value="#file.approver_user#">
+				<cfinvokeargument name="format_content" value="default">
+				<cfinvokeargument name="return_type" value="query">
+			</cfinvoke>
+			<cfset file.approver_user_full_name = approverUserQuery.user_full_name>
+
+		</cfif>--->
+
+		<cfif page_type IS 3>
+			
+			<cfset publicationArea = structNew()>
+			<cfset publicationArea.publication_area_id = "">
+			<cfset publicationArea.publication_area_name = "">
+
+		</cfif>
 
 	</cfif>
 

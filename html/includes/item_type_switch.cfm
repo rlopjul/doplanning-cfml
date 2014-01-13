@@ -175,6 +175,20 @@
 	
    	</cfcase> 
 
+
+   	<!---
+   	<cfcase value="15"><!---files edited--->
+
+		<cfset itemTypeName = "file_edited">
+		<cfset itemTypeNameP = "files_edited">
+		
+		<cfset itemTypeNameEs = "Archivo en edición">
+		<cfset itemTypeNameEsP = "Archivos en edición">
+
+		<cfset itemTypeGender = "male">
+	
+   	</cfcase>---> 
+
    	
 
 </cfswitch>

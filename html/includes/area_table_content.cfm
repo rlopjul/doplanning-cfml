@@ -94,18 +94,21 @@
 
 	<cfif is_user_table_area_responsible><!--- Table Area Responsible --->
 
-		<a href="#tableTypeName#_modify.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-small btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+		<a href="#tableTypeName#_modify.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 	
-		<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #tableTypeNameEs#" class="btn btn-danger btn-small"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+		<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #tableTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 		
 	</cfif>
 
-	<cfif is_user_table_area_responsible OR objectItem.user_in_charge EQ SESSION.user_id>
+	<cfif objectItem.user_in_charge EQ SESSION.user_id OR is_user_table_area_responsible>
 		
-		<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-small"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>	
+		<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
+
+		<cfif tableTypeId IS NOT 3>
+			<a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>					
+		</cfif>
 
 	</cfif>
-
 
 	<cfif is_user_area_responsible><!--- Area Responsible --->
 		
@@ -118,11 +121,11 @@
 			<cfset default_table_id = objectArea.default_typology_id> 
 			<cfif default_table_id IS table_id>
 
-				<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=removeAreaDefaultTable&table_id=#table_id#&area_id=#area_id#&tableTypeId=#tableTypeId##url_return_page#" onclick="return confirmRemoveDefaultTable();" title="Definir #tableTypeNameEs# por defecto para este área" class="btn btn-small btn-warning"><i class="icon-pushpin icon-rotate-270"></i> <span lang="es">Quitar #tableTypeNameEs# por defecto</span></a>
+				<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=removeAreaDefaultTable&table_id=#table_id#&area_id=#area_id#&tableTypeId=#tableTypeId##url_return_page#" onclick="return confirmRemoveDefaultTable();" title="Definir #tableTypeNameEs# por defecto para este área" class="btn btn-sm btn-warning"><i class="icon-pushpin icon-rotate-270"></i> <span lang="es">Quitar #tableTypeNameEs# por defecto</span></a>
 
 			<cfelse>
 
-				<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=setAreaDefaultTableRemote&table_id=#table_id#&area_id=#area_id#&tableTypeId=#tableTypeId##url_return_page#" onclick="return confirmSetDefaultTable();" title="Definir #tableTypeNameEs# por defecto para este área" class="btn btn-small btn-info"><i class="icon-pushpin"></i> <span lang="es">Definir #tableTypeNameEs# por defecto</span></a>
+				<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=setAreaDefaultTableRemote&table_id=#table_id#&area_id=#area_id#&tableTypeId=#tableTypeId##url_return_page#" onclick="return confirmSetDefaultTable();" title="Definir #tableTypeNameEs# por defecto para este área" class="btn btn-sm btn-info"><i class="icon-pushpin"></i> <span lang="es">Definir #tableTypeNameEs# por defecto</span></a>
 
 			</cfif>
 
@@ -131,11 +134,11 @@
 	</cfif>
 		
 	<cfif app_version NEQ "mobile">
-	<a href="#APPLICATION.htmlPath#/#tableTypeName#.cfm?#tableTypeName#=#table_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-small" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+	<a href="#APPLICATION.htmlPath#/#tableTypeName#.cfm?#tableTypeName#=#table_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 	</cfif>
 
 	<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
-		<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#tableTypeName#=#objectItem.table_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-small"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
+		<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#tableTypeName#=#objectItem.table_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
 		<cfif APPLICATION.moduleConvertFiles EQ true>
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 				<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
@@ -168,13 +171,13 @@
 
 	<!---En estos enlaces, el valor de area es necesario para seleccionarla cuando el elemento es el resultado de una búsqueda--->
 	<cfif itemTypeId IS 11 OR itemTypeId IS 12>
-		<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-small" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
+		<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
 	</cfif>
 	<cfif is_user_table_area_responsible IS true>
-		<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-small" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos</span></a>
+		<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos</span></a>
 
 		<cfif APPLICATION.moduleListsWithPermissions IS true AND itemTypeId IS 11><!---List with permissions--->
-			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-small" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores</span></a>
+			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores</span></a>
 		</cfif>
 
 	</cfif>

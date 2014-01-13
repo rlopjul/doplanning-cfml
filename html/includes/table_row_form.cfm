@@ -57,7 +57,7 @@
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-	<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="row_form" class="form-inline" onsubmit="return onSubmitForm();">
+	<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="row_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 
 		<script type="text/javascript">
 			var railo_custom_form=new RailoForms('row_form');
@@ -67,7 +67,7 @@
 			<input type="submit" value="Guardar" class="btn btn-primary"/>
 
 			<cfif page_type IS 2>
-				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn" style="float:right">Cancelar</a>
+				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-default" style="float:right">Cancelar</a>
 			</cfif>
 		</div>
 		<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
@@ -84,7 +84,7 @@
 		<div id="submitDiv2" style="margin-top:20px;">
 			<input type="submit" value="Guardar" class="btn btn-primary"/>
 			<cfif page_type IS 2>
-				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn" style="float:right">Cancelar</a>
+				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-default" style="float:right">Cancelar</a>
 			</cfif>
 		</div>
 

@@ -19,7 +19,9 @@
 	
 	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
+	<cfset timeZoneTo = "+1:00">
 	
+
 	<!---getItem--->
 	
 	<cffunction name="getItem" output="false" returntype="query" access="public">
@@ -38,26 +40,34 @@
 				SELECT items.id, items.id AS item_id, items.parent_id, items.parent_kind, items.user_in_charge,  items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link,
 				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(items.creation_date, '#dateTimeFormat#') AS creation_date 
+					, DATE_FORMAT(CONVERT_TZ(items.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date 
 				<cfelse>
 					, items.creation_date
 				</cfif>
 				<cfif arguments.itemTypeId IS NOT 1><!---Is not Messages--->
 					<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(items.last_update_date, '#dateTimeFormat#') AS last_update_date 
-					<cfelse>, items.last_update_date</cfif>
+					, DATE_FORMAT(CONVERT_TZ(items.last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date 
+					<cfelse>
+					, items.last_update_date
+					</cfif>
 					, items.attached_image_id, items.attached_image_name
 				</cfif>
 				<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
 					, items.link_target
 				</cfif>
 				<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-				, items.start_date, items.end_date
+					<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(CONVERT_TZ(items.start_date,'SYSTEM','#timeZoneTo#'), '#dateFormat#') AS start_date
+					, DATE_FORMAT(CONVERT_TZ(items.end_date,'SYSTEM','#timeZoneTo#'), '#dateFormat#') AS end_date
+					<cfelse>
+					, items.start_date, items.end_date
+					</cfif>
 					<cfif itemTypeId IS 5><!---Events--->
-					, items.start_time, items.end_time
-					, items.place
+						, items.start_time, items.end_time
+						, items.place
 					<cfelse><!---Tasks--->
-					, items.recipient_user, items.done, items.estimated_value, items.real_value
+						, items.recipient_user, items.done, items.estimated_value, items.real_value
+						, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name
 					</cfif>
 				</cfif>
 				<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
@@ -82,7 +92,10 @@
 				INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
 				LEFT JOIN #client_abb#_files AS files ON files.id = items.attached_file_id
 				<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5>
-				INNER JOIN #client_abb#_iframes_display_types AS iframes_display_types ON items.iframe_display_type_id = iframes_display_types.iframe_display_type_id
+					INNER JOIN #client_abb#_iframes_display_types AS iframes_display_types ON items.iframe_display_type_id = iframes_display_types.iframe_display_type_id
+				</cfif>
+				<cfif arguments.itemTypeId IS 6><!--- Task --->
+					INNER JOIN #client_abb#_users AS recipient_users ON items.recipient_user = recipient_users.id
 				</cfif>
 				WHERE items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">; 
 			</cfquery>
@@ -417,7 +430,7 @@
 		<cfset var method = "listAllAreaItems">
 			
 			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, attached_file_id, NULL AS file_type_id">
-			<cfset var fileColums = "id, name, IFNULL(files.replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id, file_type_id">
+			<cfset var fileColums = "id, name, IFNULL(replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id, file_type_id">
 
 			<cfset var commonColumsNull = "NULL AS end_date, NULL AS done">
 
@@ -541,16 +554,17 @@
 				UNION ALL
 				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 10 AS itemTypeId
 				FROM #client_abb#_files AS files
-				<!---
-				<cfif len(arguments.area_type) IS 0><!--- IS NOT WEB --->
-				LEFT JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id 
-				WHERE (files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> OR area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">) 
-					AND files.status='ok'
-				<cfelse>--->
+
 				INNER JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id 
 					AND area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
-					AND files.status='ok'
-				<!---</cfif>--->)
+					AND files.status='ok')
+				<!---
+				<!--- Area files edited --->
+				UNION ALL
+				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 15 AS itemTypeId
+				FROM #client_abb#_files_edited AS files_edited
+					WHERE files_edited.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND files_edited.status='ok')--->
 				) AS items
 				INNER JOIN #client_abb#_users AS users
 				ON items.user_in_charge = users.id

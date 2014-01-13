@@ -6,7 +6,7 @@ var area_content_en = {
 	
 	/*area_content.cfm*/
 	'Árbol de la organización':'Organization tree',
-	'No hay más areas dentro de esta.':'No more areas within this',
+	'No hay más áreas dentro de esta.':'No more areas within this'
 	/*END area_content.cfm*/
 };
 $.extend(jquery_lang_js.prototype.lang.en, area_content_en);

@@ -159,6 +159,9 @@
 					<cfset response_message = "Usuario o contraseña incorrecta.">
 					
 					<cfset response = {result=false, message=#response_message#}>
+
+					<!---IMPORTANTE: aquí se guarda log del intento de login fallido--->
+					<cfinclude template="includes/logRecordNoSession.cfm">
 								
 				</cfif>
 			

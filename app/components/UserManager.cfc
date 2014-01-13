@@ -519,7 +519,7 @@
 	<!---Obtiene si el usuario es interno o no--->
 	
 	<cffunction name="isInternalUser" returntype="boolean" access="public">
- 		<cfargument name="get_user_id" type="numeric" required="yes">
+ 		<cfargument name="get_user_id" type="numeric" required="true">
 		
 		<cfset var method = "isInternalUser">
 		

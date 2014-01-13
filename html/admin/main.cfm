@@ -22,7 +22,17 @@
 
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
+<!--[if lt IE 9]>
+	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+    <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+    <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
+<![endif]-->
+
+<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
 
 <cfif APPLICATION.identifier EQ "dp">
@@ -30,7 +40,6 @@
 <cfelse>
 <link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
-<!--- <link rel="stylesheet" type="text/css" href="../jquery/jstree/themes/dp/style.css"/> --->
 
 <script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
@@ -40,7 +49,17 @@
 <script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modal.js"></script>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.js" charset="utf-8" ></script>
+<script type="text/javascript">
+	<!---To enable the loading spinner in Bootstrap 3--->
+	$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
+    '<div class="loading-spinner" style="width: 200px; margin-left: -100px;">' +
+        '<div class="progress progress-striped active">' +
+            '<div class="progress-bar" style="width: 100%;"></div>' +
+        '</div>' +
+    '</div>';
+</script>
+
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8" type="text/javascript"></script>
 
 </cfoutput>
@@ -97,7 +116,7 @@
 <script type="text/javascript">
 	
 	function resizeIframe() {
-		var newHeight = windowHeight()-56;
+		var newHeight = windowHeight()-66;
 		$(".iframes").height(newHeight);
 		
 		var userIframeHeight = 300;
@@ -247,7 +266,7 @@
 			
 		});
 		
-		$('a[data-toggle="tab"]').on('shown', function (e) { //On show tab
+		$('a[data-toggle="tab"]').on('show.bs.tab', function (e) { //On show tab
 			
 			var pattern=/#.+/gi //use regex to get anchor(==selector)
 			currentTab = e.target.toString().match(pattern)[0];
@@ -317,7 +336,7 @@
 		
 		<div class="tabbable"><!---Tab Panel--->
 	
-		  <ul class="nav nav-pills" id="dpTab" style="margin-bottom:0px; clear:none;">
+		  <ul class="nav nav-pills" id="dpTab" style="clear:none;padding-bottom:5px;">
 			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
@@ -326,7 +345,9 @@
 		  </ul>
 		  
 		  <cfoutput>
-		  <div style="float:right; clear:none;">
+		  <div style="clear:none; text-align:center">
+
+		  	<span style="line-height:35px; color:##666666; font-size:12px"><b>Administración</b> beta</span>
 		  
 		  	<div style="float:right; text-align:right; clear:none;">
 				<a href="../preferences.cfm" title="Preferencias del usuario" class="link_user_logged" lang="es">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
@@ -356,7 +377,7 @@
 										</cfif> --->
 					
 				
-					<a href="preferences.cfm" title="Preferencias del usuario" lang="es">
+					<a href="../preferences.cfm" title="Preferencias del usuario" lang="es">
 					<cfif len(objectUser.image_file) GT 0>
 						<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
 					<cfelse>
@@ -374,26 +395,57 @@
 		  
 			<div class="tab-pane active" id="tab1"><!---Tab Tree--->
 				
-				<div class="form-inline" style="padding-bottom:5px;">
-										
-					<div class="input-append">
-						<input type="text" name="text" id="searchText" value="" class="input-medium" />
-						<button onClick="searchTextInTree()" class="btn" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
-					</div>					
-					
-					<a onClick="updateTree();" class="btn" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
-					<a onClick="expandTree();" class="btn" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
-					<a onClick="collapseTree();" class="btn" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
-					
-					<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
+				<!---<div class="form-inline" style="padding-bottom:5px;">--->
+				<div class="container" style="width:100%;">
+					<div class="row" style="padding-bottom:5px;">
+						
+						<div class="col-sm-11" style="padding:0;">
 
-					<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover área</span></a>
+							<div class="btn-toolbar">
 
-					<a onclick="openAreaModifyModal()" class="btn btn-info" title="Modificar área" lang="es"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
+								<div class="btn-group">
+									<div class="input-group" style="width:260px;" >
+										<input type="text" name="text" id="searchText" value="" class="form-control"/>
+										<span class="input-group-btn">
+											<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+										</span>
+									</div>
+								</div>
 
-					<a onClick="loadModal('html_content/area_delete.cfm?area='+curAreaId);" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
+								<div class="btn-group">
+									<a onClick="updateTree();" class="btn btn-default" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
+								</div>
 
-					<a href="../main.cfm" class="btn btn-info" style="float:right"><i class="icon-arrow-left"></i> <span>Volver</span></a>
+								<div class="btn-group">
+									<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+									<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+								</div>
+
+								<div class="btn-group">
+									<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
+								</div>
+								<div class="btn-group">
+									<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover área</span></a>
+								</div>
+								<div class="btn-group">
+									<a onclick="openAreaModifyModal()" class="btn btn-info" title="Modificar área" lang="es"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
+								</div>
+
+								<div class="btn-group">
+									<a onClick="loadModal('html_content/area_delete.cfm?area='+curAreaId);" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
+								</div>
+
+							</div>
+
+						</div>
+
+						<div class="col-sm-1" style="padding:0;">	
+
+							<a href="../main.cfm" class="btn btn-info" style="float:right"><i class="icon-arrow-left"></i> <span>Volver</span></a>
+
+						</div>
+
+					</div>
 				</div>
 
 				<div class="form-inline" style="padding-bottom:5px; padding-left:5px;">
@@ -516,7 +568,7 @@
 	</div>
 
 	<!--- Modal Window --->
-	<div id="ajax-modal" class="modal hide fade" tabindex="-1"></div>
+	<div id="ajax-modal" class="modal fade" tabindex="-1"></div><!---hide funcionaba en bs2--->
 
 	<div style="clear:both"><!-- --></div>
 	<div class="msg_div_error" id="errorMessage"></div>
