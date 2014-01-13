@@ -84,7 +84,7 @@
 
 		  	}else{
 
-		  		showLoadingIframe(false);
+		  		showLoadingPage(false);
 
 		  		alert(status);
 		  		newUsers = [];

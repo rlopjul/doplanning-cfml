@@ -42,7 +42,7 @@
 
 		<cfloop query="fields">
 
-			<cfset field_label = fields.label&"">
+			<cfset field_label = fields.label><!---&""--->
 			<cfset field_name = "field_#fields.field_id#">
 			<cfif fields.required IS true AND arguments.search_inputs IS false>
 				<cfset field_required_att = 'required="required"'>

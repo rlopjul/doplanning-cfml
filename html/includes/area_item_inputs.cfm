@@ -158,7 +158,7 @@
 <cfif itemTypeId IS NOT 7 OR NOT isDefined("parent_kind") OR parent_kind EQ "area">
 <div class="row">
 	<div class="col-xs-12 col-md-6">
-		<label class="control-label" for="item_title" lang="es">#t_title# <cfif title_required IS true>*</cfif></label>
+		<label class="control-label" for="item_title"><span lang="es">#t_title#</span> <cfif title_required IS true>*</cfif></label>
 		<div>
 			<cfinput type="text" name="title" id="item_title" value="#objectItem.title#" required="#title_required#" message="#t_title# requerido" passthrough="#passthrough#" class="form-control">
 		</div>
@@ -221,7 +221,7 @@
 <div class="row">
 
 	<div class="col-xs-5 col-md-3">
-		<label class="control-label" for="start_date" lang="es">#t_start_date# *</label>
+		<label class="control-label" for="start_date"><span lang="es">#t_start_date#</span> *</label>
 		<cfinput type="text" name="start_date" id="start_date" class="form-control input_datepicker" value="#objectItem.start_date#" required="true" message="#t_start_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#" onchange="setStartDate()">
 	</div>
 	
@@ -244,7 +244,7 @@
 		</cfif>
 		
 		<div class="col-xs-7">
-			<label class="control-label" for="start_hour">#t_start_time#</label>
+			<label class="control-label" for="start_hour"><span lang="es">#t_start_time#</span></label>
 			<div class="input-group" style="width:170px">
 				<select name="start_hour" id="start_hour" class="form-control" style="width:70px;">
 					<cfloop from="0" to="23" index="hour">
@@ -268,7 +268,7 @@
 <div class="row">
 
 	<div class="col-xs-5 col-md-3">
-		<label class="control-label" for="end_date" lang="es">#t_end_date# *</label>
+		<label class="control-label" for="end_date"><span lang="es">#t_end_date#</span> *</label>
 		<cfinput type="text" name="end_date" id="end_date" class="input_datepicker" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#" onchange="setEndDate()">
 	</div>
 
@@ -291,7 +291,7 @@
 		</cfif>
 		
 		<div class="col-xs-7">
-			<label class="control-label" for="end_hour">Hora de fin</label>
+			<label class="control-label" for="end_hour"><span lang="es">Hora de fin</span></label>
 			<div class="input-group" style="width:170px">
 				<select name="end_hour" style="width:70px;">
 					<cfloop from="0" to="23" index="hour">
@@ -315,7 +315,7 @@
 <cfif itemTypeId IS 5><!---Events--->
 <div class="row">
 	<div class="col-md-3">
-		<label class="control-label" for="place" lang="es">#t_place# *</label>
+		<label class="control-label" for="place"><span lang="es">#t_place#</span> *</label>
 		<cfinput type="text" name="place" id="place" value="#objectItem.place#" required="true" message="#t_place# requerido" passthrough="#passthrough#">
 	</div>
 </div>
@@ -325,14 +325,14 @@
 
 	<div class="col-xs-5 col-md-2">
 
-		<label class="control-label" for="estimated_value" lang="es">#t_estimated_value# *</label>
+		<label class="control-label" for="estimated_value"><span lang="es">#t_estimated_value#</span> *</label>
 		<cfinput type="text" name="estimated_value" id="estimated_value" value="#objectItem.estimated_value#" required="true" validate="float" message="#t_estimated_value# debe ser un decimal" passthrough="#passthrough#"><!---&nbsp;<span style="font-size:10px">Valor (tiempo, coste, ...) estimado para la tarea.</span>--->
 
 	</div>
 
 	<div class="col-xs-6 col-md-2">
 
-		<label class="control-label" for="real_value" lang="es">#t_real_value# *</label>
+		<label class="control-label" for="real_value"><span lang="es">#t_real_value#</span> *</label>
 		<cfinput type="text" name="real_value" id="real_value" value="#objectItem.real_value#" required="true" validate="float" message="#t_real_value# debe ser un decimal"><!---&nbsp;<span style="font-size:10px">Valor real de la tarea una vez realizada.</span>--->
 
 	</div>
@@ -477,7 +477,7 @@
 
 	<div class="col-md-12">
 
-		<label class="control-label" for="link" lang="es">#t_link# <cfif link_required IS true>*</cfif></label>
+		<label class="control-label" for="link"><span lang="es">#t_link#</span> <cfif link_required IS true>*</cfif></label>
 		<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
 
 	</div>
@@ -490,10 +490,10 @@
 
 	<div class="col-md-6">
 
-		<label class="control-label" for="link_target" lang="es">Abrir URL en</label>
+		<label class="control-label" for="link_target"><span lang="es">Abrir URL en</span></label> <cfif APPLICATION.moduleWeb EQ true><small lang="es">(Sólo para publicar en web)</small></cfif>
 		<select name="link_target" id="link_target">
-			<option value="_blank" <cfif objectItem.link_target EQ "_blank">selected="selected"</cfif>>Nueva ventana</option>
-			<option value="_self" <cfif objectItem.link_target EQ "_self">selected="selected"</cfif>>Misma ventana</option>
+			<option value="_blank" <cfif objectItem.link_target EQ "_blank">selected="selected"</cfif> lang="es">Nueva ventana</option>
+			<option value="_self" <cfif objectItem.link_target EQ "_self">selected="selected"</cfif> lang="es">Misma ventana</option>
 		</select>
 
 	</div>
@@ -506,6 +506,12 @@
 <cfif itemTypeId IS 2 OR itemTypeId IS 4 OR itemTypeId IS 5>
 
 	<cfif APPLICATION.moduleWeb EQ true>
+
+	<div class="row">
+
+		<div class="col-md-12"></div>
+
+	</div>
 		
 	<div class="row">
 
@@ -523,7 +529,7 @@
 
 		<div class="col-md-6">
 
-			<label class="control-label" for="iframe_display_type_id" lang="es">#t_iframe_display_type#</label>
+			<label class="control-label" for="iframe_display_type_id" lang="es">#t_iframe_display_type#</label> <small lang="es">(Sólo para publicar en web)</small>
 		
 			<cfinvoke component="#APPLICATION.componentsPath#/IframeDisplayTypeManager" method="getDisplayTypes" returnvariable="iframeDisplayTypeQuery">
 			</cfinvoke>
@@ -581,7 +587,7 @@
 	
 		<div class="col-md-6">
 
-			<label class="control-label" lang="es">#t_display_type#</label>
+			<label class="control-label" lang="es">#t_display_type#</label> <small lang="es">(Sólo para publicar en web)</small>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/DisplayTypeManager" method="getDisplayTypes" returnvariable="displayTypeQuery">
 			</cfinvoke>

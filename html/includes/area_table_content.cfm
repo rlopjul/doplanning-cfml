@@ -104,7 +104,9 @@
 		
 		<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
 
-		<a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>		
+		<cfif tableTypeId IS NOT 3>
+			<a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>					
+		</cfif>
 
 	</cfif>
 

@@ -62,8 +62,13 @@
 	<cfif is_user_area_responsible OR table_edit_permission IS true>
 		<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo registro" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Nuevo registro</span></a>
 
-		<span class="divider">&nbsp;</span>
+		<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
 	</cfif>	
+	
+	<a href="#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Exportar</span></a>
+
+	<span class="divider">&nbsp;</span>
+	
 
 	<cfif is_user_area_responsible>
 		<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Campos" lang="es"><i class="icon-list"></i> <span lang="es">Campos</span></a>
@@ -146,7 +151,7 @@
 					<th>Fecha última modificación</th>
 					<cfloop query="fields">
 						<th>#fields.label#</th>
-						<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10>
+						<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10><!--- LISTS --->
 							<cfset listFields = true>
 						</cfif>
 					</cfloop>

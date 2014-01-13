@@ -113,6 +113,10 @@
 
 	</cfif>
 
+	<cfif app_version NEQ "mobile">
+		<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+	</cfif>
+
 </cfif>
 
 
