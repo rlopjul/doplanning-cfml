@@ -246,7 +246,7 @@
 			<input type="text" name="table_to" id="table_to" value="#SESSION.client_abb#_users_to_import" readonly="true"/>
 
 			<label for="file">Archivo CSV con los usuarios a importar</label>
-			<cfinput name="file" id="file" type="file" width="100%" required="yes" message="Archivo de datos requerido para la actualización" />
+			<cfinput name="file" id="file" type="file" accept=".csv" required="yes" message="Archivo de datos requerido para la importación" />
 			<div style="margin-top:5px" id="submitDiv1">
 				<input type="submit" value="Cargar usuarios" class="btn btn-primary" />
 			</div>
