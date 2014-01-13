@@ -1,4 +1,6 @@
 /*Copyright Era7 Information Technologies 2007-2013*/
+
+/****************************************RESET CSS**************************************/
 * {
 	padding: 0;
 	margin: 0;
@@ -13,13 +15,105 @@ a:link {text-decoration:none; }
 a:visited {text-decoration:none; }
 a:active {text-decoration:none; }
 a:hover {text-decoration:none; }
+
+/****************************************END RESET CSS**************************************/
+
+/****************************************BOOTSTRAP CSS CHANGES**************************************/
+
+/*.navbar {
+	margin-bottom: 4px;
+}
+.navbar .nav > li > a {
+	padding: 5px 8px;
+}
+.navbar-inner {
+	padding-left:10px;
+	padding-right:10px;
+} 
+.navbar-static-top {
+	margin-left:0;
+	margin-right:0;
+}*/
+.div_head_menu .navbar-nav > li > a {
+	padding: 5px 8px;
+}
+.div_head_menu .navbar {
+	margin-bottom: 4px;
+	min-height: 0;
+}
+.div_head_menu .navbar-header{
+	padding-left:10px;
+}
+.area_items_menu .active{
+	background-color: #E5E5E5;
+}
+.contenedor_fondo_blanco .row{
+	margin-right: 0px;
+}
+/*.div_send_message .row{
+	margin-right: 0px;
+}*/
+.div_search_bar .row{
+	margin-right: 0px;
+	padding-bottom: 2px;
+}
+
+/*form-control styles for inputs*/
+input[type="text"], input[type="search"], select{
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555555;
+  vertical-align: middle;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+          transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+input:focus, select:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+input:-moz-placeholder {
+  color: #999999;
+}
+
+input::-moz-placeholder {
+  color: #999999;
+}
+
+input:-ms-input-placeholder {
+  color: #999999;
+}
+
+input::-webkit-input-placeholder {
+  color: #999999;
+}
+
+input[disabled],
+input[readonly],
+fieldset[disabled] input {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+}
+
+/****************************************END BOOTSTRAP CSS CHANGES**************************************/
+
+
 .body_global {
 	margin:auto;
 }
-/*.login_container {
-	width:300px;
-	margin:auto;
-}*/
 
 @media (max-width: 767px) {
 	body {
@@ -47,8 +141,8 @@ a:hover {text-decoration:none; }
 	clear:right;
 }*/
 .div_login_form{
-	/*margin-left:5px;*/
-	width:230px;margin:auto;float:none;
+	/*margin-left:5px;width:230px;*/
+	width:350px;margin:auto;float:none;
 	margin-top:20px;
 }
 
@@ -98,7 +192,7 @@ a:hover {text-decoration:none; }
 	background-color:#CCCCCC;
 	height:21px;
 	padding-left:8px;
-	padding-top:6px;
+	/*padding-top:6px;*/
 	border-bottom:solid 1px #333333;
 	
 }
@@ -124,6 +218,12 @@ a:hover {text-decoration:none; }
 }*/
 .div_head_menu{
 	clear:both;
+}
+.area_items_menu {
+	padding: 5px;
+}
+.area_items_menu li{
+	padding: 10px;
 }
 /*.div_text_area_menu{
 	color:#333333;
@@ -164,7 +264,7 @@ a:hover {text-decoration:none; }
 
 .form_separator{
 	display:block;width:100%;padding:0;
-	margin-bottom: 10px;margin-top: 10px;
+	margin-bottom:5px;margin-top:5px;
 	border:0;border-bottom:1px solid #e5e5e5;
 }
 
@@ -473,9 +573,9 @@ a:hover {text-decoration:none; }
 /*
 ////////////////////////////////////////////newMessage\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
-.div_send_message{
+/*.div_send_message{
 	clear:both;
-}
+}*/
 /*
 ////////////////////////////////////////////search\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 */
@@ -500,6 +600,9 @@ a:hover {text-decoration:none; }
 	font-size:12px;
 	color:#D01E04;
 	font-weight:bold;
+}
+.div_search_bar {
+	clear:both;	
 }
 .icon{
 	float:left;
@@ -569,21 +672,4 @@ a:hover {text-decoration:none; }
 }
 .field_label {
 	font-size: 12px;
-}
-
-
-/*BOOTSTRAP CSS CHANGES*/
-.navbar {
-	margin-bottom: 4px;
-}
-.navbar .nav > li > a {
-	padding: 5px 8px;
-}
-.navbar-inner {
-	padding-left:10px;
-	padding-right:10px;
-} 
-.navbar-static-top {
-	margin-left:0;
-	margin-right:0;
 }

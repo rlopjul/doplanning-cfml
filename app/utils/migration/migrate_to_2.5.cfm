@@ -1,4 +1,4 @@
-<cfif (SESSION.client_abb EQ "doplanning" AND SESSION.user_id IS 1) OR (SESSION.client_abb EQ "software7" AND SESSION.user_id IS 2) OR (SESSION.client_abb EQ "hcs" AND SESSION.user_id IS 256)>
+<cfif (SESSION.client_abb EQ "doplanning" AND SESSION.user_id IS 1)>
 	
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml">

@@ -12,10 +12,15 @@ var file_content_en = {
 	'Quitar del área':'Remove from area',
 	'Eliminar':'Delete',
 	'Visualizar en':'View in',
-	
+
+	'Propiedad del área:':'Property of area:',	
+	'Creado por:':'Created by:',
+	'Usuario revisor:':'Reviser user:',
+	'Usuario aprobador:':'Approval user:',
 	'Nombre de archivo:':'File name:',
-	'Fecha de subida:':'Upload date:',
+	'Fecha de creación:':'Creation date:',
 	'Fecha de reemplazo:':'Replacement date:',
+	'Fecha de última versión:':'Last version date:',
 	'Tipo de archivo:':'File type:',
 	'Tamaño:':'Size:',
 	'Descripción:':'Description:',
@@ -52,7 +57,7 @@ var file_content_en = {
 	
 	/*file_view_content.cfm*/
 	'Visualizar archivo':'View file',
-	'Volver':'Back',
+	'Volver':'Back'
 	/*END file_view_content.cfm*/
 
 }

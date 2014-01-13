@@ -8,7 +8,7 @@
 				<span lang="es">#msg#</span>
 			</div>
 		<cfelse>
-			<div class="alert alert-error">
+			<div class="alert alert-danger">
 				<!---<button type="button" class="close" data-dismiss="alert">&times;</button>--->
 				<i class="icon-warning-sign"></i> <span lang="es">#msg#</span>
 			</div>
@@ -19,7 +19,7 @@
 
 	<cfset alert_message_text = URLDecode(URL.message)>
 	<cfoutput>
-		<div class="alert alert-block">
+		<div class="alert alert-warning">
 			<!---<button type="button" class="close" data-dismiss="alert">&times;</button>--->
 			<span lang="es">#alert_message_text#</span>
 		</div>

@@ -5,7 +5,7 @@
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
 	
-<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 <cfif isDefined("FORM.page")>
 

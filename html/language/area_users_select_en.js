@@ -11,7 +11,7 @@ var area_users_select_en = {
 	
 	'No se ha seleccionado ningún usuario':'There is not a selected user',
 	' ya está en la lista':' is already in the list',
-	'Error: no se puede asignar el usuario seleccionado':'Error: can not assign the selected user',
+	'Error: no se puede asignar el usuario seleccionado':'Error: can not assign the selected user'
 	
 }
 $.extend(jquery_lang_js.prototype.lang.en, area_users_select_en);

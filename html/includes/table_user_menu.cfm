@@ -36,7 +36,7 @@
 		</script>
 
 		<div class="div_elements_menu" style="clear:both">
-			<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=removeUserFromTable&table_id=#table_id#&tableTypeId=#tableTypeId#&remove_user_id=#user_id##url_return_page#" onclick="return confirmRemoveUserFromTable();" title="Quitar de esta #tableTypeNameEs#" class="btn btn-warning btn-small"><i class="icon-remove"></i> <span lang="es">Quitar de esta #tableTypeNameEs#</span></a>
+			<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=removeUserFromTable&table_id=#table_id#&tableTypeId=#tableTypeId#&remove_user_id=#user_id##url_return_page#" onclick="return confirmRemoveUserFromTable();" title="Quitar de esta #tableTypeNameEs#" class="btn btn-warning btn-sm"><i class="icon-remove"></i> <span lang="es">Quitar de esta #tableTypeNameEs#</span></a>
 		</div>
 		</cfoutput>
 	</cfif>

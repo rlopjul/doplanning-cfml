@@ -66,6 +66,7 @@ curLangText["es"] = {
 			"area_description" : "Descripción del área",
 			
 			"user" : "Usuario",
+			"by_user" : "por el usuario",
 			"your_access_email" : "Su usuario de acceso es",
 			"you_must_change_password" : 'Debe cambiar la contraseña en el apartado "Preferencias" de la aplicación',
 			
@@ -135,6 +136,11 @@ curLangText["es"] = {
 			"deleted_file" : "Archivo eliminado",
 			"locked_file" : "Archivo bloqueado",
 			"unlocked_file" : "Archivo desbloqueado",
+			"new_version" : "Nueva versión de archivo",
+			"new_current_version" : "Cambiada versión vigente de archivo",
+			"validated_version" : "Versión de archivo validada",
+			"rejected_version" : "Versión de archivo rechazada",
+			"approved_version" : "Versión de archivo aprobada",
 			
 			"created" : "creado",
 			"added" : "añadido",
@@ -143,20 +149,27 @@ curLangText["es"] = {
 			"deleted" : "eliminado",
 			"locked" : "bloqueado",
 			"unlocked" : "desbloqueado",
+			"validated" : "validado",
+			"rejected" : "rechazado",
+			"approved" : "aprobado",
 			
 			"it_has" : "Se ha",
 			"a_file_on_the_area" : "un archivo en el área",
 			
 			"file_name" : "Nombre del archivo",
 			"user" : "Usuario",
-			"upload_date" : "Fecha de subida del archivo",
+			"upload_date" : "Fecha de creación del archivo",
 			"replacement_date" : "Fecha de reemplazo del archivo",
+			"last_version_date" : "Fecha de última versión",
 			"description" : "Descripción",
 
 		},
 
 
 		"new_table_row": {
+
+			"access_to_row_male" : "Acceda directamente al registro del",
+			"access_to_row_female": "Acceda directamente al registro de la",
 			
 			"new_row" : "Nuevo registro en",
 			"modify_row" : "Registro modificado en",
@@ -184,6 +197,22 @@ curLangText["es"] = {
 
 			"your_file_was_changed" : "Este archivo que era de su propiedad ha pasado a ser de otro usuario.",
 			"you_have_new_file" : "Este archivo que era de otro usuario ha pasado a ser suyo.",
+
+		},
+
+		"file_revision": {
+			
+			"file_revision_request" : "Solicitud de revisión de documento",
+
+			"you_have_to_revise" : "Le han enviado el siguiente archivo para que lo revise.<br/><b>IMPORTANTE: Debe validar o rechazar la versión del archivo para poder continuar con el proceso de aprobación del documento.</b>",
+
+		},
+
+		"file_approval": {
+			
+			"file_approval_request" : "Solicitud de aprobación de documento",
+
+			"you_have_to_approve" : "Le han enviado el siguiente archivo para que lo <b>apruebe</b>.<br/><b>IMPORTANTE: Debe aprobar o rechazar la versión del archivo.</b>",
 
 		},
 		
@@ -309,6 +338,7 @@ curLangText["en"] = {
 			"area_description" : "Area description",
 			
 			"user" : "User",
+			"by_user" : "by user",
 			"your_access_email" : "Your access email is",
 			"you_must_change_password" : 'You must change your password at the application preferences',
 			
@@ -378,6 +408,11 @@ curLangText["en"] = {
 			"deleted_file" : "Deleted file",
 			"locked_file" : "Locked file",
 			"unlocked_file" : "Unlocked file",
+			"new_version" : "New file version",
+			"new_current_version" : "Current file version changed",
+			"validated_version" : "File version validated",
+			"rejected_version" : "File version rejected",
+			"approved_version" : "File version approved",
 			
 			"created" : "created",
 			"added" : "added",
@@ -386,20 +421,27 @@ curLangText["en"] = {
 			"deleted" : "deleted",
 			"locked" : "locked",
 			"unlocked" : "unlocked",
+			"validated" : "validated",
+			"rejected" : "rejected",
+			"approved" : "approved",
 			
 			"it_has" : "A user has",
 			"a_file_on_the_area" : "a file in the area",
 			
 			"file_name" : "File name",
 			"user" : "User",
-			"upload_date" : "Upload date",
+			"upload_date" : "Creation date",
 			"replacement_date" : "Replacement date",
+			"last_version_date" : "Last version date",
 			"description" : "Description",
 
 		},
 
 		"new_table_row": {
 			
+			"access_to_row_male" : "Go directly to the record of the",
+			"access_to_row_female": "Go directly to the record of the",
+
 			"new_row" : "New entry in",
 			"modify_row" : "Entry modified in",
 			"delete_row" : "Entry deleted in",
@@ -425,6 +467,22 @@ curLangText["en"] = {
 
 			"your_file_was_changed" : "This file that was your property has changed to another user.",
 			"you_have_new_file" : "This file from another user is now yours.",
+		},
+
+		"file_revision": {
+			
+			"file_revision_request" : "Request for document review",
+
+			"you_have_to_revise" : "You have to review the following file.<br/><b>NOTE: You must accept or reject the file version to continue the process of approving the document.</b>",
+
+		},
+
+		"file_approval": {
+			
+			"file_approval_request" : "Request for document approval",
+
+			"you_have_to_approve" : "You have a pending approval document.<br/><b>NOTE: You must approve o reject this file version.</b>",
+
 		},
 		
 		"new_area": {

@@ -309,3 +309,64 @@ ALTER TABLE `dp_software7`.`software7_users`
 
 
 
+<!--- Area files --->
+
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `reviser_user` INTEGER AFTER `locked`,
+ ADD COLUMN `approver_user` INTEGER AFTER `reviser_user`,
+ ADD CONSTRAINT `FK_software7_files_3` FOREIGN KEY `FK_software7_files_3` (`reviser_user`)
+    REFERENCES `software7_users` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+ ADD CONSTRAINT `FK_software7_files_4` FOREIGN KEY `FK_software7_files_4` (`approver_user`)
+    REFERENCES `software7_users` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT;
+
+CREATE TABLE  `dp_software7`.`software7_files_versions` (
+  `version_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `file_id` int(11) NOT NULL,
+  `physical_name` text COLLATE utf8_unicode_ci,
+  `user_in_charge` int(11) NOT NULL,
+  `file_size` int(11) DEFAULT NULL,
+  `file_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `uploading_date` datetime NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `file_name` text COLLATE utf8_unicode_ci,
+  `status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `revision_user` int(11) DEFAULT NULL,
+  `revision_request_user` int(11) DEFAULT NULL,
+  `revision_request_date` datetime DEFAULT NULL,
+  `revised` tinyint(1) DEFAULT NULL,
+  `revision_date` datetime DEFAULT NULL,
+  `revision_result` tinyint(1) DEFAULT NULL,
+  `approval_user` int(11) DEFAULT NULL,
+  `approval_request_date` datetime DEFAULT NULL,
+  `approved` tinyint(1) DEFAULT NULL,
+  `approval_date` datetime DEFAULT NULL,
+  `publication_user` int(11) DEFAULT NULL,
+  `publication_date` datetime DEFAULT NULL,
+  `publication_file_id` int(11) DEFAULT NULL,
+  `publication_area_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`version_id`) USING BTREE,
+  KEY `user_in_charge` (`user_in_charge`),
+  KEY `FK_software7_files_versions_2` (`file_id`),
+  KEY `FK_software7_files_versions_3` (`revision_request_user`),
+  KEY `FK_software7_files_versions_4` (`revision_user`),
+  KEY `FK_software7_files_versions_5` (`approval_user`),
+  KEY `FK_software7_files_versions_6` (`publication_user`),
+  KEY `FK_software7_files_versions_7` (`publication_file_id`),
+  KEY `FK_software7_files_versions_9` (`publication_area_id`),
+  CONSTRAINT `FK_software7_files_versions_9` FOREIGN KEY (`publication_area_id`) REFERENCES `software7_areas` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `FK_software7_files_versions_1` FOREIGN KEY (`user_in_charge`) REFERENCES `software7_users` (`id`),
+  CONSTRAINT `FK_software7_files_versions_2` FOREIGN KEY (`file_id`) REFERENCES `software7_files` (`id`),
+  CONSTRAINT `FK_software7_files_versions_3` FOREIGN KEY (`revision_request_user`) REFERENCES `software7_users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `FK_software7_files_versions_4` FOREIGN KEY (`revision_user`) REFERENCES `software7_users` (`id`),
+  CONSTRAINT `FK_software7_files_versions_5` FOREIGN KEY (`approval_user`) REFERENCES `software7_users` (`id`),
+  CONSTRAINT `FK_software7_files_versions_6` FOREIGN KEY (`publication_user`) REFERENCES `software7_users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `FK_software7_files_versions_7` FOREIGN KEY (`publication_file_id`) REFERENCES `software7_files` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `FK_software7_files_versions_8` FOREIGN KEY (`publication_area_id`) REFERENCES `software7_areas` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `in_approval` BOOLEAN NOT NULL DEFAULT 0 AFTER `approver_user`;

@@ -9,7 +9,7 @@ function showTree(selectable) { /*, areaId*/
 		"themes" : {
 			"theme" : "dp",
 			"dots" : false,
-			"icons" : true,
+			"icons" : true
 			/*Deshabilitadas las URLs porque no funcionan desde accesos externos como el del SAS que tienen reescritura de direcciones. Desde páginas normales no funcionan si no son absolutas.*/
 			/*"url" : applicationPath+"/jquery/jstree/themes/dp/style2.min.css"*/
 		},

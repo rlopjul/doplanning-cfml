@@ -46,7 +46,7 @@ var area_items_content_en = {
 	'Sí':'Yes',
 	'No':'No',
 	'Hecha':'Done',
-	'Nº resultados':'Number of results',
+	'Nº resultados':'Max results',
 	'Estado actual':'Actual state',
 	'Enviada':'Sent',
 	'Leída':'Read',
@@ -70,6 +70,16 @@ var area_items_content_en = {
 	'Noticias':'News',
 	'Usuario':'User',
 	'Usuarios':'Users',
+	'Imagen':'Image',
+	'Imágenes':'Images',
+	'Lista':'List',
+	'Listas':'Lists',
+	'Formulario':'Formulario',
+	'Formularios':'Forms',
+	'Comentario de PubMed':'PubMed comment',
+	'Comentarios de PubMed':'PubMed comments',
+	'Buscar en':'Search',
+	'Buscar texto':'Search text',
 	/*END search*/
 	
 	
@@ -131,7 +141,7 @@ var area_items_content_en = {
 	
 	/*area_file_upload.cfm, area_file_replace_upload.cfm*/
 	'Ha ocurrido un error al subir el archivo.':'Failed to upload the file',
-	'Archivo reemplazado correctamente.':'File replaced',
+	'Archivo reemplazado correctamente.':'File replaced'
 	/*END area_file_upload.cfm, area_file_replace_upload.cfm*/
 
 }
