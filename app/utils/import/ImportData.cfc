@@ -65,6 +65,8 @@
 						  	`login_dmsas` varchar(255) NOT NULL,
 						  	`login_diraya` varchar(255) NOT NULL,
 						  <!---</cfif>--->
+						  `internal_user` varchar(45) NOT NULL,
+  						  `perfil_cabecera` varchar(255) NOT NULL,
 						  PRIMARY KEY (`user_id`)
 						) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 				</cfquery>

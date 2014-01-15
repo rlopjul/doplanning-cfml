@@ -183,7 +183,7 @@ function postModalFormTree(formId, requestUrl){
 
 		  		} else {
 
-		  			updateTreeWithSelectedArea();
+		  			updateTree();
 		  		}
 		  		
 

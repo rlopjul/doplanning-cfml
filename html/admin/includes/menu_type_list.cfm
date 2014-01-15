@@ -15,7 +15,7 @@
 		
 	<cfelse>
 	
-		<label>Se ha producido un error al cargar los tipos de menú</label>
+		<span>Se ha producido un error al cargar los tipos de menú</span>
 	
 	</cfif>
 

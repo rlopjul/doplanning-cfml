@@ -150,7 +150,7 @@
 	
 	<!--- ----------------------------------- getArea ------------------------------------- --->
 	
-	<!---Este método no hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Item directamente del AreaItemManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
+	<!---Este método NO hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Area directamente del AreaManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
 	
 	<cffunction name="getArea" output="false" returntype="query" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
@@ -358,6 +358,37 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- importAreas -------------------------------------- --->
+
+	<cffunction name="importAreas" output="true" returntype="void" access="remote">
+		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE--->
+		
+		<cfset var method = "importAreas">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="importAreas" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Áreas importadas">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<!---<cfreturn serializeJSON(response)>--->
+
+		<cfoutput>#serializeJSON(response)#</cfoutput>
+			
+	</cffunction>
+
+
 	<!--- ----------------------------------- updateArea -------------------------------------- --->
 
 	<cffunction name="updateArea" output="false" returntype="struct" returnformat="json" access="remote">
@@ -387,7 +418,7 @@
 	</cffunction>
 
 
-	<!--- ----------------------------------- updateArea -------------------------------------- --->
+	<!--- ----------------------------------- moveArea -------------------------------------- --->
 
 	<cffunction name="moveArea" output="false" returntype="struct" returnformat="json" access="remote">
 		<cfargument name="area_id" type="numeric" required="true"/>

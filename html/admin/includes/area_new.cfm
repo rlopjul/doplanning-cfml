@@ -2,19 +2,31 @@
 	
 	<cfset parent_area_id = URL.parent>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="objectParentArea">
-		<cfinvokeargument name="area_id" value="#parent_area_id#"/>
+	<!--- Get parent area --->
+	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectParentArea">	
+		<cfinvokeargument name="get_area_id" value="#parent_area_id#">
+		<cfinvokeargument name="return_type" value="query">
 	</cfinvoke>
 
 	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="objectArea" returnvariable="objectArea">
 		<cfinvokeargument name="return_type" value="object">
 	</cfinvoke>
 
+	<!--- Set default responsible --->
+	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUser" returnvariable="userQuery">				
+		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
+		<cfinvokeargument name="format_content" value="default">
+		<cfinvokeargument name="return_type" value="query">
+	</cfinvoke>
+
+	<cfset objectArea.user_in_charge = userQuery.id>
+	<cfset objectArea.user_full_name = userQuery.user_full_name>
+
 	<cfoutput>
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3 id="areaModalLabel">Crear área</h3>
+		    <h4 id="areaModalLabel">Crear área</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -52,5 +64,4 @@
 
 	</cfoutput>
 	
-
 </cfif>
