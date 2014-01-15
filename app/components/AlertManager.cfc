@@ -1482,7 +1482,7 @@
     <!--- -------------------------------------- newArea ------------------------------------ --->
 	
 	<cffunction name="newArea" access="public" returntype="void">
-		<cfargument name="objectArea" type="struct" required="yes">
+		<cfargument name="objectArea" type="query" required="yes">
 				
 		<cfset var method = "newArea">
 		

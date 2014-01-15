@@ -138,7 +138,7 @@
 		</cfoutput>
 <cfelse>
 	
-		<cfset numColumns = 9>
+		<cfset numColumns = 11>
 		<cfset arrayColumnsTo = arrayNew(1)>
 		<cfset arrayColumnsTo[1] = "email_login">
 		<cfset arrayColumnsTo[2] = "name">
@@ -150,6 +150,8 @@
 		<!---<cfif APPLICATION.moduleLdapUsers IS true>--->
 			<cfset arrayColumnsTo[8] = "login_dmsas">
 			<cfset arrayColumnsTo[9] = "login_diraya">
+			<cfset arrayColumnsTo[10] = "internal_user">
+			<cfset arrayColumnsTo[11] = "perfil_cabecera">
 		<!---</cfif>--->
 		<!---<cfset arrayColumnsTo[10] = "province">
 		<cfset arrayColumnsTo[11] = "phone_es">
@@ -170,6 +172,8 @@
 		<!---<cfif APPLICATION.moduleLdapUsers IS true>--->
 			<cfset arrayColumnsFrom[8] = "login_dmsas">
 			<cfset arrayColumnsFrom[9] = "login_diraya">
+			<cfset arrayColumnsFrom[10] = "internal_user">
+			<cfset arrayColumnsFrom[11] = "perfil_cabecera">
 		<!---</cfif>--->
 		<!---<cfset arrayColumnsFrom[10] = "PROVINCIA">
 		<cfset arrayColumnsFrom[11] = "TEL">
@@ -246,7 +250,7 @@
 			<input type="text" name="table_to" id="table_to" value="#SESSION.client_abb#_users_to_import" readonly="true"/>
 
 			<label for="file">Archivo CSV con los usuarios a importar</label>
-			<cfinput name="file" id="file" type="file" accept=".csv" required="yes" message="Archivo de datos requerido para la importación" />
+			<cfinput name="file" id="file" type="file" accept=".csv" required="yes" message="Archivo de datos requerido para la importación" style="width:300px"/>
 			<div style="margin-top:5px" id="submitDiv1">
 				<input type="submit" value="Cargar usuarios" class="btn btn-primary" />
 			</div>

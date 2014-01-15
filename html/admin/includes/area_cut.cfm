@@ -10,7 +10,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3 id="areaModalLabel">Cortar área</h3>
+		    <h4 id="areaModalLabel">Cortar área</h4>
 		</div>
 
 	 	<div class="modal-body">

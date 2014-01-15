@@ -41,15 +41,15 @@
 <link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
 
-<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+<script src="#APPLICATION.jqueryJSPath#"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
-<script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
+<script src="#APPLICATION.bootstrapJSPath#"></script>
 
-<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modal.js"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modal.js"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
 
-<script type="text/javascript">
+<script>
 	<!---To enable the loading spinner in Bootstrap 3--->
 	$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
     '<div class="loading-spinner" style="width: 200px; margin-left: -100px;">' +
@@ -59,8 +59,12 @@
     '</div>';
 </script>
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
-<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload.js"></script>
+
+<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
 
 </cfoutput>
 
@@ -80,7 +84,7 @@
 	<cfset iframe_page = "">
 </cfif>
 
-<script type="text/javascript">
+<script>
 
 	<cfoutput>
 	<!--- var applicationPath = "#APPLICATION.path#"; --->
@@ -108,12 +112,12 @@
 </script>
 
 <cfoutput>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/functions.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.4"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.5"></script>
+<script src="#APPLICATION.htmlPath#/scripts/functions.min.js"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.4"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.5"></script>
 </cfoutput>
 
-<script type="text/javascript">
+<script>
 	
 	function resizeIframe() {
 		var newHeight = windowHeight()-66;
@@ -191,6 +195,14 @@
 			loadModal('html_content/area_new.cfm?parent='+curAreaId);
 		else
 			alert("Debe seleccionar un área en la que crear la nueva");
+	}
+
+	function openAreaImportModal(){
+
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/area_import.cfm?parent='+curAreaId);
+		else
+			alert("Debe seleccionar un área en la que crear las nuevas áreas");
 	}
 
 	function openAreaMoveModal(){
@@ -357,7 +369,7 @@
 			</div>
 			
 			<cfif APPLICATION.identifier NEQ "vpnet">
-				<div style="float:right; padding-top:1px; padding-right:6px; width:80px; text-align:right;">
+				<div style="float:right; padding-top:1px; padding-right:6px; width:200px; text-align:right;">
 					
 					<!--- 
 					<cfif objectUser.general_administrator EQ true>
@@ -375,7 +387,8 @@
 												<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>
 											</cfif>
 										</cfif> --->
-					
+
+					<a href="../main.cfm" class="btn btn-info"><i class="icon-arrow-left"></i> <span>Volver</span></a>
 				
 					<a href="../preferences.cfm" title="Preferencias del usuario" lang="es">
 					<cfif len(objectUser.image_file) GT 0>
@@ -399,7 +412,7 @@
 				<div class="container" style="width:100%;">
 					<div class="row" style="padding-bottom:5px;">
 						
-						<div class="col-sm-11" style="padding:0;">
+						<div class="col-sm-12" style="padding:0;">
 
 							<div class="btn-toolbar">
 
@@ -413,17 +426,22 @@
 								</div>
 
 								<div class="btn-group">
-									<a onClick="updateTree();" class="btn btn-default" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
-								</div>
-
-								<div class="btn-group">
 									<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
 									<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
 								</div>
 
 								<div class="btn-group">
+									<a onClick="updateTree();" class="btn btn-default" title="Actualizar" lang="es"><i class="icon-refresh"></i></a><!---<span lang="es">Actualizar</span>--->
+								</div>
+
+								<div class="btn-group">
 									<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
 								</div>
+
+								<div class="btn-group">
+									<a onClick="openAreaImportModal()" class="btn btn-info" title="Importar áreas" lang="es"><i class="icon-arrow-up icon-white"></i> <span lang="es">Importar áreas</span></a>
+								</div>
+
 								<div class="btn-group">
 									<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover área</span></a>
 								</div>
@@ -439,11 +457,11 @@
 
 						</div>
 
-						<div class="col-sm-1" style="padding:0;">	
+						<!---<div class="col-sm-1" style="padding:0;">	
 
 							<a href="../main.cfm" class="btn btn-info" style="float:right"><i class="icon-arrow-left"></i> <span>Volver</span></a>
 
-						</div>
+						</div>--->
 
 					</div>
 				</div>
