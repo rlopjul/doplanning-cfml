@@ -1518,6 +1518,7 @@
 				<cfinvokeargument name="area_id" value="#arguments.parent_id#">
 			</cfinvoke>
 		
+			<!--- 
 			<cfquery name="beginQuery" datasource="#client_dsn#">
 				BEGIN;
 			</cfquery>
@@ -1561,20 +1562,38 @@
 			
 			<cfquery name="commitQuery" datasource="#client_dsn#">
 				COMMIT;
-			</cfquery>
+			</cfquery> --->
+			<cftransaction>
+				
+				<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="area_id">
+					<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
+					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
+					<cfinvokeargument name="name" value="#arguments.name#"/>
+					<cfinvokeargument name="description" value="#arguments.description#"/>
+					<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
+					<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
+				</cfinvoke>	
+
+			</cftransaction>
 						
             <!---Alerta a todos los usuarios que tienen acceso al área que se ha creado--->
-			<cfinvoke component="AreaManager" method="objectArea" returnvariable="objectArea">
+			<!---<cfinvoke component="AreaManager" method="objectArea" returnvariable="objectArea">
 				<cfinvokeargument name="id" value="#area_id#"/>
 				<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
 				<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
 				<cfinvokeargument name="name" value="#arguments.name#"/>
 				<cfinvokeargument name="description" value="#arguments.description#"/>
 				<cfinvokeargument name="creation_date" value="#stringCurrentDate#"/>
+			</cfinvoke>--->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="areaQuery">
+				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
 			<cfinvoke component="AlertManager" method="newArea">
-				<cfinvokeargument name="objectArea" value="#objectArea#">
+				<cfinvokeargument name="objectArea" value="#areaQuery#">
 			</cfinvoke>	
             
 			<!---Alerta al usuario que que es responsable de la misma--->
@@ -1601,6 +1620,197 @@
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+	
+	<!---  --->
+
+	<!--- ------------------------------------ createAreaInDatabase -----------------------------------  --->
+	
+	<!--- Este método debe ser llamado dentro de una transaction --->
+
+	<cffunction name="createAreaInDatabase" output="false" access="package" returntype="number">
+		<cfargument name="parent_id" type="string" required="true"/>
+		<cfargument name="user_in_charge" type="numeric" required="true"/>
+		<cfargument name="name" type="string" required="true"/>
+		<cfargument name="description" type="string" required="true"/>
+		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
+		<cfargument name="menu_type_id" type="numeric" required="false"/>
+
+		<cfset var method = "createAreaInDatabase">
+
+		<cfset var area_id = "">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+				
+			<!---<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
+			</cfinvoke>
+			
+			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
+				<cfinvokeargument name="timestamp_date" value="#current_date#">
+			</cfinvoke>--->
+					
+			<cfquery name="insertAreaQuery" datasource="#client_dsn#" result="insertAreaResult">
+				INSERT INTO #client_abb#_areas (name,parent_id,user_in_charge,creation_date,description, hide_in_menu
+					<cfif isDefined("arguments.menu_type_id") AND arguments.menu_type_id NEQ "">
+						, menu_type_id
+					</cfif>		
+				) 
+				VALUES (
+					<cfqueryPARAM value="#arguments.name#" CFSQLType="CF_SQL_varchar">,			
+					<cfqueryPARAM value="#arguments.parent_id#" CFSQLType="cf_sql_integer">,					
+					<cfqueryPARAM value="#arguments.user_in_charge#" CFSQLType="cf_sql_integer">,
+					NOW(),
+					<cfqueryPARAM value="#arguments.description#" CFSQLType="CF_SQL_varchar">,
+					<cfqueryPARAM value="#arguments.hide_in_menu#" CFSQLType="CF_SQL_boolean">
+						<cfif isDefined("arguments.menu_type_id") AND arguments.menu_type_id NEQ "">
+							,<cfqueryPARAM value = "#arguments.menu_type_id#" cfsqltype = "CF_SQL_integer">									
+						</cfif>	
+					);			
+			</cfquery>
+			<cfquery name="getLastInsertId" datasource="#client_dsn#">
+				SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_areas;
+			</cfquery>
+			<cfset area_id = getLastInsertId.last_insert_id>
+			
+			<cfquery name="insertUserQuery" datasource="#client_dsn#">
+				INSERT INTO #client_abb#_areas_users
+				VALUES (<cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">,
+						<cfqueryparam value = "#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
+				);
+			</cfquery>		
+
+			<cfreturn area_id>	
+
+	</cffunction>
+
+
+	<!--- ------------------------------------- importAreas ------------------------------------- --->
+	
+	<cffunction name="importAreas" output="false" access="public" returntype="struct">		
+		<cfargument name="parent_id" type="string" required="true"/>
+		<cfargument name="user_in_charge" type="numeric" required="true"/>
+		<!---<cfargument name="description" type="string" required="true"/>--->
+		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
+		<cfargument name="menu_type_id" type="numeric" required="false"/>
+		<cfargument name="files" type="array" required="true"/>
+		<cfargument name="delimiter" type="string" required="true">
+		<cfargument name="start_row" type="numeric" required="false" default="2">
+		
+		<cfset var method = "importAreas">
+
+		<cfset var response = structNew()>
+
+		<cfset var filesData = arrayNew(1)>
+		<cfset var destination = "">
+		<cfset var fileContent = "">
+		<cfset var fileArray = arrayNew(1)>
+			
+		<cftry>
+				
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<!---<cfinclude template="includes/checkAreaAdminAccess.cfm">--->
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
+				<cfinvokeargument name="area_id" value="#arguments.parent_id#">
+			</cfinvoke>
+			
+						
+			<cfset destination = GetTempDirectory()>
+
+		    <cffile action="upload" fileField="files[]" destination="#destination#" nameConflict="makeunique"  result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE --->
+
+			<cfset fileData = {
+				    "name": fileResult.serverfile,
+				    "size": fileResult.filesize,
+				    "url": "",
+				    "thumbnailUrl": "",
+				    "deleteUrl": "",
+				    "deleteType": "DELETE"
+				  }>
+
+			<cfset arrayAppend(filesData, fileData)>
+
+			<cfset destinationFile = destination&fileResult.serverFile>
+
+			<cffile action="read" file="#destinationFile#" variable="fileContent" charset="iso-8859-1">
+			<cffile action="delete" file="#destinationFile#">
+
+			<!--- CSV to array --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="CSVToArray" returnvariable="fileArray">
+				<cfinvokeargument name="CSV" value="#trim(#fileContent#)#">
+				<cfif arguments.delimiter EQ "tab">
+					<cfinvokeargument name="delimiter" value="#chr(9)#">
+				<cfelse>
+					<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
+				</cfif>
+			</cfinvoke>
+
+			<cfset numFileColumns = arrayLen(fileArray[1])>
+			
+			<cfif numFileColumns IS 0>
+				
+				<cfset response = {result=false, files=fileData, message="No hay contenidos en el archivo"}>
+
+				<cfreturn response>
+
+			</cfif>
+
+			<cftransaction>
+				
+				<cfloop from="#arguments.start_row#" to="#ArrayLen(fileArray)#" step="1" index="curRowIndex"><!--- loop Rows --->
+
+					<!--- <cfset error = false> --->
+
+					<cftry>
+
+						<cfset curRow = fileArray[curRowIndex]>
+
+						<cfset areaName = curRow[1]>
+						<cfif arrayLen(curRow) GT 1>
+							<cfset areaDescription = curRow[2]>
+						<cfelse>
+							<cfset areaDescription = "">
+						</cfif>				
+
+						<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="area_id">
+							<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
+							<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
+							<cfinvokeargument name="name" value="#areaName#"/>
+							<cfinvokeargument name="description" value="#areaDescription#"/>
+							<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
+							<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
+						</cfinvoke>
+
+						<cfcatch>
+
+							<cfset errorMessagePrefix = "Error en fila #curRowIndex#: ">
+							<cfset errorMessage = errorMessagePrefix&cfcatch.message>
+
+							<cfthrow message="#errorMessage#">
+
+						</cfcatch>
+
+					</cftry>	
+
+				</cfloop>
+
+			</cftransaction>
+		
+			<cfinclude template="includes/logRecord.cfm">
+			
+			<cfset response = {result=true, message="", files=fileData}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+				<cfset response = {result=false, message=cfcatch.message, files=fileData}>
 
 			</cfcatch>
 		</cftry>

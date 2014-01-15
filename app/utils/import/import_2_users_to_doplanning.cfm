@@ -106,9 +106,13 @@
 <cfset client_abb = SESSION.client_abb>
 <cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
 
-<cfif isDefined("FORM.area_id")>
+<cfif isDefined("FORM.client_dsn")>
 		
-	<cfset add_to_area_id = FORM.area_id>
+	<cfif isDefined("FORM.area_id")>
+		<cfset add_to_area_id = FORM.area_id>
+	<cfelse>
+		<cfset add_to_area_id = "">
+	</cfif>
 
 	<cfquery datasource="#APPLICATION.dsn#" name="getClient">
 		SELECT *
@@ -196,33 +200,37 @@
 			</cfoutput>
 
 
-			<!---assign User To Root Area--->
-			<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="assignUserToAreaRequest">
-				<cfinvokeargument name="request_parameters" value='<user id="#created_user_id#"/><area id="#add_to_area_id#"/>'>
-			</cfinvoke>
-		
-			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="assignUserToArea" returnvariable="assignToAreaResponse">
-				<cfinvokeargument name="request" value="#assignUserToAreaRequest#">
-			</cfinvoke>
+			<cfif isDefined("FORM.area_id")>
 
-			<cfxml variable="assignToAreaResponseXml">
-				<cfoutput>
-				#assignToAreaResponse#
-				</cfoutput>
-			</cfxml>
+				<!---assign User To Root Area--->
+				<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="assignUserToAreaRequest">
+					<cfinvokeargument name="request_parameters" value='<user id="#created_user_id#"/><area id="#add_to_area_id#"/>'>
+				</cfinvoke>
+			
+				<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="assignUserToArea" returnvariable="assignToAreaResponse">
+					<cfinvokeargument name="request" value="#assignUserToAreaRequest#">
+				</cfinvoke>
 
-			<!---Si la respuesta es un error--->
-			<cfif isDefined("assignToAreaResponseXml.response.error.xmlAttributes.code") AND isValid("integer",assignToAreaResponseXml.response.error.xmlAttributes.code)>
+				<cfxml variable="assignToAreaResponseXml">
+					<cfoutput>
+					#assignToAreaResponse#
+					</cfoutput>
+				</cfxml>
 
-				<cfoutput>
-				<strong>Error al añadir el usuario al área: #assignToAreaResponseXml.response.error.xmlAttributes.code#</strong><br/>
-				</cfoutput>
+				<!---Si la respuesta es un error--->
+				<cfif isDefined("assignToAreaResponseXml.response.error.xmlAttributes.code") AND isValid("integer",assignToAreaResponseXml.response.error.xmlAttributes.code)>
 
-			<cfelse>
+					<cfoutput>
+					<strong>Error al añadir el usuario al área: #assignToAreaResponseXml.response.error.xmlAttributes.code#</strong><br/>
+					</cfoutput>
 
-				<cfoutput>
-					Añadido al área #add_to_area_id#.<br/>
-				</cfoutput>
+				<cfelse>
+
+					<cfoutput>
+						Añadido al área #add_to_area_id#.<br/>
+					</cfoutput>
+
+				</cfif>
 
 			</cfif>
 
@@ -269,7 +277,7 @@
 				<label for="client_dsn">Identificador de aplicación DoPlanning en la que se crearán los usuarios:</label>
 				<input name="client_dsn" id="client_dsn" type="text" value="#client_dsn#" readonly="true" />
 				<label for="area_id">ID de área a la que añadir los usuarios importados</label>
-				<cfinput type="text" name="area_id" id="area_id" value="5" class="input-mini" validate="integer" required="true" message="Area a la que añadir los usuarios requerida (valor numérico)"/>
+				<cfinput type="text" name="area_id" id="area_id" value="" class="input-mini" validate="integer" required="false" message="Area a la que añadir los usuarios requerida (valor numérico)"/><!---value="5"--->
 				<div style="margin-top:5px" id="submitDiv1">
 				<cfinput type="submit" name="import" class="btn btn-primary" value="Importar usuarios">
 				</div>

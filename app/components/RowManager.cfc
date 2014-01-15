@@ -110,6 +110,7 @@
 		<cfset var response = structNew()>
 
 		<cfset var destination = "">
+		<cfset var fileContent = "">
 		<cfset var fileArray = arrayNew(1)>
 		<cfset var rowValues = structNew()>
 
@@ -162,7 +163,7 @@
 			<cfset destination = "#APPLICATION.filesPath#/#client_abb#/">
 			
 			<!--- Upload and read file --->
-			<cffile action="upload" filefield="file" destination="#destination#" nameconflict="makeunique" result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv">
+			<cffile action="upload" filefield="file" destination="#destination#" nameconflict="makeunique" result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE --->
 
 			<cfset destinationFile = destination&fileResult.serverFile>
 
