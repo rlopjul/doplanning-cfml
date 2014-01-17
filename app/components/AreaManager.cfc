@@ -1648,18 +1648,11 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 				
-			<!---<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-			</cfinvoke>
-			
-			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
-				<cfinvokeargument name="timestamp_date" value="#current_date#">
-			</cfinvoke>--->
-					
 			<cfquery name="insertAreaQuery" datasource="#client_dsn#" result="insertAreaResult">
 				INSERT INTO #client_abb#_areas (name,parent_id,user_in_charge,creation_date,description, hide_in_menu
 					<cfif isDefined("arguments.menu_type_id") AND arguments.menu_type_id NEQ "">
 						, menu_type_id
-					</cfif>		
+					</cfif>	
 				) 
 				VALUES (
 					<cfqueryPARAM value="#arguments.name#" CFSQLType="CF_SQL_varchar">,			
@@ -1681,7 +1674,7 @@
 			<cfquery name="insertUserQuery" datasource="#client_dsn#">
 				INSERT INTO #client_abb#_areas_users
 				VALUES (<cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value = "#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
+						<cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
 				);
 			</cfquery>		
 
@@ -1695,7 +1688,6 @@
 	<cffunction name="importAreas" output="false" access="public" returntype="struct">		
 		<cfargument name="parent_id" type="string" required="true"/>
 		<cfargument name="user_in_charge" type="numeric" required="true"/>
-		<!---<cfargument name="description" type="string" required="true"/>--->
 		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
 		<cfargument name="menu_type_id" type="numeric" required="false"/>
 		<cfargument name="files" type="array" required="true"/>
@@ -1710,6 +1702,7 @@
 		<cfset var destination = "">
 		<cfset var fileContent = "">
 		<cfset var fileArray = arrayNew(1)>
+		<cfset var areasCount = 0>
 			
 		<cftry>
 				
@@ -1752,18 +1745,18 @@
 			</cfinvoke>
 
 			<cfset numFileColumns = arrayLen(fileArray[1])>
-			
-			<cfif numFileColumns IS 0>
+			<cfset numFileRows = arrayLen(fileArray)>
+
+			<!---<cfif numFileColumns IS 0 OR numFileRows IS 0> Esto hace nada usar porque nunca es 0
 				
 				<cfset response = {result=false, files=fileData, message="No hay contenidos en el archivo"}>
-
 				<cfreturn response>
 
-			</cfif>
+			</cfif>--->
 
 			<cftransaction>
 				
-				<cfloop from="#arguments.start_row#" to="#ArrayLen(fileArray)#" step="1" index="curRowIndex"><!--- loop Rows --->
+				<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
 
 					<!--- <cfset error = false> --->
 
@@ -1772,20 +1765,27 @@
 						<cfset curRow = fileArray[curRowIndex]>
 
 						<cfset areaName = curRow[1]>
-						<cfif arrayLen(curRow) GT 1>
-							<cfset areaDescription = curRow[2]>
-						<cfelse>
-							<cfset areaDescription = "">
-						</cfif>				
 
-						<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="area_id">
-							<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
-							<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
-							<cfinvokeargument name="name" value="#areaName#"/>
-							<cfinvokeargument name="description" value="#areaDescription#"/>
-							<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
-							<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
-						</cfinvoke>
+						<cfif len(areaName) GT 0>
+							
+							<cfif arrayLen(curRow) GT 1>
+								<cfset areaDescription = curRow[2]>
+							<cfelse>
+								<cfset areaDescription = "">
+							</cfif>				
+
+							<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="area_id">
+								<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
+								<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
+								<cfinvokeargument name="name" value="#areaName#"/>
+								<cfinvokeargument name="description" value="#areaDescription#"/>
+								<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
+								<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
+							</cfinvoke>
+
+							<cfset areasCount = areasCount+1>
+
+						</cfif>
 
 						<cfcatch>
 
@@ -1803,14 +1803,18 @@
 			</cftransaction>
 		
 			<cfinclude template="includes/logRecord.cfm">
-			
-			<cfset response = {result=true, message="", files=fileData}>
+
+			<cfif areasCount IS 0>
+				<cfset response = {result=false, files=fileData, areasCount=areasCount, message="No se ha importado ningún área"}>
+			<cfelse>
+				<cfset response = {result=true, files=fileData, areasCount=areasCount, message="",}>
+			</cfif>
 		
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
 
-				<cfset response = {result=false, message=cfcatch.message, files=fileData}>
+				<cfset response = {result=false, files=fileData, areasCount=areasCount, message=cfcatch.message}>
 
 			</cfcatch>
 		</cftry>

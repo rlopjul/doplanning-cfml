@@ -126,7 +126,7 @@
 						filter_ignoreCase : true,
 						filter_liveSearch : true,
 						//filter_reset : 'button.reset',
-						filter_searchDelay : 300,
+						filter_searchDelay : 500,
 						filter_serversideFiltering: false,
 						filter_startsWith : false,
 						filter_useParsedRow : false

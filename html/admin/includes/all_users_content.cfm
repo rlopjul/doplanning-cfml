@@ -26,8 +26,9 @@
 	<cfset users = usersResponse.users>
 	<cfset numUsers = ArrayLen(users)>
 
-	<div class="div_message_page_title">Todos los usuarios</div>
-
+	<cfoutput>
+		<div class="div_message_page_title">Usuarios de la organización (#numUsers#)</div>
+	</cfoutput>
 	
 	<div class="div_items">
 		

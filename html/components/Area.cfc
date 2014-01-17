@@ -373,7 +373,7 @@
 			</cfinvoke>
 			
 			<cfif response.result IS true>
-				<cfset response.message = "Áreas importadas">
+				<cfset response.message = "#response.areasCount# áreas importadas">
 			</cfif>
 
 			<cfcatch>

@@ -746,7 +746,7 @@
 				<script type="text/javascript">
 					$(document).ready(function() { 
 						
-						$("##listTable").tablesorter({ 
+						$("##usersTable").tablesorter({ 
 							<!---<cfif page_type IS 1>--->
 							<cfif arguments.filter_enabled IS true>
 							widgets: ['zebra','filter'],
@@ -783,30 +783,30 @@
 						});
 						
 						<!---//  Adds "over" class to rows on mouseover
-						$("##listTable tr").mouseover(function(){
+						$("##usersTable tr").mouseover(function(){
 						  $(this).addClass("over");
 						});
 	
 						//  Removes "over" class from rows on mouseout
-						$("##listTable tr").mouseout(function(){
+						$("##usersTable tr").mouseout(function(){
 						  $(this).removeClass("over");
 						});--->
 						
 						<cfif page_type IS 1>
-						$("##listTable tbody tr").click(function(){
+						$("##usersTable tbody tr").click(function(){
 							
 							var selected = false;
 							if($(this).hasClass("selected"))
 								selected = true;
 							
-							$("##listTable tr").removeClass('selected');
+							$("##usersTable tr").removeClass('selected');
 							
 							if(!selected)
 								$(this).addClass("selected")
 							
 						});
 						<cfelse>
-						$("##listTable tbody tr").click(function(){
+						$("##usersTable tbody tr").click(function(){
 							
 							if($(this).hasClass("selected"))
 							var selected = false;
@@ -820,8 +820,8 @@
 						});
 						</cfif>
 
-						$("##listTable thead tr.tablesorter-filter-row").click(function(){
-							$("##listTable tr").removeClass('selected');
+						$("##usersTable thead tr.tablesorter-filter-row").click(function(){
+							$("##usersTable tr").removeClass('selected');
 						});
 						
 						$("##submit_select").click(function(){ 
@@ -834,11 +834,11 @@
 							<cfif page_type IS 1>
 								
 								// Selección de usuario
-								usuarioId = $("##listTable tr.selected input[type=hidden][name=user_id]").attr("value");
+								usuarioId = $("##usersTable tr.selected input[type=hidden][name=user_id]").attr("value");
 								
 								if(usuarioId != null) {
 							
-									usuarioNombre = $("##listTable tr.selected input[type=hidden][name=user_full_name]").attr("value");
+									usuarioNombre = $("##usersTable tr.selected input[type=hidden][name=user_full_name]").attr("value");
 
 									if(window.opener != null){
 										parentWindowDefined = ( $.isFunction(window.opener.setSelectedUser) || (typeof window.opener.setSelectedUser!='undefined') ); // Segunda comprobación para IE
@@ -866,11 +866,11 @@
 									
 
 								// Selección de usuarios para permisos
-								if($("##listTable tr.selected").length > 0) {
+								if($("##usersTable tr.selected").length > 0) {
 
 									var allUsersAdded = true;
 								
-									$("##listTable tr.selected").each( function() {
+									$("##usersTable tr.selected").each( function() {
 									
 										usuarioId = $("input[type=hidden][name=user_id]",this).attr("value");								
 										usuarioNombre = $("input[type=hidden][name=user_full_name]",this).attr("value");
@@ -912,7 +912,7 @@
 				</script>
 				
 				<cfoutput>
-				<table id="listTable" class="table-hover">
+				<table id="usersTable" class="table-hover">
 					<thead>
 						<tr>
 							<th style="width:35px;" class="filter-false"></th>
@@ -988,7 +988,7 @@
 				<script type="text/javascript">
 					$(document).ready(function() { 
 
-						$("##listTable").tablesorter({ 
+						$("##usersTable").tablesorter({ 
 							<cfif arguments.filter_enabled IS true>
 							widgets: ['zebra','filter','select'],
 							<cfelse>
@@ -1017,7 +1017,7 @@
 								filter_ignoreCase : true,
 								filter_liveSearch : true,
 								//filter_reset : 'button.reset',
-								filter_searchDelay : 300,
+								filter_searchDelay : 500,
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
 								filter_useParsedData : false,
@@ -1026,21 +1026,11 @@
 
 						});
 						
-						<!---//  Adds "over" class to rows on mouseover
-						$("##listTable tr").mouseover(function(){
-						  $(this).addClass("over");
-						});
-					
-						//  Removes "over" class from rows on mouseout
-						$("##listTable tr").mouseout(function(){
-						  $(this).removeClass("over");
-						});---->			
-						
 					}); 
 				</script>
 				
 				<cfoutput>
-				<table id="listTable" class="table-hover">
+				<table id="usersTable" class="table-hover">
 					<thead>
 						<tr>
 							<th style="width:35px;" class="filter-false"></th>
@@ -1112,7 +1102,7 @@
 							
 						</cfif>
 						
-						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#user_page_url#','#arguments.open_url_target#',event)">
+						<tr <cfif itemSelected IS true>class="selected"</cfif> <cfif arguments.user_in_charge IS objectUser.id>style="font-weight:bold"</cfif> onclick="openUrl('#user_page_url#','#arguments.open_url_target#',event)">
 							<td style="text-align:center">
 								<cfif len(objectUser.image_type) GT 0>
 									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>									
@@ -1120,15 +1110,12 @@
 									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
 								</cfif>
 							</td>
-							<td><span class="text_item" <cfif arguments.user_in_charge IS objectUser.id>style="font-weight:bold"</cfif>>#objectUser.family_name#</span></td>
-							<td><span class="text_item" <cfif arguments.user_in_charge IS objectUser.id>style="font-weight:bold"</cfif>>#objectUser.name#</span></td>
-							<td><span class="text_item" <cfif arguments.user_in_charge IS objectUser.id>style="font-weight:bold"</cfif>>#objectUser.email#</span></td>
+							<td>#objectUser.family_name#</td>
+							<td>#objectUser.name#</td>
+							<td>#objectUser.email#</td>
 							<cfif arguments.show_area_members IS true>
-							<td><span class="text_item" lang="es" <cfif arguments.user_in_charge IS objectUser.id>style="font-weight:bold"</cfif>><cfif objectUser.area_member IS true>Sí<cfelse>No</cfif></span></td>
+							<td lang="es"><cfif objectUser.area_member IS true>Sí<cfelse>No</cfif></td>
 							</cfif>
-							<!---<cfif APPLICATION.moduleWebRTC IS true>
-							<td><a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/user_meeting.png" alt="Reunión virtual" lang="es"/></a></td>
-							</cfif>--->
 						</tr>
 					</cfloop>
 					</tbody>

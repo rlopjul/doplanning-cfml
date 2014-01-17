@@ -3810,6 +3810,10 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfif APPLICATION.changeElementsArea IS false>
+				<cfthrow message="Función no disponible">
+			</cfif>
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="with_lock" value="true">
