@@ -126,45 +126,55 @@
 	
 
 	<strong>Datos importados:</strong>
-	<cfquery datasource="#client_dsn#" name="getImportedUsersQuery">
-		SELECT *
-		FROM #SESSION.client_abb#_users_to_import;
-	</cfquery>						
+	<cftry>
+		
+		<cfquery datasource="#client_dsn#" name="getImportedUsersQuery">
+			SELECT *
+			FROM #SESSION.client_abb#_users_to_update;
+		</cfquery>						
+		
+		<cfdump var="#getImportedUsersQuery#" label="#SESSION.client_abb#_users_to_import" metainfo="no">
+
+		<cfcatch>
+			#cfcatch.message#
+		</cfcatch>
+	</cftry>
 	
-	<cfdump var="#getImportedUsersQuery#" label="#SESSION.client_abb#_users_to_import" metainfo="no">
 
 	<div style="margin-top:10px"><a href="#CGI.SCRIPT_NAME#" class="btn btn-default">Volver</a></div>
 
 	</cfoutput>
 <cfelse>
 	
-	<cfset numColumns = 10>
+	<cfset numColumns = 11>
 	<cfset arrayColumnsTo = arrayNew(1)>
-	<cfset arrayColumnsTo[1] = "email_login">
-	<cfset arrayColumnsTo[2] = "name">
-	<cfset arrayColumnsTo[3] = "family_name_1">
-	<cfset arrayColumnsTo[4] = "family_name_2">
-	<cfset arrayColumnsTo[5] = "dni"><!---ESTE CAMPO NO SE USA PARA CREAR EL USUARIO SE USA EL NIF, POR LO QUE ESTE CAMPO SE PUEDE QUITAR UNO DE LOS DOS--->
-	<cfset arrayColumnsTo[6] = "address">
+	<cfset arrayColumnsTo[1] = "user_id">
+	<cfset arrayColumnsTo[2] = "email_login">
+	<cfset arrayColumnsTo[3] = "name">
+	<cfset arrayColumnsTo[4] = "family_name_1">
+	<cfset arrayColumnsTo[5] = "family_name_2">
+	<cfset arrayColumnsTo[6] = "dni"><!---ESTE CAMPO NO SE USA PARA CREAR EL USUARIO SE USA EL NIF, POR LO QUE ESTE CAMPO SE PUEDE QUITAR UNO DE LOS DOS--->
+	<cfset arrayColumnsTo[7] = "address">
 	<!---<cfif APPLICATION.moduleLdapUsers IS true>--->
-		<cfset arrayColumnsTo[7] = "login_dmsas">
-		<cfset arrayColumnsTo[8] = "login_diraya">
-		<cfset arrayColumnsTo[9] = "internal_user">
-		<cfset arrayColumnsTo[10] = "perfil_cabecera">
+		<cfset arrayColumnsTo[8] = "login_dmsas">
+		<cfset arrayColumnsTo[9] = "login_diraya">
+		<cfset arrayColumnsTo[10] = "internal_user">
+		<cfset arrayColumnsTo[11] = "perfil_cabecera">
 	<!---</cfif>--->
 	
 	<cfset arrayColumnsFrom = arrayNew(1)>
-	<cfset arrayColumnsFrom[1] = "email_login">
-	<cfset arrayColumnsFrom[2] = "name">
-	<cfset arrayColumnsFrom[3] = "family_name_1">
-	<cfset arrayColumnsFrom[4] = "family_name_2">
-	<cfset arrayColumnsFrom[5] = "dni">
-	<cfset arrayColumnsFrom[6] = "address">
+	<cfset arrayColumnsFrom[1] = "user_id">
+	<cfset arrayColumnsFrom[2] = "email_login">
+	<cfset arrayColumnsFrom[3] = "name">
+	<cfset arrayColumnsFrom[4] = "family_name_1">
+	<cfset arrayColumnsFrom[5] = "family_name_2">
+	<cfset arrayColumnsFrom[6] = "dni">
+	<cfset arrayColumnsFrom[7] = "address">
 	<!---<cfif APPLICATION.moduleLdapUsers IS true>--->
-		<cfset arrayColumnsFrom[7] = "login_dmsas">
-		<cfset arrayColumnsFrom[8] = "login_diraya">
-		<cfset arrayColumnsFrom[9] = "internal_user">
-		<cfset arrayColumnsFrom[10] = "perfil_cabecera">
+		<cfset arrayColumnsFrom[8] = "login_dmsas">
+		<cfset arrayColumnsFrom[9] = "login_diraya">
+		<cfset arrayColumnsFrom[10] = "internal_user">
+		<cfset arrayColumnsFrom[11] = "perfil_cabecera">
 	<!---</cfif>--->
 	
 
@@ -188,7 +198,7 @@
 		-La primera fila del archivo corresponderá a los títulos de las columnas. Los títulos de las columnas pueden ser diferentes a los indicados, pero <strong>no pueden contener espacios, tildes o caracteres especiales</strong>.<br/>
 		-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.
 		<br/>
-		-<a href="usuarios_ejemplo.csv">Aquí</a> puede descargar un archivo de ejemplo.<br/>
+		<!--- -<a href="usuarios_ejemplo.csv">Aquí</a> puede descargar un archivo de ejemplo.<br/> --->
 	</p><br/>
 
 	Detalle de esta importación:
@@ -197,7 +207,7 @@
 		-Los usuarios cargados mediante esta página no afectan a los existente en DoPlanning.<br/>
 		-En esta carga los usuarios no recibirán ningún tipo de notificación.<br/>
 		-Si la importación se lleva a cabo correctamente, se mostrarán los datos importados. Es necesario comprobar que estos datos son correctos y que no hay ningún error en los mismos.<br/>
-		-Para crear en DoPlanning los usuarios, tras cargarlos mediante esta página es necesario seguir con el siguiente paso: <a href="import_2_users_to_doplanning.cfm" target="_blank">2º Crear los usuarios cargados en DoPlanning.</a><br/>
+		-Para actualizar en DoPlanning los usuarios, tras cargarlos mediante esta página es necesario seguir con el siguiente paso: <a href="update_2_users_to_doplanning.cfm" target="_blank">2º Actualizar los usuarios cargados en DoPlanning.</a><br/>
 		-Una vez pulsado el botón "Cargar usuarios" <strong>debe esperar unos minutos hasta que se complete la operación</strong>.
 	</p>
 	<br/>
@@ -231,7 +241,7 @@
 		<input name="client_dsn" id="client_dsn" type="text" value="#client_dsn#" readonly="true" />	
 		
 		<label for="table_to">Tabla donde se cargarán los usarios</label>
-		<input type="text" name="table_to" id="table_to" value="#SESSION.client_abb#_users_to_import" readonly="true"/>
+		<input type="text" name="table_to" id="table_to" value="#SESSION.client_abb#_users_to_update" readonly="true"/>
 
 		<label for="file">Archivo CSV con los usuarios a importar</label>
 		<cfinput name="file" id="file" type="file" accept=".csv" required="yes" message="Archivo de datos requerido para la importación" style="width:300px"/>

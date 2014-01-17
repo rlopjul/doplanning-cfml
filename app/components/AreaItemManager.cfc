@@ -1477,6 +1477,10 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
+			<cfif APPLICATION.changeElementsArea IS false>
+				<cfthrow message="Función no disponible">
+			</cfif>
+
 			<cfif arguments.itemTypeId IS 13><!--- Typologies --->
 				<!--- Las tipologías no se pueden cambiar de área porque son usadas en áreas inferiores a la que pertenecen --->
 				<cfthrow message="Las tipologías no se pueden cambiar de área">

@@ -51,7 +51,7 @@
 			</cfsavecontent>
 			
 			<cftransaction>
-				<cfquery datasource="#arguments.client_dsn#" name="truncateTableQuery">
+				<!---<cfquery datasource="#arguments.client_dsn#" name="truncateTableQuery">
 					CREATE TABLE IF NOT EXISTS `#arguments.table_to#` (
 						  `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 						  `email_login` varchar(255) NOT NULL,
@@ -68,8 +68,19 @@
 						  `internal_user` varchar(45) NOT NULL,
   						  `perfil_cabecera` varchar(255) NOT NULL,
 						  PRIMARY KEY (`user_id`)
-						) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+						) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+				</cfquery>--->
+
+				<cfquery datasource="#arguments.client_dsn#" name="truncateTableQuery">
+					CREATE TABLE IF NOT EXISTS `#arguments.table_to#` (
+						  `row_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+						  <cfloop from="1" to="#numColumns#" index="curColum">
+								`#arguments["col_to_#curColum#"]#` varchar(255) NOT NULL,
+						  </cfloop>
+						  PRIMARY KEY (`row_id`)
+						) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
+
 				<cfquery datasource="#arguments.client_dsn#" name="truncateTableQuery">
 					TRUNCATE TABLE #arguments.table_to#;
 				</cfquery>
@@ -105,7 +116,7 @@
 			</cfcatch>
 		</cftry>
 		
-		<cfreturn #response#>
+		<cfreturn response>
 		
 	</cffunction>
 	

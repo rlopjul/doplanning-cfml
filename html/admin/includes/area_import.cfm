@@ -141,7 +141,7 @@
 				<div class="row">
 					<div class="col-sm-12">
 						<noscript><b>Debe habilitar JavaScript para la subida de archivos</b></noscript>
-						<label class="control-label" for="file">Archivo CSV con los nombres de las áreas a importar</label>
+						<label class="control-label" for="file">Archivo CSV con listado de nombres de las áreas a importar</label>
 						<input type="file" name="files[]" id="file" multiple required="true" accept=".csv,.tsv,text/plain" message="Archivo de datos requerido para la importación" class="form-control">
 					</div>
 				</div>

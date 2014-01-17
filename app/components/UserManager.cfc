@@ -123,10 +123,13 @@
 				<cfif len(objectUser.address) NEQ 0>	
 					<address><![CDATA[#objectUser.address#]]></address>
 				</cfif>
+				<cfif len(objectUser.perfil_cabecera) NEQ 0>
+					<perfil_cabecera><![CDATA[#objectUser.perfil_cabecera#]]></perfil_cabecera>
+				</cfif>
+				<cfif len(objectUser.login_ldap) NEQ 0><!--- Provisional fuera del if --->
+					<login_ldap><![CDATA[#objectUser.login_ldap#]]></login_ldap>
+				</cfif>
 				<cfif APPLICATION.moduleLdapUsers EQ true>
-					<cfif len(objectUser.login_ldap) NEQ 0>
-						<login_ldap><![CDATA[#objectUser.login_ldap#]]></login_ldap>
-					</cfif>
 					<cfif len(objectUser.login_diraya) NEQ 0>
 						<login_diraya><![CDATA[#objectUser.login_diraya#]]></login_diraya>
 					</cfif>
@@ -217,6 +220,8 @@
 		<cfargument name="other_1" type="string" required="no" default="">
 		<cfargument name="other_2" type="string" required="no" default="">
 		<cfargument name="dni" type="string" required="no" default="">
+
+		<cfargument name="perfil_cabecera" type="string" required="no" default="">
 		
 		<cfargument name="return_type" type="string" required="no">
 		
@@ -367,11 +372,15 @@
 					<cfset password_temp="#xmlUser.user.password_temp.xmlText#">
 				</cfif>
 
-				<cfif APPLICATION.moduleLdapUsers EQ true>
-					<cfif isDefined("xmlUser.user.login_ldap.xmlText")>
-						<cfset login_ldap="#xmlUser.user.login_ldap.xmlText#">
-					</cfif>
-					
+				<cfif isDefined("xmlUser.user.perfil_cabecera.xmlText")>
+					<cfset perfil_cabecera="#xmlUser.user.perfil_cabecera.xmlText#">
+				</cfif>
+
+				<cfif isDefined("xmlUser.user.login_ldap.xmlText")>
+					<cfset login_ldap="#xmlUser.user.login_ldap.xmlText#">
+				</cfif>
+
+				<cfif APPLICATION.moduleLdapUsers EQ true>					
 					<cfif isDefined("xmlUser.user.login_diraya.xmlText")>
 						<cfset login_diraya="#xmlUser.user.login_diraya.xmlText#">
 					</cfif>
@@ -479,7 +488,8 @@
 				password_temp="#password_temp#",		
 				image_file="#image_file#",
 				image_type="#image_type#",
-				area_member="#area_member#"
+				area_member="#area_member#",
+				perfil_cabecera="#perfil_cabecera#"
 				}>
 			
 			
@@ -639,38 +649,64 @@
 					
 						<cfthrow errorcode="#error_code#">
 					</cfif>
+
+					<cfif SESSION.client_id EQ "hcs">
+
+						<!---if login_ldap is defined--->
+						<cfif len(objectUser.login_ldap) GT 0>
+
+							<!---Check if login already used--->
+							<cfquery name="checkLoginLdap" datasource="#client_dsn#">
+								SELECT *
+								FROM #client_abb#_users
+								WHERE login_ldap=<cfqueryparam value="#objectUser.login_ldap#" cfsqltype="cf_sql_varchar">;
+							</cfquery>
+							
+							<cfif checkLoginLdap.recordCount GT 0><!---User LDAP login already assigned to another user--->
+								<cfset error_code = 211>
+							
+								<cfthrow errorcode="#error_code#">
+							</cfif>					
+							
+						</cfif>
+
+					</cfif>
 					
-					<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-					</cfinvoke>
+					<!---<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
+					</cfinvoke>--->
 										
 					<!---Insert User in DataBase--->			
 					<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
 						INSERT INTO #client_abb#_users
-						(email,name,family_name,telephone,address,password, internal_user, sms_allowed, mobile_phone, creation_date, telephone_ccode, mobile_phone_ccode, language, dni)
-						VALUES(
-							<cfqueryparam value="#objectUser.email#" cfsqltype="cf_sql_varchar">,
-							<cfqueryPARAM value="#objectUser.name#" CFSQLType = "CF_SQL_varchar">,
-							<cfqueryPARAM value="#objectUser.family_name#" CFSQLType = "CF_SQL_varchar">,
-							<cfqueryPARAM value="#objectUser.telephone#" CFSQLType = "CF_SQL_varchar">,
-							<cfqueryPARAM value="#objectUser.address#" CFSQLType = "CF_SQL_varchar">,
-							<cfqueryPARAM value="#objectUser.password#" CFSQLType = "CF_SQL_varchar">,
-							<cfqueryPARAM value="#objectUser.whole_tree_visible#" CFSQLType = "CF_SQL_bit">,
-							<cfqueryPARAM value="#objectUser.sms_allowed#" CFSQLType = "CF_SQL_bit">,
-							<cfqueryPARAM value="#objectUser.mobile_phone#" CFSQLType = "CF_SQL_varchar">,
-							<cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,
-							<cfif len(objectUser.telephone_ccode) GT 0>
-								<cfqueryPARAM value="#objectUser.telephone_ccode#" cfsqltype="cf_sql_integer">,
-							<cfelse>
-								<cfqueryparam null="true" cfsqltype="cf_sql_numeric">,
-							</cfif>
-							<cfif len(objectUser.mobile_phone_ccode) GT 0>
-								<cfqueryPARAM value="#objectUser.mobile_phone_ccode#" cfsqltype="cf_sql_integer">
-							<cfelse>
-								<cfqueryparam null="true" cfsqltype="cf_sql_numeric">
-							</cfif>,
-							<cfqueryparam value="#objectUser.language#" cfsqltype="cf_sql_varchar">,
-							<cfqueryparam value="#objectUser.dni#" cfsqltype="cf_sql_varchar">
-							);
+						SET email = <cfqueryparam value="#objectUser.email#" cfsqltype="cf_sql_varchar">,
+						name = <cfqueryPARAM value="#objectUser.name#" CFSQLType = "CF_SQL_varchar">,
+						family_name = <cfqueryPARAM value="#objectUser.family_name#" CFSQLType = "CF_SQL_varchar">,
+						telephone = <cfqueryPARAM value="#objectUser.telephone#" CFSQLType = "CF_SQL_varchar">,
+						address = <cfqueryPARAM value="#objectUser.address#" CFSQLType = "CF_SQL_varchar">,
+						password = <cfqueryPARAM value="#objectUser.password#" CFSQLType = "CF_SQL_varchar">,
+						internal_user = <cfqueryPARAM value="#objectUser.whole_tree_visible#" CFSQLType = "CF_SQL_bit">,
+						sms_allowed = <cfqueryPARAM value="#objectUser.sms_allowed#" CFSQLType = "CF_SQL_bit">,
+						mobile_phone = <cfqueryPARAM value="#objectUser.mobile_phone#" CFSQLType = "CF_SQL_varchar">,
+						creation_date = NOW(),
+						<cfif len(objectUser.telephone_ccode) GT 0>
+							telephone_ccode = <cfqueryPARAM value="#objectUser.telephone_ccode#" cfsqltype="cf_sql_integer">,
+						<cfelse>
+							telephone_ccode = <cfqueryparam null="true" cfsqltype="cf_sql_numeric">,
+						</cfif>
+						<cfif len(objectUser.mobile_phone_ccode) GT 0>
+							mobile_phone_ccode = <cfqueryPARAM value="#objectUser.mobile_phone_ccode#" cfsqltype="cf_sql_integer">
+						<cfelse>
+								mobile_phone_ccode = <cfqueryparam null="true" cfsqltype="cf_sql_numeric">
+						</cfif>,
+						language = <cfqueryparam value="#objectUser.language#" cfsqltype="cf_sql_varchar">,
+						dni = <cfqueryparam value="#objectUser.dni#" cfsqltype="cf_sql_varchar">
+						<cfif len(objectUser.login_ldap) GT 0>
+						, login_ldap = <cfqueryparam value="#objectUser.login_ldap#" cfsqltype="cf_sql_varchar">
+						</cfif>
+						<cfif len(objectUser.perfil_cabecera) GT 0>
+						, perfil_cabecera = <cfqueryparam value="#objectUser.perfil_cabecera#" cfsqltype="cf_sql_varchar">
+						</cfif>
+						;
 					</cfquery>
 					
 					<!---Aquí se obtiene el id del usuario insertado en base de datos--->
@@ -686,7 +722,7 @@
 						(name, creation_date, user_in_charge, description)
 						VALUES(
 							'Mis documentos', 
-							<cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,
+							NOW(),
 							<cfqueryparam value="#objectUser.id#" cfsqltype="cf_sql_integer">,
 							'Directorio raiz'
 							);

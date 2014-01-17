@@ -1913,12 +1913,14 @@
 </cfif>
 <br/>
 
-<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>
+<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;"><b>#access_content#</b></div>
 
 		</cfoutput>		
 		</cfsavecontent>
 		
-		<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>		
+		<!---<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>--->
+
+		<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[curLang].common.foot_do_not_reply#.</span><br/>#langText[curLang].common.foot_content_default_1# #APPLICATION.title#.</p>'>		
 		
 		<cfinvoke component="EmailManager" method="sendEmail">
 			<cfinvokeargument name="from" value="#SESSION.client_email_from#">
@@ -1944,7 +1946,7 @@
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 				
-		<cfset var method = "newUser">
+		<cfset var method = "generateNewPassword">
         
         <cfset var rootAreaQuery = structNew()>
 		
