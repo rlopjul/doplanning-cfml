@@ -664,6 +664,10 @@ fieldset[disabled] input {
 	font-size: 11px;
 	color:#666666;
 }
+#usersTable td {
+	font-size: 11px;
+	color:#000000;
+}
 #dataTable td {
 	font-size: 11px;
 }

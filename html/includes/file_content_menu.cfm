@@ -104,11 +104,17 @@
 	</cfif>
 
 	<cfif ( fileTypeId IS 1 || (fileTypeId IS NOT 1 AND objectFile.locked IS true AND objectFile.lock_user_id EQ SESSION.user_id) ) AND ( objectFile.user_in_charge EQ SESSION.user_id OR is_user_area_responsible )>
-	
-		<a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
-
-		<cfif fileTypeId IS NOT 1>
-			<a href="file_change_area.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-cut"></i> <span lang="es">Cambiar área</span></a>	
+		
+		<cfif fileTypeId IS 1>
+			
+			<cfif objectFile.user_in_charge EQ SESSION.user_id>
+				<a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
+			</cfif>
+			
+		<cfelse><!--- fileTypeId IS NOT 1 --->
+			<cfif APPLICATION.changeElementsArea IS true>
+				<a href="file_change_area.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-cut"></i> <span lang="es">Cambiar área</span></a>
+			</cfif>	
 		</cfif>
 
 	</cfif>

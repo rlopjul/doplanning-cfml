@@ -9,12 +9,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>#APPLICATION.title# - Crear los usuarios cargados en DoPlanning</title>
+<title>#APPLICATION.title# - Eliminar usuarios de DoPlanning</title>
 <!-- InstanceEndEditable -->
 <link href="../../../html/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
-<link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
+<!---<link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
-<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">--->
 
 <!--[if lt IE 9]>
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -86,7 +86,7 @@
 
 <body onBeforeUnload="onUnloadPage()" onLoad="onLoadPage()" class="body_global">
 <!---divLoading--->
-<cfinclude template="#APPLICATION.htmlPath#/includes/loading_page_div.cfm">
+<!---<cfinclude template="#APPLICATION.htmlPath#/includes/loading_page_div.cfm">--->
 <cfif APPLICATION.identifier NEQ "dp">
 	<div class="div_header">
 		<a href="../../../html/"><div class="div_header_content"><!-- --></div></a>
@@ -99,21 +99,24 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 
-<h2>2º Crear los usuarios cargados en DoPlanning</h1>
+<h2>Eliminar usuarios de DoPlanning</h1>
 
 <br/>
 
 <cfset client_abb = SESSION.client_abb>
 <cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
 
+<cfquery datasource="#client_dsn#" name="getUsersToDelete">
+	SELECT #client_abb#_users.id, #client_abb#_users.email, #client_abb#_users.creation_date, #client_abb#_users.last_connection AS ultima_conexion, number_of_connections, #client_abb#_users.family_name AS nombre, #client_abb#_users.name AS apellidos
+	FROM #client_abb#_users
+	WHERE ( last_connection IS NULL AND number_of_connections = 0 AND creation_date < MAKEDATE(2012,1) )
+	OR last_connection < MAKEDATE(2012,1)
+	ORDER BY last_connection DESC;
+</cfquery>
+
+
 <cfif isDefined("FORM.client_dsn")>
 		
-	<cfif isDefined("FORM.area_id")>
-		<cfset add_to_area_id = FORM.area_id>
-	<cfelse>
-		<cfset add_to_area_id = "">
-	</cfif>
-
 	<cfquery datasource="#APPLICATION.dsn#" name="getClient">
 		SELECT *
 		FROM APP_clients
@@ -125,65 +128,35 @@
 	</cfif>
 	
 	<cfoutput>
-	Inicio de importación.<br/>
+	Inicio de actualización.<br/>
 	CLIENTE: #getClient.name#<br/>
-	ÁREA por defecto: #add_to_area_id#<br/><br/>
 	</cfoutput>
-	
 
-	<cfquery datasource="#client_dsn#" name="getUsersToImport">
-		SELECT *
-		FROM #client_abb#_users_to_import;
-	</cfquery>
-
-	<cfloop query="getUsersToImport" startrow="699"><!---startrow="11" endrow="699"--->
+	<cfdump var="#getUsersToDelete#">
 		
-		<cfinvoke component="#APPLICATION.componentsPath#/LoginManager" method="generatePassword" returnvariable="newPassword">
-			<cfinvokeargument name="numberofCharacters" value="5">
-		</cfinvoke>
-
-		<!--- <cfoutput>#newPassword#<br/></cfoutput> --->
+	<cfloop query="getUsersToDelete"><!--- startrow --->
+		
+		<cfset delete_user_id = getUsersToDelete.id>
 
 		<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="xmlUser">
-			<cfinvokeargument name="name" value="#getUsersToImport.family_name_1# #getUsersToImport.family_name_2#">
-			<cfinvokeargument name="name" value="#getUsersToImport.family_name_1#"><!---PARA EL HCS--->
-			<cfinvokeargument name="family_name" value="#getUsersToImport.name#">
-			<cfinvokeargument name="email" value="#Trim(getUsersToImport.email_login)#">
-			<!---<cfinvokeargument name="telephone" value="">
-			<cfinvokeargument name="telephone_ccode" value="">
-			<cfinvokeargument name="mobile_phone" value="">
-			<cfinvokeargument name="mobile_phone_ccode" value="">--->
-			<cfinvokeargument name="password" value="#hash(newPassword)#"/>
-			<cfinvokeargument name="password_temp" value="#newPassword#"/>
-			<!---<cfif APPLICATION.moduleLdapUsers IS true>--->
-			<cfinvokeargument name="login_ldap" value="#Trim(getUsersToImport.login_dmsas)#"/>
-			<cfinvokeargument name="login_diraya" value="#Trim(getUsersToImport.login_diraya)#"/>
-			<!---</cfif>--->
-			<cfinvokeargument name="dni" value="#getUsersToImport.dni#"/>
-			<cfinvokeargument name="address" value="#getUsersToImport.address#"/>
-			<cfinvokeargument name="sms_allowed" value="false">
-			<cfinvokeargument name="whole_tree_visible" value="false">
-			<!--- <cfinvokeargument name="whole_tree_visible" value="true"> PARA EL HCS --->
-
-			<cfinvokeargument name="perfil_cabecera" value="#getUsersToImport.perfil_cabecera#"/>
+			<cfinvokeargument name="id" value="#delete_user_id#"/>
 			
 			<cfinvokeargument name="return_type" value="xml">
 		</cfinvoke>
 
-		<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="createUserRequest">
+		<cfdump var="#xmlUser#">
+
+		<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="deleteUserRequest">
 			<cfinvokeargument name="request_parameters" value='#xmlUser#'>
 		</cfinvoke>
 
-		<!---<cfdump var="#createUserRequest#"/>--->
-		
-		<!---createUser--->
-		<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="createUser" returnvariable="createUserResponse">
-			<cfinvokeargument name="request" value="#createUserRequest#">
+		<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="deleteUser" returnvariable="deleteUserResponse">
+			<cfinvokeargument name="request" value="#deleteUserRequest#">
 		</cfinvoke>
 
 		<cfxml variable="userResponseXml">
 			<cfoutput>
-			#createUserResponse#
+			#deleteUserResponse#
 			</cfoutput>
 		</cfxml>
 
@@ -191,79 +164,29 @@
 		<cfif isDefined("userResponseXml.response.error.xmlAttributes.code") AND isValid("integer",userResponseXml.response.error.xmlAttributes.code)>
 			
 			<cfoutput>
-			<strong>Error al crear el usuario con email #getUsersToImport.email_login#: #userResponseXml.response.error.xmlAttributes.code#</strong><br/>
+			<strong>Error al eliminar el usuario con ID : #delete_user_id#</strong><br/>
 			</cfoutput>
 
 		<cfelse>
 
-			<cfset created_user_id = userResponseXml.response.result.user.xmlAttributes.id>
-
 			<cfoutput>
-			Usuario con email #getUsersToImport.email_login# creado correctamente con ID: #created_user_id#<br/>
+			Usuario eliminado con ID: #delete_user_id#<br/>
 			</cfoutput>
 
-
-			<cfif isDefined("FORM.area_id") AND isNumeric(add_to_area_id)>
-
-				<!---assign User To Root Area--->
-				<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="assignUserToAreaRequest">
-					<cfinvokeargument name="request_parameters" value='<user id="#created_user_id#"/><area id="#add_to_area_id#"/>'>
-				</cfinvoke>
-			
-				<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="assignUserToArea" returnvariable="assignToAreaResponse">
-					<cfinvokeargument name="request" value="#assignUserToAreaRequest#">
-				</cfinvoke>
-
-				<cfxml variable="assignToAreaResponseXml">
-					<cfoutput>
-					#assignToAreaResponse#
-					</cfoutput>
-				</cfxml>
-
-				<!---Si la respuesta es un error--->
-				<cfif isDefined("assignToAreaResponseXml.response.error.xmlAttributes.code") AND isValid("integer",assignToAreaResponseXml.response.error.xmlAttributes.code)>
-
-					<cfoutput>
-					<strong>Error al añadir el usuario al área: #assignToAreaResponseXml.response.error.xmlAttributes.code#</strong><br/>
-					</cfoutput>
-
-				<cfelse>
-
-					<cfoutput>
-						Añadido al área #add_to_area_id#.<br/>
-					</cfoutput>
-
-				</cfif>
-
-			</cfif>
-
-
-		</cfif>		
-		
-
-		<br/><br/>
+		</cfif>			
 
 	</cfloop>
 
-	Importación terminada.<br/>
+	Usuarios eliminados.<br/>
 
 <cfelse>
 
-	-Cada usuario creado en DoPlanning recibirá un correo electrónico con su cuenta y una contraseña generada de forma aleatoria.<br/>
-	<!--- -Los usuarios no podrán ver todo el árbol de la organización (se crearán como usuarios externos).<br/> ---->
-	-A los usuarios se les añadirá por defecto al área indicada a continuación.<br/>
 	-Este proceso no es reversible.<br/>
-	-Los usuarios ya existentes en DoPlanning no se podrán crear de nuevo y darán un error 205.<br/>
-	-Una vez pulsado el botón "Importar usuarios" <strong>debe esperar unos minutos hasta que se complete la operación</strong>.<br/><br/>
+	-Una vez pulsado el botón "ELIMINAR usuarios" <strong>debe esperar unos minutos hasta que se complete la operación</strong>.<br/><br/>
 
-	<cftry>
+	<!---<cftry>--->
 		
-		<cfquery datasource="#client_dsn#" name="getImportedUsersQuery">
-			SELECT *
-			FROM #SESSION.client_abb#_users_to_import;
-		</cfquery>
-
-		<cfif getImportedUsersQuery.recordCount GT 0>
+		<cfif getUsersToDelete.recordCount GT 0>
 
 			<script type="text/javascript">
 
@@ -275,31 +198,29 @@
 
 			<cfoutput>
 			<cfform method="post" action="#CGI.SCRIPT_NAME#" onsubmit="onSubmitForm();">
-				<!---<label>Client Abb</label>
-				<cfinput type="text" name="abb" value="" required="true" message="Client abb requerido">--->
-				<label for="client_dsn">Identificador de aplicación DoPlanning en la que se crearán los usuarios:</label>
+				<label for="client_dsn">Identificador de aplicación DoPlanning en la que se eliminarán los usuarios:</label>
 				<input name="client_dsn" id="client_dsn" type="text" value="#client_dsn#" readonly="true" />
-				<label for="area_id">ID de área a la que añadir los usuarios importados</label>
-				<cfinput type="text" name="area_id" id="area_id" value="" class="input-mini" validate="integer" required="false" message="Area a la que añadir los usuarios requerida (valor numérico)"/><!---value="5"--->
 				<div style="margin-top:5px" id="submitDiv1">
-				<cfinput type="submit" name="import" class="btn btn-primary" value="Importar usuarios">
+				<cfinput type="submit" name="import" class="btn btn-primary" value="ELIMINAR usuarios">
 				</div>
 			</cfform>
 			</cfoutput>
 
-			<strong>Usuarios a importar:</strong>				
-			<cfdump var="#getImportedUsersQuery#" label="#SESSION.client_abb#_users_to_import" metainfo="no">
+			<cfoutput>
+				<strong>Usuarios a eliminar (#getUsersToDelete.recordCount#):</strong>
+			</cfoutput>			
+			<cfdump var="#getUsersToDelete#" label="#SESSION.client_abb#_users_to_delete" metainfo="no">
 
 		<cfelse>
 
-			<strong>No se puede realizar la importación, no hay usuarios para importar.</strong>	
+			<strong>No se puede realizar la eliminación, no hay usuarios para eliminar.</strong>	
 
 		</cfif>
 
-		<cfcatch>
-			<strong>ERROR, no se puede realizar la importación. Antes debe cargar usuarios mediante <a href="import_1_users_from_csv.cfm">1º Cargar desde un CSV los usuarios</a>.</strong>
+		<!---<cfcatch>
+			<strong>ERROR, no se puede realizar la eliminación.</strong>
 		</cfcatch>		
-	</cftry>
+	</cftry>--->
 	
 </cfif>
 

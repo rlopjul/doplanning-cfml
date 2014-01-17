@@ -11,6 +11,7 @@
 	<cfset component = "AreaQuery">	
 	
 	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
+	<cfset timeZoneTo = "+1:00">
 	
 	<!---getArea--->
 		
@@ -26,7 +27,7 @@
 			
 			<cfquery name="selectAreaQuery" datasource="#client_dsn#">
 				SELECT areas.id, areas.name, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id, areas.link, areas.type, areas.default_typology_id, areas.hide_in_menu, areas.menu_type_id
-				, DATE_FORMAT(areas.creation_date, '#dateTimeFormat#') AS creation_date
+				, DATE_FORMAT(CONVERT_TZ(areas.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
 				<cfif arguments.with_user IS true>
 				, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				</cfif>
