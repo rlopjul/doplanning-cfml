@@ -677,3 +677,16 @@ fieldset[disabled] input {
 .field_label {
 	font-size: 12px;
 }
+.item_position {
+	line-height:30px;float:left;clear:none;	
+}
+.change_position {
+	float:right;clear:none;
+	width: 14px;
+}
+.change_position a {
+	clear:right;
+}
+/*.div_position_down {
+	clear:both; height:0;
+}*/

@@ -117,11 +117,17 @@
 						<cfset objectUser.language = loginQuery.language>
 						<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
 					
-						<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="xmlResponse">
+						<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="loginResult">
 							<cfinvokeargument name="client_abb" value="#client_abb#">
 							<cfinvokeargument name="objectClient" value="#objectClient#">
 							<cfinvokeargument name="objectUser" value="#objectUser#">
 						</cfinvoke>
+
+						<cfsavecontent variable="xmlResponse">
+							<cfoutput>
+								<login valid="#loginResult.result#"></login>
+							</cfoutput>
+						</cfsavecontent>
 						
 						<!---<cfinclude template="includes/functionEndNoLog.cfm">---><!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
 						

@@ -11,18 +11,26 @@
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 
-<!--[if lt IE 9]>
+<!---<!--[if lt IE 9]>
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
     <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
     <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
 <![endif]-->
+<!--[if IE 7]>
+  	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet" >
+<![endif]-->--->
+
+<!--[if lt IE 9]>
+	<script src="#APPLICATION.htmlPath#/scripts/html5shiv/html5shiv.js"></script>
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.min.js"></script>
+<![endif]-->
 <!--[if lt IE 8]>
   	<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-ie7/bootstrap-ie7.css" rel="stylesheet" rel="stylesheet">
 <![endif]-->
 <!--[if IE 7]>
-  	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet" >
+	<link href="#APPLICATION.htmlPath#/font-awesome/css/font-awesome-ie7.min.css" rel="stylesheet">
 <![endif]-->
 
 <link href="../../styles/styles.min.css?v=2.1" rel="stylesheet" type="text/css" media="all" />
@@ -33,15 +41,15 @@
 </cfif>
 <link href="../../styles/styles_iframes.css" rel="stylesheet" type="text/css" media="all" />
 
-<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
+<script src="#APPLICATION.jqueryJSPath#"></script>
+<script src="#APPLICATION.bootstrapJSPath#"></script>
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
+<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 
-<script type="text/javascript" src="../../scripts/functions.min.js?v=2.1"></script>
-<script type="text/javascript" src="../../scripts/iframesFunctions.min.js?v=2"></script>
+<script src="../../scripts/functions.min.js?v=2.1"></script>
+<script src="../../scripts/iframesFunctions.min.js?v=2"></script>
 
-<script type="text/javascript">
+<script>
 	//Language
 	jquery_lang_js.prototype.defaultLang = 'es';
 	jquery_lang_js.prototype.currentLang = 'es';
