@@ -109,7 +109,7 @@
 					headers: { 
 						1: { 
 							sorter: "datetime" 
-						},
+						}
 						<!---2: { 
 							sorter: "datetime" 
 						}--->
