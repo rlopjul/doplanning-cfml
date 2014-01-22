@@ -202,6 +202,38 @@
 	</cffunction>
 
 
+	<!---  ---------------------- changeFieldPosition -------------------------------- --->
+
+	<cffunction name="changeFieldPosition" returntype="struct" access="public">
+		<cfargument name="field_id" type="numeric" required="true">
+		<cfargument name="other_field_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="action" type="string" required="true"><!---increase/decrease--->
+		
+		<cfset var method = "changeFieldPosition">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="changeFieldPosition" returnvariable="response">
+				<cfinvokeargument name="a_field_id" value="#arguments.field_id#">
+				<cfinvokeargument name="b_field_id" value="#arguments.other_field_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="action" value="#arguments.action#">
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
 	<!--- -------------------------------deleteFieldRemote-------------------------------------- --->
 	
     <cffunction name="deleteFieldRemote" returntype="void" access="remote">

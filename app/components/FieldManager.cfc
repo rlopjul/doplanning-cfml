@@ -409,6 +409,115 @@
 	<!---  ------------------------------------------------------------------------ --->
 
 
+	<!---  ---------------------- changeFieldPosition -------------------------------- --->
+
+	<cffunction name="changeFieldPosition" returntype="struct" access="public">
+		<cfargument name="a_field_id" type="numeric" required="true">
+		<cfargument name="b_field_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="action" type="string" required="true"><!---increase/decrease--->
+		
+		<cfset var method = "changeFieldPosition">
+
+		<cfset var response = structNew()>
+
+		<cfset var table_id = "">
+		<cfset var area_id = "">
+		
+		<cfset var a_fieldNewPosition = "">
+		<cfset var b_fieldNewPosition = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+						
+			<cfquery name="getField" datasource="#client_dsn#">		
+				SELECT fields.position, fields.table_id
+				FROM #client_abb#_#tableTypeTable#_fields AS fields
+				WHERE fields.field_id = <cfqueryparam value="#arguments.a_field_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif getField.recordCount GT 0>
+
+				<cfset table_id = getField.table_id>
+				
+				<!---Table--->
+				<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				</cfinvoke>
+				
+				<cfif getTableResponse.result IS false>
+					<cfreturn getTableResponse>
+				</cfif>
+
+				<cfset area_id = getTableResponse.table.area_id>
+
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+				<cfset b_fieldNewPosition = getField.position>
+
+				<cfquery name="getOtherField" datasource="#client_dsn#">		
+					SELECT fields.field_id, fields.position
+					FROM #client_abb#_#tableTypeTable#_fields AS fields
+					WHERE fields.field_id = <cfqueryparam value="#arguments.b_field_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+					
+				<cfif getOtherField.recordCount GT 0>
+
+					<cfset a_fieldNewPosition = getOtherField.position>
+					
+					<cftransaction>
+						
+						<cfquery name="updateOtherFieldQuery" datasource="#client_dsn#">		
+							UPDATE #client_abb#_#tableTypeTable#_fields
+							SET position = <cfqueryparam value="#b_fieldNewPosition#" cfsqltype="cf_sql_integer">
+							WHERE field_id = <cfqueryparam value="#arguments.b_field_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+						
+						<cfquery name="updateFieldQuery" datasource="#client_dsn#">		
+							UPDATE #client_abb#_#tableTypeTable#_fields
+							SET position = <cfqueryparam value="#a_fieldNewPosition#" cfsqltype="cf_sql_integer">
+							WHERE field_id = <cfqueryparam value="#arguments.a_field_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+					
+					</cftransaction>
+					
+				<cfelse>
+				
+					<cfset response = {result=false, message="Error, no se ha encontrado el campo por el que hay que cambiar el orden"}>
+					
+					<cfreturn response>
+					
+				</cfif>
+				
+				<cfinclude template="includes/logRecord.cfm">
+				
+				<cfset response = {result=true, table_id=table_id}>
+			
+			<cfelse>
+			
+				<cfset response = {result=false, message="Error, no se ha encontrado el elemento"}>
+			
+			</cfif>
+			
+		<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
 	<!--- ------------------------------------- deleteField -------------------------------------  --->
 	
 	<cffunction name="deleteField" output="false" access="public" returntype="struct">

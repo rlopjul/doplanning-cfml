@@ -2402,10 +2402,10 @@
 							
 							<cfif len(arguments.area_type) GT 0>
 								
-							<td style="vertical-align:middle"><span style="line-height:30px;">#itemsQuery.position#</span><div style="float:right;clear:none;"><cfif itemsQuery.currentRow NEQ 1>
+							<td><div class="item_position">#itemsQuery.position#</div><div class="change_position"><cfif itemsQuery.currentRow NEQ 1>
 								<cfset up_item_id = itemsQuery.id[itemsQuery.currentRow-1]>
 								<cfset up_item_type = itemsQuery.itemTypeId[itemsQuery.currentRow-1]>
-								<a onclick="openUrl('area_item_position_up.cfm?item=#itemsQuery.id#&type=#itemTypeId#&oitem=#up_item_id#&otype=#up_item_type#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a></cfif><div style="clear:both; height:0px;"><!-- --></div><cfif itemsQuery.currentRow NEQ itemsQuery.recordCount>
+								<a onclick="openUrl('area_item_position_up.cfm?item=#itemsQuery.id#&type=#itemTypeId#&oitem=#up_item_id#&otype=#up_item_type#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a><cfelse><br></cfif><!--- <div style="clear:both; height:0px;"><!-- --></div> ---><cfif itemsQuery.currentRow NEQ itemsQuery.recordCount>
 									<cfset down_item = itemsQuery.id[itemsQuery.currentRow+1]>
 									<cfset down_item_type = itemsQuery.itemTypeId[itemsQuery.currentRow+1]>
 									<a onclick="openUrl('area_item_position_down.cfm?item=#itemsQuery.id#&type=#itemTypeId#&oitem=#down_item#&otype=#down_item_type#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a>
