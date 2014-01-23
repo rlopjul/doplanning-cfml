@@ -67,7 +67,7 @@
 						, items.place
 					<cfelse><!---Tasks--->
 						, items.recipient_user, items.done, items.estimated_value, items.real_value
-						, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name
+						, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name, recipient_users.image_type AS recipient_user_image_type
 					</cfif>
 				</cfif>
 				<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
@@ -167,7 +167,7 @@
 					, users.family_name, users.name AS user_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 						<cfif arguments.itemTypeId IS 6><!---Tasks--->
 						, items.done, items.estimated_value, items.real_value
-						, recipient_users.family_name AS recipient_user_family_name, recipient_users.name AS recipient_user_name, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name
+						, items.recipient_user, recipient_users.family_name AS recipient_user_family_name, recipient_users.name AS recipient_user_name, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name, recipient_users.image_type AS recipient_user_image_type
 						</cfif>					
 					</cfif>
 					<cfif arguments.itemTypeId IS NOT 1>

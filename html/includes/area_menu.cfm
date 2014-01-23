@@ -37,17 +37,6 @@
 				<!---<div style="height:35px;"><!-- --></div>--->
 			</cfif>
 
-				<!---<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="##menu-items-navbar-collapse" id="navbar-collapse-button" style="float:right">
-			      <span class="sr-only">Toggle navigation</span>
-			      <span class="icon-bar"></span>
-			      <span class="icon-bar"></span>
-			      <span class="icon-bar"></span>
-			    </button>--->
-
-			    <!---<p style="margin-top:10px; margin-right:5px;<cfif curElement EQ 'items'>background-color:##E7E7E7</cfif>" id="area-link">
-			    	<a href="area_items.cfm?area=#area_id#" style="float:right"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/area.png" title="Todos los elementos del área" alt="Todos los elementos del área" lang="es"/></a>
-			    </p>--->
-		
 			</div>
 
 			<div style="float:right; margin-right:15px;">
@@ -79,7 +68,7 @@
 							</cfif>
 							
 							<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0>
-							<li <cfif curElement EQ "messages">class="active"</cfif>><a href="messages.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/message.png" title="Mensajes del área" alt="Mensajes del área" lang="es"/></a></li>
+							<li <cfif curElement EQ "messages">class="active"</cfif>><a href="messages.cfm?area=#area_id#&mode=tree"><img src="#APPLICATION.htmlPath#/assets/icons/message.png" title="Mensajes del área" alt="Mensajes del área" lang="es"/></a></li>
 							</cfif>
 							
 							<li <cfif curElement EQ "files">class="active"</cfif>><a href="files.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/file.png" title="Archivos del área" alt="Archivos del área" lang="es"/></a></li>
