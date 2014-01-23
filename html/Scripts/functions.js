@@ -113,7 +113,7 @@ function downloadFileLinked(anchor,event){
 }
 
 function openPopUp(url) {
-	window.open(url, "popup_id", "scrollbars,resizable,width=580,height=500");
+	window.open(url, "popup_id", "scrollbars,resizable,width=580,height=500,location=no ");
 	return false;
 }
 	
