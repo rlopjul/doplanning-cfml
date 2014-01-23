@@ -36,9 +36,9 @@
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
 
 <cfif APPLICATION.identifier EQ "dp">
-<link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp2.min.css"/>
+<link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp2.min.css"/>
 <cfelse>
-<link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
+<link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
 
 <script src="#APPLICATION.jqueryJSPath#"></script>
@@ -359,7 +359,7 @@
 		  <cfoutput>
 		  <div style="clear:none; text-align:center">
 
-		  	<span style="line-height:35px; color:##666666; font-size:12px"><b>Administración</b> beta</span>
+		  	<span class="main_title"><b>Administración</b> beta</span>
 		  
 		  	<div style="float:right; text-align:right; clear:none;">
 				<a href="../preferences.cfm" title="Preferencias del usuario" class="link_user_logged" lang="es">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>

@@ -1521,7 +1521,15 @@
 					</div>
 					
 					<cfif itemTypeId IS 6><!---Tasks--->
-						<div class="div_message_page_label"><span lang="es">Asignada a:</span> <span class="text_message_page">#objectItem.recipient_user_full_name#</span></div>
+						<div class="div_message_page_label"><span lang="es">Asignada a:</span> 
+						
+						<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.recipient_user#"><cfif len(objectItem.recipient_user_image_type) GT 0>
+							<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectItem.recipient_user#&type=#objectItem.recipient_user_image_type#&small=" alt="#objectItem.recipient_user_full_name#" class="item_img"/>									
+						<cfelse>							
+							<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectItem.recipient_user_full_name#" class="item_img_default" />
+						</cfif></a>
+
+						<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.recipient_user#">#objectItem.recipient_user_full_name#</a></div>
 					</cfif>
 					
 					<div class="div_message_page_label"><span lang="es">Fecha de creación:</span> <span class="text_message_page">#objectItem.creation_date#</span></div>
@@ -1733,7 +1741,7 @@
 								filter_searchDelay : 300,
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
-								filter_useParsedData : false,
+								filter_useParsedData : false
 						    }
 						   </cfif>
 						});
@@ -1914,9 +1922,21 @@
 								
 								</cfif>
 							</td>
-							<td><span>#itemsQuery.user_full_name#</span></td>
+							<td>
+								<cfif len(itemsQuery.user_image_type) GT 0>
+									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemsQuery.user_in_charge#&type=#itemsQuery.user_image_type#&small=" alt="#itemsQuery.user_full_name#" class="item_img"/>									
+								<cfelse>							
+									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#itemsQuery.user_full_name#" class="item_img_default" />
+								</cfif>
+								<span>#itemsQuery.user_full_name#</span></td>
 							<cfif arguments.itemTypeId IS 6><!---Tasks--->
-							<td><span>#itemsQuery.recipient_user_full_name#</span></td>
+							<td>
+								<cfif len(itemsQuery.recipient_user_image_type) GT 0>
+									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemsQuery.recipient_user#&type=#itemsQuery.recipient_user_image_type#&small=" alt="#itemsQuery.recipient_user_full_name#" class="item_img"/>									
+								<cfelse>							
+									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#itemsQuery.recipient_user_full_name#" class="item_img_default" />
+								</cfif>
+								<span>#itemsQuery.recipient_user_full_name#</span></td>
 							<td><span>#itemsQuery.estimated_value#</span></td>
 							<td><span>#itemsQuery.real_value#</span></td>
 							</cfif>
@@ -1927,12 +1947,8 @@
 							</td>
 							</cfif>
 							<cfif arguments.itemTypeId IS 5 OR arguments.itemTypeId IS 6><!---Event OR Task--->
-							<td>
-								<span>#itemsQuery.start_date#</span>
-							</td>
-							<td>
-								<span>#itemsQuery.end_date#</span>
-							</td>
+							<td><span>#itemsQuery.start_date#</span></td>
+							<td><span>#itemsQuery.end_date#</span></td>
 							</cfif>
 							
 							<cfif arguments.full_content IS true>
@@ -2013,7 +2029,7 @@
 								filter_searchDelay : 300,
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
-								filter_useParsedData : false,
+								filter_useParsedData : false
 						    } 
 						    </cfif> 
 						});

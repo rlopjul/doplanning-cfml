@@ -33,30 +33,30 @@
 <![endif]-->
 
 <cfif APPLICATION.identifier EQ "dp">
-<link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp2.min.css"/>
+<link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp2.min.css"/>
 <cfelse>
-<link rel="stylesheet" type="text/css" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
+<link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
 
 <cfif APPLICATION.identifier EQ "vpnet">
 	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
-	<script type="text/javascript" src="../SpryAssets/includes/xpath.js"></script>
-	<script type="text/javascript" src="../SpryAssets/includes/SpryData.js"></script>
-	<script type="text/javascript" src="../SpryAssets/includes/SpryXML.js"></script>
-	<script type="text/javascript" src="../SpryAssets/includes/SpryDOMUtils.js"></script>
+	<script src="../SpryAssets/includes/xpath.js"></script>
+	<script src="../SpryAssets/includes/SpryData.js"></script>
+	<script src="../SpryAssets/includes/SpryXML.js"></script>
+	<script src="../SpryAssets/includes/SpryDOMUtils.js"></script>
 	<cfif APPLICATION.moduleMessenger EQ true>
-		<script type="text/javascript" src="../app/scripts/App.js"></script>
-		<script type="text/javascript" src="scripts/MessengerControl.js"></script>
+		<script src="../app/scripts/App.js"></script>
+		<script src="scripts/MessengerControl.js"></script>
 	</cfif>
 </cfif>
 
-<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+<script src="#APPLICATION.jqueryJSPath#"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
-<script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
+<script src="#APPLICATION.bootstrapJSPath#"></script>
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
-<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
+<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
 
 </cfoutput>
 
@@ -100,9 +100,9 @@
 </script>
 
 <cfoutput>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/functions.min.js"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.4"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.5"></script>
+<script src="#APPLICATION.htmlPath#/scripts/functions.min.js"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.4"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.5"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -290,7 +290,7 @@
 		  <cfoutput>
 		  <div style="clear:none; text-align:center"><!---float:right; --->
 
-		  	<span style="line-height:35px; color:##666666; font-size:12px; font-weight:bold">#SESSION.client_name#</span>
+		  	<span class="main_title" style="font-weight:bold">#SESSION.client_name#</span>
 		  
 		  	<div style="float:right">
 
