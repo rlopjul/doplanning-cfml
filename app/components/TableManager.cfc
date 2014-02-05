@@ -63,6 +63,11 @@
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			</cfinvoke>
 
+			<cfinvoke component="ViewManager" method="deleteTableViews">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+
 			<cfquery name="deleteTable" datasource="#client_dsn#">
 				DROP TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
 			</cfquery>	
@@ -435,14 +440,14 @@
 	</cffunction>
 	
 
-
-
 	<!--- ------------------------------------- getTableFields -------------------------------------  --->
 	
 	<cffunction name="getTableFields" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="with_types" type="boolean" required="false" default="false">
+		<cfargument name="view_id" type="numeric" required="false">
+		<cfargument name="only_view_fields" type="boolean" required="false">
 
 		<cfset var method = "getTableFields">
 
@@ -459,6 +464,8 @@
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_types" value="#arguments.with_types#">
 				<cfinvokeargument name="with_table" value="true">
+				<cfinvokeargument name="view_id" value="#arguments.view_id#">
+				<cfinvokeargument name="only_view_fields" value="#arguments.only_view_fields#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -585,6 +592,76 @@
 			</cfinvoke>
 
 			<cfset response = {result=true, tableUsers=getTableUsersQuery}>
+								
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+
+	<!--- ------------------------------------- getTableViews -------------------------------------  --->
+	
+	<cffunction name="getTableViews" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getTableViews">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ViewQuery" method="getTableViews" returnvariable="getTableViewsQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_table" value="true">
+				<cfinvokeargument name="parse_dates" value="true">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif getTableViewsQuery.recordCount GT 0>
+
+				<cfset area_id = getTableViewsQuery.area_id>
+
+				<!---
+				<cfif arguments.tableTypeId IS NOT 3 OR getTableViewsQuery.general IS false><!---No es tipología general--->
+
+					<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
+
+						<!--- checkTableWithInheritanceAccess --->
+						<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
+							<cfinvokeargument name="table_id" value="#arguments.table_id#">
+							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+							<cfinvokeargument name="table_area_id" value="#area_id#">
+						</cfinvoke>					
+
+					<cfelseif getTableViewsQuery.structure_available IS false><!--- La estructura no está compartida --->
+
+						<!--- checkAreaAccess --->
+						<cfinclude template="includes/checkAreaAccess.cfm">
+
+					</cfif>
+
+				</cfif>
+				--->
+
+			</cfif>
+
+			<cfset response = {result=true, tableFields=getTableViewsQuery}>
 								
 			<cfcatch>
 

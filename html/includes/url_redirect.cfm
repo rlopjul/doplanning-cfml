@@ -47,6 +47,14 @@
 		<cfset redirect_page = "list.cfm?list=#URL.list#">
 		<cfset redirect_area_page = "area_items.cfm?list=#URL.list#&area=#URL.area#">
 	</cfif>
+<cfelseif APPLICATION.moduleLists IS true AND isDefined("URL.list_view")>
+	<cfif isDefined("URL.row")>
+		<cfset redirect_page = "list_view_row.cfm?list_view=#URL.list_view#&row=#URL.row#">
+		<cfset redirect_area_page = "list_view_rows.cfm?list_view=#URL.list_view#&row=#URL.row#&area=#URL.area#">
+	<cfelse>
+		<cfset redirect_page = "list_view.cfm?list_view=#URL.list_view#">
+		<cfset redirect_area_page = "area_items.cfm?list_view=#URL.list_view#&area=#URL.area#">
+	</cfif>
 <cfelseif APPLICATION.moduleForms IS true AND isDefined("URL.form")>
 	<cfif isDefined("URL.row")>
 		<cfset redirect_page = "form_row.cfm?form=#URL.form#&row=#URL.row#">
@@ -54,6 +62,14 @@
 	<cfelse>
 		<cfset redirect_page = "form.cfm?form=#URL.form#">
 		<cfset redirect_area_page = "area_items.cfm?form=#URL.form#&area=#URL.area#">
+	</cfif>
+<cfelseif APPLICATION.moduleForms IS true AND isDefined("URL.form_view")>
+	<cfif isDefined("URL.row")>
+		<cfset redirect_page = "form_view_row.cfm?form_view=#URL.form_view#&row=#URL.row#">
+		<cfset redirect_area_page = "form_view_rows.cfm?form_view=#URL.form_view#&row=#URL.row#&area=#URL.area#">
+	<cfelse>
+		<cfset redirect_page = "form_view.cfm?form_view=#URL.form_view#">
+		<cfset redirect_area_page = "area_items.cfm?form_view=#URL.form_view#&area=#URL.area#">
 	</cfif>
 <cfelseif APPLICATION.modulefilesWithTables IS true AND isDefined("URL.typology")>
 	<cfset redirect_page = "typology.cfm?typology=#URL.typology#">

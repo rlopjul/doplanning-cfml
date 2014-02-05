@@ -12,7 +12,7 @@
 
 <cfoutput>
 
-<script type="text/javascript">
+<script>
 
 	function onSubmitForm() {
 

@@ -98,6 +98,22 @@
 	</cffunction>
 
 
+	<!--- ----------------------- getViewRowUrl -------------------------------- --->
+	<cffunction name="getViewRowUrl" access="public" returntype="string">
+		<cfargument name="view_id" type="numeric" required="yes">
+		<cfargument name="itemTypeName" type="string" required="yes">
+		<cfargument name="row_id" type="numeric" required="yes">
+
+		<cfargument name="client_abb" type="string" required="true">
+		
+		<cfset var rowUrl = "">
+		
+		<cfset rowUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#arguments.area_id#&#arguments.itemTypeName#=#arguments.view_id#&row=#arguments.row_id#">		
+		
+		<cfreturn rowUrl>
+	</cffunction>
+
+
 	<!--- ----------------------- getAreaWebPage -------------------------------- --->
 
 	<!---Para poder URLs absolutas es necesario saber la URL donde está publicada la web.

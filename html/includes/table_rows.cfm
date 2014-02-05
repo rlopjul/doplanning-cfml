@@ -27,6 +27,30 @@
 </cfinvoke>
 <cfset fields = fieldsResult.tableFields>
 
+<!--- creation_date --->
+<!---<cfset queryAddRow(fields, 1)>
+<cfset querySetCell(fields, "field_id", "creation_date")>
+<cfset querySetCell(fields, "label", "Fecha de creación")>
+<cfset querySetCell(fields, "position", 0)>--->
+
+<!--- last_update_date --->
+<cfset queryAddRow(fields, 1)>
+<cfset querySetCell(fields, "field_id", "last_update_date")>
+<cfset querySetCell(fields, "label", "Fecha de última modificación")>
+<cfset querySetCell(fields, "position", 0)>
+
+<!--- insert_user --->
+<!---<cfset queryAddRow(fields, 1)>
+<cfset querySetCell(fields, "field_id", "insert_user")>
+<cfset querySetCell(fields, "label", "Usuario creación")>
+<cfset querySetCell(fields, "position", 0)>--->
+
+<!--- update_user --->
+<!---<cfset queryAddRow(fields, 1)>
+<cfset querySetCell(fields, "field_id", "update_user")>
+<cfset querySetCell(fields, "label", "Usuario última modificación")>
+<cfset querySetCell(fields, "position", 0)>--->
+
 <cfset area_id = objectItem.area_id>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
@@ -58,6 +82,7 @@
 
 	</cfif>
 	
+	<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
 
 	<cfif is_user_area_responsible OR table_edit_permission IS true>
 		<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo registro" lang="es"><i class="icon-plus" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Nuevo registro</span></a>
@@ -80,9 +105,9 @@
 		<span class="divider">&nbsp;</span>
 	</cfif>
 
-	<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>
+	<!---<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>
 
-	<span class="divider">&nbsp;</span>
+	<span class="divider">&nbsp;</span>--->
 
 	<cfif app_version NEQ "mobile">
 		<a href="#APPLICATION.htmlPath#/#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
@@ -98,198 +123,7 @@
 
 	<cfif tableRows.recordCount GT 0>
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
-
-		<script type="text/javascript">
-			$(document).ready(function() { 
-				
-				$("##dataTable").tablesorter({ 
-					widgets: ['zebra','filter','select','stickyHeaders'],
-					sortList: [[0,1]] ,
-					headers: { 
-						1: { 
-							sorter: "datetime" 
-						}
-						<!---2: { 
-							sorter: "datetime" 
-						}--->
-					},
-
-					widgetOptions : {
-						filter_childRows : false,
-						filter_columnFilters : true,
-						filter_cssFilter : 'tablesorter-filter',
-						filter_filteredRow   : 'filtered',
-						filter_formatter : null,
-						filter_functions : null,
-						filter_hideFilters : false,
-						filter_ignoreCase : true,
-						filter_liveSearch : true,
-						//filter_reset : 'button.reset',
-						filter_searchDelay : 500,
-						filter_serversideFiltering: false,
-						filter_startsWith : false,
-						filter_useParsedRow : false
-				    }
-				});
-				
-			}); 
-		</script>
-
-		<cfset selectFirst = true>
-		<cfset listFields = false>
-
-		<cfif isDefined("URL.field")>
-			<cfset selectFirst = false>
-		</cfif>
-
-		<table id="dataTable" class="table-hover" style="margin-top:5px;">
-			<thead>
-				<tr>
-					<th style="width:25px;">##</th>
-					<!--- <th>Fecha inserción</th> --->
-					<th>Fecha última modificación</th>
-					<cfloop query="fields">
-						<th>#fields.label#</th>
-						<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10><!--- LISTS --->
-							<cfset listFields = true>
-						</cfif>
-					</cfloop>
-				</tr>
-			</thead>
-			<tbody>
-
-			<cfif listFields IS true>
-				
-				<!--- Get selected areas --->
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRowSelectedAreas" returnvariable="getRowSelectedAreasResponse">
-					<cfinvokeargument name="table_id" value="#table_id#">
-					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-				</cfinvoke>
-
-				<cfset selectedAreas = getRowSelectedAreasResponse.areas>
-
-			</cfif>
-
-			<cfset alreadySelected = false>
-
-			<cfloop query="tableRows">
-
-				<!---<cfif isDefined("arguments.return_page")>
-					<cfset rpage = arguments.return_page>
-				<cfelse>--->
-					<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
-				<!---</cfif>--->
-				<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
-
-				<!---Row selection--->
-				<cfset dataSelected = false>
-				
-				<cfif alreadySelected IS false>
-
-					<cfif ( isDefined("URL.row") AND (URL.row IS tableRows.row_id) ) OR ( selectFirst IS true AND tableRows.currentrow IS tableRows.recordCount AND app_version NEQ "mobile" ) >
-
-						<!---Esta acción solo se completa si está en la versión HTML2--->
-						<script type="text/javascript">
-							openUrlHtml2('#row_page_url#','itemIframe');
-						</script>
-
-						<cfset dataSelected = true>
-						<cfset alreadySelected = true>
-																		
-					</cfif>
-					
-				</cfif>
-
-				<tr <cfif dataSelected IS true>class="selected"</cfif> onclick="openUrl('#row_page_url#','itemIframe',event)">
-					<td>#tableRows.row_id#</td>
-					<!---<td>#DateFormat(tableRows.creation_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>--->
-					<td><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
-					<cfset row_id = tableRows.row_id>
-					<cfloop query="fields">
-
-						<cfset field_value = "">
-
-						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS LIST --->
-
-							<cfif selectedAreas.recordCount GT 0>
-
-								<cfquery dbtype="query" name="rowSelectedAreas">
-									SELECT name
-									FROM selectedAreas
-									WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
-									AND row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">;
-								</cfquery>
-
-								<cfif rowSelectedAreas.recordCount GT 0>
-									<cfset field_value = valueList(rowSelectedAreas.name, "<br/>")>
-								</cfif>
-
-							</cfif>
-							
-						<cfelse><!--- IS NOT LIST --->
-
-							<cfset field_value = tableRows['field_#fields.field_id#']>
-
-							<cfif len(field_value) GT 0>
-								<cfif fields.field_type_id IS 6><!--- DATE --->
-									<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
-								<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
-									<cfif field_value IS true>
-										<cfset field_value = "Sí">
-									<cfelseif field_value IS false>
-										<cfset field_value = "No">
-									</cfif>
-									<cfset field_value = '<span lang="es">#field_value#</span>'>
-								<cfelse>
-
-									<cfif fields.field_type_id IS 2 OR fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- TEXTAREA --->
-										
-										<cfif len(field_value) GT 60><!---200--->
-
-											<cfif fields.field_type_id IS NOT 2>
-
-												<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="removeHTML" returnvariable="field_value">
-													<cfinvokeargument name="string" value="#field_value#">
-												</cfinvoke>
-							
-											</cfif>
-
-											<!---<cfset field_value = left(field_value, 180)&"...">ANTES ESTABA ASÍ--->
-											<cfset summary_value = left(field_value, 55)&"...">
-
-											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="summary_value">
-												<cfinvokeargument name="string" value="#summary_value#">
-											</cfinvoke>
-
-											<cfif fields.field_type_id IS NOT 11><!--- IS NOT Very long text --->
-												<cfset field_value = '#summary_value#<span class="hidden">#field_value#</span>'>
-											<cfelse>
-												<cfset field_value = summary_value>
-											</cfif>											
-
-										<cfelseif fields.field_type_id IS 2>
-
-											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
-												<cfinvokeargument name="string" value="#field_value#">
-											</cfinvoke>
-
-										</cfif>
-
-									</cfif>
-									
-								</cfif>
-							</cfif>
-
-						</cfif>
-
-						<td>#field_value#</td>
-
-					</cfloop>
-				</tr>
-			</cfloop>
-			</tbody>
-		</table>
+		<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">
 
 	<cfelse>
 	
@@ -297,10 +131,9 @@
 			openUrlHtml2('empty.cfm','itemIframe');
 		</script>				
 
-		<cfoutput>
 		<div class="div_text_result"><span lang="es">No hay datos introducidos.</span></div>
-		</cfoutput>
 
 	</cfif>
-
+	
+</div>
 </cfoutput>

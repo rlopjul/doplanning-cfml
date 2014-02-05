@@ -38,7 +38,7 @@ CKEDITOR.editorConfig = function( config ) {
 		['FontSize','TextColor','BGColor'],
 		['NumberedList','BulletedList'],
 		['Link','Unlink','-','Table','HorizontalRule','SpecialChar'],
-		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize']
+		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'], ['Image']
 	];
 	
 	//Para que solo se pueda introducir texto plano
@@ -48,4 +48,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.entities_greek = false;
 	config.entities_latin = false;
 	config.entities_processNumerical = false;
+
+	//config.filebrowserUploadUrl = '../../app/filemanager/index.html';
+	config.filebrowserBrowseUrl = '../../app/filemanager/index.html';
 };
