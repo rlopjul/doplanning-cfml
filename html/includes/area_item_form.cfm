@@ -50,8 +50,8 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>--->
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 </cfoutput>
 
 </cfif>

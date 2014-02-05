@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8"></script>
 </cfoutput>
 
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -11,6 +11,7 @@
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
 
+<!--- getRow --->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
 	<cfinvokeargument name="table_id" value="#table_id#"/>
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
@@ -96,31 +97,18 @@
 
 <div class="div_message_page_message">
 
-	<div class="div_message_page_label">Creado por: 
-	
-		<a href="area_user.cfm?area=#area_id#&user=#row.insert_user_id#"><cfif len(row.insert_user_image_type) GT 0>
-			<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.insert_user_id#&type=#row.insert_user_image_type#&small=" alt="#row.insert_user_full_name#" class="item_img" style="margin-right:2px;"/>									
-		<cfelse>							
-			<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#row.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
-		</cfif></a>
-		
-		<a href="area_user.cfm?area=#area_id#&user=#row.insert_user_id#">#row.insert_user_full_name#</a>
-	</div>
-	<div class="div_message_page_label"><span lang="es">Fecha de creación:</span> <span class="text_message_page">#DateFormat(row.creation_date, APPLICATION.dateFormat)# #TimeFormat(row.creation_date, "HH:mm")#</span></div>
+	<!--- Fields --->
+	<!--- <cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm"> --->
 
-	<cfif isNumeric(row.last_update_user_id)>
-		<div class="div_message_page_label">Última modificación por: 
-		
-			<a href="area_user.cfm?area=#area_id#&user=#row.last_update_user_id#"><cfif len(row.update_user_image_type) GT 0>
-				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.last_update_user_id#&type=#row.update_user_image_type#&small=" alt="#row.update_user_full_name#" class="item_img" style="margin-right:2px;"/>									
-			<cfelse>							
-				<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#row.update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
-			</cfif></a>
-			
-			<a href="area_user.cfm?area=#area_id#&user=#row.last_update_user_id#">#row.update_user_full_name#</a>
-		</div>
-		<div class="div_message_page_label"><span lang="es">Fecha de última modificación:</span> <span class="text_message_page">#DateFormat(row.last_update_date, APPLICATION.dateFormat)# #TimeFormat(row.last_update_date, "HH:mm")#</span></div>
-	</cfif>
+	<!---outputRowContent--->
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowContent">
+		<cfinvokeargument name="table_id" value="#table_id#">
+		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		<cfinvokeargument name="area_id" value="#area_id#">
+		<cfinvokeargument name="row" value="#row#">
+	</cfinvoke>
+
+	<div style="height:10px;clear:both"></div>
 
 	<!---tableRowUrl--->
 	<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="tableRowUrl">
@@ -135,11 +123,6 @@
 	<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
 	<input type="text" value="#tableRowUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
-
-	<div style="height:10px;clear:both"></div>
-
-	<!--- Fields --->
-	<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">
 
 </div>
 

@@ -102,25 +102,30 @@
 		
 		</cfif>
 			
-		<!---fileDownloadUrl--->
-		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
-				<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
-				<cfinvokeargument name="fileTypeId" value="1">
-				<cfinvokeargument name="item_id" value="#objectItem.id#">
-				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-			</cfinvoke>
+		<cfif arguments.itemTypeId LT 10>
+			
+			<!---fileDownloadUrl--->
+			<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
+					<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
+					<cfinvokeargument name="fileTypeId" value="1">
+					<cfinvokeargument name="item_id" value="#objectItem.id#">
+					<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+				</cfinvoke>
+			</cfif>
+
+			<!---imageDownloadUrl--->
+			<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadImageUrl">
+					<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
+					<cfinvokeargument name="fileTypeId" value="1">
+					<cfinvokeargument name="item_id" value="#objectItem.id#">
+					<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+				</cfinvoke>			
+			</cfif>
+
 		</cfif>
 		
-		<!---imageDownloadUrl--->
-		<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadImageUrl">
-				<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
-				<cfinvokeargument name="fileTypeId" value="1">
-				<cfinvokeargument name="item_id" value="#objectItem.id#">
-				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-			</cfinvoke>			
-		</cfif>
 		
 		<!---getRootArea--->
 		<cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
@@ -268,47 +273,50 @@
 						<cfif itemTypeId IS NOT 1 AND len(objectItem.last_update_date) GT 0>
 						#langText[curLang].new_item.last_update_date#: <strong>#objectItem.last_update_date#</strong><br/>
 						</cfif>
-					
-						<cfif len(objectItem.link) GT 0>
-						<cfif itemTypeId IS 3><!---Links--->
-						#langText[curLang].new_item.link_url#: 
-						<cfelse>
-						#langText[curLang].new_item.link#: </cfif><a href="#objectItem.link#" target="_blank" style="font-weight:bold;">#objectItem.link#</a><br/>
-						</cfif>
-						<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
-						#langText[curLang].new_item.iframe_url#: 
-						<a href="#objectItem.iframe_url#" target="_blank" style="font-weight:bold;">#objectItem.iframe_url#</a><br/>
-						</cfif>
-						<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-						#langText[curLang].new_item.start_date#<cfif itemTypeId IS 5> #langText[curLang].new_item.of_event#</cfif>: <b>#objectItem.start_date#</b> <cfif itemTypeId IS 5>#langText[curLang].new_item.hour#: <b>#TimeFormat(objectItem.start_time,"HH:mm")#</b></cfif><br/>
-						#langText[curLang].new_item.end_date#<cfif itemTypeId IS 5> #langText[curLang].new_item.of_event#</cfif>: <b>#objectItem.end_date#</b> <cfif itemTypeId IS 5>#langText[curLang].new_item.hour#: <b>#TimeFormat(objectItem.end_time,"HH:mm")#</b></cfif><br/>
-							<cfif itemTypeId IS 5>
-							#langText[curLang].new_item.place#: <b>#objectItem.place#</b><br/>
-							<cfelse>
-							#langText[curLang].new_item.estimated_value#: <b>#objectItem.estimated_value#</b><br/>
-							#langText[curLang].new_item.real_value#: <b>#objectItem.real_value#</b><br/>
-							#langText[curLang].new_item.task_done#: <b><cfif objectItem.done IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
-							</cfif>
-						</cfif>	
-						<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
-							<cfif arguments.action NEQ "delete">
-							#langText[curLang].new_item.attached_file#: <a href="#downloadFileUrl#" target="_blank">#objectItem.attached_file_name#</a><br/>
-							<cfelse>
-							#langText[curLang].new_item.attached_file#: #objectItem.attached_file_name#<br/>
-							</cfif>
-						</cfif>
-						<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
-							<cfif arguments.action NEQ "delete">
-							#langText[curLang].new_item.attached_image#: <a href="#downloadImageUrl#" target="_blank">#objectItem.attached_image_name#</a><br/>
-							<cfelse>
-							#langText[curLang].new_item.attached_image#: #objectItem.attached_image_name#<br/>
-							</cfif>
-						</cfif>
 						
+						<cfif arguments.itemTypeId LT 10>
+
+							<cfif len(objectItem.link) GT 0 AND (itemTypeId NEQ 4 AND itemTypeId NEQ 5)>
+								<cfif itemTypeId IS 3><!---Links--->
+								#langText[curLang].new_item.link_url#: 
+								<cfelse>
+								#langText[curLang].new_item.link#: </cfif><a href="#objectItem.link#" target="_blank" style="font-weight:bold;">#objectItem.link#</a><br/>
+							</cfif>
+							<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
+							#langText[curLang].new_item.iframe_url#: 
+							<a href="#objectItem.iframe_url#" target="_blank" style="font-weight:bold;">#objectItem.iframe_url#</a><br/>
+							</cfif>
+							<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+							#langText[curLang].new_item.start_date#<cfif itemTypeId IS 5> #langText[curLang].new_item.of_event#</cfif>: <b>#objectItem.start_date#</b> <cfif itemTypeId IS 5>#langText[curLang].new_item.hour#: <b>#TimeFormat(objectItem.start_time,"HH:mm")#</b></cfif><br/>
+							#langText[curLang].new_item.end_date#<cfif itemTypeId IS 5> #langText[curLang].new_item.of_event#</cfif>: <b>#objectItem.end_date#</b> <cfif itemTypeId IS 5>#langText[curLang].new_item.hour#: <b>#TimeFormat(objectItem.end_time,"HH:mm")#</b></cfif><br/>
+								<cfif itemTypeId IS 5>
+								#langText[curLang].new_item.place#: <b>#objectItem.place#</b><br/>
+								<cfelse>
+								#langText[curLang].new_item.estimated_value#: <b>#objectItem.estimated_value#</b><br/>
+								#langText[curLang].new_item.real_value#: <b>#objectItem.real_value#</b><br/>
+								#langText[curLang].new_item.task_done#: <b><cfif objectItem.done IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
+								</cfif>
+							</cfif>	
+							<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
+								<cfif arguments.action NEQ "delete">
+								#langText[curLang].new_item.attached_file#: <a href="#downloadFileUrl#" target="_blank">#objectItem.attached_file_name#</a><br/>
+								<cfelse>
+								#langText[curLang].new_item.attached_file#: #objectItem.attached_file_name#<br/>
+								</cfif>
+							</cfif>
+							<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
+								<cfif arguments.action NEQ "delete">
+								#langText[curLang].new_item.attached_image#: <a href="#downloadImageUrl#" target="_blank">#objectItem.attached_image_name#</a><br/>
+								<cfelse>
+								#langText[curLang].new_item.attached_image#: #objectItem.attached_image_name#<br/>
+								</cfif>
+							</cfif>
+
+						</cfif><!--- END arguments.itemTypeId LT 10 --->
 						<br/>
 						<div style="padding-left:15px;">#objectItem.description#</div>
 						
-						<cfif len(objectItem.link) GT 0 AND (itemTypeId IS 4 OR itemTypeId IS 5)><!---Links, News, Events--->
+						<cfif (itemTypeId IS 4 OR itemTypeId IS 5) AND len(objectItem.link) GT 0><!---News, Events--->
 						<br/>#langText[curLang].new_item.more_information#: <a href="#objectItem.link#" target="_blank">#objectItem.link#</a><br/>
 						</cfif>
 						

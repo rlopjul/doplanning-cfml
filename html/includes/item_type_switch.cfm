@@ -1,3 +1,6 @@
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+<!---
 <cfswitch expression="#itemTypeId#"> 
 	
 	<cfcase value="1"><!---messages--->
@@ -189,6 +192,4 @@
 	
    	</cfcase>---> 
 
-   	
-
-</cfswitch>
+</cfswitch>--->

@@ -7,6 +7,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Mensaje">
+		<cfset itemTypeNameEsP = "Mensajes">
 		
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = false>
@@ -21,6 +22,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Elemento de contenido web">
+		<cfset itemTypeNameEsP = "Elementos de contenido web">
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
@@ -35,6 +37,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Enlace">
+		<cfset itemTypeNameEsP = "Enlaces">
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
@@ -49,6 +52,7 @@
 		<cfset itemTypeTable = "news">
 		
 		<cfset itemTypeNameEs = "Noticia">
+		<cfset itemTypeNameEsP = "Noticias">
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
@@ -63,6 +67,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Evento">
+		<cfset itemTypeNameEsP = "Eventos">
 
 		<cfset itemTypeGender = "male">	
 		<cfset itemTypeWeb = true>
@@ -77,6 +82,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Tarea">
+		<cfset itemTypeNameEsP = "Tareas">
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = false>
@@ -91,6 +97,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Interconsulta">
+		<cfset itemTypeNameEsP = "Interconsultas">
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = false>
@@ -105,6 +112,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Comentario de artículo PubMed">
+		<cfset itemTypeNameEsP = "Comentarios de artículos PubMed">
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
@@ -119,6 +127,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Imagen">
+		<cfset itemTypeNameEsP = "Imágenes">
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
@@ -133,6 +142,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Archivo">
+		<cfset itemTypeNameEsP = "Archivos">
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
@@ -147,6 +157,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Lista">
+		<cfset itemTypeNameEsP = "Listas">
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
@@ -163,6 +174,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Formulario">
+		<cfset itemTypeNameEsP = "Formularios">
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
@@ -179,6 +191,7 @@
 		<cfset itemTypeTable = itemTypeNameP>
 		
 		<cfset itemTypeNameEs = "Tipología">
+		<cfset itemTypeNameEsP = "Tipologías">
 
 		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = false>
@@ -188,17 +201,60 @@
 
    	</cfcase>
 
-   	<!---
-   	<cfcase value="15"><!---Files edited--->
 
-		<cfset itemTypeName = "file_edited">
-		<cfset itemTypeNameP = "files_edited">
-		<cfset itemTypeTable = itemTypeNameP&"_edited">
+   	<cfcase value="14"><!---lists views--->
+
+		<cfset itemTypeName = "list_view">
+		<cfset itemTypeNameP = "lists_views">
+		<cfset itemTypeTable = itemTypeNameP>
 		
-		<cfset itemTypeNameEs = "Archivo en edición">
+		<cfset itemTypeNameEs = "Vista de Lista">
+		<cfset itemTypeNameEsP = "Vistas de Listas">
+
+		<cfset itemTypeGender = "female">
+		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
+
+		<cfset tableTypeId = 1>
+		<cfset tableTypeName = "list">
+	
+   	</cfcase> 
+
+   	<cfcase value="15"><!---forms views--->
+
+		<cfset itemTypeName = "form_view">
+		<cfset itemTypeNameP = "forms_views">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Vista de Formulario">
+		<cfset itemTypeNameEsP = "Vistas de Formularios">
 
 		<cfset itemTypeGender = "male">
+		<cfset itemTypeWeb = true>
+		<cfset itemTypeNoWeb = true>
+
+		<cfset tableTypeId = 2>
+		<cfset tableTypeName = "form">
 	
-   	</cfcase>--->
+   	</cfcase>
+
+   	<!--- 
+   	<cfcase value="16"><!---typologies views--->
+   	
+		<cfset itemTypeName = "typology_view">
+		<cfset itemTypeNameP = "typologies_views">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Vista de Tipología">
+		<cfset itemTypeNameEsP = "Vistas de Tipologías">
+
+		<cfset itemTypeGender = "female">
+		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
+
+		<cfset tableTypeId = 3>
+		<cfset tableTypeName = "typology">
+   	
+   	</cfcase> --->
 
 </cfswitch>

@@ -370,3 +370,79 @@ CREATE TABLE  `dp_software7`.`software7_files_versions` (
 
 
 ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `in_approval` BOOLEAN NOT NULL DEFAULT 0 AFTER `approver_user`;
+
+
+
+<!--- Views --->
+
+CREATE TABLE  `dp_software7`.`software7_lists_views` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `table_id` int(10) unsigned NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+  `user_in_charge` int(11) NOT NULL,
+  `area_id` int(11) NOT NULL,
+  `creation_date` datetime NOT NULL,
+  `last_update_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `FK_software7_lists_views_1` (`table_id`),
+  KEY `FK_software7_lists_views_2` (`user_in_charge`),
+  KEY `FK_software7_lists_views_3` (`area_id`),
+  CONSTRAINT `FK_software7_lists_views_1` FOREIGN KEY (`table_id`) REFERENCES `software7_lists` (`id`),
+  CONSTRAINT `FK_software7_lists_views_2` FOREIGN KEY (`user_in_charge`) REFERENCES `software7_users` (`id`),
+  CONSTRAINT `FK_software7_lists_views_3` FOREIGN KEY (`area_id`) REFERENCES `software7_areas` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE  `dp_software7`.`software7_lists_views_fields` (
+  `view_id` int(10) unsigned NOT NULL,
+  `field_id` int(10) unsigned NOT NULL,
+  `position` int(10) unsigned NOT NULL,
+  UNIQUE KEY `UNIQUE` (`view_id`,`field_id`) USING BTREE,
+  KEY `FK_software7_lists_views_fields_2` (`field_id`) USING BTREE,
+  CONSTRAINT `FK_software7_lists_views_fields_1` FOREIGN KEY (`view_id`) REFERENCES `software7_lists_views` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_software7_lists_views_fields_2` FOREIGN KEY (`field_id`) REFERENCES `software7_lists_fields` (`field_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE  `dp_software7`.`software7_forms_views` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `table_id` int(10) unsigned NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+  `user_in_charge` int(11) NOT NULL,
+  `area_id` int(11) NOT NULL,
+  `creation_date` datetime NOT NULL,
+  `last_update_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `FK_software7_forms_views_1` (`table_id`),
+  KEY `FK_software7_forms_views_2` (`user_in_charge`),
+  KEY `FK_software7_forms_views_3` (`area_id`),
+  CONSTRAINT `FK_software7_forms_views_1` FOREIGN KEY (`table_id`) REFERENCES `software7_forms` (`id`),
+  CONSTRAINT `FK_software7_forms_views_2` FOREIGN KEY (`user_in_charge`) REFERENCES `software7_users` (`id`),
+  CONSTRAINT `FK_software7_forms_views_3` FOREIGN KEY (`area_id`) REFERENCES `software7_areas` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE  `dp_software7`.`software7_forms_views_fields` (
+  `view_id` int(10) unsigned NOT NULL,
+  `field_id` int(10) unsigned NOT NULL,
+  `position` int(10) unsigned NOT NULL,
+  UNIQUE KEY `UNIQUE` (`view_id`,`field_id`) USING BTREE,
+  KEY `FK_software7_forms_views_fields_2` (`field_id`) USING BTREE,
+  CONSTRAINT `FK_software7_forms_views_fields_1` FOREIGN KEY (`view_id`) REFERENCES `software7_forms_views` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_software7_forms_views_fields_2` FOREIGN KEY (`field_id`) REFERENCES `software7_forms_fields` (`field_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `dp_software7`.`software7_lists_views` ADD COLUMN `include_creation_date` BOOLEAN NOT NULL AFTER `last_update_date`,
+ ADD COLUMN `include_last_update_date` BOOLEAN NOT NULL AFTER `include_creation_date`,
+ ADD COLUMN `include_insert_user` BOOLEAN NOT NULL AFTER `include_last_update_date`,
+ ADD COLUMN `include_update_user` BOOLEAN NOT NULL AFTER `include_insert_user`,
+ ADD COLUMN `creation_date_position` INTEGER UNSIGNED NOT NULL AFTER `include_update_user`,
+ ADD COLUMN `last_update_position` INTEGER UNSIGNED NOT NULL AFTER `creation_date_position`,
+ ADD COLUMN `insert_user_postion` INTEGER UNSIGNED NOT NULL AFTER `last_update_position`,
+
+
+
+
+ ALTER TABLE `dp_software7`.`software7_users` ADD COLUMN `notify_new_list_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_list_row`,
+ ADD COLUMN `notify_new_form_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_form_row`;
+

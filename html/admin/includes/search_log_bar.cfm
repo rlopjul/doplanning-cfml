@@ -1,6 +1,7 @@
 <cfoutput>
-<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 </cfoutput>
 
 
@@ -60,12 +61,19 @@
 		$('#from_date').datepicker({
 		  format: 'dd-mm-yyyy', 
 		  autoclose: true,
+		  weekStart: 1,
+		  language: 'es',
+		  todayBtn: 'linked',
 		  endDate: $('#end_date').val()	  
 		});
 		
 		
 		$('#end_date').datepicker({
 		  format: 'dd-mm-yyyy', 
+		  autoclose: true,
+		  weekStart: 1,
+		  language: 'es',
+		  todayBtn: 'linked',
 		  autoclose: true
 		});
 	

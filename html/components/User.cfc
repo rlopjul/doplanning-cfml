@@ -380,8 +380,10 @@
 		<cfargument name="notify_new_typology" type="string" required="false" default="false">
 		<cfargument name="notify_new_list" type="string" required="false" default="false">
 		<cfargument name="notify_new_list_row" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_list_view" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_form" type="string" required="false" default="false">
 		<cfargument name="notify_new_form_row" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_form_view" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_pubmed" type="string" required="false" default="false">
 
 		<!--- <cfargument name="notify_dissociate_file" type="boolean" required="false" default="false"> --->

@@ -138,9 +138,14 @@
 	<cffunction name="insertBR" returntype="string" access="public">
 		<cfargument name="string" type="string" required="true">
 
-		<cfset string = replace(string,chr(13),"<br />","ALL")>
+		<!---<cfset str = replace(arguments.string,chr(13)&chr(10),"<br />","ALL")>
+		<cfset str = replace(str,chr(10),"<br />","ALL")><!--- Para datos importados de archivos CSV --->--->
 
-		<cfreturn string>
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="str">
+			<cfinvokeargument name="string" value="#arguments.string#">
+		</cfinvoke>
+
+		<cfreturn str>
 
 	</cffunction>
 

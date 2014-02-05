@@ -6,10 +6,17 @@
 	<cflocation url="#APPLICATION.mainUrl#" addtoken="no">
 </cfif>
 
+<cfset olderBrowser = false>
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="isMobileBrowser" returnvariable="isMobileBrowser">
 </cfinvoke>
 
-<cfif isMobileBrowser IS true OR ( (FindNoCase('MSIE 6',CGI.HTTP_USER_AGENT) GT 0 OR FindNoCase('MSIE 7',CGI.HTTP_USER_AGENT) GT 0 ) AND FindNoCase('Opera',CGI.HTTP_USER_AGENT) LT 1)><!---Mobile version--->
+<cfif isMobileBrowser IS false>
+	<cfif client_abb NEQ "agsna" AND ( FindNoCase('MSIE 6',CGI.HTTP_USER_AGENT) GT 0 OR FindNoCase('MSIE 7',CGI.HTTP_USER_AGENT) GT 0 ) AND FindNoCase('Opera',CGI.HTTP_USER_AGENT) LT 1><!--- Opción deshabilitada para el AGSNA para que siempre muestre la versión estándar --->
+		<cfset olderBrowser = true>
+	</cfif>
+</cfif>
+
+<cfif isMobileBrowser IS true OR olderBrowser IS true><!---Mobile version--->
 
 	<cfif NOT isDefined("URL.area") AND NOT isDefined("URL.fileDownload")>
 		<cflocation url="mobile.cfm?abb=#client_abb#" addtoken="no">

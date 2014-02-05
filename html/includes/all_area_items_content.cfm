@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
@@ -12,13 +12,9 @@
 
 	<!---
 	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
-	
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
-		
 	<cfelse><!---VPNET--->
-
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu_vpnet.cfm">
-		
 	</cfif>--->
 	
 	<cfif len(area_type) IS 0>
