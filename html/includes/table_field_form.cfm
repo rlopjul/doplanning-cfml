@@ -10,14 +10,14 @@
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
 
 <cfoutput>
-<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" />
+<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
-<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.js"></script>
-<link rel="stylesheet" type="text/css" href="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.css">
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.js"></script>
+<link rel="stylesheet" href="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.css">
 
-<script type="text/javascript">
+<script>
 
 	function confirmDeleteField() {
 	
@@ -157,17 +157,6 @@
 
 		}
 	}
-
-	<!---function enableDatePicker(selector){
-
-		$(selector).datepicker({
-		  format: 'dd-mm-yyyy', 
-		  autoclose: true,
-		  weekStart: 1,
-		  language: 'es',
-		  todayBtn: 'linked'
-		});
-	}--->
 
 	$(document).ready(function() { 
 

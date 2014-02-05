@@ -742,7 +742,6 @@
 
 				<!---<cfif len(area_type) IS NOT 0>--->
 				<cfif itemTypeWeb IS true><!---IS WEB---><!---El orden sólo se utiliza en los elementos web--->
-				<!---<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>--->
 				
 					<!---getItemLastPosition--->
 					<cfinvoke component="AreaItemManager" method="getAreaItemsLastPosition" returnvariable="itemLastPosition">
@@ -758,7 +757,6 @@
 						<cfinvokeargument name="position" value="#objectItem.position#">
 					</cfinvoke>
 					
-				<!---</cfif>--->
 				</cfif>
 
 				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 OR arguments.itemTypeId IS 13><!---Lists, Forms, Typologies--->
@@ -2610,14 +2608,6 @@
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 		
-			<!---<cfquery name="getItemQuery" datasource="#client_dsn#">		
-				SELECT id,parent_kind,parent_id,attached_file_id,area_id,user_in_charge
-				<cfif arguments.itemTypeId IS NOT 1>,attached_image_id</cfif>
-				<cfif arguments.itemTypeId IS 7>,state</cfif>
-				FROM `#client_abb#_#itemTypeTable#`
-				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;		
-			</cfquery>--->
-
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">

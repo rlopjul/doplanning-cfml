@@ -264,6 +264,8 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="with_types" type="boolean" required="false" default="false">
+		<cfargument name="view_id" type="numeric" required="false">
+		<cfargument name="only_view_fields" type="boolean" required="false">
 
 		<cfset var method = "getTableFields">
 
@@ -275,6 +277,8 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 				<cfinvokeargument name="with_types" value="#arguments.with_types#"/>
+				<cfinvokeargument name="view_id" value="#arguments.view_id#">
+				<cfinvokeargument name="only_view_fields" value="#arguments.only_view_fields#">
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -348,6 +352,37 @@
 		<cfreturn response>
 		
 	</cffunction>
+
+
+	<!--- ----------------------------------- getTableViews ------------------------------------- --->
+	
+	<cffunction name="getTableViews" returntype="struct" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getTableViews">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableViews" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
 
 
 	<!--- ----------------------------------- addUsersToTable -------------------------------------- --->
@@ -621,6 +656,7 @@
 							<cfelse>
 							widgets: ['zebra','select'],
 							</cfif>
+							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 							sortList: [[2,1]],
 							headers: { 
 								1: { 
@@ -628,10 +664,18 @@
 								},
 								2: { 
 									sorter: "datetime" 
-								}
-							},
+								}								
+							}
+							<cfelse><!--- Typologies --->
+							sortList: [[1,1]],
+							headers: { 
+								1: { 
+									sorter: "datetime" 
+								}								
+							}
+							</cfif>
 							<cfif arguments.full_content IS false>
-							widgetOptions : {
+							, widgetOptions : {
 								filter_childRows : false,
 								filter_columnFilters : true,
 								filter_cssFilter : 'tablesorter-filter',
@@ -646,7 +690,7 @@
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
 								filter_useParsedData : false,
-						    }, 
+						    } 
 						    </cfif> 
 						});
 						
@@ -660,7 +704,9 @@
 					<thead>
 						<tr>
 							<th lang="es">Nombre</th>
+							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 							<th class="filter-false" style="width:55px;"></th>
+							</cfif>
 							<th style="width:20%;" lang="es">Fecha</th>
 							<th>Estructura compartida</th>
 							<cfif tableTypeId IS 3><!---Typologies--->
@@ -730,19 +776,16 @@
 			
 						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','itemIframe',event)">													
 							<td><a href="#item_page_url#" class="text_item" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
-							<td>
-
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
-
+							<td>
 								<cfif arguments.full_content IS true><!--- Search page --->
 									<cfset rowsOnClick = "openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#','areaIframe',event)">
 								<cfelse>
 									<cfset rowsOnClick = "openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)">
 								</cfif>
 								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="#rowsOnClick#" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
-
-							</cfif>
 							</td>
+							</cfif>
 							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>
 								<span>#left(itemsQuery.creation_date, spacePos)#</span>
 								<span class="hidden">#right(itemsQuery.creation_date, len(itemsQuery.creation_date)-spacePos)#</span>

@@ -110,7 +110,12 @@
 
 				<cfelseif fields.input_type IS "url"><!--- URL --->
 
-					<input type="url" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
+					<cfif SESSION.client_abb EQ "hcs"><!--- Deshabilitado en el HCS la obligación de introducir URLs completas para que se puedan introducir URLs relativas --->
+						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
+					<cfelse>
+						<input type="url" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
+					</cfif>
+					
 
 					<cfif fields.required IS true AND arguments.search_inputs IS false>
 						<script type="text/javascript">

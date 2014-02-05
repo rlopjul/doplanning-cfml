@@ -2371,7 +2371,7 @@
 								<a href="#item_page_url#" class="#titleClass#">#itemsQuery.title#</a>
 							</td>
 							<td>
-								<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
+								<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 14 OR itemTypeId IS 15 OR itemTypeId IS 16><!---Lists, Forms And Views--->
 									<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
 								</cfif>
 

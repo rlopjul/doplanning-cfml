@@ -207,7 +207,7 @@ function openUrl(url,target){
 	}else{
 		if(target == "areaIframe"){
 			
-			if(currentTab != "#tab2"){ //No está en el tab de área
+			/*if(currentTab != "#tab2"){ //No está en el tab de área
 			
 				$('#dpTab a[href="#tab2"]').tab('show');
 				
@@ -216,8 +216,21 @@ function openUrl(url,target){
 				var urAreaId = getURLParameterFromPath("area",url);
 				selectTreeNode(urAreaId);
 				
+			}else*/
+
+			if(currentTab != "#tab2") //No está en el tab de área
+				$('#dpTab a[href="#tab2"]').tab('show');
+
+			var urAreaId = getURLParameterFromPath("area",url);
+
+			if($.isNumeric(urAreaId) && urAreaId != curAreaId){
+
+				iframePage = url; //Para que cargue esta url tras seleccionar el área en el árbol
+
+				selectTreeNode(urAreaId);
+
 			}else
-				loadIframePage(url);
+				loadIframePage(url);				
 			
 		}else
 			loadIframePage(url);

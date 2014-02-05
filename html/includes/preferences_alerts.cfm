@@ -289,6 +289,18 @@ Preferencias de notificaciones
 			  </div>
 			</div>
 
+			<div class="row">
+
+			  <div class="col-sm-6">
+			  	<label class="checkbox">
+					<input type="checkbox" name="notify_new_list_view" value="true" <cfif preferences.notify_new_list_view IS true>checked="checked"</cfif> />
+					<span lang="es">Una vista de lista ha sido creada, modificada o eliminada</span>
+				</label>
+			  </div>
+
+			</div>
+
+
 	    </div>
 	  </div>
 
@@ -313,6 +325,7 @@ Preferencias de notificaciones
 	    <div class="col-sm-11">
 
 	    	<div class="row">
+
 	          <div class="col-sm-6">
 		    	<label class="checkbox">
 					<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
@@ -326,6 +339,18 @@ Preferencias de notificaciones
 					<span lang="es">Un registro de formulario ha sido creado, modificado o eliminado</span>
 				</label>
 			  </div>
+
+			</div>
+
+			<div class="row">
+
+			  <div class="col-sm-6">
+			  	<label class="checkbox">
+					<input type="checkbox" name="notify_new_form_view" value="true" <cfif preferences.notify_new_form_view IS true>checked="checked"</cfif> />
+					<span lang="es">Una vista de formulario ha sido creada, modificada o eliminada</span>
+				</label>
+			  </div>
+
 			</div>
 
 	    </div>

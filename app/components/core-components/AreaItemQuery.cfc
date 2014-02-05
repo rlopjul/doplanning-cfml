@@ -429,10 +429,13 @@
 		
 		<cfset var method = "listAllAreaItems">
 			
-			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, attached_file_id, NULL AS file_type_id">
-			<cfset var fileColums = "id, name, IFNULL(replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, id AS attached_file_id, file_type_id">
+			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, NULL AS file_type_id">
+			<cfset var fileColums = "id, name, IFNULL(replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, file_type_id"><!---, id AS attached_file_id--->
 
 			<cfset var commonColumsNull = "NULL AS end_date, NULL AS done">
+
+			<cfset var attachedFileColum = "attached_file_id">
+			<cfset var attachedFileColumNull = "NULL AS attached_file_id">
 
 			<cfset var eventColums = "end_date, NULL AS done">
 			<cfset var taskColums = "end_date, done">
@@ -449,14 +452,17 @@
 
 			<cfif arguments.full_content IS true>
 
-				<cfset commonColums = commonColums&", attached_file_name, link, NULL AS file_size, NULL AS file_type">
+				<cfset commonColums = commonColums&", NULL AS file_size, NULL AS file_type"><!---, attached_file_name, link, --->
 				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS identifier">
 
 				<cfset eventColums = eventColums&", place, start_date, NULL AS identifier">
 				<cfset taskColums = taskColums&", NULL AS place, start_date, NULL AS identifier">
 				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, identifier">
 
-				<cfset fileColums = fileColums&", NULL AS attached_file_name, NULL AS link, file_size, file_type">
+				<cfset fileColums = fileColums&", file_size, file_type"><!---, NULL AS attached_file_name, NULL AS link--->
+
+				<cfset attachedFileColum = attachedFileColum&", attached_file_name, link">
+				<cfset attachedFileColumNull = attachedFileColumNull&", NULL AS attached_file_name, NULL AS link">
 				
 				<cfset webColums = webColums&", link_target">
 				<cfset webColumsNull = webColumsNull&", NULL AS link_target">
@@ -480,56 +486,56 @@
 				FROM (
 				<cfif len(arguments.area_type) IS 0><!--- IS NOT WEB --->
 					<!--- Messages --->
-					( SELECT #commonColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 1 AS itemTypeId
+					( SELECT #commonColums#, #attachedFileColum#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 1 AS itemTypeId
 					FROM #client_abb#_messages AS messages 
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					UNION ALL <!--- Tasks --->
-					( SELECT #commonColums#, #webColumsNull#, #taskColums#, #iframeColumsNull# #displayColumsNull# 6 AS itemTypeId
+					( SELECT #commonColums#, #attachedFileColum#, #webColumsNull#, #taskColums#, #iframeColumsNull# #displayColumsNull# 6 AS itemTypeId
 					FROM #client_abb#_tasks AS tasks
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					<!---<cfif APPLICATION.moduleConsultations IS true>--->
 					<cfif arguments.withConsultations IS true>
 					UNION ALL <!--- Consultations --->
-					( SELECT #commonColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 7 AS itemTypeId
+					( SELECT #commonColums#, #attachedFileColum#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 7 AS itemTypeId
 					FROM #client_abb#_consultations AS consultations
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					</cfif>
 				<cfelse><!--- WEB --->
 					<!--- Entries --->
-					( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColums# #displayColums# 2 AS itemTypeId
+					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColums# #displayColums# 2 AS itemTypeId
 					FROM #client_abb#_entries AS entries
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					<cfif APPLICATION.identifier EQ "vpnet">
 					UNION ALL <!--- Links --->
-					( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 3 AS itemTypeId
+					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 3 AS itemTypeId
 					FROM #client_abb#_links AS links
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					</cfif>
 					UNION ALL <!--- News --->
-					( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColums# #displayColumsNull# 4 AS itemTypeId
+					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColums# #displayColumsNull# 4 AS itemTypeId
 					FROM #client_abb#_news AS news
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 					UNION ALL <!--- Images --->
-					( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 9 AS itemTypeId
+					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 9 AS itemTypeId
 					FROM #client_abb#_images AS images
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					AND status='ok')
 				</cfif>
 				UNION ALL <!--- Events --->
-				( SELECT #commonColums#, #webColums#, #eventColums#, #iframeColums# #displayColumsNull# 5 AS itemTypeId
+				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #eventColums#, #iframeColums# #displayColumsNull# 5 AS itemTypeId
 				FROM #client_abb#_events AS events
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				<!--- <cfif APPLICATION.modulePubMedComments IS true> --->
 				<cfif arguments.withPubmedsComments IS true><!--- Pubmeds --->
 				UNION ALL
-				( SELECT #commonColums#, #webColums#, #pubmedColums#, #iframeColumsNull# #displayColumsNull# 8 AS itemTypeId
+				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #pubmedColums#, #iframeColumsNull# #displayColumsNull# 8 AS itemTypeId
 				FROM #client_abb#_pubmeds AS pubmeds
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
@@ -537,22 +543,30 @@
 				<!--- <cfif APPLICATION.moduleLists IS true> --->
 				<cfif arguments.withLists IS true><!--- Lists --->
 				UNION ALL
-				( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 11 AS itemTypeId
+				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 11 AS itemTypeId
 				FROM #client_abb#_lists AS lists
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
+				UNION ALL
+				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 14 AS itemTypeId
+				FROM #client_abb#_lists_views AS lists_views
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">)
 				</cfif>
 				<!---<cfif APPLICATION.moduleForms IS true>--->
 				<cfif arguments.withForms IS true><!--- Forms --->
 				UNION ALL
-				( SELECT #commonColums#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 12 AS itemTypeId
+				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 12 AS itemTypeId
 				FROM #client_abb#_forms AS forms
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
+				UNION ALL
+				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 15 AS itemTypeId
+				FROM #client_abb#_forms_views AS forms_views
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">)
 				</cfif>
 				<!--- Files --->
 				UNION ALL
-				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 10 AS itemTypeId
+				( SELECT #fileColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 10 AS itemTypeId
 				FROM #client_abb#_files AS files
 
 				INNER JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id 

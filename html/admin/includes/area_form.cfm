@@ -8,10 +8,10 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<label class="control-label" for="name" lang="es">Nombre</label>
-			<input type="text" name="name" id="name" value="#objectArea.name#" required="true" message="Nombre de área requerida" class="form-control" />
+			<input type="text" name="name" id="name" value="#HTMLEditFormat(objectArea.name)#" required="true" message="Nombre de área requerida" class="form-control" />
 		</div>
 	</div>
-
+	
 	<cfif isDefined("objectParentArea")>
 	<div class="row">
 		<div class="col-sm-12">

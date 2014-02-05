@@ -293,6 +293,15 @@
 
 						<cfelse>
 
+							<cfif fields.field_type_id EQ 3 OR fields.field_type_id EQ 11><!--- LONG TEXT --->
+
+								<!--- INSERT <br> --->
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="fieldValue">
+									<cfinvokeargument name="string" value="#fieldValue#">
+								</cfinvoke>
+								
+							</cfif>
+
 							<cfset fieldValueLen = len(fieldValue)>
 
 							<cfif len(errorMessage) IS 0 AND fieldValueLen GT fields.max_length>
@@ -476,24 +485,7 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<!---<cfset fieldsNames = "row_id,user_full_name">--->
-
-			<cfif arguments.include_creation_date IS true>
-				<cfset fieldsNames = listAppend(fieldsNames, "creation_date", ",")>
-			</cfif>
-
-			<cfif arguments.include_last_update_date IS true>
-				<cfset fieldsNames = listAppend(fieldsNames, "last_update_date", ",")>
-			</cfif>
-
-			<cfif arguments.include_insert_user IS true>
-				<cfset fieldsNames = listAppend(fieldsNames, "insert_user_full_name", ",")>
-			</cfif>
-
-			<cfif arguments.include_update_user IS true>
-				<cfset fieldsNames = listAppend(fieldsNames, "update_user_full_name", ",")>
-			</cfif>
-
+			<!--- Table rows --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowsQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
@@ -503,6 +495,44 @@
 			</cfinvoke>
 
 			<cfif rowsQuery.recordCount GT 0>
+
+				<cfif arguments.include_creation_date IS true>
+					<cfset fieldsNames = listAppend(fieldsNames, "creation_date", ",")>
+					<cfset fieldsLabels = listAppend(fieldsLabels, "Fecha de creación",  ",")>
+				</cfif>
+
+				<cfif arguments.include_last_update_date IS true>
+					<cfset fieldsNames = listAppend(fieldsNames, "last_update_date", ",")>
+					<cfset fieldsLabels = listAppend(fieldsLabels, "Última modificación",  ",")>
+				</cfif>
+
+				<cfif arguments.include_insert_user IS true>
+					<cfset fieldsNames = listAppend(fieldsNames, "insert_user_full_name", ",")>
+					<cfset fieldsLabels = listAppend(fieldsLabels, "Creado por",  ",")>
+				</cfif>
+
+				<cfif arguments.include_update_user IS true>
+					<cfset fieldsNames = listAppend(fieldsNames, "update_user_full_name", ",")>
+					<cfset fieldsLabels = listAppend(fieldsLabels, "Modificado por",  ",")>
+				</cfif>
+
+				<!---<cfif arguments.include_creation_date IS true>
+					<cfset fieldsLabels = fieldsLabels&"Fecha de creación,">
+				</cfif>
+				
+				<cfif arguments.include_last_update_date IS true>
+					<cfset fieldsLabels = fieldsLabels&"Última modificación,">
+				</cfif>
+
+				<cfif arguments.include_insert_user IS true>
+					<cfset fieldsLabels = fieldsLabels&"Creado por,">
+				</cfif>
+
+				<cfif arguments.include_update_user IS true>
+					<cfset fieldsLabels = fieldsLabels&"Modificado por,">
+				</cfif>
+
+				<cfset fieldsLabels = fieldsLabels&valueList(fields.label, ",")>--->
 
 				<cfloop query="fields">
 
@@ -516,6 +546,12 @@
 
 					</cfif>
 
+					<cfif len(fields.label) GT 0>
+						<cfset fieldsLabels = listAppend(fieldsLabels, replace(fields.label, ",", " ", "ALL"), ",")>
+					<cfelse>
+						<cfset fieldsLabels = listAppend(fieldsLabels, " ", ",")>
+					</cfif>
+					
 				</cfloop>
 
 				<cfif listFields IS true>
@@ -565,24 +601,6 @@
 					</cfif>
 
 				</cfif>
-
-				<cfif arguments.include_creation_date IS true>
-					<cfset fieldsLabels = fieldsLabels&"Fecha de creación,">
-				</cfif>
-				
-				<cfif arguments.include_last_update_date IS true>
-					<cfset fieldsLabels = fieldsLabels&"Última modificación,">
-				</cfif>
-
-				<cfif arguments.include_insert_user IS true>
-					<cfset fieldsLabels = fieldsLabels&"Creado por,">
-				</cfif>
-
-				<cfif arguments.include_update_user IS true>
-					<cfset fieldsLabels = fieldsLabels&"Modificado por,">
-				</cfif>
-				
-				<cfset fieldsLabels = fieldsLabels&valueList(fields.label, ",")>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToCSV" returnvariable="exportContent">
 					<cfinvokeargument name="query" value="#rowsQuery#">
@@ -925,6 +943,72 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- getViewRows -------------------------------------  --->
+	
+	<cffunction name="getViewRows" output="false" access="public" returntype="struct">
+		<cfargument name="view_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="row_id" type="numeric" required="false">
+
+		<cfset var method = "getViewRows">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<!---checkAreaAccess in getView--->
+			<cfinvoke component="ViewManager" method="getView" returnvariable="getViewResponse">
+				<cfinvokeargument name="view_id" value="#arguments.view_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+			
+			<cfif getViewResponse.result IS false>
+				<cfreturn getTableResponse>
+			</cfif>
+
+			<cfset view = getViewResponse.view>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="getRowsQuery">
+				<cfinvokeargument name="table_id" value="#view.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfif isDefined("arguments.row_id")>
+				<cfinvokeargument name="row_id" value="#arguments.row_id#">
+				</cfif>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfif getRowsQuery.recordCount GT 0 OR NOT isDefined("arguments.row_id")>
+
+				<cfset response = {result=true, rows=#getRowsQuery#}>
+
+			<cfelse><!---Item does not exist--->
+			
+				<cfset error_code = 501>
+			
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
 	<!--- ------------------------------------- getTableRowsSearch -------------------------------------  --->
 	
 	<cffunction name="getTypologiesRowsSearch" output="false" access="public" returntype="struct">
@@ -1005,6 +1089,43 @@
 			
 			<cfif getTableRowsResponse.result IS true>
 				<cfset response = {result=true, row=#getTableRowsResponse.rows#, table=#getTableRowsResponse.table#}>
+			<cfelse>
+				<cfreturn getTableRowsResponse>
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+	<!--- ------------------------------------- getViewRow -------------------------------------  --->
+	
+	<cffunction name="getViewRow" output="false" access="public" returntype="struct">
+		<cfargument name="view_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="row_id" type="numeric" required="true">
+
+		<cfset var method = "getViewRow">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinvoke component="RowManager" method="getViewRows" returnvariable="getTableRowsResponse">
+				<cfinvokeargument name="view_id" value="#arguments.view_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="row_id" value="#arguments.row_id#">
+			</cfinvoke>
+			
+			<cfif getTableRowsResponse.result IS true>
+				<cfset response = {result=true, row=#getTableRowsResponse.rows#}>
 			<cfelse>
 				<cfreturn getTableRowsResponse>
 			</cfif>

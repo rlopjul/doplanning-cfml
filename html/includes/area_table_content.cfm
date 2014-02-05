@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8"></script>
 </cfoutput>
 
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -178,6 +178,10 @@
 
 		<cfif APPLICATION.moduleListsWithPermissions IS true AND itemTypeId IS 11><!---List with permissions--->
 			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores</span></a>
+		</cfif>
+
+		<cfif itemTypeId IS 11 OR itemTypeId IS 12>
+			<a href="#itemTypeName#_views.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Vistas" lang="es"><i class="icon-screenshot"></i> <span lang="es">Vistas</span></a>
 		</cfif>
 
 	</cfif>

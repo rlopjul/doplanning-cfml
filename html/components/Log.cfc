@@ -67,11 +67,9 @@
 
 		<cftry>
 			
-			<cfset logs = arguments.logs>
+			<!--- <cfset logs = arguments.logs> --->
 			
-			<cfset numLogs = logs.RecordCount>
-			
-			
+			<cfset numLogs = arguments.logs.RecordCount>
 			
 			<cfif numLogs GT 0>
 			
@@ -93,9 +91,9 @@
 						
 						$("##listTable").tablesorter({ 
 							<cfif arguments.full_content IS false>
-							widgets: ['zebra','filter','select'],
+							widgets: ['zebra','filter','select','stickyHeaders'],
 							<cfelse>
-							widgets: ['zebra','select'],
+							widgets: ['zebra','select','stickyHeaders'],
 							</cfif>
 		
 
@@ -158,14 +156,14 @@
 						<tr>
 							<th style="width:40px" class="filter-false"></th>
 							<th lang="es">De</th>
-							<th style="width:150px;" lang="es">Fecha</th>	
-							<th style="width:39%" lang="es">Acción</th>		
+							<th lang="es">Fecha</th>	
+							<th lang="es">Acción</th>		
 						</tr>
 					</thead>
 					
 					<tbody>
 					
-					<cfloop query="arguments.logs">
+					<cfloop query="logs">
 					
 					<!---<cfset item_page_url = "log.cfm?log=#logs.id#&return_page=#URLEncodedFormat(rpage)#">--->
 						<cfset item_page_url = "log_item.cfm?log=#logs.id#">
@@ -188,8 +186,6 @@
 							
 						</cfif>
 
-
-						
 						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','logItemIframe',event)">
 
 							<td style="text-align:center">								

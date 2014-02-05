@@ -11,6 +11,7 @@
 		<cfset tableTypeGender = "female">
 
 		<cfset itemTypeId = 11>
+		<cfset viewTypeId = 14>
 	
    	</cfcase> 
 	
@@ -25,6 +26,7 @@
 		<cfset tableTypeGender = "male">
 
 		<cfset itemTypeId = 12>
+		<cfset viewTypeId = 15>
 	
    	</cfcase> 
 
@@ -39,6 +41,7 @@
 		<cfset tableTypeGender = "female">
 
 		<cfset itemTypeId = 13>
+		<cfset viewTypeId = 16>
 	
    	</cfcase> 
 

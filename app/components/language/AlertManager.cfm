@@ -42,6 +42,15 @@ curLangText["es"] = {
 			"13": {
 				"name" : "Tipología",
 			},
+			"14": {
+				"name" : "Vista de Lista",
+			},
+			"15": {
+				"name" : "Vista de Formulario",
+			},
+			"16": {
+				"name" : "Vista de Tipología",
+			},
 			
 		},
 		
@@ -313,6 +322,15 @@ curLangText["en"] = {
 			},
 			"13": {
 				"name" : "Typology",
+			},
+			"14": {
+				"name" : "Lista view",
+			},
+			"15": {
+				"name" : "Form view",
+			},
+			"16": {
+				"name" : "Typology view",
 			},
 			
 		},

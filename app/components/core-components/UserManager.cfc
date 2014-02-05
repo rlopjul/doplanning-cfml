@@ -37,9 +37,11 @@
 		<cfset var notify_new_image = "">
 		<cfset var notify_new_typology = "">
 		<cfset var notify_new_list = "">
-		<cfset var notify_new_list_row= "">
+		<cfset var notify_new_list_row = "">
+		<cfset var notify_new_list_view = "">
 		<cfset var notify_new_form = "">
 		<cfset var notify_new_form_row = "">
+		<cfset var notify_new_form_view = "">
 		<cfset var notify_new_pubmed = "">
 
 		<cfset var notify_delete_file = "">
@@ -115,11 +117,17 @@
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_list_row")>
 					<cfset notify_new_list_row = xmlPreferences.preferences.xmlAttributes.notify_new_list_row>
 				</cfif>
+				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_list_view")>
+					<cfset notify_new_list_view = xmlPreferences.preferences.xmlAttributes.notify_new_list_view>
+				</cfif>
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_form")>
 					<cfset notify_new_form = xmlPreferences.preferences.xmlAttributes.notify_new_form>
 				</cfif>
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_form_row")>
 					<cfset notify_new_form_row = xmlPreferences.preferences.xmlAttributes.notify_new_form_row>
+				</cfif>
+				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_form_view")>
+					<cfset notify_new_form_view = xmlPreferences.preferences.xmlAttributes.notify_new_form_view>
 				</cfif>
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_pubmed")>
 					<cfset notify_new_pubmed = xmlPreferences.preferences.xmlAttributes.notify_new_pubmed>
@@ -155,8 +163,10 @@
 				<cfinvokeargument name="notify_new_typology" value="#notify_new_typology#">
 				<cfinvokeargument name="notify_new_list" value="#notify_new_list#">
 				<cfinvokeargument name="notify_new_list_row" value="#notify_new_list_row#">
+				<cfinvokeargument name="notify_new_list_view" value="#notify_new_list_view#">
 				<cfinvokeargument name="notify_new_form" value="#notify_new_form#">
 				<cfinvokeargument name="notify_new_form_row" value="#notify_new_form_row#">
+				<cfinvokeargument name="notify_new_form_view" value="#notify_new_form_view#">
 				<cfinvokeargument name="notify_new_pubmed" value="#notify_new_pubmed#">
 
 				<cfinvokeargument name="notify_delete_file" value="#notify_delete_file#">
@@ -285,8 +295,10 @@
 		<cfargument name="notify_new_typology" type="string" required="false" default="">
 		<cfargument name="notify_new_list" type="string" required="false" default="">
 		<cfargument name="notify_new_list_row" type="string" required="false" default="">
+		<cfargument name="notify_new_list_view" type="string" required="false" default="">
 		<cfargument name="notify_new_form" type="string" required="false" default="">
 		<cfargument name="notify_new_form_row" type="string" required="false" default="">
+		<cfargument name="notify_new_form_view" type="string" required="false" default="">
 		<cfargument name="notify_new_pubmed" type="string" required="false" default="">
 
 		<cfargument name="notify_delete_file" type="string" required="false" default="">
@@ -374,11 +386,17 @@
 					<cfif arguments.notify_new_list_row NEQ "">
 					AND u.notify_new_list_row = <cfqueryparam value="#arguments.notify_new_list_row#" cfsqltype="cf_sql_bit">
 					</cfif>
+					<cfif arguments.notify_new_list_view NEQ "">
+					AND u.notify_new_list_view = <cfqueryparam value="#arguments.notify_new_list_view#" cfsqltype="cf_sql_bit">
+					</cfif>
 					<cfif arguments.notify_new_form NEQ "">
 					AND u.notify_new_form = <cfqueryparam value="#arguments.notify_new_form#" cfsqltype="cf_sql_bit">
 					</cfif>
 					<cfif arguments.notify_new_form_row NEQ "">
 					AND u.notify_new_form_row = <cfqueryparam value="#arguments.notify_new_form_row#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif arguments.notify_new_form_view NEQ "">
+					AND u.notify_new_form_view = <cfqueryparam value="#arguments.notify_new_form_view#" cfsqltype="cf_sql_bit">
 					</cfif>
 					<cfif arguments.notify_new_pubmed NEQ "">
 					AND u.notify_new_pubmed = <cfqueryparam value="#arguments.notify_new_pubmed#" cfsqltype="cf_sql_bit">

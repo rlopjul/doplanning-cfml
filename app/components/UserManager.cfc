@@ -1854,30 +1854,6 @@
 	<!--- ---------------------------- getAreaUsers ------------------------------- --->
 	
 	<cffunction name="getAreaUsers" returntype="struct" output="false" access="public">
-		<!---<cfargument name="area_id" type="string" required="yes">
-		<cfargument name="areasArray" type="array" required="yes">
-		<cfargument name="include_user_log_in" type="boolean" required="no" default="false">
-		<cfargument name="get_orientation" type="string" required="no" default="desc">
-		
-		<cfargument name="notify_new_message" type="string" required="no" default="">
-		<cfargument name="notify_new_file" type="string" required="no" default="">
-		<cfargument name="notify_replace_file" type="string" required="no" default="">
-		<cfargument name="notify_new_area" type="string" required="no" default="">
-		
-		<cfargument name="notify_new_entry" type="string" required="no" default="">
-		<cfargument name="notify_new_link" type="string" required="no" default="">
-		<cfargument name="notify_new_news" type="string" required="no" default="">
-		<cfargument name="notify_new_event" type="string" required="no" default="">
-		<cfargument name="notify_new_task" type="string" required="no" default="">
-		<cfargument name="notify_new_consultation" type="string" required="no" default="">
-
-		<cfargument name="notify_new_image" type="string" required="false" default="">
-		<cfargument name="notify_new_typology" type="string" required="false" default="">
-		<cfargument name="notify_new_list" type="string" required="false" default="">
-		<cfargument name="notify_new_form" type="string" required="false" default="">
-		<cfargument name="notify_new_pubmed" type="string" required="false" default="">
-		
-		<cfargument name="with_external" type="string" required="no" default="true">--->
         
 		<cfset var method = "getAreaUsers">
 		
@@ -2757,67 +2733,6 @@
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>
-
-		<!---
-		<cfset var internalUsersEmails = structNew()>
-		<cfset var externalUsersEmails = structNew()>
-		
-		<cfset var internalUsersPhones = structNew()>
-		<cfset var externalUsersPhones = structNew()>
-		
-        <cfset var structResponse = structNew()>
-		
-        <cfinvoke component="UserManager" method="getUsersToNotify" returnvariable="arrayUsersToNotify">
-			<cfinvokeargument name="request" value="#arguments.request#"/>
-		</cfinvoke>
-		
-		<cfloop list="#APPLICATION.languages#" index="curLang">
-			
-			<cfset internalUsersEmails[curLang] = "">
-			<cfset externalUsersEmails[curLang] = "">
-			
-			<cfset internalUsersPhones[curLang] = "">
-			<cfset externalUsersPhones[curLang] = "">
-			
-		</cfloop>
-		
-		<cfloop index="curUser" array="#arrayUsersToNotify#">
-							
-			<cfset curr_val = curUser.email>
-			
-			<cfset curr_phone = curUser.mobile_phone>
-			<cfset curr_phone_ccode = curUser.mobile_phone_ccode>
-
-			<cfif curUser.whole_tree_visible IS true>
-				<!---<cfset listInternalUsers = ListAppend(listInternalUsers,curr_val,";")>--->
-				<cfset internalUsersEmails[curUser.language] = ListAppend(internalUsersEmails[curUser.language],curr_val,";")>
-				<cfif len(curr_phone) GT 0>
-					<cfif APPLICATION.identifier EQ "dp">
-						<cfset internalUsersPhones[curUser.language] = ListAppend(internalUsersPhones[curUser.language],curr_phone_ccode&curr_phone,";")>
-					<cfelse><!---vpnet--->
-						<cfset internalUsersPhones[curUser.language]  = ListAppend(internalUsersPhones[curUser.language],curr_phone,";")>
-					</cfif>	
-				</cfif>
-			<cfelse>
-				<!---<cfset listExternalUsers = ListAppend(listExternalUsers,curr_val,";")>--->
-				<cfset externalUsersEmails[curUser.language] = ListAppend(externalUsersEmails[curUser.language],curr_val,";")>
-				<cfif len(curr_phone) GT 0>
-					<cfif APPLICATION.identifier EQ "dp">
-						<cfset externalUsersPhones[curUser.language] = ListAppend(externalUsersPhones[curUser.language],curr_phone_ccode&curr_phone,";")>
-					<cfelse><!---vpnet--->
-						<cfset externalUsersPhones[curUser.language] = ListAppend(externalUsersPhones[curUser.language],curr_phone,";")>
-					</cfif>
-				</cfif>
-			</cfif>	
-			
-		</cfloop>
-		
-				
-        <cfset structResponse.structInternalUsersEmails = internalUsersEmails>
-        <cfset structResponse.structExternalUsersEmails = externalUsersEmails>
-		
-		<cfset structResponse.structInternalUsersPhones = internalUsersPhones>
-		<cfset structResponse.structExternalUsersPhones = externalUsersPhones>--->
 		
 		<cfreturn structResponse>
 	
@@ -3009,10 +2924,12 @@
 				<cfif APPLICATION.moduleLists IS true>
 				, notify_new_list
 				, notify_new_list_row
+				, notify_new_list_view
 				</cfif>
 				<cfif APPLICATION.moduleForms IS true>
 				, notify_new_form
 				, notify_new_form_row
+				, notify_new_form_view
 				</cfif>
 				<cfif APPLICATION.moduleWeb IS true>
 					<cfif APPLICATION.identifier EQ "vpnet">
@@ -3067,8 +2984,10 @@
 		<cfargument name="notify_new_typology" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_list" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_list_row" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_list_view" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_form" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_form_row" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_form_view" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_pubmed" type="boolean" required="false" default="false">
 
 		<!--- <cfargument name="notify_dissociate_file" type="boolean" required="false" default="false"> --->
@@ -3124,10 +3043,12 @@
 					<cfif APPLICATION.moduleLists IS true>
 					, notify_new_list = <cfqueryparam value="#arguments.notify_new_list#" cfsqltype="cf_sql_bit">
 					, notify_new_list_row = <cfqueryparam value="#arguments.notify_new_list_row#" cfsqltype="cf_sql_bit">
+					, notify_new_list_view = <cfqueryparam value="#arguments.notify_new_list_view#" cfsqltype="cf_sql_bit">
 					</cfif>
 					<cfif APPLICATION.moduleForms IS true>
 					, notify_new_form = <cfqueryparam value="#arguments.notify_new_form#" cfsqltype="cf_sql_bit">
 					, notify_new_form_row = <cfqueryparam value="#arguments.notify_new_form_row#" cfsqltype="cf_sql_bit">
+					, notify_new_form_view = <cfqueryparam value="#arguments.notify_new_form_view#" cfsqltype="cf_sql_bit">
 					</cfif>
 					WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
@@ -3139,143 +3060,6 @@
 				<cfthrow errorcode="#error_code#"> 
 				
 			</cfif>	
-			
-			<!---<cfxml variable="preferencesXml">
-				<cfoutput >
-					#xmlRequest.request.parameters.preferences#
-				</cfoutput>
-			</cfxml>
-						
-			<cftransaction>
-			
-			<cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_new_message")>
-				<cfquery name="notifyNewMessageQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET notify_new_message = 
-						<cfqueryparam value="#preferencesXml.preferences.XmlAttributes.notify_new_message#" cfsqltype="cf_sql_bit">
-					WHERE id = <cfqueryparam value="#preferencesXml.preferences.XmlAttributes.user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-			</cfif>
-			<cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_new_file")>
-				<cfquery name="notifyNewFileQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET notify_new_file = 
-						<cfqueryPARAM value = "#preferencesXml.preferences.XmlAttributes.notify_new_file#" CFSQLType = "CF_SQL_bit">
-					WHERE id = <cfqueryPARAM value = "#preferencesXml.preferences.XmlAttributes.user_id#" CFSQLType = "cf_sql_integer">;
-				</cfquery>
-			</cfif>
-			
-			<cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_replace_file")>
-				<cfquery name="notifyNewFileQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET notify_replace_file = 
-						<cfqueryPARAM value = "#preferencesXml.preferences.XmlAttributes.notify_replace_file#" CFSQLType = "CF_SQL_bit">
-					WHERE id = <cfqueryPARAM value = "#preferencesXml.preferences.XmlAttributes.user_id#" CFSQLType = "cf_sql_integer">;
-				</cfquery>
-			</cfif>
-            
-            <cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_new_area")>
-				<cfquery name="notifyNewFileQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET notify_new_area = 
-						<cfqueryPARAM value = "#preferencesXml.preferences.XmlAttributes.notify_new_area#" CFSQLType = "CF_SQL_bit">
-					WHERE id = <cfqueryPARAM value = "#preferencesXml.preferences.XmlAttributes.user_id#" CFSQLType = "cf_sql_integer">;
-				</cfquery>
-			</cfif>
-			
-			<cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_new_entry")>
-				<cfquery name="notifyNewEntryQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET notify_new_entry = 
-						<cfqueryparam value="#preferencesXml.preferences.XmlAttributes.notify_new_entry#" cfsqltype="cf_sql_bit">
-					WHERE id = <cfqueryparam value="#preferencesXml.preferences.XmlAttributes.user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-			</cfif>
-			
-			<cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_new_link")>
-				<cfquery name="notifyNewLinkQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET notify_new_link = 
-						<cfqueryparam value="#preferencesXml.preferences.XmlAttributes.notify_new_link#" cfsqltype="cf_sql_bit">
-					WHERE id = <cfqueryparam value="#preferencesXml.preferences.XmlAttributes.user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-			</cfif>
-			
-			<cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_new_news")>
-				<cfquery name="notifyNewNewsQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET notify_new_news = 
-						<cfqueryparam value="#preferencesXml.preferences.XmlAttributes.notify_new_news#" cfsqltype="cf_sql_bit">
-					WHERE id = <cfqueryparam value="#preferencesXml.preferences.XmlAttributes.user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-			</cfif>
-			
-			<cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_new_event")>
-				<cfquery name="notifyNewEventQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET notify_new_event = 
-						<cfqueryparam value="#preferencesXml.preferences.XmlAttributes.notify_new_event#" cfsqltype="cf_sql_bit">
-					WHERE id = <cfqueryparam value="#preferencesXml.preferences.XmlAttributes.user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-			</cfif>
-			
-			<cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_new_task")>
-				<cfquery name="notifyNewEventQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET notify_new_task = 
-						<cfqueryparam value="#preferencesXml.preferences.XmlAttributes.notify_new_task#" cfsqltype="cf_sql_bit">
-					WHERE id = <cfqueryparam value="#preferencesXml.preferences.XmlAttributes.user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-			</cfif>
-			
-			<cfif APPLICATION.moduleConsultations IS true>
-				<cfif isDefined("preferencesXml.preferences.XmlAttributes.notify_new_consultation")>
-					<cfquery name="notifyNewEventQuery" datasource="#client_dsn#">
-						UPDATE #client_abb#_users SET notify_new_consultation = 
-							<cfqueryparam value="#preferencesXml.preferences.XmlAttributes.notify_new_consultation#" cfsqltype="cf_sql_bit">
-						WHERE id = <cfqueryparam value="#preferencesXml.preferences.XmlAttributes.user_id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
-				</cfif>
-			</cfif>
-			
-			</cftransaction>
-			
-			<cfquery name="selectQuery" datasource="#client_dsn#">
-				SELECT id, notify_new_message, notify_new_file, notify_replace_file, notify_new_area,
-				notify_new_entry, notify_new_news, notify_new_event, notify_new_task
-				<cfif APPLICATION.moduleConsultations IS true>
-				, notify_new_consultation
-				</cfif>
-				<cfif APPLICATION.identifier EQ "vpnet">
-				, notify_new_link
-				</cfif>
-				FROM #client_abb#_users
-				WHERE id = <cfqueryPARAM value = "#preferencesXml.preferences.XmlAttributes.user_id#" CFSQLType="CF_SQL_varchar">;
-			</cfquery>	
-			
-			<cfif selectQuery.recordCount GT 0>
-			
-				<cfsavecontent variable="xmlResult">
-					<cfoutput>
-						<preferences user_id="#selectQuery.id#"
-							notify_new_message="#selectQuery.notify_new_message#"
-							notify_new_file="#selectQuery.notify_new_file#"
-							notify_replace_file="#selectQuery.notify_replace_file#"
-							notify_new_area="#selectQuery.notify_new_area#"
-							
-							notify_new_entry="#selectQuery.notify_new_entry#"
-							<cfif APPLICATION.identifier EQ "vpnet">
-							notify_new_link="#selectQuery.notify_new_link#"
-							</cfif>
-							notify_new_news="#selectQuery.notify_new_news#"
-							notify_new_event="#selectQuery.notify_new_event#"
-							notify_new_task="#selectQuery.notify_new_task#"
-							<cfif APPLICATION.moduleConsultations IS true>
-							notify_new_consultation="#selectQuery.notify_new_consultation#"
-							</cfif>/>
-					</cfoutput>
-				</cfsavecontent>	
-			
-			<cfelse><!---The user does not exist--->
-				
-				<cfset error_code = 204>
-				
-				<cfthrow errorcode="#error_code#"> 
-				
-			</cfif>	
-				
-			<cfset xmlResponseContent = xmlResult>--->
 		
 			<cfinclude template="includes/logRecord.cfm">
 			

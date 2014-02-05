@@ -3,6 +3,19 @@
 	<cfset component = "Utils">
 
 
+	<!--- insertBR --->
+
+	<cffunction name="insertBR" returntype="string" access="public">
+		<cfargument name="string" type="string" required="true">
+
+		<cfset str = replace(arguments.string,chr(13)&chr(10),"<br>","ALL")>
+		<cfset str = replace(str,chr(10),"<br>","ALL")><!--- Para datos importados de archivos CSV --->
+
+		<cfreturn str>
+
+	</cffunction>
+
+
 	<!---    queryToCSV     --->
 	<cffunction	name="queryToCSV" access="public" returntype="string" output="false" hint="I take a query and convert it to a comma separated value string.">
 	 
