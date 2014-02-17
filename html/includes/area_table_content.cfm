@@ -78,6 +78,8 @@
 	<cfelse>
 		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##tableTypeNameP#.cfm?area=#area_id#")>
 	</cfif>
+
+	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#table_id#")>
 	
 	<!---is_user_table_area_responsible--->
 	<cfif area_id IS objectItem.area_id>
@@ -95,6 +97,17 @@
 	<cfif is_user_table_area_responsible><!--- Table Area Responsible --->
 
 		<a href="#tableTypeName#_modify.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+
+		<cfif len(area_type) GT 0  AND tableTypeId NEQ 3>
+
+			<!--- publication --->
+			<cfif objectItem.publication_validated IS false>
+				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación');" title="Aprobar publicación" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>
+			<cfelse>
+				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación');" title="Desaprobar publicación" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>					
+			</cfif>
+			
+		</cfif>
 	
 		<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #tableTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 		

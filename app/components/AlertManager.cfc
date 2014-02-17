@@ -276,6 +276,15 @@
 						
 						<cfif arguments.itemTypeId LT 10>
 
+							<cfif itemTypeWeb IS true><!--- WEB --->
+								<cfif len(objectItem.publication_date) GT 0>
+									#langText[curLang].new_item.publication_date#: <b>#objectItem.publication_date#</b> #langText[curLang].new_item.hour#: <b>#TimeFormat(objectItem.publication_time,"HH:mm")#</b><br/>
+								</cfif>
+								<cfif APPLICATION.publicationValidation IS true AND len(publication_validated) GT 0>
+									#langText[curLang].new_item.publication_validated#: <b><cfif objectItem.publication_validated IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
+								</cfif>
+							</cfif>
+
 							<cfif len(objectItem.link) GT 0 AND (itemTypeId NEQ 4 AND itemTypeId NEQ 5)>
 								<cfif itemTypeId IS 3><!---Links--->
 								#langText[curLang].new_item.link_url#: 
@@ -313,6 +322,11 @@
 							</cfif>
 
 						</cfif><!--- END arguments.itemTypeId LT 10 --->
+
+						<cfif APPLICATION.publicationScope IS true AND ( arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 )>
+						#langText[curLang].new_file.publication_scope#: <strong>#objectItem.publication_scope_name#</strong><br/>
+						</cfif>
+
 						<br/>
 						<div style="padding-left:15px;">#objectItem.description#</div>
 						
@@ -1258,6 +1272,9 @@
 				<cfelse>
 					#langText[arguments.language].new_file.last_version_date#: <strong>#objectFile.replacement_date#</strong><br/>
 				</cfif>
+			</cfif>
+			<cfif APPLICATION.publicationScope IS true>
+			#langText[arguments.language].new_file.publication_scope#: <strong>#objectFile.publication_scope_name#</strong><br/>
 			</cfif>
 			#langText[arguments.language].new_file.description#:<br/><br/>
 			<div style="padding-left:15px;">#objectFile.description#</div>

@@ -12,10 +12,14 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="title" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
-		<cfargument name="link" type="string" required="false" default="">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
 				
 		<cfset var method = "createTable">
 
@@ -28,21 +32,27 @@
 			<cfinvoke component="AreaItem" method="createItem" returnvariable="response">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				<cfinvokeargument name="title" value="#arguments.title#">
-				<cfinvokeargument name="link" value="#arguments.link#">
+				<cfinvokeargument name="link" value="">
+				<cfinvokeargument name="link_target" value="">
 				<cfinvokeargument name="description" value="#arguments.description#">
 				<cfinvokeargument name="parent_id" value="#arguments.area_id#">
 				<cfinvokeargument name="parent_kind" value="area">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
 				<cfinvokeargument name="general" value="#arguments.general#">
+				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
+				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
+				<cfinvokeargument name="publication_hour" value="#arguments.publication_hour#">
+				<cfinvokeargument name="publication_minute" value="#arguments.publication_minute#">
+				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 			</cfinvoke>
 
 			<cfif response.result IS true>
 
 				<cfif tableTypeGender EQ "male">
-					<cfset response_message = "#tableTypeNameEs# creado, defina ahora los campos.">
+					<cfset response_message = "#tableTypeNameEs# creado, ahora debe definir los campos.">
 				<cfelse>
-					<cfset response_message = "#tableTypeNameEs# creada, defina ahora los campos.">
+					<cfset response_message = "#tableTypeNameEs# creada, ahora debe definir los campos.">
 				</cfif>
 
 				<cfset response = {result=true, message=response_message, table_id=response.item_id, area_id=#arguments.area_id#}>
@@ -70,6 +80,11 @@
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
 		
 		<cfset var method = "updateTable">
 
@@ -87,6 +102,11 @@
 				<cfinvokeargument name="description" value="#arguments.description#">
 				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
 				<cfinvokeargument name="general" value="#arguments.general#">
+				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
+				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
+				<cfinvokeargument name="publication_hour" value="#arguments.publication_hour#">
+				<cfinvokeargument name="publication_minute" value="#arguments.publication_minute#">
+				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 			</cfinvoke>
 			
 			<cfif response.result IS true>

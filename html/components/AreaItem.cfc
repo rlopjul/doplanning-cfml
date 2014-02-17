@@ -111,6 +111,11 @@
 		<cfargument name="identifier" type="string" required="false">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
 		
 		<cfset var method = "createItem">
 				
@@ -140,6 +145,7 @@
 				<cfset with_image = true>
 			</cfif>
 						
+            <!---
             <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="objectItem" returnvariable="objectItem">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
                 <cfinvokeargument name="title" value="#arguments.title#">
@@ -222,7 +228,7 @@
 				</cfif>
 				                                
                 <cfinvokeargument name="return_type" value="object">
-            </cfinvoke>
+            </cfinvoke>--->
           
 		  
          	<cfif with_attached IS true>
@@ -247,15 +253,53 @@
 			
             <!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->
             <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" returnvariable="createItemResponse">
-				<cfinvokeargument name="objectItem" value="#objectItem#"/>
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<!--- <cfinvokeargument name="objectItem" value="#objectItem#"/> --->
+
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+                <cfinvokeargument name="title" value="#arguments.title#">
+				<cfinvokeargument name="link" value="#arguments.link#">
+				<cfinvokeargument name="link_target" value="#arguments.link_target#">
+                <cfinvokeargument name="description" value="#arguments.description#">
+                <cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
+                <cfinvokeargument name="parent_id" value="#arguments.parent_id#">
+                <cfinvokeargument name="parent_kind" value="#arguments.parent_kind#">
+				<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
+				<cfinvokeargument name="post_to_twitter" value="#arguments.post_to_twitter#">
+				<cfinvokeargument name="creation_date" value="#arguments.creation_date#">
+				<cfinvokeargument name="start_date" value="#arguments.start_date#">
+				<cfinvokeargument name="end_date" value="#arguments.end_date#">
+				<cfif isDefined("arguments.start_hour") AND isDefined("arguments.start_minute")>
+					<cfinvokeargument name="start_time" value="#arguments.start_hour#:#arguments.start_minute#">
+				</cfif>
+				<cfif isDefined("arguments.end_hour") AND isDefined("arguments.end_minute")>
+					<cfinvokeargument name="end_time" value="#arguments.end_hour#:#arguments.end_minute#">
+				</cfif>
+				<cfinvokeargument name="place" value="#arguments.place#">
+				<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
+				<cfinvokeargument name="estimated_value" value="#arguments.estimated_value#">
+				<cfinvokeargument name="real_value" value="#arguments.real_value#">
+				<cfinvokeargument name="done" value="#arguments.done#">
+				<cfinvokeargument name="display_type_id" value="#arguments.display_type_id#">
+				<cfinvokeargument name="iframe_url" value="#arguments.iframe_url#">
+				<cfinvokeargument name="iframe_display_type_id" value="#arguments.iframe_display_type_id#">
+				<cfinvokeargument name="identifier" value="#arguments.identifier#">
+				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
+				<cfinvokeargument name="general" value="#arguments.general#">
+				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
+				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
+				<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
+					<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
+				</cfif>
+				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfif with_attached IS true OR with_image IS true><!---Hay archivo para subir--->
 					<cfinvokeargument name="status" value="pending"/>
 				</cfif>	
 			</cfinvoke>
 
 			<cfif createItemResponse.result IS true>
-				<cfset createdItemId = createItemResponse.objectItem.id>					
+				<cfset createdItemId = createItemResponse.item_id>					
 			<cfelse>
 				<cfthrow message="#createItemResponse.message#">
 			</cfif>
@@ -499,6 +543,11 @@
 		<cfargument name="identifier" type="string" required="false">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
 
 		<cfset var method = "updateItem">
 				
@@ -538,20 +587,6 @@
 				</cfif>
                 <cfinvokeargument name="description" value="#arguments.description#">
                 <cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
-				<!---<cfif with_attached IS false>
-                	<cfinvokeargument name="attached_file_id" value="-1">
-                    <cfinvokeargument name="attached_file_name" value="NULL">
-         		<cfelse>
-                 	<cfinvokeargument name="attached_file_id" value="NULL">
-                    <cfinvokeargument name="attached_file_name" value="(Pendiente de subir el archivo)">
-                </cfif>
-				<cfif with_image IS false>
-					<cfinvokeargument name="attached_image_id" value="-1">
-					<cfinvokeargument name="attached_image_name" value="NULL">
-				<cfelse>
-					<cfinvokeargument name="attached_image_id" value="NULL">
-                    <cfinvokeargument name="attached_image_name" value="(Pendiente de subir el archivo)">
-				</cfif>--->
                 <cfif isDefined("arguments.notify_by_sms")>
 					<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
 				</cfif>
@@ -624,7 +659,6 @@
 
             	<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">		
 					<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">		
-					<!---<cfinvokeargument name="file_name" value="#Filedata#">--->
 					<cfinvokeargument name="file_name" value="(Pendiente de subir el archivo)"><!---Este nombre sale en la notificación--->
 					<cfinvokeargument name="file_type" value="pending">
 					<cfinvokeargument name="name" value=" ">
@@ -634,10 +668,6 @@
 				</cfinvoke>
 				
 				<cfset objectFile.file_size = "0">
-				
-				<!---<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="xmlFile" returnvariable="xmlFileResult">		
-					<cfinvokeargument name="objectFile" value="#objectFile#">
-				</cfinvoke>--->
 			
             </cfif>
 			
@@ -647,7 +677,14 @@
 
                 <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="updateItem" returnvariable="updateItemResponse">
 					<cfinvokeargument name="objectItem" value="#objectItem#"/>
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>	
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+
+					<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
+					<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
+					<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
+						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
+					</cfif>
+					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				</cfinvoke>
 
 				<cfif updateItemResponse.result IS NOT true>
@@ -663,14 +700,20 @@
 			<cfelse><!---Hay archivo para subir--->
 					
 				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="updateItemWithAttachedFile" returnvariable="updateItemWithAttachedResponse">
-					<!---<cfinvokeargument name="xmlItem" value="#xmlResultItem#"/>--->
 					<cfinvokeargument name="objectItem" value="#objectItem#"/>
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>	
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+					<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">		
 					<cfinvokeargument name="file_name" value="#objectFile.name#">
 					<cfinvokeargument name="file_file_name" value="#objectFile.file_name#">
 					<cfinvokeargument name="file_type" value="#objectFile.file_type#">
 					<cfinvokeargument name="file_size" value="#objectFile.file_size#">
 					<cfinvokeargument name="file_description" value="#objectFile.description#">
+
+					<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
+					<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
+						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
+					</cfif>
+					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				</cfinvoke>
 
 				<cfif updateItemWithAttachedResponse.result IS true>
@@ -1275,6 +1318,49 @@
 		</cftry>
 		
 	</cffunction>
+
+
+	<!--- ------------------------------ changeItemPublicationValidation ----------------------------------- --->
+	
+    <cffunction name="changeItemPublicationValidation" returntype="void" access="remote">
+    	<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="validate" type="boolean" required="true">
+		
+		<cfargument name="return_path" type="string" required="yes">
+		
+		<cfset var method = "changeItemPublicationValidation">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+					
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeItemPublicationValidation" returnvariable="response">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#"/>
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<cfinvokeargument name="validate" value="#arguments.validate#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfif arguments.validate IS true>
+					<cfset response.message = "Publicación aprobada">
+				<cfelse>
+					<cfset response.message = "Publicación invalidada">
+				</cfif>
+			</cfif>
+			
+			<cfset msg = URLEncodedFormat(response.message)>
+			
+			<cflocation url="#arguments.return_path#&res=#response.result#&msg=#msg#" addtoken="no">		
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
 	
 
 
@@ -1538,6 +1624,20 @@
 						<div class="div_message_page_label"><span lang="es">Fecha de última modificación:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
 						</cfif>
 					</cfif>
+
+					<cfif len(area_type) GT 0><!--- WEB --->
+
+						<cfif len(objectItem.publication_date) GT 0>
+							<div class="div_message_page_label"><span>Fecha de publicación:</span> <span class="text_message_page">#objectItem.publication_date#</span>
+								<span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.publication_time,"HH:mm")#</span>
+							</div>
+						</cfif>
+						<cfif APPLICATION.publicationValidation IS true AND len(objectItem.publication_validated) GT 0>
+							<div class="div_message_page_label"><span>Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
+							</div>
+						</cfif>
+
+					</cfif>
 					
 					<cfif itemTypeId IS 7><!---Consultation--->
 					<div class="div_message_page_label"><span lang="es">Estado:</span> <span class="text_message_page" lang="es"><cfswitch expression="#objectItem.state#">
@@ -1599,6 +1699,11 @@
 					<div class="div_message_page_label"><span lang="es"><cfif itemTypeId IS 3>Descripción<cfelse>Contenido</cfif>:</span></div> 
 					<div class="div_message_page_description">#objectItem.description#</div>
 
+					<cfif APPLICATION.publicationScope IS true AND itemTypeId IS 11 OR itemTypeId IS 12>
+
+						<div class="div_message_page_label">Ámbito de publicación: <span class="text_message_page">#objectItem.publication_scope_name#</span></div>
+
+					</cfif>
 
 					<!---itemUrl--->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
@@ -2376,8 +2481,8 @@
 								</cfif>
 
 								<!---Attached files--->
-								<cfif itemTypeId IS 10>
-								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i><span class="hidden">3</span></a>
+								<cfif itemTypeId IS 10><!--- File --->
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i><span class="hidden">3</span></a>
 								<cfelseif isNumeric(itemsQuery.attached_file_id)>
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip" style="font-size:14px;"></i><span class="hidden">1</span></a>
 								</cfif>

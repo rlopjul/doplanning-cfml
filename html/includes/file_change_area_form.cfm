@@ -8,8 +8,6 @@
 
 <div class="div_head_subtitle"><span lang="es">Mover archivo a otra área</span></div>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
-
 <cfoutput>
 
 <script>
@@ -49,6 +47,8 @@
 <script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 <div class="contenedor_fondo_blanco">
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 	

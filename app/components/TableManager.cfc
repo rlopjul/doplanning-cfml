@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2013 --->
+<!--- Copyright Era7 Information Technologies 2007-2014 --->
 
 <cfcomponent output="false">
 	
@@ -99,7 +99,8 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="getTableQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="parse_dates" value="true">		
+				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">		
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -207,6 +208,11 @@
 				WHERE id = -1;
 			</cfquery>
 
+			<cfif arguments.tableTypeId IS NOT 3>
+				<cfset queryAddRow(getTableQuery, 1)>
+				<cfset querySetCell(getTableQuery, "publication_date", DateFormat(now(), "DD-MM-YYYY"))>
+			</cfif>
+			
 			<cfset response = {result=true, table=#getTableQuery#}>
 
 			<cfcatch>
@@ -561,7 +567,8 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="parse_dates" value="false">		
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">		
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

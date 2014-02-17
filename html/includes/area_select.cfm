@@ -14,6 +14,10 @@
 	<cfset noWebEnabled = true>
 </cfif>
 
+<cfif isDefined("URL.scope") AND isNumeric(URL.scope)>
+	<cfset scope_id = URL.scope>
+</cfif>
+
 <cfoutput>
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
@@ -88,6 +92,20 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
 
+<cfoutput>
+<div>
+<cfif APPLICATION.publicationScope IS true AND isDefined("scope_id")>
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScope" returnvariable="scope">
+		<cfinvokeargument name="scope_id" value="#scope_id#">
+	</cfinvoke>
+	<span class="help-block">Ámbito de publicación definido: #scope.name#</span>
+</cfif>
+<cfif noWebEnabled IS false AND webEnabled IS true>
+	<span class="help-block">Sólo puede seleccionar áreas web</span>
+</cfif>
+</div>
+</cfoutput>
+
 <div class="form-inline" style="margin-top:2px;">
 
 	<!---<div class="input-group">
@@ -114,10 +132,23 @@
 
 </div>
 
+<cfif APPLICATION.publicationScope IS true AND isDefined("scope_id")>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
+		<cfinvokeargument name="scope_id" value="#scope_id#">
+	</cfinvoke>
+	<cfset scopesQuery = getScopesResult.scopesAreas>
+	<cfset scopeAreasList = valueList(scopesQuery.area_id)>
+
+</cfif>
+
 <cfprocessingdirective suppresswhitespace="true">
 <div id="areasTreeContainer" style="clear:both">
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
+		<cfif APPLICATION.publicationScope IS true AND isDefined("scope_id") AND listLen(scopeAreasList) GT 0>
+			<cfinvokeargument name="enable_only_areas_ids" value="#scopeAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
+		</cfif>
 	</cfinvoke>
 
 </div>

@@ -31,7 +31,7 @@
 				<cfif arguments.with_user IS true>
 				, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				</cfif>
-				FROM #client_abb#_areas AS areas
+				FROM `#client_abb#_areas` AS areas
 				<cfif arguments.with_user IS true>
 				INNER JOIN #client_abb#_users AS users ON areas.user_in_charge = users.id
 				</cfif>

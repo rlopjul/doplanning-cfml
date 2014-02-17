@@ -40,7 +40,11 @@
 
 	function openAreaSelector(){
 		
+		<cfif APPLICATION.publicationScope IS true AND isNumeric(table.publication_scope_id)>
+		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?scope=#table.publication_scope_id#');
+		<cfelse>
 		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
+		</cfif>
 		
 	}
 
@@ -115,9 +119,10 @@
 </script>
 </cfoutput>
 
+<div class="contenedor_fondo_blanco">
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-<div class="contenedor_fondo_blanco">
 <cfoutput>
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" onsubmit="return onSubmitForm();">
 
@@ -153,6 +158,9 @@
 			<label class="control-label" for="area_name" lang="es">Área de publicación *</label>
 			<input type="hidden" name="area_id" id="area_id" value="#view.area_id#" validate="integer" required="true"/>
 			<cfinput type="text" name="area_name" id="area_name" value="#areaName#" readonly="true" required="true" message="Debe seleccionar una nueva área" onclick="openAreaSelector()" class="form-control" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
+			<cfif APPLICATION.publicationScope IS true AND isNumeric(table.publication_scope_id)>
+				<span class="help-block">Ámbito de publicación definido: #table.publication_scope_name#</span>
+			</cfif>
 		</div>
 	</div>
 
@@ -238,7 +246,7 @@
 					<cfset querySetCell(fields, "field_id", "creation_date")>
 					<cfset querySetCell(fields, "label", "Fecha de creación")>
 					<cfset querySetCell(fields, "name", "Fecha")>
-					<cfif page_type IS 2>
+					<cfif page_type IS 2 AND isDefined("view.include_creation_date")>
 						<cfif view.include_creation_date IS true>
 							<cfset querySetCell(fields, "new_position", view.creation_date_position)>
 							<cfset querySetCell(fields, "view_id", view_id)>
@@ -250,7 +258,7 @@
 					<cfset querySetCell(fields, "field_id", "last_update_date")>
 					<cfset querySetCell(fields, "label", "Fecha de última modificación")>
 					<cfset querySetCell(fields, "name", "Fecha")>
-					<cfif page_type IS 2>
+					<cfif page_type IS 2 AND isDefined("view.include_last_update_date")>
 						<cfif view.include_last_update_date IS true>
 							<cfset querySetCell(fields, "new_position", view.last_update_date_position)>
 							<cfset querySetCell(fields, "view_id", view_id)>
@@ -262,7 +270,7 @@
 					<cfset querySetCell(fields, "field_id", "insert_user")>
 					<cfset querySetCell(fields, "label", "Usuario creación")>
 					<cfset querySetCell(fields, "name", "Usuario")>
-					<cfif page_type IS 2>
+					<cfif page_type IS 2 AND isDefined("view.include_insert_user")>
 						<cfif view.include_insert_user IS true>
 							<cfset querySetCell(fields, "new_position", view.insert_user_position)>
 							<cfset querySetCell(fields, "view_id", view_id)>
@@ -274,7 +282,7 @@
 					<cfset querySetCell(fields, "field_id", "update_user")>
 					<cfset querySetCell(fields, "label", "Usuario última modificación")>
 					<cfset querySetCell(fields, "name", "Usuario")>
-					<cfif page_type IS 2>
+					<cfif page_type IS 2 AND isDefined("view.include_update_user")>
 						<cfif view.include_update_user IS true>
 							<cfset querySetCell(fields, "new_position", view.update_user_position)>
 							<cfset querySetCell(fields, "view_id", view_id)>

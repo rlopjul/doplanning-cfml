@@ -441,8 +441,102 @@ ALTER TABLE `dp_software7`.`software7_lists_views` ADD COLUMN `include_creation_
  ADD COLUMN `insert_user_postion` INTEGER UNSIGNED NOT NULL AFTER `last_update_position`,
 
 
-
-
  ALTER TABLE `dp_software7`.`software7_users` ADD COLUMN `notify_new_list_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_list_row`,
  ADD COLUMN `notify_new_form_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_form_row`;
 
+
+<!--- APP_clients --->
+
+ALTER TABLE `doplanning_app`.`APP_clients` ADD COLUMN `default_language` VARCHAR(10) NOT NULL DEFAULT 'es' AFTER `email_support`,
+ ADD COLUMN `force_notifications` BOOLEAN NOT NULL DEFAULT 0 AFTER `default_language`,
+ ADD COLUMN `tasks_reminder_notifications` BOOLEAN NOT NULL DEFAULT 1 AFTER `force_notifications`,
+ ADD COLUMN `tasks_reminder_days` INTEGER UNSIGNED NOT NULL DEFAULT 30 AFTER `tasks_reminder_notifications`;
+
+
+
+<!--- Scopes --->
+
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `publication_scope_id` INTEGER UNSIGNED AFTER `in_approval`;
+ALTER TABLE `dp_software7`.`software7_lists` ADD COLUMN `publication_scope_id` BOOLEAN AFTER `general`;
+ALTER TABLE `dp_software7`.`software7_forms` ADD COLUMN `publication_scope_id` BOOLEAN AFTER `general`;
+
+CREATE TABLE  `dp_software7`.`software7_scopes` (
+  `scope_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `position` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`scope_id`),
+  KEY `UNIQUE` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE  `dp_software7`.`software7_scopes_areas` (
+  `scope_id` int(10) unsigned NOT NULL,
+  `area_id` int(11) NOT NULL,
+  PRIMARY KEY (`scope_id`,`area_id`),
+  KEY `FK_software7_scopes_areas_2` (`area_id`),
+  CONSTRAINT `FK_software7_scopes_areas_1` FOREIGN KEY (`scope_id`) REFERENCES `software7_scopes` (`scope_id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_software7_scopes_areas_2` FOREIGN KEY (`area_id`) REFERENCES `software7_areas` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+ALTER TABLE `dp_software7`.`software7_events` ADD COLUMN `publication_date` DATE AFTER `iframe_display_type_id`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+ ALTER TABLE `dp_software7`.`software7_news` ADD COLUMN `publication_date` DATE AFTER `iframe_display_type_id`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+ ALTER TABLE `dp_software7`.`software7_entries` ADD COLUMN `publication_date` DATE AFTER `iframe_display_type_id`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+ ALTER TABLE `dp_software7`.`software7_images` ADD COLUMN `publication_date` DATE AFTER `display_type_id`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+ ALTER TABLE `dp_software7`.`software7_pubmeds` ADD COLUMN `publication_date` DATE AFTER `display_type_id`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+ ALTER TABLE `dp_software7`.`software7_lists` ADD COLUMN `publication_date` DATE AFTER `publication_scope_id`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+ ALTER TABLE `dp_software7`.`software7_lists_views` ADD COLUMN `publication_date` DATE AFTER `update_user_position`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+ ALTER TABLE `dp_software7`.`software7_forms` ADD COLUMN `publication_date` DATE AFTER `publication_scope_id`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+ ALTER TABLE `dp_software7`.`software7_forms_views` ADD COLUMN `publication_date` DATE AFTER `update_user_position`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+ ALTER TABLE `dp_software7`.`software7_areas_files` ADD COLUMN `publication_date` DATE AFTER `association_date`,
+ ADD COLUMN `publication_time` TIME AFTER `publication_date`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
+ ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
+
+
+ 

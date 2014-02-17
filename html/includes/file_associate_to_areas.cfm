@@ -158,6 +158,12 @@ Asociar archivo a áreas
 	</cfif>
 	
 	<cfoutput>
+
+	<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
+		<div>
+			<span class="help-block">Ámbito de publicación definido para el archivo: #objectFile.publication_scope_name#</span>
+		</div>
+	</cfif>
 	
 	<input type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas" />
 	
@@ -178,11 +184,24 @@ Asociar archivo a áreas
 		<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>--->
 
 	</div>
-
 	<div id="areasTreeContainer" style="clear:both; margin-top:2px; margin-bottom:2px;">
+
+	<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
+			<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
+		</cfinvoke>
+		<cfset scopesQuery = getScopesResult.scopesAreas>
+		<cfset scopeAreasList = valueList(scopesQuery.area_id)>
+
+	</cfif>
+
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
-		<cfif APPLICATION.identifier EQ "dp">
-			<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan asociar archivos a las áreas WEB--->
+		<!--- Ahora sí se pueden asociar archivos internos a las áreas web
+		<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan asociar archivos a las áreas WEB---> --->
+		
+		<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id) AND listLen(scopeAreasList) GT 0>
+			<cfinvokeargument name="enable_only_areas_ids" value="#scopeAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
 		</cfif>
 		<cfinvokeargument name="with_input_type" value="checkbox">
 	</cfinvoke>

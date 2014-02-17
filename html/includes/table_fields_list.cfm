@@ -137,13 +137,13 @@
 				</cfif>
 				#field_default_value#
 			</td>
-
-			<td><div class="item_position">#fields.currentRow#</div><!---<div class="change_position"><cfif fields.currentRow NEQ 1>
+			
+			<td><div class="item_position">#fields.currentRow#</div><div class="change_position"><cfif fields.currentRow NEQ 1>
 				<cfset up_field_id = fields.field_id[fields.currentRow-1]>
 				<a onclick="openUrl('table_field_position_up.cfm?field=#fields.field_id#&ofield=#up_field_id#&tableTypeId=#tableTypeId#&table=#fields.table_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a><cfelse><br></cfif><!--- <div class="div_position_down"><!-- --></div> ---><cfif fields.currentRow NEQ fields.recordCount>
 					<cfset down_field = fields.field_id[fields.currentRow+1]>
 					<a onclick="openUrl('table_field_position_down.cfm?field=#fields.field_id#&ofield=#down_field#&tableTypeId=#tableTypeId#&table=#fields.table_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a>
-				</cfif></div>---></td>
+				</cfif></div></td>
 		</tr>
 	</cfloop>
 	</tbody>

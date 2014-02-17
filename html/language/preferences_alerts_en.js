@@ -10,6 +10,7 @@ var preferences_alerts_en = {
 	'Un archivo ha sido asociado a un área':'A file has been added to an area',
 	'Un archivo asociado a un área ha sido reemplazado':'A file has been replaced',
 	'Un área nueva ha sido creada':'A new area has been created',
-	'Guardar':'Save'
+	'Guardar':'Save',
+	'Su organización tiene deshabilitadas las opciones de preferencias de notificaciones. Contacte con el administrador pará más información.':'Your organization disabled the notifications options. Contact the administrator for more information.',
 }
 $.extend(jquery_lang_js.prototype.lang.en, preferences_alerts_en);

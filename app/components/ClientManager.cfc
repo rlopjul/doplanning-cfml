@@ -179,6 +179,110 @@
 		</cftry>
 		
 	</cffunction>
+
+
+
+	<!--- ------------------------------------- getClient ------------------------------------ --->
+	
+	<cffunction name="getClient" returntype="struct" access="public">		
+		<cfargument name="client_abb" type="string" required="true">
+
+		<cfset var method = "getClient">	
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="selectClientQuery">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			</cfinvoke>
+			
+			<cfif selectClientQuery.recordCount GT 0>
+
+				<cfset response = {result=true, client=#selectClientQuery#}>
+
+			<cfelse><!---The client does not exist--->
+				
+				<cfset error_code = 301>
+				
+				<cfthrow errorcode="#error_code#"> 
+				
+			</cfif>	
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+
+		</cftry>
+			
+		<cfreturn response>
+					
+	</cffunction>
+
+
+	<!--- ------------------- UPDATE CLIENT ADMIN OPTIONS -------------------------------- --->
+
+	<cffunction name="updateClientAdminOptions" returntype="struct" output="true" access="public">
+		<cfargument name="default_language" type="string" required="true">
+		<cfargument name="force_notifications" type="boolean" required="false" default="false">
+		<cfargument name="tasks_reminder_notifications" type="boolean" required="false" default="false">
+		<cfargument name="tasks_reminder_days" type="numeric" required="true">
+		
+		<cfset var method = "updateClientAdminOptions">
+		
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<!--- checkAdminAccess --->
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAdminAccess">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="getClientQuery">					
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+			</cfinvoke>
+
+			<cfif getClientQuery.recordCount GT 0>
+	
+				<cfquery name="updateClient" datasource="#APPLICATION.dsn#">
+					UPDATE `APP_clients`
+					SET default_language = <cfqueryparam value="#arguments.default_language#" cfsqltype="cf_sql_varchar">,
+						force_notifications = <cfqueryparam value="#arguments.force_notifications#" cfsqltype="cf_sql_bit">,
+						tasks_reminder_notifications = <cfqueryparam value="#arguments.tasks_reminder_notifications#" cfsqltype="cf_sql_bit">,
+						tasks_reminder_days = <cfqueryparam value="#arguments.tasks_reminder_days#" cfsqltype="cf_sql_integer">
+					WHERE abbreviation = <cfqueryparam value="#SESSION.client_abb#" cfsqltype="cf_sql_varchar">;
+				</cfquery>
+
+			<cfelse><!---The client does not exist--->
+				
+				<cfset error_code = 301>
+				
+				<cfthrow errorcode="#error_code#"> 
+				
+			</cfif>	
+		
+			<cfinclude template="includes/logRecord.cfm">
+			
+			<cfset response = {result=true}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>		
+		
+	</cffunction>
+	
+		
 	
 	
 	<!--- ------------------------------ createClient ----------------------------- --->
@@ -211,16 +315,6 @@
 				<cfinvokeargument name="timestamp_date" value="#current_date#">
 			</cfinvoke>
 			
-			<!---<cfset client_id = "NULL">
-			<cfset name = "NULL">
-			<cfset administrator_id = 1>
-			<cfset number_of_users = 100>
-			<cfset space = 0>
-			<cfset abbreviation = "NULL">
-			<cfset creation_date = current_date>
-			<cfset number_of_sms_used = 0>
-			<cfset number_of_sms_paid = 100>--->
-			
 			<cfset objectClient.administrator_id = 1>
 			<cfset objectClient.root_area_id = 1><!--- root area id which will always be 1 --->
 			<cfset objectClient.number_of_users = 1>
@@ -230,12 +324,7 @@
 			
 			<cfset new_client_abb = objectClient.abbreviation>
 			
-			<!---<cfoutput>
-			<cfdump var="#objectClient#">
-			<cfdump var="#xmlRequest.request.parameters.user#">
-			</cfoutput>--->
-			
-			<cfquery name="insertClientQuery" datasource="#APPLICATION.dsn#" >							
+			<cfquery name="insertClientQuery" datasource="#APPLICATION.dsn#">							
 				INSERT INTO `APP_clients` (`id`, `name`, `administrator_id`, `root_area_id`, `number_of_users`, `space`, `abbreviation`, `creation_date`, `number_of_sms_used`, `number_of_sms_paid`, `email_support`) VALUES 
 					(<cfqueryPARAM value="#objectClient.id#" CFSQLType="CF_SQL_varchar">,
 					<cfqueryPARAM value="#objectClient.name#" CFSQLType="CF_SQL_varchar">,					
@@ -793,19 +882,6 @@
 					  UNIQUE KEY `image_src` (`image_src`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>--->	
-					
-				<!---<cfquery datasource="#client_datasource#">
-					CREATE TABLE IF NOT EXISTS `#new_client_abb#_user_preferences` (
-					  `user_id` int(11) NOT NULL,
-					  `notify_new_message` tinyint(1) default '1',
-					  `notify_new_file` tinyint(1) default '1',
-					  `language` varchar(255) collate utf8_unicode_ci default NULL,
-					  `notify_replace_file` tinyint(1) default '1',
-					  `notify_new_area` tinyint(1) default '1',
-					  PRIMARY KEY  (`user_id`)
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-				</cfquery>--->	
-				
 				
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_incidences` (
@@ -1001,7 +1077,6 @@
 			<cfinvoke component="UserManager" method="assignUserToArea">
 				<cfinvokeargument name="request" value="#assignUserToAreaRequest#">
 			</cfinvoke>
-			
 			
 			<!---Esto es provisional--->
 			<cfset SESSION.client_abb = current_client_abb>--->

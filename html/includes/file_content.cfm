@@ -257,6 +257,12 @@ function confirmApproveFile(value) {
 		<div class="div_file_page_label"><span lang="es">Descripción:</span></div>
 		<div class="div_file_page_description">#objectFile.description#</div>
 
+		<cfif APPLICATION.publicationScope IS true AND fileTypeId IS NOT 3>
+
+			<div class="div_message_page_label">Ámbito de publicación: <span class="text_message_page">#objectFile.publication_scope_name#</span></div>
+
+		</cfif>
+
 		<!---fileUrl--->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
 			<cfinvokeargument name="file_id" value="#objectFile.id#">

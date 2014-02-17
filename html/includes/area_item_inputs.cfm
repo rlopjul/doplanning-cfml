@@ -5,42 +5,74 @@
 <cfoutput>
 
 <script type="text/javascript">
-	<cfif itemTypeId IS 5 OR itemTypeId IS 6 OR itemTypeId IS 4><!---Events, Tasks, News--->
+	
 	
 	<cfif read_only IS false>
 	
 	$(function() {
 
-		$('##start_date').datepicker({
-		  format: 'dd-mm-yyyy', 
-		  autoclose: true,
-		  weekStart: 1,
-		  language: 'es',
-		  todayBtn: 'linked',
-		  endDate: $('##end_date').val()  
-		});
-	
-		$('##end_date').datepicker({
-		  format: 'dd-mm-yyyy',
-		  weekStart: 1,
-		  language: 'es',
-		  todayBtn: 'linked', 
-		  autoclose: true
-		});
+		<cfif itemTypeId IS 5 OR itemTypeId IS 6 OR itemTypeId IS 4><!---Events, Tasks, News--->
+
+			$('##start_date').datepicker({
+			  format: 'dd-mm-yyyy', 
+			  autoclose: true,
+			  weekStart: 1,
+			  language: 'es',
+			  todayBtn: 'linked'
+				}).on('changeDate', function(ev){
+					var startDateVal = $('##start_date').val();	
+			        $('##end_date').datepicker('setStartDate', startDateVal);
+			        if ( ev.date.valueOf() > $('##end_date').data('datepicker').date.valueOf() ){
+			            $('##end_date').datepicker('update', startDateVal);
+			        }
+		    	});
+		
+			$('##end_date').datepicker({
+			  format: 'dd-mm-yyyy',
+			  weekStart: 1,
+			  language: 'es',
+			  todayBtn: 'linked', 
+			  autoclose: true,
+			  startDate: $('##start_date').val() 
+			});
+
+		</cfif>
+
+		<cfif len(area_type) GT 0><!--- WEB --->
+
+			$('##publication_date').datepicker({
+			  format: 'dd-mm-yyyy',
+			  weekStart: 1,
+			  language: 'es',
+			  todayBtn: 'linked', 
+			  autoclose: true
+			});
+
+		</cfif>
 
 	});
 	
+	<!--- 
+	<cfif itemTypeId IS 5 OR itemTypeId IS 6 OR itemTypeId IS 4><!---Events, Tasks, News--->
 	
-	function setEndDate(){
-		$('##start_date').datepicker('setEndDate', $('##end_date').val());
-	}
+		function onEndDateChange(){
 
-	function setStartDate(){
-		$('##end_date').datepicker('setStartDate', $('##start_date').val());
-	}
+			$('##start_date').datepicker('setEndDate', $('##end_date').val());
+		}
 
+		function onStartDateChange(){
+			var startDateVal = $('##start_date').val();	
+			var endDateVal = $('##end_date').val();	
+
+			$('##end_date').datepicker('setStartDate', startDateVal);
+
+			if(endDateVal < startDateVal){
+				$('##end_date').datepicker('update', startDateVal);
+			}
+		}
 	
-	</cfif>
+	</cfif> --->
+	
 	
 	function checkDates(startDateFieldName, endDateFieldName) {
 		
@@ -55,14 +87,12 @@
 		if(startDateParts[2].length != 4 || endDateParts[2].length != 4)
 			return false;
 		
-		var startDate = $.datepicker.parseDate("dd-mm-yy", startDateVal);
-		var endDate = $.datepicker.parseDate("dd-mm-yy", endDateVal);
+		/*var startDate = $.datepicker.parseDate("dd-mm-yy", startDateVal);
+		var endDate = $.datepicker.parseDate("dd-mm-yy", endDateVal);*/
 				
-		return startDate <= endDate;
+		return startDateVal <= endDateVal;
 		
 	}
-
-	</cfif>
 
 	function openUserSelector(){
 
@@ -76,7 +106,6 @@
 		/*$("##recipient_user").val(userId); 
 		$("##recipient_user_name").val(userName); */
 	}
-	
 	
 	<cfif isDefined("objectItem.id") AND read_only IS false>
 				
@@ -101,6 +130,8 @@
 		}
 		
 	</cfif>
+
+	</cfif><!--- END read_only IS false --->
 	
 </script>
 
@@ -179,7 +210,7 @@
 				<cfset objectItem.creation_date = left(objectItem.creation_date, findOneOf(" ", objectItem.creation_date))>
 			</cfif>
 		
-			<cfinput type="text" name="creation_date" id="creation_date" class="input_datepicker" value="#objectItem.creation_date#" required="true" message="#t_creation_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+			<cfinput type="text" name="creation_date" id="creation_date" class="form-control" value="#objectItem.creation_date#" required="true" message="#t_creation_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 
 		</div>
 		<div class="col-xs-6">
@@ -188,6 +219,88 @@
 
 		</div>
 	</div>
+
+</cfif>
+
+<cfif len(area_type) GT 0><!--- WEB --->
+
+	<div class="row">
+
+		<div class="col-xs-6 col-md-3">
+			<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
+			<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectItem.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+		</div>
+					
+		<!--- 
+		<cfif isDefined("objectItem.publication_time")>
+					
+			<cfif len(objectItem.publication_time) IS 0>
+				<cfset objectItem.publication_time = createTime(0,0,0)>
+			</cfif>
+			
+			<cfset publication_hour = hour(objectItem.publication_time)>
+			<cfset publication_minute = minute(objectItem.publication_time)>
+
+		<cfelse><!--- After send FORM --->
+
+			<cfset publication_hour = objectItem.publication_hour>
+			<cfset publication_minute = objectItem.publication_minute>
+
+		</cfif>
+		
+		<div class="col-xs-6">
+			<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
+			<div class="input-group" style="width:170px">
+				<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
+					<cfloop from="0" to="23" index="hour">
+						<option value="#hour#" <cfif hour EQ publication_hour>selected="selected"</cfif>>#hour#</option>
+					</cfloop>
+				</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
+					<cfset minutesInOptions = false>
+					<cfloop from="0" to="59" index="minutes" step="5">
+						<cfif minutes EQ "0">
+							<cfset minutes = "00">
+						</cfif>
+						<cfif minutes EQ publication_minute>
+							<cfset minutesSelected = true>
+							<cfset minutesInOptions = true>
+						<cfelse>
+							<cfset minutesSelected = false>
+						</cfif>
+						<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
+					</cfloop>
+					<cfif minutesInOptions IS false>
+						<option value="#publication_minute#" selected="selected">#publication_minute#</option>
+					</cfif>
+				</select>
+			</div>	
+		</div> --->
+
+		<input type="hidden" name="publication_hour" value="00"/>
+		<input type="hidden" name="publication_minute" value="00"/>
+		
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12">
+			<small class="help-block">Si está definida, <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# se publicará en la fecha especificada.</small>
+		</div>
+	</div>
+
+	<cfif APPLICATION.publicationValidation IS true AND is_user_area_responsible IS true>
+		
+		<div class="row">
+			<div class="col-xs-12 col-sm-8">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("objectItem.publication_validated") AND objectItem.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+					</label>
+					<small class="help-block">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
+				</div>
+			</div>
+		</div>
+
+	</cfif>
 
 </cfif>
 
@@ -220,9 +333,9 @@
 
 <div class="row">
 
-	<div class="col-xs-5 col-md-3">
+	<div class="col-xs-6 col-md-3">
 		<label class="control-label" for="start_date"><span lang="es">#t_start_date#</span> *</label>
-		<cfinput type="text" name="start_date" id="start_date" class="form-control input_datepicker" value="#objectItem.start_date#" required="true" message="#t_start_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#" onchange="setStartDate()">
+		<cfinput type="text" name="start_date" id="start_date" class="form-control input_datepicker" value="#objectItem.start_date#" required="true" message="#t_start_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 	</div>
 	
 	<cfif itemTypeId IS 5>
@@ -243,7 +356,7 @@
 
 		</cfif>
 		
-		<div class="col-xs-7">
+		<div class="col-xs-6">
 			<label class="control-label" for="start_hour"><span lang="es">#t_start_time#</span></label>
 			<div class="input-group" style="width:170px">
 				<select name="start_hour" id="start_hour" class="form-control" style="width:70px;">
@@ -251,7 +364,7 @@
 						<option value="#hour#" <cfif hour EQ start_hour>selected="selected"</cfif>>#hour#</option>
 					</cfloop>
 				</select><span class="input-group-addon">:</span><select name="start_minute" class="form-control" style="width:70px;">
-					<cfloop from="0" to="59" index="minutes" step="15">
+					<cfloop from="0" to="59" index="minutes" step="5">
 						<cfif minutes EQ "0">
 							<cfset minutes = "00">
 						</cfif>
@@ -267,9 +380,9 @@
 
 <div class="row">
 
-	<div class="col-xs-5 col-md-3">
+	<div class="col-xs-6 col-md-3">
 		<label class="control-label" for="end_date"><span lang="es">#t_end_date#</span> *</label>
-		<cfinput type="text" name="end_date" id="end_date" class="input_datepicker" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#" onchange="setEndDate()">
+		<cfinput type="text" name="end_date" id="end_date" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 	</div>
 
 	<cfif itemTypeId IS 5>
@@ -290,7 +403,7 @@
 
 		</cfif>
 		
-		<div class="col-xs-7">
+		<div class="col-xs-6">
 			<label class="control-label" for="end_hour"><span lang="es">Hora de fin</span></label>
 			<div class="input-group" style="width:170px">
 				<select name="end_hour" style="width:70px;">
@@ -298,7 +411,7 @@
 						<option value="#hour#" <cfif hour EQ end_hour>selected="selected"</cfif>>#hour#</option>
 					</cfloop>
 				</select><span class="input-group-addon">:</span><select name="end_minute" style="width:70px;">
-					<cfloop from="0" to="59" index="minutes" step="15">
+					<cfloop from="0" to="59" index="minutes" step="5">
 						<cfif minutes EQ "0">
 							<cfset minutes = "00">
 						</cfif>
@@ -310,6 +423,7 @@
 	
 	</cfif>
 </div>
+
 </cfif>
 
 <cfif itemTypeId IS 5><!---Events--->

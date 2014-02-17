@@ -29,7 +29,18 @@
 	<cfoutput>
 		<div class="div_message_page_title">Usuarios de la organización (#numUsers#)</div>
 	</cfoutput>
-	
+
+
+	<!---
+	PENDIENTE DE TERMINAR LAS OPCIONES
+	<cfoutput>
+	<div class="div_head_subtitle_area">
+		
+		<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
+
+	</div>
+	</cfoutput>--->
+
 	<div class="div_items">
 		
 		<cfif numUsers GT 0>

@@ -21,7 +21,7 @@
 		<cfif itemTypeId IS 11 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
 			<cfset return_page = "#itemTypeName#_fields.cfm?#itemTypeName#=#actionResponse.item_id#">
 		<cfelse>
-			<cfset return_page = "area_items.cfm?&area=#FORM.area_id#&#itemTypeName#=#actionResponse.item_id#">
+			<cfset return_page = "area_items.cfm?area=#FORM.area_id#&#itemTypeName#=#actionResponse.item_id#">
 		</cfif>	
 
 		<cfset msg = urlEncodedFormat(actionResponse.message)>
@@ -34,7 +34,13 @@
 		<cfset URL.msg = actionResponse.message>
 
 		<cfset objectItem = FORM>
-		
+
+		<cfif page_type IS 1>
+			<cfset return_page = "area_items.cfm?area=#objectItem.area_id#">
+		<cfelse>
+			<cfset return_page = "#itemTypeName#.cfm?#itemTypeName#=#objectItem.item_id#">
+		</cfif>
+
 	</cfif> 
 
 <cfelse>

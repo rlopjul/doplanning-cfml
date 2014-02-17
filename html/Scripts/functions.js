@@ -64,6 +64,18 @@ function confirmAction(actionText) {
 	
 }
 
+function confirmReversibleAction(actionText) {
+	
+	var message = window.lang.convert('¿Seguro que desea ')+window.lang.convert(actionText)+'?';
+	
+	var resultado = confirm(message);
+	if(resultado)
+		return true;
+	else
+		return false;
+	
+}
+
 function toggleCheckboxChecked(checkboxId) {
 	//$(checkboxId).attr('checked',!($(checkboxId).attr('checked')=="checked"));
 	$(checkboxId).prop("checked",!($(checkboxId).is(":checked")));
