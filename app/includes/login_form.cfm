@@ -36,7 +36,7 @@
     
     <cfif APPLICATION.moduleLdapUsers EQ true><!--- LDAP --->
     <div class="form-group">
-      <div class="col-md-offset-3 col-sm-9">
+      <div class="col-sm-offset-3 col-sm-9">
         <small lang="es">Identificar con usuario y contraseña de:</small>
         
         <cfif APPLICATION.identifier EQ "vpnet">
@@ -58,7 +58,7 @@
     </cfif>
     
     <div class="form-group">
-        <div class="col-md-offset-3 col-sm-9">
+        <div class="col-sm-offset-3 col-sm-9">
           <input name="login" type="submit" class="btn btn-primary" value="Entrar" data-loading-text="Entrar" autocomplete="off" title="Acceder a la aplicación" lang="es"/>
           <!---<button type="submit" class="btn btn-primary" data-loading-text="Enviando">Entrar</button>--->
         

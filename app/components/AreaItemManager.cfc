@@ -520,17 +520,51 @@
 	<!--- ----------------------- CREATE ITEM -------------------------------- --->
 	
 	<cffunction name="createItem" returntype="struct" output="false" access="public">		
-		<cfargument name="objectItem" type="struct" required="true">
+		<!--- <cfargument name="objectItem" type="struct" required="true"> --->
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="status" type="string" required="false" default="ok"><!---pending/ok--->
+
+		<cfargument name="title" type="string" required="true">
+		<cfargument name="link" type="string" required="true">
+		<cfargument name="link_target" type="string" required="false">
+        <cfargument name="description" type="string" required="false" default="">
+        <cfargument name="parent_id" type="numeric" required="true">
+        <cfargument name="parent_kind" type="string" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+        <cfargument name="Filedata" type="any" required="false" default="">
+		<cfargument name="imagedata" type="any" required="false" default="">
+		<cfargument name="notify_by_sms" type="boolean" required="false">
+		<cfargument name="post_to_twitter" type="boolean" required="false">
+		<cfargument name="creation_date" type="string" required="false">
+		<cfargument name="start_date" type="string" required="false">
+		<cfargument name="end_date" type="string" required="false">
+		<cfargument name="start_hour" type="numeric" required="false">
+		<cfargument name="end_hour" type="numeric" required="false">
+		<cfargument name="place" type="string" required="false">
+		<cfargument name="recipient_user" type="numeric" required="false">
+		<cfargument name="estimated_value" type="numeric" required="false">
+		<cfargument name="real_value" type="numeric" required="false">
+		<cfargument name="done" type="boolean" required="no" default="false">
+		<cfargument name="display_type_id" type="numeric" required="false">
+		<cfargument name="iframe_url" type="string" required="false">
+		<cfargument name="iframe_display_type_id" type="numeric" required="false">
+		<cfargument name="identifier" type="string" required="false">
+		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="general" type="boolean" required="false" default="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_time" type="string" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 
 		<cfset var method = "createItem">
 		
 		<cfset var response = structNew()>
 
-		<cfset var parent_kind = "">
-		<cfset var parent_id = "">
-		<cfset var area_id = "">
+		<!--- <cfset var parent_kind = "">
+		<cfset var parent_id = ""> 
+		<cfset var area_id = "">--->
+		
+		<cfset var item_id = "">
 		<cfset var area_type = "">
 		<cfset var itemQuery = "">
 
@@ -541,31 +575,40 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 	
 			<!---checkAreaAccess--->
-			<cfif objectItem.parent_kind EQ "area">
+			<!---<cfif arguments.parent_kind EQ "area">
 			
-				<cfset area_id = objectItem.parent_id>	
+				<cfset area_id = arguments.parent_id>--->	
 
-			<cfelse>
+			<cfif arguments.parent_kind NEQ "area">
 			
 				<!---GET ITEM PARENT--->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemParent" returnvariable="getItemParentResult">
-					<cfinvokeargument name="item_id" value="#objectItem.parent_id#">
+					<cfinvokeargument name="item_id" value="#arguments.parent_id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 				
-				<cfset area_id = getItemParentResult.parent_area_id>
+				<cfset arguments.area_id = getItemParentResult.parent_area_id>
 				
 			</cfif>
+
+			<!--- isUserAreaResponsible --->
+			<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
 
 			<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
 
 				<!---checkAreaResponsibleAccess--->
-				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
-					<cfinvokeargument name="area_id" value="#area_id#">
-				</cfinvoke>
+				<cfif isUserAreaResponsible IS false>
+					
+					<cfset error_code = 105>
+				
+					<cfthrow errorcode="#error_code#">		
 
+				</cfif>
+			
 			<cfelse>
 
 				<!---checkAreaAccess--->
@@ -573,15 +616,15 @@
 
 			</cfif>
 
-			<cfset objectItem.area_id = area_id><!---Esta variable se utiliza despues para enviar las ALERTAS--->
+			<!---<cfset objectItem.area_id = area_id>---><!---Esta variable se utiliza despues para enviar las ALERTAS--->
 
 			<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">				
-				<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
 		
 			<cfset area_type = areaTypeResult.areaType>
 			
-			<cfif itemTypeId IS 7 AND objectItem.parent_kind NEQ "area"><!---Consultations--->
+			<cfif itemTypeId IS 7 AND arguments.parent_kind NEQ "area"><!---Consultations--->
 				
 				<cfset parent_state = getItemParentResult.state>
 				
@@ -593,15 +636,14 @@
 			
 			</cfif>
 			
-			
 			<cfif itemTypeId IS 5><!---Events--->
 				
-				<cfif len(objectItem.start_date) GT 0 AND len(objectItem.end_date) GT 0>
-					<cfset start_date = createDateFromString(objectItem.start_date)>
-					<cfset end_date = createDateFromString(objectItem.end_date)>
+				<cfif len(arguments.start_date) GT 0 AND len(arguments.end_date) GT 0>
+					<cfset startDate = createDateFromString(arguments.start_date)>
+					<cfset endDate = createDateFromString(arguments.end_date)>
 					
 					<!---end_date check--->
-					<cfif DateCompare(start_date,end_date,"d") IS 1>
+					<cfif DateCompare(startDate,endDate,"d") IS 1>
 						<cfset response_message = 'Fechas incorrectas: la fecha de fin del evento debe ser posterior a la de inicio.'>
 					
 						<cfthrow message="#response_message#">
@@ -624,7 +666,7 @@
 				
 			</cfif>
 		
-			<cfset objectItem.user_full_name = "#getUserData.family_name# #getUserData.name#">
+			<!---<cfset objectItem.user_full_name = "#getUserData.family_name# #getUserData.name#">--->
 			
 			
 			<cfif itemTypeId IS 6><!---Tasks--->
@@ -632,7 +674,7 @@
 				<cfquery datasource="#client_dsn#" name="getRecipientUserData">
 					SELECT family_name, name
 					FROM #client_abb#_users
-					WHERE id = <cfqueryparam value="#objectItem.recipient_user#" cfsqltype="cf_sql_integer">;
+					WHERE id = <cfqueryparam value="#arguments.recipient_user#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 				
 				<cfif getRecipientUserData.recordCount LT 1><!---the user does not exist--->
@@ -643,17 +685,9 @@
 					
 				</cfif>
 			
-				<cfset objectItem.recipient_user_full_name = "#getRecipientUserData.family_name# #getRecipientUserData.name#">
+				<!---<cfset objectItem.recipient_user_full_name = "#getRecipientUserData.family_name# #getRecipientUserData.name#">--->
 			
 			</cfif>
-			
-			
-			<!---<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-			</cfinvoke>
-			
-			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
-				<cfinvokeargument name="timestamp_date" value="#current_date#">
-			</cfinvoke>--->
 			
 			<!---Status of item--->
 			<!---<cfif NOT isDefined("xmlItem.item.attached_file_name.xmlText") OR len(xmlItem.item.attached_file_name.xmlText) IS 0 OR xmlItem.item.xmlAttributes.attached_file_id EQ "NULL">--->
@@ -664,15 +698,16 @@
 				<cfset status = "ok">
 			</cfif>--->
 
-			
+			<cfset arguments.title = trim(arguments.title)>
+
 			<cftransaction>
 			
 				<cfquery name="insertItemQuery" datasource="#client_dsn#" result="insertItemResult">		
 					INSERT INTO #client_abb#_#itemTypeTable#
-					SET title = <cfqueryparam value="#objectItem.title#" cfsqltype="CF_SQL_varchar">,
-					description = <cfqueryparam value="#objectItem.description#" cfsqltype="CF_SQL_varchar">,
-					parent_id = <cfqueryparam value="#objectItem.parent_id#" cfsqltype="cf_sql_integer">,
-					parent_kind = <cfqueryparam value="#objectItem.parent_kind#" cfsqltype="CF_SQL_varchar">,
+					SET title = <cfqueryparam value="#arguments.title#" cfsqltype="CF_SQL_varchar">,
+					description = <cfqueryparam value="#arguments.description#" cfsqltype="CF_SQL_varchar">,
+					parent_id = <cfqueryparam value="#arguments.parent_id#" cfsqltype="cf_sql_integer">,
+					parent_kind = <cfqueryparam value="#arguments.parent_kind#" cfsqltype="CF_SQL_varchar">,
 					user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 					<!---<cfif len(objectItem.attached_file_name) GT 0>
 						attached_file_name = <cfqueryparam value="#objectItem.attached_file_name#" cfsqltype="cf_sql_varchar">,
@@ -681,54 +716,77 @@
 						attached_file_id = <cfqueryparam value="#objectItem.attached_file_id#" cfsqltype="cf_sql_integer">
 					</cfif>,--->
 					<cfif itemTypeId IS 4><!---News--->
-						creation_date = STR_TO_DATE(<cfqueryparam value="#objectItem.creation_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y'),
+						creation_date = STR_TO_DATE(<cfqueryparam value="#arguments.creation_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y'),
 					<cfelse>
 						creation_date = NOW(),
 					</cfif>
 					status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">,
-					area_id = <cfqueryparam value="#objectItem.area_id#" cfsqltype="cf_sql_integer">,
-					link = <cfqueryparam value="#objectItem.link#" cfsqltype="cf_sql_varchar">
+					area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
+					link = <cfqueryparam value="#arguments.link#" cfsqltype="cf_sql_varchar">
 					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
-					, link_target = <cfqueryparam value="#objectItem.link_target#" cfsqltype="cf_sql_varchar">
+					, link_target = <cfqueryparam value="#arguments.link_target#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					<cfif itemTypeId IS NOT 1>
 					, last_update_date = NOW()
 					</cfif>
-					<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-					<!---, position = <cfqueryparam value="#objectItem.position#" cfsqltype="cf_sql_integer"> --->
-						<cfif itemTypeId IS 2><!---Entries--->
-						, display_type_id = <cfqueryparam value="#objectItem.display_type_id#" cfsqltype="cf_sql_integer">
+					
+					<cfif itemTypeWeb IS true><!---WEB--->
+
+						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
+							, publication_date = STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
+							, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">
 						</cfif>
-					</cfif>
-					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
-						, iframe_url = <cfqueryparam value="#objectItem.iframe_url#" cfsqltype="cf_sql_varchar">
-						, iframe_display_type_id = <cfqueryparam value="#objectItem.iframe_display_type_id#" cfsqltype="cf_sql_integer">
-					</cfif>	 
+						<!--- publicationValidation --->
+						<cfif APPLICATION.publicationValidation IS true>
+							<cfif isUserAreaResponsible IS true AND arguments.publication_validated IS true>
+								, publication_validated = <cfqueryparam value="#arguments.publication_validated#" cfsqltype="cf_sql_bit">
+								<cfif arguments.publication_validated IS true>
+									, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+									, publication_validated_date = NOW()						
+								</cfif>
+							<cfelse>
+								, publication_validated = <cfqueryparam value="false" cfsqltype="cf_sql_bit">
+							</cfif>												
+						</cfif>
+
+						<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!--- Entries, News, Events --->	
+							, iframe_url = <cfqueryparam value="#arguments.iframe_url#" cfsqltype="cf_sql_varchar">
+							, iframe_display_type_id = <cfqueryparam value="#arguments.iframe_display_type_id#" cfsqltype="cf_sql_integer">
+							<cfif itemTypeId IS 2><!---Entries--->
+							, display_type_id = <cfqueryparam value="#arguments.display_type_id#" cfsqltype="cf_sql_integer">
+							</cfif>
+						</cfif>
+
+					</cfif><!--- END WEB --->
+
 					<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-					, start_date = STR_TO_DATE(<cfqueryparam value="#objectItem.start_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
-					, end_date = STR_TO_DATE(<cfqueryparam value="#objectItem.end_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
+					, start_date = STR_TO_DATE(<cfqueryparam value="#arguments.start_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
+					, end_date = STR_TO_DATE(<cfqueryparam value="#arguments.end_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
 					</cfif>
 					<cfif itemTypeId IS 5><!---Events--->
-					, start_time = <cfqueryparam value="#objectItem.start_time#" cfsqltype="cf_sql_time">
-					, end_time = <cfqueryparam value="#objectItem.end_time#" cfsqltype="cf_sql_time">
-					, place = <cfqueryparam value="#objectItem.place#" cfsqltype="cf_sql_varchar">
+					, start_time = <cfqueryparam value="#arguments.start_time#" cfsqltype="cf_sql_time">
+					, end_time = <cfqueryparam value="#arguments.end_time#" cfsqltype="cf_sql_time">
+					, place = <cfqueryparam value="#arguments.place#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					<cfif itemTypeId IS 6><!---Tasks--->
-					, recipient_user = <cfqueryparam value="#objectItem.recipient_user#" cfsqltype="cf_sql_varchar">
-					, done = <cfqueryparam value="#objectItem.done#" cfsqltype="cf_sql_bit">
-					, estimated_value = <cfqueryparam value="#objectItem.estimated_value#" cfsqltype="cf_sql_float">
-					, real_value = <cfqueryparam value="#objectItem.real_value#" cfsqltype="cf_sql_float">
+					, recipient_user = <cfqueryparam value="#arguments.recipient_user#" cfsqltype="cf_sql_varchar">
+					, done = <cfqueryparam value="#arguments.done#" cfsqltype="cf_sql_bit">
+					, estimated_value = <cfqueryparam value="#arguments.estimated_value#" cfsqltype="cf_sql_float">
+					, real_value = <cfqueryparam value="#arguments.real_value#" cfsqltype="cf_sql_float">
 					</cfif>
 					<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultation, PubMed comment--->
-					, identifier = <cfqueryparam value="#objectItem.identifier#" cfsqltype="cf_sql_varchar"
+					, identifier = <cfqueryparam value="#arguments.identifier#" cfsqltype="cf_sql_varchar"
 		>				<cfif itemTypeId IS 7>
 						, state = <cfqueryparam value="created" cfsqltype="cf_sql_varchar">
 						</cfif>
 					</cfif>
 					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
-					, structure_available = <cfqueryparam value="#objectItem.structure_available#" cfsqltype="cf_sql_bit">
+					, structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
 						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
-						, general = <cfqueryparam value="#objectItem.general#" cfsqltype="cf_sql_bit">
+						, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
+						</cfif>
+						<cfif isDefined("arguments.publication_scope_id")>
+						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
 						</cfif>
 					</cfif>
 					;			
@@ -738,23 +796,24 @@
 					SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_#itemTypeTable#;
 				</cfquery>
 
-				<cfset objectItem.id = getLastInsertId.last_insert_id>
+				<!--- <cfset objectItem.id = getLastInsertId.last_insert_id> --->
+				<cfset item_id = getLastInsertId.last_insert_id> 
 
 				<!---<cfif len(area_type) IS NOT 0>--->
 				<cfif itemTypeWeb IS true><!---IS WEB---><!---El orden sólo se utiliza en los elementos web--->
 				
 					<!---getItemLastPosition--->
 					<cfinvoke component="AreaItemManager" method="getAreaItemsLastPosition" returnvariable="itemLastPosition">
-						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+						<cfinvokeargument name="area_id" value="#arguments.area_id#">
 					</cfinvoke>
 					
-					<cfset objectItem.position = itemLastPosition+1>
+					<cfset item_position = itemLastPosition+1>
 
 					<cfinvoke component="AreaItemManager" method="insertAreaItemPosition">
-						<cfinvokeargument name="item_id" value="#objectItem.id#">
+						<cfinvokeargument name="item_id" value="#item_id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-						<cfinvokeargument name="position" value="#objectItem.position#">
+						<cfinvokeargument name="area_id" value="#arguments.area_id#">
+						<cfinvokeargument name="position" value="#item_position#">
 					</cfinvoke>
 					
 				</cfif>
@@ -762,7 +821,7 @@
 				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 OR arguments.itemTypeId IS 13><!---Lists, Forms, Typologies--->
 					
 					<cfinvoke component="TableManager" method="createTableInDatabase">
-						<cfinvokeargument name="table_id" value="#objectItem.id#">
+						<cfinvokeargument name="table_id" value="#item_id#">
 						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 					</cfinvoke>
 
@@ -774,10 +833,10 @@
 				<cfset objectItem.creation_date = stringCurrentDate>
 			</cfif>--->
 			
-			<cfif arguments.itemTypeId IS 7 AND objectItem.parent_kind NEQ "area" AND parent_state NEQ "answered"><!---Consultations--->
+			<cfif arguments.itemTypeId IS 7 AND arguments.parent_kind NEQ "area" AND parent_state NEQ "answered"><!---Consultations--->
 		
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="updateItemState">
-					<cfinvokeargument name="item_id" value="#objectItem.parent_id#">
+					<cfinvokeargument name="item_id" value="#arguments.parent_id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="state" value="answered">
 					<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -789,9 +848,10 @@
 			<cfif arguments.status EQ "ok">
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
-					<cfinvokeargument name="item_id" value="#objectItem.id#">
+					<cfinvokeargument name="item_id" value="#item_id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="parse_dates" value="true">
+					<cfinvokeargument name="published" value="false">
 					
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -802,26 +862,25 @@
 					<cfinvokeargument name="objectItem" value="#itemQuery#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="action" value="new">
-					<cfif objectItem.notify_by_sms EQ "true">
+					<cfif arguments.notify_by_sms EQ "true">
 						<cfinvokeargument name="send_sms" value="true">
 					</cfif>
 				</cfinvoke>
 
 			</cfif>
 			
-			
-			<cfif objectItem.post_to_twitter IS true>
-				<!---postItemToTwitter--->
+			<!---postItemToTwitter--->
+			<cfif arguments.post_to_twitter IS true>
 				<cfinvoke component="AreaItemManager" method="postItemToTwitter">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="item_id" value="#objectItem.id#">
-					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="item_id" value="#item_id#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfinvoke>		
 			</cfif>
 			
 			<cfinclude template="includes/logRecord.cfm">
 
-			<cfset response = {result=true, objectItem=#objectItem#}>		
+			<cfset response = {result=true, item_id=item_id}>		
 
 			<cfcatch>
 
@@ -833,124 +892,6 @@
 		<cfreturn response>
 		
 	</cffunction>
-	
-	
-	
-	<!--- ----------------------- CREATE ITEM WITH ATTACHED -------------------------------- --->
-	
-	<!---
-	<cffunction name="createItemWithAttachedFile" returntype="struct" output="false" access="public">		
-		<!---<cfargument name="xmlItem" type="xml" required="yes">--->
-		<cfargument name="objectItem" type="struct" required="true">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
-		<!---Este parámetro debe quitarse cuando se modifiquen los métodos de FileManager y ya no sea requerido--->
-		<!---<cfargument name="request" type="string" required="yes">--->
-		<cfargument name="file_name" type="string" required="true"/>
-		<cfargument name="file_file_name" type="string" required="true"/>
-		<cfargument name="file_size" type="numeric" required="true"/>
-		<cfargument name="file_type" type="string" required="true"/>
-		<cfargument name="file_description" type="string" required="true"/>
-		
-		<cfset var method = "createItemWithAttachedFile">
-
-		<cfset var response = structNew()>
-
-		<cftry>
-							
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
-			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-
-			<cfinvoke component="AreaItemManager" method="createItem" returnvariable="createItemResponse">
-				<!---<cfinvokeargument name="xmlItem" value="#xmlItem#">--->
-				<cfinvokeargument name="objectItem" value="#arguments.objectItem#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				<cfinvokeargument name="status" value="pending"/>
-			</cfinvoke>
-
-			<cfif createItemResponse.result IS false>
-				
-				<cfreturn createItemResponse>
-
-			</cfif>
-			
-			<!---<cfinvoke component="FileManager" method="createFile" returnvariable="resultFile">
-				<cfinvokeargument name="request" value="#xmlRequest#">
-				<cfinvokeargument name="status" value="pending">
-			</cfinvoke>
-				
-			<cfxml variable="xmlResultFile">
-				<cfoutput>
-					#resultFile#
-				</cfoutput>					
-			</cfxml>--->
-
-			<cfinvoke component="FileManager" method="createFile" returnvariable="createFileResponse">
-				<cfinvokeargument name="name" value="#arguments.file_name#">		
-				<cfinvokeargument name="file_name" value="#arguments.file_file_name#">
-				<cfinvokeargument name="file_type" value="#arguments.file_type#">
-				<cfinvokeargument name="file_size" value="#arguments.file_size#">
-				<cfinvokeargument name="description" value="#arguments.file_description#">
-			</cfinvoke>			
-			
-			<cfif createFileResponse.result IS true>
-				
-				<cfset objectItem = createItemResponse.objectItem>
-				<cfset objectItem.attached_file_id = createFileResponse.objectFile.id>
-				<cfset objectItem.attached_file_name = createFileResponse.objectFile.file_name>
-				
-				<!---<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlItem">
-					<cfinvokeargument name="objectItem" value="#objectItem#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				</cfinvoke>
-				
-				<cfinvoke component="FileManager" method="objectFile" returnvariable="xmlFile">
-					<cfinvokeargument name="xml" value="#xmlResultFile.response.result.file#">
-					
-					<cfinvokeargument name="return_type" value="xml">
-				</cfinvoke>
-				
-				<cfsavecontent variable="xmlResult">
-					<cfoutput>
-					#xmlItem#
-					#xmlFile#
-					</cfoutput>				
-				</cfsavecontent>
-
-				<cfset xmlResponseContent = xmlResult>
-
-				<cfreturn xmlResponseContent>--->
-
-				<cfset response = {result=true, objectItem=#objectItem#, objectFile=#createFileResponse.objectFile#}>						
-			
-			<cfelse><!---File insert failed--->
-			
-				<!---Delete the inserted item--->
-				<!---
-				No se elimina porque se envía la notificación de eliminar un mensaje que no se ha enviado
-				<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="resultDeleteItem">
-					<cfinvokeargument name="item_id" value="#objectItem.id#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
-				</cfinvoke>--->
-		
-				<cfset error_code = 602>
-				
-				<cfthrow errorcode="#error_code#">
-			
-			</cfif>
-
-
-			<cfcatch>
-
-				<cfinclude template="includes/errorHandlerStruct.cfm">
-
-			</cfcatch>
-		</cftry>
-
-		<cfreturn response>
-	
-	</cffunction>
-	--->
 	
 	
 	
@@ -960,6 +901,11 @@
 		<cfargument name="objectItem" type="struct" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="status" type="string" required="false" default="ok"><!---pending/ok--->
+
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_time" type="string" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateItem">
 				
@@ -972,11 +918,6 @@
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
-			<!---<cfinvoke component="AreaItemManager" method="objectItem" returnvariable="objectItem">
-				<cfinvokeargument name="xml" value="#xmlItem#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-			</cfinvoke>--->
-			
 			<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
@@ -985,12 +926,6 @@
 			</cfinvoke>
 			
 			<cfset getItemObject = getItemResponse.item>
-
-			<!---
-			<cfset objectItem.area_id = getItemObject.area_id><!---Esta variable se utiliza despues para enviar las alertas--->	
-			<cfset objectItem.user_in_charge = getItemObject.user_in_charge>
-			<cfset objectItem.user_full_name = getItemObject.user_full_name><!---Para las alertas--->
-			--->
 			
 			<!---checkAreaAccess--->
 			<!---Esto se hace en getItem--->
@@ -999,11 +934,11 @@
 			<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
 				
 				<cfif len(objectItem.start_date) GT 0 AND len(objectItem.end_date) GT 0>
-					<cfset start_date = createDateFromString(objectItem.start_date)>
-					<cfset end_date = createDateFromString(objectItem.end_date)>
+					<cfset startDate = createDateFromString(objectItem.start_date)>
+					<cfset endDate = createDateFromString(objectItem.end_date)>
 					
 					<!---end_date check--->
-					<cfif DateCompare(start_date,end_date,"d") IS 1>
+					<cfif DateCompare(startDate,endDate,"d") IS 1>
 						<cfset response_message = 'Fechas incorrectas: la fecha de fin del evento debe ser posterior a la de inicio.'>
 					
 						<cfthrow message="#response_message#">
@@ -1011,7 +946,11 @@
 				</cfif>
 				
 			</cfif>
-			
+
+			<!--- isUserAreaResponsible --->
+			<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
+				<cfinvokeargument name="area_id" value="#getItemObject.area_id#">
+			</cfinvoke>
 			
 			<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Messages, Consultations--->
 				
@@ -1032,9 +971,49 @@
 			<cfelseif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
 
 				<!---checkAreaResponsibleAccess--->
-				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
-					<cfinvokeargument name="area_id" value="#getItemObject.area_id#">
-				</cfinvoke>
+				<cfif isUserAreaResponsible IS false>
+					
+					<cfset error_code = 105>
+				
+					<cfthrow errorcode="#error_code#">		
+
+				</cfif>
+
+				<!--- Scope --->
+				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13>
+					
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/ViewQuery" method="getTableViews" returnvariable="getTableViewsQuery">
+						<cfinvokeargument name="table_id" value="#objectItem.id#">
+						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+						<cfinvokeargument name="with_table" value="true">
+						<cfinvokeargument name="parse_dates" value="true">
+						
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfif getTableViewsQuery.recordCount GT 0>
+
+						<cfloop query="getTableViewsQuery">
+							
+							<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
+								<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
+								<cfinvokeargument name="area_id" value="#getTableViewsQuery.area_id#">
+							</cfinvoke>
+
+							<cfif isInScopeResult.result IS false>
+
+								<cfset response = {result=false, message="El ámbito de publicación seleccionado no es compatible con las vistas publicadas"}>
+								
+								<cfreturn response>
+								
+							</cfif>
+
+						</cfloop>
+
+					</cfif>
+
+				</cfif>
 
 			<cfelse>
 			
@@ -1093,15 +1072,6 @@
 			</cfif>
 			
 			
-			<!---<cfif itemTypeId IS NOT 1>
-				<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-				</cfinvoke>
-				
-				<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
-					<cfinvokeargument name="timestamp_date" value="#current_date#">
-				</cfinvoke>
-			</cfif>--->
-			
 			<cftransaction>
 			
 				<cfquery name="updateItemQuery" datasource="#client_dsn#">		
@@ -1116,16 +1086,33 @@
 					, creation_date = STR_TO_DATE(<cfqueryparam value="#objectItem.creation_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
 					</cfif>
 					, last_update_date = NOW()
-					<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-					<!---, position = <cfqueryparam value="#objectItem.position#" cfsqltype="cf_sql_integer">--->
-						<cfif itemTypeId IS 2><!---Entries--->
-						, display_type_id = <cfqueryparam value="#objectItem.display_type_id#" cfsqltype="cf_sql_integer">
+
+					<cfif itemTypeWeb IS true><!---WEB--->
+
+						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
+							, publication_date = STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
+							<!--- , publication_date = STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i') --->
+							, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">
 						</cfif>
-					</cfif>
-					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
-						, iframe_url = <cfqueryparam value="#objectItem.iframe_url#" cfsqltype="cf_sql_varchar">
-						, iframe_display_type_id = <cfqueryparam value="#objectItem.iframe_display_type_id#" cfsqltype="cf_sql_integer">
-					</cfif>	 
+						<!--- publicationValidation --->
+						<cfif APPLICATION.publicationValidation IS true AND isUserAreaResponsible IS true>
+							, publication_validated = <cfqueryparam value="#arguments.publication_validated#" cfsqltype="cf_sql_bit">
+							<cfif arguments.publication_validated IS true AND getItemObject.publication_validated IS false>
+								, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+								, publication_validated_date = NOW()						
+							</cfif>
+						</cfif>
+							
+						<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
+							, iframe_url = <cfqueryparam value="#objectItem.iframe_url#" cfsqltype="cf_sql_varchar">
+							, iframe_display_type_id = <cfqueryparam value="#objectItem.iframe_display_type_id#" cfsqltype="cf_sql_integer">
+							<cfif itemTypeId IS 2><!---Entries--->
+							, display_type_id = <cfqueryparam value="#objectItem.display_type_id#" cfsqltype="cf_sql_integer">
+							</cfif>
+						</cfif>	 
+
+					</cfif><!--- END WEB --->
+
 					<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
 					, start_date = STR_TO_DATE(<cfqueryparam value="#objectItem.start_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
 					, end_date = STR_TO_DATE(<cfqueryparam value="#objectItem.end_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
@@ -1152,28 +1139,43 @@
 						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
 						, general = <cfqueryparam value="#objectItem.general#" cfsqltype="cf_sql_bit">
 						</cfif>
+						<cfif isDefined("arguments.publication_scope_id")>
+						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
+						</cfif>
 					</cfif>
 					WHERE id = <cfqueryparam value="#objectItem.id#" cfsqltype="cf_sql_integer">;			
 				</cfquery>
 				
 			</cftransaction>
 			
-			<!---<cfif itemTypeId IS NOT 4>
-				<cfset objectItem.creation_date = getItemObject.creation_date><!---Para las alertas--->
-			</cfif>
-			
-			<cfset objectItem.last_update_date = stringCurrentDate>--->
-			
 			<cfif arguments.status EQ "ok">
 
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
-					<cfinvokeargument name="item_id" value="#objectItem.id#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="parse_dates" value="true">
+				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 OR arguments.itemTypeId IS 13><!--- Tables --->
 					
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="itemQuery">
+						<cfinvokeargument name="table_id" value="#objectItem.id#">
+						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+						<cfinvokeargument name="parse_dates" value="true">
+						<cfinvokeargument name="published" value="false">
+						
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				<cfelse>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+						<cfinvokeargument name="item_id" value="#objectItem.id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="parse_dates" value="true">
+						<cfinvokeargument name="published" value="false">
+						
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+				
 
 				<!--- Alert --->
 				<cfinvoke component="AlertManager" method="newAreaItem">
@@ -1217,6 +1219,10 @@
 		<cfargument name="file_size" type="numeric" required="true"/>
 		<cfargument name="file_type" type="string" required="true"/>
 		<cfargument name="file_description" type="string" required="true"/>
+
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_time" type="string" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
 		
 		<cfset var method = "updateItemWithAttachedFile">
 		
@@ -1232,6 +1238,10 @@
 					<cfinvokeargument name="objectItem" value="#arguments.objectItem#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="status" value="pending">
+
+					<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
+					<cfinvokeargument name="publication_time" value="#arguments.publication_time#">
+					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				</cfinvoke>
 
 				<cfif updateItemResponse.result IS false>
@@ -1239,18 +1249,6 @@
 					<cfreturn updateItemResponse>
 
 				</cfif>
-				
-	<!---			<cfinvoke component="FileManager" method="createFile" returnvariable="resultFile">
-					<cfinvokeargument name="request" value="#xmlRequest#">
-					<cfinvokeargument name="status" value="pending">
-				</cfinvoke>
-					
-				<cfxml variable="xmlResultFile">
-					<cfoutput>
-						#resultFile#
-					</cfoutput>					
-				</cfxml>--->
-				
 				
 				<cfinvoke component="FileManager" method="createFile" returnvariable="createFileResponse">
 					<cfinvokeargument name="name" value="#arguments.file_name#">		
@@ -1265,29 +1263,6 @@
 					
 					<cfset objectItem.attached_file_id = createFileResponse.objectFile.id>
 					<cfset objectItem.attached_file_name = createFileResponse.objectFile.file_name>
-					
-	<!---				<cfinvoke component="AreaItemManager" method="xmlItem" returnvariable="xmlItem">
-						<cfinvokeargument name="objectItem" value="#objectItem#">
-						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					</cfinvoke>
-					
-					<cfinvoke component="FileManager" method="objectFile" returnvariable="xmlFile">
-						<cfinvokeargument name="xml" value="#xmlResultFile.response.result.file#">
-						
-						<cfinvokeargument name="return_type" value="xml">
-					</cfinvoke>
-					
-					<cfsavecontent variable="xmlResult">
-						<cfoutput>
-						#xmlItem#
-						#xmlFile#
-						</cfoutput>				
-					</cfsavecontent>
-					
-	
-					<cfset xmlResponseContent = xmlResult>
-					
-					<cfreturn xmlResponseContent>--->
 					
 					<cfset response = {result=true, message="", objectItem=#objectItem#, objectFile=#createFileResponse.objectFile#}>			
 							
@@ -1351,6 +1326,7 @@
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1488,6 +1464,7 @@
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1555,6 +1532,7 @@
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1774,34 +1752,13 @@
 				<cfinvokeargument name="item_id" value="#id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 			
 			<cfif selectItemQuery.recordCount GT 0>
-			
-				<!---
-				<cfif arguments.itemTypeId IS 6><!---Tasks--->
-				
-					<cfquery datasource="#client_dsn#" name="getRecipientUserData">
-						SELECT family_name, name
-						FROM #client_abb#_users
-						WHERE id = <cfqueryparam value="#selectItemQuery.recipient_user#" cfsqltype="cf_sql_integer">;
-					</cfquery>
-					
-					<cfif getRecipientUserData.recordCount LT 1><!---the user does not exist--->
-						
-						<cfset error_code = 204>
-						
-						<cfthrow errorcode="#error_code#"> 
-						
-					</cfif>
-					
-					<cfset recipient_user_full_name = "#getRecipientUserData.family_name# #getRecipientUserData.name#">
-				
-				</cfif>--->
-				
 
 				<cfset area_id = selectItemQuery.area_id>
 				
@@ -1964,6 +1921,8 @@
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<!---<cfquery name="getEmptyItem" datasource="#client_dsn#">
 				SELECT *
@@ -1986,10 +1945,17 @@
 				<cfset objectItem.link = "">
 			</cfif>
 			<cfset objectItem.link_target = "_blank">
-			
-			<cfif itemTypeId IS 4><!---News--->
+
+			<cfif itemTypeWeb IS true><!---WEB--->
 				<cfset cur_date = DateFormat(now(), "DD-MM-YYYY")>
-				<cfset objectItem.creation_date = cur_date>
+
+				<cfset objectItem.publication_date = cur_date>
+				<cfset objectItem.publication_time = timeFormat(now(), "HH:mm")>
+				<cfset objectItem.publication_validated = true>
+
+				<cfif itemTypeId IS 4><!---News--->
+					<cfset objectItem.creation_date = cur_date>
+				</cfif>
 			</cfif>
 			
 			<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
@@ -2226,7 +2192,7 @@
 			
 			</cfif>
 			
-		<cfcatch>
+			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
 
@@ -2342,6 +2308,8 @@
 		<cfset var method = "changeAreaItemState">
 
 		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
 		<cfset var itemQuery = "">
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
@@ -2383,6 +2351,7 @@
 						<cfinvokeargument name="item_id" value="#arguments.item_id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="parse_dates" value="true">
+						<cfinvokeargument name="published" value="false">
 						
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -2428,6 +2397,8 @@
 		<cfset var method = "changeAreaItemDone">
 
 		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
 		<cfset var itemQuery = "">
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
@@ -2456,19 +2427,12 @@
 						WHERE
 						id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;			
 					</cfquery>
-					
-					<!---<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
-						<cfinvokeargument name="item_id" value="#arguments.item_id#">
-						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-						<cfinvokeargument name="return_type" value="query">
-					</cfinvoke>
-
-					<cfset itemQuery = getItemResponse.item>--->
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
 						<cfinvokeargument name="item_id" value="#arguments.item_id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="parse_dates" value="true">
+						<cfinvokeargument name="published" value="false">
 						
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -2497,7 +2461,110 @@
 			
 			</cfif>
 			
-			<cfreturn response>
+		<cfreturn response>
+		
+	</cffunction>
+	<!---  ------------------------------------------------------------------------ --->
+
+
+	<!---  ---------------------- changeItemPublicationValidation -------------------------------- --->
+	
+	<cffunction name="changeItemPublicationValidation" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="validate" type="boolean" required="true">
+		
+		<cfset var method = "changeItemPublicationValidation">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var itemQuery = "">
+
+		<cftry>
+		
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+			
+			<cfquery name="getItem" datasource="#client_dsn#">		
+				SELECT area_id, publication_validated
+				FROM #client_abb#_#itemTypeTable# 
+				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;			
+			</cfquery>
+			
+			<cfif getItem.recordCount GT 0 AND itemTypeWeb IS true>
+				
+				<cfset area_id = getItem.area_id>
+			
+				<!---checkAreaAccess--->
+				<cfinclude template="includes/checkAreaAccess.cfm">
+
+				<!--- isUserAreaResponsible --->
+				<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+			
+				<cfif APPLICATION.publicationValidation IS true AND isUserAreaResponsible IS true>
+				
+					<cfquery name="changeItemPublication" datasource="#client_dsn#">		
+						UPDATE #client_abb#_#itemTypeTable#
+						SET	publication_validated = <cfqueryparam value="#arguments.validate#" cfsqltype="cf_sql_bit">
+							<cfif arguments.validate IS true AND getItem.publication_validated IS false>
+								, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+								, publication_validated_date = NOW()						
+							</cfif>
+						WHERE
+						id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;			
+					</cfquery>
+
+					<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+						<cfinvokeargument name="item_id" value="#arguments.item_id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="parse_dates" value="true">
+						<cfinvokeargument name="published" value="false">
+						
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<!---Alert--->
+					 <cfinvoke component="AlertManager" method="newAreaItem">
+						<cfinvokeargument name="objectItem" value="#itemQuery#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="action" value="done">
+					</cfinvoke> --->
+
+					<cfinclude template="includes/logRecord.cfm">
+					
+					<cfif arguments.validate IS true>
+						<cfset response_message = "Publicación aprobada">
+					<cfelse>
+						<cfset response_message = "Publicación no aprobada">
+					</cfif>
+
+					<cfset response = {result=true, area_id=getItem.area_id, message=response_message}>
+										
+				<cfelse>
+				
+					<cfset response = {result=false, message="Error, no tiene permiso para publicar en esta área"}>
+										
+				</cfif>
+			
+			<cfelse>
+			
+				<cfset response = {result=false, message="Error, no se ha encontrado el elemento"}>
+			
+			</cfif>
+			
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
@@ -2612,6 +2679,7 @@
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -3224,7 +3292,8 @@
 				</cfif>
 				<cfif isDefined("arguments.done")>
 				<cfinvokeargument name="done" value="#arguments.done#">
-				</cfif>				
+				</cfif>
+				<cfinvokeargument name="published" value="false">				
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -3291,7 +3360,8 @@
 				</cfif>
 				<cfif isDefined("arguments.done")>
 				<cfinvokeargument name="done" value="#arguments.done#">
-				</cfif>				
+				</cfif>
+				<cfinvokeargument name="published" value="false">				
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -3446,6 +3516,7 @@
 				<cfif isDefined("arguments.end_date")>
 				<cfinvokeargument name="end_date" value="#arguments.end_date#">
 				</cfif>
+				<cfinvokeargument name="published" value="false">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -3493,6 +3564,7 @@
 				<cfif isDefined("arguments.limit")>
 				<cfinvokeargument name="limit" value="#arguments.limit#">
 				</cfif>
+				<cfinvokeargument name="published" value="false">
 
 				<cfinvokeargument name="withConsultations" value="#APPLICATION.moduleConsultations#">
 				<cfinvokeargument name="withPubmedsComments" value="#APPLICATION.modulePubMedComments#">

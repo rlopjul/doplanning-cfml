@@ -31,7 +31,8 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="parse_dates" value="false">		
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">		
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -125,7 +126,8 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="parse_dates" value="false">		
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">		
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -745,7 +747,8 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="parse_dates" value="false">		
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">		
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

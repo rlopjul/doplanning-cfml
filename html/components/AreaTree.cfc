@@ -17,6 +17,7 @@
 		<cfargument name="with_input_type" type="string" required="no" default="">
 		<cfargument name="disable_input_web" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
 		<cfargument name="disable_input_area" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
+		<cfargument name="enable_only_areas_ids" type="string" required="false"><!--- Habilita sólo los checkbox las áreas pasadas --->
 		
 		<cfset var method = "outputMainTree">
 		
@@ -43,6 +44,7 @@
 							<cfinvokeargument name="with_input_type" value="#arguments.with_input_type#">
 							<cfinvokeargument name="disable_input_web" value="#arguments.disable_input_web#">
 							<cfinvokeargument name="disable_input_area" value="#arguments.disable_input_area#">
+							<cfinvokeargument name="enable_only_areas_ids" value="#arguments.enable_only_areas_ids#">
 						</cfinvoke>
 						
 					</cfloop>
@@ -66,6 +68,7 @@
 		<cfargument name="with_input_type" type="string" required="no" default="">
 		<cfargument name="disable_input_web" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
 		<cfargument name="disable_input_area" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
+		<cfargument name="enable_only_areas_ids" type="string" required="false">
 		
 		<cfset var method = "outputMainTreeAdmin">
 		
@@ -92,6 +95,7 @@
 							<cfinvokeargument name="with_input_type" value="#arguments.with_input_type#">
 							<cfinvokeargument name="disable_input_web" value="#arguments.disable_input_web#">
 							<cfinvokeargument name="disable_input_area" value="#arguments.disable_input_area#">
+							<cfinvokeargument name="enable_only_areas_ids" value="#arguments.enable_only_areas_ids#">
 							<cfinvokeargument name="admin" value="true">
 						</cfinvoke>
 						
@@ -118,7 +122,9 @@
 		<cfargument name="with_input_type" type="string" required="true">
 		<cfargument name="disable_input_web" type="boolean" required="true">
 		<cfargument name="disable_input_area" type="boolean" required="true">
+		<cfargument name="enable_only_areas_ids" type="string" required="false">
 		<cfargument name="admin" type="boolean" required="false" default="false">
+		<cfargument name="areaEnabled" type="boolean" required="false" default="false">
 		
 		<cfset var method = "outputTree">
 		
@@ -158,13 +164,41 @@
 			</cfif>	
 			<cfset a_href = "area.cfm?area=#areaXml.xmlAttributes.id#">
 		</cfif>
-		
+
 		<cfset areaId = areaXml.xmlAttributes.id>
 		<cfset area_with_link = areaXml.xmlAttributes.with_link>
 		
+		<cfif isDefined("arguments.enable_only_areas_ids")>
+
+			<cfif arguments.areaEnabled IS false AND ( listFind(arguments.enable_only_areas_ids, areaId) GT 0 OR listFind(arguments.enable_only_areas_ids, areaXml.xmlAttributes.parent_id) GT 0 )>
+			
+				<cfset arguments.areaEnabled = true>
+
+			</cfif>
+
+		<cfelse>
+
+			<cfset arguments.areaEnabled = true>
+			
+		</cfif>
+
+		<cfif arguments.areaEnabled IS false AND len(arguments.with_input_type) IS 0><!--- Si el área no está disponible y no hay input definido para seleccionar (se selecciona un área en el árbol) --->
+
+			<cfif areaAllowed IS true>
+				
+				<cfif NOT isDefined("areaXml.xmlAttributes.type") OR areaXml.xmlAttributes.type EQ "">
+					<cfset li_rel = "not-allowed">
+				<cfelse>
+					<cfset li_rel = "not-allowed-web">
+				</cfif>	
+
+			</cfif>
+
+		</cfif>
+		
 		<cfoutput>
 		<li rel="#li_rel#" id="#areaId#" with_link="#area_with_link#" <cfif arguments.root_node IS true>class="jstree-open"</cfif>>
-		<cfif len(arguments.with_input_type) GT 0><input type="#arguments.with_input_type#" name="#input_name#" value="#areaId#" id="area#areaId#" <cfif areaAllowed IS NOT true OR (arguments.disable_input_area IS true AND li_rel EQ "allowed") OR (arguments.disable_input_web IS true AND li_rel EQ "allowed-web")>disabled="disabled"</cfif>/><!---onClick="stopPropagation(event);"---></cfif>
+		<cfif len(arguments.with_input_type) GT 0><input type="#arguments.with_input_type#" name="#input_name#" value="#areaId#" id="area#areaId#" <cfif areaAllowed IS NOT true OR arguments.areaEnabled IS false OR (arguments.disable_input_area IS true AND li_rel EQ "allowed") OR (arguments.disable_input_web IS true AND li_rel EQ "allowed-web")>disabled="disabled"</cfif>/><!---onClick="stopPropagation(event);"---></cfif>
 		<a href="#a_href#" class="jstree-node">#areaXml.xmlAttributes.name#</a>
 		</cfoutput>
 		
@@ -177,7 +211,9 @@
 					<cfinvokeargument name="with_input_type" value="#arguments.with_input_type#">
 					<cfinvokeargument name="disable_input_web" value="#arguments.disable_input_web#">
 					<cfinvokeargument name="disable_input_area" value="#arguments.disable_input_area#">
+					<cfinvokeargument name="enable_only_areas_ids" value="#arguments.enable_only_areas_ids#">
 					<cfinvokeargument name="admin" value="#arguments.admin#"/>
+					<cfinvokeargument name="areaEnabled" value="#areaEnabled#"/>
 				</cfinvoke>	
 			
 			</cfloop>

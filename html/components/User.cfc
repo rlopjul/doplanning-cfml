@@ -583,8 +583,8 @@
 	</cffunction>
 	
 
-
-	
+	<!--- outputUser --->
+		
 	<cffunction name="outputUser" returntype="void" output="true" access="public">
 		<cfargument name="objectUser" type="struct" required="true">
 		<!---<cfargument name="contact_format" type="boolean" required="false" default="false">--->
@@ -992,7 +992,7 @@
 
 						$("##usersTable").tablesorter({ 
 							<cfif arguments.filter_enabled IS true>
-							widgets: ['zebra','filter','select'],
+							widgets: ['zebra','filter','select','stickyHeaders'],
 							<cfelse>
 							widgets: ['zebra','select'],
 							</cfif>

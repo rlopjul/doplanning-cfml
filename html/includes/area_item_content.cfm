@@ -57,6 +57,15 @@
 
 	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 
+		<cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
+			<cfset url_return_page = "&return_page="&URLEncodedFormat(return_path&URL.return_page)>
+			<!--- <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&URL.return_page)> --->
+		<cfelse>
+			<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#")>
+		</cfif>
+
+		<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#")>
+
 		<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Solo para mensajes y consultas--->
 			<cfif itemTypeId IS 1 OR objectItem.state NEQ "closed">
 				<a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#" class="btn btn-sm btn-info"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
@@ -65,19 +74,24 @@
 		<cfelse><!---Si no es mensaje--->
 			
 			<!---En las áreas web o intranet se pueden modificar los elementos--->
-			<cfif area_type EQ "web" OR area_type EQ "intranet" OR objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND objectItem.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma--->
+			<cfif len(area_type) GT 0 OR objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND objectItem.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma--->
 							
 				<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 								
 			</cfif>
 			
+			<cfif len(area_type) GT 0 AND is_user_area_responsible>
+
+				<!--- publication --->
+				<cfif objectItem.publication_validated IS false>
+					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#item_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación');" title="Aprobar publicación" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>
+				<cfelse>
+					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#item_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación');" title="Desaprobar publicación" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>					
+				</cfif>
+				
+			</cfif>
+
 		</cfif>		
-		
-		<cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
-			<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##URL.return_page#")>
-		<cfelse>
-			<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##itemTypeNameP#.cfm?area=#area_id#")>
-		</cfif>
 		
 			
 		<cfif itemTypeId IS 7><!---Consultations--->

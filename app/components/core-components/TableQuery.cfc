@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2013 --->
+<!--- Copyright Era7 Information Technologies 2007-2014 --->
 
 <cfcomponent output="false">
 
@@ -6,6 +6,7 @@
 	
 	<cfset dateFormat = "%d-%m-%Y"><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
+	<cfset timeZoneTo = "+1:00">
 
 
 	<!---getTable--->
@@ -14,6 +15,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+		<cfargument name="published" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -22,28 +24,48 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<cfquery name="selectItemQuery" datasource="#client_dsn#">
-				SELECT items.id, items.id AS table_id, items.user_in_charge, items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link, 
+			<cfquery name="selectTableQuery" datasource="#client_dsn#">
+				SELECT tables.id, tables.id AS table_id, tables.user_in_charge, tables.title, tables.description, tables.attached_file_id, tables.attached_file_name, tables.area_id, tables.link, 
 				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
-				, items.attached_image_id, items.attached_image_name
-				, items.link_target
+				, tables.attached_image_id, tables.attached_image_name
+				, tables.link_target
 				<cfif tableTypeId IS 3><!---Typologies--->
-				, items.general
+				, tables.general
 				</cfif>
-				, items.structure_available
+				, tables.structure_available <!---files.file_type, --->
 				<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(items.creation_date, '#dateTimeFormat#') AS creation_date 
-					, DATE_FORMAT(items.last_update_date, '#dateTimeFormat#') AS last_update_date 
+					, DATE_FORMAT(tables.creation_date, '#dateTimeFormat#') AS creation_date 
+					, DATE_FORMAT(tables.last_update_date, '#dateTimeFormat#') AS last_update_date 
 				<cfelse>
-					, items.creation_date, items.last_update_date
+					, tables.creation_date, tables.last_update_date
 				</cfif>
-				FROM #client_abb#_#tableTypeTable# AS items
-				INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
-				LEFT JOIN #client_abb#_files AS files ON files.id = items.attached_file_id
-				WHERE items.id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">; 
+				<cfif APPLICATION.publicationScope IS true AND tableTypeId IS NOT 3>
+					, tables.publication_scope_id, scopes.name AS publication_scope_name
+				</cfif>
+				<cfif tableTypeId IS NOT 3>
+					<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(CONVERT_TZ(tables.publication_date,'SYSTEM','#timeZoneTo#'), '#dateFormat#') AS publication_date
+					<cfelse>
+					, tables.publication_date
+					</cfif>
+					, tables.publication_time, tables.publication_validated
+				</cfif>
+				FROM #client_abb#_#tableTypeTable# AS tables
+				INNER JOIN #client_abb#_users AS users ON tables.user_in_charge = users.id
+				<!--- LEFT JOIN #client_abb#_files AS files ON files.id = tables.attached_file_id --->
+				<cfif APPLICATION.publicationScope IS true AND tableTypeId IS NOT 3>
+					LEFT JOIN #client_abb#_scopes AS scopes ON tables.publication_scope_id = scopes.scope_id
+				</cfif>
+				WHERE tables.id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				<cfif arguments.published IS true AND  tableTypeId IS NOT 3>
+					AND ( tables.publication_date IS NULL OR ( tables.publication_date <= CURDATE() <!--- OR ( tables.publication_date = CURDATE() AND tables.publication_time <= CURTIME() ) ---> ) )
+					<cfif APPLICATION.publicationValidation IS true>
+					AND tables.publication_validated != false
+					</cfif>
+				</cfif>; 
 			</cfquery>
 			
-		<cfreturn selectItemQuery>
+		<cfreturn selectTableQuery>
 		
 	</cffunction>
 

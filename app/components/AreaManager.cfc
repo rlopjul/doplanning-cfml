@@ -3268,7 +3268,7 @@
 	</cffunction>
 	
 	
-<!--- -------------------------- GET MENU TYPE LIST -------------------------------- --->
+	<!--- -------------------------- GET MENU TYPE LIST -------------------------------- --->
 	
 	<cffunction name="getMenuTypeList" returntype="struct" access="public">
 		

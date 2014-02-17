@@ -10,14 +10,39 @@
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8"></script>
 
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<script type="text/javascript">
+<cfoutput>
+<cfif tableTypeId IS NOT 3 AND len(area_type) GT 0><!--- WEB --->
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+</cfif>
+</cfoutput>
+
+
+<script>
+	
+	$(function() {
+
+		<cfif tableTypeId IS NOT 3 AND len(area_type) GT 0><!--- WEB --->
+
+			$('#publication_date').datepicker({
+			  format: 'dd-mm-yyyy',
+			  weekStart: 1,
+			  language: 'es',
+			  todayBtn: 'linked', 
+			  autoclose: true
+			});
+
+		</cfif>
+
+	});
 
 	function onSubmitForm(){
 
@@ -27,6 +52,8 @@
 		return true;
 	}
 </script>
+
+<cfset passthrough = "">
 
 <cfoutput>
 
@@ -41,7 +68,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" onsubmit="return onSubmitForm();">
 
 	<!---<div id="submitDiv1" style="margin-bottom:10px;">
 		<input type="submit" value="Guardar" class="btn btn-primary"/>
@@ -58,33 +85,152 @@
 		<input type="hidden" name="table_id" value="#table_id#"/>
 	</cfif>
 
-	<div class="form-group">
-		<label for="label">Nombre</label>
-		<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
+	<div class="row">
+		<div class="col-xs-12 col-sm-8">
+			<label for="label" class="control-label">Nombre</label>
+			<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
+		</div>
 	</div>
 
-	<div class="form-group">
-		<label for="description">Descripción</label>
-		<textarea name="description" id="description" class="form-control" maxlength="1000">#table.description#</textarea>
+	<cfif tableTypeId IS NOT 3 AND len(area_type) GT 0><!--- WEB --->
+
+		<div class="row">
+
+			<div class="col-xs-6 col-md-3">
+				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
+				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#table.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+			</div>
+						
+			<!---<cfif isDefined("table.publication_time")>
+				
+				<cfif len(table.publication_time) IS 0>
+					<cfset table.publication_time = createTime(0,0,0)>
+				</cfif>
+				
+				<cfset publication_hour = hour(table.publication_time)>
+				<cfset publication_minute = minute(table.publication_time)>
+
+			<cfelse><!--- After send FORM --->
+
+				<cfset publication_hour = table.publication_hour>
+				<cfset publication_minute = table.publication_minute>
+
+			</cfif>
+			
+			<div class="col-xs-6">
+				<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
+				<div class="input-group" style="width:170px">
+					<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
+						<cfloop from="0" to="23" index="hour">
+							<option value="#hour#" <cfif hour EQ publication_hour>selected="selected"</cfif>>#hour#</option>
+						</cfloop>
+					</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
+						<cfset minutesInOptions = false>
+						<cfloop from="0" to="59" index="minutes" step="5">
+							<cfif minutes EQ "0">
+								<cfset minutes = "00">
+							</cfif>
+							<cfif minutes EQ publication_minute>
+								<cfset minutesSelected = true>
+								<cfset minutesInOptions = true>
+							<cfelse>
+								<cfset minutesSelected = false>
+							</cfif>
+							<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
+						</cfloop>
+						<cfif minutesInOptions IS false>
+							<option value="#publication_minute#" selected="selected">#publication_minute#</option>
+						</cfif>
+					</select>
+				</div>	
+			</div> --->
+
+			<input type="hidden" name="publication_hour" value="00"/>
+			<input type="hidden" name="publication_minute" value="00"/>
+			
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<small class="help-block">Si está definida, <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs# se publicará en la fecha especificada.</small>
+			</div>
+		</div>
+
+		<cfif APPLICATION.publicationValidation IS true AND is_user_area_responsible IS true>
+			
+			<div class="row">
+				<div class="col-xs-12 col-sm-8">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("table.publication_validated") AND table.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+						</label>
+						<small class="help-block">Valida <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs# para que pueda ser <cfif tableTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
+					</div>
+				</div>
+			</div>
+
+		</cfif>
+
+	</cfif>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-8">
+			<label for="description" class="control-label">Descripción</label>
+			<textarea name="description" id="description" class="form-control" maxlength="1000">#table.description#</textarea>
+		</div>
 	</div>
 
-	<div class="form-group">
-		<label for="structure_available" class="checkbox">
-			<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> Permitir copiar la estructura de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)#<br/>
-			<small class="help-block">Indica si la definición de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# está disponible para ser usada como plantilla por cualquier usuario de la organización.</small>
-		</label>
+	<div class="row">
+		<div class="col-xs-12 col-sm-8">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> Permitir copiar la estructura de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)#
+				</label>
+				<small class="help-block">Indica si la definición de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# está disponible para ser usada como plantilla por cualquier usuario de la organización.</small>
+			</div>
+		</div>
 	</div>
 	
 	<cfif tableTypeId IS 3 AND SESSION.client_administrator EQ SESSION.user_id>
 		
-		<div class="form-group">
-			<label for="general" class="checkbox">
-				<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> Habilitar como #lCase(tableTypeNameEs)# general<br/>
+	<div class="row">
+		<div class="col-xs-12 col-sm-8">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> Habilitar como #lCase(tableTypeNameEs)# general
+				</label>
 				<small class="help-block">Se podrá utilizar esta tipología en cualquier área de la organización.</small>
-			</label>
+			</div>
 		</div>
+	</div>
 
 	</cfif>
+	
+	<!--- <cfdump var="#table#"> --->
+	<cfif APPLICATION.publicationScope IS true AND tableTypeId IS NOT 3>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopes" returnvariable="getScopesResult">
+		</cfinvoke>
+		<cfset scopesQuery = getScopesResult.scopes>
+		
+		<cfif scopesQuery.recordCount GT 0>
+			
+			<div class="row">
+				<div class="col-sm-12 col-sm-8">
+					<label for="publication_scope_id" class="control-label">Ámbito de publicación</label>
+					<select name="publication_scope_id" id="publication_scope_id" class="form-control">
+						<cfloop query="scopesQuery">
+							<option value="#scopesQuery.scope_id#" <cfif table.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
+						</cfloop>
+					</select>
+					<small class="help-block">Define dónde se podrán publicar vistas <cfif tableTypeGender EQ "male">del<cfelse>de la</cfif> #tableTypeNameEs#</small>
+				</div>
+			</div>
+
+		</cfif>
+		
+	</cfif>
+
 
 	<div id="submitDiv2" style="margin-top:20px;">
 		<input type="submit" value="Guardar" class="btn btn-primary"/>

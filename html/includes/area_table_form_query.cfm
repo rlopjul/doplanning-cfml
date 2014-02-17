@@ -21,7 +21,11 @@
 		<cfif page_type IS 1>
 			<cfset return_page = "#tableTypeName#_fields.cfm?">	
 		<cfelse>
-			<cfset return_page = "#tableTypeNameP#.cfm?area=#actionResponse.area_id#&">	
+			<cfif tableTypeId IS 3>
+				<cfset return_page = "#tableTypeNameP#.cfm?area=#actionResponse.area_id#&">	
+			<cfelse>
+				<cfset return_page = "area_items.cfm?area=#actionResponse.area_id#&">
+			</cfif>
 		</cfif>
 
 		<cfset msg = urlEncodedFormat(actionResponse.message)>

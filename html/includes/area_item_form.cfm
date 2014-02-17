@@ -5,9 +5,9 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form_query.cfm">
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8"></script>
 
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
@@ -26,10 +26,9 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 	</cfoutput>
 </div>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
-
 <div class="contenedor_fondo_blanco">
-<!---<div class="div_send_message">--->
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <cfif page_type IS 1 OR objectItem.user_in_charge EQ SESSION.user_id>
 	<cfset read_only = false>
@@ -43,20 +42,12 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 	</cfif>
 </cfif>
 
-<cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 6><!---News, Events, Tasks--->
-
 <cfoutput>
-<!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script>--->
+	
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
-</cfoutput>
 
-</cfif>
-
-<cfoutput>
 <script type="text/javascript">
 
 var editor;
@@ -154,6 +145,7 @@ function onSubmitForm()
 		<cfinput type="hidden" name="parent_kind" value="#parent_kind#">
 	<cfelse>
 		<cfinput type="hidden" name="item_id" value="#item_id#">
+		<cfinput type="hidden" name="user_in_charge" value="#objectItem.user_in_charge#">
 	</cfif>
 	
 	<div id="submitDiv1" style="margin-bottom:5px;"><input type="submit" name="submit1" value="Enviar" class="btn btn-primary" lang="es"/>
@@ -192,8 +184,5 @@ function onSubmitForm()
 	<small lang="es">* Campos obligatorios.</small>
 	
 </cfform>
-
-
-<!---</div>END div_send_message--->
 
 </div>

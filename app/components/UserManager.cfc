@@ -3075,7 +3075,6 @@
 		<cfreturn response>		
 		
 	</cffunction>
-	
 		
 
 
@@ -3135,61 +3134,19 @@
 				
 				<cfif "#user_format#" EQ "true" OR "#user_format#" EQ "1">
 					<cfset xmlResult = '<contacts>'>
-							<cfloop query="getContactsQuery">
-								<cfinvoke component="UserManager" method="objectUser" returnvariable="xmlResultContact">
-										<cfif isDefined("xmlContact.contact.xmlAttributes.id")>
-											<cfinvokeargument name="id" value="#getContactsQuery.id#">
-										</cfif>
-										<cfif isDefined("xmlContact.contact.xmlAttributes.email")>
-											<cfinvokeargument name="email" value="#getContactsQuery.email#">
-										</cfif>
-										<cfif isDefined("xmlContact.contact.xmlAttributes.telephone")>
-											<cfinvokeargument name="telephone" value="#getContactsQuery.telephone#">
-										</cfif>
-										<cfif isDefined("xmlContact.contact.xmlAttributes.mobile_phone")>
-											<cfinvokeargument name="mobile_phone" value="#getContactsQuery.mobile_phone#">
-										</cfif>
-										<cfif isDefined("xmlContact.contact.family_name")>
-											<cfinvokeargument name="family_name" value="#getContactsQuery.family_name#">
-										</cfif>
-										<cfif isDefined("xmlContact.contact.name")>
-											<cfinvokeargument name="name" value="#getContactsQuery.name#">
-										</cfif>
-										<cfif isDefined("xmlContact.contact.address")>
-											<cfinvokeargument name="address" value="#getContactsQuery.address#">
-										</cfif>										
-										<cfif isDefined("xmlContact.contact.xmlAttributes.telephone_ccode")>
-										<cfinvokeargument name="telephone_ccode" value="#getContactsQuery.telephone_ccode#">
-										</cfif>
-										<cfif isDefined("xmlContact.contact.xmlAttributes.mobile_phone_ccode")>
-											<cfinvokeargument name="mobile_phone_ccode" value="#getContactsQuery.mobile_phone_ccode#">
-										</cfif>
-										
-										<cfinvokeargument name="return_type" value="xml">
-								</cfinvoke>
-								
-								<cfset xmlResult = xmlResult & xmlResultContact>
-								
-							</cfloop>
-					<cfset xmlResult = xmlResult&'</contacts>'>
-					
-				<cfelse>
-					
-					<cfset xmlResult = '<contacts>'>
-							<cfloop query="getContactsQuery">
-							
-								<cfinvoke component="ContactManager" method="objectContact" returnvariable="contact">
+						<cfloop query="getContactsQuery">
+							<cfinvoke component="UserManager" method="objectUser" returnvariable="xmlResultContact">
 									<cfif isDefined("xmlContact.contact.xmlAttributes.id")>
 										<cfinvokeargument name="id" value="#getContactsQuery.id#">
 									</cfif>
 									<cfif isDefined("xmlContact.contact.xmlAttributes.email")>
 										<cfinvokeargument name="email" value="#getContactsQuery.email#">
 									</cfif>
-									<cfif isDefined("xmlContact.contact.xmlAttributes.user_id")>
-										<cfinvokeargument name="user_id" value="#getContactsQuery.user_id#">
-									</cfif>
 									<cfif isDefined("xmlContact.contact.xmlAttributes.telephone")>
 										<cfinvokeargument name="telephone" value="#getContactsQuery.telephone#">
+									</cfif>
+									<cfif isDefined("xmlContact.contact.xmlAttributes.mobile_phone")>
+										<cfinvokeargument name="mobile_phone" value="#getContactsQuery.mobile_phone#">
 									</cfif>
 									<cfif isDefined("xmlContact.contact.family_name")>
 										<cfinvokeargument name="family_name" value="#getContactsQuery.family_name#">
@@ -3199,28 +3156,70 @@
 									</cfif>
 									<cfif isDefined("xmlContact.contact.address")>
 										<cfinvokeargument name="address" value="#getContactsQuery.address#">
-									</cfif>
-									<cfif isDefined("xmlContact.contact.xmlAttributes.mobile_phone")>
-										<cfinvokeargument name="mobile_phone" value="#getContactsQuery.mobile_phone#">
-									</cfif>
-									<cfif isDefined("xmlContact.contact.organization")>
-										<cfinvokeargument name="organization" value="#getContactsQuery.organization#">
-									</cfif>
+									</cfif>										
 									<cfif isDefined("xmlContact.contact.xmlAttributes.telephone_ccode")>
-										<cfinvokeargument name="telephone_ccode" value="#getContactsQuery.telephone_ccode#">
+									<cfinvokeargument name="telephone_ccode" value="#getContactsQuery.telephone_ccode#">
 									</cfif>
 									<cfif isDefined("xmlContact.contact.xmlAttributes.mobile_phone_ccode")>
 										<cfinvokeargument name="mobile_phone_ccode" value="#getContactsQuery.mobile_phone_ccode#">
 									</cfif>
-								</cfinvoke>
+									
+									<cfinvokeargument name="return_type" value="xml">
+							</cfinvoke>
+							
+							<cfset xmlResult = xmlResult & xmlResultContact>
+							
+						</cfloop>
+					<cfset xmlResult = xmlResult&'</contacts>'>
+					
+				<cfelse>
+					
+					<cfset xmlResult = '<contacts>'>
+						<cfloop query="getContactsQuery">
 						
-								<cfinvoke component="ContactManager" method="xmlContact" returnvariable="xmlResultContact">
-									<cfinvokeargument name="objectContact" value="#contact#">
-								</cfinvoke>
-								
-								<cfset xmlResult = xmlResult & xmlResultContact>
-								
-							</cfloop>
+							<cfinvoke component="ContactManager" method="objectContact" returnvariable="contact">
+								<cfif isDefined("xmlContact.contact.xmlAttributes.id")>
+									<cfinvokeargument name="id" value="#getContactsQuery.id#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.xmlAttributes.email")>
+									<cfinvokeargument name="email" value="#getContactsQuery.email#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.xmlAttributes.user_id")>
+									<cfinvokeargument name="user_id" value="#getContactsQuery.user_id#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.xmlAttributes.telephone")>
+									<cfinvokeargument name="telephone" value="#getContactsQuery.telephone#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.family_name")>
+									<cfinvokeargument name="family_name" value="#getContactsQuery.family_name#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.name")>
+									<cfinvokeargument name="name" value="#getContactsQuery.name#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.address")>
+									<cfinvokeargument name="address" value="#getContactsQuery.address#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.xmlAttributes.mobile_phone")>
+									<cfinvokeargument name="mobile_phone" value="#getContactsQuery.mobile_phone#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.organization")>
+									<cfinvokeargument name="organization" value="#getContactsQuery.organization#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.xmlAttributes.telephone_ccode")>
+									<cfinvokeargument name="telephone_ccode" value="#getContactsQuery.telephone_ccode#">
+								</cfif>
+								<cfif isDefined("xmlContact.contact.xmlAttributes.mobile_phone_ccode")>
+									<cfinvokeargument name="mobile_phone_ccode" value="#getContactsQuery.mobile_phone_ccode#">
+								</cfif>
+							</cfinvoke>
+					
+							<cfinvoke component="ContactManager" method="xmlContact" returnvariable="xmlResultContact">
+								<cfinvokeargument name="objectContact" value="#contact#">
+							</cfinvoke>
+							
+							<cfset xmlResult = xmlResult & xmlResultContact>
+							
+						</cfloop>
 					<cfset xmlResult = xmlResult&'</contacts>'>
 						
 				</cfif>

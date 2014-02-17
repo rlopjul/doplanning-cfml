@@ -404,45 +404,6 @@
 
 				<cfset fields = fieldsResult.tableFields>
 
-				<!---
-				<!--- creation_date --->
-				<cfif view.include_creation_date IS true>
-					<cfset queryAddRow(fields, 1)>
-					<cfset querySetCell(fields, "field_id", "creation_date")>
-					<cfset querySetCell(fields, "label", "Fecha de creación")>
-					<cfset querySetCell(fields, "view_position", view.creation_date_position)>
-				</cfif>
-
-				<!--- last_update_date --->
-				<cfif view.include_last_update_date IS true>
-					<cfset queryAddRow(fields, 1)>
-					<cfset querySetCell(fields, "field_id", "last_update_date")>
-					<cfset querySetCell(fields, "label", "Fecha de última modificación")>
-					<cfset querySetCell(fields, "view_position", view.last_update_date_position)>
-				</cfif>
-
-				<!--- insert_user --->
-				<cfif view.include_insert_user IS true>
-					<cfset queryAddRow(fields, 1)>
-					<cfset querySetCell(fields, "field_id", "insert_user")>
-					<cfset querySetCell(fields, "label", "Usuario creación")>
-					<cfset querySetCell(fields, "view_position", view.insert_user_position)>
-				</cfif>
-
-				<!--- update_user --->
-				<cfif view.include_update_user IS true>
-					<cfset queryAddRow(fields, 1)>
-					<cfset querySetCell(fields, "field_id", "update_user")>
-					<cfset querySetCell(fields, "label", "Usuario última modificación")>
-					<cfset querySetCell(fields, "view_position", view.update_user_position)>
-				</cfif>
-
-				<cfquery dbtype="query" name="fields">
-					SELECT * 
-					FROM fields
-					ORDER BY view_position ASC;
-				</cfquery>--->
-
 				<cfset cur_area_id = "">
 
 			<cfelse>
@@ -555,6 +516,9 @@
 							<cfif len(field_value) GT 0>
 
 								<cfif fields.field_type_id IS 2>
+
+									<cfset field_value = HTMLEditFormat(field_value)>
+
 									<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
 										<cfinvokeargument name="string" value="#field_value#">
 									</cfinvoke>

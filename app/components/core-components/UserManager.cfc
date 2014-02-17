@@ -64,8 +64,20 @@
 			<!--- ORDER --->
 			<cfinclude template="#APPLICATION.componentsPath#/includes/usersOrder.cfm">
 			
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="selectClientQuery">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			</cfinvoke>
 			
-			<cfif isDefined("xmlRequest.request.parameters.preferences")>				
+			<cfif selectClientQuery.recordCount IS 0><!---The client does not exist--->
+				
+				<cfset error_code = 301>
+				
+				<cfthrow errorcode="#error_code#"> 
+				
+			</cfif>	
+			
+			<cfif selectClientQuery.force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>				
 				
 				<cfxml variable="xmlPreferences">
 					<cfoutput>

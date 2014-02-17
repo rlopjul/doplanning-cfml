@@ -425,6 +425,9 @@
 		<cfargument name="Filedata" type="string" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="reviser_user" type="numeric" required="false">
+		<cfargument name="approver_user" type="numeric" required="false">
 		
 		<cfset var method = "createFile">
 		
@@ -463,6 +466,7 @@
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
 		
@@ -501,6 +505,7 @@
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
 		
 		<cfset var method = "publishFileVersion">
 		

@@ -170,11 +170,15 @@
 								<cfset field_value = '<span lang="es">#field_value#</span>'>
 							<cfelse>
 
-								<cfif fields.field_type_id IS 2 OR fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- TEXTAREA --->
+								<cfif fields.field_type_id IS 2 OR fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- TEXTAREAS --->
 									
 									<cfif len(field_value) GT 60><!---200--->
 
-										<cfif fields.field_type_id IS NOT 2>
+										<cfif fields.field_type_id IS 2>
+											
+											<cfset field_value = HTMLEditFormat(field_value)>
+
+										<cfelse>
 
 											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="removeHTML" returnvariable="field_value">
 												<cfinvokeargument name="string" value="#field_value#">
@@ -196,6 +200,8 @@
 										</cfif>											
 
 									<cfelseif fields.field_type_id IS 2>
+
+										<cfset field_value = HTMLEditFormat(field_value)>
 
 										<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
 											<cfinvokeargument name="string" value="#field_value#">

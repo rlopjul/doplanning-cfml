@@ -33,6 +33,11 @@
 
 		<cfset view = FORM>
 		<cfset table_id = FORM.table_id>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		</cfinvoke>
 		
 	</cfif> 
 
@@ -81,6 +86,11 @@
 
 		<cfset table_id = view.table_id>
 		<cfset area_id = view.area_id>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		</cfinvoke>
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
