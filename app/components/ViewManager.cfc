@@ -32,6 +32,7 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
+			<!--- getTable --->
 			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
@@ -54,6 +55,24 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAccess">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
+
+			<!--- checkScope --->
+			<cfif APPLICATION.publicationScope IS true AND isNumeric(table.publication_scope_id)>
+				
+				<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
+					<cfinvokeargument name="scope_id" value="#table.publication_scope_id#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+				<cfif isInScopeResult.result IS false>
+
+					<cfset response = {result=false, view_id=#view_id#, table_id=#arguments.table_id#, message="El ámbito definido no permite publicar esta vista en esta área"}>
+					
+					<cfreturn response>
+					
+				</cfif>
+
+			</cfif>		
 
 			<cfset arguments.title = trim(arguments.title)>
 
@@ -105,8 +124,7 @@
 				<cfinvoke component="ViewManager" method="addFieldsToView" argumentcollection="#arguments#">
 					<cfinvokeargument name="view_id" value="#view_id#">
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-					<!---<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-					<cfinvokeargument name="fields_ids" value="#arguments.fields_ids#">--->
+					<!---<cfinvokeargument name="fields_ids" value="#arguments.fields_ids#">--->
 				</cfinvoke>
 
 			</cftransaction>
@@ -118,6 +136,7 @@
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="with_table" value="false"/>
 				<cfinvokeargument name="parse_dates" value="true"/>
+				<cfinvokeargument name="published" value="false">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -271,10 +290,12 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
+			<!--- getView --->
 			<cfinvoke component="ViewManager" method="getView" returnvariable="getViewResponse">
 				<cfinvokeargument name="view_id" value="#arguments.view_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
 				<cfinvokeargument name="with_table" value="true"/>
+				<cfinvokeargument name="parse_dates" value="true"/>
 			</cfinvoke>
 
 			<cfif getViewResponse.result IS false>
@@ -295,7 +316,23 @@
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
 
-			<!--- AQUÍ HAY QUE COMPROBAR SI SE CAMBIA LA VISTA DE ÁREA --->
+			<!--- checkScope --->
+			<cfif APPLICATION.publicationScope IS true AND isNumeric(view.table_publication_scope_id)>
+				
+				<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
+					<cfinvokeargument name="scope_id" value="#view.table_publication_scope_id#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+				<cfif isInScopeResult.result IS false>
+
+					<cfset response = {result=false, view_id=#arguments.view_id#, table_id=#view.table_id#, message="El ámbito definido no permite publicar esta vista en esta área"}>
+					
+					<cfreturn response>
+					
+				</cfif>
+
+			</cfif>		
 
 			<cfset arguments.title = trim(arguments.title)>
 
@@ -336,6 +373,7 @@
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="with_table" value="false"/>
 				<cfinvokeargument name="parse_dates" value="true"/>
+				<cfinvokeargument name="published" value="false">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -416,6 +454,7 @@
 				<cfinvokeargument name="view_id" value="#arguments.view_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
 				<cfinvokeargument name="with_table" value="true"/>
+				<cfinvokeargument name="parse_dates" value="true">
 			</cfinvoke>
 
 			<cfif getViewResponse.result IS false>
@@ -497,7 +536,7 @@
 				<cfloop query="getTableViewsQuery">
 					
 					<cfinvoke component="ViewManager" method="deleteView" returnvariable="deleteViewResponse">
-						<cfinvokeargument name="item_id" value="#getTableViewsQuery.view_id#">
+						<cfinvokeargument name="view_id" value="#getTableViewsQuery.view_id#">
 						<cfinvokeargument name="itemTypeId" value="#viewTypeId#">
 					</cfinvoke>
 
@@ -544,6 +583,7 @@
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="with_table" value="#arguments.with_table#"/>
 				<cfinvokeargument name="parse_dates" value="#arguments.parse_dates#"/>
+				<cfinvokeargument name="published" value="false">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

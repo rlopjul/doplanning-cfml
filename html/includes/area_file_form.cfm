@@ -15,17 +15,14 @@
 <div class="div_head_subtitle"><span lang="es"><cfif page_type IS 1>Nuevo Archivo
 <cfelseif page_type IS 2>Modificar archivo<cfelseif page_type IS 3>Publicar versión de archivo</cfif><cfif fileTypeId IS 2> de área</cfif></span></div>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
-
 <!---<cfset return_page = "area.cfm?area=#area_id#">--->
 
 <cfoutput>
 
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
-
+<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
 <cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
 
@@ -86,7 +83,9 @@
 
 		</cfif>	
 
-		setFileTypeId("#fileTypeId#");
+		<cfif page_type IS NOT 3>
+			setFileTypeId("#fileTypeId#");
+		</cfif>
 
 	});
 
@@ -115,10 +114,12 @@
 		if(fileTypeId == 3){
 
 			$("##documentUsersContainer").show();
+			$("##publicationScopeContainer").hide();
 
 		}else{
 
 			$("##documentUsersContainer").hide();
+			$("##publicationScopeContainer").show();
 		}
 
 	}
@@ -214,6 +215,8 @@
 
 
 <div class="contenedor_fondo_blanco">
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
@@ -396,6 +399,30 @@
 			<textarea name="description" id="description" class="form-control">#file.description#</textarea>
 		</div>
 	</div>
+
+	<cfif APPLICATION.publicationScope IS true AND (page_type IS 3 OR fileTypeId NEQ 3)>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopes" returnvariable="getScopesResult">
+		</cfinvoke>
+		<cfset scopesQuery = getScopesResult.scopes>
+		
+		<cfif scopesQuery.recordCount GT 0>
+			
+			<div class="row" id="publicationScopeContainer">
+				<div class="col-sm-12">
+					<label for="publication_scope_id" class="control-label">Ámbito de publicación</label>
+					<select name="publication_scope_id" id="publication_scope_id" class="form-control">
+						<cfloop query="scopesQuery">
+							<option value="#scopesQuery.scope_id#" <cfif file.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
+						</cfloop>
+					</select>
+					<span class="help-block">Define dónde se podrá publicar el documento</span>
+				</div>
+			</div>
+
+		</cfif>
+		
+	</cfif>
 
 	<!--- Typology fields --->
 	<div id="typologyContainer"></div>

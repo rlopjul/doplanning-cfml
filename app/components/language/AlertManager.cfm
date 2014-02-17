@@ -110,6 +110,8 @@ curLangText["es"] = {
 			"assigned_to" : "Asignada a",
 			"creation_date" : "Fecha de creación",
 			"last_update_date" : "Fecha de última modificación",
+			"publication_date" : "Fecha de publicación",
+			"publication_validated" : "Publicación aprobada",
 			"link_url" : "URL del enlace",
 			"link" : "Enlace",
 			"iframe_url" : "URL del contenido incrustado",
@@ -171,6 +173,7 @@ curLangText["es"] = {
 			"replacement_date" : "Fecha de reemplazo del archivo",
 			"last_version_date" : "Fecha de última versión",
 			"description" : "Descripción",
+			"publication_scope" : "Ámbito de publicación",
 
 		},
 
@@ -391,6 +394,8 @@ curLangText["en"] = {
 			"assigned_to" : "Assigned to",
 			"creation_date" : "Creation date",
 			"last_update_date" : "Last update date",
+			"publication_date" : "Publication date",
+			"publication_validated" : "Publication approved",
 			"link_url" : "Link URL",
 			"link" : "Link",
 			"iframe_url" : "Embed content URL",
@@ -452,7 +457,7 @@ curLangText["en"] = {
 			"replacement_date" : "Replacement date",
 			"last_version_date" : "Last version date",
 			"description" : "Description",
-
+			"publication_scope" : "Publication scope",
 		},
 
 		"new_table_row": {

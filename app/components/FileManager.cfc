@@ -976,7 +976,7 @@
 						<cfif isDefined("cfcatch.errorcode") AND cfcatch.errorcode IS 607><!---The file exists in the area--->	
 							<cfset allAreas = false>
 						<cfelse>
-							<cfthrow object="#cfcatch#">					
+							<cfrethrow>					
 						</cfif>
 					</cfcatch>
 				</cftry>
@@ -1002,7 +1002,6 @@
 	<!--- ----------------------- ASSOCIATE FILE -------------------------------- --->
 	
 	<cffunction name="associateFile" returntype="struct" output="false" access="public">		
-		<!---<cfargument name="request" type="string" required="yes">--->
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">				
 		
@@ -1018,7 +1017,7 @@
 				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
 			
 				<cfinvokeargument name="return_type" value="query">
-			</cfinvoke>		
+			</cfinvoke>
 			
 			<cfinvoke component="FileManager" method="associateFileToArea">				
 				<cfinvokeargument name="objectFile" value="#objectFile#">
@@ -1062,6 +1061,26 @@
 			<cfelseif objectFile.user_in_charge NEQ user_id>
 				<cfthrow message="No puede asociar a un área un archivo que no es de su propiedad">
 			</cfif>
+
+			<!--- checkScope --->
+			<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
+				
+				<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
+					<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+				<cfif isInScopeResult.result IS false>
+
+					<!---<cfset response = {result=false, file_id=#arguments.file_id#, area_id=#arguments.area_id#, message="El ámbito de este archivo no permite publicarlo en esta área"}>
+					
+					<cfreturn response>--->
+
+					<cfthrow message="El ámbito de publicación de este archivo no permite publicarlo en esta área">
+					
+				</cfif>
+
+			</cfif>		
 
 			<!---Chequea si existe el archivo en el área--->
 			<cfquery datasource="#client_dsn#" name="isFileInAreaQuery">
@@ -1648,12 +1667,13 @@
 				
 				<!---The area is not checked before and the file is not property of the user--->
 				<cfif area_passed IS NOT true AND selectFileQuery.user_in_charge NEQ user_id>
-				
-					<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
-						SELECT area_id
-						FROM #client_abb#_areas_files
-						WHERE file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
+					
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileAreas" returnvariable="getFileAreasQuery">
+						<cfinvokeargument name="file_id" value="#file_id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
 
 					<cfif selectFileQuery.file_type_id IS NOT 1 AND isNumeric(selectFileQuery.area_id)><!--- Area file --->
 						<cfset queryCount = getFileAreasQuery.recordCount>
@@ -1800,6 +1820,7 @@
 			<cfset file.description = "">
 			<cfset file.typology_id = "">
 			<cfset file.typology_row_id = "">
+			<cfset file.publication_scope_id = "">
 			
 			<cfset response = {result=true, file=#file#}>
 
@@ -2677,6 +2698,7 @@
 		<cfargument name="file_type" type="string" required="true"/>
 		<cfargument name="description" type="string" required="true"/>
 		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
 
@@ -2731,6 +2753,25 @@
 			</cfif>
 
 			<!---<cfset objectFile.user_full_name = "#selectUserFileQuery.family_name# #selectUserFileQuery.name#">--->
+
+			<!--- checkScope --->
+			<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id")><!---AND arguments.fileTypeId IS NOT 1--->
+
+				<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
+					<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+				<cfif isInScopeResult.result IS false>
+
+					<cfset response = {result=false, message="El ámbito seleccionado para este archivo no permite publicarlo en esta área"}>
+					
+					<cfreturn response>
+					
+				</cfif>
+
+			</cfif>		
+
 			
 			<cftransaction>
 			
@@ -2751,6 +2792,10 @@
 					<cfif arguments.fileTypeId IS 3>
 						, reviser_user = <cfqueryparam value="#arguments.reviser_user#" cfsqltype="cf_sql_integer">
 						, approver_user = <cfqueryparam value="#arguments.approver_user#" cfsqltype="cf_sql_integer">
+					<cfelse>
+						<cfif isDefined("arguments.publication_scope_id")>
+						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
+						</cfif>
 					</cfif>;
 				</cfquery>
 
@@ -3096,6 +3141,7 @@
 		<cfargument name="Filedata" type="string" required="true"/>
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
 
@@ -3139,6 +3185,7 @@
 				<cfinvokeargument name="file_type" value=".#uploadedFile.clientFileExt#"/>
 				<cfinvokeargument name="file_size" value="#uploadedFile.fileSize#"/>
 				<cfinvokeargument name="description" value="#arguments.description#"/>
+				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#"/>
 				<cfinvokeargument name="reviser_user" value="#arguments.reviser_user#"/>
 				<cfinvokeargument name="approver_user" value="#arguments.approver_user#"/>
 				<cfinvokeargument name="status" value="ok">
@@ -3248,6 +3295,7 @@
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
 		
@@ -3291,6 +3339,35 @@
 
 			</cfif>
 
+			<!--- Scope --->
+			<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id")>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileAreas" returnvariable="getFileAreasQuery">
+					<cfinvokeargument name="file_id" value="#arguments.file_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfloop query="getFileAreasQuery">
+					
+					<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
+						<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
+						<cfinvokeargument name="area_id" value="#getFileAreasQuery.area_id#">
+					</cfinvoke>
+
+					<cfif isInScopeResult.result IS false>
+
+						<cfset response = {result=false, file_id=#arguments.file_id#, message="El ámbito de publicación seleccionado no es compatible con las áreas en las que está publicado el archivo"}>
+						
+						<cfreturn response>
+						
+					</cfif>
+
+				</cfloop>
+				
+			</cfif>		
+
 			<!---<cftransaction> No se puede usar aquí transacción porque dentro de setFileTypology hay transacciones--->
 
 			<cfquery name="updateFileQuery" datasource="#client_dsn#">
@@ -3300,6 +3377,10 @@
 				<cfif arguments.fileTypeId IS 3>
 					, reviser_user = <cfqueryparam value="#arguments.reviser_user#" cfsqltype="cf_sql_integer">
 					, approver_user = <cfqueryparam value="#arguments.approver_user#" cfsqltype="cf_sql_integer">
+				<cfelse>
+					<cfif isDefined("arguments.publication_scope_id")>
+						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
+					</cfif>
 				</cfif>
 				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>	
@@ -4527,6 +4608,7 @@
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
 		
 		<cfset var method = "publishFileVersion">
 
@@ -4575,6 +4657,24 @@
 				<cfinvokeargument name="area_id" value="#arguments.publication_area_id#">
 			</cfinvoke>
 
+			<!--- checkScope --->
+			<cfif APPLICATION.publicationScope IS true>
+
+				<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
+					<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
+					<cfinvokeargument name="area_id" value="#arguments.publication_area_id#">
+				</cfinvoke>
+
+				<cfif isInScopeResult.result IS false>
+
+					<cfset response = {result=false, message="El ámbito seleccionado para este archivo no permite publicarlo en esta área"}>
+					
+					<cfreturn response>
+					
+				</cfif>
+
+			</cfif>		
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersion" returnvariable="fileVersionQuery">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="fileTypeId" value="#fileQuery.file_type_id#">
@@ -4598,6 +4698,7 @@
 
 			<cfelse>	
 
+				<!--- createFile --->
 				<cfinvoke component="FileManager" method="createFile" returnvariable="createFileResult">
 					<cfinvokeargument name="fileTypeId" value="#publisedFileTypeId#"/>
 					<cfinvokeargument name="name" value="#arguments.name#"/>
@@ -4606,6 +4707,7 @@
 					<cfinvokeargument name="file_size" value="#fileVersionQuery.file_size#"/>
 					<cfinvokeargument name="description" value="#arguments.description#"/>
 					<cfinvokeargument name="area_id" value="#fileQuery.area_id#"/>
+					<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#"/>
 
 					<cfinvokeargument name="status" value="ok">
 				</cfinvoke>	
@@ -4634,27 +4736,6 @@
 					<cfset new_source = "#filesDirectoryDestination##new_file_physical_name#">
 					
 					<cffile action="copy" source="#original_source#" destination="#new_source#">			
-					
-					<cftransaction>
-						
-						<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
-							UPDATE #client_abb#_users
-							SET space_used = space_used+<cfqueryparam value="#fileQuery.file_size#" cfsqltype="cf_sql_integer">
-							WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
-						
-						<cfquery name="updateFileVersion" datasource="#client_dsn#">		
-							UPDATE `#client_abb#_#fileTypeTable#_versions`
-							SET
-							publication_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-							publication_file_id = <cfqueryparam value="#new_file_id#" cfsqltype="cf_sql_integer">, 
-							publication_area_id = <cfqueryparam value="#arguments.publication_area_id#" cfsqltype="cf_sql_integer">, 
-							publication_date = NOW()
-							WHERE version_id = <cfqueryparam value="#arguments.version_id#" cfsqltype="cf_sql_integer">
-							AND file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
-
-					</cftransaction>
 
 					<!--- setFileTypology --->
 					<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
@@ -4682,6 +4763,27 @@
 						<cfinvokeargument name="area_id" value="#arguments.publication_area_id#"/>
 					</cfinvoke>
 
+					<cftransaction>
+						
+						<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
+							UPDATE #client_abb#_users
+							SET space_used = space_used+<cfqueryparam value="#fileQuery.file_size#" cfsqltype="cf_sql_integer">
+							WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+						
+						<cfquery name="updateFileVersion" datasource="#client_dsn#">		
+							UPDATE `#client_abb#_#fileTypeTable#_versions`
+							SET
+							publication_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
+							publication_file_id = <cfqueryparam value="#new_file_id#" cfsqltype="cf_sql_integer">, 
+							publication_area_id = <cfqueryparam value="#arguments.publication_area_id#" cfsqltype="cf_sql_integer">, 
+							publication_date = NOW()
+							WHERE version_id = <cfqueryparam value="#arguments.version_id#" cfsqltype="cf_sql_integer">
+							AND file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+					</cftransaction>
+
 					<cfcatch>
 
 						<cfquery datasource="#client_dsn#" name="changeFileStatus">
@@ -4690,7 +4792,7 @@
 							WHERE id = <cfqueryparam value="#new_file_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
 				
-						<cfthrow object="#cfcatch#">
+						<cfrethrow>
 					
 					</cfcatch>
 				</cftry>

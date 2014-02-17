@@ -28,6 +28,7 @@
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+		<cfargument name="published" type="boolean" required="false" default="true">
 		
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">		
@@ -70,15 +71,23 @@
 						, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name, recipient_users.image_type AS recipient_user_image_type
 					</cfif>
 				</cfif>
-				<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-					<!---, items.position --->
-					<cfif itemTypeId IS 2><!---Entries--->
-					, items.display_type_id
+				<cfif itemTypeWeb IS true><!---WEB--->
+
+					<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(CONVERT_TZ(items.publication_date,'SYSTEM','#timeZoneTo#'), '#dateFormat#') AS publication_date
+					<cfelse>
+					, items.publication_date
 					</cfif>
-				</cfif> 
-				<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
-					, items.iframe_url, items.iframe_display_type_id, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
-				</cfif>
+					, items.publication_time, items.publication_validated
+
+					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
+						, items.iframe_url, items.iframe_display_type_id, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
+						<cfif itemTypeId IS 2><!---Entries--->
+							, items.display_type_id
+						</cfif>
+					</cfif>
+
+				</cfif><!--- END WEB --->
 				<cfif arguments.itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, PubMed comments--->
 					, items.identifier
 				</cfif>	 
@@ -97,7 +106,15 @@
 				<cfif arguments.itemTypeId IS 6><!--- Task --->
 					INNER JOIN #client_abb#_users AS recipient_users ON items.recipient_user = recipient_users.id
 				</cfif>
-				WHERE items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">; 
+				WHERE items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+				<cfif itemTypeWeb IS true><!--- WEB --->
+					<cfif arguments.published IS true>
+						AND ( items.publication_date IS NULL OR ( items.publication_date <= CURDATE() <!--- OR ( items.publication_date = CURDATE() AND items.publication_time <= CURTIME() ) ---> ) )
+						<cfif APPLICATION.publicationValidation IS true>
+						AND ( items.publication_validated IS NULL OR items.publication_validated = true )
+						</cfif>
+					</cfif>
+				</cfif>; 
 			</cfquery>
 			<!---AND status='ok'???? Esto no se pone por si se necesitan obtener mensajes desde la aplicación con el status pending--->
 		
@@ -126,7 +143,8 @@
 		<cfargument name="offset" type="numeric" required="no">
 		<!---<cfargument name="init_item" type="string" required="no">
 		<cfargument name="items_page" type="string" required="no">--->
-		<cfargument name="structure_available" type="boolean" required="false">		
+		<cfargument name="structure_available" type="boolean" required="false">
+		<cfargument name="published" type="boolean" required="false" default="true">		
 		
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">	
@@ -270,6 +288,14 @@
 					<cfif isDefined("arguments.structure_available")>
 					AND items.structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
 					</cfif>
+					<cfif itemTypeWeb IS true><!--- WEB --->
+						<cfif arguments.published IS true>
+							AND ( items.publication_date IS NULL OR ( items.publication_date <= CURDATE() <!--- OR ( items.publication_date = CURDATE() AND items.publication_time <= CURTIME() ) ---> ) )
+							<cfif APPLICATION.publicationValidation IS true>
+							AND items.publication_validated != false
+							</cfif>
+						</cfif>
+					</cfif>
 
 					<!--- Forma anterior de ordenar elementos
 					<cfif (arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 3) AND NOT isDefined("arguments.areas_ids")><!---Entries, Links--->
@@ -409,7 +435,33 @@
 
 		
 	</cffunction>
+
 	
+	<!--- getColumsWithTable --->
+
+	<cffunction name="getColumsWithTable" output="false" returntype="string" access="package">
+		<cfargument name="colums" type="string" required="true">
+		<cfargument name="table" type="string" required="true">
+
+		<cfset var = columsWithTable = "">
+
+		<cfloop list="#arguments.colums#" index="col" delimiters=",">
+			
+			<cfset column = trim(col)>
+
+			<cfif findOneOf("NULL", column) IS 0>
+				<cfset columsWithTable = listAppend(columsWithTable, "#arguments.table#.#column#", ",")>
+			<cfelse>
+				<cfset columsWithTable = listAppend(columsWithTable, "NULL", ",")>
+			</cfif>
+
+		</cfloop>
+
+		<cfreturn columsWithTable>
+
+	</cffunction>
+
+
 	
 	<!---listAllAreaItems--->
 	
@@ -423,6 +475,8 @@
 		<cfargument name="withPubmedsComments" type="boolean" required="false" default="false">
 		<cfargument name="withLists" type="boolean" required="false" default="false">
 		<cfargument name="withForms" type="boolean" required="false" default="false">
+
+		<cfargument name="published" type="boolean" required="false" default="true">
 		
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -430,7 +484,13 @@
 		<cfset var method = "listAllAreaItems">
 			
 			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, NULL AS file_type_id">
+
 			<cfset var fileColums = "id, name, IFNULL(replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, file_type_id"><!---, id AS attached_file_id--->
+
+			<cfif len(arguments.area_type) GT 0><!--- WEB --->
+				<cfset commonColums = commonColums&", publication_date, publication_time, publication_validated">
+				<cfset fileColums = fileColums&", publication_date, publication_time, publication_validated">
+			</cfif>
 
 			<cfset var commonColumsNull = "NULL AS end_date, NULL AS done">
 
@@ -474,7 +534,7 @@
 				<cfset displayColumsNull = "NULL AS display_type_id, ">
 
 			</cfif>
-								
+
 			<cfquery name="areaItemsQuery" datasource="#client_dsn#">
 				SELECT items.*, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 					<cfif len(arguments.area_type) GT 0><!--- WEB --->
@@ -508,88 +568,151 @@
 					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColums# #displayColums# 2 AS itemTypeId
 					FROM #client_abb#_entries AS entries
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-					AND status='ok')
+					AND status='ok'
+					<!--- 
+						<cfif arguments.published IS true>
+												AND ( entries.publication_date IS NULL OR (entries.publication_date <= CURDATE() AND entries.publication_time <= CURTIME()) )
+												<cfif APPLICATION.publicationValidation IS true>
+												AND ( entries.publication_validated != false )
+												</cfif>
+											</cfif> --->
+							)
 					<cfif APPLICATION.identifier EQ "vpnet">
 					UNION ALL <!--- Links --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 3 AS itemTypeId
 					FROM #client_abb#_links AS links
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-					AND status='ok')
+					AND status='ok'
+					<!--- 
+					 <cfif arguments.published IS true>
+					 						AND ( links.publication_date IS NULL OR (links.publication_date <= CURDATE() AND links.publication_time <= CURTIME()) )
+					 						<cfif APPLICATION.publicationValidation IS true>
+					 						AND ( links.publication_validated != false )
+					 						</cfif>
+					 					</cfif> --->
+					  )
 					</cfif>
 					UNION ALL <!--- News --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColums# #displayColumsNull# 4 AS itemTypeId
 					FROM #client_abb#_news AS news
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-					AND status='ok')
+					AND status='ok'
+					<!--- 
+						<cfif arguments.published IS true>
+												AND ( news.publication_date IS NULL OR (news.publication_date <= CURDATE() AND news.publication_time <= CURTIME()) )
+												<cfif APPLICATION.publicationValidation IS true>
+												AND ( news.publication_validated != false )
+												</cfif>
+											</cfif> --->
+							)
 					UNION ALL <!--- Images --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 9 AS itemTypeId
 					FROM #client_abb#_images AS images
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-					AND status='ok')
+					AND status='ok'
+					<!--- 
+					 <cfif arguments.published IS true>
+					 						AND ( images.publication_date IS NULL OR (images.publication_date <= CURDATE() AND images.publication_time <= CURTIME()) )
+					 						<cfif APPLICATION.publicationValidation IS true>
+					 						AND ( images.publication_validated != false )
+					 						</cfif>
+					 					</cfif> --->
+					  )
 				</cfif>
 				UNION ALL <!--- Events --->
 				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #eventColums#, #iframeColums# #displayColumsNull# 5 AS itemTypeId
 				FROM #client_abb#_events AS events
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				AND status='ok')
+				AND status='ok'
+				<!--- 
+					<cfif arguments.published IS true>
+										AND ( events.publication_date IS NULL OR (events.publication_date <= CURDATE() AND events.publication_time <= CURTIME()) )
+										<cfif APPLICATION.publicationValidation IS true>
+										AND ( events.publication_validated != false )
+										</cfif>
+									</cfif> --->
+						)
 				<!--- <cfif APPLICATION.modulePubMedComments IS true> --->
 				<cfif arguments.withPubmedsComments IS true><!--- Pubmeds --->
 				UNION ALL
 				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #pubmedColums#, #iframeColumsNull# #displayColumsNull# 8 AS itemTypeId
 				FROM #client_abb#_pubmeds AS pubmeds
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				AND status='ok')
+				AND status='ok'
+					<!--- 
+					<cfif arguments.published IS true>
+											AND ( pubmeds.publication_date IS NULL OR (pubmeds.publication_date <= CURDATE() AND pubmeds.publication_time <= CURTIME()) )
+											<cfif APPLICATION.publicationValidation IS true>
+											AND ( pubmeds.publication_validated != false )
+											</cfif>
+										</cfif>  --->
+					)
 				</cfif>
 				<!--- <cfif APPLICATION.moduleLists IS true> --->
 				<cfif arguments.withLists IS true><!--- Lists --->
 				UNION ALL
 				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 11 AS itemTypeId
 				FROM #client_abb#_lists AS lists
-				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				WHERE lists.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				UNION ALL
-				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 14 AS itemTypeId
+				( SELECT #getColumsWithTable(commonColums, "lists_views")#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 14 AS itemTypeId
 				FROM #client_abb#_lists_views AS lists_views
-				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">)
+				<cfif arguments.published IS true>
+					INNER JOIN `#client_abb#_lists` AS lists_v ON lists_views.table_id = lists_v.id
+					AND ( lists_v.publication_date IS NULL OR lists_v.publication_date <= CURDATE() )
+					<cfif APPLICATION.publicationValidation IS true>
+					AND ( lists_v.publication_validated IS NULL OR lists_v.publication_validated = true )
+					</cfif>
+				</cfif>
+				WHERE lists_views.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">)
 				</cfif>
 				<!---<cfif APPLICATION.moduleForms IS true>--->
 				<cfif arguments.withForms IS true><!--- Forms --->
 				UNION ALL
 				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 12 AS itemTypeId
 				FROM #client_abb#_forms AS forms
-				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				WHERE forms.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
 				UNION ALL
-				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 15 AS itemTypeId
+				( SELECT #getColumsWithTable(commonColums, "forms_views")#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 15 AS itemTypeId
 				FROM #client_abb#_forms_views AS forms_views
-				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">)
+				<cfif arguments.published IS true>
+					INNER JOIN `#client_abb#_forms` AS forms_v ON forms_views.table_id = forms_v.id
+					AND ( forms_v.publication_date IS NULL OR forms_v.publication_date <= CURDATE() )
+					<cfif APPLICATION.publicationValidation IS true>
+					AND ( forms_v.publication_validated IS NULL OR forms_v.publication_validated = true )
+					</cfif>
+				</cfif>
+				WHERE forms_views.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">)
 				</cfif>
 				<!--- Files --->
 				UNION ALL
 				( SELECT #fileColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 10 AS itemTypeId
 				FROM #client_abb#_files AS files
 
-				INNER JOIN #client_abb#_areas_files AS area_files ON area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND files.id = area_files.file_id 
+				INNER JOIN #client_abb#_areas_files AS area_files ON files.id = area_files.file_id 
 					AND area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					AND files.status='ok')
-				<!---
-				<!--- Area files edited --->
-				UNION ALL
-				( SELECT #fileColums#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 15 AS itemTypeId
-				FROM #client_abb#_files_edited AS files_edited
-					WHERE files_edited.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
-					AND files_edited.status='ok')--->
 				) AS items
 				INNER JOIN #client_abb#_users AS users
 				ON items.user_in_charge = users.id
 				<cfif len(arguments.area_type) GT 0><!---WEB--->
 					LEFT JOIN #client_abb#_items_position AS items_position
 					ON items.id = items_position.item_id AND itemTypeId = items_position.item_type_id
-					AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					AND items_position.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					<cfif arguments.full_content IS true>
 						LEFT JOIN #client_abb#_iframes_display_types AS iframes_display_types
 						ON items.iframe_display_type_id = iframes_display_types.iframe_display_type_id
 					</cfif>
+
+					<cfif arguments.published IS true>
+						WHERE ( items.publication_date IS NULL OR ( items.publication_date <= CURDATE() <!--- OR ( items.publication_date = CURDATE() AND items.publication_time <= CURTIME() ) ---> )  )
+						<cfif APPLICATION.publicationValidation IS true>
+						AND ( items.publication_validated IS NULL OR items.publication_validated = true )
+						</cfif>
+					</cfif>
+
 					ORDER BY items_position.position DESC, items.creation_date DESC
 				<cfelse>
 					ORDER BY items.creation_date DESC

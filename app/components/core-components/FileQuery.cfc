@@ -56,6 +56,9 @@
 				, locks.lock_date
 				</cfif>
 			</cfif>
+			<cfif APPLICATION.publicationScope IS true>
+				, files.publication_scope_id, scopes.name AS publication_scope_name
+			</cfif>
 			, IF(files.reviser_user IS NOT NULL, CONCAT_WS(' ', users_reviser.family_name, users_reviser.name), '' ) AS reviser_user_full_name
 			, IF(files.approver_user IS NOT NULL, CONCAT_WS(' ', users_approver.family_name, users_approver.name), '' ) AS approver_user_full_name
 			FROM #client_abb#_#fileTypeTable# AS files
@@ -85,6 +88,9 @@
 				<cfelse>
 					AND files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>--->
+			</cfif>
+			<cfif APPLICATION.publicationScope IS true>
+				LEFT JOIN #client_abb#_scopes AS scopes ON files.publication_scope_id = scopes.scope_id
 			</cfif>;
 		</cfquery>	
 			
@@ -346,7 +352,27 @@
 	</cffunction>
 
 	
+	<!---getFileAreas--->
 	
+	<cffunction name="getFileAreas" output="false" returntype="query" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
+		
+		<cfset var method = "getFileAreas">
+					
+		<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
+			SELECT area_id
+			FROM #client_abb#_areas_files
+			WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+			
+		<cfreturn getFileAreasQuery>
+		
+	</cffunction>
+
+
 	
 	<!---getImage--->
 	
