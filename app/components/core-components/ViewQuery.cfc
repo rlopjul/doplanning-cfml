@@ -43,11 +43,11 @@
 				</cfif>
 				<cfif tableTypeId IS NOT 3>
 					<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(CONVERT_TZ(table_views.publication_date,'SYSTEM','#timeZoneTo#'), '#dateFormat#') AS publication_date
+					, DATE_FORMAT(CONVERT_TZ(table_views.publication_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS publication_date
 					<cfelse>
 					, table_views.publication_date
 					</cfif>
-					, table_views.publication_time, table_views.publication_validated
+					, table_views.publication_validated
 				</cfif>
 				FROM `#client_abb#_#tableTypeTable#_views` AS table_views
 				INNER JOIN #client_abb#_users AS users ON table_views.user_in_charge = users.id
@@ -56,8 +56,8 @@
 				<!--- </cfif> --->
 				WHERE table_views.id = <cfqueryparam value="#arguments.view_id#" cfsqltype="cf_sql_integer">
 				<cfif arguments.published IS true AND  tableTypeId IS NOT 3>
-					AND ( tables.publication_date IS NULL OR tables.publication_date <= CURDATE() )
-					AND ( table_views.publication_date IS NULL OR tables.publication_date <= CURDATE() )
+					AND ( tables.publication_date IS NULL OR tables.publication_date <= NOW() )
+					AND ( table_views.publication_date IS NULL OR tables.publication_date <= NOW() )
 					<cfif APPLICATION.publicationValidation IS true>
 					AND ( tables.publication_validated IS NULL OR tables.publication_validated = true )
 					AND ( table_views.publication_validated IS NULL OR table_views.publication_validated = true )

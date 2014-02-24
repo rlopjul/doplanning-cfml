@@ -8,4 +8,5 @@
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUser">
 	<cfinvokeargument name="objectUser" value="#objectUser#">
+	<cfinvokeargument name="showAdminFields" value="true">
 </cfinvoke>

@@ -54,7 +54,7 @@
 	<cffunction name="getUser" output="false" returntype="any" access="public">
 		<cfargument name="user_id" type="numeric" required="true">
 		<cfargument name="format_content" type="string" required="false" default="default">
-		<cfargument name="return_type" type="string" required="false" default="object">
+		<cfargument name="return_type" type="string" required="false" default="query">
 		
 		<cfset var method = "getUser">
 		
@@ -262,10 +262,138 @@
 	</cffunction>
 	
 	
+	<!--- 
 	<cffunction name="updateUser" returntype="void" output="false" access="remote">
-		<cfargument name="id" type="numeric" required="true">
+			<cfargument name="user_id" type="numeric" required="true">
+			<cfargument name="family_name" type="string" required="true">
+			<cfargument name="email" type="string" required="false" default="">
+			<cfargument name="dni" type="string" required="true">
+			<cfargument name="mobile_phone" type="string" required="true">
+			<cfargument name="mobile_phone_ccode" type="string" required="true">
+			<cfargument name="address" type="string" required="true">
+			<cfargument name="language" type="string" required="true">
+			<cfargument name="password" type="string" required="true">
+			<cfargument name="password_confirmation" type="string" required="true">
+			<cfargument name="imagedata" type="string" required="false" default="">
+			
+			<cfset var method = "updateUser">
+					
+			<cftry>
+				
+				<!---<cfset response_page = "iframes/preferences_user_data.cfm">--->
+				<cfset response_page = "preferences.cfm">
+				
+				<cfif arguments.password NEQ arguments.password_confirmation>
+			
+					<cfset message = "La nueva contraseña y su confirmación deben ser iguales.">
+					<cfset message = URLEncodedFormat(message)>
+					<cflocation url="#APPLICATION.htmlPath#/#response_page#?message=#message#" addtoken="no">
+				
+				</cfif>
+				
+				<cfif APPLICATION.userEmailRequired IS true AND len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
+				
+					<cfset message = "Debe introducir un email correcto.">
+					<cfset message = URLEncodedFormat(message)>
+					<cflocation url="#APPLICATION.htmlPath#/#response_page#?message=#message#" addtoken="no">
+				
+				</cfif>
+				<cfif len(password) GT 0>
+					<cfset password_encoded = hash(arguments.password)>
+				</cfif>
+				
+				<!--- 
+				<cfsavecontent variable="request_parameters">
+					<cfoutput>
+						<user id="#arguments.id#" 
+						email="#arguments.email#"
+						mobile_phone_ccode="#arguments.mobile_phone_ccode#" 
+						mobile_phone="#arguments.mobile_phone#"
+						telephone_ccode="#arguments.telephone_ccode#"
+						telephone="#arguments.telephone#"
+						language="#arguments.language#"
+						<cfif isDefined("password_encoded")>
+						password="#password_encoded#"
+						</cfif>>
+							<family_name><![CDATA[#arguments.family_name#]]></family_name>
+							<name><![CDATA[#arguments.name#]]></name>
+							<address><![CDATA[#arguments.address#]]></address>
+							<dni><![CDATA[#arguments.dni#]]></dni>
+						</user>
+					</cfoutput>
+				</cfsavecontent>
+				
+				<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
+					<cfinvokeargument name="request_component" value="#request_component#">
+					<cfinvokeargument name="request_method" value="#method#">
+					<cfinvokeargument name="request_parameters" value="#request_parameters#">
+				</cfinvoke> --->
+	
+				<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUser" returnvariable="responseUpdateUser">
+					<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
+					<cfinvokeargument name="email" value="#arguments.email#">
+					<cfinvokeargument name="mobile_phone_ccode" value="#arguments.mobile_phone_ccode#">
+					<cfinvokeargument name="mobile_phone" value="#arguments.mobile_phone#">
+					<cfinvokeargument name="telephone_ccode" value="#arguments.telephone_ccode#">
+					<cfinvokeargument name="telephone" value="#arguments.telephone#">
+					<cfinvokeargument name="language" value="#arguments.language#">
+					<cfif isDefined("password_encoded")>
+						<cfinvokeargument name="password" value="#password_encoded#">
+					</cfif>
+					<cfinvokeargument name="family_name" value="#arguments.family_name#">
+					<cfinvokeargument name="name" value="#arguments.name#">
+					<cfinvokeargument name="address" value="#arguments.address#">
+					<cfinvokeargument name="dni" value="#arguments.dni#">
+				</cfinvoke>
+				
+				<cfif responseUpdateUser.result IS true>
+	
+					<cfif isDefined("arguments.imagedata") AND len(arguments.imagedata) GT 0>
+	
+						<!---Subida de imagen--->
+					
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="uploadUserImage">
+							<cfinvokeargument name="imagedata" value="#arguments.imagedata#">
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+						</cfinvoke>		
+						
+						<cfset message = "Modificación guardada e imagen actualizada.">
+	
+						<!---FIN subida de imagen--->
+	
+					<cfelse>
+	
+						<cfset message = "Modificación guardada.">
+					
+					</cfif>
+					
+				<cfelse><!--- Error --->
+	
+					<cfset message = responseUpdateUser.message>
+	
+				</cfif>
+	
+				<cfset message = URLEncodedFormat(message)>
+	            
+	            <cflocation url="#APPLICATION.htmlPath#/#response_page#?msg=#message#&res=1" addtoken="no">
+				
+				<cfcatch>
+					<cfinclude template="includes/errorHandler.cfm">
+				</cfcatch>										
+				
+			</cftry>
+			
+		</cffunction>
+		 --->
+	
+
+	<!--- createUser --->
+
+	<cffunction name="createUser" output="true" returntype="void" access="remote">
+		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE--->
 		<cfargument name="family_name" type="string" required="true">
-		<cfargument name="email" type="string" required="true">
+		<cfargument name="email" type="string" required="false" default="">
 		<cfargument name="dni" type="string" required="true">
 		<cfargument name="mobile_phone" type="string" required="true">
 		<cfargument name="mobile_phone_ccode" type="string" required="true">
@@ -273,97 +401,173 @@
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
 		<cfargument name="password_confirmation" type="string" required="true">
-		<cfargument name="imagedata" type="string" required="false" default="">
+		<cfargument name="files" type="array" required="false"/>
+
+		<cfargument name="information" type="string" required="true">
+		<cfargument name="internal_user" type="boolean" required="false">
+		<cfargument name="enabled" type="boolean" required="false">
+
+		<cfargument name="login_ldap" type="string" required="false">
+		<cfargument name="perfil_cabecera" type="string" required="false">
 		
-		<cfset var method = "updateUser">
-		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-		
-		<cftry>
-			
-			<!---<cfset response_page = "iframes/preferences_user_data.cfm">--->
-			<cfset response_page = "preferences.cfm">
-			
-			<cfif arguments.password NEQ arguments.password_confirmation>
-		
-				<cfset message = "La nueva contraseña y su confirmación deben ser iguales.">
-				<cfset message = URLEncodedFormat(message)>
-				<cflocation url="#APPLICATION.htmlPath#/#response_page#?message=#message#" addtoken="no">
-			
-			</cfif>
-			
-			<cfif len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
-			
-				<cfset message = "Debe introducir un email correcto.">
-				<cfset message = URLEncodedFormat(message)>
-				<cflocation url="#APPLICATION.htmlPath#/#response_page#?message=#message#" addtoken="no">
-			
-			</cfif>
-			<cfif len(password) GT 0>
-				<cfset password_encoded = hash(arguments.password)>
-			</cfif>
-			
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<user id="#arguments.id#" 
-					email="#arguments.email#"
-					mobile_phone_ccode="#arguments.mobile_phone_ccode#" 
-					mobile_phone="#arguments.mobile_phone#"
-					telephone_ccode="#arguments.telephone_ccode#"
-					telephone="#arguments.telephone#"
-					language="#arguments.language#"
-					<cfif isDefined("password_encoded")>
-					password="#password_encoded#"
-					</cfif>>
-						<family_name><![CDATA[#arguments.family_name#]]></family_name>
-						<name><![CDATA[#arguments.name#]]></name>
-						<address><![CDATA[#arguments.address#]]></address>
-						<dni><![CDATA[#arguments.dni#]]></dni>
-					</user>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>
-			
-			<cfset message = "Modificación guardada.">
-			
-			<!---Subida de imagen--->
-			
-			<cfif isDefined("arguments.imagedata") AND len(arguments.imagedata) GT 0>
-			
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="uploadUserImage">
-					<cfinvokeargument name="imagedata" value="#arguments.imagedata#">
-					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-				</cfinvoke>		
+		<cfset var method = "createUser">
+
+		<cfset var response = structNew()>
 				
-				<cfset message = "Modificación guardada e imagen actualizada.">
+		<cftry>
+									
+			<cfif arguments.password NEQ arguments.password_confirmation>
+				
+				<cfset response = {result=false, message="La nueva contraseña y su confirmación deben ser iguales."}>
+
+			<cfelse>
+
+				<cfif APPLICATION.userEmailRequired IS true AND len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
+				
+					<cfset response = {result=false, message="Debe introducir un email correcto."}>
+
+				<cfelse>
+
+					<cfset password_encoded = hash(arguments.password)>
+					
+					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="createUser" returnvariable="response">
+						<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
+						<cfinvokeargument name="email" value="#arguments.email#">
+						<cfinvokeargument name="mobile_phone_ccode" value="#arguments.mobile_phone_ccode#">
+						<cfinvokeargument name="mobile_phone" value="#arguments.mobile_phone#">
+						<cfinvokeargument name="telephone_ccode" value="#arguments.telephone_ccode#">
+						<cfinvokeargument name="telephone" value="#arguments.telephone#">
+						<cfinvokeargument name="language" value="#arguments.language#">
+						<cfinvokeargument name="password" value="#password_encoded#">
+						<cfinvokeargument name="password_temp" value="#arguments.password#">
+						<cfinvokeargument name="family_name" value="#arguments.family_name#">
+						<cfinvokeargument name="name" value="#arguments.name#">
+						<cfinvokeargument name="address" value="#arguments.address#">
+						<cfinvokeargument name="dni" value="#arguments.dni#">
+						<cfinvokeargument name="files" value="#arguments.files#">
+
+						<cfinvokeargument name="information" value="#arguments.information#">
+						<cfinvokeargument name="internal_user" value="#arguments.internal_user#">
+						<cfinvokeargument name="enabled" value="#arguments.enabled#">
+
+						<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
+						<cfinvokeargument name="perfil_cabecera" value="#arguments.perfil_cabecera#">
+					</cfinvoke>
+					
+					<cfif response.result IS true>
+
+						<cfset response.message = "Usuario creado.">
+
+					</cfif>
+
+				</cfif><!--- END email check --->
 			
-			</cfif>
-			
-			<!---FIN subida de imagen--->
-			
-			
-			<cfset message = URLEncodedFormat(message)>
-            
-            <cflocation url="#APPLICATION.htmlPath#/#response_page#?msg=#message#&res=1" addtoken="no">
-			
+			</cfif><!--- END password_confirmation check --->
+
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
+
+		<cfoutput>#serializeJSON(response)#</cfoutput>
 		
-		<cfreturn xmlResponse>
+	</cffunction>
+
+	
+	<!--- updateUser --->
+
+	<cffunction name="updateUser" output="true" returntype="void" access="remote">
+		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE--->
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="family_name" type="string" required="true">
+		<cfargument name="email" type="string" required="false" default="">
+		<cfargument name="dni" type="string" required="true">
+		<cfargument name="mobile_phone" type="string" required="true">
+		<cfargument name="mobile_phone_ccode" type="string" required="true">
+		<cfargument name="address" type="string" required="true">
+		<cfargument name="language" type="string" required="true">
+		<cfargument name="password" type="string" required="true">
+		<cfargument name="password_confirmation" type="string" required="true">
+		<cfargument name="files" type="array" required="false"/>
+
+		<cfargument name="information" type="string" required="false">
+		<cfargument name="internal_user" type="boolean" required="false" default="false">
+		<cfargument name="enabled" type="boolean" required="false" default="false">
+
+		<cfargument name="login_ldap" type="string" required="false">
+		<cfargument name="perfil_cabecera" type="string" required="false">
+
+		<cfargument name="adminFields" type="boolean" required="false" default="false">
+		
+		<cfset var method = "updateUser">
+
+		<cfset var response = structNew()>
+				
+		<cftry>
+									
+			<cfif arguments.password NEQ arguments.password_confirmation>
+				
+				<cfset response = {result=false, message="La nueva contraseña y su confirmación deben ser iguales."}>
+
+			<cfelse>
+
+				<cfif APPLICATION.userEmailRequired IS true AND len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
+				
+					<cfset response = {result=false, message="Debe introducir un email correcto."}>
+
+				<cfelse>
+
+					<cfif len(password) GT 0>
+						<cfset password_encoded = hash(arguments.password)>
+					</cfif>
+					
+					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUser" returnvariable="response">
+						<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
+						<cfinvokeargument name="email" value="#arguments.email#">
+						<cfinvokeargument name="mobile_phone_ccode" value="#arguments.mobile_phone_ccode#">
+						<cfinvokeargument name="mobile_phone" value="#arguments.mobile_phone#">
+						<cfinvokeargument name="telephone_ccode" value="#arguments.telephone_ccode#">
+						<cfinvokeargument name="telephone" value="#arguments.telephone#">
+						<cfinvokeargument name="language" value="#arguments.language#">
+						<cfif isDefined("password_encoded")>
+							<cfinvokeargument name="password" value="#password_encoded#">
+						</cfif>
+						<cfinvokeargument name="family_name" value="#arguments.family_name#">
+						<cfinvokeargument name="name" value="#arguments.name#">
+						<cfinvokeargument name="address" value="#arguments.address#">
+						<cfinvokeargument name="dni" value="#arguments.dni#">
+						<cfinvokeargument name="files" value="#arguments.files#">
+
+						<cfinvokeargument name="information" value="#arguments.information#">
+						<cfinvokeargument name="internal_user" value="#arguments.internal_user#">
+						<cfinvokeargument name="enabled" value="#arguments.enabled#">
+						<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
+						<cfinvokeargument name="perfil_cabecera" value="#arguments.perfil_cabecera#">
+						<cfinvokeargument name="adminFields" value="#arguments.adminFields#">
+					</cfinvoke>
+					
+					<cfif response.result IS true>
+
+						<cfset response.message = "Modificación guardada.">
+
+					</cfif>
+
+				</cfif><!--- END email check --->
+			
+			</cfif><!--- END password_confirmation check --->
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfoutput>#serializeJSON(response)#</cfoutput>
 		
 	</cffunction>
 	
-	
+
 	<cffunction name="updateUserPreferences" returntype="void" output="false" access="remote">
 		<cfargument name="notify_new_message" type="string" required="false" default="false">
 		<cfargument name="notify_new_file" type="string" required="false" default="false">
@@ -459,7 +663,7 @@
 
 	<!--- ----------------------------------- deleteUser -------------------------------------- --->
 
-	<cffunction name="deleteUser" output="false" returntype="struct" access="public">
+	<cffunction name="deleteUser" output="false" returntype="struct" returnformat="json" access="remote">
 		<cfargument name="user_id" type="numeric" required="true"/>
 
 		<cfset var method = "deleteUser">
@@ -471,11 +675,13 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="deleteUser" returnvariable="response">
 				<cfinvokeargument name="delete_user_id" value="#arguments.user_id#"/>
 			</cfinvoke>
-			
-			<cfinclude template="includes/responseHandlerStruct.cfm">
 
+			<cfif response.result IS true>
+				<cfset response.message = "Usuario eliminado">
+			</cfif>
+			
 			<cfcatch>
-				<cfinclude template="includes/errorHandlerStruct.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
@@ -486,33 +692,33 @@
 
 
 	
+	<!--- deleteUserImage --->
 
-	<cffunction name="deleteUserImage" returntype="void" access="remote">
-		<cfargument name="return_page" type="string" required="true">
+	<cffunction name="deleteUserImage" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="user_id" type="numeric" required="true">
 		
 		<cfset var method = "deleteUserImage">
-		
-		<cfset var response_page= "">
-		<cfset var request_parameters = "">
+
+		<cfset var response = structNew()>
 		
 		<cftry>
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="deleteUserImage">
-				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+				<cfinvokeargument name="user_id" value="#arguments.user_id#">
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>		
-				
-			<cfset msg = "Imagen eliminada.">
 			
-			<cfset msg = URLEncodedFormat(msg)>
-            
-            <cflocation url="#arguments.return_page#?msg=#msg#&res=1" addtoken="no">	
+			<cfset response.result = true>
+			<cfset response.message = "Imagen eliminada.">
+			<cfset response.user_id = arguments.user_id>
 			
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
+
+		<cfreturn response>
 		
 	</cffunction>
 
@@ -586,8 +792,8 @@
 	<!--- outputUser --->
 		
 	<cffunction name="outputUser" returntype="void" output="true" access="public">
-		<cfargument name="objectUser" type="struct" required="true">
-		<!---<cfargument name="contact_format" type="boolean" required="false" default="false">--->
+		<cfargument name="objectUser" type="query" required="true">
+		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
 		
 		<cfset var method = "outputUser">
 		
@@ -616,22 +822,40 @@
 				<div class="div_user_page_label"><span lang="es">Dirección:</span></div> 
 				<div class="div_user_page_address">#objectUser.address#</div>
 				</cfif>
-				<cfif APPLICATION.moduleWebRTC IS true>
-				<div style="padding-top:8px; clear:both;">
-					<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/user_meeting.png" width="20" alt="Reunión virtual" lang="es"/>--->
+
+				<cfif arguments.showAdminFields IS true>
 					
-					<div>
-					<a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es" class="btn btn-sm btn-info"><i class="icon-facetime-video"></i>&nbsp; <span lang="es">Reunión virtual</span></a>
+					<div class="div_user_page_label"><span lang="es">Información:</span></div> 
+					<div class="div_user_page_address">#objectUser.information#</div>
+
+					<cfif SESSION.client_abb EQ "hcs">
+						<div class="div_user_page_label"><span lang="es">Login Plataforma Recursos Humanos:</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
+						<div class="div_user_page_label"><span lang="es">Perfil de cabecera:</span> <span class="div_user_page_text">#objectUser.perfil_cabecera#</span></div>
+					</cfif>
+
+					<div class="div_user_page_label"><span lang="es">Usuario interno:</span> <span class="div_user_page_text" lang="es"><cfif objectUser.internal_user IS true><b>Sí</b><cfelse>No</cfif></span></div>	
+
+				</cfif>
+
+				<div class="div_user_page_label"><span lang="es">Activo:</span> <span class="div_user_page_text" lang="es"><cfif objectUser.enabled IS true>Sí<cfelse><b>No</b></cfif></span></div>
+
+				<cfif objectUser.enabled IS true>
+					<cfif APPLICATION.moduleWebRTC IS true>
+					<div style="padding-top:8px; clear:both;">
+						<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/user_meeting.png" width="20" alt="Reunión virtual" lang="es"/>--->
+						
+						<div>
+						<a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es" class="btn btn-sm btn-info"><i class="icon-facetime-video"></i>&nbsp; <span lang="es">Reunión virtual</span></a>
+						</div>
+						<div class="div_user_page_label"><span lang="es">URL de acceso a reunión virtual con este usuario:</span></div>
+						<textarea class="form-control" readonly="readonly" style="height:50px; cursor:text">#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#</textarea>
+														
 					</div>
-					<div class="div_user_page_label"><span lang="es">URL de acceso a reunión virtual con este usuario:</span></div>
-					<textarea class="form-control" readonly="readonly" style="height:50px; cursor:text">#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#</textarea>
-													
-				</div>
+					</cfif>
 				</cfif>
 				
+				
 			</div>
-			
-			
 			
 			</cfoutput>								
 			
@@ -976,6 +1200,7 @@
 		<cfargument name="show_area_members" type="boolean" required="false" default="false">
 		<cfargument name="open_url_target" type="string" required="false" default="itemIframe">
 		<cfargument name="filter_enabled" type="boolean" required="false" default="true">
+		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
 
 		<cfargument name="list_id" type="numeric" required="false">
 		
@@ -1042,6 +1267,12 @@
 							<cfif arguments.show_area_members IS true>
 							<th style="width:110px;" lang="es">De esta área</th>
 							</cfif>
+							<cfif arguments.showAdminFields IS true>
+								<cfif SESSION.client_abb IS "hcs">
+								<th>Perfil cabecera</th>
+								</cfif>
+								<th style="width:38px;">Activo</th>
+							</cfif>
 							<!---<cfif APPLICATION.moduleWebRTC IS true>
 							<th style="width:40px;" lang="es"></th>
 							</cfif>--->
@@ -1051,13 +1282,6 @@
 					<tbody>
 					
 					<cfset alreadySelected = false>
-					
-					<!---<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">
-						
-						<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="objectUser">
-							<cfinvokeargument name="xml" value="#xmlUsers.xmlChildren[1].xmlChildren[xmlIndex]#">
-							<cfinvokeargument name="return_type" value="object">
-						</cfinvoke>--->
 
 					<cfset userIndex = 0>
 
@@ -1118,6 +1342,12 @@
 							<cfif arguments.show_area_members IS true>
 							<td lang="es"><cfif objectUser.area_member IS true>Sí<cfelse>No</cfif></td>
 							</cfif>
+							<cfif arguments.showAdminFields IS true>
+								<cfif SESSION.client_abb IS "hcs">
+									<td>#objectUser.perfil_cabecera#</td>
+								</cfif>
+								<td lang="es"><cfif objectUser.enabled IS true>Sí<cfelse>No</cfif></th>
+							</cfif>
 						</tr>
 					</cfloop>
 					</tbody>
@@ -1140,50 +1370,6 @@
 			
 		</cftry>
 		
-	</cffunction>
-
-
-	<!--- queryToArray --->
-	<!---Este método se utiliza para convertir las consultas de usuarios en arrays, necesarios para outputUsersList--->
-	<cffunction name="queryToArray" access="public" returntype="array" output="false" hint="This turns a query into an array of structures.">
-		<cfargument name="data" type="query" required="yes" />
-
-		<cfscript>
-			// Define the local scope.
-			var LOCAL = StructNew();
-
-			// Get the column names as an array.
-			LOCAL.Columns = ListToArray( ARGUMENTS.data.ColumnList );
-
-			// Create an array that will hold the query equivalent.
-			LOCAL.QueryArray = ArrayNew( 1 );
-
-			// Loop over the query.
-			for (LOCAL.RowIndex = 1 ; LOCAL.RowIndex LTE ARGUMENTS.data.RecordCount ; LOCAL.RowIndex = (LOCAL.RowIndex + 1)){
-
-			// Create a row structure.
-			LOCAL.Row = StructNew();
-
-			// Loop over the columns in this row.
-			for (LOCAL.ColumnIndex = 1 ; LOCAL.ColumnIndex LTE ArrayLen( LOCAL.Columns ) ; LOCAL.ColumnIndex = (LOCAL.ColumnIndex + 1)){
-
-			// Get a reference to the query column.
-			LOCAL.ColumnName = LOCAL.Columns[ LOCAL.ColumnIndex ];
-
-			// Store the query cell value into the struct by key.
-			LOCAL.Row[ LOCAL.ColumnName ] = ARGUMENTS.data[ LOCAL.ColumnName ][ LOCAL.RowIndex ];
-
-			}
-
-			// Add the structure to the query array.
-			ArrayAppend( LOCAL.QueryArray, LOCAL.Row );
-
-			}
-
-			// Return the array equivalent.
-			return( LOCAL.QueryArray );
-		</cfscript>
-
 	</cffunction>
 	
 </cfcomponent>

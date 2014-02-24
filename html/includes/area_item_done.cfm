@@ -1,3 +1,7 @@
+<!--- 
+
+ESTA PÁGINA YA NO SE USA (se ha sustituido por el método changeAreaItemDone de AreaItem.cfc)
+
 <cfif isDefined("URL.item") AND isDefined("URL.type") AND isDefined("URL.area") AND isDefined("URL.done") AND isDefined("URL.return_page")>
 
 	<cfset item_id = URL.item>
@@ -21,4 +25,4 @@
 		<cflocation url="#return_url#&res=0&msg=#URLEncodedFormat('#changeAreaItemDoneResult.message#')#" addtoken="no">
 	</cfif>
 
-</cfif>
+</cfif> --->

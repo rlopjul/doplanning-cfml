@@ -20,7 +20,7 @@
 	<!---uploadUserImage--->
 	
 	<cffunction name="uploadUserImage" access="public" returntype="void">
-		<cfargument name="imagedata" type="string" required="yes">
+		<cfargument name="files" type="array" required="true">
 		<cfargument name="user_id" type="numeric" required="yes">
 		<cfargument name="client_abb" type="string" required="yes">
 				
@@ -40,10 +40,9 @@
 				<cfinvokeargument name="return_type" value="object">
 			</cfinvoke>	
 			
-			
 			<!---<cfset objectFile.user_in_charge = user_id>--->
 			
-			<cffile action="upload" filefield="#arguments.imagedata#" destination="#destination#" nameconflict="overwrite" result="uploadedFile" accept="image/jpg,image/jpeg,image/gif,image/png">
+			<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile" accept="image/jpg,image/jpeg,image/gif,image/png,image/pjpeg "><!---image/pjpeg para IE8 que tiene un bug--->
 			
 			<cfset temp_file = "#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">
 			
@@ -139,7 +138,6 @@
 		
 		<cfset var destination = "#APPLICATION.filesPath#/#arguments.client_abb#/#files_directory#/">
 		
-		<!---<cffile action="delete" file="#destination##arguments.user_id#">--->
 		<cffile action="delete" file="#destination##arguments.user_id##small_sufix#">
 		<cffile action="delete" file="#destination##arguments.user_id##medium_sufix#">
 		

@@ -27,6 +27,8 @@
 	<cfset eventTypeId = 5>
 	<cfset taskTypeId = 6> 
 	
+	<cfset timeZoneTo = "+1:00">
+
 	<!--- ----------------------- XML ITEM -------------------------------- --->
 	
 	<cffunction name="xmlItem" returntype="string" access="public">		
@@ -553,7 +555,7 @@
 		<cfargument name="general" type="boolean" required="false" default="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
-		<cfargument name="publication_time" type="string" required="false">
+		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 
 		<cfset var method = "createItem">
@@ -567,6 +569,7 @@
 		<cfset var item_id = "">
 		<cfset var area_type = "">
 		<cfset var itemQuery = "">
+		<cfset var isUserAreaResponsible = false>
 
 		<cftry>
 
@@ -732,18 +735,16 @@
 					
 					<cfif itemTypeWeb IS true><!---WEB--->
 
-						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
-							, publication_date = STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
-							, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">
+						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) IS 16>
+							, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
+							<!---, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">--->
 						</cfif>
 						<!--- publicationValidation --->
 						<cfif APPLICATION.publicationValidation IS true>
 							<cfif isUserAreaResponsible IS true AND arguments.publication_validated IS true>
-								, publication_validated = <cfqueryparam value="#arguments.publication_validated#" cfsqltype="cf_sql_bit">
-								<cfif arguments.publication_validated IS true>
-									, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
-									, publication_validated_date = NOW()						
-								</cfif>
+								, publication_validated = <cfqueryparam value="true" cfsqltype="cf_sql_bit">
+								, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+								, publication_validated_date = NOW()						
 							<cfelse>
 								, publication_validated = <cfqueryparam value="false" cfsqltype="cf_sql_bit">
 							</cfif>												
@@ -904,7 +905,7 @@
 
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
-		<cfargument name="publication_time" type="string" required="false">
+		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateItem">
@@ -1089,10 +1090,9 @@
 
 					<cfif itemTypeWeb IS true><!---WEB--->
 
-						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
-							, publication_date = STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
-							<!--- , publication_date = STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i') --->
-							, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">
+						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) IS 16>
+							, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
+							<!---, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">--->
 						</cfif>
 						<!--- publicationValidation --->
 						<cfif APPLICATION.publicationValidation IS true AND isUserAreaResponsible IS true>
@@ -1221,7 +1221,7 @@
 		<cfargument name="file_description" type="string" required="true"/>
 
 		<cfargument name="publication_date" type="string" required="false">
-		<cfargument name="publication_time" type="string" required="false">
+		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false">
 		
 		<cfset var method = "updateItemWithAttachedFile">
@@ -1240,7 +1240,7 @@
 					<cfinvokeargument name="status" value="pending">
 
 					<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
-					<cfinvokeargument name="publication_time" value="#arguments.publication_time#">
+					<!--- <cfinvokeargument name="publication_time" value="#arguments.publication_time#"> --->
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				</cfinvoke>
 
@@ -1946,25 +1946,27 @@
 			</cfif>
 			<cfset objectItem.link_target = "_blank">
 
+			<cfset cur_date = DateFormat(now(), "DD-MM-YYYY")>
+			
 			<cfif itemTypeWeb IS true><!---WEB--->
-				<cfset cur_date = DateFormat(now(), "DD-MM-YYYY")>
 
-				<cfset objectItem.publication_date = cur_date>
-				<cfset objectItem.publication_time = timeFormat(now(), "HH:mm")>
+				<cfset objectItem.publication_date = cur_date&" "&timeFormat(now(), "HH:mm:ss")>
+				<!---<cfset objectItem.publication_time = timeFormat(now(), "HH:mm")>--->
 				<cfset objectItem.publication_validated = true>
 
 				<cfif itemTypeId IS 4><!---News--->
 					<cfset objectItem.creation_date = cur_date>
 				</cfif>
+
 			</cfif>
-			
+
 			<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-				<cfset cur_date = DateFormat(now(), "DD-MM-YYYY")>
+				<!--- <cfset cur_date = DateFormat(now(), "DD-MM-YYYY")> --->
 				
 				<cfset objectItem.start_date = cur_date>
 				<cfset objectItem.end_date = cur_date>
 				
-				<cfif itemTypeId IS 5>
+				<cfif itemTypeId IS 5><!--- Events --->
 					<cfset objectItem.start_time = "00:00">
 					<cfset objectItem.end_time = "00:00">
 					<cfset objectItem.place = "">
@@ -2201,101 +2203,7 @@
 
 		<cfreturn response>
 		
-	</cffunction>
-	
-	<!---
-	<cffunction name="changeAreaItemPosition" returntype="struct" access="public">
-		<cfargument name="item_id" type="numeric" required="yes">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
-		<cfargument name="action" type="string" required="yes"><!---increase/decrease--->
-		
-		<cfset var method = "changeAreaItemPosition">
-		<cfset var response = structNew()>
-		
-		<cfset var area_id = "">
-
-		<cftry>
-			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-			
-			<cfquery name="getItem" datasource="#client_dsn#">		
-				SELECT position, area_id
-				FROM #client_abb#_#itemTypeTable# 
-				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;			
-			</cfquery>
-			
-			<cfif getItem.recordCount GT 0>
-				
-				<cfset area_id = getItem.area_id>
-			
-				<!---checkAreaAccess--->
-				<cfinclude template="includes/checkAreaAccess.cfm">
-				
-				<cfquery name="getOtherItem" datasource="#client_dsn#">		
-					SELECT id, position 
-					FROM #client_abb#_#itemTypeTable# 
-					WHERE
-					area_id = <cfqueryparam value="#getItem.area_id#" cfsqltype="cf_sql_integer">
-					AND 
-					<cfif arguments.action IS "increase">
-					position < <cfqueryparam value="#getItem.position#" cfsqltype="cf_sql_integer"> 
-					ORDER BY position DESC
-					<cfelse>
-					position > <cfqueryparam value="#getItem.position#" cfsqltype="cf_sql_integer"> 
-					ORDER BY position ASC
-					</cfif>
-					LIMIT 1;			
-				</cfquery>
-			
-					
-				<cfif getOtherItem.recordCount GT 0>
-					
-					<cftransaction>
-					
-						<cfquery name="updateOtherItemQuery" datasource="#client_dsn#">		
-							UPDATE #client_abb#_#itemTypeTable#
-							SET position = <cfqueryparam value="#getItem.position#" cfsqltype="cf_sql_integer">
-							WHERE id = <cfqueryparam value="#getOtherItem.id#" cfsqltype="cf_sql_integer">;			
-						</cfquery>
-						
-						<cfquery name="updateItemQuery" datasource="#client_dsn#">		
-							UPDATE #client_abb#_#itemTypeTable#
-							SET position = <cfqueryparam value="#getOtherItem.position#" cfsqltype="cf_sql_integer">
-							WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;			
-						</cfquery>
-					
-					</cftransaction>
-					
-				<cfelse>
-				
-					<cfset response = {result="false", message="Error, no se ha encontrado el elemento por el que hay que cambiar el orden"}>
-					
-					<cfreturn response>
-					
-				</cfif>
-				
-				<cfset response = {result=true, area_id=getItem.area_id}>
-			
-			<cfelse>
-			
-				<cfset response = {result=false, message="Error, no se ha encontrado el elemento"}>
-			
-			</cfif>
-			
-		<cfcatch>
-
-				<cfinclude template="includes/errorHandlerStruct.cfm">
-
-			</cfcatch>
-		</cftry>
-
-		<cfreturn response>
-		
-	</cffunction>--->
-	<!---  ------------------------------------------------------------------------ --->
-	
+	</cffunction>	
 	
 	
 	<!---  ---------------------- changeAreaItemState -------------------------------- --->
@@ -2311,6 +2219,8 @@
 
 		<cfset var area_id = "">
 		<cfset var itemQuery = "">
+
+		<cftry>
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
@@ -2379,8 +2289,15 @@
 				<cfset response = {result=false, message="Error: no se ha encontrado la #itemTypeNameEs#"}>
 			
 			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
 			
-			<cfreturn response>
+		<cfreturn response>
 		
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
@@ -2401,6 +2318,8 @@
 		<cfset var area_id = "">
 		<cfset var itemQuery = "">
 		
+		<cftry>
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -2460,6 +2379,13 @@
 				<cfset response = {result=false, message="Error, no se ha encontrado la #itemTypeNameEs#"}>
 			
 			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
 			
 		<cfreturn response>
 		
@@ -2536,14 +2462,8 @@
 					</cfinvoke> --->
 
 					<cfinclude template="includes/logRecord.cfm">
-					
-					<cfif arguments.validate IS true>
-						<cfset response_message = "Publicación aprobada">
-					<cfelse>
-						<cfset response_message = "Publicación no aprobada">
-					</cfif>
-
-					<cfset response = {result=true, area_id=getItem.area_id, message=response_message}>
+				
+					<cfset response = {result=true, area_id=getItem.area_id}>
 										
 				<cfelse>
 				
@@ -2567,7 +2487,7 @@
 		<cfreturn response>
 		
 	</cffunction>
-	<!---  ------------------------------------------------------------------------ --->
+	<!---  ------------------------------------------------------------------------- --->
 	
 	
 	

@@ -111,3 +111,10 @@
 	</cfoutput>
 </cfif>
 </div>
+
+<cfif isDefined("URL.file") AND isDefined("URL.download") AND URL.download IS true>
+	<cfoutput>
+	<iframe style="display:none" src="#APPLICATION.htmlPath#/file_download.cfm?id=#URL.file#"></iframe>
+	</cfoutput>
+</cfif>
+

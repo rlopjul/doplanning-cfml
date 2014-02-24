@@ -19,7 +19,7 @@ var user_content_en = {
 	'Eliminar imagen':'Delete image',
 	'Usuario sin imagen':'User without image',
 	'Nueva contraseña:':'New password:',
-	'Confirmar nueva contraseña:':'Confirm new password:',
+	'Confirmar contraseña:':'Confirm new password:',
 	'Guardar':'Save',
 	'Modificación guardada.':'Modification saved.'
 	/*END preferences_user_data.cfm*/

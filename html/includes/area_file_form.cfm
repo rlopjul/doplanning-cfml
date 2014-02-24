@@ -58,6 +58,18 @@
 			
 		});
 
+		<cfif len(area_type) GT 0><!--- WEB --->
+
+			$('##publication_date').datepicker({
+			  format: 'dd-mm-yyyy',
+			  weekStart: 1,
+			  language: 'es',
+			  todayBtn: 'linked', 
+			  autoclose: true
+			});
+
+		</cfif>
+
 		<cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
 			<cfif page_type IS 1>
 
@@ -334,17 +346,6 @@
 
 	</cfif>
 
-	<!---<cfif APPLICATION.moduleAreaFiles IS true>
-		<div class="form-group">
-			<label for="fileTypeId">Tipo de archivo</label>
-			<select name="fileTypeId" id="fileTypeId" class="col-md-3">
-				<option value="1" <cfif file.fileTypeId IS 1>selected="selected"</cfif>>Documento de usuario</option>
-				<option value="2" <cfif file.fileTypeId IS 2>selected="selected"</cfif>>Documento de área</option>
-				<option value="3" <cfif file.fileTypeId IS 3>selected="selected"</cfif>>Documento de área con circuito de calidad</option>
-			</select>
-		</div>
-	</cfif>--->
-
 	<!--- Typologies --->
 	<cfif APPLICATION.modulefilesWithTables IS true>
 
@@ -400,7 +401,7 @@
 		</div>
 	</div>
 
-	<cfif APPLICATION.publicationScope IS true AND (page_type IS 3 OR fileTypeId NEQ 3)>
+	<cfif APPLICATION.publicationScope IS true AND (page_type IS 3 OR fileTypeId NEQ 3)><!--- A los archivos de área con circuito de calidad no se les define ambito de publicación porque no pueden ser publicados directamente en otras áreas --->
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopes" returnvariable="getScopesResult">
 		</cfinvoke>
@@ -416,13 +417,104 @@
 							<option value="#scopesQuery.scope_id#" <cfif file.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
 						</cfloop>
 					</select>
-					<span class="help-block">Define dónde se podrá publicar el documento</span>
+					<small class="help-block">Define dónde se podrá publicar el documento</small>
 				</div>
 			</div>
 
 		</cfif>
 		
 	</cfif>
+
+	<cfif ( len(area_type) GT 0 OR page_type IS 3 ) AND page_type IS NOT 2><!--- WEB or Publish file--->
+
+		<div class="row">
+
+			<cfif isDefined("file.publication_hour")><!--- After send FORM --->
+
+				<cfset publication_hour = file.publication_hour>
+				<cfset publication_minute = file.publication_minute>
+
+			<cfelse>
+				
+				<cfset publication_hour = timeFormat(file.publication_date, "HH")>
+				<cfset publication_minute = timeFormat(file.publication_date, "mm")>
+
+				<cfif len(file.publication_date) GT 10>
+					<cfset file.publication_date = left(file.publication_date, findOneOf(" ", file.publication_date))>
+				</cfif>
+
+			</cfif>
+
+			<div class="col-xs-6 col-md-3">
+				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
+				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#file.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
+			</div>
+						
+			<div class="col-xs-6">
+				 
+				<!--- 
+				<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
+				<div class="input-group" style="width:170px">
+					<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
+						<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
+							<cfset curHour = TimeFormat(hour, 'HH')>
+							<option value="#curHour#" <cfif curHour EQ publication_hour>selected="selected"</cfif>>#curHour#</option>
+						</cfloop>
+					</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
+						<cfset minutesInOptions = false>
+						<cfloop from="0" to="59" index="minutes" step="5">
+							<cfif len(minutes) EQ 1>
+								<cfset minutes = "0"&minutes>
+							</cfif>
+							<cfif minutes EQ publication_minute>
+								<cfset minutesSelected = true>
+								<cfset minutesInOptions = true>
+							<cfelse>
+								<cfset minutesSelected = false>
+							</cfif>
+							<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
+						</cfloop>
+						<cfif minutesInOptions IS false AND len(publication_minute) GT 0>
+							<option value="#publication_minute#" selected="selected">#publication_minute#</option>
+						</cfif>
+					</select>
+				</div> --->
+				
+			</div>
+			
+			<input type="hidden" name="publication_hour" value="00"/>
+			<input type="hidden" name="publication_minute" value="00"/>
+			
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<small class="help-block">Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
+			</div>
+		</div>
+
+		<cfif APPLICATION.publicationValidation IS true>
+
+			<!--- isUserAreaResponsible --->
+			<cfif is_user_area_responsible IS true>
+				
+				<div class="row">
+					<div class="col-xs-12 col-sm-8">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("file.publication_validated") AND file.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+							</label>
+							<small class="help-block">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
+						</div>
+					</div>
+				</div>
+
+			</cfif>
+
+		</cfif>
+
+	</cfif>
+
 
 	<!--- Typology fields --->
 	<div id="typologyContainer"></div>

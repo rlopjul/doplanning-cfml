@@ -15,6 +15,8 @@
 	<cfset messageTypeId = 1>
 	<cfset fileItemTypeId = 10>
 	<cfset typologyTableTypeId = 3>
+
+	<cfset timeZoneTo = "+1:00">
 	
 	<!--- ----------------------- XML FILE -------------------------------- --->
 	
@@ -494,7 +496,7 @@
 	
 
 			<!---checkAccess--->
-			<cfif fileQuery.file_type_id IS 2><!---Area file (all area users can delete the file)--->
+			<cfif fileQuery.file_type_id IS 2><!---Area file (ALL area users can delete the file)--->
 				
 				<cfset area_id = fileQuery.area_id>
 
@@ -942,7 +944,10 @@
 	
 	<cffunction name="associateFileToAreas" returntype="struct" output="false" access="public">		
 		<cfargument name="file_id" type="numeric" required="true">
-		<cfargument name="areas_ids" type="string" required="true">		
+		<cfargument name="areas_ids" type="string" required="true">
+
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">		
 		
 		<cfset var method = "associateFileToAreas">
 
@@ -968,6 +973,8 @@
 					<cfinvoke component="FileManager" method="associateFileToArea">				
 						<cfinvokeargument name="objectFile" value="#objectFile#">
 						<cfinvokeargument name="area_id" value="#cur_area_id#">
+						<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
+						<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					</cfinvoke>	
 					
 					<cfset successfulAreas = listAppend(successfulAreas, cur_area_id)>	
@@ -1003,7 +1010,10 @@
 	
 	<cffunction name="associateFile" returntype="struct" output="false" access="public">		
 		<cfargument name="file_id" type="numeric" required="true">
-		<cfargument name="area_id" type="numeric" required="true">				
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">				
 		
 		<cfset var method = "associateFile">
 		
@@ -1022,6 +1032,8 @@
 			<cfinvoke component="FileManager" method="associateFileToArea">				
 				<cfinvokeargument name="objectFile" value="#objectFile#">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
+				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 			</cfinvoke>		
 			
 			<cfset response = {result=true, file_id=#arguments.file_id#, area_id=#arguments.area_id#}>		
@@ -1042,11 +1054,15 @@
 	
 	<cffunction name="associateFileToArea" returntype="void" output="false" access="package">		
 		<cfargument name="objectFile" type="query" required="yes">
-		<cfargument name="area_id" type="numeric" required="yes">		
+		<cfargument name="area_id" type="numeric" required="yes">
+
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false" default="false">			
 		
 		<cfset var method = "associateFileToArea">
 
 		<cfset var fileTypeId = objectFile.file_type_id>
+		<cfset var isUserPublicationAreaResponsible = false>
 					
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
@@ -1096,15 +1112,35 @@
 				<cfthrow errorcode="#error_code#">		
 			</cfif>
 
+			<cfif APPLICATION.publicationValidation IS true AND arguments.publication_validated IS true>
+
+				<!--- isUserPublicationAreaResponsible --->
+				<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserPublicationAreaResponsible">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+			</cfif>	
+
 			<cftransaction>
 				
-				<cfquery name="associateFileQuery" datasource="#client_dsn#">		
-					INSERT INTO #client_abb#_areas_files (area_id, file_id, association_date)
-						VALUES(
-						<cfqueryparam value = "#arguments.area_id#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value = "#objectFile.id#" cfsqltype="cf_sql_integer">,
-						NOW()
-					);			
+				<cfquery name="associateFileQuery" datasource="#client_dsn#">
+					INSERT INTO #client_abb#_areas_files 
+					SET area_id = <cfqueryparam value = "#arguments.area_id#" cfsqltype="cf_sql_integer">,
+					file_id = <cfqueryparam value = "#objectFile.id#" cfsqltype="cf_sql_integer">,
+					association_date = NOW()
+					<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
+						, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
+					</cfif>
+					<!--- publicationValidation --->
+					<cfif APPLICATION.publicationValidation IS true>
+						<cfif isUserPublicationAreaResponsible IS true AND arguments.publication_validated IS true>
+							, publication_validated = <cfqueryparam value="true" cfsqltype="cf_sql_bit">
+							, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+							, publication_validated_date = NOW()						
+						<cfelse>
+							, publication_validated = <cfqueryparam value="false" cfsqltype="cf_sql_bit">
+						</cfif>												
+					</cfif>;			
 				</cfquery>
 
 				<!---Add items position--->
@@ -1123,11 +1159,33 @@
 
 			</cftransaction>
 
-			<cfinclude template="includes/functionEndOnlyLog.cfm">		
+			<cfinclude template="includes/functionEndOnlyLog.cfm">
+
+			<!--- getFile --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+				<cfinvokeargument name="file_id" value="#objectFile.id#">
+				<cfif APPLICATION.moduleAreaFilesLite IS true>
+					<cfinvokeargument name="with_lock" value="true">
+				</cfif>
+				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="published" value="false"/>		
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif fileQuery.recordCount IS 0><!---File does not exist--->
+			
+				<cfset error_code = 601>
+			
+				<cfthrow errorcode="#error_code#">
+			
+			</cfif>			
 								
 			<!--- Alert --->
 			<cfinvoke component="AlertManager" method="newFile">
-				<cfinvokeargument name="objectFile" value="#objectFile#">
+				<cfinvokeargument name="objectFile" value="#fileQuery#">
 				<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfif objectFile.file_type_id IS 1 OR (objectFile.file_type_id IS 2 AND objectFile.area_id NEQ arguments.area_id)>
@@ -1657,7 +1715,8 @@
 				<cfif APPLICATION.moduleAreaFilesLite IS true>
 					<cfinvokeargument name="with_lock" value="true">
 				</cfif>
-				<cfinvokeargument name="parse_dates" value="true">		
+				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">		
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1821,6 +1880,10 @@
 			<cfset file.typology_id = "">
 			<cfset file.typology_row_id = "">
 			<cfset file.publication_scope_id = "">
+
+			<cfset curDate = DateFormat(now(), "DD-MM-YYYY")>
+			<cfset file.publication_date = curDate&" "&timeFormat(now(), "HH:mm:ss")>
+			<cfset file.publication_validated = true>
 			
 			<cfset response = {result=true, file=#file#}>
 
@@ -2051,7 +2114,6 @@
 		
 		<cfset var new_file_id = "">
 		<cfset var new_file_physical_name = "">
-		<cfset var current_date = "">
 		<cfset var fileQuery = "">
 		<cfset var destination = "">
 					
@@ -2698,9 +2760,9 @@
 		<cfargument name="file_type" type="string" required="true"/>
 		<cfargument name="description" type="string" required="true"/>
 		<cfargument name="area_id" type="numeric" required="false">
-		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
 
 		<!---<cfargument name="folder_id" type="numeric" required="false"/>--->
 		
@@ -2728,8 +2790,18 @@
 
 			</cfif>
 			
-			<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-			</cfinvoke>
+			<!--- <cfif APPLICATION.publicationValidation IS true AND arguments.publication_validated IS true>
+			
+							<!--- isUserAreaResponsible --->
+							<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
+								<cfinvokeargument name="area_id" value="#arguments.area_id#">
+							</cfinvoke>
+			
+						</cfif> --->
+			
+
+			<!--- <cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
+			</cfinvoke> --->
 			
 			<!---<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
 				<cfinvokeargument name="timestamp_date" value="#current_date#">
@@ -2782,7 +2854,7 @@
 					user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 					file_size = <cfqueryparam value="#arguments.file_size#" cfsqltype="cf_sql_integer">,
 					file_type = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">,
-					uploading_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,	
+					uploading_date = NOW(),	
 					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_varchar">,
 					status = <cfqueryparam value="pending" cfsqltype="cf_sql_varchar">,
 					file_type_id = <cfqueryparam value="#arguments.fileTypeId#" cfsqltype="cf_sql_integer">
@@ -2796,7 +2868,21 @@
 						<cfif isDefined("arguments.publication_scope_id")>
 						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
 						</cfif>
-					</cfif>;
+					</cfif>
+					<!---
+					<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
+						, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
+					</cfif>
+					<!--- publicationValidation --->
+					<cfif APPLICATION.publicationValidation IS true>
+						<cfif isUserAreaResponsible IS true AND arguments.publication_validated IS true>
+							, publication_validated = <cfqueryparam value="true" cfsqltype="cf_sql_bit">
+							, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+							, publication_validated_date = NOW()						
+						<cfelse>
+							, publication_validated = <cfqueryparam value="false" cfsqltype="cf_sql_bit">
+						</cfif>												
+					</cfif>--->;
 				</cfquery>
 
 				<cfquery name="getLastInsertId" datasource="#client_dsn#">
@@ -2821,7 +2907,7 @@
 						user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 						file_size = <cfqueryparam value="#arguments.file_size#" cfsqltype="cf_sql_integer">,
 						file_type = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">,
-						uploading_date = <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,	
+						uploading_date = NOW(),	
 						status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">;
 					</cfquery>
 
@@ -3141,9 +3227,13 @@
 		<cfargument name="Filedata" type="string" required="true"/>
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="typology_id" type="string" required="false">
-		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 
 		<cfset var method = "uploadNewFile">
 
@@ -3185,9 +3275,9 @@
 				<cfinvokeargument name="file_type" value=".#uploadedFile.clientFileExt#"/>
 				<cfinvokeargument name="file_size" value="#uploadedFile.fileSize#"/>
 				<cfinvokeargument name="description" value="#arguments.description#"/>
-				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#"/>
 				<cfinvokeargument name="reviser_user" value="#arguments.reviser_user#"/>
 				<cfinvokeargument name="approver_user" value="#arguments.approver_user#"/>
+				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#"/>
 				<cfinvokeargument name="status" value="ok">
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
@@ -3197,9 +3287,9 @@
 			
 				<cffile action="delete" file="#destination##temp_file#">
 			
-				<cfset error_code = 602>
+				<!--- <cfset error_code = 602> --->
 				
-				<cfthrow errorcode="#error_code#">
+				<cfthrow message="#createFileResult.message#">
 			
 			</cfif>
 				
@@ -3237,6 +3327,11 @@
 				<cfinvoke component="FileManager" method="associateFileToArea">
 					<cfinvokeargument name="objectFile" value="#objectFile#"/>
 					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+
+					<cfif isDefined("arguments.publication_date")>
+						<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+					</cfif>
+					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				</cfinvoke>
 
 				<!---
@@ -3272,8 +3367,6 @@
 
 			<cfset response = {result=true, file_id=#upload_file_id#}>	
 
-
-		
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -3295,9 +3388,10 @@
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
-		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<!--- La fecha de publicación no se puede modificar én este método porque esos atributos pertenecen al área donde esté publicada el archivo y no son atributos propios del archivo. --->
 		
 		<cfset var method = "updateFile">
 
@@ -3311,11 +3405,6 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
-			<!---<cfinvoke component="FileManager" method="getFile" returnvariable="fileQuery">				
-				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
-			
-				<cfinvokeargument name="return_type" value="query">
-			</cfinvoke>--->
 			<!--- getFile --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
@@ -3785,6 +3874,7 @@
 				</cfif>
 				<cfinvokeargument name="with_lock" value="true">
 				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -4100,6 +4190,102 @@
 		
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
+
+
+
+	<!---  ---------------------- changeFilePublicationValidation -------------------------------- --->
+	
+	<cffunction name="changeFilePublicationValidation" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="validate" type="boolean" required="true">
+		
+		<cfset var method = "changeFilePublicationValidation">
+
+		<cfset var response = structNew()>
+
+		<cfset var fileQuery = "">
+
+		<cftry>
+		
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+						
+			<cfquery name="getFile" datasource="#client_dsn#">		
+				SELECT publication_validated
+				FROM #client_abb#_areas_files
+				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
+				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;			
+			</cfquery>
+			
+			<cfif getFile.recordCount GT 0>
+							
+				<!---checkAreaAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaAccess">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+				<!--- isUserAreaResponsible --->
+				<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+			
+				<cfif APPLICATION.publicationValidation IS true AND isUserAreaResponsible IS true>
+				
+					<cfquery name="changeFilePublication" datasource="#client_dsn#">		
+						UPDATE #client_abb#_areas_files
+						SET	publication_validated = <cfqueryparam value="#arguments.validate#" cfsqltype="cf_sql_bit">
+							<cfif arguments.validate IS true AND getFile.publication_validated IS false>
+								, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+								, publication_validated_date = NOW()						
+							</cfif>
+						WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
+						AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;	
+					</cfquery>
+
+					<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaFileQuery" method="getFile" returnvariable="itemQuery">
+						<cfinvokeargument name="item_id" value="#arguments.item_id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="parse_dates" value="true">
+						<cfinvokeargument name="published" value="false">
+						
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<!---Alert--->
+					 <cfinvoke component="AlertManager" method="newAreaFile">
+						<cfinvokeargument name="objectFile" value="#itemQuery#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="action" value="done">
+					</cfinvoke> --->
+
+					<cfinclude template="includes/logRecord.cfm">
+				
+					<cfset response = {result=true, area_id=arguments.area_id}>
+										
+				<cfelse>
+				
+					<cfset response = {result=false, message="Error, no tiene permiso para publicar en esta área"}>
+										
+				</cfif>
+			
+			<cfelse>
+			
+				<cfset response = {result=false, message="Error, no se ha encontrado el elemento"}>
+			
+			</cfif>
+			
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+	<!---  ------------------------------------------------------------------------- --->
 
 
 
@@ -4609,6 +4795,10 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		
 		<cfset var method = "publishFileVersion">
 
@@ -4761,6 +4951,11 @@
 					<cfinvoke component="FileManager" method="associateFileToArea">
 						<cfinvokeargument name="objectFile" value="#newObjectFile#"/>
 						<cfinvokeargument name="area_id" value="#arguments.publication_area_id#"/>
+
+						<cfif isDefined("arguments.publication_date")>
+							<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+						</cfif>
+						<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					</cfinvoke>
 
 					<cftransaction>

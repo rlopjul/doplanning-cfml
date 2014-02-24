@@ -5,6 +5,7 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="objectUser">
 	<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 	<cfinvokeargument name="format_content" value="all">
+	<cfinvokeargument name="return_type" value="object">
 </cfinvoke>
 
 <html lang="es">
@@ -78,7 +79,6 @@
 
 <script type="text/javascript">
 	<cfoutput>
-	<!--- var applicationPath = "#APPLICATION.path#"; --->
 	var applicationId = "#APPLICATION.identifier#";
 	var selectAreaId = "#area_id#";
 	var iframePage = "#iframe_page#";
@@ -509,7 +509,7 @@
 </div>
 
 <!---Download File--->
-<cfinclude template="#APPLICATION.htmlPath#/includes/open_download_file.cfm">
+<!--- <cfinclude template="#APPLICATION.htmlPath#/includes/open_download_file.cfm"> --->
 
 </body>
 </html>

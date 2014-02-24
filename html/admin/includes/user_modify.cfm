@@ -1,45 +1,89 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js"></script>
 </cfoutput>
 
 <cfif isDefined("URL.user") AND isNumeric(URL.user)>
 	
 	<cfset user_id = URL.user>
 
-	<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
-
-	<cfset return_page = "user.cfm?user=#user_id#">
-
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="objectUser">
 		<cfinvokeargument name="user_id" value="#user_id#"/>
 		<cfinvokeargument name="format_content" value="all"/>
 	</cfinvoke>
 
-	<script type="text/javascript">
+	<cfoutput>
+	<script>
 
-		function setLanguageBeforeSend(form) {
+		$(function () {
+
+			$("##deleteImageButton").click(function() {
+
+				if(confirmAction('eliminar')) {
+
+					var requestUrl = "#APPLICATION.htmlComponentsPath#/User.cfc?method=deleteUserImage&user_id=#user_id#";
+
+					$.ajax({
+					  type: "POST",
+					  url: requestUrl,
+					  success: function(data, status) {
+
+					  	if(status == "success"){		
+					  		var message = data.message;
+
+					  		var userId = data.user_id;
+					  		openUrl("all_users.cfm?user="+userId, "allUsersIframe");
+
+					  		hideDefaultModal();
+
+					  		$('body').modalmanager('removeLoading');
+
+					  		showAlertMessage(message, data.result);
+
+					  	}else
+							alert(status);
+						
+					  },
+					  dataType: "json"
+					});
+
+				}
 			
-			return true;	
+			});
+
+		});
+
+
+		function submitUserModifyModal(){
+
+			postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser");
+
 		}
 
 	</script>
+	</cfoutput>
 
 	<div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	    <h3 id="areaModalLabel">Modificar usuario</h3>
+	    <h4>Modificar usuario</h4>
 	</div>
 
  	<div class="modal-body">
 
- 		<div>
-		<cfinclude template="#APPLICATION.htmlPath#/includes/user_data_form.cfm"/>
+ 		<div class="container-fluid">
+ 			<cfset page_type = 1>
+			<cfinclude template="#APPLICATION.htmlPath#/includes/user_data_form.cfm"/>
 		</div>
 
 	</div>
 
-	<!---<div class="modal-footer">
+	<div class="modal-footer">
 	    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-	    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)">Guardar cambios</button>
-	</div>--->
+	    <button class="btn btn-primary" onclick="submitUserModifyModal()">Guardar cambios</button>
+	</div>
 
+	<cfinclude template="#APPLICATION.htmlPath#/admin/includes/error_modal.cfm"/>
+
+<cfelse>
+	<div class="alert alert-danger"><span>Error</span></div>
 </cfif>

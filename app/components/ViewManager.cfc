@@ -4,6 +4,8 @@
 	
 	<cfset component = "ViewManager">
 
+	<cfset timeZoneTo = "+1:00">
+
 
 	<!--- ------------------------------------- createView -------------------------------------  --->
 	
@@ -18,6 +20,10 @@
 		<cfargument name="include_last_update_date" type="boolean" required="false" default="false">
 		<cfargument name="include_insert_user" type="boolean" required="false" default="false">
 		<cfargument name="include_update_user" type="boolean" required="false" default="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 
 		<cfset var method = "createView">
 
@@ -25,6 +31,7 @@
 
 		<cfset var table_area_id = "">
 		<cfset var view_id = "">
+		<cfset var isUserPublicationAreaResponsible = false>
 
 		<cftry>
 			
@@ -72,7 +79,16 @@
 					
 				</cfif>
 
-			</cfif>		
+			</cfif>	
+
+			<cfif APPLICATION.publicationValidation IS true AND arguments.publication_validated IS true>
+
+				<!--- isUserPublicationAreaResponsible --->
+				<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserPublicationAreaResponsible">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+			</cfif>	
 
 			<cfset arguments.title = trim(arguments.title)>
 
@@ -93,6 +109,19 @@
 					area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
 					title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
 					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">, 
+					<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
+						 publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM'),
+					</cfif>
+					<!--- publicationValidation --->
+					<cfif APPLICATION.publicationValidation IS true>
+						<cfif arguments.publication_validated IS true AND isUserPublicationAreaResponsible IS true>
+							publication_validated = <cfqueryparam value="true" cfsqltype="cf_sql_bit">,
+							publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
+							publication_validated_date = NOW(), 						
+						<cfelse>
+							publication_validated = <cfqueryparam value="false" cfsqltype="cf_sql_bit">,
+						</cfif>												
+					</cfif>
 					<cfloop list="creation_date,last_update_date,insert_user,update_user" index="field_name">
 						include_#field_name# = <cfqueryparam value="#arguments["include_#field_name#"]#" cfsqltype="cf_sql_bit">,
 						#field_name#_position = <cfqueryparam value="#arguments["#field_name#_position"]#" cfsqltype="cf_sql_integer">, 
@@ -173,64 +202,6 @@
 	</cffunction>
 
 
-	<!--- ------------------------------------- createViewInDatabase -------------------------------------  --->
-
-	<!---IMPORTANTE: La llamada a esta función tiene que hacerse dentro de una transacción <cftransaction>--->
-	
-	<!---<cffunction name="createViewInDatabase" output="false" access="package" returntype="numeric">
-		<cfargument name="table_id" type="numeric" required="true">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-		<cfargument name="title" type="string" required="true">
-		<cfargument name="description" type="string" required="true">
-		<cfargument name="area_id" type="numeric" required="true">
-
-		<cfset var method = "createViewInDatabase">
-
-		<cfset var view_id = "">
-
-		<cfset var viewLastPosition = "">
-		<cfset var viewPostion = "">
-
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-
-			<cfquery name="createView" datasource="#client_dsn#">
-				INSERT INTO `#client_abb#_#tableTypeTable#_views`
-				SET table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">,
-				user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-				area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
-				title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
-				description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">,
-				creation_date = NOW();
-			</cfquery>
-
-			<cfquery name="getLastInsertId" datasource="#client_dsn#">
-				SELECT LAST_INSERT_ID() AS last_insert_id FROM `#client_abb#_#tableTypeTable#_views`;
-			</cfquery>
-
-			<cfset view_id = getLastInsertId.last_insert_id>
-
-			<!---getItemLastPosition--->
-			<cfinvoke component="AreaItemManager" method="getAreaItemsLastPosition" returnvariable="viewLastPosition">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-			</cfinvoke>
-			
-			<cfset viewPostion = viewLastPosition+1>
-
-			<cfinvoke component="AreaItemManager" method="insertAreaItemPosition">
-				<cfinvokeargument name="item_id" value="#view_id#">
-				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="position" value="#viewPostion#">
-			</cfinvoke>
-
-			<cfreturn view_id>
-			
-	</cffunction>--->
-
-
-
 	<!--- ------------------------------------- addFieldsToView -------------------------------------  --->
 
 	<!---IMPORTANTE: La llamada a esta función tiene que hacerse dentro de una transacción <cftransaction>--->
@@ -277,6 +248,10 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="fields_ids" type="array" required="true">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateView">
 
@@ -332,6 +307,15 @@
 					
 				</cfif>
 
+			</cfif>	
+
+			<cfif APPLICATION.publicationValidation IS true>
+
+				<!--- isUserPublicationAreaResponsible --->
+				<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserPublicationAreaResponsible">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
 			</cfif>		
 
 			<cfset arguments.title = trim(arguments.title)>
@@ -344,6 +328,17 @@
 					title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
 					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">,
 					last_update_date = NOW()
+					<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
+						, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
+					</cfif>
+					<!--- publicationValidation --->
+					<cfif APPLICATION.publicationValidation IS true AND isUserPublicationAreaResponsible IS true>
+						, publication_validated = <cfqueryparam value="#arguments.publication_validated#" cfsqltype="cf_sql_bit">
+						<cfif arguments.publication_validated IS true AND view.publication_validated IS false>
+							, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+							, publication_validated_date = NOW()						
+						</cfif>
+					</cfif>
 					<cfloop list="creation_date,last_update_date,insert_user,update_user" index="field_name">
 						, include_#field_name# = <cfqueryparam value="#arguments["include_#field_name#"]#" cfsqltype="cf_sql_bit">,
 						#field_name#_position = <cfqueryparam value="#arguments["#field_name#_position"]#" cfsqltype="cf_sql_integer">
@@ -638,6 +633,10 @@
 				FROM #client_abb#_#tableTypeTable#_views
 				WHERE id = -1;
 			</cfquery>
+
+			<cfset queryAddRow(getViewQuery, 1)>
+			<cfset querySetCell(getViewQuery, "publication_date", DateFormat(now(), "DD-MM-YYYY")&" "&TimeFormat(now(), "HH:mm:ss"))>
+			<cfset querySetCell(getViewQuery, "publication_validated", true)>
 
 			<cfset response = {result=true, view=#getViewQuery#}>
 

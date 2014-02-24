@@ -82,10 +82,11 @@ function toggleCheckboxChecked(checkboxId) {
 }
 		
 function toggleCheckboxesChecked(checked) {
-	/*$("input").each( function() {
-		$(this).attr("checked",status);
-	})*/
-	$("input:checkbox").prop("checked",checked); 
+	//$("input:checkbox").prop("checked",checked); 
+	$("input:checkbox").each( function() {
+		if($(this).hasClass("checkbox_locked") == false)	
+			$(this).prop("checked",checked); 
+	})
 }
 
 /**

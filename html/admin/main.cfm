@@ -57,6 +57,10 @@
             '<div class="progress-bar" style="width: 100%;"></div>' +
         '</div>' +
     '</div>';
+    <!--- To set modal max height --->
+	$.fn.modal.defaults.maxHeight = function(){
+	    return $(window).height() - 170; 
+	}
 </script>
 
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
@@ -586,7 +590,7 @@
 	</div>
 
 	<!--- Modal Window --->
-	<div id="ajax-modal" class="modal fade" tabindex="-1"></div><!---hide funcionaba en bs2--->
+	<div id="ajax-modal" class="modal container fade" tabindex="-1"></div><!---hide funcionaba en bs2--->
 
 	<div style="clear:both"><!-- --></div>
 	<div class="msg_div_error" id="errorMessage"></div>

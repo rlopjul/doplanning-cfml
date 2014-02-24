@@ -248,6 +248,12 @@
 	<cffunction name="associateFile" returntype="void" access="remote">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
+
 		<cfargument name="return_path" type="string" required="yes">
 		
 		<cfset var method = "associateFile">
@@ -278,6 +284,11 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="associateFile" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+
+				<cfif isDefined("arguments.publication_date")>
+					<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+				</cfif>
+				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 			</cfinvoke>
 			
 			<cfif response.result IS true>
@@ -304,6 +315,11 @@
 	<cffunction name="associateFileToAreas" access="public" returntype="struct">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="areas_ids" type="array" required="true">
+
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
 		
 		<cfset var method = "associateFileToAreas">
 		
@@ -311,32 +327,14 @@
 
 		<cftry>
 			
-			<!---<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<file id="#arguments.file_id#"/>
-					<areas>
-					<cfloop array="#arguments.areas_ids#" index="area_id">
-						<area id="#area_id#"/>
-					</cfloop>
-					</areas>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>
-			
-			<cfxml variable="xmlAreas">
-				<cfoutput>
-					#xmlResponse.response.result.areas#
-				</cfoutput>
-			</cfxml>--->
-			
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="associateFileToAreas" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
 				<cfinvokeargument name="areas_ids" value="#arrayToList(arguments.areas_ids)#"/>
+
+				<cfif isDefined("arguments.publication_date")>
+					<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+				</cfif>
+				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 			</cfinvoke>
 
 			<cfif response.result IS true>
@@ -425,9 +423,13 @@
 		<cfargument name="Filedata" type="string" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="typology_id" type="string" required="false">
-		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
 		
 		<cfset var method = "createFile">
 		
@@ -466,9 +468,9 @@
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
-		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
 		
 		<cfset var method = "updateFile">
 		
@@ -506,6 +508,10 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="typology_id" type="string" required="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
 		
 		<cfset var method = "publishFileVersion">
 		
@@ -633,6 +639,48 @@
 		
 		<cfreturn response>
 				
+	</cffunction>
+
+
+	<!--- ------------------------------ changeFilePublicationValidation ----------------------------------- --->
+	
+    <cffunction name="changeFilePublicationValidation" returntype="void" access="remote">
+    	<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="validate" type="boolean" required="true">
+		
+		<cfargument name="return_path" type="string" required="yes">
+		
+		<cfset var method = "changeFilePublicationValidation">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+					
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFilePublicationValidation" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="validate" value="#arguments.validate#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfif arguments.validate IS true>
+					<cfset response.message = "Publicación aprobada">
+				<cfelse>
+					<cfset response.message = "Publicación invalidada">
+				</cfif>
+			</cfif>
+			
+			<cfset msg = URLEncodedFormat(response.message)>
+			
+			<cflocation url="#arguments.return_path#&res=#response.result#&msg=#msg#" addtoken="no">		
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
 	</cffunction>
 
 

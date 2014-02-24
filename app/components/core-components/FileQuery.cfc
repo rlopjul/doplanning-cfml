@@ -25,6 +25,7 @@
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="status" type="string" required="false" default="ok"><!--- ok --->
+		<cfargument name="published" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -38,7 +39,13 @@
 			SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval
 				, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 			<cfif isDefined("arguments.area_id")>
-			, areas_files.association_date
+				, areas_files.association_date
+				<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(CONVERT_TZ(areas_files.publication_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS publication_date
+				<cfelse>
+					, areas_files.publication_date
+				</cfif>
+				, areas_files.publication_validated
 			</cfif>
 			<cfif arguments.with_lock IS true>
 			, locks.user_id AS lock_user_id, locks.lock_user_full_name
@@ -81,13 +88,15 @@
 			) AS locks ON locks.file_id = files.id
 			</cfif>
 			<cfif isDefined("arguments.area_id")>
-				<!---<cfif arguments.fileTypeId IS NOT 3>--->
-					INNER JOIN #client_abb#_areas_files AS areas_files 
-					ON files.id = areas_files.file_id
-					AND areas_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> <!---OR files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				<cfelse>
-					AND files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				</cfif>--->
+				INNER JOIN #client_abb#_areas_files AS areas_files 
+				ON files.id = areas_files.file_id
+				AND areas_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				<cfif arguments.published IS true>
+					AND ( areas_files.publication_date IS NULL OR areas_files.publication_date <= NOW() )
+					<cfif APPLICATION.publicationValidation IS true>
+					AND ( areas_files.publication_validated IS NULL OR areas_files.publication_validated = true )
+					</cfif>
+				</cfif>
 			</cfif>
 			<cfif APPLICATION.publicationScope IS true>
 				LEFT JOIN #client_abb#_scopes AS scopes ON files.publication_scope_id = scopes.scope_id

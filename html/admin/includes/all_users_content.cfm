@@ -27,19 +27,18 @@
 	<cfset numUsers = ArrayLen(users)>
 
 	<cfoutput>
-		<div class="div_message_page_title">Usuarios de la organización (#numUsers#)</div>
-	</cfoutput>
+	<div class="div_message_page_title">Usuarios de la organización (#numUsers#) </div>
 
-
-	<!---
-	PENDIENTE DE TERMINAR LAS OPCIONES
-	<cfoutput>
 	<div class="div_head_subtitle_area">
 		
-		<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
+		<!--- 
+		PENDIENTE DE TERMINAR LAS OPCIONES
+		<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a> --->
+		
+		<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
 
 	</div>
-	</cfoutput>--->
+	</cfoutput>
 
 	<div class="div_items">
 		
@@ -49,6 +48,7 @@
 				<cfinvokeargument name="users" value="#users#">
 				<cfinvokeargument name="open_url_target" value="userAdminIframe">
 				<cfinvokeargument name="filter_enabled" value="true">
+				<cfinvokeargument name="showAdminFields" value="true">
 			</cfinvoke>	
 	
 		<cfelse>
