@@ -15,11 +15,6 @@
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
 
-<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="objectItem">
-	<cfinvokeargument name="table_id" value="#table_id#">
-	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-</cfinvoke>--->
-
 <cfset area_id = objectItem.area_id>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
@@ -50,8 +45,10 @@
 	<cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
 		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##URL.return_page#")>
 	<cfelse>
-		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##itemTypeNameP#.cfm?area=#area_id#")>
+		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#")>
 	</cfif>
+
+	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#view_id#")>
 	
 	<!---is_user_table_area_responsible--->
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_table_area_responsible">				
@@ -65,7 +62,16 @@
 
 	<cfif is_user_area_responsible><!--- Area Responsible --->
 		
-		
+		<cfif len(area_type) GT 0  AND tableTypeId NEQ 3>
+
+			<!--- publication --->
+			<cfif objectItem.publication_validated IS false>
+				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#view_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación');" title="Aprobar publicación" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>
+			<cfelse>
+				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#view_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación');" title="Desaprobar publicación" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>					
+			</cfif>
+			
+		</cfif>
 
 	</cfif>
 		
@@ -74,6 +80,10 @@
 	</cfif>--->
 
 	<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#view_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
+
+	<cfif app_version NEQ "mobile">
+		<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#view_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+	</cfif>
 	
 	
 </div><!---END div_elements_menu--->
@@ -115,7 +125,29 @@
 		<a onclick="openUrl('area_items.cfm?area=#objectItem.table_area_id#&#tableTypeName#=#objectItem.table_id#','areaIframe',event)" style="cursor:pointer">#tableArea.name#</a>
 	</div>
 
+	<cfif len(area_type) GT 0><!--- WEB --->
 
+		<cfif len(objectItem.publication_date) GT 0>
+			<div class="div_message_page_label"><span>Fecha de publicación:</span> <span class="text_message_page">#objectItem.publication_date#</span>
+			</div>
+		</cfif>
+		<cfif APPLICATION.publicationValidation IS true AND len(objectItem.publication_validated) GT 0>
+			<div class="div_message_page_label"><span>Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
+			</div>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
+				<cfinvokeargument name="table_id" value="#objectItem.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			</cfinvoke>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<div class="div_message_page_label"><span>Publicación de #tableTypeNameEs# aprobada:</span> <span class="text_message_page" lang="es"><cfif table.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
+			</div>
+
+		</cfif>
+
+	</cfif>
 
 	<!---itemUrl--->
 	<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">

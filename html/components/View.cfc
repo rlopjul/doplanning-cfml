@@ -28,6 +28,7 @@
 				<cfinvokeargument name="view_id" value="#arguments.view_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 				<cfinvokeargument name="with_table" value="#arguments.with_table#"/>
+				<cfinvokeargument name="parse_dates" value="true">
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -122,6 +123,10 @@
 		<cfargument name="include_last_update_date" type="boolean" required="false" default="false">
 		<cfargument name="include_insert_user" type="boolean" required="false" default="false">
 		<cfargument name="include_update_user" type="boolean" required="false" default="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false">
 		
 		<cfset var method = "updateView">
 

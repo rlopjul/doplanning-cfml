@@ -456,10 +456,6 @@ ALTER TABLE `doplanning_app`.`APP_clients` ADD COLUMN `default_language` VARCHAR
 
 <!--- Scopes --->
 
-ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `publication_scope_id` INTEGER UNSIGNED AFTER `in_approval`;
-ALTER TABLE `dp_software7`.`software7_lists` ADD COLUMN `publication_scope_id` BOOLEAN AFTER `general`;
-ALTER TABLE `dp_software7`.`software7_forms` ADD COLUMN `publication_scope_id` BOOLEAN AFTER `general`;
-
 CREATE TABLE  `dp_software7`.`software7_scopes` (
   `scope_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) CHARACTER SET latin1 NOT NULL,
@@ -477,66 +473,111 @@ CREATE TABLE  `dp_software7`.`software7_scopes_areas` (
   CONSTRAINT `FK_software7_scopes_areas_2` FOREIGN KEY (`area_id`) REFERENCES `software7_areas` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+ALTER TABLE `dp_software7`.`software7_files` ADD COLUMN `publication_scope_id` INTEGER UNSIGNED DEFAULT NULL AFTER `in_approval`;
+ALTER TABLE `dp_software7`.`software7_lists` ADD COLUMN `publication_scope_id` INTEGER UNSIGNED DEFAULT NULL AFTER `general`;
+ALTER TABLE `dp_software7`.`software7_forms` ADD COLUMN `publication_scope_id` INTEGER UNSIGNED DEFAULT NULL AFTER `general`;
+
+ALTER TABLE `dp_software7`.`software7_files` ADD CONSTRAINT `FK_software7_files_5` FOREIGN KEY `FK_software7_files_5` (`publication_scope_id`)
+    REFERENCES `software7_scopes` (`scope_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT;
+
+ALTER TABLE `dp_software7`.`software7_lists` ADD CONSTRAINT `FK_software7_lists_5` FOREIGN KEY `FK_software7_lists_5` (`publication_scope_id`)
+    REFERENCES `software7_scopes` (`scope_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT;
+
+ALTER TABLE `dp_software7`.`software7_forms` ADD CONSTRAINT `FK_software7_forms_5` FOREIGN KEY `FK_software7_forms_5` (`publication_scope_id`)
+    REFERENCES `software7_scopes` (`scope_id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT;
+
+
 
 ALTER TABLE `dp_software7`.`software7_events` ADD COLUMN `publication_date` DATE AFTER `iframe_display_type_id`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
  ALTER TABLE `dp_software7`.`software7_news` ADD COLUMN `publication_date` DATE AFTER `iframe_display_type_id`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
  ALTER TABLE `dp_software7`.`software7_entries` ADD COLUMN `publication_date` DATE AFTER `iframe_display_type_id`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
  ALTER TABLE `dp_software7`.`software7_images` ADD COLUMN `publication_date` DATE AFTER `display_type_id`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
  ALTER TABLE `dp_software7`.`software7_pubmeds` ADD COLUMN `publication_date` DATE AFTER `display_type_id`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
  ALTER TABLE `dp_software7`.`software7_lists` ADD COLUMN `publication_date` DATE AFTER `publication_scope_id`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
  ALTER TABLE `dp_software7`.`software7_lists_views` ADD COLUMN `publication_date` DATE AFTER `update_user_position`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
  ALTER TABLE `dp_software7`.`software7_forms` ADD COLUMN `publication_date` DATE AFTER `publication_scope_id`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
  ALTER TABLE `dp_software7`.`software7_forms_views` ADD COLUMN `publication_date` DATE AFTER `update_user_position`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
  ALTER TABLE `dp_software7`.`software7_areas_files` ADD COLUMN `publication_date` DATE AFTER `association_date`,
- ADD COLUMN `publication_time` TIME AFTER `publication_date`,
- ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_time`,
+ ADD COLUMN `publication_validated` BOOLEAN AFTER `publication_date`,
  ADD COLUMN `publication_validated_user` INTEGER AFTER `publication_validated`,
  ADD COLUMN `publication_validated_date` DATETIME AFTER `publication_validated_user`;
 
 
+<!--- 
+ALTER TABLE `dp_doplanning`.`doplanning_news` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`;
+
+ALTER TABLE `dp_doplanning`.`doplanning_entries` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`;
+
+ALTER TABLE `dp_doplanning`.`doplanning_events` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`;
+
+ALTER TABLE `dp_doplanning`.`doplanning_images` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`;
+
+ALTER TABLE `dp_doplanning`.`doplanning_pubmeds` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`;
+
+ALTER TABLE `dp_doplanning`.`doplanning_lists` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`;
+
+ALTER TABLE `dp_doplanning`.`doplanning_lists_views` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`;
+
+ALTER TABLE `dp_doplanning`.`doplanning_forms` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`;
+
+ALTER TABLE `dp_doplanning`.`doplanning_forms_views` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`;
+
+ALTER TABLE `dp_doplanning`.`doplanning_areas_files` MODIFY COLUMN `publication_date` DATETIME,
+DROP COLUMN `publication_time`; --->
+
+
+ALTER TABLE `dp_software7`.`software7_users` ADD COLUMN `enabled` BOOLEAN NOT NULL DEFAULT 1 AFTER `validated`;
+ALTER TABLE `dp_software7`.`software7_users` ADD COLUMN `information` TEXT AFTER `image_type`;
  
+ALTER TABLE `dp_software7`.`software7_users` MODIFY COLUMN `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;

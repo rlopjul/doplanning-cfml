@@ -67,7 +67,7 @@
 		<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 		</cfoutput>
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="queryToArray" returnvariable="usersArray">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToArray" returnvariable="usersArray">
 			<cfinvokeargument name="data" value="#users#">
 		</cfinvoke>	
 

@@ -8,7 +8,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_53'>
+	<cfset this.name = 'dp_beta_aws_6'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
@@ -43,8 +43,8 @@
 		<cfset APPLICATION.moduleAreaFilesLite = true>
 		<cfset APPLICATION.changeElementsArea = true>
 		<cfset APPLICATION.publicationScope = true>
-		<!--- <cfset APPLICATION.publicationDate = true> --->
 		<cfset APPLICATION.publicationValidation = true>
+		<cfset APPLICATION.userEmailRequired = false>
 
 		<cfset APPLICATION.openTokApiKey = 28563472>
 		<cfset APPLICATION.openTokApiSecret = "155e13718a36a6077960595721274bd23b1089d7">

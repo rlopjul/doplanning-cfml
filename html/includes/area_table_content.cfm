@@ -76,7 +76,7 @@
 	<cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
 		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##URL.return_page#")>
 	<cfelse>
-		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##tableTypeNameP#.cfm?area=#area_id#")>
+		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#")>
 	</cfif>
 
 	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#table_id#")>
@@ -117,7 +117,7 @@
 		
 		<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
 
-		<cfif tableTypeId IS NOT 3>
+		<cfif tableTypeId IS NOT 3 AND APPLICATION.changeElementsArea IS true>
 			<a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>					
 		</cfif>
 
@@ -127,10 +127,6 @@
 		
 		<cfif tableTypeId IS 3><!--- Typology --->
 
-			<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaDefaultTable" returnvariable="getDefaultTableResponse">
-				<cfinvokeargument name="area_id" value="#area_id#">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-			</cfinvoke>--->
 			<cfset default_table_id = objectArea.default_typology_id> 
 			<cfif default_table_id IS table_id>
 

@@ -239,6 +239,20 @@ function confirmApproveFile(value) {
 		<cfif len(objectFile.replacement_date) GT 0 OR objectFile.file_type_id IS NOT 3>	
 		<div class="div_file_page_label"><span lang="es"><cfif objectFile.file_type_id IS 3>Fecha de última versión:<cfelse>Fecha de reemplazo:</cfif></span> <span class="text_file_page"><cfif len(objectFile.replacement_date) GT 0>#objectFile.replacement_date#<cfelse>-</cfif></span></div>
 		</cfif>
+
+		<cfif len(area_type) GT 0><!--- WEB --->
+
+			<cfif len(objectFile.publication_date) GT 0>
+				<div class="div_file_page_label"><span>Fecha de publicación:</span> <span class="text_file_page">#objectFile.publication_date#</span>
+				</div>
+			</cfif>
+			<cfif APPLICATION.publicationValidation IS true AND len(objectFile.publication_validated) GT 0>
+				<div class="div_file_page_label"><span>Publicación aprobada:</span> <span class="text_file_page" lang="es"><cfif objectFile.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
+				</div>
+			</cfif>
+
+		</cfif>
+					
 		
 		<div class="div_file_page_label"><span lang="es">Tipo de archivo:</span> <span class="text_file_page">#objectFile.file_type#</span></div>
 		
@@ -272,6 +286,17 @@ function confirmApproveFile(value) {
 
 		<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
 		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
+
+		<!---getDownloadFileUrl--->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
+			<cfinvokeargument name="file_id" value="#objectFile.id#">
+			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+		</cfinvoke>
+
+		<div class="div_message_page_label"><span lang="es">URL de descarga:</span></div>
+		<input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
+
+		<!--- <a href="#downloadFileUrl#" target="_blank">descarga</a> --->
 
 		<!---Typology--->
 		<cfif APPLICATION.modulefilesWithTables IS true>
@@ -314,3 +339,10 @@ function confirmApproveFile(value) {
 </div>
 </cfoutput>
 </div>
+
+<cfif isDefined("URL.download") AND URL.download IS true>
+	<cfoutput>
+	<iframe style="display:none" src="#APPLICATION.htmlPath#/file_download.cfm?id=#file_id#"></iframe>
+	</cfoutput>
+</cfif>
+

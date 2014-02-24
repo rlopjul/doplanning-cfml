@@ -52,27 +52,6 @@
 
 	});
 	
-	<!--- 
-	<cfif itemTypeId IS 5 OR itemTypeId IS 6 OR itemTypeId IS 4><!---Events, Tasks, News--->
-	
-		function onEndDateChange(){
-
-			$('##start_date').datepicker('setEndDate', $('##end_date').val());
-		}
-
-		function onStartDateChange(){
-			var startDateVal = $('##start_date').val();	
-			var endDateVal = $('##end_date').val();	
-
-			$('##end_date').datepicker('setStartDate', startDateVal);
-
-			if(endDateVal < startDateVal){
-				$('##end_date').datepicker('update', startDateVal);
-			}
-		}
-	
-	</cfif> --->
-	
 	
 	function checkDates(startDateFieldName, endDateFieldName) {
 		
@@ -199,85 +178,72 @@
 	<cfinput type="hidden" name="title" value="#objectItem.title#">
 </cfif>
 
-<cfif itemTypeId IS 4><!---News--->
-
-	<div class="row">
-		<div class="col-xs-6 col-md-3">
-
-			<label class="control-label" lang="es">#t_creation_date#</label>
-		
-			<cfif len(objectItem.creation_date) GT 10>
-				<cfset objectItem.creation_date = left(objectItem.creation_date, findOneOf(" ", objectItem.creation_date))>
-			</cfif>
-		
-			<cfinput type="text" name="creation_date" id="creation_date" class="form-control" value="#objectItem.creation_date#" required="true" message="#t_creation_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
-
-		</div>
-		<div class="col-xs-6">
-			<br/>
-			<span style="font-size:10px" lang="es">Formato DD-MM-AAAA.<br/> Ejemplo:</span><span style="font-size:10px"> #DateFormat(now(), "DD-MM-YYYY")#</span>
-
-		</div>
-	</div>
-
-</cfif>
-
 <cfif len(area_type) GT 0><!--- WEB --->
 
 	<div class="row">
+
+		<cfif isDefined("objectItem.publication_hour")><!--- After send FORM --->
+
+			<cfset publication_hour = objectItem.publication_hour>
+			<cfset publication_minute = objectItem.publication_minute>
+
+		<cfelse>
+
+			<!---<cfif len(objectItem.publication_time) IS 0>
+				<cfset objectItem.publication_time = createTime(0,0,0)>
+			</cfif>--->
+			
+			<cfset publication_hour = timeFormat(objectItem.publication_date, "HH")>
+			<cfset publication_minute = timeFormat(objectItem.publication_date, "mm")>
+
+			<cfif len(objectItem.publication_date) GT 10>
+				<cfset objectItem.publication_date = left(objectItem.publication_date, findOneOf(" ", objectItem.publication_date))>
+			</cfif>
+
+		</cfif>
+
+		<!--- <cfif len(objectItem.publication_date) GT 10></cfif> --->
 
 		<div class="col-xs-6 col-md-3">
 			<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
 			<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectItem.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 		</div>
 					
-		<!--- 
-		<cfif isDefined("objectItem.publication_time")>
-					
-			<cfif len(objectItem.publication_time) IS 0>
-				<cfset objectItem.publication_time = createTime(0,0,0)>
-			</cfif>
-			
-			<cfset publication_hour = hour(objectItem.publication_time)>
-			<cfset publication_minute = minute(objectItem.publication_time)>
-
-		<cfelse><!--- After send FORM --->
-
-			<cfset publication_hour = objectItem.publication_hour>
-			<cfset publication_minute = objectItem.publication_minute>
-
-		</cfif>
-		
 		<div class="col-xs-6">
-			<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
-			<div class="input-group" style="width:170px">
-				<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
-					<cfloop from="0" to="23" index="hour">
-						<option value="#hour#" <cfif hour EQ publication_hour>selected="selected"</cfif>>#hour#</option>
-					</cfloop>
-				</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
-					<cfset minutesInOptions = false>
-					<cfloop from="0" to="59" index="minutes" step="5">
-						<cfif minutes EQ "0">
-							<cfset minutes = "00">
-						</cfif>
-						<cfif minutes EQ publication_minute>
-							<cfset minutesSelected = true>
-							<cfset minutesInOptions = true>
-						<cfelse>
-							<cfset minutesSelected = false>
-						</cfif>
-						<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
-					</cfloop>
-					<cfif minutesInOptions IS false>
-						<option value="#publication_minute#" selected="selected">#publication_minute#</option>
-					</cfif>
-				</select>
-			</div>	
-		</div> --->
+			<!--- 
+				<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
+							<div class="input-group" style="width:170px">
+								<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
+									<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
+										<cfset curHour = TimeFormat(hour, 'HH')>
+										<option value="#curHour#" <cfif curHour EQ publication_hour>selected="selected"</cfif>>#curHour#</option>
+									</cfloop>
+								</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
+									<cfset minutesInOptions = false>
+									<cfloop from="0" to="59" index="minutes" step="5">
+										<cfif len(minutes) EQ 1>
+											<cfset minutes = "0"&minutes>
+										</cfif>
+										<cfif minutes EQ publication_minute>
+											<cfset minutesSelected = true>
+											<cfset minutesInOptions = true>
+										<cfelse>
+											<cfset minutesSelected = false>
+										</cfif>
+										<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
+									</cfloop>
+									<cfif minutesInOptions IS false AND len(publication_minute) GT 0>
+										<option value="#publication_minute#" selected="selected">#publication_minute#</option>
+									</cfif>
+								</select>
+							</div> --->
+					
+		</div>
 
+		
 		<input type="hidden" name="publication_hour" value="00"/>
 		<input type="hidden" name="publication_minute" value="00"/>
+		
 		
 	</div>
 
@@ -301,6 +267,28 @@
 		</div>
 
 	</cfif>
+
+</cfif>
+
+<cfif itemTypeId IS 4><!---News--->
+
+	<div class="row">
+		<div class="col-xs-6 col-md-3">
+
+			<cfif len(objectItem.creation_date) GT 10>
+				<cfset objectItem.creation_date = left(objectItem.creation_date, findOneOf(" ", objectItem.creation_date))>
+			</cfif>
+
+			<label class="control-label" lang="es">#t_creation_date#</label>		
+			<cfinput type="text" name="creation_date" id="creation_date" class="form-control" value="#objectItem.creation_date#" required="true" message="#t_creation_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+
+		</div>
+		<div class="col-xs-6">
+			<br/>
+			<span style="font-size:10px" lang="es">Formato DD-MM-AAAA.<br/> Ejemplo:</span><span style="font-size:10px"> #DateFormat(now(), "DD-MM-YYYY")#</span>
+
+		</div>
+	</div>
 
 </cfif>
 
@@ -360,8 +348,9 @@
 			<label class="control-label" for="start_hour"><span lang="es">#t_start_time#</span></label>
 			<div class="input-group" style="width:170px">
 				<select name="start_hour" id="start_hour" class="form-control" style="width:70px;">
-					<cfloop from="0" to="23" index="hour">
-						<option value="#hour#" <cfif hour EQ start_hour>selected="selected"</cfif>>#hour#</option>
+					<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
+						<cfset curHour = TimeFormat(hour, 'HH')>
+						<option value="#curHour#" <cfif curHour EQ start_hour>selected="selected"</cfif>>#curHour#</option>
 					</cfloop>
 				</select><span class="input-group-addon">:</span><select name="start_minute" class="form-control" style="width:70px;">
 					<cfloop from="0" to="59" index="minutes" step="5">
@@ -407,8 +396,9 @@
 			<label class="control-label" for="end_hour"><span lang="es">Hora de fin</span></label>
 			<div class="input-group" style="width:170px">
 				<select name="end_hour" style="width:70px;">
-					<cfloop from="0" to="23" index="hour">
-						<option value="#hour#" <cfif hour EQ end_hour>selected="selected"</cfif>>#hour#</option>
+					<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
+						<cfset curHour = TimeFormat(hour, 'HH')>
+						<option value="#curHour#" <cfif curHour EQ end_hour>selected="selected"</cfif>>#curHour#</option>
 					</cfloop>
 				</select><span class="input-group-addon">:</span><select name="end_minute" style="width:70px;">
 					<cfloop from="0" to="59" index="minutes" step="5">

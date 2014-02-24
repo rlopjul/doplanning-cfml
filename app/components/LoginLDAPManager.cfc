@@ -104,34 +104,43 @@
 				
 					<!---  Checking if both user name and password are corrects   --->
 					<cfquery name="loginQuery" datasource="#client_dsn#">			
-						SELECT users.id, users.number_of_connections, users.language 
+						SELECT users.id, users.number_of_connections, users.language, users.enabled
 						FROM #table# AS users 
-						<!---INNER JOIN #client_abb#_user_preferences AS preferences ON users.id = preferences.user_id---> 
 						WHERE users.#login_ldap_column# = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar">;
 					</cfquery>		
 					
 					<!--- If at least one record is found, it means that the login is valid --->
-					<cfif loginQuery.RecordCount GREATER THAN 0>
-						
-						<cfset objectUser.id = loginQuery.id>
-						<cfset objectUser.language = loginQuery.language>
-						<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
-					
-						<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="loginResult">
-							<cfinvokeargument name="client_abb" value="#client_abb#">
-							<cfinvokeargument name="objectClient" value="#objectClient#">
-							<cfinvokeargument name="objectUser" value="#objectUser#">
-						</cfinvoke>
+					<cfif loginQuery.RecordCount GT 0>
 
-						<cfsavecontent variable="xmlResponse">
-							<cfoutput>
-								<login valid="#loginResult.result#"></login>
-							</cfoutput>
-						</cfsavecontent>
+						<cfif loginQuery.enabled IS true>
 						
-						<!---<cfinclude template="includes/functionEndNoLog.cfm">---><!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
+							<cfset objectUser.id = loginQuery.id>
+							<cfset objectUser.language = loginQuery.language>
+							<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
 						
-						<!---En este método solo se guarda log cuando el login (usuario o password) no es correcto--->
+							<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="loginResult">
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="objectClient" value="#objectClient#">
+								<cfinvokeargument name="objectUser" value="#objectUser#">
+							</cfinvoke>
+
+							<cfsavecontent variable="xmlResponse">
+								<cfoutput><login valid="#loginResult.result#"></login></cfoutput>
+							</cfsavecontent>
+							
+							<!---<cfinclude template="includes/functionEndNoLog.cfm">---><!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
+							
+							<!---En este método solo se guarda log cuando el login (usuario o password) no es correcto--->
+
+						<cfelse>
+
+							<cfset login_message = "Cuenta de usuario deshabilitada.">
+						
+							<cfsavecontent variable="xmlResponse">
+								<cfoutput><login valid="false"><message><![CDATA[#login_message#]]></message></login></cfoutput>
+							</cfsavecontent>
+
+						</cfif>
 						
 					<cfelse>
 					

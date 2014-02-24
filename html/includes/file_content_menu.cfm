@@ -18,10 +18,6 @@
 
 	<a href="my_files_file_replace.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-default btn-sm"><i class="icon-repeat"></i> <span lang="es">Reemplazar</span></a>
 	
-	<cfif app_version NEQ "mobile">
-	<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
-	</cfif>
-	
 	<a href="file_associate_areas.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-default btn-sm"><i class="icon-plus-sign"></i> <span lang="es">Asociar a áreas</span></a>
 	
 	<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFile&file_id=#objectFile.id#&folder_id=#folder_id#" onclick="return confirmDeleteFile();" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
@@ -51,9 +47,10 @@
 			<a href="area_file_modify.cfm?file=#objectFile.id#&area=#area_id#&fileTypeId=#fileTypeId#" class="btn btn-default btn-sm"><i class="icon-edit"></i> <span lang="es">Modificar datos</span></a>
 		</cfif>
 		
+		<!--- 
 		<cfif app_version NEQ "mobile">
-			<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
-		</cfif>
+					<a href="#APPLICATION.htmlPath#/file.cfm?file=#objectFile.id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+				</cfif> --->
 		
 		<cfif fileTypeId IS 1 OR fileTypeId IS 2>
 			<a href="area_file_associate_areas.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-plus-sign"></i> <span lang="es">Asociar a áreas</span></a>
@@ -96,10 +93,25 @@
 			</cfif>
 
 		</cfif>
-		
-		<cfif fileTypeId IS 1 || (fileTypeId IS NOT 1 AND objectFile.locked IS false)>
-			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFileRemote&file_id=#objectFile.id#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmDeleteFile();" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+
+	</cfif>
+
+	<cfif len(area_type) GT 0 AND is_user_area_responsible>
+
+		<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&file=#file_id#")>
+
+		<!--- publication validation --->
+		<cfif objectFile.publication_validated IS false>
+			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=changeFilePublicationValidation&file_id=#file_id#&area_id=#area_id#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación');" title="Aprobar publicación" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>
+		<cfelse>
+			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=changeFilePublicationValidation&file_id=#file_id#&area_id=#area_id#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación');" title="Desaprobar publicación" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>					
 		</cfif>
+		
+	</cfif>
+
+	<cfif (fileTypeId IS 1 AND objectFile.user_in_charge EQ SESSION.user_id) OR (fileTypeId IS NOT 1 AND file_area_allowed IS true AND objectFile.locked IS false)>
+
+		<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFileRemote&file_id=#objectFile.id#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmDeleteFile();" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 
 	</cfif>
 
@@ -124,7 +136,6 @@
 	</cfif>
 
 </cfif>
-
 
 
 <cfif APPLICATION.moduleConvertFiles EQ true>

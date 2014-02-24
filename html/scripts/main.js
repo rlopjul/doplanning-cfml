@@ -70,7 +70,7 @@ function loadModal(url){
 	$('body').modalmanager('loading');
 
 	$modal.load(url, '', function(){
-	  $modal.modal({width:630});
+	  $modal.modal({width:730});/*680*/
 	});
 }
 
@@ -100,7 +100,7 @@ function postModalForm(formId, requestUrl, responseUrl, responseTarget){
 		  		var message = data.message;
 
 		  		//openUrl(responseUrl+"&msg="+message+"&res="+data.result,responseTarget);
-		  		openUrl(responseUrl);
+		  		openUrl(responseUrl, responseTarget);
 
 		  		hideDefaultModal();
 
@@ -196,14 +196,10 @@ function openUrl(url,target){
 		else
 			loadIframeItemPage(url);
 	
-	}else if(target == "userAreaIframe" || target == "userAdminIframe"){
+	}else if(target == "userAreaIframe" || target == "userAdminIframe" || target == "allUsersIframe" || target == "logItemIframe"){
 
 		$("#"+target).attr('src', "iframes/"+getFilename(url));
 
-	}else if(target == "logItemIframe"){
-	
-		$("#"+target).attr('src', "iframes/"+getFilename(url));
-	
 	}else{
 		if(target == "areaIframe"){
 			

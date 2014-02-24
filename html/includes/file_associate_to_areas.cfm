@@ -14,6 +14,19 @@
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="associateFileToAreas" returnvariable="resultAddFiles">
 		<cfinvokeargument name="file_id" value="#file_id#">
 		<cfinvokeargument name="areas_ids" value="#FORM.areas_ids#">
+
+		<cfif isDefined("FORM.publication_date")>
+			<cfinvokeargument name="publication_date" value="#FORM.publication_date#">
+		</cfif>
+		<cfif isDefined("FORM.publication_hour")>
+			<cfinvokeargument name="publication_hour" value="#FORM.publication_hour#">
+		</cfif>
+		<cfif isDefined("FORM.publication_minute")>
+			<cfinvokeargument name="publication_minute" value="#FORM.publication_minute#">
+		</cfif>
+		<cfif isDefined("FORM.publication_validated")>
+			<cfinvokeargument name="publication_validated" value="#FORM.publication_validated#">
+		</cfif>
 	</cfinvoke>
 	<cfset msg = resultAddFiles.message>
 	<cfset res = resultAddFiles.result>
@@ -28,13 +41,20 @@
 
 <cfoutput>
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
 <script type="text/javascript">
 	var applicationId = "#APPLICATION.identifier#";
 	var applicationPath = "#APPLICATION.path#";
 </script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
+
+<cfif APPLICATION.moduleWeb IS true>
+	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+	<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+	<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+</cfif>
+
 </cfoutput>
 
 <script type="text/javascript">
@@ -78,10 +98,19 @@
 				e.preventDefault();
 
 				searchTextInTree();
-
 			}
 			
 		});
+
+		<cfif APPLICATION.moduleWeb IS true>
+		$('#publication_date').datepicker({
+			format: 'dd-mm-yyyy',
+			weekStart: 1,
+			language: 'es',
+			todayBtn: 'linked', 
+			autoclose: true
+		});
+		</cfif>
 
 	});
 
@@ -124,7 +153,7 @@ Asociar archivo a áreas
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
 			
 <div id="mainContainer" style="clear:both;display:none;padding-left:5px;">
-<cfform name="add_file_to_areas" method="post" action="#CGI.SCRIPT_NAME#" class="form-inline" style="clear:both;" onsubmit="return onSubmitForm();">
+<cfform name="add_file_to_areas" method="post" action="#CGI.SCRIPT_NAME#" class="form-horizontal" style="clear:both;" onsubmit="return onSubmitForm();">
 	<cfoutput>
 	
 	<script type="text/javascript">
@@ -210,6 +239,97 @@ Asociar archivo a áreas
 	<script type="text/javascript">
 		addRailoRequiredCheckBox("areas_ids[]","Debe seleccionar al menos un área");			
 	</script>
+
+
+	<cfif APPLICATION.moduleWeb IS true>
+	
+		<div class="row">
+
+			<cfif isDefined("FORM.publication_hour")><!--- After send FORM --->
+
+				<cfset publication_hour = FORM.publication_hour>
+				<cfset publication_minute = FORM.publication_minute>
+
+				<cfset publication_date = FORM.publication_date>
+
+			<cfelse>
+				
+				<cfset publication_hour = timeFormat(now(), "HH")>
+				<cfset publication_minute = timeFormat(now(), "mm")>
+
+				<cfset publication_date = DateFormat(now(),APPLICATION.dateFormat)>
+
+			</cfif>
+
+			<div class="col-xs-6 col-md-3">
+				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
+				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
+			</div>
+						
+			<div class="col-xs-6">
+				 
+				<!---<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
+				<div class="input-group" style="width:170px">
+					<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
+						<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
+							<cfset curHour = TimeFormat(hour, 'HH')>
+							<option value="#curHour#" <cfif curHour EQ publication_hour>selected="selected"</cfif>>#curHour#</option>
+						</cfloop>
+					</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
+						<cfset minutesInOptions = false>
+						<cfloop from="0" to="59" index="minutes" step="5">
+							<cfif len(minutes) EQ 1>
+								<cfset minutes = "0"&minutes>
+							</cfif>
+							<cfif minutes EQ publication_minute>
+								<cfset minutesSelected = true>
+								<cfset minutesInOptions = true>
+							<cfelse>
+								<cfset minutesSelected = false>
+							</cfif>
+							<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
+						</cfloop>
+						<cfif minutesInOptions IS false AND len(publication_minute) GT 0>
+							<option value="#publication_minute#" selected="selected">#publication_minute#</option>
+						</cfif>
+					</select>
+				</div>--->
+						
+			</div>
+			
+			<input type="hidden" name="publication_hour" value="00"/>
+			<input type="hidden" name="publication_minute" value="00"/>
+			
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<small class="help-block">Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
+			</div>
+		</div>
+
+		<cfif APPLICATION.publicationValidation IS true>
+
+			<!--- isUserAreaResponsible --->
+			<cfif is_user_area_responsible IS true>
+				
+				<div class="row">
+					<div class="col-xs-12 col-sm-8">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif NOT isDefined("FORM.publication_validated") OR FORM.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+							</label>
+							<small class="help-block">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
+						</div>
+					</div>
+				</div>
+
+			</cfif>
+
+		</cfif>
+
+	</cfif>
+
 	
 	<cfinput name="submit" type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas"/>
 	<a href="#return_page#" class="btn btn-default" style="float:right;">Cancelar</a>

@@ -112,7 +112,7 @@
 			    <div class="bar" style="width: 0%;"></div>
 			</div>
 	  
-			<form id="fileupload" action="#APPLICATION.htmlComponentsPath#/Area.cfc?method=importAreas" method="post" enctype="multipart/form-data" class="form-horizontal"><!---class="form-inline"--->
+			<form id="fileupload" action="#APPLICATION.htmlComponentsPath#/Area.cfc?method=importAreas" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<cfif isDefined("area_id")>
 					<input type="hidden" name="area_id" id="area_id" value="#area_id#" />
 				<cfelseif isDefined("parent_area_id")>

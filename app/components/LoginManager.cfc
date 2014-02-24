@@ -66,10 +66,6 @@
 				<cfif isDefined("SESSION.client_email_from")>
 					<cfset StructDelete(SESSION, "client_email_from")>
 				</cfif>
-
-				<!---<cfif isDefined("SESSION.app_modules")>
-					
-				</cfif>--->
 			</cfif>	
 			
 			<cfif APPLICATION.moduleLdapUsers IS false OR arguments.ldap_id EQ "doplanning">
@@ -126,7 +122,7 @@
 				
 				<!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
 
-				<cfset response = {result="true", message=""}>
+				<cfset response = {result=true}>
 			
 			<cfelse><!---Default Login (DoPlanning)--->
 			
@@ -134,25 +130,36 @@
 			
 				<!---  Checking if both user name and password are corrects   --->
 				<cfquery name="loginQuery" datasource="#client_dsn#">			
-					SELECT users.id, users.number_of_connections, users.language 
+					SELECT users.id, users.number_of_connections, users.language, users.enabled
 					FROM #table# AS users 
-					WHERE users.email = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar"> AND password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">;
+					WHERE users.email = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar"> 
+					AND password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">;
 				</cfquery>		
 				
 				<!--- If at least one record is found, it means that the login is valid --->
 				<cfif loginQuery.RecordCount GT 0>
 					
-					<cfset objectUser.id = loginQuery.id>
-					<cfset objectUser.language = loginQuery.language>
-					<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
-				
-					<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="response">
-						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-						<cfinvokeargument name="objectClient" value="#getClient#">
-						<cfinvokeargument name="objectUser" value="#objectUser#">
-					</cfinvoke>
+					<cfif loginQuery.enabled IS true>
+						
+						<cfset objectUser.id = loginQuery.id>
+						<cfset objectUser.language = loginQuery.language>
+						<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
 					
-					<!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
+						<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="response">
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+							<cfinvokeargument name="objectClient" value="#getClient#">
+							<cfinvokeargument name="objectUser" value="#objectUser#">
+						</cfinvoke>
+						
+						<!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
+
+					<cfelse>
+
+						<cfset response_message = "Cuenta de usuario deshabilitada.">
+					
+						<cfset response = {result=false, message=#response_message#}>
+
+					</cfif>
 				
 				<cfelse>
 				
@@ -448,33 +455,41 @@
 
 	<!--- GET USER LOGGED IN --->
  
-	<cffunction name="getUserLoggedIn" returntype="String" access="public">
+	<cffunction name="getUserLoggedIn" returntype="struct" access="public">
 				
 		<cfset var method = "getUserLoggedIn">
 		
-		<cfset var xmlResponseContent = "">
-		
+		<cfset var response = structNew()>
+
 		<cftry>
-			
-			<cfinclude template="includes/functionStart.cfm">
-			
+						
 			<cfif isDefined("SESSION.user_id")>
 			
-				<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
-					<cfinvokeargument name="get_user_id" value="#user_id#">
+				<cfinvoke component="UserManager" method="getUser" returnvariable="userQuery">
+					<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 					<cfinvokeargument name="format_content" value="all">
+					<cfinvokeargument name="return_type" value="query">
 				</cfinvoke>
 				
-				<cfinclude template="includes/functionEndNoLog.cfm">
+				<cfset response = {result=true, user=userQuery}>
 				
+			<cfelse>
+
+				<cfset error_code = 102>
+				
+				<cfthrow errorcode="#error_code#">
+
 			</cfif>
-			
+		
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
 			</cfcatch>
 		</cftry>
+
+		<cfreturn response>
 		
-		<cfreturn xmlResponse>
 			
 	</cffunction>
 	
@@ -598,53 +613,6 @@
 	
 	
 	
-	<!---    generateNewPassword     --->
-	
-	<cfscript>
-	
-		/**
-		* Generates a password the length you specify.
-		* 
-		* @param numberOfCharacters      Lengh for the generated password. 
-		* @return Returns a string. 
-		* @author Tony Blackmon (fluid@sc.rr.com) 
-		* @version 1, April 25, 2002 
-		*/
-		function generatePassword(numberofCharacters) {
-			var placeCharacter = "";
-			var currentPlace=0;
-			var group=0;
-			var subGroup=0;
-			
-			for(currentPlace=1; currentPlace lte numberofCharacters; currentPlace = currentPlace+1) {
-			group = randRange(1,4);
-			switch(group) {
-			case "1":
-			subGroup = rand();
-				switch(subGroup) {
-			case "0":
-			placeCharacter = placeCharacter & chr(randRange(33,46));
-			break;
-			case "1":
-			placeCharacter = placeCharacter & chr(randRange(58,64));
-			break;
-			}
-			case "2":
-			placeCharacter = placeCharacter & chr(randRange(97,122));
-			break;
-			case "3":
-			placeCharacter = placeCharacter & chr(randRange(65,90));
-			break;
-			case "4":
-			placeCharacter = placeCharacter & chr(randRange(48,57));
-			break;
-			}
-			}
-			return placeCharacter;
-		}
-	
-	</cfscript>
-	
 	<cffunction name="generateNewPassword" output="false" access="public" returntype="struct">
 		<cfargument name="email_login" type="string" required="yes">
 		<cfargument name="client_abb" type="string" required="yes">
@@ -670,8 +638,13 @@
 				</cfquery>
 				
 				<cfif getUser.recordCount GT 0>
+
+					<!--- <cfset new_password = generatePassword(8)> --->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="new_password">
+						<cfinvokeargument name="numberofCharacters" value="8">
+					</cfinvoke>
 				
-					<cfset new_password = generatePassword(8)>
 					<cfset new_password_encoded = hash(new_password)>
 				
 					<cfquery datasource="#client_dsn#" name="generateNewPassword">

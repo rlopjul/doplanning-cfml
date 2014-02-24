@@ -2,8 +2,6 @@
 	
 	<cfset area_id = URL.area>
 
-	<!---<cfset return_page = "area_users.cfm?area=#area_id#">--->
-
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="objectArea">
 		<cfinvokeargument name="area_id" value="#area_id#"/>
 	</cfinvoke>
@@ -12,7 +10,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4 id="areaModalLabel">Modificar área</h4>
+		    <h4>Modificar área</h4>
 		</div>
 
 	 	<div class="modal-body">

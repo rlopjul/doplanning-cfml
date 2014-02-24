@@ -488,7 +488,7 @@
 					
 		<cftry>
 	
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="deleteArea" returnvariable="response">
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="deleteArea" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			</cfinvoke>
 			

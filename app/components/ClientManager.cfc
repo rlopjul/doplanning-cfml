@@ -1167,7 +1167,7 @@
 			
 			</cftransaction>
 			
-			
+			<cfinclude template="includes/transaction_to_2.5.cfm">	
 			
 			<!---createClientFolders--->
 			<cfinvoke component="ClientManager" method="createClientFolders">
