@@ -61,7 +61,7 @@
 			<cfset url_return_page = "&return_page="&URLEncodedFormat(return_path&URL.return_page)>
 			<!--- <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&URL.return_page)> --->
 		<cfelse>
-			<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#")>
+			<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#")>
 		</cfif>
 
 		<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#")>
@@ -82,7 +82,7 @@
 			
 			<cfif len(area_type) GT 0 AND is_user_area_responsible>
 
-				<!--- publication --->
+				<!--- publication validation --->
 				<cfif objectItem.publication_validated IS false>
 					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#item_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación');" title="Aprobar publicación" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>
 				<cfelse>
@@ -132,7 +132,9 @@
 			
 				<cfif objectItem.user_in_charge EQ SESSION.user_id OR objectItem.recipient_user EQ SESSION.user_id>
 				
-					<a href="area_item_done.cfm?item=#objectItem.id#&type=#itemTypeId#&area=#area_id#&done=1#url_return_page#" <!---onclick="return confirmAction('marcar la #itemTypeNameEs# como realizada');"---> title="Marcar la #itemTypeNameEs# como realizada" class="btn btn-info btn-sm" lang="es"><i class="icon-ok"></i> <span lang="es">Realizada</span></a>
+					<!--- <a href="area_item_done.cfm?item=#objectItem.id#&type=#itemTypeId#&area=#area_id#&done=1#url_return_page#" title="Marcar la #itemTypeNameEs# como realizada" class="btn btn-info btn-sm" lang="es"><i class="icon-ok"></i> <span lang="es">Realizada</span></a> --->
+
+					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeAreaItemDone&item_id=#item_id#&itemTypeId=#itemTypeId#&done=true#url_return_path#" title="Marcar la #itemTypeNameEs# como realizada" onclick="return confirmReversibleAction('Marcar la #itemTypeNameEs# como realizada');" class="btn btn-info btn-sm" lang="es"><i class="icon-ok"></i> <span lang="es">Realizada</span></a>
 				
 				</cfif>
 				

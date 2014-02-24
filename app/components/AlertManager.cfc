@@ -274,16 +274,18 @@
 						#langText[curLang].new_item.last_update_date#: <strong>#objectItem.last_update_date#</strong><br/>
 						</cfif>
 						
-						<cfif arguments.itemTypeId LT 10>
+						<cfif itemTypeWeb IS true><!--- WEB --->
 
-							<cfif itemTypeWeb IS true><!--- WEB --->
-								<cfif len(objectItem.publication_date) GT 0>
-									#langText[curLang].new_item.publication_date#: <b>#objectItem.publication_date#</b> #langText[curLang].new_item.hour#: <b>#TimeFormat(objectItem.publication_time,"HH:mm")#</b><br/>
-								</cfif>
-								<cfif APPLICATION.publicationValidation IS true AND len(publication_validated) GT 0>
-									#langText[curLang].new_item.publication_validated#: <b><cfif objectItem.publication_validated IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
-								</cfif>
+							<cfif len(objectItem.publication_date) GT 0>
+								#langText[curLang].new_item.publication_date#: <b>#objectItem.publication_date#</b> <!--- #langText[curLang].new_item.hour#: <b>#TimeFormat(objectItem.publication_time,"HH:mm")#</b> ---><br/>
 							</cfif>
+							<cfif APPLICATION.publicationValidation IS true AND len(objectItem.publication_validated) GT 0>
+								#langText[curLang].new_item.publication_validated#: <b><cfif objectItem.publication_validated IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
+							</cfif>
+
+						</cfif>
+
+						<cfif arguments.itemTypeId LT 10>
 
 							<cfif len(objectItem.link) GT 0 AND (itemTypeId NEQ 4 AND itemTypeId NEQ 5)>
 								<cfif itemTypeId IS 3><!---Links--->
@@ -324,7 +326,7 @@
 						</cfif><!--- END arguments.itemTypeId LT 10 --->
 
 						<cfif APPLICATION.publicationScope IS true AND ( arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 )>
-						#langText[curLang].new_file.publication_scope#: <strong>#objectItem.publication_scope_name#</strong><br/>
+						#langText[curLang].new_item.publication_scope#: <strong>#objectItem.publication_scope_name#</strong><br/>
 						</cfif>
 
 						<br/>
@@ -1273,8 +1275,14 @@
 					#langText[arguments.language].new_file.last_version_date#: <strong>#objectFile.replacement_date#</strong><br/>
 				</cfif>
 			</cfif>
+			<cfif isDefined("objectFile.publication_date") AND len(objectFile.publication_date) GT 0>
+				#langText[arguments.language].new_item.publication_date#: <b>#objectFile.publication_date#</b><br/>
+			</cfif>
+			<cfif APPLICATION.publicationValidation IS true AND isDefined("objectFile.publication_date") AND len(objectFile.publication_validated) GT 0>
+				#langText[arguments.language].new_item.publication_validated#: <b><cfif objectFile.publication_validated IS true>#langText[arguments.language].new_item.yes#<cfelse>#langText[arguments.language].new_item.no#</cfif></b><br/>
+			</cfif>
 			<cfif APPLICATION.publicationScope IS true>
-			#langText[arguments.language].new_file.publication_scope#: <strong>#objectFile.publication_scope_name#</strong><br/>
+			#langText[arguments.language].new_item.publication_scope#: <strong>#objectFile.publication_scope_name#</strong><br/>
 			</cfif>
 			#langText[arguments.language].new_file.description#:<br/><br/>
 			<div style="padding-left:15px;">#objectFile.description#</div>
@@ -1303,11 +1311,20 @@
 			<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
 		</cfinvoke>
-		
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="downloadFileUrl">
 			<cfinvokeargument name="file_id" value="#arguments.file_id#">
 			<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfinvokeargument name="download" value="true">
 		</cfinvoke>
+		
+		<!--- 
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
+			<cfinvokeargument name="file_id" value="#arguments.file_id#">
+					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+		</cfinvoke> --->
+		
 
 		<cfif APPLICATION.twoUrlsToAccess IS false>
 		
@@ -1862,7 +1879,7 @@
 	<!--- -------------------------------------- newUser ------------------------------------ --->
 	
 	<cffunction name="newUser" access="public" returntype="void">
-		<cfargument name="objectUser" type="struct" required="yes">
+		<cfargument name="objectUser" type="query" required="yes">
 		<cfargument name="password_temp" type="string" required="no">
 				
 		<cfset var method = "newUser">

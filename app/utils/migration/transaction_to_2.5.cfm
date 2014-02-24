@@ -586,14 +586,98 @@
 		<cfquery datasource="#client_dsn#">	
 			ALTER TABLE `#client_abb#_files` ADD COLUMN `in_approval` BOOLEAN NOT NULL DEFAULT 0 AFTER `approver_user`;
 		</cfquery>
-
-
-
-
 		
+		<!--- 04/02/2014 --->	
+
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_lists_views` (
+			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `table_id` int(10) unsigned NOT NULL,
+			  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+			  `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+			  `user_in_charge` int(11) NOT NULL,
+			  `area_id` int(11) NOT NULL,
+			  `creation_date` datetime NOT NULL,
+			  `last_update_date` datetime DEFAULT NULL,
+			  `include_creation_date` tinyint(1) NOT NULL,
+			  `include_last_update_date` tinyint(1) NOT NULL,
+			  `include_insert_user` tinyint(1) NOT NULL,
+			  `include_update_user` tinyint(1) NOT NULL,
+			  `creation_date_position` int(10) unsigned NOT NULL,
+			  `last_update_date_position` int(10) unsigned NOT NULL,
+			  `insert_user_position` int(10) unsigned NOT NULL,
+			  `update_user_position` int(10) unsigned NOT NULL,
+			  PRIMARY KEY (`id`) USING BTREE,
+			  KEY `FK_#client_abb#_lists_views_1` (`table_id`),
+			  KEY `FK_#client_abb#_lists_views_2` (`user_in_charge`),
+			  KEY `FK_#client_abb#_lists_views_3` (`area_id`),
+			  CONSTRAINT `FK_#client_abb#_lists_views_1` FOREIGN KEY (`table_id`) REFERENCES `#client_abb#_lists` (`id`),
+			  CONSTRAINT `FK_#client_abb#_lists_views_2` FOREIGN KEY (`user_in_charge`) REFERENCES `#client_abb#_users` (`id`),
+			  CONSTRAINT `FK_#client_abb#_lists_views_3` FOREIGN KEY (`area_id`) REFERENCES `#client_abb#_areas` (`id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+		</cfquery>	
+
+
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_lists_views_fields` (
+			  `view_id` int(10) unsigned NOT NULL,
+			  `field_id` int(10) unsigned NOT NULL,
+			  `position` int(10) unsigned NOT NULL,
+			  UNIQUE KEY `UNIQUE` (`view_id`,`field_id`) USING BTREE,
+			  KEY `FK_#client_abb#_lists_views_fields_2` (`field_id`) USING BTREE,
+			  CONSTRAINT `FK_#client_abb#_lists_views_fields_1` FOREIGN KEY (`view_id`) REFERENCES `#client_abb#_lists_views` (`id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_lists_views_fields_2` FOREIGN KEY (`field_id`) REFERENCES `#client_abb#_lists_fields` (`field_id`) ON DELETE CASCADE
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;			
+		</cfquery>		
 		
 
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_forms_views` (
+			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `table_id` int(10) unsigned NOT NULL,
+			  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+			  `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+			  `user_in_charge` int(11) NOT NULL,
+			  `area_id` int(11) NOT NULL,
+			  `creation_date` datetime NOT NULL,
+			  `last_update_date` datetime DEFAULT NULL,
+			  `include_creation_date` tinyint(1) NOT NULL,
+			  `include_last_update_date` tinyint(1) NOT NULL,
+			  `include_insert_user` tinyint(1) NOT NULL,
+			  `include_update_user` tinyint(1) NOT NULL,
+			  `creation_date_position` int(10) unsigned NOT NULL,
+			  `last_update_date_position` int(10) unsigned NOT NULL,
+			  `insert_user_position` int(10) unsigned NOT NULL,
+			  `update_user_position` int(10) unsigned NOT NULL,
+			  PRIMARY KEY (`id`) USING BTREE,
+			  KEY `FK_#client_abb#_forms_views_1` (`table_id`),
+			  KEY `FK_#client_abb#_forms_views_2` (`user_in_charge`),
+			  KEY `FK_#client_abb#_forms_views_3` (`area_id`),
+			  CONSTRAINT `FK_#client_abb#_forms_views_1` FOREIGN KEY (`table_id`) REFERENCES `#client_abb#_forms` (`id`),
+			  CONSTRAINT `FK_#client_abb#_forms_views_2` FOREIGN KEY (`user_in_charge`) REFERENCES `#client_abb#_users` (`id`),
+			  CONSTRAINT `FK_#client_abb#_forms_views_3` FOREIGN KEY (`area_id`) REFERENCES `#client_abb#_areas` (`id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;			
+		</cfquery>	
 		
+		<cfquery datasource="#client_dsn#">	
+			CREATE TABLE  `#client_abb#_forms_views_fields` (
+			  `view_id` int(10) unsigned NOT NULL,
+			  `field_id` int(10) unsigned NOT NULL,
+			  `position` int(10) unsigned NOT NULL,
+			  UNIQUE KEY `UNIQUE` (`view_id`,`field_id`) USING BTREE,
+			  KEY `FK_#client_abb#_forms_views_fields_2` (`field_id`) USING BTREE,
+			  CONSTRAINT `FK_#client_abb#_forms_views_fields_1` FOREIGN KEY (`view_id`) REFERENCES `#client_abb#_forms_views` (`id`) ON DELETE CASCADE,
+			  CONSTRAINT `FK_#client_abb#_forms_views_fields_2` FOREIGN KEY (`field_id`) REFERENCES `#client_abb#_forms_fields` (`field_id`) ON DELETE CASCADE
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;			
+		</cfquery>	
+		
+				
+		<cfquery datasource="#client_dsn#">	
+			ALTER TABLE `#client_abb#_users` ADD COLUMN `notify_new_list_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_list_row`,
+			 ADD COLUMN `notify_new_form_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_form_row`;			
+		</cfquery>			
+		
+				
 	</cftransaction>
 
 	

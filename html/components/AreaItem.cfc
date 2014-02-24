@@ -104,7 +104,6 @@
 		<cfargument name="estimated_value" type="numeric" required="false">
 		<cfargument name="real_value" type="numeric" required="false">
 		<cfargument name="done" type="boolean" required="no" default="false">
-		<!---<cfargument name="position" type="numeric" required="false">--->
 		<cfargument name="display_type_id" type="numeric" required="false">
 		<cfargument name="iframe_url" type="string" required="false">
 		<cfargument name="iframe_display_type_id" type="numeric" required="false">
@@ -225,8 +224,7 @@
 				</cfif>
 				<cfif isDefined("arguments.general")>
 					<cfinvokeargument name="general" value="#arguments.general#">
-				</cfif>
-				                                
+				</cfif>                
                 <cfinvokeargument name="return_type" value="object">
             </cfinvoke>--->
           
@@ -286,9 +284,12 @@
 				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
 				<cfinvokeargument name="general" value="#arguments.general#">
 				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
-				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
-				<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
-					<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
+				<cfif isDefined("arguments.publication_date")>
+					<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+					<!--- 
+					<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
+						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
+					</cfif> --->
 				</cfif>
 				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 
@@ -680,10 +681,13 @@
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
 
 					<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
-					<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
+					<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
+						<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+					</cfif>
+					<!--- 
 					<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
 						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
-					</cfif>
+					</cfif> --->
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				</cfinvoke>
 
@@ -709,10 +713,12 @@
 					<cfinvokeargument name="file_size" value="#objectFile.file_size#">
 					<cfinvokeargument name="file_description" value="#objectFile.description#">
 
-					<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
-					<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
-						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
+					<cfif isDefined("arguments.publication_date")>
+						<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
 					</cfif>
+					<!---<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
+						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
+					</cfif>--->
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				</cfinvoke>
 
@@ -1320,6 +1326,40 @@
 	</cffunction>
 
 
+	<!--- ------------------------------ changeAreaItemDone ----------------------------------- --->
+	
+    <cffunction name="changeAreaItemDone" returntype="void" access="remote">
+    	<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="done" type="boolean" required="true">
+		
+		<cfargument name="return_path" type="string" required="yes">
+		
+		<cfset var method = "changeAreaItemDone">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+					
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeAreaItemDone" returnvariable="response">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="done" value="#arguments.done#">
+			</cfinvoke>	
+			
+			<cfset msg = URLEncodedFormat(response.message)>
+			
+			<cflocation url="#arguments.return_path#&res=#response.result#&msg=#msg#" addtoken="no">		
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
 	<!--- ------------------------------ changeItemPublicationValidation ----------------------------------- --->
 	
     <cffunction name="changeItemPublicationValidation" returntype="void" access="remote">
@@ -1335,7 +1375,6 @@
 		
 		<cftry>
 					
-			
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeItemPublicationValidation" returnvariable="response">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#"/>
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
@@ -1629,13 +1668,26 @@
 
 						<cfif len(objectItem.publication_date) GT 0>
 							<div class="div_message_page_label"><span>Fecha de publicación:</span> <span class="text_message_page">#objectItem.publication_date#</span>
-								<span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.publication_time,"HH:mm")#</span>
+								<!---<span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.publication_time,"HH:mm")#</span>--->
 							</div>
 						</cfif>
 						<cfif APPLICATION.publicationValidation IS true AND len(objectItem.publication_validated) GT 0>
 							<div class="div_message_page_label"><span>Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
 							</div>
 						</cfif>
+
+					</cfif>
+
+					<cfif itemTypeId IS 13><!--- Typologies --->
+
+						<div class="div_message_page_label">
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="typologyArea">
+								<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+							</cfinvoke>
+
+							<span lang="es">Propiedad del área:</span>
+							<a onclick="openUrl('typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#','areaIframe',event)" style="cursor:pointer">#typologyArea.name#</a>
+						</div>
 
 					</cfif>
 					

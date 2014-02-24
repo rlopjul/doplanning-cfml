@@ -88,27 +88,26 @@
 	
 	<!--- GET USER LOGGED --->
 	
-	<cffunction name="getUserLoggedIn" returntype="xml" output="false" access="public">
+	<cffunction name="getUserLoggedIn" returntype="query" output="false" access="public">
 		
 		<cfset var method = "getUserLoggedIn">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-		
+		<cfset var response = structNew()>
+					
 		<cftry>
-			
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/LoginManager" method="getUserLoggedIn" returnvariable="response">
 			</cfinvoke>
 			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
 			<cfcatch>
-				<cfinclude template="#APPLICATION.htmlComponentsPath#/includes/errorHandler.cfm">
-			</cfcatch>										
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
 			
 		</cftry>
 		
-		<cfreturn xmlResponse>
+		<cfreturn response.user>
 		
 	</cffunction>
 	

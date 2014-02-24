@@ -2079,7 +2079,7 @@
 			
 			<cfinclude template="includes/logRecord.cfm">
 
-			<cfset response = {result=true, message="", area_id=#arguments.area_id#}><!---areaXml=#areaXml#--->
+			<cfset response = {result=true, area_id=#arguments.area_id#}><!---areaXml=#areaXml#--->
 		
 			<cfcatch>
 

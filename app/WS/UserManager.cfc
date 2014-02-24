@@ -906,10 +906,10 @@
 		<cftry>
 		
 			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfinclude template="includes/checkAdminAccess.cfm">
-			
+
 			<cfset delete_user_id = xmlRequest.request.parameters.user.xmlAttributes.id>
+			
+			<!---<cfinclude template="includes/checkAdminAccess.cfm">
 			
 			<cfquery name="getUserQuery" datasource="#client_dsn#">		
 				SELECT id, root_folder_id, image_file<!---, image_id (ESTE CAMPO YA NO SE USA)--->
@@ -1115,9 +1115,28 @@
 				
 				<cfthrow errorcode="#error_code#">
 				
+			</cfif>
+
+			<cfinclude template="includes/functionEnd.cfm">--->
+
+
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="deleteUser" returnvariable="deleteUserResponse">
+				<cfinvokeargument name="delete_user_id" value="#delete_user_id#">
+			</cfinvoke>
+
+			<cfif deleteUserResponse.result IS true>
+
+				<cfsavecontent variable="xmlResponseContent">
+					<cfoutput><user id="#delete_user_id#"></area></cfoutput>
+				</cfsavecontent>
+
+				<cfinclude template="includes/functionEndNoLog.cfm">	
+
+			<cfelse>
+
+				<cfthrow message="#deleteUserResponse.message#">
+
 			</cfif>			
-		
-			<cfinclude template="includes/functionEnd.cfm">
 		
 			<cfcatch>
 				<cfset xmlResponseContent = arguments.request>

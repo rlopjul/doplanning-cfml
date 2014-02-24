@@ -210,7 +210,9 @@
 
 			<cfif arguments.tableTypeId IS NOT 3>
 				<cfset queryAddRow(getTableQuery, 1)>
-				<cfset querySetCell(getTableQuery, "publication_date", DateFormat(now(), "DD-MM-YYYY"))>
+				<cfset querySetCell(getTableQuery, "publication_date", DateFormat(now(), "DD-MM-YYYY")&" "&TimeFormat(now(), "HH:mm:ss"))>
+
+				<cfset querySetCell(getTableQuery, "publication_validated", true)>
 			</cfif>
 			
 			<cfset response = {result=true, table=#getTableQuery#}>

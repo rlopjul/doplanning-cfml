@@ -5,6 +5,86 @@
 
 	<cfinclude template="#APPLICATION.componentsPath#/includes/functions.cfm">
 
+
+	<!--- ---------------------------- GET USERS TO NOTIFY LISTS ------------------------------- --->
+	
+	<cffunction name="getUsersToNotifyLists" returntype="struct" output="false" access="public">	
+		<cfargument name="request" type="string" required="yes">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+	
+		<cfset var method = "getUsersToNotifyLists">
+		
+		<cfset var internalUsersEmails = structNew()>
+		<cfset var externalUsersEmails = structNew()>
+		
+		<cfset var internalUsersPhones = structNew()>
+		<cfset var externalUsersPhones = structNew()>
+		
+        <cfset var structResponse = structNew()>
+		
+        <cfinvoke component="UserManager" method="getUsersToNotify" returnvariable="arrayUsersToNotify">
+			<cfinvokeargument name="request" value="#arguments.request#"/>
+
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		</cfinvoke>
+		
+		<cfloop list="#APPLICATION.languages#" index="curLang">
+			
+			<cfset internalUsersEmails[curLang] = "">
+			<cfset externalUsersEmails[curLang] = "">
+			
+			<cfset internalUsersPhones[curLang] = "">
+			<cfset externalUsersPhones[curLang] = "">
+			
+		</cfloop>
+		
+		<cfloop index="curUser" array="#arrayUsersToNotify#">
+							
+			<cfset curr_val = curUser.email>
+			
+			<cfset curr_phone = curUser.mobile_phone>
+			<cfset curr_phone_ccode = curUser.mobile_phone_ccode>
+
+			<cfif curUser.whole_tree_visible IS true>
+				<!---<cfset listInternalUsers = ListAppend(listInternalUsers,curr_val,";")>--->
+				<cfset internalUsersEmails[curUser.language] = ListAppend(internalUsersEmails[curUser.language],curr_val,";")>
+				<cfif len(curr_phone) GT 0>
+					<cfif APPLICATION.identifier EQ "dp">
+						<cfset internalUsersPhones[curUser.language] = ListAppend(internalUsersPhones[curUser.language],curr_phone_ccode&curr_phone,";")>
+					<cfelse><!---vpnet--->
+						<cfset internalUsersPhones[curUser.language]  = ListAppend(internalUsersPhones[curUser.language],curr_phone,";")>
+					</cfif>	
+				</cfif>
+			<cfelse>
+				<!---<cfset listExternalUsers = ListAppend(listExternalUsers,curr_val,";")>--->
+				<cfset externalUsersEmails[curUser.language] = ListAppend(externalUsersEmails[curUser.language],curr_val,";")>
+				<cfif len(curr_phone) GT 0>
+					<cfif APPLICATION.identifier EQ "dp">
+						<cfset externalUsersPhones[curUser.language] = ListAppend(externalUsersPhones[curUser.language],curr_phone_ccode&curr_phone,";")>
+					<cfelse><!---vpnet--->
+						<cfset externalUsersPhones[curUser.language] = ListAppend(externalUsersPhones[curUser.language],curr_phone,";")>
+					</cfif>
+				</cfif>
+			</cfif>	
+			
+		</cfloop>
+		
+				
+        <cfset structResponse.structInternalUsersEmails = internalUsersEmails>
+        <cfset structResponse.structExternalUsersEmails = externalUsersEmails>
+		
+		<cfset structResponse.structInternalUsersPhones = internalUsersPhones>
+		<cfset structResponse.structExternalUsersPhones = externalUsersPhones>
+		
+		<cfreturn structResponse>
+	
+	</cffunction>
+
+
+
 	<!--- ---------------------------- GET USERS TO NOTIFY  ------------------------------- --->
 	
 	<cffunction name="getUsersToNotify" returntype="array" output="false" access="public">	
@@ -80,9 +160,7 @@
 			<cfif selectClientQuery.force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>				
 				
 				<cfxml variable="xmlPreferences">
-					<cfoutput>
-					#xmlRequest.request.parameters.preferences#
-					</cfoutput>
+					<cfoutput>#xmlRequest.request.parameters.preferences#</cfoutput>
 				</cfxml>
 				
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_message")>
@@ -184,12 +262,14 @@
 				<cfinvokeargument name="notify_delete_file" value="#notify_delete_file#">
 				<cfinvokeargument name="notify_lock_file" value="#notify_lock_file#">
 
+				<cfinvokeargument name="enabled" value="true">
+				<cfinvokeargument name="emailDefined" value="true">
+
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
 			
 			<cfset usersArray = returnArrays.usersArray>
-			<!---<cfset areasArray = returnArrays.areasArray>--->
 
 			<cfif arrayLen(usersArray) GT 0>
 							
@@ -202,85 +282,6 @@
 	
 	</cffunction>
 	
-    
-    <!--- ---------------------------- GET USERS TO NOTIFY LISTS ------------------------------- --->
-	
-	<cffunction name="getUsersToNotifyLists" returntype="struct" output="false" access="public">	
-		<cfargument name="request" type="string" required="yes">
-
-		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">
-	
-		<cfset var method = "getUsersToNotifyLists">
-		
-		<cfset var internalUsersEmails = structNew()>
-		<cfset var externalUsersEmails = structNew()>
-		
-		<cfset var internalUsersPhones = structNew()>
-		<cfset var externalUsersPhones = structNew()>
-		
-        <cfset var structResponse = structNew()>
-		
-        <cfinvoke component="UserManager" method="getUsersToNotify" returnvariable="arrayUsersToNotify">
-			<cfinvokeargument name="request" value="#arguments.request#"/>
-
-			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-		</cfinvoke>
-		
-		<cfloop list="#APPLICATION.languages#" index="curLang">
-			
-			<cfset internalUsersEmails[curLang] = "">
-			<cfset externalUsersEmails[curLang] = "">
-			
-			<cfset internalUsersPhones[curLang] = "">
-			<cfset externalUsersPhones[curLang] = "">
-			
-		</cfloop>
-		
-		<cfloop index="curUser" array="#arrayUsersToNotify#">
-							
-			<cfset curr_val = curUser.email>
-			
-			<cfset curr_phone = curUser.mobile_phone>
-			<cfset curr_phone_ccode = curUser.mobile_phone_ccode>
-
-			<cfif curUser.whole_tree_visible IS true>
-				<!---<cfset listInternalUsers = ListAppend(listInternalUsers,curr_val,";")>--->
-				<cfset internalUsersEmails[curUser.language] = ListAppend(internalUsersEmails[curUser.language],curr_val,";")>
-				<cfif len(curr_phone) GT 0>
-					<cfif APPLICATION.identifier EQ "dp">
-						<cfset internalUsersPhones[curUser.language] = ListAppend(internalUsersPhones[curUser.language],curr_phone_ccode&curr_phone,";")>
-					<cfelse><!---vpnet--->
-						<cfset internalUsersPhones[curUser.language]  = ListAppend(internalUsersPhones[curUser.language],curr_phone,";")>
-					</cfif>	
-				</cfif>
-			<cfelse>
-				<!---<cfset listExternalUsers = ListAppend(listExternalUsers,curr_val,";")>--->
-				<cfset externalUsersEmails[curUser.language] = ListAppend(externalUsersEmails[curUser.language],curr_val,";")>
-				<cfif len(curr_phone) GT 0>
-					<cfif APPLICATION.identifier EQ "dp">
-						<cfset externalUsersPhones[curUser.language] = ListAppend(externalUsersPhones[curUser.language],curr_phone_ccode&curr_phone,";")>
-					<cfelse><!---vpnet--->
-						<cfset externalUsersPhones[curUser.language] = ListAppend(externalUsersPhones[curUser.language],curr_phone,";")>
-					</cfif>
-				</cfif>
-			</cfif>	
-			
-		</cfloop>
-		
-				
-        <cfset structResponse.structInternalUsersEmails = internalUsersEmails>
-        <cfset structResponse.structExternalUsersEmails = externalUsersEmails>
-		
-		<cfset structResponse.structInternalUsersPhones = internalUsersPhones>
-		<cfset structResponse.structExternalUsersPhones = externalUsersPhones>
-		
-		<cfreturn structResponse>
-	
-	</cffunction>
-
-
 
 
 	<!--- ---------------------------- getAreaUsers ------------------------------- --->
@@ -316,7 +317,9 @@
 		<cfargument name="notify_delete_file" type="string" required="false" default="">
 		<cfargument name="notify_lock_file" type="string" required="false" default="">
 		
-		<cfargument name="with_external" type="string" required="no" default="true">
+		<cfargument name="with_external" type="string" required="false" default="true">
+		<cfargument name="enabled" type="boolean" required="false">
+		<cfargument name="emailDefined" type="boolean" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -416,6 +419,12 @@
 					
 					<cfif arguments.with_external EQ "false">
 					AND u.internal_user = true
+					</cfif>
+					<cfif isDefined("arguments.enabled")>
+					AND u.enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif isDefined("arguments.emailDefined") AND arguments.emailDefined IS true>
+					AND LENGTH(email) > 0	
 					</cfif>;
 				</cfquery>
 				
@@ -434,7 +443,6 @@
 							<cfinvokeargument name="creation_date" value="#areaUsersQuery.creation_date#">
 							<cfinvokeargument name="whole_tree_visible" value="#areaUsersQuery.internal_user#">
 							<cfinvokeargument name="root_folder_id" value="#areaUsersQuery.root_folder_id#">
-							<!---<cfinvokeargument name="general_administrator" value="">--->
 							<cfinvokeargument name="family_name" value="#areaUsersQuery.family_name#">
 							<cfinvokeargument name="name" value="#areaUsersQuery.name#">
 							<cfinvokeargument name="address" value="#areaUsersQuery.address#">
@@ -466,7 +474,6 @@
 				</cfif>	
 			
 			</cfif>
-			
 			
 			<cfset response = {usersArray=usersArray, areasArray=areasArray}>
 			<cfreturn response>
@@ -592,8 +599,6 @@
 		
 		<cfset var method = "appendUser">
 		
-		<!---<cftry>--->
-		
 			<cfloop index="arrUser" array="#usersArray#">
 		
 				<cfif arrUser.id EQ objectUser.id>
@@ -606,12 +611,6 @@
 			
 			<cfreturn usersArray>
 		
-			<!---<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-				<cfreturn null>
-			</cfcatch>
-		</cftry>--->
-	
 	</cffunction>
 
 

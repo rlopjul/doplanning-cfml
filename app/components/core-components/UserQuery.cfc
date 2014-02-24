@@ -18,16 +18,21 @@
 		<cfset var method = "getUser">
 
 			<cfquery name="getUserQuery" datasource="#arguments.client_dsn#">
-				SELECT id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, internal_user AS whole_tree_visible, image_file, image_type, dni, language,
-				CONCAT_WS(' ', family_name, name) AS user_full_name
+				SELECT id, id AS user_id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, internal_user AS whole_tree_visible, image_file, image_type, dni, language, enabled, information,
+					CONCAT_WS(' ', family_name, name) AS user_full_name
 				<cfif arguments.format_content EQ "all">
 				, space_used, number_of_connections, last_connection, connected, session_id, creation_date, root_folder_id, sms_allowed
 				</cfif> 
 				<cfif arguments.with_ldap IS true>
 				, login_ldap, login_diraya
+				<cfelseif arguments.client_abb EQ "hcs">
+					, login_ldap
 				</cfif>
 				<cfif arguments.with_vpnet IS true>
 				, center_id, category_id, service_id, service, other_1, other_2
+				</cfif>
+				<cfif arguments.client_abb EQ "hcs">
+					, perfil_cabecera
 				</cfif>
 				FROM `#arguments.client_abb#_users`
 				WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;

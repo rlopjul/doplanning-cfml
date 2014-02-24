@@ -1,7 +1,12 @@
 <cfif isDefined("URL.file")>
-	<cfset redirect_page = "file.cfm?file=#URL.file#&area=#URL.area#">
+	<cfif isDefined("URL.download")>
+		<cfset file_download = true>
+	<cfelse>
+		<cfset file_download = false>
+	</cfif>
+	<cfset redirect_page = "file.cfm?file=#URL.file#&area=#URL.area#&download=#file_download#">
 	<!---<cfset redirect_area_page = "files.cfm?file=#URL.file#&area=#URL.area#">--->
-	<cfset redirect_area_page = "area_items.cfm?file=#URL.file#&area=#URL.area#">
+	<cfset redirect_area_page = "area_items.cfm?file=#URL.file#&area=#URL.area#&download=#file_download#">
 <cfelseif isDefined("URL.message")>
 	<cfset redirect_page = "message.cfm?message=#URL.message#">
 	<!---<cfset redirect_area_page = "messages.cfm?message=#URL.message#&area=#URL.area#">--->

@@ -13,6 +13,10 @@
 
 <cfoutput>
 
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+
 <script>
 
 	function confirmDeleteView() {
@@ -74,6 +78,15 @@
 			   }
 		});
 
+		$('##publication_date').datepicker({
+			  format: 'dd-mm-yyyy',
+			  weekStart: 1,
+			  language: 'es',
+			  todayBtn: 'linked', 
+			  autoclose: true
+		});
+
+
 	    $(".up,.down").click(function(event){
 
 	    	event.stopPropagation();
@@ -115,9 +128,10 @@
 
 	});
 
-
 </script>
 </cfoutput>
+
+<cfset passthrough = "">
 
 <div class="contenedor_fondo_blanco">
 
@@ -143,6 +157,13 @@
 		<input type="hidden" name="view_id" value="#view.view_id#"/>
 	</cfif>
 
+	<div class="row">
+		<div class="col-xs-12 col-sm-8">
+			<label for="title" class="control-label">Nombre *</label>
+			<cfinput type="text" name="title" id="title" value="#view.title#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
+		</div>
+	</div>
+	
 	<cfif isNumeric(view.area_id)>
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="viewArea">
 			<cfinvokeargument name="area_id" value="#view.area_id#">
@@ -151,7 +172,6 @@
 	<cfelse>
 		<cfset areaName = "">
 	</cfif>
-	
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
@@ -165,11 +185,93 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xs-12 col-sm-8">
-			<label for="title" class="control-label">Nombre *</label>
-			<cfinput type="text" name="title" id="title" value="#view.title#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
+
+		<cfif isDefined("view.publication_hour")><!--- After send FORM --->
+
+			<cfset publication_hour = view.publication_hour>
+			<cfset publication_minute = view.publication_minute>
+
+		<cfelse>
+			
+			<cfset publication_hour = timeFormat(view.publication_date, "HH")>
+			<cfset publication_minute = timeFormat(view.publication_date, "mm")>
+
+			<cfif len(view.publication_date) GT 10>
+				<cfset view.publication_date = left(view.publication_date, findOneOf(" ", view.publication_date))>
+			</cfif>
+
+		</cfif>
+
+		<div class="col-xs-6 col-md-3">
+			<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
+			<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#view.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+		</div>
+					
+		<div class="col-xs-6">
+			<!--- 
+				<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
+							<div class="input-group" style="width:170px">
+								<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
+									<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
+										<cfset curHour = TimeFormat(hour, 'HH')>
+										<option value="#curHour#" <cfif curHour EQ publication_hour>selected="selected"</cfif>>#curHour#</option>
+									</cfloop>
+								</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
+									<cfset minutesInOptions = false>
+									<cfloop from="0" to="59" index="minutes" step="5">
+										<cfif len(minutes) EQ 1>
+											<cfset minutes = "0"&minutes>
+										</cfif>
+										<cfif minutes EQ publication_minute>
+											<cfset minutesSelected = true>
+											<cfset minutesInOptions = true>
+										<cfelse>
+											<cfset minutesSelected = false>
+										</cfif>
+										<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
+									</cfloop>
+									<cfif minutesInOptions IS false AND len(publication_minute) GT 0>
+										<option value="#publication_minute#" selected="selected">#publication_minute#</option>
+									</cfif>
+								</select>
+							</div> --->
+					
+		</div>
+		
+		<input type="hidden" name="publication_hour" value="00"/>
+		<input type="hidden" name="publication_minute" value="00"/>
+		
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12">
+			<small class="help-block">Si está definida, <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
 		</div>
 	</div>
+
+	<cfif APPLICATION.publicationValidation IS true>
+
+		<!--- isUserAreaResponsible --->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="isUserTableAreaResponsible">				
+			<cfinvokeargument name="area_id" value="#table.area_id#">
+		</cfinvoke>
+
+		<cfif isUserTableAreaResponsible IS true>
+			
+			<div class="row">
+				<div class="col-xs-12 col-sm-8">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("view.publication_validated") AND view.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+						</label>
+						<small class="help-block">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif> (sólo para publicación en web e intranet).</small>
+					</div>
+				</div>
+			</div>
+
+		</cfif>
+
+	</cfif>
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">

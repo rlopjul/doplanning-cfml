@@ -3,6 +3,53 @@
 	<cfset component = "Utils">
 
 
+	<!---    generateNewPassword     --->
+	
+	<cfscript>
+	
+		/**
+		* Generates a password the length you specify.
+		* 
+		* @param numberOfCharacters      Lengh for the generated password. 
+		* @return Returns a string. 
+		* @author Tony Blackmon (fluid@sc.rr.com) 
+		* @version 1, April 25, 2002 
+		*/
+		function generatePassword(numberofCharacters) {
+			var placeCharacter = "";
+			var currentPlace=0;
+			var group=0;
+			var subGroup=0;
+			
+			for(currentPlace=1; currentPlace lte numberofCharacters; currentPlace = currentPlace+1) {
+			group = randRange(1,4);
+			switch(group) {
+			case "1":
+			subGroup = rand();
+				switch(subGroup) {
+			case "0":
+			placeCharacter = placeCharacter & chr(randRange(33,46));
+			break;
+			case "1":
+			placeCharacter = placeCharacter & chr(randRange(58,64));
+			break;
+			}
+			case "2":
+			placeCharacter = placeCharacter & chr(randRange(97,122));
+			break;
+			case "3":
+			placeCharacter = placeCharacter & chr(randRange(65,90));
+			break;
+			case "4":
+			placeCharacter = placeCharacter & chr(randRange(48,57));
+			break;
+			}
+			}
+			return placeCharacter;
+		}
+	
+	</cfscript>
+
 	<!--- insertBR --->
 
 	<cffunction name="insertBR" returntype="string" access="public">
@@ -695,6 +742,53 @@
 		<!--- Return the resultant array of arrays. --->
 		<cfreturn LOCAL.Return />
 	 
+	</cffunction>
+
+
+
+
+	<!--- queryToArray --->
+
+	<cffunction name="queryToArray" access="public" returntype="array" output="false" hint="This turns a query into an array of structures.">
+		<cfargument name="data" type="query" required="yes" />
+
+		<cfscript>
+
+		// Define the local scope.
+		var LOCAL = StructNew();
+
+		// Get the column names as an array.
+		LOCAL.Columns = ListToArray( ARGUMENTS.Data.ColumnList );
+
+		// Create an array that will hold the query equivalent.
+		LOCAL.QueryArray = ArrayNew( 1 );
+
+		// Loop over the query.
+		for (LOCAL.RowIndex = 1 ; LOCAL.RowIndex LTE ARGUMENTS.Data.RecordCount ; LOCAL.RowIndex = (LOCAL.RowIndex + 1)){
+
+		// Create a row structure.
+		LOCAL.Row = StructNew();
+
+		// Loop over the columns in this row.
+		for (LOCAL.ColumnIndex = 1 ; LOCAL.ColumnIndex LTE ArrayLen( LOCAL.Columns ) ; LOCAL.ColumnIndex = (LOCAL.ColumnIndex + 1)){
+
+		// Get a reference to the query column.
+		LOCAL.ColumnName = LOCAL.Columns[ LOCAL.ColumnIndex ];
+
+		// Store the query cell value into the struct by key.
+		LOCAL.Row[ LOCAL.ColumnName ] = ARGUMENTS.Data[ LOCAL.ColumnName ][ LOCAL.RowIndex ];
+
+		}
+
+		// Add the structure to the query array.
+		ArrayAppend( LOCAL.QueryArray, LOCAL.Row );
+
+		}
+
+		// Return the array equivalent.
+		return( LOCAL.QueryArray );
+
+		</cfscript>
 	</cffunction>
 	
 
