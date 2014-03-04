@@ -125,12 +125,12 @@ var area_item_content_en = {
 	'Copiar Elemento de contenido a áreas':'Copy Content element to areas',
 	'Copiar Noticia a áreas':'Copy News item to areas',
 	
-	'Añadir Mensaje a áreas seleccionadas':'Copy Message to selected areas',
-	'Añadir Evento a áreas seleccionadas':'Copy Event to selected areas',
-	'Añadir Tarea a áreas seleccionadas':'Copy Task to selected areas',
-	'Añadir Interconsulta a áreas seleccionadas':'Copy Interconsultation to selected areas',
-	'Añadir Elemento de contenido a áreas seleccionadas':'Copy Content element to selected areas',
-	'Añadir Noticia a áreas seleccionadas':'Copy News item to selected areas',
+	'Copiar Mensaje en áreas seleccionadas':'Copy Message to selected areas',
+	'Copiar Evento en áreas seleccionadas':'Copy Event to selected areas',
+	'Copiar Tarea en áreas seleccionadas':'Copy Task to selected areas',
+	'Copiar Interconsulta en áreas seleccionadas':'Copy Interconsultation to selected areas',
+	'Copiar Elemento de contenido en áreas seleccionadas':'Copy Content element to selected areas',
+	'Copiar Noticia en áreas seleccionadas':'Copy News item to selected areas',
 	
 	'Seleccione las áreas a las que desea copiar el Mensaje:':'Select the areas you want to copy the Message:',
 	'Seleccione las áreas a las que desea copiar el Evento:':'Select the areas you want to copy the Event:',

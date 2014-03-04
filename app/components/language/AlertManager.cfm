@@ -153,6 +153,7 @@ curLangText["es"] = {
 			"validated_version" : "Versión de archivo validada",
 			"rejected_version" : "Versión de archivo rechazada",
 			"approved_version" : "Versión de archivo aprobada",
+			"canceled_revision" : "Revisión de archivo cancelada",
 			
 			"created" : "creado",
 			"added" : "añadido",
@@ -437,6 +438,7 @@ curLangText["en"] = {
 			"validated_version" : "File version validated",
 			"rejected_version" : "File version rejected",
 			"approved_version" : "File version approved",
+			"canceled_revision" : "File revision canceled",
 			
 			"created" : "created",
 			"added" : "added",

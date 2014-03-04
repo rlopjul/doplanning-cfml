@@ -97,6 +97,9 @@
 				<cfif arguments.itemTypeId IS 13><!--- Typology --->
 					, items.general
 				</cfif>
+				<cfif APPLICATION.publicationScope IS true AND ( arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 )>
+					, items.publication_scope_id, scopes.name AS publication_scope_name
+				</cfif>
 				FROM #client_abb#_#itemTypeTable# AS items
 				INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
 				LEFT JOIN #client_abb#_files AS files ON files.id = items.attached_file_id
@@ -105,6 +108,9 @@
 				</cfif>
 				<cfif arguments.itemTypeId IS 6><!--- Task --->
 					INNER JOIN #client_abb#_users AS recipient_users ON items.recipient_user = recipient_users.id
+				</cfif>
+				<cfif APPLICATION.publicationScope IS true AND ( arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 )>
+					LEFT JOIN #client_abb#_scopes AS scopes ON items.publication_scope_id = scopes.scope_id
 				</cfif>
 				WHERE items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
 				<cfif itemTypeWeb IS true><!--- WEB --->
@@ -127,7 +133,7 @@
 	
 	<cffunction name="getAreaItems" output="false" returntype="struct" access="public">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
-		<cfargument name="format_content" type="string" required="yes">
+		<cfargument name="format_content" type="string" required="false" default="default">
 		<cfargument name="listFormat" type="string" required="yes">
 		<cfargument name="area_id" type="string" required="no">
 		<cfargument name="areas_ids" type="string" required="no">
@@ -285,6 +291,9 @@
 					<cfif isDefined("arguments.end_date")>
 					AND items.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
 					</cfif>
+					<!---<cfif isDefined("arguments.with_end_date")>
+						AND items.end_date = STR_TO_DATE(<cfqueryparam value="#arguments.with_end_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+					</cfif>--->
 					<cfif isDefined("arguments.structure_available")>
 					AND items.structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
 					</cfif>

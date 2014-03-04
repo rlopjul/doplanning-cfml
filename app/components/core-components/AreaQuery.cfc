@@ -85,7 +85,8 @@
 			<cfquery name="rootAreasQuery" datasource="#client_dsn#">
 				SELECT areas.id
 				FROM #client_abb#_areas AS areas
-				WHERE areas.parent_id = <cfqueryparam value="#arguments.root_area_id#" cfsqltype="cf_sql_integer">;
+				WHERE areas.parent_id = <cfqueryparam value="#arguments.root_area_id#" cfsqltype="cf_sql_integer">
+				ORDER BY areas.name ASC;
 			</cfquery>	
 		
 		<cfreturn rootAreasQuery>

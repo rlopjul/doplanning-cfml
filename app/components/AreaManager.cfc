@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2014
 
     File created by: ppareja
     ColdFusion version required: 8
@@ -697,14 +697,11 @@
 		
 		<cfset var method = "getUserAreasArray">
 		
-		<cfset var areasArray = ArrayNew(1)>
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+		<cfset var areasArray = ArrayNew(1)>			
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfquery name="getUserAreas" datasource="#client_dsn#">
+			<!---<cfquery name="getUserAreas" datasource="#client_dsn#">
 				SELECT area_id
 				FROM #client_abb#_areas_users
 				WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;
@@ -724,9 +721,23 @@
 				
 				<cfthrow errorcode="#error_code#">
 			
-			</cfif>									
+			</cfif>--->									
 			
-		
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="getUserAreasArray" returnvariable="areasArray">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif arrayLen(areasArray) IS 0><!---The user has no areas--->
+							
+				<cfset error_code = 403>
+				
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
 		<cfreturn areasArray>
 		
 	</cffunction>
@@ -741,56 +752,74 @@
 		<cfargument name="allowed" type="boolean" required="no" default="false">
 		
 		<cfset var method = "loopUserAreas">
-		
-		<cfset var userBelongsToArea = false>
-					
-			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+		<cfset var allAreasList = "">
 			
-			<cfif arguments.allowed EQ true>
-				<cfset userBelongsToArea = true>
-			<cfelse>
-				<cfset list = ArrayToList(#arguments.areasArray#,",")>
-				<cfset findAreaInList = ListFind(list, #arguments.area_id#)>
-				 
-				<cfif findAreaInList GT 0>
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<!--- 
+			<cfset var userBelongsToArea = false>
+								
+				<cfinclude template="includes/functionStartOnlySession.cfm">
+				
+				<cfif arguments.allowed EQ true>
 					<cfset userBelongsToArea = true>
 				<cfelse>
-					<cfset userBelongsToArea = false>
-				</cfif>	
+					<cfset list = ArrayToList(#arguments.areasArray#,",")>
+					<cfset findAreaInList = ListFind(list, #arguments.area_id#)>
+					 
+					<cfif findAreaInList GT 0>
+						<cfset userBelongsToArea = true>
+					<cfelse>
+						<cfset userBelongsToArea = false>
+					</cfif>	
 
-			</cfif>
-			
-			<cfif userBelongsToArea EQ true>
-
-				<cfset allAreasList = ListAppend(allAreasList,#arguments.area_id#)>
+				</cfif>
 				
-			</cfif>
-			
-			<!--- Sub areas --->
-			<cfquery name="subAreasQuery" datasource="#client_dsn#">
-				SELECT id 
-				FROM #client_abb#_areas
-				WHERE parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-			
-			<cfset hasSubAreas = (#subAreasQuery.recordCount# GT 0)>
-			
-			<!--- Appending subareas content in the case where there are sub areas --->
-			<cfif hasSubAreas EQ true>			
-				<cfloop query="subAreasQuery">				
-					<cfinvoke component="AreaManager" method="loopUserAreas" returnvariable="allAreasListUpdated">
-						<cfinvokeargument name="area_id" value="#subAreasQuery.id#">
-						<cfinvokeargument name="areasArray" value="#arguments.areasArray#">
-						<cfinvokeargument name="allAreasList" value="#allAreasList#">
-						<cfinvokeargument name="allowed" value="#userBelongsToArea#">
-					</cfinvoke>
+				<cfif userBelongsToArea EQ true>
+
+					<cfset allAreasList = ListAppend(allAreasList,#arguments.area_id#)>
 					
-					<cfset allAreasList = allAreasListUpdated>
-										
-				</cfloop>			
-			</cfif>
+				</cfif>
+				
+				<!--- Sub areas --->
+				<cfquery name="subAreasQuery" datasource="#client_dsn#">
+					SELECT id 
+					FROM #client_abb#_areas
+					WHERE parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+				
+				<cfset hasSubAreas = (#subAreasQuery.recordCount# GT 0)>
+				
+				<!--- Appending subareas content in the case where there are sub areas --->
+				<cfif hasSubAreas EQ true>			
+					<cfloop query="subAreasQuery">				
+						<cfinvoke component="AreaManager" method="loopUserAreas" returnvariable="allAreasListUpdated">
+							<cfinvokeargument name="area_id" value="#subAreasQuery.id#">
+							<cfinvokeargument name="areasArray" value="#arguments.areasArray#">
+							<cfinvokeargument name="allAreasList" value="#allAreasList#">
+							<cfinvokeargument name="allowed" value="#userBelongsToArea#">
+						</cfinvoke>
+						
+						<cfset allAreasList = allAreasListUpdated>
+											
+					</cfloop>			
+				</cfif>
+			
+			<cfreturn allAreasList> --->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="loopUserAreas" returnvariable="allAreasList">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="areasArray" value="#arguments.areasArray#">
+				<cfinvokeargument name="allAreasList" value="#arguments.allAreasList#">
+				<cfinvokeargument name="allowed" value="#arguments.allowed#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfreturn allAreasList>
 		
-		<cfreturn allAreasList>
 		
 	</cffunction>
 	
@@ -806,6 +835,10 @@
 		
 		<cfset var user_id = "">
 
+		<cfset var root_area_id = "">
+		<cfset var root_user = "">
+		<cfset var areasArray = "">
+		<cfset var allAreasListUpdated = "">
 		<cfset var allAreasList = "">
 		
 		<!---<cfinclude template="includes/initVars.cfm">--->	
@@ -817,7 +850,7 @@
 			</cfinvoke>			
 			
 			<cfinvoke component="UserManager" method="isRootUser" returnvariable="root_user">
-				<cfinvokeargument name="get_user_id" value="#user_id#"> 
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#"> 
 			</cfinvoke>
 			
 			<cfif root_user IS true><!---Is root user--->
@@ -828,10 +861,7 @@
 				</cfquery>			
 				
 				<cfif getAllAreasQuery.RecordCount GT 0>
-					
-					<!---<cfloop query="getAllAreasQuery">
-						<cfset allAreasList = listAppend(allAreasList,getAllAreasQuery.id)>
-					</cfloop>--->
+
 					<cfset allAreasList = valueList(getAllAreasQuery.id)>
 					
 				</cfif>

@@ -100,7 +100,7 @@
 </div>
 </cfoutput>
 
-<div style="height:40px;"><!-- ---></div>
+<div style="height:60px;"><!-- ---></div>
 
 <cfif isDefined("user_id")>
 	<cfinclude template="#APPLICATION.htmlPath#/admin/includes/user_content.cfm">

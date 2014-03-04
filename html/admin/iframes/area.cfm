@@ -74,8 +74,9 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
+<!--- <div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Seleccione un área del árbol para ver sus usuarios.</span></div> --->
 
-<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Seleccione un área del árbol para ver sus usuarios.</span></div>
+<p class="bg-info text-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Seleccione un área del árbol para ver sus usuarios.</span></p>
 
 
 <!-- InstanceEndEditable -->
