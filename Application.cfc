@@ -1,10 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2013
-
-    File created by: alucena
-    ColdFusion version required: 8
-    Last file change by: alucena
-
---->
+<!--- Copyright Era7 Information Technologies 2007-2014 --->
 
 <cfcomponent displayname="Application" output="false">
 
@@ -14,7 +8,7 @@
 	<cfset this.sessionmanagement="true">
 	<cfset this.sessiontimeout="#createtimespan(0,5,0,0)#">
 	
-	<!--- Define the page request properties. --->
+	<!--- Set the page request properties. --->
 	<cfsetting requesttimeout="840" showdebugoutput="true" /><!---14 minutes--->
 	<!---En el web admin de Railo debe estar definido el default requesttimeout al valor de APPLICATION.filesTimeout para que se aplique en las páginas de subida de archivos--->
 	
@@ -124,9 +118,7 @@
 		<!---Google analytics--->
 		<cfset APPLICATION.googleAnalyticsAccountId = "">
 		
-		
-		<!---Al cambiar la aplicacion de sitio tambien hay que modificar los extends de los Application--->
-		
+				
 		<cfif APPLICATION.moduleWeb EQ true><!---DPWeb enabled--->
 			
 			<cfset APPLICATION.dpWebClientAbb = "doplanning">
