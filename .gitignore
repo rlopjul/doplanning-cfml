@@ -29,7 +29,10 @@ Application_POZOBLANCO.cfc
 Application_POZOBLANCO_ANTERIOR.cfc
 index_POZOBLANCO.cfm
 /app/vpnet_banner.png
+<<<<<<< HEAD
 bfj.jar
+=======
+>>>>>>> b8e83359b78f92bfe1c38ccbd1ce18812138fc79
 
 
 #################
