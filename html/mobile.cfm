@@ -111,6 +111,7 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="objectUser">
 	<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 	<cfinvokeargument name="format_content" value="all">
+	<cfinvokeargument name="return_type" value="object">
 </cfinvoke>
 
 <cfoutput>

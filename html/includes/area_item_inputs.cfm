@@ -38,7 +38,7 @@
 
 		</cfif>
 
-		<cfif len(area_type) GT 0><!--- WEB --->
+		<cfif itemTypeWeb IS true AND ( NOT isDefined("area_type") OR len(area_type) GT 0 )><!--- WEB --->
 
 			$('##publication_date').datepicker({
 			  format: 'dd-mm-yyyy',
@@ -178,7 +178,7 @@
 	<cfinput type="hidden" name="title" value="#objectItem.title#">
 </cfif>
 
-<cfif len(area_type) GT 0><!--- WEB --->
+<cfif itemTypeWeb IS true AND ( NOT isDefined("area_type") OR len(area_type) GT 0 )><!--- WEB --->
 
 	<div class="row">
 

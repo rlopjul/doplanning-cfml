@@ -1,9 +1,59 @@
-<!---Copyright Era7 Information Technologies 2007-2013--->
+<!---Copyright Era7 Information Technologies 2007-2014--->
+
 <cfcomponent output="false">
 
 	<cfset component = "UserManager">
 
 	<cfinclude template="#APPLICATION.componentsPath#/includes/functions.cfm">
+
+
+	<!--- -------------------------- isRootUser -------------------------------- --->
+	<!---Obtiene si el usuario está en la raiz de la organización o no--->
+	
+	<cffunction name="isRootUser" returntype="boolean" access="public">
+ 		<cfargument name="get_user_id" type="numeric" required="yes">
+ 		<cfargument name="root_area_id" type="numeric" required="false">
+
+ 		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+		
+		<cfset var method = "isInternalUser">
+
+		<cfset var root_area_id = "">
+				
+		<!--- <cfinvoke component="AreaManager" method="getRootAreaId" returnvariable="root_area_id">
+		</cfinvoke> --->
+
+		<cfif NOT isDefined("arguments.root_area_id")>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
+				<cfinvokeargument name="onlyId" value="true">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+			
+			<cfset root_area_id = rootAreaQuery.id>
+
+		<cfelse>
+
+			<cfset root_area_id = arguments.root_area_id>	
+			
+		</cfif>
+		
+		<cfquery name="isRootUserQuery" datasource="#client_dsn#">
+			SELECT user_id 
+			FROM #client_abb#_areas_users
+			WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer"> 
+			AND area_id = <cfqueryparam value="#root_area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+		
+		<cfif isRootUserQuery.recordCount GT 0>
+			<cfreturn true>
+		<cfelse>
+			<cfreturn false>
+		</cfif>		
+	
+	</cffunction>
 
 
 	<!--- ---------------------------- GET USERS TO NOTIFY LISTS ------------------------------- --->

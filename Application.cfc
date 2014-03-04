@@ -8,7 +8,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_beta_aws_6'>
+	<cfset this.name = 'dp_beta_aws_7'>
 	
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
@@ -100,15 +100,15 @@
 		<!---<cfset APPLICATION.jqueryUIJSPath = "//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js">
 		<cfset APPLICATION.jqueryUICSSPath = APPLICATION.path&"/jquery/jquery-ui/css/jquery-ui-bootstrap/jquery-ui-1.10.0.custom.css">--->
 		<!---<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js">--->
-		<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js">
+		<cfset APPLICATION.bootstrapJSPath = "//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js">
 		<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
         <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
 		
 		<!---<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css">--->
-		<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+		<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 		<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
 
-		<cfset APPLICATION.themeCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+		<cfset APPLICATION.themeCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 		
 		<cfset APPLICATION.mainUrl = "http://software.doplanning.net">
 		<cfset APPLICATION.alternateUrl = "">

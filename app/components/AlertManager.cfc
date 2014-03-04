@@ -539,133 +539,142 @@
 		
 		
 		<!---OLD USER--->
-		<cfif itemTypeGender EQ "male">
-			<cfset actionContent = #langText[oldUser.language].change_owner_item.owner_changed_male#>
-		<cfelse>
-			<cfset actionContent = #langText[oldUser.language].change_owner_item.owner_changed_female#>
-		</cfif>
 
-		<cfset oldUsersubject = "[#root_area.name#][#langText[oldUser.language].item[itemTypeId].name# #actionContent#] "&objectItem.title>
+		<cfif len(oldUser.email) GT 0>
 
-		<cfinvoke component="AlertManager" method="getChangeItemUserAlertContents" returnvariable="oldUserContent">
-			<cfinvokeargument name="language" value="#oldUser.language#">
-			<cfinvokeargument name="objectItem" value="#arguments.objectItem#"/>
-			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
-			<cfinvokeargument name="area_id" value="#objectItem.area_id#"/>
-			<cfinvokeargument name="new_user_full_name" value="#newUserFullName#"/>
-		</cfinvoke>
-
-		<cfif oldUser.internal_user IS true><!---INTERNAL USER--->
-			
-			<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
-				<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-			</cfinvoke>
-			
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="oldUserContentInternal">
-			<cfoutput>
-	#langText[oldUser.language].change_owner_item.your_item_was_changed#<br/><br/>
-
-	#langText[oldUser.language].common.area#: <strong>#area_name#</strong>.<br/>
-	#langText[oldUser.language].common.area_path#: #area_path#.<br/><br/>
-	
-	#oldUserContent.alertContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>				
-
-		<cfelse><!---EXTERNAL USER--->
-
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="oldUserContentExternal">
-			<cfoutput>
-	#langText[oldUser.language].change_owner_item.your_item_was_changed#<br/><br/>
-
-	#langText[oldUser.language].common.area#: <strong>#area_name#</strong> #langText[oldUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
-	
-	#oldUserContent.alertContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>
-
-		</cfif>
-		
-		<cfinvoke component="EmailManager" method="sendEmail">
-			<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-			<cfinvokeargument name="to" value="#oldUser.email#">
-			<cfinvokeargument name="subject" value="#oldUsersubject#">
-			<cfif oldUser.internal_user IS true><!---INTERNAL USER--->
-				<cfinvokeargument name="content" value="#oldUserContentInternal#">
+			<cfif itemTypeGender EQ "male">
+				<cfset actionContent = #langText[oldUser.language].change_owner_item.owner_changed_male#>
 			<cfelse>
-				<cfinvokeargument name="content" value="#oldUserContentExternal#">
+				<cfset actionContent = #langText[oldUser.language].change_owner_item.owner_changed_female#>
 			</cfif>
-			<cfinvokeargument name="foot_content" value="#oldUserContent.footContent#">
-		</cfinvoke>
+
+			<cfset oldUsersubject = "[#root_area.name#][#langText[oldUser.language].item[itemTypeId].name# #actionContent#] "&objectItem.title>
+
+			<cfinvoke component="AlertManager" method="getChangeItemUserAlertContents" returnvariable="oldUserContent">
+				<cfinvokeargument name="language" value="#oldUser.language#">
+				<cfinvokeargument name="objectItem" value="#arguments.objectItem#"/>
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<cfinvokeargument name="area_id" value="#objectItem.area_id#"/>
+				<cfinvokeargument name="new_user_full_name" value="#newUserFullName#"/>
+			</cfinvoke>
+
+			<cfif oldUser.internal_user IS true><!---INTERNAL USER--->
+				
+				<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+					<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+				</cfinvoke>
+				
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="oldUserContentInternal">
+				<cfoutput>
+		#langText[oldUser.language].change_owner_item.your_item_was_changed#<br/><br/>
+
+		#langText[oldUser.language].common.area#: <strong>#area_name#</strong>.<br/>
+		#langText[oldUser.language].common.area_path#: #area_path#.<br/><br/>
+		
+		#oldUserContent.alertContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>				
+
+			<cfelse><!---EXTERNAL USER--->
+
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="oldUserContentExternal">
+				<cfoutput>
+		#langText[oldUser.language].change_owner_item.your_item_was_changed#<br/><br/>
+
+		#langText[oldUser.language].common.area#: <strong>#area_name#</strong> #langText[oldUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
+		
+		#oldUserContent.alertContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>
+
+			</cfif>
+			
+			<cfinvoke component="EmailManager" method="sendEmail">
+				<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+				<cfinvokeargument name="to" value="#oldUser.email#">
+				<cfinvokeargument name="subject" value="#oldUsersubject#">
+				<cfif oldUser.internal_user IS true><!---INTERNAL USER--->
+					<cfinvokeargument name="content" value="#oldUserContentInternal#">
+				<cfelse>
+					<cfinvokeargument name="content" value="#oldUserContentExternal#">
+				</cfif>
+				<cfinvokeargument name="foot_content" value="#oldUserContent.footContent#">
+			</cfinvoke>
+
+		</cfif>
 
 
 		<!---NEW USER--->
-		<cfif itemTypeGender EQ "male">
-			<cfset actionContent = #langText[newUser.language].change_owner_item.owner_changed_male#>
-		<cfelse>
-			<cfset actionContent = #langText[newUser.language].change_owner_item.owner_changed_female#>
-		</cfif>
-		<cfset newUserSubject = "[#root_area.name#][#langText[newUser.language].item[itemTypeId].name# #actionContent#] "&objectItem.title>
 
-		<cfinvoke component="AlertManager" method="getChangeItemUserAlertContents" returnvariable="newUserContent">
-			<cfinvokeargument name="language" value="#newUser.language#">
-			<cfinvokeargument name="objectItem" value="#arguments.objectItem#"/>
-			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
-			<cfinvokeargument name="area_id" value="#objectItem.area_id#"/>
-			<cfinvokeargument name="new_user_full_name" value="#newUserFullName#"/>
-		</cfinvoke>
+		<cfif len(newUser.email) GT 0>
 
-		<cfif newUser.internal_user IS true><!---INTERNAL USER--->
-			
-			<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
-				<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-			</cfinvoke>
-			
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="newUserContentInternal">
-			<cfoutput>
-	#langText[newUser.language].change_owner_item.you_have_new_item#<br/><br/>
-
-	#langText[newUser.language].common.area#: <strong>#area_name#</strong>.<br/>
-	#langText[newUser.language].common.area_path#: #area_path#.<br/><br/>
-	
-	#newUserContent.alertContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>				
-
-		<cfelse><!---EXTERNAL USER--->
-
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="newUserContentExternal">
-			<cfoutput>
-	#langText[newUser.language].change_owner_item.you_have_new_item#<br/><br/>
-
-	#langText[newUser.language].common.area#: <strong>#area_name#</strong> #langText[newUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
-	
-	#newUserContent.alertContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>
-
-		</cfif>
-		
-		<cfinvoke component="EmailManager" method="sendEmail">
-			<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-			<cfinvokeargument name="to" value="#newUser.email#">
-			<cfinvokeargument name="subject" value="#newUserSubject#">
-			<cfif newUser.internal_user IS true><!---INTERNAL USER--->
-				<cfinvokeargument name="content" value="#newUserContentInternal#">
+			<cfif itemTypeGender EQ "male">
+				<cfset actionContent = #langText[newUser.language].change_owner_item.owner_changed_male#>
 			<cfelse>
-				<cfinvokeargument name="content" value="#newUserContentExternal#">
+				<cfset actionContent = #langText[newUser.language].change_owner_item.owner_changed_female#>
 			</cfif>
-			<cfinvokeargument name="foot_content" value="#newUserContent.footContent#">
-		</cfinvoke>	
+			<cfset newUserSubject = "[#root_area.name#][#langText[newUser.language].item[itemTypeId].name# #actionContent#] "&objectItem.title>
+
+			<cfinvoke component="AlertManager" method="getChangeItemUserAlertContents" returnvariable="newUserContent">
+				<cfinvokeargument name="language" value="#newUser.language#">
+				<cfinvokeargument name="objectItem" value="#arguments.objectItem#"/>
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<cfinvokeargument name="area_id" value="#objectItem.area_id#"/>
+				<cfinvokeargument name="new_user_full_name" value="#newUserFullName#"/>
+			</cfinvoke>
+
+			<cfif newUser.internal_user IS true><!---INTERNAL USER--->
+				
+				<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+					<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+				</cfinvoke>
+				
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="newUserContentInternal">
+				<cfoutput>
+		#langText[newUser.language].change_owner_item.you_have_new_item#<br/><br/>
+
+		#langText[newUser.language].common.area#: <strong>#area_name#</strong>.<br/>
+		#langText[newUser.language].common.area_path#: #area_path#.<br/><br/>
 		
+		#newUserContent.alertContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>				
+
+			<cfelse><!---EXTERNAL USER--->
+
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="newUserContentExternal">
+				<cfoutput>
+		#langText[newUser.language].change_owner_item.you_have_new_item#<br/><br/>
+
+		#langText[newUser.language].common.area#: <strong>#area_name#</strong> #langText[newUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
+		
+		#newUserContent.alertContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>
+
+			</cfif>
+			
+			<cfinvoke component="EmailManager" method="sendEmail">
+				<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+				<cfinvokeargument name="to" value="#newUser.email#">
+				<cfinvokeargument name="subject" value="#newUserSubject#">
+				<cfif newUser.internal_user IS true><!---INTERNAL USER--->
+					<cfinvokeargument name="content" value="#newUserContentInternal#">
+				<cfelse>
+					<cfinvokeargument name="content" value="#newUserContentExternal#">
+				</cfif>
+				<cfinvokeargument name="foot_content" value="#newUserContent.footContent#">
+			</cfinvoke>	
+		
+		</cfif>
 				
 
 	</cffunction>
@@ -880,6 +889,11 @@
 					<cfcase value="approve_version"><!--- approve_version --->
 						<cfset subject_action = langText[curLang].new_file.approved_version>
 						<cfset action_value = langText[curLang].new_file.approved>
+					</cfcase>
+
+					<cfcase value="cancel_revision"><!--- cancel_revision --->
+						<cfset subject_action = langText[curLang].new_file.canceled_revision>
+						<cfset action_value = langText[curLang].new_file.canceled_revision>
 					</cfcase>
 
 				</cfswitch>

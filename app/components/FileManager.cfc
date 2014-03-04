@@ -4522,6 +4522,127 @@
 
 
 
+	<!---  -------------------------- cancelRevisionRequest -------------------------------- --->
+	
+	<cffunction name="cancelRevisionRequest" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		
+		<cfset var method = "cancelRevisionRequest">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var version_id = "">
+		<cfset var fileQuery = "">
+
+		<cftry>
+		
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+						
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+				<cfinvokeargument name="with_lock" value="false">
+				<cfinvokeargument name="parse_dates" value="true">		
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif fileQuery.recordCount IS 0><!---File does not exist--->
+			
+				<cfset error_code = 601>
+			
+				<cfthrow errorcode="#error_code#">
+			
+			</cfif>
+			
+			<cfset area_id = fileQuery.area_id>
+				
+			<!---checkAreaResponsibleAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersions" returnvariable="fileVersionQuery">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="fileTypeId" value="#fileQuery.file_type_id#">
+				<cfinvokeargument name="limit" value="1">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif fileVersionQuery.recordCount IS 0>
+
+				<cfthrow message="Error al obtener la versión del archivo.">
+				
+			<cfelseif fileQuery.in_approval IS false>
+
+				<cfset response = {result=false, file_id=#arguments.file_id#, message="Este archivo no está en proceso de aprobación."}>
+
+			<cfelseif fileVersionQuery.revised IS true OR fileVersionQuery.revised>
+
+				<cfset response = {result=false, file_id=#arguments.file_id#, message="Este archivo ya ha sido revisado, no se puede cancelar."}>
+			
+			<cfelse>	
+
+				<cfset version_id = fileVersionQuery.version_id>
+				
+				<cftransaction>
+					
+					<!--- Set file in approval --->
+					<cfquery datasource="#client_dsn#" name="changeFileApprovalState">
+						UPDATE `#client_abb#_files`
+						SET in_approval = <cfqueryparam value="0" cfsqltype="cf_sql_bit">
+						WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+					
+					<!--- Save revision request --->
+					<cfquery datasource="#client_dsn#" name="saveRequestApprovalQuery">
+						UPDATE `#client_abb#_files_versions`
+						SET revision_user = <cfqueryparam null="true" cfsqltype="cf_sql_integer">,
+						approval_user = <cfqueryparam null="true" cfsqltype="cf_sql_integer">,
+						revised = <cfqueryparam null="true" cfsqltype="cf_sql_bit">,
+						revision_request_user = <cfqueryparam null="true" cfsqltype="cf_sql_integer">,
+						revision_request_date = <cfqueryparam null="true" cfsqltype="cf_sql_timestamp">
+						WHERE version_id = <cfqueryparam value="#version_id#" cfsqltype="cf_sql_integer">
+						AND file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+
+				</cftransaction>
+
+				<!--- Alert --->
+				<cfinvoke component="AlertManager" method="newFile">
+					<cfinvokeargument name="objectFile" value="#fileQuery#">
+					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
+					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="action" value="cancel_revision">
+				</cfinvoke>
+
+				<cfinclude template="includes/logRecord.cfm">	
+
+				<cfset response = {result=true, file_id=#arguments.file_id#}>
+										
+			</cfif>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+	<!---  ----------------------------------------------------------------------------- --->
+
+
+
 
 	<!---  -------------------------- validateFileVersion -------------------------------- --->
 	

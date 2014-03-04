@@ -233,10 +233,19 @@
 			alert("Debe seleccionar un área para modificar");
 	}
 
+	function openAreaDeleteModal(){
+
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/area_delete.cfm?area='+curAreaId);
+		else
+			alert("Debe seleccionar un área para eliminar");
+
+	}
+
 
 	function emptyIframes(){
 
-		$("#areaIframe").attr('src', 'about:blank');
+		$("#areaIframe").attr('src', 'iframes/area.cfm');
 		$("#userAreaIframe").attr('src', 'about:blank');
 		
 	}
@@ -454,7 +463,7 @@
 								</div>
 
 								<div class="btn-group">
-									<a onClick="loadModal('html_content/area_delete.cfm?area='+curAreaId);" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
+									<a onClick="openAreaDeleteModal()" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
 								</div>
 
 							</div>
@@ -531,10 +540,9 @@
 						</cfoutput>
 						</a> --->
 						
-					
 						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="areaIframe" onload="areaIframeLoaded()"></iframe><!---iframes/area.cfm--->
 
-						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframeItem" src="iframes/area_user.cfm" style="height:300px;background-color:#FFFFFF; border-top: 1px solid #CCCCCC;" id="userAreaIframe"></iframe>
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframeItem" src="about:blank" style="height:300px;background-color:#FFFFFF; border-top: 1px solid #CCCCCC;" id="userAreaIframe"></iframe><!---iframes/area_user.cfm--->
 					
 					</div>
 					
@@ -543,7 +551,7 @@
 						<!---All users--->
 						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframeItem" src="iframes/all_users.cfm" style="height:100%;background-color:#FFFFFF;" id="allUsersIframe"></iframe>
 
-						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframeItem" src="iframes/user.cfm" style="height:300px;background-color:#FFFFFF; border-top: 1px solid #CCCCCC;" id="userAdminIframe"></iframe>
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframeItem" src="about:blank" style="height:300px;background-color:#FFFFFF; border-top: 1px solid #CCCCCC;" id="userAdminIframe"></iframe><!---iframes/user.cfm--->
 						
 					</div>
 					

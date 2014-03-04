@@ -40,8 +40,8 @@
 					, tables.creation_date, tables.last_update_date
 				</cfif>
 				<cfif APPLICATION.publicationScope IS true AND tableTypeId IS NOT 3>
-					<!--- Si se pone tables.publication_scope_id NO devuelve el valor correcto de esa columna (siempre devuelve 1) --->
-					, scopes.scope_id AS publication_scope_id, scopes.name AS publication_scope_name
+					<!--- Antes si se ponía tables.publication_scope_id NO devolvía el valor correcto de esa columna (siempre devolvía 1) --->
+					, tables.publication_scope_id, scopes.name AS publication_scope_name
 				</cfif>
 				<cfif tableTypeId IS NOT 3>
 					<cfif arguments.parse_dates IS true>

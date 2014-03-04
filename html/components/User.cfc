@@ -567,6 +567,7 @@
 		
 	</cffunction>
 	
+	<!--- updateUserPreferences --->
 
 	<cffunction name="updateUserPreferences" returntype="void" output="false" access="remote">
 		<cfargument name="notify_new_message" type="string" required="false" default="false">
@@ -622,18 +623,19 @@
 	</cffunction>
 
 
+	<!--- updateUserLanguage --->
+
 	<cffunction name="updateUserLanguage" returntype="struct" output="false" access="public">
 		<cfargument name="user_id" type="string" required="true">
 		<cfargument name="language" type="string" required="true">
 		
 		<cfset var method = "updateUserLanguage">
 		
-		<cfset var request_parameters = "">
 		<cfset var response = "">
 		
 		<cftry>
 			
-			<cfsavecontent variable="request_parameters">
+			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					<user id="#arguments.user_id#" 
 						language="#arguments.language#">
@@ -647,10 +649,17 @@
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
 			</cfinvoke>
 			
-			<cfset response = {result="true", message=""}>
+			<cfset response = {result="true", message=""}>--->
 
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUserLanguage" returnvariable="response">
+				<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
+				<cfinvokeargument name="language" value="#arguments.language#">
+			</cfinvoke>
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+			
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>										
 			
 		</cftry>
@@ -1336,17 +1345,17 @@
 									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
 								</cfif>
 							</td>
-							<td>#objectUser.family_name#</td>
-							<td>#objectUser.name#</td>
-							<td>#objectUser.email#</td>
+							<td class="text_item">#objectUser.family_name#</td>
+							<td class="text_item">#objectUser.name#</td>
+							<td class="text_item">#objectUser.email#</td>
 							<cfif arguments.show_area_members IS true>
 							<td lang="es"><cfif objectUser.area_member IS true>Sí<cfelse>No</cfif></td>
 							</cfif>
 							<cfif arguments.showAdminFields IS true>
 								<cfif SESSION.client_abb IS "hcs">
-									<td>#objectUser.perfil_cabecera#</td>
+									<td class="text_item">#objectUser.perfil_cabecera#</td>
 								</cfif>
-								<td lang="es"><cfif objectUser.enabled IS true>Sí<cfelse>No</cfif></th>
+								<td lang="es"><cfif objectUser.enabled IS true>Sí<cfelse>No</cfif></td>
 							</cfif>
 						</tr>
 					</cfloop>

@@ -14,14 +14,17 @@ sftp-config.json
 /vpnet/
 /web4bio7/
 /software7/
+/bioinformatics7/
 /era7/
 /web/
 /intranet/
 /web_DP/
 /prueba/
 /pruebas/
+/doplanning_FILES/
 /styles.css
 /styles_menu.css
+Application.cfc
 Application_POZOBLANCO.cfc
 Application_POZOBLANCO_ANTERIOR.cfc
 index_POZOBLANCO.cfm

@@ -642,6 +642,7 @@
 	</cffunction>
 
 
+
 	<!--- ------------------------------ changeFilePublicationValidation ----------------------------------- --->
 	
     <cffunction name="changeFilePublicationValidation" returntype="void" access="remote">
@@ -681,6 +682,38 @@
 			
 		</cftry>
 		
+	</cffunction>
+
+
+	
+	<!--- ---------------------------------- requestRevision -------------------------------------- --->
+	
+	<cffunction name="requestRevision" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		
+		<cfset var method = "requestRevision">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="requestRevision" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Proceso de aprobación iniciado.">
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
 	</cffunction>
 
 
@@ -727,6 +760,46 @@
 		</cftry>
 		
 	</cffunction>
+
+
+	<!--- cancelRevisionRequest --->
+
+	<cffunction name="cancelRevisionRequest" returntype="void" access="remote">
+		<cfargument name="file_id" type="string" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="return_path" type="string" required="true">
+		
+		<cfset var method = "cancelRevisionRequest">
+
+		<cfset var response = structNew()>
+				
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="cancelRevisionRequest" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset msg = "Revisión cancelada.">
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
 
 
 	<!--- validateFileVersion --->
@@ -857,38 +930,6 @@
 			
 		</cftry>
 		
-	</cffunction>
-
-
-
-	<!--- ---------------------------------- requestRevision -------------------------------------- --->
-	
-	<cffunction name="requestRevision" returntype="struct" access="public">
-		<cfargument name="file_id" type="numeric" required="true">
-		
-		<cfset var method = "requestRevision">
-		
-		<cfset var response = structNew()>
-		
-		<cftry>
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="requestRevision" argumentcollection="#arguments#" returnvariable="response">
-			</cfinvoke>
-			
-			<cfif response.result IS true>
-				<cfset response.message = "Proceso de aprobación iniciado.">
-			</cfif>
-
-			<cfcatch>
-
-				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn response>
-				
 	</cffunction>
 
 
