@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2013--->
+<!---Copyright Era7 Information Technologies 2007-2014--->
 <cfcomponent output="false">
 
 	<cfset component = "AlertManager">
@@ -222,7 +222,8 @@
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="getTableQuery">
 			<cfinvokeargument name="table_id" value="#arguments.table_id#">
 			<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-			<cfinvokeargument name="parse_dates" value="true">		
+			<cfinvokeargument name="parse_dates" value="true">
+			<cfinvokeargument name="published" value="false">			
 			
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -453,6 +454,260 @@
 
 	</cffunction>--->
 
+
+	<!--- -------------------------------------- sendDiaryAlerts ------------------------------------ --->
+	
+	<cffunction name="sendDiaryAlerts" output="false" access="public" returntype="void">
+
+		<cfset var client_abb = "">
+		<cfset var client_dsn = "">
+
+		<cfset var userAreasIds = "">
+
+		<cftry>
+			
+			<cfinvoke component="ClientQuery" method="getClients" returnvariable="getClientsQuery">					
+			</cfinvoke>
+
+			<cfloop query="getClientsQuery">
+				
+				<cfset client_abb = getClientsQuery.abbreviation>
+				<cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
+
+				<cftry>
+
+					<!--- getAllUsers --->
+					<cfinvoke component="UserQuery" method="getAllUsersWithPreferences" returnvariable="getAllUsersQuery">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="rootArea">
+						<cfinvokeargument name="onlyId" value="false">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+					<!---En el asunto se pone el nombre del área raiz--->
+
+					<cfloop query="getAllUsersQuery">
+
+						<cfif getAllUsersQuery.enabled IS true AND len(getAllUsersQuery.email) GT 0>
+							
+							<cfset var curUserId = getAllUsersQuery.user_id>
+							<cfset var curLang = getAllUsersQuery.language>
+							<cfset var curUserEmail = getAllUsersQuery.email>
+
+							<cfif getAllUsersQuery.notify_new_task IS true>
+
+								<cfset itemTypeId = 6>
+								<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+								<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
+									<cfinvokeargument name="get_user_id" value="#curUserId#">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<cfif listLen(userAreasIds) GT 0>
+									
+									<cfinvoke component="AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+										<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+										<cfinvokeargument name="recipient_user" value="#curUserId#">
+										<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+										<cfinvokeargument name="listFormat" value="true">
+										<cfinvokeargument name="with_user" value="true">
+										<cfinvokeargument name="with_area" value="true">
+										<cfinvokeargument name="parse_dates" value="true"/>
+										<cfinvokeargument name="done" value="false">
+										
+										<!--- 
+										<cfif isDefined("arguments.from_date")>
+										<cfinvokeargument name="from_date" value="#arguments.from_date#">
+										</cfif>
+										<cfif isDefined("arguments.end_date")>
+										<cfinvokeargument name="end_date" value="#arguments.end_date#">
+										</cfif> --->
+										
+										<cfinvokeargument name="published" value="false">
+										
+										<cfinvokeargument name="client_abb" value="#client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+									<cfset var tasksQuery = getAreaItemsResult.query>
+
+									<cfset nowDate = Now()>
+									 
+									<cfset todayDate = CreateDate( Year(nowDate), Month(nowDate), Day(nowDate) )>
+
+									<cfquery dbtype="query" name="expiredTasksQuery">
+										SELECT *
+										FROM tasksQuery
+										WHERE end_date = #todayDate#;
+									</cfquery>
+
+									<cfset tasksReminderDays = 30>
+
+									<cfset futureDate = dateAdd("d", tasksReminderDays, todayDate)>
+
+									<cfquery dbtype="query" name="futureTasksQuery">
+										SELECT *
+										FROM tasksQuery
+										WHERE end_date = #futureDate#;
+									</cfquery>
+
+									<cfif expiredTasksQuery.recordCount GT 0 OR futureTasksQuery.recordCount GT 0>
+										
+										<cfset var alertContent = "">
+										<cfset var taskAlertContent = "">
+
+										<cfif expiredTasksQuery.recordCount GT 0>
+											
+											<cfset var expiredTasksArray = arrayNew(1)>
+											<cfinvoke component="Utils" method="queryToArray" returnvariable="expiredTasksArray">
+												<cfinvokeargument name="data" value="#expiredTasksQuery#">
+											</cfinvoke>		
+
+											<cfset todayDateFormatted = dateFormat(todayDate, APPLICATION.dateFormat)>
+
+											<cfset alertContent = "Las siguientes tareas caducan hoy #todayDateFormatted#:<br/>">
+
+											<cfloop array="#expiredTasksArray#" index="taskObject">
+
+												<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="taskAlertContent">
+													<cfinvokeargument name="item" value="#taskObject#">
+													<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+													<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+													<cfinvokeargument name="language" value="#curLang#">
+
+													<cfinvokeargument name="client_abb" value="#client_abb#">
+												</cfinvoke>	
+
+												<cfset alertContent = alertContent&taskAlertContent>
+
+											</cfloop>								
+											
+										</cfif>
+
+										<cfif futureTasksQuery.recordCount GT 0>
+											
+											<cfset var futureTasksArray = arrayNew(1)>
+											<cfinvoke component="Utils" method="queryToArray" returnvariable="futureTasksArray">
+												<cfinvokeargument name="data" value="#futureTasksQuery#">
+											</cfinvoke>		
+
+											<cfset alertContent = alertCOntent&"Las siguientes tareas caducan en #tasksReminderDays# días:<br/>">
+
+											<cfloop array="#futureTasksArray#" index="taskObject">
+
+												<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="taskAlertContent">
+													<cfinvokeargument name="item" value="#taskObject#">
+													<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+													<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+													<cfinvokeargument name="language" value="#curLang#">
+
+													<cfinvokeargument name="client_abb" value="#client_abb#">
+												</cfinvoke>	
+
+												<cfset alertContent = alertContent&taskAlertContent>
+
+											</cfloop>
+
+										</cfif>
+
+										<cfset var subject = "[#rootArea.name#] "&"Tiene tareas pendientes">
+
+										<cfinvoke component="AlertManager" method="getItemFootContent" returnvariable="footContent">
+											<cfinvokeargument name="language" value="#curLang#">
+										</cfinvoke>
+
+										<cfoutput>
+											#todayDate#<br/>
+											#futureDate#<br/>
+											#curUserEmail#<br/>
+											#alertContent#
+										</cfoutput>
+										
+										<!--- 
+										<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+											<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
+											<!--- <cfinvokeargument name="to" value="#curUserEmail#"> --->
+											<cfinvokeargument name="to" value="alucena@era7.com">
+											<cfinvokeargument name="subject" value="#subject#">
+											<cfinvokeargument name="content" value="#alertContent#">
+											<cfinvokeargument name="foot_content" value="#footContent#">
+										</cfinvoke> --->
+
+									</cfif><!--- END expiredTasksQuery.recordCount GT 0 OR futureTasksQuery.recordCount GT 0 --->
+
+								</cfif>
+
+							</cfif>
+
+						</cfif>
+
+					</cfloop>
+
+					<cfcatch>
+						<cfinclude template="includes/errorHandler.cfm">						
+					</cfcatch>
+
+				</cftry>
+
+			</cfloop>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>
+
+		</cftry>
+
+	</cffunction>
+
+
+
+	<!--- --------------------------- getItemDiaryAlertContent --------------------------- --->
+	
+	<cffunction name="getItemDiaryAlertContent" access="private" returntype="string">
+		<cfargument name="item" type="struct" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="itemTypeName" type="string" required="true">
+		<cfargument name="language" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+ 				
+		<cfset var method = "getItemFootContent">
+
+		<cfset var itemContent = "">
+			
+
+			<!---itemUrl--->
+			<cfinvoke component="UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+				<cfinvokeargument name="item_id" value="#item.id#">
+				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+				<cfinvokeargument name="area_id" value="#item.area_id#">
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			</cfinvoke>
+
+			<cfsavecontent variable="itemContent">
+				<cfoutput>
+
+				<a href="#areaItemUrl#" target="_blank" style="font-size:14px;">#item.title#</a><br/>
+
+				#langText[arguments.language].new_item.user#: <b>#item.user_full_name#</b><br/>
+				<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+				#langText[arguments.language].new_item.start_date#<cfif itemTypeId IS 5> #langText[arguments.language].new_item.of_event#</cfif>: <b>#item.start_date#</b> <cfif itemTypeId IS 5>#langText[arguments.language].new_item.hour#: <b>#TimeFormat(item.start_time,"HH:mm")#</b></cfif><br/>
+				#langText[arguments.language].new_item.end_date#<cfif itemTypeId IS 5> #langText[arguments.language].new_item.of_event#</cfif>: <b>#item.end_date#</b> <cfif itemTypeId IS 5>#langText[arguments.language].new_item.hour#: <b>#TimeFormat(item.end_time,"HH:mm")#</b></cfif><br/><br/>
+				</cfif>
+
+				</cfoutput>
+			</cfsavecontent>
+		
+		<cfreturn itemContent>
+
+	</cffunction>
 
 
 </cfcomponent>

@@ -1,10 +1,8 @@
 <cfif isDefined("URL.lan")>
 	<cfif URL.lan EQ "es">
 		<cfset user_language = "es">
-		<!--- <cfset SESSION.user_language = "es"> --->
 	<cfelse>
 		<cfset user_language = "en">
-		<!--- <cfset SESSION.user_language = "en"> --->
 	</cfif>
 	
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="updateUserLanguage" returnvariable="updateLanguageResult">

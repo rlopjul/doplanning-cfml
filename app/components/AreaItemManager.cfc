@@ -982,7 +982,21 @@
 
 				<!--- Scope --->
 				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13>
+
+					<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isTableInScopeResult">
+						<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
+						<cfinvokeargument name="area_id" value="#getItemObject.area_id#">
+					</cfinvoke>
+
+					<cfif isTableInScopeResult.result IS false>
+
+						<cfset response = {result=false, message="El ámbito de publicación seleccionado no es compatible con el área actual"}>
+								
+						<cfreturn response>
+						
+					</cfif>
 					
+					<!--- getTableViews --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/ViewQuery" method="getTableViews" returnvariable="getTableViewsQuery">
 						<cfinvokeargument name="table_id" value="#objectItem.id#">
 						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">

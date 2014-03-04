@@ -133,12 +133,12 @@ function confirmApproveFile(value) {
 								<b><cfif version.revised IS true>
 									pendiente de aprobación <a href="area_user.cfm?area=#area_id#&user=#objectFile.approver_user#">#objectFile.approver_user_full_name#</a>.
 								<cfelse>
-									pendiente de ser revisada por <a href="area_user.cfm?area=#area_id#&user=#objectFile.reviser_user#">#objectFile.reviser_user_full_name#</a>.
+									pendiente de ser revisado por <a href="area_user.cfm?area=#area_id#&user=#objectFile.reviser_user#">#objectFile.reviser_user_full_name#</a>.
 								</cfif></b>
 							</p>
-							
+
 							<cfif version.revised IS false AND SESSION.user_id IS objectFile.reviser_user>
-								
+								<!--- validateFileVersion --->
 								<p>
 									Debe validar o rechazar la versión de este archivo:<br/>
 									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=true&return_path=#return_path#" onclick="return confirmValidateFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Validar versión</span></a>
@@ -146,7 +146,7 @@ function confirmApproveFile(value) {
 								</p>
 
 							<cfelseif version.revised IS true AND SESSION.user_id IS objectFile.approver_user>
-
+								<!--- approveFileVersion --->
 								<p>
 									Debe aprobar o rechazar la versión de este archivo:<br/>
 									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=true&return_path=#return_path#" onclick="return confirmApproveFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar versión</span></a>
@@ -154,6 +154,15 @@ function confirmApproveFile(value) {
 								</p>
 
 							</cfif>
+
+							<cfif version.revised IS false AND is_user_area_responsible>
+								<!--- cancelRevisionRequest --->
+								<p>
+									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=cancelRevisionRequest&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmAction('cancelar la revisión');" class="btn btn-warning btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Cancelar revisión</span></a>
+								</p>								
+								
+							</cfif>
+							
 							
 						</div>
 						<div class="div_file_page_label">

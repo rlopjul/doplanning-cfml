@@ -306,7 +306,7 @@
 			<div class="col-sm-5">
 				<div class="input-group">
 				  <span class="input-group-addon"><i class="icon-search"></i></span>
-				  <input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="input-medium"/>
+				  <input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control"/>
 				</div>
 			</div>
 		</div>

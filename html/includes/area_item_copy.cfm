@@ -151,13 +151,10 @@
 </cfif>
 
 <cfoutput>
-<!---<link href="#APPLICATION.jqueryUICSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.jqueryUIJSPath#"></script>--->
 <script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
 
 <cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 6><!---News, Events, Tasks--->
 
-<!--- <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery-ui/jquery.ui.datepicker-es.js"></script> --->
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
@@ -201,7 +198,6 @@
 	}
 	
 	$(window).load( function() {		
-		<!--- $("#accordion").accordion({ active: 1 , heightStyle: "content"}); --->
 
 		$('.collapse').collapse({
 			parent:"#accordion"
@@ -456,7 +452,7 @@ function onSubmitForm()
 		</div><!---END Tab2--->
 
 	</div><!---END accordion--->
-	<input name="submit" type="submit" class="btn btn-primary" value="Añadir #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-top:3px;"/>
+	<input name="submit" type="submit" class="btn btn-primary" value="Copiar #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-top:3px;"/>
 	
 	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 	

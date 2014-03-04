@@ -22,5 +22,21 @@
 		
 	</cffunction>
 
+
+	<!---getClients--->
+		
+	<cffunction name="getClients" output="false" returntype="query" access="public">
+		
+		<cfset var method = "getClients">
+			
+			<cfquery name="selectClientsQuery" datasource="#APPLICATION.dsn#">
+				SELECT *
+				FROM `APP_clients`;
+			</cfquery>
+		
+		<cfreturn selectClientsQuery>
+		
+	</cffunction>
+
 </cfcomponent>
 	

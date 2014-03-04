@@ -3,7 +3,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
 </cfoutput>
 
 
@@ -32,6 +32,10 @@
 
 	<cfset users = usersResponse.users>
 	<cfset numUsers = ArrayLen(users)>
+
+	<cfoutput>
+	<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numUsers# <span lang="es"><cfif numUsers GT 1>Usuarios<cfelse>Usuario</cfif></span></div>
+	</cfoutput>
 	
 	<div class="div_items">
 		
