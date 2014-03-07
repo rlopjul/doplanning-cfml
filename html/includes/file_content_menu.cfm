@@ -72,7 +72,7 @@
 
 				<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=lockFile&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&lock=true&return_path=#return_path#" class="btn btn-warning btn-sm" onclick="return confirmLockFile(true);"><i class="icon-lock"></i> <span lang="es">Bloquear</span></a>
 
-				<cfif fileTypeId IS 3 AND len(version.revision_request_date) IS 0 AND is_user_area_responsible IS true>
+				<cfif fileTypeId IS 3 AND len(version.revision_request_date) IS 0>
 					
 					<a href="file_request_approval.cfm?file=#objectFile.id#" class="btn btn-default btn-sm"><i class="icon-check"></i> <span lang="es">Solicitar aprobación</span></a>
 
@@ -109,7 +109,7 @@
 		
 	</cfif>
 
-	<cfif (fileTypeId IS 1 AND objectFile.user_in_charge EQ SESSION.user_id) OR (fileTypeId IS NOT 1 AND file_area_allowed IS true AND objectFile.locked IS false)>
+	<cfif (fileTypeId IS 1 AND objectFile.user_in_charge EQ SESSION.user_id) OR (fileTypeId IS 2 AND file_area_allowed IS true AND objectFile.locked IS false) OR (fileTypeId IS 3 AND file_area_allowed IS true AND objectFile.locked IS false AND isFileApproved IS false)>
 
 		<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFileRemote&file_id=#objectFile.id#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmDeleteFile();" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 

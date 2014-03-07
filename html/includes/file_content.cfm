@@ -25,6 +25,20 @@
 		<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 	</cfinvoke>
 
+	<cfif version.approved IS true>
+
+		<cfset isFileApproved = true>
+
+	<cfelse>
+
+		<!--- isFileApproved --->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="isFileApproved" returnvariable="isFileApproved">
+			<cfinvokeargument name="file_id" value="#file_id#">
+			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+		</cfinvoke>
+
+	</cfif>
+
 </cfif>
 
 <cfoutput>
@@ -155,12 +169,11 @@ function confirmApproveFile(value) {
 
 							</cfif>
 
-							<cfif version.revised IS false AND is_user_area_responsible>
+							<cfif version.revised IS false>
 								<!--- cancelRevisionRequest --->
 								<p>
-									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=cancelRevisionRequest&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmAction('cancelar la revisión');" class="btn btn-warning btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Cancelar revisión</span></a>
+									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=cancelRevisionRequest&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmAction('cancelar el proceso de revisión');" class="btn btn-warning btn-sm"><i class="icon-undo"></i> <span lang="es">Cancelar revisión</span></a>
 								</p>								
-								
 							</cfif>
 							
 							
@@ -185,6 +198,12 @@ function confirmApproveFile(value) {
 							<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileVersionStatus">
 								<cfinvokeargument name="version" value="#version#">
 							</cfinvoke>
+
+							<cfif version.approved NEQ true AND isFileApproved IS true>
+
+								<div class="label label-warning">La versión actual de este archivo no es la versión aprobada</div>
+
+							</cfif>
 
 						</cfif>
 						

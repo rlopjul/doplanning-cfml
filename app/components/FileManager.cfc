@@ -468,7 +468,8 @@
 		<cfset var fileTypeId = "">
 		<cfset var path = "">
 		<cfset var filePath ="">
-					
+		<cfset var isApproved = "">
+
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
@@ -496,7 +497,7 @@
 	
 
 			<!---checkAccess--->
-			<cfif fileQuery.file_type_id IS 2><!---Area file (ALL area users can delete the file)--->
+			<cfif fileQuery.file_type_id IS 2 OR fileQuery.file_type_id IS 3><!---Area file (ALL area users can delete the file)--->
 				
 				<cfset area_id = fileQuery.area_id>
 
@@ -528,6 +529,26 @@
 				<cfset response = {result=false, file_id=#arguments.file_id#, message="No se puede eliminar un archivo bloqueado, debe desbloquearlo."}>
 
 			<cfelse>
+
+				<cfif fileQuery.file_type_id IS 3><!--- Comprobar si el archivo está aprobado --->
+					
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="isFileApproved" returnvariable="isApproved">
+						<cfinvokeargument name="file_id" value="#arguments.file_id#">
+						<cfinvokeargument name="fileTypeId" value="#fileQuery.file_type_id#">
+						
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfif isApproved IS true>
+						
+						<cfset response = {result=false, file_id=#arguments.file_id#, message="No se puede eliminar un archivo con una versión aprobada."}>
+
+						<cfreturn response>
+
+					</cfif>
+
+				</cfif>
 
 				<!---getFileAreas--->
 				<cfquery datasource="#client_dsn#" name="getFileAreasQuery">
@@ -2100,6 +2121,45 @@
 		<cfreturn response>
 		
 	</cffunction>
+
+
+	<!--- ------------------------------------- isFileApproved -------------------------------------  --->
+	
+	<cffunction name="isFileApproved" output="false" access="public" returntype="struct">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+
+		<cfset var method = "isFileApproved">
+
+		<cfset var response = structNew()>
+
+		<cfset var isApproved = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="isFileApproved" returnvariable="isApproved">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfset response = {result=true, approved=isApproved}>
+								
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
 
 	
 	<!--- ----------------------- DUPLICATE FILE -------------------------------- --->
@@ -4324,9 +4384,11 @@
 			</cfif>
 
 			<cfset area_id = fileQuery.area_id>
+
+			<!--- Cualquier usuario del área puede enviar a revisión un documento --->
 				
-			<!---checkAreaResponsibleAccess--->
-			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+			<!---checkAreaAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaAccess">
 				<cfinvokeargument name="area_id" value="#area_id#">
 			</cfinvoke>
 
@@ -4561,9 +4623,11 @@
 			</cfif>
 			
 			<cfset area_id = fileQuery.area_id>
+			
+			<!--- Cualquier usuario del área puede cancelar la revisión un documento --->
 				
-			<!---checkAreaResponsibleAccess--->
-			<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+			<!---checkAreaAccess--->
+			<cfinvoke component="AreaManager" method="checkAreaAccess">
 				<cfinvokeargument name="area_id" value="#area_id#">
 			</cfinvoke>
 

@@ -24,7 +24,7 @@
 
 				<div style="margin-top:10px;">Area:
 					<strong>#objectArea.name#</strong><br/>
-					<span>Ruta: #area_path#
+					<span>Ruta: #area_path#</span>
 				</div>
 			</div>
 

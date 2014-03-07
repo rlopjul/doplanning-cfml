@@ -26,7 +26,9 @@
 	</cfoutput>
 </div>
 
+<div style="margin-left:2px; margin-right:2px;">
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+</div>
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsList" returnvariable="getAreaItemsListResponse">
 	<cfinvokeargument name="area_id" value="#area_id#">

@@ -4,7 +4,7 @@
 	<cfquery datasource="#client_dsn#">	
 		CREATE TABLE  `dp_#client_abb#`.`#client_abb#_scopes` (
 		  `scope_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-		  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+		  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
 		  `position` int(10) unsigned NOT NULL,
 		  PRIMARY KEY (`scope_id`),
 		  KEY `UNIQUE` (`name`)
@@ -132,6 +132,17 @@
 	<cfquery datasource="#client_dsn#">
 		ALTER TABLE `dp_#client_abb#`.`#client_abb#_users` ADD COLUMN `information` TEXT AFTER `image_type`;
 	</cfquery>
+
+
+	<!--- Última modificación no ejecutada en clientes --->
+	<cfquery datasource="#client_dsn#">
+		ALTER TABLE `dp_#client_abb#`.`#client_abb#_files` ADD COLUMN `replacement_user` INTEGER AFTER `replacement_date`,
+	 ADD CONSTRAINT `FK_#client_abb#_files_6` FOREIGN KEY `FK_#client_abb#_files_6` (`replacement_user`)
+	    REFERENCES `#client_abb#_users` (`id`)
+	    ON DELETE SET NULL
+	    ON UPDATE RESTRICT;
+	</cfquery>
+
 			
 </cftransaction>
 

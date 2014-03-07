@@ -205,6 +205,36 @@
 		<cfreturn response>
 		
 	</cffunction>
+
+
+	<!--- ----------------------------------- isFileApproved ------------------------------------- --->
+	
+	<cffunction name="isFileApproved" returntype="boolean" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		
+		<cfset var method = "isFileApproved">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="isFileApproved" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response.approved>
+		
+	</cffunction>
 	
 	
 	<!--- ---------------------------------- convertFile -------------------------------------- --->

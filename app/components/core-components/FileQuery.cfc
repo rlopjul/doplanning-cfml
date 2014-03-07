@@ -360,6 +360,35 @@
 		
 	</cffunction>
 
+
+	<!---isFileApproved--->
+		
+	<cffunction name="isFileApproved" output="false" returntype="boolean" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "isFileApproved">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">	
+							
+			<cfquery name="isFileApproved" datasource="#client_dsn#">
+				SELECT versions.version_id
+				FROM #client_abb#_#fileTypeTable#_versions AS versions
+				WHERE versions.file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
+				AND versions.approved = true;
+			</cfquery>
+				
+		<cfif isFileApproved.recordCount GT 0>
+			<cfreturn true>
+		<cfelse>
+			<cfreturn false>
+		</cfif>
+		
+	</cffunction>
+
 	
 	<!---getFileAreas--->
 	

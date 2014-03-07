@@ -61,7 +61,7 @@
 		<cfinvokeargument name="area_id" value="#area_id#"/>
 	</cfinvoke>--->
 
-	<div class="form-inline" style="margin-top:2px;">
+	<div class="form-inline" style="position:fixed;">
 
 		<div class="btn-group">
 			<div class="input-group" style="width:260px;" >
@@ -80,7 +80,7 @@
 	</div>
 
 	<cfprocessingdirective suppresswhitespace="true">
-	<div id="areasTreeContainer" style="clear:both">
+	<div id="areasTreeContainer" style="clear:both; padding-top:30px;">
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTreeAdmin">
 			<!---<cfinvokeargument name="with_input_type" value="checkbox">

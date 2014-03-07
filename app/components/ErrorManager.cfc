@@ -54,11 +54,9 @@
 		<cfargument name="error_code" type="numeric" required="yes">
 		
 		<cfset var method = "getError">
-		
-		<!---<cftry>--->
-		
+				
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ErrorManager" method="getError" returnvariable="error">
-				<cfinvokeargument name="error_code" value="#ERROR_UNEXPECTED#">
+				<cfinvokeargument name="error_code" value="#arguments.error_code#">
 
 				<cfif isDefined("SESSION.user_id")>
 					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
@@ -72,11 +70,6 @@
 			</cfinvoke>
 			
 			<cfreturn error>
-		
-			<!---<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-		</cftry>--->
 		
 	</cffunction>
 </cfcomponent>
