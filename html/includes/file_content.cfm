@@ -45,51 +45,53 @@
 <script src="#APPLICATION.htmlPath#/language/file_content_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
 
+<div class="contenedor_fondo_blanco">
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+</div>
 
 <script type="text/javascript">
 
-function confirmDeleteFile() {
-	
-	var messageDelete = window.lang.convert("Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?");
-	return confirm(messageDelete);
-}
+	function confirmDeleteFile() {
+		
+		var messageDelete = window.lang.convert("Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?");
+		return confirm(messageDelete);
+	}
 
-function confirmLockFile(value) {
-	
-	var messageLock = "";
+	function confirmLockFile(value) {
+		
+		var messageLock = "";
 
-	if(value)
-		messageLock = "¿Seguro que desea bloquear el archivo?. No podrá ser modificado por otros usuarios.";
-	else
-		messageLock = "¿Seguro que desea desbloquear el archivo?.";
-	
-	return confirm(messageLock);
-}
+		if(value)
+			messageLock = "¿Seguro que desea bloquear el archivo?. No podrá ser modificado por otros usuarios.";
+		else
+			messageLock = "¿Seguro que desea desbloquear el archivo?.";
+		
+		return confirm(messageLock);
+	}
 
-function confirmValidateFile(value) {
-	
-	var messageLock = "";
+	function confirmValidateFile(value) {
+		
+		var messageLock = "";
 
-	if(value)
-		messageLock = "¿Seguro que desea validar esta versión del archivo?. Se enviará a aprobación.";
-	else
-		messageLock = "¿Seguro que desea rechazar esta versión del archivo?.";
-	
-	return confirm(messageLock);
-}
+		if(value)
+			messageLock = "¿Seguro que desea validar esta versión del archivo?. Se enviará a aprobación.";
+		else
+			messageLock = "¿Seguro que desea rechazar esta versión del archivo?.";
+		
+		return confirm(messageLock);
+	}
 
-function confirmApproveFile(value) {
-	
-	var messageLock = "";
+	function confirmApproveFile(value) {
+		
+		var messageLock = "";
 
-	if(value)
-		messageLock = "¿Seguro que desea aprobar esta versión del archivo?. El archivo se podrá publicar.";
-	else
-		messageLock = "¿Seguro que desea rechazar esta versión del archivo?.";
-	
-	return confirm(messageLock);
-}
+		if(value)
+			messageLock = "¿Seguro que desea aprobar esta versión del archivo?. El archivo se podrá publicar.";
+		else
+			messageLock = "¿Seguro que desea rechazar esta versión del archivo?.";
+		
+		return confirm(messageLock);
+	}
 
 </script>
 
@@ -247,19 +249,26 @@ function confirmApproveFile(value) {
 			</div>
 			<!---<div class="div_file_page_user">#objectFile.user_full_name#</div>--->
 		</cfif>
+		<cfif objectFile.file_type_id IS NOT 1>
+			<div class="div_file_page_label">
+				<span lang="es"><cfif objectFile.file_type_id IS 2>Último reemplazo por:<cfelse>Última version por:</cfif></span>			
+				<a href="area_user.cfm?area=#area_id#&user=#objectFile.replacement_user#">#objectFile.replacement_user_full_name#</a>
+			</div>
+		</cfif>
 		<cfif objectFile.file_type_id IS 3>
 			
 			<div class="div_file_page_label">
-				<span lang="es">Usuario revisor:</span>			
+				<span lang="es">Revisor:</span>			
 				<a href="area_user.cfm?area=#area_id#&user=#objectFile.reviser_user#">#objectFile.reviser_user_full_name#</a>
 			</div>
 
 			<div class="div_file_page_label">
-				<span lang="es">Usuario aprobador:</span>			
+				<span lang="es">Aprobador:</span>			
 				<a href="area_user.cfm?area=#area_id#&user=#objectFile.approver_user#">#objectFile.approver_user_full_name#</a>
 			</div>
 
 		</cfif>
+
 		<div class="div_file_page_label"><span lang="es">Nombre de archivo:</span></div>
 		<div class="div_file_page_user">#objectFile.file_name#</div>
 		

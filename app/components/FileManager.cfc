@@ -3742,6 +3742,7 @@
 					<cfquery name="updateUploadingFile" datasource="#client_dsn#">
 						UPDATE #client_abb#_#fileTypeTable#
 						SET replacement_date = NOW(), 
+						replacement_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 						file_size = <cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">,
 						file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">,
 						file_name = <cfqueryparam value="#file_name#" cfsqltype="cf_sql_varchar">,

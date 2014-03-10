@@ -36,7 +36,7 @@
 		<cfset fileTypeTable = "files">
 
 		<cfquery name="selectFileQuery" datasource="#client_dsn#">		
-			SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval
+			SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user
 				, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 			<cfif isDefined("arguments.area_id")>
 				, areas_files.association_date
@@ -66,6 +66,7 @@
 			<cfif APPLICATION.publicationScope IS true>
 				, files.publication_scope_id, scopes.name AS publication_scope_name
 			</cfif>
+			, IF(files.replacement_user IS NOT NULL, CONCAT_WS(' ', users_replacement.family_name, users_replacement.name), '' ) AS replacement_user_full_name
 			, IF(files.reviser_user IS NOT NULL, CONCAT_WS(' ', users_reviser.family_name, users_reviser.name), '' ) AS reviser_user_full_name
 			, IF(files.approver_user IS NOT NULL, CONCAT_WS(' ', users_approver.family_name, users_approver.name), '' ) AS approver_user_full_name
 			FROM #client_abb#_#fileTypeTable# AS files
@@ -73,10 +74,13 @@
 			ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> 
 			AND files.user_in_charge = users.id
 			AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+			LEFT JOIN #client_abb#_users AS users_replacement
+			ON files.replacement_user = users_replacement.id
 			LEFT JOIN #client_abb#_users AS users_reviser
 			ON files.reviser_user = users_reviser.id
 			LEFT JOIN #client_abb#_users AS users_approver
-			ON files.approver_user = users_approver.id 
+			ON files.approver_user = users_approver.id
+
 			<cfif arguments.with_lock IS true>
 			LEFT JOIN (
 				SELECT files_locks.file_id, files_locks.lock_date, files_locks.lock, files_locks.user_id,

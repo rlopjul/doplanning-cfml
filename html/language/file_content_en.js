@@ -15,8 +15,10 @@ var file_content_en = {
 
 	'Propiedad del área:':'Property of area:',	
 	'Creado por:':'Created by:',
-	'Usuario revisor:':'Reviser user:',
-	'Usuario aprobador:':'Approval user:',
+	'Último reemplazo por':'Last version by',
+	'Última version por':'Last version by',
+	'Revisor:':'Reviser user:',
+	'Aprobador:':'Approval user:',
 	'Nombre de archivo:':'File name:',
 	'Fecha de creación:':'Creation date:',
 	'Fecha de reemplazo:':'Replacement date:',

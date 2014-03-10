@@ -131,7 +131,7 @@
 		<cfelse>
 			
 			<script type="text/javascript">
-				openUrlHtml2('empty.cfm','user2Iframe');
+				openUrlHtml2('empty.cfm','userAdminIframe');
 			</script>
 		
 			<span lang="es">No hay usuarios.</span>
@@ -142,7 +142,7 @@
 <cfelse>
 	
 	<script type="text/javascript">
-		openUrlHtml2('empty.cfm','user2Iframe');
+		openUrlHtml2('empty.cfm','userAdminIframe');
 	</script>
 	
 	<p class="bg-info text-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en "Buscar" para listar usuarios de la organización.</span></p>
