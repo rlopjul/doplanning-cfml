@@ -114,6 +114,7 @@
 		<cfset var fileContent = "">
 		<cfset var fileArray = arrayNew(1)>
 		<cfset var rowValues = structNew()>
+		<cfset var fieldValue = "">
 
 		<cfset var errorMessages = "">
 
@@ -217,6 +218,8 @@
 					
 					<cfif fields.field_type_id EQ 9 OR fields.field_type_id EQ 10><!--- LISTS --->
 
+						<!--- Load field areas --->
+
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="areasQuery">
 							<cfinvokeargument name="area_id" value="#fields.list_area_id#">		
 
@@ -280,18 +283,49 @@
 
 							<cfset fieldAreasQuery = areasQueries[fields.field_id]>
 
-							<cfquery dbtype="query" name="getAreaValue">
-								SELECT id
-								FROM fieldAreasQuery
-								WHERE name LIKE <cfqueryparam value="#fieldValue#" cfsqltype="cf_sql_varchar">;
-							</cfquery>
+							<cfif fields.field_type_id IS 10><!--- Multiple areas selection --->
+								
+								<cfif listLen(fieldValue, ";") GT 0>
 
-							<cfif getAreaValue.recordCount GT 0>
-								<!--- List values required array --->
-								<cfset fieldValue = [getAreaValue.id]>
+									<cfset newFieldValue = arrayNew(1)>
+									
+									<cfloop list="#fieldValue#" index="curFieldValue" delimiters=";">
+										
+										<cfquery dbtype="query" name="getAreaValue">
+											SELECT id
+											FROM fieldAreasQuery
+											WHERE name LIKE <cfqueryparam value="#curFieldValue#" cfsqltype="cf_sql_varchar">;
+										</cfquery>
+
+										<cfif getAreaValue.recordCount GT 0>
+											<cfset arrayAppend(newFieldValue, getAreaValue.id)>
+										</cfif>
+
+									</cfloop>
+
+									<cfset fieldValue = newFieldValue>
+
+								<cfelse>
+									<cfset fieldValue = arrayNew(1)>
+								</cfif>
+
 							<cfelse>
-								<cfset fieldValue = arrayNew(1)>
+
+								<cfquery dbtype="query" name="getAreaValue">
+									SELECT id
+									FROM fieldAreasQuery
+									WHERE name LIKE <cfqueryparam value="#fieldValue#" cfsqltype="cf_sql_varchar">;
+								</cfquery>
+
+								<cfif getAreaValue.recordCount GT 0>
+									<!--- List values required array --->
+									<cfset fieldValue = [getAreaValue.id]>
+								<cfelse>
+									<cfset fieldValue = arrayNew(1)>
+								</cfif>
+
 							</cfif>
+						
 
 						<cfelse>
 
@@ -588,7 +622,7 @@
 									</cfquery>
 
 									<cfif rowSelectedAreas.recordCount GT 0>
-										<cfset fieldValue = valueList(rowSelectedAreas.name, ",")>
+										<cfset fieldValue = valueList(rowSelectedAreas.name, ";")><!--- , --->
 									</cfif>
 
 									<!--- <cfset rowValues[fieldName] = fieldValue> --->
