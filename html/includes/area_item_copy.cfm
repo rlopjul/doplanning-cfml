@@ -156,21 +156,22 @@
 <cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 6><!---News, Events, Tasks--->
 
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
 </cfif>
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
-<script type="text/javascript" src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 
 <!--- <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.css" rel="stylesheet" type="text/css" /> --->
-<script type="text/javascript">
+<!--- <script type="text/javascript">
 	var applicationId = "#APPLICATION.identifier#";
-	<!---var applicationPath = "#APPLICATION.path#";--->
-</script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
+</script> --->
+
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
 </cfoutput>
 
 <script type="text/javascript">

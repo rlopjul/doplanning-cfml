@@ -41,12 +41,15 @@
 
 <cfoutput>
 
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 <script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
+<!--- 
 <script type="text/javascript">
 	var applicationId = "#APPLICATION.identifier#";
 	var applicationPath = "#APPLICATION.path#";
-</script>
+</script> --->
+
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
 
 <cfif APPLICATION.moduleWeb IS true>

@@ -660,26 +660,34 @@
 	
 	
 	
-	<!--- ---------------------------- canUserSeeTheWholeTree ---------------------------------- --->
+	<!--- ---------------------------- userSeeTheWholeTree ---------------------------------- --->
 	
-	<cffunction name="canUserSeeTheWholeTree" returntype="boolean" access="public">
+	<cffunction name="userSeeTheWholeTree" returntype="boolean" access="public">
 		
-		<cfset var method = "canUserSeeTheWholeTree">
+		<cfset var method = "userSeeTheWholeTree">
 		
 		<cfset var user_id = "">
 
+		<cfset var internal_user = false>
 		<cfset var whole_tree_visible = false>
 		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
-			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
+			<!---<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
 				<cfinvokeargument name="get_user_id" value="#user_id#"> 
-			</cfinvoke>
-			
-			<cfset whole_tree_visible = internal_user>
+			</cfinvoke>--->
+
+			<cfquery datasource="#client_dsn#" name="getUserAttQuery">
+				SELECT internal_user, hide_not_allowed_areas
+				FROM #client_abb#_users AS users
+				WHERE users.id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfif getUserAttQuery.internal_user IS true AND getUserAttQuery.hide_not_allowed_areas IS false>
+
+				<cfset whole_tree_visible = true>
+				
+			</cfif>
 
 		<cfreturn whole_tree_visible>
 		
@@ -1058,7 +1066,7 @@
 			
 			<cfset visibleRootAreas = valueList(rootAreasQuery.id, ",")>
 			
-			<cfinvoke component="AreaManager" method="canUserSeeTheWholeTree" returnvariable="whole_tree">
+			<cfinvoke component="AreaManager" method="userSeeTheWholeTree" returnvariable="whole_tree">
 			</cfinvoke>
 			
 			<!---Se obtiene si el usuario está en el área raiz--->
@@ -1212,13 +1220,13 @@
 		<cfset var xmlPart = "">
 		<cfset var xmlAreaResult = "">
 		
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 		
 			<!---Este método no necesita chequeo de acceso al área porque si un usuario puede ver el árbol entero se tiene que acceder a este método para generarlo.--->	
 			
 			<cfif NOT isDefined("arguments.whole_tree")>
 			
-				<cfinvoke component="AreaManager" method="canUserSeeTheWholeTree" returnvariable="whole_tree_visible">
+				<cfinvoke component="AreaManager" method="userSeeTheWholeTree" returnvariable="whole_tree_visible">
 				</cfinvoke>
 				
 				<cfset arguments.whole_tree = whole_tree_visible>

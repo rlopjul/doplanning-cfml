@@ -603,6 +603,7 @@
 		<cfargument name="password" type="string" required="true">
 		<cfargument name="password_temp" type="string" required="true">
 		<cfargument name="files" type="array" required="false"/>
+		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
 		<cfargument name="information" type="string" required="true">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
@@ -708,6 +709,7 @@
 						</cfif>,
 						language = <cfqueryparam value="#arguments.language#" cfsqltype="cf_sql_varchar">,
 						dni = <cfqueryparam value="#arguments.dni#" cfsqltype="cf_sql_varchar">,
+						hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">,
 						information = <cfqueryparam value="#arguments.information#" cfsqltype="cf_sql_longvarchar">,
 						internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">,
 						enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
@@ -835,6 +837,7 @@
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="password" type="string" required="false">
 		<cfargument name="files" type="array" required="false"/>
+		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
@@ -899,7 +902,8 @@
 					mobile_phone = <cfqueryparam value = "#arguments.mobile_phone#" cfsqltype="cf_sql_varchar">,
 					telephone_ccode = <cfqueryparam value = "#arguments.telephone_ccode#" cfsqltype="cf_sql_integer">,
 					mobile_phone_ccode = <cfqueryparam value = "#arguments.mobile_phone_ccode#" cfsqltype="cf_sql_integer">,
-					dni = <cfqueryparam value="#arguments.dni#" cfsqltype="cf_sql_varchar">
+					dni = <cfqueryparam value="#arguments.dni#" cfsqltype="cf_sql_varchar">,
+					hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">
 					<cfif isDefined("arguments.password") AND len(arguments.password) GT 0>
 						, password = <cfqueryparam value = "#arguments.password#" cfsqltype="cf_sql_varchar">
 					</cfif> 

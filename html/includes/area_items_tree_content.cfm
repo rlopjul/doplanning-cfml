@@ -53,6 +53,7 @@
 
 <cfoutput>
 
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
 <script type="text/javascript">
@@ -63,51 +64,49 @@
 		if(loadTree) {
 		
 			$("##treeContainer").jstree({ 
-				"themes" : {
-					"theme" : "dp",
-					"dots" : false,
-					"icons" : false,
-					"url" : "#APPLICATION.path#/jquery/jstree/themes/dp/style.css"
+				"core" : {
+					"themes" : { 
+						"name" : "dp", 
+						"dots" : false
+					}
 				},
 				"types" : {
 					"valid_children" : [ "all" ],
 					"types" : {
 						"message" : {
-							<!---"icon" : { 
-								"image" : "#APPLICATION.path#/html/assets/icons/message_small.png" 
-							},--->
 							"max_children"	: -1,
 							"max_depth"		: -1,
-							"valid_children": "all",
+							"valid_children": -1,
 							"hover_node" : true,
 							"select_node" : true
-					
 						}
 						
 					}
 				},
-				"plugins" : [ "themes", "html_data", "types", "ui"]
-				,"ui" : {
+				"plugins" : [ "themes", "types" ]
+				<!---,"ui" : {
 					<cfif isDefined("URL.#itemTypeName#")>
 					"initially_select" : [ "#URL[itemTypeName]#" ]
 					<cfelseif app_version NEQ "mobile" AND isDefined("xmlItems.#itemTypeNameP#.#itemTypeName#")><!---En la versión móvil no se puede seleccionar por defecto porque cambia de pantalla--->
 					"initially_select" : [ "#xmlItems['#itemTypeNameP#']['#itemTypeName#'].xmlAttributes.id#" ]
 					</cfif>
-				}
+				}--->
 			});
-		}
-		
-		<!---$("##treeContainer").delegate("a","click", function(e) { 
-			//window.location.href=this.href;
-			openUrl(this.href,'itemIframe',e);
-		});--->
 
-		$("##treeContainer").bind("select_node.jstree", function (event, data) { 
+			$("##treeContainer").bind("select_node.jstree", function (event, data) { 
 		
-			var href = data.rslt.obj.children("a").attr("href");
-			openUrl(href,'itemIframe',event);
-			
-	  	}); 
+				<!---var href = data.rslt.obj.children("a").attr("href");--->
+				var node = data.node;
+				openUrl(node.a_attr.href,'itemIframe',event);
+				
+		  	}); 
+
+			<cfif isDefined("URL.#itemTypeName#")>
+				$("##treeContainer").jstree("select_node", "##"+"#URL[itemTypeName]#", false); 
+			<cfelseif app_version NEQ "mobile" AND isDefined("xmlItems.#itemTypeNameP#.#itemTypeName#")><!---En la versión móvil no se puede seleccionar por defecto porque cambia de pantalla--->
+				$("##treeContainer").jstree("select_node", "##"+"#xmlItems['#itemTypeNameP#']['#itemTypeName#'].xmlAttributes.id#", false); 
+			</cfif>
+		}
 		
 		<!---<cfif isDefined("URL.#itemTypeName#")>
 			$("##treeContainer").jstree("select_node", "##"+"#URL[itemTypeName]#", true); 

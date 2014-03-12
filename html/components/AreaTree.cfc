@@ -198,8 +198,8 @@
 		
 		<cfoutput>
 		<li rel="#li_rel#" id="#areaId#" with_link="#area_with_link#" <cfif arguments.root_node IS true>class="jstree-open"</cfif>>
-		<cfif len(arguments.with_input_type) GT 0><input type="#arguments.with_input_type#" name="#input_name#" value="#areaId#" id="area#areaId#" <cfif areaAllowed IS NOT true OR arguments.areaEnabled IS false OR (arguments.disable_input_area IS true AND li_rel EQ "allowed") OR (arguments.disable_input_web IS true AND li_rel EQ "allowed-web")>disabled="disabled"</cfif>/><!---onClick="stopPropagation(event);"---></cfif>
-		<a href="#a_href#" class="jstree-node">#areaXml.xmlAttributes.name#</a>
+		<cfif len(arguments.with_input_type) GT 0><input type="#arguments.with_input_type#" name="#input_name#" value="#areaId#" id="area#areaId#" <cfif areaAllowed IS NOT true OR arguments.areaEnabled IS false OR (arguments.disable_input_area IS true AND li_rel EQ "allowed") OR (arguments.disable_input_web IS true AND li_rel EQ "allowed-web")>disabled="disabled"</cfif>/></cfif>
+		<a href="#a_href#">#areaXml.xmlAttributes.name#</a><!--- class="jstree-node"--->
 		</cfoutput>
 		
 		<cfif isDefined("areaXml.area")>

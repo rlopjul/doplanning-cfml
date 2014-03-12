@@ -1,81 +1,71 @@
-//Variable requerida: applicationPath (YA NO SE USA)
 
-function showTree(selectable) { /*, areaId*/
+function showTree(selectable) { 
 
 	$("#areasTreeContainer").bind("loaded.jstree", function (event, data) {
 		jsTreeLoaded(event, data);
 	})
 	.jstree({ 
-		"themes" : {
-			"theme" : "dp",
-			"dots" : false,
-			"icons" : true
-			/*Deshabilitadas las URLs porque no funcionan desde accesos externos como el del SAS que tienen reescritura de direcciones. Desde páginas normales no funcionan si no son absolutas.*/
-			/*"url" : applicationPath+"/jquery/jstree/themes/dp/style2.min.css"*/
+		"core" : {
+			"themes" : { 
+				"name" : "dp", 
+				"dots" : false,
+				"responsive" : false
+			}
+		},
+		"search" : { 
+			"fuzzy" : false 
 		},
 		"types" : {
 			"valid_children" : [ "all" ],
 			"types" : {
 				"allowed" : {
-					/*"icon" : { 
-						"image" : applicationPath+"/html/assets/icons_"+applicationId+"/area_small.png"
-					},*/
 					"max_children"	: -1,
 					"max_depth"		: -1,
-					"valid_children": "all",
+					"valid_children": -1,
 					"hover_node" : selectable,
 					"select_node" : selectable
 			
 				},
 				"allowed-web" : {
-					/*"icon" : { 
-						"image" : applicationPath+"/html/assets/icons_"+applicationId+"/area_web_small.png" 
-					},*/
 					"max_children"	: -1,
 					"max_depth"		: -1,
-					"valid_children": "all",
+					"valid_children": -1,
 					"hover_node" : selectable,
 					"select_node" : selectable
 			
 				},
 				"not-allowed" : {
-					/*"icon" : { 
-						"image" : applicationPath+"/html/assets/icons_"+applicationId+"/area_small_disabled.png" 
-					},*/
 					"max_children"	: -1,
 					"max_depth" 	: -1,
-					"valid_children" : "all",
+					"valid_children" : -1,
 					"hover_node" : selectable,
 					"select_node" : selectable
 				},
 				"not-allowed-web" : {
-					/*"icon" : { 
-						"image" : applicationPath+"/html/assets/icons_"+applicationId+"/area_web_small_disabled.png" 
-					},*/
 					"max_children"	: -1,
 					"max_depth" 	: -1,
-					"valid_children" : "all",
+					"valid_children" : -1,
 					"hover_node" : selectable,
 					"select_node" : selectable
 				}
 				
 			}
 		},
-		"plugins" : [ "themes", "html_data", "types", "ui", "search", "crrm"]
-	});
-	
-	/*$("##areasTreeContainer").delegate("a","click", function(e) { 
-		//$("##areasTreeContainer").jstree("toggle_node", this);
-		//window.parent.changeIframeUrl(this.href);
-	}); */
-	
+		"plugins" : [ "types", "search" ]
+  	});
+		
 }
 
-function searchInTree(text) {	
-	$('#areasTreeContainer').jstree("search", text);
-	
-	 /*$("#demo").jstree("search", document.getElementById("text").value);*/
+var searchTimeOut = false; 
 
+function searchInTree(text) {	
+	//$('#areasTreeContainer').jstree("search", text);
+
+	if(searchTimeOut) { clearTimeout(searchTimeOut); }
+
+    searchTimeOut = setTimeout(function () {
+    	$('#areasTreeContainer').jstree(true).search(text);
+    }, 250);
 }
 
 function expandTree() {
@@ -103,10 +93,10 @@ function collapseNode() {
 }
 
 function jsTreeLoaded(event, data) { //JStree loaded
-	
-	$("#areasTreeContainer").bind("select_node.jstree", function (e, data) {
-	   var $obj = data.rslt.obj; // this will be a jquery object representing the <li> you've clicked
-	   areaSelected($obj.attr("id"),$obj.children("a").attr("href"),$obj.attr("with_link")=="true");
+
+	$("#areasTreeContainer").on("select_node.jstree", function (e, data) {
+	   	var node = data.node;
+	   	areaSelected(node.id, node.a_attr.href, node.li_attr.with_link=="true");
 	});
 	
 	treeLoaded();

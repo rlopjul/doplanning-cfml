@@ -40,6 +40,15 @@ CKEDITOR.editorConfig = function( config ) {
 		['Link','Unlink','-','Table','HorizontalRule','SpecialChar'],
 		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'], ['Image']
 	];
+
+	config.toolbar_DPAdmin =
+	[		
+		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],
+		['FontSize','TextColor','BGColor'],
+		['NumberedList','BulletedList'],
+		['Link','Unlink','-','Table','HorizontalRule','SpecialChar'],
+		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],['Image'],['Flash'],['Source']
+	];
 	
 	//Para que solo se pueda introducir texto plano
 	config.forcePasteAsPlainText = true;

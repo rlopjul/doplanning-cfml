@@ -32,17 +32,22 @@
 
 <cfoutput>
 
-<div class="div_message_page_title">Usuarios de la organización</div><!---(#numUsers#)--->
+<div class="div_message_page_title">Usuarios de la organización
 
+	<cfif SESSION.client_abb NEQ "hcs">
+		<div style="float:right; padding-right:5px;">
+			<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
+		</div>
+	</cfif>
+
+</div><!---(#numUsers#)--->
+
+<!---
 <div class="div_head_subtitle_area">
-	
-	<!--- 
-	PENDIENTE DE TERMINAR LAS OPCIONES
-	<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a> --->
 	
 	<!---<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>--->
 
-</div>
+</div>--->
 
 <div class="div_search_bar">
 

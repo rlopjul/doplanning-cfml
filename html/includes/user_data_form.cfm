@@ -5,8 +5,6 @@ page_types
 
 
 <cfoutput>
-<!---
-<script src="#APPLICATION.htmlPath#/scripts/bootstrap/bootstrap-fileupload.js" type="text/javascript"></script>--->
 
 <script>
 
@@ -165,6 +163,19 @@ page_types
 
 				</div>
 			</div>
+
+			<div class="row">
+				<div class="col-sm-12">
+
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="hide_not_allowed_areas" id="hide_not_allowed_areas" value="true" <cfif isDefined("objectUser.hide_not_allowed_areas") AND objectUser.hide_not_allowed_areas IS true>checked="checked"</cfif> /> Mostrar sólo áreas con acceso
+						</label>
+						<small class="help-block">En el árbol de áreas sólo se mostrarán las áreas con permiso de acceso.</small>
+					</div>
+
+				</div>
+			</div>	
 
 			<cfif page_type IS 1>
 				

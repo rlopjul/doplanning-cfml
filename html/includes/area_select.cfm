@@ -19,11 +19,14 @@
 </cfif>
 
 <cfoutput>
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 
+<!--- 
 <script type="text/javascript">
 	var applicationId = "#APPLICATION.identifier#";
-</script>
+</script> --->
+
 <script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
 
 <script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8" type="text/javascript"></script>

@@ -28,6 +28,9 @@
 	
 		<cfoutput>
 			
+			<cfif SESSION.client_administrator EQ SESSION.user_id>
+				<cfset arguments.toolbar = "DPAdmin">
+			</cfif>
 			<script type="text/javascript">
 				CKEDITOR.replace('#arguments.name#', {toolbar:'#arguments.toolbar#', toolbarStartupExpanded:#arguments.toolbarStartupExpanded#, language:'#arguments.language#'
 					<cfif isDefined("arguments.width")>
@@ -35,7 +38,11 @@
 					</cfif>
 					<cfif isDefined("arguments.height")>
 					, height:#arguments.height#
-					</cfif>});
+					</cfif>
+					<cfif SESSION.client_administrator EQ SESSION.user_id>
+					, forcePasteAsPlainText:false
+					</cfif>
+				});
 			</script>
 			
 		</cfoutput>

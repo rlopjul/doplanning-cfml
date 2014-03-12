@@ -39,6 +39,8 @@
 <link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
 
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
+
 <cfif APPLICATION.identifier EQ "vpnet">
 	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
 	<script src="../SpryAssets/includes/xpath.js"></script>

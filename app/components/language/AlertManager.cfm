@@ -176,8 +176,7 @@ curLangText["es"] = {
 			"last_version_date" : "Fecha de última versión",
 			"description" : "Descripción",
 
-		},
-
+		},	
 
 		"new_table_row": {
 
@@ -279,6 +278,15 @@ curLangText["es"] = {
 			"has_been_added_as_editor_of" : "Ha sido añadido como editor de la",
 
 		},
+
+		"tasks_reminder": {
+
+			"pending_tasks" : "Tiene tareas pendientes",
+			"tasks_expire_today" : "Las siguientes tareas caducan hoy",
+			"tasks_expire_days" : "Las siguientes tareas caducan en",
+			"days" : "días"
+
+		}
 	};
 	
 	
@@ -560,5 +568,14 @@ curLangText["en"] = {
 			"has_been_added_as_editor_of" : "You have been added as editor of the",
 
 		},
+
+		"tasks_reminder": {
+
+			"pending_tasks" : "You have pending tasks",
+			"tasks_expire_today" : "The following tasks expire today",
+			"tasks_expire_days" : "The following tasks expire in",
+			"days" : "days"
+
+		}
 	};
 </cfscript>

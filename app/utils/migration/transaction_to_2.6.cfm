@@ -134,13 +134,24 @@
 	</cfquery>
 
 
-	<!--- Última modificación no ejecutada en clientes --->
+	<!--- Últimas modificacións no ejecutada en clientes --->
 	<cfquery datasource="#client_dsn#">
 		ALTER TABLE `dp_#client_abb#`.`#client_abb#_files` ADD COLUMN `replacement_user` INTEGER AFTER `replacement_date`,
 	 ADD CONSTRAINT `FK_#client_abb#_files_6` FOREIGN KEY `FK_#client_abb#_files_6` (`replacement_user`)
 	    REFERENCES `#client_abb#_users` (`id`)
 	    ON DELETE SET NULL
 	    ON UPDATE RESTRICT;
+	</cfquery>
+
+
+	<cfquery datasource="#client_dsn#">
+		ALTER TABLE `dp_#client_abb#`.`#client_abb#_users` ADD COLUMN `hide_not_allowed_areas` BOOLEAN NOT NULL DEFAULT 0 AFTER `language`;
+	</cfquery>
+
+	<cfquery datasource="#client_dsn#">
+		ALTER TABLE `dp_software7`.`software7_lists_fields` ADD COLUMN `sort_by_this_field` BOOLEAN NOT NULL AFTER `required`;
+		ALTER TABLE `dp_software7`.`software7_typologies_fields` ADD COLUMN `sort_by_this_field` BOOLEAN NOT NULL AFTER `required`;
+		ALTER TABLE `dp_software7`.`software7_forms_fields` ADD COLUMN `sort_by_this_field` BOOLEAN NOT NULL AFTER `required`;
 	</cfquery>
 
 			

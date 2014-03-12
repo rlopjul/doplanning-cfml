@@ -402,6 +402,7 @@
 		<cfargument name="password" type="string" required="true">
 		<cfargument name="password_confirmation" type="string" required="true">
 		<cfargument name="files" type="array" required="false"/>
+		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
 		<cfargument name="information" type="string" required="true">
 		<cfargument name="internal_user" type="boolean" required="false">
@@ -445,6 +446,7 @@
 						<cfinvokeargument name="address" value="#arguments.address#">
 						<cfinvokeargument name="dni" value="#arguments.dni#">
 						<cfinvokeargument name="files" value="#arguments.files#">
+						<cfinvokeargument name="hide_not_allowed_areas" value="#arguments.hide_not_allowed_areas#">
 
 						<cfinvokeargument name="information" value="#arguments.information#">
 						<cfinvokeargument name="internal_user" value="#arguments.internal_user#">
@@ -490,6 +492,7 @@
 		<cfargument name="password" type="string" required="true">
 		<cfargument name="password_confirmation" type="string" required="true">
 		<cfargument name="files" type="array" required="false"/>
+		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
@@ -538,6 +541,7 @@
 						<cfinvokeargument name="address" value="#arguments.address#">
 						<cfinvokeargument name="dni" value="#arguments.dni#">
 						<cfinvokeargument name="files" value="#arguments.files#">
+						<cfinvokeargument name="hide_not_allowed_areas" value="#arguments.hide_not_allowed_areas#">
 
 						<cfinvokeargument name="information" value="#arguments.information#">
 						<cfinvokeargument name="internal_user" value="#arguments.internal_user#">

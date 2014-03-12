@@ -41,6 +41,8 @@
 <link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
 
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
+
 <script src="#APPLICATION.jqueryJSPath#"></script>
 <script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
 

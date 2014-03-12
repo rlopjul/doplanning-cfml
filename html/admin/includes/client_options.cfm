@@ -13,12 +13,39 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4 id="areaModalLabel">Opciones de notificación a usuarios</h4>
+		    <h4>Opciones de de la organización</h4>
 		</div>
 
 	 	<div class="modal-body">
 	  		
 	  		<form id="notificationsForm" method="post" class="form-horizontal">
+
+	  			<div class="row">
+					<div class="col-sm-12">
+						<label class="control-label" for="default_language" lang="es">Idioma por defecto de la aplicación</label>
+
+						<div class="row">
+							<div class="col-sm-4">
+								<select name="default_language" id="default_language" class="form-control">
+									<option value="es" <cfif clientQuery.default_language EQ "es">selected="selected"</cfif>>Español</option>
+									<option value="en" <cfif clientQuery.default_language EQ "en">selected="selected"</cfif>>English</option>
+								</select>
+							</div>
+							<div class="col-sm-8">
+								<small class="help-block">
+									Los usuarios podrán modificar el idioma en que se muestra la aplicación
+								</small>
+							</div>
+						</div>
+					</div>					
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<br>
+						<h4>Notificaciones automáticas por email</h4>
+					</div>
+				</div>
 
 				<div class="row">
 					<div class="col-sm-12">
@@ -56,26 +83,6 @@
 							</div>
 						</div>
 					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-sm-12">
-						<label class="control-label" for="default_language" lang="es">Idioma por defecto</label>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<select name="default_language" id="default_language" class="form-control">
-									<option value="es" <cfif clientQuery.default_language EQ "es">selected="selected"</cfif>>Español</option>
-									<option value="en" <cfif clientQuery.default_language EQ "en">selected="selected"</cfif>>English</option>
-								</select>
-							</div>
-							<div class="col-sm-8">
-								<small class="help-block">
-									Los usuarios podrán modificar el idioma en que se muestra la aplicación
-								</small>
-							</div>
-						</div>
-					</div>					
 				</div>
 
 			</form>

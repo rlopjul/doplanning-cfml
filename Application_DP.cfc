@@ -56,6 +56,7 @@
 		<cfset APPLICATION.title = "DoPlanning">
 		<cfset APPLICATION.identifier = "dp">
 		
+		<cfset APPLICATION.serverIp = "">
 		<cfset APPLICATION.emailSendMode = ""><!---SMTP/MandrillAPI--->
 		<cfset APPLICATION.emailServer = "">
 		<cfset APPLICATION.emailServerUserName = "">

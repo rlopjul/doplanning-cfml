@@ -19,9 +19,6 @@
 
 	<cfset component = "AlertManager">
 	
-	<!---<cfset foot_content_default = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">Este es un email automático enviado por la aplicación #APPLICATION.title#.<br /> No responda a este email.<br /> Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación.</p>'>
-	<cfset terms_of_use_default = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">El uso de #APPLICATION.title# implica la aceptación de los <a href="#APPLICATION.termsOfUseUrl#">términos de uso</a> por parte del usuario.</p>'>--->
-	
 	<cfinclude template="includes/loadLangText.cfm">
 	
 	<!--- -------------------------------------- newAreaItem ----------------------------------- --->

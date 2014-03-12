@@ -11,67 +11,7 @@
 
 	<cfset component = "AreaItemTree">
 	<cfset request_component = "AreaManager">
-	
-	
-	<!---<cffunction name="outputAreaItemsTree" returntype="void" output="true" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
-		
-		<cfset var method = "outputAreaItemsTree">
-		
-		<cfset var curItem = "">
-		
-		<!---<cftry>--->
-			
-			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
-			
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsTree" returnvariable="xmlTreeResponse">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-			</cfinvoke>
-			
-			<cfxml variable="xmlItems">
-				<cfoutput>
-				#xmlTreeResponse.response.result['#itemTypeNameP#'][1]#
-				</cfoutput>
-			</cfxml>
-			
-			<!---<cfoutput>
-			<textarea style="width:100%">#xmlItems#</textarea>
-			</cfoutput>--->
-			
-			<cfif isDefined("xmlItems.#itemTypeNameP#.#itemTypeName#")>
-			<ul>
-			<cfloop index="curItem" array="#xmlItems['#itemTypeNameP#']['#itemTypeName#']#">
-				
-				<cfinvoke component="AreaItemTree" method="outputItem">
-					<cfinvokeargument name="itemXml" value="#curItem#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				</cfinvoke>
-				
-			</cfloop>
-			</ul>
-			<cfelse>
-				<script type="text/javascript">
-					loadTree = false;
-				</script>
-				<cfoutput>
-				<div class="div_items">
-				<div class="div_text_result">No hay #lCase(itemTypeNameEsP)# en esta área.</div>
-				</div>
-				</cfoutput>
-			</cfif>
 
-			
-			<!---<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>--->
-	</cffunction>--->
-	
-	
 	
 	<cffunction name="outputItem" returntype="void" output="true" access="public">
 		<cfargument name="itemXml" type="xml">
@@ -118,7 +58,7 @@
 					<img src="#APPLICATION.htmlPath#/assets/icons/message.png" alt="#itemTypeNameEs#" class="item_img" style="margin-right:2px;"/>
 				</cfif>
 			</cfif>
-			<a href="#item_page_url#" class="jstree-node">
+			<a href="#item_page_url#"><!--- class="jstree-node"--->
 			<cfif itemTypeId IS 7><!---Consultations--->
 				<font class="div_tree_message_data">#itemXml.xmlAttributes.user_full_name#&nbsp;&nbsp;#itemXml.xmlAttributes.creation_date#</font>
 			</cfif>

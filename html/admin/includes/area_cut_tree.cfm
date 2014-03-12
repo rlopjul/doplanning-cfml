@@ -3,14 +3,18 @@
 	<cfset area_id = URL.area>
 
 	<cfoutput>
-	<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+	<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 
+	<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+
+	<!--- 
 	<script type="text/javascript">
 		var applicationId = "#APPLICATION.identifier#";
-	</script>
-	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
+	</script> --->
+	
+	<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
 
-	<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8" type="text/javascript"></script>
+	<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
 	</cfoutput>
 
 	<script type="text/javascript">
@@ -80,7 +84,7 @@
 	</div>
 
 	<cfprocessingdirective suppresswhitespace="true">
-	<div id="areasTreeContainer" style="clear:both; padding-top:30px;">
+	<div id="areasTreeContainer" style="clear:both; padding-top:35px;">
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTreeAdmin">
 			<!---<cfinvokeargument name="with_input_type" value="checkbox">
