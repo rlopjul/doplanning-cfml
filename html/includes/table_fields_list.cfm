@@ -61,6 +61,8 @@
 
 	<cfset alreadySelected = false>
 
+	<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
 	<cfloop query="fields">
 
 		<!---<cfif isDefined("arguments.return_page")>
@@ -77,7 +79,7 @@
 			
 			<cfif alreadySelected IS false>
 
-				<cfif ( isDefined("URL.field") AND (URL.field IS fields.field_id) ) OR ( selectFirst IS true AND fields.currentrow IS 1 AND app_version NEQ "mobile" ) >
+				<cfif ( isDefined("URL.field") AND URL.field IS fields.field_id ) OR ( selectFirst IS true AND fields.currentrow IS 1 AND app_version NEQ "mobile" ) >
 
 					<!---Esta acción solo se completa si está en la versión HTML2--->
 					<script type="text/javascript">
@@ -114,10 +116,20 @@
 					<cfif isNumeric(fields.default_value)>
 						
 						<!--- getArea --->
-						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="listArea">
+						<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="listArea">
 							<cfinvokeargument name="area_id" value="#fields.default_value#">
 						</cfinvoke>
-						<cfset field_default_value = listArea.name>
+						<cfset field_default_value = listArea.name>--->
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="selectDefaultAreaQuery">
+							<cfinvokeargument name="area_id" value="#fields.default_value#">
+							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+						
+						<cfif selectDefaultAreaQuery.recordCount GT 0>
+							<cfset field_default_value = selectDefaultAreaQuery.name>
+						</cfif>
 
 					</cfif>
 					

@@ -7,11 +7,12 @@
 		
 		$("##dataTable").tablesorter({ 
 			widgets: ['zebra','filter','select','stickyHeaders'],
-			sortList: [[0,1]] ,
-			headers: { 
 
+			headers: { 
+				
+				<cfset sortArray = arrayNew(1)>
 				<cfset fieldsWithDate = false>
-					
+
 				<cfloop query="fields">
 
 					<cfif fields.field_id IS "creation_date" OR fields.field_id IS "last_update_date" OR fields.field_type_id IS 6><!--- DATE --->
@@ -21,8 +22,35 @@
 						<cfset fieldsWithDate = true>
 					</cfif>
 
+					<cfif len(fields.sort_by_this) GT 0>
+						<cfif fields.sort_by_this IS "asc">
+							<cfset sortOrder = 0>
+						<cfelse>
+							<cfset sortOrder = 1>
+						</cfif>
+						<cfset arrayAppend(sortArray, {row=fields.currentRow, order=sortOrder})>
+					</cfif>
+
 				</cfloop>
 			},
+			// default "emptyTo"
+   			emptyTo: 'zero',
+			 
+			<cfset sortArrayLen = arrayLen(sortArray)>
+			<cfif sortArrayLen GT 0>
+							
+				sortList: [
+				<cfloop from="1" to="#sortArrayLen#" index="curSort">
+					[#sortArray[curSort].row#, #sortArray[curSort].order#]
+					<cfif curSort NEQ sortArrayLen>
+						,
+					</cfif>
+				</cfloop> ],
+
+			<cfelse>
+				sortList: [[0,1]] ,
+			</cfif>
+			
 
 			widgetOptions : {
 				filter_childRows : false,
@@ -48,7 +76,7 @@
 <cfset selectFirst = true>
 <cfset listFields = false>
 
-<cfif isDefined("URL.field")>
+<cfif isDefined("URL.row")>
 	<cfset selectFirst = false>
 </cfif>
 
@@ -97,7 +125,7 @@
 		
 		<cfif alreadySelected IS false>
 
-			<cfif ( isDefined("URL.row") AND (URL.row IS tableRows.row_id) ) OR ( selectFirst IS true AND tableRows.currentrow IS tableRows.recordCount AND app_version NEQ "mobile" ) >
+			<cfif ( isDefined("URL.row") AND URL.row IS tableRows.row_id ) OR ( selectFirst IS true AND tableRows.currentRow IS 1 AND app_version NEQ "mobile" ) ><!--- tableRows.recordCount --->
 
 				<!---Esta acción solo se completa si está en la versión HTML2--->
 				<script type="text/javascript">

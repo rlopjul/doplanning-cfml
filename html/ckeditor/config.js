@@ -8,7 +8,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
 	
-	config.skin = 'moonocolor_v1.1';
+	config.skin = 'moonocolor';
 	
 	config.toolbar_Full =
 	[
@@ -35,19 +35,22 @@ CKEDITOR.editorConfig = function( config ) {
 	config.toolbar_DP =
 	[		
 		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],
+		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],
 		['FontSize','TextColor','BGColor'],
 		['NumberedList','BulletedList'],
-		['Link','Unlink','-','Table','HorizontalRule','SpecialChar'],
-		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'], ['Image']
+		['Link','Unlink','-','Table','HorizontalRule','SpecialChar','Smiley'],
+		['Image']
 	];
 
 	config.toolbar_DPAdmin =
 	[		
-		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],
-		['FontSize','TextColor','BGColor'],
-		['NumberedList','BulletedList'],
-		['Link','Unlink','-','Table','HorizontalRule','SpecialChar'],
-		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],['Image'],['Flash'],['Source']
+		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],['Source'],
+		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],
+		['Format','FontSize','TextColor','BGColor'],
+		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
+		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+		['Link','Unlink','-','Table','HorizontalRule','SpecialChar','Smiley'],
+		['Image','Flash','Iframe']
 	];
 	
 	//Para que solo se pueda introducir texto plano

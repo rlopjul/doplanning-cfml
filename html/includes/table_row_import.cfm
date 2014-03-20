@@ -133,7 +133,7 @@
 			<cfif dateFields IS true>--->
 			-<strong>Campos fecha</strong>: formatos válidos las fechas: <i>DD-MM-AAAA, DD/MM/AAAA</i>.<br/>
 			<!---</cfif>--->
-			-<strong>Campos de listas con selección múltiple</strong>: los valores seleccionados de estos campos deberán definirse en un listado de valores delimitados por ; y delimitando a su vez el campo que contiene este listado por ""
+			-<strong>Campos de listas con selección múltiple</strong>: los valores seleccionados de estos campos deberán delimitarse por ; y delimitando a su vez el campo que contiene estos valores por "<br/>
 
 			<!----En el archivo no debe aparecer ninguna fila con los títulos de las columnas.<br/>--->
 			<!----La primera fila del archivo corresponderá a los títulos de las columnas. Los títulos de las columnas pueden ser diferentes a los indicados, pero <strong>no pueden contener espacios, tildes o caracteres especiales</strong>.<br/>--->

@@ -141,8 +141,14 @@ function enableDatePicker(selector){
 	});
 }
 
-function stopPropagation(e) {
-	if (!e) var e = window.event;
-	e.cancelBubble = true;
-	if (e.stopPropagation) e.stopPropagation();		
+function stopPropagation(event) {
+	event = event || window.event; // cross-browser event
+    if (event.stopPropagation) {
+        // W3C standard variant
+        event.stopPropagation();
+    } else {
+        // IE variant
+        event.cancelBubble = true;
+    }
+    return false;		
 }

@@ -464,13 +464,12 @@
 		<cfset var client_abb = "">
 		<cfset var client_dsn = "">
 
-		<cfset var userAreasIds = "">
-
 		<cfset var nowDate = Now()>
 		<cfset var todayDate = CreateDate( Year(nowDate), Month(nowDate), Day(nowDate) )>
 		<cfset var todayDateFormatted = dateFormat(todayDate, APPLICATION.dateFormat)>
 		<cfset var forceNotifications = "">
 		<cfset var tasksReminderDays = "">
+		<cfset var userAccessResult = "">
 		<cfset var subject = "">
 
 		<cftry>
@@ -517,17 +516,18 @@
 									<cfset itemTypeId = 6>
 									<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
-									<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
+									<!---<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
 										<cfinvokeargument name="get_user_id" value="#curUserId#">
 
 										<cfinvokeargument name="client_abb" value="#client_abb#">
 										<cfinvokeargument name="client_dsn" value="#client_dsn#">
 									</cfinvoke>
 
-									<cfif listLen(userAreasIds) GT 0>
+									<cfif listLen(userAreasIds) GT 0>--->
 										
 										<cfinvoke component="AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
-											<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+											<!--- <cfinvokeargument name="areas_ids" value="#userAreasIds#"> --->
+											<cfinvokeargument name="all_areas" value="true">
 											<cfinvokeargument name="recipient_user" value="#curUserId#">
 											<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 											<cfinvokeargument name="listFormat" value="true">
@@ -568,15 +568,13 @@
 												FROM tasksQuery
 												WHERE end_date = <cfqueryparam value="#futureDateFormatted#" cfsqltype="cf_sql_varchar">;
 											</cfquery>
-
-											<!---
-											<cfdump var="#tasksQuery#">
+											
+											<!---<cfdump var="#tasksQuery#">
 											<cfdump var="#futureTasksQuery#">
 											<cfoutput>
 												#futureDate#<br/>
 												#futureTasksQuery.recordCount#<br/>
-											</cfoutput>
-											--->
+											</cfoutput>--->											
 
 										<cfelse>
 
@@ -603,17 +601,29 @@
 
 												<cfloop array="#expiredTasksArray#" index="taskObject">
 
-													<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="taskAlertContent">
-														<cfinvokeargument name="item" value="#taskObject#">
-														<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-														<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-														<cfinvokeargument name="language" value="#curLang#">
+													<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="userAreaAccessResult">
+														<cfinvokeargument name="area_id" value="#taskObject.area_id#">
+														<cfinvokeargument name="user_id" value="#curUserId#">
 
 														<cfinvokeargument name="client_abb" value="#client_abb#">
-													</cfinvoke>	
+														<cfinvokeargument name="client_dsn" value="#client_dsn#">
+													</cfinvoke>
 
-													<cfset alertContent = alertContent&taskAlertContent>
+													<cfif userAreaAccessResult IS true>
+														
+														<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="taskAlertContent">
+															<cfinvokeargument name="item" value="#taskObject#">
+															<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+															<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+															<cfinvokeargument name="language" value="#curLang#">
 
+															<cfinvokeargument name="client_abb" value="#client_abb#">
+														</cfinvoke>	
+
+														<cfset alertContent = alertContent&taskAlertContent>
+
+													</cfif>
+													
 												</cfloop>								
 												
 											</cfif>
@@ -635,16 +645,28 @@
 
 												<cfloop array="#futureTasksArray#" index="taskObject">
 
-													<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="taskAlertContent">
-														<cfinvokeargument name="item" value="#taskObject#">
-														<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-														<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-														<cfinvokeargument name="language" value="#curLang#">
-
+													<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="userAreaAccessResult">
+														<cfinvokeargument name="area_id" value="#taskObject.area_id#">
+														<cfinvokeargument name="user_id" value="#curUserId#">
+														
 														<cfinvokeargument name="client_abb" value="#client_abb#">
-													</cfinvoke>	
+														<cfinvokeargument name="client_dsn" value="#client_dsn#">
+													</cfinvoke>
 
-													<cfset alertContent = alertContent&taskAlertContent>
+													<cfif userAreaAccessResult IS true>
+
+														<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="taskAlertContent">
+															<cfinvokeargument name="item" value="#taskObject#">
+															<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+															<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+															<cfinvokeargument name="language" value="#curLang#">
+
+															<cfinvokeargument name="client_abb" value="#client_abb#">
+														</cfinvoke>	
+
+														<cfset alertContent = alertContent&taskAlertContent>
+
+													</cfif>
 
 												</cfloop>
 
@@ -655,14 +677,13 @@
 											<cfinvoke component="AlertManager" method="getDiaryAlertFootContent" returnvariable="footContent">
 												<cfinvokeargument name="language" value="#curLang#">
 											</cfinvoke>
-
-											<!--- 
-											<cfoutput>
+											
+											<!---<cfoutput>
 												#todayDate#<br/>
 												#futureDate#<br/>
 												#curUserEmail#<br/>
 												#alertContent#
-											</cfoutput> --->
+											</cfoutput>--->
 											
 											<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 												<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
@@ -674,7 +695,7 @@
 
 										</cfif><!--- END expiredTasksQuery.recordCount GT 0 OR futureTasksQuery.recordCount GT 0 --->
 
-									</cfif>
+									<!--- </cfif> --->
 
 								</cfif>
 

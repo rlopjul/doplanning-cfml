@@ -42,7 +42,7 @@
 <cfoutput>
 
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
 <!--- 
 <script type="text/javascript">
@@ -50,7 +50,7 @@
 	var applicationPath = "#APPLICATION.path#";
 </script> --->
 
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
 
 <cfif APPLICATION.moduleWeb IS true>
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
@@ -70,8 +70,10 @@
 
 	function areaSelected(areaId)  {
 		var checkBoxId = "#area"+areaId;
-		if($(checkBoxId).attr('disabled')!='disabled')
+		if($(checkBoxId).attr('disabled')!='disabled'){
 			toggleCheckboxChecked(checkBoxId);
+		}
+			
 	}
 	
 	function searchTextInTree(){
@@ -114,6 +116,15 @@
 			autoclose: true
 		});
 		</cfif>
+
+		<!--- Hack para posibilitar la selección de los checkboxs en el árbol al hacer click sobre ellos --->
+		$("#areasTreeContainer input:checkbox").click(function(event) {
+			var inputId = "#"+this.id;
+			setTimeout(function(){
+		       $(inputId).prop("checked",!($(inputId).is(":checked"))); 
+		    }, 100);
+
+		});
 
 	});
 
@@ -174,15 +185,6 @@ Asociar archivo a áreas
 	
 	</cfoutput>
 	
-	<!---<div id="buttons">
-	<cfoutput>
-	<cfif isDefined("area_id")>
-		<a href="#return_path#file.cfm?file=#file_id#&area=#area_id#">Cancelar</a>
-	<cfelseif isDefined("folder_id")>
-		<a href="#return_path#my_files_file.cfm?file=#file_id#&folder=#folder_id#">Cancelar</a>
-	</cfif>
-	</cfoutput>
-	</div>--->
 	<cfif isDefined("area_id")>
 		<cfset return_page = "#return_path#file.cfm?file=#file_id#&area=#area_id#">
 	<cfelseif isDefined("folder_id")>
@@ -204,7 +206,7 @@ Asociar archivo a áreas
 	<div style="margin-top:2px;">
 
 		<div class="btn-group">
-			<div class="input-group" style="width:260px;" >
+			<div class="input-group input-group-sm" style="width:260px;" >
 				<input type="text" name="text" id="searchText" value="" class="form-control"/>
 				<span class="input-group-btn">
 					<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
@@ -216,18 +218,33 @@ Asociar archivo a áreas
 		<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>--->
 
 	</div>
-	<div id="areasTreeContainer" style="clear:both; margin-top:2px; margin-bottom:2px;">
 
 	<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
-			<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 		</cfinvoke>
-		<cfset scopesQuery = getScopesResult.scopesAreas>
-		<cfset scopeAreasList = valueList(scopesQuery.area_id)>
+
+		<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
+				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
+			</cfinvoke>
+			<cfset scopesQuery = getScopesResult.scopesAreas>
+			<cfset scopeAreasList = valueList(scopesQuery.area_id)>
+
+		<cfelse>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAllAreasIds" returnvariable="getScopesResult">
+				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
+			</cfinvoke>
+			<cfset scopeAreasList = getScopesResult.areasIds>
+			
+		</cfif>
 
 	</cfif>
 
+	<div id="areasTreeContainer" style="clear:both; margin-top:2px; margin-bottom:2px;">
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
 		<!--- Ahora sí se pueden asociar archivos internos a las áreas web
 		<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan asociar archivos a las áreas WEB---> --->

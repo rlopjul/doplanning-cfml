@@ -33,9 +33,9 @@
 		<cfif error_code IS NOT 102 AND error_code IS NOT 607>
 
 			<cfif isDefined("arguments.user_id") AND isDefined("arguments.client_abb") AND isDefined("arguments.user_language")>
-				<cfset var client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+				<cfset var client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 				<cfquery datasource="#client_dsn#" name="saveErrorQuery">
-					INSERT INTO #SESSION.client_abb#_errors_log (code, user_id, content, method, component)
+					INSERT INTO #arguments.client_abb#_errors_log (code, user_id, content, method, component)
 					VALUES (#error_code#, '#SESSION.user_id#', '#arguments.error_content#', '#error_method#', '#error_component#')
 				</cfquery>
 			<cfelse>			
@@ -55,8 +55,8 @@
 						<cfif isDefined("SESSION.user_id")>
 						<tr><td>user_id:</td> <td>#SESSION.user_id#<br /></td></tr>
 						</cfif>
-						<cfif isDefined("SESSION.client_abb")>
-						<tr><td>client_abb:</td> <td>#SESSION.client_abb#<br /></td></tr>			
+						<cfif isDefined("arguments.client_abb")>
+						<tr><td>client_abb:</td> <td>#arguments.client_abb#<br /></td></tr>			
 						</cfif>
 						<tr><td>error_code:</td> <td>#error_code#<br /></td></tr>
 						<cfif isDefined("arguments.error_message")>
@@ -138,13 +138,25 @@
 		
 		<cfset var method = "getError">
 
-		<cfset var client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+		<cfset var client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 		
 			<!---<cfinclude template="includes/functionStart.cfm">--->
 			<cfif isDefined("arguments.user_language") AND len(arguments.user_language) GT 0 AND arguments.user_language NEQ "NULL">
 				<cfset user_language = arguments.user_language>
+			<cfelseif isDefined("arguments.client_abb")>
+
+				<cfinvoke component="ClientQuery" method="getClient" returnvariable="selectClientQuery">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				</cfinvoke>
+				
+				<cfif selectClientQuery.recordCount GT 0>
+					<cfset user_language = selectClientQuery.default_language>
+				</cfif>
+			
 			<cfelse>
-				<cfset user_language = APPLICATION.defaultLanguage>
+
+				<cfset user_language = "es">
+
 			</cfif>
 						
 			<cfquery datasource="#APPLICATION.dsn#" name="getError">

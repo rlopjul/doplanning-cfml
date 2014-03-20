@@ -104,6 +104,60 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- getScopeAllAreasIds -------------------------------------  --->
+	
+	<cffunction name="getScopeAllAreasIds" output="false" access="public" returntype="struct">
+		<cfargument name="scope_id" type="numeric" required="true">
+
+		<cfset var method = "getScopeAllAreas">
+
+		<cfset var response = structNew()>
+
+		<cfset var scopeAllAreasIds = "">
+		<cfset var subAreasIds = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ScopeQuery" method="getScopeAreas" returnvariable="scopeRootAreas">
+				<cfinvokeargument name="scope_id" value="#arguments.scope_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfloop query="scopeRootAreas">
+
+				<cfset scopeAllAreasIds = listAppend(scopeAllAreasIds, scopeRootAreas.area_id)>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
+					<cfinvokeargument name="area_id" value="#scopeRootAreas.area_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+				
+				<cfif listLen(subAreasIds) GT 0>
+					<cfset scopeAllAreasIds = listAppend(scopeAllAreasIds, subAreasIds)>
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=true, areasIds=#scopeAllAreasIds#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- ------------------------------------- isAreaInScope -------------------------------------  --->
 	
 	<cffunction name="isAreaInScope" output="false" access="public" returntype="struct">

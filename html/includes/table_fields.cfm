@@ -32,7 +32,11 @@
 
 <div class="div_head_subtitle_area">
 
-	<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
+	<cfif tableTypeId IS NOT 3>
+		<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
+	<cfelse>
+		<a href="typologies.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <i class="icon-file-text" style="font-size:17px; color:##7A7A7A"></i>&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
+	</cfif>
 
 	<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Añadir campo</span></a>
 

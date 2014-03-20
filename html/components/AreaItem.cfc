@@ -965,6 +965,7 @@
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="title" type="string" required="true">
 		<cfargument name="link" type="string" required="false" default="">
+		<cfargument name="link_target" type="string" required="false">
         <cfargument name="description" type="string" required="false" default="">
         <cfargument name="Filedata" type="any" required="false" default="">
 		<cfargument name="imagedata" type="any" required="false" default="">
@@ -1005,6 +1006,7 @@
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="title" value="#arguments.title#">
 					<cfinvokeargument name="link" value="#arguments.link#">
+					<cfinvokeargument name="link_target" value="#arguments.link_target#">
 					<cfinvokeargument name="description" value="#arguments.description#">
 					<cfinvokeargument name="parent_id" value="#cur_area#">
 					<cfinvokeargument name="parent_kind" value="area">
@@ -2042,7 +2044,7 @@
 									
 								<cfelseif itemTypeId IS NOT 3><!---No es link--->
 								
-									<cfif APPLICATION.identifier NEQ "vpnet"><!---Message AND DP--->	
+									<cfif itemTypeId NEQ 1 AND APPLICATION.identifier NEQ "vpnet"><!---Message AND DP--->	
 										<cfif len(itemsQuery.user_image_type) GT 0>
 											<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemsQuery.user_in_charge#&type=#itemsQuery.user_image_type#&small=" alt="#itemsQuery.user_full_name#" class="item_img"/>									
 										<cfelse>							

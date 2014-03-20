@@ -55,9 +55,9 @@
 				
 			<cfelse>
 
-			<cfoutput>
-				Cliente #client_abb# ya migrado anteriormente.<br/>
-			</cfoutput>
+				<cfoutput>
+					Cliente #client_abb# ya migrado anteriormente.<br/>
+				</cfoutput>
 			
 			</cfif>
 		</cfloop>

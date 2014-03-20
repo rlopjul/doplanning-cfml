@@ -15,29 +15,50 @@ encrypt_key (remember_password_query.cfm)
 	}
 </script>
 
-<cfform action="#CGI.SCRIPT_NAME#" method="post" onsubmit="return getNewPasswordOnSubmit(this);">
+<cfform action="#CGI.SCRIPT_NAME#" method="post" onsubmit="return getNewPasswordOnSubmit(this);" class="form-horizontal">
 
 	<input name="client_abb" type="hidden" value="#client_abb#" />
 	<input name="language" type="hidden" id="languageInput" value="es" />
 	
-	<label for="email" lang="es">Email:</label>
-	<cfinput name="email" type="text" id="email" autofocus="true" required="true" validate="email" message="Introduzca un email válido" class="form-control" />
+	<div class="row">
+		<div class="col-sm-2">
+			<label for="email" class="control-label" lang="es">Email:</label>
+		</div>
+		<div class="col-sm-9">
+			<cfinput name="email" type="text" id="email" autofocus="true" required="true" validate="email" message="Introduzca un email válido" class="form-control" />
+		</div>
+	</div>
 	
 	<cfset captcha_text = RandRange(100, 999)>
 	<cfset captcha_text_enc = encrypt(captcha_text,encrypt_key,"CFMX_COMPAT","HEX")>
 	
 	<input name="captcha_text_enc" type="hidden" value="#captcha_text_enc#">
 	
-	<label for="captcha_text" lang="es">Introduzca los siguientes números:</label>
+ 	<div class="row">
+ 		<div class="col-sm-12">
+			<label for="captcha_text" class="control-label" lang="es">Introduzca los siguientes números:</label>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-offset-2 col-sm-4">
+			<cfimage action="captcha" difficulty="medium" fontSize="26" width="103" height="45" text="#captcha_text#" fonts="Arial,Verdana,Courier New">
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-offset-2 col-sm-4">
+			<cfinput name="captcha_text" id="captcha_text" type="text" value="" required="yes" message="Introduzca los números que aparecen en la imagen" style="margin-top:3px;" class="form-control">
+		</div>
+	</div>
 	
-	<cfimage action="captcha" difficulty="medium" fontSize="26" width="103" height="45" text="#captcha_text#" fonts="Arial,Verdana,Courier New"><br/>
-	
-	<cfinput name="captcha_text" id="captcha_text" type="text" value="" required="yes" message="Introduzca los números que aparecen en la imagen" style="margin-top:3px;" class="input-sm">
-	
-	
-	<div style="height:5px;"></div>
-	<input name="send" type="submit" class="btn btn-primary" value="Enviar" data-loading-text="Enviar nueva contraseña" autocomplete="off" lang="es"/>
-	<a href="index.cfm?client_abb=#client_abb#" class="btn btn-default" lang="es">Cancelar</a>
+	<div class="row">
+		<div class="col-sm-offset-2 col-sm-10">
+			<div style="height:5px;"></div>
+			<input name="send" type="submit" class="btn btn-primary" value="Enviar" data-loading-text="Enviar nueva contraseña" autocomplete="off" lang="es"/>
+			<a href="index.cfm?client_abb=#client_abb#" class="btn btn-default" lang="es">Cancelar</a>
+		</div>
+	</div>
 	
 </cfform>
 

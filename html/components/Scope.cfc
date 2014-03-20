@@ -82,4 +82,30 @@
 
 	</cffunction>
 
+
+	<cffunction name="getScopeAllAreasIds" output="false" returntype="struct" access="public">
+		<cfargument name="scope_id" type="numeric" required="true">
+		
+		<cfset var method = "getScopeAllAreasIds">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/ScopeManager" method="getScopeAllAreasIds" returnvariable="response">
+				<cfinvokeargument name="scope_id" value="#arguments.scope_id#">		
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
+			
+		</cftry>
+		
+		<cfreturn response>
+
+	</cffunction>
+
 </cfcomponent>

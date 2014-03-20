@@ -865,10 +865,9 @@
 				</cfquery>
 				
 				
-				
 				<!---<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_users` (`id`, `name`, `telephone`, `address`, `password`, `space_used`, `number_of_connections`, `connected`, `session_id`, `creation_date`, `internal_user`, `root_folder_id`, `family_name`, `sms_allowed`, `mobile_phone`, `space_downloaded`, `validated`, `email`, `image_id`, `telephone_ccode`, `mobile_phone_ccode`) VALUES
-					(1, 'Support', NULL, NULL, '6f2a7325a9966a6a135e0bf5e2126430', 0, 3, 1, '1a3024245e9921e08a2e746c3a35221443c5', '#current_date#', NULL, 1, NULL, 0, NULL, 0, 0, 'support@era7.com', NULL, NULL, NULL);
+					(1, 'Support', NULL, NULL, '', 0, 3, 1, '1a3024245e9921e08a2e746c3a35221443c5', '#current_date#', NULL, 1, NULL, 0, NULL, 0, 0, 'support@era7.com', NULL, NULL, NULL);
 				</cfquery>--->	
 					
 				<!---
@@ -914,12 +913,7 @@
 				  PRIMARY KEY  (`id`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;--->
 				
-					
-				<!---<cfquery datasource="#client_datasource#">	
-					INSERT INTO `#new_client_abb#_user_preferences` (`user_id`, `notify_new_message`, `notify_new_file`, `language`, `notify_replace_file`) VALUES
-					(1, 1, 1, 'es', 1);
-				</cfquery>--->
-				
+
 				<!---Aquí hay que llamar a un método que ponga como sesion actual la del cliente recien creado,
 				para que las siguientes peticiones afecten a ese cliente. Lo que habría que hacer en ese método sería:
 				SESSION.client_abb = #new_client_abb#

@@ -351,6 +351,95 @@
 		</cfif>
 			
 	</cffunction>
+
+
+	<!--- -------------------------- CHECK AREAS ACCESS -------------------------------- --->
+	<!---Comprueba si el usuario puede acceder a algún área de la lista--->
+	
+	<cffunction name="checkAreasAccess" returntype="void" output="false" access="public">
+		<cfargument name="areasList" type="string" required="yes">
+		
+		<cfset var method = "checkAreasAccess">
+		
+		<cfset var current_area = "">
+		<cfset var access_result = false>
+		<cfset var curAccessResult = "">
+		<cfset var areasCheckedList = "">
+					
+		<cfinclude template="includes/functionStartOnlySession.cfm">
+
+		<!--- Obtiene las áreas del usuario --->
+		<cfquery name="userAreasQuery" datasource="#client_dsn#">
+			SELECT area_id
+			FROM #client_abb#_areas_users
+			WHERE user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>	
+
+		<cfif userAreasQuery.recordCount GT 0>
+			
+			<!--- Comprueba si el usuario está directamente asociado a alguna de las áreas --->
+			<cfquery name="isUserInAreasQuery" dbtype="query">
+				SELECT area_id
+				FROM userAreasQuery
+				WHERE area_id IN (<cfqueryparam value="#arguments.areasList#" cfsqltype="cf_sql_varchar" list="true">);
+			</cfquery>
+
+			<cfif isUserInAreasQuery.recordCount GT 0>
+				
+				<cfset access_result = true>
+
+			<cfelse><!--- El usuario no está asociado directamente en ninguna de las áreas anteriores --->
+
+				<cfloop list="#arguments.areasList#" index="current_area">
+
+					<!---<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="current_access_result">
+						<cfinvokeargument name="area_id" value="#current_area#">
+					</cfinvoke>
+
+					<cfif current_access_result IS true>
+						<cfset access_result = true>
+						<cfbreak>
+					</cfif>--->
+
+					<cfif listFind(areasCheckedList, current_area) IS 0>
+					
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="canUserAccessToAreaExtended" returnvariable="curAccessResult">
+							<cfinvokeargument name="area_id" value="#current_area#">
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+						
+						<cfif curAccessResult.accessResult IS true>
+
+							<cfset access_result = true>
+
+							<!---<cftrace var="areasCheckedList" text="#areasCheckedList#" category="var" inline="true" type="Warning">--->
+
+							<cfbreak>
+						
+						<cfelse>
+
+							<cfset areasCheckedList = listAppend(areasCheckedList, curAccessResult.checkedAreasIds)>
+
+						</cfif>
+
+					</cfif>
+				
+				</cfloop>
+
+			</cfif><!--- END isUserInAreasQuery.recordCount GT 0 --->
+
+		</cfif><!--- END userAreasQuery.recordCount GT 0 --->
+
+		<cfif access_result IS NOT true>
+			<cfset error_code = 104>
+			
+			<cfthrow errorcode="#error_code#">		
+		</cfif>		
+	
+	</cffunction>		
 	
 	
 	
@@ -363,10 +452,18 @@
 		<cfset var method = "canUserAccessToArea">
 		
 		<cfset var access_result = false>
-		<cfset var area_users_list = "">
 					
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+
+		<!---
 		<cfquery datasource="#client_dsn#" name="getAreaUsers">
 			SELECT areas_users.user_id, areas.parent_id
 			FROM #client_abb#_areas_users AS areas_users
@@ -395,11 +492,6 @@
 			
 		<cfelse><!---No users in area--->
 		
-			<!---<cfinvoke component="AreaManager" method="getArea" returnvariable="objectArea">
-				<cfinvokeargument name="get_area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="format_content" value="default">
-				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>--->
 			<cfquery datasource="#client_dsn#" name="getAreaParent">
 				SELECT areas.parent_id
 				FROM #client_abb#_areas AS areas
@@ -415,6 +507,7 @@
 			</cfif>
 		
 		</cfif>
+		--->
 		
 		<cfreturn access_result>
 		
@@ -577,41 +670,7 @@
 	</cffunction>--->
 	
 	
-	<!--- -------------------------- CHECK AREAS ACCESS -------------------------------- --->
-	<!---Comprueba si el usuario puede acceder a algún área de la lista--->
 	
-	<cffunction name="checkAreasAccess" returntype="void" access="public">
-		<cfargument name="areasList" type="string" required="yes">
-		
-		<cfset var method = "checkAreasAccess">
-		
-		<cfset var current_area = "">
-		<cfset var access_result = false>
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
-		<cfinclude template="includes/functionStart.cfm">
-
-		<cfloop list="#arguments.areasList#" index="current_area">
-
-			<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="current_access_result">
-				<cfinvokeargument name="area_id" value="#current_area#">
-			</cfinvoke>
-			
-			<cfif current_access_result IS true>
-				<cfset access_result = true>
-				<cfbreak>
-			</cfif>
-		
-		</cfloop>
-
-		<cfif access_result IS NOT true>
-			<cfset error_code = 104>
-			
-			<cfthrow errorcode="#error_code#">		
-		</cfif>		
-	
-	</cffunction>		
 	
 	
 	
@@ -1496,10 +1555,11 @@
 
 	<!--- ------------------------------------- getSubAreas ------------------------------------- --->
 	
-	<cffunction name="getSubAreas" output="false" access="public" returntype="struct">		
+	<cffunction name="getSubAreasIds" output="false" access="public" returntype="struct">		
 		<cfargument name="area_id" type="numeric" required="true"/>
 		
-		<cfset var method = "getSubAreas">
+		<cfset var method = "getSubAreasIds">
+		<cfset var subAreasIds = "">
 
 		<cfset var response = structNew()>
 		
@@ -1507,13 +1567,14 @@
 				
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">				
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="getSubAreasIds" returnvariable="subAreasIds">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">		
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<cfset response = {result=true, areas=subAreasQuery}>
+			<cfset response = {result=true, areasIds=subAreasIds}>
 		
 			<cfcatch>
 
@@ -1525,7 +1586,6 @@
 		<cfreturn response>
 		
 	</cffunction>
-
 	
 	
 	<!--- ------------------------------------- createArea ------------------------------------- --->
@@ -2233,7 +2293,8 @@
 		<cfset var user_id = "">
 		<cfset var client_abb = "">
 		<cfset var user_language = "">
-		
+		<cfset var internal_user = "">
+
 		<cfset var xmlResponseContent = "">
 		<cfset var response = "">
 			

@@ -13,19 +13,20 @@
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
-<!---Table rows--->
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRows" returnvariable="tableRowsResult">
-	<cfinvokeargument name="table_id" value="#table_id#">
-	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-</cfinvoke>
-<cfset tableRows = tableRowsResult.rows>
-
 <!---Table fields--->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
 	<cfinvokeargument name="table_id" value="#table_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
 <cfset fields = fieldsResult.tableFields>
+
+<!---Table rows--->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRows" returnvariable="tableRowsResult">
+	<cfinvokeargument name="table_id" value="#table_id#">
+	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+	<cfinvokeargument name="fields" value="#fields#">
+</cfinvoke>
+<cfset tableRows = tableRowsResult.rows>
 
 <!--- creation_date --->
 <!---<cfset queryAddRow(fields, 1)>

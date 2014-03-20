@@ -19,6 +19,7 @@ jquery_lang_js.prototype.lang.en = {
 	'Obtener una nueva contraseña para DoPlanning':'Get a new password for DoPlanning',
 	'Introduzca los siguientes números:':'Enter the following numbers:',
 	'Su nueva contraseña ha sido enviada a su dirección de email':'Your new password has been sent to your email address',
+	'Cuenta de usuario deshabilitada':'Disabled user account',
 	'Enviar':'Send',
 	'Cancelar':'Cancel'
 	/*END remember_password.cfm*/

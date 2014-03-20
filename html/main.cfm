@@ -54,7 +54,7 @@
 </cfif>
 
 <script src="#APPLICATION.jqueryJSPath#"></script>
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
 <script src="#APPLICATION.bootstrapJSPath#"></script>
 
@@ -103,8 +103,8 @@
 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/scripts/functions.min.js"></script>
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.4"></script>
-<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.5"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.6"></script>
 </cfoutput>
 
 <script type="text/javascript">

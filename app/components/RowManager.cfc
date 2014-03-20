@@ -920,6 +920,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="false">
+		<cfargument name="fields" type="query" required="false">
 
 		<cfset var method = "getTableRows">
 
@@ -951,6 +952,7 @@
 				<cfif isDefined("arguments.row_id")>
 				<cfinvokeargument name="row_id" value="#arguments.row_id#">
 				</cfif>
+				<cfinvokeargument name="fields" value="#arguments.fields#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

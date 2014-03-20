@@ -1,5 +1,6 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_menu_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_menu_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.path#/jquery/jquery-shorten/jquery.shorten.min.js"></script>
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
 	<cfinvokeargument name="user_id" value="#SESSION.user_id#">
@@ -41,9 +42,14 @@
 						<cfinvokeargument name="area_id" value="#area_id#">
 						<cfinvokeargument name="separator" value=" / ">
 					</cfinvoke>
-					<p class="navbar_brand" style="padding-top:0px;clear:left;font-size:12px;color:##737373">
+					<p id="area_path" class="navbar_brand" style="padding-top:0px;clear:left;font-size:12px;color:##737373">
 						Ruta: #area_path#
 					</p>
+					<script>
+					$(document).ready(function() {			
+						$("##area_path").shorten({showChars: 75, ellipsesText: "... ", moreText: '<i class="icon-plus-sign-alt"></i>', lessText: '<i class="icon-minus-sign-alt"></i>'});
+					});
+					</script>
 				</cfif>
 			<cfelse><!---Está en la raiz--->
 				<!---<div style="height:35px;"><!-- --></div>--->

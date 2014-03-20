@@ -100,7 +100,9 @@
 		<cfargument name="area_id" type="string" required="yes">
 		<cfargument name="remove_order" type="boolean" required="no" default="false">
 
-		 <cfargument name="menu_type_id" type="numeric" required="false" >        
+		<cfargument name="menu_type_id" type="numeric" required="false">       
+
+		<cfargument name="with_description" type="boolean" required="false" default="false"> 
 		
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">		
@@ -109,6 +111,9 @@
 								
 			<cfquery name="subAreasQuery" datasource="#client_dsn#">
 				SELECT id, <cfif arguments.remove_order IS true>SUBSTRING_INDEX(name, '.-', -1) AS name<cfelse>name</cfif>, parent_id, creation_date, user_in_charge, image_id, link, type, menu_type_id, hide_in_menu
+				<cfif arguments.with_description IS true>
+					, description
+				</cfif>
 				FROM #client_abb#_areas AS areas
 				WHERE areas.parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				<cfif isDefined("arguments.menu_type_id")>
@@ -125,13 +130,13 @@
 	
 	<!---getSubAreasIds--->
 	
-	<cffunction name="geSubAreasIds" output="false" returntype="string" access="public">
+	<cffunction name="getSubAreasIds" output="false" returntype="string" access="public">
 		<cfargument name="area_id" type="numeric" required="yes">
 				
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">		
 		
-		<cfset var method = "geSubAreasIds">
+		<cfset var method = "getSubAreasIds">
 
 		<cfset var areas_list = "">
 		<cfset var new_areas_list = "">
@@ -146,7 +151,7 @@
 			
 				<cfset areas_list = ListAppend(areas_list,subAreasQuery.id)>
 				
-				<cfinvoke component="AreaQuery" method="geSubAreasIds" returnvariable="new_areas_list">
+				<cfinvoke component="AreaQuery" method="getSubAreasIds" returnvariable="new_areas_list">
 					<cfinvokeargument name="area_id" value="#subAreasQuery.id#">
 					
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
@@ -158,6 +163,30 @@
 				</cfif>
 		
 			</cfloop>
+			
+		<cfreturn areas_list>
+		
+	</cffunction>
+
+
+	<!---geSubAreasIds--->
+	
+	<!--- Este método con errata en el nombre se mantiene para retrocompatibilidad con versiones anteriores de DPWeb --->
+
+	<cffunction name="geSubAreasIds" output="false" returntype="string" access="public">
+		<cfargument name="area_id" type="numeric" required="yes">
+				
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">		
+
+		<cfset var areas_list = "">
+				
+			<cfinvoke component="AreaQuery" method="getSubAreasIds" returnvariable="areas_list">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
 			
 		<cfreturn areas_list>
 		

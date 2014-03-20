@@ -137,6 +137,7 @@
 		<cfargument name="listFormat" type="string" required="yes">
 		<cfargument name="area_id" type="string" required="no">
 		<cfargument name="areas_ids" type="string" required="no">
+		<cfargument name="all_areas" type="boolean" required="false" default="false">
 		<cfargument name="search_text" type="string" required="no">
 		<cfargument name="user_in_charge" type="numeric" required="no">
 		<cfargument name="recipient_user" type="numeric" required="no">
@@ -248,16 +249,20 @@
 					ON items.id = items_position.item_id AND items_position.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
 					AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
-					WHERE  
-					(<cfif isDefined("arguments.areas_ids")>
-					items.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
+					WHERE
+					<cfif arguments.all_areas IS false>
+						(<cfif isDefined("arguments.areas_ids")>
+						items.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
+						<cfelse>
+						items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+						</cfif>
+						<cfif itemTypeId IS 13><!---Typologies--->
+							OR items.general = 1
+						</cfif>
+						)
 					<cfelse>
-					items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+						1 = 1
 					</cfif>
-					<cfif itemTypeId IS 13><!---Typologies--->
-						OR items.general = 1
-					</cfif>
-					)
 					<cfif isDefined("arguments.user_in_charge")>
 					AND items.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
 					</cfif>

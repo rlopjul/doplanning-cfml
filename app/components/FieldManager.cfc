@@ -14,6 +14,7 @@
 		<cfargument name="label" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
+		<cfargument name="sort_by_this" type="string" required="true">
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
         <cfargument name="list_area_id" type="numeric" required="false">
@@ -71,6 +72,7 @@
 					<cfinvokeargument name="label" value="#arguments.label#">
 					<cfinvokeargument name="description" value="#arguments.description#">
 					<cfinvokeargument name="required" value="#arguments.required#">
+					<cfinvokeargument name="sort_by_this" value="#arguments.sort_by_this#">
 					<cfinvokeargument name="default_value" value="#arguments.default_value#">
 					<cfinvokeargument name="position" value="#arguments.position#">
 					<cfinvokeargument name="list_area_id" value="#arguments.list_area_id#">
@@ -107,6 +109,7 @@
 		<cfargument name="label" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
+		<cfargument name="sort_by_this" type="string" required="true">
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
         <cfargument name="list_area_id" type="numeric" required="false">
@@ -151,6 +154,7 @@
 				label = <cfqueryparam value="#arguments.label#" cfsqltype="cf_sql_varchar">,
 				description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">,
 				required = <cfqueryparam value="#arguments.required#" cfsqltype="cf_sql_bit">,
+				sort_by_this = <cfqueryparam value="#arguments.sort_by_this#" cfsqltype="cf_sql_varchar">,
 				default_value = <cfqueryparam value="#arguments.default_value#" cfsqltype="cf_sql_longvarchar">,
 				position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">
 				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10><!--- IS SELECT --->
@@ -191,6 +195,7 @@
 		<cfargument name="label" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
+		<cfargument name="sort_by_this" type="string" required="true">
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
         <cfargument name="list_area_id" type="numeric" required="false">
@@ -246,6 +251,7 @@
 					label = <cfqueryparam value="#arguments.label#" cfsqltype="cf_sql_varchar">,
 					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">,
 					required = <cfqueryparam value="#arguments.required#" cfsqltype="cf_sql_bit">,
+					sort_by_this = <cfqueryparam value="#arguments.sort_by_this#" cfsqltype="cf_sql_varchar">,
 					default_value = <cfqueryparam value="#arguments.default_value#" cfsqltype="cf_sql_longvarchar">
 					<cfif isDefined("arguments.position")>
 						, position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">
@@ -352,6 +358,7 @@
 							<cfinvokeargument name="label" value="#fields.label#">
 							<cfinvokeargument name="description" value="#fields.description#">
 							<cfinvokeargument name="required" value="#fields.required#">
+							<cfinvokeargument name="sort_by_this" value="#fields.sort_by_this#">
 							<cfinvokeargument name="default_value" value="#fields.default_value#">
 							<cfinvokeargument name="mysql_type" value="#fields.mysql_type#">
 							<cfif isNumeric(fields.list_area_id)>

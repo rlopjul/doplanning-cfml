@@ -155,7 +155,7 @@
 
 					<cfelse>
 
-						<cfset response_message = "Cuenta de usuario deshabilitada.">
+						<cfset response_message = "Cuenta de usuario deshabilitada">
 					
 						<cfset response = {result=false, message=#response_message#}>
 
@@ -632,38 +632,47 @@
 			<cfif len(arguments.email_login) GT 0>
 								
 				<cfquery datasource="#client_dsn#" name="getUser">
-					SELECT id, name, family_name
+					SELECT id, name, family_name, enabled
 					FROM #client_abb#_users
 					WHERE email = <cfqueryparam value="#user_email_login#" cfsqltype="cf_sql_varchar">;
 				</cfquery>
 				
 				<cfif getUser.recordCount GT 0>
 
-					<!--- <cfset new_password = generatePassword(8)> --->
+					<cfif getUser.enabled IS true>
+						
+						<!--- <cfset new_password = generatePassword(8)> --->
 
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="new_password">
-						<cfinvokeargument name="numberofCharacters" value="8">
-					</cfinvoke>
-				
-					<cfset new_password_encoded = hash(new_password)>
-				
-					<cfquery datasource="#client_dsn#" name="generateNewPassword">
-						UPDATE #client_abb#_users
-						SET password = <cfqueryparam value="#new_password_encoded#" cfsqltype="cf_sql_varchar">
-						WHERE id = <cfqueryparam value="#getUser.id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="new_password">
+							<cfinvokeargument name="numberofCharacters" value="8">
+						</cfinvoke>
 					
-					<cfinvoke component="AlertManager" method="generateNewPassword">					
-						<cfinvokeargument name="user_full_name" value="#getUser.family_name# #getUser.name#">
-						<cfinvokeargument name="user_email" value="#user_email_login#">
-						<cfinvokeargument name="user_password" value="#new_password#">
-						<cfinvokeargument name="user_language" value="#arguments.language#"/>
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">
-					</cfinvoke>
+						<cfset new_password_encoded = hash(new_password)>
 					
-					<cfset result = true>
-					<cfset message = "Su nueva contraseña ha sido enviada a su dirección de email">
+						<cfquery datasource="#client_dsn#" name="generateNewPassword">
+							UPDATE #client_abb#_users
+							SET password = <cfqueryparam value="#new_password_encoded#" cfsqltype="cf_sql_varchar">
+							WHERE id = <cfqueryparam value="#getUser.id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+						
+						<cfinvoke component="AlertManager" method="generateNewPassword">					
+							<cfinvokeargument name="user_full_name" value="#getUser.family_name# #getUser.name#">
+							<cfinvokeargument name="user_email" value="#user_email_login#">
+							<cfinvokeargument name="user_password" value="#new_password#">
+							<cfinvokeargument name="user_language" value="#arguments.language#"/>
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+						
+						<cfset result = true>
+						<cfset message = "Su nueva contraseña ha sido enviada a su dirección de email">
+
+					<cfelse>
+
+						<cfset result = false>
+						<cfset message = "Cuenta de usuario deshabilitada">
+
+					</cfif>
 				
 				<cfelse>
 				

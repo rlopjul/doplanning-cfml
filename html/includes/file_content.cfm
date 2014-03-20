@@ -345,22 +345,31 @@
 
 			<cfif isNumeric(table_id) AND isNumeric(row_id)>
 
+				<!--- 
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
 					<cfinvokeargument name="table_id" value="#table_id#">
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-				</cfinvoke>
+				</cfinvoke> --->
 				
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
 					<cfinvokeargument name="table_id" value="#table_id#"/>
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
 					<cfinvokeargument name="row_id" value="#row_id#"/>
 				</cfinvoke>
-
+				<cfset table = getRowResponse.table>
 				<cfset row = getRowResponse.row>
 
 				<div class="div_message_page_label">Tipología: <span class="text_message_page"><strong>#table.title#</strong></span></div>
 
-				<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">
+				<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">--->
+
+				<!---outputRowContent--->
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowContent">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="row" value="#row#">
+				</cfinvoke>
 				
 			</cfif>
 

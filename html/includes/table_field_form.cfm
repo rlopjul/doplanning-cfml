@@ -90,8 +90,6 @@
 
 		if(typeId == 6){ //Date
 
-			//$("##requiredContainer").show();
-
 			$("##textDefaultValue").hide();
 			$("##dateDefaultValue").show();
 			$("##booleanDefaultValue").hide();
@@ -183,7 +181,7 @@
 
 <div class="contenedor_fondo_blanco">
 <cfoutput>
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-inline" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" onsubmit="return onSubmitForm();">
 
 	<div id="submitDiv1" style="margin-bottom:10px;">
 		<input type="submit" value="Guardar" class="btn btn-primary"/>
@@ -203,73 +201,117 @@
 		<input type="hidden" name="field_id" value="#field.field_id#"/>
 	</cfif>
 
-	<div class="form-group">
-		<label for="label" class="control-label">Nombre *</label>
-		<cfinput type="text" name="label" id="label" value="#field.label#" maxlength="100" required="true" message="Nombre requerido" class="col-md-5"/>
-	</div>
-
-	<div class="form-group">
-		<cfif page_type IS 2>
-			<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
-		</cfif>
-		<label for="field_type_id" class="control-label">Tipo *</label>
-		<select name="field_type_id" id="field_type_id" class="col-md-5" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled="disabled"</cfif>>
-			<cfloop query="fieldTypes">
-				<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
-			</cfloop>
-		</select>
-		<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>
-	</div>
-
-	<div class="form-group" id="listAreaSelector">
-		<cfif isDefined("field.list_area_id") AND isNumeric(field.list_area_id)>
-			<!--- getArea --->
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="listArea">
-				<cfinvokeargument name="area_id" value="#field.list_area_id#">
-			</cfinvoke>
-			<cfset list_area_name = listArea.name>
-		<cfelse>
-			<cfset list_area_name = "">
-		</cfif>
-		<label for="default_value_text" class="control-label">Área a para generar la lista</label>
-		<div class="controls">
-			<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
-			<cfinput type="text" name="list_area_name" id="list_area_name" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" type="button" class="btn btn-default" lang="es">Seleccionar área</button>
+	<div class="row">
+		<div class="col-md-12">
+			<label for="label" class="control-label">Nombre *</label>
+			<cfinput type="text" name="label" id="label" value="#field.label#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
 		</div>
 	</div>
 
-	<div class="form-group">
-		<label for="required" class="checkbox" id="requiredContainer">
-			<input type="checkbox" name="required" id="required" value="true" <cfif isDefined("field.required") AND field.required IS true>checked="checked"</cfif> /> Obligatorio<br/>
-		</label>
-		<small class="help-block">Indica si el campo deber rellenarse de forma obligatoria</small>
+	<div class="row">
+		<div class="col-md-12">
+			<cfif page_type IS 2>
+				<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
+			</cfif>
+			<label for="field_type_id" class="control-label">Tipo *</label>
+			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled="disabled"</cfif>>
+				<cfloop query="fieldTypes">
+					<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
+				</cfloop>
+			</select>
+			<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>
+		</div>
 	</div>
 
-	<div class="form-group">
-		<label for="description" class="control-label">Descripción</label>
-		<textarea name="description" id="description" class="form-control" maxlength="1000">#field.description#</textarea>
+	<div class="row" id="listAreaSelector">
+		<div class="col-md-12">
+			<cfif isDefined("field.list_area_id") AND isNumeric(field.list_area_id)>
+				<!--- getArea --->
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="listArea">
+					<cfinvokeargument name="area_id" value="#field.list_area_id#">
+				</cfinvoke>
+				<cfset list_area_name = listArea.name>
+			<cfelse>
+				<cfset list_area_name = "">
+			</cfif>
+			<label for="default_value_text" class="control-label">Área a para generar la lista</label>
+			<div class="controls">
+				<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
+				<cfinput type="text" name="list_area_name" id="list_area_name" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" type="button" class="btn btn-default" lang="es">Seleccionar área</button>
+			</div>
+		</div>
 	</div>
 
-	<div class="form-group" id="textDefaultValue">
-		<label for="default_value_text">Valor por defecto</label>
-		<textarea name="default_value" id="default_value_text" class="form-control" maxlength="1000" rows="4" <cfif field.field_type_id IS 6 OR field.field_type_id IS 7>disabled="disabled"</cfif>>#field.default_value#</textarea>
-	</div>
-	<div class="form-group" id="dateDefaultValue">
-		<label for="default_value_date" class="control-label">Valor por defecto</label>
-		<input type="text" name="default_value" id="default_value_date" value="#field.default_value#" maxlength="10" class="input_datepicker" <cfif field.field_type_id NEQ 6>disabled="disabled"</cfif>/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
-	</div>
-	<div class="form-group" id="booleanDefaultValue">
-		<label for="default_value_boolean" class="control-label">Valor por defecto</label>
-		<select name="default_value" id="default_value_boolean" class="input-sm" <cfif field.field_type_id NEQ 7>disabled="disabled"</cfif>>
-			<option value=""></option>
-			<option value="0" <cfif field.default_value IS false>selected="selected"</cfif>>No</option>
-			<option value="1" <cfif field.default_value IS true>selected="selected"</cfif>>Sí</option>
-		</select>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="checkbox">
+				<label for="required">
+					<input type="checkbox" name="required" id="required" value="true" <cfif isDefined("field.required") AND field.required IS true>checked="checked"</cfif> /> Obligatorio<br/>
+				</label>
+				<small class="help-block">Indica si el campo deber rellenarse de forma obligatoria</small>
+			</div>
+		</div>
 	</div>
 
-	<div class="form-group" id="listDefaultValue">
-		<label for="default_value_boolean" class="control-label">Valor por defecto</label>
-		<select name="default_value" id="default_value_list" class="selectpicker span5" <cfif field.field_type_id NEQ 9 OR field.field_type_id NEQ 10>disabled="disabled"</cfif>><!---multiple---></select>
+	<cfif tableTypeId IS NOT 3>
+		
+	<div class="row">
+		<div class="col-md-12">
+			<label for="sort_by_this" class="control-label">Ordenar por defecto por este campo</label>
+			<select name="sort_by_this" id="sort_by_this" class="form-control">
+				<option value="" <cfif field.sort_by_this IS "">selected="selected"</cfif>>No</option>
+				<option value="asc" <cfif field.sort_by_this IS "asc">selected="selected"</cfif>>Orden ascendente</option>
+				<option value="desc" <cfif field.sort_by_this IS "desc">selected="selected"</cfif>>Orden descendente</option>
+			</select>
+			<small class="help-block">Se mostrarán ordenados los registros en el orden especificado por el primer campo que tenga seleccionada esta opción</small>
+			<!---<div class="checkbox">
+				<label for="sort_by_this">
+					<input type="checkbox" name="sort_by_this" id="sort_by_this" value="true" <cfif isDefined("field.sort_by_this") AND field.sort_by_this IS true>checked="checked"</cfif> /> Ordenar por defecto por este campo<br/>
+				</label>
+				<small class="help-block">Se mostrarán ordenados los registros por el primer campo que tenga seleccionada esta opción</small>
+			</div>--->
+		</div>
+	</div>
+
+	<cfelse><!--- Typologies --->
+		<input name="sort_by_this" type="hidden" value="" />
+	</cfif>
+
+	<div class="row">
+		<div class="col-md-12">
+			<label for="description" class="control-label">Descripción</label>
+			<textarea name="description" id="description" class="form-control" maxlength="1000">#field.description#</textarea>
+		</div>
+	</div>
+
+	<div class="row" id="textDefaultValue">
+		<div class="col-md-12">
+			<label for="default_value_text">Valor por defecto</label>
+			<textarea name="default_value" id="default_value_text" class="form-control" maxlength="1000" rows="4" <cfif field.field_type_id IS 6 OR field.field_type_id IS 7>disabled="disabled"</cfif>>#field.default_value#</textarea>
+		</div>
+	</div>
+	<div class="row" id="dateDefaultValue">
+		<div class="col-md-12">
+			<label for="default_value_date" class="control-label">Valor por defecto</label>
+			<input type="text" name="default_value" id="default_value_date" value="#field.default_value#" maxlength="10" class="input_datepicker" <cfif field.field_type_id NEQ 6>disabled="disabled"</cfif>/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
+		</div>
+	</div>
+	<div class="row" id="booleanDefaultValue">
+		<div class="col-md-12">
+			<label for="default_value_boolean" class="control-label">Valor por defecto</label>
+			<select name="default_value" id="default_value_boolean" class="input-sm" <cfif field.field_type_id NEQ 7>disabled="disabled"</cfif>>
+				<option value=""></option>
+				<option value="0" <cfif field.default_value IS false>selected="selected"</cfif>>No</option>
+				<option value="1" <cfif field.default_value IS true>selected="selected"</cfif>>Sí</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="row" id="listDefaultValue">
+		<div class="col-md-12">
+			<label for="default_value_boolean" class="control-label">Valor por defecto</label>
+			<select name="default_value" id="default_value_list" class="selectpicker span5" <cfif field.field_type_id NEQ 9 OR field.field_type_id NEQ 10>disabled="disabled"</cfif>><!---multiple---></select>
+		</div>
 	</div>
 	
 

@@ -32,19 +32,25 @@
 
 <cfoutput>
 
-<div class="div_message_page_title">Usuarios de la organización
+<div class="div_message_page_title">Usuarios de la organización</div><!---(#numUsers#)--->
 
+<cfif SESSION.client_administrator IS SESSION.user_id>
+<div class="btn-toolbar" style="margin-left:10px;margin-bottom:10px;">
+	<div class="btn-group">
+		<a class="btn btn-default btn-sm" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a>
+	</div>
 	<cfif SESSION.client_abb NEQ "hcs">
-		<div style="float:right; padding-right:5px;">
+		<div class="btn-group">
 			<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
 		</div>
 	</cfif>
+</div>
+</cfif>
 
-</div><!---(#numUsers#)--->
 
 <!---
 <div class="div_head_subtitle_area">
-	
+
 	<!---<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>--->
 
 </div>--->

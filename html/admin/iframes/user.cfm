@@ -88,7 +88,7 @@
 
 		<cfif SESSION.client_administrator IS SESSION.user_id>
 			
-			<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a>
+			<!--- <a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a> --->
  			<cfif isDefined("user_id")>
  			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');" ><i class="icon-edit icon-white"></i> <span lang="es">Modificar usuario</span></a>
  			<a class="btn btn-danger btn-sm navbar-btn" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#user_id#');"><i class="icon-remove"></i> <span lang="es">Eliminar usuario</span></a>

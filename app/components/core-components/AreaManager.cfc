@@ -183,7 +183,238 @@
 		<cfreturn arguments.allAreasList>
 		
 	</cffunction>
+
+
+	<!--- ------------------------------------- getSubAreasIds ------------------------------------- --->
+
+	<!--- Hay un getSubAreasIds en AreaQuery.cfc --->
 	
+	<!---<cffunction name="getSubAreasIds" output="false" access="public" returntype="string">		
+		<cfargument name="area_id" type="numeric" required="true"/>
+		
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getSubAreasIds">
+
+		<cfset var getAreasQuery = "">
+		<cfset var subAreasIds = "">
+		<cfset var subSubAreasIds = "">
+						
+			<cfquery name="getAreasQuery" datasource="#client_dsn#">
+				SELECT id
+				FROM #client_abb#_areas
+				WHERE parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfset subAreasIds = valueList(getAreasQuery.id)>
+
+			<cfloop query="#getAreasQuery#">
+
+				<cfinvoke component="AreaManager" method="getSubAreasIds" returnvariable="subSubAreasIds">
+					<cfinvokeargument name="area_id" value="#getAreasQuery.id#">				
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+				<cfif len(subSubAreasIds) GT 0>
+					<cfset subAreasIds = listAppend(subAreasIds, subSubAreasIds)>
+				</cfif>
+				
+			</cfloop>
+			
+		<cfreturn subAreasIds>
+		
+	</cffunction>--->
+	
+
+	<!--- -------------------------- canUserAccessToArea -------------------------------- --->
+	<!---Comprueba si el usuario puede acceder al área, y devuelve el resultado en una variable--->
+	
+	<cffunction name="canUserAccessToArea" returntype="boolean" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+		
+		<cfset var method = "canUserAccessToArea">
+		
+		<cfset var access_result = false>
+		<cfset var area_users_list = "">
+
+		<cfquery datasource="#client_dsn#" name="getAreaUsers">
+			SELECT areas.parent_id, areas_users.user_id
+			FROM #client_abb#_areas AS areas
+			LEFT JOIN #client_abb#_areas_users AS areas_users ON areas_users.area_id = areas.id 
+			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+		
+		<cfif getAreaUsers.recordCount GT 0>
+
+			<!--- 
+			<cfquery dbtype="query" name="getAreaUser">
+				SELECT user_id 
+				FROM getAreaUsers
+				WHERE user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery> 
+			
+
+			<cfif getAreaUser.recordCount GT 0>
+			
+				<cfset access_result = true>--->
+
+			<cfset area_users_list = ValueList(getAreaUsers.user_id, ",")>
+			
+			<cfif listFind(area_users_list, arguments.user_id) GT 0>
+			
+				<cfset access_result = true>
+								
+			<cfelse>
+					
+				<cfif isNumeric(getAreaUsers.parent_id)>
+						
+					<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+						<cfinvokeargument name="area_id" value="#getAreaUsers.parent_id#">
+						<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+					
+				</cfif>
+				
+			</cfif>
+
+		<cfelse><!---The area does not exist--->
+		
+			<cfset error_code = 301>
+			
+			<cfthrow errorcode="#error_code#">
+		
+		</cfif>	
+
+		<!---
+		<cfquery datasource="#client_dsn#" name="getAreaUsers">
+			SELECT areas_users.user_id, areas.parent_id
+			FROM #client_abb#_areas_users AS areas_users
+			INNER JOIN #client_abb#_areas AS areas ON areas_users.area_id = areas.id 
+			AND areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+		
+		<cfif getAreaUsers.recordCount GT 0>
+		
+			<cfset area_users_list = ValueList(getAreaUsers.user_id, ",")>
+			<cfif listFind(area_users_list, arguments.check_user_id) GT 0>
+			
+				<cfset access_result = true>
+				
+			<cfelse>
+					
+				<cfif isNumeric(getAreaUsers.parent_id)>
+						
+					<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+						<cfinvokeargument name="area_id" value="#getAreaUsers.parent_id#">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+					
+				</cfif>
+				
+			</cfif>
+			
+		<cfelse><!---No users in area--->
+		
+			<cfquery datasource="#client_dsn#" name="getAreaParent">
+				SELECT areas.parent_id
+				FROM #client_abb#_areas AS areas
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif isNumeric(getAreaParent.parent_id)>
+			
+				<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+					<cfinvokeargument name="area_id" value="#getAreaParent.parent_id#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+			
+			</cfif>
+		
+		</cfif>--->
+		
+		<cfreturn access_result>
+		
+	</cffunction>
+	
+
+
+	<!--- -------------------------- canUserAccessToAreaExtended -------------------------------- --->
+	<!---Comprueba si el usuario puede acceder al área, y devuelve el resultado en una variable--->
+	
+	<cffunction name="canUserAccessToAreaExtended" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="checkedAreasIds" type="string" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+		
+		<cfset var method = "canUserAccessToAreaExtended">
+		
+		<cfset var access_result = false>
+		<cfset var area_users_list = "">
+		<!--- <cfset var checkedAreasIds = arguments.area_id> --->
+
+		<cfquery datasource="#client_dsn#" name="getAreaUsers">
+			SELECT areas.parent_id, areas_users.user_id
+			FROM #client_abb#_areas AS areas
+			LEFT JOIN #client_abb#_areas_users AS areas_users ON areas_users.area_id = areas.id 
+			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+		
+		<cfif getAreaUsers.recordCount GT 0>
+
+			<cfset area_users_list = ValueList(getAreaUsers.user_id, ",")>
+			
+			<cfif listFind(area_users_list, arguments.user_id) GT 0>
+			
+				<cfset access_result = true>
+								
+			<cfelse>
+
+				<cfset arguments.checkedAreasIds = listAppend(arguments.checkedAreasIds, arguments.area_id)>
+					
+				<cfif isNumeric(getAreaUsers.parent_id) AND listFind(arguments.checkedAreasIds, getAreaUsers.parent_id) IS 0>
+						
+					<cfinvoke component="AreaManager" method="canUserAccessToAreaExtended" returnvariable="accessToAreaResult">
+						<cfinvokeargument name="area_id" value="#getAreaUsers.parent_id#">
+						<cfinvokeargument name="user_id" value="#arguments.user_id#">
+						<cfinvokeargument name="checkedAreasIds" value="#arguments.checkedAreasIds#">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+
+					<cfset access_result = accessToAreaResult.accessResult>
+
+				</cfif>
+				
+			</cfif>
+
+		<cfelse><!---The area does not exist--->
+		
+			<cfset error_code = 301>
+			
+			<cfthrow errorcode="#error_code#">
+		
+		</cfif>	
+
+		<cfreturn {accessResult=access_result, checkedAreasIds=#arguments.checkedAreasIds#}>
+		
+	</cffunction>
 
 
 </cfcomponent>	

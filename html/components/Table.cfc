@@ -319,6 +319,7 @@
 	<cffunction name="getTableRows" returntype="struct" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="fields" type="query" required="false">
 		
 		<cfset var method = "getTableRows">
 
@@ -329,6 +330,7 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableRows" returnvariable="response">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+				<cfinvokeargument name="fields" value="#arguments.fields#"/>
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">

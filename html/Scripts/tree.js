@@ -1,7 +1,7 @@
 
 function showTree(selectable) { 
 
-	$("#areasTreeContainer").bind("loaded.jstree", function (event, data) {
+	$("#areasTreeContainer").bind("ready.jstree", function (event, data) {
 		jsTreeLoaded(event, data);
 	})
 	.jstree({ 
@@ -10,7 +10,8 @@ function showTree(selectable) {
 				"name" : "dp", 
 				"dots" : false,
 				"responsive" : false
-			}
+			},
+			"multiple" : false
 		},
 		"search" : { 
 			"fuzzy" : false 
@@ -94,7 +95,7 @@ function collapseNode() {
 
 function jsTreeLoaded(event, data) { //JStree loaded
 
-	$("#areasTreeContainer").on("select_node.jstree", function (e, data) {
+	$("#areasTreeContainer").bind("select_node.jstree", function (e, data) {
 	   	var node = data.node;
 	   	areaSelected(node.id, node.a_attr.href, node.li_attr.with_link=="true");
 	});

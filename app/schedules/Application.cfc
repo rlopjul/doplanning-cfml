@@ -4,7 +4,7 @@
 
 	<cffunction name="onRequestStart" output="false">	
 		
-		<cfif CGI.REMOTE_ADDR NEQ APPLICATION.serverIp>
+		<cfif CGI.REMOTE_ADDR NEQ "127.0.0.1" AND CGI.REMOTE_ADDR NEQ APPLICATION.serverIp>
 
 			<cflocation url="#APPLICATION.signOutUrl#" addtoken="no">
 

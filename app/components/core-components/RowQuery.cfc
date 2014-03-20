@@ -330,11 +330,14 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="false">
+		<cfargument name="fields" type="query" required="false"><!--- Required to order by fields --->
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
 				
 		<cfset var method = "getTableRow">
+
+		<cfset var orderBy = "">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
@@ -348,7 +351,23 @@
 				<cfif isDefined("arguments.row_id")>
 					WHERE table_row.row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
 				<cfelse>
-					ORDER BY position ASC
+					<cfif isDefined("arguments.fields")>
+
+						<cfloop query="fields">
+							<cfif isNumeric(fields.field_id) AND len(fields.sort_by_this) GT 0>
+								<cfif len(orderBy) GT 0>
+									<cfset orderBy = orderBy&",">
+								</cfif>
+								<cfset orderBy = orderBy&"field_#fields.field_id# #fields.sort_by_this#">
+							</cfif>
+						</cfloop>
+						
+					</cfif>
+					<cfif len(orderBy) GT 0>
+						ORDER BY #orderBy#
+					<cfelse>
+						ORDER BY table_row.row_id DESC
+					</cfif>					
 				</cfif>;
 			</cfquery>
 		
@@ -582,8 +601,7 @@
 						
 				<cfquery name="rowPositionQuery" datasource="#client_dsn#">
 					SELECT MAX(position) AS max_position					
-					FROM #client_abb#_#tableTypeTable#_fields AS tables_fields
-					WHERE tables_fields.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
+					FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AS tables_rows;
 				</cfquery>
 				
 				<cfif isNumeric(rowPositionQuery.max_position)>

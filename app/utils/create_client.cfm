@@ -39,8 +39,8 @@
 		<div><label for="user_email">Email</label>*&nbsp;<cfinput type="text" name="user_email" value="" required="yes"/></div>		
 		<div><label for="user_telephone">Teléfono</label><label for="user_telephone_ccode"></label>&nbsp;<cfinput type="text" name="user_telephone_ccode" value="34" size="5" /><cfinput type="text" name="user_telephone" value="" /></div>
 		<div><label for="user_mobile_phone">Teléfono móvil</label><label for="user_mobile_phone_ccode"></label>&nbsp;<cfinput type="text" name="user_mobile_phone_ccode" value="34" size="5"><cfinput type="text" name="user_mobile_phone" value=""></div>
-		<div><label for="user_password">Contraseña</label>*&nbsp;<cfinput type="text" name="user_password" value="" required="yes"><!---6f2a7325a9966a6a135e0bf5e2126430---></div>
-		<!---<div><label for="user_password">Puede enviar SMS</label>&nbsp;<cfinput type="checkbox" name="user_sms_allowed" value="true"></div>--->
+		<div><label for="user_password">Contraseña</label>*&nbsp;<cfinput type="text" name="user_password" value="" required="yes"></div>
+		<!---<div><label for="user_sms_allowed">Puede enviar SMS</label>&nbsp;<cfinput type="checkbox" name="user_sms_allowed" value="true"></div>--->
 		<input type="hidden" name="user_sms_allowed" value="false" />
 		<div><label for="user_password">Usuario interno</label>&nbsp;<cfinput type="checkbox" name="whole_tree_visible" value="true" checked="yes" disabled="disabled"></div>
 		<cfinput type="hidden" name="user_whole_tree_visible" value="true" /> 

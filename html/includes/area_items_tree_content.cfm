@@ -54,7 +54,7 @@
 <cfoutput>
 
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
 <script type="text/javascript">
 	var loadTree = true;
@@ -68,7 +68,11 @@
 					"themes" : { 
 						"name" : "dp", 
 						"dots" : false
-					}
+					},
+					"multiple" : false
+				},
+				"search" : { 
+					"fuzzy" : false 
 				},
 				"types" : {
 					"valid_children" : [ "all" ],
@@ -83,7 +87,7 @@
 						
 					}
 				},
-				"plugins" : [ "themes", "types" ]
+				"plugins" : [ "types", "search" ]
 				<!---,"ui" : {
 					<cfif isDefined("URL.#itemTypeName#")>
 					"initially_select" : [ "#URL[itemTypeName]#" ]
@@ -101,23 +105,74 @@
 				
 		  	}); 
 
+		  	$("##searchText").on("keydown", function(e) { 
+			
+				if(e.which == 13) //Enter key
+					searchTextInTree();
+				
+			});
+
 			<cfif isDefined("URL.#itemTypeName#")>
 				$("##treeContainer").jstree("select_node", "##"+"#URL[itemTypeName]#", false); 
 			<cfelseif app_version NEQ "mobile" AND isDefined("xmlItems.#itemTypeNameP#.#itemTypeName#")><!---En la versión móvil no se puede seleccionar por defecto porque cambia de pantalla--->
 				$("##treeContainer").jstree("select_node", "##"+"#xmlItems['#itemTypeNameP#']['#itemTypeName#'].xmlAttributes.id#", false); 
 			</cfif>
 		}
-		
+
 		<!---<cfif isDefined("URL.#itemTypeName#")>
 			$("##treeContainer").jstree("select_node", "##"+"#URL[itemTypeName]#", true); 
 		</cfif>--->
 		
     }); 
+	
+	var searchItemsTimeOut = false;
+	function searchTextInTree() {	
+
+		var text = $("##searchText").val();
+
+		if(searchItemsTimeOut) { clearTimeout(searchItemsTimeOut); }
+
+	    searchItemsTimeOut = setTimeout(function () {
+	    	$('##treeContainer').jstree(true).search(text);
+	    }, 250);
+	}
+
+	function expandTree() {
+
+		$('##treeContainer').jstree('open_all');
+		
+	}
+
+	function collapseTree() {
+		
+		$('##treeContainer').jstree('close_all');
+		
+	}
 </script>
 </cfoutput>
 
 
+<div class="form-inline" style="margin-left:2px;margin-top:2px;margin-bottom:2px;">
 
+	<div class="btn-toolbar">
+								
+		<div class="btn-group">
+			<div class="input-group input-group-sm" style="width:260px;" >
+				<input type="text" name="text" id="searchText" value="" class="form-control"/>
+				<span class="input-group-btn">
+					<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+				</span>
+			</div>
+		</div>
+
+		<div class="btn-group btn-group-sm">
+			<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+			<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+		</div>
+
+	</div>
+
+</div>
 
 <div id="treeContainer" style="clear:both">
 

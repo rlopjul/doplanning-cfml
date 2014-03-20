@@ -253,18 +253,31 @@
 		</div>
 	</div>
 
-	<cfif APPLICATION.publicationValidation IS true AND is_user_area_responsible IS true>
+	<cfif APPLICATION.publicationValidation IS true>
 		
-		<div class="row">
-			<div class="col-xs-12 col-sm-8">
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("objectItem.publication_validated") AND objectItem.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
-					</label>
-					<small class="help-block">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
+		<cfif isDefined("is_user_area_responsible")><!--- Está definida el área en la que se va a publicar el elemento --->
+			
+			<cfif is_user_area_responsible IS true>
+			
+				<div class="row">
+					<div class="col-xs-12 col-sm-8">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("objectItem.publication_validated") AND objectItem.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+							</label>
+							<small class="help-block">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
+
+			</cfif>
+
+		<cfelse>
+
+			<input type="hidden" name="publication_validated"  value="false"/>
+			<small class="help-block">La publicación del elemento deberá ser <b>aprobada</b> en cada una de las áreas en las que se publique.</small>
+
+		</cfif>		
 
 	</cfif>
 

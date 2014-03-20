@@ -26,8 +26,7 @@
 		<cfoutput>
 		<cfif fields.recordCount GT 0>
 
-			<div id="submitDiv1" style="padding-left:2px;"><input type="submit" class="btn btn-primary" name="copy" value="Copiar campos" lang="es"/>
-				<!---<span class="divider">&nbsp;</span><a href="#return_page#" class="btn btn-default" lang="es">Cancelar</a>--->
+			<div id="submitDiv1" style="padding-left:2px;padding-top:2px;"><input type="submit" class="btn btn-primary" name="copy" value="Copiar campos" lang="es"/>
 			</div>
 
 			<cfset fields_selectable = true>

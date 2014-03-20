@@ -168,7 +168,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 		
 			<!--- Get table sub areas list --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="geSubAreasIds" returnvariable="subAreasIds">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
 				<cfinvokeargument name="area_id" value="#arguments.table_area_id#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -525,6 +525,7 @@
 	<cffunction name="getTableRows" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="fields" type="query" required="false">
 
 		<cfset var method = "getTableRows">
 
@@ -535,6 +536,7 @@
 			<cfinvoke component="RowManager" method="getTableRows" returnvariable="response">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="fields" value="#arguments.fields#">
 			</cfinvoke>
 								
 			<cfcatch>
@@ -723,7 +725,7 @@
 			<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
 
 				<!--- Get table sub areas list --->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="geSubAreasIds" returnvariable="subAreasIds">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
 					<cfinvokeargument name="area_id" value="#table.area_id#">
 					
 					<cfinvokeargument name="client_abb" value="#client_abb#">

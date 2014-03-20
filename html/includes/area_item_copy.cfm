@@ -18,6 +18,9 @@
 		<cfif isDefined("FORM.link")>
 			<cfinvokeargument name="link" value="#FORM.link#">
 		</cfif>
+		<cfif isDefined("FORM.link_target")>
+			<cfinvokeargument name="link_target" value="#FORM.link_target#">
+		</cfif>
         <cfinvokeargument name="description" value="#FORM.description#">
 		<cfif isDefined("FORM.Filedata")><!---Filedata puede no estar definido si ya existe un archivo--->
         	<cfinvokeargument name="Filedata" value="#FORM.Filedata#">
@@ -153,16 +156,12 @@
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
 
-<cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 6><!---News, Events, Tasks--->
-
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
-</cfif>
-
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 
@@ -171,7 +170,7 @@
 	var applicationId = "#APPLICATION.identifier#";
 </script> --->
 
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=2.3"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -218,6 +217,15 @@
 		});
 
 		showTree(true);
+
+		<!--- Hack para posibilitar la selección de los checkboxs en el árbol al hacer click sobre ellos --->
+		$("#areasTreeContainer input:checkbox").click(function(event) {
+			var inputId = "#"+this.id;
+			setTimeout(function(){
+		       $(inputId).prop("checked",!($(inputId).is(":checked"))); 
+		    }, 100);
+
+		});
 		
 	});
 
@@ -326,6 +334,10 @@
 	<cfset queryAddColumn(objectItem, "iframe_display_type_id")>
 </cfif>
 
+<cfif NOT isDefined("objectItem.publication_date")>
+	<cfset queryAddColumn(objectItem, "publication_date")>
+</cfif>
+
 <cfoutput>
 <div class="div_file_page_name">#objectItem.title#</div>
 
@@ -361,7 +373,6 @@ function onSubmitForm()
 <div id="mainContainer" style="clear:both; margin-left:5px;">		
 <cfform name="item_form" method="post" enctype="multipart/form-data" action="#CGI.SCRIPT_NAME#" style="clear:both;" onsubmit="return onSubmitForm();">
 	<input type="hidden" name="itemTypeId" value="#itemTypeId#">
-	<!---<input type="hidden" name="item_id" value="#item_id#">--->
 	<cfif isDefined("sourceItemTypeId")>
 	<input type="hidden" name="sourceItemTypeId" value="#sourceItemTypeId#">
 	</cfif>
@@ -410,7 +421,7 @@ function onSubmitForm()
 					<div>
 
 						<div class="btn-group">
-							<div class="input-group" style="width:260px;" >
+							<div class="input-group input-group-sm" style="width:260px;" >
 								<input type="text" name="text" id="searchText" value="" class="form-control"/>
 								<span class="input-group-btn">
 									<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
