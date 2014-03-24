@@ -128,7 +128,7 @@ page_types
 					<cfif APPLICATION.userEmailRequired IS true>
 						<cfinput type="text" name="email" id="email" value="#objectUser.email#" required="true" validate="email" message="Dirección de email válida requerida" class="form-control"/>
 					<cfelse>
-						<input type="email" name="email" id="email" value="#objectUser.email#" class="form-control"/>
+						<input type="email" name="email" id="email" value="#objectUser.email#" class="form-control" autocomplete="off"/>
 					</cfif>
 				</div>
 			</div>		
@@ -139,7 +139,7 @@ page_types
 					<div class="col-sm-12 col-md-12">
 
 						<label for="login_ldap" class="control-label" lang="es">Login Plataforma Recursos Humanos:</label>
-						<input type="text" name="login_ldap" id="login_ldap" value="#objectUser.login_ldap#" class="form-control" />
+						<input type="text" name="login_ldap" id="login_ldap" value="#objectUser.login_ldap#" class="form-control" autocomplete="off" />
 
 					</div>
 				</div>
@@ -150,7 +150,7 @@ page_types
 				<div class="col-sm-9">
 
 					<label for="password" class="control-label" lang="es">Nueva contraseña:</label>
-					<input type="password" name="password" id="password" <cfif isDefined("objectUser.new_password")>value="#objectUser.new_password#"</cfif> class="form-control" value="" autocomplete="false" />
+					<input type="password" name="password" id="password" <cfif isDefined("objectUser.new_password")>value="#objectUser.new_password#"</cfif> class="form-control" value="" autocomplete="off" />
 
 				</div>
 			</div>
@@ -159,7 +159,7 @@ page_types
 				<div class="col-sm-9">
 
 					<label for="password_confirmation" class="control-label" lang="es">Confirmar contraseña:</label>
-					<input type="password" name="password_confirmation" id="password_confirmation" <cfif isDefined("objectUser.new_password")>value="#objectUser.new_password#"</cfif> class="form-control" value="" autocomplete="false" />
+					<input type="password" name="password_confirmation" id="password_confirmation" <cfif isDefined("objectUser.new_password")>value="#objectUser.new_password#"</cfif> class="form-control" value="" autocomplete="off" />
 
 				</div>
 			</div>

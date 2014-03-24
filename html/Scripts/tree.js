@@ -1,7 +1,7 @@
 
 function showTree(selectable) { 
 
-	$("#areasTreeContainer").bind("ready.jstree", function (event, data) {
+	$("#areasTreeContainer").bind("ready.jstree", function (event, data) { /*loaded es el que hay que usar cuando NO se carga todo el árbol*/
 		jsTreeLoaded(event, data);
 	})
 	.jstree({ 
@@ -12,49 +12,26 @@ function showTree(selectable) {
 				"responsive" : false
 			},
 			"multiple" : false
+			/*, "data" : {
+		    	"url" : "/html/html_content/tree.cfm",
+		    	"data" : function (node) {
+			      return { "id" : node.id };
+		    	}
+		    }*/
 		},
 		"search" : { 
 			"fuzzy" : false 
 		},
-		"types" : {
-			"valid_children" : [ "all" ],
-			"types" : {
-				"allowed" : {
-					"max_children"	: -1,
-					"max_depth"		: -1,
-					"valid_children": -1,
-					"hover_node" : selectable,
-					"select_node" : selectable
-			
-				},
-				"allowed-web" : {
-					"max_children"	: -1,
-					"max_depth"		: -1,
-					"valid_children": -1,
-					"hover_node" : selectable,
-					"select_node" : selectable
-			
-				},
-				"not-allowed" : {
-					"max_children"	: -1,
-					"max_depth" 	: -1,
-					"valid_children" : -1,
-					"hover_node" : selectable,
-					"select_node" : selectable
-				},
-				"not-allowed-web" : {
-					"max_children"	: -1,
-					"max_depth" 	: -1,
-					"valid_children" : -1,
-					"hover_node" : selectable,
-					"select_node" : selectable
-				}
-				
-			}
-		},
-		"plugins" : [ "types", "search" ]
+		/*"types" : {
+			"allowed" : {},
+			"allowed-web" : {},
+			"not-allowed" : {},
+			"not-allowed-web" : {}	
+		},*/
+
+		"plugins" : [ "search" ] /*"types", */
   	});
-		
+	
 }
 
 var searchTimeOut = false; 
@@ -97,7 +74,8 @@ function jsTreeLoaded(event, data) { //JStree loaded
 
 	$("#areasTreeContainer").bind("select_node.jstree", function (e, data) {
 	   	var node = data.node;
-	   	areaSelected(node.id, node.a_attr.href, node.li_attr.with_link=="true");
+	   	//areaSelected(node.id, node.a_attr.href, node.li_attr.with_link=="true");
+	   	areaSelected(node.id, node.a_attr.href, node.li_attr.link=="1");
 	});
 	
 	treeLoaded();

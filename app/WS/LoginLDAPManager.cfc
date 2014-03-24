@@ -65,7 +65,7 @@
 
 			<cfelseif arguments.ldap_id EQ "dmsas"><!--- Dominio Corporativo del SAS --->
 
-				<!--- <cfldap	server="10.201.79.21" username="DMSAS\lucenaalexis21K" password="allugi3946" action="query" scope="subtree" name="getUser" attributes="cn" start="DC=DMSAS" filter="(1=1)"> --->
+				<!--- <cfldap server="10.201.79.21" username="DMSAS\lucenaalexis21K" password="" action="query" scope="subtree" name="getUser" attributes="cn" start="DC=DMSAS" filter="(1=1)"> --->
 
 				<cftry>
 

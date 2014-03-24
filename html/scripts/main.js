@@ -253,7 +253,6 @@ function loadTree() {
 	curAreaId = "undefined";
 
 	$("#loadingContainer").show();
-	//$("#mainContainer").hide();
 	$("#treeContainer").css('visibility', 'hidden');
 
 	var noCacheNumber = Math.floor(Math.random()*1001);

@@ -211,6 +211,14 @@
 			alert("Debe seleccionar un área en la que crear las nuevas áreas");
 	}
 
+	function openAreaExportModal(){
+
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/area_export_structure.cfm?parent='+curAreaId);
+		else
+			alert("Debe seleccionar un área para exportar");
+	}
+
 	function openAreaMoveModal(){
 
 		if($.isNumeric(curAreaId))
@@ -403,7 +411,7 @@
 											</cfif>
 										</cfif> --->
 
-					<a href="../main.cfm" class="btn btn-info"><i class="icon-arrow-left"></i> <span>Volver</span></a>
+					<a href="../main.cfm" class="btn btn-default"><i class="icon-arrow-left"></i> <span>Volver</span></a>
 				
 					<a href="../preferences.cfm" title="Preferencias del usuario" lang="es">
 					<cfif len(objectUser.image_file) GT 0>
@@ -451,21 +459,20 @@
 
 								<div class="btn-group">
 									<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
+
+									<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover</span></a>
+								
+									<a onclick="openAreaModifyModal()" class="btn btn-info" title="Modificar área" lang="es"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 								</div>
 
 								<div class="btn-group">
-									<a onClick="openAreaImportModal()" class="btn btn-info" title="Importar áreas" lang="es"><i class="icon-arrow-up icon-white"></i> <span lang="es">Importar áreas</span></a>
+									<a onClick="openAreaExportModal()" class="btn btn-info" title="Exportar áreas" lang="es"><i class="icon-arrow-down icon-white"></i> <span lang="es">Exportar</span></a>
+
+									<a onClick="openAreaImportModal()" class="btn btn-info" title="Importar áreas" lang="es"><i class="icon-arrow-up icon-white"></i> <span lang="es">Importar</span></a>									
 								</div>
 
 								<div class="btn-group">
-									<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover área</span></a>
-								</div>
-								<div class="btn-group">
-									<a onclick="openAreaModifyModal()" class="btn btn-info" title="Modificar área" lang="es"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
-								</div>
-
-								<div class="btn-group">
-									<a onClick="openAreaDeleteModal()" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar área</span></a>
+									<a onClick="openAreaDeleteModal()" class="btn btn-danger" title="Eliminar área" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 								</div>
 
 							</div>

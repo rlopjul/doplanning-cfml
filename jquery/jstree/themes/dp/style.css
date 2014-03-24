@@ -936,8 +936,8 @@
    background-image: url("../../../../html/assets/icons_dp/area_web_small_disabled.png");
    background-position: 0 0;
 }
-.jstree-dp li[rel="message"] > a > .jstree-icon {
+/*.jstree-dp li[rel="message"] > a > .jstree-icon {
    background-image: url("../../../../html/assets/icons/message_small.png");
    background-position: 0 0;
-}
+}*/
 /*DOPLANNING END*/

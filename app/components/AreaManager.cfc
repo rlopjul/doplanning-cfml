@@ -1784,12 +1784,13 @@
 	<!--- ------------------------------------- importAreas ------------------------------------- --->
 	
 	<cffunction name="importAreas" output="false" access="public" returntype="struct">		
-		<cfargument name="parent_id" type="string" required="true"/>
+		<cfargument name="parent_id" type="numeric" required="true"/>
 		<cfargument name="user_in_charge" type="numeric" required="true"/>
+		<cfargument name="import_type" type="string" required="true"/>
 		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
 		<cfargument name="menu_type_id" type="numeric" required="false"/>
 		<cfargument name="files" type="array" required="true"/>
-		<cfargument name="delimiter" type="string" required="true">
+		<cfargument name="delimiter" type="string" required="false">
 		<cfargument name="start_row" type="numeric" required="false" default="2">
 		
 		<cfset var method = "importAreas">
@@ -1801,12 +1802,14 @@
 		<cfset var fileContent = "">
 		<cfset var fileArray = arrayNew(1)>
 		<cfset var areasCount = 0>
+		<cfset var curArea = "">
+		<cfset var createdAreaId = "">
 			
 		<cftry>
 				
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<!---<cfinclude template="includes/checkAreaAdminAccess.cfm">--->
+			<!--- checkAreaAdminAccess --->
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
 				<cfinvokeargument name="area_id" value="#arguments.parent_id#">
 			</cfinvoke>
@@ -1814,7 +1817,15 @@
 						
 			<cfset destination = GetTempDirectory()>
 
-		    <cffile action="upload" fileField="files[]" destination="#destination#" nameConflict="makeunique"  result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE --->
+			<cfif arguments.import_type EQ "xml"><!--- XML file --->
+				
+				<cffile action="upload" fileField="files[]" destination="#destination#" nameConflict="makeunique"  result="fileResult" charset="utf-8" accept="text/plain,text/xml,application/xml">
+
+			<cfelse>
+
+		   		<cffile action="upload" fileField="files[]" destination="#destination#" nameConflict="makeunique"  result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE --->
+
+			</cfif>
 
 			<cfset fileData = {
 				    "name": fileResult.serverfile,
@@ -1829,50 +1840,27 @@
 
 			<cfset destinationFile = destination&fileResult.serverFile>
 
-			<cffile action="read" file="#destinationFile#" variable="fileContent" charset="iso-8859-1">
+			<cfif arguments.import_type EQ "xml"><!--- XML file --->
+				<cffile action="read" file="#destinationFile#" variable="fileContent" charset="utf-8">
+			<cfelse>
+				<cffile action="read" file="#destinationFile#" variable="fileContent" charset="iso-8859-1">
+			</cfif>
+			
 			<cffile action="delete" file="#destinationFile#">
 
-			<!--- CSV to array --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="CSVToArray" returnvariable="fileArray">
-				<cfinvokeargument name="CSV" value="#trim(#fileContent#)#">
-				<cfif arguments.delimiter EQ "tab">
-					<cfinvokeargument name="delimiter" value="#chr(9)#">
-				<cfelse>
-					<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
-				</cfif>
-			</cfinvoke>
+			<cfif arguments.import_type EQ "xml"><!--- XML --->
 
-			<cfset numFileColumns = arrayLen(fileArray[1])>
-			<cfset numFileRows = arrayLen(fileArray)>
-
-			<!---<cfif numFileColumns IS 0 OR numFileRows IS 0> Esto hace nada usar porque nunca es 0
+				<cfset areasXml = xmlParse(fileContent)>
 				
-				<cfset response = {result=false, files=fileData, message="No hay contenidos en el archivo"}>
-				<cfreturn response>
+				<cfif isDefined("areasXml.area")>
+					
+					<cftransaction>
+						<cfloop index="curArea" array="#areasXml.area#">
 
-			</cfif>--->
+							<cfset areaName = curArea.name.xmlText>
+							<cfset areaDescription = curArea.description.xmlText>
 
-			<cftransaction>
-				
-				<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
-
-					<!--- <cfset error = false> --->
-
-					<cftry>
-
-						<cfset curRow = fileArray[curRowIndex]>
-
-						<cfset areaName = curRow[1]>
-
-						<cfif len(areaName) GT 0>
-							
-							<cfif arrayLen(curRow) GT 1>
-								<cfset areaDescription = curRow[2]>
-							<cfelse>
-								<cfset areaDescription = "">
-							</cfif>				
-
-							<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="area_id">
+							<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="createdAreaId">
 								<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
 								<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
 								<cfinvokeargument name="name" value="#areaName#"/>
@@ -1881,24 +1869,102 @@
 								<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
 							</cfinvoke>
 
-							<cfset areasCount = areasCount+1>
+							<cfinvoke component="AreaManager" method="importAreasXml" returnvariable="subAreasCount">
+								<cfinvokeargument name="areasXml" value="#curArea#">
+								
+								<cfinvokeargument name="parent_id" value="#createdAreaId#"/>
+								<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
+								<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
+								<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
 
-						</cfif>
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+							</cfinvoke>
 
-						<cfcatch>
+							<cfset areasCount = areasCount+1+subAreasCount>
 
-							<cfset errorMessagePrefix = "Error en fila #curRowIndex#: ">
-							<cfset errorMessage = errorMessagePrefix&cfcatch.message>
+						</cfloop>
+					</cftransaction>
 
-							<cfthrow message="#errorMessage#">
+				<cfelse>
 
-						</cfcatch>
+					<cfset response = {result=false, files=fileData, message="Archivo vacío o con formato incorrecto"}>
+					<cfreturn response>
 
-					</cftry>	
+				</cfif>
 
-				</cfloop>
 
-			</cftransaction>
+			<cfelse><!--- CSV --->
+
+
+				<!--- CSV to array --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="CSVToArray" returnvariable="fileArray">
+					<cfinvokeargument name="CSV" value="#trim(#fileContent#)#">
+					<cfif arguments.delimiter EQ "tab">
+						<cfinvokeargument name="delimiter" value="#chr(9)#">
+					<cfelse>
+						<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
+					</cfif>
+				</cfinvoke>
+
+				<cfset numFileColumns = arrayLen(fileArray[1])>
+				<cfset numFileRows = arrayLen(fileArray)>
+
+				<!---<cfif numFileColumns IS 0 OR numFileRows IS 0> Esto hace nada usar porque nunca es 0
+					<cfset response = {result=false, files=fileData, message="No hay contenidos en el archivo"}>
+					<cfreturn response>
+				</cfif>--->
+
+				<cftransaction>
+					
+					<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
+
+						<!--- <cfset error = false> --->
+
+						<cftry>
+
+							<cfset curRow = fileArray[curRowIndex]>
+
+							<cfset areaName = curRow[1]>
+
+							<cfif len(areaName) GT 0>
+								
+								<cfif arrayLen(curRow) GT 1>
+									<cfset areaDescription = curRow[2]>
+								<cfelse>
+									<cfset areaDescription = "">
+								</cfif>				
+
+								<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="area_id">
+									<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
+									<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
+									<cfinvokeargument name="name" value="#areaName#"/>
+									<cfinvokeargument name="description" value="#areaDescription#"/>
+									<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
+									<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
+								</cfinvoke>
+
+								<cfset areasCount = areasCount+1>
+
+							</cfif>
+
+							<cfcatch>
+
+								<cfset errorMessagePrefix = "Error en fila #curRowIndex#: ">
+								<cfset errorMessage = errorMessagePrefix&cfcatch.message>
+
+								<cfthrow message="#errorMessage#">
+
+							</cfcatch>
+
+						</cftry>	
+
+					</cfloop>
+
+				</cftransaction>
+
+			</cfif><!--- END arguments.import_type EQ "xml" --->
+
 		
 			<cfinclude template="includes/logRecord.cfm">
 
@@ -1922,6 +1988,165 @@
 	</cffunction>
 	
 	<!---  --->
+
+
+	<!--- ------------------------------------- importSubAreas ------------------------------------- --->
+	
+	<cffunction name="importAreasXml" output="false" access="package" returntype="numeric">		
+		<cfargument name="areasXml" type="xml" required="true"/>
+		<cfargument name="parent_id" type="numeric" required="true"/>
+		<cfargument name="user_in_charge" type="numeric" required="true"/>
+		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
+		<cfargument name="menu_type_id" type="numeric" required="false"/>
+
+		<cfargument name="client_dsn" type="string" required="true"/>
+		<cfargument name="client_abb" type="string" required="true"/>
+
+		<cfset var areasCount = 0>
+		<cfset var curArea = "">
+		<cfset var createdAreaId = "">
+
+		<cfif isDefined("areasXml.area")>
+
+			<cfloop index="curArea" array="#areasXml.area#">
+
+				<cfset areaName = curArea.name.xmlText>
+				<cfset areaDescription = curArea.description.xmlText>
+
+				<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="createdAreaId">
+					<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
+					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
+					<cfinvokeargument name="name" value="#areaName#"/>
+					<cfinvokeargument name="description" value="#areaDescription#"/>
+					<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
+					<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
+				</cfinvoke>
+
+				<cfinvoke component="AreaManager" method="importAreasXml" returnvariable="subAreasCount">
+					<cfinvokeargument name="areasXml" value="#curArea#">
+
+					<cfinvokeargument name="parent_id" value="#createdAreaId#"/>
+					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
+					<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
+					<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
+
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				</cfinvoke>
+
+				<cfset areasCount = areasCount+1+subAreasCount>
+
+			</cfloop>
+
+		</cfif>
+
+		<cfreturn areasCount>
+
+	</cffunction>
+
+
+	<!--- ------------------------------------- exportAreasStructure ------------------------------------- --->
+	
+	<cffunction name="exportAreasStructure" output="false" access="public" returntype="struct">		
+		<cfargument name="area_id" type="numeric" required="true"/>
+
+		<cfset var method = "importAreas">
+
+		<cfset var response = structNew()>
+
+		<cfset var fileContent = '<?xml version="1.0" encoding="UTF-8"?>'>
+		<cfset var areaXmlContent = "">
+		<cfset var subAreasXmlContent = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<!--- checkAreaAdminAccess --->
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+
+			<cfquery name="getAreaQuery" datasource="#client_dsn#">
+				SELECT areas.id, areas.name, areas.parent_id, areas.description
+				FROM `#client_abb#_areas` AS areas
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif getAreaQuery.recordCount GT 0>
+				
+				<cfinvoke component="AreaManager" method="exportSubAreasStructure" returnvariable="subAreasXmlContent">
+					<cfinvokeargument name="parent_id" value="#arguments.area_id#">
+
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+				</cfinvoke>
+
+				<cfset areaXmlContent = areaXmlContent&"<area><name><![CDATA[#getAreaQuery.name#]]></name>
+<description><![CDATA[#getAreaQuery.description#]]></description>"&subAreasXmlContent&"</area>">
+
+			</cfif>
+
+			<cfset fileContent = fileContent&areaXmlContent>
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, fileContent=fileContent}>
+			 
+			<cfcatch>
+			
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+				<cfset response = {result=false, fileContent=fileContent, message=cfcatch.message}>
+
+			</cfcatch>
+		</cftry>
+			
+		<cfreturn response>
+
+	</cffunction>
+
+
+	<!--- ------------------------------------- exportSubAreasStructure ------------------------------------- --->
+	
+	<cffunction name="exportSubAreasStructure" output="false" access="package" returntype="string">		
+		<cfargument name="parent_id" type="numeric" required="true"/>
+
+		<cfargument name="client_dsn" type="string" required="true"/>
+		<cfargument name="client_abb" type="string" required="true"/>
+
+		<cfset var areaXmlContent = "">
+		<cfset var subAreasXmlContent = "">
+
+		<cfquery name="getSubAreasQuery" datasource="#client_dsn#">
+			SELECT areas.id, areas.name, areas.parent_id, areas.description
+			FROM `#client_abb#_areas` AS areas
+			WHERE areas.parent_id = <cfqueryparam value="#arguments.parent_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+
+		<cfif getSubAreasQuery.recordCount GT 0>
+			
+			<cfloop query="#getSubAreasQuery#">			
+
+				<cfinvoke component="AreaManager" method="exportSubAreasStructure" returnvariable="subAreasXmlContent">
+					<cfinvokeargument name="parent_id" value="#getSubAreasQuery.id#">
+
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				</cfinvoke>
+
+				<cfset areaXmlContent = areaXmlContent&"<area><name><![CDATA[#getSubAreasQuery.name#]]></name>
+<description><![CDATA[#getSubAreasQuery.description#]]></description>"&subAreasXmlContent&"</area>">
+
+			</cfloop>
+
+		</cfif>
+
+		<cfreturn areaXmlContent>
+
+
+	</cffunction>
+
 
 
 	<!--- -------------------------------- updateArea ----------------------------------  --->

@@ -190,7 +190,6 @@
 	$(window).load( function() {	
 
 		resizeIframe();
-		//loadTree(selectAreaId);
 		loadTree();
 		
 		<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
@@ -404,7 +403,6 @@
 					<img src="#APPLICATION.htmlPath#/assets/icons/restore.png" title="Restaurar Árbol" id="restoreTree" style="display:none;"/>
 					</div>
 					</cfoutput>--->
-					
 					<div id="treeContainer" style="overflow:auto;clear:both;"></div>			
 				</div>
 				

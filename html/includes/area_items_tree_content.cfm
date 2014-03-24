@@ -67,7 +67,8 @@
 				"core" : {
 					"themes" : { 
 						"name" : "dp", 
-						"dots" : false
+						"dots" : false,
+						"responsive" : true
 					},
 					"multiple" : false
 				},
@@ -75,16 +76,8 @@
 					"fuzzy" : false 
 				},
 				"types" : {
-					"valid_children" : [ "all" ],
-					"types" : {
-						"message" : {
-							"max_children"	: -1,
-							"max_depth"		: -1,
-							"valid_children": -1,
-							"hover_node" : true,
-							"select_node" : true
-						}
-						
+					"message" : {
+						"icon" : "#APPLICATION.htmlPath#/assets/icons/message_small.png"
 					}
 				},
 				"plugins" : [ "types", "search" ]

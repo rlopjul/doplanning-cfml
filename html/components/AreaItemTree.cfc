@@ -48,7 +48,7 @@
 		
 		
 		<cfoutput>
-		<li id="#itemXml.xmlAttributes.id#" rel="#itemTypeName#"<!---<cfif hasChildren IS true>class="jstree-open"</cfif>--->>
+		<li id="#itemXml.xmlAttributes.id#" data-jstree='{"type":"#itemTypeName#"}'><!---<cfif hasChildren IS true>class="jstree-open"</cfif>--->
 			<!---DESHABILITADO TEMPORALMENTE porque el nuevo jsTree no permite mostrar imágenes dentro de un nodo
 			<cfif isDefined("itemXml.xmlAttributes.user_image_type")>
 				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemXml.xmlAttributes.user_in_charge#&type=#itemXml.xmlAttributes.user_image_type#&small=" alt="#itemXml.xmlAttributes.user_full_name#" class="item_img" style="margin-right:2px;"/>
