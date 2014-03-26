@@ -136,6 +136,10 @@
 	<!---  -----------------------CREATE USER------------------------------------- --->
 
 	
+	<!---
+	
+	Este método ya no se usa, se usa siempre createUser de UserManager.cfc
+
 	<cffunction name="createUser" returntype="string" output="false" access="public">
 		<cfargument name="request" type="string" required="yes">
 		
@@ -381,7 +385,7 @@
 		
 		<cfreturn xmlResponse>
 			
-	</cffunction>
+	</cffunction>--->
 	
 	
 	

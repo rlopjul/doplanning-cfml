@@ -130,16 +130,6 @@ fieldset[disabled] input {
 	padding-right:2px;
 }
 /*.div_contenedor_contenido{}*/
-/*.div_login_logo{
-	padding-top:2px;
-	padding-left:2px;
-	clear:none;	
-	float:left;
-}
-.div_login_help{
-	float:right;
-	clear:right;
-}*/
 .div_login_form{
 	/*margin-left:5px;width:230px;*/
 	width:350px;margin:auto;float:none;

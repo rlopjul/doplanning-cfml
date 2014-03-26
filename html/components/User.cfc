@@ -409,6 +409,7 @@
 		<cfargument name="enabled" type="boolean" required="false">
 
 		<cfargument name="login_ldap" type="string" required="false">
+		<cfargument name="login_diraya" type="string" required="false">
 		<cfargument name="perfil_cabecera" type="string" required="false">
 		
 		<cfset var method = "createUser">
@@ -453,6 +454,7 @@
 						<cfinvokeargument name="enabled" value="#arguments.enabled#">
 
 						<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
+						<cfinvokeargument name="login_diraya" value="#arguments.login_diraya#">
 						<cfinvokeargument name="perfil_cabecera" value="#arguments.perfil_cabecera#">
 					</cfinvoke>
 					
@@ -499,6 +501,7 @@
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
 		<cfargument name="login_ldap" type="string" required="false">
+		<cfargument name="login_diraya" type="string" required="false">
 		<cfargument name="perfil_cabecera" type="string" required="false">
 
 		<cfargument name="adminFields" type="boolean" required="false" default="false">
@@ -546,7 +549,9 @@
 						<cfinvokeargument name="information" value="#arguments.information#">
 						<cfinvokeargument name="internal_user" value="#arguments.internal_user#">
 						<cfinvokeargument name="enabled" value="#arguments.enabled#">
+
 						<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
+						<cfinvokeargument name="login_diraya" value="#arguments.login_diraya#">
 						<cfinvokeargument name="perfil_cabecera" value="#arguments.perfil_cabecera#">
 						<cfinvokeargument name="adminFields" value="#arguments.adminFields#">
 					</cfinvoke>

@@ -463,13 +463,19 @@
 			
 			<cfif isDefined("SESSION.user_id")>
 			
-				<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
+				<!---<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
 					<cfinvokeargument name="get_user_id" value="#user_id#">
 					<cfinvokeargument name="format_content" value="all">
+				</cfinvoke>--->
+
+				<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUser" returnvariable="xmlResponseContent">
+					<cfinvokeargument name="get_user_id" value="#user_id#">
+					<cfinvokeargument name="format_content" value="all">
+					<cfinvokeargument name="return_type" value="xml">
 				</cfinvoke>
-				
-				<cfinclude template="includes/functionEndNoLog.cfm">
-				
+
+				<cfinclude template="includes/functionEndNoLog.cfm">	
+
 			</cfif>
 			
 			<cfcatch>

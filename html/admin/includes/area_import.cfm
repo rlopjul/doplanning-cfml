@@ -229,16 +229,14 @@
 							-Codificación: <strong>utf-8</strong><br />
 							-Formato:<br/>
 					</p>
-							<cfsavecontent variable="areaFormatContent">
-								<area>
-									<name><![CDATA[Nombre del área padre]]></name>
-									<description><![CDATA[Descripción del área padre]]></description>
-									<area>
-										<name><![CDATA[Nombre del área hija]]></name>
-										<description><![CDATA[Descripción del área hija]]></description>
-									</area>
-								</area>
-							</cfsavecontent>
+							<cfsavecontent variable="areaFormatContent"><area>
+	<name><![CDATA[Nombre del área padre]]></name>
+	<description><![CDATA[Descripción del área padre]]></description>
+	<area>
+		<name><![CDATA[Nombre del área hija]]></name>
+		<description><![CDATA[Descripción del área hija]]></description>
+	</area>
+</area></cfsavecontent>
 							#HTMLCodeFormat(areaFormatContent)#
 					<p class="help-block" style="font-size:12px;">
 						Puede obtener un ejemplo de archivo de este tipo utilizando la funcionalidad de exportar áreas.<br/>

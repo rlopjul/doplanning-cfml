@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2013
+<!---Copyright Era7 Information Technologies 2007-2014
 
     File created by: ppareja
     ColdFusion version required: 8
@@ -31,10 +31,9 @@
 		<cftry>
 		
 			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="xmlResult"><cfoutput><user
+			<cfxml variable="xmlResult"><cfoutput><user
 				<cfif len(objectUser.id) NEQ 0>
-					id="#objectUser.id#"
-				</cfif>
+					id="#objectUser.id#"</cfif>
 				<cfif len(objectUser.email) NEQ 0>
 					email="#xmlFormat(objectUser.email)#"
 				</cfif>
@@ -126,10 +125,10 @@
 				<cfif len(objectUser.perfil_cabecera) NEQ 0>
 					<perfil_cabecera><![CDATA[#objectUser.perfil_cabecera#]]></perfil_cabecera>
 				</cfif>
-				<cfif len(objectUser.login_ldap) NEQ 0><!--- Provisional fuera del if --->
-					<login_ldap><![CDATA[#objectUser.login_ldap#]]></login_ldap>
-				</cfif>
 				<cfif APPLICATION.moduleLdapUsers EQ true>
+					<cfif len(objectUser.login_ldap) NEQ 0>
+						<login_ldap><![CDATA[#objectUser.login_ldap#]]></login_ldap>
+					</cfif>
 					<cfif len(objectUser.login_diraya) NEQ 0>
 						<login_diraya><![CDATA[#objectUser.login_diraya#]]></login_diraya>
 					</cfif>
@@ -160,8 +159,11 @@
 				<cfif len(objectUser.areas_administration) NEQ 0>	
 					#objectUser.areas_administration#
 				</cfif>
-					</user></cfoutput></cfsavecontent>
+				</user></cfoutput></cfxml>
 			</cfprocessingdirective>
+
+			<!--- Remove xml declaration --->
+			<cfset xmlResult = REReplace( ToString(xmlResult), "<\?xml[^>]*>", "", "one" )>
 			
 			<cfreturn xmlResult>
 		
@@ -591,7 +593,6 @@
 	<!---  ---------------------CREATE USER------------------------------------ --->
 		
 	<cffunction name="createUser" returntype="struct" output="false" access="public">
-		<!--- <cfargument name="request" type="string" required="yes"> --->
 
 		<cfargument name="family_name" type="string" required="true">
 		<cfargument name="email" type="string" required="false" default="">
@@ -610,7 +611,15 @@
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
 		<cfargument name="login_ldap" type="string" required="false">
+		<cfargument name="login_diraya" type="string" required="false">
 		<cfargument name="perfil_cabecera" type="string" required="false">
+
+		<cfargument name="center_id" type="numeric" required="false">
+		<cfargument name="category_id" type="numeric" required="false">
+		<cfargument name="service_id" type="numeric" required="false">
+		<cfargument name="service" type="string" required="false">
+		<cfargument name="other_1" type="string" required="false">
+		<cfargument name="other_2" type="string" required="false">
 
 		<cfset var method = "createUser">
 		
@@ -622,190 +631,234 @@
 	
 		<cftry>
 		
-			<cfif APPLICATION.moduleLdapUsers NEQ true><!---Default User--->
+			<!---<cfif APPLICATION.moduleLdapUsers NEQ true>---><!---Default User--->
 			
-				<cfinclude template="includes/functionStartOnlySession.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinclude template="includes/checkAdminAccess.cfm">
+			
+			<cfif listFind(APPLICATION.languages, arguments.language , ",") IS 0>
+				<!--- <cfset arguments.language = APPLICATION.defaultLanguage> --->
+				<cfset response = {result=false, message="Idioma no válido"}>
+				<cfreturn response>
+			</cfif>
+
+			<cfset arguments.email = Trim(arguments.email)>
+			<cfset arguments.mobile_phone = Trim(arguments.mobile_phone)>
+			
+			
+			<cftransaction>
 				
-				<cfinclude template="includes/checkAdminAccess.cfm">
+				<cfif APPLICATION.userEmailRequired IS true OR len(arguments.email) GT 0>
+
+					<!---checkEmail--->
+					<cfif len(arguments.email) IS 0 OR NOT isValid("email",arguments.email)>
+						<cfset response = {result=false, message="Email incorrecto"}>
+						<cfreturn response>
+					</cfif>
+
+					<cfquery name="checkEmail" datasource="#client_dsn#">
+						SELECT id
+						FROM #client_abb#_users
+						WHERE email=<cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">;
+					</cfquery>
+					
+					<cfif checkEmail.recordCount GT 0><!---User email already used--->
+						<!---<cfset error_code = 205>
+						<cfthrow errorcode="#error_code#">--->
+						<cfset response = {result=false, message="La dirección de email introducida ya está asociada a otro usuario de la aplicación"}>
+						<cfreturn response>
+					</cfif>
 				
-				<cfif listFind(APPLICATION.languages, arguments.language , ",") IS 0>
-					<!--- <cfset arguments.language = APPLICATION.defaultLanguage> --->
-					<cfset response = {result=false, message="Idioma no válido"}>
-					<cfreturn response>
 				</cfif>
 
-				<cfset arguments.email = Trim(arguments.email)>
-				<cfset arguments.mobile_phone = Trim(arguments.mobile_phone)>
-				
-				
-				<cftransaction>
-					
-					<cfif APPLICATION.userEmailRequired IS true OR len(arguments.email) GT 0>
+				<cfif APPLICATION.moduleLdapUsers EQ true>
 
-						<!---checkEmail--->
-						<cfif len(arguments.email) IS 0 OR NOT isValid("email",arguments.email)>
-							<cfset response = {result=false, message="Email incorrecto"}>
-							<cfreturn response>
-						</cfif>
+					<!---if login_ldap is defined--->
+					<cfif len(arguments.login_ldap) GT 0>
 
-						<cfquery name="checkEmail" datasource="#client_dsn#">
-							SELECT id
+						<!---Check if login already used--->
+						<cfquery name="checkLoginLdap" datasource="#client_dsn#">
+							SELECT *
 							FROM #client_abb#_users
-							WHERE email=<cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">;
+							WHERE login_ldap=<cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">;
 						</cfquery>
 						
-						<cfif checkEmail.recordCount GT 0><!---User email already used--->
-							<!---<cfset error_code = 205>
+						<cfif checkLoginLdap.recordCount GT 0><!---User LDAP login already assigned to another user--->
+							<!---<cfset error_code = 211>
 							<cfthrow errorcode="#error_code#">--->
-							<cfset response = {result=false, message="Dirección de email ya utilizada por otro usuario"}>
+							<cfset response = {result=false, message="El login introducido ya está asociado a otro usuario de la aplicación"}>
 							<cfreturn response>
-						</cfif>
+						</cfif>		
+
+						<!---Check if exist in LDAP (ONLY VPNET)--->
+						<cfif APPLICATION.identifier EQ "vpnet">
+
+							<cfinvoke component="UserLDAPManager" method="getLDAPUser" returnvariable="xmlResponseUser">
+								<cfinvokeargument name="login_ldap" value="#objectUser.login_ldap#">
+								<cfinvokeargument name="return_type" value="xml">
+							</cfinvoke>
+
+						</cfif>			
+						
+					</cfif>
+
+					<cfif isDefined("arguments.login_diraya") AND len(objectUser.login_diraya) GT 0>
+			
+						<!---Check if login already used--->
+						<cfquery name="checkLoginDiraya" datasource="#client_dsn#">
+							SELECT *
+							FROM #client_abb#_users
+							WHERE login_diraya=<cfqueryparam value="#objectUser.login_diraya#" cfsqltype="cf_sql_varchar">;
+						</cfquery>
+						
+						<cfif checkLoginDiraya.recordCount GT 0><!---User LDAP login already assigned to another user--->
+							<!---<cfset error_code = 211>
+							<cfthrow errorcode="#error_code#">--->
+							<cfset response = {result=false, message="El login de Diraya introducido ya está asociado a otro usuario de la aplicación"}>
+							<cfreturn response>
+						</cfif>					
 					
 					</cfif>
 
-					<cfif SESSION.client_abb EQ "hcs">
-
-						<!---if login_ldap is defined--->
-						<cfif len(arguments.login_ldap) GT 0>
-
-							<!---Check if login already used--->
-							<cfquery name="checkLoginLdap" datasource="#client_dsn#">
-								SELECT *
-								FROM #client_abb#_users
-								WHERE login_ldap=<cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">;
-							</cfquery>
-							
-							<cfif checkLoginLdap.recordCount GT 0><!---User LDAP login already assigned to another user--->
-								<cfset error_code = 211>
-							
-								<cfthrow errorcode="#error_code#">
-							</cfif>					
-							
-						</cfif>
-
+				</cfif>
+				
+				<!---Insert User in DataBase--->			
+				<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
+					INSERT INTO #client_abb#_users
+					SET email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">,
+					name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
+					family_name = <cfqueryparam value="#arguments.family_name#" cfsqltype="cf_sql_varchar">,
+					telephone = <cfqueryparam value="#arguments.telephone#" cfsqltype="cf_sql_varchar">,
+					address = <cfqueryparam value="#arguments.address#" cfsqltype="cf_sql_varchar">,
+					password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">,
+					sms_allowed = <cfqueryparam value="false" cfsqltype="cf_sql_bit">,
+					mobile_phone = <cfqueryparam value="#arguments.mobile_phone#" cfsqltype="cf_sql_varchar">,
+					creation_date = NOW(),
+					<cfif len(arguments.telephone_ccode) GT 0>
+						telephone_ccode = <cfqueryparam value="#arguments.telephone_ccode#" cfsqltype="cf_sql_integer">,
+					<cfelse>
+						telephone_ccode = <cfqueryparam null="true" cfsqltype="cf_sql_numeric">,
 					</cfif>
-					
-					<!---Insert User in DataBase--->			
-					<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
-						INSERT INTO #client_abb#_users
-						SET email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">,
-						name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
-						family_name = <cfqueryparam value="#arguments.family_name#" cfsqltype="cf_sql_varchar">,
-						telephone = <cfqueryparam value="#arguments.telephone#" cfsqltype="cf_sql_varchar">,
-						address = <cfqueryparam value="#arguments.address#" cfsqltype="cf_sql_varchar">,
-						password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">,
-						sms_allowed = <cfqueryparam value="false" cfsqltype="cf_sql_bit">,
-						mobile_phone = <cfqueryparam value="#arguments.mobile_phone#" cfsqltype="cf_sql_varchar">,
-						creation_date = NOW(),
-						<cfif len(arguments.telephone_ccode) GT 0>
-							telephone_ccode = <cfqueryparam value="#arguments.telephone_ccode#" cfsqltype="cf_sql_integer">,
-						<cfelse>
-							telephone_ccode = <cfqueryparam null="true" cfsqltype="cf_sql_numeric">,
-						</cfif>
-						<cfif len(arguments.mobile_phone_ccode) GT 0>
-							mobile_phone_ccode = <cfqueryparam value="#arguments.mobile_phone_ccode#" cfsqltype="cf_sql_integer">
-						<cfelse>
-							mobile_phone_ccode = <cfqueryparam null="true" cfsqltype="cf_sql_numeric">
-						</cfif>,
-						language = <cfqueryparam value="#arguments.language#" cfsqltype="cf_sql_varchar">,
-						dni = <cfqueryparam value="#arguments.dni#" cfsqltype="cf_sql_varchar">,
-						hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">,
-						information = <cfqueryparam value="#arguments.information#" cfsqltype="cf_sql_longvarchar">,
-						internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">,
-						enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
+					<cfif len(arguments.mobile_phone_ccode) GT 0>
+						mobile_phone_ccode = <cfqueryparam value="#arguments.mobile_phone_ccode#" cfsqltype="cf_sql_integer">
+					<cfelse>
+						mobile_phone_ccode = <cfqueryparam null="true" cfsqltype="cf_sql_numeric">
+					</cfif>,
+					language = <cfqueryparam value="#arguments.language#" cfsqltype="cf_sql_varchar">,
+					dni = <cfqueryparam value="#arguments.dni#" cfsqltype="cf_sql_varchar">,
+					hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">,
+					information = <cfqueryparam value="#arguments.information#" cfsqltype="cf_sql_longvarchar">,
+					internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">,
+					enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
+					<cfif APPLICATION.moduleLdapUsers EQ true>
 						<cfif isDefined("arguments.login_ldap") AND len(arguments.login_ldap) GT 0>
 						, login_ldap = <cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
 						</cfif>
-						<cfif isDefined("arguments.perfil_cabecera")>
-						, perfil_cabecera = <cfqueryparam value="#arguments.perfil_cabecera#" cfsqltype="cf_sql_varchar">
-						</cfif>;
-					</cfquery>
-					
-					<!---Aquí se obtiene el id del usuario insertado en base de datos--->
-					<!---<cfset arguments.id = insertUserResult.GENERATED_KEY>--->
-					<cfquery name="getLastInsertId" datasource="#client_dsn#">
-						SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_users;
-					</cfquery>
-					<cfset new_user_id = getLastInsertId.last_insert_id>
-					
-					<!---Insert User Root Folder--->
-					<cfquery name="insertRootFolderQuery" datasource="#client_dsn#" result="insertRootFolderResult">
-						INSERT INTO #client_abb#_folders
-						(name, creation_date, user_in_charge, description)
-						VALUES(
-							'Mis documentos', 
-							NOW(),
-							<cfqueryparam value="#new_user_id#" cfsqltype="cf_sql_integer">,
-							'Directorio raiz'
-							);
-					</cfquery>	
-					
-					<!---<cfset root_folder_id = insertRootFolderResult.GENERATED_KEY>--->
-					<cfquery name="getLastInsertId" datasource="#client_dsn#">
-						SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_folders;
-					</cfquery>
-					<cfset root_folder_id = getLastInsertId.last_insert_id>
-					
-					<cfquery name="insertRootFolderInUser" datasource="#client_dsn#">
-						UPDATE #client_abb#_users
-						SET root_folder_id = #root_folder_id#
-						WHERE id = <cfqueryparam value="#new_user_id#" CFSQLType="cf_sql_integer">;
-					</cfquery>
-				
-				</cftransaction>
-
-				<cfif isDefined("arguments.files")>
-			
-					<!---Subida de imagen--->
-				
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="uploadUserImage">
-						<cfinvokeargument name="files" value="#arguments.files#">
-						<cfinvokeargument name="user_id" value="#new_user_id#">
-						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-					</cfinvoke>		
-					
-					<!---FIN subida de imagen--->
-				
-				</cfif>
-
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
-					<cfinvokeargument name="user_id" value="#new_user_id#">
-					<cfinvokeargument name="with_ldap" value="#APPLICATION.moduleLdapUsers#">
-					<cfif APPLICATION.identifier EQ "vpnet">
-						<cfinvokeargument name="with_vpnet" value="true">
+						<cfif isDefined("arguments.login_diraya") AND len(arguments.login_diraya) GT 0>
+						, login_diraya = <cfqueryparam value="#arguments.login_diraya#" cfsqltype="cf_sql_varchar">
+						</cfif>
+					</cfif>
+					<cfif isDefined("arguments.perfil_cabecera")>
+					, perfil_cabecera = <cfqueryparam value="#arguments.perfil_cabecera#" cfsqltype="cf_sql_varchar">
 					</cfif>
 
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					<cfif APPLICATION.identifier EQ "vpnet">
+						, center_id = <cfqueryparam value="#arguments.center_id#" cfsqltype="cf_sql_integer">
+						, category_id = <cfqueryparam value="#arguments.category_id#" cfsqltype="cf_sql_integer">
+						, service_id = <cfqueryparam value="#arguments.service_id#" cfsqltype="cf_sql_integer">
+						, service = <cfqueryparam value="#arguments.service#" cfsqltype="cf_sql_varchar">
+						, other_1 = <cfqueryparam value="#arguments.other_1#" cfsqltype="cf_sql_varchar">
+						, other_2 = <cfqueryparam value="#arguments.other_2#" cfsqltype="cf_sql_varchar">
+					</cfif>
+					;
+				</cfquery>
+				
+				<!---Aquí se obtiene el id del usuario insertado en base de datos--->
+				<!---<cfset arguments.id = insertUserResult.GENERATED_KEY>--->
+				<cfquery name="getLastInsertId" datasource="#client_dsn#">
+					SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_users;
+				</cfquery>
+				<cfset new_user_id = getLastInsertId.last_insert_id>
+				
+				<!---Insert User Root Folder--->
+				<cfquery name="insertRootFolderQuery" datasource="#client_dsn#" result="insertRootFolderResult">
+					INSERT INTO #client_abb#_folders
+					(name, creation_date, user_in_charge, description)
+					VALUES(
+						'Mis documentos', 
+						NOW(),
+						<cfqueryparam value="#new_user_id#" cfsqltype="cf_sql_integer">,
+						'Directorio raiz'
+						);
+				</cfquery>	
+				
+				<!---<cfset root_folder_id = insertRootFolderResult.GENERATED_KEY>--->
+				<cfquery name="getLastInsertId" datasource="#client_dsn#">
+					SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_folders;
+				</cfquery>
+				<cfset root_folder_id = getLastInsertId.last_insert_id>
+				
+				<cfquery name="insertRootFolderInUser" datasource="#client_dsn#">
+					UPDATE #client_abb#_users
+					SET root_folder_id = #root_folder_id#
+					WHERE id = <cfqueryparam value="#new_user_id#" CFSQLType="cf_sql_integer">;
+				</cfquery>
+			
+			</cftransaction>
+
+			<cfif isDefined("arguments.files")>
+		
+				<!---Subida de imagen--->
+			
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="uploadUserImage">
+					<cfinvokeargument name="files" value="#arguments.files#">
+					<cfinvokeargument name="user_id" value="#new_user_id#">
+					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				</cfinvoke>		
+				
+				<!---FIN subida de imagen--->
+			
+			</cfif>
+
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
+				<cfinvokeargument name="user_id" value="#new_user_id#">
+				<cfinvokeargument name="with_ldap" value="#APPLICATION.moduleLdapUsers#">
+				<cfif APPLICATION.identifier EQ "vpnet">
+					<cfinvokeargument name="with_vpnet" value="true">
+				</cfif>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfif selectUserQuery.recordCount IS 0><!---the user does not exist--->
+				
+				<cfset error_code = 204>
+				
+				<cfthrow errorcode="#error_code#"> 
+				
+			</cfif>
+
+			<cfif arguments.enabled IS true AND len(arguments.email) GT 0>
+				
+				<cfinvoke component="AlertManager" method="newUser">
+					<cfinvokeargument name="objectUser" value="#selectUserQuery#">
+					<cfinvokeargument name="password_temp" value="#arguments.password_temp#">
 				</cfinvoke>
-				
-				<cfif selectUserQuery.recordCount IS 0><!---the user does not exist--->
-					
-					<cfset error_code = 204>
-					
-					<cfthrow errorcode="#error_code#"> 
-					
-				</cfif>
 
-				<cfif arguments.enabled IS true AND len(arguments.email) GT 0>
-					
-					<cfinvoke component="AlertManager" method="newUser">
-						<cfinvokeargument name="objectUser" value="#selectUserQuery#">
-						<cfinvokeargument name="password_temp" value="#arguments.password_temp#">
-					</cfinvoke>
-
-				</cfif>
-				
+			</cfif>
 				
 			
+			<!---
 			<cfelse><!---LDAP User--->
 			
 				<cfinvoke component="UserLDAPManager" method="createUser" returnvariable="xmlResponseContent">
 					<cfinvokeargument name="request" value="#arguments.request#">
 				</cfinvoke>
 			
-			</cfif>
+			</cfif>--->
 			
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
 		
@@ -844,7 +897,15 @@
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
 		<cfargument name="login_ldap" type="string" required="false">
+		<cfargument name="login_diraya" type="string" required="false">
 		<cfargument name="perfil_cabecera" type="string" required="false">
+
+		<cfargument name="center_id" type="numeric" required="false">
+		<cfargument name="category_id" type="numeric" required="false">
+		<cfargument name="service_id" type="numeric" required="false">
+		<cfargument name="service" type="string" required="false">
+		<cfargument name="other_1" type="string" required="false">
+		<cfargument name="other_2" type="string" required="false">
 
 		<cfargument name="adminFields" type="boolean" required="false" default="false">
 
@@ -881,7 +942,7 @@
 				<cfif checkEmail.recordCount GT 0><!---User email already used--->
 
 					<cfif checkEmail.id NEQ arguments.update_user_id><!---This user is not the user who has this email--->
-						<cfset response = {result=false, message="El email introducido ya está asociado a otro usuario, por favor introduzca un email diferente."}>
+						<cfset response = {result=false, message="La dirección de email introducida ya está asociada a otro usuario de la aplicación"}>
 					
 						<cfreturn response>
 					</cfif>
@@ -907,10 +968,10 @@
 					<cfif isDefined("arguments.password") AND len(arguments.password) GT 0>
 						, password = <cfqueryparam value = "#arguments.password#" cfsqltype="cf_sql_varchar">
 					</cfif> 
-					<cfif isDefined("arguments.login_ldap")>
-						, login_ldap = <cfqueryparam value = "#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
-					</cfif>
 					<cfif APPLICATION.moduleLdapUsers EQ true>
+						<cfif isDefined("arguments.login_ldap")>
+							, login_ldap = <cfqueryparam value = "#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
+						</cfif>
 						<cfif isDefined("arguments.login_diraya")>
 							, login_diraya = <cfqueryparam value = "#arguments.login_diraya#" cfsqltype="cf_sql_varchar">
 						</cfif>
@@ -931,9 +992,9 @@
 			
 					<cfquery name="updateUserOtherData" datasource="#client_dsn#">
 						UPDATE #client_abb#_users 
-						SET center_id = <cfqueryparam value="#arguments.center#" cfsqltype="cf_sql_varchar">
-						SET category_id = <cfqueryparam value="#arguments.category#" cfsqltype="cf_sql_varchar">
-						SET service_id = <cfqueryparam value="#arguments.service#" cfsqltype="cf_sql_varchar">
+						SET center_id = <cfqueryparam value="#arguments.center_id#" cfsqltype="cf_sql_integer">
+						SET category_id = <cfqueryparam value="#arguments.category_id#" cfsqltype="cf_sql_integer">
+						SET service_id = <cfqueryparam value="#arguments.service_id#" cfsqltype="cf_sql_integer">
 						SET service = <cfqueryparam value="#arguments.service#" cfsqltype="cf_sql_varchar">
 						SET other_1 = <cfqueryparam value="#arguments.other_1#" cfsqltype="cf_sql_varchar">
 						SET other_2 = <cfqueryparam value="#arguments.other_2#" cfsqltype="cf_sql_varchar">
@@ -1852,7 +1913,9 @@
 							<cfinvokeargument name="sms_allowed" value="#selectUserQuery.sms_allowed#">
 							<cfif APPLICATION.moduleLdapUsers EQ true>
 								<cfinvokeargument name="login_ldap" value="#selectUserQuery.login_ldap#">
-								<cfinvokeargument name="login_diraya" value="#selectUserQuery.login_diraya#">
+								<cfif APPLICATION.moduleLdapDiraya EQ true>
+									<cfinvokeargument name="login_diraya" value="#selectUserQuery.login_diraya#">
+								</cfif>
 							</cfif>
 							<cfif APPLICATION.identifier EQ "vpnet">
 								<cfinvokeargument name="center_id" value="#selectUserQuery.center_id#">

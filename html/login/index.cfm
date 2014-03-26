@@ -178,7 +178,7 @@
 		</cfif>
 		
 		<cfif APPLICATION.identifier EQ "dp" AND show_help>
-			<div class="col-md-2" style="text-align:right;"><!---class="div_login_help"--->
+			<div class="col-md-2" style="text-align:right;">
 				<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" lang="es"><i class="icon-question-sign"></i></a>
 			</div>
 		</cfif>

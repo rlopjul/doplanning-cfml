@@ -133,7 +133,7 @@
 
 	<div class="row">
 	
-		<div class="col-md-2"><!---class="div_login_logo"--->
+		<div class="col-md-2">
 			<cfif APPLICATION.identifier EQ "dp"><a href="http://www.doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a></cfif>
 		</div>
 		
@@ -144,7 +144,7 @@
 		</cfif>
 		
 		<cfif APPLICATION.identifier EQ "dp">
-		<div class="col-md-2" style="text-align:right;"><!---class="div_login_help"--->
+		<div class="col-md-2" style="text-align:right;">
 			<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" lang="es"><i class="icon-question-sign"></i></a>
 		</div>
 		</cfif>

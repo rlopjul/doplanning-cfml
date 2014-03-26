@@ -1,40 +1,38 @@
-<!---Copyright Era7 Information Technologies 2007-2013
+<!---Copyright Era7 Information Technologies 2007-2014
 
     File created by: ppareja
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 10-04-2013
 	
 	17-01-2013 alucena: añadido generateNewPassword
 	10-04-2013 alucena: en loginUser se borra la sesion y se hace logout lo primero (antes se hacía en loginUserInApplication)
 	21-05-2013 alucena: no se añade el nombre de la dirección de correo en SESSION.client_email_from porque Mandrill no lo permite
 	
 --->
-<cfcomponent output="false">
+<cfcomponent output="true">
 
 	<cfset component = "LoginManager">
 
 	<!--- LOGIN USER --->
 	
-	<cffunction name="loginUser" returntype="struct" output="false" access="public">
+	<cffunction name="loginUser" returntype="struct" output="true" access="public">
 		<cfargument name="login" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
 		<cfargument name="password_encoded" type="boolean" required="false" default="true">
-		<cfargument name="ldap_id" type="string" required="false" default="default"><!---ldap id: default/diraya/dmsas--->
+		<cfargument name="ldap_id" type="string" required="false" default="doplanning"><!---ldap id: asnc/diraya/dmsas/portalep_hcs--->
 		<cfargument name="client_abb" type="string" required="true">
 
 		<cfset var method = "loginUser">
 			
 		<cfset var response = structNew()>
 
-		<cfset var user_login = "">
+		<cfset var client_dsn = "">
 		<cfset var ldapLogin = false>
 		
 		<cftry>
 
 			<cfinclude template="includes/functionStartNoSession.cfm">
 			
-			<!---Esto estaba antes en loginUserInApplication--->
 			<cfif getAuthUser() NEQ "">			
 				<cflogout>
 				
@@ -74,7 +72,6 @@
 				</cfif>
 			</cfif>
 
-			<cfset user_login = arguments.login>
 			<cfset client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 			
 			<!---Get client data--->
@@ -113,16 +110,14 @@
 
 			<cfif ldapLogin IS true><!---LDAP Login--->				
 			
-				<cfinvoke component="LoginLDAPManager" method="loginLDAPUser" returnvariable="xmlResponseContent">
+				<cfinvoke component="LoginLDAPManager" method="loginLDAPUser" returnvariable="response">
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 					<cfinvokeargument name="objectClient" value="#getClient#">
 					<cfinvokeargument name="objectUser" value="#objectUser#">
-					<cfinvokeargument name="ldap_id" value="#ldap_id#">
+					<cfinvokeargument name="ldap_id" value="#arguments.ldap_id#">
 				</cfinvoke>
 				
 				<!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
-
-				<cfset response = {result=true}>
 			
 			<cfelse><!---Default Login (DoPlanning)--->
 			
@@ -132,7 +127,7 @@
 				<cfquery name="loginQuery" datasource="#client_dsn#">			
 					SELECT users.id, users.number_of_connections, users.language, users.enabled
 					FROM #table# AS users 
-					WHERE users.email = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar"> 
+					WHERE users.email = <cfqueryparam value="#arguments.login#" cfsqltype="cf_sql_varchar"> 
 					AND password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">;
 				</cfquery>		
 				

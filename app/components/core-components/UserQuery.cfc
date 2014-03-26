@@ -24,9 +24,11 @@
 				, space_used, number_of_connections, last_connection, connected, session_id, creation_date, root_folder_id, sms_allowed
 				</cfif> 
 				<cfif arguments.with_ldap IS true>
-				, login_ldap, login_diraya
-				<cfelseif arguments.client_abb EQ "hcs">
-					, login_ldap
+				, login_ldap
+				<!--- <cfif arguments.client_abb EQ "asnc" OR arguments.client_abb EQ "agsna"> --->
+				<cfif APPLICATION.moduleLdapDiraya EQ true>
+					, login_diraya
+				</cfif>
 				</cfif>
 				<cfif arguments.with_vpnet IS true>
 				, center_id, category_id, service_id, service, other_1, other_2

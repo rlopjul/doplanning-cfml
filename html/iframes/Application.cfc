@@ -1,10 +1,9 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2014
 
     File created by: alucena
     ColdFusion version required: 8
     Last file change by: alucena
-    Date of last file change: 23-05-2012
-	
+
 --->
 
 <cfcomponent displayname="Application CFC html restricted area" extends="../../Application">
@@ -16,20 +15,11 @@
 				
 			<!---Como esta página es un iframe, se redirige a la página iframe_login_redirect donde hay un script que redirige a la página padre--->
 			<!---No se puede pasar la página de destino al login porque la página de destino es un iframe--->	
-			<cfoutput>
-				<cfif isDefined("URL.abb")>
-					<cflocation url="#APPLICATION.htmlPath#/login/iframe_login_redirect.cfm?abb=#URL.abb#" addtoken="no">
-				<cfelse>
-					<cflocation url="#APPLICATION.htmlPath#/login/iframe_login_redirect.cfm" addtoken="no">
-				</cfif>
-			</cfoutput>
-			
-			<!---<cfif isDefined("URL.abb")>
-				<cfset destination_page = URLEncodedFormat(CGI.SCRIPT_NAME&"?"&CGI.QUERY_STRING)>
-				<cflocation url="#APPLICATION.htmlPath#/login/?client_abb=#URL.abb#&dpage=#destination_page#" addtoken="no">
+			<cfif isDefined("URL.abb")>
+				<cflocation url="#APPLICATION.htmlPath#/login/iframe_login_redirect.cfm?abb=#URL.abb#" addtoken="no">
 			<cfelse>
-				<cflocation url="#APPLICATION.mainUrl#" addtoken="no">
-			</cfif>--->
+				<cflocation url="#APPLICATION.htmlPath#/login/iframe_login_redirect.cfm" addtoken="no">
+			</cfif>
 			
 		</cfif>
 		

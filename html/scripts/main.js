@@ -1,3 +1,8 @@
+/*Required vars
+clientAbb
+selectAreaId
+iframePage
+*/
 var curAreaId = 0;
 var areaWithLink = false;
 var currentTab = "#tab1";
@@ -70,7 +75,7 @@ function loadModal(url){
 	$('body').modalmanager('loading');
 
 	$modal.load(url, '', function(){
-	  $modal.modal({width:730});/*680*/
+	  $modal.modal({width:740});/*680*/
 	});
 }
 
@@ -223,14 +228,25 @@ function openUrl(url,target){
 }
 
 function loadIframePage(page) {
+	if(page.indexOf("?") == -1)
+		page = page+"?abb="+clientAbb;
+	else
+		page = page+"&abb="+clientAbb;
+
 	$("#areaIframe").attr('src', "iframes/"+getFilename(page));
 }
 
 function loadIframeItemPage(page) {
+	if(page.indexOf("?") == -1)
+		page = page+"?abb="+clientAbb;
+	else
+		page = page+"&abb="+clientAbb;
+
 	$("#itemIframe").attr('src', "iframes2/"+getFilename(page));		
 }
 
 function loadIframeSearchItemPage(page) {
+	page = page+"&abb="+clientAbb;
 	$("#searchItemIframe").attr('src', "iframes2/"+getFilename(page));		
 }
 
@@ -287,11 +303,12 @@ function areaSelected(areaId, areaUrl, withLink)  {
 	
 	if(iframePage.length > 0){ //Hay página para cargar
 		loadIframePage(iframePage);
-		//loadIframeItemPage(iframePage);
 		iframePage = ""; //Se borra el contenido del iframePage para que no vuelva a cargarse al recargar el árbol.
-	} else
-	   loadIframePage(areaUrl);
-	  
+	} else {
+
+		loadIframePage(areaUrl);
+	}
+
 	if(disableNextTabChange){
 		disableNextTabChange = false;
 	} else if(!$('#changeTabDisabled').is(':checked'))

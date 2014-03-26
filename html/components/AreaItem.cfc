@@ -2339,8 +2339,10 @@
 		<cfset var selectFirst = true>
 
 		<cftry>
-		
-			<cfif StructCount(URL) GT 1>
+			
+			<cfset var numUrlParams = StructCount(URL)>
+
+			<cfif numUrlParams GT 1 AND NOT (numUrlParams EQ 2 AND isDefined("URL.abb"))>
 				<cfset selectFirst = false>
 			</cfif>
 								

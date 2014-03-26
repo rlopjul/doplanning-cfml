@@ -133,16 +133,32 @@ page_types
 				</div>
 			</div>		
 
-			<cfif isDefined("objectUser.login_ldap")>
+			<cfif APPLICATION.moduleLdapUsers EQ true><!--- LDAP --->
 
 				<div class="row">
 					<div class="col-sm-12 col-md-12">
 
-						<label for="login_ldap" class="control-label" lang="es">Login Plataforma Recursos Humanos:</label>
+						<label for="login_ldap" class="control-label" lang="es" style="text-align:left">Login #APPLICATION.ldapName#:</label>
+						<!--- <cfif SESSION.client_abb EQ "hcs">Login Plataforma Recursos Humanos
+						<cfelseif SESSION.client_abb EQ "asnc">Login ASNC
+						<cfelseif SESSION.client_abb EQ "agsna">Login DMSAS
+						<cfelse>Login LDAP
+						</cfif> --->
 						<input type="text" name="login_ldap" id="login_ldap" value="#objectUser.login_ldap#" class="form-control" autocomplete="off" />
 
 					</div>
 				</div>
+
+				<cfif APPLICATION.moduleLdapDiraya EQ true >
+					<div class="row">
+						<div class="col-sm-12 col-md-12">
+
+							<label for="login_diraya" class="control-label" lang="es">Login Diraya</label>
+							<input type="text" name="login_diraya" id="login_diraya" value="#objectUser.login_diraya#" class="form-control" autocomplete="off" />
+
+						</div>
+					</div>
+				</cfif>
 
 			</cfif>
 

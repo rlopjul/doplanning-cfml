@@ -98,6 +98,7 @@
 	var selectAreaId = "#area_id#";
 	var iframePage = "#iframe_page#";
 	var userLanguage = "#objectUser.language#";
+	var clientAbb = "#SESSION.client_abb#";
 	
 	<!--- var areaImgHeight = 60; --->
 	
@@ -410,8 +411,8 @@
 												<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>
 											</cfif>
 										</cfif> --->
-
-					<a href="../main.cfm" class="btn btn-default"><i class="icon-arrow-left"></i> <span>Volver</span></a>
+									
+					<a href="../main.cfm?abb=#SESSION.client_abb#" class="btn btn-default"><i class="icon-arrow-left"></i> <span>Volver</span></a>
 				
 					<a href="../preferences.cfm" title="Preferencias del usuario" lang="es">
 					<cfif len(objectUser.image_file) GT 0>

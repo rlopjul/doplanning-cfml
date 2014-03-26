@@ -1,30 +1,26 @@
-<!---Copyright Era7 Information Technologies 2007-2013
+<!--- Copyright Era7 Information Technologies 2007-2014 --->
 
-	Date of file creation: 09-03-2013
-	File created by: alucena
-	ColdFusion version required: 8
-	Last file change by: alucena
-	Date of last file change: 10-06-2013
-	
---->
-<cfcomponent output="false">
+<cfcomponent output="true">
 
 	<cfset component = "LoginLDAPManager">
 	
 	
-	<cffunction name="loginLDAPUser" returntype="string" output="false" access="public">
-		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="objectClient" type="any" required="yes">
-		<cfargument name="objectUser" type="struct" required="yes">
-		<cfargument name="ldap_id" type="string" required="no" default="default">
+	<cffunction name="loginLDAPUser" returntype="struct" output="true" access="package">
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="objectClient" type="any" required="true">
+		<cfargument name="objectUser" type="struct" required="true">
+		<cfargument name="ldap_id" type="string" required="true">
 		
 		<cfset var method = "loginLDAPUser">
+
+		<cfset var response = structNew()>
 		
 		<cfset var user_login = "">
 		<cfset var password = "">
 		<cfset var password_ldap = "">
 		<cfset var login_ldap_column = "">
 		<cfset var loginValid = false>
+		<cfset var loginMessage = "">
 		
 		
 			<cfinclude template="includes/functionStartNoSession.cfm">
@@ -48,9 +44,8 @@
 			<cfset password_ldap = "{MD5}"&password_ldap>--->
 			<cfset password_ldap = password>
 
-			<cfif arguments.ldap_id EQ "default"><!---Default LDAP--->
+			<cfif arguments.ldap_id EQ "asnc"><!---Default LDAP ASNC--->
 				
-				<!---<cfldap server="#APPLICATION.ldapServer#" port="#APPLICATION.ldapServerPort#" username="#APPLICATION.ldapServerUserName#" password="#APPLICATION.ldapServerPassword#" action="query" name="getUser" start="#APPLICATION.ldapUsersPath#" scope="#APPLICATION.ldapScope#" attributes="#APPLICATION.ldapUsersLoginAtt#,#APPLICATION.ldapUsersPasswordAtt#" filter="(&(#APPLICATION.ldapUsersLoginAtt#=#user_login#)(#APPLICATION.ldapUsersPasswordAtt#=#password_ldap#))">--->
 				<cftry>
 					<cfldap	server="#APPLICATION.ldapServer#" port="#APPLICATION.ldapServerPort#" username="#user_login#@areanorte" password="#password_ldap#" action="query" name="getUser" start="#APPLICATION.ldapUsersPath#" scope="#APPLICATION.ldapScope#" attributes="#APPLICATION.ldapUsersLoginAtt#" filter="(#APPLICATION.ldapUsersLoginAtt#=#user_login#)">
 					
@@ -95,79 +90,102 @@
 						<cfset loginValid = false>
 					</cfcatch>
 				</cftry>
-			
+
+			<cfelseif arguments.ldap_id EQ "portalep_hcs">
+					
+				<cfhttp url="https://portalep.hcs.es/rrhh/HCS/valida-usr.asp" method="get" result="loginResponse">
+					<cfhttpparam name="usr" type="URL" value="#user_login#">
+					<cfhttpparam name="pwd" type="URL" value="#password_ldap#">
+				</cfhttp>
+
+				<cfif loginResponse.status_code EQ 200>
+
+					<cfset responseContent = loginResponse.filecontent>
+
+					<cfif responseContent EQ "TRUE">
+						
+						<cfset login_ldap_column = "login_ldap">
+				
+						<cfset loginValid = true>
+
+					</cfif>
+
+				<cfelse>
+
+					<cfthrow message="Error al acceder al servicio de login">
+
+				</cfif>
+
+						
 			</cfif>
 			
 			<cfif loginValid IS true><!---AND getUser.recordCount GT 0--->
 					
-					<cfset table = arguments.client_abb&"_users">			
+				<cfset table = arguments.client_abb&"_users">			
+			
+				<!---  Checking if user is correct   --->
+				<cfquery name="loginQuery" datasource="#client_dsn#">			
+					SELECT users.id, users.number_of_connections, users.language, users.enabled
+					FROM #table# AS users 
+					WHERE users.#login_ldap_column# = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar">;
+				</cfquery>		
 				
-					<!---  Checking if both user name and password are corrects   --->
-					<cfquery name="loginQuery" datasource="#client_dsn#">			
-						SELECT users.id, users.number_of_connections, users.language, users.enabled
-						FROM #table# AS users 
-						WHERE users.#login_ldap_column# = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar">;
-					</cfquery>		
+				<!--- If at least one record is found, it means that the login is valid --->
+				<cfif loginQuery.RecordCount GT 0>
+
+					<cfif loginQuery.enabled IS true>
 					
-					<!--- If at least one record is found, it means that the login is valid --->
-					<cfif loginQuery.RecordCount GT 0>
+						<cfset objectUser.id = loginQuery.id>
+						<cfset objectUser.language = loginQuery.language>
+						<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
+					
+						<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="loginResult">
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="objectClient" value="#objectClient#">
+							<cfinvokeargument name="objectUser" value="#objectUser#">
+						</cfinvoke>
 
-						<cfif loginQuery.enabled IS true>
+						<!---<cfsavecontent variable="xmlResponse">
+							<cfoutput><login valid="#loginResult.result#"></login></cfoutput>
+						</cfsavecontent>--->
+
+						<cfset response = {result=loginResult.result}>
 						
-							<cfset objectUser.id = loginQuery.id>
-							<cfset objectUser.language = loginQuery.language>
-							<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
-						
-							<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="loginResult">
-								<cfinvokeargument name="client_abb" value="#client_abb#">
-								<cfinvokeargument name="objectClient" value="#objectClient#">
-								<cfinvokeargument name="objectUser" value="#objectUser#">
-							</cfinvoke>
+						<!--- Aquí no se guarda log porque ya se ha guardado en el método anterior
+						En este método solo se guarda log cuando el login (usuario o password) no es correcto --->
 
-							<cfsavecontent variable="xmlResponse">
-								<cfoutput><login valid="#loginResult.result#"></login></cfoutput>
-							</cfsavecontent>
-							
-							<!---<cfinclude template="includes/functionEndNoLog.cfm">---><!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
-							
-							<!---En este método solo se guarda log cuando el login (usuario o password) no es correcto--->
-
-						<cfelse>
-
-							<cfset login_message = "Cuenta de usuario deshabilitada.">
-						
-							<cfsavecontent variable="xmlResponse">
-								<cfoutput><login valid="false"><message><![CDATA[#login_message#]]></message></login></cfoutput>
-							</cfsavecontent>
-
-						</cfif>
-						
 					<cfelse>
+
+						<cfset loginMessage = "Cuenta de usuario deshabilitada.">
 					
-						<cfset login_message = "Usuario no disponible en esta aplicación.">
-				
-						<cfsavecontent variable="xmlResponse">
+						<!---<cfsavecontent variable="xmlResponse">
 							<cfoutput><login valid="false"><message><![CDATA[#login_message#]]></message></login></cfoutput>
-						</cfsavecontent>
-						
-						<cfinclude template="includes/logRecordNoSession.cfm">
-				
+						</cfsavecontent>--->
+						<cfset response = {result=false, message=#loginMessage#}>
+
 					</cfif>
+					
+				<cfelse>
+				
+					<cfset loginMessage = "Usuario no disponible en esta aplicación.">
+			
+					<cfset response = {result=false, message=#loginMessage#}>
+					
+					<cfinclude template="includes/logRecordNoSession.cfm">
+			
+				</cfif>
 				
 			<cfelse>
 			
-				<cfset login_message = "Usuario o contraseña incorrecta.">
+				<cfset loginMessage = "Usuario o contraseña incorrecta.">
 			
-				<cfsavecontent variable="xmlResponse">
-					<cfoutput><login valid="false"><message><![CDATA[#login_message#]]></message></login></cfoutput>
-				</cfsavecontent>
+				<cfset response = {result=false, message=#loginMessage#}>
 				
 				<cfinclude template="includes/logRecordNoSession.cfm">
 				
 			</cfif>
 			
-
-		<cfreturn xmlResponse>
+		<cfreturn response>
 		
 	</cffunction>
 	
