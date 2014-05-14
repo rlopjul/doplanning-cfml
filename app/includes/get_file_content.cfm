@@ -7,7 +7,7 @@ file_type
 <!---<cfset filename = replace(filename," ","_","ALL")>--->
 <cfset filename = replaceList(file_name," ,á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ", "_,a,e,i,o,u,n,A,E,I,O,U,N")><!---Necesita esto para que no falle en IE si el nombre tiene acentos--->
 	
-<cfswitch expression="#file_type#">
+<!---<cfswitch expression="#file_type#">
 	<cfcase value=".pdf">
 		<cfset filetype="application/pdf">
 	</cfcase>
@@ -32,10 +32,11 @@ file_type
 	<cfdefaultcase>
 		<cfset filetype="application/x-unknown; charset=UTF-8">
 	</cfdefaultcase>
-</cfswitch>
+</cfswitch>--->
 
+<cfset filetype = fileGetMimeType(filename,false)>
 
-<cfset fileInfo = GetFileInfo(source)>
+<cfset fileInfo = getFileInfo(source)>
 <!---
 Esto no funciona en Railo con Tomcat
 <cfset mimeType = getPageContext().getServletContext().getMimeType(source)>--->

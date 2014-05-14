@@ -211,7 +211,20 @@
 						<cfthrow errorcode="#error_code#">
 					</cfif>
 					
-					<cfimage action="info" source="#destination##temp_file#" structname="image_info">
+					<cftry>
+						
+						<cfimage action="info" source="#destination##temp_file#" structname="image_info">
+
+						<cfcatch>
+
+							<!--- If it fails convert to RGB and Strip Information with ImageMagick --->
+							<!--- REQUIRES ImageMagick installed on the server --->
+							<cfexecute name="convert" arguments="#destination##temp_file# -strip -colorspace rgb -quality 100 #destination##temp_file#" timeout="30" variable="msg" />
+
+							<cfimage action="info" source="#destination##temp_file#" structname="image_info">
+
+						</cfcatch>
+					</cftry>
 					
 					<cfif image_info.width GT required_width>
 						<cfimage action="resize" width="#required_width#" source="#destination##temp_file#" destination="#destination##temp_file#" overwrite="yes" name="image_resized">

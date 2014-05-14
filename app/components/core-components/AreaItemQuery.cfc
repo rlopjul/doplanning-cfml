@@ -19,7 +19,8 @@
 	
 	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
-	<cfset timeZoneTo = "+1:00">
+	<!---<cfset timeZoneTo = "+1:00">--->
+	<cfset timeZoneTo = "Europe/Madrid">
 	
 
 	<!---getItem--->
@@ -143,6 +144,7 @@
 		<cfargument name="recipient_user" type="numeric" required="no">
 		<cfargument name="with_user" type="boolean" required="no" default="false">
 		<cfargument name="with_area" type="boolean" required="no" default="false">
+		<cfargument name="with_position" type="boolean" required="false" default="true">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="limit" type="numeric" required="no"><!---Limita el número de elementos a mostrar. Solo debe usarse si listFormat es false--->
 		<cfargument name="done" type="boolean" required="no">
@@ -154,7 +156,10 @@
 		<cfargument name="published" type="boolean" required="false" default="true">		
 		
 		<cfargument name="from_date" type="string" required="no">
-		<cfargument name="end_date" type="string" required="no">	
+		<cfargument name="end_date" type="string" required="no">
+
+		<cfargument name="from_start_date" type="string" required="no">
+		<cfargument name="to_end_date" type="string" required="no">		
 		
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">	
@@ -179,7 +184,7 @@
 				<cfquery name="areaItemsQuery" datasource="#client_dsn#">
 					SELECT <cfif isDefined("arguments.limit")>SQL_CALC_FOUND_ROWS</cfif>
 					items.id, items.title, items.user_in_charge
-					<cfif isDefined("arguments.area_id")>
+					<cfif isDefined("arguments.area_id") AND arguments.with_position IS true>
 					, items_position.position 
 					</cfif>
 					<cfif arguments.parse_dates IS true>
@@ -201,8 +206,13 @@
 					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
 					, items.link_target
 					</cfif>
-					<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-					, DATE_FORMAT(items.start_date, '#dateFormat#') AS start_date, DATE_FORMAT(items.end_date, '#dateFormat#') AS end_date
+					<cfif (itemTypeId IS 5 OR itemTypeId IS 6)><!---Events, Tasks--->
+						<cfif arguments.parse_dates IS true>
+							, DATE_FORMAT(items.start_date, '#dateFormat#') AS start_date, DATE_FORMAT(items.end_date, '#dateFormat#') AS end_date
+						<cfelse>
+							, CONVERT_TZ(items.start_date,'SYSTEM','#timeZoneTo#') AS start_date
+							, CONVERT_TZ(items.end_date,'SYSTEM','#timeZoneTo#') AS end_date
+						</cfif>
 					</cfif>
 					<cfif itemTypeId IS 5><!---Events--->
 					, items.start_time, items.end_time, items.place
@@ -296,6 +306,12 @@
 					<cfif isDefined("arguments.end_date")>
 					AND items.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
 					</cfif>
+					<cfif isDefined("arguments.from_start_date")>
+					AND items.start_date <= STR_TO_DATE(<cfqueryparam value="#arguments.from_start_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+					</cfif>
+					<cfif isDefined("arguments.to_end_date")>
+					AND items.end_date >= STR_TO_DATE(<cfqueryparam value="#arguments.to_end_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+					</cfif>
 					<!---<cfif isDefined("arguments.with_end_date")>
 						AND items.end_date = STR_TO_DATE(<cfqueryparam value="#arguments.with_end_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
 					</cfif>--->
@@ -318,7 +334,7 @@
 					ORDER BY items.position DESC
 					<cfelse>--->
 					<cfif arguments.itemTypeId IS NOT 6>
-						<cfif isDefined("arguments.area_id")>
+						<cfif isDefined("arguments.area_id") AND arguments.with_position IS true>
 							ORDER BY items_position.position DESC, items.creation_date DESC
 						<cfelse>
 							ORDER BY items.creation_date DESC		
@@ -349,6 +365,112 @@
 		
 		<cfreturn {query=areaItemsQuery, count=count}>
 		
+	</cffunction>
+
+
+	<!---getMonthItemsByDays --->
+	
+	<cffunction name="getMonthItemsByDays" output="false" returntype="struct" access="public">
+		<cfargument name="itemTypeId" type="numeric" required="yes">
+		<cfargument name="format_content" type="string" required="false" default="default">
+		<cfargument name="area_id" type="string" required="no">
+		<cfargument name="areas_ids" type="string" required="no">
+		<cfargument name="all_areas" type="boolean" required="false" default="false">
+		<cfargument name="user_in_charge" type="numeric" required="no">
+		<cfargument name="recipient_user" type="numeric" required="no">
+		<cfargument name="with_user" type="boolean" required="no" default="false">
+		<cfargument name="with_area" type="boolean" required="no" default="false">
+		<!---<cfargument name="parse_dates" type="boolean" required="false" default="false">--->
+
+		<cfargument name="done" type="boolean" required="no">
+		<!---<cfargument name="state" type="string" required="no">
+		<cfargument name="offset" type="numeric" required="no">
+		
+		<cfargument name="structure_available" type="boolean" required="false">--->
+		<cfargument name="published" type="boolean" required="false" default="true">		
+		
+		<cfargument name="year" type="string" required="true">
+		<cfargument name="month" type="string" required="true">	
+		
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">	
+
+		<cfset var days = arrayNew(1)>
+		<!---<cfset var areaItemsQuery = queryNew()>--->
+
+		<cfinvoke component="AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
+			<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
+			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+			<cfinvokeargument name="listFormat" value="true">
+			<cfinvokeargument name="format_content" value="#arguments.format_content#">
+			<cfinvokeargument name="with_user" value="#arguments.with_user#">
+			<cfinvokeargument name="with_area" value="#arguments.with_area#"/>
+			<!--- La columna position da error en queryOfQuery --->
+			<cfinvokeargument name="with_position" value="false">
+			<cfinvokeargument name="parse_dates" value="false"/>
+
+			<cfinvokeargument name="done" value="#arguments.done#">
+			<cfinvokeargument name="published" value="#arguments.published#">				
+			
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		</cfinvoke>
+		<cfset areaItemsQuery = getAreaItemsResult.query>
+
+
+		<!--- Hay que cambiar el nombre a la columna position porque da error en queryOfquery --->
+		<!---<cfinvoke component="Utils" method="QueryChangeColumnName" returnvariable="areaItemsQuery">
+			<cfinvokeargument name="query" value="#areaItemsQuery#"/>
+			<cfinvokeargument name="columnname" value="position"/>
+			<cfinvokeargument name="newcolumnname" value="item_position"/>
+		</cfinvoke>--->
+		
+		<cfset month_date = CreateDate(arguments.year, arguments.month, 1)>
+		<cfset month_days = DaysInMonth(month_date)>
+		
+		<!---<cfquery dbtype="query" name="itemsByMonth">
+			SELECT id, title, start_date, end_date
+			FROM areaItemsQuery
+			WHERE ( MONTH(CAST(start_date AS DATE)) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(CAST(start_date AS DATE)) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> )
+			OR ( MONTH(CAST(end_date AS DATE)) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(CAST(end_date AS DATE)) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> );
+		</cfquery>--->
+
+		<cfquery dbtype="query" name="itemsByMonth">
+			SELECT id, title, start_date, end_date
+			FROM areaItemsQuery
+			WHERE ( MONTH(start_date) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(start_date) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> )
+			OR ( MONTH(end_date) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(end_date) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> );
+		</cfquery>
+				
+		<cfloop index="d" from="1" to="#month_days#" step="1">
+			
+			<cfquery dbtype="query" name="itemsByDay">
+				SELECT *
+				FROM itemsByMonth
+				WHERE ( DAYOFMONTH(start_date) <= <cfqueryparam value="#d#" cfsqltype="cf_sql_integer"> AND MONTH(start_date) <= <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer">
+				OR MONTH(start_date) < <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer">)
+				AND (DAYOFMONTH(end_date) >= #d# AND MONTH(end_date) >= #arguments.month# 
+				OR MONTH(end_date) > <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> );
+			</cfquery>
+			
+			<cfif itemsByDay.recordCount GT 0>
+				<cfset day = arrayNew(1)>
+				<cfset day_number = d>
+				
+				<cfloop query="itemsByDay">
+					<cfset event = structNew()>
+					<cfset event.title = itemsByDay.title>
+					<cfset arrayAppend(day, event)>
+				</cfloop>
+				
+				<cfset days[day_number] = day>
+			</cfif>			 
+		</cfloop>
+
+		<cfreturn {days=days}>
+
 	</cffunction>
 	
 	
@@ -621,13 +743,15 @@
 				FROM #client_abb#_lists AS lists
 				WHERE lists.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
-				UNION ALL
+				UNION ALL <!--- List Views --->
 				( SELECT #getColumsWithTable(commonColums, "lists_views")#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 14 AS itemTypeId
 				FROM #client_abb#_lists_views AS lists_views
 				<cfif arguments.published IS true>
 					INNER JOIN `#client_abb#_lists` AS lists_v ON lists_views.table_id = lists_v.id
+					AND ( lists_views.publication_date IS NULL OR lists_views.publication_date <= NOW() )
 					AND ( lists_v.publication_date IS NULL OR lists_v.publication_date <= NOW() )
 					<cfif APPLICATION.publicationValidation IS true>
+					AND ( lists_views.publication_validated IS NULL OR lists_views.publication_validated = true )
 					AND ( lists_v.publication_validated IS NULL OR lists_v.publication_validated = true )
 					</cfif>
 				</cfif>
@@ -640,13 +764,15 @@
 				FROM #client_abb#_forms AS forms
 				WHERE forms.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND status='ok')
-				UNION ALL
+				UNION ALL <!--- Form Views --->
 				( SELECT #getColumsWithTable(commonColums, "forms_views")#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 15 AS itemTypeId
 				FROM #client_abb#_forms_views AS forms_views
 				<cfif arguments.published IS true>
 					INNER JOIN `#client_abb#_forms` AS forms_v ON forms_views.table_id = forms_v.id
+					AND ( forms_views.publication_date IS NULL OR forms_views.publication_date <= NOW() )
 					AND ( forms_v.publication_date IS NULL OR forms_v.publication_date <= NOW() )
 					<cfif APPLICATION.publicationValidation IS true>
+					AND ( forms_views.publication_validated IS NULL OR forms_views.publication_validated = true )
 					AND ( forms_v.publication_validated IS NULL OR forms_v.publication_validated = true )
 					</cfif>
 				</cfif>
@@ -745,7 +871,6 @@
 		<cfreturn areaWebItemsQuery>
 		
 	</cffunction>
-	
 	
 	
 	<!---getAreaItemsLastPosition--->

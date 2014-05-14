@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_basica_general_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
+<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

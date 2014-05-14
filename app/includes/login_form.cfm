@@ -85,6 +85,11 @@
     </div>
 </form>
   
+
+<!---<cfif find("intranet", CGI.SCRIPT_NAME) GT 0>
+  <br/>
+  IP: #CGI.REMOTE_ADDR#
+</cfif>---> 
 </cfoutput>
 
 <cfinclude template="#APPLICATION.corePath#/includes/login_md5_js.cfm">

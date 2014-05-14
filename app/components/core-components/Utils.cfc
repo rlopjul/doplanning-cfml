@@ -871,4 +871,67 @@ hint="Converts an entire query or the given record to a struct. This might retur
 	</cffunction>
 
 
+	<!--- QueryChangeColumnName --->
+
+	<!---<cffunction
+	    name="QueryChangeColumnName"
+	    access="public"
+	    output="false"
+	    returntype="query"
+	    hint="Changes the column name of the given query.">
+	 
+	    <!--- Define arguments. --->
+	    <cfargument
+	        name="Query"
+	        type="query"
+	        required="true"
+	        />
+	 
+	    <cfargument
+	        name="ColumnName"
+	        type="string"
+	        required="true"
+	        />
+	 
+	    <cfargument
+	        name="NewColumnName"
+	        type="string"
+	        required="true"
+	        />
+	 
+	    <cfscript>
+	 
+	        var LOCAL = StructNew();
+	 
+	        LOCAL.Columns = ARGUMENTS.Query.GetColumnNames();
+	 
+	        LOCAL.ColumnList = ArrayToList(
+	            LOCAL.Columns
+	            );
+	 
+	        LOCAL.ColumnIndex = ListFindNoCase(
+	            LOCAL.ColumnList,
+	            ARGUMENTS.ColumnName
+	            );
+	 
+	        if (LOCAL.ColumnIndex){
+	 
+	            LOCAL.Columns = ListToArray(
+	                LOCAL.ColumnList
+	                );
+	 
+	            LOCAL.Columns[ LOCAL.ColumnIndex ] = ARGUMENTS.NewColumnName;
+	 
+	            ARGUMENTS.Query.SetColumnNames(
+	                LOCAL.Columns
+	                );
+	 
+	        }
+	 
+	        return( ARGUMENTS.Query );
+	 
+	    </cfscript>
+	</cffunction>--->
+
+
 </cfcomponent>

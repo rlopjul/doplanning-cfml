@@ -9,6 +9,6 @@
 <cfif APPLICATION.identifier EQ "dp">
 <div class="alert alert-block" style="clear:both;">
 No puede crear nuevos contactos.<br />
-Los contactos no estarán disponibles en la próxima versión de DoPlanning.
+Los contactos no estarán disponibles en la próxima versión de #APPLICATION.title#.
 </div>
 </cfif>

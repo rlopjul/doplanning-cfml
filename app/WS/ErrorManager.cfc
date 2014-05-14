@@ -31,23 +31,23 @@
 			<cfset error_code = ERROR_UNEXPECTED>
 		</cfif>
 			
-			
-		<!---saveError in DataBase--->
-		<cfif isDefined("SESSION.user_id") AND isDefined("SESSION.client_abb") AND isDefined("SESSION.user_language")>
-			<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
-			<cfquery datasource="#client_dsn#" name="saveErrorQuery">
-				INSERT INTO #SESSION.client_abb#_errors_log (code, user_id, content, method, component)
-				VALUES (#error_code#, '#SESSION.user_id#', '#error_content#', '#error_method#', '#error_component#')
-			</cfquery>
-		<cfelse>			
-			<cfquery datasource="#APPLICATION.dsn#" name="saveErrorQuery">
-				INSERT INTO APP_errors_log (code, content, method, component)
-				VALUES (#error_code#, '#error_content#', '#error_method#', '#error_component#')
-			</cfquery>
-		</cfif>
-				
-				
-		<cfif error_code IS NOT 102 AND error_code IS NOT 607>
+		
+		<cfif error_code IS NOT 102 AND error_code IS NOT 607 AND error_code IS NOT 408>
+
+			<!---saveError in DataBase--->
+			<cfif isDefined("SESSION.user_id") AND isDefined("SESSION.client_abb") AND isDefined("SESSION.user_language")>
+				<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+				<cfquery datasource="#client_dsn#" name="saveErrorQuery">
+					INSERT INTO #SESSION.client_abb#_errors_log (code, user_id, content, method, component)
+					VALUES (#error_code#, '#SESSION.user_id#', '#error_content#', '#error_method#', '#error_component#')
+				</cfquery>
+			<cfelse>			
+				<cfquery datasource="#APPLICATION.dsn#" name="saveErrorQuery">
+					INSERT INTO APP_errors_log (code, content, method, component)
+					VALUES (#error_code#, '#error_content#', '#error_method#', '#error_component#')
+				</cfquery>
+			</cfif>
+		
 			<cfif APPLICATION.errorReport EQ "email">
 			
 				<cfsavecontent variable="mail_content">

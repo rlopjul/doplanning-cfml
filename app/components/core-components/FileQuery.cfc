@@ -13,7 +13,8 @@
 	
 	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
-	<cfset timeZoneTo = "+1:00">
+	<!--- <cfset timeZoneTo = "+1:00"> --->
+	<cfset timeZoneTo = "Europe/Madrid">
 	
 	
 	<!---getFile--->

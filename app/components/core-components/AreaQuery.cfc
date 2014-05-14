@@ -11,7 +11,8 @@
 	<cfset component = "AreaQuery">	
 	
 	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
-	<cfset timeZoneTo = "+1:00">
+	<!--- <cfset timeZoneTo = "+1:00"> --->
+	<cfset timeZoneTo = "Europe/Madrid">
 	
 	<!---getArea--->
 		
@@ -464,9 +465,10 @@
 		
 		<cfset var areaType = "">
 		<cfset var menuType = "">
+		<cfset var link = "">
 					
 		<cfquery datasource="#client_dsn#" name="getAreaType">
-			SELECT areas.type, areas.parent_id, areas.id, areas.name, areas.description, areas.menu_type_id
+			SELECT areas.type, areas.parent_id, areas.id, areas.name, areas.description, areas.menu_type_id, image_id, link
 			FROM #client_abb#_areas AS areas
 			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
@@ -519,8 +521,12 @@
 			<cfthrow errorcode="#error_code#">
 		
 		</cfif>
+
+		<cfif isNumeric(getAreaType.image_id)>
+			<cfset link = getAreaType.link>		
+		</cfif>
 		
-		<cfset response = {result="true", areaType=#areaType#, id=#getAreaType.id#, name=#getAreaType.name#, parent_id=#getAreaType.parent_id#, description=#getAreaType.description#, menu_type_id=#menuType#}>	
+		<cfset response = {result="true", areaType=#areaType#, id=#getAreaType.id#, name=#getAreaType.name#, parent_id=#getAreaType.parent_id#, description=#getAreaType.description#, menu_type_id=#menuType#, link=#link#}>	
 		<cfreturn response>
 		
 	</cffunction>
@@ -539,6 +545,7 @@
 		
 		<cfset var method = "getAreaImageId">
 								
+			<!---
 			<cfquery name="areaImageIdQuery" datasource="#arguments.client_dsn#">
 				SELECT areas.parent_id, images.id AS image_id
 				FROM #client_abb#_areas AS areas LEFT JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id
@@ -569,6 +576,72 @@
 				</cfif>
 				
 				<cfreturn area_image_id>
+				
+			<cfelse><!---Area does not exist--->
+			
+				<cfset error_code = 401>
+			
+				<cfthrow errorcode="#error_code#">
+					
+			</cfif>--->
+
+			<cfinvoke component="AreaQuery" method="getAreaInheritedImage" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+			<cfreturn response.image_id>
+		
+	</cffunction>
+
+
+	<!---getAreaInheritedImage--->
+	
+	<!---Devuelve la imagen a mostrar área--->
+	
+	<cffunction name="getAreaInheritedImage" output="false" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="yes">	
+			
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">		
+		
+		<cfset var method = "getAreaInheritedImage">
+
+		<cfset var response = structNew()>
+								
+			<cfquery name="areaImageQuery" datasource="#arguments.client_dsn#">
+				SELECT areas.parent_id, areas.image_id, areas.link
+				FROM #client_abb#_areas AS areas 
+				<!---LEFT JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id--->
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>	
+		
+			<cfif areaImageQuery.recordCount GT 0>
+			
+				<cfif NOT isNumeric(areaImageQuery.image_id)>
+				
+					<cfif isNumeric(areaImageQuery.parent_id) AND areaImageQuery.parent_id GT 0> 
+						<cfinvoke component="AreaQuery" method="getAreaInheritedImage" returnvariable="response">
+							<cfinvokeargument name="area_id" value="#areaImageQuery.parent_id#">
+							
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+						</cfinvoke>
+					<cfelse><!---Area image not found--->
+						
+						<!---<cfreturn -1>--->
+
+						<cfset response = {result=true, image_id=-1, link=""}>
+					</cfif>	
+					
+				<cfelse>
+
+					<cfset response = {result=true, image_id=#areaImageQuery.image_id#, link=#areaImageQuery.link#}>
+				</cfif>
+				
+				<cfreturn response>
 				
 			<cfelse><!---Area does not exist--->
 			

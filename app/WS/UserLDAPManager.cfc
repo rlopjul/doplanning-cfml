@@ -259,7 +259,10 @@
 				<!---Insert User in DataBase--->			
 				<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
 					INSERT INTO #client_abb#_users
-					(email,name,family_name,telephone,address, internal_user, sms_allowed, mobile_phone, creation_date, telephone_ccode, mobile_phone_ccode, language, login_ldap, login_diraya, dni
+					(email,name,family_name,telephone,address, internal_user, sms_allowed, mobile_phone, creation_date, telephone_ccode, mobile_phone_ccode, language, login_ldap, dni 
+						<cfif APPLICATION.moduleLdapDiraya EQ true>
+						, login_diraya
+						</cfif> 
 						<cfif APPLICATION.identifier EQ "vpnet">
 							, center_id, category_id, service_id, service, other_1, other_2 
 						</cfif>
@@ -289,8 +292,10 @@
 						</cfif>
 						<cfqueryparam value="#objectUser.language#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#objectUser.login_ldap#" cfsqltype="cf_sql_varchar">,
-						<cfqueryparam value="#objectUser.login_diraya#" cfsqltype="cf_sql_varchar">,
 						<cfqueryparam value="#objectUser.dni#" cfsqltype="cf_sql_varchar">
+						<cfif APPLICATION.moduleLdapDiraya EQ true>
+							, <cfqueryparam value="#objectUser.login_diraya#" cfsqltype="cf_sql_varchar">
+						</cfif>
 						<cfif APPLICATION.identifier EQ "vpnet">
 							, <cfqueryparam value="#objectUser.center_id#" cfsqltype="cf_sql_integer">,
 							<cfqueryparam value="#objectUser.category_id#" cfsqltype="cf_sql_integer">,

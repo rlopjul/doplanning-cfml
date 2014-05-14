@@ -5,7 +5,8 @@
 	<cfset component = "ViewQuery">
 
 	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
-	<cfset timeZoneTo = "+1:00">
+	<!--- <cfset timeZoneTo = "+1:00"> --->
+	<cfset timeZoneTo = "Europe/Madrid">
 
 
 	<!---getView--->
@@ -57,7 +58,7 @@
 				WHERE table_views.id = <cfqueryparam value="#arguments.view_id#" cfsqltype="cf_sql_integer">
 				<cfif arguments.published IS true AND  tableTypeId IS NOT 3>
 					AND ( tables.publication_date IS NULL OR tables.publication_date <= NOW() )
-					AND ( table_views.publication_date IS NULL OR tables.publication_date <= NOW() )
+					AND ( table_views.publication_date IS NULL OR table_views.publication_date <= NOW() )
 					<cfif APPLICATION.publicationValidation IS true>
 					AND ( tables.publication_validated IS NULL OR tables.publication_validated = true )
 					AND ( table_views.publication_validated IS NULL OR table_views.publication_validated = true )

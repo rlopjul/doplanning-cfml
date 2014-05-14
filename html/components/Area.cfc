@@ -73,7 +73,6 @@
 	
 		<cfset var method = "getAreaContent">
 		
-		<cfset var request_parameters = "">
 		<cfset var xmlResponse = "">
 		<cfset var response = "">
 		
@@ -91,24 +90,20 @@
 				<cfinvokeargument name="withSubSubAreas" value="false">
 			</cfinvoke>
 			
-			<cfxml variable="xmlResponse">
-				<cfoutput>
-				#response#
-				</cfoutput>
-			</cfxml>
+			<cfxml variable="xmlResponse"><cfoutput>#response#</cfoutput></cfxml>
 			
 			
 			<cfcatch>
 			
 				<!---Esto está puesto aquí para intentar detectar un error que daba--->	
-				<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+				<!---<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 					<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 					<cfinvokeargument name="to" value="alucena@era7.com">
 					<cfinvokeargument name="bcc" value="">
 					<cfinvokeargument name="subject" value="Error en #APPLICATION.title# getAreaContent">
 					<cfinvokeargument name="content" value="#arguments.area_id# #response#">
 					<cfinvokeargument name="foot_content" value="">
-				</cfinvoke>
+				</cfinvoke>--->
 			
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										

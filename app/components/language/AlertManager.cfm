@@ -154,6 +154,7 @@ curLangText["es"] = {
 			"rejected_version" : "Versión de archivo rechazada",
 			"approved_version" : "Versión de archivo aprobada",
 			"canceled_revision" : "Revisión de archivo cancelada",
+			"changed_owner_to_area" : "Archivo de usuario convertido en archivo de área",
 			
 			"created" : "creado",
 			"added" : "añadido",
@@ -447,6 +448,7 @@ curLangText["en"] = {
 			"rejected_version" : "File version rejected",
 			"approved_version" : "File version approved",
 			"canceled_revision" : "File revision canceled",
+			"changed_owner_to_area" : "User file converted to area file",
 			
 			"created" : "created",
 			"added" : "added",

@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_diseno_general_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
+<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,9 +86,9 @@
 
 <!-- InstanceBeginEditable name="head" -->
 <cfoutput>
-<script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
+<script src="#APPLICATION.bootstrapJSPath#"></script>
 </cfoutput>
-<script type="text/javascript">
+<script>
 	function openUrlLite(url,target){
 		window.location.href = url;
 	}
@@ -114,9 +114,16 @@
 <!-- InstanceBeginEditable name="header" -->
 @@(" ")@@
 <cfoutput>
-<cfif APPLICATION.identifier EQ "dp">
-<div style="float:left; padding-top:2px;"><a href="../html/index.cfm"><img src="../html/assets/logo_app.gif" alt="Inicio" title="Inicio"/></a></div>
-</cfif>
+	<cfif APPLICATION.title EQ "DoPlanning">
+		<div style="float:left; padding-top:2px;">
+			<a href="../html/index.cfm"><img src="../html/assets/logo_app.gif" alt="Inicio" title="Inicio"/></a>
+		</div>
+	<cfelse>
+		<div style="float:left;">
+			<a href="../html/index.cfm" title="Inicio" class="btn"><i class="icon-home" style="font-size:16px"></i></a>
+		</div>
+	</cfif>
+</div>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
 		<a href="../html/preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="../html/logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>

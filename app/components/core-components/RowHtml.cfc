@@ -241,7 +241,7 @@
 							
 						</cfif>
 
-						<select name="#field_name#[]" id="#field_name#" #field_required_att# class="selectpicker" <cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>multiple style="height:90px"</cfif>>
+						<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>multiple style="height:90px"</cfif>>
 							<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
 								<option value=""></option>
 							</cfif>

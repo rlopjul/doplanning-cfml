@@ -563,13 +563,12 @@
 		<cfset var method = "isUserAreaResponsible">
 
 		<cfset var user_id = "">
-		<cfset var client_administrator = "">
 		
 		<cfset var access_result = false>
 
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 					
-		<cfif client_administrator IS user_id><!---Is general administrator user--->
+		<cfif SESSION.client_administrator IS SESSION.user_id><!---Is general administrator user--->
 			<cfreturn true>
 		</cfif>
 
@@ -581,7 +580,7 @@
 		
 		<cfif getArea.recordCount GT 0>
 			
-			<cfif getArea.user_in_charge IS user_id>
+			<cfif getArea.user_in_charge IS SESSION.user_id>
 				<cfreturn true>
 			</cfif>
 

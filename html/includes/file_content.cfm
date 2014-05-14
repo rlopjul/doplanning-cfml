@@ -321,7 +321,7 @@
 			<cfinvokeargument name="area_id" value="#area_id#">
 		</cfinvoke>
 
-		<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
+		<div class="div_message_page_label"><span lang="es">URL en #APPLICATION.title#:</span></div>
 		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
 		<!---getDownloadFileUrl--->

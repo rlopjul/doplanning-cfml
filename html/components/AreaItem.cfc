@@ -1450,8 +1450,7 @@
 		
 		<cfset var method = "getAreaItemsList">
 		
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<cfset var response = structNew()>
 			
 		<cftry>
 			
@@ -1666,7 +1665,8 @@
 						</cfif>
 					</cfif>
 
-					<cfif len(area_type) GT 0><!--- WEB --->
+					<cfif APPLICATION.moduleWeb IS true AND ( len(area_type) GT 0 OR itemTypeId IS 11 OR itemTypeId IS 12 )><!--- WEB --->
+						<!--- Debe poder mostrarse el estado de publicación en las listas y formularios aunque no estén en áreas web para poder publicar sus vistas en áreas web --->
 
 						<cfif len(objectItem.publication_date) GT 0>
 							<div class="div_message_page_label"><span>Fecha de publicación:</span> <span class="text_message_page">#objectItem.publication_date#</span>
@@ -1674,7 +1674,7 @@
 							</div>
 						</cfif>
 						<cfif APPLICATION.publicationValidation IS true AND len(objectItem.publication_validated) GT 0>
-							<div class="div_message_page_label"><span>Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
+							<div class="div_message_page_label"><span>Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span> 
 							</div>
 						</cfif>
 
@@ -1730,10 +1730,10 @@
 					</cfif>				
 					
 							
-					<cfif isNumeric(objectItem.attached_file_id)>
+					<cfif isNumeric(objectItem.attached_file_id)><!--- Attached file --->
 					<div class="div_message_page_label"><span lang="es">Archivo:</span> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_file_name#</a></div>
 					</cfif>
-					<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id)>
+					<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id)><!--- Attached image --->
 					<div class="div_message_page_label"><span lang="es">Imagen:</span> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_image_name#</a></div>
 					</cfif>
 					
@@ -1768,7 +1768,7 @@
 						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 					</cfinvoke>
 
-					<div class="div_message_page_label"><span lang="es">URL en DoPlanning:</span></div>
+					<div class="div_message_page_label"><span lang="es">URL en #APPLICATION.title#:</span></div>
 					<input type="text" value="#areaItemUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
 					<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->

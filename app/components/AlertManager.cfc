@@ -893,6 +893,11 @@
 						<cfset action_value = langText[curLang].new_file.canceled_revision>
 					</cfcase>
 
+					<cfcase value="change_owner_to_area"><!--- change_owner_to_area --->
+						<cfset subject_action = langText[curLang].new_file.changed_owner_to_area>
+						<cfset action_value = langText[curLang].new_file.changed_owner_to_area>
+					</cfcase>
+
 				</cfswitch>
 
 				<cfset subject = "[#root_area.name#][#subject_action#] "&objectFile.name>
@@ -1292,7 +1297,7 @@
 			<cfif APPLICATION.publicationValidation IS true AND isDefined("objectFile.publication_date") AND len(objectFile.publication_validated) GT 0>
 				#langText[arguments.language].new_item.publication_validated#: <b><cfif objectFile.publication_validated IS true>#langText[arguments.language].new_item.yes#<cfelse>#langText[arguments.language].new_item.no#</cfif></b><br/>
 			</cfif>
-			<cfif APPLICATION.publicationScope IS true>
+			<cfif APPLICATION.publicationScope IS true AND len(objectFile.publication_scope_name) GT 0>
 			#langText[arguments.language].new_item.publication_scope#: <strong>#objectFile.publication_scope_name#</strong><br/>
 			</cfif>
 			#langText[arguments.language].new_file.description#:<br/><br/>

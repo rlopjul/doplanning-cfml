@@ -109,7 +109,7 @@
 		
 	</cfif>
 
-	<cfif (fileTypeId IS 1 AND objectFile.user_in_charge EQ SESSION.user_id) OR (fileTypeId IS 2 AND file_area_allowed IS true AND objectFile.locked IS false) OR (fileTypeId IS 3 AND file_area_allowed IS true AND objectFile.locked IS false AND isFileApproved IS false)>
+	<cfif (fileTypeId IS 1 AND objectFile.user_in_charge EQ SESSION.user_id) OR (fileTypeId IS 2 AND file_area_allowed IS true AND objectFile.locked IS false) OR (fileTypeId IS 3 AND file_area_allowed IS true AND objectFile.locked IS false AND isFileApproved IS false) OR (SESSION.user_id EQ SESSION.client_administrator)>
 
 		<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFileRemote&file_id=#objectFile.id#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmDeleteFile();" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 
@@ -119,8 +119,22 @@
 		
 		<cfif fileTypeId IS 1>
 			
-			<cfif objectFile.user_in_charge EQ SESSION.user_id>
-				<a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
+			<cfif objectFile.user_in_charge EQ SESSION.user_id OR SESSION.user_id EQ SESSION.client_administrator>
+
+				<div class="btn-group">
+					<a href="##" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" title="Cambiar propietario" lang="es"> 
+					<i class="icon-user"></i> <span lang="es">Cambiar propietario</span> <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						
+						<li><a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#">Cambiar usuario propietario</a></li>
+						
+						<li><a href="file_change_owner_to_area.cfm?file=#objectFile.id#&area=#area_id#">Convertir en archivo del área</a></li>
+
+					</ul>
+				</div>
+
+				<!---<a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
+				<a href="file_change_owner_to_area.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Convertir en archivo del área</span></a>--->
 			</cfif>
 			
 		<cfelse><!--- fileTypeId IS NOT 1 --->

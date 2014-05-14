@@ -246,7 +246,10 @@ function loadIframeItemPage(page) {
 }
 
 function loadIframeSearchItemPage(page) {
-	page = page+"&abb="+clientAbb;
+	if(page.indexOf("?") == -1)
+		page = page+"?abb="+clientAbb;
+	else
+		page = page+"&abb="+clientAbb;
 	$("#searchItemIframe").attr('src', "iframes2/"+getFilename(page));		
 }
 

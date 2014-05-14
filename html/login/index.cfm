@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_diseno_general_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
+<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -167,17 +167,19 @@
 		
 		<cfif APPLICATION.identifier EQ "dp" AND show_logo>
 			<div class="col-md-2">
-				<a href="http://www.doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a>
+				<cfif APPLICATION.title EQ "DoPlanning">
+					<a href="http://doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a>
+				</cfif>
 			</div>
 		</cfif>
 		
 		<cfif APPLICATION.identifier EQ "dp" AND show_banner>
 			<div class="col-md-8" style="text-align:center">
-				<img src="download_login_image.cfm?abb=#client_abb#" alt="DoPlanning Banner" />
+				<img src="download_login_image.cfm?abb=#client_abb#" alt="Login Banner" />
 			</div>
 		</cfif>
 		
-		<cfif APPLICATION.identifier EQ "dp" AND show_help>
+		<cfif APPLICATION.title EQ "DoPlanning" AND show_help>
 			<div class="col-md-2" style="text-align:right;">
 				<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" lang="es"><i class="icon-question-sign"></i></a>
 			</div>
@@ -191,8 +193,10 @@
 		<div class="row">
 			<div style="text-align:center;padding-top:30px;">
 				<span class="texto_normal">
-				<cfif APPLICATION.identifier EQ "dp">
-				<span lang="es">Acceso a DoPlanning</span> <strong>#getClient.name#</strong>
+				<cfif APPLICATION.identifier EQ "dp" >
+					<cfif APPLICATION.title EQ "DoPlanning">
+						<span lang="es">Acceso a DoPlanning</span> 
+					</cfif><strong>#getClient.name#</strong>
 				<cfelseif APPLICATION.identifier EQ "vpnet">
 				Acceso a Colabora.
 				</cfif>

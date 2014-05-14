@@ -584,7 +584,7 @@
 			<cfinvoke component="EmailManager" method="sendEmail">
 				<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 				<cfinvokeargument name="to" value="#recipient#">
-				<cfinvokeargument name="subject" value="Solicitud de ayuda de usuario de DoPlanning">
+				<cfinvokeargument name="subject" value="Solicitud de ayuda de usuario de APPLICATION.title">
 				<cfinvokeargument name="content" value="#html_text#">
 				<cfinvokeargument name="foot_content" value="#foot_content#">
 				<cfinvokeargument name="styles" value="false">

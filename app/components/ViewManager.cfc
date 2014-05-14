@@ -4,7 +4,8 @@
 	
 	<cfset component = "ViewManager">
 
-	<cfset timeZoneTo = "+1:00">
+	<!--- <cfset timeZoneTo = "+1:00"> --->
+	<cfset timeZoneTo = "Europe/Madrid">
 
 
 	<!--- ------------------------------------- createView -------------------------------------  --->

@@ -1,32 +1,44 @@
 <!---
 Required URL variables:
-id
+id / image
 --->
 <cfheader name="expires" value="#now()#"> 
 <cfheader name="pragma" value="no-cache"> 
 <cfheader name="cache-control" value="no-cache, no-store, must-revalidate">
-<cfif isDefined("URL.id") AND isValid("integer",URL.id)>
-	<cfset component = "downloadAreaImage">
-	<cfset method = "downloadAreaImage">
-	
+<cfif isDefined("SESSION.client_abb")>
+
 	<cfinclude template="#APPLICATION.componentsPath#/includes/sessionVars.cfm">
-	
-	<cfset area_id = URL.id>
-	
-	<!---¿Un usuario puede acceder a la imagen de un área superior a la que no tiene acceso?--->
-	<!---<cfinclude template="#APPLICATION.componentsPath#/includes/checkAreaAccess.cfm">--->
-	
-	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaImageId" returnvariable="image_id">
-		<cfinvokeargument name="area_id" value="#area_id#"> 
-	</cfinvoke>
-	
-	<cfif image_id IS NOT -1>
+
+	<cfif isDefined("URL.id") AND isValid("integer",URL.id)>
+		<cfset component = "downloadAreaImage">
+		<cfset method = "downloadAreaImage">
 		
-		<!---<cfquery name="objectFile" datasource="#client_dsn#">
-			SELECT *, file_size AS file_size_full
-			FROM #client_abb#_areas_images
-			WHERE id = <cfqueryparam value="#image_id#" cfsqltype="cf_sql_integer">;
-		</cfquery>--->
+		<cfset area_id = URL.id>
+		
+		<!---Un usuario puede acceder a la imagen de un área superior a la que no tiene acceso--->
+		
+		<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaImageId" returnvariable="image_id">
+			<cfinvokeargument name="area_id" value="#area_id#"> 
+		</cfinvoke>--->
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaImageId" returnvariable="image_id">
+			<cfinvokeargument name="area_id" value="#area_id#">
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+
+	<!--- <cfelseif isDefined("image") AND isNumeric(URL.image)>
+			
+			<cfset image_id = URL.image> --->
+	
+	<cfelse>
+
+		<cfset image_id = -1>
+
+	</cfif>
+
+
+	<cfif image_id IS NOT -1>
 		
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getImage" returnvariable="objectFile">
 			<cfinvokeargument name="image_id" value="#image_id#">
@@ -37,15 +49,15 @@ id
 		<cfset files_directory = "areas_images">
 		
 		<cfinclude template="get_file.cfm">	
-	
+
 	<cfelse>
-	
+
 		<!---<cfheader name="content-disposition" value="attachment; filename=DoPlanning_Banner" charset="UTF-8">
 		<cfcontent file="#ExpandPath('dp_banner.png')#" deletefile="no" />
 		Al intentar cargar un swf con el cfcontent da error en flash
 		--->
-		<!---<cflocation url="#APPLICATION.resourcesPath#/dp_banner.swf" addtoken="no">--->
 		<cflocation url="#APPLICATION.resourcesPath#/#APPLICATION.identifier#_banner.png" addtoken="no">
 		
 	</cfif>
+
 </cfif>

@@ -1,1 +1,1 @@
-<cflocation url="main.cfm" addtoken="false">
+<cflocation url="main.cfm?abb=#SESSION.client_abb#" addtoken="false">

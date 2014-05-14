@@ -137,12 +137,34 @@
 
 <cfif APPLICATION.publicationScope IS true AND isDefined("scope_id")>
 
+	<!--- 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
-		<cfinvokeargument name="scope_id" value="#scope_id#">
-	</cfinvoke>
-	<cfset scopesQuery = getScopesResult.scopesAreas>
-	<cfset scopeAreasList = valueList(scopesQuery.area_id)>
+			<cfinvokeargument name="scope_id" value="#scope_id#">
+		</cfinvoke>
+		<cfset scopesQuery = getScopesResult.scopesAreas>
+		<cfset scopeAreasList = valueList(scopesQuery.area_id)> --->
 
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+		<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+	</cfinvoke>
+
+	<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
+			<cfinvokeargument name="scope_id" value="#scope_id#">
+		</cfinvoke>
+		<cfset scopesQuery = getScopesResult.scopesAreas>
+		<cfset scopeAreasList = valueList(scopesQuery.area_id)>
+
+	<cfelse>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAllAreasIds" returnvariable="getScopesResult">
+			<cfinvokeargument name="scope_id" value="#scope_id#">
+		</cfinvoke>
+		<cfset scopeAreasList = getScopesResult.areasIds>
+		
+	</cfif>
+	
 </cfif>
 
 <cfprocessingdirective suppresswhitespace="true">

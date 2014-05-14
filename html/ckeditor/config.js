@@ -61,6 +61,8 @@ CKEDITOR.editorConfig = function( config ) {
 	config.entities_latin = false;
 	config.entities_processNumerical = false;
 
-	//config.filebrowserUploadUrl = '../../app/filemanager/index.html';
 	config.filebrowserBrowseUrl = '../../app/filemanager/index.html';
+
+	//Para permitir etiquetas <script> (necesario para subir animaciones html en nanomyp)
+	config.extraAllowedContent = 'script[src]';
 };

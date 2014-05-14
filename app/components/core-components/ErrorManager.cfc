@@ -29,9 +29,9 @@
 		</cfif>
 			
 			
-		<!---saveError in DataBase--->
-		<cfif error_code IS NOT 102 AND error_code IS NOT 607>
+		<cfif error_code IS NOT 102 AND error_code IS NOT 607 AND error_code IS NOT 408>
 
+			<!---saveError in DataBase--->
 			<cfif isDefined("arguments.user_id") AND isDefined("arguments.client_abb") AND isDefined("arguments.user_language")>
 				<cfset var client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 				<cfquery datasource="#client_dsn#" name="saveErrorQuery">
@@ -44,83 +44,88 @@
 					VALUES (#error_code#, '#arguments.error_content#', '#error_method#', '#error_component#')
 				</cfquery>
 			</cfif>
-	
-			<cfif APPLICATION.errorReport EQ "email">
-			
-				<cfsavecontent variable="mail_content">
-				<cfoutput>
-				<html><body>
-						Error en #APPLICATION.title#.<br />
-						<table>
-						<cfif isDefined("SESSION.user_id")>
-						<tr><td>user_id:</td> <td>#SESSION.user_id#<br /></td></tr>
-						</cfif>
-						<cfif isDefined("arguments.client_abb")>
-						<tr><td>client_abb:</td> <td>#arguments.client_abb#<br /></td></tr>			
-						</cfif>
-						<tr><td>error_code:</td> <td>#error_code#<br /></td></tr>
-						<cfif isDefined("arguments.error_message")>
-						<tr><td>Mensaje:</td> <td>#error_message#<br /></td></tr>
-						</cfif>
-						<tr><td>Componente:</td> <td>#error_component#<br /></td></tr>
-						<tr><td>Método:</td> <td>#error_method#<br /></td></tr>
-						<cfif len(arguments.error_content) GT 0>
-						<tr><td>Datos:</td> <td>#arguments.error_content#<br /></td></tr>
-						</cfif>
-						<cfif isDefined("arguments.error_request")>
-						<tr><td>REQUEST:</td> <td>#arguments.error_request#<br/></td></tr>
-						</cfif>
-						<cfif isDefined("arguments.error_cfcatch")>
-						<tr><td valign="top">Error:</td>	
-							<td><cfdump var="#error_cfcatch#" format="text"></td>
-						</tr>
-						</cfif>
-						<br />
-						</table>
-				</body></html>
-				</cfoutput>
-				</cfsavecontent>
+
+			<cfif error_code IS NOT 104><!--- De este error no se envía notificación --->
+					
+				<cfif APPLICATION.errorReport EQ "email">
 				
-				<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
-					<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-					<!---<cfinvokeargument name="from" value="#SESSION.client_email_from#">--->
-					<cfinvokeargument name="to" value="#APPLICATION.emailErrors#">
-					<cfinvokeargument name="bcc" value="">
-					<cfinvokeargument name="subject" value="[#APPLICATION.title#] Error registrado">
-					<cfinvokeargument name="content" value="#mail_content#">
-					<cfinvokeargument name="foot_content" value="">
-				</cfinvoke>
-				
-			<cfelse>
-			
-				<cfdocument format="pdf" overwrite="no" filename="ERROR_#error_component#_#error_method#.pdf">
+					<cfsavecontent variable="mail_content">
+					<cfoutput>
 					<html><body>
-						<cfoutput>
-						Error en #APPLICATION.title#.<br />
-						
-						<cfif isDefined("arguments.user_id")>
-						user_id: #arguments.user_id#<br />
-						</cfif>
-						<cfif isDefined("arguments.client_abb")>
-						client_abb: #arguments.client_abb#<br />			
-						</cfif>
-						error_code: #error_code#<br />
-						<cfif isDefined("error_message")>
-						Mensaje: #error_message#<br />
-						</cfif>
-						Componente: #error_component#<br />
-						Método: #error_method#<br />
-						Datos: #arguments.error_content#<br />
-						</cfoutput>
-						<cfif isDefined("error_cfcatch")>
-						Error:<br />	
-							<cfdump var="#error_cfcatch#">
-						</cfif>
-						<br />
+							Error en #APPLICATION.title#.<br />
+							<table>
+							<cfif isDefined("SESSION.user_id")>
+							<tr><td>user_id:</td> <td>#SESSION.user_id#<br /></td></tr>
+							</cfif>
+							<cfif isDefined("arguments.client_abb")>
+							<tr><td>client_abb:</td> <td>#arguments.client_abb#<br /></td></tr>			
+							</cfif>
+							<tr><td>error_code:</td> <td>#error_code#<br /></td></tr>
+							<cfif isDefined("arguments.error_message")>
+							<tr><td>Mensaje:</td> <td>#error_message#<br /></td></tr>
+							</cfif>
+							<tr><td>Componente:</td> <td>#error_component#<br /></td></tr>
+							<tr><td>Método:</td> <td>#error_method#<br /></td></tr>
+							<cfif len(arguments.error_content) GT 0>
+							<tr><td>Datos:</td> <td>#arguments.error_content#<br /></td></tr>
+							</cfif>
+							<cfif isDefined("arguments.error_request")>
+							<tr><td>REQUEST:</td> <td>#arguments.error_request#<br/></td></tr>
+							</cfif>
+							<cfif isDefined("arguments.error_cfcatch")>
+							<tr><td valign="top">Error:</td>	
+								<td><cfdump var="#error_cfcatch#" format="text"></td>
+							</tr>
+							</cfif>
+							<br />
+							</table>
 					</body></html>
-				</cfdocument>
+					</cfoutput>
+					</cfsavecontent>
+					
+					<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
+						<!---<cfinvokeargument name="from" value="#SESSION.client_email_from#">--->
+						<cfinvokeargument name="to" value="#APPLICATION.emailErrors#">
+						<cfinvokeargument name="bcc" value="">
+						<cfinvokeargument name="subject" value="[#APPLICATION.title#] Error registrado">
+						<cfinvokeargument name="content" value="#mail_content#">
+						<cfinvokeargument name="foot_content" value="">
+					</cfinvoke>
+					
+				<cfelse>
 				
-			</cfif>
+					<cfdocument format="pdf" overwrite="no" filename="ERROR_#error_component#_#error_method#.pdf">
+						<html><body>
+							<cfoutput>
+							Error en #APPLICATION.title#.<br />
+							
+							<cfif isDefined("arguments.user_id")>
+							user_id: #arguments.user_id#<br />
+							</cfif>
+							<cfif isDefined("arguments.client_abb")>
+							client_abb: #arguments.client_abb#<br />			
+							</cfif>
+							error_code: #error_code#<br />
+							<cfif isDefined("error_message")>
+							Mensaje: #error_message#<br />
+							</cfif>
+							Componente: #error_component#<br />
+							Método: #error_method#<br />
+							Datos: #arguments.error_content#<br />
+							</cfoutput>
+							<cfif isDefined("error_cfcatch")>
+							Error:<br />	
+								<cfdump var="#error_cfcatch#">
+							</cfif>
+							<br />
+						</body></html>
+					</cfdocument>
+					
+				</cfif>
+
+			</cfif><!--- END error_code IS NOT 104 --->
+
 		</cfif>
 		
 	</cffunction>

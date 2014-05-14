@@ -847,7 +847,7 @@
 					<div class="div_user_page_address">#objectUser.information#</div>
 
 					<cfif SESSION.client_abb EQ "hcs">
-						<div class="div_user_page_label"><span lang="es">Login Plataforma Recursos Humanos:</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
+						<div class="div_user_page_label"><span lang="es">Login #APPLICATION.ldapName#:</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
 						<div class="div_user_page_label"><span lang="es">Perfil de cabecera:</span> <span class="div_user_page_text">#objectUser.perfil_cabecera#</span></div>
 					</cfif>
 

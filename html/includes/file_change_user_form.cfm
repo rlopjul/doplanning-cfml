@@ -56,7 +56,7 @@
 	</script>
 	
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
-	<input type="hidden" name="file_id" value="#file_id#" />
+	<input type="hidden" name="file_id" value="#file_id#"/>
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
 	<div class="row">

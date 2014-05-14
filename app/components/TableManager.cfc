@@ -285,7 +285,8 @@
 				</cfif>
 				<cfif isDefined("arguments.structure_available") AND arguments.structure_available IS true>
 					<cfinvokeargument name="structure_available" value="true"/>
-				</cfif>		
+				</cfif>
+				<cfinvokeargument name="published" value="false">		
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

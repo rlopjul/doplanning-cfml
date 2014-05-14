@@ -27,7 +27,8 @@
 	<cfset eventTypeId = 5>
 	<cfset taskTypeId = 6> 
 	
-	<cfset timeZoneTo = "+1:00">
+	<!--- <cfset timeZoneTo = "+1:00"> --->
+	<cfset timeZoneTo = "Europe/Madrid">
 
 	<!--- ----------------------- XML ITEM -------------------------------- --->
 	

@@ -16,7 +16,8 @@
 	<cfset fileItemTypeId = 10>
 	<cfset typologyTableTypeId = 3>
 
-	<cfset timeZoneTo = "+1:00">
+	<!---<cfset timeZoneTo = "+1:00">--->
+	<cfset timeZoneTo = "Europe/Madrid">
 	
 	<!--- ----------------------- XML FILE -------------------------------- --->
 	
@@ -991,14 +992,22 @@
 				
 				<cftry>
 				
-					<cfinvoke component="FileManager" method="associateFileToArea">				
+					<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="associateFileResult">				
 						<cfinvokeargument name="objectFile" value="#objectFile#">
 						<cfinvokeargument name="area_id" value="#cur_area_id#">
 						<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
 						<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
-					</cfinvoke>	
-					
-					<cfset successfulAreas = listAppend(successfulAreas, cur_area_id)>	
+					</cfinvoke>
+
+					<cfif associateFileResult.result IS true>
+						<cfset successfulAreas = listAppend(successfulAreas, cur_area_id)>	
+					<cfelse>
+						<cfset allAreas = false>
+
+						<cfset response = {result=false, file_id=#arguments.file_id#, areas_ids=#successfulAreas#, allAreas=#allAreas#, message=#associateFileResult.message#}>	
+						<cfreturn response>
+
+					</cfif>
 					
 					<cfcatch>
 						<cfif isDefined("cfcatch.errorcode") AND cfcatch.errorcode IS 607><!---The file exists in the area--->	
@@ -1050,15 +1059,13 @@
 				<cfinvokeargument name="return_type" value="query">
 			</cfinvoke>
 			
-			<cfinvoke component="FileManager" method="associateFileToArea">				
+			<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="response">				
 				<cfinvokeargument name="objectFile" value="#objectFile#">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
 				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
-			</cfinvoke>		
-			
-			<cfset response = {result=true, file_id=#arguments.file_id#, area_id=#arguments.area_id#}>		
-
+			</cfinvoke>
+	
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1073,7 +1080,7 @@
 	
 	<!--- ----------------------- ASSOCIATE FILE TO AREA -------------------------------- --->
 	
-	<cffunction name="associateFileToArea" returntype="void" output="false" access="package">		
+	<cffunction name="associateFileToArea" returntype="struct" output="false" access="package">		
 		<cfargument name="objectFile" type="query" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">
 
@@ -1082,13 +1089,18 @@
 		
 		<cfset var method = "associateFileToArea">
 
+		<cfset var response = structNew()>
+
 		<cfset var fileTypeId = objectFile.file_type_id>
 		<cfset var isUserPublicationAreaResponsible = false>
+		<cfset var areaType = "">
 					
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<!--- checkAreaAccess --->
-			<cfinclude template="includes/checkAreaAccess.cfm">
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAccess">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
 			
 			<cfif objectFile.file_type_id IS 2>
 				<!--- checkAreaAccess --->
@@ -1096,8 +1108,33 @@
 					<cfinvokeargument name="area_id" value="#objectFile.area_id#">
 				</cfinvoke>
 			<cfelseif objectFile.user_in_charge NEQ user_id>
-				<cfthrow message="No puede asociar a un área un archivo que no es de su propiedad">
+				<!--- <cfthrow message="No puede asociar a un área un archivo que no es de su propiedad"> --->
+
+				<cfset response = {result=false, file_id=#objectFile.id#, area_id=#arguments.area_id#, message="No puede asociar a un área un archivo que no es de su propiedad"}>
+					
+				<cfreturn response>
 			</cfif>
+
+			<!--- check area type --->
+			<cfif objectFile.file_type_id IS 2 OR objectFile.file_type_id IS 3><!--- Area file --->
+				
+				<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">				
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+			
+				<cfset areaType = areaTypeResult.areaType>
+				
+				<cfif len(areaType) GT 0>
+					
+					<cfset response = {result=false, file_id=#objectFile.id#, area_id=#arguments.area_id#, message="No se puede publicar un archivo de área en un área web"}>
+					
+					<cfreturn response>
+
+				</cfif>
+
+			</cfif>
+
+			
 
 			<!--- checkScope --->
 			<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
@@ -1109,11 +1146,11 @@
 
 				<cfif isInScopeResult.result IS false>
 
-					<!---<cfset response = {result=false, file_id=#arguments.file_id#, area_id=#arguments.area_id#, message="El ámbito de este archivo no permite publicarlo en esta área"}>
+					<cfset response = {result=false, file_id=#objectFile.id#, area_id=#arguments.area_id#, message="El ámbito de publicación de este archivo no permite publicarlo en esta área"}>
 					
-					<cfreturn response>--->
+					<cfreturn response>
 
-					<cfthrow message="El ámbito de publicación de este archivo no permite publicarlo en esta área">
+					<!---<cfthrow message="El ámbito de publicación de este archivo no permite publicarlo en esta área">--->
 					
 				</cfif>
 
@@ -1215,6 +1252,10 @@
 					<cfinvokeargument name="action" value="new">
 				</cfif>
 			</cfinvoke>
+
+			<cfset response = {result=true, file_id=#objectFile.id#, area_id=#arguments.area_id#}>
+
+		<cfreturn response>
 		
 	</cffunction>
 	
@@ -1255,13 +1296,10 @@
 				</cfif>
 
 				<!--- dissociateFileFromArea --->
-				<cfinvoke component="FileManager" method="dissociateFileFromArea">				
+				<cfinvoke component="FileManager" method="dissociateFileFromArea" returnvariable="response">
 					<cfinvokeargument name="objectFile" value="#fileQuery#">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				</cfinvoke>		
-
-
-				<cfset response = {result=true, file_id=#arguments.file_id#, area_id=#arguments.area_id#}>	
+				</cfinvoke>
 
 			<cfelse><!---File does not exist--->
 			
@@ -1285,14 +1323,18 @@
 
 	<!--- ----------------------- DISSOCIATE FILE FROM AREA -------------------------------- --->
 	
-	<cffunction name="dissociateFileFromArea" returntype="void" output="false" access="package">		
+	<cffunction name="dissociateFileFromArea" returntype="struct" output="false" access="package">		
 		<cfargument name="objectFile" type="query" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">		
 		
 		<cfset var method = "dissociateFileFromArea">
 		
+		<cfset var response = structNew()>
+		<cfset var response_message = "">
+
 		<cfset var file_id = objectFile.file_id>
 		<cfset var fileTypeId = objectFile.file_type_id>
+
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
@@ -1307,10 +1349,10 @@
 			</cfquery>
 			
 			<cfif isFileInAreaQuery.recordCount LT 2><!---The file is only in this area--->
-				<!---<cfset response_message = "El archivo solo está asociado en esta área. Para quitarlo debe eliminarlo.">
-				<cfset response = {result=false, message=#response_message#, file_id=#arguments.file_id#, area_id=#arguments.area_id#}>
-				<cfreturn response>--->
-				<cfthrow message="El archivo sólo está asociado en esta área. Para quitarlo debe eliminarlo.">
+				<cfset response_message = "El archivo solo está asociado en esta área. Para quitarlo debe eliminarlo.">
+				<cfset response = {result=false, message=#response_message#, file_id=#file_id#, area_id=#arguments.area_id#}>
+				<cfreturn response>
+				<!---<cfthrow message="El archivo sólo está asociado en esta área. Para quitarlo debe eliminarlo.">--->
 			</cfif>
 			
 			<cftransaction>
@@ -1339,6 +1381,10 @@
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="action" value="dissociate">
 			</cfinvoke>
+
+			<cfset response = {result=true, file_id=#file_id#, area_id=#arguments.area_id#}>
+
+		<cfreturn response>
 		
 	</cffunction>
 
@@ -3325,8 +3371,14 @@
 			</cfif>
 
 			<cffile action="upload" filefield="Filedata" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
-		
+
 			<cfset temp_file="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">	
+
+			<cfif len(uploadedFile.clientFileExt) IS 0>
+				
+				<cfthrow message="No se puede subir un archivo sin extensión">
+
+			</cfif>
 			
 			<cfinvoke component="FileManager" method="createFile" returnvariable="createFileResult">
 				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
@@ -3381,10 +3433,10 @@
 					UPDATE #client_abb#_users
 					SET space_used = space_used+<cfqueryparam value="#uploadedFile.fileSize#" cfsqltype="cf_sql_integer">
 					WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>	
+				</cfquery>
 
 				<!--- associateFileToArea --->
-				<cfinvoke component="FileManager" method="associateFileToArea">
+				<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="associateFileResult">
 					<cfinvokeargument name="objectFile" value="#objectFile#"/>
 					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 
@@ -3393,6 +3445,12 @@
 					</cfif>
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				</cfinvoke>
+
+				<cfif associateFileResult.result IS false>
+					
+					<cfthrow message="#associateFileResult.message#">
+
+				</cfif>
 
 				<!---
 				<!--- newAreaFile --->
@@ -3420,7 +3478,7 @@
 					
 					<!---<cfset error_code = 604>--->
 			
-					<cfthrow object="#cfcatch#">
+					<cfrethrow/>
 				
 				</cfcatch>
 			</cftry>
@@ -3598,20 +3656,24 @@
 		
 			<cfthrow errorcode="#error_code#">
 
-		</cfif>		
+		</cfif>
 
-		<cfif fileQuery.file_type_id IS NOT 1><!--- Area file --->
+		<cfif SESSION.client_administrator NEQ user_id><!--- checkAdminAccess --->
 
-			<cfset area_id = fileQuery.area_id>
-			
-			<!---checkAreaAccess--->
-			<cfinclude template="includes/checkAreaAccess.cfm">
+			<cfif fileQuery.file_type_id IS NOT 1><!--- Area file --->
 
-		<cfelseif fileQuery.user_in_charge NEQ user_id><!--- User file --->
-
-			<cfset error_code = 103><!---Access denied--->
+				<cfset area_id = fileQuery.area_id>
 				
-			<cfthrow errorcode="#error_code#">
+				<!---checkAreaAccess--->
+				<cfinclude template="includes/checkAreaAccess.cfm">
+
+			<cfelseif fileQuery.user_in_charge NEQ user_id><!--- User file --->
+
+				<cfset error_code = 103><!---Access denied--->
+					
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
 
 		</cfif>
 
@@ -3941,6 +4003,7 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 			
+
 			<!---canUserModifyFile--->
 			<cfinvoke component="FileManager" method="canUserModifyFile" returnvariable="canUserModifyFileResponse">
 				<cfinvokeargument name="fileQuery" value="#fileQuery#">
@@ -3956,7 +4019,7 @@
 				<cfif isDefined("arguments.area_id")>
 					<!---checkAreaResponsibleAccess--->
 					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
-						<cfinvokeargument name="area_id" value="#area_id#">
+						<cfinvokeargument name="area_id" value="#arguments.area_id#">
 					</cfinvoke>
 				<cfelse>
 					<!---checkAdminAccess--->
@@ -3965,6 +4028,7 @@
 				</cfif>
 				
 			</cfif>
+
 
 			<cfif fileQuery.user_in_charge EQ arguments.new_user_in_charge>
 				
@@ -4022,6 +4086,110 @@
 		<cfreturn response>
 			
 	</cffunction>
+
+
+
+	<!--- ----------------------------------- changeFileOwnerToArea -------------------------------------- --->
+
+	<cffunction name="changeFileOwnerToArea" output="false" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="new_area_id" type="numeric" required="true">
+
+		<cfset var method = "changeFileOwnerToArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+				<cfinvokeargument name="with_lock" value="true">
+				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<!---canUserModifyFile--->
+			<cfinvoke component="FileManager" method="canUserModifyFile" returnvariable="canUserModifyFileResponse">
+				<cfinvokeargument name="fileQuery" value="#fileQuery#">
+			</cfinvoke>
+			<cfif canUserModifyFileResponse.result IS false>
+				
+				<cfreturn canUserModifyFileResponse>
+
+			</cfif>					
+
+			<!---Chequea si existe el archivo en el área--->
+			<cfquery datasource="#client_dsn#" name="isFileInAreaQuery">
+				SELECT file_id
+				FROM #client_abb#_areas_files
+				WHERE area_id = <cfqueryparam value = "#arguments.new_area_id#" cfsqltype="cf_sql_integer"> AND 
+				file_id = <cfqueryparam value = "#arguments.file_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfif isFileInAreaQuery.recordCount IS 0><!---The file NOT exists in the area--->
+
+				<!--- Esto es necesario para que se puedan comprobar las áreas donde se pueden asociar el archivo --->
+				<cfset querySetCell(fileQuery, "file_type_id", 2)>
+				<cfset querySetCell(fileQuery, "area_id", arguments.new_area_id)>
+
+				<!--- associateFileToArea --->
+				<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="associateFileResult">				
+					<cfinvokeargument name="objectFile" value="#fileQuery#">
+					<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+				</cfinvoke>	
+
+				<cfif associateFileResult.result IS false>
+
+					<cfset response = {result=false, file_id=#arguments.file_id#, message=#associateFileResult.message#}>
+
+					<cfreturn response>
+
+				</cfif>
+
+			</cfif>
+			
+			<!--- Set file to area --->
+			<cfquery datasource="#client_dsn#" name="setFileToArea">
+				UPDATE #client_abb#_files
+				SET file_type_id = <cfqueryparam value="2" cfsqltype="cf_sql_integer">,
+				area_id = <cfqueryparam value="#arguments.new_area_id#" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+				
+			<!---Send Alert--->
+			<cfinvoke component="AlertManager" method="newFile">
+				<cfinvokeargument name="objectFile" value="#fileQuery#">
+				<cfinvokeargument name="fileTypeId" value="2"/>
+				<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+
+				<cfinvokeargument name="action" value="change_owner_to_area">
+			</cfinvoke>	
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, file_id=#arguments.file_id#}>
+
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
 
 
 
@@ -4092,16 +4260,32 @@
 			<cfelse>		
 
 				<!--- associateFileToArea --->
-				<cfinvoke component="FileManager" method="associateFileToArea">				
+				<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="associateFileResult">				
 					<cfinvokeargument name="objectFile" value="#fileQuery#">
 					<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
 				</cfinvoke>	
 
+				<cfif associateFileResult.result IS false>
+
+					<cfset response = {result=false, file_id=#arguments.file_id#, new_area_id=#arguments.new_area_id#, old_area_id=#fileQuery.area_id#, message=#associateFileResult.message#}>
+
+					<cfreturn response>
+
+				</cfif>
+
 				<!--- dissociateFile --->
-				<cfinvoke component="FileManager" method="dissociateFileFromArea">
+				<cfinvoke component="FileManager" method="dissociateFileFromArea" returnvariable="dissociateFileResult">
 					<cfinvokeargument name="objectFile" value="#fileQuery#"/>
 					<cfinvokeargument name="area_id" value="#fileQuery.area_id#"/>
 				</cfinvoke>
+
+				<cfif dissociateFileResult.result IS false>
+
+					<cfset response = {result=false, file_id=#arguments.file_id#, new_area_id=#arguments.new_area_id#, old_area_id=#fileQuery.area_id#, message=#dissociateFileResult.message#}>
+
+					<cfreturn response>
+
+				</cfif>
 
 				<cfif fileQuery.file_type_id IS NOT 1>
 					
@@ -5134,7 +5318,7 @@
 					</cfif>
 
 					<!--- associateFileToArea --->
-					<cfinvoke component="FileManager" method="associateFileToArea">
+					<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="associateFileResult">
 						<cfinvokeargument name="objectFile" value="#newObjectFile#"/>
 						<cfinvokeargument name="area_id" value="#arguments.publication_area_id#"/>
 
@@ -5143,6 +5327,12 @@
 						</cfif>
 						<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					</cfinvoke>
+
+					<cfif associateFileResult.result IS false>
+						
+						<cfthrow message="#associateFileResult.message#">
+						
+					</cfif>
 
 					<cftransaction>
 						

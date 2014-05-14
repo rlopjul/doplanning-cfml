@@ -640,6 +640,39 @@
 	</cffunction>
 
 
+	<!--- ---------------------------------- changeFileOwnerToArea -------------------------------------- --->
+	
+	<cffunction name="changeFileOwnerToArea" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="new_area_id" type="numeric" required="true">
+		
+		<cfset var method = "changeFileOwnerToArea">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileOwnerToArea" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Propiedad del archivo cambiada">
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+				
+	</cffunction>
+
+
 	<!--- ---------------------------------- changeFileArea -------------------------------------- --->
 	
 	<cffunction name="changeFileArea" returntype="struct" access="public">

@@ -139,7 +139,7 @@ page_types
 					<div class="col-sm-12 col-md-12">
 
 						<label for="login_ldap" class="control-label" lang="es" style="text-align:left">Login #APPLICATION.ldapName#:</label>
-						<!--- <cfif SESSION.client_abb EQ "hcs">Login Plataforma Recursos Humanos
+						<!--- <cfif SESSION.client_abb EQ "hcs">Login #APPLICATION.ldapName#
 						<cfelseif SESSION.client_abb EQ "asnc">Login ASNC
 						<cfelseif SESSION.client_abb EQ "agsna">Login DMSAS
 						<cfelse>Login LDAP

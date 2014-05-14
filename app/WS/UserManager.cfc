@@ -779,7 +779,7 @@
 						WHERE id = <cfqueryparam value="#updateUserId#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 				</cfif>
-				<cfif isDefined("userXml.user.login_diraya")>
+				<cfif APPLICATION.moduleLdapDiraya EQ true AND isDefined("userXml.user.login_diraya")>
 					<cfquery name="loginDirayaQuery" datasource="#client_dsn#">
 						UPDATE #client_abb#_users SET login_diraya = <cfqueryparam value = "#userXml.user.login_diraya.xmlText#" cfsqltype="cf_sql_varchar">
 						WHERE id = <cfqueryparam value="#updateUserId#" cfsqltype="cf_sql_integer">;
@@ -1476,6 +1476,7 @@ step="1">
 		
 			<cfinclude template="includes/functionStart.cfm"> 
 		
+			<!---
 			<cfquery name="selectUserQuery" datasource="#client_dsn#">
 				SELECT id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, image_file, image_type, dni, language
 				<cfif arguments.format_content EQ "all">
@@ -1489,30 +1490,43 @@ step="1">
 				</cfif>
 				FROM #client_abb#_users
 				WHERE id = #arguments.get_user_id#;
-			</cfquery>
-			
-			<cfquery name="checkClientAdministrator" datasource="#APPLICATION.dsn#">
-				SELECT id 
-				FROM APP_clients				
-				WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">
-				AND administrator_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;			
-			</cfquery>
-			
-			<cfif checkClientAdministrator.recordCount GT 0>
-				<!---<cfset general_administrator = true>--->
-				<cfset general_administrator = 1>
-			<cfelse>
-				<!---<cfset general_administrator = false>--->
-				<cfset general_administrator = 0>
-				
-				<cfquery name="checkAreaAdministrator" datasource="#client_dsn#">
-					SELECT user_id, area_id 
-					FROM #client_abb#_areas_administrators		
-					WHERE user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;			
+			</cfquery>--->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
+				<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
+				<cfinvokeargument name="format_content" value="#arguments.format_content#">
+				<cfinvokeargument name="with_ldap" value="#APPLICATION.moduleLdapUsers#">
+				<cfif APPLICATION.identifier EQ "vpnet">
+					<cfinvokeargument name="with_vpnet" value="true">
+				</cfif>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif selectUserQuery.recordCount GT 0>
+
+				<cfquery name="checkClientAdministrator" datasource="#APPLICATION.dsn#">
+					SELECT id 
+					FROM APP_clients				
+					WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">
+					AND administrator_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;			
 				</cfquery>
 				
-			</cfif>
-			<cfif selectUserQuery.recordCount GT 0>
+				<cfif checkClientAdministrator.recordCount GT 0>
+					<!---<cfset general_administrator = true>--->
+					<cfset general_administrator = 1>
+				<cfelse>
+					<!---<cfset general_administrator = false>--->
+					<cfset general_administrator = 0>
+					
+					<cfquery name="checkAreaAdministrator" datasource="#client_dsn#">
+						SELECT user_id, area_id 
+						FROM #client_abb#_areas_administrators		
+						WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;	
+					</cfquery>
+					
+				</cfif>
 				
 				<cfsavecontent variable="areasUser">
 					<cfif isDefined("checkAreaAdministrator") AND checkAreaAdministrator.recordCount GT 0>
@@ -1529,52 +1543,54 @@ step="1">
 				</cfsavecontent>	
 				
 				<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
-						<cfinvokeargument name="id" value="#selectUserQuery.id#">
-						<cfinvokeargument name="email" value="#selectUserQuery.email#">
-						<cfinvokeargument name="telephone" value="#selectUserQuery.telephone#">
-						<cfinvokeargument name="telephone_ccode" value="#selectUserQuery.telephone_ccode#">
-						<cfinvokeargument name="family_name" value="#selectUserQuery.family_name#">
-						<cfinvokeargument name="name" value="#selectUserQuery.name#">
-						<cfinvokeargument name="address" value="#selectUserQuery.address#">
-						<cfinvokeargument name="mobile_phone" value="#selectUserQuery.mobile_phone#">
-						<cfinvokeargument name="mobile_phone_ccode" value="#selectUserQuery.mobile_phone_ccode#">
-						<cfinvokeargument name="whole_tree_visible" value="#selectUserQuery.internal_user#">
-						
-						<cfinvokeargument name="image_file" value="#selectUserQuery.image_file#">
-						<cfinvokeargument name="image_type" value="#selectUserQuery.image_type#">
-						<cfinvokeargument name="dni" value="#selectUserQuery.dni#">
-						<cfinvokeargument name="language" value="#selectUserQuery.language#">
+					<cfinvokeargument name="id" value="#selectUserQuery.id#">
+					<cfinvokeargument name="email" value="#selectUserQuery.email#">
+					<cfinvokeargument name="telephone" value="#selectUserQuery.telephone#">
+					<cfinvokeargument name="telephone_ccode" value="#selectUserQuery.telephone_ccode#">
+					<cfinvokeargument name="family_name" value="#selectUserQuery.family_name#">
+					<cfinvokeargument name="name" value="#selectUserQuery.name#">
+					<cfinvokeargument name="address" value="#selectUserQuery.address#">
+					<cfinvokeargument name="mobile_phone" value="#selectUserQuery.mobile_phone#">
+					<cfinvokeargument name="mobile_phone_ccode" value="#selectUserQuery.mobile_phone_ccode#">
+					<cfinvokeargument name="whole_tree_visible" value="#selectUserQuery.internal_user#">
+					
+					<cfinvokeargument name="image_file" value="#selectUserQuery.image_file#">
+					<cfinvokeargument name="image_type" value="#selectUserQuery.image_type#">
+					<cfinvokeargument name="dni" value="#selectUserQuery.dni#">
+					<cfinvokeargument name="language" value="#selectUserQuery.language#">
 
-						<cfif arguments.format_content EQ "all">	
-							<cfinvokeargument name="client_abb" value="#client_abb#">		
-							<cfinvokeargument name="areas_administration" value="#areasUser#">
-							<cfinvokeargument name="space_used" value="#selectUserQuery.space_used#">
-							<cfinvokeargument name="number_of_connections" value="#selectUserQuery.number_of_connections#">
-							<cfinvokeargument name="last_connection" value="#selectUserQuery.last_connection#">
-							<cfinvokeargument name="connected" value="#selectUserQuery.connected#">
-							<cfinvokeargument name="session_id" value="#selectUserQuery.session_id#">
-							<cfinvokeargument name="creation_date" value="#selectUserQuery.creation_date#">
-							<cfinvokeargument name="root_folder_id" value="#selectUserQuery.root_folder_id#">
-							<cfinvokeargument name="general_administrator" value="#general_administrator#">
-							<cfinvokeargument name="sms_allowed" value="#selectUserQuery.sms_allowed#">
-							<cfif APPLICATION.moduleLdapUsers EQ true>
-								<cfinvokeargument name="login_ldap" value="#selectUserQuery.login_ldap#">
+					<cfif arguments.format_content EQ "all">	
+						<cfinvokeargument name="client_abb" value="#client_abb#">		
+						<cfinvokeargument name="areas_administration" value="#areasUser#">
+						<cfinvokeargument name="space_used" value="#selectUserQuery.space_used#">
+						<cfinvokeargument name="number_of_connections" value="#selectUserQuery.number_of_connections#">
+						<cfinvokeargument name="last_connection" value="#selectUserQuery.last_connection#">
+						<cfinvokeargument name="connected" value="#selectUserQuery.connected#">
+						<cfinvokeargument name="session_id" value="#selectUserQuery.session_id#">
+						<cfinvokeargument name="creation_date" value="#selectUserQuery.creation_date#">
+						<cfinvokeargument name="root_folder_id" value="#selectUserQuery.root_folder_id#">
+						<cfinvokeargument name="general_administrator" value="#general_administrator#">
+						<cfinvokeargument name="sms_allowed" value="#selectUserQuery.sms_allowed#">
+						<cfif APPLICATION.moduleLdapUsers EQ true>
+							<cfinvokeargument name="login_ldap" value="#selectUserQuery.login_ldap#">
+							<cfif APPLICATION.moduleLdapDiraya EQ true>
 								<cfinvokeargument name="login_diraya" value="#selectUserQuery.login_diraya#">
 							</cfif>
-							<cfif APPLICATION.identifier EQ "vpnet">
-								<!---<cfinvokeargument name="center" value="#selectUserQuery.center#">
-								<cfinvokeargument name="category" value="#selectUserQuery.category#">--->
-								<cfinvokeargument name="center_id" value="#selectUserQuery.center_id#">
-								<cfinvokeargument name="category_id" value="#selectUserQuery.category_id#">
-								<cfinvokeargument name="service_id" value="#selectUserQuery.service_id#">
-								<cfinvokeargument name="service" value="#selectUserQuery.service#">
-								<cfinvokeargument name="other_1" value="#selectUserQuery.other_1#">
-								<cfinvokeargument name="other_2" value="#selectUserQuery.other_2#">
-							</cfif>
 						</cfif>
-						
-						
-						<cfinvokeargument name="return_type" value="object">
+						<cfif APPLICATION.identifier EQ "vpnet">
+							<!---<cfinvokeargument name="center" value="#selectUserQuery.center#">
+							<cfinvokeargument name="category" value="#selectUserQuery.category#">--->
+							<cfinvokeargument name="center_id" value="#selectUserQuery.center_id#">
+							<cfinvokeargument name="category_id" value="#selectUserQuery.category_id#">
+							<cfinvokeargument name="service_id" value="#selectUserQuery.service_id#">
+							<cfinvokeargument name="service" value="#selectUserQuery.service#">
+							<cfinvokeargument name="other_1" value="#selectUserQuery.other_1#">
+							<cfinvokeargument name="other_2" value="#selectUserQuery.other_2#">
+						</cfif>
+					</cfif>
+					
+					
+					<cfinvokeargument name="return_type" value="object">
 				</cfinvoke>
 				
 				<cfif arguments.return_type EQ "object">

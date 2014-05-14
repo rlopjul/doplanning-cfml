@@ -119,7 +119,7 @@ app_version almacena si es la versión móvil o la estandar--->
 
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_area_responsible">				
 					<cfinvokeargument name="area_id" value="#area_id#">
-				</cfinvoke>
+				</cfinvoke>				
 
 			</cfif>
 			
