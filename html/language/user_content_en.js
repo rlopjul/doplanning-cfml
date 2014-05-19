@@ -22,6 +22,8 @@ var user_content_en = {
 	'Confirmar contraseña:':'Confirm new password:',
 	'Guardar':'Save',
 	'Modificación guardada.':'Modification saved.'
+	'Mostrar sólo áreas con acceso':'Show only areas with access permission',
+	'En el árbol de áreas sólo se mostrarán las áreas con permiso de acceso.':'The areas tree only will show the areas with access permission.'
 	/*END preferences_user_data.cfm*/
 }
 $.extend(jquery_lang_js.prototype.lang.en, user_content_en);

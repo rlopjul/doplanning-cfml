@@ -37,7 +37,7 @@
 					, table_views.creation_date, table_views.last_update_date
 				</cfif>
 				<cfif arguments.with_table IS true>
-				, tables.area_id AS table_area_id, tables.title AS table_title
+				, tables.area_id AS table_area_id, tables.title AS table_title, tables.publication_validated AS table_publication_validated
 					<cfif APPLICATION.publicationScope IS true AND tableTypeId IS NOT 3>
 					, tables.publication_scope_id AS table_publication_scope_id
 					</cfif>

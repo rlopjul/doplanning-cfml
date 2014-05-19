@@ -13,6 +13,7 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/View" method="getView" returnvariable="objectItem">
 	<cfinvokeargument name="view_id" value="#view_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+	<cfinvokeargument name="with_table" value="true">
 </cfinvoke>
 
 <cfset area_id = objectItem.area_id>
@@ -115,15 +116,21 @@
 		<a onclick="openUrl('area_items.cfm?area=#objectItem.table_area_id#&#tableTypeName#=#objectItem.table_id#','areaIframe',event)" style="cursor:pointer">#objectItem.table_title#</a>
 	</div>
 
-	<div class="div_message_page_label">
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="tableArea">
-			<cfinvokeargument name="area_id" value="#objectItem.table_area_id#">
-		</cfinvoke>
+	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isInternalUser" returnvariable="internal_user">
+		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
+	</cfinvoke>
 
-		<b><span lang="es">Propiedad del área:</span></b>
-		
-		<a onclick="openUrl('area_items.cfm?area=#objectItem.table_area_id#&#tableTypeName#=#objectItem.table_id#','areaIframe',event)" style="cursor:pointer">#tableArea.name#</a>
-	</div>
+	<cfif internal_user IS true>
+		<div class="div_message_page_label">
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="tableArea">
+				<cfinvokeargument name="area_id" value="#objectItem.table_area_id#">
+			</cfinvoke>
+
+			<b><span lang="es">Propiedad del área:</span></b>
+			
+			<a onclick="openUrl('area_items.cfm?area=#objectItem.table_area_id#&#tableTypeName#=#objectItem.table_id#','areaIframe',event)" style="cursor:pointer">#tableArea.name#</a>
+		</div>
+	</cfif>
 
 	<cfif len(area_type) GT 0><!--- WEB --->
 
@@ -135,14 +142,14 @@
 			<div class="div_message_page_label"><span>Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
 			</div>
 
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
+			<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
 				<cfinvokeargument name="table_id" value="#objectItem.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-			</cfinvoke>
+			</cfinvoke>--->
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<div class="div_message_page_label"><span>Publicación de #tableTypeNameEs# aprobada:</span> <span class="text_message_page" lang="es"><cfif table.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
+			<div class="div_message_page_label"><span>Publicación de #tableTypeNameEs# aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.table_publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
 			</div>
 
 		</cfif>

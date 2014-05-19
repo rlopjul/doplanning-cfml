@@ -202,9 +202,9 @@ page_types
 
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="hide_not_allowed_areas" id="hide_not_allowed_areas" value="true" <cfif isDefined("objectUser.hide_not_allowed_areas") AND objectUser.hide_not_allowed_areas IS true>checked="checked"</cfif> /> Mostrar sólo áreas con acceso
+							<input type="checkbox" name="hide_not_allowed_areas" id="hide_not_allowed_areas" value="true" <cfif isDefined("objectUser.hide_not_allowed_areas") AND objectUser.hide_not_allowed_areas IS true>checked="checked"</cfif> /> <span lang="es">Mostrar sólo áreas con acceso</span>
 						</label>
-						<small class="help-block">En el árbol de áreas sólo se mostrarán las áreas con permiso de acceso.</small>
+						<small class="help-block" lang="es">En el árbol de áreas sólo se mostrarán las áreas con permiso de acceso.</small>
 					</div>
 
 				</div>

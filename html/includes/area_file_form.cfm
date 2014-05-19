@@ -12,8 +12,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<div class="div_head_subtitle"><span lang="es"><cfif page_type IS 1>Nuevo Archivo
-<cfelseif page_type IS 2>Modificar archivo<cfelseif page_type IS 3>Publicar versión de archivo</cfif><cfif fileTypeId IS 2> de área</cfif></span></div>
+<div class="div_head_subtitle"><span lang="es"><cfif page_type IS 1>Nuevo Archivo<cfelseif page_type IS 2>Modificar archivo<cfelseif page_type IS 3>Publicar versión de archivo</cfif><cfif fileTypeId IS 2> de área</cfif></span></div>
 
 <!---<cfset return_page = "area.cfm?area=#area_id#">--->
 
@@ -253,7 +252,7 @@
 		<cfif page_type IS 1>
 
 			<div class="alert alert-info">
-				<small>Este archivo pertenecerá a esta área y podrá ser modificado por cualquier usuario con acceso a la misma.</small>
+				<small lang="es">Este archivo pertenecerá a esta área y podrá ser modificado por cualquier usuario con acceso a la misma.</small>
 			</div>
 
 		<cfelseif page_type IS 3>
@@ -278,12 +277,12 @@
 
 			<div class="row">
 				<div class="col-sm-12">
-					<label for="fileTypeId" class="control-label">Tipo de documento de área</label>
+					<label for="fileTypeId" class="control-label" lang="es">Tipo de documento de área</label>
 					<select name="fileTypeId" id="fileTypeId" class="form-control" onchange="setFileTypeId($('##fileTypeId').val());">
-						<option value="2" <cfif fileTypeId IS 2>selected="selected"</cfif>>Sin circuito de calidad</option>
-						<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif>>Con circuito de calidad</option>
+						<option value="2" <cfif fileTypeId IS 2>selected="selected"</cfif> lang="es">Sin circuito de calidad</option>
+						<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif> lang="es">Con circuito de calidad</option>
 					</select>
-					<span class="help-block">Esta opción no se puede cambiar una vez creado el documento</span>
+					<span class="help-block" lang="es">Esta opción no se puede cambiar una vez creado el documento</span>
 				</div>
 			</div>
 
@@ -356,9 +355,9 @@
 		</cfif>
 		<div class="row">
 			<div class="col-sm-12">
-				<label for="typology_id" class="control-label">Tipología *</label>
+				<label for="typology_id" class="control-label"><span lang="es">Tipología</span> *</label>
 				<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val(),'');" class="form-control">
-					<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif>>Básica</option>
+					<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Básica</option>
 					<cfif areaTables.recordCount GT 0>
 						<cfloop query="areaTables">
 							<option value="#areaTables.id#" <cfif areaTables.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS areaTables.id>style="font-weight:bold"</cfif>>#areaTables.title#</option>
@@ -373,7 +372,7 @@
 	<cfif page_type IS 1>
 		<div class="row">
 			<div class="col-sm-12">
-				<label for="formFile" class="control-label" lang="es">Archivo *</label>
+				<label for="formFile" class="control-label"><span lang="es">Archivo</span> *</label>
 				<input type="file" name="Filedata" value="" id="formFile" required="required" />
 
 				<script type="text/javascript">
@@ -385,7 +384,7 @@
 	
 	<div class="row">
 		<div class="col-sm-12">
-			<label for="formFileName" class="control-label" lang="es">Nombre *</label>
+			<label for="formFileName" class="control-label" lang="es"><span lang="es">Nombre</span> *</label>
 			<input type="text" name="name" value="#file.name#" id="formFileName" required="required" class="form-control"/>
 
 			<script type="text/javascript">
@@ -411,13 +410,13 @@
 			
 			<div class="row" id="publicationScopeContainer">
 				<div class="col-sm-12">
-					<label for="publication_scope_id" class="control-label">Ámbito de publicación</label>
+					<label for="publication_scope_id" class="control-label" lang="es">Ámbito de publicación</label>
 					<select name="publication_scope_id" id="publication_scope_id" class="form-control">
 						<cfloop query="scopesQuery">
 							<option value="#scopesQuery.scope_id#" <cfif file.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
 						</cfloop>
 					</select>
-					<small class="help-block">Define dónde se podrá publicar el documento</small>
+					<small class="help-block" lang="es">Define dónde se podrá publicar el documento</small>
 				</div>
 			</div>
 
@@ -489,7 +488,7 @@
 
 		<div class="row">
 			<div class="col-sm-12">
-				<small class="help-block">Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
+				<small class="help-block" lang="es">Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
 			</div>
 		</div>
 
@@ -504,7 +503,7 @@
 							<label>
 								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("file.publication_validated") AND file.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
 							</label>
-							<small class="help-block">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
+							<small class="help-block" lang="es">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
 						</div>
 					</div>
 				</div>
@@ -525,7 +524,7 @@
 		<input type="submit" class="btn btn-primary" name="modify" value="Enviar" lang="es"/>
 
 		<cfif page_type IS 2>
-			<a href="file.cfm?file=#file_id#&area=#area#" class="btn btn-default" style="float:right">Cancelar</a>
+			<a href="file.cfm?file=#file_id#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 		</cfif>
 	</div>
 	<br/>

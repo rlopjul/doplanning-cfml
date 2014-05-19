@@ -11,6 +11,7 @@
 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/area_table_content_en.js" charset="utf-8"></script>
 
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 </cfoutput>
@@ -87,7 +88,7 @@
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
-			<label for="label" class="control-label">Nombre</label>
+			<label for="label" class="control-label" lang="es">Nombre</label>
 			<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
 		</div>
 	</div>
@@ -178,7 +179,7 @@
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
-			<label for="description" class="control-label">Descripción</label>
+			<label for="description" class="control-label" lang="es">Descripción</label>
 			<textarea name="description" id="description" class="form-control" maxlength="1000">#table.description#</textarea>
 		</div>
 	</div>
@@ -187,9 +188,9 @@
 		<div class="col-xs-12 col-sm-8">
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> Permitir copiar la estructura de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)#
+					<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> <span lang="es">Permitir copiar la estructura de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)#</span>
 				</label>
-				<small class="help-block">Indica si la definición de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# está disponible para ser usada como plantilla por cualquier usuario de la organización.</small>
+				<small class="help-block" lang="es">Indica si la definición de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# está disponible para ser usada como plantilla por cualquier usuario de la organización.</small>
 			</div>
 		</div>
 	</div>
@@ -200,9 +201,9 @@
 		<div class="col-xs-12 col-sm-8">
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> Habilitar como #lCase(tableTypeNameEs)# general
+					<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> <span lang="es">Habilitar como #lCase(tableTypeNameEs)# general</span>
 				</label>
-				<small class="help-block">Se podrá utilizar esta tipología en cualquier área de la organización.</small>
+				<small class="help-block" lang="es">Se podrá utilizar esta tipología en cualquier área de la organización.</small>
 			</div>
 		</div>
 	</div>
@@ -221,13 +222,13 @@
 			
 			<div class="row">
 				<div class="col-sm-12 col-sm-8">
-					<label for="publication_scope_id" class="control-label">Ámbito de publicación</label>
+					<label for="publication_scope_id" class="control-label" lang="es">Ámbito de publicación</label>
 					<select name="publication_scope_id" id="publication_scope_id" class="form-control">
 						<cfloop query="scopesQuery">
 							<option value="#scopesQuery.scope_id#" <cfif table.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
 						</cfloop>
 					</select>
-					<small class="help-block">Define dónde se podrán publicar vistas <cfif tableTypeGender EQ "male">del<cfelse>de la</cfif> #tableTypeNameEs#</small>
+					<small class="help-block" lang="es">Define dónde se podrán publicar vistas <cfif tableTypeGender EQ "male">del<cfelse>de la</cfif> #tableTypeNameEs#</small>
 				</div>
 			</div>
 
@@ -237,9 +238,9 @@
 
 
 	<div id="submitDiv2" style="margin-top:20px;">
-		<input type="submit" value="Guardar" class="btn btn-primary"/>
+		<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 		<cfif page_type IS 2 AND isDefined("URL.area") AND isNumeric(URL.area)>
-			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#URL.area#" class="btn btn-default" style="float:right">Cancelar</a>
+			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#URL.area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 		</cfif>
 	</div>
 	

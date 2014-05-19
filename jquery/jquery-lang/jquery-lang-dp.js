@@ -12,6 +12,7 @@
  * Changelog:
  *  - Added support for title attribute and input types email and password
  *	- Modificado para para habilitar compatibilidad con IE7 (localStorage)
+ * 	- Modificado para traducir IGNORANDO el caracter :
  *
  * Source: http://www.isogenicengine.com/documentation/jquery-multi-language-site-plugin/
 **/

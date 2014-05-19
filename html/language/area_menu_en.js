@@ -25,11 +25,14 @@ var area_menu_en = {
 	
 	'Nuevo Mensaje':'New Message',
 	'Nuevo Archivo':'New File',
+	'Nuevo Archivo de área':'New area File',
 	'Nuevo Evento':'New Event',
 	'Nueva Tarea':'New Task',
 	'Nueva Interconsulta':'New Interconsultation',
 	'Nuevo Elemento de contenido web':'New Web content element',
 	'Nueva Noticia':'New News item',
+	'Nueva Lista':'New List',
+	'Nuevo Formulario':'New Form',
 	
 	'Subir nuevo archivo':'Upload new file',
 	'Asociar Archivo':'Associate File',
