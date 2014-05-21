@@ -103,9 +103,9 @@
 </script>
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/scripts/functions.min.js"></script>
+<script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.2"></script>
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
-<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.6"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.7"></script>
 </cfoutput>
 
 <script type="text/javascript">
@@ -373,7 +373,7 @@
 						<cfif objectUser.general_administrator EQ true>
 							<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-right:3px;" lang="es"/></a>--->
 							
-							<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" style="float:right" title="Administración general"><i class="icon-wrench"></i> <span lang="es"></span></a>
+							<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" style="float:right" title="Administración general" lang="es"><i class="icon-wrench"></i> <span lang="es"></span></a>
 						<cfelse>
 							<!--- PROVISIONAL MIENTRAS ESTÉ EL ICONO TAMBIÉN ANTES
 							<cfxml variable="areasAdminXml">
@@ -387,7 +387,7 @@
 							<cfif nAreasAdmin GT 0>
 								<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>--->
 
-								<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" style="float:right" title="Administración de áreas"><i class="icon-wrench"></i></a>
+								<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" style="float:right" title="Administración de áreas" lang="es"><i class="icon-wrench"></i></a>
 							</cfif>
 						</cfif>
 						</cfoutput>

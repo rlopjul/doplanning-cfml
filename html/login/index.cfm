@@ -84,7 +84,7 @@
 		<script src="../../app/scripts/App.js"></script>
 		<script src="../scripts/MessengerControl.js"></script>
 		<cfif isDefined("SESSION.user_id")>
-		<script type="text/javascript">
+		<script>
 		window.onload = function (){
 			Messenger.Private.initGetNewConversations();
 		}
@@ -97,26 +97,36 @@
 <script src="#APPLICATION.jqueryJSPath#"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
-<script src="../scripts/functions.min.js?v=2.1"></script>
-</cfoutput>
+<script src="../scripts/functions.min.js?v=2.2"></script>
 
-<script type="text/javascript">
+<script>
+	
+	var clientDefaultLanguage = "#getClient.default_language#";
+
 	//Language
+	var selectedLanguage = 'es';
 	jquery_lang_js.prototype.defaultLang = 'es';
 	jquery_lang_js.prototype.currentLang = 'es';
 	window.lang = new jquery_lang_js();
 	
 	$().ready(function () {
 		window.lang.run();
+
+		if(hasLocalStorage()) {
+			selectedLanguage = localStorage.getItem('langJs_currentLang');
+		}
+
+		if(selectedLanguage == null)
+			window.lang.change(clientDefaultLanguage);
 	});
 </script>
+</cfoutput>
+
 
 <!-- InstanceBeginEditable name="head" -->
 <cfoutput>
 <script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
 </cfoutput>
-
-<!---<script src="class.cod.min.js" type="text/javascript"></script>--->
 
 <!-- InstanceEndEditable -->
 </head>
@@ -167,9 +177,18 @@
 		
 		<cfif APPLICATION.identifier EQ "dp" AND show_logo>
 			<div class="col-md-2">
-				<cfif APPLICATION.title EQ "DoPlanning">
-					<a href="http://doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a>
-				</cfif>
+				<div class="row">
+					<div class="col-xs-6">
+					<cfif APPLICATION.title EQ "DoPlanning">
+						<a href="http://doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a>
+					</cfif>
+					</div>
+					<cfif APPLICATION.title EQ "DoPlanning" AND show_help>
+					<div class="col-xs-6" style="text-align:right;">
+						<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" class="visible-sm visible-xs" lang="es"><i class="icon-question-sign"></i></a>
+					</div>
+					</cfif>
+				</div>
 			</div>
 		</cfif>
 		
@@ -181,7 +200,7 @@
 		
 		<cfif APPLICATION.title EQ "DoPlanning" AND show_help>
 			<div class="col-md-2" style="text-align:right;">
-				<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" lang="es"><i class="icon-question-sign"></i></a>
+				<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" class="hidden-sm hidden-xs" lang="es"><i class="icon-question-sign"></i></a>
 			</div>
 		</cfif>
 		

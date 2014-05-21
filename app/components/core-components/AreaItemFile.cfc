@@ -70,11 +70,11 @@
 								
 				<!---
 				Ya no se requiere ningún tamaño concreto para las imágenes de las áreas,
-				solo se limita a un tamaño lógico para web
+				solo se limita a un tamaño máximo
 				<cfset required_width = 468>
 				<cfset required_height = 60>--->
-				<cfset required_width = 1100>
-				<cfset required_height = 1000>
+				<cfset required_width = 2000>
+				<cfset required_height = 2000>
 				
 				<!---<cfif NOT isDefined("arguments.xmlArea")>--->
 				<cfif NOT isDefined("arguments.area_id")>

@@ -12,6 +12,7 @@ jquery_lang_js.prototype.lang.en = {
 	'Acceso a DoPlanning':'Access of DoPlanning',
 	'Ayuda DoPlanning':'DoPlanning Help',
 	'Identificar con usuario y contraseña de:':'Identify with user and password of:',
+	'Usuario o contraseña incorrecta.':'Incorrect user or password',
 	/*END login*/
 	
 	/*remember_password.cfm*/

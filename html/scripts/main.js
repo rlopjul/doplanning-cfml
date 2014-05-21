@@ -21,26 +21,6 @@ function getFilename(url) {
    return url.substring(url.lastIndexOf('/')+1);
 }
 
-function hasLocalStorage() {
-
-	//http://mathiasbynens.be/notes/localstorage-pattern
-
-  	var uid = new Date,
-          result;
-          
-    try {
-
-        localStorage.setItem(uid, uid);
-        result = localStorage.getItem(uid) == uid;
-        localStorage.removeItem(uid);
-
-        return result && localStorage;
-
-    } catch(e) {}
-
-}
-
-
 function showAlertMessage(msg, res){
 
 	//if($("#alertContainer").is(":visible"))

@@ -75,11 +75,11 @@
     
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-9">
-          <input name="login" type="submit" class="btn btn-primary" value="Entrar" data-loading-text="Entrar" autocomplete="off" title="Acceder a la aplicación" lang="es"/>
+          <input name="login" type="submit" class="btn btn-primary" value="Entrar" data-loading-text="Loading" autocomplete="off" title="Acceder a la aplicación" lang="es"/>
           <!---<button type="submit" class="btn btn-primary" data-loading-text="Enviando">Entrar</button>--->
         
           <cfif APPLICATION.identifier EQ "dp">
-            <a href="remember_password.cfm?client_abb=#client_abb#" title="¿Olvidó su contraseña?" class="btn btn-default" lang="es"><!---<button type="button" class="btn btn-default">--->Resetear contraseña<!---</button>---></a>
+            <a href="remember_password.cfm?client_abb=#client_abb#" title="¿Olvidó su contraseña?" class="btn btn-default" lang="es"><span lang="es">Resetear contraseña</span></a>
           </cfif>
         </div>
     </div>

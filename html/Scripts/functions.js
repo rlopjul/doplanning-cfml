@@ -152,3 +152,22 @@ function stopPropagation(event) {
     }
     return false;		
 }
+
+function hasLocalStorage() {
+
+	//http://mathiasbynens.be/notes/localstorage-pattern
+
+  	var uid = new Date,
+          result;
+          
+    try {
+
+        localStorage.setItem(uid, uid);
+        result = localStorage.getItem(uid) == uid;
+        localStorage.removeItem(uid);
+
+        return result && localStorage;
+
+    } catch(e) {}
+
+}

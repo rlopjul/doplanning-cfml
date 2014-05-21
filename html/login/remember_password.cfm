@@ -133,9 +133,23 @@
 
 	<div class="row">
 	
-		<div class="col-md-2">
-			<cfif APPLICATION.identifier EQ "dp" AND APPLICATION.title EQ "DoPlanning"><a href="http://doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a></cfif>
-		</div>
+		<cfif APPLICATION.identifier EQ "dp">
+			<div class="col-md-2">
+				<div class="row">
+					<div class="col-xs-6">
+					<cfif APPLICATION.title EQ "DoPlanning">
+						<a href="http://doplanning.net/" target="_blank"><img src="../assets/logo_inicio.gif" alt="DoPlanning" title="DoPlanning" /></a>
+					</cfif>
+					</div>
+					<cfif APPLICATION.title EQ "DoPlanning">
+					<div class="col-xs-6" style="text-align:right;">
+						<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" class="visible-sm visible-xs" lang="es"><i class="icon-question-sign"></i></a>
+					</div>
+					</cfif>
+				</div>
+			</div>
+		</cfif>
+		
 		
 		<cfif APPLICATION.identifier EQ "dp">
 		<div class="col-md-8" style="text-align:center">
@@ -145,7 +159,7 @@
 		
 		<cfif APPLICATION.title EQ "DoPlanning" AND APPLICATION.identifier EQ "dp">
 		<div class="col-md-2" style="text-align:right;">
-			<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" lang="es"><i class="icon-question-sign"></i></a>
+			<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" class="hidden-sm hidden-xs" lang="es"><i class="icon-question-sign"></i></a>
 		</div>
 		</cfif>
 		

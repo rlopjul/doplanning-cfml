@@ -119,9 +119,9 @@
 </script>
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/scripts/functions.min.js"></script>
+<script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.2"></script>
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
-<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.6"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.7"></script>
 </cfoutput>
 
 <script>
