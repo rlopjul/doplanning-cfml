@@ -54,7 +54,7 @@
 </cfif>
 
 <script src="#APPLICATION.jqueryJSPath#"></script>
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
 
 <script src="#APPLICATION.bootstrapJSPath#"></script>
 

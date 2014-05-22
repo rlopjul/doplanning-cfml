@@ -161,7 +161,7 @@
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
 
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 

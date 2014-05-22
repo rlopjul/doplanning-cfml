@@ -20,7 +20,7 @@
 
 <cfoutput>
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
+<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
 
 <!--- 
 <script type="text/javascript">
