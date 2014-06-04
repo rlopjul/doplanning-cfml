@@ -68,6 +68,7 @@
 
 <cfoutput>
 <script src="#APPLICATION.jqueryJSPath#"></script>
+<script src="#APPLICATION.bootstrapJSPath#"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
 <script src="../html/scripts/functions.min.js?v=2.1"></script>

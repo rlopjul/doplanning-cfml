@@ -6,7 +6,12 @@
 	$(document).ready(function() { 
 		
 		$("##dataTable").tablesorter({ 
-			widgets: ['zebra','filter','select','stickyHeaders'],
+
+			<cfif CGI.REMOTE_ADDR EQ "88.26.181.160">
+				widgets: ['zebra','filter','select','stickyHeaders','math'],
+			<cfelse>
+				widgets: ['zebra','filter','select','stickyHeaders'],
+			</cfif>
 
 			headers: { 
 				
@@ -35,6 +40,10 @@
 			},
 			// default "emptyTo"
    			emptyTo: 'zero',
+			<!---textExtraction: 'basic',--->
+<cfif CGI.REMOTE_ADDR EQ "88.26.181.160">
+	usNumberFormat: false,
+</cfif>
 			 
 			<cfset sortArrayLen = arrayLen(sortArray)>
 			<cfif sortArrayLen GT 0>
@@ -50,7 +59,6 @@
 			<cfelse>
 				sortList: [[0,1]] ,
 			</cfif>
-			
 
 			widgetOptions : {
 				filter_childRows : false,
@@ -67,6 +75,21 @@
 				filter_serversideFiltering: false,
 				filter_startsWith : false,
 				filter_useParsedRow : false
+
+				<cfif CGI.REMOTE_ADDR EQ "88.26.181.160">
+					, math_data     : 'math', // data-math attribute
+				    math_ignore   : [0]
+				    <!---, math_mask     : '##.000,00'--->
+				    <!---, math_complete : function($cell, wo, result, value, arry) {
+				        var txt = '<span class="align-decimal"> ' + result + '</span>';
+				        if ($cell.attr('data-math') === 'all-sum') {
+				          // when the "all-sum" is processed, add a count to the end
+				          return txt + ' (Sum of ' + arry.length + ' cells)';
+				        }
+				        return txt;
+				    }--->
+				</cfif>
+
 		    }
 		});
 		
@@ -93,8 +116,8 @@
 			</cfloop>
 		</tr>
 	</thead>
-	<tbody>
 
+	<tbody>
 	<cfif listFields IS true>
 		
 		<!--- Get selected areas --->
@@ -127,10 +150,11 @@
 
 			<cfif ( isDefined("URL.row") AND URL.row IS tableRows.row_id ) OR ( selectFirst IS true AND tableRows.currentRow IS 1 AND app_version NEQ "mobile" ) ><!--- tableRows.recordCount --->
 
-				<!---Esta acción solo se completa si está en la versión HTML2--->
-				<script type="text/javascript">
+				<!--- ESTO PUESTO AQUÍ HACE QUE FALLE EL TABLESORTER PARA LAS SUMAS --->
+				<!---<script>
 					openUrlHtml2('#row_page_url#','itemIframe');
-				</script>
+				</script>--->
+				<cfset onpenUrlHtml2 = row_page_url>
 
 				<cfset dataSelected = true>
 				<cfset alreadySelected = true>
@@ -187,7 +211,12 @@
 						<cfset field_value = tableRows['field_#fields.field_id#']>
 
 						<cfif len(field_value) GT 0>
-							<cfif fields.field_type_id IS 6><!--- DATE --->
+
+							<cfif fields.field_type_id EQ 4><!--- INTEGER --->
+								<!---<cfset field_value = DecimalFormat(field_value)>--->
+							<cfelseif fields.field_type_id IS 5><!--- DECIMAL --->
+								<cfset field_value = LSnumberFormat(field_value, ",.__", getLocale())>
+							<cfelseif fields.field_type_id IS 6><!--- DATE --->
 								<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
 							<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
 								<cfif field_value IS true>
@@ -243,7 +272,7 @@
 						</cfif>
 
 					</cfif>
-
+					
 					<td>#field_value#</td>
 
 				</cfif>
@@ -252,6 +281,31 @@
 		</tr>
 	</cfloop>
 	</tbody>
+
+	<cfif CGI.REMOTE_ADDR EQ "88.26.181.160">
+	<tfoot>
+	   <tr>
+			<th></th>
+			<cfloop query="fields">
+				<cfif fields.field_type_id EQ 4 OR fields.field_type_id IS 5><!--- INTEGER OR DECIMAL --->
+					<th data-math="col-sum" data-math-mask="##.000,00"></th>
+				<cfelse>
+					<th></th>
+				</cfif>
+			</cfloop>
+		</tr>
+	</tfoot>
+	</cfif>
+
 </table>
+
+<cfif isDefined("onpenUrlHtml2")>
+	
+	<!---Esta acción sólo se completa si está en la versión HTML2--->
+	<script>
+		openUrlHtml2('#onpenUrlHtml2#','itemIframe');
+	</script>
+
+</cfif>
 
 </cfoutput>

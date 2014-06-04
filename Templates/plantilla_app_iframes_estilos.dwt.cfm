@@ -1,7 +1,7 @@
 <!-- TemplateInfo codeOutsideHTMLIsLocked="true" --><!DOCTYPE html>
 <html lang="es">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8"> 
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- TemplateBeginEditable name="doctitle" -->
 <title></title>

@@ -85,9 +85,6 @@
 </script>
 
 <!-- InstanceBeginEditable name="head" -->
-<cfoutput>
-<script src="#APPLICATION.bootstrapJSPath#"></script>
-</cfoutput>
 <script>
 	function openUrlLite(url,target){
 		window.location.href = url;
@@ -114,16 +111,15 @@
 <!-- InstanceBeginEditable name="header" -->
 @@(" ")@@
 <cfoutput>
-	<cfif APPLICATION.title EQ "DoPlanning">
-		<div style="float:left; padding-top:2px;">
-			<a href="../html/index.cfm"><img src="../html/assets/logo_app.gif" alt="Inicio" title="Inicio"/></a>
-		</div>
-	<cfelse>
-		<div style="float:left;">
-			<a href="../html/index.cfm" title="Inicio" class="btn"><i class="icon-home" style="font-size:16px"></i></a>
-		</div>
-	</cfif>
-</div>
+<cfif APPLICATION.title EQ "DoPlanning">
+	<div style="float:left; padding-top:2px;">
+		<a href="../html/index.cfm"><img src="../html/assets/logo_app.gif" alt="Inicio" title="Inicio"/></a>
+	</div>
+<cfelse>
+	<div style="float:left;">
+		<a href="../html/index.cfm" title="Inicio" class="btn"><i class="icon-home" style="font-size:16px"></i></a>
+	</div>
+</cfif>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
 		<a href="../html/preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="../html/logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>

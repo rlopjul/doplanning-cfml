@@ -4,7 +4,7 @@
 <head>
 <!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la Ãºltima versiÃ³n (que no habilite el modo de compatibilidad) --->
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
@@ -21,7 +21,7 @@
 	<cfset client_abb = URL.client_abb>
 </cfif>
 
-<!---AquÃ­ se aÃ±ade COLLATE utf8_bin para que sea case sensitive en la comparaciÃ³n--->
+<!---Aquí se añade COLLATE utf8_bin para que sea case sensitive en la comparación--->
 <cfquery datasource="#APPLICATION.dsn#" name="getClient">
 	SELECT *
 	FROM APP_clients
@@ -75,7 +75,7 @@
 </cfoutput>
 
 <cfif APPLICATION.identifier EQ "vpnet">
-	<!---Esto solo debe mantenerse para la versiÃ³n vpnet (por el Messenger)--->
+	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
 	<script src="../../SpryAssets/includes/xpath.js"></script>
 	<script src="../../SpryAssets/includes/SpryData.js"></script>
 	<script src="../../SpryAssets/includes/SpryXML.js"></script>
@@ -84,7 +84,7 @@
 		<script src="../../app/scripts/App.js"></script>
 		<script src="../scripts/MessengerControl.js"></script>
 		<cfif isDefined("SESSION.user_id")>
-		<script>
+		<script type="text/javascript">
 		window.onload = function (){
 			Messenger.Private.initGetNewConversations();
 		}
@@ -95,38 +95,24 @@
 
 <cfoutput>
 <script src="#APPLICATION.jqueryJSPath#"></script>
+<script src="#APPLICATION.bootstrapJSPath#"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
-<script src="../scripts/functions.min.js?v=2.2"></script>
+<script src="../scripts/functions.min.js?v=2.1"></script>
+</cfoutput>
 
-<script>
-	
-	var clientDefaultLanguage = "#getClient.default_language#";
-
+<script type="text/javascript">
 	//Language
-	var selectedLanguage = 'es';
 	jquery_lang_js.prototype.defaultLang = 'es';
 	jquery_lang_js.prototype.currentLang = 'es';
 	window.lang = new jquery_lang_js();
 	
 	$().ready(function () {
 		window.lang.run();
-
-		if(hasLocalStorage()) {
-			selectedLanguage = localStorage.getItem('langJs_currentLang');
-		}
-
-		if(selectedLanguage == null)
-			window.lang.change(clientDefaultLanguage);
 	});
 </script>
-</cfoutput>
-
 
 <!-- InstanceBeginEditable name="head" -->
-<cfoutput>
-<script type="text/javascript" src="#APPLICATION.bootstrapJSPath#"></script>
-</cfoutput>
 
 <!-- InstanceEndEditable -->
 </head>

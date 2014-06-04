@@ -1841,8 +1841,13 @@
 						});--->
 						
 						$("##listTable").tablesorter({ 
+
 							<cfif arguments.full_content IS false>
-							widgets: ['zebra','filter','select'],
+								<cfif itemTypeId IS 6><!---Tasks--->
+									widgets: ['zebra','filter','select','stickyHeaders','math'],
+								<cfelse>
+									widgets: ['zebra','filter','select','stickyHeaders'],
+								</cfif>
 							<cfelse>
 							widgets: ['zebra','select'],
 							</cfif>
@@ -1901,6 +1906,21 @@
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
 								filter_useParsedData : false
+
+								<cfif itemTypeId IS 6><!---Tasks--->
+									, math_data     : 'math', // data-math attribute
+								    math_ignore   : [0,1,2,3,4,7,8,9]
+								    ///math_mask     : '##,####0.00',
+								    <!---, math_complete : function($cell, wo, result, value, arry) {
+								        var txt = '<span class="align-decimal"> ' + result + '</span>';
+								        if ($cell.attr('data-math') === 'all-sum') {
+								          // when the "all-sum" is processed, add a count to the end
+								          return txt + ' (Sum of ' + arry.length + ' cells)';
+								        }
+								        return txt;
+								    } --->
+								</cfif>
+
 						    }
 						   </cfif>
 						});
@@ -1980,6 +2000,22 @@
 							</cfif>
 						</tr>
 					</thead>
+
+					<cfif arguments.full_content IS false AND itemTypeId IS 6><!---Tasks--->
+					<tfoot>
+					   <tr>
+					   		<th></th>
+					   		<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th data-math="col-sum"></th>
+							<th data-math="col-sum"></th>
+							<th></th>		
+							<th></th>
+						</tr>
+					</tfoot>
+					</cfif>
 					
 					<tbody>
 					
@@ -2002,10 +2038,14 @@
 							<cfif isDefined("URL.#itemTypeName#")>
 							
 								<cfif URL[itemTypeName] IS itemsQuery.id>
-									<!---Esta acción solo se completa si está en la versión HTML2--->
-									<script type="text/javascript">
+
+									<!--- ESTO PUESTO AQUÍ HACE QUE FALLE EL TABLESORTER PARA LAS SUMAS --->
+									<!---<script type="text/javascript">
 										openUrlHtml2('#item_page_url#','itemIframe');
-									</script>
+									</script>--->
+
+									<cfset onpenUrlHtml2 = item_page_url>
+
 									<cfset itemSelected = true>
 								</cfif>
 								
@@ -2013,10 +2053,13 @@
 							
 								<cfif app_version NEQ "mobile">
 								
-									<!---Esta acción solo se completa si está en la versión HTML2--->
-									<script type="text/javascript">
+									<!--- ESTO PUESTO AQUÍ HACE QUE FALLE EL TABLESORTER PARA LAS SUMAS --->
+									<!---<script type="text/javascript">
 										openUrlHtml2('#item_page_url#','itemIframe');
-									</script>
+									</script>--->
+
+									<cfset onpenUrlHtml2 = item_page_url>
+
 									<cfset itemSelected = true>
 									
 								</cfif>
@@ -2123,6 +2166,16 @@
 					</tbody>
 				
 				</table>
+
+				<cfif isDefined("onpenUrlHtml2")>
+					
+					<!---Esta acción sólo se completa si está en la versión HTML2--->
+					<script>
+						openUrlHtml2('#onpenUrlHtml2#','itemIframe');
+					</script>
+
+				</cfif>
+
 				</cfoutput>
 			</cfif>
 								

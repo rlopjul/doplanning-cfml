@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8"> 
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- InstanceBeginEditable name="doctitle" -->
 <title></title>

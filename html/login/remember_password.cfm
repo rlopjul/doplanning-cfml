@@ -4,7 +4,7 @@
 <head>
 <!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la √∫ltima versi√≥n (que no habilite el modo de compatibilidad) --->
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la ˙ltima versiÛn (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
@@ -21,7 +21,7 @@
 	<cfset client_abb = URL.client_abb>
 </cfif>
 
-<!---Aqu√≠ se a√±ade COLLATE utf8_bin para que sea case sensitive en la comparaci√≥n--->
+<!---AquÌ se aÒade COLLATE utf8_bin para que sea case sensitive en la comparaciÛn--->
 <cfquery datasource="#APPLICATION.dsn#" name="getClient">
 	SELECT *
 	FROM APP_clients
@@ -36,7 +36,7 @@
 	</cfif>
 </cfif>
 
-<title>#APPLICATION.title# - #getClient.name#: obtener nueva contrase√±a</title>
+<title>#APPLICATION.title#-#getClient.name#: obtener nueva contrase&ntilde;a</title>
 <!-- InstanceEndEditable -->
 <link href="../assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
@@ -75,7 +75,7 @@
 </cfoutput>
 
 <cfif APPLICATION.identifier EQ "vpnet">
-	<!---Esto solo debe mantenerse para la versi√≥n vpnet (por el Messenger)--->
+	<!---Esto solo debe mantenerse para la versiÛn vpnet (por el Messenger)--->
 	<script src="../../SpryAssets/includes/xpath.js"></script>
 	<script src="../../SpryAssets/includes/SpryData.js"></script>
 	<script src="../../SpryAssets/includes/SpryXML.js"></script>
@@ -95,6 +95,7 @@
 
 <cfoutput>
 <script src="#APPLICATION.jqueryJSPath#"></script>
+<script src="#APPLICATION.bootstrapJSPath#"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
 <script src="../scripts/functions.min.js?v=2.1"></script>
@@ -168,7 +169,7 @@
 	<div class="row">
 		<div style="text-align:center;padding-top:30px;">
 			<span class="texto_normal">
-			<p><span lang="es">Obtener una nueva contrase√±a para #APPLICATION.title#</span> <strong>#getClient.name#</strong></p> 
+			<p><span lang="es">Obtener una nueva contrase&ntilde;a para #APPLICATION.title#</span> <strong>#getClient.name#</strong></p> 
 			</span>
 		</div>
 	</div>
