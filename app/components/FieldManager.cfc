@@ -18,6 +18,7 @@
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
         <cfargument name="list_area_id" type="numeric" required="false">
+        <cfargument name="field_input_type" type="string" required="false">
 
 		<cfset var method = "createField">
 
@@ -77,6 +78,7 @@
 					<cfinvokeargument name="position" value="#arguments.position#">
 					<cfinvokeargument name="list_area_id" value="#arguments.list_area_id#">
 					<cfinvokeargument name="mysql_type" value="#fieldType.mysql_type#">
+					<cfinvokeargument name="field_input_type" value="#arguments.field_input_type#">
 				</cfinvoke>
 
 			</cftransaction>
@@ -114,6 +116,7 @@
         <cfargument name="position" type="numeric" required="false">
         <cfargument name="list_area_id" type="numeric" required="false">
         <cfargument name="mysql_type" type="string" required="true">
+        <cfargument name="field_input_type" type="string" required="false">
 
 		<cfset var method = "createFieldInDatabase">
 
@@ -159,8 +162,10 @@
 				position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">
 				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10><!--- IS SELECT --->
 					, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
+					, field_input_type = <cfqueryparam value="#arguments.field_input_type#" cfsqltype="cf_sql_varchar">
 				<cfelse>
 					, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+					, field_input_type = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
 				</cfif>;
 			</cfquery>
 
@@ -199,6 +204,7 @@
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
         <cfargument name="list_area_id" type="numeric" required="false">
+        <cfargument name="field_input_type" type="string" required="false">
 
 		<cfset var method = "updateField">
 
@@ -258,8 +264,10 @@
 					</cfif>
 					<cfif isDefined("arguments.list_area_id")>
 						, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
+						, field_input_type = <cfqueryparam value="#arguments.field_input_type#" cfsqltype="cf_sql_varchar">
 					<cfelse>
 						, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+						, field_input_type = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
 					</cfif>
 					WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
@@ -364,6 +372,7 @@
 							<cfif isNumeric(fields.list_area_id)>
 								<cfinvokeargument name="list_area_id" value="#fields.list_area_id#"/>
 							</cfif>
+							<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
 						</cfinvoke>
 
 					</cfif>

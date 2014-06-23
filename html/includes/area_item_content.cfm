@@ -80,18 +80,31 @@
 								
 			</cfif>
 			
-			<cfif APPLICATION.moduleWeb IS true AND len(area_type) GT 0 AND is_user_area_responsible>
+			<cfif APPLICATION.moduleWeb IS true AND len(area_type) GT 0>
 
-				<!--- publication validation --->
-				<cfif objectItem.publication_validated IS false>
+				<cfif is_user_area_responsible IS true>
+					
+					<!--- publication validation --->
+					<cfif objectItem.publication_validated IS false>
 
-					<cfif SESSION.client_abb NEQ "hcs" OR objectItem.publication_scope_id NEQ 1><!---En el DP HCS el ámbito de publicación 1 es DoPlanning, que no requiere aprobación de publicación--->
-						<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#item_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación en web');" title="Permitir la publicación en web" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>
+						<cfif SESSION.client_abb NEQ "hcs" OR NOT isDefined("objectItem.publication_scope_id") OR objectItem.publication_scope_id NEQ 1><!---En el DP HCS el ámbito de publicación 1 es DoPlanning, que NO necesita aprobación de publicación--->
+							<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#item_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación en web');" title="Permitir la publicación en web" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>
+						</cfif>
+
+					<cfelse>
+						<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#item_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Permitir la publicación en web" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>
+
+						<!---<cfif SESSION.client_abb EQ "hcs">
+					
+							<a href="" target="_blank" title="Ver en web" class="btn btn-default btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Ver en web</span></a>
+
+						</cfif>--->
+
 					</cfif>
 
-				<cfelse>
-					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#item_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Permitir la publicación en web" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>					
 				</cfif>
+
+
 				
 			</cfif>
 
@@ -255,7 +268,7 @@
 					
 					<cfif APPLICATION.moduleWeb EQ true>
 						<!---<cfif itemTypeId IS NOT 2>--->
-						<li><a href="entry_copy.cfm?#copy_query_string#" lang="es">Elemento de contenido web</a></li>
+						<li><a href="entry_copy.cfm?#copy_query_string#" lang="es">Elemento de contenido genérico</a></li>
 						<!---</cfif>--->
 						<cfif APPLICATION.identifier EQ "vpnet"><!---itemTypeId IS NOT 3 AND --->
 						<li><a href="link_copy.cfm?#copy_query_string#" lang="es">Enlace</a></li>
@@ -281,10 +294,32 @@
 
 		
 		
-		<cfif APPLICATION.moduleWeb EQ true AND APPLICATION.moduleTwitter IS true AND area_type EQ "web">
-		<a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#" class="btn btn-default btn-sm"><i class="icon-twitter"></i> Publicar en Twitter</a>
+		<cfif APPLICATION.moduleWeb EQ true AND ( area_type EQ "web" OR area_type EQ "intranet" ) AND objectItem.publication_validated IS NOT false>
+
+			<cfif APPLICATION.moduleTwitter IS true AND area_type EQ "web">
+				<a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#" class="btn btn-default btn-sm"><i class="icon-twitter"></i> Publicar en Twitter</a>
+			</cfif>
+			
+			<cfif (itemTypeId IS 4 OR itemTypeId IS 5) AND isDefined("webPath")>
+				
+				<!---areaWebUrl--->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getItemWebPageFullUrl" returnvariable="itemPageFullUrl">
+					<cfinvokeargument name="item_id" value="#objectItem.id#">
+					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+					<cfinvokeargument name="title" value="#objectItem.title#">
+					<cfinvokeargument name="path_url" value="#webPathUrl#">
+					<cfinvokeargument name="path" value="#webPath#">
+				</cfinvoke>
+
+				<span class="divider">&nbsp;</span>
+
+				<a href="#itemPageFullUrl#" class="btn btn-default btn-sm" title="Ver en #area_type#" lang="es" target="_blank"><i class="icon-globe"></i> <span lang="es">Ver en #area_type#</span></a>
+
+			</cfif>
 		
 		</cfif>
+
+
 		
 				
 	<cfelse><!---VPNET--->
@@ -301,6 +336,9 @@
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 	<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 	<cfinvokeargument name="area_type" value="#area_type#">
+	<cfif isDefined("webPath")>
+		<cfinvokeargument name="webPath" value="#webPath#">
+	</cfif>
 </cfinvoke>
 
 

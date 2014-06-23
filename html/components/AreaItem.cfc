@@ -1619,6 +1619,7 @@
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="itemTypeName" type="string" required="true">
 		<cfargument name="area_type" type="string" required="true">
+		<cfargument name="webPath" type="string" required="false">
 		
 		<cfset var method = "outputItem">
 		
@@ -1773,7 +1774,7 @@
 
 					<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->
 
-						<cfif (area_type EQ "web" OR area_type EQ "intranet") AND (itemTypeId IS 4 OR itemTypeId IS 5)>
+						<cfif (area_type EQ "web" OR area_type EQ "intranet") AND (itemTypeId IS 4 OR itemTypeId IS 5) AND isDefined("arguments.webPath")>
 
 							<!---itemWebUrl--->
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getItemWebPage" returnvariable="itemPage">
@@ -1781,9 +1782,9 @@
 								<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 								<cfinvokeargument name="title" value="#objectItem.title#">
 							</cfinvoke>
-							<cfset itemWebUrl = "/#area_type#/#itemPage#">
+							<cfset itemWebUrl = "/#arguments.webPath#/#itemPage#">
 
-							<div class="div_message_page_label"><span lang="es">URL relativa en la #area_type#:</span></div>
+							<div class="div_message_page_label"><span lang="es">URL relativa en la <b>#area_type#</b>:</span></div>
 							<input type="text" value="#itemWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 						</cfif>
 						
@@ -2154,7 +2155,8 @@
 							</cfif>
 							
 							<cfif arguments.full_content IS true>
-								<td><a onclick="openUrl('#itemTypeNameP#.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="link_blue">#itemsQuery.area_name#</a></td>
+								<!---#itemTypeNameP#.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#--->
+								<td><a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="link_blue">#itemsQuery.area_name#</a></td>
 							<cfelse>
 								<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
 								<td style="vertical-align:middle"><span style="line-height:30px;">#itemsQuery.position#</span><!---Opciones de ordenar anteriores<div style="float:right;clear:none;"><a onclick="openUrl('area_item_position_up.cfm?item=#itemsQuery.id#&type=#itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a><div style="clear:both; height:0px;"><!-- --></div><a onclick="openUrl('area_item_position_down.cfm?item=#itemsQuery.id#&type=#itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a></div>---></td>
@@ -2219,9 +2221,6 @@
 							</cfif>
 							sortList: [[1,1]],
 							headers: { 
-								/*0: { 
-									sorter: false 
-								},*/
 								1: { 
 									sorter: "datetime" 
 								}
@@ -2360,7 +2359,7 @@
 							</cfswitch></span></td>
 							
 							<cfif arguments.full_content IS true>
-								<td><a onclick="openUrl('#itemTypeNameP#.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="link_blue">#itemsQuery.area_name#</a></td>
+								<td><a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="link_blue">#itemsQuery.area_name#</a></td>
 							</cfif>
 							
 						</tr>
@@ -2488,7 +2487,7 @@
 							<cfif len(area_type) IS 0>
 							<th style="width:55%" lang="es">Título</th>
 							<cfelse>
-							<th style="width:49%" lang="es">Título</th>
+							<th style="width:49%" lang="es">Título/Contenido</th>
 							</cfif>
 							<th style="width:5%" class="filter-false"></th>
 							<th style="width:23%" lang="es">De</th>
@@ -2582,7 +2581,30 @@
 										<cfset titleClass = titleClass&" text_red"> 
 									</cfif>
 								</cfif>
-								<a href="#item_page_url#" class="#titleClass#">#itemsQuery.title#</a>
+
+								<cfset titleContent = itemsQuery.title>
+
+								<cfif len(titleContent) IS 0>
+
+									<cfset itemDescription = itemsQuery.description>
+
+									<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="removeHTML" returnvariable="itemDescription">
+										<cfinvokeargument name="string" value="#itemDescription#">
+									</cfinvoke>
+
+									<cfif len(itemsQuery.description) GT 100>
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="leftToNextSpace" returnvariable="itemContent">
+											<cfinvokeargument name="str" value="#itemDescription#">
+											<cfinvokeargument name="count" value="100">
+										</cfinvoke>
+										<cfset titleContent = "<i>#itemContent#...</i>">
+									<cfelse>
+										<cfset titleContent = "<i>#itemDescription#</i>">
+									</cfif>
+								
+								</cfif>
+
+								<a href="#item_page_url#" class="#titleClass#">#titleContent#</a>
 							</td>
 							<td>
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 14 OR itemTypeId IS 15 OR itemTypeId IS 16><!---Lists, Forms And Views--->

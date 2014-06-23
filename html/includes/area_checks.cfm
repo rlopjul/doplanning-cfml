@@ -101,9 +101,20 @@ app_version almacena si es la versión móvil o la estandar--->
 		<!---Esto es para las páginas de items, archivos, usuarios (la mayoría de las páginas excepto la de navegación del arbol area.cfm) que no reciben este valor--->
 		<!---El tipo de un área depende del tipo de las áreas superiores que tenga.--->
 		<!---area_type puede ser web, intranet o NULL--->
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaType" returnvariable="area_type">
+		<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaType" returnvariable="area_type">
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>--->
+
+		<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaType" returnvariable="areaTypeResult">
 			<cfinvokeargument name="area_id" value="#area_id#">
 		</cfinvoke>
+		<cfset area_type = areaTypeResult.areaType>
+		<cfif area_type EQ "web" OR area_type EQ "intranet"><!---Area web url--->
+			<cfset webPath = areaTypeResult.webPath>
+			<cfset webPathUrl = areaTypeResult.webPathUrl>
+		</cfif>
+		
+
 	</cfif>
 
 	<!---is_user_area_responsible--->

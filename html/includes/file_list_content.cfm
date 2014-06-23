@@ -219,7 +219,7 @@
 			
 			<cfif full_content IS true>
 				<td>
-				<a onclick="openUrl('files.cfm?area=#files.area_id#&file=#files.id#','areaIframe',event)" class="link_blue">#files.area_name#</a>
+				<a onclick="openUrl('area_items.cfm?area=#files.area_id#&file=#files.id#','areaIframe',event)" class="link_blue">#files.area_name#</a>
 				</td>
 			</cfif>
 		</tr>		

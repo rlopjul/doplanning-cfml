@@ -353,9 +353,10 @@
 		<cfset var method = "getAreaType">
 		
 		<cfset var areaType = "">
+		<cfset var typeAreaId = "">
 					
 		<cfquery datasource="#client_dsn#" name="getAreaType">
-			SELECT areas.type, areas.parent_id
+			SELECT areas.type, areas.parent_id, areas.id
 			FROM #client_abb#_areas AS areas
 			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
@@ -365,6 +366,7 @@
 			<cfif len(getAreaType.type) GT 0>
 			
 				<cfset areaType = getAreaType.type>
+				<cfset typeAreaId = getAreaType.id>
 				
 			<cfelse>
 					
@@ -377,6 +379,7 @@
 					</cfinvoke>
 					
 					<cfset areaType = typeResponse.areaType>
+					<cfset typeAreaId = typeResponse.typeAreaId>
 					
 				</cfif>
 				
@@ -389,7 +392,7 @@
 		
 		</cfif>
 		
-		<cfset response = {result="true", areaType=#areaType#}>	
+		<cfset response = {result="true", areaType=#areaType#, typeAreaId=#typeAreaId#}>	
 		<cfreturn response>
 		
 	</cffunction>

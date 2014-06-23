@@ -220,7 +220,7 @@
 				</cfif>
 			
 				<cfif APPLICATION.moduleWeb EQ true>
-					<option value="entries_search.cfm" <cfif curElement EQ "entries">selected="selected"</cfif> lang="es">Elementos de contenido web</option>
+					<option value="entries_search.cfm" <cfif curElement EQ "entries">selected="selected"</cfif> lang="es">Elementos de contenido genérico</option>
 
 					<option value="newss_search.cfm" <cfif curElement EQ "news">selected="selected"</cfif> lang="es">Noticias</option>
 

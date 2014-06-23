@@ -39,7 +39,7 @@ function addRailoRequiredSelect(input_name, message)
 	railo_custom_form.addInput(input_name,true,-1,14,null,message,null,null,null,null,-1);
 }
 
-function addRailoRequiredRadioInput(input_name, message)
+function addRailoRequiredRadio(input_name, message)
 {
 	railo_custom_form.addInput(input_name,true,1,14,null,message,null,null,null,null,-1);
 	//railo_form_62.addInput('prueba',true,1,14,null,'PROBANDO',null,null,null,null,-1);

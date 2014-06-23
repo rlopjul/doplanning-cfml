@@ -122,10 +122,6 @@
 
 	<!--- ----------------------- getAreaWebPage -------------------------------- --->
 
-	<!---Para poder URLs absolutas es necesario saber la URL donde está publicada la web.
-	Esta URL podría estar definida en base de datos en el cliente correspondiente.
-	También es necesario saber en qué idioma está---->
-
 	<cffunction name="getAreaWebPage" access="public" returntype="string">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="name" type="string" required="true">
@@ -135,7 +131,13 @@
 		<cfset var pageTitle = "">
 		
 		<cfif arguments.remove_order IS true>
-			<cfset pageTitle = mid(arguments.name, findOneOf(".-", arguments.name)+3, len(arguments.name))>
+			<cfif find(".- ", arguments.name) GT 0>
+				<cfset pageTitle = mid(arguments.name, find(".- ", arguments.name)+3, len(arguments.name))>
+			<cfelseif find(".-", arguments.name) GT 0>
+				<cfset pageTitle = mid(arguments.name, find(".-", arguments.name)+2, len(arguments.name))>
+			<cfelse>
+				<cfset pageTitle = arguments.name>
+			</cfif>
 		<cfelse>
 			<cfset pageTitle = arguments.name>
 		</cfif>
@@ -148,11 +150,32 @@
 	</cffunction>
 
 
-	<!--- ----------------------- getItemWebPage -------------------------------- --->
+	<!--- ----------------------- getAreaWebPageFullUrl -------------------------------- --->
 
-	<!---Para poder URLs absolutas es necesario saber la URL donde está publicada la web.
-	Esta URL podría estar definida en base de datos en el cliente correspondiente.
-	También es necesario saber en qué idioma está---->
+	<!---Para poder URLs absolutas es necesario saber la URL donde está publicada la web--->
+
+	<cffunction name="getAreaWebPageFullUrl" access="public" returntype="string">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="name" type="string" required="true">
+		<cfargument name="remove_order" type="boolean" required="true">
+		<cfargument name="path_url" type="string" required="true">
+		<cfargument name="path" type="string" required="true">
+		
+		<cfset var areaWebUrl = "">
+		
+		<cfinvoke component="UrlManager" method="getAreaWebPage" returnvariable="areaPage">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfinvokeargument name="name" value="#arguments.name#">
+			<cfinvokeargument name="remove_order" value="#arguments.remove_order#">
+		</cfinvoke>
+
+		<cfset areaWebUrl = arguments.path_url&"/"&arguments.path&"/"&areaPage>
+		
+		<cfreturn areaWebUrl>
+	</cffunction>
+
+
+	<!--- ----------------------- getItemWebPage -------------------------------- --->
 
 	<cffunction name="getItemWebPage" access="public" returntype="string">
 		<cfargument name="item_id" type="numeric" required="true">
@@ -177,6 +200,30 @@
 	</cffunction>
 
 
+	<!--- ----------------------- getItemWebPageFullUrl -------------------------------- --->
+
+	<!---Para poder URLs absolutas es necesario saber la URL donde está publicada la web--->
+
+	<cffunction name="getItemWebPageFullUrl" access="public" returntype="string">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="title" type="string" required="true">
+		<cfargument name="path_url" type="string" required="true">
+		<cfargument name="path" type="string" required="true">
+
+		<cfset var itemWebUrl = "">
+		
+		<cfinvoke component="UrlManager" method="getItemWebPage" returnvariable="itemPage">
+			<cfinvokeargument name="item_id" value="#arguments.item_id#">
+			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+			<cfinvokeargument name="title" value="#arguments.title#"/>
+		</cfinvoke>
+
+		<cfset itemWebUrl = arguments.path_url&"/"&arguments.path&"/"&itemPage>
+		
+		<cfreturn itemWebUrl>
+	</cffunction>
+
 
 	<!--- ----------------------- pageTitleToUrl -------------------------------- --->
 	<cffunction name="pageTitleToUrl" access="public" returntype="string">
@@ -192,6 +239,20 @@
 		<cfset titleUrl = replaceList(titleUrl, Chr(34), "")>
 
 		<cfreturn titleUrl>
+	</cffunction>
+
+
+	<!--- ----------------------- getFileWebPage -------------------------------- --->
+
+	<cffunction name="getFileWebPage" access="public" returntype="string">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfset var fileWebUrl = "">
+
+		<cfset fileWebUrl = "download_file.cfm?file=#arguments.file_id#&area=#arguments.area_id#">
+		
+		<cfreturn fileWebUrl>
 	</cffunction>
 
 	

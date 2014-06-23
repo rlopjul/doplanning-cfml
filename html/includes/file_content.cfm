@@ -321,7 +321,7 @@
 			<cfinvokeargument name="area_id" value="#area_id#">
 		</cfinvoke>
 
-		<div class="div_message_page_label"><span lang="es">URL en #APPLICATION.title#:</span></div>
+		<div class="div_message_page_label"><span lang="es">URL del elemento en #APPLICATION.title#:</span></div>
 		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
 		<!---getDownloadFileUrl--->
@@ -330,10 +330,26 @@
 			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 		</cfinvoke>
 
-		<div class="div_message_page_label"><span lang="es">URL de descarga:</span></div>
+		<div class="div_message_page_label"><span lang="es">URL de descarga desde #APPLICATION.title#:</span></div>
 		<input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
-		<!--- <a href="#downloadFileUrl#" target="_blank">descarga</a> --->
+
+		<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->
+
+			<cfif (area_type EQ "web" OR area_type EQ "intranet") AND isDefined("webPath")>
+
+				<!---fileWebUrl--->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
+					<cfinvokeargument name="file_id" value="#objectFile.id#">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+				<cfset fileWebUrl = "/#webPath#/#filePage#">
+
+				<div class="div_message_page_label"><span lang="es">URL relativa en la <b>#area_type#</b>:</span></div>
+				<input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
+			</cfif>
+			
+		</cfif>
 
 		<!---Typology--->
 		<cfif APPLICATION.modulefilesWithTables IS true>

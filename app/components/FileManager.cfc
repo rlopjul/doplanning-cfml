@@ -3817,9 +3817,15 @@
 					</cfquery>
 					
 					<!--- ------------------ Update User Space Used --------------------- --->
-					<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
+					<cfquery name="updateSpaceUsedRemove" datasource="#client_dsn#">
 						UPDATE #client_abb#_users
-						SET space_used = space_used-#fileQuery.file_size#+<cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">
+						SET space_used = space_used-#fileQuery.file_size#
+						WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+
+					<cfquery name="updateSpaceUsedAdd" datasource="#client_dsn#">
+						UPDATE #client_abb#_users
+						SET space_used = space_used+<cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">
 						WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 				

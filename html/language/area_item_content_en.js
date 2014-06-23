@@ -4,7 +4,7 @@ var area_item_content_en = {
 	'Evento':'Event',
 	'Tarea':'Task',
 	'Interconsulta':'Interconsultation',
-	'Elemento de contenido web':'Web content element',
+	'Elemento de contenido genérico':'Generic content element',
 	'Noticia':'News item',
 	
 	/*area_item_new_content*/
@@ -12,7 +12,7 @@ var area_item_content_en = {
 	'Nuevo Evento':'New Event',
 	'Nueva Tarea':'New Task',
 	'Nueva Interconsulta':'New Interconsultation',
-	'Nuevo Elemento de contenido web':'New Web content element',
+	'Nuevo Elemento de contenido genérico':'New Generic content element',
 	'Nueva Noticia':'New News item',
 	/*END area_item_new_content*/
 	
@@ -21,7 +21,7 @@ var area_item_content_en = {
 	'Modificar Evento':'Modify Event',
 	'Modificar Tarea':'Modify Task',
 	'Modificar Interconsulta':'Modify Interconsultation',
-	'Modificar Elemento de contenido web':'Modify web content element',
+	'Modificar Elemento de contenido genérico':'Modify web content element',
 	'Modificar Noticia':'Modify News item',
 	'Archivo eliminado.':'File deleted.',
 	'Imagen eliminada.':'Image deleted.',

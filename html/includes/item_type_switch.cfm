@@ -22,8 +22,8 @@
 		<!--- <cfset itemTypeNameU = "Entry"> --->
 		<cfset itemTypeNameP = "entries">
 		
-		<cfset itemTypeNameEs = "Elemento de contenido web">
-		<cfset itemTypeNameEsP = "Elementos de contenido web">
+		<cfset itemTypeNameEs = "Elemento de contenido genérico">
+		<cfset itemTypeNameEsP = "Elementos de contenido genérico">
 
 		<cfset itemTypeGender = "male">
 	

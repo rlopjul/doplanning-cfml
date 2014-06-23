@@ -71,6 +71,23 @@
 	<!--- QUITADO EL ENLACE HASTA QUE SE TERMINE EL DESARROLLO, esta página debe mostrar el contenido de los elementos <a href="#APPLICATION.htmlPath#/area_items_full.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Expandir contenido" lang="es" target="_blank"><i class="icon-external-link-sign" style="font-size:14px; line-height:23px;"></i></a> --->
 
 	<a href="area_items.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+
+	<cfif APPLICATION.moduleWeb EQ true AND ( area_type EQ "web" OR area_type EQ "intranet" ) AND isDefined("webPathUrl")>
+
+		<!---areaWebUrl--->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaWebPageFullUrl" returnvariable="areaPageFullUrl">
+			<cfinvokeargument name="area_id" value="#area_id#">
+			<cfinvokeargument name="name" value="#objectArea.name#">
+			<cfinvokeargument name="remove_order" value="true">
+			<cfinvokeargument name="path_url" value="#webPathUrl#">
+			<cfinvokeargument name="path" value="#webPath#">
+		</cfinvoke>
+
+		<span class="divider">&nbsp;</span>
+
+		<a href="#areaPageFullUrl#" class="btn btn-default btn-sm" title="Ver en #area_type#" lang="es" target="_blank"><i class="icon-globe" style="font-size:14px; line-height:23px;"></i></a>
+
+	</cfif>
 	
 	</cfoutput>
 </div>

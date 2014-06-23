@@ -256,6 +256,8 @@
 		<cfargument name="area_id" type="numeric" required="yes">
 		
 		<cfset var method = "getAreaType">
+
+		<cfset var areaType = "">
 							
 		<cfinclude template="includes/functionStart.cfm">
 		
@@ -265,6 +267,22 @@
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
+
+			<cfset areaType = getAreaTypeResult.areaType>
+
+			<cfif len(getAreaTypeResult.areaType) GT 0><!---Get web path URL--->
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWeb" returnvariable="getWebQuery">
+					<cfinvokeargument name="area_id" value="#getAreaTypeResult.typeAreaId#">
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset getAreaTypeResult.webPath = getWebQuery.path>
+				<cfset getAreaTypeResult.webPathUrl = getWebQuery.path_url>
+
+			</cfif>
 					
 
 		<cfreturn getAreaTypeResult>

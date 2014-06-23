@@ -200,6 +200,12 @@
 
 							</div>
 						</div>
+
+						<cfif fields.required IS true AND arguments.search_inputs IS false>
+							<script>
+								addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
+							</script>
+						</cfif>	
 					
 					<cfelse><!--- LISTS --->
 
@@ -241,33 +247,76 @@
 							
 						</cfif>
 
-						<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>multiple style="height:90px"</cfif>>
-							<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
-								<option value=""></option>
-							</cfif>
 
-							<cfinvoke component="AreaHtml" method="outputSubAreasSelect">
+						<cfif fields.field_input_type EQ "radio" OR fields.field_input_type EQ "checkbox"><!---RADIO / CHECKBOX--->
+
+							<!---<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
+								<option value=""></option>
+							</cfif>--->
+
+							<cfinvoke component="AreaHtml" method="outputSubAreasInput">
 								<cfinvokeargument name="area_id" value="#fields.list_area_id#">
 								<cfif len(selectedAreasList) GT 0>
 									<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
 								</cfif>
 								<cfinvokeargument name="recursive" value="false">
-
+								<cfinvokeargument name="field_name" value="#field_name#"/>
+								<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
+								<!---<cfif fields.required IS true AND arguments.search_inputs IS false>
+									<cfinvokeargument name="field_required" value="true">
+								<cfelse>
+									<cfinvokeargument name="field_required" value="false">
+								</cfif>--->
 								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 							</cfinvoke>
-						</select>
-						<cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>
-							<small class="help-block">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
+
+							<cfif fields.required IS true AND arguments.search_inputs IS false>
+								<cfif fields.field_input_type EQ "radio">
+									<script>
+										addRailoRequiredRadio("#field_name#[]", "Campo '#field_label#' obligatorio");
+									</script>
+								<cfelseif fields.field_input_type EQ "checkbox">
+									<script>
+										addRailoRequiredCheckBox("#field_name#[]", "Campo '#field_label#' obligatorio");
+									</script>
+								</cfif>
+							</cfif>	
+
+						<cfelse><!---SELECT--->
+
+
+							<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>multiple style="height:90px"</cfif>>
+								<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
+									<option value=""></option>
+								</cfif>
+
+								<cfinvoke component="AreaHtml" method="outputSubAreasSelect">
+									<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+									<cfif len(selectedAreasList) GT 0>
+										<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+									</cfif>
+									<cfinvokeargument name="recursive" value="false">
+
+									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+									<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+								</cfinvoke>
+							</select>
+							<cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>
+								<small class="help-block">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
+							</cfif>
+
+							<cfif fields.required IS true AND arguments.search_inputs IS false>
+								<script>
+									addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							</cfif>	
+
+
 						</cfif>
+						
 
 					</cfif>
-
-					<cfif fields.required IS true AND arguments.search_inputs IS false>
-						<script type="text/javascript">
-							addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
-						</script>
-					</cfif>	
 
 				</cfif>
 

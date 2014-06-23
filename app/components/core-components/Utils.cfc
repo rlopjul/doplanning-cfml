@@ -47,6 +47,34 @@
 			}
 			return placeCharacter;
 		}
+
+		/**
+		* @return Returns a string. 
+		* @author alucena
+		*/
+		function leftToNextSpace(str, count) {
+	
+			var strLen = len(str);
+			if(strLen GT count){
+				var nextChar = mid(str,count+1,1);
+				
+				if(nextChar != " "){	
+					var nextSpace = find(" ", str, count+1);
+					
+					if(nextSpace GT 0)
+						str = left(str, nextSpace-1);
+					else
+						str = left(str, count);	
+				}
+				else{
+					str = left(str, count);
+				}
+			}
+			
+			return str;
+			
+		}
+
 	
 	</cfscript>
 
@@ -869,69 +897,6 @@ hint="Converts an entire query or the given record to a struct. This might retur
 
 		</cfscript>
 	</cffunction>
-
-
-	<!--- QueryChangeColumnName --->
-
-	<!---<cffunction
-	    name="QueryChangeColumnName"
-	    access="public"
-	    output="false"
-	    returntype="query"
-	    hint="Changes the column name of the given query.">
-	 
-	    <!--- Define arguments. --->
-	    <cfargument
-	        name="Query"
-	        type="query"
-	        required="true"
-	        />
-	 
-	    <cfargument
-	        name="ColumnName"
-	        type="string"
-	        required="true"
-	        />
-	 
-	    <cfargument
-	        name="NewColumnName"
-	        type="string"
-	        required="true"
-	        />
-	 
-	    <cfscript>
-	 
-	        var LOCAL = StructNew();
-	 
-	        LOCAL.Columns = ARGUMENTS.Query.GetColumnNames();
-	 
-	        LOCAL.ColumnList = ArrayToList(
-	            LOCAL.Columns
-	            );
-	 
-	        LOCAL.ColumnIndex = ListFindNoCase(
-	            LOCAL.ColumnList,
-	            ARGUMENTS.ColumnName
-	            );
-	 
-	        if (LOCAL.ColumnIndex){
-	 
-	            LOCAL.Columns = ListToArray(
-	                LOCAL.ColumnList
-	                );
-	 
-	            LOCAL.Columns[ LOCAL.ColumnIndex ] = ARGUMENTS.NewColumnName;
-	 
-	            ARGUMENTS.Query.SetColumnNames(
-	                LOCAL.Columns
-	                );
-	 
-	        }
-	 
-	        return( ARGUMENTS.Query );
-	 
-	    </cfscript>
-	</cffunction>--->
 
 
 </cfcomponent>

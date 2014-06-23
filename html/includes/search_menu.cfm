@@ -10,7 +10,7 @@
 	
 	<cfcase value="entries_search.cfm">
 		<cfset curElement = "entries">
-		<cfset curTitle = "Elementos de contenido web">
+		<cfset curTitle = "Elementos de contenido genérico">
 	</cfcase>
 	
 	<cfcase value="links_search.cfm">
@@ -105,7 +105,7 @@
 		</cfif>
 		
 		<cfif APPLICATION.moduleWeb EQ true>
-			<li <cfif curElement EQ "entries">class="active"</cfif>><a href="entries_search.cfm"><img src="#APPLICATION.htmlPath#/assets/icons/entry.png" title="Elementos de contenido web" alt="Elementos de contenidos web" lang="es"/></a></li>
+			<li <cfif curElement EQ "entries">class="active"</cfif>><a href="entries_search.cfm"><img src="#APPLICATION.htmlPath#/assets/icons/entry.png" title="Elementos de contenido genérico" alt="Elementos de contenidos web" lang="es"/></a></li>
 			
 			<li <cfif curElement EQ "news">class="active"</cfif>><a href="newss_search.cfm"><img src="#APPLICATION.htmlPath#/assets/icons/news.png" title="Noticias" alt="Noticias" lang="es"/></a></li>
 

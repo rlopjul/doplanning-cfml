@@ -95,12 +95,16 @@
 			$("##booleanDefaultValue").hide();
 			$("##listDefaultValue").hide();
 			$("##listAreaSelector").hide();
+			$("##fieldInputTypeList").hide();
+			$("##fieldInputTypeListMultiple").hide();
 
 			$("##default_value_text").prop('disabled', true);
 			$("##default_value_date").prop('disabled', false);
 			$("##default_value_boolean").prop('disabled', true);
 			$("##default_value_list").prop('disabled', true);
 			$("##list_area_id").prop('disabled', true);
+			$("##field_input_type_list").prop('disabled', true);
+			$("##field_input_type_list_multiple").prop('disabled', true);
 
 		}else if(typeId == 7){ //Boolean
 
@@ -109,12 +113,16 @@
 			$("##booleanDefaultValue").show();
 			$("##listDefaultValue").hide();
 			$("##listAreaSelector").hide();
+			$("##fieldInputTypeList").hide();
+			$("##fieldInputTypeListMultiple").hide();
 
 			$("##default_value_text").prop('disabled', true);
 			$("##default_value_date").prop('disabled', true);
 			$("##default_value_boolean").prop('disabled', false);
 			$("##default_value_list").prop('disabled', true);
 			$("##list_area_id").prop('disabled', true);
+			$("##field_input_type_list").prop('disabled', true);
+			$("##field_input_type_list_multiple").prop('disabled', true);
 
 		}else if(typeId == 9 || typeId ==10){ //List
 
@@ -130,6 +138,20 @@
 			$("##default_value_list").prop('disabled', false);
 			$("##list_area_id").prop('disabled', false);
 
+			if(typeId == 9){
+				$("##fieldInputTypeList").show();
+				$("##field_input_type_list").prop('disabled', false);
+
+				$("##fieldInputTypeListMultiple").hide();
+				$("##field_input_type_list_multiple").prop('disabled', true);
+			}else{
+				$("##fieldInputTypeList").hide();
+				$("##field_input_type_list").prop('disabled', true);
+
+				$("##fieldInputTypeListMultiple").show();
+				$("##field_input_type_list_multiple").prop('disabled', false);
+			}
+
 		}else {
 
 			$("##textDefaultValue").show();
@@ -137,12 +159,16 @@
 			$("##booleanDefaultValue").hide();
 			$("##listDefaultValue").hide();
 			$("##listAreaSelector").hide();
+			$("##fieldInputTypeList").hide();
+			$("##fieldInputTypeListMultiple").hide();
 
 			$("##default_value_text").prop('disabled', false);
 			$("##default_value_date").prop('disabled', true);
 			$("##default_value_boolean").prop('disabled', true);
 			$("##default_value_list").prop('disabled', true);
 			$("##list_area_id").prop('disabled', true);
+			$("##field_input_type_list").prop('disabled', true);
+			$("##field_input_type_list_multiple").prop('disabled', true);
 
 			if(typeId == 2 || typeId == 3){
 
@@ -154,6 +180,7 @@
 			}
 
 		}
+
 	}
 
 	$(document).ready(function() { 
@@ -204,7 +231,12 @@
 	<div class="row">
 		<div class="col-md-12">
 			<label for="label" class="control-label">Nombre *</label>
-			<cfinput type="text" name="label" id="label" value="#field.label#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
+			<cfif tableTypeId IS 2>
+				<cfset labelMaxLength = "500">
+			<cfelse>
+				<cfset labelMaxLength = "100">
+			</cfif>
+			<cfinput type="text" name="label" id="label" value="#field.label#" maxlength="#labelMaxLength#" required="true" message="Nombre requerido" class="form-control"/>
 		</div>
 	</div>
 
@@ -220,6 +252,26 @@
 				</cfloop>
 			</select>
 			<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>
+		</div>
+	</div>
+
+	<div class="row" id="fieldInputTypeList">
+		<div class="col-md-12">
+			<label for="field_input_type_list" class="control-label">Mostrar opciones en</label>
+			<select name="field_input_type" id="field_input_type_list" class="form-control">
+				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif>>Lista desplegable</option>
+				<option value="radio" <cfif field.field_input_type EQ "radio">selected="selected"</cfif>>Radio (se muestran visibles todas las opciones)</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="row" id="fieldInputTypeListMultiple">
+		<div class="col-md-12">
+			<label for="field_input_type_list_multiple" class="control-label">Mostrar opciones en</label>
+			<select name="field_input_type" id="field_input_type_list_multiple" class="form-control">
+				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif>>Lista</option>
+				<option value="checkbox" <cfif field.field_input_type EQ "checkbox">selected="selected"</cfif>>Checkbox (se muestran visibles todas las opciones)</option>
+			</select>
 		</div>
 	</div>
 

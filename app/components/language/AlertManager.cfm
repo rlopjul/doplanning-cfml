@@ -7,7 +7,7 @@ curLangText["es"] = {
 				"name" : "Mensaje",
 			},
 			"2": {
-				"name" : "Elemento de contenido web",
+				"name" : "Elemento de contenido genérico",
 			},
 			"3": {
 				"name" : "Enlace",
@@ -301,7 +301,7 @@ curLangText["en"] = {
 				"name" : "Message",
 			},
 			"2": {
-				"name" : "Web content element",
+				"name" : "Generic content element",
 			},
 			"3": {
 				"name" : "Link",

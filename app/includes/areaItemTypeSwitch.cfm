@@ -21,8 +21,8 @@
 		<cfset itemTypeNameP = "entries">
 		<cfset itemTypeTable = itemTypeNameP>
 		
-		<cfset itemTypeNameEs = "Elemento de contenido web">
-		<cfset itemTypeNameEsP = "Elementos de contenido web">
+		<cfset itemTypeNameEs = "Elemento de contenido genérico">
+		<cfset itemTypeNameEsP = "Elementos de contenido genérico">
 
 		<cfset itemTypeGender = "male">
 		<cfset itemTypeWeb = true>
