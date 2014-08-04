@@ -155,6 +155,9 @@
 		<cfset t_real_value = "Valor real">
 	</cfif>
 </cfif>
+<cfif itemTypeId IS 5 OR itemTypeId IS 8>
+	<cfset t_price = "Precio">
+</cfif>
 <cfset t_position = "Posición">
 <cfset t_iframe_url = "Incrustar contenido">
 <cfset t_iframe_display_type = "Tamaño contenido incrustado">
@@ -436,6 +439,7 @@
 		<cfinput type="text" name="place" id="place" value="#objectItem.place#" required="true" message="#t_place# requerido" passthrough="#passthrough#">
 	</div>
 </div>
+
 <cfelseif itemTypeId IS 6><!---Tasks--->
 
 <div class="row">
@@ -472,6 +476,15 @@
 	
 </div>
 
+</cfif>
+
+<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+	<div class="row">
+		<div class="col-xs-6 col-md-3">
+			<label class="control-label" for="price"><span lang="es">#t_price#</span> *</label>
+			<cfinput type="text" name="price" id="price" value="#objectItem.price#" required="true" validate="float" message="#t_price# debe ser un decimal" passthrough="#passthrough#">
+		</div>
+	</div>
 </cfif>
 
 <div style="clear:both; height:15px;"><!-- --></div>

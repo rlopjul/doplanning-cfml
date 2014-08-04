@@ -113,7 +113,7 @@
 			$("##booleanDefaultValue").show();
 			$("##listDefaultValue").hide();
 			$("##listAreaSelector").hide();
-			$("##fieldInputTypeList").hide();
+			$("##fieldInputTypeList").show();
 			$("##fieldInputTypeListMultiple").hide();
 
 			$("##default_value_text").prop('disabled', true);
@@ -121,7 +121,7 @@
 			$("##default_value_boolean").prop('disabled', false);
 			$("##default_value_list").prop('disabled', true);
 			$("##list_area_id").prop('disabled', true);
-			$("##field_input_type_list").prop('disabled', true);
+			$("##field_input_type_list").prop('disabled', false);
 			$("##field_input_type_list_multiple").prop('disabled', true);
 
 		}else if(typeId == 9 || typeId ==10){ //List

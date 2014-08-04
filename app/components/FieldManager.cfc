@@ -160,12 +160,15 @@
 				sort_by_this = <cfqueryparam value="#arguments.sort_by_this#" cfsqltype="cf_sql_varchar">,
 				default_value = <cfqueryparam value="#arguments.default_value#" cfsqltype="cf_sql_longvarchar">,
 				position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">
-				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10><!--- IS SELECT --->
-					, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
+				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10 OR arguments.field_type_id IS 7><!--- IS SELECT OR BOOLEAN--->
 					, field_input_type = <cfqueryparam value="#arguments.field_input_type#" cfsqltype="cf_sql_varchar">
 				<cfelse>
-					, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
 					, field_input_type = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
+				</cfif>
+				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10><!--- IS SELECT --->
+					, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
+				<cfelse>
+					, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
 				</cfif>;
 			</cfquery>
 
@@ -262,12 +265,15 @@
 					<cfif isDefined("arguments.position")>
 						, position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">
 					</cfif>
-					<cfif isDefined("arguments.list_area_id")>
-						, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
+					<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10 OR arguments.field_type_id IS 7><!--- IS SELECT OR BOOLEAN--->
 						, field_input_type = <cfqueryparam value="#arguments.field_input_type#" cfsqltype="cf_sql_varchar">
 					<cfelse>
-						, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
 						, field_input_type = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
+					</cfif>
+					<cfif isDefined("arguments.list_area_id")>
+						, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
+					<cfelse>
+						, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
 					</cfif>
 					WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>

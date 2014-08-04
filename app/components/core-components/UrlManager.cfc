@@ -127,6 +127,8 @@
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="remove_order" type="boolean" required="true">
 		
+		<cfargument name="preview" type="boolean" required="false" default="false">
+
 		<cfset var areaWebUrl = "">
 		<cfset var pageTitle = "">
 		
@@ -145,6 +147,10 @@
 		<cfset pageTitle = pageTitleToUrl(pageTitle)>
 
 		<cfset areaWebUrl = "page.cfm?id=#arguments.area_id#&title=#pageTitle#">
+
+		<cfif arguments.preview IS true>
+			<cfset areaWebUrl = areaWebUrl&"&preview=1">
+		</cfif>
 		
 		<cfreturn areaWebUrl>
 	</cffunction>
@@ -160,6 +166,8 @@
 		<cfargument name="remove_order" type="boolean" required="true">
 		<cfargument name="path_url" type="string" required="true">
 		<cfargument name="path" type="string" required="true">
+
+		<cfargument name="preview" type="boolean" required="false" default="false">
 		
 		<cfset var areaWebUrl = "">
 		
@@ -171,6 +179,10 @@
 
 		<cfset areaWebUrl = arguments.path_url&"/"&arguments.path&"/"&areaPage>
 		
+		<cfif arguments.preview IS true>
+			<cfset areaWebUrl = areaWebUrl&"&preview=1">
+		</cfif>
+
 		<cfreturn areaWebUrl>
 	</cffunction>
 
@@ -186,15 +198,26 @@
 		<cfset var itemWebUrl = "">
 		<cfset var pageTitle = "">
 
+		<cfset pageTitle = pageTitleToUrl(arguments.title)>
+
+		<!---
+		DPWebs antiguos con páginas para noticia y evento
 		<cfif arguments.itemTypeId IS 4>
 			<cfset pageName = "noticia.cfm">
 		<cfelse>
 			<cfset pageName = "evento.cfm">
 		</cfif>
 
-		<cfset pageTitle = pageTitleToUrl(arguments.title)>
-
 		<cfset itemWebUrl = "#pageName#?id=#arguments.item_id#&title=#pageTitle#">
+		--->
+
+		<cfif arguments.itemTypeId IS 4>
+			<cfset itemType = "news">
+		<cfelse>
+			<cfset itemType = "event">
+		</cfif>
+
+		<cfset itemWebUrl = "page.cfm?#itemType#=#arguments.item_id#&title=#pageTitle#">
 		
 		<cfreturn itemWebUrl>
 	</cffunction>

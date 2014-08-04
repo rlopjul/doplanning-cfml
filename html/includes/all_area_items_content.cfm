@@ -87,6 +87,23 @@
 
 		<a href="#areaPageFullUrl#" class="btn btn-default btn-sm" title="Ver en #area_type#" lang="es" target="_blank"><i class="icon-globe" style="font-size:14px; line-height:23px;"></i></a>
 
+
+		<cfif SESSION.client_abb EQ "hcs"><!--- Sólo disponible para el HCS porque requiere login en la web --->
+			
+			<!---areaWebUrl preview--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaWebPageFullUrl" returnvariable="areaPageFullUrlPreview">
+				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="name" value="#objectArea.name#">
+				<cfinvokeargument name="remove_order" value="true">
+				<cfinvokeargument name="path_url" value="#webPathUrl#">
+				<cfinvokeargument name="path" value="#webPath#">
+				<cfinvokeargument name="preview" value="true">
+			</cfinvoke>
+
+			<a href="#areaPageFullUrlPreview#" class="btn btn-default btn-sm" title="Vista previa en #area_type# (incluye elementos no publicados)" lang="es" target="_blank"><i class="icon-eye-open" style="font-size:14px; line-height:23px;"></i></a>	
+
+		</cfif>
+
 	</cfif>
 	
 	</cfoutput>

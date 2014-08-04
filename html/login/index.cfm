@@ -7,6 +7,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!---ADD TO HOME SCREEN--->
+<link rel="stylesheet" type="text/css" href="../scripts/cubiq-add-to-homescreen/addtohomescreen.css">
+<script src="../scripts/cubiq-add-to-homescreen/addtohomescreen.min.js"></script>
+<script>
+addToHomescreen({
+   startDelay: 0
+});
+</script>
+<!---END ADD TO HOME SCREEN--->
+
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
 <cfinclude template="#APPLICATION.corePath#/includes/login_query.cfm">

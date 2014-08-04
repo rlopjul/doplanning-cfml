@@ -558,6 +558,7 @@
 		<cfargument name="publication_date" type="string" required="false">
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
+		<cfargument name="price" type="numeric" required="false">
 
 		<cfset var method = "createItem">
 		
@@ -776,12 +777,16 @@
 					, estimated_value = <cfqueryparam value="#arguments.estimated_value#" cfsqltype="cf_sql_float">
 					, real_value = <cfqueryparam value="#arguments.real_value#" cfsqltype="cf_sql_float">
 					</cfif>
+					<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+					, price = <cfqueryparam value="#arguments.price#" cfsqltype="cf_sql_float">
+					</cfif>
 					<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultation, PubMed comment--->
 					, identifier = <cfqueryparam value="#arguments.identifier#" cfsqltype="cf_sql_varchar"
 		>				<cfif itemTypeId IS 7>
 						, state = <cfqueryparam value="created" cfsqltype="cf_sql_varchar">
 						</cfif>
 					</cfif>
+
 					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
 					, structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
 						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
@@ -908,6 +913,7 @@
 		<cfargument name="publication_date" type="string" required="false">
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
+		<cfargument name="price" type="numeric" required="false">
 
 		<cfset var method = "updateItem">
 				
@@ -1137,6 +1143,9 @@
 					, end_time = <cfqueryparam value="#objectItem.end_time#" cfsqltype="cf_sql_time">
 					, place = <cfqueryparam value="#objectItem.place#" cfsqltype="cf_sql_varchar">
 					</cfif>
+					<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+					, price = <cfqueryparam value="#arguments.price#" cfsqltype="cf_sql_float">
+					</cfif>
 					<cfif itemTypeId IS 6><!---Tasks--->
 					, recipient_user = <cfqueryparam value="#objectItem.recipient_user#" cfsqltype="cf_sql_varchar">
 					, done = <cfqueryparam value="#objectItem.done#" cfsqltype="cf_sql_bit">
@@ -1238,6 +1247,7 @@
 		<cfargument name="publication_date" type="string" required="false">
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false">
+		<cfargument name="price" type="numeric" required="false">
 		
 		<cfset var method = "updateItemWithAttachedFile">
 		
@@ -1257,6 +1267,7 @@
 					<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
 					<!--- <cfinvokeargument name="publication_time" value="#arguments.publication_time#"> --->
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+					<cfinvokeargument name="price" value="#arguments.price#">
 				</cfinvoke>
 
 				<cfif updateItemResponse.result IS false>
@@ -1993,6 +2004,10 @@
 					<cfset objectItem.real_value = 0>
 				</cfif>
 		 	</cfif>
+
+		 	<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+		 		<cfset objectItem.price = 0>
+		 	</cfif>
 			
 			<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, PubMed comments--->
 				<cfset objectItem.identifier = "">
@@ -2674,17 +2689,19 @@
 				</cfinvoke>
 				
 				<cfset objectItem = getItemResponse.item>--->
+				
+
+				<!---IMPORTANTE: esto se tiene que hacer fuera de <cftransaction> porque si se hace dentro da error, ya que al enviar las notificaciones por email de la elminicación de registros se accede a otro Datasource dentro de la misma transacción. Para solucionarlo habría que habilitar que se puediese acceder a la otra base de datos desde el mismo datasource--->
+				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---List, Forms, Typologies--->
 					
+					<cfinvoke component="TableManager" method="deleteTableInDatabase">
+						<cfinvokeargument name="table_id" value="#arguments.item_id#">
+						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					</cfinvoke>
+
+				</cfif>
+
 				<cftransaction>
-
-					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---List, Forms, Typologies--->
-						
-						<cfinvoke component="TableManager" method="deleteTableInDatabase">
-							<cfinvokeargument name="table_id" value="#arguments.item_id#">
-							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-						</cfinvoke>
-
-					</cfif>
 					
 					<!--- CHANGE SUB ITEMS  --->
 					<!---Ya no se borran los submensajes de un mensaje, lo que se hace es que se ponen como hijos del nivel superior--->

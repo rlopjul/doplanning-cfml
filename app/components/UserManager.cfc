@@ -1993,6 +1993,7 @@
 			<cfset querySetCell(getEmptyUserQuery, "enabled", true)>
 			<!---<cfset querySetCell(getEmptyUserQuery, "mobile_phone_ccode", "34")>
 			<cfset querySetCell(getEmptyUserQuery, "telephone_ccode", "34")>--->
+			<cfset querySetCell(getEmptyUserQuery, "hide_not_allowed_areas", 1)>
 			<cfset querySetCell(getEmptyUserQuery, "language", clientQuery.default_language)>
 
 			<cfset queryAddColumn(getEmptyUserQuery, "new_password")>

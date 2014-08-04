@@ -72,6 +72,9 @@
 						, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name, recipient_users.image_type AS recipient_user_image_type
 					</cfif>
 				</cfif>
+				<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+					, items.price
+				</cfif>
 				<cfif itemTypeWeb IS true><!---WEB--->
 
 					<cfif arguments.parse_dates IS true>

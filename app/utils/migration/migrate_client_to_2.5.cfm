@@ -581,3 +581,13 @@ ALTER TABLE `dp_software7`.`software7_users` ADD COLUMN `enabled` BOOLEAN NOT NU
 ALTER TABLE `dp_software7`.`software7_users` ADD COLUMN `information` TEXT AFTER `image_type`;
  
 ALTER TABLE `dp_software7`.`software7_users` MODIFY COLUMN `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL;
+
+
+
+
+<!--- CAMBIOS TABLA DoPlanning APP_clients---> 
+ALTER TABLE `doplanning_app`.`APP_clients` 
+ADD COLUMN `default_language` VARCHAR(10) NOT NULL DEFAULT 'es' AFTER `email_support`,
+ADD COLUMN `force_notifications` TINYINT(1) NOT NULL DEFAULT 0 AFTER `default_language`,
+ADD COLUMN `tasks_reminder_notifications` TINYINT(1) NOT NULL DEFAULT 1 AFTER `force_notifications`,
+ADD COLUMN `tasks_reminder_days` INT(10) UNSIGNED NOT NULL DEFAULT 30 AFTER `tasks_reminder_notifications`;

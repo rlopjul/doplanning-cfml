@@ -115,6 +115,7 @@
 		<cfargument name="publication_hour" type="numeric" required="false">
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false">
+		<cfargument name="price" type="numeric" required="false">
 		
 		<cfset var method = "createItem">
 				
@@ -292,6 +293,7 @@
 					</cfif> --->
 				</cfif>
 				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+				<cfinvokeargument name="price" value="#arguments.price#">
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfif with_attached IS true OR with_image IS true><!---Hay archivo para subir--->
@@ -549,6 +551,7 @@
 		<cfargument name="publication_hour" type="numeric" required="false">
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false">
+		<cfargument name="price" type="numeric" required="false">
 
 		<cfset var method = "updateItem">
 				
@@ -689,6 +692,7 @@
 						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
 					</cfif> --->
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+					<cfinvokeargument name="price" value="#arguments.price#">
 				</cfinvoke>
 
 				<cfif updateItemResponse.result IS NOT true>
@@ -720,6 +724,7 @@
 						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
 					</cfif>--->
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+					<cfinvokeargument name="price" value="#arguments.price#">
 				</cfinvoke>
 
 				<cfif updateItemWithAttachedResponse.result IS true>
@@ -1727,9 +1732,12 @@
 						<div class="div_message_page_label"><span lang="es">Valor real:</span> <span class="text_message_page">#objectItem.real_value#</span></div>
 						<div class="div_message_page_label"><span lang="es">Realizada:</span> <span class="text_message_page"><cfif objectItem.done IS true>Sí<cfelse>No</cfif></span></div>
 						</cfif>
-					
+
 					</cfif>				
 					
+					<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+						<div class="div_message_page_label"><span lang="es">Precio:</span> <span class="text_message_page">#objectItem.price#</span></div>
+					</cfif>					
 							
 					<cfif isNumeric(objectItem.attached_file_id)><!--- Attached file --->
 					<div class="div_message_page_label"><span lang="es">Archivo:</span> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_file_name#</a></div>

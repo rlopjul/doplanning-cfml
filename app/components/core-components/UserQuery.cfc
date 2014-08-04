@@ -77,6 +77,7 @@
 					</cfif>
 					(u.name REGEXP <cfqueryparam value="#arguments.search_text_re#" cfsqltype="cf_sql_varchar">
 					OR u.family_name REGEXP <cfqueryparam value="#arguments.search_text_re#" cfsqltype="cf_sql_varchar">
+					OR CONCAT(u.family_name, ' ', u.name) REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
 					OR u.email REGEXP <cfqueryparam value="#arguments.search_text_re#" cfsqltype="cf_sql_varchar">
 					OR u.address REGEXP <cfqueryparam value="#arguments.search_text_re#" cfsqltype="cf_sql_varchar">
 					OR u.dni REGEXP <cfqueryparam value="#arguments.search_text_re#" cfsqltype="cf_sql_varchar">

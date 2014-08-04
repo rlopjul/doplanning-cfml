@@ -432,6 +432,7 @@
 	<cffunction name="deleteView" output="false" access="public" returntype="struct">
 		<cfargument name="view_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="with_transaction" type="boolean" required="false" default="true">
 
 		<cfset var method = "deleteView">
 
@@ -466,7 +467,16 @@
 				<cfinvokeargument name="area_id" value="#table_area_id#">
 			</cfinvoke>
 
-			<cftransaction>
+			<cftry>
+				
+				<cfif arguments.with_transaction IS true>
+					
+					<!--- <cftransaction> --->
+					<cfquery datasource="#client_dsn#" name="startTransaction">
+						START TRANSACTION;
+					</cfquery>
+
+				</cfif>
 			
 				<!---DELETE ITEM POSITION--->
 				<cfinvoke component="AreaItemManager" method="deleteItemPosition">
@@ -479,7 +489,26 @@
 					WHERE id = <cfqueryparam value="#arguments.view_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
-			</cftransaction>
+				<cfif arguments.with_transaction IS true>
+					<!--- </cftransaction> --->
+					<cfquery datasource="#client_dsn#" name="endTransaction">
+						COMMIT;
+					</cfquery>
+				</cfif>
+
+				<cfcatch>
+
+					<cfif arguments.with_transaction IS true>
+						<cfquery datasource="#client_dsn#" name="rollbackTransaction">
+							ROLLBACK;
+						</cfquery>
+					</cfif>
+
+					<cfrethrow/>
+
+				</cfcatch>
+
+			</cftry>
 			
 			<cfinclude template="includes/logRecord.cfm">
 
@@ -534,6 +563,7 @@
 					<cfinvoke component="ViewManager" method="deleteView" returnvariable="deleteViewResponse">
 						<cfinvokeargument name="view_id" value="#getTableViewsQuery.view_id#">
 						<cfinvokeargument name="itemTypeId" value="#viewTypeId#">
+						<cfinvokeargument name="with_transaction" value="false">
 					</cfinvoke>
 
 					<cfif deleteViewResponse.result IS false>

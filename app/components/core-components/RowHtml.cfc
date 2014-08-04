@@ -58,7 +58,10 @@
 
 			<div class="col-md-12">
 
-				<label for="#field_name#" class="control-label">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
+				<cfif fields.field_input_type NEQ "checkbox">
+					<label for="#field_name#" class="control-label">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
+				</cfif>
+				
 				<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
 
 				<cfif fields.input_type IS "textarea"><!--- TEXTAREA --->
@@ -189,22 +192,58 @@
 
 					<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
 
+
 						<div class="row">
 							<div class="col-xs-5 col-sm-2">
 
-								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
-									<option value=""></option>
-									<option value="1" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
-									<option value="0" <cfif field_value IS false>selected="selected"</cfif>>No</option>
-								</select>
+								<cfif fields.field_input_type EQ "radio"><!---Radio--->
+
+									<div>
+									  <label>
+									  	<input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> />&nbsp;Sí
+									  </label>&nbsp;&nbsp;
+									  <label>
+									    <input type="#field_input_type#" name="#field_name#" value="0" <cfif field_value IS false>checked</cfif> />&nbsp;No
+									    
+									  </label>
+									</div>
+
+								<cfelseif fields.field_input_type EQ "checkbox"><!---Checkbox--->
+
+									<div class="checkbox">
+									  <label>
+									    <input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> /> #field_label#
+									    
+									  </label>
+									</div>
+
+								<cfelse>
+
+									<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
+										<option value=""></option>
+										<option value="1" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
+										<option value="0" <cfif field_value IS false>selected="selected"</cfif>>No</option>
+									</select>
+									
+								</cfif>
 
 							</div>
 						</div>
 
 						<cfif fields.required IS true AND arguments.search_inputs IS false>
-							<script>
-								addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
-							</script>
+							<cfif fields.field_input_type EQ "radio">
+								<script>
+									addRailoRequiredRadio("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							<cfelseif fields.field_input_type EQ "checkbox">
+								<script>
+									addRailoRequiredCheckBox("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							<cfelse>
+								<script>
+									addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							</cfif>
 						</cfif>	
 					
 					<cfelse><!--- LISTS --->

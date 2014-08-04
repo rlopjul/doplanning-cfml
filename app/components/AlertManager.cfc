@@ -305,6 +305,9 @@
 								#langText[curLang].new_item.task_done#: <b><cfif objectItem.done IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
 								</cfif>
 							</cfif>	
+							<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+								#langText[curLang].new_item.price#: <b>#objectItem.price#</b><br/>
+							</cfif>
 							<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
 								<cfif arguments.action NEQ "delete">
 								#langText[curLang].new_item.attached_file#: <a href="#downloadFileUrl#" target="_blank">#objectItem.attached_file_name#</a><br/>

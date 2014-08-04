@@ -47,8 +47,8 @@
 <!---	<cfset numLogActions = logActions.RecordCount>--->
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">	
-	<cfinvokeargument name="order_by" value="name">
-	<cfinvokeargument name="order_type" value="asc">
+	<!---<cfinvokeargument name="order_by" value="name">
+	<cfinvokeargument name="order_type" value="asc">---->
 </cfinvoke>
 
 <cfset users = getUsersResponse.users>
