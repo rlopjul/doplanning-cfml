@@ -39,7 +39,7 @@
 
 </cfif>
 
-<script type="text/javascript">
+<script>
 
 	$(document).ready(function() {
 
@@ -98,6 +98,10 @@
 			setFileTypeId("#fileTypeId#");
 		</cfif>
 
+		<cfif page_type IS 1 AND fileTypeId NEQ 1>
+			$("##file-type-help").tooltip();
+		</cfif>
+
 	});
 
 	function onSubmitForm() {
@@ -126,6 +130,7 @@
 
 			$("##documentUsersContainer").show();
 			$("##publicationScopeContainer").hide();
+
 
 		}else{
 
@@ -231,7 +236,7 @@
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
-	<script type="text/javascript">
+	<script>
 		var railo_custom_form=new RailoForms('file_form');
 	</script>
 	
@@ -252,7 +257,7 @@
 		<cfif page_type IS 1>
 
 			<div class="alert alert-info">
-				<small lang="es">Este archivo pertenecerá a esta área y podrá ser modificado por cualquier usuario con acceso a la misma.</small>
+				<small lang="es">Este archivo pertenecerá a esta <b>área</b> y podrá ser modificado por cualquier usuario con acceso a la misma.</small>
 			</div>
 
 		<cfelseif page_type IS 3>
@@ -277,12 +282,12 @@
 
 			<div class="row">
 				<div class="col-sm-12">
-					<label for="fileTypeId" class="control-label" lang="es">Tipo de documento de área</label>
+					<label for="fileTypeId" class="control-label" lang="es">Tipo de documento de área <i id="file-type-help" class="icon-question-sign" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<b>Sin circuito de calidad</b>: cada vez que se suba una versión del archivo se sobreescribirá la anterior (no se guardan las versiones previas del archivo)</p><br><b>Con circuito de calidad</b>: se guardan las distintas versiones del archivo y es requerido un proceso de revisión y aprobación de las versiones." lang="es" style="cursor:pointer"></i></label>
 					<select name="fileTypeId" id="fileTypeId" class="form-control" onchange="setFileTypeId($('##fileTypeId').val());">
 						<option value="2" <cfif fileTypeId IS 2>selected="selected"</cfif> lang="es">Sin circuito de calidad</option>
 						<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif> lang="es">Con circuito de calidad</option>
 					</select>
-					<span class="help-block" lang="es">Esta opción no se puede cambiar una vez creado el documento</span>
+					<small class="help-block" lang="es">Esta opción no se puede cambiar una vez creado el documento</small>
 				</div>
 			</div>
 
@@ -340,6 +345,14 @@
 		</div>
 
 	<cfelse>
+
+		<cfif page_type IS 1>
+
+			<div class="alert alert-info">
+				<small lang="es">Este archivo te pertenecerá a ti y sólo tú podrás modificarlo. Cada vez que subas una versión del archivo se sobreescribirá la anterior.</small>
+			</div>
+
+		</cfif>
 
 		<input type="hidden" name="fileTypeId" value="#fileTypeId#"/>
 

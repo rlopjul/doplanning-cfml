@@ -92,9 +92,12 @@
 					</cfif>
 
 				</cfif><!--- END WEB --->
-				<cfif arguments.itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, PubMed comments--->
+				<cfif arguments.itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, Publications--->
 					, items.identifier
-				</cfif>	 
+				</cfif>
+				<cfif arguments.itemTypeId IS 8><!---Publications--->
+					, items.sub_type_id
+				</cfif>
 				<cfif arguments.itemTypeId IS 7><!---Consultation--->
 					, items.state, items.read_date
 				</cfif>

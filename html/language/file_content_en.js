@@ -12,36 +12,50 @@ var file_content_en = {
 	'Quitar del área':'Remove from area',
 	'Eliminar':'Delete',
 	'Visualizar en':'View in',
+	'Versiones':'Versions',
+	'Validar versión':'Validate version',
+	'Rechazar versión':'Reject version',
+	'Cancelar revisión':'Cancel revision',
+	'Bloquear':'Lock',
+	'Desbloquear':'Unlock',
 
-	'Propiedad del área':'Property of area:',	
-	'Creado por':'Created by:',
+	'Propiedad del área':'Property of area',	
+	'Creado por':'Created by',
 	'Último reemplazo por':'Last version by',
 	'Última version por':'Last version by',
-	'Revisor':'Reviser user:',
-	'Aprobador':'Approval user:',
-	'Nombre de archivo':'File name:',
-	'Fecha de creación':'Creation date:',
-	'Fecha de reemplazo':'Replacement date:',
-	'Fecha de última versión':'Last version date:',
+	'Revisor':'Reviser user',
+	'Aprobador':'Approval user',
+	'Nombre de archivo':'File name',
+	'Fecha de creación':'Creation date',
+	'Fecha de reemplazo':'Replacement date',
+	'Fecha de última versión':'Last version date',
 	'Fecha de publicación':'Publication date',
-	'Tipo de archivo':'File type:',
-	'Tamaño':'Size:',
+	'Fecha de envío a revisión':'Send to revision date',
+	'Tipo de archivo':'File type',
+	'Tamaño':'Size',
 	'Descripción':'Description',
 	'Generando archivo...':'Generating file...',
 	'Tipología':'Typology',
 	'Ámbito de publicación':'Publication scope',
 	'Nombre físico':'Physical name',
+	'Motivo de rechazo en aprobación':'Reason for rejection on approval',
+	'Motivo de rechazo en revisión':'Reason for rejection on revision',
 	
 	/*area_file_new.cfm*/
 	'Nuevo Archivo':'New File',	
 	'Nuevo Archivo de área':'New area File',
-	'Archivo':'File:',
-	'Nombre':'Name:',
+	'Archivo':'File',
+	'Nombre':'Name',
 	'Enviar':'Send',
 	'Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.':'After clicking the button, the application will take depending on the file size.',
 	'Enviando archivo...':'Sending file...',
 
-	'Este archivo pertenecerá a esta área y podrá ser modificado por cualquier usuario con acceso a la misma.':'This file will belong to this area and anyone with access to this area will be able to modify it.',
+	'Este archivo te pertenecerá a ti y sólo tú podrás modificarlo. Cada vez que subas una versión del archivo se sobreescribirá la anterior.':'This file will belong to you and only you can change it. Each time you upload a file version will overwrite the previous.',
+
+	'Este archivo pertenecerá a esta <b>área</b> y podrá ser modificado por cualquier usuario con acceso a la misma.':'This file will belong to this <b>area</b> and anyone with access to this area will be able to modify it.',
+
+	'<b>Sin circuito de calidad</b>: cada vez que se suba una versión del archivo se sobreescribirá la anterior (no se guardan las versiones previas del archivo)</p><br><b>Con circuito de calidad</b>: se guardan las distintas versiones del archivo y es requerido un proceso de revisión y aprobación de las versiones.':
+	'<b>Without quality circuit</b>: each time a file is uploaded will overwrite the previous version (previous versions of the file are not saved)</p><br><b>With quality circuit</b>: different versions of the file are saved and is required a process of review and approval of the versions',
 
 	'Área de publicación':'Publication area',
 	'Seleccionar área':'Select area',
@@ -61,6 +75,7 @@ var file_content_en = {
 	'Aprobar publicación':'Approve publication',
 	'Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).':'Validates the file so that it can be published (only for publication on website and intranet)',
 
+	'* Campos obligatorios.':'* Required fields',
 	/*END area_file_new.cfm*/
 	
 	/*area_file_modify.cfm*/
@@ -87,6 +102,12 @@ var file_content_en = {
 	'Visualizar archivo':'View file',
 	'Volver':'Back',
 	/*END file_view_content.cfm*/
+
+	/*file.cfm*/
+	'Debe bloquear el archivo para poder realizar cualquier modificación.':'You have to lock the file to make any changes.',
+	'URL del archivo en DoPlanning':'File URL in DoPlanning',
+	'URL de descarga desde DoPlanning':'Download URL from DoPlanning',
+	/*END file.cfm*/
 
 	/*search_2_bar.cfm*/
 	'Todas':'All',

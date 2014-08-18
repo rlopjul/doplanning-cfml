@@ -50,7 +50,7 @@
 
 	<cfcase value="pubmeds_search.cfm">
 		<cfset curElement = "pubmeds">
-		<cfset curTitle = "Comentarios de artículos PubMed">
+		<cfset curTitle = "Publicaciones">
 	</cfcase>
 
 	<cfcase value="images_search.cfm">
@@ -101,7 +101,7 @@
 		</cfif>
 
 		<cfif APPLICATION.modulePubMedComments IS true>
-			<li <cfif curElement EQ "pubmeds">class="active"</cfif>><a href="pubmeds_search.cfm"><img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" title="Comentarios de PubMed" alt="Comentarios de PubMed" lang="es"/></a></li>
+			<li <cfif curElement EQ "pubmeds">class="active"</cfif>><a href="pubmeds_search.cfm"><img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" title="Publicaciones" alt="Publicaciones" lang="es"/></a></li>
 		</cfif>
 		
 		<cfif APPLICATION.moduleWeb EQ true>

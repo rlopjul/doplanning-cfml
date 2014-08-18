@@ -305,7 +305,34 @@
 								#langText[curLang].new_item.task_done#: <b><cfif objectItem.done IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
 								</cfif>
 							</cfif>	
-							<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+
+							<cfif itemTypeId IS 8><!--- Publications --->
+								
+								<cfif isNumeric(objectItem.sub_type_id)>
+									<cfinvoke component="#APPLICATION.componentsPath#/ItemSubTypeManager" method="getSubType" returnvariable="subTypeQuery">
+										<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+										<cfinvokeargument name="sub_type_id" value="#objectItem.sub_type_id#">
+									</cfinvoke>
+									<cfif subTypeQuery.recordCount GT 0>
+										#langText[curLang].new_item.type#: <b><cfif curLang EQ "es">#subTypeQuery.sub_type_title_es#<cfelse>#subTypeQuery.sub_type_title_en#</cfif></b><br/>
+									</cfif>
+								</cfif>
+
+								<cfif len(objectItem.identifier) GT 0>
+									#langText[curLang].new_item.identifier#: <b>#objectItem.identifier#</b><br/>
+
+										<cfif isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
+											#langText[curLang].new_item.link_to_pubmed#: <a href="http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#" target="_blank">http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#</a><br/>
+										</cfif>
+								</cfif>
+
+								<cfif subTypeQuery.recordCount IS 0 OR subTypeQuery.sub_type_id NEQ 1>
+									#langText[curLang].new_item.price#: <b>#objectItem.price#</b><br/>
+								</cfif>
+
+							</cfif>
+							
+							<cfif itemTypeId IS 5><!---Events--->
 								#langText[curLang].new_item.price#: <b>#objectItem.price#</b><br/>
 							</cfif>
 							<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
@@ -934,6 +961,31 @@
 					#langText[curLang].new_file.user#: <strong><!---#objectFile.user_full_name#--->#actionUserName#</strong><br />
 
 					#fileAlertContent#
+
+					<cfif arguments.action EQ "reject_version">
+						
+						<!--- getFileVersion --->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersions" returnvariable="getFileVersionsQuery">
+							<cfinvokeargument name="file_id" value="#objectFile.id#">
+							<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
+							<cfinvokeargument name="limit" value="1">
+							
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfset version = getFileVersionsQuery>
+
+						<cfif version.revised IS true AND version.revision_result IS true><!---Approval reject--->
+							#langText[curLang].file_approval.reject_reason#:<br/>
+							<i>#version.approval_result_reason#</i><br/>
+						<cfelse><!---Revision reject--->
+						 	#langText[curLang].file_revision.reject_reason#:<br/>
+							<i>#version.revision_result_reason#</i><br/>
+						</cfif>
+						
+					</cfif>
+
 					<!--- 
 					#langText[curLang].new_file.user#: <strong><!---#objectFile.user_full_name#--->#actionUserName#</strong><br />
 										#langText[curLang].new_file.file_name#: <strong>#objectFile.name#</strong><br />

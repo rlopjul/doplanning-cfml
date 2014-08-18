@@ -185,13 +185,13 @@ Preferencias de notificaciones
 			<cfif APPLICATION.modulePubMedComments IS true>
 			<div class="row">
 				<div class="col-sm-1" style="padding-right:0px;text-align:center;">
-					<img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" alt="Nuevo comentario de PubMed" />
+					<img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" alt="Nueva publicación" />
 				</div>
 
 				<div class="col-sm-11">
 					<label class="checkbox">
 						<input type="checkbox" name="notify_new_pubmed" value="true" <cfif preferences.notify_new_pubmed IS true>checked="checked"</cfif> />
-						<span lang="es">Un comentario de PubMed ha sido creado, modificado o eliminado</span>
+						<span lang="es">Una publicación ha sido creada, modificada o eliminada</span>
 					</label>
 				</div>
 			</div>	

@@ -559,6 +559,7 @@
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
+		<cfargument name="sub_type_id" type="numeric" required="false">
 
 		<cfset var method = "createItem">
 		
@@ -796,6 +797,10 @@
 						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
 						</cfif>
 					</cfif>
+
+					<cfif isDefined("arguments.sub_type_id")>
+						, sub_type_id = <cfqueryparam value="#arguments.sub_type_id#" cfsqltype="cf_sql_integer">
+					</cfif>
 					;			
 				</cfquery>
 				
@@ -914,6 +919,7 @@
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
+		<cfargument name="sub_type_id" type="numeric" required="false">
 
 		<cfset var method = "updateItem">
 				
@@ -1167,6 +1173,9 @@
 						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
 						</cfif>
 					</cfif>
+					<cfif isDefined("arguments.sub_type_id")>
+						, sub_type_id = <cfqueryparam value="#arguments.sub_type_id#" cfsqltype="cf_sql_integer">
+					</cfif>
 					WHERE id = <cfqueryparam value="#objectItem.id#" cfsqltype="cf_sql_integer">;			
 				</cfquery>
 				
@@ -1248,6 +1257,7 @@
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false">
 		<cfargument name="price" type="numeric" required="false">
+		<cfargument name="sub_type_id" type="numeric" required="false">
 		
 		<cfset var method = "updateItemWithAttachedFile">
 		
@@ -1268,6 +1278,7 @@
 					<!--- <cfinvokeargument name="publication_time" value="#arguments.publication_time#"> --->
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					<cfinvokeargument name="price" value="#arguments.price#">
+					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
 				</cfinvoke>
 
 				<cfif updateItemResponse.result IS false>
@@ -1470,6 +1481,7 @@
 
 		<cfset var area_id = "">
 		<cfset var new_area_type = "">
+		<cfset var new_item_position = "">
 					
 		<cftry>
 
@@ -1545,14 +1557,43 @@
 
 			</cfif>			
 				
-			<cfquery datasource="#client_dsn#" name="changeItemArea">
-				UPDATE #client_abb#_#itemTypeTable#
-				SET area_id = <cfqueryparam value="#arguments.new_area_id#" cfsqltype="cf_sql_integer">
-				<cfif itemQuery.parent_kind EQ "area">
-					, parent_id = <cfqueryparam value="#arguments.new_area_id#" cfsqltype="cf_sql_integer">
+			<cftransaction>
+				
+				<cfquery datasource="#client_dsn#" name="changeItemArea">
+					UPDATE #client_abb#_#itemTypeTable#
+					SET area_id = <cfqueryparam value="#arguments.new_area_id#" cfsqltype="cf_sql_integer">
+					<cfif itemQuery.parent_kind EQ "area">
+						, parent_id = <cfqueryparam value="#arguments.new_area_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+				<!---DELETE ITEM OLD POSITION--->
+				<cfinvoke component="AreaItemManager" method="deleteItemPosition">
+					<cfinvokeargument name="item_id" value="#arguments.item_id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				</cfinvoke>
+
+				<cfif itemTypeWeb IS true><!---IS WEB---><!---El orden sólo se utiliza en los elementos web--->
+				
+					<!---getItemLastPosition--->
+					<cfinvoke component="AreaItemManager" method="getAreaItemsLastPosition" returnvariable="itemLastPosition">
+						<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+					</cfinvoke>
+					
+					<cfset new_item_position = itemLastPosition+1>
+
+					<!---Insert new position--->
+					<cfinvoke component="AreaItemManager" method="insertAreaItemPosition">
+						<cfinvokeargument name="item_id" value="#arguments.item_id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+						<cfinvokeargument name="position" value="#new_item_position#">
+					</cfinvoke>
+					
 				</cfif>
-				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
+
+			</cftransaction>
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="newItemQuery">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
@@ -2012,6 +2053,8 @@
 			<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, PubMed comments--->
 				<cfset objectItem.identifier = "">
 			</cfif>
+
+			<cfset objectItem.sub_type_id = -1>
 			
 			<cfset response = {result=true, item=#objectItem#}>
 

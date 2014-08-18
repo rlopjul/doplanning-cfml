@@ -216,7 +216,7 @@
 				</cfif>
 			
 				<cfif APPLICATION.modulePubMedComments IS true>
-					<option value="pubmeds_search.cfm" <cfif curElement EQ "pubmeds">selected="selected"</cfif> lang="es">Comentarios de PubMed</option>
+					<option value="pubmeds_search.cfm" <cfif curElement EQ "pubmeds">selected="selected"</cfif> lang="es">Publicaciones</option>
 				</cfif>
 			
 				<cfif APPLICATION.moduleWeb EQ true>

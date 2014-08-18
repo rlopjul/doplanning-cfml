@@ -50,6 +50,11 @@
 
 		</cfif>
 
+		<cfif itemTypeId IS 8>
+			subTypeChange($('##sub_type_id').val());
+		</cfif>
+		
+
 	});
 	
 	
@@ -86,6 +91,29 @@
 		$("##recipient_user_name").val(userName); */
 	}
 	
+
+	function subTypeChange(subTypeId){
+
+		if(subTypeId == 1){ 
+			$("##identifierLabel").text("PubMed ID");
+			$("##openInPubMedButton").show();
+			$("##fieldPrice").hide();
+		}else {
+			$("##identifierLabel").text(window.lang.convert("Identificador/Número"));
+			$("##openInPubMedButton").hide();
+			$("##fieldPrice").show();
+		}
+
+	}
+
+	function openPublicationInPubMed(pubMedId){
+
+		if($.isNumeric(pubMedId))
+			window.open("http://www.ncbi.nlm.nih.gov/pubmed/"+pubMedId, '_blank');
+		else
+			alert(window.lang.convert("PubMed Id no válido"));
+	}
+
 	<cfif isDefined("objectItem.id") AND read_only IS false>
 				
 		function deleteAttachedFile() {
@@ -158,6 +186,10 @@
 <cfif itemTypeId IS 5 OR itemTypeId IS 8>
 	<cfset t_price = "Precio">
 </cfif>
+<cfif itemTypeId IS 8>
+	<cfset t_identifier = "Identificador/Número">
+	<cfset t_sub_type = "Tipo de">
+</cfif>
 <cfset t_position = "Posición">
 <cfset t_iframe_url = "Incrustar contenido">
 <cfset t_iframe_display_type = "Tamaño contenido incrustado">
@@ -166,6 +198,28 @@
 	<cfset passthrough = 'readonly="readonly"'>
 <cfelse>
 	<cfset passthrough = "">
+</cfif>
+
+<cfif itemTypeId IS 8>
+<div class="row">
+	
+	<div class="col-md-6">
+
+		<label class="control-label" for="sub_type_id" id="subTypeLabel"><span lang="es">#t_sub_type#</span> <span lang="es">#itemTypeNameEs#</span> *</label>
+
+		<cfinvoke component="#APPLICATION.componentsPath#/ItemSubTypeManager" method="getSubTypes" returnvariable="subTypeQuery">
+			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+		</cfinvoke>
+		
+		<select name="sub_type_id" id="sub_type_id" <cfif read_only IS true>disabled="disabled"</cfif> onchange="subTypeChange($('##sub_type_id').val());">
+			<cfloop query="subTypeQuery">
+				<option value="#subTypeQuery.sub_type_id#" lang="es" <cfif objectItem.sub_type_id IS subTypeQuery.sub_type_id>selected="selected"</cfif>>#subTypeQuery.sub_type_title_es#</option>
+			</cfloop>
+		</select>
+
+	</div>
+
+</div>
 </cfif>
 
 <cfif itemTypeId IS NOT 7 OR NOT isDefined("parent_kind") OR parent_kind EQ "area">
@@ -252,7 +306,8 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-			<small class="help-block">Si está definida, <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# se publicará en la fecha especificada.</small>
+			<!---<small class="help-block">Si está definida, <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# se publicará en la fecha especificada.</small>--->
+			<small class="help-block" lang="es">Si está definida, este contenido se mostrará en la #area_type# en la fecha especificada.</small>
 		</div>
 	</div>
 
@@ -478,8 +533,26 @@
 
 </cfif>
 
-<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+<cfif itemTypeId IS 7 OR itemTypeId IS 8>
+
+	<!---<label class="control-label">##</label>--->
 	<div class="row">
+    
+    	<div class="col-xs-6 col-md-3">
+    		<label class="control-label" for="identifier" id="identifierLabel"><span lang="es">#t_identifier#</span> *</label>
+			<cfinput type="text" name="identifier" id="identifier" value="#objectItem.identifier#" placeholder="Identificador" class="input-xlarge" passthrough="#passthrough#" lang="es">
+			<button type="button" class="btn btn-default btn-xs" id="openInPubMedButton" lang="es" onclick="openPublicationInPubMed($('##identifier').val())">Ver en PubMed</button>
+		</div>
+
+		<!---<div class="col-xs-6 col-md-3">
+		</div>--->
+
+	</div>
+	<!---<div style="height:5px;"><!-- --></div>--->
+</cfif>
+
+<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+	<div class="row" id="fieldPrice">
 		<div class="col-xs-6 col-md-3">
 			<label class="control-label" for="price"><span lang="es">#t_price#</span> *</label>
 			<cfinput type="text" name="price" id="price" value="#objectItem.price#" required="true" validate="float" message="#t_price# debe ser un decimal" passthrough="#passthrough#">
@@ -496,20 +569,7 @@
 	</div>
 
 </div>
-<div style="height:10px;"><!-- --></div>
-<cfif itemTypeId IS 7 OR itemTypeId IS 8>
-
-	<!---<label class="control-label">##</label>--->
-	<div class="row">
-    
-    	<div class="col-md-12">
-			<cfinput type="text" name="identifier" value="#objectItem.identifier#" placeholder="Identificador" class="input-xlarge" passthrough="#passthrough#" lang="es">
-		</div>
-
-	</div>
-	<div style="height:5px;"><!-- --></div>
-</cfif>
-	
+<div style="height:10px;"><!-- --></div>	
 
 <cfif read_only IS false>
 	
@@ -552,7 +612,7 @@
 	
 	</cfif>
 	
-	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 8>
+	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6>
 	
 		<cfif isDefined("objectItem.attached_image_name") AND len(objectItem.attached_image_name) GT 0 AND objectItem.attached_image_name NEQ "-">
 		
@@ -704,13 +764,22 @@
 </cfif>
 
 <cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-<!---<div class="form-group">
 
-	<label class="control-label" lang="es">#t_position#</label>
-	
-	<cfinput type="text" name="position" id="position" value="#objectItem.position#" required="true" validate="integer" message="#t_position# debe ser un número entero" style="width:50px;" passthrough="#passthrough#">
+	<!---<cfif SESSION.client_abb EQ "hcs">
+		
+		<div class="row">
+		
+			<div class="col-md-6">
 
-</div>--->
+				<label class="control-label" lang="es">#t_position#</label>
+					
+				<cfinput type="text" name="position" id="position" value="#objectItem.position#" required="true" validate="integer" message="#t_position# debe ser un número entero" style="width:50px;" passthrough="#passthrough#">
+
+			</div>
+
+		</div>
+
+	</cfif>--->
 
 	<cfif itemTypeId IS 2>
 	<div class="row">
@@ -722,15 +791,9 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/DisplayTypeManager" method="getDisplayTypes" returnvariable="displayTypeQuery">
 			</cfinvoke>
 			
-			<!---<cfset display_type_options = "Por defecto,Listado de elementos,Imagen a la derecha,Imagen a la izquierda,Figura con pie">
-			<cfset display_type_values = "1,2,3,4,5">
-			<cfloop list="#display_type_values#" index="display_type_id">
-				<option value="#display_type_id#" <cfif objectItem.display_type_id IS display_type_id>selected="selected"</cfif>>#listGetAt(display_type_options,display_type_id)#</option>
-			</cfloop>--->
-			
 			<select name="display_type_id" <cfif read_only IS true>disabled="disabled"</cfif>>
 				<cfloop query="displayTypeQuery">
-					<option value="#displayTypeQuery.display_type_id#" <cfif objectItem.display_type_id IS display_type_id>selected="selected"</cfif>>#displayTypeQuery.display_type_title_es#</option>
+					<option value="#displayTypeQuery.display_type_id#" <cfif objectItem.display_type_id IS displayTypeQuery.display_type_id>selected="selected"</cfif>>#displayTypeQuery.display_type_title_es#</option>
 				</cfloop>
 			</select>
 

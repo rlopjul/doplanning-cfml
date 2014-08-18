@@ -76,8 +76,8 @@ var area_items_content_en = {
 	'Listas':'Lists',
 	'Formulario':'Formulario',
 	'Formularios':'Forms',
-	'Comentario de PubMed':'PubMed comment',
-	'Comentarios de PubMed':'PubMed comments',
+	'Publicación':'Publication',
+	'Publicaciones':'Publications',
 	'Buscar en':'Search',
 	'Buscar texto':'Search text',
 	/*END search*/

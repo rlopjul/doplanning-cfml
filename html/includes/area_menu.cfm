@@ -123,7 +123,7 @@
 
 							<cfif APPLICATION.modulePubMedComments IS true><!--- PubMed Comments --->
 
-								<li <cfif curElement EQ "pubmeds">class="active"</cfif>><a href="pubmeds.cfm?area=#area_id#" title="Comentarios PubMed del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" title="Comentarios de PubMed" alt="Comentarios de PubMed" lang="es"/></a></li>
+								<li <cfif curElement EQ "pubmeds">class="active"</cfif>><a href="pubmeds.cfm?area=#area_id#" title="Publicaciones del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" title="Publicaciones" alt="Publicaciones" lang="es"/></a></li>
 
 							</cfif>
 

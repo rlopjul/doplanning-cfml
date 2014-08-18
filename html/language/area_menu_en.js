@@ -1,11 +1,14 @@
 var area_menu_en = {
 	'Mostrar información del área':'Show area information',
 	'Ocultar información del área':'Hide area information',
-	'Responsable:':'Responsible:',
-	'Fecha de creación:':'Creation date:',
-	'Descripción:':'Description:',
+	'Tipo de área':'Area type',
+	'Responsable':'Responsible',
+	'Fecha de creación':'Creation date:',
+	'Descripción':'Description',
 	'No hay descripción del área':'No description of the area',
-	'URL del área en DoPlanning:':'DoPlanning area URL:',
+	'URL del área en DoPlanning':'DoPlanning area URL',
+	'URL relativa en la <b>web</b>':'Relative URL on the <b>web</b>',
+	'URL relativa en la <b>intranet</b>':'Relative URL on the <b>intranet</b>',
 	
 	'Todos los elementos del área':'All area elements',
 	'Mensajes del área':'Area messages',

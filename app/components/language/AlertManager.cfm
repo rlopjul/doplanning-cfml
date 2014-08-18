@@ -25,7 +25,7 @@ curLangText["es"] = {
 				"name" : "Interconsulta",
 			},
 			"8": {
-				"name" : "Comentario de artículo PubMed",
+				"name" : "Publicación",
 			},
 			"9": {
 				"name" : "Imagen",
@@ -121,7 +121,10 @@ curLangText["es"] = {
 			"of_event" : "del evento",
 			"hour" : "Hora",
 			"place" : "Lugar",
+			"identifier" : "Identificador",
 			"price" : "Precio",
+			"type" : "Tipo",
+			"link_to_pubmed" : "Enlace a PubMed",
 			"estimated_value" : "Valor estimado",
 			"real_value" : "Valor real",
 			"task_done" : "Tarea realizada",
@@ -220,6 +223,8 @@ curLangText["es"] = {
 
 			"you_have_to_revise" : "Le han enviado el siguiente archivo para que lo revise.<br/><b>IMPORTANTE: Debe validar o rechazar la versión del archivo para poder continuar con el proceso de aprobación del documento.</b>",
 
+			"reject_reason" : "Motivo de rechazo en revisión",
+
 		},
 
 		"file_approval": {
@@ -227,6 +232,8 @@ curLangText["es"] = {
 			"file_approval_request" : "Solicitud de aprobación de documento",
 
 			"you_have_to_approve" : "Le han enviado el siguiente archivo para que lo <b>apruebe</b>.<br/><b>IMPORTANTE: Debe aprobar o rechazar la versión del archivo.</b>",
+
+			"reject_reason" : "Motivo de rechazo en aprobación",
 
 		},
 		
@@ -320,7 +327,7 @@ curLangText["en"] = {
 				"name" : "Interconsultation",
 			},
 			"8": {
-				"name" : "PubMed article comment",
+				"name" : "Publication",
 			},
 			"9": {
 				"name" : "Image",
@@ -416,7 +423,10 @@ curLangText["en"] = {
 			"of_event" : "of the event",
 			"hour" : "Time",
 			"place" : "Place",
+			"identifier" : "Identifier",
 			"price" : "Price",
+			"type" : "Type",
+			"link_to_pubmed" : "Link to PubMed",
 			"estimated_value" : "Estimated value",
 			"real_value" : "Real value",
 			"task_done" : "Task done",
@@ -512,6 +522,8 @@ curLangText["en"] = {
 
 			"you_have_to_revise" : "You have to review the following file.<br/><b>NOTE: You must accept or reject the file version to continue the process of approving the document.</b>",
 
+			"reject_reason" : "Reason for rejection on revision",
+
 		},
 
 		"file_approval": {
@@ -519,6 +531,8 @@ curLangText["en"] = {
 			"file_approval_request" : "Request for document approval",
 
 			"you_have_to_approve" : "You have a pending approval document.<br/><b>NOTE: You must approve o reject this file version.</b>",
+
+			"reject_reason" : "Reason for rejection on approval",
 
 		},
 		

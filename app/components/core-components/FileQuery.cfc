@@ -313,6 +313,7 @@
 							
 			<cfquery name="getFileVersionsQuery" datasource="#client_dsn#">
 				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
+					, files.revision_result_reason, files.approval_result_reason
 					, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
 					, DATE_FORMAT(files.revision_request_date, '#dateTimeFormat#') AS revision_request_date
 					, DATE_FORMAT(files.approval_request_date, '#dateTimeFormat#') AS approval_request_date  
@@ -346,6 +347,7 @@
 							
 			<cfquery name="getFileVersionsQuery" datasource="#client_dsn#">
 				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
+					, files.revision_result_reason, files.approval_result_reason
 					, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date
 					, DATE_FORMAT(files.revision_request_date, '#dateTimeFormat#') AS revision_request_date
 					, DATE_FORMAT(files.approval_request_date, '#dateTimeFormat#') AS approval_request_date  

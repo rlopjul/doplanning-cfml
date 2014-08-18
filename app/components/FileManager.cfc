@@ -4905,6 +4905,7 @@
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="valid" type="boolean" required="true">
+		<cfargument name="revision_result_reason" type="string" required="false">
 		
 		<cfset var method = "validateFileVersion">
 
@@ -4965,6 +4966,10 @@
 
 				<cfset response = {result=false, file_id=#arguments.file_id#, message="Este archivo ya ha sido revisado previamente."}>
 			
+			<cfelseif arguments.valid IS false AND NOT isDefined("arguments.revision_result_reason")>
+
+				<cfset response = {result=false, file_id=#arguments.file_id#, message="Motivo de rechazo requerido."}>
+
 			<cfelse>	
 
 				<cfset version_id = fileVersionQuery.version_id>
@@ -4977,6 +4982,9 @@
 						revised = 1,
 						revision_date = NOW(),
 						revision_result = <cfqueryparam value="#arguments.valid#" cfsqltype="cf_sql_bit">
+						<cfif arguments.valid IS false>
+							, revision_result_reason = <cfqueryparam value="#arguments.revision_result_reason#" cfsqltype="cf_sql_longvarchar">
+						</cfif>
 						WHERE version_id = <cfqueryparam value="#version_id#" cfsqltype="cf_sql_integer">
 						AND file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
@@ -5044,7 +5052,8 @@
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="approve" type="boolean" required="true">
-		
+		<cfargument name="approval_result_reason" type="string" required="false">
+
 		<cfset var method = "approveFileVersion">
 
 		<cfset var response = structNew()>
@@ -5103,6 +5112,10 @@
 			<cfelseif fileVersionQuery.approved IS true>
 
 				<cfset response = {result=false, file_id=#arguments.file_id#, message="Este archivo ya ha sido aprobado previamente."}>
+
+			<cfelseif arguments.approve IS false AND NOT isDefined("arguments.approval_result_reason")>
+
+				<cfset response = {result=false, file_id=#arguments.file_id#, message="Motivo de rechazo requerido."}>
 			
 			<cfelse>	
 
@@ -5115,6 +5128,9 @@
 						SET 
 						approval_date = NOW(),
 						approved = <cfqueryparam value="#arguments.approve#" cfsqltype="cf_sql_bit">
+						<cfif arguments.approve IS false>
+							, approval_result_reason = <cfqueryparam value="#arguments.approval_result_reason#" cfsqltype="cf_sql_longvarchar">
+						</cfif>
 						WHERE version_id = <cfqueryparam value="#version_id#" cfsqltype="cf_sql_integer">
 						AND file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>

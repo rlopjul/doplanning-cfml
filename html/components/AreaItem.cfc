@@ -116,6 +116,7 @@
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false">
 		<cfargument name="price" type="numeric" required="false">
+		<cfargument name="sub_type_id" type="numeric" required="false">
 		
 		<cfset var method = "createItem">
 				
@@ -294,11 +295,13 @@
 				</cfif>
 				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				<cfinvokeargument name="price" value="#arguments.price#">
+				<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfif with_attached IS true OR with_image IS true><!---Hay archivo para subir--->
 					<cfinvokeargument name="status" value="pending"/>
-				</cfif>	
+				</cfif>
+
 			</cfinvoke>
 
 			<cfif createItemResponse.result IS true>
@@ -552,6 +555,7 @@
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false">
 		<cfargument name="price" type="numeric" required="false">
+		<cfargument name="sub_type_id" type="numeric" required="false">
 
 		<cfset var method = "updateItem">
 				
@@ -693,6 +697,7 @@
 					</cfif> --->
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					<cfinvokeargument name="price" value="#arguments.price#">
+					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
 				</cfinvoke>
 
 				<cfif updateItemResponse.result IS NOT true>
@@ -725,6 +730,7 @@
 					</cfif>--->
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					<cfinvokeargument name="price" value="#arguments.price#">
+					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
 				</cfinvoke>
 
 				<cfif updateItemWithAttachedResponse.result IS true>
@@ -1675,12 +1681,12 @@
 						<!--- Debe poder mostrarse el estado de publicación en las listas y formularios aunque no estén en áreas web para poder publicar sus vistas en áreas web --->
 
 						<cfif len(objectItem.publication_date) GT 0>
-							<div class="div_message_page_label"><span>Fecha de publicación:</span> <span class="text_message_page">#objectItem.publication_date#</span>
+							<div class="div_message_page_label"><span lang="es">Fecha de publicación:</span> <span class="text_message_page">#objectItem.publication_date#</span>
 								<!---<span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.publication_time,"HH:mm")#</span>--->
 							</div>
 						</cfif>
 						<cfif APPLICATION.publicationValidation IS true AND len(objectItem.publication_validated) GT 0>
-							<div class="div_message_page_label"><span>Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span> 
+							<div class="div_message_page_label"><span lang="es">Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span> 
 							</div>
 						</cfif>
 
@@ -1735,7 +1741,35 @@
 
 					</cfif>				
 					
-					<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
+					<cfif itemTypeId IS 8><!--- Publications --->
+
+						<cfif isNumeric(objectItem.sub_type_id)>
+							<cfinvoke component="#APPLICATION.componentsPath#/ItemSubTypeManager" method="getSubType" returnvariable="subTypeQuery">
+								<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+								<cfinvokeargument name="sub_type_id" value="#objectItem.sub_type_id#">
+							</cfinvoke>
+							<cfif subTypeQuery.recordCount GT 0>
+								<div class="div_message_page_label"><span lang="es">Tipo:</span> <span class="text_message_page" lang="es">#subTypeQuery.sub_type_title_es#</span></div>
+							</cfif>
+						</cfif>
+
+						<cfif len(objectItem.identifier) GT 0>
+						<div class="div_message_page_label"><span lang="es">Identificador:</span> <span class="text_message_page">#objectItem.identifier#</span></div>
+
+							<cfif isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
+								<div class="div_message_page_label"><span lang="es">Enlace a PubMed:</span> <span class="text_message_page"><a href="http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#" target="_blank">http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#</a></span></div>
+							</cfif>
+						</cfif>
+
+						<cfif subTypeQuery.recordCount IS 0 OR subTypeQuery.sub_type_id NEQ 1>
+							
+							<div class="div_message_page_label"><span lang="es">Precio:</span> <span class="text_message_page">#objectItem.price#</span></div>
+
+						</cfif>
+						
+					</cfif>
+
+					<cfif itemTypeId IS 5><!---Events--->
 						<div class="div_message_page_label"><span lang="es">Precio:</span> <span class="text_message_page">#objectItem.price#</span></div>
 					</cfif>					
 							
@@ -1753,10 +1787,6 @@
 					</cfif>
 					<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
 					<div class="div_message_page_label"><span lang="es">URL contenido incrustado:</span><br/> <a href="#objectItem.iframe_url#" target="_blank">#objectItem.iframe_url#</a></div>
-					</cfif>
-					
-					<cfif isDefined("objectItem.identifier") AND len(objectItem.identifier) GT 0>
-					<div class="div_message_page_label"><span lang="es">Identificador:</span> <span class="text_message_page">#objectItem.identifier#</span></div>
 					</cfif>
 					
 					<div class="div_message_page_label"><span lang="es"><cfif itemTypeId IS 3>Descripción<cfelse>Contenido</cfif>:</span></div> 

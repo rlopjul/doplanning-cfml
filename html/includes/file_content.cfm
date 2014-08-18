@@ -158,7 +158,8 @@
 								<p>
 									Debe validar o rechazar la versión de este archivo:<br/>
 									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=true&return_path=#return_path#" onclick="return confirmValidateFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Validar versión</span></a>
-									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=false&return_path=#return_path#" onclick="return confirmValidateFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
+									<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=false&return_path=#return_path#" onclick="return confirmValidateFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
+									<a href="file_reject_revision.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
 								</p>
 
 							<cfelseif version.revised IS true AND SESSION.user_id IS objectFile.approver_user>
@@ -166,7 +167,8 @@
 								<p>
 									Debe aprobar o rechazar la versión de este archivo:<br/>
 									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=true&return_path=#return_path#" onclick="return confirmApproveFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar versión</span></a>
-									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=false&return_path=#return_path#" onclick="return confirmApproveFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
+									<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=false&return_path=#return_path#" onclick="return confirmApproveFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
+									<a href="file_reject_approval.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
 								</p>
 
 							</cfif>
@@ -191,7 +193,7 @@
 
 					<cfelse>
 						<div class="alert alert-info">
-							<span>Debe bloquear el archivo para poder realizar cualquier modificación.</span>
+							<span lang="es">Debe bloquear el archivo para poder realizar cualquier modificación.</span>
 						</div>
 
 						<cfif fileTypeId IS 3>
@@ -280,11 +282,11 @@
 		<cfif len(area_type) GT 0><!--- WEB --->
 
 			<cfif len(objectFile.publication_date) GT 0>
-				<div class="div_file_page_label"><span>Fecha de publicación:</span> <span class="text_file_page">#objectFile.publication_date#</span>
+				<div class="div_file_page_label"><span lang="es">Fecha de publicación:</span> <span class="text_file_page">#objectFile.publication_date#</span>
 				</div>
 			</cfif>
 			<cfif APPLICATION.publicationValidation IS true AND len(objectFile.publication_validated) GT 0>
-				<div class="div_file_page_label"><span>Publicación aprobada:</span> <span class="text_file_page" lang="es"><cfif objectFile.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
+				<div class="div_file_page_label"><span lang="es">Publicación aprobada:</span> <span class="text_file_page" lang="es"><cfif objectFile.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
 				</div>
 			</cfif>
 
@@ -310,7 +312,7 @@
 
 		<cfif APPLICATION.publicationScope IS true AND fileTypeId IS NOT 3>
 
-			<div class="div_message_page_label">Ámbito de publicación: <span class="text_message_page">#objectFile.publication_scope_name#</span></div>
+			<div class="div_message_page_label"><span lang="es">Ámbito de publicación:</span> <span class="text_message_page">#objectFile.publication_scope_name#</span></div>
 
 		</cfif>
 
@@ -321,7 +323,7 @@
 			<cfinvokeargument name="area_id" value="#area_id#">
 		</cfinvoke>
 
-		<div class="div_message_page_label"><span lang="es">URL del elemento en #APPLICATION.title#:</span></div>
+		<div class="div_message_page_label"><span lang="es">URL del archivo en #APPLICATION.title#:</span></div>
 		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
 		<!---getDownloadFileUrl--->

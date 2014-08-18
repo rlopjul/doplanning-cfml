@@ -59,7 +59,7 @@
 	</cfif>
 
 	<cfif APPLICATION.modulePubMedComments IS true>
-	<a href="pubmed_new.cfm?area=#area_id#" onclick="openUrl('pubmed_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo Comentario de PubMed" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" style="height:22px;"/></a>
+	<a href="pubmed_new.cfm?area=#area_id#" onclick="openUrl('pubmed_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nueva Publicación" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;<img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" style="height:22px;"/></a> <!--- <i class="icon-book" style="font-size:19px; color:##0088CC"></i> --->
 	</cfif>
 	
 	<span class="divider">&nbsp;</span>

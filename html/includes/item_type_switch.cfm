@@ -100,8 +100,8 @@
 		<!--- <cfset itemTypeNameU = "PubMed"> --->
 		<cfset itemTypeNameP = "pubmeds">
 		
-		<cfset itemTypeNameEs = "Comentario de artículo PubMed">
-		<cfset itemTypeNameEsP = "Comentarios de artículos PubMed">
+		<cfset itemTypeNameEs = "Publicación">
+		<cfset itemTypeNameEsP = "Publicaciones">
 
 		<cfset itemTypeGender = "male">
 	

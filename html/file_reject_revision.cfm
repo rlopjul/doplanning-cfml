@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>#APPLICATION.title#-Editar Publicación</title>
+<title>#APPLICATION.title#-Rechazar versión</title>
 <!-- InstanceEndEditable -->
 <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
@@ -134,13 +134,9 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 
-<cfset return_path = "#APPLICATION.htmlPath#/">
-<cfset itemTypeId = 8>
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_modify_content.cfm">
+<cfset page_type = 1><!---Revision--->
+<cfinclude template="#APPLICATION.htmlPath#/includes/file_reject_version.cfm">
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
-	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>
 <!-- InstanceEndEditable -->
 </div>
 </body>

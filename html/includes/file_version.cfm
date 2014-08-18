@@ -82,6 +82,16 @@ Versión de archivo
 				<cfinvokeargument name="version" value="#version#">
 			</cfinvoke>
 
+			<!---<cfif version.revision_result IS false>
+				<div class="div_file_page_label"><span lang="es">Motivo de rechazo en revisión:</span><br> 
+				<span class="text_file_page">#version.revision_result_reason#</span></div>	
+			</cfif>
+
+			<cfif version.approved IS false>
+				<div class="div_file_page_label"><span lang="es">Motivo de rechazo en aprobación:</span><br>
+				<span class="text_file_page">#version.approval_result_reason#</span></div>	
+			</cfif>--->
+
 		<cfelse>
 			<div>
 				<cfif len(version.revision_request_date) GT 0>

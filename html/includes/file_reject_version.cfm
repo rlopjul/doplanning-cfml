@@ -1,29 +1,31 @@
+<!---
+page_type
+
+1 reject revision
+2 reject approval
+--->
+
 <cfif isDefined("FORM.page")>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="requestRevision" argumentcollection="#FORM#" returnvariable="actionResponse">
-	</cfinvoke>	
-
-	<cfif actionResponse.result IS true>
-
-		<cfset file_id = actionResponse.file_id>
+	<cfif page_type IS 1>
 		
-		<cfset msg = URLEncodedFormat(actionResponse.message)>
-		
-		<cflocation url="area_items.cfm?area=#area_id#&file=#file_id#&res=1&msg=#msg#" addtoken="no">
-			
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="rejectRevisionFileVersion" argumentcollection="#FORM#" returnvariable="actionResponse">
+		</cfinvoke>
+
 	<cfelse>
-		
-		<cfset URL.res = 0>
-		<cfset URL.msg = actionResponse.message>
 
-		<cfset newUser = FORM>
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="rejectApproveFileVersion" argumentcollection="#FORM#" returnvariable="actionResponse">
+		</cfinvoke>
 
 	</cfif>
 
 <cfelse>
 
-	<cfif isDefined("URL.file") AND isNumeric(URL.file)>
+	<cfif isDefined("URL.file") AND isNumeric(URL.file) AND isDefined("URL.fileTypeId") AND isNumeric(URL.fileTypeId) AND isDefined("URL.area") AND isNumeric(URL.area) AND isDefined("URL.return_path")>
 		<cfset file_id = URL.file>
+		<cfset fileTypeId = URL.fileTypeId>
+		<cfset area_id = URL.area>
+		<cfset return_path = URL.return_path>
 	<cfelse>
 		<cflocation url="empty.cfm" addtoken="no">
 	</cfif>
@@ -49,13 +51,13 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<div class="div_head_subtitle"><span lang="es">Solicitar aprobación de documento</span></div>
+<div class="div_head_subtitle"><span lang="es">Rechazar <cfif page_type IS 1>validación<cfelse>aprobación</cfif> de versión de archivo</span></div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <cfoutput>
 
-<script type="text/javascript">
+<script>
 
 	function onSubmitForm() {
 
@@ -70,19 +72,22 @@
 
 </script>
 
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
+<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 <div class="contenedor_fondo_blanco">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
 	
-	<script type="text/javascript">
+	<script>
 		var railo_custom_form=new RailoForms('file_form');
 	</script>
 	
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
 	<input type="hidden" name="file_id" value="#file_id#" />
+	<input type="hidden" name="fileTypeId" value="#fileTypeId#" />
+	<input type="hidden" name="valid" value="false" />
 	<input type="hidden" name="area_id" value="#area_id#"/>
+	<input type="hidden" name="return_path" value="#return_path#"/>
 
 	<div class="form-group">
 		<span>Nombre del archivo:</span>
@@ -104,20 +109,26 @@
 		<strong>#file.approver_user_full_name#</strong>
 	</div>
 
-	<p class="help-block" style="font-size:12px;">
-		Proceso de aprobación:<br/>
-		1º Se enviará el archivo al usuario revisor.<br/>
-		2º El usuario revisor debe validar el documento.<br/>
-		3º Si el usuario revisor valida el documento, se envía el documento al usuario aprobador.<br/>
-		4º El usuario aprobador debe validar el documento.<br/>
-		Si el documento no es validado por el revisor o el aprobador, se debe iniciar de nuevo el proceso de aprobación con una nueva versión del archivo.
-	</p>
+	<cfif page_type IS 1>
+		<cfset result_input = "revision_result_reason">
+	<cfelse>
+		<cfset result_input = "approval_result_reason">
+	</cfif>
+
+	<div class="form-group">
+		<label for="#result_input#">Motivo de rechazo de <cfif page_type IS 1>validación<cfelse>aprobación</cfif> de versión:</label>
+		<textarea name="#result_input#" id="#result_input#" required="true" style="height:160px;" class="form-control"></textarea>
+		<script type="text/javascript">
+			addRailoRequiredTextInput("#result_input#", "Campo 'Motivo de rechazo' obligatorio");
+		</script>
+	</div>
+
 	
 	<div style="height:10px;"><!--- ---></div>
 
 	<div id="submitDiv">
-		<input type="submit" class="btn btn-primary" name="modify" value="Iniciar proceso de aprobación" lang="es"/>
-
+		<button type="submit" class="btn btn-danger"><span lang="es">Rechazar versión</span></button>
+		
 		<a href="file.cfm?file=#file_id#&area=#area_id#" class="btn btn-default" style="float:right">Cancelar</a>
 	</div>
 

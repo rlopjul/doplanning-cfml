@@ -17,7 +17,7 @@
 	<span lang="es">Fecha de creación:</span> <span class="text_message_page">#objectArea.creation_date#</span>
 	</div>
 	<div class="div_message_page_label">
-	<span lang="es">Descripcion:</span>
+	<span lang="es">Descripción:</span>
 	</div>
 	<div class="div_message_page_description"><cfif len(objectArea.description) GT 0>#objectArea.description#<cfelse><i><span lang="es">No hay descripción del área</span></i></cfif></div>
 

@@ -6,6 +6,7 @@ var area_item_content_en = {
 	'Interconsulta':'Interconsultation',
 	'Elemento de contenido genérico':'Generic content element',
 	'Noticia':'News item',
+	'Publicación':'Publication',
 	
 	/*area_item_new_content*/
 	'Nuevo Mensaje':'New Message',
@@ -14,6 +15,7 @@ var area_item_content_en = {
 	'Nueva Interconsulta':'New Interconsultation',
 	'Nuevo Elemento de contenido genérico':'New Generic content element',
 	'Nueva Noticia':'New News item',
+	'Nueva Publicación':'New Publication',
 	/*END area_item_new_content*/
 	
 	/*area_item_modify_content*/
@@ -23,6 +25,7 @@ var area_item_content_en = {
 	'Modificar Interconsulta':'Modify Interconsultation',
 	'Modificar Elemento de contenido genérico':'Modify web content element',
 	'Modificar Noticia':'Modify News item',
+	'Modificar Publicación':'Modify Publication',
 	'Archivo eliminado.':'File deleted.',
 	'Imagen eliminada.':'Image deleted.',
 	/*END area_item_modify_content*/
@@ -31,6 +34,10 @@ var area_item_content_en = {
 	'Título':'Title',
 	'Fecha de creación':'Creation date',
 	'Formato DD-MM-AAAA. Ejemplo:':'DD-MM-YYYY format. Example:',
+	'Fecha de publicación':'Publication date',
+	'Si está definida, este contenido se mostrará en la web en la fecha especificada.':'If defined, this content will be accessible from the web on the specified date',
+	'Si está definida, este contenido se mostrará en la intranet en la fecha especificada.':'If defined, this content will be accessible from the intranet on the specified date',
+	'Publicación aprobada':'Publication approved',
 	'Usuario destinatario:':'Destination user:',
 	'Seleccionar usuario':'Select user',
 	'Usuario destinatario':'Destination user',
@@ -52,6 +59,13 @@ var area_item_content_en = {
 	'Posición':'Position',
 	'Tipo de visualización':'Visualization type',
 	'Identificador':'Identifier',
+	'Identificador/Número':'Identifier/Number',
+	'Tipo':'Type',
+	'Tipo de':'Type of',
+	'Revista':'Journal',
+	'Ver en PubMed':'Open in PubMed',
+	'PubMed Id no válido':'Invalid PubMed Id',
+	'Precio':'Price',
 	
 	'Archivo':'File',
 	'Archivo adjunto:':'Attached file:',
@@ -91,6 +105,8 @@ var area_item_content_en = {
 	'Abrir en nueva ventana':'Open in new window',
 	'Adjunto':'Attached',
 	'Copiar como':'Copy as',
+	'Cambiar propietario':'Change owner',
+	'Mover a otra área':'Move to another area',
 	
 	'Asignada a:':'Asigned to:',
 	'Estado:':'State:',
@@ -115,6 +131,8 @@ var area_item_content_en = {
 	'Descripción:':'Description:',
 	'Contenido:':'Content:',
 	'URL en DoPlanning:':'DoPlanning URL:',
+	'Enlace a PubMed':'Link to PubMed',
+	'Sí':'Yes',
 	/*END area_item_content*/
 	
 	/*area_item_copy.cfm*/

@@ -871,7 +871,7 @@
 		<cfargument name="file_id" type="string" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
-		<cfargument name="valid" type="boolean" required="true">
+		<!---<cfargument name="valid" type="boolean" required="true">--->
 		<cfargument name="return_path" type="string" required="true">
 		
 		<cfset var method = "validateFileVersion">
@@ -885,15 +885,61 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="validateFileVersion" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
 				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
-				<cfinvokeargument name="valid" value="#arguments.valid#"/>
+				<cfinvokeargument name="valid" value="true"/>
 			</cfinvoke>
 			
 			<cfif response.result IS true>
-				<cfif arguments.valid IS true>
+				<!--- <cfif arguments.valid IS true> --->
 					<cfset msg = "Versión validada.">
-				<cfelse>
+				<!---<cfelse>
 					<cfset msg = "Versión rechazada.">
-				</cfif>
+				</cfif>--->
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
+	<!--- rejectRevisionFileVersion --->
+
+	<cffunction name="rejectRevisionFileVersion" returntype="void" access="remote">
+		<cfargument name="file_id" type="string" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="revision_result_reason" type="string" required="true">
+		<cfargument name="return_path" type="string" required="true">
+		
+		<cfset var method = "rejectRevisionFileVersion">
+
+		<cfset var response = structNew()>
+				
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="validateFileVersion" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+				<cfinvokeargument name="valid" value="false"/>
+				<cfinvokeargument name="revision_result_reason" value="#arguments.revision_result_reason#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<!--- <cfif arguments.valid IS true>
+					<cfset msg = "Versión validada.">
+				<cfelse>--->
+					<cfset msg = "Versión rechazada.">
+				<!---</cfif>--->
 			<cfelse>
 				<cfset msg = response.message>
 			</cfif>
@@ -954,6 +1000,49 @@
 		</cftry>
 		
 	</cffunction>
+
+
+	<!--- rejectApproveFileVersion --->
+
+	<cffunction name="rejectApproveFileVersion" returntype="void" access="remote">
+		<cfargument name="file_id" type="string" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="approval_result_reason" type="string" required="true">
+		<cfargument name="return_path" type="string" required="true">
+		
+		<cfset var method = "rejectApproveFileVersion">
+
+		<cfset var response = structNew()>
+				
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="approveFileVersion" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+				<cfinvokeargument name="approve" value="false"/>
+				<cfinvokeargument name="approval_result_reason" value="#arguments.approval_result_reason#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset msg = "Versión rechazada.">
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
 
 
 	<!--- duplicateFileVersion --->
@@ -1193,6 +1282,9 @@
 
 					<div class="label label-warning">Versión de archivo rechazada en la aprobación</div>
 
+					<br><span class="text-warning" lang="es">Motivo de rechazo en aprobación:</span><br/>
+					<i class="text_file_page">#version.approval_result_reason#</i>	
+
 				<cfelse>
 
 					<div class="label label-warning">Versión de archivo revisada pendiente de aprobación</div>
@@ -1203,7 +1295,11 @@
 
 				<div class="label label-warning">Versión de archivo rechazada en la revisión</div>
 
+				<br><span class="text-warning" lang="es">Motivo de rechazo en revisión:</span><br/>
+				<i class="text_file_page">#version.revision_result_reason#</i>	
+
 			</cfif>
+
 			</div>
 
 		</cfif>

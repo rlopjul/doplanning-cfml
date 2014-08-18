@@ -111,10 +111,10 @@
 		<cfset itemTypeNameP = "pubmeds">
 		<cfset itemTypeTable = itemTypeNameP>
 		
-		<cfset itemTypeNameEs = "Comentario de artículo PubMed">
-		<cfset itemTypeNameEsP = "Comentarios de artículos PubMed">
+		<cfset itemTypeNameEs = "Publicación">
+		<cfset itemTypeNameEsP = "Publicaciones">
 
-		<cfset itemTypeGender = "male">
+		<cfset itemTypeGender = "female">
 		<cfset itemTypeWeb = true>
 		<cfset itemTypeNoWeb = true>
 	
