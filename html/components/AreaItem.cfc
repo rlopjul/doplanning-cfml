@@ -144,92 +144,7 @@
             
 			<cfif len(arguments.imagedata) GT 0>
 				<cfset with_image = true>
-			</cfif>
-						
-            <!---
-            <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="objectItem" returnvariable="objectItem">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-                <cfinvokeargument name="title" value="#arguments.title#">
-				<cfinvokeargument name="link" value="#arguments.link#">
-				<cfif isDefined("arguments.link_target")>
-					<cfinvokeargument name="link_target" value="#arguments.link_target#">
-				</cfif>
-                <cfinvokeargument name="description" value="#arguments.description#">
-                <cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
-                <cfinvokeargument name="parent_id" value="#arguments.parent_id#">
-                <cfinvokeargument name="parent_kind" value="#arguments.parent_kind#">
-				<!---<cfif with_attached IS false>
-                	<cfinvokeargument name="attached_file_id" value="-1">
-                    <cfinvokeargument name="attached_file_name" value="NULL">
-         		<cfelse>
-                 	<cfinvokeargument name="attached_file_id" value="NULL">
-                    <cfinvokeargument name="attached_file_name" value="(Pendiente de subir el archivo)">
-                </cfif>
-				<cfif with_image IS false>
-					<cfinvokeargument name="attached_image_id" value="-1">
-					<cfinvokeargument name="attached_image_name" value="NULL">
-				<cfelse>
-					<cfinvokeargument name="attached_image_id" value="NULL">
-                    <cfinvokeargument name="attached_image_name" value="(Pendiente de subir el archivo)">
-				</cfif>--->
-                <cfif isDefined("arguments.notify_by_sms")>
-					<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
-				</cfif>
-				<cfif isDefined("arguments.post_to_twitter")>
-					<cfinvokeargument name="post_to_twitter" value="#arguments.post_to_twitter#">
-				</cfif>
-				<cfif isDefined("arguments.creation_date")>
-					<cfinvokeargument name="creation_date" value="#arguments.creation_date#">
-				</cfif>
-				<cfif isDefined("arguments.start_date")>
-					<cfinvokeargument name="start_date" value="#arguments.start_date#">
-				</cfif>
-				<cfif isDefined("arguments.end_date")>
-					<cfinvokeargument name="end_date" value="#arguments.end_date#">
-				</cfif>
-				<cfif isDefined("arguments.start_hour") AND isDefined("arguments.start_minute")>
-					<cfinvokeargument name="start_time" value="#arguments.start_hour#:#arguments.start_minute#">
-				</cfif>
-				<cfif isDefined("arguments.end_hour") AND isDefined("arguments.end_minute")>
-					<cfinvokeargument name="end_time" value="#arguments.end_hour#:#arguments.end_minute#">
-				</cfif>
-				<cfif isDefined("arguments.place")>
-					<cfinvokeargument name="place" value="#arguments.place#">
-				</cfif>
-				<cfif isDefined("arguments.recipient_user")>
-					<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
-				</cfif>
-				<cfif isDefined("arguments.estimated_value")>
-					<cfinvokeargument name="estimated_value" value="#arguments.estimated_value#">
-				</cfif>
-				<cfif isDefined("arguments.real_value")>
-					<cfinvokeargument name="real_value" value="#arguments.real_value#">
-				</cfif>
-				<cfinvokeargument name="done" value="#arguments.done#">
-				<!---<cfif isDefined("arguments.position")>
-					<cfinvokeargument name="position" value="#arguments.position#">
-				</cfif>--->
-				<cfif isDefined("arguments.display_type_id")>
-					<cfinvokeargument name="display_type_id" value="#arguments.display_type_id#">
-				</cfif>
-				<cfif isDefined("arguments.iframe_url")>
-					<cfinvokeargument name="iframe_url" value="#arguments.iframe_url#">
-				</cfif>
-				<cfif isDefined("arguments.iframe_display_type_id")>
-					<cfinvokeargument name="iframe_display_type_id" value="#arguments.iframe_display_type_id#">
-				</cfif>
-				<cfif isDefined("arguments.identifier")>
-					<cfinvokeargument name="identifier" value="#arguments.identifier#">
-				</cfif>
-				<cfif isDefined("arguments.structure_available")>
-					<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
-				</cfif>
-				<cfif isDefined("arguments.general")>
-					<cfinvokeargument name="general" value="#arguments.general#">
-				</cfif>                
-                <cfinvokeargument name="return_type" value="object">
-            </cfinvoke>--->
-          
+			</cfif>         
 		  
          	<cfif with_attached IS true>
             	<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">		
@@ -1270,16 +1185,22 @@
 			
 			</cfif>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="deleteItemAttachedFile" returnvariable="xmlResponseContent">
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="deleteItemAttachedFile" returnvariable="deleteAttachedFileResponse">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+
+				<cfinvokeargument name="file_type" value="file"/>
 			</cfinvoke>	
 			
+			<cfif deleteAttachedFileResponse.result IS true>
+				<cfset msg = "Archivo eliminado.">
+			<cfelse>
+				<cfset msg = deleteAttachedFileResponse.message>
+			</cfif>
 			
-			<cfset msg = "Archivo eliminado.">
 			<cfset msg = URLEncodedFormat(msg)>
             
-            <cflocation url="#arguments.return_page#&res=1&msg=#msg#" addtoken="no">	
+            <cflocation url="#arguments.return_page#&res=#deleteAttachedFileResponse.result#&msg=#msg#" addtoken="no">	
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -1319,16 +1240,22 @@
 			
 			</cfif>
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="deleteItemAttachedImage" returnvariable="xmlResponseContent">
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="deleteItemAttachedFile" returnvariable="deleteAttachedFileResponse">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+
+				<cfinvokeargument name="file_type" value="image"/>
 			</cfinvoke>	
 			
+			<cfif deleteAttachedFileResponse.result IS true>
+				<cfset msg = "Archivo de imagen eliminado.">
+			<cfelse>
+				<cfset msg = deleteAttachedFileResponse.message>
+			</cfif>
 			
-			<cfset msg = "Imagen eliminada.">
 			<cfset msg = URLEncodedFormat(msg)>
             
-            <cflocation url="#arguments.return_page#&res=1&msg=#msg#" addtoken="no">	
+           <cflocation url="#arguments.return_page#&res=#deleteAttachedFileResponse.result#&msg=#msg#" addtoken="no">	
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">

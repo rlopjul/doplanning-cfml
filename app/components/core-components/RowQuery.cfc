@@ -650,4 +650,43 @@
 		
 	</cffunction>
 
+
+	<!--- ------------------------------------- deleteRow -------------------------------------  --->
+	
+	<cffunction name="deleteRow" output="false" access="public" returntype="void">
+		<cfargument name="row_id" type="numeric" required="true">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
+
+		<cfset var method = "deleteRow">
+
+		<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+		<cftransaction>
+			
+			<!---Delete selected areas--->
+			<cfquery name="deleteSelectedAreasQuery" datasource="#client_dsn#">
+				DELETE FROM `#client_abb#_#tableTypeTable#_rows_areas`
+				WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				AND row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<!---Delete row--->
+			<cfquery name="deleteRow" datasource="#client_dsn#">
+				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+				WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+
+		</cftransaction>
+		
+		<!--- saveLog --->
+		<cfinclude template="includes/logRecord.cfm">
+
+	
+	</cffunction>
+
 </cfcomponent>

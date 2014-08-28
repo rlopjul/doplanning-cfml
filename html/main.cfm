@@ -304,31 +304,48 @@
 				</div>
 				
 				<cfif APPLICATION.identifier NEQ "vpnet">
-					<div style="float:right; padding-top:1px; padding-right:6px; width:80px; text-align:right;">
+					<div style="float:right; padding-top:1px; padding-right:6px; text-align:right;"><!---width:80px; --->
 						
-						<cfif objectUser.general_administrator EQ true>
-							<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-right:3px;" lang="es"/></a>
-						<cfelse>
-							<cfxml variable="areasAdminXml">
-								#objectUser.areas_administration#
-							</cfxml>
-							<cfif isDefined("areasAdminXml.areas_administration.area")>
-								<cfset nAreasAdmin = arrayLen(areasAdminXml.areas_administration.area)>
+						<div class="btn-toolbar">
+						
+							<cfif objectUser.general_administrator EQ true>
+
+								<div class="btn-group">
+									<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" title="Administración general nueva versión HTML" lang="es"><i class="icon-wrench"></i></a>
+								</div>
+
+								<div class="btn-group">
+									<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general versión Flash" title="Administración general" style="margin-right:3px;" lang="es"/></a>
+								</div>
+
 							<cfelse>
-								<cfset nAreasAdmin = 0>
+								<cfxml variable="areasAdminXml">
+									#objectUser.areas_administration#
+								</cfxml>
+								<cfif isDefined("areasAdminXml.areas_administration.area")>
+									<cfset nAreasAdmin = arrayLen(areasAdminXml.areas_administration.area)>
+								<cfelse>
+									<cfset nAreasAdmin = 0>
+								</cfif>
+								<cfif nAreasAdmin GT 0>
+									<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>--->
+									<div class="btn-group">
+										<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" style="float:right" title="Administración de áreas" lang="es"><i class="icon-wrench"></i></a>
+									</div>
+								</cfif>
 							</cfif>
-							<cfif nAreasAdmin GT 0>
-								<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>
-							</cfif>
-						</cfif>
-					
-						<a href="preferences.cfm" title="Preferencias del usuario" lang="es">
-						<cfif len(objectUser.image_file) GT 0>
-							<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
-						<cfelse>
-							<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
-						</cfif>
-						</a>
+						
+							<div class="btn-group">
+								<a href="preferences.cfm" title="Preferencias del usuario" lang="es">
+								<cfif len(objectUser.image_file) GT 0>
+									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
+								<cfelse>
+									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
+								</cfif>
+								</a>
+							</div>
+
+						</div>
 					</div>
 				</cfif>
 			  
@@ -344,7 +361,7 @@
 				<div class="container" style="width:100%;">
 					<div class="row" style="padding-bottom:5px;">
 						
-						<div class="col-sm-11" style="padding:0;">
+						<div class="col-sm-12" style="padding:0;">
 							<div class="btn-toolbar">
 								<div class="btn-group">
 									<div class="input-group" style="width:260px;">
@@ -368,30 +385,8 @@
 							<input type="hidden" id="changeTabDisabled" value="true"/><!---No cambiar de pestaña al seleccionar área--->
 						</div>
 
-						<div class="col-sm-1" style="padding:0;">	
-						<cfoutput>
-						<cfif objectUser.general_administrator EQ true>
-							<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general" title="Administración general" style="margin-right:3px;" lang="es"/></a>--->
-							
-							<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" style="float:right" title="Administración general" lang="es"><i class="icon-wrench"></i> <span lang="es"></span></a>
-						<cfelse>
-							<!--- PROVISIONAL MIENTRAS ESTÉ EL ICONO TAMBIÉN ANTES
-							<cfxml variable="areasAdminXml">
-								#objectUser.areas_administration#
-							</cfxml>
-							<cfif isDefined("areasAdminXml.areas_administration.area")>
-								<cfset nAreasAdmin = arrayLen(areasAdminXml.areas_administration.area)>
-							<cfelse>
-								<cfset nAreasAdmin = 0>
-							</cfif> --->
-							<cfif nAreasAdmin GT 0>
-								<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>--->
-
-								<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" style="float:right" title="Administración de áreas" lang="es"><i class="icon-wrench"></i></a>
-							</cfif>
-						</cfif>
-						</cfoutput>
-						</div>
+						<!---<div class="col-sm-1" style="padding:0;">	
+						</div>--->
 
 					</div>
 				</div>

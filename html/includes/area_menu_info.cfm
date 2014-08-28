@@ -24,6 +24,7 @@
 	<!---areaUrl--->
 	<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
 		<cfinvokeargument name="area_id" value="#area_id#">
+		<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 	</cfinvoke>
 	<div class="div_message_page_label"><span lang="es">URL del área en #APPLICATION.title#:</span></div>
 	<input type="text" value="#areaUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>

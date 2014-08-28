@@ -22,7 +22,10 @@
 		<cfset error_message = "undefined">
 		<cfset error_code = 10000>
 	</cfif>
+
+	<cfset error_request = SerializeJSON(arguments)>
 	
+	<!--- Error Manager from Components --->
 	<cfinvoke component="#APPLICATION.componentsPath#/ErrorManager" method="saveError" returnvariable="saveErrorResponse">
 		<cfinvokeargument name="error_component" value="#component#" >
 		<cfinvokeargument name="error_method" value="#method#">
@@ -34,9 +37,10 @@
 		<cfif isDefined("cfcatch")>
 			<cfinvokeargument name="error_cfcatch" value="#cfcatch#">
 		</cfif>
-		<cfif isDefined("arguments.request")>
+		<cfinvokeargument name="error_request" value="#error_request#">
+		<!---<cfif isDefined("arguments.request")>
 			<cfinvokeargument name="error_request" value="#arguments.request#">
-		</cfif>
+		</cfif>--->
 	</cfinvoke>
 
 	<cfif error_code IS NOT 10000>

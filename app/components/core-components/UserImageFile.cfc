@@ -42,7 +42,7 @@
 			
 			<!---<cfset objectFile.user_in_charge = user_id>--->
 			
-			<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile" accept="image/jpg,image/jpeg,image/gif,image/png,image/pjpeg "><!---image/pjpeg para IE8 que tiene un bug--->
+			<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile" accept="image/jpg,image/jpeg,image/gif,image/png,image/pjpeg"><!---image/pjpeg para IE8 que tiene un bug--->
 			
 			<cfset temp_file = "#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">
 			
@@ -56,6 +56,38 @@
 				<cfthrow errorcode="#error_code#">
 			</cfif>
 			
+			<!--- MODULE ANTI VIRUS --->
+			<cfif APPLICATION.moduleAntiVirus IS true>
+
+				<cfinvoke component="AntiVirusManager" method="checkForVirus" returnvariable="checkForVirusResponse">
+					<cfinvokeargument name="path" value="#destination#">
+					<cfinvokeargument name="filename" value="#temp_file#">
+				</cfinvoke>
+
+				<cfif checkForVirusResponse.result IS false><!--- Delete infected file --->
+
+					<!--- delete image --->
+					<cffile action="delete" file="#destination##temp_file#">
+
+					<!---saveVirusLog--->
+					<cfinvoke component="AntiVirusManager" method="saveVirusLog">
+						<cfinvokeargument name="user_id" value="#arguments.user_id#">
+						<cfinvokeargument name="file_name" value="#objectFile.file_name#"/>
+						<cfinvokeargument name="anti_virus_result" value="#checkForVirusResponse.message#">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfset anti_virus_check_message = trim(listlast(checkForVirusResponse.message, ":"))>
+
+					<cfthrow message="Archivo #objectFile.file_name# no válido por ser identificado como virus: #anti_virus_check_message#">
+
+				</cfif>
+
+			</cfif>
+
+
 			<cffile action="rename" source="#destination##temp_file#" destination="#destination##objectFile.physical_name#">
 			
 			<cfimage action="info" source="#destination##objectFile.physical_name#" structname="image_info">

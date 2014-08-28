@@ -459,6 +459,7 @@
 	<cffunction name="deleteFile" returntype="struct" output="false" access="public">		
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="forceDeleteVirus" type="boolean" required="false" default="false">
 		
 		<cfset var method = "deleteFile">
 		
@@ -494,44 +495,47 @@
 			</cfif>	
 
 			<cfset fileTypeId = fileQuery.file_type_id>
-			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
-	
-
-			<!---checkAccess--->
-			<cfif fileQuery.file_type_id IS 2 OR fileQuery.file_type_id IS 3><!---Area file (ALL area users can delete the file)--->
-				
-				<cfset area_id = fileQuery.area_id>
-
-				<!---checkAreaAccess--->
-				<cfinclude template="includes/checkAreaAccess.cfm">
-
-			<cfelse><!--- User file --->
+			<!---<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">--->
 		
-				<cfif fileQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
+			<cfif arguments.forceDeleteVirus IS false>
 
-					<cfif isDefined("arguments.area_id")>
+				<!---checkAccess--->
+				<cfif fileQuery.file_type_id IS 2 OR fileQuery.file_type_id IS 3><!---Area file (ALL area users can delete the file)--->
 					
-						<cfset area_id = arguments.area_id>
+					<cfset area_id = fileQuery.area_id>
 
-						<cfinclude template="includes/checkAreaAdminAccess.cfm">
+					<!---checkAreaAccess--->
+					<cfinclude template="includes/checkAreaAccess.cfm">
 
-					<cfelse>
+				<cfelse><!--- User file --->
+			
+					<cfif fileQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
 
-						<cfinclude template="includes/checkAdminAccess.cfm">
+						<cfif isDefined("arguments.area_id")>
+						
+							<cfset area_id = arguments.area_id>
 
-					</cfif>
+							<cfinclude template="includes/checkAreaAdminAccess.cfm">
 
-				</cfif>			
+						<cfelse>
+
+							<cfinclude template="includes/checkAdminAccess.cfm">
+
+						</cfif>
+
+					</cfif>			
+
+				</cfif>
 
 			</cfif>
 
-			<cfif fileQuery.locked IS true>
+			<cfif fileQuery.locked IS true AND arguments.forceDeleteVirus IS false>
 
 				<cfset response = {result=false, file_id=#arguments.file_id#, message="No se puede eliminar un archivo bloqueado, debe desbloquearlo."}>
 
 			<cfelse>
 
-				<cfif fileQuery.file_type_id IS 3><!--- Comprobar si el archivo está aprobado --->
+				<cfif fileQuery.file_type_id IS 3 AND arguments.forceDeleteVirus IS false><!--- Comprobar si el archivo está aprobado --->
 					
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="isFileApproved" returnvariable="isApproved">
 						<cfinvokeargument name="file_id" value="#arguments.file_id#">
@@ -550,6 +554,8 @@
 					</cfif>
 
 				</cfif>
+
+				<!--- 
 
 				<!---getFileAreas--->
 				<cfquery datasource="#client_dsn#" name="getFileAreasQuery">
@@ -591,6 +597,8 @@
 							<cfinvoke component="FileManager" method="deleteFileVersion" returnvariable="deleteFileVersionResponse">
 								<cfinvokeargument name="version_id" value="#fileVersionsQuery.version_id#"/>
 								<cfinvokeargument name="fileQuery" value="#fileQuery#"/>
+								<cfinvokeargument name="send_alert" value="false"/>
+								<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#"/>
 							</cfinvoke>
 
 							<cfif deleteFileVersionResponse.result IS false>
@@ -662,18 +670,37 @@
 					<cfloop query="getFileAreasQuery">
 
 						<!--- Alert --->
-						<cfinvoke component="AlertManager" method="newFile">
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 							<cfinvokeargument name="objectFile" value="#fileQuery#">
 							<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
 							<cfinvokeargument name="area_id" value="#getFileAreasQuery.area_id#">
-							<cfinvokeargument name="action" value="delete">
+							<cfinvokeargument name="user_id" value="#user_id#">
+							<cfif arguments.forceDeleteVirus IS true>
+								<cfinvokeargument name="action" value="delete_virus">
+							<cfelse>
+								<cfinvokeargument name="action" value="delete">
+							</cfif>
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
 						
 					</cfloop>
 
 				</cfif>
 
-				<cfset response = {result=true, file_id=#arguments.file_id#}>
+				<cfset response = {result=true, file_id=#arguments.file_id#}> --->
+
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="response">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#">
+					<cfinvokeargument name="fileQuery" value="#fileQuery#">
+					<cfinvokeargument name="user_id" value="#user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
 			</cfif>
 
@@ -689,12 +716,136 @@
 	</cffunction>
 
 
+	<!--- ----------------------- DELETE FILE VERSION -------------------------------- --->
+	
+	<cffunction name="deleteFileVersion" returntype="struct" output="false" access="public">
+		<cfargument name="file_id" type="numeric" required="true">		
+		<cfargument name="version_id" type="numeric" required="true">
+		
+		<cfset var method = "deleteFileVersion">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var fileQuery = "">
+		<cfset var fileVersionQuery = "">
+		<cfset var fileTypeId = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<!--- getFile --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="with_lock" value="false">
+				<cfinvokeargument name="parse_dates" value="true">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif fileQuery.recordCount IS 0><!---The file does not exist (is not found)--->
+				
+				<cfset error_code = 601>
+				
+				<cfthrow errorcode="#error_code#">
+							
+			</cfif>	
+
+			<cfset area_id = fileQuery.area_id>
+
+			<!---checkAreaAccess--->
+			<cfinclude template="includes/checkAreaAccess.cfm">
+
+			<cfif fileQuery.locked IS true>
+
+				<cfset response = {result=false, version_id=#arguments.version_id#, message="No se puede eliminar una versión de un archivo bloqueado, debe desbloquearlo para eliminarla."}>
+
+			<cfelse>
+
+				<cfset fileTypeId = fileQuery.file_type_id>
+
+				<!--- getFileVersion --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersion" returnvariable="fileVersionQuery">
+					<cfinvokeargument name="version_id" value="#arguments.version_id#">
+					<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif fileVersionQuery.recordCount IS 0>
+					
+					<cfset error_code = 601>
+				
+					<cfthrow errorcode="#error_code#">
+
+				</cfif>
+
+				<!--- getLasFileVersion --->
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getLastFileVersion" returnvariable="getLastFileVersionResponse">
+					<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+					<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
+				</cfinvoke>
+
+				<cfset lastVersion = getLastFileVersionResponse.version>
+
+				<cfif fileVersionQuery.approved IS true>
+
+					<cfset response = {result=false, version_id=#arguments.version_id#, message="No se puede eliminar una versión aprobada."}>
+
+				<cfelseif fileVersionQuery.revised IS true>
+
+					<cfset response = {result=false, version_id=#arguments.version_id#, message="No se puede eliminar una versión revisada."}>
+
+				<cfelseif fileVersionQuery.version_id EQ lastVersion.version_id>
+
+					<cfset response = {result=false, version_id=#arguments.version_id#, message="No se puede eliminar la última versión del archivo."}>
+
+				<cfelseif fileVersionQuery.user_in_charge NEQ SESSION.user_id>
+
+					<cfset response = {result=false, version_id=#arguments.version_id#, message="Sólo el usuario propietario de la versión puede eliminarla."}>
+
+				<cfelse>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFileVersion" returnvariable="response">
+						<cfinvokeargument name="file_id" value="#arguments.file_id#">
+						<cfinvokeargument name="version_id" value="#arguments.version_id#">
+						<cfinvokeargument name="fileQuery" value="#fileQuery#">
+						<cfinvokeargument name="fileVersionQuery" value="#fileVersionQuery#">
+						
+						<cfinvokeargument name="forceDeleteVirus" value="false">
+						<cfinvokeargument name="send_alert" value="true">
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>	
+
+	</cffunction>
+
 	
 	<!--- ----------------------- DELETE FILE VERSION -------------------------------- --->
 	
-	<cffunction name="deleteFileVersion" returntype="struct" output="false" access="private">		
+<!---	<cffunction name="deleteFileVersion" returntype="struct" output="false" access="private">		
 		<cfargument name="version_id" type="numeric" required="true">
 		<cfargument name="fileQuery" type="query" required="true">
+		<cfargument name="send_alert" type="boolean" required="true">
+		<cfargument name="forceDeleteVirus" type="boolean" required="false" default="false">
 		
 		<cfset var method = "deleteFileVersion">
 		
@@ -741,7 +892,7 @@
 			<cfset fileTypeId = fileQuery.file_type_id>
 			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
-			<cfif fileQuery.locked IS true>
+			<cfif fileQuery.locked IS true AND arguments.forceDeleteVirus IS false>
 
 				<cfset response = {result=false, version_id=#arguments.version_id#, message="No se puede eliminar un archivo bloqueado, debe desbloquearlo."}>
 
@@ -794,16 +945,34 @@
 
 				<cfinclude template="includes/logRecord.cfm">
 
+				<cfif arguments.send_alert IS true AND arguments.forceDeleteVirus>
+
+					<!--- Alert --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
+						<cfinvokeargument name="objectFile" value="#fileQuery#">
+						<cfinvokeargument name="fileTypeId" value="#fileQuery.file_type_id#">
+						<cfinvokeargument name="area_id" value="#fileQuery.area_id#">
+						<cfinvokeargument name="action" value="delete_version_virus">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">						
+					</cfinvoke>
+					
+				</cfif>
+
 				<!---<cfif getFileAreasQuery.recordCount GT 0>
 					
 					<cfloop query="getFileAreasQuery">
 
 						<!--- Alert --->
-						<cfinvoke component="AlertManager" method="newFile">
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 							<cfinvokeargument name="objectFile" value="#fileVersionQuery#">
 							<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 							<cfinvokeargument name="area_id" value="#getFileAreasQuery.area_id#">
 							<cfinvokeargument name="action" value="delete">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
 						
 					</cfloop>
@@ -817,7 +986,7 @@
 		<cfreturn response>	
 		
 	</cffunction>
-
+--->
 
 
 	
@@ -1242,15 +1411,19 @@
 			</cfif>			
 								
 			<!--- Alert --->
-			<cfinvoke component="AlertManager" method="newFile">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 				<cfinvokeargument name="objectFile" value="#fileQuery#">
 				<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="user_id" value="#user_id#">
 				<cfif objectFile.file_type_id IS 1 OR (objectFile.file_type_id IS 2 AND objectFile.area_id NEQ arguments.area_id)>
 					<cfinvokeargument name="action" value="associate">
 				<cfelse>
 					<cfinvokeargument name="action" value="new">
 				</cfif>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
 			<cfset response = {result=true, file_id=#objectFile.id#, area_id=#arguments.area_id#}>
@@ -1375,11 +1548,15 @@
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
 
 			<!--- Alert --->
-			<cfinvoke component="AlertManager" method="newFile">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 				<cfinvokeargument name="objectFile" value="#arguments.objectFile#">
 				<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="user_id" value="#user_id#">
 				<cfinvokeargument name="action" value="dissociate">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
 			<cfset response = {result=true, file_id=#file_id#, area_id=#arguments.area_id#}>
@@ -2590,17 +2767,21 @@
 								</cfif>
 							</cfquery>
 							<cfset item_id = getAreaItem.id>
+
+							<!--- getItem --->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+								<cfinvokeargument name="item_id" value="#item_id#">
+								<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+								<cfinvokeargument name="parse_dates" value="true">
+								<cfinvokeargument name="published" value="false">
+								
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
 							
 							<cfif arguments.send_alert IS true>
-							
-								<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
-									<cfinvokeargument name="item_id" value="#item_id#">
-									<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-									<cfinvokeargument name="return_type" value="query">
-								</cfinvoke>
-								
-								<cfset itemQuery = getItemResponse.item>
-
+																
+								<!--- Alert --->
 								<cfinvoke component="AlertManager" method="newAreaItem">
 									<cfinvokeargument name="objectItem" value="#itemQuery#">
 									<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
@@ -2621,6 +2802,61 @@
 									WHERE id = <cfqueryparam value="#item_id#" cfsqltype="cf_sql_integer">;
 								</cfquery>
 							</cfif>
+
+							<!--- MODULE ANTI VIRUS --->
+							<cfif APPLICATION.moduleAntiVirus IS true>
+							
+								<!--- START THREAD --->
+								<cfthread name="antiVirusCheckNewAttached#arguments.file_type#" action="run" priority="NORMAL" file_id="#file_id#" fileTypeId="1" user_id="#SESSION.user_id#" itemQuery="#itemQuery#" client_abb="#SESSION.client_abb#" client_dsn="#client_dsn#" item_id="€#item_id#" file_type="#arguments.file_type#">
+
+									<cftry>
+										
+										<!--- Wait for the execution of the antivirus check --->
+										<cfscript>
+											sleep(300);
+										</cfscript>
+										
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/AntiVirusManager" method="checkFile" returnvariable="checkFileResult">
+											<cfinvokeargument name="file_id" value="#file_id#">
+											<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+											<cfinvokeargument name="user_id" value="#user_id#">
+
+											<cfinvokeargument name="client_abb" value="#client_abb#">
+										</cfinvoke>
+
+										<cfif checkFileResult.result IS false><!--- Delete infected file --->
+
+											<!--- delete attached file / image --->
+
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItemAttachedFile">
+												<cfinvokeargument name="item_id" value="#item_id#">
+												<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+												<cfinvokeargument name="itemQuery" value="#itemQuery#"/>
+												<cfinvokeargument name="forceDeleteVirus" value="true">
+												<cfinvokeargument name="user_id" value="#user_id#">
+												<cfinvokeargument name="anti_virus_check_result" value="#checkFileResult.message#">
+												<cfinvokeargument name="file_type" value="#file_type#">
+													
+												<cfinvokeargument name="client_abb" value="#client_abb#">
+												<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											</cfinvoke>
+
+										</cfif>
+
+										<cfcatch>
+
+											<cfinclude template="includes/errorHandlerStruct.cfm">
+
+										</cfcatch>
+
+									</cftry>
+
+								</cfthread>
+								<!--- END THREAD --->
+
+							</cfif>
+
+
 						</cfif>	
 						
 						<cfinvoke component="FileManager" method="objectFile" returnvariable="xmlResult">
@@ -2859,7 +3095,7 @@
 	
 	<cffunction name="createFile" returntype="struct" output="false" access="public">
 		<cfargument name="fileTypeId" type="numeric" required="true"/>		
-		<cfargument name="name" type="string" required="true"/>
+		<cfargument name="name" type="string" required="false"/>
 		<cfargument name="file_name" type="string" required="true"/>
 		<cfargument name="file_size" type="numeric" required="true"/>
 		<!---<cfargument name="file_size_full" type="numeric" required="true"/>--->
@@ -2955,17 +3191,20 @@
 			
 				<cfquery name="createFileQuery" datasource="#client_dsn#" result="createFileResult">
 					INSERT INTO `#client_abb#_#fileTypeTable#`
-					SET name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
+					SET
 					file_name = <cfqueryparam value="#arguments.file_name#" cfsqltype="cf_sql_varchar">,
-					user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 					file_size = <cfqueryparam value="#arguments.file_size#" cfsqltype="cf_sql_integer">,
 					file_type = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">,
 					uploading_date = NOW(),	
-					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_varchar">,
-					status = <cfqueryparam value="pending" cfsqltype="cf_sql_varchar">,
-					file_type_id = <cfqueryparam value="#arguments.fileTypeId#" cfsqltype="cf_sql_integer">
-					<cfif arguments.fileTypeId IS NOT 1>
-						, area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					status = <cfqueryparam value="pending" cfsqltype="cf_sql_varchar">
+					<cfif arguments.fileTypeId IS NOT 4>
+						, name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
+						, user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+						, description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_varchar">
+						, file_type_id = <cfqueryparam value="#arguments.fileTypeId#" cfsqltype="cf_sql_integer">
+						<cfif arguments.fileTypeId IS NOT 1>
+							, area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+						</cfif>
 					</cfif>
 					<cfif arguments.fileTypeId IS 3>
 						, reviser_user = <cfqueryparam value="#arguments.reviser_user#" cfsqltype="cf_sql_integer">
@@ -2974,21 +3213,7 @@
 						<cfif isDefined("arguments.publication_scope_id")>
 						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
 						</cfif>
-					</cfif>
-					<!---
-					<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
-						, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
-					</cfif>
-					<!--- publicationValidation --->
-					<cfif APPLICATION.publicationValidation IS true>
-						<cfif isUserAreaResponsible IS true AND arguments.publication_validated IS true>
-							, publication_validated = <cfqueryparam value="true" cfsqltype="cf_sql_bit">
-							, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
-							, publication_validated_date = NOW()						
-						<cfelse>
-							, publication_validated = <cfqueryparam value="false" cfsqltype="cf_sql_bit">
-						</cfif>												
-					</cfif>--->;
+					</cfif>;
 				</cfquery>
 
 				<cfquery name="getLastInsertId" datasource="#client_dsn#">
@@ -3025,7 +3250,7 @@
 			</cftransaction>			
 
 			<cfinclude template="includes/logRecord.cfm">
-
+			
 			<!--- getFile --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
 				<cfinvokeargument name="file_id" value="#file_id#">
@@ -3452,17 +3677,59 @@
 
 				</cfif>
 
-				<!---
-				<!--- newAreaFile --->
-				<cfinvoke component="AlertManager" method="newFile">
-					<cfinvokeargument name="objectFile" value="#objectFile#">
-					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
-					<cfinvokeargument name="area_id" value="#arguments.area_id#">
-					<cfinvokeargument name="action" value="new">
-					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
-				</cfinvoke>--->
-
 				<cffile action="rename" source="#destination##temp_file#" destination="#destination##upload_file_id#">
+
+				<!--- MODULE ANTI VIRUS --->
+				<cfif APPLICATION.moduleAntiVirus IS true>
+
+					<!--- START THREAD --->
+					<cfthread name="antiVirusCheckNewFile" action="run" priority="NORMAL" file_id="#upload_file_id#" fileTypeId="#arguments.fileTypeId#" user_id="#SESSION.user_id#" client_abb="#SESSION.client_abb#" client_dsn="#client_dsn#">
+
+						<cftry>
+							
+							<!--- Wait for the execution of the antivirus check --->
+							<cfscript>
+								sleep(300);
+							</cfscript>
+							
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AntiVirusManager" method="checkFile" returnvariable="checkFileResult">
+								<cfinvokeargument name="file_id" value="#file_id#">
+								<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+								<cfinvokeargument name="user_id" value="#user_id#">
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+							</cfinvoke>
+
+							<cfif checkFileResult.result IS false><!--- Delete infected file --->
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="deleteFileResult">
+									<cfinvokeargument name="file_id" value="#file_id#">
+									<cfinvokeargument name="forceDeleteVirus" value="true">
+									<cfinvokeargument name="user_id" value="#user_id#">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<cfif deleteFileResult.result IS false>
+									<cfthrow message="#checkFileResult.message#">
+								</cfif>
+
+							</cfif>
+
+							<cfcatch>
+
+								<cfinclude template="includes/errorHandlerStruct.cfm">
+
+							</cfcatch>
+
+						</cftry>
+
+					</cfthread>
+
+				</cfif>				
+
+				
 
 				<cfcatch><!---The upload fail--->
 
@@ -3481,7 +3748,10 @@
 					<cfrethrow/>
 				
 				</cfcatch>
+
 			</cftry>
+
+			
 
 			<cfset response = {result=true, file_id=#upload_file_id#}>	
 
@@ -3720,6 +3990,7 @@
 		<cfset var temp_file = "">
 		<cfset var new_physical_name = "">
 		<cfset var fileQuery = "">
+		<cfset var version_id = "">
 					
 		<cftry>
 
@@ -3809,7 +4080,13 @@
 						file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">,
 						file_name = <cfqueryparam value="#file_name#" cfsqltype="cf_sql_varchar">,
 						status = 'ok',
-						status_replacement = 'uploaded'
+						status_replacement = 'uploaded',
+						<cfif APPLICATION.moduleAntiVirus IS true>
+							anti_virus_check = <cfqueryparam value="0" cfsqltype="cf_sql_bit">,
+						<cfelse>
+							anti_virus_check = <cfqueryparam null="true" cfsqltype="cf_sql_bit">,
+						</cfif>
+						anti_virus_check_result = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
 						<cfif arguments.fileTypeId IS 3>
 						, physical_name = <cfqueryparam value="#new_physical_name#" cfsqltype="cf_sql_varchar">
 						</cfif>
@@ -3862,6 +4139,74 @@
 					<cfthrow errorcode="#error_code#">
 
 				</cfif>
+
+
+				<!--- MODULE ANTI VIRUS --->
+				<cfif APPLICATION.moduleAntiVirus IS true>
+
+					<!--- START THREAD --->
+					<cfthread name="antiVirusCheckReplaceFile" action="run" priority="NORMAL" file_id="#arguments.file_id#" fileTypeId="#arguments.fileTypeId#" version_id="#version_id#" user_id="#SESSION.user_id#" client_abb="#SESSION.client_abb#" client_dsn="#client_dsn#">
+
+						<cftry>
+							
+							<!--- Wait for the execution of the anti virus check --->
+							<cfscript>
+								sleep(300);
+							</cfscript>
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AntiVirusManager" method="checkFile" returnvariable="checkFileResult">
+								<cfinvokeargument name="file_id" value="#file_id#">
+								<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+								<cfinvokeargument name="user_id" value="#user_id#">
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+							</cfinvoke>
+
+							<cfif checkFileResult.result IS false>
+
+								<cfif arguments.fileTypeId IS 3><!--- Delete infected file version --->
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFileVersion" returnvariable="deleteFileResult">
+										<cfinvokeargument name="file_id" value="#file_id#"/>
+										<cfinvokeargument name="version_id" value="#version_id#"/>
+										<cfinvokeargument name="send_alert" value="true">
+										<cfinvokeargument name="forceDeleteVirus" value="true">
+										<cfinvokeargument name="user_id" value="#user_id#">
+
+										<cfinvokeargument name="client_abb" value="#client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+								<cfelse><!--- Delete infected file --->
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="deleteFileResult">
+										<cfinvokeargument name="file_id" value="#file_id#">
+										<cfinvokeargument name="forceDeleteVirus" value="true">
+										<cfinvokeargument name="user_id" value="#user_id#">
+
+										<cfinvokeargument name="client_abb" value="#client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+								</cfif>
+
+								<cfif deleteFileResult.result IS false>
+									<cfthrow message="#deleteFileResult.message#">
+								</cfif>
+
+							</cfif>
+
+							<cfcatch>
+
+								<cfinclude template="includes/errorHandlerStruct.cfm">
+
+							</cfcatch>
+
+						</cftry>
+
+					</cfthread>
+
+				</cfif>
 			
 				<cfcatch><!---The upload fail--->
 				
@@ -3894,11 +4239,15 @@
 				<cfset area_id = fileQuery.area_id>
 
 				<!--- New version --->
-				<cfinvoke component="AlertManager" method="newFile">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 					<cfinvokeargument name="objectFile" value="#fileReplacedQuery#">
 					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="user_id" value="#user_id#">
 					<cfinvokeargument name="action" value="new_version">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>	
 
 			</cfif>
@@ -4172,12 +4521,16 @@
 
 				
 			<!---Send Alert--->
-			<cfinvoke component="AlertManager" method="newFile">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 				<cfinvokeargument name="objectFile" value="#fileQuery#">
 				<cfinvokeargument name="fileTypeId" value="2"/>
 				<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+				<cfinvokeargument name="user_id" value="#user_id#">
 
 				<cfinvokeargument name="action" value="change_owner_to_area">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>	
 
 			<cfinclude template="includes/logRecord.cfm">
@@ -4417,15 +4770,19 @@
 			<cfinclude template="includes/logRecord.cfm">
 
 			<!--- Alert --->
-			<cfinvoke component="AlertManager" method="newFile">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 				<cfinvokeargument name="objectFile" value="#fileQuery#">
 				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="user_id" value="#user_id#">
 				<cfif arguments.lock IS true>
 					<cfinvokeargument name="action" value="lock">
 				<cfelse>
 					<cfinvokeargument name="action" value="unlock">
 				</cfif>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
 			<cfset response = {result=true, file_id=#arguments.file_id#, lock=arguments.lock}>
@@ -4871,11 +5228,15 @@
 				</cftransaction>
 
 				<!--- Alert --->
-				<cfinvoke component="AlertManager" method="newFile">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 					<cfinvokeargument name="objectFile" value="#fileQuery#">
 					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="user_id" value="#user_id#">
 					<cfinvokeargument name="action" value="cancel_revision">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 				<cfinclude template="includes/logRecord.cfm">	
@@ -5001,15 +5362,19 @@
 				</cftransaction>
 
 				<!--- Alert --->
-				<cfinvoke component="AlertManager" method="newFile">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 					<cfinvokeargument name="objectFile" value="#fileQuery#">
 					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="user_id" value="#user_id#">
 					<cfif arguments.valid IS true>
 						<cfinvokeargument name="action" value="validate_version">
 					<cfelse>
 						<cfinvokeargument name="action" value="reject_version">
 					</cfif>
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 				<cfif arguments.valid IS true>
@@ -5145,15 +5510,19 @@
 				</cftransaction>
 
 				<!--- Alert --->
-				<cfinvoke component="AlertManager" method="newFile">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 					<cfinvokeargument name="objectFile" value="#fileQuery#">
 					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="user_id" value="#user_id#">
 					<cfif arguments.approve IS true>
 						<cfinvokeargument name="action" value="approve_version">
 					<cfelse>
 						<cfinvokeargument name="action" value="reject_version">
 					</cfif>
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 				<cfinclude template="includes/logRecord.cfm">	
@@ -5532,11 +5901,15 @@
 				</cfif>	
 
 				<!--- New current version --->
-				<cfinvoke component="AlertManager" method="newFile">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 					<cfinvokeargument name="objectFile" value="#fileReplacedQuery#">
 					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="user_id" value="#user_id#">
 					<cfinvokeargument name="action" value="new_current_version">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>	
 
 				<cfset response = {result=true, version_id=#version_id#}>

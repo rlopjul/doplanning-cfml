@@ -103,6 +103,10 @@ curLangText["es"] = {
 			"modified_female" : "modificada",
 			"done_female" : "realizada",
 			"closed_female" : "cerrada",
+			"attached_file_of" : "Archivo adjunto de",
+			"attached_image_of" : "Imagen adjunta de",
+			"deleted_virus_male" : "eliminado por contener virus",
+			"deleted_virus_female" : "eliminada por contener virus",
 			
 			"subject" : "Asunto",
 			"title" : "Título",
@@ -137,6 +141,8 @@ curLangText["es"] = {
 			"of_male" : "del",
 			"of_female" : "de la",
 			"you_must_access" : "debe acceder a la aplicación",
+
+			"virus_description" : "ARCHIVO ADJUNTO ELIMINADO PORQUE HA SIDO IDENTIFICADO POR EL SISTEMA ANTIVIRUS COMO VIRUS O CON POSIBILIDAD DE SER DAÑINO",
 			
 		},
 		
@@ -150,6 +156,9 @@ curLangText["es"] = {
 			"replaced_file" : "Archivo reemplazado",
 			"dissociated_file" : "Archivo quitado",
 			"deleted_file" : "Archivo eliminado",
+			"deleted_file_virus" : "Archivo eliminado por contener virus",
+			"deleted_version" : "Versión de archivo eliminada",
+			"deleted_version_virus" : "Versión de archivo eliminada por contener virus",
 			"locked_file" : "Archivo bloqueado",
 			"unlocked_file" : "Archivo desbloqueado",
 			"new_version" : "Nueva versión de archivo",
@@ -181,6 +190,8 @@ curLangText["es"] = {
 			"last_version_date" : "Fecha de última versión",
 			"description" : "Descripción",
 
+			"virus_description" : "ARCHIVO ELIMINADO PORQUE HA SIDO IDENTIFICADO POR EL SISTEMA ANTIVIRUS COMO VIRUS O CON POSIBILIDAD DE SER DAÑINO",
+			"virus_advice" : "Si tiene de este archivo en su ordenador, proceda a eliminarlo",
 		},	
 
 		"new_table_row": {
@@ -405,6 +416,10 @@ curLangText["en"] = {
 			"modified_female" : "modified",
 			"done_female" : "done",
 			"closed_female" : "closed",
+			"attached_file_of" : "Attached file of",
+			"attached_image_of" : "Attached image of",
+			"deleted_virus_male" : "deleted for virus detection",
+			"deleted_virus_female" : "deleted for virus detection",			
 			
 			"subject" : "Subject",
 			"title" : "Title",
@@ -439,6 +454,8 @@ curLangText["en"] = {
 			"of_male" : "of the",
 			"of_female" : "of the",
 			"you_must_access" : "you must access the application",
+
+			"virus_description" : "THE ATTACHED FILE HAS BEEN DELETED BECAUSE THE ANTIVIRUS SYSTEM IDENTIFIED IT AS A VIRUS OR WITH POSSIBILITY TO BE HARMFUL",
 			
 		},
 		
@@ -452,6 +469,9 @@ curLangText["en"] = {
 			"replaced_file" : "Replaced file",
 			"dissociated_file" : "Dissociated file",
 			"deleted_file" : "Deleted file",
+			"deleted_file_virus" : "Deleted file for containing virus",
+			"deleted_version" : "Deleted file version",
+			"deleted_version_virus" : "Deleted file version for containing virus",
 			"locked_file" : "Locked file",
 			"unlocked_file" : "Unlocked file",
 			"new_version" : "New file version",
@@ -482,6 +502,9 @@ curLangText["en"] = {
 			"replacement_date" : "Replacement date",
 			"last_version_date" : "Last version date",
 			"description" : "Description",
+
+			"virus_description" : "THIS FILE HAS BEEN DELETED BECAUSE THE ANTIVIRUS SYSTEM IDENTIFIED IT AS A VIRUS OR WITH POSSIBILITY TO BE HARMFUL",
+			"virus_advice" : "If you have this file on your computer, proceed to delete it",
 		},
 
 		"new_table_row": {

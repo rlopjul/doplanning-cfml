@@ -2141,16 +2141,15 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 						
-			<cfquery name="deleteItemPosition" datasource="#client_dsn#">
-				DELETE FROM #client_abb#_items_position
-				WHERE item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
-				AND item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
-				<cfif isDefined("arguments.area_id")>
-					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				</cfif>;
-			</cfquery>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="deleteItemPosition">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 						
-		
 	</cffunction>
 
 	
@@ -2847,25 +2846,34 @@
 	
 	<!--- ----------------------- DELETE ITEM ATTACHED FILE -------------------------------- --->
 	
-	<cffunction name="deleteItemAttachedFile" returntype="string" access="public">
+	<cffunction name="deleteItemAttachedFile" returntype="struct" access="public">
 		<cfargument name="item_id" type="string" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
+
+		<cfargument name="file_type" type="string" required="true"><!--- file / image --->
 		
 		<cfset var method = "deleteItemAttachedFile">
 		
+		<cfset var response = structNew()>
+
 		<cfset var area_id = "">
 		<cfset var area_type = "">
 						
-			<cfinclude template="includes/functionStart.cfm">
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-					
-			<cfquery name="getItemQuery" datasource="#client_dsn#">		
-				SELECT id,parent_kind,parent_id,attached_file_id,area_id,user_in_charge
-				FROM #client_abb#_#itemTypeTable#
-				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;		
-			</cfquery>
 			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="getItemQuery">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 			
 			<cfif getItemQuery.recordCount GT 0>
 				
@@ -2891,43 +2899,21 @@
 						
 					</cfif>
 				</cfif>					
-				
-				
-				<!--- DELETE IN DB  --->
-				<cfquery name="deleteAttachedFile" datasource="#client_dsn#">
-					UPDATE #client_abb#_#itemTypeTable#
-					SET	attached_file_name = <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">,
-					attached_file_id = <cfqueryparam cfsqltype="cf_sql_integer" null="yes">
-					WHERE id = <cfqueryparam value="#getItemQuery.id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-				
-					
-				<!---DELETE ATTACHED_FILE FILE--->
-				<cfif getItemQuery.attached_file_id NEQ "NULL" AND getItemQuery.attached_file_id NEQ "" AND getItemQuery.attached_file_id NEQ "-1">
-				
-					<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-						<cfinvokeargument name="file_id" value="#getItemQuery.attached_file_id#">
-						<cfinvokeargument name="area_id" value="#area_id#">
-					</cfinvoke>
-					
-					<cfif resultDeleteFile. result IS false><!---File delete failed--->
-						<cfset error_code = 605>
-	
-						<cfthrow errorcode="#error_code#">
-					
-					</cfif>
-					
-				<cfelse>
-				
-					<cfset error_code = 601>
-	
-					<cfthrow errorcode="#error_code#">
-					
-				</cfif>
-				
-				<cfinclude template="includes/logRecord.cfm">
 
-				<cfset xmlResponseContent = '<#itemTypeName# id="#arguments.item_id#"/>'>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItemAttachedFile">
+					<cfinvokeargument name="item_id" value="#getItemQuery.id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="itemQuery" value="#getItemQuery#">
+					<cfinvokeargument name="forceDeleteVirus" value="false">
+					<cfinvokeargument name="user_id" value="#user_id#">
+
+					<cfinvokeargument name="file_type" value="#arguments.file_type#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset response = {result=true, item_id=#arguments.item_id#}>
 				
 			<cfelse><!---Item does not exist--->
 			
@@ -2936,9 +2922,15 @@
 				<cfthrow errorcode="#error_code#">
 					
 			</cfif>	
-			
-						
-		<cfreturn xmlResponseContent>
+										
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
 				
 	</cffunction>
 	<!--- ---------------------------------------------------------------------------------- --->
@@ -2948,6 +2940,7 @@
 	
 	<!--- ----------------------- DELETE ITEM ATTACHED IMAGE -------------------------------- --->
 	
+	<!---
 	<cffunction name="deleteItemAttachedImage" returntype="string" access="public">
 		<cfargument name="item_id" type="string" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
@@ -2960,13 +2953,22 @@
 			<cfinclude template="includes/functionStart.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-		
-			<cfquery name="getItemQuery" datasource="#client_dsn#">		
-				SELECT id,parent_kind,parent_id,attached_image_id,area_id,user_in_charge
+
+			<!---<cfquery name="getItemQuery" datasource="#client_dsn#">		
+				SELECT id,parent_kind,parent_id,attached_file_id,area_id,user_in_charge
 				FROM #client_abb#_#itemTypeTable#
 				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;		
-			</cfquery>
-			
+			</cfquery>--->
+		
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="getItemQuery">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="published" value="false">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 			
 			<cfif getItemQuery.recordCount GT 0>
 				
@@ -2993,7 +2995,21 @@
 					</cfif>
 				</cfif>		
 				
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItemAttachedFile">
+					<cfinvokeargument name="item_id" value="#getItemQuery.id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="itemQuery" value="#getItemQuery#">
+					<cfinvokeargument name="forceDeleteVirus" value="false">
+					<cfinvokeargument name="user_id" value="#user_id#">
+
+					<cfinvokeargument name="file_type" value="image">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 				
+				<!--- 
+
 				<!--- DELETE IN DB  --->
 				<cfquery name="deleteAttachedFile" datasource="#client_dsn#">
 					UPDATE #client_abb#_#itemTypeTable#
@@ -3026,7 +3042,7 @@
 					
 				</cfif>
 
-				<cfinclude template="includes/logRecord.cfm">
+				<cfinclude template="includes/logRecord.cfm"> --->
 				
 				<cfset xmlResponseContent = '<#itemTypeName# id="#arguments.item_id#"/>'>
 				
@@ -3043,7 +3059,7 @@
 				
 	</cffunction>
 	<!--- ---------------------------------------------------------------------------------- --->
-	
+	--->
 	
 	
 	

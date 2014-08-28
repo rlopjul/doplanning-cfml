@@ -393,7 +393,7 @@
 			</div>
 			
 			<cfif APPLICATION.identifier NEQ "vpnet">
-				<div style="float:right; padding-top:1px; padding-right:6px; width:200px; text-align:right;">
+				<div style="float:right; padding-top:1px; padding-right:6px; text-align:right;"><!---width:200px; --->
 					
 					<!--- 
 					<cfif objectUser.general_administrator EQ true>
@@ -411,16 +411,23 @@
 												<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>
 											</cfif>
 										</cfif> --->
-									
-					<a href="../main.cfm?abb=#SESSION.client_abb#" class="btn btn-default"><i class="icon-arrow-left"></i> <span>Volver</span></a>
-				
-					<a href="../preferences.cfm" title="Preferencias del usuario" lang="es">
-					<cfif len(objectUser.image_file) GT 0>
-						<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
-					<cfelse>
-						<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
-					</cfif>
-					</a>
+					<div class="btn-toolbar">
+
+						<div class="btn-group">
+							<a href="../main.cfm?abb=#SESSION.client_abb#" class="btn btn-default"><i class="icon-arrow-left"></i> <span>Volver</span></a>
+						</div>
+					
+						<div class="btn-group">
+							<a href="../preferences.cfm" title="Preferencias del usuario" lang="es">
+							<cfif len(objectUser.image_file) GT 0>
+								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
+							<cfelse>
+								<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
+							</cfif>
+							</a>
+						</div>
+
+					</div>
 				</div>
 			</cfif>
 		  

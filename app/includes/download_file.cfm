@@ -59,10 +59,19 @@
 	<cfinvokeargument name="return_type" value="query">
 </cfinvoke>		
 
-<cfset fileTypeId = objectFile.file_type_id>
-<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+<cfif isDefined("APPLICATION.moduleAntiVirus") AND APPLICATION.moduleAntiVirus IS true AND objectFile.anti_virus_check IS 0>
 
-<cfset files_directory = fileTypeDirectory>
+	<b>Archivo pendiente de analizar por el sistema Anti Virus, intente descargarlo de nuevo pasados unos minutos.</b>
+
+<cfelse>
+
+	<cfset fileTypeId = objectFile.file_type_id>
+	<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
+	<cfset files_directory = fileTypeDirectory>
 
 
-<cfinclude template="get_file.cfm">
+	<cfinclude template="get_file.cfm">
+	
+</cfif>
+

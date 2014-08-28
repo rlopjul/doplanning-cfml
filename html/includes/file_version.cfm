@@ -37,6 +37,12 @@ function confirmDuplicateVersion() {
 	return confirm(messageDuplicate);
 }
 
+function confirmDeleteFileVersion() {
+		
+	var messageDelete = window.lang.convert("Si ELIMINA la versión, se borrará definitivamente. ¿Seguro que desea borrar esta versión?");
+	return confirm(messageDelete);
+}
+
 </script>
 
 <cfif app_version NEQ "html2">
@@ -53,20 +59,27 @@ Versión de archivo
 	
 	<a href="#APPLICATION.htmlPath#/file_version_download.cfm?id=#version.version_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-info"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
 
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="lastVersion">
+		<cfinvokeargument name="file_id" value="#version.file_id#">
+		<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+	</cfinvoke>
+
 	<cfif objectFile.in_approval IS false AND objectFile.locked IS true AND objectFile.lock_user_id IS SESSION.user_id>
-		
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="lastVersion">
-			<cfinvokeargument name="file_id" value="#version.file_id#">
-			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
-		</cfinvoke>
 
 		<cfif lastVersion.version_id NEQ version_id OR ( len(version.revision_request_date) GT 0 AND version.approved IS NOT true )>
 
 			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=duplicateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&version_id=#version_id#&return_path=#return_path#" onclick="return confirmDuplicateVersion();" class="btn btn-warning btn-sm"><i class="icon-copy"></i> <span lang="es">Duplicar y definir como versión vigente</span></a>
 
 		</cfif>
-
+		
 	</cfif>
+
+	<cfif SESSION.client_abb NEQ "hcs">
+		<cfif version.approved IS NOT true AND version.revised IS NOT true AND objectFile.locked IS false AND lastVersion.version_id NEQ version_id AND version.user_in_charge EQ SESSION.user_id>
+			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFileVersionRemote&file_id=#objectFile.id#&version_id=#version_id#&return_path=#return_path#" onclick="return confirmDeleteFileVersion();" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar versión</span></a>
+		</cfif>
+	</cfif>
+	
 
 </div>
 </cfoutput>
@@ -156,6 +169,8 @@ Versión de archivo
 			<cfinvokeargument name="file_id" value="#objectFile.id#">
 			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 			<cfinvokeargument name="area_id" value="#area_id#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 
 		<div class="div_message_page_label"><span lang="es">URL en #APPLICATION.title#:</span></div>

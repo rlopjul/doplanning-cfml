@@ -830,32 +830,23 @@
 				<cfreturn getRowResponse>
 			</cfif>
 
-			<cfset row = getRowResponse.row>
+			<!---<cfset row = getRowResponse.row>--->
 
-			<cftransaction>
-				
-				<!---Delete row--->
-				<cfquery name="deleteRow" datasource="#client_dsn#">
-					DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
-					WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+			<!--- Delete Row In DataBase--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
+				<cfinvokeargument name="row_id" value="#arguments.row_id#">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 
-				<!---Delete selected areas--->
-				<cfquery name="deleteSelectedAreasQuery" datasource="#client_dsn#">
-					DELETE FROM `#client_abb#_#tableTypeTable#_rows_areas`
-					WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-					AND row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-
-			</cftransaction>
-
-			<cfinclude template="includes/logRecord.cfm">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 
 			<cfif arguments.tableTypeId IS NOT 3><!--- IS NOT typology --->
 
 				<!--- Alert --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newTableRow">
-					<cfinvokeargument name="row_id" value="#row_id#">
+					<cfinvokeargument name="row_id" value="#arguments.row_id#">
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					<cfinvokeargument name="action" value="delete">

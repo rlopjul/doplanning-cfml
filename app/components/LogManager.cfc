@@ -1,12 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2008
-
-	Date of file creation: 12-08-2008
-	File created by: alucena
-	ColdFusion version required: 8
-	Last file change by: alucena
-	Date of last file change: 08-07-2009
-	
---->
+<!--- Copyright Era7 Information Technologies 2007-20014 --->
 <cfcomponent displayname="LogManager" output="false">
 
 	<cfset component = "LogManager">	
@@ -20,28 +12,30 @@
 		<cfargument name="log_component" type="string" required="yes">
 		<cfargument name="log_method" type="string" required="yes">
 		<cfargument name="log_content" type="string" required="yes">
-		<cfargument name="client_abb" type="string" required="no">
+
+		<cfargument name="client_abb" type="string" required="false" default="#SESSION.client_abb#">
 		
 		<cfset var method = "saveLog">
 		
 		<cftry>
 			
-			<cfif NOT isDefined("arguments.client_abb")>
+			<!---<cfif NOT isDefined("arguments.client_abb")>
 				<cfinclude template="includes/sessionVarsNoAppCheck.cfm">
 			<cfelse>
-				<cfset client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
-			</cfif>
-		
-			<cfquery name="recordLog" datasource="#client_dsn#">
-				INSERT INTO #client_abb#_logs (user_id, request_content, component, method)
-				VALUES 
-				(<cfif isDefined("user_id")>
-					<cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
-				 <cfelse>
-					<cfqueryparam null="yes" cfsqltype="cf_sql_integer">
-				 </cfif>, '#log_content#', '#log_component#', '#log_method#')
-			</cfquery>
-		
+				<cfset client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>	
+			</cfif>--->
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/LogManager" method="saveLog">
+				<cfinvokeargument name="log_component" value="#arguments.log_component#">
+				<cfinvokeargument name="log_method" value="#arguments.log_method#">
+				<cfinvokeargument name="log_content" value="#arguments.log_content#">
+
+				<cfif isDefined("SESSION.user_id")>
+					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+				</cfif>
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			</cfinvoke>
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>
@@ -262,7 +256,7 @@
 	
 	
 	
-<!----------------------------------------- getLogs -------------------------------------------------->
+	<!----------------------------------------- getLogs -------------------------------------------------->
 	
 	<cffunction name="getLogs" returntype="struct" access="public">
 		<cfargument name="user_log" type="numeric" required="no">
@@ -350,78 +344,16 @@
 		
 	</cffunction>	
 	
-	
 
-	
-	
-	<!----------------------------------------- getLogActions -------------------------------------------------->
-	
-	<!---Devuelve una lista de las acciones de log disponibles--->
-	
-	<!---<cffunction name="getLogActions" returntype="string" access="public">
-		<cfargument name="request" type="string" required="yes">
-		
-		<cfset var method = "getLogActions">
-		
-		<cfset var user_id = "">
-		<cfset var client_abb = "">
-		<cfset var user_language = "">
-			
-		<cfset var xmlRequest = "">
-		<cfset var xmlResult = "">
-		<cfset var xmlResponseContent = "">
-	
-			
-		<cftry>
-			
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfinclude template="includes/checkAdminAccess.cfm">
-			
-			<cfquery datasource="#APPLICATION.dsn#" name="getLogActions">
-				SELECT *
-				FROM APP_methods AS methods
-				WHERE action_es != ''
-				ORDER BY action_es ASC;
-			</cfquery>
-			
-			<cfset xmlResult = '<log_actions>'>
-			
-			<cfif getLogActions.RecordCount GT 0>
-				<cfloop query="getLogActions">
-					
-					<cfset xmlLog = '<log_action id="#getLogActions.id#"><action><![CDATA[#getLogActions.action_es#]]></action><description><![CDATA[#getLogActions.description_es#]]></description></log_action>'>
-					<cfset xmlResult = xmlResult&xmlLog>
-				</cfloop>
-			</cfif>
-			
-			<cfset xmlResponseContent = xmlResult&"</log_actions>">
-	
-			<cfinclude template="includes/functionEndNoLog.cfm">
-			
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn xmlResponse>
-		
-	</cffunction>
-	
-</cfcomponent>--->
-
-
-
-	<!---cmartinez--->
 	<!----------------------------------------- getLogActions -------------------------------------------------->
 	
 	<!---Devuelve una lista de las acciones de log disponibles--->
 	
 	<cffunction name="getLogActions" returntype="struct" access="public">
 		
-		<cfset var method = "getLogActions">	
+		<cfset var method = "getLogActions">
+
+		<cfset var response = structNew()>	
 			
 		<cftry>
 			
@@ -446,7 +378,7 @@
 			
 		</cftry>
 		
-		<cfreturn #response#>
+		<cfreturn response>
 		
 	</cffunction>
 	

@@ -1207,6 +1207,42 @@
 		</cftry>
 		
 	</cffunction>
+
+
+	<!--- ---------------------------------- deleteFileVersionRemote -------------------------------------- --->
+	
+	<cffunction name="deleteFileVersionRemote" returntype="void" access="remote">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="version_id" type="numeric" required="true">
+		<cfargument name="return_path" type="string" required="true">
+		
+		<cfset var method = "deleteFileVersionRemote">
+		
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="deleteFileVersion" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="version_id" value="#arguments.version_id#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset msg = "Versión de archivo eliminada.">
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#file_versions.cfm?file=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+						
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
 	
 	
 	

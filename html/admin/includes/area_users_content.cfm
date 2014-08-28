@@ -1,7 +1,11 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload.js"></script
 </cfoutput>
 
 <!--- <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm"> --->
@@ -55,7 +59,7 @@
 
 	<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/area_modify.cfm?area=#area_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
 	
-	<!---<a class="btn btn-info btn-sm disabled"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a>ESTO ESTÁ EMPEZADO PERO NO TERMINADO (falta solucionar la subida de archivos) onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');" --->
+	<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a>
 
 	<a href="area_users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
 
@@ -66,13 +70,6 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
 	<cfinvokeargument name="area_id" value="#area_id#">
 </cfinvoke>
-
-<!---<cfxml variable="xmlUsers">
-	<cfoutput>
-	#usersResponse.usersXml#
-	</cfoutput>
-</cfxml>
-<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>--->
 
 <cfset users = usersResponse.users>
 <cfset numUsers = ArrayLen(users)>

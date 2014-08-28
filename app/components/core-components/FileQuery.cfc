@@ -31,84 +31,99 @@
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
 		
-		<cfset var method = "getFile">
-					
-		<!---<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">--->
-		<cfset fileTypeTable = "files">
+		<cfset var method = "getFile">		
 
-		<cfquery name="selectFileQuery" datasource="#client_dsn#">		
-			SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user
-				, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
-			<cfif isDefined("arguments.area_id")>
-				, areas_files.association_date
+		<cfif arguments.fileTypeId IS NOT 4>
+
+			<cfset fileTypeTable = "files">
+
+			<cfquery name="selectFileQuery" datasource="#client_dsn#">		
+				SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user
+					, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
+				<cfif isDefined("arguments.area_id")>
+					, areas_files.association_date
+					<cfif arguments.parse_dates IS true>
+						, DATE_FORMAT(CONVERT_TZ(areas_files.publication_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS publication_date
+					<cfelse>
+						, areas_files.publication_date
+					</cfif>
+					, areas_files.publication_validated
+				</cfif>
+				<cfif arguments.with_lock IS true>
+				, locks.user_id AS lock_user_id, locks.lock_user_full_name
+				</cfif>
 				<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(CONVERT_TZ(areas_files.publication_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS publication_date
+					, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date 
+					, DATE_FORMAT(CONVERT_TZ(files.replacement_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS replacement_date
+					<cfif arguments.with_lock IS true> 
+					, DATE_FORMAT(CONVERT_TZ(locks.lock_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS lock_date
+					</cfif>
 				<cfelse>
-					, areas_files.publication_date
-				</cfif>
-				, areas_files.publication_validated
-			</cfif>
-			<cfif arguments.with_lock IS true>
-			, locks.user_id AS lock_user_id, locks.lock_user_full_name
-			</cfif>
-			<cfif arguments.parse_dates IS true>
-				, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date 
-				, DATE_FORMAT(CONVERT_TZ(files.replacement_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS replacement_date
-				<cfif arguments.with_lock IS true> 
-				, DATE_FORMAT(CONVERT_TZ(locks.lock_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS lock_date
-				</cfif>
-			<cfelse>
-				, files.uploading_date
-				, files.replacement_date
-				<cfif arguments.with_lock IS true> 
-				, locks.lock_date
-				</cfif>
-			</cfif>
-			<cfif APPLICATION.publicationScope IS true>
-				, files.publication_scope_id, scopes.name AS publication_scope_name
-			</cfif>
-			, IF(files.replacement_user IS NOT NULL, CONCAT_WS(' ', users_replacement.family_name, users_replacement.name), '' ) AS replacement_user_full_name
-			, IF(files.reviser_user IS NOT NULL, CONCAT_WS(' ', users_reviser.family_name, users_reviser.name), '' ) AS reviser_user_full_name
-			, IF(files.approver_user IS NOT NULL, CONCAT_WS(' ', users_approver.family_name, users_approver.name), '' ) AS approver_user_full_name
-			FROM #client_abb#_#fileTypeTable# AS files
-			INNER JOIN #client_abb#_users AS users 
-			ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> 
-			AND files.user_in_charge = users.id
-			AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
-			LEFT JOIN #client_abb#_users AS users_replacement
-			ON files.replacement_user = users_replacement.id
-			LEFT JOIN #client_abb#_users AS users_reviser
-			ON files.reviser_user = users_reviser.id
-			LEFT JOIN #client_abb#_users AS users_approver
-			ON files.approver_user = users_approver.id
-
-			<cfif arguments.with_lock IS true>
-			LEFT JOIN (
-				SELECT files_locks.file_id, files_locks.lock_date, files_locks.lock, files_locks.user_id,
-				CONCAT_WS(' ', users_locks.family_name, users_locks.name) AS lock_user_full_name 
-				FROM #client_abb#_#fileTypeTable#_locks AS files_locks
-				INNER JOIN #client_abb#_users AS users_locks ON files_locks.file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> AND files_locks.user_id = users_locks.id
-				ORDER BY lock_date DESC
-				LIMIT 1
-			) AS locks ON locks.file_id = files.id
-			</cfif>
-			<cfif isDefined("arguments.area_id")>
-				INNER JOIN #client_abb#_areas_files AS areas_files 
-				ON files.id = areas_files.file_id
-				AND areas_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				<cfif arguments.published IS true>
-					AND ( areas_files.publication_date IS NULL OR areas_files.publication_date <= NOW() )
-					<cfif APPLICATION.publicationValidation IS true>
-					AND ( areas_files.publication_validated IS NULL OR areas_files.publication_validated = true )
+					, files.uploading_date
+					, files.replacement_date
+					<cfif arguments.with_lock IS true> 
+					, locks.lock_date
 					</cfif>
 				</cfif>
-			</cfif>
-			<cfif APPLICATION.publicationScope IS true>
-				LEFT JOIN #client_abb#_scopes AS scopes ON files.publication_scope_id = scopes.scope_id
-			</cfif>;
-		</cfquery>	
+				<cfif APPLICATION.publicationScope IS true>
+					, files.publication_scope_id, scopes.name AS publication_scope_name
+				</cfif>
+				<cfif isDefined("APPLICATION.moduleAntiVirus") AND APPLICATION.moduleAntiVirus IS true>
+					, files.anti_virus_check, files.anti_virus_check_result
+				</cfif>
+				, IF(files.replacement_user IS NOT NULL, CONCAT_WS(' ', users_replacement.family_name, users_replacement.name), '' ) AS replacement_user_full_name
+				, IF(files.reviser_user IS NOT NULL, CONCAT_WS(' ', users_reviser.family_name, users_reviser.name), '' ) AS reviser_user_full_name
+				, IF(files.approver_user IS NOT NULL, CONCAT_WS(' ', users_approver.family_name, users_approver.name), '' ) AS approver_user_full_name
+				FROM #client_abb#_#fileTypeTable# AS files
+				INNER JOIN #client_abb#_users AS users 
+				ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> 
+				AND files.user_in_charge = users.id
+				AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				LEFT JOIN #client_abb#_users AS users_replacement
+				ON files.replacement_user = users_replacement.id
+				LEFT JOIN #client_abb#_users AS users_reviser
+				ON files.reviser_user = users_reviser.id
+				LEFT JOIN #client_abb#_users AS users_approver
+				ON files.approver_user = users_approver.id
+
+				<cfif arguments.with_lock IS true>
+				LEFT JOIN (
+					SELECT files_locks.file_id, files_locks.lock_date, files_locks.lock, files_locks.user_id,
+					CONCAT_WS(' ', users_locks.family_name, users_locks.name) AS lock_user_full_name 
+					FROM #client_abb#_#fileTypeTable#_locks AS files_locks
+					INNER JOIN #client_abb#_users AS users_locks ON files_locks.file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> AND files_locks.user_id = users_locks.id
+					ORDER BY lock_date DESC
+					LIMIT 1
+				) AS locks ON locks.file_id = files.id
+				</cfif>
+				<cfif isDefined("arguments.area_id")>
+					INNER JOIN #client_abb#_areas_files AS areas_files 
+					ON files.id = areas_files.file_id
+					AND areas_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					<cfif arguments.published IS true>
+						AND ( areas_files.publication_date IS NULL OR areas_files.publication_date <= NOW() )
+						<cfif APPLICATION.publicationValidation IS true>
+						AND ( areas_files.publication_validated IS NULL OR areas_files.publication_validated = true )
+						</cfif>
+					</cfif>
+				</cfif>
+				<cfif APPLICATION.publicationScope IS true>
+					LEFT JOIN #client_abb#_scopes AS scopes ON files.publication_scope_id = scopes.scope_id
+				</cfif>;
+			</cfquery>
 			
-		
+		<cfelse><!---AREA IMAGES--->
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
+			<cfquery name="selectFileQuery" datasource="#client_dsn#">		
+				SELECT *
+				FROM #client_abb#_#fileTypeTable# AS files
+				WHERE files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+		</cfif>
+			
 		<cfreturn selectFileQuery>
 		
 	</cffunction>
@@ -314,11 +329,11 @@
 			<cfquery name="getFileVersionsQuery" datasource="#client_dsn#">
 				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
 					, files.revision_result_reason, files.approval_result_reason
-					, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date 
-					, DATE_FORMAT(files.revision_request_date, '#dateTimeFormat#') AS revision_request_date
-					, DATE_FORMAT(files.approval_request_date, '#dateTimeFormat#') AS approval_request_date  
-					, DATE_FORMAT(files.revision_date, '#dateTimeFormat#') AS revision_date 
-					, DATE_FORMAT(files.approval_date, '#dateTimeFormat#') AS approval_date 
+					, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date 
+					, DATE_FORMAT(CONVERT_TZ(files.revision_request_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS revision_request_date
+					, DATE_FORMAT(CONVERT_TZ(files.approval_request_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS approval_request_date  
+					, DATE_FORMAT(CONVERT_TZ(files.revision_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS revision_date 
+					, DATE_FORMAT(CONVERT_TZ(files.approval_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS approval_date 
 					, users.family_name, users.name AS user_name, users.image_type AS user_image_type,
 					CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				FROM #client_abb#_#fileTypeTable#_versions AS files
@@ -338,6 +353,8 @@
 		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="limit" type="numeric" required="false">
 
+		<cfargument name="parse_dates" type="boolean" required="false" default="true">
+
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
@@ -348,10 +365,14 @@
 			<cfquery name="getFileVersionsQuery" datasource="#client_dsn#">
 				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
 					, files.revision_result_reason, files.approval_result_reason
-					, DATE_FORMAT(files.uploading_date, '#dateTimeFormat#') AS uploading_date
-					, DATE_FORMAT(files.revision_request_date, '#dateTimeFormat#') AS revision_request_date
-					, DATE_FORMAT(files.approval_request_date, '#dateTimeFormat#') AS approval_request_date  
-					, DATE_FORMAT(files.revision_date, '#dateTimeFormat#') AS revision_date 
+					<cfif arguments.parse_dates IS true>
+						, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date
+						, DATE_FORMAT(CONVERT_TZ(files.revision_request_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS revision_request_date
+						, DATE_FORMAT(CONVERT_TZ(files.approval_request_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS approval_request_date  
+						, DATE_FORMAT(CONVERT_TZ(files.revision_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS revision_date 
+					<cfelse>
+						, uploading_date, revision_request_date, approval_request_date, revision_date
+					</cfif>
 					, users.family_name, users.name AS user_name, users.image_type AS user_image_type,
 					CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				FROM #client_abb#_#fileTypeTable#_versions AS files

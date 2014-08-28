@@ -1815,6 +1815,7 @@
 		<cfset var response = structNew()>
 
 		<cfset var filesData = arrayNew(1)>
+		<cfset var fileData = "">
 		<cfset var destination = "">
 		<cfset var fileContent = "">
 		<cfset var fileArray = arrayNew(1)>
@@ -1844,6 +1845,39 @@
 
 			</cfif>
 
+			<cfset destinationFile = destination&fileResult.serverFile>
+
+			<!--- MODULE ANTI VIRUS --->
+			<cfif APPLICATION.moduleAntiVirus IS true>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AntiVirusManager" method="checkForVirus" returnvariable="checkForVirusResponse">
+					<cfinvokeargument name="path" value="#destination#">
+					<cfinvokeargument name="filename" value="#fileResult.serverFile#">
+				</cfinvoke>
+
+				<cfif checkForVirusResponse.result IS false><!--- Delete infected file --->
+
+					<!--- delete image --->
+					<cffile action="delete" file="#destinationFile#">
+
+					<!---saveVirusLog--->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AntiVirusManager" method="saveVirusLog">
+						<cfinvokeargument name="user_id" value="#user_id#">
+						<cfinvokeargument name="file_name" value="#fileResult.clientFile#"/>
+						<cfinvokeargument name="anti_virus_result" value="#checkForVirusResponse.message#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#"/>
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+					
+					<cfset anti_virus_check_message = trim(listlast(checkForVirusResponse.message, ":"))>
+					
+					<cfthrow type="virus" message="Archivo #fileResult.clientFile# no válido por ser identificado como virus: #anti_virus_check_message#">
+
+				</cfif>
+
+			</cfif>
+
 			<cfset fileData = {
 				    "name": fileResult.serverfile,
 				    "size": fileResult.filesize,
@@ -1854,8 +1888,6 @@
 				  }>
 
 			<cfset arrayAppend(filesData, fileData)>
-
-			<cfset destinationFile = destination&fileResult.serverFile>
 
 			<cfif arguments.import_type EQ "xml"><!--- XML file --->
 				<cffile action="read" file="#destinationFile#" variable="fileContent" charset="utf-8">
@@ -2243,38 +2275,6 @@
 						</cfquery>		
 					</cfif>					
 					
-					
-					<cfif isDefined("arguments.with_image") AND arguments.with_image NEQ "">
-						<cfif arguments.with_image EQ "false">
-							<!--- check if exist the image --->
-							<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-								SELECT * 
-								FROM #client_abb#_areas AS areas
-								WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-							</cfquery>
-							
-							<cfif selectAreaQuery.recordCount GT 0>
-								<cfif len(selectAreaQuery.image_id) GT 0 AND selectAreaQuery.image_id NEQ "NULL">
-									<!---Delete area image--->
-									<cfinvoke component="AreaManager" method="deleteAreaImage" returnvariable="deleteAreaImageResponse">
-										<cfinvokeargument name="area_id" value="#arguments.area_id#">
-									</cfinvoke>
-									<cfif deleteAreaImageResponse.result NEQ true>
-					
-										<cfset error_code = 605>
-								
-										<cfthrow errorcode="#error_code#">
-										
-									</cfif>
-								</cfif>
-							<cfelse><!---The area does not exist--->
-				
-								<cfset error_code = 401>
-								
-								<cfthrow errorcode="#error_code#">
-							</cfif>
-						</cfif> 
-					</cfif>
 					<!--- +++++++++++++++++++++++++++++++++++USER IN CHARGE+++++++++++++++++++++++++++++++++++++ --->
 					<cfif isDefined("arguments.user_in_charge") AND arguments.user_in_charge NEQ "">
 						<cfquery name="userInChargeQuery" datasource="#client_dsn#">
@@ -2324,29 +2324,63 @@
 				
 			</cftry>
 
+			<!---
+			<cfif isDefined("arguments.with_image")>
+				<cfif arguments.with_image EQ "false">
+					<!--- check if exist the image --->
+					<cfquery name="selectAreaQuery" datasource="#client_dsn#">
+						SELECT * 
+						FROM #client_abb#_areas AS areas
+						WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+					
+					<cfif selectAreaQuery.recordCount GT 0>
+						<cfif len(selectAreaQuery.image_id) GT 0 AND selectAreaQuery.image_id NEQ "NULL">
+							<!---Delete area image--->
+							<cfinvoke component="AreaManager" method="deleteAreaImage" returnvariable="deleteAreaImageResponse">
+								<cfinvokeargument name="area_id" value="#arguments.area_id#">
+							</cfinvoke>
+							<cfif deleteAreaImageResponse.result NEQ true>
+			
+								<cfset error_code = 605>
+						
+								<cfthrow errorcode="#error_code#">
+								
+							</cfif>
+						</cfif>
+					<cfelse><!---The area does not exist--->
+		
+						<cfset error_code = 401>
+						
+						<cfthrow errorcode="#error_code#">
+					</cfif>
+				</cfif> 
+			</cfif>
+			--->
 
+			
+			<!---<cfif isDefined("arguments.image_file") AND len(arguments.image_file) GT 0>--->
+			<cfif isDefined("arguments.files")>
 
-			<cfif isDefined("arguments.image_file") AND len(arguments.image_file) GT 0>
-
+				<cfset fileTypeId = 4>
+				<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
 				<cfquery name="getAreaFile" datasource="#client_dsn#">
 					SELECT image_id
 					FROM #client_abb#_areas
-					WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
+					WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 			
 				<cfif getAreaFile.recordCount GT 0>
 					
-					<cfif NOT isValid("integer", getAreaFile.image_id)><!---El area no tiene imagen--->
-						
+					<cfif NOT isNumeric(getAreaFile.image_id)><!---El area no tiene imagen--->
 
 						<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="createImageFileResponse">
-							<cfinvokeargument name="name" value=" ">		
 							<cfinvokeargument name="file_name" value=" ">
 							<cfinvokeargument name="file_type" value=" ">
 							<cfinvokeargument name="file_size" value="0">
 							<cfinvokeargument name="description" value="">
-							<cfinvokeargument name="fileTypeId" value="1">
+							<cfinvokeargument name="fileTypeId" value="#fileTypeId#"><!---areas_images--->
 						</cfinvoke>
 
 						<cfif createImageFileResponse.result IS true>
@@ -2368,19 +2402,21 @@
 						
 						<cfset image_id = getAreaFile.image_id>
 
-						<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">				
-							<cfinvokeargument name="get_file_id" value="#image_id#">
-						
-							<cfinvokeargument name="return_type" value="object">
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="objectFile">				
+							<cfinvokeargument name="file_id" value="#image_id#">
+							<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#"/>
+							<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
 						</cfinvoke>	
 
 						<cfset image_physical_name = objectFile.physical_name>
 						
-						<cfquery name="updateStateUploadingFile" datasource="#client_dsn#">
-							UPDATE #client_abb#_#files_table#
+						<!---<cfquery name="updateStateUploadingFile" datasource="#client_dsn#">
+							UPDATE #client_abb#_#fileTypeTable#
 							SET status_replacement = 'pending'
-							WHERE id=<cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
+							WHERE id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
+						</cfquery>--->
 						
 					</cfif>
 					
@@ -2395,18 +2431,26 @@
 
 					
 				<cftry>
-				
-					<cfinvoke component="AreaItemFile" method="uploadItemFile">
-						<cfinvokeargument name="file_type" value="area_image">
+					
+					<!--- Upload Image File --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemFile" method="uploadItemFile">
+						<cfinvokeargument name="type" value="area_image">
 						<cfinvokeargument name="file_id" value="#image_id#">
 						<cfinvokeargument name="file_physical_name" value="#image_physical_name#">
-						<cfinvokeargument name="Filedata" value="#arguments.image_file#">
+						<cfinvokeargument name="files" value="#arguments.files#">
+						<cfinvokeargument name="area_id" value="#arguments.area_id#">
+						<cfinvokeargument name="user_id" value="#user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
 					</cfinvoke>
 					
 					<cfcatch>
 					
-						<cfset response = {result=false, message=#cfcatch.Message#}>	
+						<cfinclude template="includes/errorHandlerStruct.cfm">
+
 						<cfreturn response>
+
+						<!---<cfset response = {result=false, message=#cfcatch.Message#}>	
+						<cfreturn response>--->
 					
 					</cfcatch>
 					
@@ -2436,6 +2480,7 @@
 	<!--- _____________________________________________________________________________  --->
 	
 	
+
 	
 	<!--- ------------------------------------- selectArea -------------------------------------  --->
 	

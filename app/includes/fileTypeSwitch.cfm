@@ -27,14 +27,13 @@
 	
    	</cfcase>
 
-   	<!---
-   	<cfcase value="4"><!---area files edited version--->
+   	<cfcase value="4"><!---areas images--->
 
-   		<cfset fileTypeName  = "file_version">
-		<cfset fileTypeNameP = "files_versions">
-		<cfset fileTypeTable = "files_edited_versions">
-		<cfset fileTypeDirectory = "files_edited">
+   		<cfset fileTypeName  = "file">
+		<cfset fileTypeNameP = "files">
+		<cfset fileTypeTable = "areas_images">
+		<cfset fileTypeDirectory = "areas_images">
 	
-   	</cfcase>--->
+   	</cfcase>
 
 </cfswitch>

@@ -4,7 +4,6 @@
 	File created by: alucena
 	ColdFusion version required: 8
 	Last file change by: alucena
-	Date of last file change: 15-11-2012
 	
 	15-11-2012 alucena: cambiado tamaño máximo de las imágenes
 	24-06-2013 alucena: areaItemTypeSwitch.cfm cambiado de directorio
@@ -20,10 +19,9 @@
 	<cffunction name="uploadItemFile" access="public" returntype="struct">
 		<cfargument name="type" type="string" required="yes">
 		<cfargument name="user_id" type="string" required="yes">
-		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="user_language" type="string" required="yes">
-		<!---<cfargument name="client_dsn" type="string" required="yes">--->
-		<cfargument name="Filedata" type="string" required="yes">
+		<!---<cfargument name="user_language" type="string" required="yes">--->		
+		<cfargument name="Filedata" type="string" required="false">
+		<cfargument name="files[]" type="string" required="false">
 		<!---<cfargument name="xmlFile" type="xml" required="yes">--->
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_physical_name" type="numeric" required="false">
@@ -32,11 +30,16 @@
 		<cfargument name="xmlArea" type="xml" required="no">--->
 		<cfargument name="item_id" type="numeric" required="false"/>
 		<cfargument name="area_id" type="numeric" required="false"/>
+
+		<cfargument name="client_abb" type="string" required="true">
+		<!---<cfargument name="client_dsn" type="string" required="yes">--->
 				
 		<cfset var method = "uploadItemFile">		
 		
 		<cfset var client_dsn = APPLICATION.identifier&"_"&client_abb>
 		
+		<cfset var files_table = "">
+		<cfset var files_directory = "">
 		
 		<cfswitch expression="#type#"><!---TIPOS DE SUBIDAS DE ARCHIVOS--->
 		
@@ -108,12 +111,6 @@
 		
 		<cfset var destination = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/'>
 
-		<!---<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
-			<cfinvokeargument name="xml" value="#xmlFile#">
-			
-			<cfinvokeargument name="return_type" value="object">
-		</cfinvoke>--->
-		
 		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
 			<cfinvokeargument name="id" value="#arguments.file_id#">
 			<cfif isDefined("arguments.file_physical_name")>
@@ -128,8 +125,8 @@
 		<cfquery datasource="#client_dsn#" name="getFile">
 			SELECT *
 			FROM #client_abb#_#files_table#
-			WHERE id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer"> 
-			<cfif type NEQ "area_image">
+			WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> 
+			<cfif arguments.type NEQ "area_image">
 			AND user_in_charge = <cfqueryparam value="#objectFile.user_in_charge#" cfsqltype="cf_sql_integer">
 			</cfif>;
 		</cfquery>
@@ -147,44 +144,6 @@
 			<cfthrow errorcode="#error_code#">
 			
 		</cfif>
-			
-		<cfif type EQ "area_image">
-		
-			<!---AREA_IMAGE--->
-			
-			<cfquery name="selectAreaImageQuery" datasource="#client_dsn#">
-				SELECT * 
-				FROM #client_abb#_areas AS areas LEFT JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id
-				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-			
-			<cfif selectAreaImageQuery.recordCount GT 0>
-			
-				<cfif isValid("integer", selectAreaImageQuery.image_id)><!---El area tiene imagen--->
-				
-					<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
-						UPDATE #client_abb#_areas
-						SET space_used = space_used-#selectAreaImageQuery.file_size#
-						WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
-					
-					<cfset objectFile.physical_name = selectAreaImageQuery.physical_name>
-				
-				<cfelse><!---El area no tiene imagen ya subida--->
-					
-					<cfset objectFile.physical_name = objectFile.id>
-														
-				</cfif>
-			
-			<cfelse><!---The area does not exist--->
-			
-				<cfset error_code = 301>
-				
-				<cfthrow errorcode="#error_code#">
-			
-			</cfif>	
-			
-		</cfif>
 		
 		<cftry>		
 			
@@ -192,6 +151,8 @@
 			
 			<cfif type EQ "item_image_html">
 				<cffile action="upload" filefield="#arguments.Filedata#" destination="#destination#" nameconflict="overwrite" result="uploadedFile" accept="image/gif,image/jpeg,image/png,image/pjpeg"><!---image/pjpeg para IE8 que tiene un bug--->
+			<cfelseif type EQ "area_image">
+				<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
 			<cfelse>
 				<cffile action="upload" filefield="#arguments.Filedata#" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
 			</cfif>
@@ -201,50 +162,120 @@
 			<cfset objectFile.file_name = uploadedFile.clientFileName&"."&uploadedFile.clientFileExt>
 			<cfset objectFile.file_type = lCase("."&uploadedFile.clientFileExt)>
 			
-			<cfif type EQ "item_image_html" OR type EQ "area_image" OR type EQ "user_image">
+			<cfif type EQ "item_image_html" OR type EQ "area_image"><!---OR type EQ "user_image"--->
 				
 				<!---<cfif objectFile.file_type EQ ".jpg">--->
 				
-					<cfif NOT FileExists("#destination##temp_file#")><!---The physical file does not exist--->
-						<cfset error_code = 608>
-		
-						<cfthrow errorcode="#error_code#">
-					</cfif>
+				<cfif NOT FileExists("#destination##temp_file#")><!---The physical file does not exist--->
+					<cfset error_code = 608>
+	
+					<cfthrow errorcode="#error_code#">
+				</cfif>
+
+				<cfif arguments.type EQ "area_image"><!---AREA_IMAGE--->
 					
-					<cftry>
-						
-						<cfimage action="info" source="#destination##temp_file#" structname="image_info">
-
-						<cfcatch>
-
-							<!--- If it fails convert to RGB and Strip Information with ImageMagick --->
-							<!--- REQUIRES ImageMagick installed on the server --->
-							<cfexecute name="convert" arguments="#destination##temp_file# -strip -colorspace rgb -quality 100 #destination##temp_file#" timeout="30" variable="msg" />
-
-							<cfimage action="info" source="#destination##temp_file#" structname="image_info">
-
-						</cfcatch>
-					</cftry>
+					<cfquery name="selectAreaImageQuery" datasource="#client_dsn#">
+						SELECT * 
+						FROM #client_abb#_areas AS areas 
+						LEFT JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id
+						WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
 					
-					<cfif image_info.width GT required_width>
-						<cfimage action="resize" width="#required_width#" source="#destination##temp_file#" destination="#destination##temp_file#" overwrite="yes" name="image_resized">
+					<cfif selectAreaImageQuery.recordCount GT 0>
+					
+						<cfif isNumeric(selectAreaImageQuery.image_id)><!---El area tiene imagen--->
 						
-						<cfif image_resized.height GT required_height>
+							<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
+								UPDATE #client_abb#_areas
+								SET space_used = space_used-#selectAreaImageQuery.file_size#
+								WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+							</cfquery>
 							
-							<cfimage action="resize" height="#required_height#" source="#destination##temp_file#" destination="#destination##temp_file#" overwrite="yes" name="image_resized">
+							<cfset objectFile.physical_name = selectAreaImageQuery.physical_name>
+						
+						<cfelse><!---El area no tiene imagen ya subida--->
 							
+							<cfset objectFile.physical_name = objectFile.id>
+																
 						</cfif>
 					
-					<cfelseif image_info.height GT required_height>
+					<cfelse><!---The area does not exist--->
 					
+						<cfset error_code = 301>
+						
+						<cfthrow errorcode="#error_code#">
+					
+					</cfif>	
+					
+				</cfif>
+
+				<!--- MODULE ANTI VIRUS --->
+				<cfif APPLICATION.moduleAntiVirus IS true>
+
+					<cfinvoke component="AntiVirusManager" method="checkForVirus" returnvariable="checkForVirusResponse">
+						<cfinvokeargument name="path" value="#destination#">
+						<cfinvokeargument name="filename" value="#temp_file#">
+					</cfinvoke>
+
+					<cfif checkForVirusResponse.result IS false><!--- Delete infected file --->
+
+						<!--- delete image --->
+						<cffile action="delete" file="#destination##temp_file#">
+
+						<!---saveVirusLog--->
+						<cfinvoke component="AntiVirusManager" method="saveVirusLog">
+							<cfinvokeargument name="user_id" value="#arguments.user_id#">
+							<cfinvokeargument name="file_name" value="#objectFile.file_name#"/>
+							<cfinvokeargument name="anti_virus_result" value="#checkForVirusResponse.message#">
+
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+						
+						<cfset anti_virus_check_message = trim(listlast(checkForVirusResponse.message, ":"))>
+						
+						<cfthrow type="virus" message="Archivo #objectFile.file_name# no válido por ser identificado como virus: #anti_virus_check_message#">
+
+					</cfif>
+
+				</cfif>
+
+				<cftry>
+					
+					<cfimage action="info" source="#destination##temp_file#" structname="image_info">
+
+					<cfcatch>
+
+						<!--- If it fails convert to RGB and Strip Information with ImageMagick --->
+						<!--- REQUIRES ImageMagick installed on the server --->
+						<cfexecute name="convert" arguments="#destination##temp_file# -strip -colorspace rgb -quality 100 #destination##temp_file#" timeout="35" variable="msg" />
+
+						<cfimage action="info" source="#destination##temp_file#" structname="image_info">
+
+					</cfcatch>
+				</cftry>
+				
+				<cfif image_info.width GT required_width>
+					<cfimage action="resize" width="#required_width#" source="#destination##temp_file#" destination="#destination##temp_file#" overwrite="yes" name="image_resized">
+					
+					<cfif image_resized.height GT required_height>
+						
 						<cfimage action="resize" height="#required_height#" source="#destination##temp_file#" destination="#destination##temp_file#" overwrite="yes" name="image_resized">
 						
 					</cfif>
+				
+				<cfelseif image_info.height GT required_height>
+				
+					<cfimage action="resize" height="#required_height#" source="#destination##temp_file#" destination="#destination##temp_file#" overwrite="yes" name="image_resized">
+					
+				</cfif>
 					
 				<!---</cfif>--->
 				
 			</cfif>
-			
+
+
+			<!---Move file to final destination--->
 			<cffile action="rename" source="#destination##temp_file#" destination="#destination##objectFile.physical_name#">
 						
 			<cftransaction>
@@ -284,16 +315,6 @@
 				
 				<!---message_file_html, item_file_html, item_image_html--->
 				<cfcase value="item_file_html,item_image_html">
-					
-					<!---<cfif type EQ "message_file_html">
-						
-						<cfquery datasource="#client_dsn#" name="addFileToMessage">
-							UPDATE #client_abb#_messages
-							SET attached_file_id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">,
-							attached_file_name = <cfqueryparam value="#objectFile.file_name#" cfsqltype="cf_sql_varchar">,						
-							status = 'uploaded'
-							WHERE id = <cfqueryparam value="#message_id#" cfsqltype="cf_sql_integer">
-						</cfquery>--->
 						
 					<cfif type EQ "item_file_html">
 						<cfquery datasource="#client_dsn#" name="addFileToMessage">
@@ -398,26 +419,43 @@
 			
 			<cfreturn objectFile>
 			
+			<cfcatch type="virus">
+
+				<cfif isDefined("objectFile.id")>
+
+					<cfif arguments.type NEQ "area_image" OR NOT isNumeric(selectAreaImageQuery.image_id)><!---Si el nuevo archivo no era para reemplazar una imagen de área--->
+						
+						<cfquery datasource="#client_dsn#" name="changeFileStatus">
+							UPDATE #client_abb#_#files_table#
+							SET status = 'virus'
+							WHERE id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+					</cfif>
+
+				</cfif>
+
+				<cfrethrow/>
+
+			</cfcatch>
+
+			<cfcatch><!---The upload fail--->
+
+				<cfif isDefined("objectFile.id")>
+					<cfquery datasource="#client_dsn#" name="changeFileStatus">
+						UPDATE #client_abb#_#files_table#
+						SET status = 'error'
+						WHERE id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+				</cfif>
+				
+				<!---<cfset error_code = 604>--->
+		
+				<cfrethrow/>
 			
-		<cfcatch><!---The upload fail--->
-			<cfif isDefined("objectFile.id")>
-				<cfquery datasource="#client_dsn#" name="changeFileStatus">
-					UPDATE #client_abb#_#files_table#
-					SET status = 'error'
-					WHERE id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-			</cfif>
+			</cfcatch>
 			
-			<!---<cfset error_code = 604>--->
-	
-			<cfthrow object="#cfcatch#">
-		
-		</cfcatch>
-			
-		</cftry>
-		
-		
-		
+		</cftry>		
 		
 		
 		

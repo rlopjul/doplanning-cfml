@@ -23,6 +23,7 @@
 		</cfif>
 	</cfif>
 	
+	<!--- Error Manager from components --->
 	<cfinvoke component="#APPLICATION.componentsPath#/ErrorManager" method="saveError">
 		<cfinvokeargument name="error_component" value="#component#" >
 		<cfinvokeargument name="error_method" value="#method#">

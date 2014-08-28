@@ -472,6 +472,38 @@
 	</cffunction>
 
 
+	<!--- deleteAreaImage --->
+
+	<cffunction name="deleteAreaImage" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true">
+		
+		<cfset var method = "deleteAreaImage">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="deleteAreaImage" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>		
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Imagen eliminada.">
+			</cfif>
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+
+
 	<!--- ----------------------------------- deleteArea -------------------------------------- --->
 
 	<cffunction name="deleteArea" output="false" returntype="struct" returnformat="json" access="remote">

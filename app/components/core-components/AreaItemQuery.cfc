@@ -31,8 +31,8 @@
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="published" type="boolean" required="false" default="true">
 		
-		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">		
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
 		
 		<cfset var method = "getItem">
 					
@@ -1041,5 +1041,29 @@
 			
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
+
+
+	<!---  ---------------------- deleteItemPosition -------------------------------- --->
+
+	<cffunction name="deleteItemPosition" returntype="void" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+		
+		<cfset var method = "deleteItemPosition">
+						
+			<cfquery name="deleteItemPosition" datasource="#client_dsn#">
+				DELETE FROM #client_abb#_items_position
+				WHERE item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+				AND item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+				<cfif isDefined("arguments.area_id")>
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>;
+			</cfquery>
+						
+	</cffunction>
   
 </cfcomponent>

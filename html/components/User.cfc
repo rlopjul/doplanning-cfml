@@ -261,132 +261,6 @@
 		
 	</cffunction>
 	
-	
-	<!--- 
-	<cffunction name="updateUser" returntype="void" output="false" access="remote">
-			<cfargument name="user_id" type="numeric" required="true">
-			<cfargument name="family_name" type="string" required="true">
-			<cfargument name="email" type="string" required="false" default="">
-			<cfargument name="dni" type="string" required="true">
-			<cfargument name="mobile_phone" type="string" required="true">
-			<cfargument name="mobile_phone_ccode" type="string" required="true">
-			<cfargument name="address" type="string" required="true">
-			<cfargument name="language" type="string" required="true">
-			<cfargument name="password" type="string" required="true">
-			<cfargument name="password_confirmation" type="string" required="true">
-			<cfargument name="imagedata" type="string" required="false" default="">
-			
-			<cfset var method = "updateUser">
-					
-			<cftry>
-				
-				<!---<cfset response_page = "iframes/preferences_user_data.cfm">--->
-				<cfset response_page = "preferences.cfm">
-				
-				<cfif arguments.password NEQ arguments.password_confirmation>
-			
-					<cfset message = "La nueva contraseña y su confirmación deben ser iguales.">
-					<cfset message = URLEncodedFormat(message)>
-					<cflocation url="#APPLICATION.htmlPath#/#response_page#?message=#message#" addtoken="no">
-				
-				</cfif>
-				
-				<cfif APPLICATION.userEmailRequired IS true AND len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
-				
-					<cfset message = "Debe introducir un email correcto.">
-					<cfset message = URLEncodedFormat(message)>
-					<cflocation url="#APPLICATION.htmlPath#/#response_page#?message=#message#" addtoken="no">
-				
-				</cfif>
-				<cfif len(password) GT 0>
-					<cfset password_encoded = hash(arguments.password)>
-				</cfif>
-				
-				<!--- 
-				<cfsavecontent variable="request_parameters">
-					<cfoutput>
-						<user id="#arguments.id#" 
-						email="#arguments.email#"
-						mobile_phone_ccode="#arguments.mobile_phone_ccode#" 
-						mobile_phone="#arguments.mobile_phone#"
-						telephone_ccode="#arguments.telephone_ccode#"
-						telephone="#arguments.telephone#"
-						language="#arguments.language#"
-						<cfif isDefined("password_encoded")>
-						password="#password_encoded#"
-						</cfif>>
-							<family_name><![CDATA[#arguments.family_name#]]></family_name>
-							<name><![CDATA[#arguments.name#]]></name>
-							<address><![CDATA[#arguments.address#]]></address>
-							<dni><![CDATA[#arguments.dni#]]></dni>
-						</user>
-					</cfoutput>
-				</cfsavecontent>
-				
-				<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-					<cfinvokeargument name="request_component" value="#request_component#">
-					<cfinvokeargument name="request_method" value="#method#">
-					<cfinvokeargument name="request_parameters" value="#request_parameters#">
-				</cfinvoke> --->
-	
-				<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUser" returnvariable="responseUpdateUser">
-					<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
-					<cfinvokeargument name="email" value="#arguments.email#">
-					<cfinvokeargument name="mobile_phone_ccode" value="#arguments.mobile_phone_ccode#">
-					<cfinvokeargument name="mobile_phone" value="#arguments.mobile_phone#">
-					<cfinvokeargument name="telephone_ccode" value="#arguments.telephone_ccode#">
-					<cfinvokeargument name="telephone" value="#arguments.telephone#">
-					<cfinvokeargument name="language" value="#arguments.language#">
-					<cfif isDefined("password_encoded")>
-						<cfinvokeargument name="password" value="#password_encoded#">
-					</cfif>
-					<cfinvokeargument name="family_name" value="#arguments.family_name#">
-					<cfinvokeargument name="name" value="#arguments.name#">
-					<cfinvokeargument name="address" value="#arguments.address#">
-					<cfinvokeargument name="dni" value="#arguments.dni#">
-				</cfinvoke>
-				
-				<cfif responseUpdateUser.result IS true>
-	
-					<cfif isDefined("arguments.imagedata") AND len(arguments.imagedata) GT 0>
-	
-						<!---Subida de imagen--->
-					
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="uploadUserImage">
-							<cfinvokeargument name="imagedata" value="#arguments.imagedata#">
-							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-						</cfinvoke>		
-						
-						<cfset message = "Modificación guardada e imagen actualizada.">
-	
-						<!---FIN subida de imagen--->
-	
-					<cfelse>
-	
-						<cfset message = "Modificación guardada.">
-					
-					</cfif>
-					
-				<cfelse><!--- Error --->
-	
-					<cfset message = responseUpdateUser.message>
-	
-				</cfif>
-	
-				<cfset message = URLEncodedFormat(message)>
-	            
-	            <cflocation url="#APPLICATION.htmlPath#/#response_page#?msg=#message#&res=1" addtoken="no">
-				
-				<cfcatch>
-					<cfinclude template="includes/errorHandler.cfm">
-				</cfcatch>										
-				
-			</cftry>
-			
-		</cffunction>
-		 --->
-	
 
 	<!--- createUser --->
 
@@ -575,6 +449,7 @@
 		<cfoutput>#serializeJSON(response)#</cfoutput>
 		
 	</cffunction>
+	
 	
 	<!--- updateUserPreferences --->
 

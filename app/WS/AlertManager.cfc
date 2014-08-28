@@ -109,6 +109,8 @@
 				<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>
 		</cfif>
 		
@@ -118,6 +120,8 @@
 				<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>			
 		</cfif>
 		
@@ -528,10 +532,14 @@
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
 			<cfinvokeargument name="file_id" value="#objectFile.id#">
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 		
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
 			<cfinvokeargument name="file_id" value="#objectFile.id#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 		
 		<cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
@@ -754,6 +762,7 @@
 		<!---areaUrl--->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
 			<cfinvokeargument name="area_id" value="#objectArea.id#">
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 		
 		<!---getRootArea--->
@@ -943,6 +952,7 @@
 		<!---areaUrl--->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
 			<cfinvokeargument name="area_id" value="#area_id#">
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 		
 		<cfif APPLICATION.twoUrlsToAccess IS false>

@@ -10,6 +10,7 @@
 	
 	<cfset error_request = SerializeJSON(arguments)>
 
+	<!--- Error Manager from core-components --->
 	<cfinvoke component="#APPLICATION.coreComponentsPath#/ErrorManager" method="saveError">
 		<cfinvokeargument name="error_component" value="#component#" >
 		<cfinvokeargument name="error_method" value="#method#">
@@ -19,6 +20,9 @@
 		</cfif>
 		<cfif isDefined("cfcatch")>
 			<cfinvokeargument name="error_cfcatch" value="#cfcatch#">
+		</cfif>
+		<cfif isDefined("arguments.client_abb")>
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 		</cfif>
 	</cfinvoke>
 	

@@ -316,11 +316,21 @@
 
 		</cfif>
 
+
+		<cfif APPLICATION.moduleAntiVirus IS true>
+
+			<div class="div_message_page_label"><span lang="es"><cfif fileTypeId IS 3>Última versión de archivo analizada por Antivirus<cfelse>Analizado por Antivirus</cfif>:</span>
+			<span class="text_message_page" lang="es"><cfif objectFile.anti_virus_check IS true>Sí<cfelse>No</cfif></span></div>
+
+		</cfif>
+
 		<!---fileUrl--->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
 			<cfinvokeargument name="file_id" value="#objectFile.id#">
 			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 			<cfinvokeargument name="area_id" value="#area_id#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 
 		<div class="div_message_page_label"><span lang="es">URL del archivo en #APPLICATION.title#:</span></div>
@@ -330,6 +340,8 @@
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
 			<cfinvokeargument name="file_id" value="#objectFile.id#">
 			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 
 		<div class="div_message_page_label"><span lang="es">URL de descarga desde #APPLICATION.title#:</span></div>
