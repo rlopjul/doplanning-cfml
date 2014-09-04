@@ -26,21 +26,20 @@
 
 </cfif>
 <cfoutput>
-<div class="div_head_menu">
-	<div class="navbar navbar-default navbar-static-top">
-		<div class="navbar-header">
+<div class="container div_head_menu">
+	<div class="navbar navbar-default navbar-static-top" style="margin-bottom:0">
+		<div class="container">
 
 			<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
 			<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
 			<span class="navbar_brand">#area_name#</span><br/>
-			<p class="navbar_brand" style="padding-top:0px;clear:left;font-size:12px;color:##737373">
+
+			<p style="padding-top:0px;clear:left;font-size:12px;"><!--- class="navbar_brand" color:##737373 --->
 				<cfif SESSION.client_id EQ "hcs" OR internal_user IS true>Ruta: #area_path#<cfelse>&nbsp;</cfif>
 			</p>
-
 		</div>
 	</div>
 </div>
-
 <div style="clear:both"><!-- --></div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_menu_info.cfm">

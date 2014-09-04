@@ -5,7 +5,7 @@
 	<cfoutput>
 		<link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 	</cfoutput>
-	<title>Migrar Clientes</title>
+	<title>Migrar Clientes DoPlanning</title>
 	</head>
 	
 	<body>
@@ -16,7 +16,7 @@
 
 			<div class="col-sm-12">
 
-				<h2>Migrar Clientes</h1>
+				<h2>Migrar Clientes DoPlanning</h1>
 
 			</div>
 
@@ -30,29 +30,31 @@
 				SELECT *
 				FROM APP_clients;
 			</cfquery>
-		
+			
+			<cfset checkVersion = true>
+
 			<cfloop query="getClients">
 		
-				<cfset client_abb = getClients.abbreviation>
-				<cfset client_dsn = APPLICATION.identifier&"_"&getClients.abbreviation>
-		
-				<cfinclude template="transaction_to_#FORM.version#.cfm">
+				<cfset new_client_abb = getClients.abbreviation>
+				<cfset client_datasource = APPLICATION.identifier&"_"&getClients.abbreviation>
+				
+				<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_#FORM.version#.cfm">
 
 			</cfloop>	
 					
 		<cfelse>
 
-			<cfset client_abb = FORM.abb>
-			<cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
+			<cfset new_client_abb = FORM.abb>
+			<cfset client_datasource = APPLICATION.identifier&"_"&new_client_abb>
 			
 			<cfquery datasource="#APPLICATION.dsn#" name="getClient">
 				SELECT *
 				FROM APP_clients
-				WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">;
+				WHERE abbreviation = <cfqueryparam value="#new_client_abb#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
 		
 			<cfif getClient.recordCount IS 0>
-				<cfthrow message="Error al obtener el cliente: #client_abb#">
+				<cfthrow message="Error al obtener el cliente: #new_client_abb#">
 			</cfif>
 			
 			<cfoutput>
@@ -63,7 +65,8 @@
 			<div class="row">
 
 				<div class="col-sm-12">
-					<cfinclude template="transaction_to_#FORM.version#.cfm">
+					<cfset checkVersion = true>
+					<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_#FORM.version#.cfm">
 				</div>
 
 			</div>
@@ -83,6 +86,7 @@
 						<label>Versión</label>
 						<select name="version">
 							<option value="2.8.1">2.8.1</option>
+							<option value="2.8.2">2.8.2</option>
 						</select>
 					</div>
 

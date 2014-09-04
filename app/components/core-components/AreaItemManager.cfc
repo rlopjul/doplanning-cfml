@@ -9,6 +9,17 @@
 	<cfset timeZoneTo = "Europe/Madrid">
 
 
+	<!--- getAreaItemTypes --->
+
+	<cffunction name="getAreaItemTypes" returntype="array" access="public">
+
+		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeArray.cfm">
+
+		<cfreturn itemTypeArray>
+
+	</cffunction>
+
+
 	<!--- ----------------------- DELETE ITEM ATTACHED FILE -------------------------------- --->
 	
 	<cffunction name="deleteItemAttachedFile" returntype="void" access="public">

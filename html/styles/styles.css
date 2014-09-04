@@ -630,6 +630,7 @@ fieldset[disabled] input {
 }
 .more_info_img {
 	float:left; margin-right:3px; margin-top:12px; cursor:pointer;
+	/*color: #FFFFFF; Esto hay que añadirlo para el HCS*/
 }
 .more_info_content {
 	clear:both; background-color:#FFFFFF; padding:5px; display:none; margin-bottom:2px;
@@ -646,9 +647,17 @@ fieldset[disabled] input {
 }
 .navbar_brand {
 	display:block; padding-top:10px; float:left;
+	/*color: #FFF; Esto hay que añadirlo para el hcs*/
+	font-weight: bold;
 }
 .loading_position{
 	position:absolute; top:50%; left:50%; margin:-12px 0 0 -12px; width:200px; margin-left:-100px;
+}
+.tablesorter a {
+	text-decoration: none !important;
+}
+.tablesorter-filter::-ms-clear {
+    display: none; /*Para deshabilitar la x que aparece en IE10 y que al hacer clic no restaura el listado de la tabla*/
 }
 #listTable td {
 	font-size: 11px;

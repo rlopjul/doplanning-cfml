@@ -9,7 +9,7 @@
 
 <html lang="es">
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
+<!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <cfoutput>
@@ -414,7 +414,7 @@
 					<div class="btn-toolbar">
 
 						<div class="btn-group">
-							<a href="../main.cfm?abb=#SESSION.client_abb#" class="btn btn-default"><i class="icon-arrow-left"></i> <span>Volver</span></a>
+							<a href="../main.cfm?abb=#SESSION.client_abb#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span>Volver</span></a>
 						</div>
 					
 						<div class="btn-group">

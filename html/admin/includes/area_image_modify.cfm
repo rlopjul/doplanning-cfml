@@ -110,7 +110,7 @@
 						<cfif isNumeric(objectArea.image_id)>
 							<button type="button" id="deleteAreaImageButton" title="Eliminar imagen actual" class="btn btn-danger btn-xs" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></button>
 						</cfif>
-						<p class="bg-info text-info" style="padding:5px;" id="imageHelp">La imagen que se muestra es la heredada de las áreas superiores. Puede asignar una imagen a esta área y pasará a ser la que se muestre en esta y en las áreas inferiores, siempre que las inferiores no tengan una imagen definida.</p>
+						<p class="bg-info" style="padding:5px;" id="imageHelp">La imagen que se muestra es la heredada de las áreas superiores. Puede asignar una imagen a esta área y pasará a ser la que se muestre en esta y en las áreas inferiores, siempre que las inferiores no tengan una imagen definida.</p><!---text-info--->
 					</div>
 				</div>
 				<div class="row" style="margin-top:5px;">

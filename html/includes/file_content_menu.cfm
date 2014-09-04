@@ -1,5 +1,5 @@
 <cfoutput>
-<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-info"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
+<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
 		
 <cfif listFind(".gif,.jpg,.png",objectFile.file_type) GT 0>
 	<cfif page_type IS 1>
@@ -16,9 +16,9 @@
 
 <cfif page_type IS 1> 
 
-	<a href="my_files_file_replace.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-default btn-sm"><i class="icon-repeat"></i> <span lang="es">Reemplazar</span></a>
+	<a href="my_files_file_replace.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-info btn-sm"><i class="icon-repeat"></i> <span lang="es">Reemplazar</span></a>
 	
-	<a href="file_associate_areas.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-default btn-sm"><i class="icon-plus-sign"></i> <span lang="es">Asociar a áreas</span></a>
+	<a href="file_associate_areas.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-info btn-sm"><i class="icon-plus-sign"></i> <span lang="es">Asociar a áreas</span></a>
 	
 	<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFile&file_id=#objectFile.id#&folder_id=#folder_id#" onclick="return confirmDeleteFile();" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 	<a href="my_files_file_modify.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-sm btn-info"><i class="icon-edit"></i> <span lang="es">Modificar datos</span></a>
@@ -39,9 +39,9 @@
 
 		<cfif fileTypeId IS 1 || (fileTypeId IS NOT 1 AND objectFile.locked IS true AND objectFile.lock_user_id IS SESSION.user_id)>
 			<cfif fileTypeId IS 1 OR fileTypeId IS 2>
-				<a href="area_file_replace.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-repeat"></i> <span lang="es">Reemplazar</span></a>
+				<a href="area_file_replace.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#" class="btn btn-info btn-sm"><i class="icon-repeat"></i> <span lang="es">Reemplazar</span></a>
 			<cfelse>
-				<a href="area_file_replace.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-upload-alt"></i> <span lang="es">Nueva versión</span></a>
+				<a href="area_file_replace.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#" class="btn btn-info btn-sm"><i class="icon-upload-alt"></i> <span lang="es">Nueva versión</span></a>
 			</cfif>
 			
 			<a href="area_file_modify.cfm?file=#objectFile.id#&area=#area_id#&fileTypeId=#fileTypeId#" class="btn btn-default btn-sm"><i class="icon-edit"></i> <span lang="es">Modificar datos</span></a>
@@ -104,7 +104,7 @@
 		<cfif objectFile.publication_validated IS false>
 			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=changeFilePublicationValidation&file_id=#file_id#&area_id=#area_id#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación');" title="Aprobar publicación" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>
 		<cfelse>
-			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=changeFilePublicationValidation&file_id=#file_id#&area_id=#area_id#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación');" title="Desaprobar publicación" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>					
+			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=changeFilePublicationValidation&file_id=#file_id#&area_id=#area_id#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación');" title="Desaprobar publicación" class="btn btn-warning btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>					
 		</cfif>
 		
 	</cfif>
@@ -122,7 +122,7 @@
 			<cfif objectFile.user_in_charge EQ SESSION.user_id OR SESSION.user_id EQ SESSION.client_administrator>
 
 				<div class="btn-group">
-					<a href="##" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" title="Cambiar propietario" lang="es"> 
+					<a href="##" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Cambiar propietario" lang="es"> 
 					<i class="icon-user"></i> <span lang="es">Cambiar propietario</span> <span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						
@@ -139,7 +139,7 @@
 			
 		<cfelse><!--- fileTypeId IS NOT 1 --->
 			<cfif APPLICATION.changeElementsArea IS true>
-				<a href="file_change_area.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-cut"></i> <span lang="es">Cambiar área</span></a>
+				<a href="file_change_area.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-cut"></i> <span lang="es">Cambiar área</span></a>
 			</cfif>	
 		</cfif>
 

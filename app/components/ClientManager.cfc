@@ -1161,9 +1161,17 @@
 			
 			</cftransaction>
 			
-			<cfinclude template="includes/transaction_to_2.5.cfm">
+			<cfset checkVersion = false>
 
-			<cfinclude template="includes/transaction_to_2.6.cfm">	
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.5.cfm">
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.6.cfm">
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.cfm">
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.1.cfm">	
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.2.cfm">			
 			
 			<!---createClientFolders--->
 			<cfinvoke component="ClientManager" method="createClientFolders">

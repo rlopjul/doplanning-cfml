@@ -447,7 +447,7 @@
 				<cfif len(listInternalUsers) GT 0>
 				
 					<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
-						<cfinvokeargument name="area_id" value="#area_id#">
+						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 					</cfinvoke>

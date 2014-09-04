@@ -10,25 +10,25 @@
 	<body>
 	
 	<cfif isDefined("FORM.abb")>	
-		<cfset client_abb = FORM.abb>
-		
-		<cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
+
+		<cfset new_client_abb = FORM.abb>
+		<cfset client_datasource = APPLICATION.identifier&"_"&new_client_abb>
 		
 		<cfquery datasource="#APPLICATION.dsn#" name="getClient">
 			SELECT *
 			FROM APP_clients
-			WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">;
+			WHERE abbreviation = <cfqueryparam value="#new_client_abb#" cfsqltype="cf_sql_varchar">;
 		</cfquery>
 	
 		<cfif getClient.recordCount IS 0>
-			<cfthrow message="Error al obtener el cliente: #client_abb#">
+			<cfthrow message="Error al obtener el cliente: #new_client_abb#">
 		</cfif>
 		
 		<cfoutput>
 		CLIENTE: #getClient.name#<br/>
 		</cfoutput>		
 		
-		<cfinclude template="transaction_to_2.8.cfm">	
+		<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.cfm">	
 		
 	<cfelseif isDefined("FORM.migrate")>
 	
@@ -39,24 +39,24 @@
 	
 		<cfloop query="getClients">
 	
-			<cfset client_abb = getClients.abbreviation>
-			<cfset client_dsn = APPLICATION.identifier&"_"&getClients.abbreviation>
+			<cfset new_client_abb = getClients.abbreviation>
+			<cfset client_datasource = APPLICATION.identifier&"_"&getClients.abbreviation>
 	
-			<cfquery datasource="#client_dsn#" name="isDbDp28">
-				SHOW TABLES LIKE '#client_abb#_webs';
+			<cfquery datasource="#client_datasource#" name="isDbDp28">
+				SHOW TABLES LIKE '#new_client_abb#_webs';
 			</cfquery>
 	
 			<cfif isDbDp28.recordCount IS 0>
 				<cfoutput>
-					Migrar #client_abb#<br/>
+					Migrar #new_client_abb#<br/>
 				</cfoutput>
 			
-				<cfinclude template="transaction_to_2.8.cfm">	
+				<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.cfm">	
 				
 			<cfelse>
 
 				<cfoutput>
-					Cliente #client_abb# ya migrado anteriormente.<br/>
+					Cliente #new_client_abb# ya migrado anteriormente.<br/>
 				</cfoutput>
 			
 			</cfif>

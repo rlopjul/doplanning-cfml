@@ -68,7 +68,7 @@
 
 		<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Solo para mensajes y consultas--->
 			<cfif itemTypeId IS 1 OR objectItem.state NEQ "closed">
-				<a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#" class="btn btn-sm btn-info"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
+				<a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#" class="btn btn-sm btn-primary"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
 			</cfif>
 	
 		<cfelse><!---Si no es mensaje--->
@@ -92,7 +92,7 @@
 						</cfif>
 
 					<cfelse>
-						<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#item_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Permitir la publicación en web" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>
+						<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#item_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Permitir la publicación en web" class="btn btn-warning btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>
 
 						<!---<cfif SESSION.client_abb EQ "hcs">
 					
@@ -172,11 +172,11 @@
 		<cfif objectItem.user_in_charge EQ SESSION.user_id OR is_user_area_responsible>
 			
 			<cfif itemTypeId IS NOT 1>
-				<a href="item_change_user.cfm?item=#item_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
+				<a href="item_change_user.cfm?item=#item_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
 			</cfif>
 
 			<cfif APPLICATION.changeElementsArea IS true>
-				<a href="item_change_area.cfm?item=#item_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-warning btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>	
+				<a href="item_change_area.cfm?item=#item_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>	
 			</cfif>
 
 		</cfif>

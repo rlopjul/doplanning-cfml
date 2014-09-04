@@ -186,8 +186,10 @@
 <cfif itemTypeId IS 5 OR itemTypeId IS 8>
 	<cfset t_price = "Precio">
 </cfif>
-<cfif itemTypeId IS 8>
+<cfif itemTypeId IS 7 OR itemTypeId IS 8>
 	<cfset t_identifier = "Identificador/Número">
+</cfif>
+<cfif itemTypeId IS 8>
 	<cfset t_sub_type = "Tipo de">
 </cfif>
 <cfset t_position = "Posición">
@@ -541,7 +543,9 @@
     	<div class="col-xs-6 col-md-3">
     		<label class="control-label" for="identifier" id="identifierLabel"><span lang="es">#t_identifier#</span> *</label>
 			<cfinput type="text" name="identifier" id="identifier" value="#objectItem.identifier#" placeholder="Identificador" class="input-xlarge" passthrough="#passthrough#" lang="es">
-			<button type="button" class="btn btn-default btn-xs" id="openInPubMedButton" lang="es" onclick="openPublicationInPubMed($('##identifier').val())">Ver en PubMed</button>
+			<cfif itemTypeId IS 8>
+				<button type="button" class="btn btn-default btn-xs" id="openInPubMedButton" lang="es" onclick="openPublicationInPubMed($('##identifier').val())">Ver en PubMed</button>
+			</cfif>
 		</div>
 
 		<!---<div class="col-xs-6 col-md-3">

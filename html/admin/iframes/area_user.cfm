@@ -96,7 +96,10 @@
 
 		<cfif isAdministratorResponse.result IS false>--->
 			
+			<!---
+			PENDIENTE DE IMPLEMENTAR
 			<a class="btn btn-info btn-sm disabled navbar-btn" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>
+			--->
 
 		<!---</cfif>--->
 

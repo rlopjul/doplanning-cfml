@@ -32,20 +32,32 @@
 
 <cfoutput>
 
-<div class="div_message_page_title">Usuarios de la organización</div><!---(#numUsers#)--->
+<!---<div class="div_message_page_title">Usuarios de la organización</div>----><!---(#numUsers#)--->
 
-<cfif SESSION.client_administrator IS SESSION.user_id>
+<div class="div_head_menu">
+	<div class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<span class="navbar-brand">Usuarios de la organización</span>
+			<cfif SESSION.client_administrator IS SESSION.user_id>
+				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a>
+					
+				<cfif SESSION.client_abb NEQ "hcs">
+					<!---<div class="btn-group">--->
+						<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
+					<!---</div>--->
+				</cfif>
+			</cfif>
+		</div>
+	</div>
+</div>
+
+<!---<cfif SESSION.client_administrator IS SESSION.user_id>
 <div class="btn-toolbar" style="margin-left:10px;margin-bottom:10px;">
 	<div class="btn-group">
-		<a class="btn btn-default btn-sm" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a>
+		
 	</div>
-	<cfif SESSION.client_abb NEQ "hcs">
-		<div class="btn-group">
-			<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
-		</div>
-	</cfif>
 </div>
-</cfif>
+</cfif>--->
 
 
 <!---
@@ -156,6 +168,6 @@
 		openUrlHtml2('empty.cfm','userAdminIframe');
 	</script>
 	
-	<p class="bg-info text-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en "Buscar" para listar usuarios de la organización.</span></p>
+	<p class="bg-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en "Buscar" para listar usuarios de la organización.</span></p><!---text-info--->
 
 </cfif>

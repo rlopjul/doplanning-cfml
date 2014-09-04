@@ -3198,7 +3198,7 @@
 					uploading_date = NOW(),	
 					status = <cfqueryparam value="pending" cfsqltype="cf_sql_varchar">
 					<cfif arguments.fileTypeId IS NOT 4>
-						, name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
+						, name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">
 						, user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
 						, description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_varchar">
 						, file_type_id = <cfqueryparam value="#arguments.fileTypeId#" cfsqltype="cf_sql_integer">

@@ -12,7 +12,6 @@
 			
 		<div class="navbar navbar-default navbar-static-top" role="navigation">
 		   	<div class="navbar-header" style="float:left">
-			<!---<a class="navbar-brand" href="##">Mensajes</a>--->
 			
 			<cfif isDefined("area_name")>
 				<!---<cfif area_allowed EQ true>
@@ -42,7 +41,7 @@
 						<cfinvokeargument name="area_id" value="#area_id#">
 						<cfinvokeargument name="separator" value=" / ">
 					</cfinvoke>
-					<p id="area_path" class="navbar_brand" style="padding-top:0px;clear:left;font-size:12px;color:##737373">
+					<p id="area_path" style="padding-top:0px;clear:left;font-size:12px;"><!--- class="navbar_brand" color:##737373--->
 						Ruta: #area_path#
 					</p>
 					<script>
@@ -62,7 +61,7 @@
 				<ul class="nav navbar-nav">
 					<li class="dropdown">
 				        <a href="##" class="dropdown-toggle" data-toggle="dropdown">
-					      <i class="icon-th" style="font-size:26px;color:##428bca"></i><!---color:##428BCA--->
+					      <i class="icon-th" style="font-size:26px;"></i><!---color:##428bca--->
 					  	</a>
 				        <ul class="dropdown-menu pull-right" style="min-width:300px">
 				        	<li>

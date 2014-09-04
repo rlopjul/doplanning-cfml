@@ -10,7 +10,7 @@
 
 <html lang="es">
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2013 (www.era7.com)-->
+<!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <cfoutput>
@@ -311,7 +311,7 @@
 							<cfif objectUser.general_administrator EQ true>
 
 								<div class="btn-group">
-									<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" title="Administración general nueva versión HTML" lang="es"><i class="icon-wrench"></i></a>
+									<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-primary btn-sm" title="Administración general nueva versión HTML" lang="es"><i class="icon-wrench"></i></a>
 								</div>
 
 								<div class="btn-group">
@@ -330,7 +330,7 @@
 								<cfif nAreasAdmin GT 0>
 									<!---<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=areaAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración de áreas" title="Administración de áreas" style="margin-right:3px;" lang="es"/></a>--->
 									<div class="btn-group">
-										<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-info" style="float:right" title="Administración de áreas" lang="es"><i class="icon-wrench"></i></a>
+										<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-primary btn-sm" style="float:right" title="Administración de áreas" lang="es"><i class="icon-wrench"></i></a>
 									</div>
 								</cfif>
 							</cfif>
