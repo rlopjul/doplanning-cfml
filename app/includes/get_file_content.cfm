@@ -23,7 +23,11 @@ Esto quitado porque por ahora no se puede usar gzip para esta aplicación
 <!---<cfheader name="Expires" value="#GetHttpTimeString(DateAdd('m', 1, Now()))#">--->
 
 <!---Para poder cargar un swf desde otra página o swf hay que quitar esto--->
-<cfheader name="Content-Disposition" value="attachment; filename=""#filename#""" charset="UTF-8">
+<cfif NOT isDefined("URL.open") OR URL.open EQ 0>
+	<cfheader name="Content-Disposition" value="attachment; filename=""#filename#""" charset="UTF-8">
+<cfelse>
+	<cfheader name="Content-Disposition" value="filename=""#filename#""" charset="UTF-8">
+</cfif>
 
 <!---<cfheader name="Accept-Ranges" value="bytes">--->
 <cfheader name="Content-Length" value="#fileInfo.size#">

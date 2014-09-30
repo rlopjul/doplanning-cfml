@@ -1,15 +1,14 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2014
 
 	Date of file creation: 30-09-2008
 	File created by: alucena
-	ColdFusion version required: 8
-	Last file change by: alucena
-	
+		
 --->
 <cfcomponent output="false">
 
 	<cfset component = "Area">
 	<cfset request_component = "AreaManager">
+
 	
 	<!--- ----------------------------------- getMainTree -------------------------------------- --->
 

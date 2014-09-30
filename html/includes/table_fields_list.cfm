@@ -59,9 +59,9 @@
 	</thead>
 	<tbody>
 
-	<cfset alreadySelected = false>
-
 	<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+	
+	<cfset alreadySelected = false>
 
 	<cfloop query="fields">
 
@@ -123,6 +123,7 @@
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="selectDefaultAreaQuery">
 							<cfinvokeargument name="area_id" value="#fields.default_value#">
+
 							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
@@ -132,7 +133,80 @@
 						</cfif>
 
 					</cfif>
+				
+				<cfelseif fields.field_type_id IS 12><!--- USER --->
+
+					<cfif isNumeric(fields.default_value)>
+						
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
+							<cfinvokeargument name="user_id" value="#fields.default_value#">
+
+							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+						<cfif userQuery.recordCount GT 0>
+							<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+								<cfset field_default_value = userQuery.user_full_name>
+							<cfelse>
+								<cfset field_default_value = "<i>USUARIO SIN NOMBRE</i>">
+							</cfif>
+						<cfelse>
+							<cfset field_default_value = '<i lang="es">USUARIO NO ENCONTRADO</i>'>
+						</cfif>
+						
+					</cfif>
 					
+				<cfelseif fields.field_type_id IS 13><!--- ITEM --->
+
+					<cfif isNumeric(fields.default_value)>
+
+						<cfif fields.item_type_id IS 10><!--- FILE --->
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+								<cfinvokeargument name="file_id" value="#fields.default_value#">
+								<cfinvokeargument name="parse_dates" value="false"/>
+								<cfinvokeargument name="published" value="false"/>
+
+								<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<cfif fileQuery.recordCount GT 0>
+								<cfif len(fileQuery.name) GT 0>
+									<cfset field_default_value = fileQuery.name>
+								<cfelse>
+									<cfset field_default_value = "<i>ARCHIVO SIN TÍTULO</i>">
+								</cfif>
+							<cfelse>
+								<cfset field_default_value = "<i>ARCHIVO NO DISPONIBLE</i>">
+							</cfif>
+							
+						<cfelse><!--- ITEM --->
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+								<cfinvokeargument name="item_id" value="#fields.default_value#">
+								<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
+								<cfinvokeargument name="parse_dates" value="false"/>
+								<cfinvokeargument name="published" value="false"/>
+
+								<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<cfif itemQuery.recordCount GT 0>
+								<cfif len(itemQuery.title) GT 0>
+									<cfset field_default_value = itemQuery.title>
+								<cfelse>
+									<cfset field_default_value = "<i>ELEMENTO SIN TÍTULO</i>">
+								</cfif>
+							<cfelse>
+								<cfset field_default_value = "<i>ELEMENTO NO DISPONIBLE</i>">
+							</cfif>
+
+						</cfif>
+
+					</cfif>
+
 				<cfelse><!--- IS NOT LIST --->
 
 					<cfset field_default_value = fields.default_value>

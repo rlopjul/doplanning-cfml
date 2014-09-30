@@ -184,7 +184,7 @@ fieldset[disabled] input {
 	padding-left:8px;
 	/*padding-top:6px;*/
 	border-bottom:solid 1px #333333;
-	
+	margin-bottom: 5px;	
 }
 .div_head_subtitle_area{
 	/*clear:left;*/
@@ -647,7 +647,7 @@ fieldset[disabled] input {
 }
 .navbar_brand {
 	display:block; padding-top:10px; float:left;
-	/*color: #FFF; Esto hay que añadirlo para el hcs*/
+	color: #FFF; /*Esto hay que añadirlo SOLO para el hcs*/
 	font-weight: bold;
 }
 .loading_position{
@@ -662,6 +662,9 @@ fieldset[disabled] input {
 #listTable td {
 	font-size: 11px;
 	color:#666666;
+}
+#listTable tr {
+	height: 35px;	
 }
 #usersTable td {
 	font-size: 11px;

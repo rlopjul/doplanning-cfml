@@ -406,6 +406,7 @@
 
 		<cfinvoke component="AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfinvokeargument name="areas_ids" value="#arguments.areas_ids#">
 			<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
 			<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
 			<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
@@ -625,9 +626,9 @@
 		
 		<cfset var method = "listAllAreaItems">
 			
-			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, NULL AS file_type_id">
+			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, NULL AS file_type_id, NULL AS locked">
 
-			<cfset var fileColums = "id, name, IFNULL(replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, file_type_id"><!---, id AS attached_file_id--->
+			<cfset var fileColums = "id, name, IFNULL(replacement_date, uploading_date) AS creation_date, description, user_in_charge, #area_id# AS area_id, file_type_id, locked"><!---, id AS attached_file_id--->
 
 			<cfif len(arguments.area_type) GT 0><!--- WEB --->
 				<cfset commonColums = commonColums&", publication_date, publication_validated">

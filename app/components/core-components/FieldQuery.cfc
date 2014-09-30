@@ -18,7 +18,7 @@
 		<cfset var method = "getFieldTypes">
 			
 			<cfquery name="getFieldTypesQuery" datasource="#client_dsn#">
-				SELECT field_type_id, input_type, name, max_length, mysql_type, cf_sql_type
+				SELECT field_type_id, field_type_group, input_type, name, max_length, mysql_type, cf_sql_type
 				FROM `#client_abb#_#fieldsTypesTable#`
 				WHERE enabled = true
 				ORDER BY position ASC;
@@ -40,7 +40,7 @@
 		<cfset var method = "getFieldType">
 			
 			<cfquery name="getFieldTypeQuery" datasource="#client_dsn#">
-				SELECT field_type_id, input_type, name, mysql_type
+				SELECT field_type_id, field_type_group, input_type, name, mysql_type
 				FROM `#client_abb#_#fieldsTypesTable#`
 				WHERE field_type_id = <cfqueryparam value="#arguments.field_type_id#" cfsqltype="cf_sql_integer">
 				AND enabled = true;

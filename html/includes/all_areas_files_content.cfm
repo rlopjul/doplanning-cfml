@@ -50,6 +50,21 @@
 	<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numItems# <span lang="es"><cfif numItems IS 1>Archivo<cfelse>Archivos</cfif></span></div>
 	</cfoutput>
 
+	
+	<script>
+		
+		$(document).ready(function() { 
+
+			<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
+			$('#listTable').bind('select.tablesorter.select', function(e, ts){
+			    var itemUrl= $(ts.elem).data("item-url");
+			    openUrl(itemUrl,'itemIframe',event);
+			});
+
+		});
+
+	</script>
+
 	<cfset full_content = true>
 	<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">
 	

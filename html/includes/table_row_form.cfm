@@ -24,12 +24,39 @@
 	No hay campos definidos para rellenar.
 
 <cfelse>
-	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js" type="text/javascript"></script>
+	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+	<script src="#APPLICATION.path#/jquery/jquery-mask/jquery.mask.min.js"></script>
+	<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
+	<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
-	<script type="text/javascript">
+	<script>
+
+		function openUserSelectorWithField(fieldName){
+
+			return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+
+		}
+
+		function setSelectedUser(userId, userName, fieldName) {
+				
+			document.getElementById(fieldName).value = userId;
+			document.getElementById(fieldName+"_user_full_name").value = userName;
+		}
+
+		function clearFieldSelectedUser(fieldName) {
+
+			document.getElementById(fieldName).value = "";
+			document.getElementById(fieldName+"_user_full_name").value = "";
+		}
+
+		function openItemSelectorWithField(itemTypeId,fieldName){
+
+			return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
+
+		}
 
 		function onSubmitForm(){
 
@@ -53,7 +80,7 @@
 
 	</script>
 
-	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
+	
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 

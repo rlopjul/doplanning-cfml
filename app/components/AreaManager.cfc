@@ -374,8 +374,10 @@
 	<!--- -------------------------- CHECK AREAS ACCESS -------------------------------- --->
 	<!---Comprueba si el usuario puede acceder a algún área de la lista--->
 	
-	<cffunction name="checkAreasAccess" returntype="void" output="false" access="public">
-		<cfargument name="areasList" type="string" required="yes">
+	<cffunction name="checkAreasAccess" returntype="struct" output="false" access="public">
+		<cfargument name="areasList" type="string" required="true">
+
+		<cfargument name="throwError" type="boolean" required="false" default="true">
 		
 		<cfset var method = "checkAreasAccess">
 		
@@ -383,6 +385,7 @@
 		<cfset var access_result = false>
 		<cfset var curAccessResult = "">
 		<cfset var areasCheckedList = "">
+		<cfset var area_id = "">
 					
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 
@@ -405,19 +408,11 @@
 			<cfif isUserInAreasQuery.recordCount GT 0>
 				
 				<cfset access_result = true>
+				<cfset area_id = isUserInAreasQuery.area_id>
 
 			<cfelse><!--- El usuario no está asociado directamente en ninguna de las áreas anteriores --->
 
 				<cfloop list="#arguments.areasList#" index="current_area">
-
-					<!---<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="current_access_result">
-						<cfinvokeargument name="area_id" value="#current_area#">
-					</cfinvoke>
-
-					<cfif current_access_result IS true>
-						<cfset access_result = true>
-						<cfbreak>
-					</cfif>--->
 
 					<cfif listFind(areasCheckedList, current_area) IS 0>
 					
@@ -432,8 +427,7 @@
 						<cfif curAccessResult.accessResult IS true>
 
 							<cfset access_result = true>
-
-							<!---<cftrace var="areasCheckedList" text="#areasCheckedList#" category="var" inline="true" type="Warning">--->
+							<cfset area_id = current_area>
 
 							<cfbreak>
 						
@@ -451,16 +445,19 @@
 
 		</cfif><!--- END userAreasQuery.recordCount GT 0 --->
 
-		<cfif access_result IS NOT true>
+		<cfif arguments.throwError IS true AND access_result IS NOT true>
 			<cfset error_code = 104>
 			
 			<cfthrow errorcode="#error_code#">		
 		</cfif>		
+
+		<cfset response = {result=access_result, area_id=area_id}>
+
+		<cfreturn response>
 	
-	</cffunction>		
-	
-	
-	
+	</cffunction>	
+
+
 	<!--- -------------------------- canUserAccessToArea -------------------------------- --->
 	<!---Comprueba si el usuario puede acceder al área, y devuelve el resultado en una variable--->
 	
@@ -480,52 +477,6 @@
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>
-
-		<!---
-		<cfquery datasource="#client_dsn#" name="getAreaUsers">
-			SELECT areas_users.user_id, areas.parent_id
-			FROM #client_abb#_areas_users AS areas_users
-			INNER JOIN #client_abb#_areas AS areas ON areas_users.area_id = areas.id 
-			AND areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-		</cfquery>
-		
-		<cfif getAreaUsers.recordCount GT 0>
-		
-			<cfset area_users_list = ValueList(getAreaUsers.user_id, ",")>
-			<cfif listFind(area_users_list, user_id) GT 0>
-			
-				<cfset access_result = true>
-				
-			<cfelse>
-					
-				<cfif isNumeric(getAreaUsers.parent_id)>
-						
-					<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
-						<cfinvokeargument name="area_id" value="#getAreaUsers.parent_id#">
-					</cfinvoke>
-					
-				</cfif>
-				
-			</cfif>
-			
-		<cfelse><!---No users in area--->
-		
-			<cfquery datasource="#client_dsn#" name="getAreaParent">
-				SELECT areas.parent_id
-				FROM #client_abb#_areas AS areas
-				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-			
-			<cfif isNumeric(getAreaParent.parent_id)>
-			
-				<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
-					<cfinvokeargument name="area_id" value="#getAreaParent.parent_id#">
-				</cfinvoke>
-			
-			</cfif>
-		
-		</cfif>
-		--->
 		
 		<cfreturn access_result>
 		

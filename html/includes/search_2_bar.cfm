@@ -5,6 +5,10 @@
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
 
+	<!---bootstrap-select--->
+	<!---<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>--->
+
 </cfoutput>
 
 <cfif NOT isDefined("itemTypeId")>
@@ -86,13 +90,6 @@
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">	
 	</cfinvoke>
 	
-	<!---<cfxml variable="xmlUsers">
-		<cfoutput>
-		#getUsersResponse.usersXml#
-		</cfoutput>
-	</cfxml>
-	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>--->
-
 	<cfset users = getUsersResponse.users>
 	<cfset numUsers = ArrayLen(users)>
 
@@ -119,6 +116,8 @@
 		  todayBtn: 'linked', 
 		  autoclose: true
 		});
+
+		<!---$('.selectpicker').selectpicker();--->
 
 	});
 	
@@ -186,52 +185,61 @@
 
 
 <cfoutput>
-<div class="div_search_bar">
+<div class="container div_search_bar">
 <cfform method="get" name="search_form" action="#CGI.SCRIPT_NAME#" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
 		var railo_custom_form=new RailoForms('search_form');
 	</script>
 
-	<div class="row">
+	<cfif isDefined("URL.field") AND isDefined("URL.itemTypeId")><!---SELECT ITEM PAGE--->
+	
+		<input type="hidden" name="field" value="#URL.field#" />
+		<input type="hidden" name="itemTypeId" value="#URL.itemTypeId#" />
 
-    	<label for="search_page" class="col-sm-2 control-label" lang="es">Buscar en</label>
+	<cfelse><!---SEARCH ITEMS PAGE--->
 
-    	<div class="col-sm-4">
-	    	<select name="search_page" id="search_page" class="form-control" onchange="goToUrl($('##search_page').val(),'');">
-	    		<option value="messages_search.cfm" <cfif curElement EQ "messages">selected="selected"</cfif> lang="es">Mensajes</option>
-	    		<option value="files_search.cfm" <cfif curElement EQ "files">selected="selected"</cfif> lang="es">Archivos</option>
-	    		<option value="events_search.cfm" <cfif curElement EQ "events">selected="selected"</cfif> lang="es">Eventos</option>
-	    		<option value="tasks_search.cfm" <cfif curElement EQ "tasks">selected="selected"</cfif> lang="es">Tareas</option>
-	    		<cfif APPLICATION.moduleLists IS true>
-	    			<option value="lists_search.cfm" <cfif curElement EQ "lists">selected="selected"</cfif> lang="es">Listas</option>
-	    		</cfif>
+		<div class="row">
 
-	    		<cfif APPLICATION.moduleForms IS true>
-	    			<option value="forms_search.cfm" <cfif curElement EQ "forms">selected="selected"</cfif> lang="es">Formularios</option>
-	    		</cfif>
-	    		
-	    		<cfif APPLICATION.moduleConsultations IS true>
-	    			<option value="consultations_search.cfm" <cfif curElement EQ "consultations">selected="selected"</cfif> lang="es">Interconsultas</option>
-				</cfif>
+	    	<label for="search_page" class="col-sm-2 control-label" lang="es">Buscar en</label>
+
+	    	<div class="col-sm-4">
+		    	<select name="search_page" id="search_page" class="form-control" onchange="goToUrl($('##search_page').val(),'');">
+		    		<option value="messages_search.cfm" <cfif curElement EQ "messages">selected="selected"</cfif> lang="es">Mensajes</option>
+		    		<option value="files_search.cfm" <cfif curElement EQ "files">selected="selected"</cfif> lang="es">Archivos</option>
+		    		<option value="events_search.cfm" <cfif curElement EQ "events">selected="selected"</cfif> lang="es">Eventos</option>
+		    		<option value="tasks_search.cfm" <cfif curElement EQ "tasks">selected="selected"</cfif> lang="es">Tareas</option>
+		    		<cfif APPLICATION.moduleLists IS true>
+		    			<option value="lists_search.cfm" <cfif curElement EQ "lists">selected="selected"</cfif> lang="es">Listas</option>
+		    		</cfif>
+
+		    		<cfif APPLICATION.moduleForms IS true>
+		    			<option value="forms_search.cfm" <cfif curElement EQ "forms">selected="selected"</cfif> lang="es">Formularios</option>
+		    		</cfif>
+		    		
+		    		<cfif APPLICATION.moduleConsultations IS true>
+		    			<option value="consultations_search.cfm" <cfif curElement EQ "consultations">selected="selected"</cfif> lang="es">Interconsultas</option>
+					</cfif>
+				
+					<cfif APPLICATION.modulePubMedComments IS true>
+						<option value="pubmeds_search.cfm" <cfif curElement EQ "pubmeds">selected="selected"</cfif> lang="es">Publicaciones</option>
+					</cfif>
+				
+					<cfif APPLICATION.moduleWeb EQ true>
+						<option value="entries_search.cfm" <cfif curElement EQ "entries">selected="selected"</cfif> lang="es">Elementos de contenido genérico</option>
+
+						<option value="newss_search.cfm" <cfif curElement EQ "news">selected="selected"</cfif> lang="es">Noticias</option>
+
+						<option value="images_search.cfm" <cfif curElement EQ "images">selected="selected"</cfif> lang="es">Imágenes</option>
+					</cfif>
+
+					<option value="users_search.cfm" <cfif curElement EQ "users">selected="selected"</cfif> lang="es">Usuarios</option>
 			
-				<cfif APPLICATION.modulePubMedComments IS true>
-					<option value="pubmeds_search.cfm" <cfif curElement EQ "pubmeds">selected="selected"</cfif> lang="es">Publicaciones</option>
-				</cfif>
-			
-				<cfif APPLICATION.moduleWeb EQ true>
-					<option value="entries_search.cfm" <cfif curElement EQ "entries">selected="selected"</cfif> lang="es">Elementos de contenido genérico</option>
+		    	</select>
+			</div>
+	  	</div>
 
-					<option value="newss_search.cfm" <cfif curElement EQ "news">selected="selected"</cfif> lang="es">Noticias</option>
-
-					<option value="images_search.cfm" <cfif curElement EQ "images">selected="selected"</cfif> lang="es">Imágenes</option>
-				</cfif>
-
-				<option value="users_search.cfm" <cfif curElement EQ "users">selected="selected"</cfif> lang="es">Usuarios</option>
-		
-	    	</select>
-		</div>
-  	</div>
+	</cfif>
 
 
 	<cfif APPLICATION.modulefilesWithTables IS true AND isDefined("curElement") AND curElement IS "files"><!--- Files Typologies --->
@@ -302,8 +310,8 @@
 	<cfelse>
 
 		<div class="row">
-			<label for="text" class="col-sm-2 control-label" lang="es">Buscar texto</label>
-			<div class="col-sm-5">
+			<label for="text" class="control-label col-xs-2" lang="es">Buscar texto</label>
+			<div class="col-xs-10 col-sm-5">
 				<div class="input-group">
 				  <span class="input-group-addon"><i class="icon-search"></i></span>
 				  <input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control"/>
@@ -319,13 +327,13 @@
 				
 		<div class="row">
 
-			<label for="from_date" class="col-xs-2 col-sm-2 control-label" lang="es">Fecha desde</label> 
+			<label for="from_date" class="col-xs-2 control-label" lang="es">Fecha desde</label> 
 
 			<div class="col-xs-4 col-sm-4">		
 				<input type="text" name="from_date" id="from_date" class="input_datepicker" value="#from_date#" onchange="setFromDate()">
 			</div>
 
-			<label for="end_date" class="col-xs-2 col-sm-2 control-label" lang="es">Fecha hasta</label> 
+			<label for="end_date" class="col-xs-2 control-label" lang="es">Fecha hasta</label> 
 
 			<div class="col-xs-4 col-sm-4">		
 				<input type="text" name="end_date" id="end_date" value="#end_date#" class="input_datepicker" onchange="setEndDate()"/>
@@ -385,27 +393,20 @@
 
 			<div class="col-xs-5 col-sm-5">
 
-				<select name="from_user" id="from_user" class="form-control">
-				<option value="" lang="es">Todos</option>
-				<!---<cfloop index="xmlIndex" from="1" to="#numUsers#" step="1">				
-					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="objectUser">
-						<cfinvokeargument name="xml" value="#xmlUsers.users.user[xmlIndex]#">
-						<cfinvokeargument name="return_type" value="object">
-					</cfinvoke>--->	
-				<cfloop index="objectUser" array="#users#">	
-					
-					<option value="#objectUser.id#" <cfif objectUser.id EQ user_in_charge>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
-					
-				</cfloop>
+				<select name="from_user" id="from_user" class="form-control"><!---class="selectpicker" data-live-search="true"--->
+					<option value="" lang="es">Todos</option>
+					<cfloop index="objectUser" array="#users#">	
+						<option value="#objectUser.id#" <cfif objectUser.id EQ user_in_charge>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
+					</cfloop>
 				</select>
 
 			</div>
 
 		</cfif>
 
-		<label for="limit" class="col-xs-2 col-sm-2 control-label" lang="es">Nº resultados</label>
+		<label for="limit" class="col-xs-2 control-label" lang="es">Nº resultados</label>
 
-		<div class="col-xs-3 col-sm-2"> 
+		<div class="col-xs-3"> 
 			<select name="limit" id="limit" class="form-control">
 				<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
 				<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>

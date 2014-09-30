@@ -85,10 +85,14 @@
 		</script>				
 
 		<cfoutput>
-		<div class="div_text_result"><span lang="es">Haga clic en Añadir usuarios parar añadir un nuevo usuario.</span></div>
+		<div class="div_text_result"><span lang="es">Haga clic en Añadir editores parar añadir un nuevo usuario.</span></div>
 		</cfoutput>
 
 	</cfif>
+
+	<div style="margin-top:10px">
+		<small class="help-block" lang="es">Los usuarios responsables de este área tienen el permiso de editores por defecto.</small>
+	</div>
 
 </div>
 

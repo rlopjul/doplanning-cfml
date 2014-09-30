@@ -21,7 +21,7 @@
 </div>
 </cfoutput>--->
 
-<form action="users.cfm?area=#area_id#" method="post" style="padding:0; margin:0; clear:none;">
+<!---<form action="users.cfm?area=#area_id#" method="post" style="padding:0; margin:0; clear:none;">--->
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="areaUsersResponse">	
 		<cfinvokeargument name="area_id" value="#area_id#">
@@ -47,6 +47,6 @@
 	</cfif>
 	
 	</div>
-</form>
+<!---</form>--->
 <br/>
 <small style="margin-left:5px;" lang="es">En esta lista solo se incluyen los usuarios con acceso al área actual.</small>

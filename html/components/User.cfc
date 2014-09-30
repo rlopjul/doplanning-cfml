@@ -851,6 +851,7 @@
 		<cfargument name="users" type="array" required="true">
 		<cfargument name="page_type" type="numeric" required="true">
 		<cfargument name="filter_enabled" type="boolean" required="false" default="false">
+		<cfargument name="field_id" type="string" required="false">
 		
 		<cfset var method = "outputUsersSelectList">
 		
@@ -915,10 +916,11 @@
 						  $(this).removeClass("over");
 						});--->
 						
-						<cfif page_type IS 1>
+						<cfif page_type IS 1><!--- select only one user --->
 						$("##usersTable tbody tr").click(function(){
 							
 							var selected = false;
+
 							if($(this).hasClass("selected"))
 								selected = true;
 							
@@ -926,13 +928,49 @@
 							
 							if(!selected)
 								$(this).addClass("selected")
+
+
+							var userId = null;
+							var userName = "";
+
+							var parentWindowDefined = false;
+
+							// Selección de usuario
+							userId = $("##usersTable tr.selected input[type=hidden][name=user_id]").attr("value");
+							
+							if(userId != null) {
+						
+								userName = $("##usersTable tr.selected input[type=hidden][name=user_full_name]").attr("value");
+
+								if(window.opener != null){
+									parentWindowDefined = ( $.isFunction(window.opener.setSelectedUser) || (typeof window.opener.setSelectedUser!='undefined') ); // Segunda comprobación para IE
+								} 
+
+								if(parentWindowDefined){
+
+									<cfif isDefined("arguments.field_id")>
+										window.opener.setSelectedUser(userId, userName, '#arguments.field_id#');
+									<cfelse>
+										window.opener.setSelectedUser(userId, userName);
+									</cfif>
+									window.close();
+
+								}else{
+
+									setResponsibleUser(userId, userName);
+								}
+							
+							}else{
+								alert(window.lang.convert("No se ha seleccionado ningún usuario"));
+							}
 							
 						});
 						<cfelse>
 						$("##usersTable tbody tr").click(function(){
 							
-							if($(this).hasClass("selected"))
+							<!---if($(this).hasClass("selected"))--->
 							var selected = false;
+
 							if($(this).hasClass("selected"))
 								selected = true;
 														
@@ -949,85 +987,58 @@
 						
 						$("##submit_select").click(function(){ 
 											
-							var usuarioId = null;
-							var usuarioNombre = "";
+							var userId = null;
+							var userName = "";
 
 							var parentWindowDefined = false;
 							
-							<cfif page_type IS 1>
+							<!---<cfif page_type IS 1>
+							<cfelse>--->
 								
-								// Selección de usuario
-								usuarioId = $("##usersTable tr.selected input[type=hidden][name=user_id]").attr("value");
+							if(window.opener != null){
+								parentWindowDefined = ( $.isFunction(window.opener.addUser) || (typeof window.opener.addUser!='undefined') );
+							}
 								
-								if(usuarioId != null) {
+							// Selección de usuarios para permisos
+							if($("##usersTable tr.selected").length > 0) {
+
+								var allUsersAdded = true;
 							
-									usuarioNombre = $("##usersTable tr.selected input[type=hidden][name=user_full_name]").attr("value");
+								$("##usersTable tr.selected").each( function() {
+								
+									userId = $("input[type=hidden][name=user_id]",this).attr("value");								
+									userName = $("input[type=hidden][name=user_full_name]",this).attr("value");
+									
+									if(parentWindowDefined){	
 
-									if(window.opener != null){
-										parentWindowDefined = ( $.isFunction(window.opener.setSelectedUser) || (typeof window.opener.setSelectedUser!='undefined') ); // Segunda comprobación para IE
-									} 
-
-									if(parentWindowDefined){
-
-										window.opener.setSelectedUser(usuarioId, usuarioNombre);
-										window.close();
+										if(window.opener.addUser(userId, userName))
+											window.close();
+										else
+											alert(userName+window.lang.convert(" ya está en la lista"));
 
 									}else{
 
-										setResponsibleUser(usuarioId, usuarioNombre);
+										if(addUser(userId, userName) == false)
+											allUsersAdded = false;
+
 									}
-								
-								}else{
-									alert(window.lang.convert("No se ha seleccionado ningún usuario"));
-								}
 
-							<cfelse>
-								
-								if(window.opener != null){
-									parentWindowDefined = ( $.isFunction(window.opener.addUser) || (typeof window.opener.addUser!='undefined') );
-								}
-									
+								});
 
-								// Selección de usuarios para permisos
-								if($("##usersTable tr.selected").length > 0) {
+								if(!parentWindowDefined){
 
-									var allUsersAdded = true;
-								
-									$("##usersTable tr.selected").each( function() {
-									
-										usuarioId = $("input[type=hidden][name=user_id]",this).attr("value");								
-										usuarioNombre = $("input[type=hidden][name=user_full_name]",this).attr("value");
+									if(allUsersAdded){
+										sendUsersForm();
+										$("##submit_select").prop('disabled', true); 
+									}
 										
-										if(parentWindowDefined){	
-
-											if(window.opener.addUser(usuarioId, usuarioNombre))
-												window.close();
-											else
-												alert(usuarioNombre+window.lang.convert(" ya está en la lista"));
-
-										}else{
-
-											if(addUser(usuarioId, usuarioNombre) == false)
-												allUsersAdded = false;
-
-										}
-
-									});
-
-									if(!parentWindowDefined){
-
-										if(allUsersAdded){
-											sendUsersForm();
-											$("##submit_select").prop('disabled', true); 
-										}
-											
-									}
-									
-								}else{
-									alert(window.lang.convert("No se ha seleccionado ningún usuario"));
 								}
+								
+							}else{
+								alert(window.lang.convert("No se ha seleccionado ningún usuario"));
+							}
 
-							</cfif>
+							<!---</cfif>--->
 							
 						}); 
 							
@@ -1074,7 +1085,12 @@
 				</cfoutput>
 				
 				<div style="height:2px; clear:both;"><!-- --></div>
-				<button type="button" id="submit_select" class="btn btn-primary" style="margin-left:5px;" lang="es"><cfif page_type IS 1>Asignar usuario seleccionado<cfelse>Añadir usuarios seleccionados</cfif></button>
+
+				<cfif page_type IS 2>
+					<button type="button" id="submit_select" class="btn btn-primary" style="margin-left:5px;" lang="es">Añadir usuarios seleccionados</button>
+					<!---<cfif page_type IS 1>Asignar usuario seleccionado<cfelse>--->
+				</cfif>
+				
 				
 			</cfif>
 								

@@ -57,13 +57,6 @@
 		</cfif>		
 		
 	</cfinvoke>
-		
-	<!---<cfxml variable="xmlItems">
-	<cfoutput>
-	#getAllAreasItemsResponse.itemsXml#
-	</cfoutput>
-	</cfxml>
-	<cfset numItems = ArrayLen(xmlItems.xmlChildren[1].XmlChildren)>--->
 	
 	<cfset areaItemsQuery = getAllAreasItemsResponse.query>
 

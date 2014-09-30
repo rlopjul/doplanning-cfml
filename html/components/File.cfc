@@ -91,6 +91,43 @@
 	</cffunction>
 
 
+	<!--- ---------------------------------- checkAreaFileAccess -------------------------------------- --->
+	
+	<cffunction name="checkAreaFileAccess" output="false" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		
+		<cfset var method = "checkAreaFileAccess">
+				
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="checkAreaFileAccess" returnvariable="checkAreaFileAccessResponse">				
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+			</cfinvoke>
+			
+			<cfif checkAreaFileAccessResponse.result IS false>
+				
+				<cfset error_code = 104>
+			
+				<cfthrow errorcode="#error_code#">	
+
+			</cfif>
+
+			<cfset response = checkAreaFileAccessResponse>								
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+				
+	</cffunction>
+
+
+
 	<!--- ----------------------------------- getEmptyFile -------------------------------------- --->
 
 	<cffunction name="getEmptyFile" output="false" returntype="struct" access="public">

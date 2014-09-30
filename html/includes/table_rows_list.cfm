@@ -7,7 +7,7 @@
 		
 		$("##dataTable").tablesorter({ 
 
-			<cfif CGI.REMOTE_ADDR EQ "88.26.181.160">
+			<cfif CGI.REMOTE_ADDR EQ "80.36.94.30">
 				widgets: ['zebra','filter','select','stickyHeaders','math'],
 			<cfelse>
 				widgets: ['zebra','filter','select','stickyHeaders'],
@@ -41,7 +41,7 @@
 			// default "emptyTo"
    			emptyTo: 'zero',
 			<!---textExtraction: 'basic',--->
-<cfif CGI.REMOTE_ADDR EQ "88.26.181.160">
+<cfif CGI.REMOTE_ADDR EQ "80.36.94.30">
 	usNumberFormat: false,
 </cfif>
 			 
@@ -76,7 +76,7 @@
 				filter_startsWith : false,
 				filter_useParsedRow : false
 
-				<cfif CGI.REMOTE_ADDR EQ "88.26.181.160">
+				<cfif CGI.REMOTE_ADDR EQ "80.36.94.30">
 					, math_data     : 'math', // data-math attribute
 				    math_ignore   : [0]
 				    <!---, math_mask     : '##.000,00'--->
@@ -129,6 +129,8 @@
 		<cfset selectedAreas = getRowSelectedAreasResponse.areas>
 
 	</cfif>
+
+	<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
 	<cfset alreadySelected = false>
 
@@ -225,6 +227,93 @@
 									<cfset field_value = "No">
 								</cfif>
 								<cfset field_value = '<span lang="es">#field_value#</span>'>
+
+							<cfelseif fields.field_type_id IS 12><!--- USER --->
+
+								<!---
+								<cfif isNumeric(field_value)>
+									<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
+										<cfinvokeargument name="user_id" value="#field_value#">
+									</cfinvoke>
+									<cfif userQuery.recordCount GT 0>
+										<cfset field_value = userQuery.family_name&" "&userQuery.name>
+									</cfif>
+								</cfif>--->
+
+								<cfif isNumeric(field_value)>
+						
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
+										<cfinvokeargument name="user_id" value="#field_value#">
+
+										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+									<cfif userQuery.recordCount GT 0>
+										<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+											<cfset field_value = userQuery.user_full_name>
+										<cfelse>
+											<cfset field_value = "<i>USUARIO SIN NOMBRE</i>">
+										</cfif>
+									<cfelse>
+										<cfset field_value = '<i lang="es">USUARIO NO ENCONTRADO</i>'>
+									</cfif>
+									
+								</cfif>
+
+
+							<cfelseif fields.field_type_id IS 13><!--- ITEM --->
+
+
+								<cfif isNumeric(field_value)>
+
+									<cfif fields.item_type_id IS 10><!--- FILE --->
+
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+											<cfinvokeargument name="file_id" value="#field_value#">
+											<cfinvokeargument name="parse_dates" value="false"/>
+											<cfinvokeargument name="published" value="false"/>
+
+											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+										</cfinvoke>
+
+										<cfif fileQuery.recordCount GT 0>
+											<cfif len(fileQuery.name) GT 0>
+												<cfset field_value = fileQuery.name>
+											<cfelse>
+												<cfset field_value = "<i>ARCHIVO SIN TÍTULO</i>">
+											</cfif>
+										<cfelse>
+											<cfset field_value = "<i>ARCHIVO NO DISPONIBLE</i>">
+										</cfif>
+										
+									<cfelse><!--- ITEM --->
+
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+											<cfinvokeargument name="item_id" value="#field_value#">
+											<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
+											<cfinvokeargument name="parse_dates" value="false"/>
+											<cfinvokeargument name="published" value="false"/>
+
+											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+										</cfinvoke>
+
+										<cfif itemQuery.recordCount GT 0>
+											<cfif len(itemQuery.title) GT 0>
+												<cfset field_value = itemQuery.title>
+											<cfelse>
+												<cfset field_value = "<i>ELEMENTO SIN TÍTULO</i>">
+											</cfif>
+										<cfelse>
+											<cfset field_value = "<i>ELEMENTO NO DISPONIBLE</i>">
+										</cfif>
+
+									</cfif>
+
+								</cfif>
+
+
 							<cfelse>
 
 								<cfif fields.field_type_id IS 2 OR fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- TEXTAREAS --->
@@ -282,7 +371,7 @@
 	</cfloop>
 	</tbody>
 
-	<cfif CGI.REMOTE_ADDR EQ "88.26.181.160">
+	<cfif CGI.REMOTE_ADDR EQ "80.36.94.30">
 	<tfoot>
 	   <tr>
 			<th></th>

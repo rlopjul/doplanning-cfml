@@ -1436,7 +1436,7 @@
 
 				<cfif changeImageUserResult.result IS false>
 					
-					<cfreturn changeFileUserResult>
+					<cfreturn changeImageUserResult>
 
 				</cfif>
 

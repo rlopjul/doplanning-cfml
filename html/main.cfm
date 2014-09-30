@@ -447,9 +447,9 @@
 						<a id="areaImageAnchor" onClick="goToAreaLink()"><!---Banner--->
 						<cfoutput>
 							<cfif isNumeric(area_id)>
-								<img src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#" id="areaImage" alt="Imagen del área" />
+								<img src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#" id="areaImage" alt="Imagen del área" style="max-width:100%;" />
 							<cfelse>
-								<img src="#APPLICATION.resourcesPath#/#APPLICATION.identifier#_banner.png" id="areaImage" alt="Imagen del área" />
+								<img src="#APPLICATION.resourcesPath#/#APPLICATION.identifier#_banner.png" id="areaImage" alt="Imagen del área" style="max-width:100%" />
 							</cfif>
 						</cfoutput>
 						</a>

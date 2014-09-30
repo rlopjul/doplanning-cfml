@@ -141,6 +141,18 @@ function enableDatePicker(selector){
 	});
 }
 
+function stopEvent(event){
+
+	if(event.preventDefault) //event.preventDefault() da error en IE
+		event.preventDefault();
+	else
+		event.returnValue = false;
+	
+	stopPropagation(event);
+
+	return false;
+}
+
 function stopPropagation(event) {
 	event = event || window.event; // cross-browser event
     if (event.stopPropagation) {

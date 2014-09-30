@@ -181,11 +181,6 @@
 
 		</cfif>
 
-		
-		<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
-		</cfif>
-		
 		<!---<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">--->
 		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
 			<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
@@ -292,6 +287,10 @@
 
 		</cfif>
 
+		
+		<cfif app_version NEQ "mobile">
+		<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+		</cfif>
 		
 		
 		<cfif APPLICATION.moduleWeb EQ true AND ( area_type EQ "web" OR area_type EQ "intranet" ) AND objectItem.publication_validated IS NOT false>

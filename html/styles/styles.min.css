@@ -9,20 +9,20 @@ input[disabled],input[readonly],fieldset[disabled] input{cursor:not-allowed;back
 .div_inicio_logo{float:left;padding-top:20px;padding-left:10px;padding-bottom:5px}.div_inicio_derecha{float:right;padding-top:5px;padding-right:3px}.div_inicio_usuario{float:right}
 .div_text_user_logged{text-align:right}.div_head_title{clear:both;color:#06c;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:14px;vertical-align:middle;font-weight:bold}
 .div_head_title a{color:#06c}.link_blue{font-size:11px}.icon_title{float:left}.head_title{padding-left:5px;float:left}.div_head_title a:visited{color:#06c}
-.div_head_subtitle{clear:both;font-size:14px;color:#333;background-color:#ccc;height:21px;padding-left:8px;border-bottom:solid 1px #333}.div_head_subtitle_area{clear:both;color:#333;font-size:14px;padding-top:2px;padding-bottom:2px;padding-left:2px;display:table-cell}
-.div_head_subtitle_area a{white-space:nowrap}.div_head_menu{clear:both}.area_items_menu{padding:5px}.area_items_menu li{padding:10px}.a_area_area{font-size:15px}
-.div_area{height:32px;background-color:#fff;margin-bottom:2px;padding-left:14px;clear:both}.div_img_area_area{padding-right:6px;padding-top:6px;float:left}
-.div_text_area{text-overflow:ellipsis;padding-top:6px}.div_separator{height:1px;background-color:#ccc;clear:both}.form_separator{display:block;width:100%;padding:0;margin-bottom:5px;margin-top:5px;border:0;border-bottom:1px solid #e5e5e5}
-.div_items{clear:both;background-color:#fff}.text_item{font-size:11px;color:#000}.text_item a:visited{color:#06c}.text_red{color:#e80000;font-weight:bold}
-.div_tree_message_data{color:#666}.item_img{max-width:none}.item_img_default{max-width:none;padding-bottom:2px;padding-top:2px}.div_file{height:62px;clear:both}
-.img_file{float:left;margin-left:7px;margin-right:6px}.div_file_right{height:62px}.div_text_file_name{float:left;clear:right;padding-top:8px;font-size:11px}
-.div_text_file_email{float:left;clear:left;padding-left:40px;font-size:13px;color:#000}.div_text_file_date{float:left;clear:left;padding-left:40px;font-size:13px;color:#666}
-.div_text_file_size{float:right;clear:right;padding-right:4px;font-size:13px;color:#666}.div_users_header{clear:both}.div_user{height:47px;clear:both}
-.div_checkbox_user{width:40px;height:22px;float:left;clear:left}.div_checkbox_users_header{width:40px;float:left;clear:left}.checkbox_user{margin-top:16px;margin-left:11px;font-size:16px}
-.checkbox_users_header{margin-top:6px;margin-left:11px;font-size:16px}.div_user_right{height:27px;clear:none}.div_text_user_name{float:left;clear:right;padding-top:7px;padding-bottom:4px}
-.text_user_data{color:#666;font-size:13px}.div_text_user_email{float:left;clear:left;color:#666;font-size:13px;padding-left:40px}.div_text_user_mobile{float:right;clear:none;color:#666;font-size:13px}
-.div_message_page_title{clear:both;font-size:14px;color:#666;padding-left:8px;padding-top:6px;padding-bottom:6px;font-weight:bold}.div_message_page_message{background-color:#fff;padding-left:8px;padding-top:4px;padding-bottom:8px}
-.div_message_page_label{float:left;clear:left;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666;line-height:16px;padding-top:2px;padding-bottom:2px;padding-right:5px}
+.div_head_subtitle{clear:both;font-size:14px;color:#333;background-color:#ccc;height:21px;padding-left:8px;border-bottom:solid 1px #333;margin-bottom:5px}
+.div_head_subtitle_area{clear:both;color:#333;font-size:14px;padding-top:2px;padding-bottom:2px;padding-left:2px;display:table-cell}.div_head_subtitle_area a{white-space:nowrap}
+.div_head_menu{clear:both}.area_items_menu{padding:5px}.area_items_menu li{padding:10px}.a_area_area{font-size:15px}.div_area{height:32px;background-color:#fff;margin-bottom:2px;padding-left:14px;clear:both}
+.div_img_area_area{padding-right:6px;padding-top:6px;float:left}.div_text_area{text-overflow:ellipsis;padding-top:6px}.div_separator{height:1px;background-color:#ccc;clear:both}
+.form_separator{display:block;width:100%;padding:0;margin-bottom:5px;margin-top:5px;border:0;border-bottom:1px solid #e5e5e5}.div_items{clear:both;background-color:#fff}
+.text_item{font-size:11px;color:#000}.text_item a:visited{color:#06c}.text_red{color:#e80000;font-weight:bold}.div_tree_message_data{color:#666}.item_img{max-width:none}
+.item_img_default{max-width:none;padding-bottom:2px;padding-top:2px}.div_file{height:62px;clear:both}.img_file{float:left;margin-left:7px;margin-right:6px}
+.div_file_right{height:62px}.div_text_file_name{float:left;clear:right;padding-top:8px;font-size:11px}.div_text_file_email{float:left;clear:left;padding-left:40px;font-size:13px;color:#000}
+.div_text_file_date{float:left;clear:left;padding-left:40px;font-size:13px;color:#666}.div_text_file_size{float:right;clear:right;padding-right:4px;font-size:13px;color:#666}
+.div_users_header{clear:both}.div_user{height:47px;clear:both}.div_checkbox_user{width:40px;height:22px;float:left;clear:left}.div_checkbox_users_header{width:40px;float:left;clear:left}
+.checkbox_user{margin-top:16px;margin-left:11px;font-size:16px}.checkbox_users_header{margin-top:6px;margin-left:11px;font-size:16px}.div_user_right{height:27px;clear:none}
+.div_text_user_name{float:left;clear:right;padding-top:7px;padding-bottom:4px}.text_user_data{color:#666;font-size:13px}.div_text_user_email{float:left;clear:left;color:#666;font-size:13px;padding-left:40px}
+.div_text_user_mobile{float:right;clear:none;color:#666;font-size:13px}.div_message_page_title{clear:both;font-size:14px;color:#666;padding-left:8px;padding-top:6px;padding-bottom:6px;font-weight:bold}
+.div_message_page_message{background-color:#fff;padding-left:8px;padding-top:4px;padding-bottom:8px}.div_message_page_label{float:left;clear:left;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666;line-height:16px;padding-top:2px;padding-bottom:2px;padding-right:5px}
 .text_message_page{font-size:13px;color:#000}.div_message_page_date{clear:right;font-size:13px;color:#000;padding-top:3px;padding-bottom:3px}.div_message_page_description{clear:both;font-size:13px;color:#000;padding:6px;border-style:solid;border-color:#ccc;border-width:1px}
 .div_message_page_description ul{list-style-position:inside}.div_message_page_description ol{list-style-position:inside}.div_message_page_description p{padding-top:8px;padding-bottom:8px}
 .div_user_page_title{clear:both;font-size:14px;color:#666;padding-left:8px;padding-top:6px;padding-bottom:6px;font-weight:bold}.div_user_page_user{background-color:#fff;padding-left:8px;padding-top:4px;padding-bottom:8px}
@@ -44,7 +44,7 @@ input[disabled],input[readonly],fieldset[disabled] input{cursor:not-allowed;back
 .div_search_label{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#666;line-height:16px;padding-right:5px;float:left;width:110px;padding-top:2px;clear:left}
 .table_incidences{width:100%;font-family:Verdana,Arial,Helvetica,sans-serif;font-size:12px;color:#000}.table_incidences tr.incidence{height:22px;background-color:#fff}
 .more_info_img{float:left;margin-right:3px;margin-top:12px;cursor:pointer}.more_info_content{clear:both;background-color:#fff;padding:5px;display:none;margin-bottom:2px}
-.hidden{display:none}.highlight{font-weight:bold}.navbar_brand{display:block;padding-top:10px;float:left;font-weight:bold}.loading_position{position:absolute;top:50%;left:50%;margin:-12px 0 0 -12px;width:200px;margin-left:-100px}
-.tablesorter a{text-decoration:none!important}.tablesorter-filter::-ms-clear{display:none}#listTable td{font-size:11px;color:#666}#usersTable td{font-size:11px;color:#000}
-#dataTable td{font-size:11px}#dataTable tr{height:28px}.field_label{font-size:12px}.item_position{line-height:30px;float:left;clear:none}.change_position{float:right;clear:none;width:14px}
-.change_position a{clear:right}
+.hidden{display:none}.highlight{font-weight:bold}.navbar_brand{display:block;padding-top:10px;float:left;color:#FFF;font-weight:bold}.loading_position{position:absolute;top:50%;left:50%;margin:-12px 0 0 -12px;width:200px;margin-left:-100px}
+.tablesorter a{text-decoration:none!important}.tablesorter-filter::-ms-clear{display:none}#listTable td{font-size:11px;color:#666}#listTable tr{height:35px}
+#usersTable td{font-size:11px;color:#000}#dataTable td{font-size:11px}#dataTable tr{height:28px}.field_label{font-size:12px}.item_position{line-height:30px;float:left;clear:none}
+.change_position{float:right;clear:none;width:14px}.change_position a{clear:right}

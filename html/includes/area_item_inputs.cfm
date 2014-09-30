@@ -306,12 +306,14 @@
 		
 	</div>
 
+	<cfif isDefined("area_type")>
 	<div class="row">
 		<div class="col-sm-12">
 			<!---<small class="help-block">Si está definida, <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# se publicará en la fecha especificada.</small>--->
 			<small class="help-block" lang="es">Si está definida, este contenido se mostrará en la #area_type# en la fecha especificada.</small>
 		</div>
 	</div>
+	</cfif>
 
 	<cfif APPLICATION.publicationValidation IS true>
 		

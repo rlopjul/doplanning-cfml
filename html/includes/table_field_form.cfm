@@ -17,6 +17,8 @@
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.js"></script>
 <link rel="stylesheet" href="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.css">
 
+<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
+
 <script>
 
 	function confirmDeleteField() {
@@ -60,6 +62,30 @@
 			
 	}
 
+	function openUserSelectorWithField(fieldName){
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+
+	}
+
+	function setSelectedUser(userId, userName, fieldName) {
+			
+		document.getElementById(fieldName).value = userId;
+		document.getElementById(fieldName+"_full_name").value = userName;
+	}
+
+	function clearFieldSelectedUser(fieldName) {
+
+		document.getElementById(fieldName).value = "";
+		document.getElementById(fieldName+"_full_name").value = "";
+	}
+
+	function openItemSelectorWithField(itemTypeId,fieldName){
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
+
+	}
+
 	function loadAreaList(areaId, selectedValue) {
 
 		if(!isNaN(areaId)){
@@ -88,53 +114,52 @@
 
 	function fieldTypeChange(typeId){
 
+		$("##textDefaultValue").hide();
+		$("##dateDefaultValue").hide();
+		$("##booleanDefaultValue").hide();
+		$("##listDefaultValue").hide();
+		$("##userDefaultValue").hide();
+		$("##itemDefaultValue").hide();
+
+		$("##listAreaSelector").hide();
+		$("##fieldInputTypeList").hide();
+		$("##fieldInputTypeListMultiple").hide();
+		$("##fieldInputItemType").hide();
+
+		$("##default_value_text").prop('disabled', true);
+		$("##default_value_date").prop('disabled', true);
+		$("##default_value_boolean").prop('disabled', true);
+		$("##default_value_list").prop('disabled', true);
+		$("##default_value_user").prop('disabled', true);
+		$("##default_value_item").prop('disabled', true);
+
+		$("##list_area_id").prop('disabled', true);
+		$("##field_input_type_list").prop('disabled', true);
+		$("##field_input_type_list_multiple").prop('disabled', true);
+		$("##item_type_id").prop('disabled', true);
+
+
 		if(typeId == 6){ //Date
 
-			$("##textDefaultValue").hide();
 			$("##dateDefaultValue").show();
-			$("##booleanDefaultValue").hide();
-			$("##listDefaultValue").hide();
-			$("##listAreaSelector").hide();
-			$("##fieldInputTypeList").hide();
-			$("##fieldInputTypeListMultiple").hide();
 
-			$("##default_value_text").prop('disabled', true);
 			$("##default_value_date").prop('disabled', false);
-			$("##default_value_boolean").prop('disabled', true);
-			$("##default_value_list").prop('disabled', true);
-			$("##list_area_id").prop('disabled', true);
-			$("##field_input_type_list").prop('disabled', true);
-			$("##field_input_type_list_multiple").prop('disabled', true);
+			
 
 		}else if(typeId == 7){ //Boolean
 
-			$("##textDefaultValue").hide();
-			$("##dateDefaultValue").hide();
 			$("##booleanDefaultValue").show();
-			$("##listDefaultValue").hide();
-			$("##listAreaSelector").hide();
 			$("##fieldInputTypeList").show();
-			$("##fieldInputTypeListMultiple").hide();
 
-			$("##default_value_text").prop('disabled', true);
-			$("##default_value_date").prop('disabled', true);
 			$("##default_value_boolean").prop('disabled', false);
-			$("##default_value_list").prop('disabled', true);
-			$("##list_area_id").prop('disabled', true);
+
 			$("##field_input_type_list").prop('disabled', false);
-			$("##field_input_type_list_multiple").prop('disabled', true);
 
 		}else if(typeId == 9 || typeId ==10){ //List
 
-			$("##textDefaultValue").hide();
-			$("##dateDefaultValue").hide();
-			$("##booleanDefaultValue").hide();
 			$("##listDefaultValue").show();
 			$("##listAreaSelector").show();
 
-			$("##default_value_text").prop('disabled', true);
-			$("##default_value_date").prop('disabled', true);
-			$("##default_value_boolean").prop('disabled', true);
 			$("##default_value_list").prop('disabled', false);
 			$("##list_area_id").prop('disabled', false);
 
@@ -152,23 +177,27 @@
 				$("##field_input_type_list_multiple").prop('disabled', false);
 			}
 
+		}else if(typeId == 12){ //User
+
+			$("##userDefaultValue").show();
+
+			$("##default_value_user").prop('disabled', false);
+
+		}else if(typeId == 13){ //Item
+
+			$("##fieldInputItemType").show();
+			$("##itemDefaultValue").show();
+
+			<cfif page_type IS 1>
+				$("##item_type_id").prop('disabled', false);
+			</cfif>
+			$("##default_value_item").prop('disabled', false);
+
 		}else {
 
 			$("##textDefaultValue").show();
-			$("##dateDefaultValue").hide();
-			$("##booleanDefaultValue").hide();
-			$("##listDefaultValue").hide();
-			$("##listAreaSelector").hide();
-			$("##fieldInputTypeList").hide();
-			$("##fieldInputTypeListMultiple").hide();
-
+			
 			$("##default_value_text").prop('disabled', false);
-			$("##default_value_date").prop('disabled', true);
-			$("##default_value_boolean").prop('disabled', true);
-			$("##default_value_list").prop('disabled', true);
-			$("##list_area_id").prop('disabled', true);
-			$("##field_input_type_list").prop('disabled', true);
-			$("##field_input_type_list_multiple").prop('disabled', true);
 
 			if(typeId == 2 || typeId == 3){
 
@@ -180,6 +209,12 @@
 			}
 
 		}
+
+	}
+
+	function fieldItemTypeChange(itemTypeId){
+
+		clearFieldSelectedItem('default_value_item');
 
 	}
 
@@ -197,6 +232,8 @@
 	});
 </script>
 </cfoutput>
+
+<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
 <!---Table fields types--->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Field" method="getFieldTypes" returnvariable="typesResult">
@@ -246,12 +283,37 @@
 				<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
 			</cfif>
 			<label for="field_type_id" class="control-label">Tipo *</label>
-			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled="disabled"</cfif>>
+			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled=</cfif>>
 				<cfloop query="fieldTypes">
-					<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
+					<cfif tableTypeId NEQ 2 OR (fieldTypes.field_type_group NEQ "user" AND fieldTypes.field_type_group NEQ "doplanning_element")><!---Estos tipos de campos no están disponibles en los formularios--->
+						<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
+					</cfif>
 				</cfloop>
 			</select>
 			<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>
+		</div>
+	</div>
+		
+	<div class="row" id="fieldInputItemType">	
+		<div class="col-md-10">
+			<cfif page_type IS 2 AND isNumeric(field.item_type_id)>
+				<input name="item_type_id" type="hidden" value="#field.item_type_id#"/>
+			</cfif>			
+			<label class="control-label" for="item_type_id" id="subTypeLabel"><span lang="es">Tipo de elemento de DoPlanning</span> *</label>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypes" returnvariable="itemTypesStruct">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
+
+			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+			
+			<select name="item_type_id" id="item_type_id" class="form-control" onchange="fieldItemTypeChange($('##item_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
+				<cfloop array="#itemTypesArray#" index="itemTypeid">
+					<option value="#itemTypeId#" lang="es" <cfif field.item_type_id IS itemTypeId>selected="selected"</cfif>>#itemTypesStruct[itemTypeId].label#</option>
+				</cfloop>
+			</select>
+			<small class="help-block">No se puede modificar el tipo de elemento DoPlanning una vez creado el campo.</small>
+
 		</div>
 	</div>
 
@@ -366,6 +428,140 @@
 		</div>
 	</div>
 	
+	<div class="row" id="userDefaultValue">
+		<div class="col-md-12">
+
+			<cfset field_default_value = field.default_value>
+
+			<cfif field.field_type_id IS 12 AND isNumeric(field_default_value)>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
+					<cfinvokeargument name="user_id" value="#field_default_value#">
+
+					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif userQuery.recordCount GT 0>
+					<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+						<cfset field_value_user = userQuery.user_full_name>
+					<cfelse>
+						<cfset field_value_user = "USUARIO SELECCIONADO SIN NOMBRE">
+					</cfif>
+				<cfelse>
+					<cfset field_value_user = "USUARIO NO DISPONIBLE">
+					<cfset field_default_value = "">
+				</cfif>
+			<cfelse>
+				<cfset field_value_user = "">
+			</cfif>
+
+			<div class="row">
+				<div class="col-md-12">
+					<label for="default_value_user" class="control-label">Valor por defecto</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-11 col-sm-6">
+					<input type="hidden" name="default_value" id="default_value_user" value="#field_default_value#" />
+					<input type="text" name="default_value_user_full_name" id="default_value_user_full_name" value="#field_value_user#" class="form-control" readonly onclick="openUserSelectorWithField('default_value_user')" />
+				</div>
+				<div class="col-xs-1 col-sm-6">
+					<button onclick="clearFieldSelectedUser('default_value_user')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button> 
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-6">
+					<button onclick="openUserSelectorWithField('default_value_user')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div class="row" id="itemDefaultValue">
+		<div class="col-md-12">
+
+			<cfset field_default_value = field.default_value>
+
+			<cfif field.field_type_id IS 13 AND isNumeric(field_default_value)>
+
+				<cfif field.item_type_id IS 10><!--- FILE --->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+						<cfinvokeargument name="file_id" value="#field_default_value#">
+						<cfinvokeargument name="parse_dates" value="false"/>
+						<cfinvokeargument name="published" value="false"/>
+
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfif fileQuery.recordCount GT 0>
+						<cfif len(fileQuery.name) GT 0>
+							<cfset field_value_title = fileQuery.name>
+						<cfelse>
+							<cfset field_value_title = "ARCHIVO SELECCIONADO SIN TÍTULO">
+						</cfif>
+					<cfelse>
+						<cfset field_value_title = "ARCHIVO NO DISPONIBLE">
+						<cfset field_default_value = "">
+					</cfif>
+					
+				<cfelse><!--- ITEM --->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+						<cfinvokeargument name="item_id" value="#field_default_value#">
+						<cfinvokeargument name="itemTypeId" value="#field.item_type_id#">
+						<cfinvokeargument name="parse_dates" value="false"/>
+						<cfinvokeargument name="published" value="false"/>
+
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfif itemQuery.recordCount GT 0>
+						<cfif len(itemQuery.title) GT 0>
+							<cfset field_value_title = itemQuery.title>
+						<cfelse>
+							<cfset field_value_title = "ELEMENTO SELECCIONADO SIN TÍTULO">
+						</cfif>
+					<cfelse>
+						<cfset field_value_title = "ELEMENTO NO DISPONIBLE">
+						<cfset field_default_value = "">
+					</cfif>
+
+				</cfif>
+				
+			<cfelse>
+				<cfset field_value_title = "">
+			</cfif>
+
+			<div class="row">
+				<div class="col-md-12">
+					<label for="default_value_item" class="control-label">Valor por defecto</label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-11 col-sm-6">
+					<input type="hidden" name="default_value" id="default_value_item" value="#field_default_value#" />
+					<textarea name="default_value_title" id="default_value_item_title" class="form-control" readonly onclick="openItemSelectorWithField($('##item_type_id').val(),'default_value_item')">#field_value_title#</textarea>
+				</div>
+				<div class="col-xs-1 col-sm-6">
+					<button onclick="clearFieldSelectedItem('default_value_item')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button> 
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-6">
+					<button onclick="openItemSelectorWithField($('##item_type_id').val(),'default_value_item')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
 
 	<!---<label for="position">Posición</label>
 	<cfinput type="text" name="position" id="position" value="#field.position#" required="true" validate="integer" message="Posición debe ser un número entero" style="width:50px;">--->

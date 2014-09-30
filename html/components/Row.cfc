@@ -391,6 +391,8 @@
 		<cfset var method = "outputRowContent">
 		
 		<cftry>
+
+			<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 					
 			<cfif isDefined("arguments.view_id")>
 
@@ -442,6 +444,10 @@
 				<cfset querySetCell(fields, "position", 0)>
 
 			</cfif>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypes" returnvariable="itemTypesStruct">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
 
 			<cfoutput>
 			<cfloop query="fields">
@@ -530,6 +536,100 @@
 						<cfelseif fields.field_type_id IS 8><!---URL--->
 
 							<div class="div_message_page_label">#field_label#<br/> <a href="#field_value#" target="_blank">#field_value#</a></div>
+
+						<cfelseif fields.field_type_id IS 12><!--- USER --->
+
+
+							<div class="div_message_page_label">#field_label# 
+
+								<cfif isNumeric(field_value)>
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
+										<cfinvokeargument name="user_id" value="#field_value#">
+
+										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+									<cfif userQuery.recordCount GT 0>
+										<cfset field_value_user = userQuery.user_full_name>
+
+										<cfif len(userQuery.image_type) GT 0>
+											<a href="user.cfm?user=#userQuery.user_id#"><img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#field_value#&type=#userQuery.image_type#&small=" alt="#field_value_user#" class="item_img" style="margin-right:2px;"/></>									
+										<cfelse>						
+											<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#userQuery.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+										</cfif>
+										<a href="user.cfm?user=#userQuery.user_id#">#field_value_user#</a>
+
+									<cfelse>
+										<span><i>Usuario no encontrado</i></span>
+									</cfif>
+
+								</cfif>
+
+							</div>
+
+
+						<cfelseif fields.field_type_id IS 13><!--- ITEM --->
+
+
+							<div class="div_message_page_label">#field_label# 
+
+								<cfif isNumeric(field_value)>
+
+									<cfif fields.item_type_id IS 10><!--- FILE --->
+
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+											<cfinvokeargument name="file_id" value="#field_value#">
+											<cfinvokeargument name="parse_dates" value="false"/>
+											<cfinvokeargument name="published" value="false"/>
+
+											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+										</cfinvoke>
+
+										<cfif fileQuery.recordCount GT 0>
+											<cfif len(fileQuery.name) GT 0>
+												<cfset field_value_item = fileQuery.name>
+											<cfelse>
+												<cfset field_value_item = "<i>Archivo sin título</i>">
+											</cfif>
+
+											<a href="file.cfm?file=#fileQuery.file_id#">#field_value_item#</a>
+										<cfelse>
+											<i>ARCHIVO NO DISPONIBLE</i>
+										</cfif>
+										
+									<cfelse><!--- ITEM --->
+
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+											<cfinvokeargument name="item_id" value="#field_value#">
+											<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
+											<cfinvokeargument name="parse_dates" value="false"/>
+											<cfinvokeargument name="published" value="false"/>
+
+											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+										</cfinvoke>
+
+										<cfif itemQuery.recordCount GT 0>
+											<cfif len(itemQuery.title) GT 0>
+												<cfset field_value_item = itemQuery.title>
+											<cfelse>
+												<cfset field_value_item = "<i>Elemento sin título</i>">
+											</cfif>
+
+											<a href="#itemTypesStruct[fields.item_type_id].name#.cfm?#itemTypesStruct[fields.item_type_id].name#=#itemQuery.item_id#">#field_value_item#</a>
+										<cfelse>
+											<i>ELEMENTO NO DISPONIBLE</i>
+										</cfif>
+
+									</cfif>
+
+								</cfif>
+
+							</div>
+
 
 						<cfelse>
 

@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2013 --->
+<!--- Copyright Era7 Information Technologies 2007-2014 --->
 
 <cfcomponent output="false">
 	
@@ -19,6 +19,7 @@
         <cfargument name="position" type="numeric" required="false">
         <cfargument name="list_area_id" type="numeric" required="false">
         <cfargument name="field_input_type" type="string" required="false">
+        <cfargument name="item_type_id" type="numeric" required="false">
 
 		<cfset var method = "createField">
 
@@ -79,6 +80,7 @@
 					<cfinvokeargument name="list_area_id" value="#arguments.list_area_id#">
 					<cfinvokeargument name="mysql_type" value="#fieldType.mysql_type#">
 					<cfinvokeargument name="field_input_type" value="#arguments.field_input_type#">
+					<cfinvokeargument name="item_type_id" value="#arguments.item_type_id#">
 				</cfinvoke>
 
 			</cftransaction>
@@ -117,6 +119,7 @@
         <cfargument name="list_area_id" type="numeric" required="false">
         <cfargument name="mysql_type" type="string" required="true">
         <cfargument name="field_input_type" type="string" required="false">
+        <cfargument name="item_type_id" type="numeric" required="false">
 
 		<cfset var method = "createFieldInDatabase">
 
@@ -169,6 +172,9 @@
 					, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
 				<cfelse>
 					, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif arguments.field_type_id IS 13><!---DoPlanning Item--->
+					, item_type_id = <cfqueryparam value="#arguments.item_type_id#" cfsqltype="cf_sql_integer">
 				</cfif>;
 			</cfquery>
 
@@ -184,7 +190,10 @@
 					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
 					ADD COLUMN `field_#field_id#` #arguments.mysql_type# 
 					<cfif arguments.required IS true>
-					NOT NULL	
+						NOT NULL
+						<cfif len(arguments.default_value) GT 0>
+							DEFAULT '#arguments.default_value#'
+						</cfif>
 					</cfif>;
 				</cfquery>
 
@@ -208,6 +217,7 @@
         <cfargument name="position" type="numeric" required="false">
         <cfargument name="list_area_id" type="numeric" required="false">
         <cfargument name="field_input_type" type="string" required="false">
+        <cfargument name="item_type_id" type="numeric" required="false">
 
 		<cfset var method = "updateField">
 
@@ -274,6 +284,9 @@
 						, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
 					<cfelse>
 						, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif arguments.field_type_id IS 13><!---DoPlanning Item--->
+						, item_type_id = <cfqueryparam value="#arguments.item_type_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
@@ -379,6 +392,9 @@
 								<cfinvokeargument name="list_area_id" value="#fields.list_area_id#"/>
 							</cfif>
 							<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
+							<cfif isNumeric(fields.item_type_id)>
+								<cfinvokeargument name="item_type_id" value="#fields.item_type_id#">
+							</cfif>
 						</cfinvoke>
 
 					</cfif>

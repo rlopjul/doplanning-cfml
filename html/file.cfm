@@ -133,12 +133,30 @@
 
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
-<cfif isDefined("URL.area") AND isValid("integer",URL.area)>
-	<cfset area_id = URL.area>
-	<cfset return_page = "files.cfm?area=#area_id#">
+
+<cfif isDefined("URL.file") AND isNumeric(URL.file)>
+
+	<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+		<cfset area_id = URL.area>
+	<cfelse>
+	
+		<!---checkAreaFileAccess--->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="checkAreaFileAccess" returnvariable="checkAreaFileAccessResponse">
+			<cfinvokeargument name="file_id" value="#URL.file#">
+		</cfinvoke>	
+
+		<cfset area_id = checkAreaFileAccessResponse.area_id>
+		
+	</cfif>
+
 <cfelse>
+
 	<cflocation url="area.cfm" addtoken="no">
+
 </cfif>
+
+<cfset return_page = "files.cfm?area=#area_id#">
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/file_head.cfm">

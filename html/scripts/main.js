@@ -171,8 +171,9 @@ function postModalFormTree(formId, requestUrl){
 		});
 }
 
+function openUrl(url,target){ 
 
-function openUrl(url,target){
+	/*En iframesFunctions.js hay un método que se llama igual que este, pero que recibe 3 parámetros. Habría que modificar uno de los dos para que no tuviesen el mismo nombre y así evitar confusiones. main.js e iframesFunctions.js no se usan y no se deben usar en la misma página*/
 	
 	if(target == "itemIframe"){
 		

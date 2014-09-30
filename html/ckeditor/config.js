@@ -37,10 +37,10 @@ CKEDITOR.editorConfig = function( config ) {
 		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],
 		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],
 		['FontSize','TextColor','BGColor'],
-		['NumberedList','BulletedList'],
-		['Link','Unlink','-','Table','HorizontalRule','SpecialChar','Smiley'],
+		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
+		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar','Smiley'],
 		['Image']
-	];
+	];/*,['InsertPre']*/
 
 	config.toolbar_DPAdmin =
 	[		
@@ -49,10 +49,14 @@ CKEDITOR.editorConfig = function( config ) {
 		['Format','FontSize','TextColor','BGColor'],
 		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
 		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-		['Link','Unlink','-','Table','HorizontalRule','SpecialChar','Smiley'],
-		['Image','Flash','Iframe']
+		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar','Smiley'],
+		['Image','Flash','Iframe'],['InsertPre']
 	];
 	
+	//Insert pre tag plugin
+	//config.extraPlugins = 'insertpre';
+	//config.insertpre_class = '';
+
 	//Para que solo se pueda introducir texto plano
 	config.forcePasteAsPlainText = true;
 
@@ -63,6 +67,13 @@ CKEDITOR.editorConfig = function( config ) {
 
 	config.filebrowserBrowseUrl = '../../app/filemanager/index.html';
 
-	//Para permitir etiquetas <script> (necesario para subir animaciones html en nanomyp)
-	config.extraAllowedContent = 'script[src]';
+	config.extraAllowedContent = 'script[src]'+ //Para permitir etiquetas <script> (necesario para subir animaciones html en nanomyp)
+		' a(*)[*]'+ //Para embeber widgets de twitter
+		' pre(*)'; //Para incluir código
+
+	//config.protectedSource.push(/<pre>[\s\S]*?<\/pre>/gi); //Esto oculta este código, y no lo muestra en el editor
+
+	/*config.htmlEncodeOutput = true;
+	config.entities = false;*/
+
 };

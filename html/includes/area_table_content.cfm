@@ -145,10 +145,6 @@
 		</cfif>
 
 	</cfif>
-		
-	<cfif app_version NEQ "mobile">
-	<a href="#APPLICATION.htmlPath#/#tableTypeName#.cfm?#tableTypeName#=#table_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
-	</cfif>
 
 	<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
 		<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#tableTypeName#=#objectItem.table_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
@@ -197,6 +193,10 @@
 			<a href="#itemTypeName#_views.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Vistas" lang="es"><i class="icon-screenshot"></i> <span lang="es">Vistas</span></a>
 		</cfif>
 
+	</cfif>
+
+	<cfif app_version NEQ "mobile">
+	<a href="#APPLICATION.htmlPath#/#tableTypeName#.cfm?#tableTypeName#=#table_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 	</cfif>
 	
 </div><!---END div_elements_menu--->

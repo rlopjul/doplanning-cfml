@@ -1939,7 +1939,7 @@
 		
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
-			<cfinclude template="includes/functionStart.cfm">
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfset file_id = arguments.get_file_id>
 			
@@ -1978,15 +1978,17 @@
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
+					<!--- 
+					ESTO NO DEBE SER NECESARIO PORQUE EL ÁREA DEL ARCHIVO DEBE APARECER EN getFileAreasQuery (debe estar añadido en la tabla area_files) 
 					<cfif selectFileQuery.file_type_id IS NOT 1 AND isNumeric(selectFileQuery.area_id)><!--- Area file --->
 						<cfset queryCount = getFileAreasQuery.recordCount>
 
 						<cfset queryAddRow(getFileAreasQuery)>
 						<cfset querySetCell(getFileAreasQuery, "area_id", selectFileQuery.area_id, queryCount+1)>
-					</cfif>					
+					</cfif>
+					--->				
 					
-					<cfif getFileAreasQuery.RecordCount IS 0 AND isDefined("arguments.itemTypeId")><!---The file is not in area--->
-					
+					<cfif getFileAreasQuery.recordCount IS 0 AND isDefined("arguments.itemTypeId")><!---The file is not in area--->
 					
 						<!---Aquí comprueba si el archivo está asociado a otro tipo de elemento (entradas, noticias, eventos, etc)--->
 						<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -2004,9 +2006,9 @@
 					
 					</cfif>
 					
-					<cfif getFileAreasQuery.RecordCount GT 0>
+					<cfif getFileAreasQuery.recordCount GT 0>
 				
-						<cfif getFileAreasQuery.RecordCount IS 1>
+						<cfif getFileAreasQuery.recordCount IS 1>
 						
 							<cfset area_id = getFileAreasQuery.area_id>	
 					
@@ -2105,6 +2107,80 @@
 		
 	</cffunction>
 	
+
+	<!--- ----------------------------------- checkAreaFileAccess ----------------------------------  --->
+	
+	<cffunction name="checkAreaFileAccess" output="false" access="public" returntype="struct">
+		<cfargument name="file_id" type="numeric" required="true">
+
+		<cfset var response = structNew()>
+
+		<cfset var access_result = false>
+		<cfset var area_id = "">
+
+		<cfinclude template="includes/functionStartOnlySession.cfm">
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="selectFileQuery">
+			<cfinvokeargument name="file_id" value="#arguments.file_id#">
+			<!---<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>--->
+			<cfinvokeargument name="parse_dates" value="false">
+			<cfinvokeargument name="published" value="false">		
+
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+			
+		<cfif selectFileQuery.recordCount GT 0>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileAreas" returnvariable="getFileAreasQuery">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif getFileAreasQuery.recordCount GT 0>
+				
+				<cfif getFileAreasQuery.recordCount IS 1>
+				
+					<cfset area_id = getFileAreasQuery.area_id>	
+			
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+						<cfinvokeargument name="area_id" value="#area_id#">
+					</cfinvoke>
+			
+				<cfelse>
+					
+					<cfset fileAreasList = valueList(getFileAreasQuery.area_id)>
+
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreasAccess" returnvariable="checkAreasAccessResult">
+						<cfinvokeargument name="areasList" value="#fileAreasList#">
+						<cfinvokeargument name="throwError" value="false">
+					</cfinvoke>
+
+					<cfset access_result = checkAreasAccessResult.result>
+					<cfset area_id = checkAreasAccessResult.area_id>					
+					
+				</cfif>
+			
+			<cfelse>
+
+				<cfset access_result = false>
+
+			</cfif>
+
+		<cfelse>
+
+			<cfset access_result = false>
+
+		</cfif>
+
+		<cfset response = {result=access_result, area_id=area_id}>
+
+		<cfreturn response>
+
+	</cffunction>
+
 	
 	<!--- ----------------------------------- getEmptyFile ----------------------------------  --->
 	
@@ -3863,19 +3939,11 @@
 			</cfquery>	
 
 			<!--- setFileTypology --->
-			<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
-				
-				<cfinvoke component="FileManager" method="setFileTypology" argumentcollection="#arguments#" returnvariable="setFileTypologyResponse">
-				</cfinvoke>
-
-				<cfif setFileTypologyResponse.result IS false>
-
-					<cfthrow message="#setFileTypologyResponse.message#">
-
-				</cfif>
+			<cfif isDefined("arguments.typology_id")>
 
 				<cfif fileQuery.typology_id NEQ arguments.typology_id AND isNumeric(fileQuery.typology_row_id)><!---File typology was changed--->
 					
+					<!--- Delete old row --->
 					<cfinvoke component="RowManager" method="deleteRow" returnvariable="deleteRowResponse">
 						<cfinvokeargument name="row_id" value="#fileQuery.typology_row_id#"/>
 						<cfinvokeargument name="table_id" value="#fileQuery.typology_id#"/>
@@ -3884,6 +3952,26 @@
 
 					<cfif deleteRowResponse.result IS false>
 						<cfthrow message="#deleteRowResponse.message#">
+					</cfif>
+
+				</cfif>
+
+				<cfif isNumeric(arguments.typology_id)><!--- Typology selected --->
+				
+					<cfinvoke component="FileManager" method="setFileTypology" argumentcollection="#arguments#" returnvariable="setFileTypologyResponse">
+					</cfinvoke>
+
+					<cfif setFileTypologyResponse.result IS false>
+						<cfthrow message="#setFileTypologyResponse.message#">
+					</cfif>
+
+				<cfelse><!--- Clear file typology --->
+
+					<cfinvoke component="FileManager" method="clearFileTypology" argumentcollection="#arguments#" returnvariable="clearFileTypologyResponse">
+					</cfinvoke>
+
+					<cfif clearFileTypologyResponse.result IS false>
+						<cfthrow message="#clearFileTypologyResponse.message#">
 					</cfif>
 
 				</cfif>
@@ -4289,7 +4377,7 @@
 	<cffunction name="setFileTypology" output="false" returntype="struct" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
-		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="table_id" type="numeric" required="true"><!---Este parámetro viene incluído junto con el resto de campos de la tabla en el método outputRowFormInputs en RowHtml--->
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="action" type="string" required="true">
 
@@ -4316,6 +4404,44 @@
 				</cfquery>
 
 			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
+
+
+	<!--- ----------------------------------- clearFileTypology -------------------------------------- --->
+
+	<cffunction name="clearFileTypology" output="false" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+
+		<cfset var method = "clearFileTypology">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
+			<cfquery datasource="#client_dsn#" name="clearFileTypology">
+				UPDATE #client_abb#_#fileTypeTable#
+				SET typology_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">,
+				typology_row_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfset response = {result=true, file_id=#arguments.file_id#}>
 
 			<cfcatch>
 

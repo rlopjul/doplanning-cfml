@@ -23,6 +23,8 @@
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
+<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
+
 <cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaDefaultTable" returnvariable="getDefaultTableResponse">
@@ -70,28 +72,25 @@
 		</cfif>
 
 		<cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
-			<cfif page_type IS 1>
 
-				<cfif isNumeric(file.typology_id)>
-					loadTypology(#file.typology_id#, '');
-				<cfelseif isNumeric(default_typology_id)>
-					loadTypology(#default_typology_id#, '');
-				</cfif>
-				
+			<cfif isNumeric(file.typology_id)>
+				<cfset selected_typology_id = file.typology_id>
+			<cfelseif page_type IS NOT 2><!---IS NOT modify file page--->
+				<cfset selected_typology_id = default_typology_id>
 			<cfelse>
-				
-				<cfif isNumeric(file.typology_id)>
-
-					<cfif isNumeric(file.typology_row_id)>
-						loadTypology(#file.typology_id#, #file.typology_row_id#);
-					<cfelse>
-						loadTypology(#file.typology_id#, '');
-					</cfif>
-
-				</cfif>
-
+				<cfset selected_typology_id = "">
 			</cfif>
 
+			<cfif isNumeric(selected_typology_id)>
+				<cfif page_type IS 1>
+					loadTypology(#selected_typology_id#, '');
+				<cfelseif isDefined("file.typology_row_id") AND isNumeric(file.typology_row_id)>
+					loadTypology(#selected_typology_id#, #file.typology_row_id#);
+				<cfelse>
+					loadTypology(#selected_typology_id#, '');
+				</cfif>
+			</cfif>
+				
 		</cfif>	
 
 		<cfif page_type IS NOT 3>
@@ -147,25 +146,60 @@
 		 return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
 	}
 
+	function openUserSelectorWithField(fieldName){
+
+		selectUserType = fieldName;
+		return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+
+	}
+
 	function openReviserUserSelector(){
 
-		selectuserType = "reviser";
+		selectUserType = "reviser";
 		openUserSelector();
+
 	}
 
 	function openApproverUserSelector(){
 
-		selectuserType = "approver";
+		selectUserType = "approver";
 		openUserSelector();
+
 	}
 
-	function setSelectedUser(userId, userName) {
+	function setSelectedUser(userId, userName, fieldName) {
 
-		document.getElementById(selectuserType+"_user").value = userId;
-		document.getElementById(selectuserType+"_user_full_name").value = userName;
+		if(selectUserType.length != 0) {
 
-		selectuserType = "";				
+			if(selectUserType == "reviser" || selectUserType == "approver"){
+				document.getElementById(selectUserType+"_user").value = userId;
+				document.getElementById(selectUserType+"_user_full_name").value = userName;
+			}else{
+				document.getElementById(fieldName).value = userId;
+				document.getElementById(fieldName+"_user_full_name").value = userName;
+			}
+
+			selectUserType = "";	
+
+		} else {
+			alert("Error al asignar el usuario");
+		}
+
+					
 	}
+
+	function clearFieldSelectedUser(fieldName) {
+
+		document.getElementById(fieldName).value = "";
+		document.getElementById(fieldName+"_user_full_name").value = "";
+	}
+
+	function openItemSelectorWithField(itemTypeId,fieldName){
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
+
+	}
+
 
 	function openAreaSelector(){
 		
@@ -306,7 +340,7 @@
 		</cfif>		
 			
 		<div id="documentUsersContainer">
-			<cfif page_type IS NOT 3 AND (page_type IS NOT 2 OR file.file_type_id IS 3)>
+			<cfif page_type IS NOT 3 AND ( page_type IS NOT 2 OR ( (isDefined("file.file_type_id") AND file.file_type_id IS 3) OR (isDefined("fileTypeId") AND fileTypeId IS 3) ) )>
 				<div class="row">
 					<div class="col-sm-12">
 
@@ -361,11 +395,6 @@
 	<!--- Typologies --->
 	<cfif APPLICATION.modulefilesWithTables IS true>
 
-		<cfif isNumeric(file.typology_id)>
-			<cfset selected_typology_id = file.typology_id>
-		<cfelse>
-			<cfset selected_typology_id = default_typology_id>
-		</cfif>
 		<div class="row">
 			<div class="col-sm-12">
 				<label for="typology_id" class="control-label"><span lang="es">Tipología</span> *</label>

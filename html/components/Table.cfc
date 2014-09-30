@@ -656,8 +656,9 @@
 		<cfargument name="app_version" type="string" required="true">
 		<cfargument name="default_table_id" type="numeric" required="false" default="0">
 		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
 
-		<cfset var method = "outputItemsList">
+		<cfset var method = "outputTablesList">
 
 		<cftry>
 			
@@ -668,11 +669,13 @@
 			<cfset numItems = itemsQuery.recordCount>
 			
 			<cfif numItems GT 0>
-			
+				
+				<cfoutput>
+
 				<script type="text/javascript">
 					$(document).ready(function() { 
 						
-						$("##dataTable").tablesorter({ 
+						$("##listTable").tablesorter({ 
 							<cfif arguments.full_content IS false>
 							widgets: ['zebra','filter','select'],
 							<cfelse>
@@ -715,14 +718,22 @@
 						    } 
 						    </cfif> 
 						});
+
+
+						<cfif arguments.openItemOnSelect IS true>
+						<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
+						$('##listTable').bind('select.tablesorter.select', function(event, ts){
+						    var itemUrl= $(ts.elem).data("item-url");
+						    openUrlLite(itemUrl,'itemIframe');
+						    <!--- onclick="openUrl('#item_page_url#','itemIframe',event)" --->
+						});
+						</cfif>
 						
 					}); 
 				</script>
 				
 				
-				<cfoutput>
-				
-				<table id="dataTable" class="table-hover">
+				<table id="listTable" class="table-hover">
 					<thead>
 						<tr>
 							<th lang="es">Nombre</th>
@@ -762,7 +773,7 @@
 						<!---Item selection--->
 						<cfset itemSelected = false>
 						
-						<cfif alreadySelected IS false>
+						<cfif arguments.openItemOnSelect IS true AND alreadySelected IS false>
 						
 							<cfif isDefined("URL.#itemTypeName#")>
 							
@@ -795,9 +806,9 @@
 						</cfif>
 						
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
-			
-						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','itemIframe',event)">													
-							<td><a href="#item_page_url#" class="text_item" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
+						
+						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#"  data-item-id="#itemsQuery.id#" onclick="stopEvent(event)">
+							<td><a href="#APPLICATION.path#/html/#item_page_url#" class="text_item" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 							<td>
 								<cfif arguments.full_content IS true><!--- Search page --->

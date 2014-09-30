@@ -14,14 +14,8 @@ function openUrlLite(url,target){
 
 function openUrl(url,target,event){
 	
-	if(event.preventDefault) //event.preventDefault() da error en IE
-		event.preventDefault();
-	else
-		event.returnValue = false;
+	stopEvent(event);
 	
-	if(event.stopPropagation) //event.stopPropagation() da error en IE
-		event.stopPropagation();
-
 	openUrlLite(url,target);
 
 	return false;

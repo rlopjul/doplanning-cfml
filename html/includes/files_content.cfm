@@ -10,11 +10,6 @@
 	<cfinvokeargument name="area_id" value="#area_id#">
 </cfinvoke>
 
-<!---<cfxml variable="xmlFiles">
-	<cfoutput>
-	#xmlResponse.response.result.files#
-	</cfoutput>
-</cfxml>--->
 <cfset files = getAreaFilesResponse.files>
 
 <cfoutput>
@@ -55,6 +50,21 @@
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+
+
+<script>
+	
+	$(document).ready(function() { 
+
+		<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
+		$('#listTable').bind('select.tablesorter.select', function(event, ts){
+		    var itemUrl= $(ts.elem).data("item-url");
+		    openUrlLite(itemUrl,'itemIframe');
+		});
+
+	});
+
+</script>
 
 <cfset full_content = false>
 <cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">

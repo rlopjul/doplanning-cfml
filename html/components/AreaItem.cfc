@@ -1413,6 +1413,47 @@
 		
 	</cffunction>
 	
+
+	<!--- ----------------------------------- getAreaItems ------------------------------------- --->
+	
+	<cffunction name="getAreaItems" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="user_in_charge" type="numeric" required="no">
+		<cfargument name="recipient_user" type="numeric" required="no">
+		<cfargument name="limit" type="numeric" required="no">
+		<cfargument name="done" type="boolean" required="no">
+		
+		<cfset var method = "getAreaItems">
+		
+		<cfset var response = structNew()>
+			
+		<cftry>
+			
+			<!---<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">--->
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAreaItems" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="format_content" value="default">
+				<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
+				<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
+				<cfinvokeargument name="limit" value="#arguments.limit#">
+				<cfinvokeargument name="done" value="#arguments.done#">
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+	
 	
 	
 	<!--- ----------------------------------- getAreaItemsTree ------------------------------------- --->
@@ -1773,6 +1814,7 @@
 		<cfargument name="full_content" type="boolean" required="no" default="false">
 		<cfargument name="return_page" type="string" required="no">
 		<cfargument name="app_version" type="string" required="true">
+		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
 		
 		<cfset var method = "outputItemsList">
 
@@ -1790,7 +1832,10 @@
 			
 			<cfif numItems GT 0>
 			
+			<cfoutput>
+
 				<script type="text/javascript">
+
 					$(document).ready(function() { 
 						
 						<!---$.tablesorter.addParser({
@@ -1891,21 +1936,30 @@
 						   </cfif>
 						});
 						
-						//  Adds "over" class to rows on mouseover
-						$("##listTable tr").mouseover(function(){
+						<!---//  Adds "over" class to rows on mouseover
+						$("##listTable tbody tr").mouseover(function(){
 						  $(this).addClass("over");
 						});
 					
 						//  Removes "over" class from rows on mouseout
-						$("##listTable tr").mouseout(function(){
+						$("##listTable tbody tr").mouseout(function(){
 						  $(this).removeClass("over");
-						});
+						});---->
 						
+						<cfif arguments.openItemOnSelect IS true>
+						<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
+						$('##listTable').bind('select.tablesorter.select', function(event, ts){
+						    var itemUrl= $(ts.elem).data("item-url");
+						    openUrlLite(itemUrl,'itemIframe');
+						    <!---onclick="openUrl('#item_page_url#','itemIframe',event)"--->
+
+						});
+						</cfif>	
+
+
+
 					}); 
 				</script>
-				
-				
-				<cfoutput>
 				
 				<table id="listTable" class="tablesorter">
 					<thead>
@@ -1999,7 +2053,7 @@
 						<!---Item selection--->
 						<cfset itemSelected = false>
 						
-						<cfif alreadySelected IS false>
+						<cfif arguments.openItemOnSelect IS true AND alreadySelected IS false>
 						
 							<cfif isDefined("URL.#itemTypeName#")>
 							
@@ -2039,8 +2093,9 @@
 						</cfif>
 						
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
+
 											
-						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','itemIframe',event)">
+						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#"  data-item-id="#itemsQuery.id#" onclick="stopEvent(event)"><!--- id: usado para cuando se tiene que obtener el id del elemento seleccionado (al seleccionar un listado de elementos)--->
 							<td style="text-align:center">
 								<cfif itemTypeId IS 6><!---Tasks--->
 									
@@ -2080,7 +2135,7 @@
 										<cfset titleClass = titleClass&" text_red"> 
 									</cfif>
 								</cfif>
-								<a href="#item_page_url#" class="#titleClass#">#itemsQuery.title#</a></td>
+								<a href="#APPLICATION.path#/html/#item_page_url#" class="#titleClass#">#itemsQuery.title#</a></td>
 							<td><!---Attached files--->
 								<cfif isNumeric(itemsQuery.attached_file_id)>
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
@@ -2164,6 +2219,7 @@
 		<cfargument name="full_content" type="boolean" required="no" default="false">
 		<cfargument name="return_page" type="string" required="no">
 		<cfargument name="app_version" type="string" required="true">
+		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
 		
 		<cfset var method = "outputConsultationsList">
 
@@ -2210,15 +2266,14 @@
 						    </cfif> 
 						});
 						
-						//  Adds "over" class to rows on mouseover
-						$("##listTable tr").mouseover(function(){
-						  $(this).addClass("over");
+						<cfif arguments.openItemOnSelect IS true>
+						<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
+						$('##listTable').bind('select.tablesorter.select', function(event, ts){
+						    var itemUrl= $(ts.elem).data("item-url");
+						    openUrlLite(itemUrl,'itemIframe');
+						    <!---onclick="openUrl('#item_page_url#','itemIframe',event)"--->
 						});
-					
-						//  Removes "over" class from rows on mouseout
-						$("##listTable tr").mouseout(function(){
-						  $(this).removeClass("over");
-						});
+						</cfif>	
 						
 					}); 
 				</script>
@@ -2261,7 +2316,7 @@
 						<!---Item selection--->
 						<cfset itemSelected = false>
 						
-						<cfif alreadySelected IS false>
+						<cfif arguments.openItemOnSelect IS true AND alreadySelected IS false>
 						
 							<cfif isDefined("URL.#itemTypeName#")>
 							
@@ -2295,7 +2350,8 @@
 						
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 											
-						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','itemIframe',event)">
+						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#"  data-item-id="#itemsQuery.id#" onclick="stopEvent(event)"><!--- id: usado para cuando se tiene que obtener el id del elemento seleccionado (al seleccionar un listado de elementos)--->
+
 							<!---<td style="text-align:center">
 								<i class="icon-exchange" style="font-size:15px; color:##0088CC"></i>
 							</td>--->
@@ -2306,7 +2362,7 @@
 								</cfif>
 								<span>#itemsQuery.user_full_name#</span></td>
 							<td><span>#itemsQuery.creation_date#</span></td>							
-							<td><a href="#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
+							<td><a href="#APPLICATION.path#/html/#item_page_url#" class="text_item">#itemsQuery.title#</a></td>
 							<td><!---Attached files--->
 								<cfif len(itemsQuery.attached_file_name) GT 0 AND itemsQuery.attached_file_name NEQ "-">
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip"></i><span class="hidden">1</span></a>
@@ -2430,7 +2486,7 @@
 						    }
 						});
 						
-						//  Adds "over" class to rows on mouseover
+						<!---//  Adds "over" class to rows on mouseover
 						$("##listTable tr").mouseover(function(){
 						  $(this).addClass("over");
 						});
@@ -2438,7 +2494,7 @@
 						//  Removes "over" class from rows on mouseout
 						$("##listTable tr").mouseout(function(){
 						  $(this).removeClass("over");
-						});
+						});--->
 						
 					}); 
 				</script>
@@ -2525,9 +2581,21 @@
 									<cfif itemsQuery.file_type_id IS 1><!--- User file --->
 										<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" class="item_img" alt="#itemTypeNameEs#" title="#itemTypeNameEs#"/>
 									<cfelseif itemsQuery.file_type_id IS 2><!--- Area file --->
-										<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_area.png" class="item_img" alt="#itemTypeNameEs# del área" title="#itemTypeNameEs# del área"/>
+
+										<cfif itemsQuery.locked IS true>
+											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_area_locked.png" class="item_img" alt="#itemTypeNameEs# del área bloqueado" title="#itemTypeNameEs# del área bloqueado"/>
+										<cfelse>
+											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_area.png" class="item_img" alt="#itemTypeNameEs# del área" title="#itemTypeNameEs# del área"/>
+										</cfif>
+
 									<cfelseif itemsQuery.file_type_id IS 3>
-										<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_edited.png" class="item_img" alt="#itemTypeNameEs# del área en edición" title="#itemTypeNameEs# del área en edición"/>
+
+										<cfif itemsQuery.locked IS true>
+											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_edited_locked.png" class="item_img" alt="#itemTypeNameEs# del área bloqueado" title="#itemTypeNameEs# del área bloqueado"/>
+										<cfelse>
+											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_edited.png" class="item_img" alt="#itemTypeNameEs# del área en edición" title="#itemTypeNameEs# del área en edición"/>
+										</cfif>
+
 									</cfif>
 
 								<cfelseif itemTypeId IS NOT 3><!---No es link--->

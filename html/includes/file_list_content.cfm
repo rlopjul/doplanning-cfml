@@ -1,3 +1,13 @@
+<!--- page_types:
+		1 Mis documentos
+		2 Asociar archivo a un área
+		3 Archivos de un área
+
+		En las últimas versiones sólos se utiliza page_type 3 porque Mis documentos y Asociar archivo a un área ya no están disponibles
+ --->
+<cfset page_type = 3>
+
+
 <script type="text/javascript">
 	$(document).ready(function() { 
 		
@@ -52,7 +62,7 @@
 			</cfif>
 		});
 		
-		//  Adds "over" class to rows on mouseover
+		<!---//  Adds "over" class to rows on mouseover
 		$("#listTable tr").mouseover(function(){
 		  $(this).addClass("over");
 		});
@@ -60,8 +70,8 @@
 		//  Removes "over" class from rows on mouseout
 		$("#listTable tr").mouseout(function(){
 		  $(this).removeClass("over");
-		});
-		
+		});--->
+
     }); 
 	
 </script>
@@ -71,7 +81,7 @@
 <cfset numFiles = files.recordCount>
 <div class="div_items">
 <!---<div class="div_separator"><!-- --></div>--->
-<cfset page_type = 3>
+
 <cfif numFiles GT 0>
 
 	<cfoutput>
@@ -102,21 +112,12 @@
 	
 	<cfset alreadySelected = false>
 	
-	<!---
-	<cfloop index="xmlIndex" from="1" to="#numFiles#" step="1">
-			
-		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
-				<cfinvokeargument name="xml" value="#xmlFiles.files.file[xmlIndex]#">
-				<cfinvokeargument name="return_type" value="object">
-		</cfinvoke>	
-		<!---Importante: en este xml no viene user_full_name--->--->
-
 	<cfloop query="files">		
 
 		<!---File selection--->
 		<cfset itemSelected = false>
 		
-		<cfif alreadySelected IS false>
+		<cfif alreadySelected IS false AND NOT isDefined("URL.field")><!---No es selección de archivo--->
 		
 			<cfif isDefined("URL.file")>
 			
@@ -143,18 +144,19 @@
 			</cfif>
 			
 		</cfif>
-				
 		
-		<tr <cfif itemSelected IS true>class="selected"</cfif>
-			<!---<cfif page_type IS 1>
+		<!---<cfif page_type IS 1>
 				onclick="goToUrl('my_files_file.cfm?folder=#folder_id#&file=#files.id#')"--->
-			<cfif page_type IS 2>
-				onclick="submitForm('file_#files.id#')"
-			<cfelseif page_type IS 3>
-				<!---onclick="goToUrl('file.cfm?area=#area_id#&file=#files.id#')"--->
-				onclick="openUrl('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe',event)"
-			</cfif>
-			>
+		<!---
+		<cfif page_type IS 2>
+			<!---onclick="submitForm('file_#files.id#')"--->
+		<cfelseif page_type IS 3>
+			<!---onclick="goToUrl('file.cfm?area=#area_id#&file=#files.id#')"--->
+			onclick="openUrl('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe',event)"
+		</cfif>---->
+		<cfset item_page_url = "file.cfm?area=#files.area_id#&file=#files.id#">
+
+		<tr data-item-url="#item_page_url#" data-item-id="#files.id#" onclick="stopEvent(event)" <cfif itemSelected IS true>class="selected"</cfif>>
 			<td style="text-align:center"><cfif isDefined("page_type") AND page_type IS 2>
 					<form name="file_#files.id#" action="#APPLICATION.htmlComponentsPath#/File.cfc?method=associateFile" method="post" style="float:left;">
 						<input type="hidden" name="area_id" value="#files.area_id#" />

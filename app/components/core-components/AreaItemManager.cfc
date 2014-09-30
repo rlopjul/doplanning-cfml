@@ -11,11 +11,12 @@
 
 	<!--- getAreaItemTypes --->
 
-	<cffunction name="getAreaItemTypes" returntype="array" access="public">
+	<cffunction name="getAreaItemTypes" returntype="struct" access="public">
+		<cfargument name="client_abb" type="string" required="true">
 
 		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeArray.cfm">
 
-		<cfreturn itemTypeArray>
+		<cfreturn itemTypesStruct>
 
 	</cffunction>
 

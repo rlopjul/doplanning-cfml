@@ -64,7 +64,9 @@
 				
 				<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
 
-				<cfif fields.input_type IS "textarea"><!--- TEXTAREA --->
+
+				<cfif fields.field_type_group IS "long_text" OR fields.field_type_group IS "very_long_text"><!--- TEXTAREA --->
+
 
 					<cfif arguments.search_inputs IS false>
 						
@@ -93,7 +95,9 @@
 
 					</cfif>
 
-				<cfelseif fields.input_type IS "number"><!--- INTEGER --->
+
+				<cfelseif fields.field_type_group IS "integer"><!--- INTEGER --->
+
 
 					<div class="row">
 						<div class="col-xs-6 col-sm-3">
@@ -111,7 +115,9 @@
 						</cfif>	
 					</script>
 
-				<cfelseif fields.input_type IS "url"><!--- URL --->
+
+				<cfelseif fields.field_type_group IS "url"><!--- URL --->
+
 
 					<cfif arguments.client_abb EQ "hcs"><!--- Deshabilitado en el HCS la obligación de introducir URLs completas para que se puedan introducir URLs relativas --->
 						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
@@ -126,8 +132,10 @@
 						</script>
 					</cfif>	
 
-				<cfelseif fields.input_type IS "date"><!--- DATE --->
+
+				<cfelseif fields.field_type_group IS "date"><!--- DATE --->
 					
+
 					<cfif action NEQ "create" AND NOT isDefined("FORM.tableTypeId") AND isDate(field_value)>
 						<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
 					</cfif>
@@ -154,99 +162,97 @@
 						enableDatePicker('###field_name#');	
 					</script>
 
-				<cfelseif fields.input_type IS "text">			
 
-					<cfif fields.cf_sql_type IS "cf_sql_date">
+				<cfelseif fields.field_type_group IS "short_text"><!--- TEXT --->
 
-					<cfelseif fields.cf_sql_type IS "cf_sql_decimal"><!--- DECIMAL --->
 
-						<div class="row">
-							<div class="col-xs-6 col-sm-3">
-						
-							<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="col-md-2"/>
+					<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" />
 
-							</div>
-						</div>
-
+					<cfif fields.required IS true AND arguments.search_inputs IS false>
 						<script type="text/javascript">
-							<cfif fields.required IS true AND arguments.search_inputs IS false>
-								addRailoRequiredFloat("#field_name#", "El campo '#field_label#' debe ser numérico y es obligatorio");
-							<cfelse>
-								addRailoValidateFloat("#field_name#", "El campo '#field_label#' debe ser numérico");
-							</cfif>	
+							addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
 						</script>
+					</cfif>	
+				
 
-					<cfelse><!--- TEXT --->
+				<cfelseif fields.field_type_group IS "decimal"><!--- DECIMAL --->
 
-						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" />
-
-						<cfif fields.required IS true AND arguments.search_inputs IS false>
-							<script type="text/javascript">
-								addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
-							</script>
-						</cfif>	
-
-					</cfif>
-
-				<cfelseif fields.input_type IS "select"><!--- SELECT --->
-
-					<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
-
-
-						<div class="row">
-							<div class="col-xs-5 col-sm-2">
-
-								<cfif fields.field_input_type EQ "radio"><!---Radio--->
-
-									<div>
-									  <label>
-									  	<input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> />&nbsp;Sí
-									  </label>&nbsp;&nbsp;
-									  <label>
-									    <input type="#field_input_type#" name="#field_name#" value="0" <cfif field_value IS false>checked</cfif> />&nbsp;No
-									    
-									  </label>
-									</div>
-
-								<cfelseif fields.field_input_type EQ "checkbox"><!---Checkbox--->
-
-									<div class="checkbox">
-									  <label>
-									    <input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> /> #field_label#
-									    
-									  </label>
-									</div>
-
-								<cfelse>
-
-									<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
-										<option value=""></option>
-										<option value="1" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
-										<option value="0" <cfif field_value IS false>selected="selected"</cfif>>No</option>
-									</select>
-									
-								</cfif>
-
-							</div>
-						</div>
-
-						<cfif fields.required IS true AND arguments.search_inputs IS false>
-							<cfif fields.field_input_type EQ "radio">
-								<script>
-									addRailoRequiredRadio("#field_name#", "Campo '#field_label#' obligatorio");
-								</script>
-							<cfelseif fields.field_input_type EQ "checkbox">
-								<script>
-									addRailoRequiredCheckBox("#field_name#", "Campo '#field_label#' obligatorio");
-								</script>
-							<cfelse>
-								<script>
-									addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
-								</script>
-							</cfif>
-						</cfif>	
+					<div class="row">
+						<div class="col-xs-6 col-sm-3">
 					
-					<cfelse><!--- LISTS --->
+						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="col-md-2"/>
+
+						</div>
+					</div>
+
+					<script>
+						<cfif fields.required IS true AND arguments.search_inputs IS false>
+							addRailoRequiredFloat("#field_name#", "El campo '#field_label#' debe ser numérico y es obligatorio");
+						<cfelse>
+							addRailoValidateFloat("#field_name#", "El campo '#field_label#' debe ser numérico");
+						</cfif>	
+					</script>
+
+
+				<cfelseif fields.field_type_group IS "boolean"><!--- BOOLEAN --->
+
+
+					<div class="row">
+						<div class="col-xs-5 col-sm-2">
+
+							<cfif fields.field_input_type EQ "radio"><!---Radio--->
+
+								<div>
+								  <label>
+								  	<input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> />&nbsp;Sí
+								  </label>&nbsp;&nbsp;
+								  <label>
+								    <input type="#field_input_type#" name="#field_name#" value="0" <cfif field_value IS false>checked</cfif> />&nbsp;No
+								    
+								  </label>
+								</div>
+
+							<cfelseif fields.field_input_type EQ "checkbox"><!---Checkbox--->
+
+								<div class="checkbox">
+								  <label>
+								    <input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> /> #field_label#
+								    
+								  </label>
+								</div>
+
+							<cfelse>
+
+								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
+									<option value=""></option>
+									<option value="1" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
+									<option value="0" <cfif field_value IS false>selected="selected"</cfif>>No</option>
+								</select>
+								
+							</cfif>
+
+						</div>
+					</div>
+
+					<cfif fields.required IS true AND arguments.search_inputs IS false>
+						<cfif fields.field_input_type EQ "radio">
+							<script>
+								addRailoRequiredRadio("#field_name#", "Campo '#field_label#' obligatorio");
+							</script>
+						<cfelseif fields.field_input_type EQ "checkbox">
+							<script>
+								addRailoRequiredCheckBox("#field_name#", "Campo '#field_label#' obligatorio");
+							</script>
+						<cfelse>
+							<script>
+								addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
+							</script>
+						</cfif>
+					</cfif>	
+
+
+				<cfelseif fields.field_type_group IS "list"><!--- SELECT --->
+
 
 						<cfif NOT isDefined("FORM.tableTypeId")>
 
@@ -355,7 +361,132 @@
 						</cfif>
 						
 
+				<cfelseif fields.field_type_group IS "user"><!--- doplanning_user USER --->
+
+					<cfset field_value_user = "">
+
+					<cfif isNumeric(field_value)>
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
+							<cfinvokeargument name="user_id" value="#field_value#">
+
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+						</cfinvoke>
+						<cfif userQuery.recordCount GT 0>
+							<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+								<cfset field_value_user = userQuery.user_full_name>
+							<cfelse>
+								<cfset field_value_user = "USUARIO SELECCIONADO SIN NOMBRE">
+							</cfif>
+						<cfelse>
+							<cfset field_value_user = "USUARIO NO DISPONIBLE">
+							<cfset field_value = "">
+						</cfif>
 					</cfif>
+
+					<div class="row">
+						<div class="col-xs-11 col-sm-6">
+							<input type="hidden" name="#field_name#" id="#field_name#" value="#field_value#" />
+							<input type="text" name="#field_name#_user_full_name" id="#field_name#_user_full_name" value="#field_value_user#" #field_required_att# class="#text_input_class#" readonly onclick="openUserSelectorWithField('#field_name#')" />
+							<cfif fields.required IS true AND arguments.search_inputs IS false>
+								<script type="text/javascript">
+									addRailoRequiredInteger("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							</cfif>	
+						</div>
+						<cfif fields.required IS false>
+							<div class="col-xs-1 col-sm-6">
+								<button onclick="clearFieldSelectedUser('#field_name#')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button> 
+							</div>
+						</cfif>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-6">
+							<button onclick="openUserSelectorWithField('#field_name#')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>							
+						</div>
+					</div>
+					
+					
+
+				<cfelseif fields.field_type_group IS "doplanning_item"><!--- AREA ITEMS --->
+
+
+					<cfif isNumeric(field_value)>
+						
+						<cfif fields.item_type_id IS 10><!--- FILE --->
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+								<cfinvokeargument name="file_id" value="#field_value#">
+								<cfinvokeargument name="parse_dates" value="false"/>
+								<cfinvokeargument name="published" value="false"/>
+
+								<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<cfif fileQuery.recordCount GT 0>
+								<cfif len(fileQuery.name) GT 0>
+									<cfset field_value_title = fileQuery.name>
+								<cfelse>
+									<cfset field_value_title = "ARCHIVO SELECCIONADO SIN TÍTULO">
+								</cfif>
+							<cfelse>
+								<cfset field_value_title = "ARCHIVO NO DISPONIBLE">
+								<cfset field_value = "">
+							</cfif>
+							
+						<cfelse><!--- ITEM --->
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+								<cfinvokeargument name="item_id" value="#field_value#">
+								<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
+								<cfinvokeargument name="parse_dates" value="false"/>
+								<cfinvokeargument name="published" value="false"/>
+
+								<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<cfif itemQuery.recordCount GT 0>
+								<cfif len(itemQuery.title) GT 0>
+									<cfset field_value_title = itemQuery.title>
+								<cfelse>
+									<cfset field_value_title = "ELEMENTO SELECCIONADO SIN TÍTULO">
+								</cfif>
+							<cfelse>
+								<cfset field_value_title = "ELEMENTO NO DISPONIBLE">
+								<cfset field_value = "">
+							</cfif>
+
+						</cfif>
+
+					<cfelse>
+
+						<cfset field_value_title = "">
+
+					</cfif>
+
+					<div class="row">
+						<div class="col-xs-11 col-sm-6">
+							<input type="hidden" name="#field_name#" id="#field_name#" value="#field_value#" />
+							<input type="text" name="#field_name#_title" id="#field_name#_title" value="#field_value_title#" #field_required_att# class="#text_input_class#" readonly onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" />
+							<cfif fields.required IS true AND arguments.search_inputs IS false>
+								<script type="text/javascript">
+									addRailoRequiredInteger("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							</cfif>	
+						</div>
+						<cfif fields.required IS false>
+							<div class="col-xs-1 col-sm-6">
+								<button onclick="clearFieldSelectedItem('#field_name#')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button> 
+							</div>
+						</cfif>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-6">
+							<button onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>							
+						</div>
+					</div>
 
 				</cfif>
 

@@ -1,6 +1,11 @@
 <cfoutput>
 <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
-		
+
+<cfif listFind(".zip,.rar,.exe,.avi",objectFile.file_type) IS 0>
+	
+	<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&open=1" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
+	
+</cfif>
 <cfif listFind(".gif,.jpg,.png",objectFile.file_type) GT 0>
 	<cfif page_type IS 1>
 	

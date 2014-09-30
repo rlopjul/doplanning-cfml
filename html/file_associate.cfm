@@ -144,9 +144,12 @@
 
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/my_files_id.cfm">
+<!---
+ESTA PÁGINA YA NO SE DEBE USAR, LOS ARCHIVOS SE ASOCIAN DESDE LAS ÁREAS, Mis Documentos ya no está disponible
 <cfset page_type = 2>
 <cfset return_path = "#APPLICATION.htmlPath#/">
 <cfinclude template="#APPLICATION.htmlPath#/includes/my_files_content.cfm">
+---->
 
 
 <!-- InstanceEndEditable -->

@@ -110,7 +110,7 @@
 		<cfset var result = "">
 		<cfset var clamavOptions = "--infected --no-summary">
 		<cfset var filePath = arguments.path&arguments.filename>
-		<cfset var fileCheck = "#clamavOptions# #filePath#">
+		<cfset var fileCheck = '#clamavOptions# "#filePath#"'><!---Importante: que la ruta del archivo vaya entre comillas por si el nombre del archivo (que puede no ser el nombre definitivo) incluye espacios--->
 
 		<cfset var command = "clamdscan"><!--- clamscan / clamdscan --->
 		<!--- 

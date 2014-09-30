@@ -279,7 +279,7 @@
 
 		<cfset var fileWebUrl = "">
 
-		<cfset fileWebUrl = "download_file.cfm?file=#arguments.file_id#&area=#arguments.area_id#">
+		<cfset fileWebUrl = "download_file.cfm?file=#arguments.file_id#&area=#arguments.area_id#&open">
 		
 		<cfreturn fileWebUrl>
 	</cffunction>
