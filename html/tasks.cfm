@@ -134,12 +134,18 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 <cfset itemTypeId = 6>
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_content.cfm">
 
-<cfset return_page = "area.cfm?area=#area_id#">
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
-	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>
+<cfif isDefined("URL.mode") AND URL.mode EQ "gantt">
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_tasks_gantt_content.cfm">
+<cfelse>
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_content.cfm">
+	
+	<cfset return_page = "area.cfm?area=#area_id#">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
+		<cfinvokeargument name="return_page" value="#return_page#">
+	</cfinvoke>
+</cfif>
+
 <!-- InstanceEndEditable -->
 </div>
 </body>

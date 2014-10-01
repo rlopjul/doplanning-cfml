@@ -1423,6 +1423,7 @@
 		<cfargument name="recipient_user" type="numeric" required="no">
 		<cfargument name="limit" type="numeric" required="no">
 		<cfargument name="done" type="boolean" required="no">
+		<cfargument name="parse_dates" type="boolean" required="false">
 		
 		<cfset var method = "getAreaItems">
 		
@@ -1440,6 +1441,7 @@
 				<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
 				<cfinvokeargument name="limit" value="#arguments.limit#">
 				<cfinvokeargument name="done" value="#arguments.done#">
+				<cfinvokeargument name="parse_dates" value="#arguments.parse_dates#">
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">

@@ -3272,6 +3272,7 @@
 		<cfargument name="format_content" type="string" required="no" default="default"><!---default/all--->
 		<cfargument name="limit" type="numeric" required="no">
 		<cfargument name="done" type="boolean" required="no">
+		<cfargument name="parse_dates" type="boolean" required="false" default="true">
 		
 		<cfset var method = "getAreaItems">
 		<cfset var areaItemsQuery = "">
@@ -3297,7 +3298,7 @@
 				<cfinvokeargument name="listFormat" value="true">
 				<cfinvokeargument name="format_content" value="#arguments.format_content#">
 				<cfinvokeargument name="with_user" value="true">
-				<cfinvokeargument name="parse_dates" value="true"/>
+				<cfinvokeargument name="parse_dates" value="#arguments.parse_dates#"/>
 				<cfif isDefined("arguments.limit")>
 					<cfinvokeargument name="limit" value="#arguments.limit#">
 				</cfif>
@@ -3372,6 +3373,7 @@
 				<cfif isDefined("arguments.done")>
 				<cfinvokeargument name="done" value="#arguments.done#">
 				</cfif>
+				<cfinvokeargument name="parse_dates" value="true">
 				<cfinvokeargument name="published" value="false">				
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">

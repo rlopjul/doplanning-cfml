@@ -46,7 +46,8 @@
 	        data: {
 	            method: 'getAreaItems',
 	            area_id: areaId,
-	            itemTypeId: itemTypeId
+	            itemTypeId: itemTypeId,
+	            parse_dates: false
 	        },
 	        method:'POST', <!--- En principio, las peticiones de este tipo que no envían datos, se harán por GET, a no ser que se automatice el envío de parametros en el atributo data --->
 	        dataType:"json",

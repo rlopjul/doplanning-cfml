@@ -216,8 +216,11 @@
 						<cfif arguments.parse_dates IS true>
 							, DATE_FORMAT(items.start_date, '#dateFormat#') AS start_date, DATE_FORMAT(items.end_date, '#dateFormat#') AS end_date
 						<cfelse>
+							<!---
+							Si parse_dates está a false, NO debe realizar ninguna trasnformación sobre la fecha, deve devolverse tal y como está en base de datos
 							, CONVERT_TZ(items.start_date,'SYSTEM','#timeZoneTo#') AS start_date
-							, CONVERT_TZ(items.end_date,'SYSTEM','#timeZoneTo#') AS end_date
+							, CONVERT_TZ(items.end_date,'SYSTEM','#timeZoneTo#') AS end_date--->
+							, items.start_date, end_date
 						</cfif>
 					</cfif>
 					<cfif itemTypeId IS 5><!---Events--->

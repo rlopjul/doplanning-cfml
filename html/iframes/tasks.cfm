@@ -75,7 +75,11 @@
 <!-- InstanceBeginEditable name="content" -->
 
 <cfset itemTypeId = 6>
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_content.cfm">
+<cfif isDefined("URL.mode") AND URL.mode EQ "gantt">
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_tasks_gantt_content.cfm">
+<cfelse>
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_content.cfm">
+</cfif>
 
 <!-- InstanceEndEditable -->
 </body>

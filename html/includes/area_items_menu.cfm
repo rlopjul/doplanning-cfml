@@ -27,6 +27,15 @@
 
 	<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Messages OR consultations--->
 		<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-default btn-sm"><i class="icon-sitemap" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo árbol</span></a>
+
+		<span class="divider">&nbsp;</span>
+
+	<cfelseif itemTypeId IS 6>
+
+		<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=gantt" class="btn btn-default btn-sm"><i class="icon-tasks" style="font-size:14px; line-height:23px;"></i> <span lang="es">Diagrama de Gantt</span></a>
+
+		<span class="divider">&nbsp;</span>
+
 	</cfif>
 
 	<cfif app_version NEQ "mobile">
