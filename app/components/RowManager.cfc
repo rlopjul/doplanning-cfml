@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2013 --->
+<!--- Copyright Era7 Information Technologies 2007-2014 --->
 
 <cfcomponent output="false">
 	
@@ -105,6 +105,7 @@
 		<cfargument name="start_row" type="numeric" required="false" default="2">
 		<cfargument name="delete_rows" type="boolean" required="false" default="false">
 		<cfargument name="cancel_on_error" type="boolean" required="false" default="true">
+		<cfargument name="decimals_with_mask" type="boolean" required="false" default="false">
 
 		<cfset var method = "importRows">
 
@@ -166,12 +167,22 @@
 			<cfset destination = "#APPLICATION.filesPath#/#client_abb#/">
 			
 			<!--- Upload and read file --->
-			<cffile action="upload" filefield="file" destination="#destination#" nameconflict="makeunique" result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE --->
+			<cffile action="upload" filefield="file" destination="#destination#" nameconflict="makeunique" result="fileResult" charset="Windows-1252" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE ---><!---charset usado anteriormente: iso-8859-1--->
 
 			<cfset destinationFile = destination&fileResult.serverFile>
 
-			<cffile action="read" file="#destinationFile#" variable="fileContent" charset="iso-8859-1">
+			<cffile action="read" file="#destinationFile#" variable="fileContent" charset="Windows-1252">
 			<cffile action="delete" file="#destinationFile#">
+
+			<cfset fileContentStart = left(fileContent, 6)>
+
+			<cfif fileContentStart EQ "sep=;#chr(10)#">
+
+				<!---Borra el código de compatibilidad añadido en la exportación para versiones de Office desde 2010--->
+
+				<cfset fileContent = right(fileContent, len(fileContent)-6)>
+
+			</cfif>
 
 			<!--- CSV to array --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="CSVToArray" returnvariable="fileArray">
@@ -192,6 +203,13 @@
 				<cfreturn response>
 
 			</cfif>
+
+
+			<!--- getFieldMaskTypes --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
 
 			<cfif arguments.cancel_on_error IS true>
 				<cfquery datasource="#client_dsn#" name="startTransaction">
@@ -248,7 +266,46 @@
 
 						<cfset fieldValue = fileArray[curRow][curColumn]>
 
-						<cfif fields.field_type_id IS 6><!--- DATE --->
+						<cfif fields.field_type_id IS 5><!---DECIMAL--->
+
+							<cfif isNumeric(fields.mask_type_id) AND arguments.decimals_with_mask IS true><!---Hay máscara seleccionada en el campo y los datos importados del archivo están especificados como en la máscara--->
+							
+								<cfset cf_prefix = maskTypesStruct[fields.mask_type_id].cf_prefix>
+								<cfset cf_sufix = maskTypesStruct[fields.mask_type_id].cf_sufix>
+								<cfset cf_prefix_len = len(cf_prefix)>
+								<cfset cf_sufix_len = len(cf_sufix)>
+								<cfset decimal_delimiter = maskTypesStruct[fields.mask_type_id].decimal_delimiter>
+
+								<cfif cf_prefix_len GT 0 AND cf_prefix EQ left(fieldValue, cf_prefix_len)>
+									<!---Se borra el prefijo--->
+									<cfset fieldValue = right(fieldValue, len(fieldValue)-cf_prefix_len)>	
+
+								</cfif>
+
+								<cfif decimal_delimiter EQ "."><!---Decimales separados por punto--->
+									
+									<!---Se borran las comas que puede haber en los millares--->
+									<cfset fieldValue = replace(fieldValue, ",", "", "ALL")>
+
+								<cfelseif decimal_delimiter EQ ","><!---Decimales separados por coma--->
+
+									<!---Se borran los puntos que puede haber en los millares---->
+									<cfset fieldValue = replace(fieldValue, ".", "", "ALL")>
+
+									<!---Se sustituyen las comas por puntos--->
+									<cfset fieldValue = replace(fieldValue, ",", ".", "ALL")>
+									
+								</cfif>
+
+								<cfif cf_sufix_len GT 0 AND cf_sufix EQ right(fieldValue, cf_sufix_len)>
+									<!---Se borra el sufijo--->
+									<cfset fieldValue = left(fieldValue, len(fieldValue)-cf_sufix_len)>								
+								</cfif>
+
+
+							</cfif>
+							
+						<cfelseif fields.field_type_id IS 6><!--- DATE --->
 
 							<cfif len(fieldValue) GT 0>
 
@@ -481,6 +538,8 @@
 		<cfargument name="include_last_update_date" type="boolean" required="false" default="false">
 		<cfargument name="include_insert_user" type="boolean" required="false" default="false">
 		<cfargument name="include_update_user" type="boolean" required="false" default="false">
+		<cfargument name="decimals_with_mask" type="boolean" required="false" default="false">
+		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
 
 		<cfset var method = "exportRows">
 
@@ -590,18 +649,34 @@
 					
 				</cfloop>
 
-				<cfif listFields IS true>
+				<cfif arguments.decimals_with_mask IS true OR listFields IS true>
 
-					<!--- Get selected areas --->
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getRowSelectedAreas" returnvariable="selectedAreasQuery">
-						<cfinvokeargument name="table_id" value="#arguments.table_id#">
-						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfif arguments.decimals_with_mask IS true>
 						
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">
-					</cfinvoke>
+						<!--- getFieldMaskTypes --->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
+							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 
-					<cfif selectedAreasQuery.recordCount GT 0>
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+						</cfinvoke>
+
+					</cfif>
+
+					<cfif listFields IS true>
+
+						<!--- Get selected areas --->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getRowSelectedAreas" returnvariable="selectedAreasQuery">
+							<cfinvokeargument name="table_id" value="#arguments.table_id#">
+							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+							
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+						
+					</cfif>
+					
+
+					<cfif arguments.decimals_with_mask IS true OR selectedAreasQuery.recordCount GT 0>
 						
 						<cfloop query="rowsQuery">
 
@@ -609,9 +684,32 @@
 
 							<cfloop query="fields">
 
-								<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10><!--- LISTS --->
+								<cfset fieldName = "field_#fields.field_id#">
 
-									<cfset fieldName = "field_#fields.field_id#">
+								<cfif arguments.decimals_with_mask IS true AND fields.field_type_id IS 5><!--- DECIMAL --->
+
+									<cfif isNumeric(fields.mask_type_id)>
+
+										<cfset fieldValue = rowsQuery[fieldName]>
+
+										<cfif len(fieldValue) GT 0>
+											
+											<cfset field_mask_type_id = fields.mask_type_id>
+
+											<cfset cf_data_mask = maskTypesStruct[field_mask_type_id].cf_data_mask>
+											<cfset cf_prefix = maskTypesStruct[field_mask_type_id].cf_prefix>
+											<cfset cf_sufix = maskTypesStruct[field_mask_type_id].cf_sufix>
+											<cfset cf_locale = maskTypesStruct[field_mask_type_id].cf_locale>
+											<cfset fieldValue = cf_prefix&LSnumberFormat(fieldValue, cf_data_mask, cf_locale)&cf_sufix>
+
+											<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
+
+										</cfif>
+										
+									</cfif>
+
+								<cfelseif listFields IS true AND ( fields.field_type_id EQ 9 OR fields.field_type_id IS 10 )><!--- LISTS --->
+
 									<cfset fieldValue = "">
 
 									<cfquery dbtype="query" name="rowSelectedAreas">
@@ -649,6 +747,12 @@
 						<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
 					</cfif>
 				</cfinvoke>
+
+				<cfif arguments.ms_excel_compatibility IS true>
+					
+					<cfset exportContent = "sep=;#chr(10)#"&exportContent>
+
+				</cfif>
 				
 			</cfif>
 			

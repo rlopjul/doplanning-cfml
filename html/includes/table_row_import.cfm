@@ -104,23 +104,29 @@
 	<p class="help-block" style="font-size:12px;">
 		El archivo utilizado para realizar esta importación deberá tener las siguientes características:<br/>
 	
-			-Tipo de archivo: <strong>.csv o .txt</strong> delimitado por ; o por tabulaciones.<br/>
-			-Codificación: <strong>iso-8859-1</strong> (codificación por defecto en Windows).<br />
+			-Tipo de archivo: <strong>.csv o .txt</strong> delimitado por ; o por tabulaciones.<br>Punto y coma es la delimitación por defecto en el SO Windows en España (esto varía en configuraciones por defecto de otros paises o idiomas).<br/>
+			-Codificación: <strong>Windows-1252</strong> (codificación por defecto en Windows).<br /><!---iso-8859-1--->
 			-Número de columnas: <strong>#fields.recordCount#</strong>.<br />
 			-<strong>Orden de las columnas</strong>:<br />
 			<em>
+				<cfset fieldsWithMask = "">
 				<cfloop query="fields">
 					#fields.label#
 					<cfif fields.currentRow NEQ fields.recordCount>
 						,
 					</cfif>
-					<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
+					<cfif fields.field_type_id IS 5><!---DECIMAL--->
+						<cfif isNumeric(fields.mask_type_id)>
+							<cfset fieldsWithMask = listAppend(fieldsWithMask, "&nbsp;"&fields.label, ",")>
+						</cfif>
+					<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
 						<cfset booleanFields = true>
 					<cfelseif fields.field_type_id EQ 9 OR fields.field_type_id EQ 10><!--- LISTS --->
 						<cfset listFields = true>
 					<cfelseif fields.input_type IS "date"><!--- DATE --->
 						<cfset dateFields = true>
 					</cfif>
+
 				</cfloop>
 			</em><br/>
 			-Si el orden de las columnas no corresponde con el anterior la importación no se realizará correctamente.<br/>
@@ -203,10 +209,31 @@
 		        <label>
 		          <input type="checkbox" name="start_row" value="1"<cfif isDefined("FORM.start_row")>checked</cfif>> Importar primera fila del archivo
 		        </label>
-		        <small class="help-block">Por defecto no se importa la primera fila del archivo (fila para los títulos de las columnas)</small>
+		        <small class="help-block" style="margin-bottom:0">Por defecto no se importa la primera fila del archivo (fila para los títulos de las columnas)</small>
 		      </div>
 		    </div>
 		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+		      <div class="checkbox">
+		        <label>
+		          	<input type="checkbox" name="decimals_with_mask" value="1"<cfif isDefined("FORM.decimals_with_mask")>checked</cfif>> Los valores decimales usan las máscaras especificadas en la definición de los campos<br/>
+		         	<cfif len(fieldsWithMask) GT 0>
+		       			Importante: los siguientes campos tienen una máscara seleccionada:<i>#fieldsWithMask#</i>
+		        	<cfelse>
+		        		(No hay campos decimales definidos con máscara, esta opción se ignorará)
+		        	</cfif><br/>
+		        	 <b>Use esta opción para poder importar valores decimales delimitados por coma en lugar de punto</b><br/>
+		        </label>
+		        <small class="help-block">Por defecto los campos decimales deben estar en el siguiente formato: 9999.99<br/>
+		        Si los decimales usan otro formato distinto, como por ejemplo separar la cifra decimal por coma en lugar de punto, debe especificarlo primero en la <a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">definición de los campos</a> aplicándole una máscara, y posteriormente seleccionar esta opción en la importación para que se tenga en cuenta la máscara al realizar la importación.<br/>
+		    	
+		    	
+		      </div>
+		    </div>
+		</div>
+
 
 		<div class="row" style="margin-top:20px">
 			<div class="col-sm-12" id="submitDiv1">

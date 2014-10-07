@@ -103,6 +103,10 @@
 			<a href="#itemTypeName#_users.cfm?#itemTypeName#=#table_id#" class="btn btn-default btn-sm" title="Editores" lang="es"><i class="icon-group"></i> <span lang="es">Editores</span></a>
 		</cfif>
 
+		<cfif itemTypeId IS 11 OR itemTypeId IS 12>
+			<a href="#itemTypeName#_views.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Vistas" lang="es"><i class="icon-screenshot"></i> <span lang="es">Vistas</span></a>
+		</cfif>
+		
 		<span class="divider">&nbsp;</span>
 	</cfif>
 
@@ -124,7 +128,19 @@
 
 	<cfif tableRows.recordCount GT 0>
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">
+		<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">--->
+
+		<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+
+		<!--- outputRowList --->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowList">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			<cfinvokeargument name="tableRows" value="#tableRows#">
+			<cfinvokeargument name="fields" value="#fields#">
+			<cfinvokeargument name="openRowOnSelect" value="true">
+			<cfinvokeargument name="app_version" value="#app_version#">
+		</cfinvoke>
 
 	<cfelse>
 	

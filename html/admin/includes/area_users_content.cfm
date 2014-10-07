@@ -32,7 +32,7 @@
 
 			<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
 			<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
-			<span class="navbar_brand">#area_name#</span><br/>
+			<span class="navbar_brand <cfif SESSION.client_abb EQ "hcs">hcs</cfif>">#area_name#</span><br/>
 
 			<p style="padding-top:0px;clear:left;font-size:12px;"><!--- class="navbar_brand" color:##737373 --->
 				<cfif SESSION.client_id EQ "hcs" OR internal_user IS true>Ruta: #area_path#<cfelse>&nbsp;</cfif>

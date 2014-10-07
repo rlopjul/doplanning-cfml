@@ -20,6 +20,7 @@
         <cfargument name="list_area_id" type="numeric" required="false">
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="item_type_id" type="numeric" required="false">
+        <cfargument name="mask_type_id" type="string" required="false">
 
 		<cfset var method = "createField">
 
@@ -81,6 +82,7 @@
 					<cfinvokeargument name="mysql_type" value="#fieldType.mysql_type#">
 					<cfinvokeargument name="field_input_type" value="#arguments.field_input_type#">
 					<cfinvokeargument name="item_type_id" value="#arguments.item_type_id#">
+					<cfinvokeargument name="mask_type_id" value="#arguments.mask_type_id#">
 				</cfinvoke>
 
 			</cftransaction>
@@ -120,6 +122,7 @@
         <cfargument name="mysql_type" type="string" required="true">
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="item_type_id" type="numeric" required="false">
+        <cfargument name="mask_type_id" type="numeric" required="false">
 
 		<cfset var method = "createFieldInDatabase">
 
@@ -175,7 +178,11 @@
 				</cfif>
 				<cfif arguments.field_type_id IS 13><!---DoPlanning Item--->
 					, item_type_id = <cfqueryparam value="#arguments.item_type_id#" cfsqltype="cf_sql_integer">
-				</cfif>;
+				</cfif>
+				<cfif isDefined("arguments.mask_type_id") AND isNumeric(arguments.mask_type_id)>
+					, mask_type_id = <cfqueryparam value="#arguments.mask_type_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				;
 			</cfquery>
 
 			<cfquery name="getLastInsertId" datasource="#client_dsn#">
@@ -218,6 +225,7 @@
         <cfargument name="list_area_id" type="numeric" required="false">
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="item_type_id" type="numeric" required="false">
+        <cfargument name="mask_type_id" type="string" required="false">
 
 		<cfset var method = "updateField">
 
@@ -287,6 +295,13 @@
 					</cfif>
 					<cfif arguments.field_type_id IS 13><!---DoPlanning Item--->
 						, item_type_id = <cfqueryparam value="#arguments.item_type_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif isDefined("arguments.mask_type_id")>
+						<cfif isNumeric(arguments.mask_type_id)>
+							, mask_type_id = <cfqueryparam value="#arguments.mask_type_id#" cfsqltype="cf_sql_integer">
+						<cfelse>
+							, mask_type_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+						</cfif>
 					</cfif>
 					WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
@@ -789,6 +804,40 @@
 			</cfinvoke>
 
 			<cfset response = {result=true, fieldTypes=getFieldTypesQuery}>
+								
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+
+	<!--- ------------------------------------- getFieldMaskTypes -------------------------------------  --->
+	
+	<cffunction name="getFieldMaskTypes" output="false" access="public" returntype="struct">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getFieldMasks">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+			</cfinvoke>
+
+			<cfset response = {result=true, maskTypesStruct=maskTypesStruct}>
 								
 			<cfcatch>
 

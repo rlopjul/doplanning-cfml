@@ -281,6 +281,10 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="file" type="string" required="true">
 		<cfargument name="delimiter" type="string" required="true">
+		<cfargument name="start_row" type="numeric" required="false">
+		<cfargument name="delete_rows" type="boolean" required="false">
+		<cfargument name="cancel_on_error" type="boolean" required="false">
+		<cfargument name="decimals_with_mask" type="boolean" required="false">
 		
 		<cfset var method = "importRows">
 
@@ -379,6 +383,49 @@
 
 
 
+	<!--- -------------------------------outputRowList-------------------------------------- --->
+	
+    <cffunction name="outputRowList" returntype="void" access="public" output="true">
+    	<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="tableRows" type="query" required="true">
+		<cfargument name="fields" type="query" required="true">
+		<cfargument name="openRowOnSelect" type="boolean" required="true">
+		<cfargument name="app_version" type="string" required="true">
+		
+		<cfset var method = "outputRowFormInputs">
+		
+		<cftry>
+					
+			<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowList">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="tableRows" value="#arguments.tableRows#">
+				<cfinvokeargument name="fields" value="#arguments.fields#">
+				<cfinvokeargument name="openRowOnSelect" value="#arguments.openRowOnSelect#">
+				<cfinvokeargument name="app_version" value="#arguments.app_version#">
+
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfcatch>
+				<cfoutput>
+					<div class="alert alert-danger">
+						<i class="icon-warning-sign"></i> <span lang="es">#cfcatch.message#</span>
+					</div>
+				</cfoutput>
+				<cfinclude template="includes/errorHandlerNoRedirect.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
+
 	<!--- -------------------------------outputRowContent-------------------------------------- --->
 	
     <cffunction name="outputRowContent" returntype="void" access="public" output="true">
@@ -445,7 +492,7 @@
 
 			</cfif>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypes" returnvariable="itemTypesStruct">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>
 
@@ -525,7 +572,11 @@
 
 									<cfset field_value = HTMLEditFormat(field_value)>
 
-									<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
+									<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
+										<cfinvokeargument name="string" value="#field_value#">
+									</cfinvoke>--->
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
 										<cfinvokeargument name="string" value="#field_value#">
 									</cfinvoke>
 								</cfif>
@@ -633,7 +684,34 @@
 
 						<cfelse>
 
-							<cfif fields.field_type_id IS 6><!--- DATE --->
+							<cfif fields.field_type_id IS 5><!--- DECIMAL --->
+
+								<cfif isNumeric(fields.mask_type_id)>
+
+									<cfset field_mask_type_id = fields.mask_type_id>
+
+									<!--- getFieldMaskTypes --->
+									<cfinvoke component="#APPLICATION.htmlComponentsPath#/Field" method="getFieldMaskTypes" returnvariable="getFieldMaskTypesResponse">
+										<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+									</cfinvoke>
+
+									<cfset maskTypesStruct = getFieldMaskTypesResponse.maskTypesStruct>
+
+									<cfset cf_data_mask = maskTypesStruct[field_mask_type_id].cf_data_mask>
+									<cfset cf_prefix = maskTypesStruct[field_mask_type_id].cf_prefix>
+									<cfset cf_sufix = maskTypesStruct[field_mask_type_id].cf_sufix>
+									<cfset cf_locale = maskTypesStruct[field_mask_type_id].cf_locale>
+									<cfset field_value = cf_prefix&LSnumberFormat(field_value, cf_data_mask, cf_locale)&cf_sufix>
+
+								<cfelse>
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="trimDecimal" returnvariable="field_value">
+										<cfinvokeargument name="value" value="#field_value#">
+									</cfinvoke>
+									
+								</cfif>
+
+							<cfelseif fields.field_type_id IS 6><!--- DATE --->
 
 								<cfif isDate(field_value)>
 									<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>

@@ -135,6 +135,7 @@
 
 	<!--- insertBR --->
 
+	<!---
 	<cffunction name="insertBR" returntype="string" access="public">
 		<cfargument name="string" type="string" required="true">
 
@@ -147,12 +148,13 @@
 
 		<cfreturn str>
 
-	</cffunction>
+	</cffunction>--->
 
 
 	<!--- replaceBR --->
 
-	<!---<cffunction name="replaceBR" returntype="string" access="public">
+	<!---
+	<cffunction name="replaceBR" returntype="string" access="public">
 		<cfargument name="string" type="string" required="true">
 
 		<cfset string = replace(string,"<br />",chr(13),"ALL")>
@@ -176,14 +178,19 @@
 
 	<!--- removeHTML --->
 
+	<!---
 	<cffunction name="removeHTML" returntype="string" access="public">
 		<cfargument name="string" type="string" required="true">
 
-		<cfset string = REReplace(string,"<[^>]*>","","ALL")>
+		<!---<cfset string = REReplace(string,"<[^>]*>","","ALL")>--->
 
-		<cfreturn string>
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="removeHTML" returnvariable="stringReplaced">
+			<cfinvokeargument name="string" value="#arguments.string#">
+		</cfinvoke>
 
-	</cffunction>
+		<cfreturn stringReplaced>
+
+	</cffunction>--->
 
 
 </cfcomponent>

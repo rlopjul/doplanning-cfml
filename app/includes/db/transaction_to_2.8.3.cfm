@@ -63,8 +63,8 @@
 
 		<cfcatch>
 			<cfoutput>
-				<!--- csalud NO MIGRADO CORRECTAMENTE, falta la columna field_type_group--->
-				<b>#new_client_abb# NO migrado a versión #version_id#</b><br/><br/>
+				<b>#new_client_abb# NO migrado a versión #version_id#</b><br/>
+				<cfdump var="#cfcatch#">
 			</cfoutput> 
 		</cfcatch>
 

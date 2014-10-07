@@ -1,17 +1,22 @@
-<cfoutput>
+<!---<cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+
+
+<!--- getFieldMaskTypes --->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Field" method="getFieldMaskTypes" returnvariable="getFieldMaskTypesResponse">
+	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+</cfinvoke>
+
+<cfset maskTypesStruct = getFieldMaskTypesResponse.maskTypesStruct>
 
 <script type="text/javascript">
 	$(document).ready(function() { 
 		
 		$("##dataTable").tablesorter({ 
 
-			<cfif CGI.REMOTE_ADDR EQ "80.36.94.30">
-				widgets: ['zebra','filter','select','stickyHeaders','math'],
-			<cfelse>
-				widgets: ['zebra','filter','select','stickyHeaders'],
-			</cfif>
+			<!---widgets: ['zebra','filter','select','stickyHeaders'],--->
+			widgets: ['zebra','filter','select','stickyHeaders','math'],
 
 			headers: { 
 				
@@ -41,10 +46,9 @@
 			// default "emptyTo"
    			emptyTo: 'zero',
 			<!---textExtraction: 'basic',--->
-<cfif CGI.REMOTE_ADDR EQ "80.36.94.30">
-	usNumberFormat: false,
-</cfif>
-			 
+			textAttribute: "data-text",
+			textExtraction: "basic",
+			usNumberFormat: true, <!--- false Requerido para que la suma de los valores de las comlumnas con decimales separados por , sea correcta (esto hace que los decimales separados por . no se sumen correctamente, pero para eso se usan otras opciones)  ---->
 			<cfset sortArrayLen = arrayLen(sortArray)>
 			<cfif sortArrayLen GT 0>
 							
@@ -76,9 +80,14 @@
 				filter_startsWith : false,
 				filter_useParsedRow : false
 
-				<cfif CGI.REMOTE_ADDR EQ "80.36.94.30">
-					, math_data     : 'math', // data-math attribute
-				    math_ignore   : [0]
+				<!--- Suma de valores de las columnas --->
+					, math_data     : 'math' // data-math attribute
+				    , math_ignore   : [0
+				    <cfloop query="fields"> 
+				    	<cfif fields.field_type_id NEQ 4 AND fields.field_type_id NEQ 5>
+				    		, #fields.currentRow#
+				    	</cfif>
+				    </cfloop>]
 				    <!---, math_mask     : '##.000,00'--->
 				    <!---, math_complete : function($cell, wo, result, value, arry) {
 				        var txt = '<span class="align-decimal"> ' + result + '</span>';
@@ -88,10 +97,20 @@
 				        }
 				        return txt;
 				    }--->
-				</cfif>
-
+				<!--- Fin suma de los valores de las columnas --->
 		    }
 		});
+
+
+		<!---<cfif arguments.openItemOnSelect IS true>--->
+		<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
+		$('##dataTable').bind('select.tablesorter.select', function(event, ts){
+		    var itemUrl= $(ts.elem).data("item-url");
+		    openUrlLite(itemUrl,'itemIframe');
+		    <!---onclick="openUrl('#row_page_url#','itemIframe',event)"--->
+
+		});
+		<!---</cfif>--->	
 		
 	}); 
 </script>
@@ -165,7 +184,8 @@
 			
 		</cfif>
 
-		<tr <cfif dataSelected IS true>class="selected"</cfif> onclick="openUrl('#row_page_url#','itemIframe',event)">
+		<tr <cfif dataSelected IS true>class="selected"</cfif> data-item-url="#row_page_url#">
+
 			<td>#tableRows.row_id#</td>
 			
 			<cfset row_id = tableRows.row_id>
@@ -214,10 +234,30 @@
 
 						<cfif len(field_value) GT 0>
 
-							<cfif fields.field_type_id EQ 4><!--- INTEGER --->
-								<!---<cfset field_value = DecimalFormat(field_value)>--->
-							<cfelseif fields.field_type_id IS 5><!--- DECIMAL --->
-								<cfset field_value = LSnumberFormat(field_value, ",.__", getLocale())>
+							<cfif fields.field_type_id IS 5><!--- DECIMAL --->
+
+								<cfif isNumeric(fields.mask_type_id)>
+
+									<cfset field_mask_type_id = fields.mask_type_id>
+
+									<cfset cf_data_mask = maskTypesStruct[field_mask_type_id].cf_data_mask>
+									<cfset cf_prefix = maskTypesStruct[field_mask_type_id].cf_prefix>
+									<cfset cf_sufix = maskTypesStruct[field_mask_type_id].cf_sufix>
+									<cfset cf_locale = maskTypesStruct[field_mask_type_id].cf_locale>
+									<cfset field_value = cf_prefix&LSnumberFormat(field_value, cf_data_mask, cf_locale)&cf_sufix>
+
+									<!---<cfset field_value = LSnumberFormat(field_value, ",.__", getLocale())>--->
+
+								<cfelse>
+									<!---<cfset field_value = LSnumberFormat(field_value, ".__", "en_US")>--->
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="trimDecimal" returnvariable="field_value">
+										<cfinvokeargument name="value" value="#field_value#">
+									</cfinvoke>
+									
+								</cfif>
+								
+								
 							<cfelseif fields.field_type_id IS 6><!--- DATE --->
 								<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
 							<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
@@ -229,16 +269,6 @@
 								<cfset field_value = '<span lang="es">#field_value#</span>'>
 
 							<cfelseif fields.field_type_id IS 12><!--- USER --->
-
-								<!---
-								<cfif isNumeric(field_value)>
-									<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
-										<cfinvokeargument name="user_id" value="#field_value#">
-									</cfinvoke>
-									<cfif userQuery.recordCount GT 0>
-										<cfset field_value = userQuery.family_name&" "&userQuery.name>
-									</cfif>
-								</cfif>--->
 
 								<cfif isNumeric(field_value)>
 						
@@ -362,7 +392,15 @@
 
 					</cfif>
 					
-					<td>#field_value#</td>
+					<cfif fields.field_type_id IS 5 AND isDefined("cf_locale") AND cf_locale EQ "es_ES"><!---Esto es neceario para que se sume correctamente, el valor que se suma es el de data-text--->
+						
+						<td data-text="#tableRows['field_#fields.field_id#']#">#field_value#</td>
+
+					<cfelse>
+
+						<td>#field_value#</td>
+
+					</cfif>
 
 				</cfif>
 
@@ -371,20 +409,29 @@
 	</cfloop>
 	</tbody>
 
-	<cfif CGI.REMOTE_ADDR EQ "80.36.94.30">
 	<tfoot>
 	   <tr>
 			<th></th>
 			<cfloop query="fields">
-				<cfif fields.field_type_id EQ 4 OR fields.field_type_id IS 5><!--- INTEGER OR DECIMAL --->
-					<th data-math="col-sum" data-math-mask="##.000,00"></th>
+				<cfif fields.field_type_id EQ 4><!--- INTEGER --->
+					<th data-math="col-sum" data-math-mask="##"></th><!---data-math-mask="##000"--->
+				<cfelseif fields.field_type_id IS 5><!--- DECIMAL --->
+
+					<cfif isNumeric(fields.mask_type_id)>
+						<cfset field_mask_type_id = fields.mask_type_id>
+						<th data-math="col-sum" data-math-mask="#maskTypesStruct[field_mask_type_id].tablesorterd_data_mask#"></th>
+					<cfelse>
+						<th data-math="col-sum" data-math-mask="####.00"></th>
+					</cfif>
+
+					<!---<th data-math="col-sum" data-math-mask="##.00"></th>--->
+					
 				<cfelse>
 					<th></th>
 				</cfif>
 			</cfloop>
 		</tr>
 	</tfoot>
-	</cfif>
 
 </table>
 
@@ -397,4 +444,5 @@
 
 </cfif>
 
-</cfoutput>
+
+</cfoutput>--->

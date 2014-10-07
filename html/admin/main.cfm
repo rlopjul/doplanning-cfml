@@ -135,7 +135,7 @@
 		$("#areaIframe").height(newHeight-userIframeHeight-5)
 		$("#allUsersIframe").height(newHeight-userIframeHeight-5);
 		$("#logItemIframe").height(newHeight);
-		$("#treeContainer").height(newHeight-73);
+		$("#treeContainer").height(newHeight-79);
 	}
 
 	function changeLanguage() {

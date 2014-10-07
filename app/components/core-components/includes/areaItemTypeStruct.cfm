@@ -1,6 +1,4 @@
-<!---Este include no se debe usar directamente, se debe usar sólo el método getAreaItemTypes del componente AreaItemManager--->
-
-<cfset itemTypesStruct = structNew()>
+<!---Este include NO se debe usar directamente, se debe usar sólo el método getAreaItemTypes del componente AreaItemManager--->
 
 <!---messages--->
 <cfset structInsert(itemTypesStruct, 1, {id=1, position=1, name="message", label="Mensaje", label_plural="Mensajes", gender="male", web=false, no_web=true})>

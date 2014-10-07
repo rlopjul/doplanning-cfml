@@ -34,6 +34,35 @@
 	</cffunction>
 
 
+
+	<!--- ----------------------------------- getFieldMaskTypes ------------------------------------- --->
+	
+	<cffunction name="getFieldMaskTypes" returntype="struct" access="public">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		
+		<cfset var method = "getFieldMaskTypes">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="getFieldMaskTypes" returnvariable="response">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
+
 	<!--- ----------------------------------- getField -------------------------------------- --->
 
 	<!---Este método no hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Item directamente del AreaItemManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->

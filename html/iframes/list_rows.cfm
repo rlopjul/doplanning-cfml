@@ -33,7 +33,7 @@
 	<link href="#APPLICATION.htmlPath#/font-awesome/css/font-awesome-ie7.min.css" rel="stylesheet">
 <![endif]-->
 
-<link href="../styles/styles.min.css?v=2.1" rel="stylesheet" type="text/css" media="all" />
+<link href="../styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>

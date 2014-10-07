@@ -3,6 +3,46 @@
 	<cfset component = "Utils">
 
 
+	<!--- removeHTML --->
+
+	<cfscript>
+		
+
+		/**
+		* Removes HTML fron string
+		* 
+		*/
+		function removeHTML(string) {
+
+			var stringReplaced = REReplace(arguments.string,"<[^>]*>","","ALL");
+
+			return stringReplaced;
+			
+		}
+
+
+	</cfscript>
+
+
+	<!---    trimDecimal     --->
+	<cfscript>
+		
+		/**
+		* Removes unnecessary 0 after decimal point
+		* 
+		*/
+		function trimDecimal(value) {
+
+			if( findOneOf(".", arguments.value) GT 0 )
+				return reReplace(REReplace(arguments.value, "0+$", "", "ALL"), "\.+$", "");
+			else
+				return arguments.value;
+			
+		}
+	</cfscript>
+
+
+
 	<!---    generateNewPassword     --->
 	
 	<cfscript>

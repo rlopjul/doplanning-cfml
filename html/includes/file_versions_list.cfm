@@ -41,7 +41,7 @@
 </cfif>
 
 <cfoutput>
-<table id="dataTable" class="table-hover" style="margin-top:5px;">
+<table id="dataTable" class="data-table table-hover" style="margin-top:5px;">
 	<thead>
 		<tr>
 			<th style="width:25px;">##</th>

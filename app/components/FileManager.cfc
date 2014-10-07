@@ -3855,6 +3855,7 @@
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="unlock" type="boolean" required="false" default="false">
 		<!--- La fecha de publicación no se puede modificar én este método porque esos atributos pertenecen al área donde esté publicada el archivo y no son atributos propios del archivo. --->
 		
 		<cfset var method = "updateFile">
@@ -3981,6 +3982,23 @@
 			<!---</cftransaction>--->				
 			
 			<cfinclude template="includes/logRecord.cfm">
+
+			<!--- Unlock file --->
+			<cfif arguments.fileTypeId IS NOT 1 AND arguments.unlock IS true>
+				
+				<cfinvoke component="FileManager" method="changeAreaFileLock" returnvariable="changeLockResponse">
+					<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+					<cfinvokeargument name="lock" value="false"/>
+				</cfinvoke>
+
+				<cfif changeLockResponse.result IS false>
+					
+					<cfreturn changeLockResponse>
+
+				</cfif>
+	
+			</cfif>
 
 			<cfset response = {result=true, file_id=#arguments.file_id#}>
 			

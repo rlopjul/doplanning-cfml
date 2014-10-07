@@ -116,7 +116,7 @@
 		
 		$("#itemIframe").height(newHeight-areaImgHeight);
 		$("#searchItemIframe").height(newHeight);
-		$("#treeContainer").height(newHeight-47);
+		$("#treeContainer").height(newHeight-50);
 	}
 	
 	function changeLanguage() {

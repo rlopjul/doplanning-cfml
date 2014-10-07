@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8"> 
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>Selección de usuario</title>
@@ -33,7 +33,7 @@
 	<link href="#APPLICATION.htmlPath#/font-awesome/css/font-awesome-ie7.min.css" rel="stylesheet">
 <![endif]-->
 
-<link href="../styles/styles.min.css?v=2.1" rel="stylesheet" type="text/css" media="all" />
+<link href="../styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>

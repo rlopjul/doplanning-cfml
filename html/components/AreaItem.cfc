@@ -1921,9 +1921,9 @@
 								filter_useParsedData : false
 
 								<cfif itemTypeId IS 6><!---Tasks--->
-									, math_data     : 'math', // data-math attribute
-								    math_ignore   : [0,1,2,3,4,7,8,9]
-								    ///math_mask     : '##,####0.00',
+									, math_data     : 'math' // data-math attribute
+								    , math_ignore   : [0,1,2,3,4,7,8,9]
+								    <!---. math_mask     : '##,####0.00'--->
 								    <!---, math_complete : function($cell, wo, result, value, arry) {
 								        var txt = '<span class="align-decimal"> ' + result + '</span>';
 								        if ($cell.attr('data-math') === 'all-sum') {
@@ -2623,7 +2623,10 @@
 
 									<cfset itemDescription = itemsQuery.description>
 
-									<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="removeHTML" returnvariable="itemDescription">
+									<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="removeHTML" returnvariable="itemDescription">
+										<cfinvokeargument name="string" value="#itemDescription#">
+									</cfinvoke>--->
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="removeHTML" returnvariable="itemDescription">
 										<cfinvokeargument name="string" value="#itemDescription#">
 									</cfinvoke>
 

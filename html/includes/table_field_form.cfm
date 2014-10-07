@@ -125,6 +125,7 @@
 		$("##fieldInputTypeList").hide();
 		$("##fieldInputTypeListMultiple").hide();
 		$("##fieldInputItemType").hide();
+		$("##fieldInputMaskType").hide();
 
 		$("##default_value_text").prop('disabled', true);
 		$("##default_value_date").prop('disabled', true);
@@ -137,6 +138,7 @@
 		$("##field_input_type_list").prop('disabled', true);
 		$("##field_input_type_list_multiple").prop('disabled', true);
 		$("##item_type_id").prop('disabled', true);
+		$("##mask_type_id").prop('disabled', true);
 
 
 		if(typeId == 6){ //Date
@@ -152,7 +154,6 @@
 			$("##fieldInputTypeList").show();
 
 			$("##default_value_boolean").prop('disabled', false);
-
 			$("##field_input_type_list").prop('disabled', false);
 
 		}else if(typeId == 9 || typeId ==10){ //List
@@ -208,6 +209,13 @@
 				$("##default_value_text").attr("rows", '1');
 			}
 
+			if(typeId == 5) { //Decimal
+
+				$("##fieldInputMaskType").show();
+
+				$("##mask_type_id").prop('disabled', false);
+
+			} 
 		}
 
 	}
@@ -285,7 +293,7 @@
 			<label for="field_type_id" class="control-label">Tipo *</label>
 			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled=</cfif>>
 				<cfloop query="fieldTypes">
-					<cfif tableTypeId NEQ 2 OR (fieldTypes.field_type_group NEQ "user" AND fieldTypes.field_type_group NEQ "doplanning_element")><!---Estos tipos de campos no están disponibles en los formularios--->
+					<cfif tableTypeId NEQ 2 OR (fieldTypes.field_type_group NEQ "user" AND fieldTypes.field_type_group NEQ "doplanning_item")><!---Estos tipos de campos no están disponibles en los formularios--->
 						<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
 					</cfif>
 				</cfloop>
@@ -299,21 +307,42 @@
 			<cfif page_type IS 2 AND isNumeric(field.item_type_id)>
 				<input name="item_type_id" type="hidden" value="#field.item_type_id#"/>
 			</cfif>			
-			<label class="control-label" for="item_type_id" id="subTypeLabel"><span lang="es">Tipo de elemento de DoPlanning</span> *</label>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypes" returnvariable="itemTypesStruct">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>
 
 			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
-			
+
+			<label class="control-label" for="item_type_id" id="subTypeLabel"><span lang="es">Tipo de elemento de DoPlanning</span> *</label>
 			<select name="item_type_id" id="item_type_id" class="form-control" onchange="fieldItemTypeChange($('##item_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
-				<cfloop array="#itemTypesArray#" index="itemTypeid">
+				<cfloop array="#itemTypesArray#" index="itemTypeId">
 					<option value="#itemTypeId#" lang="es" <cfif field.item_type_id IS itemTypeId>selected="selected"</cfif>>#itemTypesStruct[itemTypeId].label#</option>
 				</cfloop>
 			</select>
 			<small class="help-block">No se puede modificar el tipo de elemento DoPlanning una vez creado el campo.</small>
 
+		</div>
+	</div>
+
+	<div class="row" id="fieldInputMaskType">
+		<div class="col-md-12">
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeid#">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
+
+			<cfset maskTypesArray = structSort(maskTypesStruct, "numeric", "ASC", "position")>
+
+			<label for="mask_type_id" class="control-label">Máscara</label>
+			<select name="mask_type_id" id="mask_type_id" class="form-control"><!---onchange="fieldItemTypeChange($('##item_type_id').val());"--->
+				<option value="">Sin máscara</option>
+				<cfloop array="#maskTypesArray#" index="maskTypeId">
+					<option value="#maskTypeId#" lang="es" <cfif field.mask_type_id IS maskTypeId>selected="selected"</cfif>>#maskTypesStruct[maskTypeId].label# (#maskTypesStruct[maskTypeId].description#)</option>
+				</cfloop>
+			</select>
+			<small class="help-block">Permite definir como se mostrará el valor numérico introducido.</small>
 		</div>
 	</div>
 

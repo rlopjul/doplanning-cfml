@@ -65,7 +65,7 @@
 </cfif>
 
 <cfoutput>
-<table id="dataTable" class="table-hover" style="margin-top:5px;">
+<table id="dataTable" class="data-table table-hover" style="margin-top:5px;">
 	<thead>
 		<tr>
 			<cfif views_selectable IS true>

@@ -305,7 +305,7 @@
 				<!---<cfset fields_selectable = true>
 				<cfinclude template="#APPLICATION.htmlPath#/includes/table_fields_list.cfm">--->
 
-				<table id="dataTable" class="table-hover" style="margin-top:5px;">
+				<table id="dataTable" class="data-table table-hover" style="margin-top:5px;">
 					<thead>
 						<tr>
 							<th style="width:25px;text-align:center;"><input type="checkbox" name="select_all" onclick="toggleCheckboxesChecked(this.checked);"/></th>

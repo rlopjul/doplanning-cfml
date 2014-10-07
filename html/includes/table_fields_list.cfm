@@ -5,7 +5,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
-<script type="text/javascript">
+<script>
 	$(document).ready(function() { 
 		
 		<cfif fields_selectable IS false>
@@ -43,7 +43,7 @@
 </cfif>
 
 <cfoutput>
-<table id="dataTable" class="table-hover" style="margin-top:5px;">
+<table id="dataTable" class="data-table table-hover" style="margin-top:5px;">
 	<thead>
 		<tr>
 			<cfif fields_selectable IS true>

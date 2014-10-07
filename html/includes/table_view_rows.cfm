@@ -64,7 +64,19 @@
 
 	<cfif tableRows.recordCount GT 0>
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">
+		<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">--->
+
+		<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+
+		<!--- outputRowList --->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowList">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			<cfinvokeargument name="tableRows" value="#tableRows#">
+			<cfinvokeargument name="fields" value="#fields#">
+			<cfinvokeargument name="openRowOnSelect" value="true">
+			<cfinvokeargument name="app_version" value="#app_version#">
+		</cfinvoke>
 
 	<cfelse>
 	

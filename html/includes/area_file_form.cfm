@@ -261,7 +261,7 @@
 	</cfif>
 </script>
 
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
+<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
 
 
 <div class="contenedor_fondo_blanco">
@@ -559,6 +559,16 @@
 
 	<!--- Typology fields --->
 	<div id="typologyContainer"></div>
+
+	<cfif fileTypeId IS NOT 1 AND page_type IS 2>
+		
+		<div class="checkbox">
+		    <label>
+		    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras guardar modificación
+		    </label>
+	  	</div>
+
+	</cfif>
 	
 	<div style="height:10px;"><!--- ---></div>
 

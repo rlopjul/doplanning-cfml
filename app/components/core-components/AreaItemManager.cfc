@@ -9,16 +9,36 @@
 	<cfset timeZoneTo = "Europe/Madrid">
 
 
-	<!--- getAreaItemTypes --->
+	<!--- getAreaItemTypesStruct --->
 
-	<cffunction name="getAreaItemTypes" returntype="struct" access="public">
+	<cffunction name="getAreaItemTypesStruct" returntype="struct" access="public">
 		<cfargument name="client_abb" type="string" required="true">
 
-		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeArray.cfm">
+		<cfset var itemTypesStruct = structNew()>
+
+		<cfinclude template="includes/areaItemTypeStruct.cfm">
 
 		<cfreturn itemTypesStruct>
 
 	</cffunction>
+
+
+	<!--- getAreaItemTypesArray --->
+
+	<!---<cffunction name="getAreaItemTypesArray" returntype="array" access="public">
+		<cfargument name="client_abb" type="string" required="true">
+
+		<cfset var itemTypesStruct = structNew()>
+
+		<cfinvoke component="AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+		</cfinvoke>
+
+		<cfset var itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
+		<cfreturn itemTypesArray>
+
+	</cffunction>--->
 
 
 	<!--- ----------------------- DELETE ITEM ATTACHED FILE -------------------------------- --->

@@ -70,7 +70,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-xs-offset-1 col-xs-11">
 		      <div class="checkbox">
 		        <label>
 		          <input type="checkbox" name="include_creation_date" value="true">Fecha de creación</label>
@@ -79,7 +79,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-xs-offset-1 col-xs-11">
 		      <div class="checkbox">
 		        <label>
 		          <input type="checkbox" name="include_last_update_date" value="true">Fecha de última modificación</label>
@@ -88,7 +88,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-xs-offset-1 col-xs-11">
 		      <div class="checkbox">
 		        <label>
 		          <input type="checkbox" name="include_insert_user" value="true">Usuario creación</label>
@@ -97,13 +97,40 @@
 		</div>
 
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-xs-offset-1 col-xs-11">
 		      <div class="checkbox">
 		        <label>
 		          <input type="checkbox" name="include_update_user" value="true">Usuario última modificación</label>
 		      </div>
 		    </div>
 		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				&nbsp;
+		    </div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+		      <div class="checkbox">
+		        <label>
+		          <input type="checkbox" name="decimals_with_mask" value="true">Aplicar máscaras a los valores decimales exportados.
+		       <br/>Use esta opción para poder exportar los valores decimales delimitados por coma en lugar de punto para que sean interpretados correctamente en Excel</label>
+		      </div>
+		    </div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+		      <div class="checkbox">
+		        <label>
+		          <input type="checkbox" name="ms_excel_compatibility" value="true">Habilitar compatibilidad de apertura con las nuevas versiones de Microsoft Office Excel (versiones a partir de 2010) </label>
+		      </div>
+		    </div>
+		</div>
+
+		
 
 		<div class="row" style="margin-top:20px">
 			<div class="col-sm-12" id="submitDiv1">
