@@ -22,8 +22,9 @@
 
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<cfif len(APPLICATION.themeCSSPath) GT 0>
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
-
+</cfif>
 <!--[if lt IE 9]>
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -41,7 +42,7 @@
 <link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
 
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.0" rel="stylesheet" />
 
 <script src="#APPLICATION.jqueryJSPath#"></script>
 <script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>

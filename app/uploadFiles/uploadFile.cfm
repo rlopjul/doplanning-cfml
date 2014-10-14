@@ -96,6 +96,7 @@
 				<!---<cfinvokeargument name="xmlArea" value="#xmlArea#">--->
 				<cfinvokeargument name="area_id" value="#xmlArea.area.xmlAttributes.id#"/>
 			</cfif>
+			<cfinvokeargument name="flash_version" value="true"><!---Provisional para detectar las subidas de archivos desde la versión Flash de la administración--->
 		</cfinvoke>		
 		
 		<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="xmlFile" returnvariable="xmlResponseContent">

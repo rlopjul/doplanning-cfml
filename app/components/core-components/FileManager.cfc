@@ -194,7 +194,7 @@
 					</cfif>
 					
 					<!---Update User Space Used--->
-					<cfif fileQuery.status EQ "ok">
+					<cfif fileQuery.status EQ "ok" AND fileQuery.file_type_id IS 1>
 						<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
 							UPDATE #client_abb#_users
 							SET space_used = space_used-#fileQuery.file_size#
@@ -339,6 +339,10 @@
 					<cffile action="delete" file="#filePath#">
 				<!---</cfif>--->
 				
+				<!--- 
+
+					Se deshabilita para los archivos que no son de usuario
+
 				<!---Update User Space Used--->
 				<cfif fileQuery.status EQ "ok">
 					<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
@@ -347,6 +351,8 @@
 						WHERE id = <cfqueryparam value="#fileVersionQuery.user_in_charge#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 				</cfif>
+
+				--->
 
 				<cfif lastFileVersionQuery.version_id EQ arguments.version_id>
 					

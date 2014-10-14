@@ -9,8 +9,9 @@
 <cfoutput>
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<cfif len(APPLICATION.themeCSSPath) GT 0>
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
-
+</cfif>
 <!---<!--[if lt IE 9]>
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -33,7 +34,7 @@
 	<link href="#APPLICATION.htmlPath#/font-awesome/css/font-awesome-ie7.min.css" rel="stylesheet">
 <![endif]-->
 
-<link href="../html/styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />
+<link href="#APPLICATION.dpCSSPath#" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../html/styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>

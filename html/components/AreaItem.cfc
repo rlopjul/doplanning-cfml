@@ -1647,7 +1647,7 @@
 						</cfif>
 					</cfif>
 
-					<cfif APPLICATION.moduleWeb IS true AND ( len(area_type) GT 0 OR itemTypeId IS 11 OR itemTypeId IS 12 )><!--- WEB --->
+					<cfif APPLICATION.moduleWeb IS true AND itemTypeId NEQ 13 AND ( len(area_type) GT 0 OR itemTypeId IS 11 OR itemTypeId IS 12 )><!--- WEB --->
 						<!--- Debe poder mostrarse el estado de publicación en las listas y formularios aunque no estén en áreas web para poder publicar sus vistas en áreas web --->
 
 						<cfif len(objectItem.publication_date) GT 0>

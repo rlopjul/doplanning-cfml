@@ -1,0 +1,486 @@
+<!--- Copyright Era7 Information Technologies 2007-2014 --->
+
+<cfcomponent output="false">
+
+	<cfset component = "ApplicationManager">
+
+
+	<!--- -------------------------------------- setApplicationVars ----------------------------------- --->
+	
+	<cffunction name="setApplicationVars" access="public" returntype="void">
+		<cfargument name="emailServerUserName" type="string" required="true">
+		<cfargument name="emailServerPassword" type="string" required="true">
+		<cfargument name="emailFrom" type="string" required="true">
+
+		<cfargument name="openTokApiKey" type="numeric" required="false">
+		<cfargument name="openTokApiSecret" type="string" required="false">
+
+		<cfargument name="serverIp" type="string" required="true">
+
+		<cfargument name="mainUrl" type="string" required="true">
+		<cfargument name="signOutUrl" type="string" required="true">
+
+		<cfargument name="ldapName" type="string" required="false">
+
+		<cfargument name="title" type="string" required="false" default="DoPlanning">
+		<cfargument name="moduleMessenger" type="boolean" required="false" default="false">
+		<cfargument name="moduleLdapUsers" type="boolean" required="false" default="false">
+		<cfargument name="moduleConvertFiles" type="boolean" required="false" default="false">
+		<cfargument name="moduleWeb" type="boolean" required="false" default="false">
+		<cfargument name="moduleTwitter" type="boolean" required="false" default="false">
+		<cfargument name="moduleConsultations" type="boolean" required="false" default="true">
+		<cfargument name="includeConsultationsInAlerts" type="boolean" required="false" default="true">
+		<cfargument name="moduleVirtualMeetings" type="boolean" required="false" default="false">
+		<cfargument name="moduleWebRTC" type="boolean" required="false" default="false">
+		<cfargument name="showDniTitle" type="boolean" required="false" default="false">
+		<cfargument name="twoUrlsToAccess" type="boolean" required="false" default="false">
+		<cfargument name="modulefilesWithTables" type="boolean" required="false" default="true">
+		<cfargument name="filesTablesInheritance" type="boolean" required="false" default="true">
+		<cfargument name="moduleLists" type="boolean" required="false" default="true">
+		<cfargument name="moduleForms" type="boolean" required="false" default="true">
+		<cfargument name="modulePubMedComments" type="boolean" required="false" default="true">
+		<cfargument name="moduleListsWithPermissions" type="boolean" required="false" default="false">
+		<cfargument name="moduleAreaFilesLite" type="boolean" required="false" default="true">
+		<cfargument name="changeElementsArea" type="boolean" required="false" default="true">
+		<cfargument name="publicationScope" type="boolean" required="false" default="true">
+		<cfargument name="publicationValidation" type="boolean" required="false" default="false">
+		<cfargument name="userEmailRequired" type="boolean" required="false" default="true">
+		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
+		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
+
+		<cfargument name="addSchedules" type="boolean" required="false" default="false">
+
+		<cfargument name="defaultLanguage" type="string" required="false" default="es">
+
+		<cfargument name="twitterConsumerKey" type="string" required="false">
+		<cfargument name="twitterConsumerSecret" type="string" required="false">
+		<cfargument name="twitterAccessToken" type="string" required="false">
+		<cfargument name="twitterAccessTokenSecret" type="string" required="false">
+
+
+			<cfset APPLICATION.dsn = "doplanning_app">
+			<cfset APPLICATION.dataBaseName = "doplanning_app">
+			
+			<cfset APPLICATION.moduleMessenger = arguments.moduleMessenger><!---true/false--->
+			<cfset APPLICATION.moduleLdapUsers = arguments.moduleLdapUsers>
+			<cfset APPLICATION.moduleConvertFiles = arguments.moduleConvertFiles>
+			<cfset APPLICATION.moduleWeb = arguments.moduleWeb>
+			<cfset APPLICATION.moduleTwitter = arguments.moduleTwitter>
+			<cfset APPLICATION.moduleConsultations = arguments.moduleConsultations>
+			<cfset APPLICATION.includeConsultationsInAlerts = arguments.includeConsultationsInAlerts>
+			<cfset APPLICATION.moduleVirtualMeetings = arguments.moduleVirtualMeetings>
+			<cfset APPLICATION.moduleWebRTC = arguments.moduleWebRTC>
+			<cfset APPLICATION.showDniTitle = arguments.showDniTitle>
+			<cfset APPLICATION.twoUrlsToAccess = arguments.twoUrlsToAccess>
+			<cfset APPLICATION.modulefilesWithTables = arguments.modulefilesWithTables>
+			<cfset APPLICATION.filesTablesInheritance = arguments.filesTablesInheritance>
+			<cfset APPLICATION.moduleLists = arguments.moduleLists>
+			<cfset APPLICATION.moduleForms = arguments.moduleForms>
+			<cfset APPLICATION.modulePubMedComments = arguments.modulePubMedComments>
+			<cfset APPLICATION.moduleListsWithPermissions = arguments.moduleListsWithPermissions>
+			<cfset APPLICATION.moduleAreaFilesLite = arguments.moduleAreaFilesLite>
+			<cfset APPLICATION.changeElementsArea = arguments.changeElementsArea>
+			<cfset APPLICATION.publicationScope = arguments.publicationScope>
+			<cfset APPLICATION.publicationValidation = arguments.publicationValidation>
+			<cfset APPLICATION.userEmailRequired = arguments.userEmailRequired>
+			<cfset APPLICATION.moduleLdapDiraya = arguments.moduleLdapDiraya><!--- asnc, agsna --->
+			<cfset APPLICATION.moduleAntiVirus = arguments.moduleAntiVirus>
+
+			<cfif arguments.moduleWebRTC IS true>
+
+				<cfif isDefined("arguments.openTokApiKey") AND isDefined("arguments.openTokApiSecret")>
+					<cfset APPLICATION.openTokApiKey = arguments.openTokApiKey>
+					<cfset APPLICATION.openTokApiSecret = arguments.openTokApiSecret>
+				<cfelse>
+					<cfthrow message="Las variables openTokApiKey y openTokApiSecret deben estar definidas">
+				</cfif>
+				
+			</cfif>
+			
+			<cfset APPLICATION.title = arguments.title><!--- Default: DoPlanning --->
+			<cfset APPLICATION.identifier = "dp"><!---Por defecto aquí debe poner dp. dp para DoPlanning. vpnet para hospital--->
+			
+			<cfset APPLICATION.version = "1.8">
+			<cfset APPLICATION.clientVersion = "1.8">
+			<cfset APPLICATION.clientLoginVersion = "1.4.1">
+
+			<cfset APPLICATION.languages = "es,en">
+				
+			<cfset APPLICATION.dateFormat = "dd-mm-yyyy">
+
+			<cfset APPLICATION.serverIp = arguments.serverIp>
+			
+			<cfset APPLICATION.errorReport = "email"><!---email/file--->
+
+			<cfset APPLICATION.emailSendMode = "MandrillAPI"><!---SMTP/MandrillAPI--->
+			<cfset APPLICATION.emailServerPort = "587"><!---Default 587, SSL 465 (SSL da problemas con algunas versiones de JDK/JRE y Railo)--->
+			<cfset APPLICATION.emailServer = "smtp.mandrillapp.com">
+			<cfset APPLICATION.emailServerUserName = arguments.emailServerUserName>
+			<cfset APPLICATION.emailServerPassword = arguments.emailServerPassword>
+			<cfset APPLICATION.emailFrom = arguments.emailFrom>
+
+			<cfset APPLICATION.emailFalseTo = """Undisclosed-Recipients"" <dpera7@gmail.com>"> 
+			<cfset APPLICATION.emailReply = "support@doplanninng.net">
+			<cfset APPLICATION.emailFail = "support@doplanning.net">
+			<cfset APPLICATION.emailErrors = "bugs@doplanning.net">
+			
+			<cfset APPLICATION.smsFrom = APPLICATION.title>
+			<cfset APPLICATION.smsUserName = "">
+			<cfset APPLICATION.smsPassword = "">
+			<cfset APPLICATION.smsServerAddress = "http://api.mensatek.com/v4/enviar.php">
+			<cfset APPLICATION.smsReportAddress = "support@era7.com">
+			
+			<cfset APPLICATION.path = "">
+			<cfset APPLICATION.resourcesPath = APPLICATION.path&"/app">
+			<cfset APPLICATION.uploadFilesPath = APPLICATION.path&"/app/uploadFiles">
+			<cfset APPLICATION.corePath = "/dp-core">
+			<cfset APPLICATION.componentsPath = APPLICATION.corePath&"/components">
+			<cfset APPLICATION.coreComponentsPath = APPLICATION.componentsPath&"/core-components">
+			<cfset APPLICATION.filesPath = "/webroot/files/doplanning">
+			<cfset APPLICATION.defaultTimeout = 840><!---Si se pone a un tiempo menor que el de filesTimeout parece que algunas veces da problemas en la subida de archivos al acceder a otros métodos--->
+			<cfset APPLICATION.filesTimeout = 840><!---14 minutes--->
+			
+			<cfset APPLICATION.htmlPath = APPLICATION.path&"/html">
+			<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
+			
+			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js">
+			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
+	        <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
+			
+			<!---<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">--->
+			<cfset APPLICATION.baseCSSPath = "//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css">
+			<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+
+			<!---<cfset APPLICATION.themeCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">--->
+			<cfset APPLICATION.themeCSSPath = "">
+
+			<cfset APPLICATION.dpCSSPath = "#APPLICATION.htmlPath#/styles/styles.min.css?v=2.2">
+
+			<cfset APPLICATION.mainUrl = arguments.mainUrl>
+			<cfset APPLICATION.alternateUrl = "">
+			<cfset APPLICATION.signOutUrl = arguments.signOutUrl>
+			<cfset APPLICATION.helpUrl = "http://doplanning.net/es/page.cfm?id=9&title=tutoriales">
+			<cfset APPLICATION.communityUrl = "http://doplanning.net/">
+			<cfset APPLICATION.webUrl = "http://doplanning.net/">
+			
+			<cfset APPLICATION.termsOfUseUrl = APPLICATION.mainUrl&"/web/terms_of_use.cfm">
+
+			<cfset APPLICATION.defaultLanguage = arguments.defaultLanguage>
+
+			<cfif arguments.addSchedules IS true>
+				
+				<!---sendDiaryAlerts schedule--->
+				<cfschedule action="update"	task="sendDiaryAlerts" operation="HTTPRequest"
+					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.cfm"
+					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(1,5,0)#"
+					interval="daily" requestTimeOut="50" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.txt')#">
+
+
+			</cfif>
+
+			<cfif APPLICATION.moduleMessenger EQ true>
+				<cfset APPLICATION.messengerUserExpireTime = 60><!---In seconds--->
+				
+				<cfif arguments.addSchedules IS true>
+
+					<cfschedule action="update"	task="checkIfUsersAreConnected"	operation="HTTPRequest"
+						url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/checkIfUsersAreConnected.cfm"
+						startDate="#DateFormat(now(), 'm/d/yyyy')#"	startTime="#TimeFormat(now(), 'h:mm tt')#"
+						interval="#APPLICATION.messengerUserExpireTime#" requestTimeOut="30" publish="no"
+						path="#ExpandPath('#APPLICATION.resourcesPath#/schedules/')#"
+						resolveURL="yes" file="checkIfUsersAreConnectedResult.html">
+
+				</cfif>
+			</cfif>
+			
+			<cfif APPLICATION.moduleLdapUsers EQ true>
+				<cfset APPLICATION.ldapName = arguments.ldapName>
+				<cfset APPLICATION.ldapServer = "">
+				<cfset APPLICATION.ldapServerPort = "">
+				<cfset APPLICATION.ldapServerUserName = "">
+				<cfset APPLICATION.ldapServerPassword = "">
+				<cfset APPLICATION.ldapUsersPath = "">
+				<cfset APPLICATION.ldapScope = "">
+				<cfset APPLICATION.ldapUsersLoginAtt = ""><!---Att=Attribute--->
+				<cfset APPLICATION.ldapUsersPasswordAtt = "">
+			</cfif>
+			
+			<cfif APPLICATION.moduleTwitter IS true>
+				<cfset APPLICATION.twitterConsumerKey = arguments.twitterConsumerKey>
+				<cfset APPLICATION.twitterConsumerSecret = arguments.twitterConsumerSecret>
+				<cfset APPLICATION.twitterAccessToken = arguments.twitterAccessToken>
+				<cfset APPLICATION.twitterAccessTokenSecret = arguments.twitterAccessTokenSecret>	
+			</cfif>
+			<!---<cfif APPLICATION.moduleWeb EQ true>
+				<cfset var paths = [expandPath("./app/WS/components/twitter4j-core-2.2.6-SNAPSHOT.jar")]>
+				<cfset APPLICATION.javaloader = createObject("component", "app.WS.components.javaloader.JavaLoader").init(paths)>
+				<cfset APPLICATION.Twitter = APPLICATION.javaloader.create("twitter4j.Twitter")>		
+			</cfif>--->
+			
+			
+			<!---<cfxml variable="xmlApplication">
+				<cfoutput>
+				<application name="#this.name#" clientmanagement="#this.clientmanagement#" sessiontimeout="#this.sessiontimeout#">
+				
+					<dsn><![CDATA[#APPLICATION.dsn#]]></dsn>
+					<email_from><![CDATA[#APPLICATION.emailFrom#]]></email_from>
+					<email_reply><![CDATA[#APPLICATION.emailReply#]]></email_reply>
+					<email_fail><![CDATA[#APPLICATION.emailFail#]]></email_fail>
+					
+					<main_url><![CDATA[#APPLICATION.mainUrl#]]></main_url>
+					<sign_out_url><![CDATA[#APPLICATION.signOutUrl#]]></sign_out_url>
+					
+					<path><![CDATA[#APPLICATION.path#]]></path>
+					<components_path><![CDATA[#APPLICATION.componentsPath#]]></components_path>
+					<upload_files_path><![CDATA[#APPLICATION.uploadFilesPath#]]></upload_files_path>
+					
+					<default_language><![CDATA[#APPLICATION.defaultLanguage#]]></default_language>
+					
+				</application>
+				</cfoutput>
+			</cfxml>--->
+			
+			<!---<cffile action="write" nameconflict="overwrite" file="#ExpandPath('#APPLICATION.path#/Application.xml')#" output="#xmlApplication#" charset="utf-8" mode="775">--->
+				
+
+	</cffunction>
+
+
+	<!--- -------------------------------------- setApplicationVars ----------------------------------- --->
+	
+	<cffunction name="setApplicationVarsDefault" access="public" returntype="void">
+		<cfargument name="defaultSet" type="string" required="true" default="doplanning.net">
+
+		<cfargument name="emailServerUserName" type="string" required="true">
+		<cfargument name="emailServerPassword" type="string" required="true">
+		<cfargument name="emailFrom" type="string" required="false">
+
+		<cfargument name="openTokApiKey" type="numeric" required="false">
+		<cfargument name="openTokApiSecret" type="string" required="false">
+
+		<cfargument name="addSchedules" type="boolean" required="false" default="false">
+
+		<cfswitch expression="#arguments.defaultSet#">
+			
+			<cfcase value="doplanning.net">
+				
+				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
+					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
+					<cfif isDefined("arguments.emailFrom")>
+						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
+					<cfelse>
+						<cfinvokeargument name="emailFrom" value="no-reply@doplanning.net">
+					</cfif>
+
+					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
+					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
+					
+					<cfinvokeargument name="serverIp" value="54.217.233.240">
+
+					<cfinvokeargument name="mainUrl" value="http://doplanning.net">
+					<cfinvokeargument name="signOutUrl" value="http://doplanning.net">
+
+					<cfinvokeargument name="moduleWeb" value="true">
+
+					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+				</cfinvoke>
+
+			</cfcase>
+
+			<cfcase value="development">
+				
+				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+
+					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
+					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
+					<cfif isDefined("arguments.emailFrom")>
+						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
+					<cfelse>
+						<cfinvokeargument name="emailFrom" value="doplanning-curso-no-reply@hcs.es">
+					</cfif>
+
+					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
+					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
+					
+					<cfinvokeargument name="serverIp" value="176.34.253.2">
+
+					<cfinvokeargument name="mainUrl" value="http://curso.doplanning.net">
+					<cfinvokeargument name="signOutUrl" value="http://curso.doplanning.net">
+
+					<cfinvokeargument name="ldapName" value="Portal del Empleado">
+
+					<cfinvokeargument name="moduleLdapUsers" value="true">
+					<cfinvokeargument name="moduleWeb" value="true">
+					<cfinvokeargument name="moduleWebRTC" value="true">
+					<cfinvokeargument name="showDniTitle" value="true">
+					<cfinvokeargument name="modulePubMedComments" value="true">
+					<cfinvokeargument name="moduleListsWithPermissions" value="true">
+					<cfinvokeargument name="changeElementsArea" value="true">
+					<cfinvokeargument name="publicationScope" value="true">
+					<cfinvokeargument name="publicationValidation" value="true">
+					<cfinvokeargument name="userEmailRequired" value="false">
+					<cfinvokeargument name="moduleAntiVirus" value="true">
+
+					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+				</cfinvoke>
+				
+			</cfcase>
+
+
+			<cfcase value="era7bioinformatics.com">
+				
+				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
+					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
+					<cfif isDefined("arguments.emailFrom")>
+						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
+					<cfelse>
+						<cfinvokeargument name="emailFrom" value="doplanning@era7bioinformatics.com">
+					</cfif>
+
+					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
+					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
+					
+					<cfinvokeargument name="serverIp" value="23.23.250.237">
+
+					<cfinvokeargument name="mainUrl" value="http://era7bioinformatics.com">
+					<cfinvokeargument name="signOutUrl" value="http://era7bioinformatics.com/bioinformatics7">
+
+					<cfinvokeargument name="title" value="Era7">
+					<cfinvokeargument name="moduleWeb" value="true">
+					<cfinvokeargument name="moduleWebRTC" value="true">
+
+					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+				</cfinvoke>
+
+			</cfcase>
+
+			<cfcase value="genome7.com">
+				
+				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
+					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
+					<cfif isDefined("arguments.emailFrom")>
+						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
+					<cfelse>
+						<cfinvokeargument name="emailFrom" value="no-reply@genome7.com">
+					</cfif>
+
+					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
+					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
+					
+					<cfinvokeargument name="serverIp" value="54.77.243.167">
+
+					<cfinvokeargument name="mainUrl" value="https://genome7.com">
+					<cfinvokeargument name="signOutUrl" value="https://genome7.com/genome7">
+
+					<cfinvokeargument name="title" value="Genome7">
+					<cfinvokeargument name="moduleWeb" value="true">
+
+					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">	
+				</cfinvoke>
+
+			</cfcase>
+
+		</cfswitch>
+
+		<cfif NOT isDefined("APPLICATION.dsn")>
+			
+			<cfthrow message="defaultSet NO definido">
+
+		</cfif>
+
+	</cffunction>
+
+
+
+	<!--- -------------------------------------- setApplicationVarsDPWeb ----------------------------------- --->
+	
+	<cffunction name="setApplicationVarsDPWeb" access="public" returntype="void">
+		<cfargument name="dpWebClientAbb" type="string" required="true">
+		<cfargument name="dpWebClientTitle" type="string" required="true">
+		<cfargument name="intranetAutoLoginIps" type="string" required="false">
+
+		<cfargument name="dpUrl" type="string" required="true">
+		
+		<cfargument name="rootAreaEs" type="string" required="false">
+		<cfargument name="rootAreaEn" type="string" required="false">
+		<cfargument name="rootAreaIntranet" type="string" required="false">
+
+		<cfargument name="rootAreaNews" type="string" required="false">
+		<cfargument name="rootAreaIntranetNews" type="string" required="false">
+
+		<cfargument name="logoClient" type="string" required="true">
+
+		<cfargument name="webCSSPath" type="string" required="true">
+
+		<cfargument name="cssLayout" type="string" required="true">
+		<cfargument name="colorLayout" type="string" required="true">
+		<cfargument name="fontLayout" type="string" required="true">
+		<cfargument name="layout" type="string" required="true">
+		<cfargument name="indexLayout" type="string" required="true">
+		<cfargument name="jsLayout" type="string" required="true">
+		<cfargument name="intranetLayout" type="string" required="true">
+		<cfargument name="indexIntranetLayout" type="string" required="true">
+		<cfargument name="colorIntranetLayout" type="string" required="true">
+		<cfargument name="fontIntranetLayout" type="string" required="true">
+
+		<cfargument name="googleAnalyticsAccountId" type="string" required="true">
+		<cfargument name="addThisProfileId" type="string" required="true">
+
+		<cfargument name="includeTableSorter" type="boolean" required="false" default="false">
+
+			<cfset APPLICATION.dpWebClientAbb = arguments.dpWebClientAbb>
+			<cfset APPLICATION.dpWebClientDsn = APPLICATION.identifier&"_"&APPLICATION.dpWebClientAbb>
+			<cfset APPLICATION.dpWebClientTitle = arguments.dpWebClientTitle>
+
+			<cfset APPLICATION.dpUrl = arguments.dpUrl>
+
+			<cfif isDefined("arguments.intranetAutoLoginIps")>
+				<cfset APPLICATION.intranetAutoLoginIps = arguments.intranetAutoLoginIps>
+			</cfif>
+
+			<cfif isDefined("arguments.rootAreaEs")>
+				<cfset APPLICATION.rootAreaEs = arguments.rootAreaEs>
+			</cfif>
+			<cfif isDefined("arguments.rootAreaEn")>
+				<cfset APPLICATION.rootAreaEn = arguments.rootAreaEn>
+			</cfif>
+			<cfif isDefined("arguments.rootAreaIntranet")>
+				<cfset APPLICATION.rootAreaIntranet = arguments.rootAreaIntranet>
+			</cfif>
+			<cfif isDefined("arguments.rootAreaNews")>
+				<cfset APPLICATION.rootAreaNews = arguments.rootAreaNews>
+			</cfif>
+			<cfif isDefined("arguments.rootAreaIntranetNews")>
+				<cfset APPLICATION.rootAreaIntranetNews = arguments.rootAreaIntranetNews>
+			</cfif>
+			
+			<cfset APPLICATION.logoClient = arguments.logoClient>
+
+			<cfset APPLICATION.webCSSPath = arguments.webCSSPath>
+
+			<cfset APPLICATION.cssLayout = arguments.cssLayout>
+            <cfset APPLICATION.colorLayout = arguments.colorLayout>
+            <cfset APPLICATION.fontLayout = arguments.fontLayout>
+            <cfset APPLICATION.layout = arguments.layout>
+            <cfset APPLICATION.indexLayout = arguments.indexLayout>			
+            <cfset APPLICATION.jsLayout = arguments.jsLayout>   
+			
+			<cfset APPLICATION.intranetLayout = arguments.intranetLayout>
+			<cfset APPLICATION.indexIntranetLayout = arguments.indexIntranetLayout>
+			<cfset APPLICATION.colorIntranetLayout = arguments.colorIntranetLayout>
+			<cfset APPLICATION.fontIntranetLayout = arguments.fontIntranetLayout>
+
+			<cfset APPLICATION.includeTableSorter = arguments.includeTableSorter>
+
+			<!---Google analytics--->
+			<cfset APPLICATION.googleAnalyticsAccountId = arguments.googleAnalyticsAccountId>
+			<cfset APPLICATION.addThisProfileId = arguments.addThisProfileId>
+
+	</cffunction>
+
+
+</cfcomponent>

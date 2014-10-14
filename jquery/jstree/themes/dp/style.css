@@ -926,7 +926,7 @@
 }
 .jstree-dp li[rel="allowed-web"] > a > .jstree-icon {
    background-image: url("../../../../html/assets/icons_dp/area_web_small.png");
-   background-position: 0 0;
+   background-position: 0 3px;
 }
 .jstree-dp li[rel="not-allowed"] > a > .jstree-icon {
    background-image: url("../../../../html/assets/icons_dp/area_small_disabled.png");
@@ -934,16 +934,16 @@
 }
 .jstree-dp li[rel="not-allowed-web"] > a > .jstree-icon {
    background-image: url("../../../../html/assets/icons_dp/area_web_small_disabled.png");
-   background-position: 0 0;
+   background-position: 0 3px;
 }
 
 .jstree-dp li[rel="allowed-admin"] > a > .jstree-icon {
-   background-image: url("../../../../html/assets/icons_dp/area_small_admin.jpg");
+   background-image: url("../../../../html/assets/icons_dp/area_small_admin.png");
    background-position: 0 3px;
 }
 .jstree-dp li[rel="allowed-web-admin"] > a > .jstree-icon {
-   background-image: url("../../../../html/assets/icons_dp/area_web_small.png");
-   background-position: 0 0;
+   background-image: url("../../../../html/assets/icons_dp/area_web_small_admin.png");
+   background-position: 0 3px;
 }
 /*.jstree-dp li[rel="message"] > a > .jstree-icon {
    background-image: url("../../../../html/assets/icons/message_small.png");

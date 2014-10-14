@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
+<!--Developed and copyright by Web4Bio 2007-2014 (www.web4bio.com)-->
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la 鷏tima versi髇 (que no habilite el modo de compatibilidad) --->
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la 煤ltima versi贸n (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
@@ -14,7 +14,9 @@
 <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<cfif len(APPLICATION.themeCSSPath) GT 0>
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
+</cfif>
 <!---
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -34,7 +36,8 @@
 	<link href="#APPLICATION.htmlPath#/font-awesome/css/font-awesome-ie7.min.css" rel="stylesheet">
 <![endif]-->
 
-<link href="styles/styles.min.css?v=2.1" rel="stylesheet" type="text/css" media="all" />
+<!---<link href="../html/styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />--->
+<link href="#APPLICATION.dpCSSPath#" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
@@ -48,7 +51,7 @@
 </cfoutput>
 
 <cfif APPLICATION.identifier EQ "vpnet">
-	<!---Esto solo debe mantenerse para la versi髇 vpnet (por el Messenger)--->
+	<!---Esto solo debe mantenerse para la versi贸n vpnet (por el Messenger)--->
 	<script src="../SpryAssets/includes/xpath.js"></script>
 	<script src="../SpryAssets/includes/SpryData.js"></script>
 	<script src="../SpryAssets/includes/SpryXML.js"></script>
@@ -94,7 +97,7 @@
 		window.location.href = url;
 	}
 	function openUrlHtml2(url,target){
-		//En esta versi髇 no se hace nada con las peticiones a este m閠odo
+		//En esta versi贸n no se hace nada con las peticiones a este m茅todo
 	}
 </script>
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
@@ -123,7 +126,7 @@
 </cfif>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
-		<a href="preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="logout.cfm" class="text_user_logged" title="Cerrar sesi髇" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+		<a href="preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="logout.cfm" class="text_user_logged" title="Cerrar sesi贸n" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 	</div>
 </div>
 </cfoutput>

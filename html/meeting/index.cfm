@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
+<!--Developed and copyright by Web4Bio 2007-2014 (www.web4bio.com)-->
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
@@ -14,7 +14,9 @@
 <link href="../assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<cfif len(APPLICATION.themeCSSPath) GT 0>
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
+</cfif>
 <!---
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -34,7 +36,8 @@
 	<link href="#APPLICATION.htmlPath#/font-awesome/css/font-awesome-ie7.min.css" rel="stylesheet">
 <![endif]-->
 
-<link href="../styles/styles.min.css?v=2.1" rel="stylesheet" type="text/css" media="all" />
+<!---<link href="../html/styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />--->
+<link href="#APPLICATION.dpCSSPath#" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
@@ -68,6 +71,7 @@
 
 <cfoutput>
 <script src="#APPLICATION.jqueryJSPath#"></script>
+<script src="#APPLICATION.bootstrapJSPath#"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
 <script src="../scripts/functions.min.js?v=2.1"></script>
@@ -85,9 +89,6 @@
 </script>
 
 
-<cfoutput>
-<script src="#APPLICATION.bootstrapJSPath#"></script>
-</cfoutput>
 <script>
 	function openUrlLite(url,target){
 		window.location.href = url;
@@ -114,16 +115,15 @@
 
  
 <cfoutput>
-	<cfif APPLICATION.title EQ "DoPlanning">
-		<div style="float:left; padding-top:2px;">
-			<a href="../index.cfm"><img src="../assets/logo_app.gif" alt="Inicio" title="Inicio"/></a>
-		</div>
-	<cfelse>
-		<div style="float:left;">
-			<a href="../index.cfm" title="Inicio" class="btn"><i class="icon-home" style="font-size:16px"></i></a>
-		</div>
-	</cfif>
-</div>
+<cfif APPLICATION.title EQ "DoPlanning">
+	<div style="float:left; padding-top:2px;">
+		<a href="../index.cfm"><img src="../assets/logo_app.gif" alt="Inicio" title="Inicio"/></a>
+	</div>
+<cfelse>
+	<div style="float:left;">
+		<a href="../index.cfm" title="Inicio" class="btn"><i class="icon-home" style="font-size:16px"></i></a>
+	</div>
+</cfif>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
 		<a href="../preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="../logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>

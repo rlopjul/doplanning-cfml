@@ -2,25 +2,11 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_diseno_general_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
+<!--Developed and copyright by Web4Bio 2007-2014 (www.web4bio.com)-->
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la Ãºltima versiÃ³n (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-
-<!---ADD TO HOME SCREEN--->
-<link rel="stylesheet" type="text/css" href="../scripts/cubiq-add-to-homescreen/addtohomescreen.css">
-<script src="../scripts/cubiq-add-to-homescreen/addtohomescreen.min.js"></script>
-<script>
-addToHomescreen({
-   startDelay: 0
-});
-</script>
-<!---END ADD TO HOME SCREEN--->
-
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
 <cfinclude template="#APPLICATION.corePath#/includes/login_query.cfm">
@@ -35,7 +21,7 @@ addToHomescreen({
 	<cfset client_abb = URL.client_abb>
 </cfif>
 
-<!---Aquí se añade COLLATE utf8_bin para que sea case sensitive en la comparación--->
+<!---Aquï¿½ se aï¿½ade COLLATE utf8_bin para que sea case sensitive en la comparaciï¿½n--->
 <cfquery datasource="#APPLICATION.dsn#" name="getClient">
 	SELECT *
 	FROM APP_clients
@@ -55,7 +41,9 @@ addToHomescreen({
 <link href="../assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<cfif len(APPLICATION.themeCSSPath) GT 0>
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
+</cfif>
 <!---
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -75,7 +63,8 @@ addToHomescreen({
 	<link href="#APPLICATION.htmlPath#/font-awesome/css/font-awesome-ie7.min.css" rel="stylesheet">
 <![endif]-->
 
-<link href="../styles/styles.min.css?v=2.1" rel="stylesheet" type="text/css" media="all" />
+<!---<link href="../html/styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />--->
+<link href="#APPLICATION.dpCSSPath#" rel="stylesheet" type="text/css" media="all" />
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
@@ -89,7 +78,7 @@ addToHomescreen({
 </cfoutput>
 
 <cfif APPLICATION.identifier EQ "vpnet">
-	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
+	<!---Esto solo debe mantenerse para la versiÃ³n vpnet (por el Messenger)--->
 	<script src="../../SpryAssets/includes/xpath.js"></script>
 	<script src="../../SpryAssets/includes/SpryData.js"></script>
 	<script src="../../SpryAssets/includes/SpryXML.js"></script>

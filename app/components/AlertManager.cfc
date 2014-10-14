@@ -1026,11 +1026,13 @@
 		<cfset var alertContent = "">
 		<cfset var footContent = "">
 
-		<cfinvoke component="AlertManager" method="getFileAccessContent" returnvariable="accessContent">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileAccessContent" returnvariable="accessContent">
 			<cfinvokeargument name="file_id" value="#objectFile.id#"/>
 			<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#"/>
 			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			<cfinvokeargument name="language" value="#arguments.language#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 
 		<cfsavecontent variable="alertContent">
@@ -1049,7 +1051,7 @@
 			</cfoutput>
 		</cfsavecontent>
 
-		<cfinvoke component="AlertManager" method="getFileFootContent" returnvariable="footContent">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileFootContent" returnvariable="footContent">
 			<cfinvokeargument name="language" value="#arguments.language#">
 		</cfinvoke>
 
@@ -1126,18 +1128,20 @@
 		<!---ACTION USER--->
 		<cfset actionUserSubject = "[#root_area.name#][#actionSubject#] "&objectFile.name>
 					
-		<cfinvoke component="AlertManager" method="getFileAccessContent" returnvariable="accessContent">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileAccessContent" returnvariable="accessContent">
 			<cfinvokeargument name="file_id" value="#objectFile.id#"/>
 			<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#"/>
 			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			<cfinvokeargument name="language" value="#actionUser.language#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 		</cfinvoke>
 
-		<cfinvoke component="AlertManager" method="getFileFootContent" returnvariable="footContent">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileFootContent" returnvariable="footContent">
 			<cfinvokeargument name="language" value="#actionUser.language#">
 		</cfinvoke>
 
-		<cfinvoke component="AlertManager" method="getFileAlertContent" returnvariable="fileAlertContent">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileAlertContent" returnvariable="fileAlertContent">
 			<cfinvokeargument name="objectFile" value="#arguments.objectFile#">
 			<cfinvokeargument name="language" value="#actionUser.language#">
 		</cfinvoke>

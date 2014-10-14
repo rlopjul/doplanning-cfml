@@ -838,156 +838,6 @@
 
 	</cffunction>
 
-	
-	<!--- ----------------------- DELETE FILE VERSION -------------------------------- --->
-	
-<!---	<cffunction name="deleteFileVersion" returntype="struct" output="false" access="private">		
-		<cfargument name="version_id" type="numeric" required="true">
-		<cfargument name="fileQuery" type="query" required="true">
-		<cfargument name="send_alert" type="boolean" required="true">
-		<cfargument name="forceDeleteVirus" type="boolean" required="false" default="false">
-		
-		<cfset var method = "deleteFileVersion">
-		
-		<cfset var response = structNew()>
-
-		<cfset var area_id = "">
-		<cfset var fileTypeId = "">
-		<cfset var path = "">
-		<cfset var filePath ="">
-
-		<!--- Las consultas de este método no se pueden meter dentro de otra transacción porque este método se llama desde deleteFile --->
-								
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-									
-			<!---
-			<!--- getFile --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
-				<cfinvokeargument name="file_id" value="#arguments.file_id#">
-				<cfinvokeargument name="with_lock" value="false">
-				<cfinvokeargument name="parse_dates" value="true">
-				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
-
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
-			<cfif fileQuery.recordCount IS 0><!---The file does not exist (is not found)--->
-				
-				<cfset error_code = 601>
-				
-				<cfthrow errorcode="#error_code#">
-							
-			</cfif>	
-
-			<cfset fileTypeId = fileQuery.file_type_id>
-			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
-			
-			<cfset area_id = fileQuery.area_id>
-
-			<!---checkAreaAccess--->
-			<cfinclude template="includes/checkAreaAccess.cfm">
-		--->
-
-			<cfset fileTypeId = fileQuery.file_type_id>
-			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
-
-			<cfif fileQuery.locked IS true AND arguments.forceDeleteVirus IS false>
-
-				<cfset response = {result=false, version_id=#arguments.version_id#, message="No se puede eliminar un archivo bloqueado, debe desbloquearlo."}>
-
-			<cfelse>
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersion" returnvariable="fileVersionQuery">
-					<cfinvokeargument name="version_id" value="#arguments.version_id#">
-					<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
-					
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
-
-				<cfif fileVersionQuery.recordCount IS 0>
-					
-					<cfset error_code = 601>
-				
-					<cfthrow errorcode="#error_code#">
-
-				</cfif>
-
-				<!--- <cftransaction> --->
-				
-					<!--- Deletion of the row representing the file version --->
-					<cfquery name="deleteFileVersionQuery" datasource="#client_dsn#">		
-						DELETE
-						FROM #client_abb#_files_versions
-						WHERE version_id = <cfqueryparam value="#arguments.version_id#" cfsqltype="cf_sql_integer">
-						AND file_id = <cfqueryparam value="#fileQuery.file_id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
-					
-					<cfset path = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#/'>	
-					<cfset filePath = path & fileVersionQuery.physical_name>			
-					
-					<!--- Now we delete physically the file on the server --->
-					<!---<cfif FileExists(filePath)>---><!---If the physical file exist--->
-						<cffile action="delete" file="#filePath#">
-					<!---</cfif>--->
-					
-					<!---Update User Space Used--->
-					<cfif fileQuery.status EQ "ok">
-						<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
-							UPDATE #client_abb#_users
-							SET space_used = space_used-#fileVersionQuery.file_size#
-							WHERE id = <cfqueryparam value="#fileVersionQuery.user_in_charge#" cfsqltype="cf_sql_integer">;
-						</cfquery>
-					</cfif>
-				
-				<!--- </cftransaction> --->
-
-				<cfinclude template="includes/logRecord.cfm">
-
-				<cfif arguments.send_alert IS true AND arguments.forceDeleteVirus>
-
-					<!--- Alert --->
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
-						<cfinvokeargument name="objectFile" value="#fileQuery#">
-						<cfinvokeargument name="fileTypeId" value="#fileQuery.file_type_id#">
-						<cfinvokeargument name="area_id" value="#fileQuery.area_id#">
-						<cfinvokeargument name="action" value="delete_version_virus">
-
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">						
-					</cfinvoke>
-					
-				</cfif>
-
-				<!---<cfif getFileAreasQuery.recordCount GT 0>
-					
-					<cfloop query="getFileAreasQuery">
-
-						<!--- Alert --->
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
-							<cfinvokeargument name="objectFile" value="#fileVersionQuery#">
-							<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
-							<cfinvokeargument name="area_id" value="#getFileAreasQuery.area_id#">
-							<cfinvokeargument name="action" value="delete">
-
-							<cfinvokeargument name="client_abb" value="#client_abb#">
-							<cfinvokeargument name="client_dsn" value="#client_dsn#">
-						</cfinvoke>
-						
-					</cfloop>
-
-				</cfif>--->
-
-				<cfset response = {result=true, version_id=#arguments.version_id#}>
-
-			</cfif>
-
-		<cfreturn response>	
-		
-	</cffunction>
---->
-
 
 	
 	<!--- ----------------------- MOVE FILE TO FOLDER -------------------------------- --->
@@ -2554,11 +2404,16 @@
 					WHERE id = <cfqueryparam value="#new_file_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 				
-				<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
-					UPDATE #client_abb#_users
-					SET space_used = space_used+<cfqueryparam value="#fileQuery.file_size#" cfsqltype="cf_sql_integer">
-					WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+				<cfif arguments.fileTypeId IS 1>
+					
+					<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
+						UPDATE #client_abb#_users
+						SET space_used = space_used+<cfqueryparam value="#fileQuery.file_size#" cfsqltype="cf_sql_integer">
+						WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+
+				</cfif>
+				
 
 			</cftransaction>
 			
@@ -3444,12 +3299,16 @@
 						<cfthrow errorcode="#error_code#">
 					</cfif>
 					
-					<!---Update User Space Used--->
-					<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
-						UPDATE #client_abb#_users
-						SET space_used = space_used-#fileQuery.file_size#
-						WHERE id = #user_id#;
-					</cfquery>	
+					<cfif type EQ "user_image">
+						
+						<!---Update User Space Used--->
+						<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
+							UPDATE #client_abb#_users
+							SET space_used = space_used-#fileQuery.file_size#
+							WHERE id = #user_id#;
+						</cfquery>
+
+					</cfif>	
 				
 				</cftransaction>
 			
@@ -3728,14 +3587,17 @@
 
 				</cfif>	
 
-				
-				<!--- ------------------ Update User Space Used --------------------- --->
-				<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
-					UPDATE #client_abb#_users
-					SET space_used = space_used+<cfqueryparam value="#uploadedFile.fileSize#" cfsqltype="cf_sql_integer">
-					WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+				<cfif arguments.fileTypeId IS 1>
+					
+					<!--- ------------------ Update User Space Used --------------------- --->
+					<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
+						UPDATE #client_abb#_users
+						SET space_used = space_used+<cfqueryparam value="#uploadedFile.fileSize#" cfsqltype="cf_sql_integer">
+						WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
 
+				</cfif>
+				
 				<!--- associateFileToArea --->
 				<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="associateFileResult">
 					<cfinvokeargument name="objectFile" value="#objectFile#"/>
@@ -4199,18 +4061,24 @@
 						WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 					
-					<!--- ------------------ Update User Space Used --------------------- --->
-					<cfquery name="updateSpaceUsedRemove" datasource="#client_dsn#">
-						UPDATE #client_abb#_users
-						SET space_used = space_used-#fileQuery.file_size#
-						WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
+					<cfif arguments.fileTypeId IS 1>
 
-					<cfquery name="updateSpaceUsedAdd" datasource="#client_dsn#">
-						UPDATE #client_abb#_users
-						SET space_used = space_used+<cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">
-						WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
+						<!--- Esto se deshabilitará para todos los archivos ya que no es un valor fiable porque los archivos de área no pertenecen a un sólo usuario, pero por ahora se deja para los archivos de usuario --->
+
+						<!--- ------------------ Update User Space Used --------------------- --->
+						<cfquery name="updateSpaceUsedRemove" datasource="#client_dsn#">
+							UPDATE #client_abb#_users
+							SET space_used = space_used-#fileQuery.file_size#
+							WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+						<cfquery name="updateSpaceUsedAdd" datasource="#client_dsn#">
+							UPDATE #client_abb#_users
+							SET space_used = space_used+<cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">
+							WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+					</cfif>
 				
 				</cftransaction>
 
@@ -5869,6 +5737,10 @@
 						
 					</cfif>
 
+					<!---
+					
+					Se deshabilita para los archivos que no son de usuario
+
 					<cftransaction>
 						
 						<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
@@ -5889,6 +5761,8 @@
 						</cfquery>
 
 					</cftransaction>
+
+					--->
 
 					<cfcatch>
 

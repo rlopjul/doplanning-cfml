@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2014
 
 	Date of file creation: 16-05-2012
 	File created by: alucena
@@ -33,6 +33,8 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<!---<cfargument name="client_dsn" type="string" required="yes">--->
+
+		<cfargument name="flash_version" required="false" default="false"><!---Provisional para detectar las subidas de archivos desde la versión Flash de la administración--->
 				
 		<cfset var method = "uploadItemFile">		
 		
@@ -151,7 +153,7 @@
 			
 			<cfif type EQ "item_image_html">
 				<cffile action="upload" filefield="#arguments.Filedata#" destination="#destination#" nameconflict="overwrite" result="uploadedFile" accept="image/gif,image/jpeg,image/png,image/pjpeg"><!---image/pjpeg para IE8 que tiene un bug--->
-			<cfelseif type EQ "area_image">
+			<cfelseif type EQ "area_image" AND arguments.flash_version IS false>
 				<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
 			<cfelse>
 				<cffile action="upload" filefield="#arguments.Filedata#" destination="#destination#" nameconflict="overwrite" result="uploadedFile">

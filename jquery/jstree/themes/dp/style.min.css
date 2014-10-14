@@ -97,8 +97,8 @@
 .jstree-dp-responsive .jstree-node{background-position:-80px 0;background-repeat:repeat-y}.jstree-dp-responsive .jstree-last{background:transparent}.jstree-dp-responsive .jstree-leaf>.jstree-ocl{background-position:-40px -120px}
 .jstree-dp-responsive .jstree-last>.jstree-ocl{background-position:-40px -160px}.jstree-dp-responsive .jstree-themeicon-custom{background-color:transparent;background-image:none}
 }.jstree-dp>.jstree-container-ul>.jstree-node{margin-left:0;margin-right:0}.jstree-dp li a{font-family:Verdana,Arial}.jstree-dp li[rel="allowed"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_small.png");background-position:0 3px}
-.jstree-dp li[rel="allowed-web"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_web_small.png");background-position:0 0}
+.jstree-dp li[rel="allowed-web"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_web_small.png");background-position:0 3px}
 .jstree-dp li[rel="not-allowed"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_small_disabled.png");background-position:0 3px}
-.jstree-dp li[rel="not-allowed-web"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_web_small_disabled.png");background-position:0 0}
-.jstree-dp li[rel="allowed-admin"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_small_admin.jpg");background-position:0 3px}
-.jstree-dp li[rel="allowed-web-admin"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_web_small.png");background-position:0 0}
+.jstree-dp li[rel="not-allowed-web"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_web_small_disabled.png");background-position:0 3px}
+.jstree-dp li[rel="allowed-admin"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_small_admin.png");background-position:0 3px}
+.jstree-dp li[rel="allowed-web-admin"]>a>.jstree-icon{background-image:url("../../../../html/assets/icons_dp/area_web_small_admin.png");background-position:0 3px}
