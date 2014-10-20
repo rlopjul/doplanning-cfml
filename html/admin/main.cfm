@@ -123,6 +123,8 @@
 <script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.2"></script>
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
 <script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.7"></script>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 </cfoutput>
 
 <script>
@@ -235,6 +237,14 @@
 			loadModal('html_content/area_user_associate.cfm?area='+curAreaId+'&user='+userId);
 		else
 			alert("Debe seleccionar un área para asociar el usuario");
+	}
+
+	function openAreaAssociateAdministratorModal(userId){
+
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/area_administrator_associate.cfm?area='+curAreaId+'&user='+userId);
+		else
+			alert("Debe seleccionar un área para asociar el administrador");
 	}
 
 	function openAreaModifyModal(){

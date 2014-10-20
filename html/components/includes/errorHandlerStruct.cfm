@@ -68,6 +68,10 @@
 				<cfinvokeargument name="content" value="#mail_content#">
 				<cfinvokeargument name="foot_content" value="">
 			</cfinvoke>
+
+			<cfcatch>
+
+			</cfcatch>
 			
 			<cffinally>
 

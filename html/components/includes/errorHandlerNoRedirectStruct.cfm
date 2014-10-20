@@ -74,14 +74,16 @@
 				<cfinvokeargument name="content" value="#mail_content#">
 				<cfinvokeargument name="foot_content" value="">
 			</cfinvoke>
-			
-			<cffinally>
 
-				<!--- response --->
+			<!--- response --->
+			<cfset response = {result="false", message="#cfcatch.message#"}>
+
+			<cfcatch>
+
 				<cfset response = {result="false", message="#cfcatch.message#"}>
-			
-			</cffinally>
 
+			</cfcatch>
+			
 		</cftry>
 		
 	</cfcatch>

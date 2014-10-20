@@ -148,11 +148,11 @@
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
 	        <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
 			
-			<!---<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">--->
+			<!---<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">--->
 			<cfset APPLICATION.baseCSSPath = "//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css">
 			<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
 
-			<!---<cfset APPLICATION.themeCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">--->
+			<!---<cfset APPLICATION.themeCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">--->
 			<cfset APPLICATION.themeCSSPath = "">
 
 			<cfset APPLICATION.dpCSSPath = "#APPLICATION.htmlPath#/styles/styles.min.css?v=2.2">
@@ -162,7 +162,7 @@
 			<cfset APPLICATION.signOutUrl = arguments.signOutUrl>
 			<cfset APPLICATION.helpUrl = "http://doplanning.net/es/page.cfm?id=9&title=tutoriales">
 			<cfset APPLICATION.communityUrl = "http://doplanning.net/">
-			<cfset APPLICATION.webUrl = "http://doplanning.net/">
+			<cfset APPLICATION.webUrl = ""><!--- http://doplanning.net/ ---><!--- Esta variable NO se debe usar, se mantiene para retrocompatibilidad --->
 			
 			<cfset APPLICATION.termsOfUseUrl = APPLICATION.mainUrl&"/web/terms_of_use.cfm">
 
@@ -216,33 +216,7 @@
 				<cfset var paths = [expandPath("./app/WS/components/twitter4j-core-2.2.6-SNAPSHOT.jar")]>
 				<cfset APPLICATION.javaloader = createObject("component", "app.WS.components.javaloader.JavaLoader").init(paths)>
 				<cfset APPLICATION.Twitter = APPLICATION.javaloader.create("twitter4j.Twitter")>		
-			</cfif>--->
-			
-			
-			<!---<cfxml variable="xmlApplication">
-				<cfoutput>
-				<application name="#this.name#" clientmanagement="#this.clientmanagement#" sessiontimeout="#this.sessiontimeout#">
-				
-					<dsn><![CDATA[#APPLICATION.dsn#]]></dsn>
-					<email_from><![CDATA[#APPLICATION.emailFrom#]]></email_from>
-					<email_reply><![CDATA[#APPLICATION.emailReply#]]></email_reply>
-					<email_fail><![CDATA[#APPLICATION.emailFail#]]></email_fail>
-					
-					<main_url><![CDATA[#APPLICATION.mainUrl#]]></main_url>
-					<sign_out_url><![CDATA[#APPLICATION.signOutUrl#]]></sign_out_url>
-					
-					<path><![CDATA[#APPLICATION.path#]]></path>
-					<components_path><![CDATA[#APPLICATION.componentsPath#]]></components_path>
-					<upload_files_path><![CDATA[#APPLICATION.uploadFilesPath#]]></upload_files_path>
-					
-					<default_language><![CDATA[#APPLICATION.defaultLanguage#]]></default_language>
-					
-				</application>
-				</cfoutput>
-			</cfxml>--->
-			
-			<!---<cffile action="write" nameconflict="overwrite" file="#ExpandPath('#APPLICATION.path#/Application.xml')#" output="#xmlApplication#" charset="utf-8" mode="775">--->
-				
+			</cfif>--->		
 
 	</cffunction>
 
@@ -403,7 +377,8 @@
 		<cfargument name="dpWebClientTitle" type="string" required="true">
 		<cfargument name="intranetAutoLoginIps" type="string" required="false">
 
-		<cfargument name="dpUrl" type="string" required="true">
+		<cfargument name="webUrl" type="string" required="true">
+		<cfargument name="dpUrl" type="string" required="false">
 		
 		<cfargument name="rootAreaEs" type="string" required="false">
 		<cfargument name="rootAreaEn" type="string" required="false">
@@ -414,29 +389,38 @@
 
 		<cfargument name="logoClient" type="string" required="true">
 
-		<cfargument name="webCSSPath" type="string" required="true">
+		<cfargument name="jsLayout" type="string" required="false"><!---Esta variable NO se debe usar, se mantiene sólo para retrocompatibilidad---->
 
-		<cfargument name="cssLayout" type="string" required="true">
-		<cfargument name="colorLayout" type="string" required="true">
-		<cfargument name="fontLayout" type="string" required="true">
-		<cfargument name="layout" type="string" required="true">
-		<cfargument name="indexLayout" type="string" required="true">
-		<cfargument name="jsLayout" type="string" required="true">
-		<cfargument name="intranetLayout" type="string" required="true">
-		<cfargument name="indexIntranetLayout" type="string" required="true">
-		<cfargument name="colorIntranetLayout" type="string" required="true">
-		<cfargument name="fontIntranetLayout" type="string" required="true">
+		<cfargument name="webCSSPath" type="string" required="true">
+		<cfargument name="cssLayout" type="string" required="false" default="#APPLICATION.path#/app/css/mockup.css">
+
+		<cfargument name="layout" type="string" required="false" default="#APPLICATION.path#/app/layouts/pages/layout.cfm">
+		<cfargument name="indexLayout" type="string" required="false" default="#APPLICATION.path#/app/layouts/pages/layout_index.cfm">
+		<cfargument name="colorLayout" type="string" required="false" default="#APPLICATION.path#/app/css/colors/palette.css">
+		<cfargument name="fontLayout" type="string" required="false" default="#APPLICATION.path#/app/css/fonts/type.css">
+
+		<cfargument name="intranetLayout" type="string" required="false" default="#APPLICATION.path#/app/layouts/pages/layout_intranet.cfm">
+		<cfargument name="indexIntranetLayout" type="string" required="false" default="#APPLICATION.path#/app/layouts/pages/layout_index_intranet.cfm">
+		<cfargument name="colorIntranetLayout" type="string" required="false" default="#APPLICATION.path#/app/css/colors/palette.css">
+		<cfargument name="fontIntranetLayout" type="string" required="false" default="#APPLICATION.path#/app/css/fonts/type.css">
 
 		<cfargument name="googleAnalyticsAccountId" type="string" required="true">
 		<cfargument name="addThisProfileId" type="string" required="true">
 
 		<cfargument name="includeTableSorter" type="boolean" required="false" default="false">
 
+		<cfargument name="dpWebEnableTwitterWidgets" type="boolean" required="false" default="false"><!---Carga el script de widgets de Twitter--->
+		<cfargument name="dpWebEnableGeneratePdf" type="boolean" required="false" default="true">
+
 			<cfset APPLICATION.dpWebClientAbb = arguments.dpWebClientAbb>
 			<cfset APPLICATION.dpWebClientDsn = APPLICATION.identifier&"_"&APPLICATION.dpWebClientAbb>
 			<cfset APPLICATION.dpWebClientTitle = arguments.dpWebClientTitle>
 
-			<cfset APPLICATION.dpUrl = arguments.dpUrl>
+			<cfset APPLICATION.webUrl = arguments.webUrl><!--- URL de la web en DPWeb --->
+
+			<cfif isDefined("arguments.dpUrl")><!---Esta variable NO se debe usar, se mantiene para retrocompatibilidad--->
+				<cfset APPLICATION.dpUrl = arguments.dpUrl>
+			</cfif>
 
 			<cfif isDefined("arguments.intranetAutoLoginIps")>
 				<cfset APPLICATION.intranetAutoLoginIps = arguments.intranetAutoLoginIps>
@@ -466,8 +450,11 @@
             <cfset APPLICATION.colorLayout = arguments.colorLayout>
             <cfset APPLICATION.fontLayout = arguments.fontLayout>
             <cfset APPLICATION.layout = arguments.layout>
-            <cfset APPLICATION.indexLayout = arguments.indexLayout>			
-            <cfset APPLICATION.jsLayout = arguments.jsLayout>   
+            <cfset APPLICATION.indexLayout = arguments.indexLayout>	
+
+            <cfif isDefined("arguments.jsLayout")><!---Esta variable NO se debe usar, se mantiene para retrocompatibilidad---->
+            	<cfset APPLICATION.jsLayout = arguments.jsLayout>   
+            </cfif>
 			
 			<cfset APPLICATION.intranetLayout = arguments.intranetLayout>
 			<cfset APPLICATION.indexIntranetLayout = arguments.indexIntranetLayout>
@@ -475,6 +462,9 @@
 			<cfset APPLICATION.fontIntranetLayout = arguments.fontIntranetLayout>
 
 			<cfset APPLICATION.includeTableSorter = arguments.includeTableSorter>
+
+			<cfset APPLICATION.dpWebEnableTwitterWidgets = arguments.dpWebEnableTwitterWidgets>
+			<cfset APPLICATION.dpWebEnableGeneratePdf = arguments.dpWebEnableGeneratePdf>
 
 			<!---Google analytics--->
 			<cfset APPLICATION.googleAnalyticsAccountId = arguments.googleAnalyticsAccountId>

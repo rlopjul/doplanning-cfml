@@ -417,4 +417,75 @@
 	</cffunction>
 
 
+
+	<!--- -------------------------- getNearestAreaUserAssociated -------------------------------- --->
+	<!---Obtiene el área más próxima en la que está asociado el usuario (como usuario o como administrador)--->
+	
+	<cffunction name="getNearestAreaUserAssociated" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
+
+		<cfargument name="userType" type="string" required="false" default="users"><!---users/administrators--->
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+		
+		<cfset var method = "getNearestAreaUserAssociated">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_users_list = "">
+
+		<cfquery datasource="#client_dsn#" name="getAreaUsers">
+			SELECT areas.parent_id, areas.name, areas_users.user_id 
+			FROM #client_abb#_areas AS areas
+			LEFT JOIN #client_abb#_areas_#arguments.userType# AS areas_users ON areas_users.area_id = areas.id 
+			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+		
+		<cfif getAreaUsers.recordCount GT 0>
+
+			<cfset area_users_list = ValueList(getAreaUsers.user_id, ",")>
+			
+			<cfif listFind(area_users_list, arguments.user_id) GT 0>
+
+				<cfset response = {result=true, area_id=#arguments.area_id#, area_name=#getAreaUsers.name#}>
+
+			<cfelse>
+
+				<cfif isNumeric(getAreaUsers.parent_id)>
+					
+					<cfinvoke component="AreaManager" method="getNearestAreaUserAssociated" returnvariable="getAreaUserAssociatedResponse">
+						<cfinvokeargument name="area_id" value="#getAreaUsers.parent_id#">
+						<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+						<cfinvokeargument name="userType" value="#arguments.userType#">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+
+					<cfset response = getAreaUserAssociatedResponse>
+
+				<cfelse>
+
+					<cfset response = {result=false}>
+
+				</cfif>
+
+			</cfif>
+							
+		<cfelse>
+				
+			<cfset error_code = 301>
+			
+			<cfthrow errorcode="#error_code#">
+			
+		</cfif>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
+
 </cfcomponent>	

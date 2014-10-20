@@ -236,6 +236,47 @@
 		
 	</cffunction>
 	
+
+	<!--- ----------------------------------- getAllAreaAdministrators ------------------------------------- --->
+	
+	<cffunction name="getAllAreaAdministrators" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="order_by" type="string" required="false" default="family_name">
+		<cfargument name="order_type" type="string" required="false" default="asc">
+		
+		<cfset var method = "getAllAreaAdministrators">
+		
+		<cfset var response = structNew()>
+		
+		<cftry>
+
+			<cfxml variable="xmlUser">
+				<cfoutput>
+					<user id="" email="" image_type="" area_member="">
+						<family_name><![CDATA[]]></family_name>
+						<name><![CDATA[]]></name>		
+					</user>
+				</cfoutput>
+			</cfxml>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getAllAreaAdministrators" returnvariable="response">
+				<cfinvokeargument name="xmlUser" value="#xmlUser#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="order_by" value="#arguments.order_by#"/>
+				<cfinvokeargument name="order_type" value="#arguments.order_type#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>				
+																							
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
 	
 	
 	<cffunction name="getUserPreferences" output="false" returntype="query" access="public">
@@ -680,6 +721,71 @@
 		<cfreturn response>
 			
 	</cffunction>
+
+
+	<!--- ----------------------------------- associateAreaAdministrator -------------------------------------- --->
+
+	<cffunction name="associateAreaAdministrator" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true" />
+		<cfargument name="user_id" type="numeric" required="true" />
+		
+		<cfset var method = "assignUserToArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="associateAreaAdministrator" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="add_user_id" value="#arguments.user_id#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Usuario asociado como administrador">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+
+
+
+	<!--- ----------------------------------- dissociateAreaAdministrator -------------------------------------- --->
+
+	<cffunction name="dissociateAreaAdministrator" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true" />
+		<cfargument name="user_id" type="numeric" required="true" />
+		
+		<cfset var method = "dissociateAreaAdministrator">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="dissociateAreaAdministrator" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="dissociate_user_id" value="#arguments.user_id#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Usuario quitado de administrador del área">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
 	
 
 	<!--- outputUser --->
@@ -852,6 +958,7 @@
 		<cfargument name="page_type" type="numeric" required="true">
 		<cfargument name="filter_enabled" type="boolean" required="false" default="false">
 		<cfargument name="field_id" type="string" required="false">
+		<cfargument name="adminUsers" type="boolean" required="false" default="false">
 		
 		<cfset var method = "outputUsersSelectList">
 		
@@ -867,10 +974,16 @@
 
 			<cfif numUsers GT 0>
 				
-				<script type="text/javascript">
+				<cfif arguments.adminUsers IS false>
+					<cfset usersTableId = "usersTable">
+				<cfelse>
+					<cfset usersTableId = "usersTableAdmin">
+				</cfif>
+				
+				<script>
 					$(document).ready(function() { 
 						
-						$("##usersTable").tablesorter({ 
+						$("###usersTableId#").tablesorter({ 
 							<!---<cfif page_type IS 1>--->
 							<cfif arguments.filter_enabled IS true>
 							widgets: ['zebra','filter'],
@@ -906,25 +1019,15 @@
 						    </cfif> 
 						});
 						
-						<!---//  Adds "over" class to rows on mouseover
-						$("##usersTable tr").mouseover(function(){
-						  $(this).addClass("over");
-						});
-	
-						//  Removes "over" class from rows on mouseout
-						$("##usersTable tr").mouseout(function(){
-						  $(this).removeClass("over");
-						});--->
-						
 						<cfif page_type IS 1><!--- select only one user --->
-						$("##usersTable tbody tr").click(function(){
+						$("###usersTableId# tbody tr").click(function(){
 							
 							var selected = false;
 
 							if($(this).hasClass("selected"))
 								selected = true;
 							
-							$("##usersTable tr").removeClass('selected');
+							$("###usersTableId# tr").removeClass('selected');
 							
 							if(!selected)
 								$(this).addClass("selected")
@@ -936,11 +1039,11 @@
 							var parentWindowDefined = false;
 
 							// Selección de usuario
-							userId = $("##usersTable tr.selected input[type=hidden][name=user_id]").attr("value");
+							userId = $("###usersTableId# tr.selected input[type=hidden][name=user_id]").attr("value");
 							
 							if(userId != null) {
 						
-								userName = $("##usersTable tr.selected input[type=hidden][name=user_full_name]").attr("value");
+								userName = $("###usersTableId# tr.selected input[type=hidden][name=user_full_name]").attr("value");
 
 								if(window.opener != null){
 									parentWindowDefined = ( $.isFunction(window.opener.setSelectedUser) || (typeof window.opener.setSelectedUser!='undefined') ); // Segunda comprobación para IE
@@ -966,7 +1069,7 @@
 							
 						});
 						<cfelse>
-						$("##usersTable tbody tr").click(function(){
+						$("###usersTableId# tbody tr").click(function(){
 							
 							<!---if($(this).hasClass("selected"))--->
 							var selected = false;
@@ -981,8 +1084,8 @@
 						});
 						</cfif>
 
-						$("##usersTable thead tr.tablesorter-filter-row").click(function(){
-							$("##usersTable tr").removeClass('selected');
+						$("###usersTableId# thead tr.tablesorter-filter-row").click(function(){
+							$("###usersTableId# tr").removeClass('selected');
 						});
 						
 						$("##submit_select").click(function(){ 
@@ -1000,11 +1103,11 @@
 							}
 								
 							// Selección de usuarios para permisos
-							if($("##usersTable tr.selected").length > 0) {
+							if($("###usersTableId# tr.selected").length > 0) {
 
 								var allUsersAdded = true;
 							
-								$("##usersTable tr.selected").each( function() {
+								$("###usersTableId# tr.selected").each( function() {
 								
 									userId = $("input[type=hidden][name=user_id]",this).attr("value");								
 									userName = $("input[type=hidden][name=user_full_name]",this).attr("value");
@@ -1046,7 +1149,7 @@
 				</script>
 				
 				<cfoutput>
-				<table id="usersTable" class="table-hover">
+				<table id="#usersTableId#" class="users-table table-hover">
 					<thead>
 						<tr>
 							<th style="width:35px;" class="filter-false"></th>
@@ -1114,6 +1217,7 @@
 		<cfargument name="open_url_target" type="string" required="false" default="itemIframe">
 		<cfargument name="filter_enabled" type="boolean" required="false" default="true">
 		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
+		<cfargument name="adminUsers" type="boolean" required="false" default="false">
 
 		<cfargument name="list_id" type="numeric" required="false">
 		
@@ -1124,11 +1228,17 @@
 			<cfset numUsers = ArrayLen(users)>
 
 			<cfif numUsers GT 0>
+
+				<cfif arguments.adminUsers IS false>
+					<cfset usersTableId = "usersTable">
+				<cfelse>
+					<cfset usersTableId = "usersTableAdmin">
+				</cfif>
 				
-				<script type="text/javascript">
+				<script>
 					$(document).ready(function() { 
 
-						$("##usersTable").tablesorter({ 
+						$("###usersTableId#").tablesorter({ 
 							<cfif arguments.filter_enabled IS true>
 							widgets: ['zebra','filter','select','stickyHeaders'],
 							<cfelse>
@@ -1170,7 +1280,7 @@
 				</script>
 				
 				<cfoutput>
-				<table id="usersTable" class="table-hover">
+				<table id="#usersTableId#" class="users-table table-hover">
 					<thead>
 						<tr>
 							<th style="width:35px;" class="filter-false"></th>
@@ -1218,19 +1328,16 @@
 							<cfif isDefined("URL.user")>
 							
 								<cfif URL.user IS objectUser.id>
-									<!---Esta acción solo se completa si está en la versión HTML2--->
-									<script type="text/javascript">
-										openUrlHtml2('#user_page_url#','#arguments.open_url_target#');
-									</script>
+									
+									<cfset onpenUrlHtml2 = user_page_url>
+
 									<cfset itemSelected = true>
 								</cfif>
 								
 							<cfelseif userIndex IS 1>
 							
-								<!---Esta acción solo se completa si está en la versión HTML2--->
-								<script type="text/javascript">
-									openUrlHtml2('#user_page_url#','#arguments.open_url_target#');
-								</script>
+								<cfset onpenUrlHtml2 = user_page_url>
+
 								<cfset itemSelected = true>
 								
 							</cfif>
@@ -1272,6 +1379,16 @@
 						<small class="help-block" lang="es">Se muestra en negrita el responsable del área</small>
 					</div>
 				</cfif>
+
+				<cfif isDefined("onpenUrlHtml2")>
+			
+					<!---Esta acción solo se completa si está en la versión HTML2--->
+					<script>
+						openUrlHtml2('#onpenUrlHtml2#','#arguments.open_url_target#');
+					</script>
+
+				</cfif>
+
 				</cfoutput>
 			
 			</cfif>
@@ -1282,6 +1399,176 @@
 			</cfcatch>										
 			
 		</cftry>
+		
+	</cffunction>
+
+
+
+	<!---outputAdministratorsList (HTML TABLE)--->
+	
+	<cffunction name="outputAdministratorsList" returntype="void" output="true" access="public">
+		<cfargument name="users" type="array" required="true">
+		<!---<cfargument name="open_url_target" type="string" required="false" default="itemIframe">--->
+		<cfargument name="filter_enabled" type="boolean" required="false" default="true">
+		<cfargument name="showAdminFields" type="boolean" required="false" default="true">
+		
+		<cfset var method = "outputAdministratorsList">
+		
+		<!---<cftry>--->
+			
+			<cfset numUsers = ArrayLen(users)>
+
+			<cfif numUsers GT 0>
+
+				<cfset usersTableId = "usersTableAreasAdmin">
+				
+				<script>
+					$(document).ready(function() { 
+
+						$("###usersTableId#").tablesorter({ 
+							<cfif arguments.filter_enabled IS true>
+							widgets: ['zebra','filter'],<!--- 'select','stickyHeaders' stickyHeaders no sale bien, se muestra fuera de la ventana--->
+							<cfelse>
+							widgets: ['zebra'],<!--- ,'select' --->
+							</cfif>
+							sortList: [[1,0]] ,
+							headers: { 
+								0: { 
+									sorter: false 
+								}
+								<!---<cfif APPLICATION.moduleWebRTC IS true>
+								, 5: { 
+									sorter: false 
+								}
+								</cfif>--->
+							},
+							<cfif arguments.filter_enabled IS true>
+							widgetOptions : {
+								filter_childRows : false,
+								filter_columnFilters : true,
+								filter_cssFilter : 'tablesorter-filter',
+								filter_filteredRow : 'filtered',
+								filter_formatter : null,
+								filter_functions : null,
+								filter_hideFilters : false,
+								filter_ignoreCase : true,
+								filter_liveSearch : true,
+								//filter_reset : 'button.reset',
+								filter_searchDelay : 500,
+								filter_serversideFiltering: false,
+								filter_startsWith : false,
+								filter_useParsedData : false,
+						    },
+						    </cfif>
+
+						});
+						
+					}); 
+				</script>
+				
+				<cfoutput>
+				<table id="#usersTableId#" class="users-table table-hover">
+					<thead>
+						<tr>
+							<th style="width:35px;" class="filter-false"></th>
+							<th lang="es">Nombre</th>
+							<th lang="es">Apellidos</th>
+							<th lang="es">Email</th>
+							<th style="width:38px;">Activo</th>
+							<th lang="es">Área</th>
+							<th class="filter-false"></th>
+							
+						</tr>
+					</thead>
+					
+					<tbody>
+					
+					<cfset alreadySelected = false>
+
+					<cfset userIndex = 0>
+
+					<cfloop index="objectUser" array="#users#">	
+						
+						<cfset userIndex++>
+
+						<!---<cfif isDefined("arguments.area_id")>
+							<cfset user_page_url = "area_user.cfm?area=#arguments.area_id#&user=#objectUser.id#"> 
+						<cfelseif isDefined("arguments.list_id")>
+							<cfset user_page_url = "list_user.cfm?user=#objectUser.id#&list=#arguments.list_id#"> 
+						<cfelse>
+							<cfset user_page_url = "user.cfm?user=#objectUser.id#"> 
+						</cfif>--->
+						
+						<!---Item selection--->
+						<cfset itemSelected = false>
+						
+						<!---<cfif alreadySelected IS false>
+						
+							<cfif isDefined("URL.user")>
+							
+								<cfif URL.user IS objectUser.id>
+									
+									<cfset onpenUrlHtml2 = user_page_url>
+
+									<cfset itemSelected = true>
+								</cfif>
+								
+							<cfelseif userIndex IS 1>
+							
+								<cfset onpenUrlHtml2 = user_page_url>
+
+								<cfset itemSelected = true>
+								
+							</cfif>
+							
+							<cfif itemSelected IS true>
+								<cfset alreadySelected = true>
+							</cfif>
+							
+						</cfif>--->
+						
+						<tr <cfif itemSelected IS true>class="selected"</cfif>><!---onclick="openUrl('#user_page_url#','#arguments.open_url_target#',event)"--->
+							<td style="text-align:center">
+								<cfif len(objectUser.image_type) GT 0>
+									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>									
+								<cfelse>							
+									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
+								</cfif>
+							</td>
+							<td class="text_item">#objectUser.family_name#</td>
+							<td class="text_item">#objectUser.name#</td>
+							<td class="text_item">#objectUser.email#</td>
+								
+							<td lang="es"><cfif objectUser.enabled IS true>Sí<cfelse>No</cfif></td>
+							<td>#objectUser.area_name#</td>
+
+							<td><a class="btn btn-warning btn-sm navbar-btn" title="Quitar administrador" onClick="showAreaAdministratorDissociateModalModal('html_content/area_administrator_dissociate.cfm?area=#objectUser.area_id#&user=#objectUser.id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar</span></a>
+							</td>
+						</tr>
+					</cfloop>
+					</tbody>
+					
+				</table>
+
+				<!---<cfif isDefined("onpenUrlHtml2")>
+			
+					<!---Esta acción solo se completa si está en la versión HTML2--->
+					<script>
+						openUrlHtml2('#onpenUrlHtml2#','#arguments.open_url_target#');
+					</script>
+
+				</cfif>--->
+
+				</cfoutput>
+			
+			</cfif>
+								
+								
+			<!---<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>--->
 		
 	</cffunction>
 	

@@ -668,7 +668,7 @@ fieldset[disabled] input {
 #listTable tr {
 	height: 35px;	
 }
-#usersTable td {
+.users-table td {
 	font-size: 11px;
 	color:#000000;
 }

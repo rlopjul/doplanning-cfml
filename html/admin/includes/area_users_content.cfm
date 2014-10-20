@@ -5,7 +5,7 @@
 
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.iframe-transport.js"></script>
-<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload.js"></script
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload.js"></script>
 </cfoutput>
 
 <!--- <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm"> --->
@@ -26,7 +26,7 @@
 
 </cfif>
 <cfoutput>
-<div class="container div_head_menu">
+<div class="div_head_menu"><!---container--->
 	<div class="navbar navbar-default navbar-static-top" style="margin-bottom:0">
 		<div class="container">
 
@@ -66,28 +66,112 @@
 
 </cfoutput>
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
-	<cfinvokeargument name="area_id" value="#area_id#">
-</cfinvoke>
+<script>
 
-<cfset users = usersResponse.users>
-<cfset numUsers = ArrayLen(users)>
-
-<div class="div_users">
-	
-	<cfif numUsers GT 0>
-
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
-			<cfinvokeargument name="users" value="#users#">
-			<cfinvokeargument name="area_id" value="#area_id#">
-			<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
-			<cfinvokeargument name="show_area_members" value="true">
-			<cfinvokeargument name="open_url_target" value="userAreaIframe">
-			<cfinvokeargument name="filter_enabled" value="true">
-		</cfinvoke>	
-
-	<cfelse>
-		<span lang="es">No hay usuarios.</span>
+	<cfoutput>
+	var areaId = #area_id#;
+	var userId = "";
+	<cfif isDefined("URL.user")>
+		userId = #URL.user#;
 	</cfif>
+	</cfoutput>
 	
-</div>
+	$(window).load( function() {
+
+		<!---$('#dpTab a').click( function (e) {
+			if(e.preventDefault)
+		  		e.preventDefault();
+			
+		  	$(this).tab('show');
+			
+		});--->
+
+		
+		$('a[data-toggle="tab"]').on('show.bs.tab', function (e) { //On show tab
+
+			
+			var pattern=/#.+/gi; //use regex to get anchor(==selector)
+			var currentTab = e.target.toString().match(pattern)[0];
+
+			if(currentTab == "#administrators" && $('#administrators').is(':empty') ) { 
+
+				loadAdministrators();
+				showLoadingPage(true);
+				<!---$("#mainContainer").hide();--->
+			}
+
+		});
+
+		<!--- Select the active tab from URL --->
+		var activeTab = $('[href=' + location.hash + ']');
+		activeTab && activeTab.tab('show');
+		
+		
+	});
+
+
+	function loadAdministrators() {
+	
+		$("#loadingContainer").show();
+
+		var noCacheNumber = Math.floor(Math.random()*1001);
+		var loadPage = "../html_content/area_administrators.cfm?area="+areaId+"&n="+noCacheNumber;
+		if($.isNumeric(userId))
+			loadPage = loadPage+"&user="+userId;
+
+		$("#administrators").load(loadPage, function() {
+			showLoadingPage(false);
+		});
+	}
+</script>
+
+
+<!--- Nav tabs --->
+<cfif SESSION.client_administrator IS SESSION.user_id>
+
+	<ul class="nav nav-pills" role="tablist">
+	  <li class="active"><a href="#users" role="tab" data-toggle="tab">Usuarios</a></li>
+	  <li><a href="#administrators" role="tab" data-toggle="tab">Administradores</a></li>
+	</ul>
+
+	<!--- Tab panes --->
+	<div class="tab-content">
+	  <div class="tab-pane active" id="users">
+
+</cfif>
+
+	  	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>
+
+		<cfset users = usersResponse.users>
+		<cfset numUsers = ArrayLen(users)>
+
+		<div class="div_users">
+			
+			<cfif numUsers GT 0>
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
+					<cfinvokeargument name="users" value="#users#">
+					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
+					<cfinvokeargument name="show_area_members" value="true">
+					<cfinvokeargument name="open_url_target" value="userAreaIframe">
+					<cfinvokeargument name="filter_enabled" value="true">
+				</cfinvoke>	
+
+			<cfelse>
+				<span lang="es">No hay usuarios.</span>
+			</cfif>
+			
+		</div>
+
+<cfif SESSION.client_administrator IS SESSION.user_id>
+
+	  </div>
+	  <div class="tab-pane" id="administrators"></div>
+	</div>
+
+</cfif>
+
+

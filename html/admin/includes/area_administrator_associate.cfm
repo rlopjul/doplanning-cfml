@@ -3,7 +3,7 @@
 	<cfset area_id = URL.area>
 	<cfset user_id = URL.user>
 
-	<cfset return_page = "area_users.cfm?area=#area_id#">
+	<cfset return_page = "area_users.cfm?area=#area_id#&user=#user_id#&no-cache=#RandRange(0,100)###administrators">
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="objectUser">
 		<cfinvokeargument name="user_id" value="#user_id#">
@@ -16,31 +16,32 @@
 	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
-
-	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
-		<cfinvokeargument name="area_id" value="#area_id#">
-		<cfinvokeargument name="check_user_id" value="#user_id#">
-	</cfinvoke>	
 	
 	<cfoutput>
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3>Asociar usuario a área</h3>
+		    <h3>Asociar administrador de área</h3>
 		</div>
+
+		<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAssociatedAsAdministrator" returnvariable="isAreaAdministratorResponse">
+			<cfinvokeargument name="area_id" value="#area_id#"/>
+			<cfinvokeargument name="check_user_id" value="#user_id#"/>
+		</cfinvoke>
+
 
 	 	<div class="modal-body">
 
-	 		<cfif isUserInAreaResponse.isUserInArea IS false>
+  			<cfif isAreaAdministratorResponse.isUserAdministrator IS false>
 
-				<p>¿Seguro que desea asociar este usuario a esta área?</p>
+				<p>¿Seguro que desea asociar este usuario como <b>administrador</b> de esta área?:</p>
 
 			<cfelse>
 
-				<p>Este usuario <b>ya está asociado a esta área</b></p>
+				<p>Este usuario <b>ya es administrador de esta área</b>.</p>
 
 			</cfif>
-	  		
+
 			<div>
 				<div class="well well-sm">
 					<cfif len(objectUser.image_type) GT 0>
@@ -55,9 +56,9 @@
 				</div>
 			</div>
 
-			<cfif isUserInAreaResponse.isUserInArea IS false>
+			<cfif isAreaAdministratorResponse.isUserAdministrator IS false>
 
-				<small class="help-block">Se le enviará notificación por email, si el usuario está activo.</small>
+				<small class="help-block">No se enviará notificación por email de esta acción</small>
 
 				<form id="associateForm" method="post">
 					<input type="hidden" name="area_id" value="#objectArea.id#"/>
@@ -65,23 +66,24 @@
 				</form>
 
 			</cfif>
-			
+
+
 		</div>
 
 		<div class="modal-footer">
 		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <cfif isUserInAreaResponse.isUserInArea IS false>
-		   		<button class="btn btn-primary" id="areaModifySubmit" onclick="submitAssociateModal(event)">Asociar usuario</button>
+		    <cfif isAreaAdministratorResponse.isUserAdministrator IS false>
+		   		<button class="btn btn-primary" id="areaModifySubmit" onclick="submitAssociateAdministratorModal(event)">Asociar administrador</button>
 		   	</cfif>
 		</div>
 
 		<script>
-			function submitAssociateModal(e){
+			function submitAssociateAdministratorModal(e){
 
 			    if(e.preventDefault)
 					e.preventDefault();
 
-				postModalForm("##associateForm", "#APPLICATION.htmlComponentsPath#/User.cfc?method=assignUserToArea", "#return_page#", "areaIframe");
+				postModalForm("##associateForm", "#APPLICATION.htmlComponentsPath#/User.cfc?method=associateAreaAdministrator", "#return_page#", "areaIframe");
 
 			}
 		</script>

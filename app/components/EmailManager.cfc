@@ -159,19 +159,25 @@ body {
 				"Reply-To": "#APPLICATION.emailReply#"
 			},--->
 			
-			<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult">
-				<cfhttpparam type="header" name="Content-Type" value="application/json" />
-				<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
-			</cfhttp>
-					
-			<cfset mandrillResponse = deserializeJSON(responseResult.filecontent)>
+			<cftry>
+				
+				<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult">
+					<cfhttpparam type="header" name="Content-Type" value="application/json" />
+					<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
+				</cfhttp>
+						
+				<cfset mandrillResponse = deserializeJSON(responseResult.filecontent)>
+
+				<cfcatch>
+					<cfthrow message="Error al conectar con el servicio de envío de emails, no se ha enviado notificación por email a los usuarios. #cfcatch.message#"/>
+				</cfcatch>
+			</cftry>
 			
 			<cfif responseResult.status_code NEQ 200>
 				
 				<cfthrow errorcode="1302" message="#mandrillResponse.message#">
 				
 			</cfif>
-		
 
 		</cfif>
 		

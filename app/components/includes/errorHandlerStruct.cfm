@@ -86,17 +86,16 @@
 				<cfinvokeargument name="content" value="#mail_content#">
 				<cfinvokeargument name="foot_content" value="">
 			</cfinvoke>
-			
-			<cffinally>
-				
-				<!--- <cfset status = "error">	
-				<cfinclude template="#APPLICATION.componentsPath#/includes/generateResponse.cfm"> --->
 
-				<!--- response --->
+			<!--- response --->
+			<cfset response = {result=false, message="#cfcatch.message#"}>
+
+			<cfcatch>
+
 				<cfset response = {result=false, message="#cfcatch.message#"}>
-			
-			</cffinally>
-			
+
+			</cfcatch>
+		
 		</cftry>
 		
 	</cfcatch>

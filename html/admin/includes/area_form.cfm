@@ -42,4 +42,5 @@
 </form>
 </cfoutput>
 
+<!--- Select User Modal --->
 <cfinclude template="user_select_modal.cfm" />

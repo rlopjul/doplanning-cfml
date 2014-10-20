@@ -209,31 +209,44 @@ function openUrl(url,target){
 }
 
 function loadIframePage(page) {
-	if(page.indexOf("?") == -1)
-		page = page+"?abb="+clientAbb;
-	else
-		page = page+"&abb="+clientAbb;
+	page = addClientAbbToPage(page);
 
 	$("#areaIframe").attr('src', "iframes/"+getFilename(page));
 }
 
 function loadIframeItemPage(page) {
-	if(page.indexOf("?") == -1)
-		page = page+"?abb="+clientAbb;
-	else
-		page = page+"&abb="+clientAbb;
+	page = addClientAbbToPage(page);
 
 	$("#itemIframe").attr('src', "iframes2/"+getFilename(page));		
 }
 
 function loadIframeSearchItemPage(page) {
+	page = addClientAbbToPage(page);
+
+	$("#searchItemIframe").attr('src', "iframes2/"+getFilename(page));		
+}
+
+
+function addClientAbbToPage(page) {
+
+	var hashContent = "";
+	var hashIndex = page.indexOf("#");
+	if(hashIndex != -1){
+		hashContent = page.substring(hashIndex, page.length);
+		page = page.substring(0, hashIndex);
+	}
+		
 	if(page.indexOf("?") == -1)
 		page = page+"?abb="+clientAbb;
 	else
 		page = page+"&abb="+clientAbb;
-	$("#searchItemIframe").attr('src', "iframes2/"+getFilename(page));		
-}
 
+	if(hashIndex != -1){
+		page = page+hashContent;
+	}
+
+	return page;
+}
 
 function areaIframeLoaded() {
 	//setLoadingArea(false);

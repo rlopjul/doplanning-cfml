@@ -85,24 +85,25 @@
 	<div class="container">
 
 		<cfif isDefined("user_id") AND isDefined("area_id")>
-		<a class="btn btn-warning btn-sm navbar-btn" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de esta área</span></a>
+			<a class="btn btn-warning btn-sm navbar-btn" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de esta área</span></a>
 		</cfif>
 
 		<cfif SESSION.client_administrator IS SESSION.user_id>
 
-			<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
-			<cfinvokeargument name="area_id" value="#area_id#"/>
-			<cfinvokeargument name="user_id" value="#user_id#"/>
-		</cfinvoke>
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
+				<cfinvokeargument name="area_id" value="#area_id#"/>
+				<cfinvokeargument name="user_id" value="#user_id#"/>
+			</cfinvoke>
 
-		<cfif isAdministratorResponse.result IS false>--->
-			
-			<!---
-			PENDIENTE DE IMPLEMENTAR
-			<a class="btn btn-info btn-sm disabled navbar-btn" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>
-			--->
+			<cfif isAdministratorResponse.isUserAdministrator IS true>
 
-		<!---</cfif>--->
+				<a class="btn btn-warning btn-sm navbar-btn" title="Quitar administrador" onClick="parent.loadModal('html_content/area_administrator_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de administrador del área</span></a>
+				
+			<!---<cfelse>
+
+				<a class="btn btn-info btn-sm navbar-btn" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>--->
+
+			</cfif>
 
 		</cfif>
 			

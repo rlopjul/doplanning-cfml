@@ -17,7 +17,7 @@
 </div>	
 
 <cfoutput>
-<script type="text/javascript">
+<script>
 	
 	function showSelectUserModal(){
 
