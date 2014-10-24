@@ -33,6 +33,7 @@
 		<cfset var toEmails = "">
 		<cfset var jsonFields = "">
 		<cfset var fromName = "">
+		<cfset var responseResult = "">
 				
 		<!--- <cfset head_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">No responda a este email.</span><br />Este email ha sido enviado mediante la aplicación #APPLICATION.title#.</p>'> --->
 
@@ -148,10 +149,10 @@ body {
 			
 			<!---"to": [
 				{
-					"email": "alucena@era7.com"
+					"email": ""
 				},
 				{
-					"email": "bugs@doplanning.net"
+					"email": ""
 				}
 			],
 			
@@ -159,19 +160,32 @@ body {
 				"Reply-To": "#APPLICATION.emailReply#"
 			},--->
 			
-			<cftry>
-				
-				<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult">
-					<cfhttpparam type="header" name="Content-Type" value="application/json" />
-					<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
-				</cfhttp>
-						
-				<cfset mandrillResponse = deserializeJSON(responseResult.filecontent)>
+			<cfloop from="1" to="3" index="curAttempt">
+			
+				<cftry>
+					
+					<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult">
+						<cfhttpparam type="header" name="Content-Type" value="application/json" />
+						<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
+					</cfhttp>
+							
+					<cfset mandrillResponse = deserializeJSON(responseResult.filecontent)>
 
-				<cfcatch>
-					<cfthrow message="Error al conectar con el servicio de envío de emails, no se ha enviado notificación por email a los usuarios. #cfcatch.message#"/>
-				</cfcatch>
-			</cftry>
+					<cfbreak>
+
+					<cfcatch>
+
+						<cfif curAttempt GT 2>
+							<cfthrow message="Error al conectar con el servicio de envío de emails, no se ha enviado notificación por email a los usuarios. #cfcatch.message#"/>
+						<cfelse>
+							<cfset sleep(300)>
+						</cfif>
+						
+					</cfcatch>
+
+				</cftry>
+
+			</cfloop>
 			
 			<cfif responseResult.status_code NEQ 200>
 				

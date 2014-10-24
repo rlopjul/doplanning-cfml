@@ -227,12 +227,12 @@
 			
 			<cfif itemTypeId IS NOT 7 OR arguments.parent_kind EQ "area">
 				<cfif itemTypeGender EQ "male">
-					<cfset response_message = "#itemTypeNameEs# insertado.">
+					<cfset response_message = "#itemTypeNameEs# enviado.">
 				<cfelse>
-					<cfset response_message = "#itemTypeNameEs# insertada.">
+					<cfset response_message = "#itemTypeNameEs# enviada.">
 				</cfif>
 			<cfelse><!---Consultation--->
-				<cfset response_message = "Respuesta a #itemTypeNameEs# insertada.">
+				<cfset response_message = "Respuesta a #itemTypeNameEs# enviado.">
 			</cfif>
 
             <cfif with_attached IS true><!---Hay archivo para subir--->
@@ -377,9 +377,9 @@
 				</cfinvoke>
 				
 				<cfif itemTypeGender EQ "male">
-					<cfset response_message = "#itemTypeNameEs# insertado.">
+					<cfset response_message = "#itemTypeNameEs# enviado.">
 				<cfelse>
-					<cfset response_message = "#itemTypeNameEs# insertada.">
+					<cfset response_message = "#itemTypeNameEs# enviada.">
 				</cfif>
 					
 
@@ -401,9 +401,9 @@
 					</cfinvoke>
 					
 					<cfif itemTypeGender EQ "male">
-						<cfset response_message = "#itemTypeNameEs# insertado.">
+						<cfset response_message = "#itemTypeNameEs# enviado.">
 					<cfelse>
-						<cfset response_message = "#itemTypeNameEs# insertada.">
+						<cfset response_message = "#itemTypeNameEs# enviada.">
 					</cfif>
 					
 					<!---<cfcatch>
@@ -1562,9 +1562,9 @@
 	<!--- ----------------------- GET ALL AREA ITEMS -------------------------------- --->
 	
 	<cffunction name="getAllAreaItems" returntype="struct" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="area_type" type="string" required="yes">
-		<cfargument name="limit" type="numeric" required="no">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="area_type" type="string" required="true">
+		<cfargument name="limit" type="numeric" required="false">
 				
 		<cfset var method = "getAllAreaItems">
 
@@ -1575,9 +1575,38 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAllAreaItems" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="area_type" value="#arguments.area_type#">
-				<cfif isDefined("arguments.limit")>
 				<cfinvokeargument name="limit" value="#arguments.limit#">
-				</cfif>
+			</cfinvoke>	
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+
+	<!--- ----------------------- GET ALL ITEMS -------------------------------- --->
+	
+	<cffunction name="getAllItems" returntype="struct" access="public">
+		<cfargument name="limit" type="numeric" required="false">
+		<cfargument name="full_content" type="boolean" required="false">
+				
+		<cfset var method = "getAllItems">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAllItems" returnvariable="response">
+				<cfinvokeargument name="limit" value="#arguments.limit#">
+				<cfinvokeargument name="full_content" value="#arguments.full_content#">
 			</cfinvoke>	
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">

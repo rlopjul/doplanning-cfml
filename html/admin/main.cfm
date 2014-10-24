@@ -460,7 +460,7 @@
 
 								<div class="btn-group">
 									<div class="input-group" style="width:260px;" >
-										<input type="text" name="text" id="searchText" value="" class="form-control"/>
+										<input type="text" name="text" id="searchText" value="" class="form-control" placeholder="Búsqueda de área" lang="es"/>
 										<span class="input-group-btn">
 											<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
 										</span>

@@ -1,10 +1,11 @@
 jquery_lang_js.prototype.lang.en = {
+	'Salir':'Logout',
 	'Árbol':'Tree',
 	'Área':'Area',
 	'Búsqueda':'Search',
-	'Salir':'Logout',
 	'Cerrar sesión':'Exit',
 	'Buscar':'Search',
+	'Búsqueda de área':'Area search',
 	'Actualizar':'Refresh',
 	'Expandir':'Expand',
 	'Colapsar':'Collapse',

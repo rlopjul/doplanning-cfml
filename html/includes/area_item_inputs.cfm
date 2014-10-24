@@ -213,7 +213,7 @@
 			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 		</cfinvoke>
 		
-		<select name="sub_type_id" id="sub_type_id" <cfif read_only IS true>disabled="disabled"</cfif> onchange="subTypeChange($('##sub_type_id').val());">
+		<select name="sub_type_id" id="sub_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif> onchange="subTypeChange($('##sub_type_id').val());">
 			<cfloop query="subTypeQuery">
 				<option value="#subTypeQuery.sub_type_id#" lang="es" <cfif objectItem.sub_type_id IS subTypeQuery.sub_type_id>selected="selected"</cfif>>#subTypeQuery.sub_type_title_es#</option>
 			</cfloop>
@@ -227,9 +227,9 @@
 <cfif itemTypeId IS NOT 7 OR NOT isDefined("parent_kind") OR parent_kind EQ "area">
 <div class="row">
 	<div class="col-xs-12 col-md-6">
-		<label class="control-label" for="item_title"><span lang="es">#t_title#</span> <cfif title_required IS true>*</cfif></label>
+		<label class="<cfif APPLICATION.hideInputLabels IS false>control-label<cfelse>sr-only</cfif>" for="item_title"><span lang="es">#t_title#</span> <cfif title_required IS true>*</cfif></label>
 		<div>
-			<cfinput type="text" name="title" id="item_title" value="#objectItem.title#" required="#title_required#" message="#t_title# requerido" passthrough="#passthrough#" class="form-control">
+			<cfinput type="text" name="title" id="item_title" value="#objectItem.title#" required="#title_required#" message="#t_title# requerido" passthrough="#passthrough# lang='es'" placeholder="#t_title#" class="form-control">
 		</div>
 	</div>
 </div>
@@ -354,7 +354,7 @@
 				<cfset objectItem.creation_date = left(objectItem.creation_date, findOneOf(" ", objectItem.creation_date))>
 			</cfif>
 
-			<label class="control-label" lang="es">#t_creation_date#</label>		
+			<label class="control-label" for="creation_date" lang="es">#t_creation_date#</label>		
 			<cfinput type="text" name="creation_date" id="creation_date" class="form-control" value="#objectItem.creation_date#" required="true" message="#t_creation_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 
 		</div>
@@ -373,12 +373,12 @@
 	<div class="row">
 		<div class="col-md-12">
 
-			<label class="control-label" lang="es">#t_recipient_user#</label>
+			<label class="control-label" for="recipient_user_full_name" lang="es">#t_recipient_user#</label>
 
 			<div class="row">
 				<div class="col-sm-5" style="padding-right:0;">
-					<input type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" required="true" />
-					<cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" value="#objectItem.recipient_user_full_name#" readonly="yes" required="true" message="Usuario destinatario requerido" onclick="openUserSelector()">
+					<input type="hidden" name="recipient_user" id="recipient_user" value="#objectItem.recipient_user#" required="true" class="form-control" />
+					<cfinput type="text" name="recipient_user_full_name" id="recipient_user_full_name" class="form-control" value="#objectItem.recipient_user_full_name#" readonly="yes" required="true" message="Usuario destinatario requerido" onclick="openUserSelector()">
 				</div>
 				<div class="col-sm-7">
 					<cfif read_only IS false> <button onclick="return openUserSelector();" class="btn btn-default" lang="es">Seleccionar usuario</button></cfif>
@@ -421,13 +421,13 @@
 		
 		<div class="col-xs-6">
 			<label class="control-label" for="start_hour"><span lang="es">#t_start_time#</span></label>
-			<div class="input-group" style="width:170px">
-				<select name="start_hour" id="start_hour" class="form-control" style="width:70px;">
+			<div class="input-group" style="width:180px">
+				<select name="start_hour" id="start_hour" class="form-control" style="width:75px;">
 					<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
 						<cfset curHour = TimeFormat(hour, 'HH')>
 						<option value="#curHour#" <cfif curHour EQ start_hour>selected="selected"</cfif>>#curHour#</option>
 					</cfloop>
-				</select><span class="input-group-addon">:</span><select name="start_minute" class="form-control" style="width:70px;">
+				</select><span class="input-group-addon">:</span><select name="start_minute" class="form-control" style="width:75px;">
 					<cfloop from="0" to="59" index="minutes" step="5">
 						<cfif minutes EQ "0">
 							<cfset minutes = "00">
@@ -446,7 +446,7 @@
 
 	<div class="col-xs-6 col-md-3">
 		<label class="control-label" for="end_date"><span lang="es">#t_end_date#</span> *</label>
-		<cfinput type="text" name="end_date" id="end_date" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+		<cfinput type="text" name="end_date" id="end_date" class="form-control" value="#objectItem.end_date#" required="true" message="#t_end_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 	</div>
 
 	<cfif itemTypeId IS 5>
@@ -469,13 +469,13 @@
 		
 		<div class="col-xs-6">
 			<label class="control-label" for="end_hour"><span lang="es">Hora de fin</span></label>
-			<div class="input-group" style="width:170px">
-				<select name="end_hour" style="width:70px;">
+			<div class="input-group" style="width:180px">
+				<select name="end_hour" class="form-control" style="width:75px;">
 					<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
 						<cfset curHour = TimeFormat(hour, 'HH')>
 						<option value="#curHour#" <cfif curHour EQ end_hour>selected="selected"</cfif>>#curHour#</option>
 					</cfloop>
-				</select><span class="input-group-addon">:</span><select name="end_minute" style="width:70px;">
+				</select><span class="input-group-addon">:</span><select name="end_minute" class="form-control" style="width:75px;">
 					<cfloop from="0" to="59" index="minutes" step="5">
 						<cfif minutes EQ "0">
 							<cfset minutes = "00">
@@ -495,7 +495,7 @@
 <div class="row">
 	<div class="col-md-3">
 		<label class="control-label" for="place"><span lang="es">#t_place#</span> *</label>
-		<cfinput type="text" name="place" id="place" value="#objectItem.place#" required="true" message="#t_place# requerido" passthrough="#passthrough#">
+		<cfinput type="text" name="place" id="place" class="form-control" value="#objectItem.place#" required="true" message="#t_place# requerido" passthrough="#passthrough#">
 	</div>
 </div>
 
@@ -506,14 +506,14 @@
 	<div class="col-xs-5 col-md-2">
 
 		<label class="control-label" for="estimated_value"><span lang="es">#t_estimated_value#</span> *</label>
-		<cfinput type="text" name="estimated_value" id="estimated_value" value="#objectItem.estimated_value#" required="true" validate="float" message="#t_estimated_value# debe ser un decimal" passthrough="#passthrough#"><!---&nbsp;<span style="font-size:10px">Valor (tiempo, coste, ...) estimado para la tarea.</span>--->
+		<cfinput type="text" name="estimated_value" id="estimated_value" class="form-control" value="#objectItem.estimated_value#" required="true" validate="float" message="#t_estimated_value# debe ser un decimal" passthrough="#passthrough#"><!---&nbsp;<span style="font-size:10px">Valor (tiempo, coste, ...) estimado para la tarea.</span>--->
 
 	</div>
 
 	<div class="col-xs-6 col-md-2">
 
 		<label class="control-label" for="real_value"><span lang="es">#t_real_value#</span> *</label>
-		<cfinput type="text" name="real_value" id="real_value" value="#objectItem.real_value#" required="true" validate="float" message="#t_real_value# debe ser un decimal"><!---&nbsp;<span style="font-size:10px">Valor real de la tarea una vez realizada.</span>--->
+		<cfinput type="text" name="real_value" id="real_value" class="form-control" value="#objectItem.real_value#" required="true" validate="float" message="#t_real_value# debe ser un decimal"><!---&nbsp;<span style="font-size:10px">Valor real de la tarea una vez realizada.</span>--->
 
 	</div>
 
@@ -544,7 +544,7 @@
     
     	<div class="col-xs-6 col-md-3">
     		<label class="control-label" for="identifier" id="identifierLabel"><span lang="es">#t_identifier#</span> *</label>
-			<cfinput type="text" name="identifier" id="identifier" value="#objectItem.identifier#" placeholder="Identificador" class="input-xlarge" passthrough="#passthrough#" lang="es">
+			<cfinput type="text" name="identifier" id="identifier" class="form-control" value="#objectItem.identifier#" placeholder="Identificador" passthrough="#passthrough#" lang="es">
 			<cfif itemTypeId IS 8>
 				<button type="button" class="btn btn-default btn-xs" id="openInPubMedButton" lang="es" onclick="openPublicationInPubMed($('##identifier').val())">Ver en PubMed</button>
 			</cfif>
@@ -561,7 +561,7 @@
 	<div class="row" id="fieldPrice">
 		<div class="col-xs-6 col-md-3">
 			<label class="control-label" for="price"><span lang="es">#t_price#</span> *</label>
-			<cfinput type="text" name="price" id="price" value="#objectItem.price#" required="true" validate="float" message="#t_price# debe ser un decimal" passthrough="#passthrough#">
+			<cfinput type="text" name="price" id="price" class="form-control" value="#objectItem.price#" required="true" validate="float" message="#t_price# debe ser un decimal" passthrough="#passthrough#" placeholder="Precio">
 		</div>
 	</div>
 </cfif>
@@ -674,7 +674,7 @@
 	<div class="col-md-12">
 
 		<label class="control-label" for="link"><span lang="es">#t_link#</span> <cfif link_required IS true>*</cfif></label>
-		<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+		<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
 
 	</div>
 	
@@ -687,7 +687,7 @@
 	<div class="col-md-6">
 
 		<label class="control-label" for="link_target"><span lang="es">Abrir URL en</span></label> <cfif APPLICATION.moduleWeb EQ true><small lang="es">(Sólo para publicar en web)</small></cfif>
-		<select name="link_target" id="link_target">
+		<select name="link_target" id="link_target" class="form-control">
 			<option value="_blank" <cfif objectItem.link_target EQ "_blank">selected="selected"</cfif> lang="es">Nueva ventana</option>
 			<option value="_self" <cfif objectItem.link_target EQ "_self">selected="selected"</cfif> lang="es">Misma ventana</option>
 		</select>
@@ -715,7 +715,7 @@
 
 			<label class="control-label" for="iframe_url" lang="es">#t_iframe_url#</label> <small lang="es">(Sólo para publicar en web)</small>
 			
-			<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="#t_iframe_url# válida con http:// requerida" class="col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+			<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="#t_iframe_url# válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
 			
 		</div>
 		
@@ -734,7 +734,7 @@
 			<cfset iframe_display_type_values = "1,2">
 			<option value="#iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframe_display_type_id>selected="selected"</cfif>>#listGetAt(iframe_display_type_options,iframe_display_type_id)#</option>--->
 	
-			<select name="iframe_display_type_id" id="iframe_display_type_id" <cfif read_only IS true>disabled="disabled"</cfif>>
+			<select name="iframe_display_type_id" id="iframe_display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
 				<cfloop query="iframeDisplayTypeQuery">
 					<option value="#iframeDisplayTypeQuery.iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframeDisplayTypeQuery.iframe_display_type_id>selected="selected"</cfif>>#iframeDisplayTypeQuery.iframe_display_type_title_es#</option>
 				</cfloop>
@@ -797,7 +797,7 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/DisplayTypeManager" method="getDisplayTypes" returnvariable="displayTypeQuery">
 			</cfinvoke>
 			
-			<select name="display_type_id" <cfif read_only IS true>disabled="disabled"</cfif>>
+			<select name="display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
 				<cfloop query="displayTypeQuery">
 					<option value="#displayTypeQuery.display_type_id#" <cfif objectItem.display_type_id IS displayTypeQuery.display_type_id>selected="selected"</cfif>>#displayTypeQuery.display_type_title_es#</option>
 				</cfloop>

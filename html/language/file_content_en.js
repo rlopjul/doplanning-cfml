@@ -3,6 +3,7 @@ var file_content_en = {
 	'Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?':'If you DELETE the file, it will be deleted from ALL areas to which it is associated. Are you sure you want to delete the file?',
 	
 	'Descargar':'Download',
+	'Abrir':'Open',
 	'Visualizar':'View',
 	'Reemplazar':'Replace',
 	'Ampliar':'Enlarge',
@@ -18,7 +19,8 @@ var file_content_en = {
 	'Cancelar revisión':'Cancel revision',
 	'Bloquear':'Lock',
 	'Desbloquear':'Unlock',
-
+	'Cambiar propietario':'Change owner',
+	
 	'Propiedad del área':'Property of area',	
 	'Creado por':'Created by',
 	'Último reemplazo por':'Last version by',
@@ -40,6 +42,7 @@ var file_content_en = {
 	'Nombre físico':'Physical name',
 	'Motivo de rechazo en aprobación':'Reason for rejection on approval',
 	'Motivo de rechazo en revisión':'Reason for rejection on revision',
+	'Analizado por Antivirus':'Analyzed by Antivirus',
 	
 	/*area_file_new.cfm*/
 	'Nuevo Archivo':'New File',	

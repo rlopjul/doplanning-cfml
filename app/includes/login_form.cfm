@@ -16,21 +16,38 @@
       <input name="destination_page" type="hidden" value="#destination_page#" />
     </cfif>	
   
-    <div class="form-group">    
-      <label for="email" id="emailLabel" lang="es" class="col-sm-3 control-label">Email:</label>
+    <div class="form-group">
+      <cfif APPLICATION.hideInputLabels IS false>
+        <label for="email" id="emailLabel" lang="es" class="col-sm-3 control-label">Email:</label>
+      <cfelse>
+        <label for="email" id="emailLabel" lang="es" class="sr-only">Email:</label>
+      </cfif>
+      <cfif APPLICATION.hideInputLabels IS false>
       <div class="col-sm-9">
-        <cfif APPLICATION.moduleLdapUsers NEQ true>
-        <input name="email" type="email" id="email" required="true" autofocus="true" class="form-control"/>
+      <cfelse>
+      <div class="col-sm-offset-3 col-sm-9">
+      </cfif>        <cfif APPLICATION.moduleLdapUsers NEQ true>
+        <input name="email" type="email" id="email" required="true" autofocus="true" class="form-control" placeholder="Email" lang="es"/>
         <cfelse><!--- LDAP --->
-        <input name="email" type="text" id="email" required="true" autofocus="true" class="form-control"/>
+        <input name="email" type="text" id="email" required="true" autofocus="true" class="form-control" placeholder="Email" lang="es"/>
         </cfif>
       </div>
     </div>
     
     <div class="form-group">
-      <label for="password" lang="es" class="col-sm-3 control-label">Contraseña:</label>
+
+      <cfif APPLICATION.hideInputLabels IS false>
+        <label for="password" lang="es" class="col-sm-3 control-label">Contraseña:</label>
+      <cfelse>
+        <label for="password" lang="es" class="sr-only">Contraseña:</label>
+      </cfif>
+
+      <cfif APPLICATION.hideInputLabels IS false>
       <div class="col-sm-9">
-        <input name="password" type="password" id="password" required="true" class="form-control"/>
+      <cfelse>
+      <div class="col-sm-offset-3 col-sm-9">
+      </cfif>
+        <input name="password" type="password" id="password" required="true" class="form-control" placeholder="Contraseña" lang="es"/>
       </div>
     </div>
     
@@ -40,33 +57,43 @@
         <small lang="es">Identificar con usuario y contraseña de:</small>
         
         <cfif APPLICATION.identifier EQ "vpnet">
-          <label class="radio" for="ldap_asnc"> 
-            <input type="radio" name="ldap_id" value="asnc" id="ldap_asnc" onclick="onLdapChange(this)" checked="checked"/> ASNC
-          </label>
+          <div class="radio">
+            <label for="ldap_asnc"> 
+              <input type="radio" name="ldap_id" value="asnc" id="ldap_asnc" onclick="onLdapChange(this)" checked="checked"/> ASNC
+            </label>
+          </div>
           <!--- <input type="radio" name="ldap_id" value="diraya" />&nbsp;Diraya --->
         <cfelse>
-          <label class="radio" for="ldap_doplanning"> 
-            <input type="radio" name="ldap_id" value="doplanning" id="ldap_doplanning" onclick="onLdapChange(this)" checked="checked" /> DoPlanning
-          </label>
+          <div class="radio">
+            <label for="ldap_doplanning"> 
+              <input type="radio" name="ldap_id" value="doplanning" id="ldap_doplanning" onclick="onLdapChange(this)" checked="checked" /> DoPlanning
+            </label>
+          </div>
         </cfif>
 
         <cfif client_abb EQ "agsna">
-          <label class="radio" for="ldap_dmsas"> 
-            <input type="radio" name="ldap_id" value="dmsas" id="ldap_dmsas" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
-          </label>
+          <div class="radio">
+            <label for="ldap_dmsas"> 
+              <input type="radio" name="ldap_id" value="dmsas" id="ldap_dmsas" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
+            </label>
+          </div>
         </cfif>
 
         <cfif client_abb EQ "hcs" OR client_abb EQ "software7">
-          <label class="radio" for="ldap_portalep_hcs"> 
-            <input type="radio" name="ldap_id" value="portalep_hcs" id="ldap_portalep_hcs" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
-          </label>
+          <div class="radio">
+            <label for="ldap_portalep_hcs"> 
+              <input type="radio" name="ldap_id" value="portalep_hcs" id="ldap_portalep_hcs" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
+            </label>
+          </div>
         </cfif>
 
         <!---<cfif APPLICATION.identifier EQ "vpnet" OR client_abb EQ "agsna">--->
         <cfif APPLICATION.moduleLdapDiraya EQ true>
-          <label class="radio" for="ldap_diraya">
-            <input type="radio" name="ldap_id" value="diraya" id="ldap_diraya" onclick="onLdapChange(this)" /> Diraya
-          </label>
+          <div class="radio">
+            <label for="ldap_diraya">
+              <input type="radio" name="ldap_id" value="diraya" id="ldap_diraya" onclick="onLdapChange(this)" /> Diraya
+            </label>
+          </div>
         </cfif>
 
       </div>

@@ -310,11 +310,19 @@
 	<cfelse>
 
 		<div class="row">
-			<label for="text" class="control-label col-xs-2" lang="es">Buscar texto</label>
+			<cfif APPLICATION.hideInputLabels IS false>
+				<label for="text" class="col-xs-2 control-label" lang="es">Buscar texto</label>
+			</cfif>
+			
 			<div class="col-xs-10 col-sm-5">
+				
 				<div class="input-group">
-				  <span class="input-group-addon"><i class="icon-search"></i></span>
-				  <input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control"/>
+					<cfif APPLICATION.hideInputLabels IS true>
+						<span class="input-group-addon"><label for="text"><i class="icon-search"></i></label></span>
+					<cfelse>
+						<span class="input-group-addon"><i class="icon-search"></i></span>
+					</cfif>
+				  <input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control" placeholder="Buscar texto" lang="es"/>
 				</div>
 			</div>
 		</div>
@@ -327,16 +335,34 @@
 				
 		<div class="row">
 
-			<label for="from_date" class="col-xs-2 control-label" lang="es">Fecha desde</label> 
+			<cfif APPLICATION.hideInputLabels IS false>
+				<label for="from_date" class="col-xs-2 control-label" lang="es">Fecha desde</label> 
+			</cfif>
 
-			<div class="col-xs-4 col-sm-4">		
-				<input type="text" name="from_date" id="from_date" class="input_datepicker" value="#from_date#" onchange="setFromDate()">
+			<div class="col-xs-4 col-sm-4">
+				<cfif APPLICATION.hideInputLabels IS true>
+					<div class="input-group">	
+						 <span class="input-group-addon"><label for="from_date"><i class="icon-calendar"></i></label></span>
+						<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()" placeholder="Fecha desde" lang="es">
+					</div>
+				<cfelse>
+					<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()">
+				</cfif>
 			</div>
 
-			<label for="end_date" class="col-xs-2 control-label" lang="es">Fecha hasta</label> 
+			<cfif APPLICATION.hideInputLabels IS false>
+				<label for="end_date" class="col-xs-2 control-label" lang="es">Fecha hasta</label> 
+			</cfif>
 
-			<div class="col-xs-4 col-sm-4">		
-				<input type="text" name="end_date" id="end_date" value="#end_date#" class="input_datepicker" onchange="setEndDate()"/>
+			<div class="col-xs-4 col-sm-4">
+				<cfif APPLICATION.hideInputLabels IS true>
+					<div class="input-group">	
+						<span class="input-group-addon"><label for="end_date"><i class="icon-calendar"></i></label> </span>		
+						<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()" placeholder="Fecha hasta" lang="es"/>
+					</div>
+				<cfelse>
+					<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()"/>
+				</cfif>
 			</div>
 
 		</div>

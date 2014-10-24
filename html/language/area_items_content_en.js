@@ -84,13 +84,13 @@ var area_items_content_en = {
 	
 	
 	/*AreaItem.cfc*/
-	'Mensaje insertado.':'Message inserted.',
-	'Evento insertado.':'Event inserted.',
-	'Tarea insertada.':'Task inserted.',
-	'Interconsulta insertada.':'Interconsultation inserted.',
-	'Elemento de contenido genérico insertado.':'Generic content element inserted.',
-	'Noticia insertada.':'News item inserted',
-	'Respuesta a Interconsulta insertada.':'Interconsultation response inserted.',
+	'Mensaje enviado.':'Message sent.',
+	'Evento enviado.':'Event sent.',
+	'Tarea enviada.':'Task sent.',
+	'Interconsulta enviada.':'Interconsultation sent.',
+	'Elemento de contenido genérico enviada.':'Generic content element sent.',
+	'Noticia enviada.':'News item sent',
+	'Respuesta a Interconsulta enviada.':'Interconsultation response sent.',
 	
 	'Evento modificado.':'Event modified.',
 	'Tarea modificada.':'Task modified.',

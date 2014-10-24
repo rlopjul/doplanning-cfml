@@ -1,4 +1,4 @@
-/*Copyright Era7 Information Technologies 2007-2013*/
+/*Copyright Era7 Information Technologies 2007-2014*/
 
 /****************************************RESET CSS**************************************/
 * {
@@ -20,20 +20,6 @@ a:hover {text-decoration:none; }
 
 /****************************************BOOTSTRAP CSS CHANGES**************************************/
 
-/*.navbar {
-	margin-bottom: 4px;
-}
-.navbar .nav > li > a {
-	padding: 5px 8px;
-}
-.navbar-inner {
-	padding-left:10px;
-	padding-right:10px;
-} 
-.navbar-static-top {
-	margin-left:0;
-	margin-right:0;
-}*/
 .div_head_menu .navbar-nav > li > a {
 	padding: 5px 8px;
 }
@@ -50,9 +36,6 @@ a:hover {text-decoration:none; }
 .contenedor_fondo_blanco .row{
 	margin-right: 0px;
 }
-/*.div_send_message .row{
-	margin-right: 0px;
-}*/
 .div_search_bar .row{
 	margin-right: 0px;
 	padding-bottom: 2px;
@@ -131,8 +114,8 @@ fieldset[disabled] input {
 }
 /*.div_contenedor_contenido{}*/
 .div_login_form{
-	/*margin-left:5px;width:230px;*/
-	width:350px;margin:auto;float:none;
+	/*width:350px*/
+	width:375px;margin:auto;float:none;
 	margin-top:20px;
 }
 
@@ -648,9 +631,6 @@ fieldset[disabled] input {
 .navbar_brand {
 	display:block; padding-top:10px; float:left;
 	font-weight: bold;
-}
-.navbar_brand.hcs {
-	color: #FFF; /*Esto hay que añadirlo SOLO para el hcs*/
 }
 .loading_position{
 	position:absolute; top:50%; left:50%; margin:-12px 0 0 -12px; width:200px; margin-left:-100px;

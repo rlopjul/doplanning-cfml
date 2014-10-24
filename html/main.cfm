@@ -315,10 +315,12 @@
 									<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-primary btn-sm" title="Administración general nueva versión HTML" lang="es"><i class="icon-wrench"></i></a>
 								</div>
 
-								<div class="btn-group">
-									<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general versión Flash" title="Administración general" style="margin-right:3px;" lang="es"/></a>
-								</div>
-
+								<cfif SESSION.client_abb EQ "hcs">
+									<div class="btn-group">
+										<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general versión Flash" title="Administración general versión Flash" style="margin-right:3px;" lang="es"/></a>
+									</div>
+								</cfif>
+								
 							<cfelse>
 								<cfxml variable="areasAdminXml">
 									#objectUser.areas_administration#
@@ -366,7 +368,7 @@
 							<div class="btn-toolbar">
 								<div class="btn-group">
 									<div class="input-group" style="width:260px;">
-										<input type="text" name="text" id="searchText" value="" class="form-control"/>
+										<input type="text" name="text" id="searchText" value="" class="form-control" placeholder="Búsqueda de área" lang="es"/>
 										<span class="input-group-btn">
 											<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
 										</span>

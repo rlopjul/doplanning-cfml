@@ -34,7 +34,7 @@
 				<cfif app_version EQ "mobile">
 					<a href="area.cfm?area=#area_id#" class="navbar_brand">#area_name#</a>
 				<cfelse>
-					<span class="navbar_brand <cfif SESSION.client_abb EQ "hcs">hcs</cfif>">#area_name#</span>
+					<span class="navbar_brand">#area_name#</span>
 				</cfif><br/>
 				<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS true>
 					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">

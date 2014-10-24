@@ -2631,7 +2631,7 @@
 		
 			<cfloop query="userItemsQuery">
 			
-				<cfinvoke component="AreaItemManager" method="deleteItemResult">
+				<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="deleteItemResult">
 					<cfinvokeargument name="item_id" value="#userItemsQuery.id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				</cfinvoke>
@@ -3487,18 +3487,20 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var userAreasIds = "">
+
 		<cftry>
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
-			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="user_areas_ids">
-				<cfinvokeargument name="get_user_id" value="#user_id#">
+			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
+				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 			</cfinvoke>
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
-				<cfinvokeargument name="areas_ids" value="#user_areas_ids#">
+				<cfinvokeargument name="areas_ids" value="#userAreasIds#">
 				<cfif isDefined("arguments.search_text")>
 					<cfinvokeargument name="search_text" value="#arguments.search_text#">
 				</cfif>
@@ -3553,7 +3555,7 @@
 	
 	
 	<!--- ----------------GET ALL AREA ITEMS--------------------------------------------   --->
-	<!---A esta función siempre la llama otra funcion de ColdFusion, por lo que no tiene que tener try catch, ya que la otra fucion que llame a esta lo tendrá.--->
+	<!---A esta función siempre la llama otra funcion de ColdFusion--->
 	
 	<cffunction name="getAllAreaItems" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="yes">
@@ -3597,6 +3599,58 @@
 			</cfcatch>
 		</cftry>
 			
+		<cfreturn response>
+			
+	</cffunction>
+	<!--- ------------------------------------------------------------------------------  --->
+
+
+
+	<!--- ----------------GET ALL ITEMS--------------------------------------------   --->
+	
+	<cffunction name="getAllItems" output="false" returntype="struct" access="public">
+		<cfargument name="limit" type="numeric" required="false" default="50">
+		<cfargument name="full_content" type="boolean" required="false" default="true">
+		
+		<cfset var method = "getAllItems">
+
+		<cfset var response = structNew()>
+
+		<cfset var userAreasIds = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+						
+			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
+				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
+			</cfinvoke>
+			
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
+				<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+				<cfinvokeargument name="limit" value="#arguments.limit#">
+				<cfinvokeargument name="full_content" value="#arguments.full_content#">
+
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="withConsultations" value="#APPLICATION.moduleConsultations#">
+				<cfinvokeargument name="withPubmedsComments" value="#APPLICATION.modulePubMedComments#">
+				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
+				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset response = {result=true, query=#getAreaItemsResult.query#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
 		<cfreturn response>
 			
 	</cffunction>

@@ -41,9 +41,6 @@
 <link href="../assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
-<cfif len(APPLICATION.themeCSSPath) GT 0>
-<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
-</cfif>
 <!---
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -65,6 +62,9 @@
 
 <!---<link href="../html/styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />--->
 <link href="#APPLICATION.dpCSSPath#" rel="stylesheet" type="text/css" media="all" />
+<cfif len(APPLICATION.themeCSSPath) GT 0>
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
+</cfif>
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
@@ -199,8 +199,8 @@
 
 	<cfif show_title IS true>
 		<div class="row">
-			<div style="text-align:center;padding-top:30px;">
-				<span class="texto_normal">
+			<div class="col-sm-offset-3 col-sm-6" style="text-align:center;padding-top:30px;">
+				<p class="texto_normal">
 				<cfif APPLICATION.identifier EQ "dp" >
 					<cfif APPLICATION.title EQ "DoPlanning">
 						<span lang="es">Acceso a DoPlanning</span> 
@@ -208,24 +208,47 @@
 				<cfelseif APPLICATION.identifier EQ "vpnet">
 				Acceso a Colabora.
 				</cfif>
-				</span>
+				</p>
 			</div>
 		</div>
 	</cfif>
 	
-	<!---<div class="row">--->
-		<cfif isDefined("URL.dpage")>
-			<cfset destination_page = URLDecode(URL.dpage)>
-		<cfelse>
-			<cfset destination_page = "">
-		</cfif>
+	
+	<cfif isDefined("URL.dpage")>
+		<cfset destination_page = URLDecode(URL.dpage)>
+	<cfelse>
+		<cfset destination_page = "">
+	</cfif>
+	<div class="row">
+		<div class="col-sm-offset-3 col-sm-5">
 		
-		<!---<div style="margin-left:auto; margin-right:auto; margin-top: 30px; width:550px;">--->
-		<div class="div_login_form">
+		<!---<div class="div_login_form">--->
 			<cfinclude template="#APPLICATION.corePath#/includes/login_form.cfm">
-		</div>
 		<!---</div>--->
-	<!---</div>--->
+
+		</div>
+	</div>
+
+
+	<cfif show_logo IS true>
+
+	<div class="row">
+
+		<div class="col-sm-offset-3 col-sm-6">
+
+			<div class="panel panel-default" style="margin-top:35px;">
+			  <div class="panel-body">
+			    <h5>¡Gracias por usar DoPlanning!. Tenemos el placer de comunicarte que DoPlanning ha sido nominado para los premios UP-Start 2014 como mejor herramienta web de trabajo colaborativo. </h5>
+				<small><b>Puedes votar DoPlanning aquí:</b> 
+	 			<a href="http://awards.up-con.com/2014/vote?page=3" target="_blank">http://awards.up-con.com/2014/vote?page=3</a></small>
+			  </div>
+			</div>
+
+		</div>
+
+	</div>
+
+	</cfif>
 
 </div>
 </cfoutput>

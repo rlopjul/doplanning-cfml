@@ -48,6 +48,8 @@
 		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
 		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
 
+		<cfargument name="hideInputLabels" type="boolean" required="false" default="false">
+
 		<cfargument name="addSchedules" type="boolean" required="false" default="false">
 
 		<cfargument name="defaultLanguage" type="string" required="false" default="es">
@@ -57,6 +59,10 @@
 		<cfargument name="twitterAccessToken" type="string" required="false">
 		<cfargument name="twitterAccessTokenSecret" type="string" required="false">
 
+		<cfargument name="baseCSSPath" type="string" required="false" default="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.2">
+		<cfargument name="themeCSSPath" type="string" required="false" default="">
 
 			<cfset APPLICATION.dsn = "doplanning_app">
 			<cfset APPLICATION.dataBaseName = "doplanning_app">
@@ -149,20 +155,23 @@
 	        <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
 			
 			<!---<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">--->
-			<cfset APPLICATION.baseCSSPath = "//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css">
+			<!---<cfset APPLICATION.baseCSSPath = "//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css">--->
+			<cfset APPLICATION.hideInputLabels = arguments.hideInputLabels>
+			<cfset APPLICATION.baseCSSPath = arguments.baseCSSPath>
 			<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
 
 			<!---<cfset APPLICATION.themeCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">--->
-			<cfset APPLICATION.themeCSSPath = "">
+			<cfset APPLICATION.themeCSSPath = arguments.themeCSSPath>
 
-			<cfset APPLICATION.dpCSSPath = "#APPLICATION.htmlPath#/styles/styles.min.css?v=2.2">
+			<!---<cfset APPLICATION.dpCSSPath = "#APPLICATION.htmlPath#/styles/styles.min.css?v=2.2">--->
+			<cfset APPLICATION.dpCSSPath = arguments.dpCSSPath>
 
 			<cfset APPLICATION.mainUrl = arguments.mainUrl>
 			<cfset APPLICATION.alternateUrl = "">
 			<cfset APPLICATION.signOutUrl = arguments.signOutUrl>
 			<cfset APPLICATION.helpUrl = "http://doplanning.net/es/page.cfm?id=9&title=tutoriales">
 			<cfset APPLICATION.communityUrl = "http://doplanning.net/">
-			<cfset APPLICATION.webUrl = ""><!--- http://doplanning.net/ ---><!--- Esta variable NO se debe usar, se mantiene para retrocompatibilidad --->
+			<cfset APPLICATION.webUrl = ""><!--- http://doplanning.net/ ---><!--- Esta variable NO se debe usar en DoPlanning (se usa en DPWeb), se mantiene para retrocompatibilidad --->
 			
 			<cfset APPLICATION.termsOfUseUrl = APPLICATION.mainUrl&"/web/terms_of_use.cfm">
 
@@ -259,6 +268,9 @@
 					<cfinvokeargument name="moduleWeb" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+
+					<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
 				</cfinvoke>
 
 			</cfcase>
@@ -298,6 +310,11 @@
 					<cfinvokeargument name="moduleAntiVirus" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+
+					<cfinvokeargument name="hideInputLabels" value="true">
+					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/paper/bootstrap.min.css">
+
+					<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_paper.css">
 				</cfinvoke>
 				
 			</cfcase>

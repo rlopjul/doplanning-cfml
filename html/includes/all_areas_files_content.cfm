@@ -58,7 +58,7 @@
 			<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
 			$('#listTable').bind('select.tablesorter.select', function(e, ts){
 			    var itemUrl= $(ts.elem).data("item-url");
-			    openUrl(itemUrl,'itemIframe',event);
+			    openUrlLite(itemUrl,'itemIframe');
 			});
 
 		});
