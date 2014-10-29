@@ -85,7 +85,7 @@
 	<div class="container">
 
 		<cfif isDefined("user_id") AND isDefined("area_id")>
-			<a class="btn btn-warning btn-sm navbar-btn" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de esta área</span></a>
+			<a class="btn btn-warning btn-sm navbar-btn" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar del área</span></a>
 		</cfif>
 
 		<cfif SESSION.client_administrator IS SESSION.user_id>

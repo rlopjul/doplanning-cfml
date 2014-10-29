@@ -27,7 +27,7 @@
 			<input type="hidden" name="field" value="#URL.field#" />
 		</cfif>
 
-		<div class="container">
+		<div class="container-fluid">
 
 			<div class="row">
 
@@ -36,7 +36,7 @@
 					  <span class="input-group-addon"><i class="icon-search"></i></span>
 					  <input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control"/>
 					</div>--->
-					<input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control" placeholder="Usuario" lang="es"/>
+					<input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control" placeholder="Buscar usuario" lang="es"/>
 				</div>
 
 				<div class="col-xs-1">

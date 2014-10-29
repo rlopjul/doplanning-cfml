@@ -61,7 +61,7 @@
 		<cfset var method = "getRootArea">
 								
 			<cfquery name="rootAreaQuery" datasource="#client_dsn#">
-				SELECT areas.id <cfif arguments.onlyId IS false>, areas.name, areas.user_in_charge, areas.description</cfif>
+				SELECT areas.id <cfif arguments.onlyId IS false>, areas.name, areas.user_in_charge, areas.description, version_tree</cfif>
 				FROM #client_abb#_areas AS areas
 				WHERE areas.parent_id IS NULL
 				LIMIT 1;
@@ -675,6 +675,25 @@
 		<cfreturn getMenuTypeList>
 		
 	</cffunction>	
+
+
+	<!--- -------------------------- updateAreaVersionTree -------------------------------- --->
+	
+	<cffunction name="updateAreaVersionTree" returntype="void" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">	
+		
+		<cfset var method = "getMenuTypeList">
+					
+		<cfquery datasource="#client_dsn#" name="saveCache">
+			UPDATE #client_abb#_areas
+			SET version_tree = version_tree+1
+			WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+		
+	</cffunction>
 	
     
   

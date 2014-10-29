@@ -81,16 +81,16 @@
 
 <cfoutput>
 <div class="navbar navbar-default navbar-fixed-top" style="z-index:1029"><!--- z-index necesario para que se oculte cuando se están cargando datos --->
-	<div class="container">
+	<div class="container-fluid">
 
 		<cfif isDefined("user_id")>
-			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar a esta área</a>
+			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar al área</a>
 
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 
 				<span class="divider">&nbsp;</span>
 			
-				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateAdministratorModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar como administrador de esta área</a>
+				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateAdministratorModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar como administrador del área</a>
 
 				<!--- <a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a> --->
 

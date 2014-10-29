@@ -26,7 +26,7 @@
 		<!---<cfargument name="head_content" type="string" required="no">--->
 		<cfargument name="foot_content" type="string" required="no">
 		<cfargument name="styles" type="boolean" required="no" default="true">
-		<cfargument name="file_source" type="string" required="no">
+		<!---<cfargument name="file_source" type="string" required="no">--->
 		
 		<cfset var method = "sendEmail">
 		

@@ -879,7 +879,6 @@
 	<!---  -----------------------UPDATE USER------------------------------------- --->
 
 	<cffunction name="updateUser" returntype="struct" output="false" access="public">
-		<!--- <cfargument name="request" type="string" required="yes"> --->
 		<cfargument name="update_user_id" type="numeric" required="true">
 		<cfargument name="family_name" type="string" required="true">
 		<cfargument name="email" type="string" required="false" default="">
@@ -925,6 +924,11 @@
 			<cfif arguments.update_user_id NEQ SESSION.user_id>
 				<cfinclude template="includes/checkAdminAccess.cfm">
 			</cfif>
+
+			<cfinvoke component="UserManager" method="getUser" returnvariable="userQuery">
+				<cfinvokeargument name="get_user_id" value="#arguments.update_user_id#">
+				<cfinvokeargument name="return_type" value="query"/>
+			</cfinvoke>	
 			
 			<cfif APPLICATION.userEmailRequired IS true OR len(arguments.email) GT 0>
 				
@@ -936,7 +940,7 @@
 				<cfquery name="checkEmail" datasource="#client_dsn#">
 					SELECT id
 					FROM #client_abb#_users
-					WHERE email=<cfqueryparam value="#Trim(arguments.email)#" cfsqltype="cf_sql_varchar">;
+					WHERE email = <cfqueryparam value="#Trim(arguments.email)#" cfsqltype="cf_sql_varchar">;
 				</cfquery>
 				
 				<cfif checkEmail.recordCount GT 0><!---User email already used--->
@@ -1004,6 +1008,19 @@
 				</cfif>
 			
 			</cftransaction>
+
+			<cfif userQuery.hide_not_allowed_areas NEQ arguments.hide_not_allowed_areas OR (arguments.adminFields IS true AND SESSION.client_administrator EQ SESSION.user_id AND userQuery.internal_user NEQ arguments.internal_user)>
+				
+				<!--- deleteUserCacheTree --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
+					<cfinvokeargument name="user_id" value="#arguments.update_user_id#">
+					<cfinvokeargument name="tree_type" value="default">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfif>
 
 			<cfinvoke component="UserManager" method="updateUserLanguage" returnvariable="updateUserResponse">
 				<cfinvokeargument name="update_user_id" value="#arguments.update_user_id#">
@@ -1560,6 +1577,15 @@
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="new_area" value="false">
 			</cfinvoke>
+
+			<!--- deleteUserCacheTree --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
+				<cfinvokeargument name="user_id" value="#arguments.add_user_id#">
+				<cfinvokeargument name="tree_type" value="default">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 			
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
 			
@@ -1681,6 +1707,15 @@
 					DELETE FROM #client_abb#_areas_users
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND user_id = <cfqueryparam value="#arguments.dissociate_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
+
+				<!--- deleteUserCacheTree --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
+					<cfinvokeargument name="user_id" value="#arguments.dissociate_user_id#">
+					<cfinvokeargument name="tree_type" value="default">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 			
 			<cfelse><!---The area does not exist--->
 				
@@ -1757,6 +1792,15 @@
 						SET user_id = <cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">,
 						area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;			
 					</cfquery>
+
+					<!--- deleteUserCacheTree --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
+						<cfinvokeargument name="user_id" value="#arguments.add_user_id#">
+						<cfinvokeargument name="tree_type" value="admin">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
 				
 				<cfelse><!---the user does not exist--->
 				
@@ -1833,6 +1877,15 @@
 					WHERE user_id = <cfqueryparam value = "#arguments.dissociate_user_id#" cfsqltype="cf_sql_integer">
 					AND area_id = <cfqueryparam value = "#arguments.area_id#" cfsqltype="cf_sql_integer">;			
 				</cfquery>
+
+				<!--- deleteUserCacheTree --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
+					<cfinvokeargument name="user_id" value="#arguments.dissociate_user_id#">
+					<cfinvokeargument name="tree_type" value="admin">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 			
 			<cfelse><!---The area does not exist--->
 				

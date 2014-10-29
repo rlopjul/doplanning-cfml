@@ -477,7 +477,7 @@
 								</div>
 
 								<div class="btn-group">
-									<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a>
+									<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white" style="color:#5BB75B"></i> <span lang="es">Nueva área</span></a>
 
 									<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover</span></a>
 								

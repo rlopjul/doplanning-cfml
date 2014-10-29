@@ -8,7 +8,7 @@
 
 <div class="div_head_menu">
 	<div class="navbar navbar-default navbar-static-top">
-		<div class="container">
+		<div class="container-fluid">
 			<span class="navbar-brand">Usuarios de la organización</span>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a>

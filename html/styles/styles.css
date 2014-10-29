@@ -391,10 +391,12 @@ fieldset[disabled] input {
 	border-style:solid; border-color:#CCCCCC; border-width:1px;
 }
 .div_message_page_description ul {
-	list-style-position:inside;
+	list-style-position:outside;
+    margin-left:20px;
 }
 .div_message_page_description ol {
-	list-style-position:inside;
+	list-style-position:outside;
+    margin-left:20px;
 }
 .div_message_page_description p {
 	padding-top:8px;

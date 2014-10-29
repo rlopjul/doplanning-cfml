@@ -48,6 +48,8 @@
 		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
 		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
 
+		<cfargument name="cacheTree" type="boolean" required="false" default="true">
+
 		<cfargument name="hideInputLabels" type="boolean" required="false" default="false">
 
 		<cfargument name="addSchedules" type="boolean" required="false" default="false">
@@ -91,6 +93,8 @@
 			<cfset APPLICATION.userEmailRequired = arguments.userEmailRequired>
 			<cfset APPLICATION.moduleLdapDiraya = arguments.moduleLdapDiraya><!--- asnc, agsna --->
 			<cfset APPLICATION.moduleAntiVirus = arguments.moduleAntiVirus>
+
+			<cfset APPLICATION.cacheTree = arguments.cacheTree>
 
 			<cfif arguments.moduleWebRTC IS true>
 
@@ -315,6 +319,8 @@
 					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/paper/bootstrap.min.css">
 
 					<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_paper.css">
+
+					<cfinvokeargument name="cacheTree" value="true">
 				</cfinvoke>
 				
 			</cfcase>
@@ -371,6 +377,8 @@
 					<cfinvokeargument name="moduleWeb" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">	
+
+					<cfinvokeargument name="cacheTree" value="true">
 				</cfinvoke>
 
 			</cfcase>

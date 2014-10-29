@@ -230,7 +230,7 @@
 	</div>
 
 
-	<cfif show_logo IS true>
+	<cfif show_logo IS true AND APPLICATION.title EQ "DoPlanning">
 
 	<div class="row">
 
@@ -239,8 +239,10 @@
 			<div class="panel panel-default" style="margin-top:35px;">
 			  <div class="panel-body">
 			    <h5>¡Gracias por usar DoPlanning!. Tenemos el placer de comunicarte que DoPlanning ha sido nominado para los premios UP-Start 2014 como mejor herramienta web de trabajo colaborativo. </h5>
-				<small><b>Puedes votar DoPlanning aquí:</b> 
-	 			<a href="http://awards.up-con.com/2014/vote?page=3" target="_blank">http://awards.up-con.com/2014/vote?page=3</a></small>
+				<small><b>Puedes votar DoPlanning aquí para que esté entre los 3 finalistas:</b><br/> 
+	 			<a href="http://awards.up-con.com/2014/vote?page=3" target="_blank">http://awards.up-con.com/2014/vote?page=3</a></small><br/><br/>
+
+	 			<small><a href="http://www.ideal.es/granada/201410/28/pyme-local-aspira-premio-20141027234437.html" target="_blank">Noticia en el periódico Ideal con la nominación</a></small>
 			  </div>
 			</div>
 
