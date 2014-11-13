@@ -47,6 +47,7 @@
 		<cfargument name="userEmailRequired" type="boolean" required="false" default="true">
 		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
 		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
+		<cfargument name="homeTab" type="boolean" required="false" default="false">
 
 		<cfargument name="cacheTree" type="boolean" required="false" default="true">
 
@@ -61,7 +62,7 @@
 		<cfargument name="twitterAccessToken" type="string" required="false">
 		<cfargument name="twitterAccessTokenSecret" type="string" required="false">
 
-		<cfargument name="baseCSSPath" type="string" required="false" default="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 
 		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.2">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">
@@ -93,6 +94,7 @@
 			<cfset APPLICATION.userEmailRequired = arguments.userEmailRequired>
 			<cfset APPLICATION.moduleLdapDiraya = arguments.moduleLdapDiraya><!--- asnc, agsna --->
 			<cfset APPLICATION.moduleAntiVirus = arguments.moduleAntiVirus>
+			<cfset APPLICATION.homeTab = arguments.homeTab>
 
 			<cfset APPLICATION.cacheTree = arguments.cacheTree>
 
@@ -154,17 +156,17 @@
 			<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
 			
 			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
-			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js">
+			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js">
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
 	        <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
 			
-			<!---<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">--->
-			<!---<cfset APPLICATION.baseCSSPath = "//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css">--->
+			<!---<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">--->
+			<!---<cfset APPLICATION.baseCSSPath = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/cerulean/bootstrap.min.css">--->
 			<cfset APPLICATION.hideInputLabels = arguments.hideInputLabels>
 			<cfset APPLICATION.baseCSSPath = arguments.baseCSSPath>
 			<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
 
-			<!---<cfset APPLICATION.themeCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">--->
+			<!---<cfset APPLICATION.themeCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">--->
 			<cfset APPLICATION.themeCSSPath = arguments.themeCSSPath>
 
 			<!---<cfset APPLICATION.dpCSSPath = "#APPLICATION.htmlPath#/styles/styles.min.css?v=2.2">--->
@@ -173,8 +175,8 @@
 			<cfset APPLICATION.mainUrl = arguments.mainUrl>
 			<cfset APPLICATION.alternateUrl = "">
 			<cfset APPLICATION.signOutUrl = arguments.signOutUrl>
-			<cfset APPLICATION.helpUrl = "http://doplanning.net/es/page.cfm?id=9&title=tutoriales">
-			<cfset APPLICATION.communityUrl = "http://doplanning.net/">
+			<cfset APPLICATION.helpUrl = "https://doplanning.net/es/page.cfm?id=9&amp;title=tutoriales">
+			<cfset APPLICATION.communityUrl = "https://doplanning.net/">
 			<cfset APPLICATION.webUrl = ""><!--- http://doplanning.net/ ---><!--- Esta variable NO se debe usar en DoPlanning (se usa en DPWeb), se mantiene para retrocompatibilidad --->
 			
 			<cfset APPLICATION.termsOfUseUrl = APPLICATION.mainUrl&"/web/terms_of_use.cfm">
@@ -266,14 +268,14 @@
 					
 					<cfinvokeargument name="serverIp" value="54.217.233.240">
 
-					<cfinvokeargument name="mainUrl" value="http://doplanning.net">
-					<cfinvokeargument name="signOutUrl" value="http://doplanning.net">
+					<cfinvokeargument name="mainUrl" value="https://doplanning.net">
+					<cfinvokeargument name="signOutUrl" value="https://doplanning.net">
 
 					<cfinvokeargument name="moduleWeb" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
-					<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+					<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 
 				</cfinvoke>
 
@@ -313,14 +315,59 @@
 					<cfinvokeargument name="userEmailRequired" value="false">
 					<cfinvokeargument name="moduleAntiVirus" value="true">
 
+					<cfinvokeargument name="homeTab" value="true">
+
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
 					<cfinvokeargument name="hideInputLabels" value="true">
-					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/paper/bootstrap.min.css">
+					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/paper/bootstrap.min.css">
 
 					<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_paper.css">
+				</cfinvoke>
+				
+			</cfcase>
 
-					<cfinvokeargument name="cacheTree" value="true">
+
+			<cfcase value="hcs.es">
+				
+				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+
+					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
+					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
+					<cfif isDefined("arguments.emailFrom")>
+						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
+					<cfelse>
+						<cfinvokeargument name="emailFrom" value="doplanning-no-reply@hcs.es">
+					</cfif>
+
+					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
+					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
+					
+					<cfinvokeargument name="serverIp" value="54.228.233.178">
+
+					<cfinvokeargument name="mainUrl" value="http://doplanning.hcs.es">
+					<cfinvokeargument name="signOutUrl" value="http://doplanning.hcs.es">
+
+					<cfinvokeargument name="ldapName" value="Portal del Empleado">
+
+					<cfinvokeargument name="moduleLdapUsers" value="true">
+					<cfinvokeargument name="moduleWeb" value="true">
+					<cfinvokeargument name="moduleWebRTC" value="true">
+					<cfinvokeargument name="showDniTitle" value="false">
+					<cfinvokeargument name="modulePubMedComments" value="false">
+					<cfinvokeargument name="moduleListsWithPermissions" value="true">
+					<cfinvokeargument name="changeElementsArea" value="true">
+					<cfinvokeargument name="publicationScope" value="true">
+					<cfinvokeargument name="publicationValidation" value="true">
+					<cfinvokeargument name="userEmailRequired" value="false">
+					<cfinvokeargument name="moduleAntiVirus" value="true">
+
+					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+
+					<cfinvokeargument name="hideInputLabels" value="false">
+					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/cerulean/bootstrap.min.css">
+
+					<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_celurean.css">
 				</cfinvoke>
 				
 			</cfcase>
@@ -342,17 +389,20 @@
 					
 					<cfinvokeargument name="serverIp" value="23.23.250.237">
 
-					<cfinvokeargument name="mainUrl" value="http://era7bioinformatics.com">
-					<cfinvokeargument name="signOutUrl" value="http://era7bioinformatics.com/bioinformatics7">
+					<cfinvokeargument name="mainUrl" value="https://era7bioinformatics.com">
+					<cfinvokeargument name="signOutUrl" value="https://era7bioinformatics.com/bioinformatics7">
 
 					<cfinvokeargument name="title" value="Era7">
 					<cfinvokeargument name="moduleWeb" value="true">
 					<cfinvokeargument name="moduleWebRTC" value="true">
 
+					<cfinvokeargument name="homeTab" value="true">
+
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 				</cfinvoke>
 
 			</cfcase>
+
 
 			<cfcase value="genome7.com">
 				
@@ -377,8 +427,6 @@
 					<cfinvokeargument name="moduleWeb" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">	
-
-					<cfinvokeargument name="cacheTree" value="true">
 				</cfinvoke>
 
 			</cfcase>
@@ -404,13 +452,16 @@
 
 		<cfargument name="webUrl" type="string" required="true">
 		<cfargument name="dpUrl" type="string" required="false">
+
+		<cfargument name="webDirectories" type="string" required="false"><!---Esta variable será obligatoria, se mantiene opcional temporalmente para retrocompatibiilidad--->
 		
+		<!---Estas variables deben dejar se usarse y sustituirse por APPLICATION.webs, se mantienen para retrocompatibilidad--->	
 		<cfargument name="rootAreaEs" type="string" required="false">
 		<cfargument name="rootAreaEn" type="string" required="false">
 		<cfargument name="rootAreaIntranet" type="string" required="false">
-
 		<cfargument name="rootAreaNews" type="string" required="false">
 		<cfargument name="rootAreaIntranetNews" type="string" required="false">
+		<!--- --->
 
 		<cfargument name="logoClient" type="string" required="true">
 
@@ -431,6 +482,7 @@
 
 		<cfargument name="googleAnalyticsAccountId" type="string" required="true">
 		<cfargument name="addThisProfileId" type="string" required="true">
+		<cfargument name="googleSearchCode" type="string" required="false">
 
 		<cfargument name="includeTableSorter" type="boolean" required="false" default="false">
 
@@ -440,6 +492,51 @@
 			<cfset APPLICATION.dpWebClientAbb = arguments.dpWebClientAbb>
 			<cfset APPLICATION.dpWebClientDsn = APPLICATION.identifier&"_"&APPLICATION.dpWebClientAbb>
 			<cfset APPLICATION.dpWebClientTitle = arguments.dpWebClientTitle>
+
+			<cfif isDefined("arguments.webDirectories")>
+				
+				<cfset APPLICATION.webDirectories = arguments.webDirectories>
+
+				<cfset APPLICATION.webs = structNew()>
+
+				<cfloop list="#APPLICATION.webDirectories#" index="webPath">
+					
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWeb" returnvariable="getWebQuery">
+						<cfinvokeargument name="path" value="#webPath#">
+						
+						<cfinvokeargument name="client_abb" value="#APPLICATION.dpWebClientAbb#">
+						<cfinvokeargument name="client_dsn" value="#APPLICATION.dpWebClientDsn#">
+					</cfinvoke>
+
+					<cfif getWebQuery.recordCount GT 0>
+
+						<cfset web = structNew()>
+						<cfset web.path = webPath>
+						<cfset web.pathUrl = getWebQuery.path_url>
+						<cfset web.areaId = getWebQuery.area_id>
+						<cfset web.areaType = getWebQuery.area_type>
+						<cfset web.language = getWebQuery.language>
+
+
+						<cfif isDefined("getWebQuery.news_area_id")>
+							<cfset web.newsAreaId = getWebQuery.news_area_id>
+						</cfif>
+						<cfif isDefined("getWebQuery.events_area_id")>
+							<cfset web.eventsAreaId = getWebQuery.events_area_id>
+						</cfif>
+						<cfif isDefined("getWebQuery.publications_area_id")>
+							<cfset web.publicationsAreaId = getWebQuery.publications_area_id>
+						</cfif>
+						
+						<cfset APPLICATION.webs[webPath] = web>
+
+					<cfelse>
+						<cfthrow message="Web con directorio '#webPath#' no definido en tabla #APPLICATION.dpWebClientAbb#_webs">
+					</cfif>
+
+				</cfloop>
+
+			</cfif>
 
 			<cfset APPLICATION.webUrl = arguments.webUrl><!--- URL de la web en DPWeb --->
 
@@ -465,7 +562,7 @@
 			</cfif>
 			<cfif isDefined("arguments.rootAreaIntranetNews")>
 				<cfset APPLICATION.rootAreaIntranetNews = arguments.rootAreaIntranetNews>
-			</cfif>
+			</cfif>			
 			
 			<cfset APPLICATION.logoClient = arguments.logoClient>
 
@@ -494,6 +591,10 @@
 			<!---Google analytics--->
 			<cfset APPLICATION.googleAnalyticsAccountId = arguments.googleAnalyticsAccountId>
 			<cfset APPLICATION.addThisProfileId = arguments.addThisProfileId>
+
+			<cfif isDefined("arguments.googleSearchCode")>
+				<cfset APPLICATION.googleSearchCode = arguments.googleSearchCode>
+			</cfif>
 
 	</cffunction>
 

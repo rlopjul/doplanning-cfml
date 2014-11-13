@@ -7,11 +7,6 @@
 
 	<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
-	<!--- 
-	<script type="text/javascript">
-		var applicationId = "#APPLICATION.identifier#";
-	</script> --->
-	
 	<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
 
 	<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
@@ -60,10 +55,6 @@
 	</script>
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
-
-	<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="objectArea">
-		<cfinvokeargument name="area_id" value="#area_id#"/>
-	</cfinvoke>--->
 
 	<div class="form-inline" style="position:fixed;">
 

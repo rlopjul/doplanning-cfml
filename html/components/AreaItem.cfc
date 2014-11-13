@@ -1506,6 +1506,7 @@
 		<cfargument name="state" type="string" required="no">
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
+		<cfargument name="to_end_date" type="string" required="no">
 				
 		<cfset var method = "getAllAreasItems">
 		
@@ -1540,6 +1541,9 @@
 				</cfif>
 				<cfif isDefined("arguments.end_date")>
 				<cfinvokeargument name="end_date" value="#arguments.end_date#">
+				</cfif>
+				<cfif isDefined("arguments.to_end_date")>
+				<cfinvokeargument name="to_end_date" value="#arguments.to_end_date#">
 				</cfif>
 				<cfinvokeargument name="with_area" value="true">
 			</cfinvoke>	
@@ -1735,7 +1739,7 @@
 						<cfelse><!---Tasks--->
 						<div class="div_message_page_label"><span lang="es">Valor estimado:</span> <span class="text_message_page">#objectItem.estimated_value#</span></div>
 						<div class="div_message_page_label"><span lang="es">Valor real:</span> <span class="text_message_page">#objectItem.real_value#</span></div>
-						<div class="div_message_page_label"><span lang="es">Realizada:</span> <span class="text_message_page"><cfif objectItem.done IS true>Sí<cfelse>No</cfif></span></div>
+						<div class="div_message_page_label"><span lang="es">Realizada:</span> <span class="text_message_page" lang="es"><cfif objectItem.done IS true>Sí<cfelse>No</cfif></span></div>
 						</cfif>
 
 					</cfif>				
@@ -2354,7 +2358,7 @@
 								<cfif URL[itemTypeName] IS itemsQuery.id>
 								
 									<!---Esta acción solo se completa si está en la versión HTML2--->
-									<script type="text/javascript">
+									<script>
 										openUrlHtml2('#item_page_url#','itemIframe');
 									</script>
 									<cfset itemSelected = true>
@@ -2365,7 +2369,7 @@
 							
 								<cfif app_version NEQ "mobile">
 									<!---Esta acción solo se completa si está en la versión HTML2--->
-									<script type="text/javascript">
+									<script>
 										openUrlHtml2('#item_page_url#','itemIframe');
 									</script>
 									<cfset itemSelected = true>
@@ -2537,13 +2541,13 @@
 						<tr>
 							<th style="width:35px" class="filter-false"></th>
 							<cfif len(area_type) IS 0>
-							<th style="width:55%" lang="es">Título</th>
+							<th style="width:55%"><span lang="es">Título</span></th>
 							<cfelse>
-							<th style="width:49%" lang="es">Título/Contenido</th>
+							<th style="width:49%"><span lang="es">Título/Contenido</span></th>
 							</cfif>
 							<th style="width:5%" class="filter-false"></th>
-							<th style="width:23%" lang="es">De</th>
-							<th style="width:12%" lang="es">Fecha</th>
+							<th style="width:23%"><span lang="es">De</span></th>
+							<th style="width:12%"><span lang="es">Fecha</span></th>
 							<cfif len(area_type) GT 0>
 							<th style="width:6%" class="filter-false">##</th>
 							</cfif>
@@ -2579,9 +2583,15 @@
 
 							<cfif ( isDefined("URL.#itemTypeName#") AND (URL[itemTypeName] IS itemsQuery.id) ) OR ( selectFirst IS true AND itemsQuery.currentrow IS 1 AND app_version NEQ "mobile" ) >
 
+								<cfif isDefined("URL.reply")>
+									<cfset onpenUrlHtml2 = "#itemTypeName#_new.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+								<cfelse>
+									<cfset onpenUrlHtml2 = item_page_url>
+								</cfif>
+
 								<!---Esta acción solo se completa si está en la versión HTML2--->
-								<script type="text/javascript">
-									openUrlHtml2('#item_page_url#','itemIframe');
+								<script>
+									openUrlHtml2('#onpenUrlHtml2#','itemIframe');
 								</script>
 
 								<cfset itemSelected = true>

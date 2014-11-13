@@ -424,7 +424,7 @@
 					
 		<cftry>
 	
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="updateArea" argumentcollection="#arguments#" returnvariable="response">
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="moveArea" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
 			
 			<cfif response.result IS true>

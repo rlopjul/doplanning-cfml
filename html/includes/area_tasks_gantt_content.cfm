@@ -7,7 +7,8 @@
 <script src="#APPLICATION.path#/jquery/jquery.serializecfjson-0.2.min.js"></script>
 <!---<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.3/moment.min.js"></script>--->
 
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<!---<script src="http://d3js.org/d3.v3.min.js"></script>--->
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.min.js"></script>
 
 <script src="#APPLICATION.htmlPath#/scripts/gantt/gantt-chart-d3.min.js"></script>
 <script src="#APPLICATION.htmlPath#/scripts/gantt/ganttDP.min.js"></script>

@@ -2738,7 +2738,7 @@
 							<cfif APPLICATION.moduleAntiVirus IS true>
 							
 								<!--- START THREAD --->
-								<cfthread name="antiVirusCheckNewAttached#arguments.file_type#" action="run" priority="NORMAL" file_id="#file_id#" fileTypeId="1" user_id="#SESSION.user_id#" itemQuery="#itemQuery#" client_abb="#SESSION.client_abb#" client_dsn="#client_dsn#" item_id="€#item_id#" file_type="#arguments.file_type#">
+								<cfthread name="antiVirusCheckNewAttached#arguments.file_type#" action="run" priority="NORMAL" file_id="#file_id#" fileTypeId="1" user_id="#SESSION.user_id#" itemQuery="#itemQuery#" client_abb="#SESSION.client_abb#" client_dsn="#client_dsn#" item_id="#item_id#" file_type="#arguments.file_type#">
 
 									<cftry>
 										

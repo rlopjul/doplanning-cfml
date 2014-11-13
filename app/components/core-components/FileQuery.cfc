@@ -72,6 +72,7 @@
 					, files.anti_virus_check, files.anti_virus_check_result
 				</cfif>
 				, IF(files.replacement_user IS NOT NULL, CONCAT_WS(' ', users_replacement.family_name, users_replacement.name), '' ) AS replacement_user_full_name
+				, users_replacement.image_type AS replacement_user_image_type
 				, IF(files.reviser_user IS NOT NULL, CONCAT_WS(' ', users_reviser.family_name, users_reviser.name), '' ) AS reviser_user_full_name
 				, IF(files.approver_user IS NOT NULL, CONCAT_WS(' ', users_approver.family_name, users_approver.name), '' ) AS approver_user_full_name
 				FROM #client_abb#_#fileTypeTable# AS files

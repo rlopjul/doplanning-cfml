@@ -347,3 +347,7 @@ function restoreArea() {
 	$("#maximizeArea").show();
 	$("#restoreArea").hide();
 }*/
+
+function showTreeTab(){
+	$('#dpTab a[href="#tab1"]').tab('show');			
+}

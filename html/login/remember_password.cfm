@@ -87,7 +87,7 @@
 		<script src="../../app/scripts/App.js"></script>
 		<script src="../scripts/MessengerControl.js"></script>
 		<cfif isDefined("SESSION.user_id")>
-		<script type="text/javascript">
+		<script>
 		window.onload = function (){
 			Messenger.Private.initGetNewConversations();
 		}
@@ -99,13 +99,17 @@
 <cfoutput>
 <script src="#APPLICATION.jqueryJSPath#"></script>
 <script src="#APPLICATION.bootstrapJSPath#"></script>
-<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
+<!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>--->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
 <script src="../scripts/functions.min.js?v=2.1"></script>
 </cfoutput>
 
-<script type="text/javascript">
+<script>
 	//Language
+	<!---
 	jquery_lang_js.prototype.defaultLang = 'es';
 	jquery_lang_js.prototype.currentLang = 'es';
 	window.lang = new jquery_lang_js();
@@ -113,6 +117,9 @@
 	$().ready(function () {
 		window.lang.run();
 	});
+	--->
+	
+	window.lang = new Lang('es');
 </script>
 
 <!-- InstanceBeginEditable name="head" -->
@@ -171,9 +178,9 @@
 	
 	<div class="row">
 		<div style="text-align:center;padding-top:30px;">
-			<span class="texto_normal">
-			<p><span lang="es">Obtener una nueva contrase&ntilde;a para #APPLICATION.title#</span> <strong>#getClient.name#</strong></p> 
-			</span>
+			<p class="texto_normal">
+				<span lang="es">Obtener una nueva contrase&ntilde;a para #APPLICATION.title#</span> <strong>#getClient.name#</strong> 
+			</p>
 		</div>
 	</div>
 	

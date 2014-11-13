@@ -1378,6 +1378,16 @@
 		</cfif>
 		
 	</cffunction>
+
+
+
+	<!--- ----------------------- getFileIconsTypes -------------------------------- --->
+	
+	<cffunction name="getFileIconsTypes" returntype="string" output="false" access="public">
+
+		<cfreturn "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">
+		
+	</cffunction>
 	
 	
 </cfcomponent>

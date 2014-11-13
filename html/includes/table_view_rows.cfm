@@ -72,6 +72,7 @@
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowList">
 			<cfinvokeargument name="table_id" value="#table_id#">
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			<cfinvokeargument name="view_id" value="#view_id#">
 			<cfinvokeargument name="tableRows" value="#tableRows#">
 			<cfinvokeargument name="fields" value="#fields#">
 			<cfinvokeargument name="openRowOnSelect" value="true">

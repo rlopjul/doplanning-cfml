@@ -76,7 +76,10 @@
 	
 </script>
 
-<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">
+<!---<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">--->
+
+<cfinvoke component="#APPLICATION.htmlComponentsPath#" method="getFileIconsTypes" returnvariable="iconTypes">
+</cfinvoke>
 
 <cfset numFiles = files.recordCount>
 <div class="div_items">

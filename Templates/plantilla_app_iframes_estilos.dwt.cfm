@@ -45,14 +45,16 @@
 <script src="#APPLICATION.jqueryJSPath#"></script>
 <script src="#APPLICATION.bootstrapJSPath#"></script>
 
-<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
+<!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>--->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 
 <script src="../html/scripts/functions.min.js?v=2.1"></script>
 <script src="../html/scripts/iframesFunctions.min.js?v=2"></script>
 
 <script>
 	//Language
-	jquery_lang_js.prototype.defaultLang = 'es';
+	<!--- jquery_lang_js.prototype.defaultLang = 'es';
 	jquery_lang_js.prototype.currentLang = 'es';
 	
 	jquery_lang_js.prototype.lang.en = [{}];
@@ -61,8 +63,16 @@
 	
 	$().ready(function () {
    		window.lang.run();
+	});--->
+	
+	Lang.prototype.pack.en = {};
+	Lang.prototype.pack.en.token = {};
+	
+	$(window).load(function () {
+		window.lang = new Lang('es');
 	});
 </script>
+<script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
 
 </cfoutput>
 <!-- TemplateBeginEditable name="head" -->

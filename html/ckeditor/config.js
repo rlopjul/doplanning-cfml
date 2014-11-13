@@ -42,6 +42,15 @@ CKEDITOR.editorConfig = function( config ) {
 		['Image']
 	];/*,['InsertPre']*/
 
+	config.toolbar_DP_hcs =
+	[		
+		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],
+		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],
+		['FontSize','TextColor','BGColor'],
+		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
+		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar']
+	];/*,['InsertPre']*/
+
 	config.toolbar_DPAdmin =
 	[		
 		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],['Source'],
@@ -65,10 +74,10 @@ CKEDITOR.editorConfig = function( config ) {
 	config.entities_latin = false;
 	config.entities_processNumerical = false;
 
-	config.filebrowserBrowseUrl = '../../app/filemanager/index.html';
+	//config.filebrowserBrowseUrl = '../../app/filemanager/index.html'; // ESTO SÓLO SE PUEDE HABILITAR PARA ALGUNOS DP COMO EL DE HOVI QUE TIENEN SERVIDOR PROPIO
 
-	config.extraAllowedContent = 'script[src]'+ //Para permitir etiquetas <script> (necesario para subir animaciones html en nanomyp)
-		' a(*)[*]'+ //Para embeber widgets de twitter
+	config.extraAllowedContent = 'script[src];'+ //Para permitir etiquetas <script> (necesario para subir animaciones html en nanomyp)
+		' a(*)[*];'+ //Para embeber widgets de twitter
 		' pre(*)'; //Para incluir código
 
 	//config.protectedSource.push(/<pre>[\s\S]*?<\/pre>/gi); //Esto oculta este código, y no lo muestra en el editor

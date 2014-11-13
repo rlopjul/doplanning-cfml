@@ -32,16 +32,25 @@
 		<cfif error_code IS NOT 102 AND error_code IS NOT 607 AND error_code IS NOT 408>
 
 			<!---saveError in DataBase--->
-			<cfif isDefined("arguments.user_id") AND isDefined("arguments.client_abb") AND isDefined("arguments.user_language")>
+			<cfif isDefined("arguments.client_abb")><!---AND isDefined("arguments.user_language")--->
 				<cfset var client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 				<cfquery datasource="#client_dsn#" name="saveErrorQuery">
-					INSERT INTO #arguments.client_abb#_errors_log (code, user_id, content, method, component)
-					VALUES (#error_code#, '#SESSION.user_id#', '#arguments.error_content#', '#error_method#', '#error_component#')
+					INSERT INTO #arguments.client_abb#_errors_log
+					SET code = <cfqueryparam value="#error_code#" cfsqltype="cf_sql_integer">,
+					<cfif isDefined("arguments.user_id")>
+					user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">, 
+					<cfelseif isDefined("SESSION.user_id")>
+					user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">, 
+					</cfif>
+					content = <cfqueryparam value="#arguments.error_content#" cfsqltype="cf_sql_longvarchar">, 
+					method = <cfqueryparam value="#error_method#" cfsqltype="cf_sql_varchar">, 
+					component = <cfqueryparam value="#error_component#" cfsqltype="cf_sql_varchar">;
+					<!---VALUES (#error_code#, '#SESSION.user_id#', '#arguments.error_content#', '#error_method#', '#error_component#');--->
 				</cfquery>
 			<cfelse>			
 				<cfquery datasource="#APPLICATION.dsn#" name="saveErrorQuery">
 					INSERT INTO APP_errors_log (code, content, method, component)
-					VALUES (#error_code#, '#arguments.error_content#', '#error_method#', '#error_component#')
+					VALUES (#error_code#, '#arguments.error_content#', '#error_method#', '#error_component#');
 				</cfquery>
 			</cfif>
 

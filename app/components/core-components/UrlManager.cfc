@@ -1,13 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2013
-
-    File created by: alucena
-    ColdFusion version required: 8
-    Last file change by: alucena
-	
-	17-01-2013 alucena: cambiada la url de los elementos, quitado /html/
-	22-04-2013 alucena: cambiado client_id por client_abb en las URLs con abb=
-	
---->
+<!--- Copyright Era7 Information Technologies 2007-2014 --->
 <cfcomponent output="false">
 	
 	<cfset component = "UrlManager">
@@ -38,8 +29,6 @@
 		<cfargument name="client_abb" type="string" required="true">
 		
 		<cfset var fileUrl = "">
-
-		<!--- <cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm"> --->
 		
 		<!---<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?area=#arguments.area_id#&file=#arguments.file_id#&abb=#arguments.client_abb#">--->
 
@@ -64,8 +53,6 @@
 		<cfargument name="client_abb" type="string" required="true">
 		
 		<cfset var fileUrl = "">
-
-		<!--- <cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm"> --->
 		
 		<cfif isDefined("arguments.item_id") AND isDefined("arguments.itemTypeName")>
 			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&fileDownload=#arguments.file_id#&#arguments.itemTypeName#=#arguments.item_id#">
@@ -152,10 +139,10 @@
 
 		<cfset pageTitle = pageTitleToUrl(pageTitle)>
 
-		<cfset areaWebUrl = "page.cfm?id=#arguments.area_id#&title=#pageTitle#">
+		<cfset areaWebUrl = "page.cfm?id=#arguments.area_id#&amp;title=#pageTitle#">
 
 		<cfif arguments.preview IS true>
-			<cfset areaWebUrl = areaWebUrl&"&preview=1">
+			<cfset areaWebUrl = areaWebUrl&"&amp;preview=1">
 		</cfif>
 		
 		<cfreturn areaWebUrl>
@@ -164,7 +151,7 @@
 
 	<!--- ----------------------- getAreaWebPageFullUrl -------------------------------- --->
 
-	<!---Para poder URLs absolutas es necesario saber la URL donde está publicada la web--->
+	<!---Para definir URLs absolutas es necesario saber la URL donde está publicada la web--->
 
 	<cffunction name="getAreaWebPageFullUrl" access="public" returntype="string">
 		<cfargument name="area_id" type="numeric" required="true">
@@ -186,7 +173,7 @@
 		<cfset areaWebUrl = arguments.path_url&"/"&arguments.path&"/"&areaPage>
 		
 		<cfif arguments.preview IS true>
-			<cfset areaWebUrl = areaWebUrl&"&preview=1">
+			<cfset areaWebUrl = areaWebUrl&"&amp;preview=1">
 		</cfif>
 
 		<cfreturn areaWebUrl>
@@ -213,7 +200,6 @@
 		<cfelse>
 			<cfset pageName = "evento.cfm">
 		</cfif>
-
 		<cfset itemWebUrl = "#pageName#?id=#arguments.item_id#&title=#pageTitle#">
 		--->
 
@@ -223,7 +209,7 @@
 			<cfset itemType = "event">
 		</cfif>
 
-		<cfset itemWebUrl = "page.cfm?#itemType#=#arguments.item_id#&title=#pageTitle#">
+		<cfset itemWebUrl = "page.cfm?#itemType#=#arguments.item_id#&amp;title=#pageTitle#">
 		
 		<cfreturn itemWebUrl>
 	</cffunction>
@@ -262,10 +248,13 @@
 
 		<cfset titleUrl = lCase(trim(arguments.title))>
 	
-		<cfset titleUrl = replaceList(titleUrl," ,á,é,í,ó,ú,ñ", "-,a,e,i,o,u,n")>
+		<!---<cfset titleUrl = replaceList(titleUrl," ,á,é,í,ó,ú,ñ", "-,a,e,i,o,u,n")>--->
+		<cfset titleUrl = replaceList(titleUrl," ,á,é,í,ó,ú,ñ,%", "-,a,e,i,o,u,n,%25")>
 	
 		<!---Reemplazar comillas dobles por comillas simples--->
 		<cfset titleUrl = replaceList(titleUrl, Chr(34), "")>
+
+		<!---<cfset titleUrl = URLEncodedFormat(titleUrl)>--->
 
 		<cfreturn titleUrl>
 	</cffunction>

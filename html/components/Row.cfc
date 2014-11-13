@@ -388,6 +388,7 @@
     <cffunction name="outputRowList" returntype="void" access="public" output="true">
     	<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="view_id" type="numeric" required="false">
 		<cfargument name="tableRows" type="query" required="true">
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="openRowOnSelect" type="boolean" required="true">
@@ -402,6 +403,7 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowList">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="view_id" value="#arguments.view_id#">
 				<cfinvokeargument name="tableRows" value="#arguments.tableRows#">
 				<cfinvokeargument name="fields" value="#arguments.fields#">
 				<cfinvokeargument name="openRowOnSelect" value="#arguments.openRowOnSelect#">

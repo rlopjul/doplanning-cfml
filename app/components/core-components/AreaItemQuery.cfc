@@ -139,7 +139,7 @@
 	<!---getAreaItems--->
 	
 	<cffunction name="getAreaItems" output="false" returntype="struct" access="public">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
+		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="format_content" type="string" required="false" default="default">
 		<cfargument name="listFormat" type="string" required="yes">
 		<cfargument name="area_id" type="string" required="no">
@@ -321,9 +321,6 @@
 					<cfif isDefined("arguments.to_end_date")>
 					AND items.end_date >= STR_TO_DATE(<cfqueryparam value="#arguments.to_end_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
 					</cfif>
-					<!---<cfif isDefined("arguments.with_end_date")>
-						AND items.end_date = STR_TO_DATE(<cfqueryparam value="#arguments.with_end_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
-					</cfif>--->
 					<cfif isDefined("arguments.structure_available")>
 					AND items.structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
 					</cfif>
@@ -663,20 +660,20 @@
 
 			<cfif arguments.full_content IS true>
 
-				<cfset commonColums = commonColums&", NULL AS file_size, NULL AS file_type"><!---, attached_file_name, link, --->
+				<cfset commonColums = commonColums&", NULL AS file_size, NULL AS file_type, NULL AS file_name"><!---, attached_file_name, link, --->
 				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS identifier">
 
 				<cfset eventColums = eventColums&", place, start_date, NULL AS identifier">
 				<cfset taskColums = taskColums&", NULL AS place, start_date, NULL AS identifier">
 				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, identifier">
 
-				<cfset fileColums = fileColums&", file_size, file_type"><!---, NULL AS attached_file_name, NULL AS link--->
+				<cfset fileColums = fileColums&", file_size, file_type, file_name"><!---, NULL AS attached_file_name, NULL AS link--->
 
 				<cfset attachedFileColum = attachedFileColum&", attached_file_name, link">
 				<cfset attachedFileColumNull = attachedFileColumNull&", NULL AS attached_file_name, NULL AS link">
 				
-				<cfset webColums = webColums&", link_target">
-				<cfset webColumsNull = webColumsNull&", NULL AS link_target">
+				<cfset webColums = webColums&", attached_image_name, link_target">
+				<cfset webColumsNull = webColumsNull&", NULL AS attached_image_name, NULL AS link_target">
 
 				<cfset iframeColums = "iframe_url, iframe_display_type_id, ">
 				<cfset iframeColumsNull = "NULL AS iframe_url, NULL AS iframe_display_type_id, ">

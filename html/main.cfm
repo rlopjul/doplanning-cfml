@@ -59,7 +59,8 @@
 
 <script src="#APPLICATION.bootstrapJSPath#"></script>
 
-<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
 
 </cfoutput>
@@ -80,7 +81,7 @@
 	<cfset iframe_page = "">
 </cfif>
 
-<script type="text/javascript">
+<script>
 	<cfoutput>
 	var applicationId = "#APPLICATION.identifier#";
 	var selectAreaId = "#area_id#";
@@ -96,9 +97,11 @@
 	
 	//Language
 	var selectedLanguage = 'es';
-	jquery_lang_js.prototype.defaultLang = 'es';
+	<!---jquery_lang_js.prototype.defaultLang = 'es';
 	jquery_lang_js.prototype.currentLang = 'es';
-	window.lang = new jquery_lang_js();
+	window.lang = new jquery_lang_js();--->
+	window.lang = new Lang('es');
+	<!---window.lang.dynamic('en', '#APPLICATION.htmlPath#/language/main_en.json');--->
 	</cfoutput>
 	
 </script>
@@ -109,15 +112,25 @@
 <script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.7"></script>
 </cfoutput>
 
-<script type="text/javascript">
+<script>
+
+	<cfif APPLICATION.homeTab IS true>
+		currentTab = "#tab0";
+	</cfif>
 	
 	function resizeIframe() {
 		var newHeight = windowHeight()-66;
+
 		$(".iframes").height(newHeight);
 		
 		$("#itemIframe").height(newHeight-areaImgHeight);
 		$("#searchItemIframe").height(newHeight);
 		$("#treeContainer").height(newHeight-50);
+		/*$("#lastItemsContainer").height(newHeight-87);
+		$("#homeRightContainer").height(newHeight);*/
+		$("#homeContainer").height(newHeight);
+
+		//alert($("#lastItemsHead").height());
 	}
 	
 	function changeLanguage() {
@@ -145,6 +158,7 @@
 		}
 
 		$("#loadingContainer").hide();
+
 		$("#treeContainer").css('visibility', 'visible');
 
 		if($("#mainContainer").is(":hidden"))
@@ -184,6 +198,19 @@
 		
 	}
 
+	function loadHome(){
+
+		$("#loadingContainer").show();
+
+		var limit = $("#limit").val();
+
+		var noCacheNumber = Math.floor(Math.random()*1001);
+		$("#homeContainer").load("html_content/home.cfm?limit="+limit+"&n="+noCacheNumber, function() {
+			$("#loadingContainer").hide();
+			resizeIframe();
+		});
+	}
+
 	
 	$(window).resize( function() {
 		resizeIframe();
@@ -192,7 +219,13 @@
 	$(window).load( function() {	
 
 		resizeIframe();
-		loadTree();
+
+		<!---<cfif APPLICATION.homeTab IS true>
+			loadHome();
+		</cfif>--->
+
+		<!---loadTree();--->
+		showTree(true);	
 		
 		<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
 		Messenger.Private.initGetNewConversations();
@@ -251,14 +284,19 @@
 	});
 	
 	$(document).ready(function () {
-		//Language
-   		window.lang.run();
-		
-   		if(hasLocalStorage())
-			selectedLanguage = localStorage.getItem('langJs_currentLang');
 
-		if(userLanguage != selectedLanguage)
+		//Language
+   		<!---window.lang.run();--->		
+		var savedLanguage = selectedLanguage;
+
+   		if(hasLocalStorage())
+   			savedLanguage = localStorage.getItem('langJs_currentLang');
+			<!---selectedLanguage = localStorage.getItem('langJs_currentLang');--->
+
+		if(savedLanguage != selectedLanguage && userLanguage == savedLanguage){
 			window.lang.change(userLanguage);
+		}
+			
 
 		if(selectedLanguage == 'en')
 			$('#languageSelector').text('Español');
@@ -285,7 +323,10 @@
 		<div class="tabbable"><!---Tab Panel--->
 	
 		  <ul class="nav nav-pills" id="dpTab" style="clear:none;padding-bottom:5px;">
-			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
+		  	<cfif APPLICATION.homeTab IS true>
+		  		<li class="active"><a href="#tab0" data-toggle="tab" lang="es"><i class="icon-home"></i></a></li>
+		  	</cfif>
+			<li <cfif APPLICATION.homeTab IS false>class="active"</cfif>><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Búsqueda</a></li>
 		  </ul>
@@ -298,7 +339,7 @@
 		  	<div style="float:right">
 
 			  	<div style="float:right; text-align:right; clear:none;">
-					<a href="preferences.cfm" title="Preferencias del usuario" class="link_user_logged" lang="es">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
+					<a href="preferences.cfm" title="Preferencias del usuario" class="link_user_logged">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
 					
 					<a href="logout.cfm" title="Cerrar sesión" class="link_user_logout" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 		
@@ -358,8 +399,21 @@
 		  </div>
 		  
 		  <div class="tab-content" style="clear:both;">
+
+		  	<cfif APPLICATION.homeTab IS true>
+		  	<div class="tab-pane active" id="tab0"><!---Tab Home--->
+
+		  		<!---homeContainer--->
+				<div id="homeContainer" style="overflow:auto;">
+
+					<cfinclude template="#APPLICATION.htmlPath#/includes/home_content.cfm">
+
+				</div>
+
+		  	</div>
+		  	</cfif>
 		  
-			<div class="tab-pane active" id="tab1"><!---Tab Tree--->
+			<div class="tab-pane <cfif APPLICATION.homeTab IS false>active</cfif>" id="tab1"><!---Tab Tree--->
 				
 				<div class="container" style="width:100%;">
 					<div class="row" style="padding-bottom:5px;">
@@ -402,7 +456,9 @@
 					<img src="#APPLICATION.htmlPath#/assets/icons/restore.png" title="Restaurar Árbol" id="restoreTree" style="display:none;"/>
 					</div>
 					</cfoutput>--->
-					<div id="treeContainer" style="overflow:auto;clear:both;"></div>			
+					<div id="treeContainer" style="overflow:auto;clear:both;">
+						<cfinclude template="#APPLICATION.htmlPath#/html_content/tree.cfm">
+					</div>			
 				</div>
 				
 				<!---foot--->

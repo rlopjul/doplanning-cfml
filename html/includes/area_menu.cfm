@@ -42,7 +42,7 @@
 						<cfinvokeargument name="separator" value=" / ">
 					</cfinvoke>
 					<p id="area_path" style="padding-top:0px;clear:left;font-size:12px;"><!--- class="navbar_brand" color:##737373--->
-						Ruta: #area_path#
+						<span lang="es">Ruta:</span> #area_path#
 					</p>
 					<script>
 					$(document).ready(function() {			

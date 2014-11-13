@@ -8,7 +8,7 @@ encrypt_key (remember_password_query.cfm)
 
 <cfinclude template="#APPLICATION.corePath#/includes/alert_message.cfm">
 
-<script type="text/javascript">
+<script>
 	function getNewPasswordOnSubmit(form){
 		$("##languageInput").val(window.lang.convert("es")); 
 		return true;
@@ -25,7 +25,7 @@ encrypt_key (remember_password_query.cfm)
 			<label for="email" class="control-label" lang="es">Email:</label>
 		</div>
 		<div class="col-sm-9">
-			<cfinput name="email" type="text" id="email" autofocus="true" required="true" validate="email" message="Introduzca un email válido" class="form-control" />
+			<input name="email" type="email" id="email" autofocus required class="form-control" />
 		</div>
 	</div>
 	
@@ -55,7 +55,7 @@ encrypt_key (remember_password_query.cfm)
 	<div class="row">
 		<div class="col-sm-offset-2 col-sm-10">
 			<div style="height:5px;"></div>
-			<input name="send" type="submit" class="btn btn-primary" value="Enviar" data-loading-text="Loading" autocomplete="off" lang="es"/>
+			<input name="send" type="submit" class="btn btn-primary" value="Enviar" data-loading-text="Loading" lang="es"/>
 			<a href="index.cfm?client_abb=#client_abb#" class="btn btn-default" lang="es">Cancelar</a>
 		</div>
 	</div>

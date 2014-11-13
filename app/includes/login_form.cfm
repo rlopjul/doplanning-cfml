@@ -27,9 +27,9 @@
       <cfelse>
       <div class="col-sm-offset-3 col-sm-9">
       </cfif>        <cfif APPLICATION.moduleLdapUsers NEQ true>
-        <input name="email" type="email" id="email" required="true" autofocus="true" class="form-control" placeholder="Email" lang="es"/>
+        <input name="email" type="email" id="email" required autofocus class="form-control" placeholder="Email" lang="es"/>
         <cfelse><!--- LDAP --->
-        <input name="email" type="text" id="email" required="true" autofocus="true" class="form-control" placeholder="Email" lang="es"/>
+        <input name="email" type="text" id="email" required autofocus class="form-control" placeholder="Email" lang="es"/>
         </cfif>
       </div>
     </div>
@@ -47,7 +47,7 @@
       <cfelse>
       <div class="col-sm-offset-3 col-sm-9">
       </cfif>
-        <input name="password" type="password" id="password" required="true" class="form-control" placeholder="Contraseña" lang="es"/>
+        <input name="password" type="password" id="password" required class="form-control" placeholder="Contraseña" lang="es"/>
       </div>
     </div>
     
@@ -102,7 +102,7 @@
     
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-9">
-          <input name="login" type="submit" class="btn btn-primary" value="Entrar" data-loading-text="Loading" autocomplete="off" title="Acceder a la aplicación" lang="es"/>
+          <input name="login" type="submit" class="btn btn-primary" value="Entrar" data-loading-text="Loading" title="Acceder a la aplicación" lang="es"/>
           <!---<button type="submit" class="btn btn-primary" data-loading-text="Enviando">Entrar</button>--->
         
           <cfif APPLICATION.identifier EQ "dp">

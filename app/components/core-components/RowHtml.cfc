@@ -547,6 +547,7 @@
 	<cffunction name="outputRowList" access="public" returntype="void" output="true">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="view_id" type="numeric" required="false">
 		<cfargument name="tableRows" type="query" required="true">
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="openRowOnSelect" type="boolean" required="false" default="false">
@@ -716,9 +717,9 @@
 
 			<cfloop query="tableRows">
 
-				<cfif isDefined("view_id")>
-					<cfset rpage = "#itemTypeName#_rows.cfm?#itemTypeName#=#view_id#">
-					<cfset row_page_url = "#itemTypeName#_row.cfm?#itemTypeName#=#view_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
+				<cfif isDefined("arguments.view_id")>
+					<cfset rpage = "#tableTypeName#_view_rows.cfm?#tableTypeName#_view=#arguments.view_id#">
+					<cfset row_page_url = "#tableTypeName#_view_row.cfm?#tableTypeName#_view=#arguments.view_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
 				<cfelse>
 					<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
 					<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">

@@ -3482,6 +3482,7 @@
 		<cfargument name="state" type="string" required="no">
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
+		<cfargument name="to_end_date" type="string" required="no">
 		
 		<cfset var method = "getAllAreasItems">
 
@@ -3530,6 +3531,9 @@
 				</cfif>
 				<cfif isDefined("arguments.end_date")>
 				<cfinvokeargument name="end_date" value="#arguments.end_date#">
+				</cfif>
+				<cfif isDefined("arguments.to_end_date")>
+				<cfinvokeargument name="to_end_date" value="#arguments.to_end_date#">
 				</cfif>
 				<cfinvokeargument name="published" value="false">
 				

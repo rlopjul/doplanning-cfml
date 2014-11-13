@@ -1,9 +1,9 @@
 
 <cfoutput>
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
-	<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
-	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
+	<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+	<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+	<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
 
 	<!---bootstrap-select--->
 	<!---<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>

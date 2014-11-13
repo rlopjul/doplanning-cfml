@@ -37,6 +37,7 @@
 
 <cfset areaItems = getAreaItemsListResponse.areaItems>
 
+
 <cfset numItems = areaItems.recordCount>
 
 <div class="div_items">

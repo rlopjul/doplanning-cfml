@@ -70,7 +70,9 @@
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload.js"></script>
 
-<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
+<!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8"></script>--->
 <script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
 
 </cfoutput>
@@ -109,9 +111,11 @@
 	
 	// Language
 	var selectedLanguage = 'es';
-	jquery_lang_js.prototype.defaultLang = 'es';
+	<!---jquery_lang_js.prototype.defaultLang = 'es';
 	jquery_lang_js.prototype.currentLang = 'es';
-	window.lang = new jquery_lang_js();
+	window.lang = new jquery_lang_js();--->
+	window.lang = new Lang('es');
+	<!---window.lang.dynamic('en', '#APPLICATION.htmlPath#/language/main_en.json');--->
 	</cfoutput>
 
 	// Modal
@@ -278,7 +282,9 @@
 	
 	$(window).load( function() {		
 		resizeIframe();
-		loadTree();
+		<!---loadTree();--->
+
+		showTree(true);	
 		
 		<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
 		Messenger.Private.initGetNewConversations();
@@ -336,13 +342,20 @@
 	
 	$(document).ready(function () {
 		// Language
-   		window.lang.run();
+   		<!---window.lang.run();
 
    		if(hasLocalStorage())
 			selectedLanguage = localStorage.getItem('langJs_currentLang');
 
 		if(userLanguage != selectedLanguage)
+			window.lang.change(userLanguage);--->
+
+		if(hasLocalStorage())
+   			savedLanguage = localStorage.getItem('langJs_currentLang');
+
+		if(savedLanguage != selectedLanguage && userLanguage == savedLanguage){
 			window.lang.change(userLanguage);
+		}
 		
 		if(selectedLanguage == 'en')
 			$('#languageSelector').text('Español');
@@ -397,9 +410,9 @@
 		  	<span class="main_title"><b>Administración</b> beta</span>
 		  
 		  	<div style="float:right; text-align:right; clear:none;">
-				<a href="../preferences.cfm" title="Preferencias del usuario" class="link_user_logged" lang="es">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
+				<a href="../preferences.cfm" title="Preferencias del usuario" class="link_user_logged">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
 				
-				<a href="../logout.cfm" title="Cerrar sesión" class="link_user_logout" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+				<a href="../logout.cfm" title="Cerrar sesión" class="link_user_logout"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 
 			</div>
 			
@@ -425,7 +438,7 @@
 					<div class="btn-toolbar">
 
 						<div class="btn-group">
-							<a href="../main.cfm?abb=#SESSION.client_abb#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span>Volver</span></a>
+							<a href="../main.cfm?abb=#SESSION.client_abb#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
 						</div>
 					
 						<div class="btn-group">
@@ -522,7 +535,9 @@
 					</div>
 					</cfoutput>--->
 					
-					<div id="treeContainer" style="overflow:auto;clear:both;"></div>			
+					<div id="treeContainer" style="overflow:auto;clear:both;">
+						<cfinclude template="#APPLICATION.htmlPath#/admin/html_content/tree.cfm">
+					</div>			
 				</div>
 				
 				<!---foot--->

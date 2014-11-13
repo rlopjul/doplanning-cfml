@@ -30,6 +30,8 @@
 			
 			<cfif SESSION.client_administrator EQ SESSION.user_id>
 				<cfset arguments.toolbar = "DPAdmin">
+			<cfelseif SESSION.client_abb EQ "hcs">
+				<cfset arguments.toolbar = "DP_hcs">
 			</cfif>
 			<script type="text/javascript">
 				CKEDITOR.replace('#arguments.name#', {toolbar:'#arguments.toolbar#', toolbarStartupExpanded:#arguments.toolbarStartupExpanded#, language:'#arguments.language#'

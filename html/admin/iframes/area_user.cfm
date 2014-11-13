@@ -45,14 +45,16 @@
 <script src="#APPLICATION.jqueryJSPath#"></script>
 <script src="#APPLICATION.bootstrapJSPath#"></script>
 
-<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>
+<!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>--->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 
 <script src="../../scripts/functions.min.js?v=2.1"></script>
 <script src="../../scripts/iframesFunctions.min.js?v=2"></script>
 
 <script>
 	//Language
-	jquery_lang_js.prototype.defaultLang = 'es';
+	<!--- jquery_lang_js.prototype.defaultLang = 'es';
 	jquery_lang_js.prototype.currentLang = 'es';
 	
 	jquery_lang_js.prototype.lang.en = [{}];
@@ -61,8 +63,16 @@
 	
 	$().ready(function () {
    		window.lang.run();
+	});--->
+	
+	Lang.prototype.pack.en = {};
+	Lang.prototype.pack.en.token = {};
+	
+	$(window).load(function () {
+		window.lang = new Lang('es');
 	});
 </script>
+<script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
 
 </cfoutput>
 <!-- InstanceBeginEditable name="head" -->
@@ -83,7 +93,7 @@
 <cfoutput>
 <div class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
-
+		
 		<cfif isDefined("user_id") AND isDefined("area_id")>
 			<a class="btn btn-warning btn-sm navbar-btn" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar del área</span></a>
 		</cfif>
@@ -111,7 +121,7 @@
 </div>
 </cfoutput>
 
-<div style="height:40px;"><!-- ---></div>
+<div style="height:60px;"><!-- ---></div>
 
 <cfif isDefined("user_id") AND isDefined("URL.area")>
 	<cfinclude template="#APPLICATION.htmlPath#/admin/includes/user_content.cfm">
