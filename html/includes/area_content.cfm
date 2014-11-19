@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_content_en.js?v=1" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
 
 <cfoutput>

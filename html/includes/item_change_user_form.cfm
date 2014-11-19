@@ -1,7 +1,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_change_user_query.cfm">
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
@@ -17,7 +17,7 @@
 	function onSubmitForm() {
 
 		if(check_custom_form())	{
-			document.getElementById("submitDiv").innerHTML = window.lang.convert("Enviando...");
+			document.getElementById("submitDiv").innerHTML = window.lang.translate("Enviando...");
 
 			return true;
 		}

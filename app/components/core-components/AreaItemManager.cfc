@@ -12,13 +12,27 @@
 	<!--- getAreaItemTypesStruct --->
 
 	<cffunction name="getAreaItemTypesStruct" returntype="struct" access="public">
-		<cfargument name="client_abb" type="string" required="true">
+		<!---<cfargument name="client_abb" type="string" required="true">--->
 
 		<cfset var itemTypesStruct = structNew()>
 
 		<cfinclude template="includes/areaItemTypeStruct.cfm">
 
 		<cfreturn itemTypesStruct>
+
+	</cffunction>
+
+
+	<!--- getAreaItemTypeStruct --->
+
+	<cffunction name="getAreaItemTypeStruct" returntype="struct" access="public">
+
+		<cfset var itemTypesStruct = structNew()>
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+		</cfinvoke>
+
+		<cfreturn itemTypesStruct[arguments.itemTypeId]>
 
 	</cffunction>
 

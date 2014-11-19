@@ -19,7 +19,8 @@ OR SESSION.user_id EQ "93" OR SESSION.user_id EQ "152" OR SESSION.user_id EQ "1"
 	
 		<cfquery datasource="#client_dsn#" name="getUsers">
 			SELECT *
-			FROM #client_abb#_users;
+			FROM #client_abb#_users
+			WHERE enabled = true;
 		</cfquery>
 			
 		<cfoutput>

@@ -68,6 +68,11 @@
 		<cfset curTitle = "Formularios">
 	</cfcase>
 	
+	<cfcase value="dp_documents_search.cfm">
+		<cfset curElement = "dp_documents">
+		<cfset curTitle = "Documentos de Doplanning">
+	</cfcase>
+
 </cfswitch>
 
 <cfoutput>

@@ -39,7 +39,7 @@ function confirmDuplicateVersion() {
 
 function confirmDeleteFileVersion() {
 		
-	var messageDelete = window.lang.convert("Si ELIMINA la versión, se borrará definitivamente. ¿Seguro que desea borrar esta versión?");
+	var messageDelete = window.lang.translate("Si ELIMINA la versión, se borrará definitivamente. ¿Seguro que desea borrar esta versión?");
 	return confirm(messageDelete);
 }
 

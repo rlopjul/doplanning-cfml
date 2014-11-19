@@ -4,7 +4,7 @@
 
 <cfoutput>
 
-<script type="text/javascript">
+<script>
 	
 	
 	<cfif read_only IS false>
@@ -99,7 +99,7 @@
 			$("##openInPubMedButton").show();
 			$("##fieldPrice").hide();
 		}else {
-			$("##identifierLabel").text(window.lang.convert("Identificador/Número"));
+			$("##identifierLabel").text(window.lang.translate("Identificador/Número"));
 			$("##openInPubMedButton").hide();
 			$("##fieldPrice").show();
 		}
@@ -111,7 +111,7 @@
 		if($.isNumeric(pubMedId))
 			window.open("http://www.ncbi.nlm.nih.gov/pubmed/"+pubMedId, '_blank');
 		else
-			alert(window.lang.convert("PubMed Id no válido"));
+			alert(window.lang.translate("PubMed Id no válido"));
 	}
 
 	<cfif isDefined("objectItem.id") AND read_only IS false>
@@ -579,7 +579,39 @@
 
 <cfif read_only IS false>
 	
-	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9>
+	<cfif itemTypeId IS 20><!--- DoPlanning Document --->
+
+		<cfif page_type IS 1 OR objectItem.user_in_charge EQ SESSION.user_id>
+			<div class="row">
+				<div class="col-xs-12 col-sm-8">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="area_editable" id="area_editable" value="true" <cfif isDefined("objectItem.area_editable") AND objectItem.area_editable IS true>checked="checked"</cfif> /> <span lang="es">Documento editable por los usuarios del área</span>
+						</label>
+						<small class="help-block" lang="es">Permite que los usuarios del área puedan editar el documento y habilita el sistema de bloqueo del documento</small>
+					</div>
+				</div>
+			</div>
+		</cfif>
+		
+		<cfif objectItem.area_editable IS true>
+			
+			<div class="checkbox">
+			    <label>
+			    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras guardar modificación
+			    </label>
+			    <small class="help-block" lang="es">Si el archivo está bloqueado no puede ser editado por otros usuarios</small>
+		  	</div>
+
+		<cfelseif page_type NEQ 1>
+
+			<input type="hidden" name="unlock" value="true" checked>
+
+		</cfif>
+
+	</cfif>
+	
+	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9 AND itemTypeId IS NOT 20>
 	
 		<cfif isDefined("objectItem.attached_file_name") AND len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
 			<!---<div style="padding-top:5px;"><span class="texto_normal">Modificar archivo adjunto:</span>&nbsp;<cfinput type="file" name="Filedata"></div>--->
@@ -618,7 +650,7 @@
 	
 	</cfif>
 	
-	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6>
+	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 20>
 	
 		<cfif isDefined("objectItem.attached_image_name") AND len(objectItem.attached_image_name) GT 0 AND objectItem.attached_image_name NEQ "-">
 		
@@ -669,32 +701,36 @@
 </cfif>
 
 
-<div class="row">
+<cfif itemTypeId IS NOT 20><!--- IS NOT DoPlanning Document --->
+	
+	<div class="row">
 
-	<div class="col-md-12">
+		<div class="col-md-12">
 
-		<label class="control-label" for="link"><span lang="es">#t_link#</span> <cfif link_required IS true>*</cfif></label>
-		<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+			<label class="control-label" for="link"><span lang="es">#t_link#</span> <cfif link_required IS true>*</cfif></label>
+			<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
 
+		</div>
+		
 	</div>
-	
-</div>
 
-<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7><!---IS NOT Messages, Tasks OR Consultations--->
-	
-<div class="row">
+	<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7><!---IS NOT Messages, Tasks OR Consultations--->
+		
+	<div class="row">
 
-	<div class="col-md-6">
+		<div class="col-md-6">
 
-		<label class="control-label" for="link_target"><span lang="es">Abrir URL en</span></label> <cfif APPLICATION.moduleWeb EQ true><small lang="es">(Sólo para publicar en web)</small></cfif>
-		<select name="link_target" id="link_target" class="form-control">
-			<option value="_blank" <cfif objectItem.link_target EQ "_blank">selected="selected"</cfif> lang="es">Nueva ventana</option>
-			<option value="_self" <cfif objectItem.link_target EQ "_self">selected="selected"</cfif> lang="es">Misma ventana</option>
-		</select>
+			<label class="control-label" for="link_target"><span lang="es">Abrir URL en</span></label> <cfif APPLICATION.moduleWeb EQ true><small lang="es">(Sólo para publicar en web)</small></cfif>
+			<select name="link_target" id="link_target" class="form-control">
+				<option value="_blank" <cfif objectItem.link_target EQ "_blank">selected="selected"</cfif> lang="es">Nueva ventana</option>
+				<option value="_self" <cfif objectItem.link_target EQ "_self">selected="selected"</cfif> lang="es">Misma ventana</option>
+			</select>
 
+		</div>
+		
 	</div>
-	
-</div>
+
+	</cfif>
 
 </cfif>
 
@@ -810,8 +846,6 @@
 
 </cfif>
 
-
-
 </cfoutput>
 
 <cfif APPLICATION.identifier NEQ "dp"><!---SMS Deshabilitado para DoPlanning--->
@@ -836,4 +870,12 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
 	<cfinvokeargument name="name" value="description">
 	<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+	<!---
+	<cfif itemTypeId IS 1 OR itemTypeId IS 6><!--- Message, Task --->
+		<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+		<cfinvokeargument name="toolbarCanCollapse" value="true"/>
+	</cfif>--->
+	<cfif itemTypeId IS 20><!--- DoPlanning Document --->
+		<cfinvokeargument name="height" value="500"/>
+	</cfif>
 </cfinvoke>

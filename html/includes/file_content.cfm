@@ -49,11 +49,11 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 </div>
 
-<script type="text/javascript">
+<script>
 
 	function confirmDeleteFile() {
 		
-		var messageDelete = window.lang.convert("Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?");
+		var messageDelete = window.lang.translate("Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?");
 		return confirm(messageDelete);
 	}
 
@@ -356,22 +356,23 @@
 		<input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
 
-		<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->
+		<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
 
-			<cfif (area_type EQ "web" OR area_type EQ "intranet") AND isDefined("webPath")>
+		<cfif (area_type EQ "web" OR area_type EQ "intranet") AND isDefined("webPath")>
 
-				<!---fileWebUrl--->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
-					<cfinvokeargument name="file_id" value="#objectFile.id#">
-					<cfinvokeargument name="area_id" value="#area_id#">
-				</cfinvoke>
-				<cfset fileWebUrl = "/#webPath#/#filePage#">
+			<!---fileWebUrl--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
+				<cfinvokeargument name="file_id" value="#objectFile.id#">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+			<cfset fileWebUrl = "/#webPath#/#filePage#">
 
-				<div class="div_message_page_label"><span lang="es">URL relativa en la <b>#area_type#</b>:</span></div>
-				<input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
-			</cfif>
-			
+			<div class="div_message_page_label"><span lang="es">URL <b>relativa en la #area_type#</b>:</span></div>
+			<input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
+
 		</cfif>
+			
+		<!---</cfif>--->
 
 		<!---Typology--->
 		<cfif APPLICATION.modulefilesWithTables IS true>

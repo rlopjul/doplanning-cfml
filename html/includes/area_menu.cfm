@@ -90,6 +90,12 @@
 							
 							<li <cfif curElement EQ "files">class="active"</cfif>><a href="files.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/file.png" title="Archivos del área" alt="Archivos del área" lang="es"/></a></li>
 							
+							<cfif APPLICATION.moduleDPDocuments IS true><!--- DoPlanning Documents --->
+
+								<li <cfif curElement EQ "dp_documents">class="active"</cfif>><a href="dp_documents.cfm?area=#area_id#" title="Documentos DoPlanning del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/dp_document.png" title="Documentos DoPlanning del área" alt="Documentos DoPlanning del área" lang="es"/></a></li>
+
+							</cfif>
+
 							<cfif APPLICATION.identifier EQ "dp" OR (APPLICATION.moduleWeb EQ true AND area_type EQ "web" OR area_type EQ "intranet")><!---Events--->
 								<li <cfif curElement EQ "events">class="active"</cfif>><a href="events.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/event.png" title="Eventos del área" alt="Eventos del área" lang="es"/></a></li>
 							</cfif>

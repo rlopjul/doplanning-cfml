@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 </cfoutput>
 
 <!--- <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm"> --->

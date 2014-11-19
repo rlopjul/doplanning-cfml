@@ -49,16 +49,14 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 
-<script src="../scripts/functions.min.js?v=2.1"></script>
-<script src="../scripts/iframesFunctions.min.js?v=2"></script>
+<script src="../scripts/functions.min.js?v=2.3"></script>
+<script src="../scripts/iframesFunctions.min.js?v=2.1"></script>
 
 <script>
 	//Language
 	<!--- jquery_lang_js.prototype.defaultLang = 'es';
 	jquery_lang_js.prototype.currentLang = 'es';
-	
 	jquery_lang_js.prototype.lang.en = [{}];
-	
 	window.lang = new jquery_lang_js();
 	
 	$().ready(function () {
@@ -68,7 +66,7 @@
 	Lang.prototype.pack.en = {};
 	Lang.prototype.pack.en.token = {};
 	
-	$(window).load(function () {
+	$().ready(function () {
 		window.lang = new Lang('es');
 	});
 </script>
@@ -86,7 +84,7 @@
 <!-- InstanceBeginEditable name="content" -->
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_content_en.js?v=1" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
 
 <cfif isDefined("URL.area")>

@@ -61,8 +61,9 @@
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
-<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>
 
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.3"></script>
 </cfoutput>
 
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>
@@ -107,9 +108,9 @@
 </script>
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.2"></script>
+<script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.3"></script>
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
-<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.7"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.9"></script>
 </cfoutput>
 
 <script>

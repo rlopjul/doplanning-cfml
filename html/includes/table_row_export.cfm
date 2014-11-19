@@ -41,7 +41,7 @@
 
 		function onSubmitForm(){
 
-			document.getElementById("submitDiv1").innerHTML = window.lang.convert('Exportación solicitada...');
+			document.getElementById("submitDiv1").innerHTML = window.lang.translate('Exportación solicitada...');
 
 			showLoading = false;
 		}

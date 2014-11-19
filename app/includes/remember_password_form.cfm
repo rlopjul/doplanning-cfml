@@ -10,7 +10,7 @@ encrypt_key (remember_password_query.cfm)
 
 <script>
 	function getNewPasswordOnSubmit(form){
-		$("##languageInput").val(window.lang.convert("es")); 
+		$("##languageInput").val(window.lang.translate("es")); 
 		return true;
 	}
 </script>

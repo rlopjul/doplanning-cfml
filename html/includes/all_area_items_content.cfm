@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
@@ -34,7 +34,10 @@
 	<cfif APPLICATION.moduleAreaFilesLite IS true AND len(area_type) IS 0>
 	<a href="area_file_new.cfm?area=#area_id#&fileTypeId=2" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo Archivo de área" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" style="height:22px;"/></a>
 	</cfif>
-	
+
+	<cfif APPLICATION.moduleDPDocuments IS true>
+		<a href="dp_document_new.cfm?area=#area_id#" onclick="openUrl('dp_document_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo Documento DoPlanning" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/dp_document.png" style="height:22px;"/></a>	
+	</cfif>
 	
 	<a href="event_new.cfm?area=#area_id#" onclick="openUrl('event_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo Evento" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/event.png" style="height:22px;"/></a>
 	

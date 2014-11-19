@@ -494,7 +494,7 @@
 		
 		<cfset var user_id = "">
 		
-		<cfset var allUserAreasList = "">
+		<cfset var allUserAreasAdminList = "">
 		<cfset var access_result = false>
 
 		<!---<cfinclude template="includes/initVars.cfm">--->	
@@ -506,7 +506,7 @@
 			<cfinvoke component="AreaManager" method="getAllUserAreasAdminList" returnvariable="allUserAreasAdminList">
 				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 			</cfinvoke>
-			
+
 			<cfinvoke component="AreaManager" method="canTheUserAccess" returnvariable="access_result">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="allUserAreasList" value="#allUserAreasAdminList#">
@@ -516,7 +516,7 @@
 				<cfset error_code = 105>
 				
 				<cfthrow errorcode="#error_code#">		
-			</cfif>		
+			</cfif>
 		
 		</cfif>
 			
@@ -1207,7 +1207,7 @@
 				</cfloop>
 				
 				<cfif arguments.cached IS true>
-
+					
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="saveCacheTree">
 						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 						<cfinvokeargument name="area_id" value="#rootAreaId#">
@@ -2688,6 +2688,7 @@
 		<cfset var client_abb = "">
 		<cfset var user_language = "">
 		<cfset var internal_user = "">
+		<cfset var access_result = "">
 
 		<cfset var xmlResponseContent = "">
 		<cfset var response = "">
@@ -2698,10 +2699,26 @@
 				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#"> 
 			</cfinvoke>			
 			<cfif internal_user IS false>
+
 				<!--- checkAreaAccess --->
-				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAccess">
+				<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAccess">
+					<cfinvokeargument name="area_id" value="#arguments.get_area_id#">
+				</cfinvoke>---->
+
+				<!--- checkAreaAccess --->
+				<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
 					<cfinvokeargument name="area_id" value="#arguments.get_area_id#">
 				</cfinvoke>
+				
+				<cfif access_result IS NOT true>
+					
+					<!--- checkAreaAdminAccess --->
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
+						<cfinvokeargument name="area_id" value="#arguments.get_area_id#">
+					</cfinvoke>
+
+				</cfif>
+
 			</cfif>
 			<!---Un usuario interno aunque no tenga permisos de área puede acceder a ver su nombre y descripción--->
 			
@@ -3135,9 +3152,25 @@
 		<cfargument name="order_type" type="string" required="no" default="asc">
 				
 		<cfset var method = "getAreaUsers">
+
+		<cfset var access_result = false>
 		<cfset var user_in_charge = "">
 		
 			<cfinclude template="includes/functionStart.cfm">
+
+			<!--- checkAreaAccess --->
+			<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+			
+			<cfif access_result IS NOT true>
+				
+				<!--- checkAreaAdminAccess --->
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+			</cfif>		
 			
 			<cfquery name="membersQuery" datasource="#client_dsn#">
 				SELECT users.id, users.email, users.name, users.telephone, users.family_name, users.mobile_phone, users.telephone_ccode, users.mobile_phone_ccode, users.image_type

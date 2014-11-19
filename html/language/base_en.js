@@ -4,8 +4,6 @@ Lang.prototype.pack.en = {
 		'Volver':'Return',
 		
 		/*login*/
-		'Email:':'Email:',
-		'Contraseña:':'Password:',
 		'Entrar':'Enter',
 		'Acceder a la aplicación':'Access the application',
 		'Resetear contraseña':'Reset password',

@@ -528,7 +528,7 @@
 		<cfargument name="status" type="string" required="false" default="ok"><!---pending/ok--->
 
 		<cfargument name="title" type="string" required="true">
-		<cfargument name="link" type="string" required="true">
+		<cfargument name="link" type="string" required="false">
 		<cfargument name="link_target" type="string" required="false">
         <cfargument name="description" type="string" required="false" default="">
         <cfargument name="parent_id" type="numeric" required="true">
@@ -560,6 +560,7 @@
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
+		<cfargument name="area_editable" type="boolean" required="false" default="false">
 
 		<cfset var method = "createItem">
 		
@@ -727,15 +728,19 @@
 						creation_date = NOW(),
 					</cfif>
 					status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">,
-					area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
-					link = <cfqueryparam value="#arguments.link#" cfsqltype="cf_sql_varchar">
+					area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					<cfif itemTypeId IS NOT 20>
+					, link = <cfqueryparam value="#arguments.link#" cfsqltype="cf_sql_varchar">
+					</cfif>
 					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
 					, link_target = <cfqueryparam value="#arguments.link_target#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					<cfif itemTypeId IS NOT 1>
 					, last_update_date = NOW()
 					</cfif>
-					
+					<cfif itemTypeId IS 20>
+						, area_editable = <cfqueryparam value="#arguments.area_editable#" cfsqltype="cf_sql_bit">
+					</cfif>
 					<cfif itemTypeWeb IS true><!---WEB--->
 
 						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) IS 16>
@@ -920,6 +925,8 @@
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
+		<cfargument name="area_editable" type="boolean" required="false" default="false">
+		<cfargument name="unlock" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateItem">
 				
@@ -935,6 +942,9 @@
 			<cfinvoke component="AreaItemManager" method="getItem" returnvariable="getItemResponse">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfif itemTypeId IS 20>
+					<cfinvokeargument name="with_lock" value="true"/>
+				</cfif>
 				
 				<cfinvokeargument name="return_type" value="query">
 			</cfinvoke>
@@ -942,7 +952,7 @@
 			<cfset getItemObject = getItemResponse.item>
 			
 			<!---checkAreaAccess--->
-			<!---Esto se hace en getItem--->
+			<!---Esto ya se hace en getItem--->
 			<!---<cfinclude template="includes/checkAreaAccess.cfm">--->
 			
 			<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
@@ -977,6 +987,14 @@
 				<!---Si es una tarea, puede modificarla el usuario que la creó y el usuario asignado.--->
 				
 				<cfif getItemObject.user_in_charge NEQ user_id AND getItemObject.recipient_user NEQ user_id><!---El usuario que accede no tiene permiso--->
+					<cfset error_code = 103><!---Access denied--->
+						
+					<cfthrow errorcode="#error_code#">
+				</cfif>
+
+			<cfelseif itemTypeId IS 20><!--- DoPlanning Document --->
+
+				<cfif ( getItemObject.area_editable IS false AND getItemObject.user_in_charge EQ SESSION.user_id ) NEQ true AND ( getItemObject.area_editable IS true AND (getItemObject.locked IS false OR getItemObject.lock_user_id IS SESSION.user_id) ) NEQ true>
 					<cfset error_code = 103><!---Access denied--->
 						
 					<cfthrow errorcode="#error_code#">
@@ -1114,6 +1132,11 @@
 					, creation_date = STR_TO_DATE(<cfqueryparam value="#objectItem.creation_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
 					</cfif>
 					, last_update_date = NOW()
+					, last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">
+
+					<cfif itemTypeId IS 20 AND getItemObject.user_in_charge EQ SESSION.user_id><!--- DoPlanning Document --->
+						, area_editable = <cfqueryparam value="#arguments.area_editable#" cfsqltype="cf_sql_bit">
+					</cfif>
 
 					<cfif itemTypeWeb IS true><!---WEB--->
 
@@ -1157,8 +1180,9 @@
 					, done = <cfqueryparam value="#objectItem.done#" cfsqltype="cf_sql_bit">
 					, estimated_value = <cfqueryparam value="#objectItem.estimated_value#" cfsqltype="cf_sql_float">
 					, real_value = <cfqueryparam value="#objectItem.real_value#" cfsqltype="cf_sql_float">
+					<!---
 					<cfelse><!---Is not tasks--->
-					, user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
+					, user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">--->
 					</cfif>
 					<cfif itemTypeId IS 8><!---PubMed comment--->
 					, identifier = <cfqueryparam value="#objectItem.identifier#" cfsqltype="cf_sql_varchar"
@@ -1207,8 +1231,7 @@
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
-				</cfif>
-				
+				</cfif>				
 
 				<!--- Alert --->
 				<cfinvoke component="AlertManager" method="newAreaItem">
@@ -1223,6 +1246,23 @@
 			</cfif>
 		
 			<cfinclude template="includes/logRecord.cfm">
+
+			<!--- Unlock DoPlanning Document --->
+			<cfif arguments.itemTypeId IS 20 AND arguments.unlock IS true>
+				
+				<cfinvoke component="AreaItemManager" method="changeAreaItemLock" returnvariable="changeLockResponse">
+					<cfinvokeargument name="item_id" value="#objectItem.id#"/>
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+					<cfinvokeargument name="lock" value="false"/>
+				</cfinvoke>
+
+				<cfif changeLockResponse.result IS false>
+					
+					<cfreturn changeLockResponse>
+
+				</cfif>
+	
+			</cfif>
 
 			<cfset response = {result=true, objectItem=#objectItem#}>		
 
@@ -1800,6 +1840,8 @@
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="return_type" type="string" required="no" default="xml">
+
+		<cfargument name="with_lock" type="boolean" required="false" default="false">
 		
 		<cfset var method = "getItem">
 
@@ -1820,6 +1862,8 @@
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="parse_dates" value="true">
 				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="with_lock" value="#arguments.with_lock#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -2052,6 +2096,11 @@
 			
 			<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, PubMed comments--->
 				<cfset objectItem.identifier = "">
+			</cfif>
+
+			<cfif itemTypeId IS 20><!--- DoPlanning item --->
+				<cfset objectItem.locked = false>
+				<cfset objectItem.area_editable = false>				
 			</cfif>
 
 			<cfset objectItem.sub_type_id = -1>
@@ -2414,7 +2463,8 @@
 					<cfquery name="changeItemDone" datasource="#client_dsn#">		
 						UPDATE #client_abb#_#itemTypeTable#
 						SET	done = <cfqueryparam value="#arguments.done#" cfsqltype="cf_sql_bit">,
-						last_update_date = NOW()
+						last_update_date = NOW(),
+						last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">
 						WHERE
 						id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;			
 					</cfquery>
@@ -2562,6 +2612,135 @@
 	<!---  ------------------------------------------------------------------------- --->
 	
 	
+
+	<!---  ---------------------- changeAreaItemLock -------------------------------- --->
+	
+	<cffunction name="changeAreaItemLock" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="lock" type="boolean" required="true">
+		
+		<cfset var method = "changeAreaItemLock">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var itemQuery = "">
+
+		<cftry>
+		
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+						
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<cfinvokeargument name="with_lock" value="true">
+				<cfinvokeargument name="parse_dates" value="true">		
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif itemQuery.recordCount IS 0><!---Item does not exist--->
+			
+				<cfset error_code = 601>
+			
+				<cfthrow errorcode="#error_code#">
+			
+			</cfif>
+				
+			<cfset area_id = itemQuery.area_id>
+		
+			<cfif itemQuery.locked EQ arguments.lock>
+
+				<cfif arguments.lock IS true>
+					
+					<cfthrow message="Error, el documento ya está bloqueado.">
+
+				<cfelse>
+
+					<cfthrow message="Error, el documento ya está desbloqueado.">
+
+				</cfif>
+													
+			<cfelseif arguments.lock IS false AND itemQuery.lock_user_id NEQ user_id>
+				
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+			<cfelse>
+
+				<!---checkAreaAccess--->
+				<cfinclude template="includes/checkAreaAccess.cfm">
+
+			</cfif>
+
+			<!---<cfif itemQuery.in_approval IS true>
+
+				<cfset response = {result=false, item_id=#arguments.item_id#, message="No se puede bloquear un documento en proceso de aprobación."}>
+				<cfreturn response>
+
+			</cfif>--->		
+
+			<cftransaction>
+				
+				<cfquery name="addItemLock" datasource="#client_dsn#">		
+					INSERT INTO `#client_abb#_#itemTypeTable#_locks`
+					SET item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">,
+					user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
+					lock_date = NOW(),
+					`lock` = <cfqueryparam value="#arguments.lock#" cfsqltype="cf_sql_bit">;			
+				</cfquery>
+
+				<cfquery name="changeAreaItemLock" datasource="#client_dsn#">		
+					UPDATE `#client_abb#_#itemTypeTable#`
+					SET	locked = <cfqueryparam value="#arguments.lock#" cfsqltype="cf_sql_bit">
+					WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;	
+				</cfquery>	
+
+			</cftransaction>
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<!--- Alert --->
+			<!---
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newItem">
+				<cfinvokeargument name="objectItem" value="#itemQuery#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="user_id" value="#user_id#">
+				<cfif arguments.lock IS true>
+					<cfinvokeargument name="action" value="lock">
+				<cfelse>
+					<cfinvokeargument name="action" value="unlock">
+				</cfif>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>--->
+
+			<cfset response = {result=true, item_id=#arguments.item_id#, lock=arguments.lock}>
+									
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+	<!---  ------------------------------------------------------------------------ --->
+
+
+
+
+
 	
 	<!--- ----------------------- DELETE AREA ITEMS -------------------------------- --->
 	
@@ -3589,6 +3768,7 @@
 				<cfinvokeargument name="withPubmedsComments" value="#APPLICATION.modulePubMedComments#">
 				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
+				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -3641,6 +3821,7 @@
 				<cfinvokeargument name="withPubmedsComments" value="#APPLICATION.modulePubMedComments#">
 				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
+				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

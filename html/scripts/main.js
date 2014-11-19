@@ -3,7 +3,7 @@ clientAbb
 selectAreaId
 iframePage
 */
-var curAreaId = 0;
+var curAreaId = "undefined";
 var areaWithLink = false;
 var currentTab = "#tab1";
 var disableNextTabChange = false;

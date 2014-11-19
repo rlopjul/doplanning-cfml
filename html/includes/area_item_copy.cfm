@@ -154,7 +154,7 @@
 </cfif>
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
@@ -356,7 +356,7 @@ function onSubmitForm()
 		<cfif itemTypeId IS 5>
 		if(!checkDates("start_date", "end_date")) {
 			submitForm = false;
-			alert(window.lang.convert("Fechas incorrectas. Compruebe que la fecha de fin del evento es igual o posterior a la fecha de inicio y tiene el formato adecuado."));
+			alert(window.lang.translate("Fechas incorrectas. Compruebe que la fecha de fin del evento es igual o posterior a la fecha de inicio y tiene el formato adecuado."));
 		}
 		</cfif>
 		
@@ -454,7 +454,7 @@ function onSubmitForm()
 					</div>
 					
 					<script type="text/javascript">
-						addRailoRequiredCheckBox("areas_ids[]",window.lang.convert("Debe seleccionar al menos un área"));
+						addRailoRequiredCheckBox("areas_ids[]",window.lang.translate("Debe seleccionar al menos un área"));
 					</script>
 
 				</div>

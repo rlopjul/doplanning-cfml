@@ -1178,7 +1178,9 @@
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.4.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.5.cfm">			
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.5.cfm">	
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.9.cfm">			
 			
 			<!---createClientFolders--->
 			<cfinvoke component="ClientManager" method="createClientFolders">

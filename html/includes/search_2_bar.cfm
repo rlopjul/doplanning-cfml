@@ -96,7 +96,7 @@
 </cfif>
 
 
-<script type="text/javascript">
+<script>
 	
 	$(function() {
 
@@ -143,7 +143,7 @@
 		}*/
 
 		if(check_custom_form())	{
-			//document.getElementById("submitDiv").innerHTML = window.lang.convert("Enviando archivo...");
+			//document.getElementById("submitDiv").innerHTML = window.lang.translate("Enviando archivo...");
 
 			return true;
 		}
@@ -207,6 +207,9 @@
 		    	<select name="search_page" id="search_page" class="form-control" onchange="goToUrl($('##search_page').val(),'');">
 		    		<option value="messages_search.cfm" <cfif curElement EQ "messages">selected="selected"</cfif> lang="es">Mensajes</option>
 		    		<option value="files_search.cfm" <cfif curElement EQ "files">selected="selected"</cfif> lang="es">Archivos</option>
+		    		<cfif APPLICATION.moduleDPDocuments IS true>
+		    			<option value="dp_documents_search.cfm" <cfif curElement EQ "dp_documents">selected="selected"</cfif> lang="es">Documentos DoPlanning</option>
+		    		</cfif>
 		    		<option value="events_search.cfm" <cfif curElement EQ "events">selected="selected"</cfif> lang="es">Eventos</option>
 		    		<option value="tasks_search.cfm" <cfif curElement EQ "tasks">selected="selected"</cfif> lang="es">Tareas</option>
 		    		<cfif APPLICATION.moduleLists IS true>

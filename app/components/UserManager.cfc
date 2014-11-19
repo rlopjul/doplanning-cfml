@@ -2258,8 +2258,24 @@
 	<cffunction name="getAreaUsers" returntype="struct" output="false" access="public">
         
 		<cfset var method = "getAreaUsers">
+
+		<cfset var access_result = false>
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<!--- checkAreaAccess --->
+			<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+			
+			<cfif access_result IS NOT true>
+				
+				<!--- checkAreaAdminAccess --->
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+			</cfif>
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getAreaUsers" argumentcollection="#arguments#" returnvariable="response">
 
@@ -2633,9 +2649,7 @@
 		<cfset var method = "getAllAreaUsers">
 		
 		<cfset var init_area_id = "">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-				
+						
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">

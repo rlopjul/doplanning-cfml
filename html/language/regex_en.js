@@ -3,9 +3,12 @@
 var area_menu_en_regex = {
 
 	"regex": [
+		[/^Email:?$/, "Email"],
+		[/^Contraseña:?$/, "Password"],
+
 		[/^Descripción:?$/, "Description"],
 		[/^Responsable:?$/, "Responsible"],
-		[/^Fecha de creación:?$/, "Creation date"]
+		[/^Fecha de creación:?$/, "Creation date"],
 	]
 
 };

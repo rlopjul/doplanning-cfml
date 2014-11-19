@@ -90,6 +90,7 @@
 							<option value="2.8.3">2.8.3</option>
 							<option value="2.8.4">2.8.4 (Máscaras de campos decimales)</option>
 							<option value="2.8.5">2.8.5 (Caché en árbol)</option>
+							<option value="2.9">2.9 (Pestaña Home, Documento DoPlanning, Caché de permisos de áreas)</option>
 						</select>
 					</div>
 

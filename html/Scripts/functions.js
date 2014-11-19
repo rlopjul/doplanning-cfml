@@ -54,7 +54,7 @@ function openAreaInfo(){
 
 function confirmAction(actionText) {
 	
-	var message = window.lang.convert('¿Seguro que desea ')+window.lang.convert(actionText)+window.lang.convert('?. Esta acción no es reversible.');
+	var message = window.lang.translate('¿Seguro que desea ')+window.lang.translate(actionText)+window.lang.translate('?. Esta acción no es reversible.');
 	
 	var resultado = confirm(message);
 	if(resultado)
@@ -66,7 +66,7 @@ function confirmAction(actionText) {
 
 function confirmReversibleAction(actionText) {
 	
-	var message = window.lang.convert('¿Seguro que desea ')+window.lang.convert(actionText)+'?';
+	var message = window.lang.translate('¿Seguro que desea ')+window.lang.translate(actionText)+'?';
 	
 	var resultado = confirm(message);
 	if(resultado)

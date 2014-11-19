@@ -78,7 +78,7 @@
 
 <!---<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">--->
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#" method="getFileIconsTypes" returnvariable="iconTypes">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIconsTypes" returnvariable="iconTypes">
 </cfinvoke>
 
 <cfset numFiles = files.recordCount>

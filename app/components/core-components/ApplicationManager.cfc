@@ -47,9 +47,10 @@
 		<cfargument name="userEmailRequired" type="boolean" required="false" default="true">
 		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
 		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
-		<cfargument name="homeTab" type="boolean" required="false" default="false">
-
 		<cfargument name="cacheTree" type="boolean" required="false" default="true">
+
+		<cfargument name="homeTab" type="boolean" required="false" default="false">
+		<cfargument name="moduleDPDocuments" type="boolean" required="false" default="false">
 
 		<cfargument name="hideInputLabels" type="boolean" required="false" default="false">
 
@@ -94,9 +95,10 @@
 			<cfset APPLICATION.userEmailRequired = arguments.userEmailRequired>
 			<cfset APPLICATION.moduleLdapDiraya = arguments.moduleLdapDiraya><!--- asnc, agsna --->
 			<cfset APPLICATION.moduleAntiVirus = arguments.moduleAntiVirus>
+			<cfset APPLICATION.cacheTree = arguments.cacheTree>
 			<cfset APPLICATION.homeTab = arguments.homeTab>
 
-			<cfset APPLICATION.cacheTree = arguments.cacheTree>
+			<cfset APPLICATION.moduleDPDocuments = arguments.moduleDPDocuments>
 
 			<cfif arguments.moduleWebRTC IS true>
 
@@ -273,6 +275,9 @@
 
 					<cfinvokeargument name="moduleWeb" value="true">
 
+					<cfinvokeargument name="homeTab" value="true">
+					<cfinvokeargument name="moduleDPDocuments" value="true">
+
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
 					<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
@@ -316,6 +321,7 @@
 					<cfinvokeargument name="moduleAntiVirus" value="true">
 
 					<cfinvokeargument name="homeTab" value="true">
+					<cfinvokeargument name="moduleDPDocuments" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
@@ -362,6 +368,8 @@
 					<cfinvokeargument name="userEmailRequired" value="false">
 					<cfinvokeargument name="moduleAntiVirus" value="true">
 
+					<cfinvokeargument name="homeTab" value="false">
+
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
 					<cfinvokeargument name="hideInputLabels" value="false">
@@ -397,6 +405,7 @@
 					<cfinvokeargument name="moduleWebRTC" value="true">
 
 					<cfinvokeargument name="homeTab" value="true">
+					<cfinvokeargument name="moduleDPDocuments" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 				</cfinvoke>

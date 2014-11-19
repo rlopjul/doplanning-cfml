@@ -1064,7 +1064,7 @@
 								}
 							
 							}else{
-								alert(window.lang.convert("No se ha seleccionado ningún usuario"));
+								alert(window.lang.translate("No se ha seleccionado ningún usuario"));
 							}
 							
 						});
@@ -1117,7 +1117,7 @@
 										if(window.opener.addUser(userId, userName))
 											window.close();
 										else
-											alert(userName+window.lang.convert(" ya está en la lista"));
+											alert(userName+window.lang.translate(" ya está en la lista"));
 
 									}else{
 
@@ -1138,7 +1138,7 @@
 								}
 								
 							}else{
-								alert(window.lang.convert("No se ha seleccionado ningún usuario"));
+								alert(window.lang.translate("No se ha seleccionado ningún usuario"));
 							}
 
 							<!---</cfif>--->

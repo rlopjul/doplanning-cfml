@@ -36,7 +36,7 @@
 					<div class="col-xs-11" style="vertical-align:middle;line-height:30px;">
 
 						<cfif numItems GT 0>
-						<span lang="es">Listas</span>&nbsp;<span class="badge alert-info">#numItems#</span>
+						<span lang="es">Listas</span>&nbsp;<span class="label label-info">#numItems#</span>
 						<cfelse>
 						<span lang="es">No hay listas</span>
 						</cfif>
@@ -112,7 +112,7 @@
 					<div class="col-xs-11" style="vertical-align:middle;line-height:30px;">
 
 						<cfif numItems GT 0>
-						<span lang="es">Tareas pendientes</span>&nbsp;<span class="badge alert-info">#numItems#</span>
+						<span lang="es">Tareas pendientes</span>&nbsp;<span class="label label-info">#numItems#</span>
 						<cfelse>
 						<span lang="es">No tiene tareas pendientes</span>
 						</cfif>
@@ -209,7 +209,7 @@
 					<div class="col-xs-11" style="vertical-align:middle;line-height:30px;">
 
 						<cfif numItems GT 0>
-						<span lang="es">Eventos próximos</span>&nbsp;<span class="badge alert-info">#numItems#</span>
+						<span lang="es">Eventos próximos</span>&nbsp;<span class="label label-info">#numItems#</span>
 						<cfelse>
 						<span lang="es">No hay eventos próximos</span>
 						</cfif>

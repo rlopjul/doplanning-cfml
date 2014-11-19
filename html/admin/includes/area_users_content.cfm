@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
@@ -11,6 +11,12 @@
 <!--- <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm"> --->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_id.cfm">
+
+<!---area_allowed--->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="checkAreaAdminAccess">
+	<cfinvokeargument name="area_id" value="#area_id#">
+</cfinvoke>
+<cfset area_allowed = true>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
 
@@ -140,31 +146,31 @@
 
 </cfif>
 
-	  	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
-			<cfinvokeargument name="area_id" value="#area_id#">
-		</cfinvoke>
+  	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfinvoke>
 
-		<cfset users = usersResponse.users>
-		<cfset numUsers = ArrayLen(users)>
+	<cfset users = usersResponse.users>
+	<cfset numUsers = ArrayLen(users)>
 
-		<div class="div_users">
-			
-			<cfif numUsers GT 0>
+	<div class="div_users">
+		
+		<cfif numUsers GT 0>
 
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
-					<cfinvokeargument name="users" value="#users#">
-					<cfinvokeargument name="area_id" value="#area_id#">
-					<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
-					<cfinvokeargument name="show_area_members" value="true">
-					<cfinvokeargument name="open_url_target" value="userAreaIframe">
-					<cfinvokeargument name="filter_enabled" value="true">
-				</cfinvoke>	
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
+				<cfinvokeargument name="users" value="#users#">
+				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
+				<cfinvokeargument name="show_area_members" value="true">
+				<cfinvokeargument name="open_url_target" value="userAreaIframe">
+				<cfinvokeargument name="filter_enabled" value="true">
+			</cfinvoke>	
 
-			<cfelse>
-				<span lang="es">No hay usuarios.</span>
-			</cfif>
-			
-		</div>
+		<cfelse>
+			<span lang="es">No hay usuarios.</span>
+		</cfif>
+		
+	</div>
 
 <cfif SESSION.client_administrator IS SESSION.user_id>
 

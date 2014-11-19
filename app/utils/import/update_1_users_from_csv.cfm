@@ -77,7 +77,7 @@
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
-<script src="../../../html/scripts/functions.min.js?v=2.1"></script>
+<script src="../../../html/scripts/functions.min.js?v=2.3"></script>
 </cfoutput>
 
 <script>
@@ -239,7 +239,7 @@
 	<script type="text/javascript">
 
 		function onSubmitForm(){
-			document.getElementById("submitDiv1").innerHTML = window.lang.convert('Cargando...');
+			document.getElementById("submitDiv1").innerHTML = window.lang.translate('Cargando...');
 		}
 
 	</script>

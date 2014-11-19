@@ -1,3 +1,26 @@
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypeStruct" returnvariable="itemTypeStruct">
+	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+</cfinvoke>
+
+<cfset itemTypeName = itemTypeStruct.name>
+<cfset itemTypeNameP = itemTypeStruct.namePlural>
+<cfset itemTypeTable = itemTypeStruct.table>
+
+<cfset itemTypeNameEs = itemTypeStruct.label>
+<cfset itemTypeNameEsP = itemTypeStruct.labelPlural>
+
+<cfset itemTypeGender = itemTypeStruct.gender>
+<cfset itemTypeWeb = itemTypeStruct.web>
+<cfset itemTypeNoWeb = itemTypeStruct.noWeb>
+
+<cfif itemTypeId GT 10 AND itemTypeId LT 16>
+	<cfset tableTypeId = itemTypeStruct.tableTypeId>
+	<cfif itemTypeId IS 14 OR itemTypeId IS 15>
+		<cfset tableTypeName = itemTypeStruct.tableTypeName>
+	</cfif>
+</cfif>
+
+<!---
 <cfswitch expression="#itemTypeId#"> 
 	
 	<cfcase value="1"><!---messages--->
@@ -257,4 +280,21 @@
    	
    	</cfcase> --->
 
+   	<cfcase value="20"><!---DoPlanning Document--->
+   	
+		<cfset itemTypeName = "dp_document">
+		<cfset itemTypeNameP = "dp_documents">
+		<cfset itemTypeTable = itemTypeNameP>
+		
+		<cfset itemTypeNameEs = "Documento DoPlanning">
+		<cfset itemTypeNameEsP = "Documentos DoPlanning">
+
+		<cfset itemTypeGender = "male">
+		<cfset itemTypeWeb = false>
+		<cfset itemTypeNoWeb = true>
+   	
+   	</cfcase>
+
 </cfswitch>
+
+--->

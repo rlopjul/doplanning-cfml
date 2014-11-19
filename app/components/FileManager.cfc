@@ -2051,7 +2051,7 @@
 			<cfset file.typology_row_id = "">
 			<cfset file.publication_scope_id = "">
 
-			<cfset curDate = DateFormat(now(), "DD-MM-YYYY")>
+			<cfset curDate = DateFormat(now(), APPLICATION.dateFormat)>
 			<cfset file.publication_date = curDate&" "&timeFormat(now(), "HH:mm:ss")>
 			<cfset file.publication_validated = true>
 			
@@ -5735,19 +5735,20 @@
 						
 						<cfthrow message="#associateFileResult.message#">
 						
-					</cfif>
+					</cfif>					
 
 					<!---
-					
-					Se deshabilita para los archivos que no son de usuario
-
-					<cftransaction>
+						<cftransaction>
 						
+						Se deshabilita para los archivos que no son de usuario
+
 						<cfquery name="updateSpaceUsed" datasource="#client_dsn#">
 							UPDATE #client_abb#_users
 							SET space_used = space_used+<cfqueryparam value="#fileQuery.file_size#" cfsqltype="cf_sql_integer">
 							WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
+
+						--->
 						
 						<cfquery name="updateFileVersion" datasource="#client_dsn#">		
 							UPDATE `#client_abb#_#fileTypeTable#_versions`
@@ -5760,9 +5761,7 @@
 							AND file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
 
-					</cftransaction>
-
-					--->
+					<!--- </cftransaction> --->
 
 					<cfcatch>
 

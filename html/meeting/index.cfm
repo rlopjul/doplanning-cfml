@@ -77,7 +77,7 @@
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
-<script src="../scripts/functions.min.js?v=2.1"></script>
+<script src="../scripts/functions.min.js?v=2.3"></script>
 </cfoutput>
 
 <script>
@@ -104,7 +104,7 @@
 		window.location.href = url;
 	}
 	function openUrlHtml2(url,target){
-		//En esta versión no se hace nada con las peticiones a este método
+		//En esta versi�n no se hace nada con las peticiones a este m�todo
 	}
 </script>
 <!-- InstanceBeginEditable name="head" --><!-- InstanceEndEditable -->
@@ -133,7 +133,7 @@
 </cfif>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
-		<a href="../preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="../logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+		<a href="../preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="../logout.cfm" class="text_user_logged" title="Cerrar sesi�n" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 	</div>
 </div>
 </cfoutput>

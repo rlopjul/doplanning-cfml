@@ -1,5 +1,8 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
+<cfif itemTypeId IS 20>
+	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.2"></script>
+</cfif>
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
@@ -13,18 +16,33 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
 	<cfinvokeargument name="item_id" value="#item_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+	<cfif itemTypeId IS 20>
+		<cfinvokeargument name="with_lock" value="true">
+	</cfif>
 </cfinvoke>
 
 <cfset area_id = objectItem.area_id>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<script type="text/javascript">
+<script>
 	<!---Esto es para evitar que se abran enlaces en el iframe--->
 	$(document).ready( function(){
 		$('.dropdown-toggle').dropdown();
 		$(".div_message_page_description a").attr('target','_blank');
 	}); 
+
+	function confirmLockDocument(value) {
+		
+		var messageLock = "";
+
+		if(value)
+			messageLock = "¿Seguro que desea bloquear el documento?. No podrá ser modificado por otros usuarios.";
+		else
+			messageLock = "¿Seguro que desea desbloquear el documento?.";
+		
+		return confirm(messageLock);
+	}
 
 	<!---function submitCopyItemForm(){
 	
@@ -73,12 +91,23 @@
 	
 		<cfelse><!---Si no es mensaje--->
 			
-			<!---En las áreas web o intranet se pueden modificar los elementos--->
-			<cfif len(area_type) GT 0 OR objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND objectItem.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma--->
-							
-				<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+			<cfif itemTypeId IS NOT 20>
+				
+				<!---En las áreas web o intranet se pueden modificar los elementos--->
+				<cfif len(area_type) GT 0 OR objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND objectItem.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma--->
 								
+					<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+									
+				</cfif>
+
+			<cfelseif ( objectItem.area_editable IS false AND objectItem.user_in_charge EQ SESSION.user_id ) OR ( objectItem.area_editable IS true AND (objectItem.locked IS false OR objectItem.lock_user_id IS SESSION.user_id) )>
+
+				<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+
 			</cfif>
+			
+
+			
 			
 			<cfif APPLICATION.moduleWeb IS true AND len(area_type) GT 0>
 
@@ -157,6 +186,29 @@
 				
 			</cfif>
 		
+		</cfif>
+
+		<cfif itemTypeId IS 20><!--- DoPlanning document--->
+
+			<a href="#APPLICATION.htmlPath#/dp_document_generate_pdf.cfm?#itemTypeName#=#objectItem.id#" target="_blank" class="btn btn-default btn-sm"><i class="icon-file-text"></i> <span lang="es">PDF</span></a>
+			
+			<cfif objectItem.area_editable IS true><!--- Area editable --->
+				
+				<cfif objectItem.locked IS true>
+
+					<cfif objectItem.lock_user_id IS SESSION.user_id OR is_user_area_responsible>
+						<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=lockAreaItem&item_id=#item_id#&itemTypeId=#itemTypeId#&area_id=#area_id#&lock=false&return_path=#return_path#" class="btn btn-warning btn-sm" onclick="return confirmLockDocument(false);"><i class="icon-unlock"></i> <span lang="es">Desbloquear</span></a>
+					</cfif>
+
+				<cfelse>
+
+					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=lockAreaItem&item_id=#item_id#&itemTypeId=#itemTypeId#&area_id=#area_id#&lock=true&return_path=#return_path#" class="btn btn-warning btn-sm" onclick="return confirmLockDocument(true);"><i class="icon-lock"></i> <span lang="es">Bloquear</span></a>
+
+				</cfif>
+
+			</cfif>
+			
+
 		</cfif>
 
 		<cfif itemTypeId IS NOT 7 OR objectItem.state EQ "created"><!---Is not consultation or is not created--->
@@ -325,6 +377,24 @@
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu_vpnet.cfm">
 	
+	</cfif>
+
+
+	<cfif itemTypeId IS 20 AND objectItem.area_editable IS true><!--- DoPlanning Document area editable--->
+
+
+		<cfif objectItem.locked IS true>
+			<div class="alert alert-warning">
+				<span>Archivo bloqueado por el usuario <a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.lock_user_id#">#objectItem.lock_user_full_name#</a>.<br/>
+				Sólo este usuario puede editar el documento.</span>
+			</div>
+
+			<div class="div_file_page_label">
+				<span lang="es">Fecha de bloqueo:</span> <span class="text_file_page">#objectItem.lock_date#</span>
+			</div>	
+		</cfif>
+
+
 	</cfif>
 		
 	

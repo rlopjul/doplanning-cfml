@@ -736,18 +736,18 @@
 				<table id="listTable" class="table-hover">
 					<thead>
 						<tr>
-							<th lang="es">Nombre</th>
+							<th><span lang="es">Nombre</span></th>
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 							<th class="filter-false" style="width:55px;"></th>
 							</cfif>
-							<th style="width:20%;" lang="es">Fecha</th>
+							<th style="width:20%;"><span lang="es">Fecha</span></th>
 							<th>Estructura compartida</th>
 							<cfif tableTypeId IS 3><!---Typologies--->
-							<th>De esta área</th>
-							<th>General</th>	
+							<th><span lang="es">De esta área</span></th>
+							<th><span lang="es">General</span></th>	
 							</cfif>
 							<cfif arguments.full_content IS true>
-							<th lang="es">Área</th>
+							<th><span lang="es">Área</span></th>
 							</cfif>
 						</tr>
 					</thead>
@@ -816,7 +816,7 @@
 								<cfelse>
 									<cfset rowsOnClick = "openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)">
 								</cfif>
-								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="#rowsOnClick#" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
+								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="#rowsOnClick#" title="Registros" lang="es"><i class="icon-list" style="font-size:15px;"></i></a>
 							</td>
 							</cfif>
 							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>

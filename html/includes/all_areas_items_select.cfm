@@ -1,6 +1,6 @@
 <cfoutput>
 
-<script src="#APPLICATION.htmlPath#/language/area_items_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
@@ -41,7 +41,7 @@
 					window.close();	
 
 				}else{
-					alert(window.lang.convert("No se ha seleccionado ningún elemento"));
+					alert(window.lang.translate("No se ha seleccionado ningún elemento"));
 				}
 
 			});--->
@@ -63,7 +63,7 @@
 					window.close();	
 
 				}else{
-					alert(window.lang.convert("Selección incorrecta"));
+					alert(window.lang.translate("Selección incorrecta"));
 				}
 			    
 			});

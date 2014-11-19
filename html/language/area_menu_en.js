@@ -18,6 +18,7 @@ var area_menu_en = {
 		'Listas del área':'Area lists',
 		"Formularios del área":"Area forms",
 		"Publicaciones del área":"Area publications",
+		'Documentos DoPlanning del área':'Area DoPlanning Documents',
 		'Usuarios del área':'Area users',
 		'Elementos de contenidos WEB del área':'Area Generic content elements',
 		'Noticias WEB del área':'Area Web News',
@@ -38,6 +39,7 @@ var area_menu_en = {
 		'Nueva Lista':'New List',
 		'Nuevo Formulario':'New Form',
 		'Nueva Publicación':'New Publication',
+		'Nuevo Documento DoPlanning':'New DoPlanning Document',
 		
 		'Subir nuevo archivo':'Upload new file',
 		'Asociar Archivo':'Associate File',

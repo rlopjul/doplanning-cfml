@@ -30,6 +30,7 @@
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="published" type="boolean" required="false" default="true">
+		<cfargument name="with_lock" type="boolean" required="false" default="false">
 		
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -53,6 +54,10 @@
 					, items.last_update_date
 					</cfif>
 					, items.attached_image_id, items.attached_image_name
+					<cfif arguments.itemTypeId IS NOT 7><!---Is not Consultations--->
+						, items.last_update_user_id
+						, CONCAT_WS(' ', last_update_users.family_name, last_update_users.name) AS last_update_user_full_name, last_update_users.image_type AS last_update_user_image_type
+					</cfif>
 				</cfif>
 				<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
 					, items.link_target
@@ -107,17 +112,41 @@
 				<cfif APPLICATION.publicationScope IS true AND ( arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 )>
 					, items.publication_scope_id, scopes.name AS publication_scope_name
 				</cfif>
+				<cfif arguments.itemTypeId IS 20><!--- DoPlanning document --->
+					, items.area_editable, items.locked
+					<cfif arguments.with_lock IS true>
+					, locks.user_id AS lock_user_id, locks.lock_user_full_name
+						<cfif arguments.parse_dates IS true>
+						, DATE_FORMAT(CONVERT_TZ(locks.lock_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS lock_date
+						<cfelse>
+						, locks.lock_date
+						</cfif>
+					</cfif>
+				</cfif>
 				FROM #client_abb#_#itemTypeTable# AS items
 				INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
 				LEFT JOIN #client_abb#_files AS files ON files.id = items.attached_file_id
 				<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5>
 					INNER JOIN #client_abb#_iframes_display_types AS iframes_display_types ON items.iframe_display_type_id = iframes_display_types.iframe_display_type_id
 				</cfif>
+				<cfif arguments.itemTypeId IS NOT 1 AND arguments.itemTypeId IS NOT 7><!--- IS NOT Messages and Consultations --->
+					LEFT JOIN #client_abb#_users AS last_update_users ON items.last_update_user_id = last_update_users.id
+				</cfif>
 				<cfif arguments.itemTypeId IS 6><!--- Task --->
 					INNER JOIN #client_abb#_users AS recipient_users ON items.recipient_user = recipient_users.id
 				</cfif>
 				<cfif APPLICATION.publicationScope IS true AND ( arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 )>
 					LEFT JOIN #client_abb#_scopes AS scopes ON items.publication_scope_id = scopes.scope_id
+				</cfif>
+				<cfif arguments.itemTypeId IS 20 AND arguments.with_lock IS true>
+				LEFT JOIN (
+					SELECT items_locks.item_id, items_locks.lock_date, items_locks.lock, items_locks.user_id,
+					CONCAT_WS(' ', users_locks.family_name, users_locks.name) AS lock_user_full_name 
+					FROM #client_abb#_#itemTypeTable#_locks AS items_locks
+					INNER JOIN #client_abb#_users AS users_locks ON items_locks.item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer"> AND items_locks.user_id = users_locks.id
+					ORDER BY lock_date DESC
+					LIMIT 1
+				) AS locks ON locks.item_id = items.id
 				</cfif>
 				WHERE items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
 				<cfif itemTypeWeb IS true><!--- WEB --->
@@ -375,7 +404,7 @@
 
 
 	<!---getMonthItemsByDays --->
-	
+
 	<cffunction name="getMonthItemsByDays" output="false" returntype="struct" access="public">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="format_content" type="string" required="false" default="default">
@@ -386,13 +415,10 @@
 		<cfargument name="recipient_user" type="numeric" required="no">
 		<cfargument name="with_user" type="boolean" required="no" default="false">
 		<cfargument name="with_area" type="boolean" required="no" default="false">
-		<!---<cfargument name="parse_dates" type="boolean" required="false" default="false">--->
+
 
 		<cfargument name="done" type="boolean" required="no">
-		<!---<cfargument name="state" type="string" required="no">
-		<cfargument name="offset" type="numeric" required="no">
-		
-		<cfargument name="structure_available" type="boolean" required="false">--->
+
 		<cfargument name="published" type="boolean" required="false" default="true">		
 		
 		<cfargument name="year" type="string" required="true">
@@ -402,9 +428,9 @@
 		<cfargument name="client_dsn" type="string" required="yes">	
 
 		<cfset var days = arrayNew(1)>
-		<!---<cfset var areaItemsQuery = queryNew()>--->
 
-		<cfinvoke component="AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			<cfinvokeargument name="areas_ids" value="#arguments.areas_ids#">
 			<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
@@ -414,7 +440,7 @@
 			<cfinvokeargument name="format_content" value="#arguments.format_content#">
 			<cfinvokeargument name="with_user" value="#arguments.with_user#">
 			<cfinvokeargument name="with_area" value="#arguments.with_area#"/>
-			<!--- La columna position da error en queryOfQuery --->
+
 			<cfinvokeargument name="with_position" value="false">
 			<cfinvokeargument name="parse_dates" value="false"/>
 
@@ -425,24 +451,9 @@
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 		</cfinvoke>
 		<cfset areaItemsQuery = getAreaItemsResult.query>
-
-
-		<!--- Hay que cambiar el nombre a la columna position porque da error en queryOfquery --->
-		<!---<cfinvoke component="Utils" method="QueryChangeColumnName" returnvariable="areaItemsQuery">
-			<cfinvokeargument name="query" value="#areaItemsQuery#"/>
-			<cfinvokeargument name="columnname" value="position"/>
-			<cfinvokeargument name="newcolumnname" value="item_position"/>
-		</cfinvoke>--->
 		
 		<cfset month_date = CreateDate(arguments.year, arguments.month, 1)>
 		<cfset month_days = DaysInMonth(month_date)>
-		
-		<!---<cfquery dbtype="query" name="itemsByMonth">
-			SELECT id, title, start_date, end_date
-			FROM areaItemsQuery
-			WHERE ( MONTH(CAST(start_date AS DATE)) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(CAST(start_date AS DATE)) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> )
-			OR ( MONTH(CAST(end_date AS DATE)) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(CAST(end_date AS DATE)) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> );
-		</cfquery>--->
 
 		<cfquery dbtype="query" name="itemsByMonth">
 			SELECT id, title, start_date, end_date
@@ -450,35 +461,44 @@
 			WHERE ( MONTH(start_date) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(start_date) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> )
 			OR ( MONTH(end_date) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(end_date) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> );
 		</cfquery>
+		
 				
 		<cfloop index="d" from="1" to="#month_days#" step="1">
 			
-			<cfquery dbtype="query" name="itemsByDay">
-				SELECT *
-				FROM itemsByMonth
-				WHERE ( DAYOFMONTH(start_date) <= <cfqueryparam value="#d#" cfsqltype="cf_sql_integer"> AND MONTH(start_date) <= <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer">
-				OR MONTH(start_date) < <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer">)
-				AND (DAYOFMONTH(end_date) >= #d# AND MONTH(end_date) >= #arguments.month# 
-				OR MONTH(end_date) > <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> );
-			</cfquery>
+
+			<cfset select_date = CreateDate(arguments.year, arguments.month, #d#)>
+			<cfset day = arrayNew(1)>
+			<cfset day_with_event = false>
 			
-			<cfif itemsByDay.recordCount GT 0>
-				<cfset day = arrayNew(1)>
-				<cfset day_number = d>
+			
+			<cfloop query="itemsByMonth" startrow="1" endrow="#itemsByMonth.recordCount#">
+				<cfset title_event = itemsByMonth.title>
+				<cfset start_date_event = itemsByMonth.start_date>
+				<cfset end_date_event = itemsByMonth.end_date>				
 				
-				<cfloop query="itemsByDay">
+				<cfif ((DateCompare(start_date_event, select_date ) IS 0) OR (DateCompare(start_date_event, select_date ) IS -1))
+					AND ((DateCompare(end_date_event, select_date ) IS 0) OR (DateCompare(end_date_event, select_date ) IS 1))>
+										
 					<cfset event = structNew()>
-					<cfset event.title = itemsByDay.title>
+					<cfset event.title = title_event>
 					<cfset arrayAppend(day, event)>
-				</cfloop>
-				
-				<cfset days[day_number] = day>
-			</cfif>			 
+					<cfset day_with_event = true>
+					
+				</cfif>
+
+			</cfloop>
+			
+			<cfif day_with_event IS true>
+				<cfset days[d] = day>
+			</cfif>
+			
+		 
 		</cfloop>
 
 		<cfreturn {days=days}>
 
 	</cffunction>
+	
 	
 	
 	<!---  -------------------GET ITEM PARENT----------------------   --->
@@ -592,7 +612,11 @@
 			
 			<cfset column = trim(col)>
 
-			<cfif findOneOf("NULL", column) IS 0>
+			<cfif find("IFNULL(last_update_date", column) GT 0><!--- last_update_date column --->
+				<cfset columsWithTable = listAppend(columsWithTable, "IFNULL(#arguments.table#.last_update_date,#arguments.table#.creation_date) AS last_update_date", ",")>
+			<cfelseif find("creation_date) AS last_update_date", column) GT 0>
+				<!---Este campo ya se ha definido en el anterior--->
+			<cfelseif find("NULL", column) IS 0>
 				<cfset columsWithTable = listAppend(columsWithTable, "#arguments.table#.#column#", ",")>
 			<cfelse>
 				<cfset columsWithTable = listAppend(columsWithTable, "NULL", ",")>
@@ -619,6 +643,7 @@
 		<cfargument name="withPubmedsComments" type="boolean" required="false" default="false">
 		<cfargument name="withLists" type="boolean" required="false" default="false">
 		<cfargument name="withForms" type="boolean" required="false" default="false">
+		<cfargument name="withDPDocuments" type="boolean" required="false" default="false">
 
 		<cfargument name="published" type="boolean" required="false" default="true">
 		
@@ -631,12 +656,15 @@
 				<cfthrow message="Areas requerida">
 			</cfif>
 
-			<cfset var commonColums = "id, title, creation_date, description, user_in_charge, area_id, NULL AS file_type_id, NULL AS locked">
+			<cfset var commonColums = "id, title, creation_date, IFNULL(last_update_date,creation_date) AS last_update_date, description, user_in_charge, last_update_user_id, area_id, NULL AS file_type_id, NULL AS locked">
+			<cfset var commonColumsWithoutLastUpdate = "id, title, creation_date, creation_date AS last_update_date, description, user_in_charge, NULL AS last_update_user_id, area_id, NULL AS file_type_id, NULL AS locked">
 
-			<cfset var fileColums = "id, name, IFNULL(replacement_date, uploading_date) AS creation_date, description, user_in_charge, area_files.area_id, file_type_id, locked"><!--- #area_id# AS area_id , id AS attached_file_id--->
+			<cfset var fileColums = "id, name, uploading_date AS creation_date, IFNULL(replacement_date, uploading_date) AS last_update_date, description, user_in_charge, replacement_user, area_files.area_id, file_type_id, locked"><!---IFNULL(replacement_date, uploading_date) AS creation_date--->
 
 			<cfif isDefined("arguments.area_type") AND len(arguments.area_type) GT 0><!--- WEB --->
-				<cfset commonColums = commonColums&", publication_date, publication_validated">
+				<cfset commonColumsWebAdd = ", publication_date, publication_validated">
+				<cfset commonColums = commonColums&commonColumsWebAdd>
+				<cfset commonColumsWithoutLastUpdate = commonColumsWithoutLastUpdate&commonColumsWebAdd>
 				<cfset fileColums = fileColums&", publication_date, publication_validated">
 			</cfif>
 
@@ -648,6 +676,7 @@
 			<cfset var eventColums = "end_date, NULL AS done">
 			<cfset var taskColums = "end_date, done">
 			<cfset var pubmedColums = "NULL AS end_date, NULL AS done">
+			<cfset var consultationColums = "NULL AS end_date, NULL AS done">
 
 			<cfset var webColums = "attached_image_id">
 			<cfset var webColumsNull = "NULL AS attached_image_id">
@@ -660,12 +689,15 @@
 
 			<cfif arguments.full_content IS true>
 
-				<cfset commonColums = commonColums&", NULL AS file_size, NULL AS file_type, NULL AS file_name"><!---, attached_file_name, link, --->
-				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS identifier">
+				<cfset commonColumsFullAdd = ", NULL AS file_size, NULL AS file_type, NULL AS file_name"><!---, attached_file_name, link, --->
+				<cfset commonColums = commonColums&commonColumsFullAdd>
+				<cfset commonColumsWithoutLastUpdate = commonColumsWithoutLastUpdate&commonColumsFullAdd>
+				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL AS state">
 
-				<cfset eventColums = eventColums&", place, start_date, NULL AS identifier">
-				<cfset taskColums = taskColums&", NULL AS place, start_date, NULL AS identifier">
-				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, identifier">
+				<cfset eventColums = eventColums&", place, start_date, NULL AS identifier, NULL AS state">
+				<cfset taskColums = taskColums&", NULL AS place, start_date, NULL AS identifier, NULL AS state">
+				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, identifier, NULL AS state">
+				<cfset consultationColums = consultationColums&", NULL AS place, NULL AS start_date, NULL AS identifier, state">
 
 				<cfset fileColums = fileColums&", file_size, file_type, file_name"><!---, NULL AS attached_file_name, NULL AS link--->
 
@@ -694,13 +726,24 @@
 				FROM (
 				<cfif NOT isDefined("arguments.area_type") OR len(arguments.area_type) IS 0><!--- IS NOT WEB --->
 					<!--- Messages --->
-					( SELECT #commonColums#, #attachedFileColum#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 1 AS itemTypeId
+					( SELECT #commonColumsWithoutLastUpdate#, #attachedFileColum#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 1 AS itemTypeId
 					FROM #client_abb#_messages AS messages 
 					WHERE status='ok'
 					<cfif NOT isDefined("arguments.areas_ids")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
+					<cfif arguments.withConsultations IS true>
+					UNION ALL <!--- Consultations --->
+					( SELECT #commonColumsWithoutLastUpdate#, #attachedFileColum#, #webColumsNull#, #consultationColums#, #iframeColumsNull# #displayColumsNull# 7 AS itemTypeId
+					FROM #client_abb#_consultations AS consultations
+					WHERE status='ok'
+					<cfif NOT isDefined("arguments.areas_ids")>
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					</cfif>
+					)
+					</cfif>
+
 					UNION ALL <!--- Tasks --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColumsNull#, #taskColums#, #iframeColumsNull# #displayColumsNull# 6 AS itemTypeId
 					FROM #client_abb#_tasks AS tasks
@@ -709,17 +752,20 @@
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
-					<!---<cfif APPLICATION.moduleConsultations IS true>--->
-					<cfif arguments.withConsultations IS true>
-					UNION ALL <!--- Consultations --->
-					( SELECT #commonColums#, #attachedFileColum#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 7 AS itemTypeId
-					FROM #client_abb#_consultations AS consultations
+
+					<cfif arguments.withDPDocuments IS true>
+					UNION ALL <!--- DoPlanning Documents --->
+					( SELECT #commonColums#, #attachedFileColum#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 20 AS itemTypeId
+					FROM #client_abb#_dp_documents AS dp_documents
 					WHERE status='ok'
 					<cfif NOT isDefined("arguments.areas_ids")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
 					</cfif>
+
+
+
 				</cfif>
 				<cfif NOT isDefined("arguments.area_type")>
 					UNION ALL
@@ -853,7 +899,10 @@
 				INNER JOIN #client_abb#_users AS users
 				ON items.user_in_charge = users.id
 
-				
+				<!---<cfif arguments.with_area IS true>
+					INNER JOIN #client_abb#_areas AS areas
+					ON items.area_id = areas.id
+				</cfif>--->
 
 				<cfif isDefined("arguments.area_type") AND len(arguments.area_type) GT 0><!---WEB--->
 					LEFT JOIN #client_abb#_items_position AS items_position
@@ -873,7 +922,8 @@
 
 					ORDER BY items_position.position DESC, items.creation_date DESC
 				<cfelse>
-					ORDER BY items.creation_date DESC
+					<!---ORDER BY items.creation_date DESC--->
+					ORDER BY items.last_update_date DESC
 				</cfif>
 
 				<cfif isDefined("arguments.limit")>

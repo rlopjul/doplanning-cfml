@@ -14,7 +14,7 @@
 	
 	<cfset file_type = URL.type>
 	
-	<cfswitch expression="#file_type#">
+	<!---<cfswitch expression="#file_type#">
 		<cfcase value=".jpg">
 			<cfset filetype="image/jpeg">
 		</cfcase>
@@ -27,7 +27,8 @@
 		<cfdefaultcase>
 			<cfset filetype="application/x-unknown; charset=UTF-8">
 		</cfdefaultcase>
-	</cfswitch>
+	</cfswitch>--->
+	<cfset filetype = fileGetMimeType(file_type,false)>
 	
 	<cfset filename = URL.id&URL.type>
 	

@@ -4,7 +4,7 @@
 <head>
 <!--Developed and copyright by Web4Bio 2007-2014 (www.web4bio.com)-->
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la 煤ltima versi贸n (que no habilite el modo de compatibilidad) --->
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la 鷏tima versi髇 (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
@@ -51,7 +51,7 @@
 </cfoutput>
 
 <cfif APPLICATION.identifier EQ "vpnet">
-	<!---Esto solo debe mantenerse para la versi贸n vpnet (por el Messenger)--->
+	<!---Esto solo debe mantenerse para la versi髇 vpnet (por el Messenger)--->
 	<script src="../SpryAssets/includes/xpath.js"></script>
 	<script src="../SpryAssets/includes/SpryData.js"></script>
 	<script src="../SpryAssets/includes/SpryXML.js"></script>
@@ -77,7 +77,7 @@
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
-<script src="../html/scripts/functions.min.js?v=2.1"></script>
+<script src="../html/scripts/functions.min.js?v=2.3"></script>
 </cfoutput>
 
 <script>
@@ -104,7 +104,7 @@
 		window.location.href = url;
 	}
 	function openUrlHtml2(url,target){
-		//En esta versi贸n no se hace nada con las peticiones a este m茅todo
+		//En esta versi髇 no se hace nada con las peticiones a este m閠odo
 	}
 </script>
 <!-- TemplateBeginEditable name="head" --><!-- TemplateEndEditable --><!-- InstanceEndEditable -->
@@ -133,7 +133,7 @@
 </cfif>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
-		<a href="../html/preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="../html/logout.cfm" class="text_user_logged" title="Cerrar sesi贸n" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+		<a href="../html/preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="../html/logout.cfm" class="text_user_logged" title="Cerrar sesi髇" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 	</div>
 </div>
 </cfoutput>

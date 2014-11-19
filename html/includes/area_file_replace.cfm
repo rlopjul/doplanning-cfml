@@ -18,7 +18,7 @@ function onSubmitForm()
 {
 	/*if(check_custom_form())
 	{*/
-		document.getElementById("submitDiv").innerHTML =  window.lang.convert("Enviando...");
+		document.getElementById("submitDiv").innerHTML =  window.lang.translate("Enviando...");
 
 		return true;
 	/*}

@@ -25,6 +25,8 @@
 		<cfargument name="toolbar" type="string" required="false" default="DP">
 		<cfargument name="toolbarStartupExpanded" type="boolean" default="true">
 		<cfargument name="language" type="string" required="false" default="#APPLICATION.defaultLanguage#"/>
+		<cfargument name="readOnly" type="boolean" required="false" default="false">
+		<cfargument name="toolbarCanCollapse" type="boolean" required="false" default="false">
 	
 		<cfoutput>
 			
@@ -34,7 +36,9 @@
 				<cfset arguments.toolbar = "DP_hcs">
 			</cfif>
 			<script type="text/javascript">
-				CKEDITOR.replace('#arguments.name#', {toolbar:'#arguments.toolbar#', toolbarStartupExpanded:#arguments.toolbarStartupExpanded#, language:'#arguments.language#'
+				CKEDITOR.replace('#arguments.name#', {toolbar:'#arguments.toolbar#', toolbarStartupExpanded:#arguments.toolbarStartupExpanded#, 
+					toolbarCanCollapse:#arguments.toolbarCanCollapse#, readOnly:#arguments.readOnly#,
+					language:'#arguments.language#'
 					<cfif isDefined("arguments.width")>
 					, width:#arguments.width#
 					</cfif>
@@ -43,7 +47,7 @@
 					</cfif>
 					<cfif SESSION.client_administrator EQ SESSION.user_id>
 					, forcePasteAsPlainText:false
-					</cfif>
+					</cfif>	
 				});
 			</script>
 			

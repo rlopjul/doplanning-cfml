@@ -16,6 +16,8 @@ Lang.prototype.pack.en = {
 
 		"Administración general":"General administration",
 		"Administración de áreas":"Areas administration", 
+		"Administración general nueva versión HTML":"General administration (new version)",
+		"Administración general versión Flash":"General administration (old version)",
 		"Preferencias del usuario":"User preferences",
 		"Versión móvil":"Mobile version",
 		
@@ -26,11 +28,18 @@ Lang.prototype.pack.en = {
 		"Tareas pendientes":"Pending tasks",
 		"Eventos próximos":"Upcoming Events",
 		"No hay eventos próximos":"There are no upcoming events",
-		"No tiene tareas pendientes":"You do not have pending tasks",
+		"No tiene tareas pendientes":"You don't have pending tasks",
 		"No hay listas":"No lists",
 		"Caduca hoy":"Expires today",
 		"Caducada":"Expired",
 		"Hoy":"Today",
+		"Estado":"State",
+		"Respondida":"Replied",
+		"Enviada":"Sent",
+		"Cerrada":"Closed",
+		"Leída":"Read",
+		"Nueva versión":"New version",
+		"Modificación":"Edited",
 
 		"No hay elementos":"No items",
 
@@ -43,7 +52,7 @@ Lang.prototype.pack.en = {
 		"Fecha de inicio":"Start date",
 		"Fecha de fin":"End date",
 		"Lugar":"Place",
-		"Realizada":"Done:",
+		"Realizada":"Done",
 		"Sí":"Yes",
 		"No":"No",
 
@@ -58,6 +67,9 @@ Lang.prototype.pack.en = {
 		"Importar áreas":"Áreas import",
 		"Eliminar":"Delete",
 		"Eliminar área":"Area delete",
-		"Volver":"Return"
+		"Volver":"Return",
+
+		"Accede a las áreas de la organización a través de la pestaña":"You can access the areas of the organization through the tab",
+		"para crear nuevos elementos":"to create new items"
 	}
 };

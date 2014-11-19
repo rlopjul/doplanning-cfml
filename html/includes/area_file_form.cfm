@@ -1,29 +1,29 @@
 <!---page_types
 1 Create and upload new file
 2 Modify file
-3 Publish area file
+3 Publish area file (version)
 --->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form_query.cfm">
 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/file_content_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-
-<div class="div_head_subtitle"><span lang="es"><cfif page_type IS 1>Nuevo Archivo<cfelseif page_type IS 2>Modificar archivo<cfelseif page_type IS 3>Publicar versión de archivo</cfif><cfif fileTypeId IS 2> de área</cfif></span></div>
-
-<!---<cfset return_page = "area.cfm?area=#area_id#">--->
-
-<cfoutput>
-
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.3"></script>
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
 <script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
+</cfoutput>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+
+<div class="div_head_subtitle"><span lang="es"><cfif page_type IS 1>Nuevo Archivo<cfelseif page_type IS 2>Modificar Archivo<cfelseif page_type IS 3>Publicar versión de archivo</cfif><cfif fileTypeId IS 2> de área</cfif></span></div>
+
+<!---<cfset return_page = "area.cfm?area=#area_id#">--->
+
+<cfoutput>
 
 <cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
 
@@ -115,7 +115,7 @@
 		}
 
 		if(check_custom_form())	{
-			document.getElementById("submitDiv").innerHTML = window.lang.convert("Enviando archivo...");
+			document.getElementById("submitDiv").innerHTML = window.lang.translate("Enviando archivo...");
 
 			return true;
 		}
@@ -466,7 +466,7 @@
 		
 	</cfif>
 
-	<cfif ( len(area_type) GT 0 OR page_type IS 3 ) AND page_type IS NOT 2><!--- WEB or Publish file--->
+	<cfif ( len(area_type) GT 0 OR page_type IS 3 ) AND page_type IS NOT 2><!--- WEB or Publish file version--->
 
 		<div class="row">
 
@@ -587,3 +587,11 @@
 </div>
 
 </cfoutput>
+
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+	<cfinvokeargument name="name" value="description">
+	<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+	<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+	<cfinvokeargument name="toolbarCanCollapse" value="true"/>
+	<cfinvokeargument name="height" value="180"/>
+</cfinvoke>

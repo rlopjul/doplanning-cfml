@@ -72,6 +72,8 @@
 		
 		<cfset var method = "saveCacheTree">
 			
+			<!--- 1048576 Límite por defecto de max_allowed_packet en MySQL --->
+				
 			<cfquery datasource="#client_dsn#" name="saveCacheTreeQuery">
 				INSERT INTO #client_abb#_areas_tree_cache
 				SET user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">,

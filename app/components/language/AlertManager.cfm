@@ -51,6 +51,9 @@ curLangText["es"] = {
 			"16": {
 				"name" : "Vista de Tipología",
 			},
+			"20": {
+				"name" : "Documento DoPlanning",
+			},
 			
 		},
 		
@@ -363,6 +366,9 @@ curLangText["en"] = {
 			},
 			"16": {
 				"name" : "Typology view",
+			},
+			"20": {
+				"name" : "DoPlanning document",
 			},
 			
 		},

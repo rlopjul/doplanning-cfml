@@ -309,7 +309,7 @@
 			</cfif>			
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				<!---<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">--->
 			</cfinvoke>
 
 			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
@@ -317,7 +317,9 @@
 			<label class="control-label" for="item_type_id" id="subTypeLabel"><span lang="es">Tipo de elemento de DoPlanning</span> *</label>
 			<select name="item_type_id" id="item_type_id" class="form-control" onchange="fieldItemTypeChange($('##item_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
 				<cfloop array="#itemTypesArray#" index="itemTypeId">
-					<option value="#itemTypeId#" lang="es" <cfif field.item_type_id IS itemTypeId>selected="selected"</cfif>>#itemTypesStruct[itemTypeId].label#</option>
+					<cfif itemTypesStruct[itemTypeId].showInSelect IS true>
+						<option value="#itemTypeId#" lang="es" <cfif field.item_type_id IS itemTypeId>selected="selected"</cfif>>#itemTypesStruct[itemTypeId].label#</option>
+					</cfif>
 				</cfloop>
 			</select>
 			<small class="help-block">No se puede modificar el tipo de elemento DoPlanning una vez creado el campo.</small>

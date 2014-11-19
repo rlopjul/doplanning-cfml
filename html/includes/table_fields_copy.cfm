@@ -56,8 +56,8 @@ function onSubmitForm() {
 
 	if($("##copy_fields_form input:checkbox:checked").length > 0) {
 	
-		document.getElementById("submitDiv1").innerHTML = window.lang.convert('Copiando...');
-		document.getElementById("submitDiv2").innerHTML = window.lang.convert('Copiando...');
+		document.getElementById("submitDiv1").innerHTML = window.lang.translate('Copiando...');
+		document.getElementById("submitDiv2").innerHTML = window.lang.translate('Copiando...');
 
 		return true;
 	

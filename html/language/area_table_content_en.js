@@ -23,7 +23,8 @@ var area_table_content_en = {
 		
 		'Habilitar como tipología general':'Set as general typology',
 		'Se podrá utilizar esta tipología en cualquier área de la organización.':'This typology may be used in any area of the organization',
-		'Define dónde se podrán publicar vistas de la lista':'Set the areas where can be published views of the list',
+		'Define dónde se podrán publicar vistas de la Lista':'Set the areas where can be published views of the List',
+		'Define dónde se podrán publicar vistas del Formulario':'Set the areas where can be published views of the Form',
 
 		'Guardar':'Save',
 		/*END area_table_form*/

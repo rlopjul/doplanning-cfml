@@ -197,6 +197,28 @@
 		<cfreturn access_result>
 		
 	</cffunction>
+
+
+	<!--- ----------------------------------- checkAreaAdminAccess ------------------------------------- --->
+	
+	<cffunction name="checkAreaAdminAccess" output="false" returntype="void" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		
+		<cfset var method = "checkAreaAdminAccess">
+				
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess" returnvariable="access_result">				
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>
+				
+	</cffunction>
 	
 
 	<!--- ----------------------------------- isUserAreaResponsible ------------------------------------- --->

@@ -97,6 +97,12 @@
 			<cfset publicationArea.publication_area_id = "">
 			<cfset publicationArea.publication_area_name = "">
 
+			<cfset curDateTime = DateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
+			<cfset queryAddColumn(file, "publication_date")>
+			<cfset queryAddColumn(file, "publication_validated")>
+			<cfset querySetCell(file, "publication_date", curDateTime)>
+			<cfset querySetCell(file, "publication_validated", true)>
+
 		</cfif>
 
 	</cfif>

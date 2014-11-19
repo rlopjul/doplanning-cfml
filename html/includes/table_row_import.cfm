@@ -155,7 +155,7 @@
 
 		function onSubmitForm(){
 
-			document.getElementById("submitDiv1").innerHTML = window.lang.convert('Enviando...');
+			document.getElementById("submitDiv1").innerHTML = window.lang.translate('Enviando...');
 
 		}
 

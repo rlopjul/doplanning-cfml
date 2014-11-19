@@ -10,7 +10,7 @@
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_content_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.htmlPath#/language/area_table_content_en.js" charset="utf-8"></script>
 
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
@@ -251,4 +251,6 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
 	<cfinvokeargument name="name" value="description">
 	<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+	<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+	<cfinvokeargument name="toolbarCanCollapse" value="true"/>
 </cfinvoke>

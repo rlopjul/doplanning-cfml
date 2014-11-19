@@ -20,6 +20,8 @@
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 
+		<cfargument name="with_lock" type="boolean" required="false" default="false">
+
 		<cfset var method = "getItem">
 
 		<cfset var response = structNew()>
@@ -29,6 +31,8 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getItem" returnvariable="response">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+
+				<cfinvokeargument name="with_lock" value="#arguments.with_lock#">
 				
 				<!---<cfinvokeargument name="return_type" value="object">--->
 				<cfinvokeargument name="return_type" value="query">
@@ -82,7 +86,7 @@
 	<cffunction name="createItem" returntype="struct" access="public">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="title" type="string" required="true">
-		<cfargument name="link" type="string" required="true">
+		<cfargument name="link" type="string" required="false">
 		<cfargument name="link_target" type="string" required="false">
         <cfargument name="description" type="string" required="false" default="">
         <cfargument name="parent_id" type="numeric" required="true">
@@ -117,6 +121,7 @@
 		<cfargument name="publication_validated" type="boolean" required="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
+		<cfargument name="area_editable" type="boolean" required="false" default="false">
 		
 		<cfset var method = "createItem">
 				
@@ -211,6 +216,7 @@
 				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				<cfinvokeargument name="price" value="#arguments.price#">
 				<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
+				<cfinvokeargument name="area_editable" value="#arguments.area_editable#">
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfif with_attached IS true OR with_image IS true><!---Hay archivo para subir--->
@@ -471,6 +477,8 @@
 		<cfargument name="publication_validated" type="boolean" required="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
+		<cfargument name="area_editable" type="boolean" required="false" default="false">
+		<cfargument name="unlock" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateItem">
 				
@@ -613,6 +621,8 @@
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					<cfinvokeargument name="price" value="#arguments.price#">
 					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
+					<cfinvokeargument name="area_editable" value="#arguments.area_editable#">
+					<cfinvokeargument name="unlock" value="#arguments.unlock#"/>
 				</cfinvoke>
 
 				<cfif updateItemResponse.result IS NOT true>
@@ -1624,6 +1634,52 @@
 		<cfreturn response>
 		
 	</cffunction>
+
+
+
+	<!--- lockAreaItem --->
+
+	<cffunction name="lockAreaItem" returntype="void" access="remote">
+		<cfargument name="item_id" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="lock" type="boolean" required="true">
+		<cfargument name="return_path" type="string" required="true">
+		
+		<cfset var method = "lockAreaItem">
+
+		<cfset var response = structNew()>
+				
+		<cftry>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeAreaItemLock" returnvariable="response">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#"/>
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<cfinvokeargument name="lock" value="#arguments.lock#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfif arguments.lock IS true>
+					<cfset msg = "Documento bloqueado.">
+				<cfelse>
+					<cfset msg = "Documento desbloqueado.">
+				</cfif>
+			<cfelse>
+				<cfset msg = response.message>
+			</cfif>
+				
+			<cfset msg = URLEncodedFormat(msg)>
+			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#&res=#response.result#&msg=#msg#" addtoken="no">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
 	
 	
 		
@@ -1660,6 +1716,19 @@
 						<!---<span class="text_message_page">#objectItem.user_full_name#</span>--->
 						<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.user_in_charge#">#objectItem.user_full_name#</a>
 					</div>
+
+					<cfif isDefined("objectItem.last_update_user_id") AND isNumeric(objectItem.last_update_user_id)>
+					<div class="div_message_page_label"><span lang="es">Última modificación por:</span>
+					
+						<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.last_update_user_id#"><cfif len(objectItem.last_update_user_image_type) GT 0>
+							<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectItem.last_update_user_id#&type=#objectItem.last_update_user_image_type#&small=" alt="#objectItem.last_update_user_full_name#" class="item_img" style="margin-right:2px;"/>									
+						<cfelse>							
+							<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectItem.last_update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+						</cfif></a>
+						
+						<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.last_update_user_id#">#objectItem.last_update_user_full_name#</a>
+					</div>
+					</cfif>
 					
 					<cfif itemTypeId IS 6><!---Tasks--->
 						<div class="div_message_page_label"><span lang="es">Asignada a:</span> 
@@ -1793,8 +1862,20 @@
 					</cfif>
 					
 					<div class="div_message_page_label"><span lang="es"><cfif itemTypeId IS 3>Descripción<cfelse>Contenido</cfif>:</span></div> 
-					<div class="div_message_page_description">#objectItem.description#</div>
 
+					<cfif itemTypeId IS 20>
+						<div style="clear:both">
+							<textarea name="description" class="form-control" style="height:500px;" readonly>#objectItem.description#</textarea>
+						</div>
+					<cfelse>
+						<div class="div_message_page_description">
+						<!---<cfif itemTypeId IS 20>
+							<style scoped>@import url(#APPLICATION.htmlPath#/ckeditor/contents.css);</style>
+						</cfif>--->
+							#objectItem.description#
+						</div>
+					</cfif>
+					
 					<cfif APPLICATION.publicationScope IS true AND itemTypeId IS 11 OR itemTypeId IS 12>
 
 						<div class="div_message_page_label">Ámbito de publicación: <span class="text_message_page">#objectItem.publication_scope_name#</span></div>
@@ -1831,7 +1912,20 @@
 						
 					</cfif>
 				</div>
-			</cfoutput>								
+			</cfoutput>			
+
+			<cfif itemTypeId IS 20><!--- DoPlanning Document --->
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+					<cfinvokeargument name="name" value="description">
+					<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+					<cfinvokeargument name="height" value="500"/>
+					<cfinvokeargument name="readOnly" value="true"/>
+					<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+					<cfinvokeargument name="toolbarCanCollapse" value="true"/>
+				</cfinvoke>	
+
+			</cfif>				
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -2003,54 +2097,54 @@
 								<th style="width:35px" class="filter-false"></th>
 								<cfif arguments.full_content IS false>
 									<cfif itemTypeId IS 1><!---Messages--->
-										<th style="width:55%" lang="es">Asunto</th>
+										<th style="width:55%"><span lang="es">Asunto</span></th>
 									<cfelseif itemTypeId IS 2 OR itemTypeId IS 3><!---Entries, Links--->
-										<th style="width:49%" lang="es">Título</th>
+										<th style="width:49%"><span lang="es">Título</span></th>
 									<cfelse>
-										<th style="width:55%" lang="es">Título</th>
+										<th style="width:55%"><span lang="es">Título</span></th>
 									</cfif>
 									<th style="width:5%" class="filter-false"></th>
-									<th style="width:23%" lang="es">De</th>
-									<th style="width:12%" lang="es">Fecha</th>
+									<th style="width:23%"><span lang="es">De</span></th>
+									<th style="width:12%"><span lang="es">Fecha</span></th>
 									<cfif itemTypeId IS 5>
-										<th style="width:8%" lang="es">Inicio</th>		
-										<th style="width:4%" lang="es">Fin</th>
+										<th style="width:8%"><span lang="es">Inicio</span></th>		
+										<th style="width:4%"><span lang="es">Fin</span></th>
 									</cfif>
 									<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
 									<th style="width:6%" class="filter-false">##</th>
 									</cfif>
 								<cfelse>
-									<th style="width:39%" lang="es"><cfif itemTypeId IS 1>Asunto<cfelse>Título</cfif></th>
+									<th style="width:39%"><span lang="es"><cfif itemTypeId IS 1>Asunto<cfelse>Título</cfif></span></th>
 									<th style="width:5%" class="filter-false"></th>
-									<th style="width:19%" lang="es">De</th>
-									<th style="width:10%" lang="es">Fecha</th>
+									<th style="width:19%"><span lang="es">De</span></th>
+									<th style="width:10%"><span lang="es">Fecha</span></th>
 									<cfif itemTypeId IS 5>
-										<th style="width:5%" lang="es">Inicio</th>		
-										<th style="width:5%" lang="es">Fin</th>
+										<th style="width:5%"><span lang="es">Inicio</span></th>		
+										<th style="width:5%"><span lang="es">Fin</span></th>
 									</cfif>
-									<th style="width:23%" lang="es">Área</th>
+									<th style="width:23%" lang="es"><span lang="es">Área</span></th>
 								</cfif>
 							<cfelse><!---Tasks--->
 								<th style="width:34px" class="filter-false"></th>
 								<cfif arguments.full_content IS false>
-								<th style="width:27%" lang="es">Título</th>
+								<th style="width:27%"><span lang="es">Título</span></th>
 								<th style="width:4%" class="filter-false"></th>
-								<th style="width:17%" lang="es">De</th>
-								<th style="width:17%" lang="es">Para</th>
-								<th style="width:5%" lang="es">VE</th>
-								<th style="width:5%" lang="es">VR</th>
-								<th style="width:10%" lang="es">Inicio</th>		
-								<th style="width:10%" lang="es">Fin</th>
+								<th style="width:17%"><span lang="es">De</span></th>
+								<th style="width:17%"><span lang="es">Para</span></th>
+								<th style="width:5%"><span lang="es">VE</span></th>
+								<th style="width:5%"><span lang="es">VR</span></th>
+								<th style="width:10%"><span lang="es">Inicio</span></th>		
+								<th style="width:10%"><span lang="es">Fin</span></th>
 								<cfelse>
-								<th style="width:16%" lang="es">Título</th>
+								<th style="width:16%"><span lang="es">Título</span></th>
 								<th style="width:4%"></th>
-								<th style="width:15%" lang="es">De</th>
-								<th style="width:15%" lang="es">Para</th>
-								<th style="width:6%" lang="es">VE</th>
-								<th style="width:6%" lang="es">VR</th>	
-								<th style="width:10%" lang="es">Inicio</th>		
-								<th style="width:10%" lang="es">Fin</th>
-								<th style="width:14%" lang="es">Área</th>
+								<th style="width:15%"><span lang="es">De</span></th>
+								<th style="width:15%"><span lang="es">Para</span></th>
+								<th style="width:6%"><span lang="es">VE</span></th>
+								<th style="width:6%"><span lang="es">VR</span></th>	
+								<th style="width:10%"><span lang="es">Inicio</span></th>		
+								<th style="width:10%"><span lang="es">Fin</span></th>
+								<th style="width:14%"><span lang="es">Área</span></th>
 								</cfif>					
 							</cfif>
 						</tr>
