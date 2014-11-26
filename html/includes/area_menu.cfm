@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_menu_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/area_menu_en.js?v=1" charset="utf-8"></script>
 <script src="#APPLICATION.path#/jquery/jquery-shorten/jquery.shorten.min.js"></script>
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
@@ -80,7 +80,7 @@
 								<li <cfif curElement EQ "links">class="active"</cfif>><a href="links.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/link.png" title="Enlaces del área" alt="Enlaces del área" lang="es"/></a></li>
 								</cfif>
 
-								<li <cfif curElement EQ "images">class="active"</cfif>><a href="images.cfm?area=#area_id#" title="Imágenes del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/image.png" title="Imágenes del área" alt="Imágenes del área" lang="es"/></i></a></li>	
+								<li <cfif curElement EQ "images">class="active"</cfif>><a href="images.cfm?area=#area_id#" title="Imágenes del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/image.png" title="Imágenes del área" alt="Imágenes del área" lang="es"/></a></li>	
 								
 							</cfif>
 							
@@ -90,7 +90,7 @@
 							
 							<li <cfif curElement EQ "files">class="active"</cfif>><a href="files.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/file.png" title="Archivos del área" alt="Archivos del área" lang="es"/></a></li>
 							
-							<cfif APPLICATION.moduleDPDocuments IS true><!--- DoPlanning Documents --->
+							<cfif APPLICATION.moduleDPDocuments IS true AND ( APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0 )><!--- DoPlanning Documents --->
 
 								<li <cfif curElement EQ "dp_documents">class="active"</cfif>><a href="dp_documents.cfm?area=#area_id#" title="Documentos DoPlanning del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/dp_document.png" title="Documentos DoPlanning del área" alt="Documentos DoPlanning del área" lang="es"/></a></li>
 

@@ -39,8 +39,8 @@ CKEDITOR.editorConfig = function( config ) {
 		['Format','FontSize','TextColor','BGColor'],
 		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
 		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar','Smiley'],
-		['Image']
-	];/*,['InsertPre']*/
+		['Image'],['InsertPre']
+	];
 
 	config.toolbar_DP_hcs =
 	[		
@@ -50,6 +50,17 @@ CKEDITOR.editorConfig = function( config ) {
 		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
 		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar']
 	];/*,['InsertPre']*/
+
+	config.toolbar_DP_document =
+	[		
+		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],
+		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],
+		['Format','FontSize','TextColor','BGColor'],
+		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
+		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar'],
+		['Image'],['InsertPre']
+	];
 
 	config.toolbar_DPAdmin =
 	[		
@@ -76,7 +87,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.entities_latin = false;
 	config.entities_processNumerical = false;
 
-	//config.filebrowserBrowseUrl = '../../app/filemanager/index.html'; // ESTO SÓLO SE PUEDE HABILITAR PARA ALGUNOS DP COMO EL DE HOVI QUE TIENEN SERVIDOR PROPIO
+	//config.filebrowserBrowseUrl = '../../app/filemanager/index.html'; // ESTO SÓLO SE PUEDE HABILITAR PARA LOS DP CON SERVIDOR PROPIO
 
 	config.extraAllowedContent = 'script[src];'+ //Para permitir etiquetas <script> (necesario para subir animaciones html en nanomyp)
 		' a(*)[*];'+ //Para embeber widgets de twitter

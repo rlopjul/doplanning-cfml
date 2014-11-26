@@ -157,7 +157,8 @@
 			<cfset APPLICATION.htmlPath = APPLICATION.path&"/html">
 			<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
 			
-			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+			<!---<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">--->
+			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
 			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js">
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
 	        <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
@@ -368,7 +369,8 @@
 					<cfinvokeargument name="userEmailRequired" value="false">
 					<cfinvokeargument name="moduleAntiVirus" value="true">
 
-					<cfinvokeargument name="homeTab" value="false">
+					<cfinvokeargument name="homeTab" value="true">
+					<cfinvokeargument name="moduleDPDocuments" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 

@@ -7,7 +7,7 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.3"></script>
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
 
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
@@ -166,7 +166,7 @@ function onSubmitForm()
 	</div>
 
 
-	<cfif itemTypeId IS 1 AND SESSION.client_abb NEQ "hcs">
+	<cfif itemTypeId IS 1>
 	
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="areaUsersResponse">	
 			<cfinvokeargument name="area_id" value="#area_id#">

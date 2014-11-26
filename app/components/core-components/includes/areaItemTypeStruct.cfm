@@ -44,10 +44,10 @@
 <cfset structInsert(itemTypesStruct, 13, {id=13, position=11, name="typology", namePlural="typologies", table="typologies", label="Tipology", labelPlural="Tipologías", gender="female", web=true, noWeb=true, showInSelect=false, tableTypeId=3})>
 
 <!---lists views--->
-<cfset structInsert(itemTypesStruct, 14, {id=14, position=12, name="list_view", namePlural="list_views", table="list_views", label="Vista de Lista", labelPlural="Vistas de Listas", gender="female", web=true, noWeb=true, showInSelect=false, tableTypeId=1, tableTypeName="list"})>
+<cfset structInsert(itemTypesStruct, 14, {id=14, position=12, name="list_view", namePlural="lists_views", table="lists_views", label="Vista de Lista", labelPlural="Vistas de Listas", gender="female", web=true, noWeb=true, showInSelect=false, tableTypeId=1, tableTypeName="list"})>
 
 <!---form views--->
-<cfset structInsert(itemTypesStruct, 15, {id=15, position=13, name="form_view", namePlural="form_views", table="form_views", label="Vista de Formulario", labelPlural="Vistas de Formularios", gender="female", web=true, noWeb=true, showInSelect=false, tableTypeId=2, tableTypeName="form"})>
+<cfset structInsert(itemTypesStruct, 15, {id=15, position=13, name="form_view", namePlural="forms_views", table="forms_views", label="Vista de Formulario", labelPlural="Vistas de Formularios", gender="female", web=true, noWeb=true, showInSelect=false, tableTypeId=2, tableTypeName="form"})>
 
 <!---DoPlanning Documents--->
 <cfif APPLICATION.moduleDPDocuments IS true>

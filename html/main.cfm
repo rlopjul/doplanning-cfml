@@ -26,6 +26,11 @@
 <cfif len(APPLICATION.themeCSSPath) GT 0>
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
 </cfif>
+<!---
+Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de alerta/error de seguridad en IE8, pero no es seguro 100%--->
+<!---
+<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+--->
 <!--[if lt IE 9]>
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -63,7 +68,7 @@
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>
 
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.3"></script>
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
 </cfoutput>
 
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>

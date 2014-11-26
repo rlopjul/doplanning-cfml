@@ -2479,7 +2479,7 @@
 						
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 											
-						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#"  data-item-id="#itemsQuery.id#" onclick="stopEvent(event)"><!--- id: usado para cuando se tiene que obtener el id del elemento seleccionado (al seleccionar un listado de elementos)--->
+						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#" onclick="stopEvent(event)"><!--- id: usado para cuando se tiene que obtener el id del elemento seleccionado (al seleccionar un listado de elementos)--->
 
 							<!---<td style="text-align:center">
 								<i class="icon-exchange" style="font-size:15px; color:##0088CC"></i>
@@ -2552,20 +2552,33 @@
 			
 			<cfif numItems GT 0>
 			
-				<script type="text/javascript">
+				<script>
+
 					$(document).ready(function() { 
 						
 						$("##listTable").tablesorter({ 
-							widgets: ['zebra','filter','select'],
+							widgets: ['zebra','filter'],<!--- ,'select' --->
 							<cfif len(area_type) GT 0><!--- WEB --->
 							sortList: [[5,1]] ,
-							<cfelse>
+							<cfelseif numItems LT 500><!---Cuando hay muchos elementos el ordenar por fecha da error y aparecen errores en Firefox--->
 							sortList: [[4,1]] ,
 							</cfif>
 							headers: { 
+								<cfif numItems GT 600>
+								4: { 
+									sorter: "false" 
+								}
+								<cfelse>
 								4: { 
 									sorter: "datetime" 
 								}
+								</cfif>
+
+								<cfif len(area_type) GT 0><!--- WEB --->
+								, 6: { 
+									sorter: "false" 
+								}	
+								</cfif>
 							},
 
    							//widthFixed : true,
@@ -2615,35 +2628,38 @@
 						    }
 						});
 						
-						<!---//  Adds "over" class to rows on mouseover
-						$("##listTable tr").mouseover(function(){
-						  $(this).addClass("over");
-						});
-					
-						//  Removes "over" class from rows on mouseout
-						$("##listTable tr").mouseout(function(){
-						  $(this).removeClass("over");
-						});--->
+						$('##listTable tbody tr').on('click', function(e) {
+
+					        var row = $(this);
+
+					        if(!row.hasClass("selected")) {
+					        	$('##listTable tbody tr').removeClass("selected");
+					        	row.addClass("selected");
+					        }
+
+					        var itemUrl= row.data("item-url");
+						    openUrlLite(itemUrl,'itemIframe');
+
+					    });
 						
 					}); 
 				</script>
-				
-				<cfoutput>
-				
+
 				<table id="listTable" class="tablesorter">
 					<thead>
 						<tr>
 							<th style="width:35px" class="filter-false"></th>
 							<cfif len(area_type) IS 0>
-							<th style="width:55%"><span lang="es">Título</span></th>
+							<th style="width:56%"><span lang="es">Título</span></th>
 							<cfelse>
-							<th style="width:49%"><span lang="es">Título/Contenido</span></th>
+							<th style="width:47%"><span lang="es">Título/Contenido</span></th>
 							</cfif>
 							<th style="width:5%" class="filter-false"></th>
 							<th style="width:23%"><span lang="es">De</span></th>
 							<th style="width:12%"><span lang="es">Fecha</span></th>
 							<cfif len(area_type) GT 0>
-							<th style="width:6%" class="filter-false">##</th>
+							<th style="width:5%" class="filter-false">##</th>
+							<th style="width:3%" class="filter-false"></th>
 							</cfif>
 						</tr>
 					</thead>
@@ -2697,7 +2713,7 @@
 						
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 											
-						<tr <cfif itemSelected IS true>class="selected"</cfif> onclick="openUrl('#item_page_url#','itemIframe',event)">
+						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#"><!--- onclick="openUrl('#item_page_url#','itemIframe',event)"--->
 							<td style="text-align:center">
 								<cfif itemTypeId IS 6><!---Tasks--->
 									
@@ -2775,7 +2791,7 @@
 								
 								</cfif>
 
-								<a href="#item_page_url#" class="#titleClass#">#titleContent#</a>
+								<a href="#APPLICATION.path#/html/#item_page_url#" onclick="preventEventDefault(event)" class="#titleClass#">#titleContent#</a>
 							</td>
 							<td>
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 14 OR itemTypeId IS 15 OR itemTypeId IS 16><!---Lists, Forms And Views--->
@@ -2806,33 +2822,36 @@
 								</cfif>	
 							</td>
 							<td>
-							
-							<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringDate">
-								<cfinvokeargument name="timestamp_date" value="#itemsQuery.creation_date#">
-							</cfinvoke>							
-							<cfset spacePos = findOneOf(" ", stringDate)>
-							<span>
-							<cfif spacePos GT 0>
-							#left(stringDate, spacePos)#
-							<cfelse><!---Esto es para que no de error en versiones antiguas de DoPlanning que tienen la fecha en otro formato--->
-							#stringDate#
-							</cfif>
-							</span>
-							<cfif spacePos GT 0>
-							<span class="hidden">#right(stringDate, len(stringDate)-spacePos)#</span>
-							</cfif>
+								<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringDate">
+									<cfinvokeargument name="timestamp_date" value="#itemsQuery.creation_date#">
+								</cfinvoke>							
+								<cfset spacePos = findOneOf(" ", stringDate)>
+								<span>
+								<cfif spacePos GT 0>
+								#left(stringDate, spacePos)#
+								<cfelse><!---Esto es para que no de error en versiones antiguas de DoPlanning que tienen la fecha en otro formato--->
+								#stringDate#
+								</cfif>
+								</span>
+								<cfif spacePos GT 0>
+								<span class="hidden">#right(stringDate, len(stringDate)-spacePos)#</span>
+								</cfif>
 							</td>
 							
 							<cfif len(arguments.area_type) GT 0>
 								
-							<td><div class="item_position">#itemsQuery.position#</div><div class="change_position"><cfif itemsQuery.currentRow NEQ 1>
+							<td><div class="item_position">#itemsQuery.position#</div></td>
+
+							<td style="text-align:center">
+								<div class="change_position"><cfif itemsQuery.currentRow NEQ 1>
 								<cfset up_item_id = itemsQuery.id[itemsQuery.currentRow-1]>
 								<cfset up_item_type = itemsQuery.itemTypeId[itemsQuery.currentRow-1]>
 								<a onclick="openUrl('area_item_position_up.cfm?item=#itemsQuery.id#&type=#itemTypeId#&oitem=#up_item_id#&otype=#up_item_type#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a><cfelse><br></cfif><!--- <div style="clear:both; height:0px;"><!-- --></div> ---><cfif itemsQuery.currentRow NEQ itemsQuery.recordCount>
 									<cfset down_item = itemsQuery.id[itemsQuery.currentRow+1]>
 									<cfset down_item_type = itemsQuery.itemTypeId[itemsQuery.currentRow+1]>
 									<a onclick="openUrl('area_item_position_down.cfm?item=#itemsQuery.id#&type=#itemTypeId#&oitem=#down_item#&otype=#down_item_type#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a>
-								</cfif></div></td>
+								</cfif></div>
+							</td>
 
 							</cfif>
 							
@@ -2841,7 +2860,6 @@
 					</tbody>
 				
 				</table>
-				</cfoutput>
 			</cfif>
 								
 			

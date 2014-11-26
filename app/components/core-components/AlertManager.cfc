@@ -289,7 +289,10 @@
 						</cfif>
 
 						<cfif itemTypeId IS 1>#langText[curLang].new_item.subject#<cfelse>#langText[curLang].new_item.title#</cfif>: <strong style="font-size:14px;">#objectItem.title#</strong><br/>			
-						#langText[curLang].new_item.user#: <b>#objectItem.user_full_name#</b><br/>		
+						#langText[curLang].new_item.user#: <b>#objectItem.user_full_name#</b><br/>	
+						<cfif isDefined("objectItem.last_update_user_full_name") AND len(objectItem.last_update_user_full_name) GT 0>
+							#langText[curLang].new_item.last_update_user#: <b>#objectItem.last_update_user_full_name#</b><br/>	
+						</cfif> 	
 						<cfif itemTypeId IS 6><!---Tasks--->
 						#langText[curLang].new_item.assigned_to#: <b>#objectItem.recipient_user_full_name#</b><br/>
 						</cfif>

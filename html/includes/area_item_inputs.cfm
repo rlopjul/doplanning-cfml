@@ -877,5 +877,6 @@
 	</cfif>--->
 	<cfif itemTypeId IS 20><!--- DoPlanning Document --->
 		<cfinvokeargument name="height" value="500"/>
+		<cfinvokeargument name="toolbar" value="DP_document"/>
 	</cfif>
 </cfinvoke>

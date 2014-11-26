@@ -1,9 +1,14 @@
 <cfoutput>
-<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.min.js?v=2.17"></script>
-<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.widgets.min.js"></script>
+<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.min.js?v=2.18"></script>
+<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.widgets.min.js?v=2.18"></script>
 <script src="#APPLICATION.path#/jquery/tablesorter/widgets/widget-math.js?v=2.1"></script>
-<script src="#APPLICATION.path#/jquery/jquery-migrate-1.2.1.min.js"></script><!---Se añade este script para poder seguir usando jquery.tablesorter.extras-0.1.22.min.js ya que usa la funcion  $.browser--->
-<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.extras-0.1.22.min.js"></script>
+
+<cfset curPageFile = GetFileFromPath(CGI.SCRIPT_NAME)>
+<cfif curPageFile NEQ "area_items.cfm" AND curPageFile NEQ "list_rows.cfm" AND curPageFile NEQ "form_rows.cfm"><!---En esta página no se cargan estos scripts que dan problemas en los navegadores cuando hay muchos registros--->
+	<script src="#APPLICATION.path#/jquery/jquery-migrate-1.2.1.min.js"></script><!---Se añade este script para poder seguir usando jquery.tablesorter.extras-0.1.22.min.js ya que usa la funcion  $.browser--->
+	<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.extras-0.1.22.min.js"></script>
+</cfif>
+
 <link href="#APPLICATION.path#/jquery/tablesorter/css/style.min.css" rel="stylesheet" media="all" />
 
 <script>

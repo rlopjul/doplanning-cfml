@@ -104,7 +104,7 @@
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
-<script src="../scripts/functions.min.js?v=2.3"></script>
+<script src="../scripts/functions.min.js?v=2.4"></script>
 </cfoutput>
 
 <script>
@@ -237,27 +237,29 @@
 	</div>
 
 
+	<!---
 	<cfif show_logo IS true AND APPLICATION.title EQ "DoPlanning" AND URL.client_abb NEQ "hcs">
 
-	<div class="row">
+		<div class="row">
 
-		<div class="col-sm-offset-3 col-sm-6">
+			<div class="col-sm-offset-3 col-sm-6">
 
-			<div class="panel panel-default" style="margin-top:35px;">
-			  <div class="panel-body">
-			    <h5>¡Gracias por usar DoPlanning!. Tenemos el placer de comunicarte que DoPlanning ha sido nominado para los premios UP-Start 2014 como mejor herramienta web de trabajo colaborativo. </h5>
-				<small><b>Puedes votar DoPlanning aquí para que esté entre los 3 finalistas:</b><br/> 
-	 			<a href="http://awards.up-con.com/2014/vote?page=3" target="_blank">http://awards.up-con.com/2014/vote?page=3</a></small><br/><br/>
+				<div class="panel panel-default" style="margin-top:35px;">
+				  <div class="panel-body">
+				    <h5>¡Gracias por usar DoPlanning!. Tenemos el placer de comunicarte que DoPlanning ha sido nominado para los premios UP-Start 2014 como mejor herramienta web de trabajo colaborativo. </h5>
+					<small><b>Puedes votar DoPlanning aquí para que esté entre los 3 finalistas:</b><br/> 
+		 			<a href="http://awards.up-con.com/2014/vote?page=3" target="_blank">http://awards.up-con.com/2014/vote?page=3</a></small><br/><br/>
 
-	 			<small><a href="http://www.ideal.es/granada/201410/28/pyme-local-aspira-premio-20141027234437.html" target="_blank">Noticia en el periódico Ideal con la nominación</a></small>
-			  </div>
+		 			<small><a href="http://www.ideal.es/granada/201410/28/pyme-local-aspira-premio-20141027234437.html" target="_blank">Noticia en el periódico Ideal con la nominación</a></small>
+				  </div>
+				</div>
+
 			</div>
 
 		</div>
 
-	</div>
-
 	</cfif>
+	--->
 
 </div>
 </cfoutput>

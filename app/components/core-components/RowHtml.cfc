@@ -572,7 +572,10 @@
 				
 				$("##dataTable#arguments.tableTypeId#_#arguments.table_id#").tablesorter({  <!--- Se le asigna un id único a la tabla por si hay más en la misma página --->
 
-					widgets: ['zebra','filter','select','stickyHeaders','math'],
+					widgets: ['zebra','filter','stickyHeaders','math'],<!---'select',--->
+
+					<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
+					dateFormat : "ddmmyyyy", // set the default date format
 
 					headers: { 
 						
@@ -583,7 +586,8 @@
 
 							<cfif fields.field_id IS "creation_date" OR fields.field_id IS "last_update_date" OR fields.field_type_id IS 6><!--- DATE --->
 								<cfif fieldsWithDate IS true>,</cfif>#fields.currentRow#: { 
-									sorter: "datetime" 
+									<!---sorter: "datetime"--->
+									sorter: "shortDate"
 								}
 								<cfset fieldsWithDate = true>
 							</cfif>
@@ -660,10 +664,25 @@
 
 				<cfif arguments.openRowOnSelect IS true>
 				<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
-				$('##dataTable#arguments.tableTypeId#_#arguments.table_id#').bind('select.tablesorter.select', function(event, ts){
+				<!---$('##dataTable#arguments.tableTypeId#_#arguments.table_id#').bind('select.tablesorter.select', function(event, ts){
 				    var itemUrl= $(ts.elem).data("item-url");
 				    openUrlLite(itemUrl,'itemIframe');
-				});
+				});--->
+
+				$('##dataTable#arguments.tableTypeId#_#arguments.table_id# tbody tr').on('click', function(e) {
+
+			       	var row = $(this);
+
+			        if(!row.hasClass("selected")) {
+			        	$('##dataTable#arguments.tableTypeId#_#arguments.table_id# tbody tr').removeClass("selected");
+			        	row.addClass("selected");
+			        }
+
+			        var itemUrl= row.data("item-url");
+				    openUrlLite(itemUrl,'itemIframe');
+
+			    });
+
 				</cfif>
 				
 			}); 

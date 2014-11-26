@@ -19,7 +19,7 @@
 	<cfset search_text = URL.text>
 	<cfset search_text_highlight = replace(search_text,' ','","',"ALL")>
 	<cfoutput>
-		<script type="text/javascript">
+		<script>
 			$(document).ready(function() {
 			  <!---$(".text_item").highlight("#search_text#");--->
 			  $(".text_item").highlight(["#search_text_highlight#"]);	

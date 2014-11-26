@@ -112,9 +112,9 @@ ya que si la URL no se incluye en el href, no funciona correctamente
 */
 function downloadFileLinked(anchor,event){
 
-	if(event.preventDefault)
-		event.preventDefault();
-	//event.stopPropagation();
+	/*if(event.preventDefault)
+		event.preventDefault();*/
+	preventEventDefault(event);
 
 	showLoading = false;
 
@@ -143,14 +143,19 @@ function enableDatePicker(selector){
 
 function stopEvent(event){
 
-	if(event.preventDefault) //event.preventDefault() da error en IE
-		event.preventDefault();
-	else
-		event.returnValue = false;
+	preventEventDefault(event);
 	
 	stopPropagation(event);
 
 	return false;
+}
+
+function preventEventDefault(event){
+
+	if(event.preventDefault) //event.preventDefault() da error en IE
+		event.preventDefault();
+	else
+		event.returnValue = false;
 }
 
 function stopPropagation(event) {

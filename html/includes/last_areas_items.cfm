@@ -280,6 +280,7 @@
 
 							<cfset titleContent = itemsQuery.title>
 
+							<!---
 							<cfif len(titleContent) IS 0>
 
 								<cfset itemDescription = itemsQuery.description>
@@ -298,7 +299,8 @@
 									<cfset titleContent = "<i>#itemDescription#</i>">
 								</cfif>
 							
-							</cfif>					
+							</cfif>
+							--->				
 
 							<h4>#titleContent#</h4><!---<h5>--->
 
@@ -387,6 +389,7 @@
 										<cfinvokeargument name="name" value="description#itemsQuery.id#">
 										<cfinvokeargument name="language" value="#SESSION.user_language#"/>
 										<cfinvokeargument name="height" value="500"/>
+										<cfinvokeargument name="toolbar" value="DP_document"/>
 										<cfinvokeargument name="readOnly" value="true"/>
 										<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
 										<cfinvokeargument name="toolbarCanCollapse" value="true"/>
@@ -518,7 +521,7 @@
 
 								<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i></a>
 								<span class="divider">&nbsp;</span>
-								<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small.png" alt="Area" title="Ver en área"><span lang="es">Ver en área</></a>
+								<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small.png" alt="Area" title="Ver en área"><span lang="es">Ver en área</a>
 
 							</div>
 						</div>
