@@ -14,6 +14,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="true">
+		<cfargument name="file_id" type="numeric" required="false">
 
 		<cfset var method = "getRow">
 
@@ -25,6 +26,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 				<cfinvokeargument name="row_id" value="#arguments.row_id#"/>
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -436,6 +438,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="row" type="query" required="true">
+		<cfargument name="file_id" type="numeric" required="false"><!---Only for typology--->
 		
 		<cfset var method = "outputRowContent">
 		
@@ -464,6 +467,7 @@
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					<cfinvokeargument name="with_types" value="true"/>
+					<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
 				</cfinvoke>
 
 				<cfset fields = fieldsResult.tableFields>

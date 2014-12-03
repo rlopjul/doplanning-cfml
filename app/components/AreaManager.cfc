@@ -259,7 +259,7 @@
 
 		<cfset var areaType = "">
 							
-		<cfinclude template="includes/functionStart.cfm">
+		<cfinclude template="includes/functionStartOnlySession.cfm">
 		
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -286,6 +286,41 @@
 					
 
 		<cfreturn getAreaTypeResult>
+		
+	</cffunction>
+
+
+
+	<!--- -------------------------- getAreaTypeWeb -------------------------------- --->
+	<!---Obtiene el tipo del área y otros valores del área--->
+	
+	<cffunction name="getAreaTypeWeb" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="yes">
+		
+		<cfset var method = "getAreaTypeWeb">
+
+		<cfset var response = structNew()>		
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+					
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaTypeWeb" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>	
 		
 	</cffunction>
 	

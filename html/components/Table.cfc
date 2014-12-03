@@ -286,6 +286,7 @@
 		<cfargument name="with_types" type="boolean" required="false" default="false">
 		<cfargument name="view_id" type="numeric" required="false">
 		<cfargument name="only_view_fields" type="boolean" required="false">
+		<cfargument name="file_id" type="boolean" required="false">
 
 		<cfset var method = "getTableFields">
 
@@ -299,6 +300,7 @@
 				<cfinvokeargument name="with_types" value="#arguments.with_types#"/>
 				<cfinvokeargument name="view_id" value="#arguments.view_id#">
 				<cfinvokeargument name="only_view_fields" value="#arguments.only_view_fields#">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">

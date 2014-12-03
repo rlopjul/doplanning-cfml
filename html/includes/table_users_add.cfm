@@ -70,6 +70,7 @@
 		  type: "POST",
 		  url: requestUrl,
 		  data: {table_id:tableId, tableTypeId:tableTypeId, users_ids:newUsers},
+		  dataType: "json",
 		  success: function(data, status) {
 
 		  	if(status == "success"){
@@ -90,8 +91,7 @@
 		  		newUsers = [];
 		  	}
 			
-		  },
-		  dataType: "json"
+		  }		  
 		});
 
 	}

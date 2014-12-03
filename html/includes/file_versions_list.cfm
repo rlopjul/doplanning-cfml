@@ -2,11 +2,11 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
-<script type="text/javascript">
+<script>
 	$(document).ready(function() { 
 
 
-		$.tablesorter.addParser({
+		<!---$.tablesorter.addParser({
 			id: "datetime",
 			is: function(s) {
 				return false; 
@@ -17,18 +17,35 @@
 				return $.tablesorter.formatFloat(new Date(s).getTime());
 			},
 			type: "numeric"
-		});
+		});--->
 		
 		
 		$("#dataTable").tablesorter({ 
-			widgets: ['zebra','select'],
+			widgets: ['zebra'], <!---,'select'--->
 			sortList: [[0,1]] ,
+			<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
+			dateFormat: "ddmmyyyy", // set the default date format
 			headers: { 
-				1: { 
-					sorter: "datetime" 
-				},
-			},
+				4: { 
+					sorter: "shortDate" 
+				}
+			}
 		});
+
+
+		$('#dataTable tbody tr').on('click', function(e) {
+
+	       	var row = $(this);
+
+	        if(!row.hasClass("selected")) {
+	        	$('#dataTable tbody tr').removeClass("selected");
+	        	row.addClass("selected");
+	        }
+
+	        var itemUrl= row.data("item-url");
+		    openUrlLite(itemUrl,'itemIframe');
+
+	    });
 
 
 	}); 
@@ -41,7 +58,7 @@
 </cfif>
 
 <cfoutput>
-<table id="dataTable" class="data-table table-hover" style="margin-top:5px;">
+<table id="dataTable" class="data-table" style="margin-top:5px;">
 	<thead>
 		<tr>
 			<th style="width:25px;">##</th>
@@ -53,8 +70,8 @@
 			<th>Publicada</th>
 		</tr>
 	</thead>
-	<tbody>
 
+	<tbody>
 	<cfset alreadySelected = false>
 
 	<cfloop query="versions">
@@ -76,9 +93,10 @@
 			<cfif ( isDefined("URL.file_version") AND (URL.file_version IS versions.version_id) ) OR ( selectFirst IS true AND versions.currentrow IS 1 AND app_version NEQ "mobile" ) >
 
 				<!---Esta acción solo se completa si está en la versión HTML2--->
-				<script type="text/javascript">
+				<!---<script type="text/javascript">
 					openUrlHtml2('#version_page_url#','itemIframe');
-				</script>
+				</script>--->
+				<cfset onpenUrlHtml2 = version_page_url>
 
 				<cfset fieldSelected = true>
 				<cfset alreadySelected = true>
@@ -87,11 +105,9 @@
 			
 		</cfif>
 
-		<tr <cfif fieldSelected IS true>class="selected"</cfif> <cfif versions.currentRow IS 1>style="font-weight:bold"</cfif> onclick="openUrl('#version_page_url#','itemIframe',event)">
+		<tr <cfif fieldSelected IS true>class="selected"</cfif> <cfif versions.currentRow IS 1>style="font-weight:bold"</cfif> data-item-url="#version_page_url#"><!---onclick="openUrl('#version_page_url#','itemIframe',event)"--->
 			<td>#versionIndex#</td>
 			<td>#versions.file_name#</td>
-			<cfset uploadDate = versions.uploading_date>	
-			<cfset spacePos = findOneOf(" ", uploadDate)>
 			<td>
 				<cfif len(versions.user_image_type) GT 0>
 					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#versions.user_in_charge#&type=#versions.user_image_type#&small=" alt="#versions.user_full_name#" class="item_img"/>									
@@ -100,12 +116,14 @@
 				</cfif>
 				<span>#versions.user_full_name#</span>
 			</td>
+			<cfset uploadDate = versions.uploading_date>	
+			<cfset spacePos = findOneOf(" ", uploadDate)>
 			<td>
 				<span>#left(uploadDate, spacePos)#</span>
 				<span class="hidden">#right(uploadDate, len(uploadDate)-spacePos)#</span>
 			</td>
 			<td>
-				<!---fileUrl--->
+				<!---fileSize--->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="trasnformFileSize" returnvariable="fileSize">
 					<cfinvokeargument name="file_size_full" value="#versions.file_size#">
 				</cfinvoke>
@@ -121,6 +139,16 @@
 	</cfloop>
 	</tbody>
 </table>
+
+<cfif isDefined("onpenUrlHtml2")>
+					
+	<!---Esta acción sólo se completa si está en la versión HTML2--->
+	<script>
+		openUrlHtml2('#onpenUrlHtml2#','itemIframe');
+	</script>
+
+</cfif>
+
 </cfoutput>
 
 <div style="margin-top:10px">

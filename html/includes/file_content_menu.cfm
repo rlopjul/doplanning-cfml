@@ -91,7 +91,7 @@
 
 				<cfif version.approved IS true AND NOT isNumeric(version.publication_file_id) AND is_user_area_responsible>
 				
-					<a href="file_publish.cfm?file=#objectFile.id#&area=#area_id#&fileTypeId=#fileTypeId#&version=#version.version_id#" class="btn btn-default btn-sm"><i class="icon-share"></i> <span lang="es">Publicar versión</span></a>
+					<a href="file_publish.cfm?file=#objectFile.id#&area=#area_id#&fileTypeId=#fileTypeId#&version=#version.version_id#" class="btn btn-success btn-sm"><i class="icon-share"></i> <span lang="es">Publicar versión</span></a>
 
 				</cfif>
 
@@ -99,6 +99,11 @@
 
 		</cfif>
 
+	</cfif>
+
+	<!---File áreas--->
+	<cfif (fileTypeId IS 1 AND (SESSION.user_id EQ objectFile.user_in_charge OR SESSION.user_id EQ SESSION.client_administrator)) OR (fileTypeId NEQ 1 AND file_area_allowed IS true)>
+		<a href="file_areas.cfm?file=#objectFile.id#&area=#area_id#&fileTypeId=#fileTypeId#" class="btn btn-default btn-sm"><i class="icon-sitemap"></i> <span lang="es">Áreas</span></a>
 	</cfif>
 
 	<cfif len(area_type) GT 0 AND is_user_area_responsible>

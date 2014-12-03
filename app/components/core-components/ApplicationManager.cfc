@@ -65,7 +65,7 @@
 
 		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 
-		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.2">
+		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.3">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">
 
 			<cfset APPLICATION.dsn = "doplanning_app">
@@ -162,6 +162,8 @@
 			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js">
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
 	        <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
+
+	        <cfset APPLICATION.ckeditorJSPath = "#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4">
 			
 			<!---<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">--->
 			<!---<cfset APPLICATION.baseCSSPath = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/cerulean/bootstrap.min.css">--->
@@ -326,10 +328,12 @@
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
-					<cfinvokeargument name="hideInputLabels" value="true">
+					<!---<cfinvokeargument name="hideInputLabels" value="true">
 					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/paper/bootstrap.min.css">
 
-					<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_paper.css">
+					<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_paper.css">--->
+					<cfinvokeargument name="hideInputLabels" value="false">
+					<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
 				</cfinvoke>
 				
 			</cfcase>
@@ -352,8 +356,8 @@
 					
 					<cfinvokeargument name="serverIp" value="54.228.233.178">
 
-					<cfinvokeargument name="mainUrl" value="http://doplanning.hcs.es">
-					<cfinvokeargument name="signOutUrl" value="http://doplanning.hcs.es">
+					<cfinvokeargument name="mainUrl" value="https://hcs.es">
+					<cfinvokeargument name="signOutUrl" value="https://hcs.es">
 
 					<cfinvokeargument name="ldapName" value="Portal del Empleado">
 

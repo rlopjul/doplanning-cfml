@@ -567,6 +567,7 @@
 		<cfset var method = "getItemAccessContent">
 
 		<cfset var accessContent = "">
+		<cfset var accessClient = "">
 
 		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
@@ -605,9 +606,15 @@
 				-&nbsp;<cfif itemTypeGender EQ "male">#langText[arguments.language].new_item.access_to_item_male#<cfelse>#langText[arguments.language].new_item.access_to_item_female#</cfif> #langText[arguments.language].item[itemTypeId].name# #langText[arguments.language].new_item.access_to_item_link#: <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a>
 			</cfif>					
 
-			<cfif isDefined("SESSION.client_id")>
+			<cfif arguments.client_abb EQ "hcs">
+				<cfset accessClient = "doplanning">
+			<cfelseif isDefined("SESSION.client_id")>
+				<cfset accessClient = SESSION.client_id>
+			</cfif>
+
+			<cfif len(accessClient) GT 0>
 				<br/>-&nbsp;#langText[arguments.language].common.access_to_application#:
-			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#</a>
+			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>
 			</cfif>
 			
 			</cfoutput>
@@ -662,6 +669,7 @@
 		<cfset var method = "getRowAccessContent">
 
 		<cfset var accessContent = "">
+		<cfset var accessClient = "">
 
 		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
@@ -691,9 +699,15 @@
 			
 			-&nbsp;<cfif itemTypeGender EQ "male">#langText[arguments.language].new_table_row.access_to_row_male#<cfelse>#langText[arguments.language].new_table_row.access_to_row_female#</cfif> #langText[arguments.language].item[itemTypeId].name# #langText[arguments.language].new_item.access_to_item_link#:<br/><a target="_blank" href="#tableRowUrl#">#tableRowUrl#</a>
 
-			<cfif isDefined("SESSION.client_id")>
+			<cfif arguments.client_abb EQ "hcs">
+				<cfset accessClient = "doplanning">
+			<cfelseif isDefined("SESSION.client_id")>
+				<cfset accessClient = SESSION.client_id>
+			</cfif>
+
+			<cfif len(accessClient) GT 0>
 				<br/>-&nbsp;#langText[arguments.language].common.access_to_application#:
-			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#</a>
+			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>
 			</cfif>
 			
 			</cfoutput>
@@ -1740,6 +1754,7 @@
 		<cfset var method = "getFileAccessContent">
 
 		<cfset var accessContent = "">
+		<cfset var accessClient = "">
 
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
 			<cfinvokeargument name="file_id" value="#arguments.file_id#">
@@ -1767,9 +1782,15 @@
 			<br/>-&nbsp;#langText[language].new_file.access_to_download_file#:
 			<a target="_blank" href="#downloadFileUrl#">#downloadFileUrl#</a>
 			
-			<cfif isDefined("SESSION.client_id")>
+			<cfif arguments.client_abb EQ "hcs">
+				<cfset accessClient = "doplanning">
+			<cfelseif isDefined("SESSION.client_id")>
+				<cfset accessClient = SESSION.client_id>
+			</cfif>
+
+			<cfif len(accessClient) GT 0>
 				<br/>-&nbsp;#langText[language].common.access_to_application#:
-				<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#</a>
+				<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>
 			</cfif>
 			</cfoutput>
 			</cfsavecontent>

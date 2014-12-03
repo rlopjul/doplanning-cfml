@@ -82,20 +82,10 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_page_div.cfm">
 
 <!-- InstanceBeginEditable name="content" -->
-<cfoutput>
-<script src="#APPLICATION.htmlPath#/language/file_content_en.js" charset="utf-8"></script>
-</cfoutput>
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-
-<div class="div_head_subtitle"><span lang="es">Asociar archivo al área</span>
-</div>
 
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/my_files_id.cfm">
-<cfset page_type = 2>
-<cfset return_path = "#APPLICATION.htmlPath#/iframes2/">
-<cfinclude template="#APPLICATION.htmlPath#/includes/my_files_content.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/file_areas.cfm">
+
 <!-- InstanceEndEditable -->
 </body>
 <!-- InstanceEnd --></html>

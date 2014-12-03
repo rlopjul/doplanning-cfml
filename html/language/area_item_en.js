@@ -91,6 +91,7 @@ var area_item_content_en = {
 		'Tipo de':'Type of',
 		'Revista':'Journal',
 		'Ver en PubMed':'Open in PubMed',
+		'Obtener datos de PubMed':'Get data from PubMed',
 		'PubMed Id no válido':'Invalid PubMed Id',
 		'Precio':'Price',
 

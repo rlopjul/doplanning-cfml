@@ -296,7 +296,7 @@
 				<cfset LOCAL.curRowValue = ARGUMENTS.Query[ LOCAL.ColumnNames[ LOCAL.ColumnIndex ] ][ ARGUMENTS.Query.CurrentRow ]>
 				
 				<!--- Add the field to the row data. --->
-				<cfif len(LOCAL.curRowValue) GTE 10 AND isDate(LOCAL.curRowValue)><!---Is DATE--->
+				<cfif len(LOCAL.curRowValue) GTE 10 AND isDate(LOCAL.curRowValue)><!---The value is DATE--->
 				
 					<cfset LOCAL.RowData[ LOCAL.ColumnIndex ] = """#DateFormat(dateConvert("local2Utc", LOCAL.curRowValue), "dd/mm/yyyy")#""" />
 				

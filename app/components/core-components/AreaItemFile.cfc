@@ -19,15 +19,11 @@
 	<cffunction name="uploadItemFile" access="public" returntype="struct">
 		<cfargument name="type" type="string" required="yes">
 		<cfargument name="user_id" type="string" required="yes">
-		<!---<cfargument name="user_language" type="string" required="yes">--->		
 		<cfargument name="Filedata" type="string" required="false">
 		<cfargument name="files[]" type="string" required="false">
-		<!---<cfargument name="xmlFile" type="xml" required="yes">--->
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_physical_name" type="numeric" required="false">
 		<cfargument name="itemTypeId" type="numeric" required="no">
-		<!---<cfargument name="xmlItem" type="xml" required="no">
-		<cfargument name="xmlArea" type="xml" required="no">--->
 		<cfargument name="item_id" type="numeric" required="false"/>
 		<cfargument name="area_id" type="numeric" required="false"/>
 
@@ -52,8 +48,8 @@
 				<cfset files_directory = "files">
 				
 				<cfif type EQ "item_image_html">
-					<cfset required_width = 1100>
-					<cfset required_height = 1000>
+					<cfset required_width = 2048>
+					<cfset required_height = 2048>
 				</cfif>
 				
 				<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -78,8 +74,8 @@
 				solo se limita a un tamaño máximo
 				<cfset required_width = 468>
 				<cfset required_height = 60>--->
-				<cfset required_width = 2000>
-				<cfset required_height = 2000>
+				<cfset required_width = 2048>
+				<cfset required_height = 2048>
 				
 				<!---<cfif NOT isDefined("arguments.xmlArea")>--->
 				<cfif NOT isDefined("arguments.area_id")>
@@ -257,6 +253,8 @@
 					</cfcatch>
 				</cftry>
 				
+				<!---
+				Esto estaba antes así y no daba problemas
 				<cfif image_info.width GT required_width>
 					<cfimage action="resize" width="#required_width#" source="#destination##temp_file#" destination="#destination##temp_file#" overwrite="yes" name="image_resized">
 					
@@ -270,6 +268,22 @@
 				
 					<cfimage action="resize" height="#required_height#" source="#destination##temp_file#" destination="#destination##temp_file#" overwrite="yes" name="image_resized">
 					
+				</cfif>
+				--->
+
+				<cfif image_info.width GT required_width OR image_info.height GT required_height>
+					
+					<cfimage source="#destination##temp_file#" name="imageToScale">			
+					<cfset ImageScaleToFit(imageToScale, required_width, arguments.maxheight, "highQuality")>
+					<cfimage action="write" source="#imageToScale#" destination="#destination##temp_file#" quality="0.85" overwrite="yes">
+
+				<!---
+				<cfelseif objectFile.file_type EQ ".jpg" OR objectFile.file_type EQ ".jpeg">
+					
+					<!---IMPORTANTE: se ajusta la calidad de todas las imágenes JPG adjuntas que se suben para disminuir su peso--->
+					<!---Esto se quita porque los resultados de cambiar la calidad de la imagen no son buenos (disminuye notablemente el tamaño de la imagen pero también se pierde calidad que afecta a determinados colores), por lo que no se debe hacer por defecto--->
+					<cfimage action="write" source="#destination##temp_file#" destination="#destination##temp_file#" quality="0.85" overwrite="yes"> --->
+
 				</cfif>
 					
 				<!---</cfif>--->

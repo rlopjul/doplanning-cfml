@@ -29,12 +29,19 @@
 			</select>
 			<button type="submit" class="btn btn-default btn-sm" title="Actualizar"><i class="icon-refresh"></i> Actualizar</button>
 		</form>--->
-		
-		<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
-		</cfif>
+		<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
 
-		<a href="users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+			<cfif app_version NEQ "mobile">
+				<div class="btn-group pull-right">
+					<a href="#APPLICATION.htmlPath#/users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+				</div>
+			</cfif>
+
+			<div class="btn-group pull-right">
+				<a href="users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+			</div>
+
+		</div>
 		
 	<cfelse><!---VPNET--->
 	

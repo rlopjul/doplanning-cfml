@@ -10,26 +10,37 @@
 <!---<div class="div_head_subtitle_area_text"><strong>#uCase(itemTypeNameEsP)#</strong><br/>del área</div>--->
 
 <cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
-	
-	<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>  
-		<cfif itemTypeId IS 7>
-			<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
-		<cfelse>
-			<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
-		</cfif></a>
-	
-	<span class="divider">&nbsp;</span>
+	<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
 
-	<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=list" class="btn btn-default btn-sm"><i class="icon-th-list" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo lista</span></a>
+		<div class="btn-group">
+			<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>  
+				<cfif itemTypeId IS 7>
+					<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
+				<cfelse>
+					<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
+				</cfif></a>
+		</div>
 
-	<span class="divider">&nbsp;</span>
-	
-	<cfif app_version NEQ "mobile">
-	<a href="#APPLICATION.htmlPath#/#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
-	</cfif>
+		<!---<span class="divider">&nbsp;</span>--->
 
-	<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>	
+
+		<!---<span class="divider">&nbsp;</span>--->
+		
+		<cfif app_version NEQ "mobile">
+			<div class="btn-group pull-right">
+				<a href="#APPLICATION.htmlPath#/#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+			</div>
+		</cfif>
+
+		<div class="btn-group pull-right">
+			<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+		</div>
+
+		<div class="btn-group pull-right">
+			<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=list" class="btn btn-default btn-sm"><i class="icon-th-list" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo lista</span></a>
+		</div>
 	
+	</div>
 	
 <cfelse><!---VPNET--->
 
@@ -56,9 +67,9 @@
 <cfoutput>
 
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
-<script type="text/javascript">
+<script>
 	var loadTree = true;
 	
 	$(document).ready(function() { 
@@ -147,7 +158,7 @@
 </cfoutput>
 
 
-<div class="form-inline" style="margin-left:2px;margin-top:2px;margin-bottom:2px;">
+<div class="form-inline" style="margin-left:2px;margin-top:2px;margin-bottom:2px;clear:both">
 
 	<div class="btn-toolbar">
 								

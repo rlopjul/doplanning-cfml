@@ -362,11 +362,11 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 									<a href="admin/?abb=#SESSION.client_abb#" class="btn btn-primary btn-sm" title="Administración general nueva versión HTML" lang="es"><i class="icon-wrench"></i></a>
 								</div>
 
-								<cfif SESSION.client_abb EQ "hcs">
+								<!---<cfif SESSION.client_abb EQ "hcs">
 									<div class="btn-group">
 										<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general versión Flash" title="Administración general versión Flash" style="margin-right:3px;" lang="es"/></a>
 									</div>
-								</cfif>
+								</cfif>--->
 								
 							<cfelse>
 								<cfxml variable="areasAdminXml">

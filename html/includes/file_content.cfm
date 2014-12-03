@@ -9,6 +9,7 @@
 			area_id required
 --->
 
+<!--- File --->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 	<cfinvokeargument name="file_id" value="#file_id#">
 	<cfif isDefined("area_id")>
@@ -95,27 +96,10 @@
 
 </script>
 
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/file_name_head.cfm">
+
 <cfoutput>
-<div class="div_file_page_name">
-<cfif fileTypeId IS 1><!--- User file --->
-	<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" title="Archivo"/>
-<cfelseif fileTypeId IS 2><!--- Area file --->
-	<cfif objectFile.locked IS true>
-		<img src="#APPLICATION.htmlPath#/assets/icons/file_area_locked.png" alt="Archivo del área bloqueado" title="Archivo del área bloqueado"/>
-	<cfelse>
-		<img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" alt="Archivo del área" title="Archivo del área"/>
-	</cfif>
-<cfelseif fileTypeId IS 3>
-	<cfif objectFile.locked IS true>
-		<img src="#APPLICATION.htmlPath#/assets/icons/file_edited_locked.png" alt="Archivo del área en edición" title="Archivo del área bloqueado"/>
-	<cfelse>
-		<img src="#APPLICATION.htmlPath#/assets/icons/file_edited.png" alt="Archivo del área en edición" title="Archivo del área en edición"/>
-	</cfif>
-</cfif>
-
- #objectFile.name#</div>
-<div class="div_separator"><!-- --></div>
-
 <div class="div_elements_menu"><!---div_elements_menu--->
 
 	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
@@ -139,88 +123,92 @@
 
 			<cfif objectFile.file_type_id IS 2 OR objectFile.file_type_id IS 3>
 
-				<cfif objectFile.locked IS true>
-					<div class="alert alert-warning">
-						<span>Archivo bloqueado por el usuario <a href="area_user.cfm?area=#objectFile.area_id#&user=#objectFile.lock_user_id#">#objectFile.lock_user_full_name#</a>.</span>
-					</div>
+				<cfif (objectFile.file_type_id IS 2 AND area_id EQ objectFile.area_id) OR objectFile.file_type_id IS 3>
 
-					<div class="div_file_page_label">
-						<span>Fecha de bloqueo:</span> <span class="text_file_page">#objectFile.lock_date#</span>
-					</div>
-				<cfelse>
-
-					<cfif objectFile.file_type_id IS 3 AND objectFile.in_approval IS true>
-
+					<cfif objectFile.locked IS true>
 						<div class="alert alert-warning">
-							<p>Archivo en proceso de revisión y aprobación.<br/>
-								Estado actual:
-								<b><cfif version.revised IS true>
-									pendiente de aprobación <a href="area_user.cfm?area=#area_id#&user=#objectFile.approver_user#">#objectFile.approver_user_full_name#</a>.
-								<cfelse>
-									pendiente de ser revisado por <a href="area_user.cfm?area=#area_id#&user=#objectFile.reviser_user#">#objectFile.reviser_user_full_name#</a>.
-								</cfif></b>
-							</p>
-
-							<cfif version.revised IS false AND SESSION.user_id IS objectFile.reviser_user>
-								<!--- validateFileVersion --->
-								<p>
-									Debe validar o rechazar la versión de este archivo:<br/>
-									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=true&return_path=#return_path#" onclick="return confirmValidateFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Validar versión</span></a>
-									<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=false&return_path=#return_path#" onclick="return confirmValidateFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
-									<a href="file_reject_revision.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
-								</p>
-
-							<cfelseif version.revised IS true AND SESSION.user_id IS objectFile.approver_user>
-								<!--- approveFileVersion --->
-								<p>
-									Debe aprobar o rechazar la versión de este archivo:<br/>
-									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=true&return_path=#return_path#" onclick="return confirmApproveFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar versión</span></a>
-									<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=false&return_path=#return_path#" onclick="return confirmApproveFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
-									<a href="file_reject_approval.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
-								</p>
-
-							</cfif>
-
-							<cfif version.revised IS false>
-								<!--- cancelRevisionRequest --->
-								<p>
-									<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=cancelRevisionRequest&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmAction('cancelar el proceso de revisión');" class="btn btn-warning btn-sm"><i class="icon-undo"></i> <span lang="es">Cancelar revisión</span></a>
-								</p>								
-							</cfif>
-							
-							
+							<span>Archivo bloqueado por el usuario <a href="area_user.cfm?area=#objectFile.area_id#&user=#objectFile.lock_user_id#">#objectFile.lock_user_full_name#</a>.</span>
 						</div>
+
 						<div class="div_file_page_label">
-							<span>Fecha de envío a revisión:</span> <span class="text_file_page">#version.revision_request_date#</span>
+							<span>Fecha de bloqueo:</span> <span class="text_file_page">#objectFile.lock_date#</span>
 						</div>
-						<cfif len(version.revision_date)>
-						<div class="div_file_page_label">
-							<span>Fecha de envío a revisión:</span> <span class="text_file_page">#version.revision_date#</span>
-						</div>
-						</cfif>
-
 					<cfelse>
-						<div class="alert alert-info">
-							<span lang="es">Debe bloquear el archivo para poder realizar cualquier modificación.</span>
-						</div>
 
-						<cfif fileTypeId IS 3>
-							
-							<!--- outputFileVersionStatus --->
-							<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileVersionStatus">
-								<cfinvokeargument name="version" value="#version#">
-							</cfinvoke>
+						<cfif objectFile.file_type_id IS 3 AND objectFile.in_approval IS true>
 
-							<cfif version.approved NEQ true AND isFileApproved IS true>
+							<div class="alert alert-warning">
+								<p>Archivo en proceso de revisión y aprobación.<br/>
+									Estado actual:
+									<b><cfif version.revised IS true>
+										pendiente de aprobación <a href="area_user.cfm?area=#area_id#&user=#objectFile.approver_user#">#objectFile.approver_user_full_name#</a>.
+									<cfelse>
+										pendiente de ser revisado por <a href="area_user.cfm?area=#area_id#&user=#objectFile.reviser_user#">#objectFile.reviser_user_full_name#</a>.
+									</cfif></b>
+								</p>
 
-								<div class="label label-warning">La versión actual de este archivo no es la versión aprobada</div>
+								<cfif version.revised IS false AND SESSION.user_id IS objectFile.reviser_user>
+									<!--- validateFileVersion --->
+									<p>
+										Debe validar o rechazar la versión de este archivo:<br/>
+										<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=true&return_path=#return_path#" onclick="return confirmValidateFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Validar versión</span></a>
+										<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=false&return_path=#return_path#" onclick="return confirmValidateFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
+										<a href="file_reject_revision.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
+									</p>
 
+								<cfelseif version.revised IS true AND SESSION.user_id IS objectFile.approver_user>
+									<!--- approveFileVersion --->
+									<p>
+										Debe aprobar o rechazar la versión de este archivo:<br/>
+										<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=true&return_path=#return_path#" onclick="return confirmApproveFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar versión</span></a>
+										<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=false&return_path=#return_path#" onclick="return confirmApproveFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
+										<a href="file_reject_approval.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
+									</p>
+
+								</cfif>
+
+								<cfif version.revised IS false>
+									<!--- cancelRevisionRequest --->
+									<p>
+										<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=cancelRevisionRequest&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmAction('cancelar el proceso de revisión');" class="btn btn-warning btn-sm"><i class="icon-undo"></i> <span lang="es">Cancelar revisión</span></a>
+									</p>								
+								</cfif>
+								
+								
+							</div>
+							<div class="div_file_page_label">
+								<span>Fecha de envío a revisión:</span> <span class="text_file_page">#version.revision_request_date#</span>
+							</div>
+							<cfif len(version.revision_date)>
+							<div class="div_file_page_label">
+								<span>Fecha de envío a revisión:</span> <span class="text_file_page">#version.revision_date#</span>
+							</div>
 							</cfif>
 
+						<cfelse>
+							<div class="alert alert-info">
+								<span lang="es">Debe bloquear el archivo para poder realizar cualquier modificación.</span>
+							</div>
+
+							<cfif fileTypeId IS 3>
+								
+								<!--- outputFileVersionStatus --->
+								<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileVersionStatus">
+									<cfinvokeargument name="version" value="#version#">
+								</cfinvoke>
+
+								<cfif version.approved NEQ true AND isFileApproved IS true>
+
+									<div class="label label-warning">La versión actual de este archivo no es la versión aprobada</div>
+
+								</cfif>
+
+							</cfif>
+							
 						</cfif>
 						
 					</cfif>
-					
+
 				</cfif>
 
 				<div class="div_file_page_label">
@@ -242,7 +230,7 @@
 
 				</cfif>
 
-			</cfif>
+			</cfif><!--- END objectFile.file_type_id IS 2 OR objectFile.file_type_id IS 3 --->
 
 			<div class="div_file_page_label">
 				<cfif objectFile.file_type_id IS 1><!--- User file --->
@@ -383,17 +371,12 @@
 			<cfset row_id = objectFile.typology_row_id>
 
 			<cfif isNumeric(table_id) AND isNumeric(row_id)>
-
-				<!--- 
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
-					<cfinvokeargument name="table_id" value="#table_id#">
-					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-				</cfinvoke> --->
 				
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
 					<cfinvokeargument name="table_id" value="#table_id#"/>
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
 					<cfinvokeargument name="row_id" value="#row_id#"/>
+					<cfinvokeargument name="file_id" value="#objectFile.id#"/>
 				</cfinvoke>
 				<cfset table = getRowResponse.table>
 				<cfset row = getRowResponse.row>
@@ -408,6 +391,7 @@
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 					<cfinvokeargument name="area_id" value="#area_id#">
 					<cfinvokeargument name="row" value="#row#">
+					<cfinvokeargument name="file_id" value="#file_id#"/>
 				</cfinvoke>
 				
 			</cfif>

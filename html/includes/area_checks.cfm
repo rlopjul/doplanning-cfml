@@ -59,6 +59,14 @@ app_version almacena si es la versión móvil o la estandar--->
 		<cfcase value="12">
 			<cfset curElement = "forms">
 		</cfcase>
+
+		<cfcase value="12">
+			<cfset curElement = "forms">
+		</cfcase>
+
+		<cfcase value="20">
+			<cfset curElement = "dp_documents">
+		</cfcase>
 		
 	</cfswitch>
 	

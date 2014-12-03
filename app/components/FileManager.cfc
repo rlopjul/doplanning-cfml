@@ -2025,7 +2025,7 @@
 
 		</cfif>
 
-		<cfset response = {result=access_result, area_id=area_id}>
+		<cfset response = {result=access_result, area_id=area_id, file=selectFileQuery}>
 
 		<cfreturn response>
 
@@ -2068,6 +2068,76 @@
 			
 	</cffunction>
 	<!---  -------------------------------------------------------------------------------- --->
+
+
+
+	<!--- ----------------------------------- getFileAreas ----------------------------------  --->
+	
+	<cffunction name="getFileAreas" output="false" access="public" returntype="struct">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="with_names" type="numeric" required="false" default="true">
+		<cfargument name="accessCheck" type="boolean" required="false" default="true">
+
+		<cfset var response = structNew()>
+
+		<cfset var access_result = false>
+
+		<cftry>
+			
+		
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileAreas" returnvariable="getFileAreasQuery">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="with_names" value="#arguments.with_names#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif getFileAreasQuery.recordCount GT 0 AND arguments.accessCheck IS true>
+				
+				<cfif getFileAreasQuery.recordCount IS 1>
+				
+					<cfset area_id = getFileAreasQuery.area_id>	
+			
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+						<cfinvokeargument name="area_id" value="#area_id#">
+					</cfinvoke>
+			
+				<cfelse>
+					
+					<cfset fileAreasList = valueList(getFileAreasQuery.area_id)>
+
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreasAccess" returnvariable="checkAreasAccessResult">
+						<cfinvokeargument name="areasList" value="#fileAreasList#">
+						<cfinvokeargument name="throwError" value="false">
+					</cfinvoke>
+
+					<cfset access_result = checkAreasAccessResult.result>
+					<cfset area_id = checkAreasAccessResult.area_id>					
+					
+				</cfif>
+
+			</cfif>
+
+			<cfif arguments.accessCheck IS true AND access_result IS false>
+				<cfset error_code = 104>
+				
+				<cfthrow errorcode="#error_code#">	
+			</cfif>
+
+			<cfset response = {result=true, fileAreas=getFileAreasQuery}>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
 
 
 	<!--- ------------------------------------- getFileVersion -------------------------------------  --->
@@ -5758,7 +5828,7 @@
 							publication_area_id = <cfqueryparam value="#arguments.publication_area_id#" cfsqltype="cf_sql_integer">, 
 							publication_date = NOW()
 							WHERE version_id = <cfqueryparam value="#arguments.version_id#" cfsqltype="cf_sql_integer">
-							AND file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+							AND file_id = <cfqueryparam value="#old_file_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
 
 					<!--- </cftransaction> --->

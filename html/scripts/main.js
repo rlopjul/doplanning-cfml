@@ -79,6 +79,7 @@ function postModalForm(formId, requestUrl, responseUrl, responseTarget){
 		  type: "POST",
 		  url: requestUrl,
 		  data: $(formId).serialize(),
+		  dataType: "json",
 		  success: function(data, status) {
 
 		  	if(status == "success"){
@@ -96,8 +97,7 @@ function postModalForm(formId, requestUrl, responseUrl, responseTarget){
 		  	}else
 				alert(status);
 			
-		  },
-		  dataType: "json"
+		  }		  
 		});
 
 }
@@ -140,6 +140,7 @@ function postModalFormTree(formId, requestUrl){
 		  type: "POST",
 		  url: requestUrl,
 		  data: $(formId).serialize(),
+		  dataType: "json",
 		  success: function(data, status) {
 
 		  	if(status == "success"){
@@ -166,15 +167,14 @@ function postModalFormTree(formId, requestUrl){
 		  	}else
 				alert(status);
 			
-		  },
-		  dataType: "json"
+		  }		  
 		});
 }
 
 function openUrl(url,target){ 
 
 	/*En iframesFunctions.js hay un método que se llama igual que este, pero que recibe 3 parámetros. Habría que modificar uno de los dos para que no tuviesen el mismo nombre y así evitar confusiones. main.js e iframesFunctions.js no se usan y no se deben usar en la misma página*/
-	
+
 	if(target == "itemIframe"){
 		
 		if(currentTab == "#tab3")
@@ -288,7 +288,12 @@ function updateTreeWithSelectedArea(areaId){
 function selectTreeNode(nodeId) {
 
 	$("#areasTreeContainer").jstree("deselect_all");
-	$("#areasTreeContainer").jstree("select_node", nodeId); 
+	if($("#areasTreeContainer").jstree("select_node", nodeId) == false) { // Es false si el área no está en el árbol y no se puede seleccionar
+
+		alert("Área no accesible en su árbol"); 
+		iframePage = "";
+
+	}
 }
 
 function areaSelected(areaId, areaUrl, withLink)  {

@@ -63,11 +63,13 @@
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			</cfinvoke>
 
-			<cfinvoke component="ViewManager" method="deleteTableViews">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-			</cfinvoke>
-
+			<cfif tableTypeId NEQ 3><!--- IS NOT Typology --->
+				<cfinvoke component="ViewManager" method="deleteTableViews">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				</cfinvoke>
+			</cfif>
+			
 			<cfquery name="deleteTable" datasource="#client_dsn#">
 				DROP TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
 			</cfquery>	
@@ -457,6 +459,7 @@
 		<cfargument name="with_types" type="boolean" required="false" default="false">
 		<cfargument name="view_id" type="numeric" required="false">
 		<cfargument name="only_view_fields" type="boolean" required="false">
+		<cfargument name="file_id" type="numeric" required="false"><!--- Only for Typologies --->
 
 		<cfset var method = "getTableFields">
 
@@ -486,7 +489,27 @@
 
 				<cfif arguments.tableTypeId IS NOT 3 OR getTableFieldsQuery.general IS false><!---No es tipología general--->
 
-					<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
+					<cfif arguments.tableTypeId IS 3 AND isDefined("arguments.file_id")><!---Typology (file)--->
+
+						<!---checkAreaFileAccess--->
+						<cfinvoke component="FileManager" method="checkAreaFileAccess" returnvariable="checkAreaFileAccessResponse">
+							<cfinvokeargument name="file_id" value="#arguments.file_id#">
+						</cfinvoke>	
+
+						<cfif checkAreaFileAccessResponse.result IS false>
+							<cfset error_code = 104>
+							<cfthrow errorcode="#error_code#">
+						<cfelse>
+							<cfset file = checkAreaFileAccessResponse.file>
+							<cfset file_typology_id = file.typology_id>
+
+							<cfif file_typology_id NEQ arguments.table_id>
+								<cfset error_code = 104>
+								<cfthrow errorcode="#error_code#">
+							</cfif>
+						</cfif>
+
+					<cfelseif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
 
 						<!--- checkTableWithInheritanceAccess --->
 						<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
@@ -494,7 +517,7 @@
 							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 
 							<cfinvokeargument name="table_area_id" value="#area_id#">
-						</cfinvoke>					
+						</cfinvoke>		
 
 					<cfelseif getTableFieldsQuery.structure_available IS false><!--- La estructura no está compartida --->
 

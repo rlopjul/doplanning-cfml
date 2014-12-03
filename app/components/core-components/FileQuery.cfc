@@ -370,14 +370,21 @@
 						, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date
 						, DATE_FORMAT(CONVERT_TZ(files.revision_request_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS revision_request_date
 						, DATE_FORMAT(CONVERT_TZ(files.approval_request_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS approval_request_date  
-						, DATE_FORMAT(CONVERT_TZ(files.revision_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS revision_date 
+						, DATE_FORMAT(CONVERT_TZ(files.revision_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS revision_date
+						, DATE_FORMAT(CONVERT_TZ(files.approval_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS approval_date 
 					<cfelse>
-						, uploading_date, revision_request_date, approval_request_date, revision_date
+						, uploading_date, revision_request_date, approval_request_date, revision_date, approval_date
 					</cfif>
 					, users.family_name, users.name AS user_name, users.image_type AS user_image_type,
 					CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
+					, users_revision.image_type AS revision_user_image_type,
+					CONCAT_WS(' ', users_revision.family_name, users_revision.name) AS revision_user_full_name
+					, users_approval.image_type AS approval_user_image_type,
+					CONCAT_WS(' ', users_approval.family_name, users_approval.name) AS approval_user_full_name
 				FROM #client_abb#_#fileTypeTable#_versions AS files
 				INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
+				RIGHT JOIN #client_abb#_users AS users_revision ON files.revision_user = users_revision.id
+				RIGHT JOIN #client_abb#_users AS users_approval ON files.approval_user = users_approval.id
 				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
 				ORDER BY files.version_id DESC
 				<cfif isDefined("arguments.limit")>
@@ -423,6 +430,7 @@
 	
 	<cffunction name="getFileAreas" output="false" returntype="query" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="with_names" type="boolean" required="false" default="false">
 		
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -430,9 +438,14 @@
 		<cfset var method = "getFileAreas">
 					
 		<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
-			SELECT area_id
-			FROM #client_abb#_areas_files
-			WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+			SELECT files.area_id<cfif arguments.with_names IS true>, areas.name, DATE_FORMAT(files.association_date, '#dateTimeFormat#') AS association_date</cfif>
+			FROM #client_abb#_areas_files AS files
+			<cfif arguments.with_names IS true>
+				INNER JOIN #client_abb#_areas AS areas ON files.area_id = areas.id
+				AND files.file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
+			<cfelse>
+				WHERE files.file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">	
+			</cfif>;
 		</cfquery>
 			
 		<cfreturn getFileAreasQuery>

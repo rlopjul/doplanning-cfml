@@ -1016,6 +1016,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="false">
 		<cfargument name="fields" type="query" required="false">
+		<cfargument name="file_id" type="numeric" required="false"><!--- Only for typology row --->
 
 		<cfset var method = "getTableRows">
 
@@ -1029,18 +1030,54 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<!---checkAreaAccess in getTable--->
-			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-			</cfinvoke>
-			
-			<cfif getTableResponse.result IS false>
-				<cfreturn getTableResponse>
+			<cfif arguments.tableTypeId IS 3 AND isDefined("arguments.row_id") AND isDefined("arguments.file_id")><!---Only one row of Typology (file)--->
+
+				<!---checkAreaFileAccess--->
+				<cfinvoke component="FileManager" method="checkAreaFileAccess" returnvariable="checkAreaFileAccessResponse">
+					<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				</cfinvoke>	
+
+				<cfif checkAreaFileAccessResponse.result IS false>
+					<cfset error_code = 104>
+					<cfthrow errorcode="#error_code#">
+				<cfelse>
+					<cfset file = checkAreaFileAccessResponse.file>
+					<cfset file_typology_id = file.typology_id>
+					<cfset file_typology_row_id = file.typology_row_id>	
+
+					<cfif file_typology_id NEQ arguments.table_id OR file_typology_row_id NEQ arguments.row_id>
+						<cfset error_code = 104>
+						<cfthrow errorcode="#error_code#">
+					</cfif>
+				</cfif>
+				
+				<!--- getTable --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="table">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="parse_dates" value="true">
+					<cfinvokeargument name="published" value="false">		
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			<cfelse>
+
+				<!---checkAreaAccess in getTable--->
+				<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				</cfinvoke>
+
+				<cfif getTableResponse.result IS false>
+					<cfreturn getTableResponse>
+				</cfif>
+
+				<cfset table = getTableResponse.table>
+
 			</cfif>
-
-			<cfset table = getTableResponse.table>
-
+			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="getRowsQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
@@ -1143,7 +1180,7 @@
 	</cffunction>
 
 
-	<!--- ------------------------------------- getTableRowsSearch -------------------------------------  --->
+	<!--- ------------------------------------- getTypologiesRowsSearch -------------------------------------  --->
 	
 	<cffunction name="getTypologiesRowsSearch" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
@@ -1208,6 +1245,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="true">
+		<cfargument name="file_id" type="numeric" required="false">
 
 		<cfset var method = "getRow">
 
@@ -1219,6 +1257,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="row_id" value="#arguments.row_id#">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 			</cfinvoke>
 			
 			<cfif getTableRowsResponse.result IS true>

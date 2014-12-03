@@ -119,7 +119,13 @@
 						<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT --->
 
 							<cfset field_name = "field_#fields.field_id#">
-							<cfset field_value = arguments[field_name]>
+
+							<cfif fields.field_type_id IS 7 AND fields.required IS false AND NOT isDefined("arguments[field_name]")><!--- EMPTY BOOLEAN --->
+								<cfset field_value = "">
+							<cfelse>
+								<cfset field_value = arguments[field_name]>
+							</cfif>
+							
 
 							, field_#fields.field_id# = 	
 
@@ -129,7 +135,7 @@
 								<cfelse>
 									<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">
 								</cfif>
-							<cfelseif fields.field_type_id IS 7 AND len(field_value) IS 0><!--- BOOLEAN --->	
+							<cfelseif fields.field_type_id IS 7 AND len(field_value) IS 0><!--- EMPTY BOOLEAN --->	
 								<cfqueryparam cfsqltype="#fields.cf_sql_type#" null="true">
 							<cfelse>														
 								<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">

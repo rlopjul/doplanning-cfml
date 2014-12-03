@@ -271,6 +271,32 @@
 		<cfreturn areaTypeResult.areaType>
 		
 	</cffunction>
+
+
+	<!--- ----------------------------------- getAreaTypeWeb ------------------------------------- --->
+	
+	<cffunction name="getAreaTypeWeb" output="false" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		
+		<cfset var method = "getAreaTypeWeb">
+		
+		<cfset var response = "">
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="#method#" returnvariable="response">				
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
 	
 	
 	

@@ -174,11 +174,11 @@ fieldset[disabled] input {
 	clear:both;
 	color:#333333;
 	font-size:14px;
-	/*height:35px;*/
-	padding-top:2px;
-	padding-bottom:2px;
+	/*height: 48px;*/
+	padding-top:4px;
+	margin-bottom:16px;
 	padding-left:2px;
-	display:table-cell; /*para que los botones se muestren en dos líneas en la versión móvil sin pisar otros elementos y haya un margen entre cada botón*/
+	/*display:table-cell;*/ /*para que los botones se muestren en dos líneas en la versión móvil sin pisar otros elementos y haya un margen entre cada botón*/
 }
 .div_head_subtitle_area a{
 	white-space:nowrap; /*Para mostrar los iconos y las imágenes de los botones en la misma línea en IE*/
@@ -189,10 +189,19 @@ fieldset[disabled] input {
 	padding-right:10px;
 	font-size:12px;
 }*/
+.btn-new-item-dp{
+	width:45px;
+	height:35px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+.btn-new-item-dp img{
+	height:25px;
+}
 .div_head_menu{
 	clear:both;
 }
-.area_items_menu {
+.list-inline.area_items_menu {
 	padding: 5px;
 }
 .area_items_menu li{

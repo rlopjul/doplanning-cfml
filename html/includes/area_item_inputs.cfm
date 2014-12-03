@@ -54,7 +54,6 @@
 			subTypeChange($('##sub_type_id').val());
 		</cfif>
 		
-
 	});
 	
 	
@@ -97,15 +96,18 @@
 		if(subTypeId == 1){ 
 			$("##identifierLabel").text("PubMed ID");
 			$("##openInPubMedButton").show();
+			$("##getPublicationDataButton").show();
 			$("##fieldPrice").hide();
 		}else {
 			$("##identifierLabel").text(window.lang.translate("Identificador/Número"));
 			$("##openInPubMedButton").hide();
+			$("##getPublicationDataButton").hide();
 			$("##fieldPrice").show();
 		}
 
 	}
 
+	<cfif itemTypeId IS 8>
 	function openPublicationInPubMed(pubMedId){
 
 		if($.isNumeric(pubMedId))
@@ -113,6 +115,126 @@
 		else
 			alert(window.lang.translate("PubMed Id no válido"));
 	}
+
+	function getPublicationData(publicationId){
+					
+		if($.isNumeric(publicationId)){
+		
+			showLoadingPage(true);
+
+			<!---
+			IMPORTANTE: los navegadores no permiten por defecto realizar peticiones AJAX a un servidor distinto del que se ejecuta el script. Para permitir el funcionamiento del siguiente código, y hacer una petición a un servidor externo es necesario el uso de plugins u otro código que lo permita. En este caso se está usando un plugin para jQuery.
+			http://james.padolsey.com/javascript/cross-domain-requests-with-jquery/
+			Con PubMed no funciona, con otras páginas sí.
+			Está quitado el plugin ya que no es necesario para peticiones en el mismo servidor.
+			--->
+			
+			$.ajax({
+			   type: "GET",
+			   //url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi&db=pubmed&id="+publicationId+"&retmode=xml",
+			   url:"#APPLICATION.htmlComponentsPath#/AreaItem.cfc",
+			   data: "method=getPublicationInPubMed&pubmed_id="+publicationId,
+			   dataType: "text",
+			   /*crossDomain: "true",*/
+			   /*dataType: "xml",*/
+			   /*async: false,*/
+			   success: handleXmlPublicationResponse,
+			   error: function(data){
+
+			   		showLoadingPage(false);
+					alert("Ha ocurrido un error al obtener los datos.");
+
+			   }
+			 });
+				 
+		}else{
+			alert(window.lang.translate("PubMed Id no válido"));
+		}
+
+	}
+
+	function handleXmlPublicationResponse(response){
+			
+		var xmlDoc = $.parseXML($.trim(response));
+		var jXml = $(xmlDoc);
+		
+		if(jXml.find("PubmedArticleSet").length != 0) {
+
+			var jTitle = jXml.find("PubmedArticleSet").find("PubmedArticle").find("MedlineCitation").find("Article").find("ArticleTitle");
+			var jAbstract = jXml.find("Abstract").find("AbstractText");
+			var jYear = jXml.find("PubmedArticleSet").find("PubmedArticle").find("MedlineCitation").find("Article").find("Journal").find("JournalIssue").find("PubDate").find("Year");
+			var jMonth = jXml.find("PubmedArticleSet").find("PubmedArticle").find("MedlineCitation").find("Article").find("Journal").find("JournalIssue").find("PubDate").find("Month");
+			var jAuthors = jXml.find("PubmedArticleSet").find("PubmedArticle").find("MedlineCitation").find("Article").find("AuthorList").find("Author");
+			var jJournal = jXml.find("PubmedArticleSet").find("PubmedArticle").find("MedlineCitation").find("MedlineJournalInfo").find("MedlineTA");
+			var eLocationId = jXml.find("PubmedArticleSet").find("ELocationID");
+					
+			var authors = "";
+			
+			jAuthors.each(function(){
+			
+				var jAuthor = $(this);  
+				
+				var author = jAuthor.find("FirstName").text();
+				
+				var lastName = jAuthor.find("LastName").text();
+				
+				if(author != "" && lastName != "")
+					author += " ";
+				
+				author += lastName;
+				
+				var initials = jAuthor.find("Initials").text();
+				
+				if(author != "" && initials != "")
+					author += " ";
+					
+				author += initials;
+				
+				if(authors != "" && author != "")
+					authors += ", ";
+				authors += author;
+				
+			});
+			
+
+			if( $("##item_title").val().length == 0 )
+				$("##item_title").val(jTitle.text());
+
+			var publicationContent = '<p>'+authors+'</p>'+'<p>'+jJournal.text()+'. ';
+
+			/*if( $.isNumeric(jMonth.text()) ) {
+				var monthIndex = jMonth.text();
+				// Get monthName from datepicker array
+				var monthName = $.fn.datepicker.dates['en'].months[monthIndex];
+				publicationContent = publicationContent+monthName+' ';
+			}*/
+
+			if( jMonth.text().length > 0 ) {
+				publicationContent = publicationContent+jMonth.text()+' ';
+			}
+			
+			if( $.isNumeric(jYear.text()) ) {
+				publicationContent = publicationContent+jYear.text();
+			}
+
+			if( eLocationId.attr('EIdType') == "doi" )
+				publicationContent = publicationContent+'. doi: '+eLocationId.text();
+
+			publicationContent = publicationContent+'</p>';
+
+			if( jAbstract.text().length > 0 )
+			publicationContent = publicationContent+'<p>'+jAbstract.text()+'</p>';
+
+			editor.setData(publicationContent);
+				
+		}else{
+			alert("No se han encontrado datos relacionados con este id");
+		}
+						
+		showLoadingPage(false);
+	}
+	</cfif>
+
 
 	<cfif isDefined("objectItem.id") AND read_only IS false>
 				
@@ -545,15 +667,23 @@
     	<div class="col-xs-6 col-md-3">
     		<label class="control-label" for="identifier" id="identifierLabel"><span lang="es">#t_identifier#</span> *</label>
 			<cfinput type="text" name="identifier" id="identifier" class="form-control" value="#objectItem.identifier#" placeholder="Identificador" passthrough="#passthrough#" lang="es">
-			<cfif itemTypeId IS 8>
-				<button type="button" class="btn btn-default btn-xs" id="openInPubMedButton" lang="es" onclick="openPublicationInPubMed($('##identifier').val())">Ver en PubMed</button>
-			</cfif>
+			
 		</div>
 
 		<!---<div class="col-xs-6 col-md-3">
 		</div>--->
 
 	</div>
+
+	<cfif itemTypeId IS 8>
+	<div class="row">
+    	<div class="col-xs-12">
+			<button type="button" class="btn btn-default btn-xs" id="getPublicationDataButton" lang="es" onclick="getPublicationData($('##identifier').val())">Obtener datos de PubMed</button>
+
+			<button type="button" class="btn btn-default btn-xs" id="openInPubMedButton" lang="es" onclick="openPublicationInPubMed($('##identifier').val())">Ver en PubMed</button>
+    	</div>
+    </div>
+    </cfif>
 	<!---<div style="height:5px;"><!-- --></div>--->
 </cfif>
 

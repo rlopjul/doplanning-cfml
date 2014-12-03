@@ -154,6 +154,36 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- getFileAreas------------------------------------- --->
+	
+	<cffunction name="getFileAreas" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="accessCheck" type="boolean" required="false" default="true">
+		
+		<cfset var method = "getFileAreas">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFileAreas" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				<cfinvokeargument name="accessCheck" value="#arguments.accessCheck#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
+
 	<!--- ----------------------------------- getFileVersion ------------------------------------- --->
 	
 	<cffunction name="getFileVersion" returntype="query" access="public">

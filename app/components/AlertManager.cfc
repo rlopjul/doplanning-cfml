@@ -1260,26 +1260,6 @@
 			<cfset listExternalUsers = externalUsersEmails[curLang]>
         
 			<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
-								
-				<!---<cfif APPLICATION.twoUrlsToAccess IS false>
-					<cfsavecontent variable="access_content">
-					<cfoutput>
-					-&nbsp;#langText[curLang].common.access_to_area#:
-					<a target="_blank" href="#areaUrl#">#areaUrl#</a>
-			
-					<br/>-&nbsp;#langText[curLang].common.access_to_application#:
-					<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#</a>
-					</cfoutput>
-					</cfsavecontent>
-				<cfelse>
-					<cfsavecontent variable="access_content">
-					<cfoutput>
-					#langText[curLang].common.access_to_area_links#: <br/>
-					-&nbsp;#langText[curLang].common.access_internal# <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/?area=#objectArea.id#&abb=#SESSION.client_abb#">#APPLICATION.mainUrl##APPLICATION.path#/?area=#objectArea.id#&abb=#SESSION.client_abb#</a><br/>
-					-&nbsp;#langText[curLang].common.access_external# <a target="_blank" href="#APPLICATION.alternateUrl#/?area=#objectArea.id#&abb=#SESSION.client_abb#">#APPLICATION.alternateUrl#/?area=#objectArea.id#&abb=#SESSION.client_abb#</a>
-					</cfoutput>
-					</cfsavecontent>	
-				</cfif>--->
 
 				<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="access_content">
 					<cfinvokeargument name="area_id" value="#objectArea.id#"/>
@@ -1369,6 +1349,7 @@
 		<cfset var method = "getAreaAccessContent">
 
 		<cfset var accessContent = "">
+		<cfset var accessClient = "">
 
 		<!---areaUrl--->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
@@ -1383,9 +1364,16 @@
 			<cfoutput>
 			-&nbsp;#langText[arguments.language].common.access_to_area#:
 			<a target="_blank" href="#areaUrl#">#areaUrl#</a>
-	
+			
+
+			<cfif SESSION.client_abb EQ "hcs">
+				<cfset accessClient = "doplanning">
+			<cfelse>
+				<cfset accessClient = SESSION.client_id>
+			</cfif>
+
 			<br/>-&nbsp;#langText[arguments.language].common.access_to_application#:
-			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#SESSION.client_id#</a>
+			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>
 			</cfoutput>
 			</cfsavecontent>
 			
@@ -1816,12 +1804,19 @@
 		
 		<cfset var access_default = "">
 		<cfset var access_content = "">
+		<cfset var accessClient = "">
 		
 		<cfif APPLICATION.twoUrlsToAccess IS false>
 		
 			<cfset access_default = '#langText[curLang].common.access_to_application#: '>
+
+			<cfif arguments.client_abb EQ "hcs">
+				<cfset accessClient = "doplanning">
+			<cfelse>
+				<cfset accessClient = arguments.client_id>
+			</cfif>
 			
-			<cfset access_content = '#access_default#<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#arguments.client_id#">#APPLICATION.mainUrl##APPLICATION.path#/#arguments.client_id#</a>'>	
+			<cfset access_content = '#access_default#<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>'>	
 			
 		<cfelse>
 			

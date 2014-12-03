@@ -748,7 +748,7 @@
 							<!---, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">--->
 						</cfif>
 						<!--- publicationValidation --->
-						<cfif APPLICATION.publicationValidation IS true>
+						<cfif APPLICATION.publicationValidation IS true AND itemTypeId IS NOT 13><!--- IS NOT Typologies --->
 							<cfif isUserAreaResponsible IS true AND arguments.publication_validated IS true>
 								, publication_validated = <cfqueryparam value="true" cfsqltype="cf_sql_bit">
 								, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
@@ -3744,6 +3744,7 @@
 		<cfargument name="area_id" type="numeric" required="yes">
 		<cfargument name="area_type" type="string" required="yes">
 		<cfargument name="limit" type="numeric" required="no">
+		<cfargument name="full_content" type="boolean" required="false">
 		
 		<cfset var method = "getAllAreaItems">
 
@@ -3769,6 +3770,8 @@
 				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
+
+				<cfinvokeargument name="full_content" value="#arguments.full_content#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -3840,5 +3843,190 @@
 			
 	</cffunction>
 	<!--- ------------------------------------------------------------------------------  --->
+
+
+
+	<!--- ------------------------------------- exportAreaItems ------------------------------------- --->
+	
+	<cffunction name="exportAreaItems" output="false" access="public" returntype="struct">		
+		<cfargument name="area_id" type="numeric" required="true"/>
+		<!---<cfargument name="delimiter" type="string" required="false" default=";">--->
+		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
+
+		<cfset var method = "exportAreaItems">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_type = "">
+		<cfset var exportContent = "">
+
+		<cfset var delimiter = ";">
+		<cfset var newLine = (Chr( 13 ) & Chr( 10 ))>
+		<cfset var buffer = CreateObject( "java", "java.lang.StringBuffer" ).Init() />
+		<cfset var columnsNames = "">
+		<cfset var columnsLabels = "">
+		<cfset var rowData = []>
+		<cfset var curRowValue = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaType" returnvariable="areaTypeResult">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+			<cfset area_type = areaTypeResult.areaType>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAllAreaItems" returnvariable="getAllAreaItemsResult">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="area_type" value="#area_type#">
+				<cfinvokeargument name="full_content" value="true">
+			</cfinvoke>
+
+			<cfset areaItemsQuery = getAllAreaItemsResult.query>
+
+			<cfif areaItemsQuery.recordCount GT 0>
+
+				<cfset columnsNames = "itemType;title;user_full_name;creation_date;last_update_user_full_name;last_update_date;description;revision_user_full_name;revision_date;approval_user_full_name;approval_date">
+				<cfset columnsLabels = "Tipo de elemento;Título;Usuario creación;Fecha de creación;Usuario última modificación;Fecha de última modificación;Descripción;Usuario revisor de la versión;Fecha de revision;Usuario aprobador de la versión;Fecha de aprobación">
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				</cfinvoke>
+
+				<!--- Add columns name row --->
+				<cfset buffer.Append( JavaCast("string", (columnsLabels & newLine) ) ) />
+
+				<!---
+					Now that we have dealt with any header value, let's
+					convert the query body to CSV. When doing this, we are
+					going to qualify each field value. This is done be
+					default since it will be much faster than actually
+					checking to see if a field needs to be qualified.
+				--->
+				<cfloop query="areaItemsQuery">
+
+					<!--- Create array to hold row data. --->
+					<cfset rowData = [] />
+
+					<cfif areaItemsQuery.itemTypeId IS 10 AND areaItemsQuery.file_type_id IS 3><!--- Area Files with versions--->
+
+						<!--- getLasFileVersion --->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersions" returnvariable="lastVersion">
+							<cfinvokeargument name="file_id" value="#areaItemsQuery.id#"/>
+							<cfinvokeargument name="fileTypeId" value="#areaItemsQuery.file_type_id#"/>
+							<cfinvokeargument name="limit" value="1">
+							<cfinvokeargument name="parse_dates" value="true">
+							
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+						
+					</cfif>
+			 
+					<!--- Loop over the columns. --->
+					<cfloop	list="#columnsNames#" index="columnName" delimiters="#delimiter#">
+
+						<cfset curRowValue = "">
+			 			
+						<cfswitch expression="#columnName#">
+							
+							<cfcase value="itemType">
+								<cfset curRowValue = itemTypesStruct[areaItemsQuery.itemTypeId].label>
+							</cfcase>
+
+							<cfcase value="last_update_user_full_name">
+
+								<cfif isNumeric(areaItemsQuery.last_update_user_id)>
+									
+									<!--- Last update user --->
+						    		<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
+										<cfinvokeargument name="user_id" value="#areaItemsQuery.last_update_user_id#">
+
+										<cfinvokeargument name="client_abb" value="#client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+									<cfset curRowValue = userQuery.user_full_name>
+
+								</cfif>
+								
+							</cfcase>
+
+							<cfcase value="revision_date">
+
+								<cfif areaItemsQuery.itemTypeId IS 10 AND areaItemsQuery.file_type_id IS 3><!--- Area Files --->
+									<cfset curRowValue = lastVersion.revision_date>
+								</cfif>
+								
+							</cfcase>
+
+							<cfcase value="revision_user_full_name">
+
+								<cfif areaItemsQuery.itemTypeId IS 10 AND areaItemsQuery.file_type_id IS 3><!--- Area Files --->
+									<cfset curRowValue = lastVersion.revision_user_full_name>
+								</cfif>
+								
+							</cfcase>
+
+							<cfcase value="approval_date">
+
+								<cfif areaItemsQuery.itemTypeId IS 10 AND areaItemsQuery.file_type_id IS 3><!--- Area Files --->
+									<cfset curRowValue = lastVersion.approval_date>
+								</cfif>
+								
+							</cfcase>
+
+							<cfcase value="approval_user_full_name">
+
+								<cfif areaItemsQuery.itemTypeId IS 10 AND areaItemsQuery.file_type_id IS 3><!--- Area Files --->
+									<cfset curRowValue = lastVersion.approval_user_full_name>
+								</cfif>
+								
+							</cfcase>
+
+							<cfdefaultcase>
+
+								<cfset curRowValue = areaItemsQuery[columnName]>
+
+								<cfif len(LOCAL.curRowValue) GTE 10 AND isDate(LOCAL.curRowValue)><!---The value is DATE--->
+									<cfset curRowValue = DateFormat(dateConvert("local2Utc", curRowValue), "dd/mm/yyyy")/>
+								</cfif>
+								
+							</cfdefaultcase>
+
+						</cfswitch>
+
+						<cfset curRowValue = """#Replace( curRowValue, """", """""", "all" )#""">
+
+						<cfset arrayAppend(rowData, curRowValue)/>
+			 
+					</cfloop>
+			 
+					<!--- Append the row data to the string buffer. --->
+					<cfset buffer.Append( JavaCast(	"string", (	ArrayToList(rowData,delimiter) & newLine ))) />
+
+				</cfloop>
+
+			</cfif>
+
+			<cfset exportContent = buffer.ToString()>
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, area_id=arguments.area_id, content=exportContent}>
+			 
+			<cfcatch>
+			
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+				<cfset response = {result=false, message=cfcatch.message}>
+
+			</cfcatch>
+		</cftry>
+			
+		<cfreturn response>
+
+	</cffunction>
 	
 </cfcomponent>

@@ -57,7 +57,7 @@ Versión de archivo
 
 <div class="div_elements_menu"><!---div_elements_menu--->
 	
-	<a href="#APPLICATION.htmlPath#/file_version_download.cfm?id=#version.version_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-info"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
+	<a href="#APPLICATION.htmlPath#/file_version_download.cfm?id=#version.version_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="lastVersion">
 		<cfinvokeargument name="file_id" value="#version.file_id#">

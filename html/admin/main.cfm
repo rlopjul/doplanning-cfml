@@ -498,9 +498,9 @@
 								</div>
 
 								<div class="btn-group">
-									<a onClick="openAreaExportModal()" class="btn btn-info" title="Exportar áreas" lang="es"><i class="icon-arrow-down icon-white"></i> <span lang="es">Exportar</span></a>
+									<a onClick="openAreaExportModal()" class="btn btn-info" title="Exportar áreas" lang="es"><i class="icon-circle-arrow-down icon-white"></i> <span lang="es">Exportar</span></a>
 
-									<a onClick="openAreaImportModal()" class="btn btn-info" title="Importar áreas" lang="es"><i class="icon-arrow-up icon-white"></i> <span lang="es">Importar</span></a>									
+									<a onClick="openAreaImportModal()" class="btn btn-info" title="Importar áreas" lang="es"><i class="icon-circle-arrow-up icon-white"></i> <span lang="es">Importar</span></a>									
 								</div>
 
 								<div class="btn-group">
@@ -512,9 +512,7 @@
 						</div>
 
 						<!---<div class="col-sm-1" style="padding:0;">	
-
 							<a href="../main.cfm" class="btn btn-info" style="float:right"><i class="icon-arrow-left"></i> <span>Volver</span></a>
-
 						</div>--->
 
 					</div>
