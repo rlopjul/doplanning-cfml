@@ -63,7 +63,7 @@
 						  	if(status == "success"){
 						  		if(data.result == true){
 							  		$('##deleteAreaImageButton').hide();
-							  		$('##areaImage').attr('src', '#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#');
+							  		$('##areaImage').attr('src', '#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#&no-cache=#RandRange(0,999)#');
 							  		$('##imageHelp').show();
 							  		openUrl("#return_page#", "areaIframe");
 						  		} else {
@@ -101,7 +101,7 @@
 				
 				<div class="row">
 					<div class="col-sm-12">
-						<img id="areaImage" alt="Imagen del área" src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#" style="max-height:50px;">
+						<img id="areaImage" alt="Imagen del área" src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#&no-cache=#RandRange(0,999)#" style="max-height:50px;">
 					</div>
 				</div>
 

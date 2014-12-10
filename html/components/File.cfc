@@ -511,6 +511,72 @@
 	</cffunction>
 
 
+	<!--- uploadFileRemote --->
+
+	<cffunction name="uploadFileRemote" output="false" returntype="string" returnformat="plain" access="remote">
+		<cfargument name="files" type="array" required="false">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="name" type="string" required="true">
+		<cfargument name="description" type="string" required="true">
+		<cfargument name="reviser_user" type="numeric" required="false">
+		<cfargument name="approver_user" type="numeric" required="false">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="uploadNewFile" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+
+			<cfif response.result IS true>
+				<!---<cfset file_id = 1>--->	
+
+				<cfset file = response.file>
+
+				<cfset response = { result=true,  
+				  files:
+				    [
+				      {
+				        url: "",
+				        thumbnail_url: "",
+				        name: "#file.name#",
+				        <!---type: "text/plain",--->
+				        type: #fileGetMimeType(file.name, false)#,
+				        size: #file.file_size#,
+				        file_id = #response.file_id#,
+				        fileTypeId = #file.file_type_id#
+				        <!---delete_url: "#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFileRemote&file_id=#file_id#&area_id=#arguments.area_id#&return_path=#return_path#",
+				        delete_type: "DELETE"--->
+				      }
+				    ]
+				}>
+
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+				<cfset response = { result=false,  
+				  files:
+				    [
+				      {
+				        name: "#arguments.name#",
+				        error: "#cfcatch.message#"
+				      }
+				    ]
+				}>
+
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn serializeJSON(response)>
+
+	</cffunction>
+
+
 	<!--- ---------------------------------- createFile -------------------------------------- --->
 	
 	<cffunction name="createFile" access="public" returntype="struct">
@@ -527,6 +593,7 @@
 		<cfargument name="publication_hour" type="numeric" required="false">
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false">
+		<cfargument name="version_index" type="string" required="false">
 		
 		<cfset var method = "createFile">
 		
@@ -642,6 +709,7 @@
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="Filedata" type="string" required="true">
+		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="unlock" type="boolean" required="false">
 		
 		<cfset var method = "replaceFile">

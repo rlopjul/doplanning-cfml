@@ -3887,8 +3887,8 @@
 
 			<cfif areaItemsQuery.recordCount GT 0>
 
-				<cfset columnsNames = "itemType;title;user_full_name;creation_date;last_update_user_full_name;last_update_date;description;revision_user_full_name;revision_date;approval_user_full_name;approval_date">
-				<cfset columnsLabels = "Tipo de elemento;Título;Usuario creación;Fecha de creación;Usuario última modificación;Fecha de última modificación;Descripción;Usuario revisor de la versión;Fecha de revision;Usuario aprobador de la versión;Fecha de aprobación">
+				<cfset columnsNames = "itemType;title;user_full_name;creation_date;last_update_user_full_name;last_update_date;description;version_index;revision_user_full_name;revision_date;approval_user_full_name;approval_date">
+				<cfset columnsLabels = "Tipo de elemento;Título;Usuario creación;Fecha de creación;Usuario última modificación;Fecha de última modificación;Descripción;Nº Versión actual;Usuario revisor de la versión;Fecha de revision;Usuario aprobador de la versión;Fecha de aprobación">
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
@@ -3949,6 +3949,14 @@
 
 									<cfset curRowValue = userQuery.user_full_name>
 
+								</cfif>
+								
+							</cfcase>
+
+							<cfcase value="version_index">
+
+								<cfif areaItemsQuery.itemTypeId IS 10 AND areaItemsQuery.file_type_id IS 3><!--- Area Files --->
+									<cfset curRowValue = lastVersion.version_index>
 								</cfif>
 								
 							</cfcase>

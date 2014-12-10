@@ -2342,6 +2342,7 @@
 		<cfargument name="image_file" type="string" required="false"/>
 		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
 		<cfargument name="menu_type_id" type="numeric" required="false"/>
+		<cfargument name="files" type="array" required="false"/>
 
 		<cfset var method = "updateArea">
 		

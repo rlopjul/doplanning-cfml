@@ -51,11 +51,13 @@
 			</cfif>
 
 		</div>
+		
 		<div class="btn-group">
 
 			<a href="area_file_new.cfm?area=#area_id#&fileTypeId=1" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="Nuevo Archivo" lang="es"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/file.png" /></a>
 
 		</div>
+		
 		<div class="btn-group">
 
 			<cfif APPLICATION.moduleAreaFilesLite IS true AND len(area_type) IS 0>

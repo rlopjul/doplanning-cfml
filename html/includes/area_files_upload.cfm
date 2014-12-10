@@ -1,0 +1,388 @@
+<cfif isDefined("URL.area") AND isValid("integer",URL.area)>
+	<cfset area_id = URL.area>
+<cfelse>
+	<cflocation url="empty.cfm" addtoken="no">
+</cfif>
+
+<cfoutput>
+
+<!--- <!-- Bootstrap styles -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<!-- Generic page styles -->
+<link rel="stylesheet" href="#APPLICATION.path#/jquery/jquery-file-upload/css/style.css">
+--->
+<!-- blueimp Gallery styles -->
+<link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet" href="#APPLICATION.path#/jquery/jquery-file-upload/css/jquery.fileupload.css">
+<link rel="stylesheet" href="#APPLICATION.path#/jquery/jquery-file-upload/css/jquery.fileupload-ui.css">
+<!-- CSS adjustments for browsers with JavaScript disabled -->
+<noscript><link rel="stylesheet" href="#APPLICATION.path#/jquery/jquery-file-upload/css/jquery.fileupload-noscript.css"></noscript>
+<noscript><link rel="stylesheet" href="#APPLICATION.path#/jquery/jquery-file-upload/css/jquery.fileupload-ui-noscript.css"></noscript>
+
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+<!--- <!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+--->
+<!-- blueimp Gallery script -->
+<script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload-validate.js"></script>
+<!-- The File Upload user interface plugin -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload-ui.js"></script>
+<!--- <!-- The main application script -->
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/main.js"></script>
+--->
+<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+<!--[if (gte IE 8)&(lt IE 10)]>
+<script src="#APPLICATION.path#/jquery/jquery-file-upload/js/cors/jquery.xdr-transport.js"></script>
+<![endif]-->
+
+<script>
+    var area_id = #area_id#;
+
+    var url = "#APPLICATION.htmlComponentsPath#/File.cfc?method=uploadFileRemote";
+</script>
+
+</cfoutput>
+
+<script>
+$(function () {
+    'use strict';
+
+    // Initialize the jQuery File Upload widget:
+    $('#fileupload').fileupload({
+        // Uncomment the following to send cross-domain cookies:
+        //xhrFields: {withCredentials: true},
+        url: url
+        <!---, paramName: "Filedata[]"--->
+        <!---, formData: {area_id:area_id, fileTypeId:fileTypeId}--->
+    });
+
+    <!---// Enable iframe cross-domain access via redirect option:
+    $('#fileupload').fileupload(
+        'option',
+        'redirect',
+        window.location.href.replace(
+            /\/[^\/]*$/,
+            '/cors/result.html?%s'
+        )
+    );--->
+
+    <!---if (window.location.hostname === 'blueimp.github.io') {
+        // Demo settings:
+        $('#fileupload').fileupload('option', {
+            url: '//jquery-file-upload.appspot.com/',
+            // Enable image resizing, except for Android and Opera,
+            // which actually support image resizing, but fail to
+            // send Blob objects via XHR requests:
+            disableImageResize: /Android(?!.*Chrome)|Opera/
+                .test(window.navigator.userAgent),
+            maxFileSize: 5000000,
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+        });
+        // Upload server status check for browsers with CORS support:
+        if ($.support.cors) {
+            $.ajax({
+                url: '//jquery-file-upload.appspot.com/',
+                type: 'HEAD'
+            }).fail(function () {
+                $('<div class="alert alert-danger"/>')
+                    .text('Upload server currently unavailable - ' +
+                            new Date())
+                    .appendTo('#fileupload');
+            });
+        }
+    } else {
+        // Load existing files:
+        $('#fileupload').addClass('fileupload-processing');
+        $.ajax({
+            // Uncomment the following to send cross-domain cookies:
+            //xhrFields: {withCredentials: true},
+            url: $('#fileupload').fileupload('option', 'url'),
+            dataType: 'json',
+            context: $('#fileupload')[0]
+        }).always(function () {
+            $(this).removeClass('fileupload-processing');
+        }).done(function (result) {
+            $(this).fileupload('option', 'done')
+                .call(this, $.Event('done'), {result: result});
+        });
+    }--->
+
+    <!--- https://github.com/blueimp/jQuery-File-Upload/wiki/How-to-submit-additional-Form-Data --->
+     $('#fileupload').bind('fileuploadsubmit', function (e, data) {
+
+        var inputs = data.context.find(':input');
+        if (inputs.filter(function () {
+                return !this.value && $(this).prop('required');
+            }).first().focus().length) {
+            data.context.find('button').prop('disabled', false);
+            return false;
+        }
+        data.formData = inputs.serializeArray();
+
+    });
+
+
+     $(window).on('beforeunload', function(event){
+    
+        var activeUploads = $('#fileupload').fileupload('active');
+
+        if(activeUploads > 0){
+
+            showLoadingPage(false);
+
+            var alertMessage = window.lang.translate('Está subiendo archivos, si cambia de página se cancelará la subida');
+    
+            return alertMessage;
+        }  
+
+    });
+
+});
+</script>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
+    <cfinvokeargument name="user_id" value="#SESSION.user_id#">
+    <cfinvokeargument name="format_content" value="default">
+    <cfinvokeargument name="return_type" value="query">
+</cfinvoke>
+
+<cfset file_reviser_user = userQuery.id>
+<!---<cfset file_reviser_user_full_name = userQuery.user_full_name>--->
+<cfset file_approver_user = userQuery.id>
+<!---<cfset file_approver_user_full_name = userQuery.user_full_name>--->
+
+<div class="div_head_subtitle"><span lang="es">Subir varios archivos</span></div>
+
+<div class="container-fluid">
+
+    <!---
+    <div class="row">
+        <div class="col-sm-12">
+            <span>Área: <strong>#area_name#</strong></span><br/><br/>
+        </div>        
+    </div>
+    --->
+
+    <cfif FindNoCase('MSIE',CGI.HTTP_USER_AGENT) GT 0 AND ( FindNoCase('MSIE 6',CGI.HTTP_USER_AGENT) GT 0 OR FindNoCase('MSIE 7',CGI.HTTP_USER_AGENT) GT 0 OR FindNoCase('MSIE 8',CGI.HTTP_USER_AGENT) GT 0 )><!--- OLD IE --->
+
+        <div class="row">
+
+            <div class="col-sm-12">
+                <div class="alert alert-warning" role="alert">
+                    Esta funcionalidad no es compatible con su versión de Internet Explorer. Debe actualizar a la versión 10 o superior para poder utilizarla.
+                </div>
+            </div>
+
+        </div>
+
+    <cfelse>
+
+         <!-- The file upload form used as target for the file upload widget -->
+        <form id="fileupload" action="//jquery-file-upload.appspot.com/" method="POST" enctype="multipart/form-data">
+            <!-- Redirect browsers with JavaScript disabled to the origin page -->
+            <noscript><input type="hidden" name="redirect" value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
+            <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+            <div class="row fileupload-buttonbar">
+                <div class="col-lg-7">
+                    <!-- The fileinput-button span is used to style the file input field as button -->
+                    <span class="btn btn-success fileinput-button">
+                        <i class="icon-plus icon-white"></i>
+                        <span lang="es">Añadir archivos</span>
+                        <input type="file" name="files[]" multiple>
+                    </span>
+                    
+                    <button type="submit" class="btn btn-primary start">
+                        <i class="icon-upload"></i>
+                        <span lang="es">Iniciar todos</span>
+                    </button>
+                    <button type="reset" class="btn btn-warning cancel">
+                        <i class="icon-remove-sign"></i>
+                        <span lang="es">Cancelar todos</span>
+                    </button>
+                   <!--- <button type="button" class="btn btn-danger delete">
+                        <i class="glyphicon glyphicon-trash"></i>
+                        <span>Delete</span>
+                    </button>
+                    
+                    <input type="checkbox" class="toggle">--->
+
+                    <cfif FindNoCase('MSIE 9',CGI.HTTP_USER_AGENT) IS 0>
+                        
+                        <div class="well"><i class="icon-plus" style="color:#5BB75B;font-size:22px;"></i>&nbsp;<span lang="es" style="font-size:16px;">Puede arrastrar aquí los archivos que desea subir.</span></div>
+
+                    </cfif>                    
+
+                    <!-- The global file processing state -->
+                    <span class="fileupload-process"></span>
+                </div>
+                <!-- The global progress state -->
+                <div class="col-lg-5 fileupload-progress fade">
+                    <!-- The global progress bar -->
+                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar progress-bar-info" style="width:0%;"></div>
+                    </div>
+                    <!-- The extended global progress state -->
+                    <div class="progress-extended">&nbsp;</div>
+                </div>
+            </div>
+
+            <!-- The table listing the files available for upload/download -->
+            <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+        </form>
+        
+    </cfif> 
+
+</div>
+
+
+<!-- The blueimp Gallery widget -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+    <div class="slides"></div>
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+</div>
+
+<script>
+    openUrlHtml2('empty.cfm','itemIframe');
+</script>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+
+            <span class="preview"></span>
+
+        </td>
+
+        <td colspan="3">
+
+            <span class="name">{%=file.name%} (<span class="size">Processing...</span>)</span><br/>
+            <cfoutput>
+            <input type="hidden" name="area_id" value="#area_id#"/>
+            <input type="hidden" name="reviser_user" id="reviser_user" value="#file_reviser_user#" />
+            <input type="hidden" name="approver_user" id="approver_user" value="#file_approver_user#" />
+            </cfoutput>
+            <label lang="es">Tipo</label>
+            <select name="fileTypeId" id="fileTypeId" class="form-control">
+                <option value="1" selected="selected" lang="es">Archivo de usuario</option>
+                <option value="2" lang="es">Archivo de área sin circuito de calidad</option>
+                <option value="3" lang="es">Archivo de área con circuito de calidad</option>
+            </select>
+            <label lang="es">Nombre</label>
+            <input type="text" name="name" value="{%=file.name%}" required/>
+            <label lang="es">Descripción</label>
+            <input type="text" name="description" value=""/>
+
+            <strong class="error text-danger"></strong>
+
+            <div style="height:5px;"></div>
+            
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-info" style="width:0%;"></div></div>
+
+
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="icon-upload"></i>
+                    <span lang="es">Iniciar</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="icon-remove-sign"></i>
+                    <span lang="es">Cancelar</span>
+                </button>
+            {% } %}
+
+        </td>
+
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } else { %}
+                <div><span class="label label-success" lang="es">Subido</span></div>
+            {% } %}
+
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <i class="icon-remove"></i>
+                    <span>Eliminar</span>
+                </button>
+                <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+                <button class="btn btn-default cancel">
+                    <i class="icon-remove-circle"></i>
+                    <span lang="es">Quitar de la lista</span>
+                </button>
+            {% } %}
+            <a class="btn btn-info" onclick="openUrl('area_file_modify.cfm?area={%=area_id%}&file={%=file.file_id%}&fileTypeId={%=file.fileTypeId%}&return_page=file.cfm','itemIframe',event)">
+                <i class="icon-edit"></i>
+                <span lang="es">Modificar datos</span>
+            </a>
+            <cfoutput>
+            <a class="btn btn-default" href="#APPLICATION.htmlPath#/file.cfm?file={%=file.file_id%}&area={%=area_id%}" target="_blank" lang="es">
+                <i class="icon-external-link"></i>
+            </a>
+            </cfoutput>
+
+        </td>
+    </tr>
+{% } %}
+</script>

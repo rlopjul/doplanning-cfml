@@ -3106,6 +3106,7 @@
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="version_index" type="string" required="false">
 
 		<!---<cfargument name="folder_id" type="numeric" required="false"/>--->
 		
@@ -3236,6 +3237,7 @@
 						SET file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">,
 						physical_name = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_varchar">,
 						file_name = <cfqueryparam value="#arguments.file_name#" cfsqltype="cf_sql_varchar">,
+						version_index = <cfqueryparam value="#arguments.version_index#" cfsqltype="cf_sql_varchar">,
 						user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 						file_size = <cfqueryparam value="#arguments.file_size#" cfsqltype="cf_sql_integer">,
 						file_type = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">,
@@ -3560,8 +3562,9 @@
 		<cfargument name="fileTypeId" type="numeric" required="true"/>
 		<cfargument name="name" type="string" required="true"/>
 		<cfargument name="description" type="string" required="true"/>
-		<cfargument name="Filedata" type="string" required="true"/>
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="Filedata" type="string" required="false"/>
+		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="typology_id" type="string" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
@@ -3570,6 +3573,7 @@
 		<cfargument name="publication_hour" type="numeric" required="false">
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
+		<cfargument name="version_index" type="string" required="false">
 
 		<cfset var method = "uploadNewFile">
 
@@ -3600,7 +3604,12 @@
 
 			</cfif>
 
-			<cffile action="upload" filefield="Filedata" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
+			<cfif isDefined("arguments.Filedata")><!--- Default --->
+				<cffile action="upload" filefield="Filedata" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
+			<cfelse><!---jQuery fileupload--->
+				<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
+			</cfif>
+			
 
 			<cfset temp_file="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">	
 
@@ -3621,6 +3630,7 @@
 				<cfinvokeargument name="approver_user" value="#arguments.approver_user#"/>
 				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#"/>
 				<cfinvokeargument name="status" value="ok">
+				<cfinvokeargument name="version_index" value="#arguments.version_index#"/>
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			</cfinvoke>	
@@ -3761,7 +3771,7 @@
 
 			
 
-			<cfset response = {result=true, file_id=#upload_file_id#}>	
+			<cfset response = {result=true, file_id=#upload_file_id#, file=objectFile}>	
 
 			<cfcatch>
 
@@ -4017,6 +4027,7 @@
 		<cfargument name="file_id" type="string" required="true"/>
 		<cfargument name="fileTypeId" type="numeric" required="true" />
 		<cfargument name="Filedata" type="string" required="true"/>
+		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="unlock" type="boolean" required="false" default="false">
 		
 		<cfset var method = "replaceFile">
@@ -4082,6 +4093,7 @@
 							INSERT INTO `#client_abb#_#fileTypeTable#_versions`
 							SET file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">,
 							file_name = <cfqueryparam value="#file_name#" cfsqltype="cf_sql_varchar">,
+							version_index = <cfqueryparam value="#arguments.version_index#" cfsqltype="cf_sql_varchar">,
 							user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 							file_size = <cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">,
 							file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">,
@@ -5937,6 +5949,7 @@
 						INSERT INTO `#client_abb#_#fileTypeTable#_versions`
 						SET file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">,
 						file_name = <cfqueryparam value="#fileVersionQuery.file_name#" cfsqltype="cf_sql_varchar">,
+						version_index = <cfqueryparam value="#fileVersionQuery.version_index#" cfsqltype="cf_sql_varchar">,
 						physical_name = <cfqueryparam value="#fileVersionQuery.physical_name#" cfsqltype="cf_sql_varchar">,
 						user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 						file_size = <cfqueryparam value="#fileVersionQuery.file_size#" cfsqltype="cf_sql_integer">,

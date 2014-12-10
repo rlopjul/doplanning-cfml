@@ -26,7 +26,7 @@
 			<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 			dateFormat: "ddmmyyyy", // set the default date format
 			headers: { 
-				4: { 
+				5: { 
 					sorter: "shortDate" 
 				}
 			}
@@ -62,6 +62,7 @@
 	<thead>
 		<tr>
 			<th style="width:25px;">##</th>
+			<th>Nº</th>
 			<th>Archivo</th>
 			<th>Usuario</th>
 			<th>Fecha</th>
@@ -107,6 +108,7 @@
 
 		<tr <cfif fieldSelected IS true>class="selected"</cfif> <cfif versions.currentRow IS 1>style="font-weight:bold"</cfif> data-item-url="#version_page_url#"><!---onclick="openUrl('#version_page_url#','itemIframe',event)"--->
 			<td>#versionIndex#</td>
+			<td>#versions.version_index#</td>
 			<td>#versions.file_name#</td>
 			<td>
 				<cfif len(versions.user_image_type) GT 0>

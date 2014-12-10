@@ -14,6 +14,9 @@
 		<cfinvokeargument name="file_id" value="#FORM.file_id#"/>
 		<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
 		<cfinvokeargument name="Filedata" value="#FORM.Filedata#"/>
+		<cfif isDefined("FORM.version_index")>
+			<cfinvokeargument name="version_index" value="#FORM.version_index#"/>
+		</cfif>
 		<cfif isDefined("FORM.unlock")>
 			<cfinvokeargument name="unlock" value="#FORM.unlock#"/>
 		</cfif>

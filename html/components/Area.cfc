@@ -402,8 +402,10 @@
 
 	<!--- ----------------------------------- importAreas -------------------------------------- --->
 
-	<cffunction name="importAreas" output="true" returntype="void" access="remote">
-		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE--->
+	<cffunction name="importAreas" output="false" returntype="string" returnformat="plain" access="remote">
+		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE
+		Es necesario usar returnformat="plain" para que devuelva texto plano y serializeJSON para generar el JSON de respuesta
+		https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation--->
 		
 		<cfset var method = "importAreas">
 
@@ -424,9 +426,43 @@
 			
 		</cftry>
 		
-		<!---<cfreturn serializeJSON(response)>--->
+		<!---<cfoutput>#serializeJSON(response)#</cfoutput>--->
 
-		<cfoutput>#serializeJSON(response)#</cfoutput>
+		<cfreturn serializeJSON(response)>
+			
+	</cffunction>
+
+
+	<!--- ----------------------------------- updateAreaImage -------------------------------------- --->
+
+	<cffunction name="updateAreaImage" output="false" returntype="string" returnformat="plain" access="remote">
+		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE
+		Es necesario usar returnformat="plain" para que devuelva texto plano y serializeJSON para generar el JSON de respuesta
+		https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation--->
+
+		<cfargument name="area_id" type="numeric" required="true"/>
+		<cfargument name="files" type="array" required="false"/>
+		
+		<cfset var method = "updateArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="updateArea" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Imagen de área modificada">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn serializeJSON(response)>
 			
 	</cffunction>
 
@@ -477,35 +513,6 @@
 			
 			<cfif response.result IS true>
 				<cfset response.message = "Área movida">
-			</cfif>
-
-			<cfcatch>
-				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
-		</cftry>
-		
-		<cfreturn response>
-			
-	</cffunction>
-
-
-	<!--- ----------------------------------- updateAreaImage -------------------------------------- --->
-
-	<cffunction name="updateAreaImage" output="false" returntype="struct" returnformat="json" access="remote">
-		<cfargument name="area_id" type="numeric" required="true"/>
-		
-		<cfset var method = "updateArea">
-
-		<cfset var response = structNew()>
-					
-		<cftry>
-	
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="updateArea" argumentcollection="#arguments#" returnvariable="response">
-			</cfinvoke>
-			
-			<cfif response.result IS true>
-				<cfset response.message = "Imagen de área modificada">
 			</cfif>
 
 			<cfcatch>

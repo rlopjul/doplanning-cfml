@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 </cfoutput>
@@ -30,6 +30,11 @@
 				<a href="area_file_new.cfm?area=#area_id#&fileTypeId=2" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo Archivo de área" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" style="height:22px;"/></a>
 				</cfif>
 			</div>
+
+			<div class="btn-group">
+				<a href="area_files_upload.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Subir varios archivos" lang="es"><i class="icon-upload" style="color:##5BB75B;font-size:19px;line-height:23px;"></i> <span lang="es">Subir varios archivos</span></a>
+			</div>
+			
 		
 			
 			<!---Opción deshabilitada definitivamente<a href="file_associate.cfm?area=#area_id#" onclick="openUrl('file_associate.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Asociar archivo existente" lang="es"><i class="icon-plus-sign"></i> <span lang="es">Asociar Archivo</span></a>--->

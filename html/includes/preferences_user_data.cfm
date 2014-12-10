@@ -12,17 +12,6 @@ Datos Personales
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Login" method="getUserLoggedIn" returnvariable="objectUser">
 </cfinvoke>
 
-<!--- 
-<cfxml variable="xmlUser">
-	<cfoutput>
-	#xmlResponse.response.result.user#
-	</cfoutput>
-</cfxml>
-<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="objectUser">
-	<cfinvokeargument name="xml" value="#xmlUser.user#">
-	<cfinvokeargument name="return_type" value="object">
-</cfinvoke> --->
-
 <cfoutput>
 
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
@@ -70,9 +59,11 @@ Datos Personales
 		} else {
 	
 			$(formId).fileupload('send', {fileInput: $('##file'), url: requestUrl})
-				.success(function ( data, status ) {
+				.success(function ( data, status, jqXHR ) {
 
 					if(status == "success"){
+
+						//console.log(jqXHR);
 
 				  		var result = $.parseJSON(data);
 				  		var message = result.message;

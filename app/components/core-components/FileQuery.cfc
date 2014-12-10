@@ -328,7 +328,7 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">	
 							
 			<cfquery name="getFileVersionsQuery" datasource="#client_dsn#">
-				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
+				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.version_index, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
 					, files.revision_result_reason, files.approval_result_reason
 					, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date 
 					, DATE_FORMAT(CONVERT_TZ(files.revision_request_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS revision_request_date
@@ -364,7 +364,7 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">	
 							
 			<cfquery name="getFileVersionsQuery" datasource="#client_dsn#">
-				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
+				SELECT files.version_id, files.file_id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.file_name, files.version_index, files.description, files.revision_request_user, files.revised, files.revision_result, files.revision_user, files.approved, files.approval_user, files.publication_user, files.publication_date, files.publication_file_id, files.publication_area_id
 					, files.revision_result_reason, files.approval_result_reason
 					<cfif arguments.parse_dates IS true>
 						, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date
@@ -383,8 +383,8 @@
 					CONCAT_WS(' ', users_approval.family_name, users_approval.name) AS approval_user_full_name
 				FROM #client_abb#_#fileTypeTable#_versions AS files
 				INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
-				RIGHT JOIN #client_abb#_users AS users_revision ON files.revision_user = users_revision.id
-				RIGHT JOIN #client_abb#_users AS users_approval ON files.approval_user = users_approval.id
+				LEFT JOIN #client_abb#_users AS users_revision ON files.revision_user = users_revision.id
+				LEFT JOIN #client_abb#_users AS users_approval ON files.approval_user = users_approval.id
 				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
 				ORDER BY files.version_id DESC
 				<cfif isDefined("arguments.limit")>

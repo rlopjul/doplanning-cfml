@@ -1,7 +1,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/file_change_owner_to_area_query.cfm">
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/file_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">

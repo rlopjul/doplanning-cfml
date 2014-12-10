@@ -1,7 +1,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_replace_query.cfm">
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/file_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
@@ -31,37 +31,88 @@ function onSubmitForm()
 <div class="contenedor_fondo_blanco">
 
 <cfoutput>
-<cfform action="#CGI.SCRIPT_NAME#?file=#file_id#&fileTypeId=#fileTypeId#&area=#area_id#" method="post" enctype="multipart/form-data" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?file=#file_id#&fileTypeId=#fileTypeId#&area=#area_id#" method="post" enctype="multipart/form-data" class="form-horizontal" onsubmit="return onSubmitForm();">
 	<input type="hidden" name="file_id" value="#file_id#" />
 	<input type="hidden" name="area_id" value="#area_id#" />
 
-	<div class="form-group">
-		<label lang="es"><cfif fileTypeId IS 3>Nueva versión de archivo:<cfelse>Archivo a reemplazar:</cfif></label>
-		<span>#file.name#</span>
+	<div class="row">
+		<div class="col-sm-12">
+			<label lang="es"><cfif fileTypeId IS 3>Nueva versión de archivo:<cfelse>Archivo a reemplazar:</cfif></label>
+			<span>#file.name#</span>
+		</div>
 	</div>
 
-	<div class="form-group">
-		<label lang="es">Archivo:</label>
-		<cfinput type="file" name="Filedata" value="" required="yes" message="Debe seleccionar un archivo"/>
+	<div class="row">
+		<div class="col-sm-12">
+			<label lang="es" id="filedata">Archivo:</label>
+			<cfinput type="file" name="Filedata" id="filedata" value="" required="yes" message="Debe seleccionar un archivo"/>
+		</div>
 	</div>
 
 	<cfif fileTypeId IS NOT 1>
+
+		<cfif fileTypeId IS 3>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="lastVersion">
+				<cfinvokeargument name="file_id" value="#file_id#"/>
+				<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
+			</cfinvoke>
+
+			<cfif isNumeric(lastVersion.version_index)>
+				<cfset version_index_value = lastVersion.version_index+1>
+			<cfelse>
+				<cfset version_index_value = "">
+			</cfif>
+
+			<div class="row">
+				<div class="col-sm-12" style="padding-top:8px;">
+					<label lang="es" for="version_index">Número de versión</label>
+				</div>
+		  	</div>		
+		  	<div class="row">
+				<div class="col-sm-1 col-xs-3">
+					<cfinput type="text" name="version_index" id="version_index" value="#version_index_value#" required="false" validate="integer" message="Debe introducir un valor numérico para el número de versión" class="form-control" />
+				</div>
+			</div>			
+		</cfif>
 		
-		<div class="checkbox">
-		    <label>
-		    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras subir nueva versión
-		    </label>
-	  	</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="checkbox">
+				    <label>
+				    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras subir nueva versión
+				    </label>
+			  	</div>
+			</div>
+		</div>
 
 	</cfif>
 	
-	<div style="height:12px;"></div>
-	
-	<div id="submitDiv"><input type="submit" class="btn btn-primary" name="modify" value="Guardar" lang="es"/>
-	
-	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>	
+	<div class="row">
+		<div class="col-sm-12">
+			<div style="height:12px;"></div>
+		</div>
 	</div>
-	<small lang="es">Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.</small>
+
+	<div class="row">
+		<div class="col-sm-12">
+
+			<div id="submitDiv"><input type="submit" class="btn btn-primary" name="modify" value="Guardar" lang="es"/>
+			
+				<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>	
+			</div>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12">
+
+			<small lang="es">Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.</small>
+
+		</div>
+	</div>
+
 </cfform>
 </cfoutput>
 

@@ -7,7 +7,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form_query.cfm">
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/file_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
@@ -128,12 +128,14 @@
 		if(fileTypeId == 3){
 
 			$("##documentUsersContainer").show();
+			$("##documentVersionIndex").show();
 			$("##publicationScopeContainer").hide();
 
 
 		}else{
 
 			$("##documentUsersContainer").hide();
+			$("##documentVersionIndex").hide();
 			$("##publicationScopeContainer").show();
 		}
 
@@ -291,7 +293,7 @@
 		<cfif page_type IS 1>
 
 			<div class="alert alert-info">
-				<small lang="es">Este archivo pertenecerá a esta <b>área</b> y podrá ser modificado por cualquier usuario con acceso a la misma.</small>
+				<small lang="es">Este archivo pertenecerá a esta</span> <b lang="es">área</b> <span lang="es">y podrá ser modificado por cualquier usuario con acceso a la misma.</small>
 			</div>
 
 		<cfelseif page_type IS 3>
@@ -305,7 +307,7 @@
 					<label for="publication_area_name" class="control-label" lang="es">Área de publicación</label>
 					<div class="controls">
 						<input type="hidden" name="publication_area_id" id="publication_area_id" value="#publicationArea.publication_area_id#" validate="integer" required="true"/>
-						<cfinput type="text" name="publication_area_name" id="publication_area_name" value="#publicationArea.publication_area_name#" readonly="true" required="true" message="Debe seleccionar una área para publicar" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
+						<cfinput type="text" name="publication_area_name" id="publication_area_name" value="#publicationArea.publication_area_name#" readonly="true" required="true" message="Debe seleccionar una área para publicar" onclick="openAreaSelector()"/> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
 					</div>
 				</div>
 			</div>
@@ -316,7 +318,7 @@
 
 			<div class="row">
 				<div class="col-sm-12">
-					<label for="fileTypeId" class="control-label" lang="es">Tipo de documento de área <i id="file-type-help" class="icon-question-sign" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<b>Sin circuito de calidad</b>: cada vez que se suba una versión del archivo se sobreescribirá la anterior (no se guardan las versiones previas del archivo)</p><br><b>Con circuito de calidad</b>: se guardan las distintas versiones del archivo y es requerido un proceso de revisión y aprobación de las versiones." lang="es" style="cursor:pointer"></i></label>
+					<label for="fileTypeId" class="control-label" lang="es">Tipo de documento de área <i id="file-type-help" class="icon-question-sign" data-toggle="tooltip" data-placement="bottom" data-html="true" title="-Sin circuito de calidad: cada vez que se suba una versión del archivo se sobreescribirá la anterior (no se guardan las versiones previas del archivo)<br><br>-Con circuito de calidad: se guardan las distintas versiones del archivo y es requerido un proceso de revisión y aprobación de las versiones." lang="es" style="cursor:pointer"></i></label>
 					<select name="fileTypeId" id="fileTypeId" class="form-control" onchange="setFileTypeId($('##fileTypeId').val());">
 						<option value="2" <cfif fileTypeId IS 2>selected="selected"</cfif> lang="es">Sin circuito de calidad</option>
 						<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif> lang="es">Con circuito de calidad</option>
@@ -348,7 +350,7 @@
 
 						<div class="row">
 							<div class="col-sm-5" style="padding-right:0;">
-								<input type="hidden" name="reviser_user" id="reviser_user" value="#file.reviser_user#" validate="integer" required="true" />
+								<input type="hidden" name="reviser_user" id="reviser_user" value="#file.reviser_user#" />
 								<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#file.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" /> 
 							</div>
 							<div class="col-sm-7">
@@ -366,7 +368,7 @@
 						
 						<div class="row">
 							<div class="col-sm-5" style="padding-right:0;">
-								<input type="hidden" name="approver_user" id="approver_user" value="#file.approver_user#" validate="integer" required="true"/>
+								<input type="hidden" name="approver_user" id="approver_user" value="#file.approver_user#" />
 								<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#file.approver_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" />
 							</div>
 							<div class="col-sm-7">
@@ -434,6 +436,25 @@
 			</script>
 		</div>
 	</div>
+
+	<cfif page_type IS 1>
+			
+		<div id="documentVersionIndex">
+
+			<div class="row">
+				<div class="col-sm-12">
+					<label lang="es" for="version_index">Número de versión</label>
+				</div>
+		  	</div>		
+		  	<div class="row">
+				<div class="col-sm-1 col-xs-3">
+					<cfinput type="text" name="version_index" id="version_index" value="1" required="false" validate="integer" message="Debe introducir un valor numérico para el número de versión" class="form-control" />
+				</div>
+			</div>
+
+		</div>
+
+	</cfif>
 
 	<div class="row">
 		<div class="col-sm-12">

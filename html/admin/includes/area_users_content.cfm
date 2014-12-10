@@ -51,7 +51,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_menu_info.cfm">
 
 <div>
-	<img alt="Imagen del área" src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#" style="max-height:50px;">
+	<img alt="Imagen del área" src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#&no-cache=#RandRange(0,999)#" style="max-height:50px;">
 </div>
 </cfoutput>
 
@@ -109,9 +109,8 @@
 		});
 
 		<!--- Select the active tab from URL --->
-		var activeTab = $('[href=' + location.hash + ']');
+		var activeTab = $('[href="' + location.hash + '"]');
 		activeTab && activeTab.tab('show');
-		
 		
 	});
 

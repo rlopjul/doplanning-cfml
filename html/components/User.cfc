@@ -396,8 +396,11 @@
 	
 	<!--- updateUser --->
 
-	<cffunction name="updateUser" output="true" returntype="void" access="remote">
-		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE--->
+	<cffunction name="updateUser" output="false" returntype="string" returnformat="plain" access="remote">
+		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE
+		Es necesario usar returnformat="plain" para que devuelva texto plano y serializeJSON para generar el JSON de respuesta
+		https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation--->
+		
 		<cfargument name="user_id" type="numeric" required="true">
 		<cfargument name="family_name" type="string" required="true">
 		<cfargument name="email" type="string" required="false" default="">
@@ -487,7 +490,12 @@
 			
 		</cftry>
 
-		<cfoutput>#serializeJSON(response)#</cfoutput>
+		<!---<cfscript>
+			 getpagecontext().getresponse().setHeader("Content-type","text/plain");
+		</cfscript>--->
+
+		<!---<cfoutput>#serializeJSON(response)#</cfoutput>--->
+		<cfreturn serializeJSON(response)>
 		
 	</cffunction>
 	

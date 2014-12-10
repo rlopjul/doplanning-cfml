@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_diseno_general_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<!--Developed and copyright by Web4Bio 2007-2014 (www.web4bio.com)-->
+<!--Developed and copyright by Era7 Information Technologies & Web4Bio 2007-2014 (www.doplanning.net)-->
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
@@ -21,7 +21,7 @@
 	<cfset client_abb = URL.client_abb>
 </cfif>
 
-<!---Aqu� se a�ade COLLATE utf8_bin para que sea case sensitive en la comparaci�n--->
+<!---Aquí se añade COLLATE utf8_bin para que sea case sensitive en la comparación--->
 <cfquery datasource="#APPLICATION.dsn#" name="getClient">
 	SELECT *
 	FROM APP_clients
@@ -41,6 +41,10 @@
 <link href="../assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="#APPLICATION.dpCSSPath#" rel="stylesheet" type="text/css" media="all" />
+<cfif len(APPLICATION.themeCSSPath) GT 0>
+<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
+</cfif>
 <!---
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -61,10 +65,6 @@
 <![endif]-->
 
 <!---<link href="../html/styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />--->
-<link href="#APPLICATION.dpCSSPath#" rel="stylesheet" type="text/css" media="all" />
-<cfif len(APPLICATION.themeCSSPath) GT 0>
-<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
-</cfif>
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
@@ -246,11 +246,11 @@
 
 				<div class="panel panel-default" style="margin-top:35px;">
 				  <div class="panel-body">
-				    <h5>¡Gracias por usar DoPlanning!. Tenemos el placer de comunicarte que DoPlanning ha sido nominado para los premios UP-Start 2014 como mejor herramienta web de trabajo colaborativo. </h5>
-					<small><b>Puedes votar DoPlanning aquí para que esté entre los 3 finalistas:</b><br/> 
+				    <h5>�Gracias por usar DoPlanning!. Tenemos el placer de comunicarte que DoPlanning ha sido nominado para los premios UP-Start 2014 como mejor herramienta web de trabajo colaborativo. </h5>
+					<small><b>Puedes votar DoPlanning aqu� para que est� entre los 3 finalistas:</b><br/> 
 		 			<a href="http://awards.up-con.com/2014/vote?page=3" target="_blank">http://awards.up-con.com/2014/vote?page=3</a></small><br/><br/>
 
-		 			<small><a href="http://www.ideal.es/granada/201410/28/pyme-local-aspira-premio-20141027234437.html" target="_blank">Noticia en el periódico Ideal con la nominación</a></small>
+		 			<small><a href="http://www.ideal.es/granada/201410/28/pyme-local-aspira-premio-20141027234437.html" target="_blank">Noticia en el peri�dico Ideal con la nominaci�n</a></small>
 				  </div>
 				</div>
 
