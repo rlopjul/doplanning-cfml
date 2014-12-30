@@ -188,7 +188,8 @@
 		<!---<cfargument name="init_item" type="string" required="no">
 		<cfargument name="items_page" type="string" required="no">--->
 		<cfargument name="structure_available" type="boolean" required="false">
-		<cfargument name="published" type="boolean" required="false" default="true">		
+		<cfargument name="published" type="boolean" required="false" default="true">
+		<cfargument name="identifier" type="string" required="false">		
 		
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
@@ -264,8 +265,11 @@
 					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
 					, items.iframe_url, items.iframe_display_type_id, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
 					</cfif>	 
-					<cfif arguments.itemTypeId IS 7><!---Consultations--->
-					, items.state, items.identifier
+					<cfif arguments.itemTypeId IS 7 OR arguments.itemTypeId IS 8><!---Consultations, Publications--->
+					, items.identifier
+						<cfif arguments.itemTypeId IS 7><!---Consultations--->
+						, items.state
+						</cfif>
 					</cfif>
 					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
 					, items.structure_available
@@ -352,6 +356,9 @@
 					</cfif>
 					<cfif isDefined("arguments.structure_available")>
 					AND items.structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif isDefined("arguments.identifier")>
+					AND items.identifier LIKE <cfqueryparam value="%#arguments.identifier#%" cfsqltype="cf_sql_varchar">
 					</cfif>
 					<cfif itemTypeWeb IS true><!--- WEB --->
 						<cfif arguments.published IS true>
@@ -692,12 +699,12 @@
 				<cfset commonColumsFullAdd = ", NULL AS file_size, NULL AS file_type, NULL AS file_name"><!---, attached_file_name, link, --->
 				<cfset commonColums = commonColums&commonColumsFullAdd>
 				<cfset commonColumsWithoutLastUpdate = commonColumsWithoutLastUpdate&commonColumsFullAdd>
-				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL AS state">
+				<cfset commonColumsNull = commonColumsNull&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL AS sub_type_id, NULL AS state">
 
-				<cfset eventColums = eventColums&", place, start_date, NULL AS identifier, NULL AS state">
-				<cfset taskColums = taskColums&", NULL AS place, start_date, NULL AS identifier, NULL AS state">
-				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, identifier, NULL AS state">
-				<cfset consultationColums = consultationColums&", NULL AS place, NULL AS start_date, NULL AS identifier, state">
+				<cfset eventColums = eventColums&", place, start_date, NULL AS identifier, NULL AS sub_type_id, NULL AS state">
+				<cfset taskColums = taskColums&", NULL AS place, start_date, NULL AS identifier, NULL AS sub_type_id, NULL AS state">
+				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, identifier, sub_type_id, NULL AS state">
+				<cfset consultationColums = consultationColums&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL sub_type_id, state">
 
 				<cfset fileColums = fileColums&", file_size, file_type, file_name"><!---, NULL AS attached_file_name, NULL AS link--->
 

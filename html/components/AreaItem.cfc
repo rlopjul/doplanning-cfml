@@ -1517,6 +1517,7 @@
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
 		<cfargument name="to_end_date" type="string" required="no">
+		<cfargument name="identifier" type="string" required="false">
 				
 		<cfset var method = "getAllAreasItems">
 		
@@ -1555,6 +1556,7 @@
 				<cfif isDefined("arguments.to_end_date")>
 				<cfinvokeargument name="to_end_date" value="#arguments.to_end_date#">
 				</cfif>
+				<cfinvokeargument name="identifier" value="#arguments.identifier#">
 				<cfinvokeargument name="with_area" value="true">
 			</cfinvoke>	
 
@@ -1815,9 +1817,9 @@
 
 					</cfif>				
 					
-					<cfif itemTypeId IS 8><!--- Publications --->
+					<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, Publications --->
 
-						<cfif isNumeric(objectItem.sub_type_id)>
+						<cfif itemTypeId IS 8 AND isNumeric(objectItem.sub_type_id)>
 							<cfinvoke component="#APPLICATION.componentsPath#/ItemSubTypeManager" method="getSubType" returnvariable="subTypeQuery">
 								<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 								<cfinvokeargument name="sub_type_id" value="#objectItem.sub_type_id#">
@@ -1830,12 +1832,12 @@
 						<cfif len(objectItem.identifier) GT 0>
 						<div class="div_message_page_label"><span lang="es">Identificador:</span> <span class="text_message_page">#objectItem.identifier#</span></div>
 
-							<cfif isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
+							<cfif itemTypeId IS 8 AND isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
 								<div class="div_message_page_label"><span lang="es">Enlace a PubMed:</span> <span class="text_message_page"><a href="http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#" target="_blank">http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#</a></span></div>
 							</cfif>
 						</cfif>
 
-						<cfif subTypeQuery.recordCount IS 0 OR subTypeQuery.sub_type_id NEQ 1>
+						<cfif itemTypeId IS 8 AND ( subTypeQuery.recordCount IS 0 OR subTypeQuery.sub_type_id NEQ 1 )>
 							
 							<div class="div_message_page_label"><span lang="es">Precio:</span> <span class="text_message_page">#objectItem.price#</span></div>
 
@@ -2108,21 +2110,24 @@
 									<th style="width:5%" class="filter-false"></th>
 									<th style="width:23%"><span lang="es">De</span></th>
 									<th style="width:12%"><span lang="es">Fecha</span></th>
-									<cfif itemTypeId IS 5>
+									<cfif itemTypeId IS 5><!---Events--->
 										<th style="width:8%"><span lang="es">Inicio</span></th>		
 										<th style="width:4%"><span lang="es">Fin</span></th>
-									</cfif>
-									<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
+									<cfelseif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
 									<th style="width:6%" class="filter-false">##</th>
+									<cfelseif itemTypeId IS 8><!---Publications---><!---itemTypeId IS 7 OR --->
+									<th style="width:6%"><span lang="es">Identificador</span></th>
 									</cfif>
 								<cfelse>
 									<th style="width:39%"><span lang="es"><cfif itemTypeId IS 1>Asunto<cfelse>Título</cfif></span></th>
 									<th style="width:5%" class="filter-false"></th>
 									<th style="width:19%"><span lang="es">De</span></th>
 									<th style="width:10%"><span lang="es">Fecha</span></th>
-									<cfif itemTypeId IS 5>
+									<cfif itemTypeId IS 5><!---Events--->
 										<th style="width:5%"><span lang="es">Inicio</span></th>		
 										<th style="width:5%"><span lang="es">Fin</span></th>
+									<cfelseif itemTypeId IS 8><!---Publications--->
+										<th style="width:6%"><span lang="es">Identificador</span></th>
 									</cfif>
 									<th style="width:23%" lang="es"><span lang="es">Área</span></th>
 								</cfif>
@@ -2301,16 +2306,20 @@
 							</td>
 							</cfif>
 							<cfif arguments.itemTypeId IS 5 OR arguments.itemTypeId IS 6><!---Event OR Task--->
-							<td><span>#itemsQuery.start_date#</span></td>
-							<td><span>#itemsQuery.end_date#</span></td>
+								<td><span>#itemsQuery.start_date#</span></td>
+								<td><span>#itemsQuery.end_date#</span></td>
+							<cfelseif itemTypeId IS 8><!---Publications---><!---itemTypeId IS 7 OR --->
+								<td>#itemsQuery.identifier#</td>
 							</cfif>
 							
+
+
 							<cfif arguments.full_content IS true>
 								<!---#itemTypeNameP#.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#--->
 								<td><a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="link_blue">#itemsQuery.area_name#</a></td>
 							<cfelse>
 								<cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
-								<td style="vertical-align:middle"><span style="line-height:30px;">#itemsQuery.position#</span><!---Opciones de ordenar anteriores<div style="float:right;clear:none;"><a onclick="openUrl('area_item_position_up.cfm?item=#itemsQuery.id#&type=#itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a><div style="clear:both; height:0px;"><!-- --></div><a onclick="openUrl('area_item_position_down.cfm?item=#itemsQuery.id#&type=#itemTypeId#&area=#itemsQuery.area_id#','areaIframe',event)"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a></div>---></td>
+								<td style="vertical-align:middle"><span style="line-height:30px;">#itemsQuery.position#</span></td>
 								</cfif>
 							</cfif>
 							
@@ -3170,12 +3179,23 @@
 											<cfcase value="closed"><strong lang="es">Cerrada</strong></cfcase>
 										</cfswitch></span>
 
+									<cfelseif itemTypeId IS 8><!--- Publications --->
+
+										<cfif len(itemsQuery.identifier) GT 0>
+										<!---<b lang="es">Identificador:</b> <span>#itemsQuery.identifier#</span>--->
+
+											<cfif isNumeric(itemsQuery.identifier) AND isNumeric(itemsQuery.sub_type_id) AND itemsQuery.sub_type_id IS 1>
+												<div><span>PubMed URL:</span> <a href="http://www.ncbi.nlm.nih.gov/pubmed/#itemsQuery.identifier#" target="_blank">http://www.ncbi.nlm.nih.gov/pubmed/#itemsQuery.identifier#</a>
+												</div>
+											</cfif>
+										</cfif>
+
 									</cfif>
 
 
 									<cfif itemTypeId EQ 10><!--- Files --->
 
-										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><i class="icon-download-alt"></i> #itemsQuery.file_name#</a><br/>
+										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><i class="icon-download-alt"></i> #itemsQuery.file_name#</a><br>
 
 									<cfelse>
 

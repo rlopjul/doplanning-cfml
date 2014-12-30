@@ -105,7 +105,7 @@
 			    	<!---if( $("##name").val().length > 0 ){
 			    		postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea");
 			    	} else {
-			    		alert("Debe introducir un nombre de área");
+			    		showAlertModal("Debe introducir un nombre de área");
 			    	}--->
 
 			    	$('body').modalmanager('loading');
@@ -129,7 +129,7 @@
 						  		showAlertMessage(message, data.result);
 
 						  	}else
-								alert(status);
+								showAlertErrorModal(status);
 							
 						  },
 						  dataType: "json"
@@ -138,7 +138,7 @@
 
 				} else {
 
-					alert("Debe introducir un número válido de días");
+					showAlertModal("Debe introducir un número válido de días");
 				}
 				
 			}

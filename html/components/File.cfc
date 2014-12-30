@@ -521,6 +521,8 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
+		<cfargument name="version_index" type="string" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
 
 		<cfset var response = structNew()>
 		
@@ -552,7 +554,17 @@
 				    ]
 				}>
 
+			<cfelse><!--- Error --->
+
+				<cfset response.files = [
+				      {
+				        name: "#arguments.name#",
+				        error: "#response.message#",
+				      }
+				    ]>
+
 			</cfif>
+
 
 			<cfcatch>
 
@@ -563,7 +575,7 @@
 				    [
 				      {
 				        name: "#arguments.name#",
-				        error: "#cfcatch.message#"
+				        error: "#cfcatch.message#",
 				      }
 				    ]
 				}>

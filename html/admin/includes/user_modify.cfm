@@ -41,7 +41,7 @@
 					  		showAlertMessage(message, data.result);
 
 					  	}else
-							alert(status);
+							showAlertErrorModal(status);
 						
 					  },
 					  dataType: "json"
@@ -82,7 +82,7 @@
 	    <button class="btn btn-primary" onclick="submitUserModifyModal()">Guardar cambios</button>
 	</div>
 
-	<cfinclude template="#APPLICATION.htmlPath#/admin/includes/error_modal.cfm"/>
+	<!---<cfinclude template="#APPLICATION.htmlPath#/admin/includes/error_modal.cfm"/>--->
 
 <cfelse>
 	<div class="alert alert-danger"><span>Error</span></div>

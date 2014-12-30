@@ -26,12 +26,13 @@ function postUserDataForm(requestUrl) {
 			  			hideDefaultModal();	
 			  			showAlertMessage(message, data.result);	  			
 			  		} else {
-			  			$("#errorMessageModal").modal();	
-			  			$("#modalErrorMessage").text(message);		  			
+			  			/*$("#errorMessageModal").modal();	
+			  			$("#modalErrorMessage").text(message);*/
+			  			showAlertErrorModal(message);		  			
 			  		}
 			  			
 			  	}else
-					alert(status);
+					showAlertModal(status);
 				
 			  },
 			  dataType: "json"
@@ -56,16 +57,17 @@ function postUserDataForm(requestUrl) {
 			  			hideDefaultModal();
 			  			showAlertMessage(message, result.result);
 			  		} else {
-						$("#errorMessageModal").modal();	
-			  			$("#modalErrorMessage").text(message);					  			
+						/*$("#errorMessageModal").modal();	
+			  			$("#modalErrorMessage").text(message);*/
+			  			showAlertErrorModal(message);					  			
 			  		}			  		
 
 			  	}else
-			  		alert(status);
+			  		showAlertModal(status);
 
 			}).error(function ( data, status )  {
 
-				alert("Error: "+status);
+				showAlertModal("Error: "+status);
 
 			}).complete(function ( data, status )  { });
 

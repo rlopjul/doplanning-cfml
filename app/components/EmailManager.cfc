@@ -175,8 +175,14 @@ body {
 
 					<cfcatch>
 
-						<cfif curAttempt GT 2>
-							<cfthrow message="Error al conectar con el servicio de envío de emails, no se ha enviado notificación por email a los usuarios. #cfcatch.message#"/>
+						<cfif curAttempt GT 2><!--- API CONNECTION ERROR --->
+
+							<cfset fullFrom = '"#fromName#" <#APPLICATION.emailFrom#>'>
+
+							<!---<cfmail server="#APPLICATION.emailServer#" username="#APPLICATION.emailServerUserName#" password="#APPLICATION.emailServerPassword#" type="html" from="#fullFrom#" to="#arguments.to#" bcc="#arguments.bcc#" subject="#arguments.subject#" charset="utf-8" port="#APPLICATION.emailServerPort#">#email_content#</cfmail>--->
+
+							<cfthrow message="Error al conectar con el servicio de envío de emails, no se ha enviado notificación por email a los usuarios. Por favor, inténtelo de nuevo. #cfcatch.message#"/>
+
 						<cfelse>
 							<cfset sleep(300)>
 						</cfif>
@@ -187,7 +193,7 @@ body {
 
 			</cfloop>
 			
-			<cfif responseResult.status_code NEQ 200>
+			<cfif isDefined("responseResult") AND isDefined("mandrillResponse") AND responseResult.status_code NEQ 200>
 				
 				<cfthrow errorcode="1302" message="#mandrillResponse.message#">
 				

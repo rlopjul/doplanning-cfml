@@ -4,7 +4,7 @@
 <script src="#APPLICATION.path#/jquery/tablesorter/widgets/widget-math.js?v=2.1"></script>
 
 <cfset curPageFile = GetFileFromPath(CGI.SCRIPT_NAME)>
-<cfif curPageFile NEQ "area_items.cfm" AND curPageFile NEQ "list_rows.cfm" AND curPageFile NEQ "form_rows.cfm"><!---En esta página no se cargan estos scripts que dan problemas en los navegadores cuando hay muchos registros--->
+<cfif curPageFile NEQ "area_items.cfm" AND curPageFile NEQ "list_rows.cfm" AND curPageFile NEQ "form_rows.cfm" AND curPageFile NEQ "all_users.cfm"><!---En esta página no se cargan estos scripts que yan no son necesarios y porque dan problemas en los navegadores cuando hay muchos registros--->
 	<script src="#APPLICATION.path#/jquery/jquery-migrate-1.2.1.min.js"></script><!---Se añade este script para poder seguir usando jquery.tablesorter.extras-0.1.22.min.js ya que usa la funcion  $.browser--->
 	<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.extras-0.1.22.min.js"></script>
 </cfif>

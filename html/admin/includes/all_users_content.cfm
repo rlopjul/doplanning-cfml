@@ -20,6 +20,8 @@
 						<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
 					<!---</div>--->
 				</cfif>
+
+				<a class="btn btn-default btn-sm navbar-btn" href="#APPLICATION.htmlComponentsPath#/User.cfc?method=exportUsersDownload" onclick="return downloadFileLinked(this,event)" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> Exportar usuarios</a>
 			</cfif>
 		</div>
 	</div>
@@ -72,6 +74,7 @@
 				<cfinvokeargument name="users" value="#users#">
 				<cfinvokeargument name="open_url_target" value="userAdminIframe">
 				<cfinvokeargument name="filter_enabled" value="true">
+				<cfinvokeargument name="select_enabled" value="true">
 				<cfinvokeargument name="showAdminFields" value="true">
 			</cfinvoke>	
 	
@@ -95,3 +98,51 @@
 	<p class="bg-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en "Buscar" para listar usuarios de la organización.</span></p><!---text-info--->
 
 </cfif>
+
+<script>
+	
+	function openAreaAssociateUsers() {
+
+		var associateUsersIds = "";
+
+		$('#usersTable tbody tr:visible input[type=checkbox]:checked').each(function() {
+
+			if(associateUsersIds.length > 0)
+				associateUsersIds = associateUsersIds+","+this.value;
+			else
+				associateUsersIds = this.value;
+
+		});
+
+		if(associateUsersIds.length > 0)
+			parent.openAreaAssociateUsersModal(associateUsersIds);
+		else
+			parent.showAlertModal("No hay usuarios");
+
+	}
+
+	$(document).ready(function() { 
+
+		$('#addSelectedUsersNavBar').hide();	
+					    	
+	    $('#usersTable tbody input[type=checkbox]').on('click', function(e) {
+
+	    	stopPropagation(e);
+
+	    	if( $('#usersTable tbody tr:visible input[type=checkbox]:checked').length > 0 )
+				$('#addSelectedUsersNavBar').show();
+			else
+				$('#addSelectedUsersNavBar').hide();	
+
+	    });
+
+	});
+</script>
+
+<nav class="navbar navbar-default navbar-fixed-bottom" id="addSelectedUsersNavBar">
+  	<div class="container-fluid">
+  	
+		<a class="btn btn-info btn-sm navbar-btn" onclick="openAreaAssociateUsers()"><i class="icon-plus icon-white"></i> Asociar usuarios seleccionados al área</a>
+
+  	</div>
+</nav>

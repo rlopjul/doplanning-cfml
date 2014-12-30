@@ -50,12 +50,35 @@ function hideAlertMessage(){
 
 }
 
+function showAlertModal(msg){
+
+	//loadModal( "html_content/alert_modal.cfm?msg="+encodeURIComponent(msg) );
+	var data = {
+	    "msg": msg,
+	    "error": false
+	};
+
+	$("#alertModal").html( tmpl("tmpl-alert-modal", data) );
+	$("#alertModal").modal( {width:650, backdrop:'static'} );
+}
+
+function showAlertErrorModal(msg){
+
+	var data = {
+	    "msg": msg,
+	    error: true
+	};
+
+	$("#alertModal").html( tmpl("tmpl-alert-modal", data) );
+	$("#alertModal").modal( {width:650, backdrop:'static'} );
+}
+
 function loadModal(url){
  
 	$('body').modalmanager('loading');
 
 	$modal.load(url, '', function(){
-	  $modal.modal({width:740});/*680*/
+	  $modal.modal({width:740, backdrop:'static'});/*680*/
 	});
 }
 

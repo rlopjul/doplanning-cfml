@@ -60,7 +60,7 @@
 
     			}).error(function (jqXHR, textStatus, errorThrown) {
 
-    				alert("Error: "+textStatus+" "+errorThrown);
+    				showAlertErrorModal("Error: "+textStatus+" "+errorThrown);
 
     			}).complete(function (result, textStatus, jqXHR) { });*/
 
@@ -82,11 +82,11 @@
 				  		showAlertMessage(message, result.result);
 
 				  	}else
-						alert(status);
+						showAlertErrorModal(status);
 
     			}).error(function ( data, status )  {
 
-    				alert("Error: "+status);
+    				showAlertErrorModal(status);
 
     			}).complete(function ( data, status )  { });
 
@@ -269,12 +269,12 @@
 			    	if( $("##file").val().length > 0 ){
 			    		postImportAreasForm();
 			    	} else {
-			    		alert("Debe seleccionar un archivo");
+			    		showAlertModal("Debe seleccionar un archivo");
 			    	}
 
 				} else {
 
-					alert("Debe seleccionar un usuario responsable");
+					showAlertModal("Debe seleccionar un usuario responsable");
 				}
 
 			}

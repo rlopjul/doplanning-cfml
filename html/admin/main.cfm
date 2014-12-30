@@ -51,6 +51,7 @@
 
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modal.js"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
+<!---<script src="#APPLICATION.htmlPath#/bootstrap/bootbox/bootbox.js"></script>--->
 
 <script>
 	<!---To enable the loading spinner in Bootstrap 3--->
@@ -69,6 +70,7 @@
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
@@ -125,8 +127,8 @@
 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.3"></script>
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
-<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.9"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.2"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.91"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 </cfoutput>
@@ -154,7 +156,7 @@
 			
 		window.lang.change(newLanguage);
 			
-		location.href = "language_selection.cfm?lan="+newLanguage;
+		location.href = "../language_selection.cfm?lan="+newLanguage+"&rpage=admin/";
 	
 	}
 
@@ -208,7 +210,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_new.cfm?parent='+curAreaId);
 		else
-			alert("Debe seleccionar un área en la que crear la nueva");
+			showAlertModal("Debe seleccionar un área en la que crear la nueva");
 	}
 
 	function openAreaImportModal(){
@@ -216,7 +218,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_import.cfm?parent='+curAreaId);
 		else
-			alert("Debe seleccionar un área en la que crear las nuevas áreas");
+			showAlertModal("Debe seleccionar un área en la que crear las nuevas áreas");
 	}
 
 	function openAreaExportModal(){
@@ -224,7 +226,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_export_structure.cfm?parent='+curAreaId);
 		else
-			alert("Debe seleccionar un área para exportar");
+			showAlertModal("Debe seleccionar un área para exportar");
 	}
 
 	function openAreaMoveModal(){
@@ -232,7 +234,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_cut.cfm?area='+curAreaId);
 		else
-			alert("Debe seleccionar un área para mover");
+			showAlertModal("Debe seleccionar un área para mover");
 	}
 
 	function openAreaAssociateModal(userId){
@@ -240,7 +242,16 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_user_associate.cfm?area='+curAreaId+'&user='+userId);
 		else
-			alert("Debe seleccionar un área para asociar el usuario");
+			showAlertModal("Debe seleccionar un área para asociar el usuario");
+	}
+
+	function openAreaAssociateUsersModal(usersIds){
+
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/area_users_associate.cfm?area='+curAreaId+'&users='+usersIds);
+		else
+			//alert("Debe seleccionar un área para asociar los usuarios");
+			showAlertModal("Debe seleccionar un área para asociar los usuarios");
 	}
 
 	function openAreaAssociateAdministratorModal(userId){
@@ -248,7 +259,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_administrator_associate.cfm?area='+curAreaId+'&user='+userId);
 		else
-			alert("Debe seleccionar un área para asociar el administrador");
+			showAlertModal("Debe seleccionar un área para asociar el administrador");
 	}
 
 	function openAreaModifyModal(){
@@ -256,7 +267,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_modify.cfm?area='+curAreaId);
 		else
-			alert("Debe seleccionar un área para modificar");
+			showAlertModal("Debe seleccionar un área para modificar");
 	}
 
 	function openAreaDeleteModal(){
@@ -264,7 +275,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_delete.cfm?area='+curAreaId);
 		else
-			alert("Debe seleccionar un área para eliminar");
+			showAlertModal("Debe seleccionar un área para eliminar");
 
 	}
 
@@ -350,11 +361,18 @@
 		if(userLanguage != selectedLanguage)
 			window.lang.change(userLanguage);--->
 
-		if(hasLocalStorage())
+		<!---if(hasLocalStorage())
    			savedLanguage = localStorage.getItem('langJs_currentLang');
 
 		if(savedLanguage != selectedLanguage && userLanguage == savedLanguage){
 			window.lang.change(userLanguage);
+		}--->
+
+		selectedLanguage = window.lang.currentLang;
+
+		if( window.lang.currentLang != userLanguage ){
+			window.lang.change(userLanguage);
+			selectedLanguage = userLanguage;
 		}
 		
 		if(selectedLanguage == 'en')
@@ -407,7 +425,7 @@
 		  <cfoutput>
 		  <div style="clear:none; text-align:center">
 
-		  	<span class="main_title"><b>Administración</b> beta</span>
+		  	<span class="main_title"><b lang="es"><cfif SESSION.client_administrator IS SESSION.user_id>Administración general<cfelse>Administración de áreas</cfif></b></span>
 		  
 		  	<div style="float:right; text-align:right; clear:none;">
 				<a href="../preferences.cfm" title="Preferencias del usuario" class="link_user_logged">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
@@ -520,7 +538,7 @@
 
 				<div class="form-inline" style="padding-bottom:5px; padding-left:5px;">
 					<label class="checkbox">
-						<input type="checkbox" id="changeTabDisabled" value="true"/> <span>No cambiar de pestaña al seleccionar área</span>
+						<input type="checkbox" id="changeTabDisabled" value="true" style="width:15px;height:15px"/> <span style="font-size:15px;">No cambiar de pestaña al seleccionar área</span>
 					</label>
 				</div>
 				
@@ -546,7 +564,6 @@
 						<a onClick="changeLanguage()" id="languageSelector" style="font-size:12px;cursor:pointer;">Inglés</a>
 						
 						<!--- <span style="font-size:12px;">&nbsp;|&nbsp;</span>
-						
 						<a href="mobile.cfm" style="font-size:12px" lang="es">Versión móvil</a> --->
 						
 					</div>
@@ -641,13 +658,37 @@
 	<!--- Modal Window --->
 	<div id="ajax-modal" class="modal container fade" tabindex="-1"></div><!---hide funcionaba en bs2--->
 
+	<!---Alert modal--->
+	<div id="alertModal" class="modal container fade" tabindex="-1"></div>
+
 	<div style="clear:both"><!-- --></div>
 	<div class="msg_div_error" id="errorMessage"></div>
+
+	<div id="prueba"></div>
 
 </div>
 
 <!---Download File--->
 <!--- <cfinclude template="#APPLICATION.htmlPath#/includes/open_download_file.cfm"> --->
+
+<!--- Alert modal --->
+<script type="text/x-tmpl" id="tmpl-alert-modal">
+
+{% if(o.error==true) { %}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="text-danger"><i class="icon-warning-sign"></i>&nbsp;Error</h4>
+</div>
+{% } %}
+
+<div class="modal-body">
+	<br/>
+	{%=o.msg%}
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" lang="es">Aceptar</button>
+</div>
+</script>
 
 </body>
 </html>

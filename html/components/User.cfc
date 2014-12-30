@@ -696,6 +696,38 @@
 		<cfreturn response>
 			
 	</cffunction>
+
+
+	<!--- ----------------------------------- assignUsersToArea -------------------------------------- --->
+
+	<cffunction name="assignUsersToArea" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true" />
+		<cfargument name="users_ids" type="string" required="true" />
+		
+		<cfset var method = "assignUsersToArea">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="assignUsersToArea" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="users_ids" value="#arguments.users_ids#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Usuarios asociados al area">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
 	
 
 
@@ -1224,6 +1256,7 @@
 		<cfargument name="show_area_members" type="boolean" required="false" default="false">
 		<cfargument name="open_url_target" type="string" required="false" default="itemIframe">
 		<cfargument name="filter_enabled" type="boolean" required="false" default="true">
+		<cfargument name="select_enabled" type="boolean" required="false" default="false">
 		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
 		<cfargument name="adminUsers" type="boolean" required="false" default="false">
 
@@ -1246,17 +1279,43 @@
 				<script>
 					$(document).ready(function() { 
 
+						<!---$.tablesorter.addParser({ 
+					        id: "custom-checkbox", 
+					        is: function(s) { 
+					            return false; 
+					        }, 
+					        format: function(s, t, cell) {
+					        	console.log($(cell).find("input[type=checkbox]").is(':checked'));
+					            return $(cell).find("input[type=checkbox]").is(':checked') ? 1 : 0;
+					        }, 
+					        type: "numeric" 
+					    });--->
+
 						$("###usersTableId#").tablesorter({ 
 							<cfif arguments.filter_enabled IS true>
-							widgets: ['zebra','filter','select','stickyHeaders'],
+							widgets: ['zebra','filter','stickyHeaders'],<!---'select',--->
 							<cfelse>
-							widgets: ['zebra','select'],
+							widgets: ['zebra'],<!---,'select'--->
 							</cfif>
-							sortList: [[1,0]] ,
+							<cfif arrayLen(arguments.users) LT 500><!---El orden del tablesorter en listados con muchos registros es muy lento--->
+								sortList: [[1,0]] ,
+							</cfif>
 							headers: { 
-								0: { 
-									sorter: false 
-								}
+								<cfif arguments.select_enabled IS true>
+									0: { 
+										<!---<cfif arrayLen(arguments.users) LT 50>
+										sorter: "custom-checkbox" 
+										<cfelse>--->
+										sorter: false
+									}
+									, 1: { 
+										sorter: false 
+									}
+								<cfelse>
+									0: { 
+										sorter: false 
+									}
+								</cfif>
 								<!---<cfif APPLICATION.moduleWebRTC IS true>
 								, 5: { 
 									sorter: false 
@@ -1283,6 +1342,21 @@
 						    </cfif>
 
 						});
+
+
+						$('###usersTableId# tbody tr').on('click', function(e) {
+
+					        var row = $(this);
+
+					        if(!row.hasClass("selected")) {
+					        	$('###usersTableId# tbody tr').removeClass("selected");
+					        	row.addClass("selected");
+					        }
+
+					        var itemUrl = row.data("item-url");
+						    openUrlLite(itemUrl,'#arguments.open_url_target#');
+
+					    });
 						
 					}); 
 				</script>
@@ -1291,6 +1365,9 @@
 				<table id="#usersTableId#" class="users-table table-hover">
 					<thead>
 						<tr>
+							<cfif arguments.select_enabled IS true>
+							<th style="width:35px;" class="filter-false"></th>
+							</cfif>
 							<th style="width:35px;" class="filter-false"></th>
 							<th lang="es">Nombre</th>
 							<th lang="es">Apellidos</th>
@@ -1356,7 +1433,12 @@
 							
 						</cfif>
 						
-						<tr <cfif itemSelected IS true>class="selected"</cfif> <cfif arguments.user_in_charge IS objectUser.id>style="font-weight:bold"</cfif> onclick="openUrl('#user_page_url#','#arguments.open_url_target#',event)">
+						<tr <cfif itemSelected IS true>class="selected"</cfif> <cfif arguments.user_in_charge IS objectUser.id>style="font-weight:bold"</cfif> data-item-url="#user_page_url#"><!--- onclick="openUrl('#user_page_url#','#arguments.open_url_target#',event)"--->
+							<cfif arguments.select_enabled IS true>
+							<td style="text-align:center">
+								<input type="checkbox" name="selected_user_#objectUser.id#" value="#objectUser.id#">
+							</td>
+							</cfif>
 							<td style="text-align:center">
 								<cfif len(objectUser.image_type) GT 0>
 									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>									
@@ -1579,5 +1661,54 @@
 		</cftry>--->
 		
 	</cffunction>
+
+
+	<!--- -------------------------------exportUsersDownload-------------------------------------- --->
+	
+    <cffunction name="exportUsersDownload" returntype="void" access="remote">
+    	<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="delimiter" type="string" required="false" default=";">
+		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
+		
+		<cfset var method = "exportAreaItemsDownload">
+
+		<cfset var exportUsersResponse = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="exportUsers" returnvariable="exportUsersResponse">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
+				<cfinvokeargument name="ms_excel_compatibility" value="#arguments.ms_excel_compatibility#">
+			</cfinvoke>
+
+			<cfif exportUsersResponse.result IS true><!---The export is success--->
+				
+				<cfif arguments.delimiter EQ "tab">
+					<cfset contentDisposition = "attachment; filename=doplanning_#SESSION.client_abb#_users.txt;">
+					<cfset contentType = "text/plain; charset=Windows-1252">
+				<cfelse>
+					<cfset contentDisposition = "attachment; filename=doplanning_#SESSION.client_abb#_users.csv;">
+					<cfset contentType = "text/csv; charset=Windows-1252">
+				</cfif>
+
+				<cfheader name="Content-Disposition" value="#contentDisposition#" charset="Windows-1252"><!---iso-8859-1--->
+				<cfcontent type="#contentType#"><cfoutput>#exportUsersResponse.content#</cfoutput></cfcontent>
+
+			<cfelse>
+				<!---There is an error in the export--->
+				<cfoutput>
+					Error: #exportUsersResponse.message#
+				</cfoutput>
+			</cfif>
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+	</cffunction>
+
 	
 </cfcomponent>

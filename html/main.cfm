@@ -114,8 +114,8 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.3"></script>
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
-<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.9"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.2"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.91"></script>
 </cfoutput>
 
 <script>
@@ -293,17 +293,18 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 		//Language
    		<!---window.lang.run();--->		
-		var savedLanguage = selectedLanguage;
+		<!---var savedLanguage = selectedLanguage;
 
    		if(hasLocalStorage())
-   			savedLanguage = localStorage.getItem('langJs_currentLang');
-			<!---selectedLanguage = localStorage.getItem('langJs_currentLang');--->
+   			savedLanguage = localStorage.getItem('langJs_currentLang');--->
 
-		if(savedLanguage != selectedLanguage && userLanguage == savedLanguage){
+   		selectedLanguage = window.lang.currentLang;
+
+		if( window.lang.currentLang != userLanguage ){
 			window.lang.change(userLanguage);
+			selectedLanguage = userLanguage;
 		}
-			
-
+		
 		if(selectedLanguage == 'en')
 			$('#languageSelector').text('Español');
 		else
@@ -318,6 +319,9 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 <!--- Loading --->
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
+
+<!--- Alert --->
+<cfinclude template="#APPLICATION.htmlPath#/includes/main_alert.cfm">
 
 <div class="div_contenedor_contenido">
   	

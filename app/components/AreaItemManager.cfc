@@ -3662,6 +3662,7 @@
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
 		<cfargument name="to_end_date" type="string" required="no">
+		<cfargument name="identifier" type="string" required="false">
 		
 		<cfset var method = "getAllAreasItems">
 
@@ -3714,6 +3715,7 @@
 				<cfif isDefined("arguments.to_end_date")>
 				<cfinvokeargument name="to_end_date" value="#arguments.to_end_date#">
 				</cfif>
+				<cfinvokeargument name="identifier" value="#arguments.identifier#">
 				<cfinvokeargument name="published" value="false">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -3887,8 +3889,21 @@
 
 			<cfif areaItemsQuery.recordCount GT 0>
 
+				<!--- getUser --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
+					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
 				<cfset columnsNames = "itemType;title;user_full_name;creation_date;last_update_user_full_name;last_update_date;description;version_index;revision_user_full_name;revision_date;approval_user_full_name;approval_date">
-				<cfset columnsLabels = "Tipo de elemento;Título;Usuario creación;Fecha de creación;Usuario última modificación;Fecha de última modificación;Descripción;Nº Versión actual;Usuario revisor de la versión;Fecha de revision;Usuario aprobador de la versión;Fecha de aprobación">
+
+				<cfif selectUserQuery.language EQ "es">
+					<cfset columnsLabels = "Tipo de elemento;Título;Usuario creación;Fecha de creación;Usuario última modificación;Fecha de última modificación;Descripción;Nº Versión actual;Usuario revisor de la versión;Fecha de revision;Usuario aprobador de la versión;Fecha de aprobación">
+				<cfelse>
+					<cfset columnsLabels = "Element type;Tittle;Creation user;Creation date;Last update user;Last update date;Description;Current number version;Revision user;Revision date;Current version approval user;Approval date">
+				</cfif>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">

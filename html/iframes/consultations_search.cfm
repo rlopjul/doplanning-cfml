@@ -85,7 +85,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/search_menu.cfm">
 
-<cfset itemTypeId = 8>
+<cfset itemTypeId = 7>
 <cfinclude template="#APPLICATION.htmlPath#/includes/all_areas_items_content.cfm">
 
 <!-- InstanceEndEditable -->

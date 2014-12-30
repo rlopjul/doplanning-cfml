@@ -1607,13 +1607,13 @@
 
 	<cffunction name="assignUsersToArea" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="true"/>
-		<cfargument name="users_id" type="list" required="true"/>
+		<cfargument name="users_ids" type="string" required="true"/>
 		
 		<cfset var method = "assignUsersToArea">
 
 		<cfset var response = structNew()>
 
-		<cfset var user_id = "">
+		<cfset var cur_user_id = "">
 		<cfset var client_abb = "">
 			
 		<cftry>
@@ -1622,8 +1622,7 @@
 			
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 		
-			<cfloop index="cur_user_index" list="#arguments.users_id#">
-				<cfset cur_user_id = cur_user_index>
+			<cfloop index="cur_user_id" list="#arguments.users_ids#">
 				
 				<cfinvoke component="UserManager" method="assignUserToArea" returnvariable="responseAssignUser">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
@@ -1640,7 +1639,7 @@
 			
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
 			
-			<cfset response = {result=true, message="", area_id=#arguments.area_id#}>
+			<cfset response = {result=true, area_id=#arguments.area_id#}>
 		
 			<cfcatch>
 
@@ -3060,6 +3059,101 @@
 		<cfreturn xmlResponse>		
 		
 	</cffunction>
+
+
+
+	<!--- ------------------------------------- exportUsers -------------------------------------  --->
+	
+	<cffunction name="exportUsers" output="false" access="public" returntype="struct">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="delimiter" type="string" required="true">
+		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
+
+		<cfset var method = "exportUsers">
+
+		<cfset var response = structNew()>
+
+		<cfset var fieldsNames = "">
+		<cfset var fieldsLabels = "">
+		<cfset var exportContent = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<!--- checkAdminAccess --->
+			<cfinclude template="includes/checkAdminAccess.cfm">
+
+			<!--- getAllUsers --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getAllUsers" returnvariable="getAllUsersQuery">
+				<cfinvokeargument name="with_external" value="true">
+				<cfinvokeargument name="order_by" value="creation_date">
+				<cfinvokeargument name="order_type" value="ASC">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif getAllUsersQuery.recordCount GT 0>
+
+				<!--- getUser --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
+					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled, id, creation_date, number_of_connections, last_connection">
+
+				<cfif selectUserQuery.language EQ "es">
+					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo, ID, Fecha de alta, Nº de conexiones, Última conexión">
+				<cfelse>
+					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active, ID, Registration date, Number of connections, Last connection">
+				</cfif>
+
+				<cfif client_abb EQ "hcs">
+					<cfset fieldsNames = listAppend(fieldsNames, "perfil_cabecera")>
+					<cfset fieldsLabels = listAppend(fieldsLabels, "Perfil de cabecera")>
+				</cfif>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToCSV" returnvariable="exportContent">
+					<cfinvokeargument name="query" value="#getAllUsersQuery#">
+					<cfinvokeargument name="fields" value="#fieldsNames#">
+					<cfinvokeargument name="fieldsLabels" value="#fieldsLabels#">
+					<cfinvokeargument name="createHeaderRow" value="true">
+					<cfif arguments.delimiter EQ "tab">
+						<cfinvokeargument name="delimiter" value="	">
+					<cfelse>
+						<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
+					</cfif>
+				</cfinvoke>
+
+				<cfif arguments.ms_excel_compatibility IS true>
+					
+					<cfset exportContent = "sep=;#chr(10)#"&exportContent>
+
+				</cfif>
+				
+			</cfif>
+			
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, content=#exportContent#}>
+			
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+				<cfset response = {result=false, message=cfcatch.message}>
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+
 	
 	
 </cfcomponent>

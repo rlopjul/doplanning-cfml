@@ -39,7 +39,7 @@
 		
 		<cfif isDefined("URL.return_page") AND URL.return_page EQ "file.cfm">
 			<cflocation url="file.cfm?area=#area_id#&file=#file_id#&res=1&msg=#msg#" addtoken="no">
-		<celse>
+		<cfelse>
 			<cflocation url="area_items.cfm?area=#area_id#&file=#file_id#&res=1&msg=#msg#" addtoken="no">
 		</cfif>
 	

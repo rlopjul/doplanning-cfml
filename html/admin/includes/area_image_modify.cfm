@@ -68,11 +68,11 @@
 							  		openUrl("#return_page#", "areaIframe");
 						  		} else {
 						  			var message = data.message;
-							  		alert(message);
+							  		showAlertModal(message);
 						  		}		
 						  		
 						  	}else
-								alert(status);
+								showAlertErrorModal(status);
 							
 						  },
 						  dataType: "json"
@@ -181,7 +181,7 @@
 						  		openUrl("#return_page#", "areaIframe");
 						  	}else{
 
-						  		alert(status);
+						  		showAlertErrorModal(status);
 						  	}
 							
 						  },
@@ -205,11 +205,11 @@
 
 						  		openUrl("#return_page#", "areaIframe");
 						  	}else
-						  		alert(status);
+						  		showAlertErrorModal(status);
 
 						}).error(function ( data, status )  {
 
-							alert("Error: "+status);
+							showAlertErrorModal(status);
 
 						}).complete(function ( data, status )  { });
 

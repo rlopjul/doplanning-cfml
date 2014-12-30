@@ -176,7 +176,8 @@ var area_item_content_en = {
 		'Descripción:':'Description:',
 		'Contenido:':'Content:',
 		'URL en DoPlanning:':'DoPlanning URL:',
-		'Enlace a PubMed':'Link to PubMed',
+		'Tipo:':'Type:',
+		'Enlace a PubMed:':'PubMed link:',
 		'Sí':'Yes',
 		'No':'No',
 		/*END area_item_content*/

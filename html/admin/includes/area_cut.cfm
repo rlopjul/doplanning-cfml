@@ -47,7 +47,7 @@
 					postModalFormTree("##cutAreaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=moveArea");
 				} else {
 
-					alert("Debe seleccionar un área de destino");
+					showAlertModal("Debe seleccionar un área de destino");
 				}
 
 			}

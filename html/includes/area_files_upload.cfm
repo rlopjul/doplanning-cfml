@@ -61,13 +61,30 @@
 
 <script>
     var area_id = #area_id#;
-
     var url = "#APPLICATION.htmlComponentsPath#/File.cfc?method=uploadFileRemote";
+    var curFile = 0;
 </script>
 
 </cfoutput>
 
 <script>
+
+function setFileTypeId(fileTypeId, fileUploadId) {
+
+    if(fileTypeId == 3){
+
+        //$("##documentUsersContainer").show();
+        $("#documentVersionIndex"+fileUploadId).show();
+
+
+    }else{
+
+        //$("##documentUsersContainer").hide();
+        $("#documentVersionIndex"+fileUploadId).hide();
+    }
+
+}
+
 $(function () {
     'use strict';
 
@@ -276,9 +293,16 @@ $(function () {
     openUrlHtml2('empty.cfm','itemIframe');
 </script>
 
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopes" returnvariable="getScopesResult">
+</cfinvoke>
+<cfset scopesQuery = getScopesResult.scopes>
+
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
+
+    {% curFile = curFile+1; %}
+
     <tr class="template-upload fade">
         <td>
 
@@ -294,16 +318,31 @@ $(function () {
             <input type="hidden" name="reviser_user" id="reviser_user" value="#file_reviser_user#" />
             <input type="hidden" name="approver_user" id="approver_user" value="#file_approver_user#" />
             </cfoutput>
-            <label lang="es">Tipo</label>
-            <select name="fileTypeId" id="fileTypeId" class="form-control">
+            <label for="fileTypeId{%=curFile%}" lang="es">Tipo</label>
+            <select name="fileTypeId" id="fileTypeId{%=curFile%}" class="form-control" onchange="setFileTypeId($('#fileTypeId{%=curFile%}').val(),{%=curFile%});">
                 <option value="1" selected="selected" lang="es">Archivo de usuario</option>
                 <option value="2" lang="es">Archivo de área sin circuito de calidad</option>
                 <option value="3" lang="es">Archivo de área con circuito de calidad</option>
             </select>
-            <label lang="es">Nombre</label>
-            <input type="text" name="name" value="{%=file.name%}" required/>
-            <label lang="es">Descripción</label>
-            <input type="text" name="description" value=""/>
+            <label for="name{%=curFile%}" lang="es">Nombre</label>
+            <input type="text" name="name" id="name{%=curFile%}" value="{%=file.name%}" required/>
+            <div id="documentVersionIndex{%=curFile%}" style="display:none">
+                <label lang="es" for="version_index{%=curFile%}">Número de versión</label>
+                <input type="number" name="version_index" id="version_index{%=curFile%}" value="1" min="0" class="form-control" style="width:100px;" />
+            </div>
+            <label for="description{%=curFile%}" lang="es">Descripción</label>
+            <input type="text" name="description" id="description{%=curFile%}" value=""/>
+
+            <cfif scopesQuery.recordCount GT 0>
+                <label for="publication_scope_id{%=curFile%}" class="control-label" lang="es">Ámbito de publicación</label>
+                <select name="publication_scope_id" id="publication_scope_id{%=curFile%}" class="form-control">
+                    <cfoutput>
+                    <cfloop query="scopesQuery">
+                        <option value="#scopesQuery.scope_id#" <cfif FindNoCase(area_type, scopesQuery.name) GT 0>selected="selected"</cfif>>#scopesQuery.name#</option>
+                    </cfloop>
+                    </cfoutput>
+                </select>
+            </cfif>
 
             <strong class="error text-danger"></strong>
 
@@ -324,10 +363,10 @@ $(function () {
                     <span lang="es">Cancelar</span>
                 </button>
             {% } %}
-
         </td>
 
     </tr>
+
 {% } %}
 </script>
 <!-- The template to display files available for download -->
@@ -372,15 +411,17 @@ $(function () {
                     <span lang="es">Quitar de la lista</span>
                 </button>
             {% } %}
-            <a class="btn btn-info" onclick="openUrl('area_file_modify.cfm?area={%=area_id%}&file={%=file.file_id%}&fileTypeId={%=file.fileTypeId%}&return_page=file.cfm','itemIframe',event)">
-                <i class="icon-edit"></i>
-                <span lang="es">Modificar datos</span>
-            </a>
-            <cfoutput>
-            <a class="btn btn-default" href="#APPLICATION.htmlPath#/file.cfm?file={%=file.file_id%}&area={%=area_id%}" target="_blank" lang="es">
-                <i class="icon-external-link"></i>
-            </a>
-            </cfoutput>
+            {% if (file.file_id) { %}
+                <a class="btn btn-info" onclick="openUrl('area_file_modify.cfm?area={%=area_id%}&file={%=file.file_id%}&fileTypeId={%=file.fileTypeId%}&return_page=file.cfm','itemIframe',event)">
+                    <i class="icon-edit"></i>
+                    <span lang="es">Modificar datos</span>
+                </a>
+                <cfoutput>
+                <a class="btn btn-default" href="#APPLICATION.htmlPath#/file.cfm?file={%=file.file_id%}&area={%=area_id%}" target="_blank" lang="es">
+                    <i class="icon-external-link"></i>
+                </a>
+                </cfoutput>
+            {% } %}
 
         </td>
     </tr>

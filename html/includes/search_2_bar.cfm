@@ -77,6 +77,11 @@
 	<cfset end_date = "">
 </cfif>
 
+<cfif isDefined("URL.identifier")>
+	<cfset identifier = URL.identifier>
+<cfelse>
+	<cfset identifier = "">
+</cfif>
 
 <cfif isDefined("URL.typology_id")>
 	<cfset selected_typology_id = URL.typology_id>
@@ -395,20 +400,28 @@
 			</div>
 		</cfif>
 				
-		<cfif itemTypeId IS 7><!---Consultations--->
+		<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, Publications--->
 			<div class="row">
-				<label for="done" class="col-sm-2 control-label" lang="es">Estado actual</label> 
+				<label for="identifier" class="col-sm-2 control-label" lang="es">Identificador</label> 
 
 				<div class="col-sm-4">
-					<select name="state" id="state" class="form-control">
-						<option value="" lang="es">Todos</option>
-						<option value="created" <cfif cur_state EQ "created">selected="selected"</cfif> lang="es">Enviada</option>
-						<option value="read" <cfif cur_state EQ "read">selected="selected"</cfif> lang="es">Leída</option>
-						<option value="answered" <cfif cur_state EQ "answered">selected="selected"</cfif> lang="es">Respondida</option>
-						<option value="closed" <cfif cur_state EQ "closed">selected="selected"</cfif> lang="es">Cerrada</option>
-					</select>
+					<input type="text" name="identifier" id="identifier" value="#identifier#" class="form-control"/>
 				</div>
-			</div>	
+
+				<cfif itemTypeId IS 7><!--- Consultations --->		
+					<label for="done" class="col-sm-2 control-label" lang="es">Estado actual</label> 
+
+					<div class="col-sm-4">
+						<select name="state" id="state" class="form-control">
+							<option value="" lang="es">Todos</option>
+							<option value="created" <cfif cur_state EQ "created">selected="selected"</cfif> lang="es">Enviada</option>
+							<option value="read" <cfif cur_state EQ "read">selected="selected"</cfif> lang="es">Leída</option>
+							<option value="answered" <cfif cur_state EQ "answered">selected="selected"</cfif> lang="es">Respondida</option>
+							<option value="closed" <cfif cur_state EQ "closed">selected="selected"</cfif> lang="es">Cerrada</option>
+						</select>
+					</div>	
+				</cfif>
+			</div>
 		</cfif>
 		
 

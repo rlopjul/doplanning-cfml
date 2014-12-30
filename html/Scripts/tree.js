@@ -4,6 +4,13 @@ function showTree(selectable) {
 	$("#areasTreeContainer").bind("ready.jstree", function (event, data) { /*loaded es el que hay que usar cuando NO se carga todo el árbol*/
 		jsTreeLoaded(event, data);
 	})
+	.bind("search.jstree", function (e, data) {
+	   if (data.res.length == 0){
+	   		showAlertMessage(window.lang.translate("No hay resultados"),0);
+	   }else{
+	   		showAlertMessage(data.res.length+" "+window.lang.translate("resultados"),1);
+	   }
+	})
 	.jstree({ 
 		"core" : {
 			"themes" : { 

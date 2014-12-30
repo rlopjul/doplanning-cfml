@@ -70,6 +70,9 @@ Lang.prototype.pack.en = {
 		"Volver":"Return",
 
 		"Accede a las áreas de la organización a través de la pestaña":"You can access the areas of the organization through the tab",
-		"para crear nuevos elementos":"to create new items"
+		"para crear nuevos elementos":"to create new items",
+
+		"No hay resultados":"No results",
+		"resultados":"results"
 	}
 };

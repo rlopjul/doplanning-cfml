@@ -54,7 +54,12 @@
 		
 		<cfif len(end_date) GT 0>
 			<cfinvokeargument name="end_date" value="#end_date#">
-		</cfif>		
+		</cfif>
+
+		<cfif len(identifier) GT 0>
+			<cfinvokeargument name="identifier" value="#identifier#">
+		</cfif>
+
 		
 	</cfinvoke>
 	
@@ -105,7 +110,7 @@
 		</div>
 	<cfelse>
 		
-		<script type="text/javascript">
+		<script>
 			openUrlHtml2('empty.cfm','itemIframe');
 		</script>			
 	

@@ -31,7 +31,7 @@
 			} else {
 				$("#areasTreeContainer").jstree("deselect_all"); 
 				parent.setNewParentId(undefined);
-				alert("No puede seleccionar como área de destino el área a mover");
+				parent.showAlertModal("No puede seleccionar como área de destino el área a mover");
 			}
 
 		}
