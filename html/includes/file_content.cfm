@@ -111,6 +111,58 @@
 		<cfinclude template="#APPLICATION.htmlPath#/includes/file_content_menu_vpnet.cfm">
 	
 	</cfif>
+
+	<!---Typology--->
+	<cfif APPLICATION.modulefilesWithTables IS true>
+
+		<!---Typology fields--->
+		<cfset table_id = objectFile.typology_id>
+		<cfset tableTypeId = 3>
+		<cfset row_id = objectFile.typology_row_id>
+
+		<cfif isNumeric(table_id) AND isNumeric(row_id)>
+			
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
+				<cfinvokeargument name="table_id" value="#table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
+				<cfinvokeargument name="row_id" value="#row_id#"/>
+				<cfinvokeargument name="file_id" value="#objectFile.id#"/>
+			</cfinvoke>
+			<cfset table = getRowResponse.table>
+			<cfset row = getRowResponse.row>
+
+			<!---Table fields--->
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
+				<cfinvokeargument name="table_id" value="#table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="with_types" value="true"/>
+				<cfinvokeargument name="file_id" value="#file_id#"/>
+			</cfinvoke>
+
+			<cfset fields = fieldsResult.tableFields>
+
+			<cfset requestUrl = "">
+
+			<cfloop query="fields">
+				
+				<cfif fields.field_type_id IS 14><!---REQUEST URL--->
+
+					<cfset field_name = "field_#fields.field_id#">
+
+					<cfif len(row[field_name]) GT 0>
+						<cfset requestUrl = row[field_name]>
+					</cfif>
+
+				</cfif>
+
+			</cfloop>
+			
+			<a href="#requestUrl#?file_path=#URLEncodedFormat('/html/file_download.cfm?id=#file_id#')#" target="_blank" class="btn btn-success btn-sm"><i class="icon-asterisk"></i> <span>#table.title#</span></a>
+
+		</cfif>
+
+	</cfif>
+
 </div>
 <!---<cfdump var="#objectFile.file_types_conversion#">--->
 </cfoutput>
@@ -366,20 +418,20 @@
 		<cfif APPLICATION.modulefilesWithTables IS true>
 			
 			<!---Typology fields--->
-			<cfset table_id = objectFile.typology_id>
+			<!---<cfset table_id = objectFile.typology_id>
 			<cfset tableTypeId = 3>
-			<cfset row_id = objectFile.typology_row_id>
+			<cfset row_id = objectFile.typology_row_id>--->
 
 			<cfif isNumeric(table_id) AND isNumeric(row_id)>
 				
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
+				<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
 					<cfinvokeargument name="table_id" value="#table_id#"/>
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
 					<cfinvokeargument name="row_id" value="#row_id#"/>
 					<cfinvokeargument name="file_id" value="#objectFile.id#"/>
 				</cfinvoke>
 				<cfset table = getRowResponse.table>
-				<cfset row = getRowResponse.row>
+				<cfset row = getRowResponse.row>--->
 
 				<div class="div_message_page_label">Tipología: <span class="text_message_page"><strong>#table.title#</strong></span></div>
 
@@ -391,6 +443,7 @@
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 					<cfinvokeargument name="area_id" value="#area_id#">
 					<cfinvokeargument name="row" value="#row#">
+					<cfinvokeargument name="fields" value="#fields#">
 					<cfinvokeargument name="file_id" value="#file_id#"/>
 				</cfinvoke>
 				

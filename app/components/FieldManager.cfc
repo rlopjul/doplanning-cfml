@@ -122,7 +122,7 @@
         <cfargument name="mysql_type" type="string" required="true">
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="item_type_id" type="numeric" required="false">
-        <cfargument name="mask_type_id" type="numeric" required="false">
+        <cfargument name="mask_type_id" type="string" required="false">
 
 		<cfset var method = "createFieldInDatabase">
 

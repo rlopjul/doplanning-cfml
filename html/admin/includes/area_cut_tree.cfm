@@ -2,6 +2,7 @@
 
 	<cfset area_id = URL.area>
 
+	<!---
 	<cfoutput>
 	<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 
@@ -11,18 +12,21 @@
 
 	<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
 	</cfoutput>
+--->
 
-	<script type="text/javascript">
+	<cfinclude template="#APPLICATION.htmlPath#/includes/jstree_scripts.cfm">
+
+	<script>
 		
 		<cfoutput>
 		var curAreaId = #area_id#;
 		</cfoutput>
 
-		function treeLoaded() { 
+		<!---function treeLoaded() { 
 			
 			$("#loadingContainer").hide();
 			
-		}
+		}--->
 
 		function areaSelected(areaId, areaUrl, withLink)  {
 
@@ -36,7 +40,7 @@
 
 		}
 
-		function searchTextInTree(){
+		<!---function searchTextInTree(){
 			searchInTree(document.getElementById('searchText').value);	
 		}
 		
@@ -50,7 +54,7 @@
 					searchTextInTree();
 				
 			});
-		});
+		});--->
 
 	</script>
 
@@ -58,19 +62,7 @@
 
 	<div class="form-inline" style="position:fixed;">
 
-		<div class="btn-group">
-			<div class="input-group input-group-sm" style="width:260px;" >
-				<input type="text" name="text" id="searchText" value="" class="form-control" placeholder="Búsqueda de área"/>
-				<span class="input-group-btn">
-					<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
-				</span>
-			</div>
-		</div>
-
-		<div class="btn-group btn-group-sm">
-			<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
-			<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
-		</div>
+		<cfinclude template="#APPLICATION.htmlPath#/includes/tree_toolbar.cfm">
 
 	</div>
 

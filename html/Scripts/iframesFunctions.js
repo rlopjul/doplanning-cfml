@@ -30,3 +30,8 @@ function openUrlHtml2(url,target){
 	}
 	
 }
+
+function showAlertMessage(msg, res){
+
+	parent.showAlertMessage(msg, res);
+}

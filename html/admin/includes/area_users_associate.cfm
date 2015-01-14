@@ -23,7 +23,7 @@
 
 	 	<div class="modal-body">
 
-	 		<div><p>Compruebe los usuarios seleccionados:</p></div>
+	 		<div><p>Comprueba los usuarios seleccionados:</p></div>
 
 	 		<div>
 
@@ -80,7 +80,7 @@
 
 			<cfelse>
 
-				<p>No hay usuarios seleccionados no pertenecientes al área</p>
+				<p>No hay usuarios seleccionados no pertenecientes al área de destino</p>
 
 	 		</cfif>
 			

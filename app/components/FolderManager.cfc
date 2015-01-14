@@ -624,6 +624,7 @@
 	<cffunction name="deleteFolder" returntype="string" output="false" access="public">		
 		<cfargument name="request" type="string" required="yes">
 		<!---<cfargument name="folder_id" type="string" required="yes">--->
+		<cfargument name="with_transaction" type="boolean" required="false" default="true">
 		
 		<cfset var method = "deleteFolder">
 		
@@ -637,51 +638,80 @@
 			
 			<cfset folder_id = xmlRequest.request.parameters.folder.xmlAttributes.id>
 					
-			<cfquery name="beginQuery" datasource="#client_dsn#">
+			<!---<cfquery name="beginQuery" datasource="#client_dsn#">
 				BEGIN;
-			</cfquery>
-			
-			<!--- ----------------------------DELETE FOLDER FILES----------------------------------- --->
-			<cfquery name="filesQuery" datasource="#client_dsn#">
-				SELECT file_id 
-				FROM #client_abb#_folders_files 
-				WHERE folder_id = <cfqueryPARAM value = "#folder_id#" CFSQLType = "CF_SQL_integer">;
-			</cfquery>
-			<cfif filesQuery.recordCount GT 0>
-				<cfloop query="filesQuery">
-					<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
-						<cfinvokeargument name="file_id" value="#filesQuery.file_id#">
-					</cfinvoke>
-				</cfloop>
+			</cfquery>--->
+
+			<cfif arguments.with_transaction IS true>
+				<!--- <cftransaction nested="true"> --->
+				<cfquery datasource="#client_dsn#" name="startTransaction">
+					START TRANSACTION;
+				</cfquery>
 			</cfif>
-			<!--- --------------------------------------------------------------------------------- --->
+
+			<cftry>
+					
+				<!--- ----------------------------DELETE FOLDER FILES----------------------------------- --->
+				<cfquery name="filesQuery" datasource="#client_dsn#">
+					SELECT file_id 
+					FROM #client_abb#_folders_files 
+					WHERE folder_id = <cfqueryPARAM value = "#folder_id#" CFSQLType = "CF_SQL_integer">;
+				</cfquery>
+				<cfif filesQuery.recordCount GT 0>
+					<cfloop query="filesQuery">
+						<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
+							<cfinvokeargument name="file_id" value="#filesQuery.file_id#">
+							<cfinvokeargument name="with_transaction" value="false">
+						</cfinvoke>
+					</cfloop>
+				</cfif>
+				<!--- --------------------------------------------------------------------------------- --->
+				
+				<!--- ------------------------------DELETE SUB FOLDERS--------------------------------- --->
+				<cfquery name="subFoldersQuery" datasource="#client_dsn#">
+					SELECT id
+					FROM #client_abb#_folders 
+					WHERE parent_id = <cfqueryPARAM value = "#folder_id#" CFSQLType = "CF_SQL_integer">;
+				</cfquery>
+				<cfif subFoldersQuery.recordCount GT 0>
+					<cfloop query="subFoldersQuery">
+						<cfinvoke component="FolderManager" method="deleteFolder">
+							<cfinvokeargument name="request" value='<request><parameters><folder id="#subFoldersQuery.id#"/></parameters></request>'>
+							<cfinvokeargument name="with_transaction" value="false">
+						</cfinvoke>
+					</cfloop>
+				</cfif>
+				<!--- ---------------------------------------------------------------------------------- --->
+				
+				<!--- ------------------------------DELETE FOLDER--------------------------------------- --->
+				<cfquery name="deleteFolderQuery" datasource="#client_dsn#">
+					DELETE 
+					FROM #client_abb#_folders
+					WHERE id = <cfqueryPARAM value = "#folder_id#" CFSQLType = "CF_SQL_integer">;
+				</cfquery>			
+				<!--- ---------------------------------------------------------------------------------- --->
 			
-			<!--- ------------------------------DELETE SUB FOLDERS--------------------------------- --->
-			<cfquery name="subFoldersQuery" datasource="#client_dsn#">
-				SELECT id
-				FROM #client_abb#_folders 
-				WHERE parent_id = <cfqueryPARAM value = "#folder_id#" CFSQLType = "CF_SQL_integer">;
-			</cfquery>
-			<cfif subFoldersQuery.recordCount GT 0>
-				<cfloop query="subFoldersQuery">
-					<cfinvoke component="FolderManager" method="deleteFolder">
-						<cfinvokeargument name="request" value='<request><parameters><folder id="#subFoldersQuery.id#"/></parameters></request>'>
-					</cfinvoke>
-				</cfloop>
+
+				<cfcatch>
+
+					<cfif arguments.with_transaction IS true>
+						<cfquery datasource="#client_dsn#" name="rollbackTransaction">
+							ROLLBACK;
+						</cfquery>
+					</cfif>
+
+					<cfrethrow/>
+
+				</cfcatch>
+
+			</cftry>
+			
+			<cfif arguments.with_transaction IS true>
+				<!--- </cftransaction> --->
+				<cfquery datasource="#client_dsn#" name="endTransaction">
+					COMMIT;
+				</cfquery>
 			</cfif>
-			<!--- ---------------------------------------------------------------------------------- --->
-			
-			<!--- ------------------------------DELETE FOLDER--------------------------------------- --->
-			<cfquery name="deleteFolderQuery" datasource="#client_dsn#">
-				DELETE 
-				FROM #client_abb#_folders
-				WHERE id = <cfqueryPARAM value = "#folder_id#" CFSQLType = "CF_SQL_integer">;
-			</cfquery>			
-			<!--- ---------------------------------------------------------------------------------- --->
-			
-			<cfquery name="beginQuery" datasource="#client_dsn#">
-				COMMIT;
-			</cfquery>
 			
 			<cfsavecontent variable="xmlResult">
 				<cfoutput>

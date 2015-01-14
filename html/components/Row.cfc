@@ -438,6 +438,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="row" type="query" required="true">
+		<cfargument name="fields" type="query" required="false">
 		<cfargument name="file_id" type="numeric" required="false"><!---Only for typology--->
 		
 		<cfset var method = "outputRowContent">
@@ -448,29 +449,37 @@
 					
 			<cfif isDefined("arguments.view_id")>
 
-				<!---View fields--->
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/View" method="getViewFields" returnvariable="fieldsResult">
-					<cfinvokeargument name="view_id" value="#arguments.view_id#">
-					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-					<cfinvokeargument name="with_types" value="true"/>
-					<cfinvokeargument name="with_view_extra_fields" value="true">
-				</cfinvoke>
+				<cfif NOT isDefined("arguments.fields")>
+					
+					<!---View fields--->
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/View" method="getViewFields" returnvariable="fieldsResult">
+						<cfinvokeargument name="view_id" value="#arguments.view_id#">
+						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+						<cfinvokeargument name="with_types" value="true"/>
+						<cfinvokeargument name="with_view_extra_fields" value="true">
+					</cfinvoke>
 
-				<cfset fields = fieldsResult.tableFields>
+					<cfset fields = fieldsResult.tableFields>
 
+				</cfif>
+				
 				<cfset cur_area_id = "">
 
 			<cfelse>
 
-				<!---Table fields--->
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
-					<cfinvokeargument name="table_id" value="#arguments.table_id#">
-					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-					<cfinvokeargument name="with_types" value="true"/>
-					<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
-				</cfinvoke>
+				<cfif NOT isDefined("arguments.fields")>
 
-				<cfset fields = fieldsResult.tableFields>
+					<!---Table fields--->
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
+						<cfinvokeargument name="table_id" value="#arguments.table_id#">
+						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+						<cfinvokeargument name="with_types" value="true"/>
+						<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+					</cfinvoke>
+
+					<cfset fields = fieldsResult.tableFields>
+
+				</cfif>
 
 				<!--- creation_date --->
 				<cfset queryAddRow(fields, 1)>

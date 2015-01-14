@@ -90,7 +90,7 @@
 
 <cfoutput>
 <div class="navbar navbar-default navbar-fixed-top">
-	<div class="container">
+	<div class="container-fluid">
 		
 		<cfif isDefined("user_id") AND isDefined("area_id")>
 			<a class="btn btn-warning btn-sm navbar-btn" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar del área</span></a>

@@ -21,12 +21,12 @@
 	</cfif>
 	
 	<!--- 
-	<cfif APPLICATION.identifier EQ "vpnet"><!---Esto está deshabilitado en DoPlanning--->
+	<cfif APPLICATION.identifier EQ "vpnet">---><!---Esto está deshabilitado en DoPlanning--->
 		<div class="div_element_menu">
 			<div class="div_icon_menus"><a href="folder_new.cfm?parent=#folder_id#"><img src="assets/icons/folder_new.png" title="Nueva carpeta" alt="Nueva carpeta"/></a></div>
 			<div class="div_text_menus"><a href="folder_new.cfm?parent=#folder_id#" class="text_menus">Nueva<br />carpeta</a></div>
 		</div>
-	</cfif> --->
+	<!--- </cfif> --->
 	
 	</cfoutput>
 </div>

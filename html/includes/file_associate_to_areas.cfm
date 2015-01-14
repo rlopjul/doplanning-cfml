@@ -253,6 +253,7 @@ Asociar archivo a áreas
 			<cfinvokeargument name="enable_only_areas_ids" value="#scopeAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
 		</cfif>
 		<cfinvokeargument name="with_input_type" value="checkbox">
+		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 	</cfinvoke>
 	</div>
 	

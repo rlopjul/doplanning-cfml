@@ -194,6 +194,7 @@
 			<!--- ORDER --->
 			<cfinclude template="#APPLICATION.componentsPath#/includes/usersOrder.cfm">
 			
+			<!---
 			<!--- getClient --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="selectClientQuery">
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
@@ -205,9 +206,9 @@
 				
 				<cfthrow errorcode="#error_code#"> 
 				
-			</cfif>	
+			</cfif>--->
 			
-			<cfif selectClientQuery.force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>				
+			<cfif SESSION.client_force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>				
 				
 				<cfxml variable="xmlPreferences">
 					<cfoutput>#xmlRequest.request.parameters.preferences#</cfoutput>

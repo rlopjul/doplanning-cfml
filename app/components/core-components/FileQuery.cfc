@@ -26,6 +26,7 @@
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="status" type="string" required="false" default="ok"><!--- ok --->
+		<cfargument name="ignore_status" type="boolean" required="false" default="false">
 		<cfargument name="published" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
@@ -79,7 +80,9 @@
 				INNER JOIN #client_abb#_users AS users 
 				ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> 
 				AND files.user_in_charge = users.id
-				AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				<cfif arguments.ignore_status IS false>
+					AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				</cfif>
 				LEFT JOIN #client_abb#_users AS users_replacement
 				ON files.replacement_user = users_replacement.id
 				LEFT JOIN #client_abb#_users AS users_reviser

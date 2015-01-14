@@ -18,6 +18,8 @@
 		<cfargument name="disable_input_web" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
 		<cfargument name="disable_input_area" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
 		<cfargument name="enable_only_areas_ids" type="string" required="false"><!--- Habilita sólo los checkbox las áreas pasadas --->
+
+		<cfargument name="get_user_id" type="numeric" required="false">
 		
 		<cfset var method = "outputMainTree">
 		
@@ -26,6 +28,7 @@
 		<cftry>
 			
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getMainTree" returnvariable="getMainTreeResponse">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 			</cfinvoke>
 
 			<cfxml variable="xmlAreas">
@@ -65,6 +68,8 @@
 		<cfargument name="disable_input_web" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
 		<cfargument name="disable_input_area" type="boolean" required="no" default="false"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
 		<cfargument name="enable_only_areas_ids" type="string" required="false">
+
+		<cfargument name="get_user_id" type="numeric" required="false">
 		
 		<cfset var method = "outputMainTreeAdmin">
 		
@@ -73,6 +78,7 @@
 		<cftry>
 			
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getMainTreeAdmin" returnvariable="getMainTreeResponse">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 			</cfinvoke>
 
 			<cfxml variable="xmlAreas">

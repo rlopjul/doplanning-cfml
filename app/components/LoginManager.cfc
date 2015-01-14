@@ -64,6 +64,9 @@
 				<cfif isDefined("SESSION.client_email_from")>
 					<cfset StructDelete(SESSION, "client_email_from")>
 				</cfif>
+				<cfif isDefined("SESSION.client_force_notifications")>
+					<cfset StructDelete(SESSION, "client_force_notifications")>					
+				</cfif>
 			</cfif>	
 			
 			<cfif APPLICATION.moduleLdapUsers IS false OR arguments.ldap_id EQ "doplanning">
@@ -76,7 +79,7 @@
 			
 			<!---Get client data--->
 			<cfquery name="getClient" datasource="#APPLICATION.dsn#">
-				SELECT id, name, administrator_id, email_support
+				SELECT id, name, administrator_id, email_support, force_notifications
 				FROM APP_clients
 				WHERE abbreviation = <cfqueryparam value="#arguments.client_abb#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
@@ -220,6 +223,7 @@
 				<!---<cfset SESSION.client_email_from = """#APPLICATION.title#"" <#objectClient.email_support#>">--->
 				<!---No se incluye el nombre junto con la dirección porque Mandrill no lo permite--->
 				<cfset SESSION.client_email_from = objectClient.email_support>
+				<cfset SESSION.client_force_notifications = objectClient.force_notifications><!--- Esta variable se almacena en sesion para evitar el error "can't use different connections inside a transaction" --->
 				
 				<cfloginuser name="#user_login#" password="#password#" roles="#role#">				
 					
@@ -339,6 +343,9 @@
 			</cfif>
 			<cfif isDefined("SESSION.client_email_from")>
 				<cfset StructDelete(SESSION, "client_email_from")>
+			</cfif>
+			<cfif isDefined("SESSION.client_force_notifications")>
+				<cfset StructDelete(SESSION, "client_force_notifications")>					
 			</cfif>
 
 			<!---The log is saved before in this method--->

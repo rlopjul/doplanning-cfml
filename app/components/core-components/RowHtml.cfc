@@ -58,7 +58,7 @@
 
 			<div class="col-md-12">
 
-				<cfif fields.field_input_type NEQ "checkbox">
+				<cfif fields.field_input_type NEQ "checkbox" OR fields.field_type_group EQ "list">
 					<label for="#field_name#" class="control-label">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
 				</cfif>
 				

@@ -13,6 +13,7 @@
 	<!--- ----------------------------------- getMainTree -------------------------------------- --->
 
 	<cffunction name="getMainTree" output="false" returntype="struct" access="public">
+		<cfargument name="get_user_id" type="numeric" required="false">
 		
 		<cfset var method = "getMainTree">
 
@@ -21,6 +22,7 @@
 		<cftry>
 	
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getMainTree" returnvariable="response">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -39,7 +41,8 @@
 	<!--- ----------------------------------- getMainTreeAdmin -------------------------------------- --->
 
 	<cffunction name="getMainTreeAdmin" output="false" returntype="struct" access="public">
-		
+		<cfargument name="get_user_id" type="numeric" required="false">
+
 		<cfset var method = "getMainTreeAdmin">
 
 		<cfset var response = structNew()>
@@ -47,6 +50,7 @@
 		<cftry>
 	
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getMainTreeAdmin" returnvariable="response">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">

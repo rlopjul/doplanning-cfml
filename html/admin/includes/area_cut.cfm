@@ -24,7 +24,7 @@
 				<span>Ruta: #area_path#</span>
 			</div>
 
-	 		Seleccione el área de destino:
+	 		Selecciona el área de destino:
 
 	 		<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" src="iframes/area_cut_tree.cfm?area=#area_id#" style="height:350px;background-color:##FFFFFF;"></iframe>
 

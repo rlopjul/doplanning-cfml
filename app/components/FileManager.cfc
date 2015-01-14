@@ -413,6 +413,7 @@
 						<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
 							<cfinvokeargument name="file_id" value="#cur_file_id#">
 							<cfinvokeargument name="area_id" value="#arguments.area_id#">
+							<cfinvokeargument name="with_transaction" value="false">
 						</cfinvoke>
 
 						<cfif deleteFileResult.result IS false>
@@ -460,6 +461,7 @@
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="forceDeleteVirus" type="boolean" required="false" default="false">
+		<cfargument name="with_transaction" type="boolean" required="false" default="true">
 		
 		<cfset var method = "deleteFile">
 		
@@ -481,6 +483,7 @@
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="with_lock" value="false">
 				<cfinvokeargument name="parse_dates" value="true">
+				<cfinvokeargument name="ignore_status" value="true">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -697,6 +700,8 @@
 					<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#">
 					<cfinvokeargument name="fileQuery" value="#fileQuery#">
 					<cfinvokeargument name="user_id" value="#user_id#">
+					<cfinvokeargument name="with_transaction" value="#arguments.with_transaction#">
+
 
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -5705,18 +5710,26 @@
 			<!--- checkScope --->
 			<cfif APPLICATION.publicationScope IS true>
 
-				<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
-					<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
-					<cfinvokeargument name="area_id" value="#arguments.publication_area_id#">
+				<cfinvoke component="ScopeManager" method="getScopes" returnvariable="getScopesResult">
 				</cfinvoke>
+				<cfset scopesQuery = getScopesResult.scopes>
 
-				<cfif isInScopeResult.result IS false>
+				<cfif scopesQuery.recordCount GT 0>
 
-					<cfset response = {result=false, message="El ámbito seleccionado para este archivo no permite publicarlo en esta área"}>
+					<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
+						<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
+						<cfinvokeargument name="area_id" value="#arguments.publication_area_id#">
+					</cfinvoke>
+
+					<cfif isInScopeResult.result IS false>
+
+						<cfset response = {result=false, message="El ámbito seleccionado para este archivo no permite publicarlo en esta área"}>
+						
+						<cfreturn response>
+						
+					</cfif>
 					
-					<cfreturn response>
-					
-				</cfif>
+				</cfif>				
 
 			</cfif>		
 

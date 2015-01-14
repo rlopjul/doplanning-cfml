@@ -18,21 +18,18 @@
 	<cfset scope_id = URL.scope>
 </cfif>
 
-<cfoutput>
+<cfinclude template="#APPLICATION.htmlPath#/includes/jstree_scripts.cfm">
+
+<!---<cfoutput>
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
 
-<!--- 
-<script type="text/javascript">
-	var applicationId = "#APPLICATION.identifier#";
-</script> --->
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
 
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
+<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
+</cfoutput>--->
 
-<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
-
-<script type="text/javascript">
+<script>
 	
 	<cfoutput>
 		var allEnabled = #allEnabled#;
@@ -40,11 +37,11 @@
 		var noWebEnabled = #noWebEnabled#;
 	</cfoutput>
 	
-	function treeLoaded() { 
+	<!---function treeLoaded() { 
 		
 		$("#loadingContainer").hide();
 		
-	}
+	}--->
 
 	function areaSelected(areaId, areaUrl, withLink)  {
 
@@ -74,6 +71,7 @@
 		window.close();			
 	}
 
+	<!---
 	function searchTextInTree(){
 		searchInTree(document.getElementById('searchText').value);	
 	}
@@ -89,7 +87,7 @@
 			
 		});
 
-	});
+	});--->
 
 </script>
 
@@ -119,7 +117,7 @@
 								
 		<div class="btn-group">
 			<div class="input-group input-group-sm" style="width:260px;" >
-				<input type="text" name="text" id="searchText" value="" class="form-control"/>
+				<input type="text" name="text" id="searchText" value="" class="form-control" placeholder="Búsqueda de área"/>
 				<span class="input-group-btn">
 					<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
 				</span>
@@ -174,6 +172,7 @@
 		<cfif APPLICATION.publicationScope IS true AND isDefined("scope_id") AND listLen(scopeAreasList) GT 0>
 			<cfinvokeargument name="enable_only_areas_ids" value="#scopeAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
 		</cfif>
+		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 	</cfinvoke>
 
 </div>

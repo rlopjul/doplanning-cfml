@@ -293,9 +293,13 @@
 			<label for="field_type_id" class="control-label">Tipo *</label>
 			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled=</cfif>>
 				<cfloop query="fieldTypes">
-					<cfif tableTypeId NEQ 2 OR (fieldTypes.field_type_group NEQ "user" AND fieldTypes.field_type_group NEQ "doplanning_item")><!---Estos tipos de campos no están disponibles en los formularios--->
-						<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
+
+					<cfif ( tableTypeId EQ 2 AND (fieldTypes.field_type_group EQ "user" OR fieldTypes.field_type_group EQ "doplanning_item") ) OR ( tableTypeId NEQ 3 AND fieldTypes.field_type_id EQ 14 )><!---Los campos "user" y "doplanning_item" no están disponibles en los formularios. El campo "Request URL" sólo está disponible en archivos--->
+						<cfcontinue>
+					<cfelse>
+						<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>						
 					</cfif>
+					
 				</cfloop>
 			</select>
 			<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>

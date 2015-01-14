@@ -15,7 +15,7 @@
 
 	 	<div class="modal-body">
 	  		
-			¿Seguro que desea eliminar definitivamente este usuario?:<br/>
+			¿Seguro que deseas eliminar definitivamente este usuario?:<br/>
 			<div style="padding-left:50px; padding-top:15px; padding-bottom:15px;">
 				<div>
 					<cfif len(objectUser.image_type) GT 0>
@@ -26,7 +26,7 @@
 				</div>
 			</div>
 
-			<div>Tenga en cuenta que se eliminarán definitivamente todos los contenidos del usuario: mensajes, archivos, tareas, eventos, ...</div>
+			<div>Ten en cuenta que <b>se eliminarán definitivamente todos los contenidos del usuario</b>: mensajes, archivos, tareas, eventos, ...</div>
 
 			<form id="deleteUserForm" method="post">
 				<input type="hidden" name="user_id" value="#user_id#"/>
@@ -36,7 +36,7 @@
 
 		<div class="modal-footer">
 		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-primary" onclick="submitUserModal(event)">Eliminar usuario</button>
+		    <button class="btn btn-danger" id="deleteUserSubmitButton" data-loading-text="Eliminando..." onclick="submitUserModal(event)">Eliminar usuario</button>
 		</div>
 
 		<script>
@@ -44,6 +44,8 @@
 
 			    if(e.preventDefault)
 					e.preventDefault();
+
+				$("##deleteUserSubmitButton").button('loading');
 				
 				postModalForm("##deleteUserForm", "#APPLICATION.htmlComponentsPath#/User.cfc?method=deleteUser", "all_users.cfm", "allUsersIframe");
 

@@ -21,6 +21,17 @@ function getFilename(url) {
    return url.substring(url.lastIndexOf('/')+1);
 }
 
+function getMaxZIndex(){
+
+	var maxZ = Math.max.apply(null,$.map($('body > *'), function(e,n){
+           if($(e).css('position')=='absolute' || $(e).css('position')=='fixed')
+                return parseInt($(e).css('z-index'))||1 ;
+           })
+    );
+
+    return maxZ;
+}
+
 function showAlertMessage(msg, res){
 
 	//if($("#alertContainer").is(":visible"))
@@ -34,6 +45,10 @@ function showAlertMessage(msg, res){
 	
 	$("#alertContainer button").after('<span>'+msg+'</span>');
 
+	var maxZIndex = getMaxZIndex();
+
+    $("#alertContainer").css('zIndex',maxZIndex+1);
+
 	$("#alertContainer").fadeIn('slow');
 
 
@@ -46,7 +61,9 @@ function showAlertMessage(msg, res){
 
 function hideAlertMessage(){
 
-	$("#alertContainer").fadeOut('slow');
+	$("#alertContainer").fadeOut('slow', function() {
+	    $("#alertContainer span").remove();
+	});
 
 }
 
@@ -109,9 +126,10 @@ function postModalForm(formId, requestUrl, responseUrl, responseTarget){
 		  		var message = data.message;
 
 		  		//openUrl(responseUrl+"&msg="+message+"&res="+data.result,responseTarget);
-		  		openUrl(responseUrl, responseTarget);
 
 		  		hideDefaultModal();
+
+		  		openUrl(responseUrl, responseTarget);		  		
 
 		  		$('body').modalmanager('removeLoading');
 		  		

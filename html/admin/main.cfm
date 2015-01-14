@@ -128,7 +128,7 @@
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.3"></script>
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.2"></script>
-<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.91"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.92"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 </cfoutput>
@@ -251,6 +251,14 @@
 			loadModal('html_content/area_users_associate.cfm?area='+curAreaId+'&users='+usersIds);
 		else
 			//alert("Debe seleccionar un área para asociar los usuarios");
+			showAlertModal("Debe seleccionar un área para asociar los usuarios");
+	}
+
+	function openAssociateUsersModal(usersIds, areaId){
+
+		if($.isNumeric(areaId))
+			loadModal('html_content/area_users_associate.cfm?area='+areaId+'&users='+usersIds);
+		else
 			showAlertModal("Debe seleccionar un área para asociar los usuarios");
 	}
 
@@ -388,8 +396,6 @@
 
 			hideAlertMessage();
 
-    		$("#alertContainer span").remove();
-
 		});
 				
 	});
@@ -510,9 +516,9 @@
 								<div class="btn-group">
 									<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white" style="color:#5BB75B"></i> <span lang="es">Nueva área</span></a>
 
-									<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover</span></a>
-								
 									<a onclick="openAreaModifyModal()" class="btn btn-info" title="Modificar área" lang="es"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+
+									<a onClick="openAreaMoveModal()" class="btn btn-info" title="Mover área" lang="es"><i class="icon-cut icon-white"></i> <span lang="es">Mover</span></a>
 								</div>
 
 								<div class="btn-group">

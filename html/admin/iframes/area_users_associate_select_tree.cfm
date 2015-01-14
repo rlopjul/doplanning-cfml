@@ -83,62 +83,9 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfif isDefined("URL.user")>
-	<cfset user_id = URL.user>
-</cfif>
 
-<cfoutput>
-<div class="navbar navbar-default navbar-fixed-top" style="z-index:1029"><!--- z-index necesario para que se oculte cuando se están cargando datos --->
-	<div class="container-fluid">
+<cfinclude template="#APPLICATION.htmlPath#/admin/includes/area_users_associate_select_tree.cfm"/>
 
-		<cfif isDefined("user_id")>
-
-
-			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar al área</a>
-
-			<cfif SESSION.client_administrator IS SESSION.user_id>
-
-				<span class="divider">&nbsp;</span>
-			
-				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateAdministratorModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar como administrador del área</a>
-
-				<!--- <a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a> --->
-
-				<span class="divider">&nbsp;</span>
-	 			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar usuario</span></a>
-
-	 			<!---<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');"><i class="icon-sitemap icon-white"></i> <span lang="es">Árbol de áreas</span></a>--->
-
-				<div class="btn-group">
-				  <button type="button" class="btn btn-default btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-				    <i class="icon-sitemap icon-white"></i> Ver árbol <span class="caret"></span>
-				  </button>
-				  <ul class="dropdown-menu" role="menu">
-				   	<li><a onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');" style="cursor:pointer">De áreas</a></li>
-				    <li><a onclick="parent.loadModal('html_content/user_tree_admin.cfm?user=#user_id#');" style="cursor:pointer">De administración</a></li>
-				  </ul>
-				</div>
-
-				<span class="divider">&nbsp;</span>
-				
-	 			<a class="btn btn-danger btn-sm navbar-btn" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#user_id#');"><i class="icon-remove"></i> <span lang="es">Eliminar usuario</span></a>
-
-			</cfif>
-
-
-		</cfif>
-
-	</div>
-</div>
-</cfoutput>
-
-<div style="height:60px;"><!-- ---></div>
-
-<cfif isDefined("user_id")>
-	<cfinclude template="#APPLICATION.htmlPath#/admin/includes/user_content.cfm">
-<cfelse>
-	No hay usuario seleccionado
-</cfif>
 
 <!-- InstanceEndEditable -->
 </body>

@@ -787,6 +787,7 @@
 	<!--- ---------------------------- userSeeTheWholeTree ---------------------------------- --->
 	
 	<cffunction name="userSeeTheWholeTree" returntype="boolean" access="public">
+		<cfargument name="get_user_id" type="numeric" required="false" default="#SESSION.user_id#">
 		
 		<cfset var method = "userSeeTheWholeTree">
 		
@@ -804,7 +805,7 @@
 			<cfquery datasource="#client_dsn#" name="getUserAttQuery">
 				SELECT internal_user, hide_not_allowed_areas
 				FROM #client_abb#_users AS users
-				WHERE users.id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+				WHERE users.id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 
 			<cfif getUserAttQuery.internal_user IS true AND getUserAttQuery.hide_not_allowed_areas IS false>
@@ -1145,6 +1146,7 @@
 	
 	<cffunction name="getMainTree" output="false" access="public" returntype="struct">
 		<cfargument name="cached" type="boolean" required="false" default="#APPLICATION.cacheTree#">
+		<cfargument name="get_user_id" type="numeric" required="false" default="#SESSION.user_id#">
 		
 		<cfset var method = "getMainTree">
 
@@ -1168,6 +1170,13 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfif arguments.get_user_id NEQ SESSION.user_id>
+				
+				<!--- checkAdminAccess --->
+				<cfinclude template="includes/checkAdminAccess.cfm">
+
+			</cfif>
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
 				<cfinvokeargument name="onlyId" value="false">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -1180,7 +1189,7 @@
 			<cfif arguments.cached IS true>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="getCacheTree" returnvariable="getCacheQuery">
-					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+					<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
 					<cfinvokeargument name="area_id" value="#rootAreaId#">
 					<cfinvokeargument name="version" value="#rootAreaVersion#">
 					<cfinvokeargument name="tree_type" value="default">
@@ -1209,6 +1218,7 @@
 				<cfset visibleRootAreas = valueList(rootAreasQuery.id, ",")>
 				
 				<cfinvoke component="AreaManager" method="userSeeTheWholeTree" returnvariable="whole_tree">
+					<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 				</cfinvoke>
 				
 				<!---Se obtiene si el usuario está en el área raiz--->
@@ -1216,7 +1226,7 @@
 					SELECT user_id
 					FROM #client_abb#_areas_users AS areas_users
 					WHERE area_id = <cfqueryparam value="#rootAreaid#" cfsqltype="cf_sql_integer"> 
-					AND user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+					AND user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 				
 				<cfif isUserInRootArea.recordCount GT 0>
@@ -1234,7 +1244,8 @@
 						<!---<cfinvokeargument name="withSubAreas" value="#with_sub_areas#">--->
 						<cfinvokeargument name="allowed" value="#userInRootArea#">	
 						<cfinvokeargument name="whole_tree" value="#whole_tree#">
-						<cfinvokeargument name="list_type" value="default">		
+						<cfinvokeargument name="list_type" value="default">
+						<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">	
 					</cfinvoke> 		
 					
 					<cfset areasContent = areasContent&areasResult>
@@ -1244,7 +1255,7 @@
 				<cfif arguments.cached IS true>
 					
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="saveCacheTree">
-						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
 						<cfinvokeargument name="area_id" value="#rootAreaId#">
 						<cfinvokeargument name="version" value="#rootAreaVersion#">
 						<cfinvokeargument name="tree_type" value="default">
@@ -1280,6 +1291,7 @@
 	
 	<cffunction name="getMainTreeAdmin" access="public" returntype="struct">
 		<cfargument name="cached" type="boolean" required="false" default="#APPLICATION.cacheTree#">
+		<cfargument name="get_user_id" type="numeric" required="false" default="#SESSION.user_id#">
 		
 		<cfset var method = "getMainTreeAdmin">
 
@@ -1301,6 +1313,13 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfif arguments.get_user_id NEQ SESSION.user_id>
+				
+				<!--- checkAdminAccess --->
+				<cfinclude template="includes/checkAdminAccess.cfm">
+
+			</cfif>
+
 			<!---<cfinvoke component="AreaManager" method="getRootAreaId" returnvariable="rootAreaId">
 			</cfinvoke>--->
 
@@ -1316,7 +1335,7 @@
 			<cfif arguments.cached IS true>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="getCacheTree" returnvariable="getCacheQuery">
-					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+					<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
 					<cfinvokeargument name="area_id" value="#rootAreaId#">
 					<cfinvokeargument name="version" value="#rootAreaVersion#">
 					<cfinvokeargument name="tree_type" value="admin">
@@ -1335,7 +1354,7 @@
 
 			<cfif len(areasXml) IS 0>
 							
-				<cfif SESSION.client_administrator EQ user_id>
+				<cfif SESSION.client_administrator EQ arguments.get_user_id>
 					<cfset whole_tree = true>
 				<cfelse>
 					<cfset whole_tree = false>
@@ -1343,7 +1362,7 @@
 					<cfquery name="getUserAreasAdmin" datasource="#client_dsn#">
 						SELECT area_id
 						FROM #client_abb#_areas_administrators
-						WHERE user_id = <cfqueryparam value = "#user_id#" cfsqltype="cf_sql_varchar">;
+						WHERE user_id = <cfqueryparam value = "#arguments.get_user_id#" cfsqltype="cf_sql_varchar">;
 					</cfquery>
 
 					<cfif getUserAreasAdmin.RecordCount IS 0><!---The user has no areas--->
@@ -1359,13 +1378,14 @@
 					<cfinvokeargument name="area_id" value="#rootAreaId#">
 					<cfinvokeargument name="allowed" value="false">	
 					<cfinvokeargument name="whole_tree" value="#whole_tree#">
-					<cfinvokeargument name="list_type" value="administrator">		
+					<cfinvokeargument name="list_type" value="administrator">
+					<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">			
 				</cfinvoke>
 
 				<cfif arguments.cached IS true>
 					
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="saveCacheTree">
-						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
 						<cfinvokeargument name="area_id" value="#rootAreaId#">
 						<cfinvokeargument name="version" value="#rootAreaVersion#">
 						<cfinvokeargument name="tree_type" value="admin">
@@ -1413,6 +1433,8 @@
 		<cfargument name="withSubSubAreas" type="boolean" required="false" default="true">
 		
 		<cfargument name="list_type" type="string" required="false" default="default">
+
+		<cfargument name="get_user_id" type="numeric" required="false" default="#SESSION.user_id#">
 		
 		<cfset var method = "getAreaContent">
 		
@@ -1430,6 +1452,7 @@
 			<cfif NOT isDefined("arguments.whole_tree")>
 			
 				<cfinvoke component="AreaManager" method="userSeeTheWholeTree" returnvariable="whole_tree_visible">
+					<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 				</cfinvoke>
 				
 				<cfset arguments.whole_tree = whole_tree_visible>
@@ -1465,7 +1488,9 @@
 				<cfinvokeargument name="withSubAreas" value="#arguments.withSubAreas#">	
 				<cfinvokeargument name="withSubSubAreas" value="#arguments.withSubSubAreas#">	
 				
-				<cfinvokeargument name="list_type" value="#arguments.list_type#">	
+				<cfinvokeargument name="list_type" value="#arguments.list_type#">
+
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">	
 			</cfinvoke>				
 			
 			<cfreturn #xmlAreaResult#>			
@@ -1492,6 +1517,8 @@
 		<cfargument name="withSubSubAreas" type="boolean" required="false" default="true">
 		
 		<cfargument name="list_type" type="string" required="true">
+
+		<cfargument name="get_user_id" type="numeric" required="false" default="#SESSION.user_id#">
 		
 		<cfset var method = "getAreaQueryContent">
 		
@@ -1523,7 +1550,8 @@
 					<cfquery datasource="#client_dsn#" name="isUserInArea">
 						SELECT user_id
 						FROM #client_abb#_areas_users AS areas_users
-						WHERE area_id=<cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer"> AND user_id=<cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+						WHERE area_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer"> 
+						AND user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 					
 					<cfif isUserInArea.recordCount GT 0>
@@ -1546,7 +1574,8 @@
 						<cfquery datasource="#client_dsn#" name="isUserAdministratorOfArea">
 							SELECT areas_administrators.user_id
 							FROM #client_abb#_areas_administrators AS areas_administrators
-							WHERE areas_administrators.area_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer"> AND user_id=<cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+							WHERE areas_administrators.area_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer"> 
+							AND user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
 						
 						<cfif isUserAdministratorOfArea.recordCount GT 0>
@@ -1613,6 +1642,8 @@
 					<cfinvokeargument name="withSubSubAreas" value="#arguments.withSubSubAreas#">	
 					
 					<cfinvokeargument name="list_type" value="#arguments.list_type#">	
+
+					<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 				</cfinvoke>
 				
 				<cfset xmlPart = xmlPart&xmlAreasResult>		
@@ -1644,6 +1675,8 @@
 		<cfargument name="withSubSubAreas" type="boolean" required="true">
 		
 		<cfargument name="list_type" type="string" required="true">
+
+		<cfargument name="get_user_id" type="numeric" required="false" default="#SESSION.user_id#">
 		
 		<cfset var method = "getSubAreasContent">
 		
@@ -1683,7 +1716,9 @@
 						
 						<cfinvokeargument name="withSubAreas" value="#arguments.withSubSubAreas#">	
 						
-						<cfinvokeargument name="list_type" value="#arguments.list_type#">	
+						<cfinvokeargument name="list_type" value="#arguments.list_type#">
+
+						<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">	
 					</cfinvoke>				
 				
 					<cfset xmlPart = xmlPart&xmlAreaResult>	
@@ -2961,6 +2996,16 @@
 					<cfinvokeargument name="itemTypeId" value="12">
 				</cfinvoke>
 
+			</cfif>
+
+			<cfif APPLICATION.moduleDPDocuments IS true>
+				
+				<!--- -----------------DELETE AREA DPDOCUMENTS------------------------- --->
+				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="itemTypeId" value="20">
+				</cfinvoke>
+
 			</cfif>			
 			
 			<!--- -------------------DELETE AREAS_FILES------------------------ --->
@@ -3102,7 +3147,7 @@
 	
 	<!---    --------------------GET AREA MEMBERS-------------------------------------  --->
 	<!---Obtiene los usuarios asociados a un área.
-	Hay un método en el UserManager que hace practicamente lo mismo--->
+	Hay un método en el UserManager (getAreaUsers) que hace practicamente lo mismo--->
 	<cffunction name="getAreaMembers" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="order_by" type="string" required="false"/>

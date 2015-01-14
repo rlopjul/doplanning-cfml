@@ -52,6 +52,7 @@
 		<cfargument name="forceDeleteVirus" type="boolean" required="false" default="false">
 		<cfargument name="fileQuery" type="query" required="false">
 		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="with_transaction" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">	
@@ -74,6 +75,7 @@
 					<cfinvokeargument name="file_id" value="#arguments.file_id#">
 					<cfinvokeargument name="with_lock" value="false">
 					<cfinvokeargument name="parse_dates" value="true">
+					<cfinvokeargument name="ignore_status" value="true">
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
@@ -99,7 +101,14 @@
 				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 
-			<cftransaction>
+			<cfif arguments.with_transaction IS true>
+				<!--- <cftransaction nested="true"> --->
+				<cfquery datasource="#client_dsn#" name="startTransaction">
+					START TRANSACTION;
+				</cfquery>
+			</cfif>
+
+			<cftry>
 							
 				<!---Delete typology--->
 				<cfif isNumeric(fileQuery.typology_id) AND isNumeric(fileQuery.typology_row_id)>
@@ -203,8 +212,28 @@
 					</cfif>
 
 				</cfif>
+
+
+				<cfcatch>
+
+					<cfif arguments.with_transaction IS true>
+						<cfquery datasource="#client_dsn#" name="rollbackTransaction">
+							ROLLBACK;
+						</cfquery>
+					</cfif>
+
+					<cfrethrow/>
+
+				</cfcatch>
+
+			</cftry>
 			
-			</cftransaction>
+			<cfif arguments.with_transaction IS true>
+				<!--- </cftransaction> --->
+				<cfquery datasource="#client_dsn#" name="endTransaction">
+					COMMIT;
+				</cfquery>
+			</cfif>
 
 			<!--- saveLog --->
 			<cfinclude template="includes/logRecord.cfm">

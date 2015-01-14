@@ -34,7 +34,7 @@
 <cfoutput>
 <div class="div_head_menu"><!---container--->
 	<div class="navbar navbar-default navbar-static-top" style="margin-bottom:0">
-		<div class="container">
+		<div class="container-fluid">
 
 			<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
 			<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
@@ -134,7 +134,7 @@
 <!--- Nav tabs --->
 <cfif SESSION.client_administrator IS SESSION.user_id>
 
-	<ul class="nav nav-pills" role="tablist">
+	<ul class="nav nav-tabs" role="tablist">
 	  <li class="active"><a href="#users" role="tab" data-toggle="tab">Usuarios</a></li>
 	  <li><a href="#administrators" role="tab" data-toggle="tab">Administradores</a></li>
 	</ul>
@@ -143,7 +143,7 @@
 	<div class="tab-content">
 	  <div class="tab-pane active" id="users">
 
-</cfif>
+</cfif>	
 
   	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
 		<cfinvokeargument name="area_id" value="#area_id#">
@@ -163,7 +163,21 @@
 				<cfinvokeargument name="show_area_members" value="true">
 				<cfinvokeargument name="open_url_target" value="userAreaIframe">
 				<cfinvokeargument name="filter_enabled" value="true">
-			</cfinvoke>	
+			</cfinvoke>
+
+			<cfoutput>
+
+				<nav class="navbar navbar-default navbar-fixed-bottom">
+				  	<div class="container-fluid">
+				  	
+						<!---<a class="btn btn-info btn-sm navbar-btn" onclick="openAreaAssociateUsers()"><i class="icon-plus icon-white"></i> Asociar usuarios seleccionados al área</a>--->
+
+						<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/area_users_associate_select.cfm?area=#area_id#');"><i class="icon-plus icon-white"></i> Asociar estos usuarios a otra área</a>
+
+				  	</div>
+				</nav>
+
+			</cfoutput>	
 
 		<cfelse>
 			<span lang="es">No hay usuarios.</span>

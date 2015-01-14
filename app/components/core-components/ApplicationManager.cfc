@@ -19,6 +19,8 @@
 
 		<cfargument name="mainUrl" type="string" required="true">
 		<cfargument name="signOutUrl" type="string" required="true">
+		<cfargument name="helpUrl" type="string" required="false" default="https://doplanning.net/es/page.cfm?id=9&amp;title=tutoriales">
+		<cfargument name="termsOfUseUrl" type="string" required="false" default="https://doplanning.net/es/terminos_de_uso.cfm">
 
 		<cfargument name="ldapName" type="string" required="false">
 
@@ -180,11 +182,12 @@
 			<cfset APPLICATION.mainUrl = arguments.mainUrl>
 			<cfset APPLICATION.alternateUrl = "">
 			<cfset APPLICATION.signOutUrl = arguments.signOutUrl>
-			<cfset APPLICATION.helpUrl = "https://doplanning.net/es/page.cfm?id=9&amp;title=tutoriales">
+			<cfset APPLICATION.helpUrl = arguments.helpUrl>
 			<cfset APPLICATION.communityUrl = "https://doplanning.net/">
 			<cfset APPLICATION.webUrl = ""><!--- http://doplanning.net/ ---><!--- Esta variable NO se debe usar en DoPlanning (se usa en DPWeb), se mantiene para retrocompatibilidad --->
 			
-			<cfset APPLICATION.termsOfUseUrl = APPLICATION.mainUrl&"/web/terms_of_use.cfm">
+			<!---<cfset APPLICATION.termsOfUseUrl = APPLICATION.mainUrl&"/web/terms_of_use.cfm">--->
+			<cfset APPLICATION.termsOfUseUrl = arguments.termsOfUseUrl>
 
 			<cfset APPLICATION.defaultLanguage = arguments.defaultLanguage>
 

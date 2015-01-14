@@ -14,12 +14,12 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3 id="areaModalLabel">Eliminar área</h3>
+		    <h4>Eliminar área</h3>
 		</div>
 
 	 	<div class="modal-body">
 	  		
-			¿Seguro que desea eliminar definitivamente esta área?:<br/>
+			¿Seguro que deseas eliminar definitivamente esta área?:<br/>
 			<div style="padding-left:50px; padding-top:15px; padding-bottom:15px;">
 
 				<div style="margin-top:10px;">Area:
@@ -28,7 +28,7 @@
 				</div>
 			</div>
 
-			<div>Tenga en cuenta que se eliminarán definitivamente todos los elementos del área: mensajes, tareas, eventos...</div>
+			<div>Ten en cuenta que <b>se eliminarán definitivamente todos los elementos del área</b>: mensajes, tareas, eventos...</div>
 
 			<form id="deleteAreaForm" method="post">
 				<input type="hidden" name="area_id" value="#objectArea.id#"/>
@@ -38,7 +38,7 @@
 
 		<div class="modal-footer">
 		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAssociateModal(event)">Eliminar área</button>
+		    <button class="btn btn-danger" id="areaModifySubmit" onclick="submitAssociateModal(event)">Eliminar área</button>
 		</div>
 
 		<script>

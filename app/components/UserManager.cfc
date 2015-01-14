@@ -1350,6 +1350,16 @@
 
 					</cfif>
 
+					<cfif APPLICATION.moduleDPDocuments IS true>
+						
+						<!--- -----------------DELETE DPDOCUMENTS ------------------------- --->
+						<cfinvoke component="AreaItemManager" method="deleteUserItems">
+							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
+							<cfinvokeargument name="itemTypeId" value="20">
+						</cfinvoke>
+
+					</cfif>
+
 					<!---
 
 					Esto deshabilitado porque las listas y formularios son elementos que TIENEN REGISTROS DE OTROS USUARIOS
@@ -1381,6 +1391,7 @@
 					<!---DELETE USER FOLDERS AND FILES--->
 					<cfinvoke component="FolderManager" method="deleteFolder" returnvariable="deleteFolderResult">
 						<cfinvokeargument name="request" value='<request><parameters><folder id="#getUserQuery.root_folder_id#"/></parameters></request>'>
+						<cfinvokeargument name="with_transaction" value="false"/>
 					</cfinvoke>
 					
 					<cfxml variable="xmlDeleteFolderResult">
@@ -1391,10 +1402,11 @@
 					
 					<cfif xmlDeleteFolderResult.response.xmlAttributes.status EQ "error"><!---Delete folder failed--->
 						<!--- RollBack the transaction --->
-						<cfquery name="rollBackTransaction" datasource="#client_dsn#">
+						<!---<cfquery name="rollBackTransaction" datasource="#client_dsn#">
 							ROLLBACK;
-						</cfquery>
-						
+						</cfquery>--->
+						<cftransaction action="rollback"/>
+
 						<cfset error_code = 709>
 				
 						<cfthrow errorcode="#error_code#">
@@ -1415,14 +1427,16 @@
 						
 						<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
 							<cfinvokeargument name="file_id" value="#filesQuery.id#">
+							<cfinvokeargument name="with_transaction" value="false">
 						</cfinvoke>
 
 						<cfif deleteFileResult.result IS false>
 
 							<!--- RollBack the transaction --->
-							<cfquery name="rollBackTransaction" datasource="#client_dsn#">
+							<!---<cfquery name="rollBackTransaction" datasource="#client_dsn#">
 								ROLLBACK;
-							</cfquery>
+							</cfquery>--->
+							<cftransaction action="rollback"/>
 								
 							<cfthrow message="#deleteFileResult.message#">
 
