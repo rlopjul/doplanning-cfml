@@ -28,8 +28,12 @@
 					</cfif>
 				</cfif>--->
 				<cfif isDefined("objectArea")>
-				<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
-				<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
+					<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Mostrar información del área" id="openAreaImg">
+						<i class="icon-info-sign more_info_img" <!---onclick="openAreaInfo()"--->></i>
+					</a>
+					<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Ocultar información del área" id="closeAreaImg" style="display:none;">
+						<i class="icon-info-sign more_info_img" <!---onclick="openAreaInfo()"--->></i>
+					</a>
 				</cfif>
 				<cfif app_version EQ "mobile">
 					<a href="area.cfm?area=#area_id#" class="navbar_brand">#area_name#</a>

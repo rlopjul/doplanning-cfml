@@ -18,11 +18,12 @@
 
 	<cfif actionResponse.result IS true>
 		
+		<!---
 		<cfif itemTypeId IS 11 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
 			<cfset return_page = "#itemTypeName#_fields.cfm?#itemTypeName#=#actionResponse.item_id#">
-		<cfelse>
+		<cfelse>--->
 			<cfset return_page = "area_items.cfm?area=#FORM.area_id#&#itemTypeName#=#actionResponse.item_id#">
-		</cfif>	
+		<!---</cfif>--->	
 
 		<cfset msg = urlEncodedFormat(actionResponse.message)>
 

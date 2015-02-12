@@ -559,20 +559,34 @@
 					<cfset field_label = fields.label&":">
 					<cfset field_name = "field_#fields.field_id#">		
 				
-					<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- LISTS --->
+					<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10 OR fields.field_type_id IS 15 OR fields.field_type_id IS 16><!--- LISTS --->
 
-						<!--- Get selected areas --->
-						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRowSelectedAreas" returnvariable="getRowSelectedAreasResponse">
-							<cfinvokeargument name="table_id" value="#arguments.table_id#">
-							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-							<cfinvokeargument name="field_id" value="#fields.field_id#">
-							<cfinvokeargument name="row_id" value="#row.row_id#">
-						</cfinvoke>
+						
 
-						<cfset selectedAreas = getRowSelectedAreasResponse.areas>
-						<cfset field_value = valueList(selectedAreas.name, "<br/>")>
+						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- Area lists --->
 
-						<div class="div_message_page_label">#field_label#<cfif fields.field_type_id IS 10><br/></cfif> <span class="text_message_page">#field_value#</span></div>
+							<!--- Get selected areas --->
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRowSelectedAreas" returnvariable="getRowSelectedAreasResponse">
+								<cfinvokeargument name="table_id" value="#arguments.table_id#">
+								<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+								<cfinvokeargument name="field_id" value="#fields.field_id#">
+								<cfinvokeargument name="row_id" value="#row.row_id#">
+							</cfinvoke>
+
+							<cfset selectedAreas = getRowSelectedAreasResponse.areas>
+							<cfset field_value = valueList(selectedAreas.name, "<br/>")>
+
+						<cfelse><!--- Text values lists --->
+
+							<cfset field_value = row[field_name]>
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
+								<cfinvokeargument name="string" value="#field_value#">
+							</cfinvoke>
+
+						</cfif>
+
+						<div class="div_message_page_label">#field_label#<cfif fields.field_type_id IS 10 OR fields.field_type_id IS 16><br/></cfif> <span class="text_message_page">#field_value#</span></div>
 
 					<cfelse><!--- IS NOT LISTS --->
 

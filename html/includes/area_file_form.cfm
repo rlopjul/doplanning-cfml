@@ -479,7 +479,11 @@
 							<option value="#scopesQuery.scope_id#" <cfif file.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
 						</cfloop>
 					</select>
-					<small class="help-block" lang="es">Define dónde se podrá publicar el documento</small>
+					<small class="help-block" lang="es">Define dónde se podrá publicar el documento.
+						<cfif SESSION.client_abb EQ "hcs">
+							<br/><b>Importante:</b> los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.
+						</cfif>
+					</small>
 				</div>
 			</div>
 

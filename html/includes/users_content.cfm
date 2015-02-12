@@ -77,40 +77,58 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/users_list.cfm">--->
 
 <!---<cfif all_users IS true>--->
-<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
-		<cfinvokeargument name="area_id" value="#area_id#">
-	</cfinvoke>
+<cfif objectArea.users_visible IS true>
+
+	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>
+
+	<cfelse>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaMembers" returnvariable="usersResponse">	
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>
+		
+	</cfif>
+
+	<cfset users = usersResponse.users>
+	<cfset numUsers = ArrayLen(users)>
+
+	<div class="div_users">
+		
+		<cfif numUsers GT 0>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
+				<cfinvokeargument name="users" value="#users#">
+				<cfinvokeargument name="area_id" value="#area_id#">
+				<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
+				<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
+					<cfinvokeargument name="show_area_members" value="true">
+				</cfif>
+			</cfinvoke>	
+
+		<cfelse>
+
+			<script>
+				openUrlHtml2('empty.cfm','itemIframe');
+			</script>	
+		
+			<span lang="es">No hay usuarios.</span>
+		</cfif>
+		
+	</div>
 
 <cfelse>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaMembers" returnvariable="usersResponse">	
-		<cfinvokeargument name="area_id" value="#area_id#">
-	</cfinvoke>
-	
+	<script>
+		openUrlHtml2('empty.cfm','itemIframe');
+	</script>	
+
+	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Los usuarios de esta área no están visibles.</span></div>
+
 </cfif>
-
-<cfset users = usersResponse.users>
-<cfset numUsers = ArrayLen(users)>
-
-<div class="div_users">
-	
-	<cfif numUsers GT 0>
-
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
-			<cfinvokeargument name="users" value="#users#">
-			<cfinvokeargument name="area_id" value="#area_id#">
-			<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
-			<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
-				<cfinvokeargument name="show_area_members" value="true">
-			</cfif>
-		</cfinvoke>	
-
-	<cfelse>
-		<span lang="es">No hay usuarios.</span>
-	</cfif>
-	
-</div>
 
 <!---</form>--->

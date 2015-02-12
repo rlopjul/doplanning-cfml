@@ -49,6 +49,12 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 	</cfif>
 </cfif>
 
+<cfif objectArea["item_type_#itemTypeId#_enabled"] IS false><!---Está deshabilitada la creación de nuevos mensajes en esta área--->
+	
+	<cflocation url="#return_page#" addtoken="no">
+
+</cfif>
+
 <cfoutput>
 
 <script>
@@ -167,7 +173,7 @@ function onSubmitForm()
 	</div>
 
 
-	<cfif itemTypeId IS 1>
+	<cfif itemTypeId IS 1 AND objectArea.users_visible IS true>
 	
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="areaUsersResponse">	
 			<cfinvokeargument name="area_id" value="#area_id#">

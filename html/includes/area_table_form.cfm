@@ -89,7 +89,7 @@
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
 			<label for="label" class="control-label" lang="es">Nombre</label>
-			<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
+			<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="200" required="true" message="Nombre requerido" class="form-control"/>
 		</div>
 	</div>
 

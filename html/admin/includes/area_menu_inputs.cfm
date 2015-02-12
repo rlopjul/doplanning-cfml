@@ -17,7 +17,7 @@
 			<div class="col-sm-12">
 				<div class="checkbox" style="margin-top:5px;">
 					<label class="control-label" for="hide_in_menu" lang="es">
-						<input id="hide_in_menu" name="hide_in_menu" type="checkbox" value="true" <cfif objectArea.hide_in_menu IS true>checked="checked"</cfif> />
+						<input id="hide_in_menu" name="hide_in_menu" type="checkbox" value="true" class="checkbox_locked" <cfif objectArea.hide_in_menu IS true>checked="checked"</cfif> />
 						Ocultar del menú web
 					</label>
 					<small class="help-block">

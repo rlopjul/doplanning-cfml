@@ -92,6 +92,8 @@
 							<option value="2.8.5">2.8.5 (Caché en árbol)</option>
 							<option value="2.9">2.9 (Pestaña Home, Documento DoPlanning, Caché de permisos de áreas)</option>
 							<option value="2.9.1">2.9.1 (Nº de versión de versiones de archivos)</option>
+							<option value="2.9.2">2.9.2 (Nuevos tipos de campos listas y deshabilitar elementos de áreas)</option>
+							<option value="2.9.3">2.9.3 (Áreas de sólo lectura, ocultar usuarios de área, nuevas preferencias en notificaciones)</option>
 						</select>
 					</div>
 

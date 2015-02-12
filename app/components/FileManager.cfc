@@ -3477,6 +3477,9 @@
 					<cfinvokeargument name="with_user" value="true">
 					<cfinvokeargument name="with_area" value="#arguments.with_area#">
 					<cfinvokeargument name="with_typology" value="false">
+					<cfif isDefined("arguments.typology_id") AND arguments.typology_id EQ "null">
+						<cfinvokeargument name="with_null_typology" value="true">
+					</cfif>
 					<cfif isDefined("arguments.limit")>
 					<cfinvokeargument name="limit" value="#arguments.limit#">
 					</cfif>
@@ -3502,50 +3505,6 @@
 				<cfset response = {result=true, files=#getAreaFilesResult.query#}>
 
 			</cfif>
-
-			<!---<cfset areaFilesQuery = getAreaFilesResult.query>
-			
-			<cfset xmlItems=''>
-			<cfif areaFilesQuery.recordCount GT 0>
-					
-				<cfset xmlItems = '<files>'>
-					
-				<cfloop query="areaFilesQuery">
-					
-					<cfinvoke component="FileManager" method="objectFile" returnvariable="xmlResultItem">
-						<cfinvokeargument name="id" value="#areaFilesQuery.id#">
-						<cfinvokeargument name="name" value="#areaFilesQuery.name#">
-						<cfinvokeargument name="user_in_charge" value="#areaFilesQuery.user_in_charge#">
-						<cfinvokeargument name="association_date" value="#areaFilesQuery.association_date#">
-						<cfinvokeargument name="replacement_date" value="#areaFilesQuery.replacement_date#">
-						<cfinvokeargument name="user_full_name" value="#areaFilesQuery.family_name# #areaFilesQuery.user_name#">
-						<cfinvokeargument name="file_type" value="#areaFilesQuery.file_type#">
-						
-						<!---<cfinvokeargument name="description" value="#areaFilesQuery.description#">--->
-						
-						<cfif arguments.with_area IS true>
-							<cfinvokeargument name="area_name" value="#areaFilesQuery.area_name#">
-							<cfinvokeargument name="area_id" value="#areaFilesQuery.area_id#">	
-						</cfif>
-
-						<cfinvokeargument name="return_type" value="xml">
-					</cfinvoke>
-					
-					<cfset xmlItems = xmlItems&xmlResultItem>
-					
-				</cfloop>
-
-				<cfset xmlItems = xmlItems&'</files>'>
-
-			<cfelse>	
-				<cfset xmlItems='<files/>'>	
-			</cfif>			
-						
-			<cfset xmlResponseContent = xmlItems>
-					
-			<cfset xmlResponse = xmlResponseContent>
-		
-		<cfreturn xmlResponse>--->
 
 			<cfcatch>
 

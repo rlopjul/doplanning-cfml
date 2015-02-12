@@ -33,7 +33,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<script type="text/javascript">
+<script>
 	<!---Esto es para evitar que se abran enlaces en el iframe--->
 	$(document).ready( function(){
 		$('.dropdown-toggle').dropdown();
@@ -94,57 +94,64 @@
 
 	</cfif>
 
-	<cfif is_user_table_area_responsible><!--- Table Area Responsible --->
+	<cfif objectArea.read_only IS false>
 
-		<a href="#tableTypeName#_modify.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+		
+		<cfif is_user_table_area_responsible><!--- Table Area Responsible --->
 
-		<cfif APPLICATION.moduleWeb IS true AND tableTypeId NEQ 3><!--- Debe poder aprobarse la publicación en las listas y formularios aunque no estén en áreas web para poder publicar sus vistas en áreas web --->
+			<a href="#tableTypeName#_modify.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 
-			<!--- publication --->
-			<cfif objectItem.publication_validated IS false>
+			<cfif APPLICATION.moduleWeb IS true AND tableTypeId NEQ 3><!--- Debe poder aprobarse la publicación en las listas y formularios aunque no estén en áreas web para poder publicar sus vistas en áreas web --->
 
-				<cfif SESSION.client_abb NEQ "hcs" OR objectItem.publication_scope_id NEQ 1><!---En el DP HCS el ámbito de publicación 1 es DoPlanning, que no requiere aprobación de publicación--->
-					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación en web');" title="Permitir la publicación en web" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>					
+				<!--- publication --->
+				<cfif objectItem.publication_validated IS false>
+
+					<cfif SESSION.client_abb NEQ "hcs" OR objectItem.publication_scope_id NEQ 1><!---En el DP HCS el ámbito de publicación 1 es DoPlanning, que no requiere aprobación de publicación--->
+						<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación en web');" title="Permitir la publicación en web" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>					
+					</cfif>
+
+				<cfelse>
+					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Impedir la publicación en web" class="btn btn-warning btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>					
 				</cfif>
-
-			<cfelse>
-				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Impedir la publicación en web" class="btn btn-warning btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>					
+				
 			</cfif>
+		
+			<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #tableTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 			
 		</cfif>
-	
-		<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #tableTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
-		
-	</cfif>
 
-	<cfif objectItem.user_in_charge EQ SESSION.user_id OR is_user_table_area_responsible>
-		
-		<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
+		<cfif objectItem.user_in_charge EQ SESSION.user_id OR is_user_table_area_responsible>
+			
+			<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
 
-		<cfif tableTypeId IS NOT 3 AND APPLICATION.changeElementsArea IS true>
-			<a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>					
+			<cfif tableTypeId IS NOT 3 AND APPLICATION.changeElementsArea IS true>
+				<a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>					
+			</cfif>
+
 		</cfif>
 
-	</cfif>
+		<cfif is_user_area_responsible><!--- Area Responsible --->
+			
+			<cfif tableTypeId IS 3><!--- Typology --->
 
-	<cfif is_user_area_responsible><!--- Area Responsible --->
-		
-		<cfif tableTypeId IS 3><!--- Typology --->
+				<cfset default_table_id = objectArea.default_typology_id> 
+				<cfif default_table_id IS table_id>
 
-			<cfset default_table_id = objectArea.default_typology_id> 
-			<cfif default_table_id IS table_id>
+					<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=removeAreaDefaultTable&table_id=#table_id#&area_id=#area_id#&tableTypeId=#tableTypeId##url_return_page#" onclick="return confirmRemoveDefaultTable();" title="Definir #tableTypeNameEs# por defecto para este área" class="btn btn-sm btn-warning"><i class="icon-pushpin icon-rotate-270"></i> <span lang="es">Quitar #tableTypeNameEs# por defecto</span></a>
 
-				<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=removeAreaDefaultTable&table_id=#table_id#&area_id=#area_id#&tableTypeId=#tableTypeId##url_return_page#" onclick="return confirmRemoveDefaultTable();" title="Definir #tableTypeNameEs# por defecto para este área" class="btn btn-sm btn-warning"><i class="icon-pushpin icon-rotate-270"></i> <span lang="es">Quitar #tableTypeNameEs# por defecto</span></a>
+				<cfelse>
 
-			<cfelse>
+					<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=setAreaDefaultTableRemote&table_id=#table_id#&area_id=#area_id#&tableTypeId=#tableTypeId##url_return_page#" onclick="return confirmSetDefaultTable();" title="Definir #tableTypeNameEs# por defecto para este área" class="btn btn-sm btn-info"><i class="icon-pushpin"></i> <span lang="es">Definir #tableTypeNameEs# por defecto</span></a>
 
-				<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=setAreaDefaultTableRemote&table_id=#table_id#&area_id=#area_id#&tableTypeId=#tableTypeId##url_return_page#" onclick="return confirmSetDefaultTable();" title="Definir #tableTypeNameEs# por defecto para este área" class="btn btn-sm btn-info"><i class="icon-pushpin"></i> <span lang="es">Definir #tableTypeNameEs# por defecto</span></a>
+				</cfif>
 
 			</cfif>
 
 		</cfif>
 
-	</cfif>
+
+	</cfif><!--- END objectArea.read_only IS false --->
+
 
 	<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
 		<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#tableTypeName#=#objectItem.table_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
@@ -182,7 +189,9 @@
 	<cfif itemTypeId IS 11 OR itemTypeId IS 12>
 		<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
 	</cfif>
-	<cfif is_user_table_area_responsible IS true>
+
+	<cfif is_user_table_area_responsible IS true AND objectArea.read_only IS false>
+
 		<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos</span></a>
 
 		<cfif APPLICATION.moduleListsWithPermissions IS true AND itemTypeId IS 11><!---List with permissions--->
@@ -196,7 +205,7 @@
 	</cfif>
 
 	<cfif app_version NEQ "mobile">
-	<a href="#APPLICATION.htmlPath#/#tableTypeName#.cfm?#tableTypeName#=#table_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+	<a href="#APPLICATION.htmlPath#/#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 	</cfif>
 	
 </div><!---END div_elements_menu--->

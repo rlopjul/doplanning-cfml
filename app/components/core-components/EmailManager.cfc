@@ -20,6 +20,7 @@
 			<cfinvokeargument name="from" value="#arguments.from#">
 			<cfinvokeargument name="from_name" value="#arguments.from_name#">
 			<cfinvokeargument name="to" value="#arguments.to#">
+			<cfinvokeargument name="bcc" value="#arguments.bcc#">
 			<cfinvokeargument name="subject" value="#arguments.subject#">
 			<cfinvokeargument name="content" value="#arguments.content#">
 			<cfinvokeargument name="foot_content" value="#arguments.foot_content#">

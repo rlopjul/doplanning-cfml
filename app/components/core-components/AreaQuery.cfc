@@ -27,7 +27,7 @@
 		<cfset var method = "getArea">
 			
 			<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-				SELECT areas.id, areas.name, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id, areas.link, areas.type, areas.default_typology_id, areas.hide_in_menu, areas.menu_type_id
+				SELECT areas.id, areas.name, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id, areas.link, areas.type, areas.default_typology_id, areas.hide_in_menu, areas.menu_type_id, areas.item_type_1_enabled, areas.item_type_2_enabled, areas.item_type_3_enabled, areas.item_type_4_enabled, areas.item_type_5_enabled, areas.item_type_6_enabled,  areas.item_type_7_enabled, areas.item_type_8_enabled, areas.item_type_9_enabled, areas.item_type_10_enabled, areas.item_type_11_enabled, areas.item_type_12_enabled, areas.item_type_13_enabled, areas.item_type_14_enabled, areas.item_type_15_enabled, areas.item_type_20_enabled, areas.users_visible, areas.read_only
 				, DATE_FORMAT(CONVERT_TZ(areas.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
 				<cfif arguments.with_user IS true>
 				, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name

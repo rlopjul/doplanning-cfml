@@ -368,7 +368,7 @@
 					<cfinvokeargument name="moduleWeb" value="true">
 					<cfinvokeargument name="moduleWebRTC" value="true">
 					<cfinvokeargument name="showDniTitle" value="false">
-					<cfinvokeargument name="modulePubMedComments" value="false">
+					<cfinvokeargument name="modulePubMedComments" value="true">
 					<cfinvokeargument name="moduleListsWithPermissions" value="true">
 					<cfinvokeargument name="changeElementsArea" value="true">
 					<cfinvokeargument name="publicationScope" value="true">

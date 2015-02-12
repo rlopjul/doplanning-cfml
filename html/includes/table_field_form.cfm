@@ -126,6 +126,7 @@
 		$("##fieldInputTypeListMultiple").hide();
 		$("##fieldInputItemType").hide();
 		$("##fieldInputMaskType").hide();
+		$("##listTextValues").hide();
 
 		$("##default_value_text").prop('disabled', true);
 		$("##default_value_date").prop('disabled', true);
@@ -139,6 +140,8 @@
 		$("##field_input_type_list_multiple").prop('disabled', true);
 		$("##item_type_id").prop('disabled', true);
 		$("##mask_type_id").prop('disabled', true);
+
+		$("##list_values").prop('disabled', true);
 
 
 		if(typeId == 6){ //Date
@@ -156,21 +159,34 @@
 			$("##default_value_boolean").prop('disabled', false);
 			$("##field_input_type_list").prop('disabled', false);
 
-		}else if(typeId == 9 || typeId ==10){ //List
+		}else if(typeId == 9 || typeId == 10 || typeId == 15 || typeId == 16){ //List
 
-			$("##listDefaultValue").show();
-			$("##listAreaSelector").show();
+			if( typeId == 9 || typeId == 10 ) { //Areas list
 
-			$("##default_value_list").prop('disabled', false);
-			$("##list_area_id").prop('disabled', false);
+				$("##listDefaultValue").show();
+				$("##listAreaSelector").show();
 
-			if(typeId == 9){
+				$("##default_value_list").prop('disabled', false);
+				$("##list_area_id").prop('disabled', false);
+
+			} else { // List of text values
+
+				$("##textDefaultValue").show();
+				$("##listTextValues").show();
+
+				$("##default_value_text").prop('disabled', false);
+				$("##list_values").prop('disabled', false);
+
+			}
+
+			
+			if(typeId == 9 || typeId == 15){
 				$("##fieldInputTypeList").show();
 				$("##field_input_type_list").prop('disabled', false);
 
 				$("##fieldInputTypeListMultiple").hide();
 				$("##field_input_type_list_multiple").prop('disabled', true);
-			}else{
+			} else {
 				$("##fieldInputTypeList").hide();
 				$("##field_input_type_list").prop('disabled', true);
 
@@ -214,8 +230,10 @@
 				$("##fieldInputMaskType").show();
 
 				$("##mask_type_id").prop('disabled', false);
+				
+			}
 
-			} 
+
 		}
 
 	}
@@ -388,6 +406,14 @@
 				<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
 				<cfinput type="text" name="list_area_name" id="list_area_name" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" type="button" class="btn btn-default" lang="es">Seleccionar área</button>
 			</div>
+		</div>
+	</div>
+
+	<div class="row" id="listTextValues">
+		<div class="col-md-12">
+			<label for="list_values">Valores de la lista</label>
+			<textarea name="list_values" id="list_values" class="form-control" maxlength="1000" rows="4" <cfif field.field_type_id NEQ 15>disabled="disabled"</cfif>><cfif isDefined("field.list_values")>#field.list_values#</cfif><!--- ESTE IF SE QUITA CUANDO SE AÑADA ESTA FUNCIONALIDAD PARA TODOS LOS DP----></textarea>
+			<small class="help-block">Introduce cada valor de la lista en una línea distinta<!---<br/>Ejemplo: Azul<br/>Verde<br/>Amarillo---></small>
 		</div>
 	</div>
 

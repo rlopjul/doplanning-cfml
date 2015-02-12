@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>
 </cfoutput>
 
 <!---<div class="div_head_subtitle">
@@ -130,9 +130,15 @@ Datos Personales
 
 </cfoutput>
 
-<div class="container">
+<div class="container-fluid">
 	<cfset page_type = 2>
 	<cfinclude template="#APPLICATION.htmlPath#/includes/user_data_form.cfm"/>
+
+	<div class="row">
+		<div class="col-sm-12">
+			<button type="button" class="btn btn-primary" id="saveUserData" onclick="submitUserModifyModal()" lang="es" style="margin-bottom:2px;">Guardar</button>
+		</div>
+	</div>
+
 </div>
 
-<button type="button" class="btn btn-primary" id="saveUserData" onclick="submitUserModifyModal()" lang="es" style="margin-bottom:2px;">Guardar</button>

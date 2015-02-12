@@ -12,14 +12,22 @@
 <cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 	<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
 
-		<div class="btn-group">
-			<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>  
-				<cfif itemTypeId IS 7>
-					<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
-				<cfelse>
-					<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
-				</cfif></a>
-		</div>
+		<cfif objectArea["item_type_#itemTypeId#_enabled"] IS true AND objectArea.read_only IS false>
+			<div class="btn-group">
+				<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>  
+					<cfif itemTypeId IS 7>
+						<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
+					<cfelse>
+						<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
+					</cfif></a>
+			</div>
+		<cfelse>
+
+			<div class="btn-group">
+				<button class="btn btn-link disabled" lang="es">Está deshabilitada la creación de <cfif itemTypeGender EQ "male">nuevos<cfelse>nuevas</cfif> #itemTypeNameEsP# en esta área</button>
+			</div>
+
+		</cfif>
 
 		<!---<span class="divider">&nbsp;</span>--->
 

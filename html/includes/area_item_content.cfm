@@ -86,7 +86,12 @@
 
 		<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Solo para mensajes y consultas--->
 			<cfif itemTypeId IS 1 OR objectItem.state NEQ "closed">
-				<a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#" class="btn btn-sm btn-primary"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
+				<cfif objectArea["item_type_#itemTypeId#_enabled"] IS true AND objectArea.read_only IS false>
+					<a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#" class="btn btn-sm btn-primary"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
+				<cfelse>
+					<div><button class="btn btn-link disabled" lang="es">Está deshabilitada la creación de <cfif itemTypeGender EQ "male">nuevos<cfelse>nuevas</cfif> #itemTypeNameEsP# en esta área</button></div>
+				</cfif>
+				
 			</cfif>
 	
 		<cfelse><!---Si no es mensaje--->
@@ -95,12 +100,16 @@
 				
 				<!---En las áreas web o intranet se pueden modificar los elementos--->
 				<cfif len(area_type) GT 0 OR objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND objectItem.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma--->
-								
-					<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
-									
+
+					<cfif objectArea.read_only IS false>
+
+						<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+
+					</cfif>
+										
 				</cfif>
 
-			<cfelseif ( objectItem.area_editable IS false AND objectItem.user_in_charge EQ SESSION.user_id ) OR ( objectItem.area_editable IS true AND (objectItem.locked IS false OR objectItem.lock_user_id IS SESSION.user_id) )>
+			<cfelseif ( ( objectItem.area_editable IS false AND objectItem.user_in_charge EQ SESSION.user_id ) OR ( objectItem.area_editable IS true AND (objectItem.locked IS false OR objectItem.lock_user_id IS SESSION.user_id) ) ) AND objectArea.read_only IS false>
 
 				<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 
@@ -111,7 +120,7 @@
 			
 			<cfif APPLICATION.moduleWeb IS true AND len(area_type) GT 0>
 
-				<cfif is_user_area_responsible IS true>
+				<cfif is_user_area_responsible IS true AND objectArea.read_only IS false>
 					
 					<!--- publication validation --->
 					<cfif objectItem.publication_validated IS false>
@@ -142,7 +151,7 @@
 			
 		<cfif itemTypeId IS 7><!---Consultations--->
 				
-			<cfif objectItem.state NEQ "closed">
+			<cfif objectItem.state NEQ "closed" AND objectArea.read_only IS false>
 			
 				<cfif objectItem.parent_kind EQ "area">
 				
@@ -174,7 +183,7 @@
 		
 		<cfif itemTypeId IS 6><!---Tasks--->
 		
-			<cfif objectItem.done IS 0>
+			<cfif objectItem.done IS 0 AND objectArea.read_only IS false>
 			
 				<cfif objectItem.user_in_charge EQ SESSION.user_id OR objectItem.recipient_user EQ SESSION.user_id>
 				
@@ -192,7 +201,7 @@
 
 			<a href="#APPLICATION.htmlPath#/dp_document_generate_pdf.cfm?#itemTypeName#=#objectItem.id#" target="_blank" class="btn btn-default btn-sm"><i class="icon-file-text"></i> <span lang="es">PDF</span></a>
 			
-			<cfif objectItem.area_editable IS true><!--- Area editable --->
+			<cfif objectItem.area_editable IS true AND objectArea.read_only IS false><!--- Area editable --->
 				
 				<cfif objectItem.locked IS true>
 
@@ -211,17 +220,26 @@
 
 		</cfif>
 
-		<cfif itemTypeId IS NOT 7 OR objectItem.state EQ "created"><!---Is not consultation or is not created--->
+		<cfif ( itemTypeId IS NOT 7 OR objectItem.state EQ "created" ) AND objectArea.read_only IS false><!---Is not consultation or is not created--->
 
 			<cfif objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 1 AND SESSION.user_id IS SESSION.client_administrator)>
 		
 				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+
+				<!--- PENDIENTE DE CAMBIAR O NO --->
+				<!---<script>
+					function eliminarElemento(){
+
+						confirmAction('eliminar');
+					}
+				</script>
+				<a onclick="return showConfirmModal('eliminar',eliminarElemento);" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>---->
 		
 			</cfif>
 
 		</cfif>
 
-		<cfif objectItem.user_in_charge EQ SESSION.user_id OR is_user_area_responsible>
+		<cfif ( objectItem.user_in_charge EQ SESSION.user_id OR is_user_area_responsible ) AND objectArea.read_only IS false>
 			
 			<cfif itemTypeId IS NOT 1>
 				<a href="item_change_user.cfm?item=#item_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
@@ -265,42 +283,6 @@
 				</cfif> 
 			</cfif>
 		</cfif>
-		
-		<!---<a href="#itemTypeName#_copy.cfm?#itemTypeName#=#item_id#" title="Copiar #itemTypeNameEs# a otras áreas" class="btn btn-default btn-sm"><i class="icon-copy"></i> Copiar</a>--->
-
-		<!---<br/>
-		<form name="copy_item_to" id="copy_item_to" method="get" action="" style="display:inline; padding:0; margin:0;">
-			<input type="hidden" name="sourceItemTypeId" value="#itemTypeId#"/>
-			<input type="hidden" name="#itemTypeName#" value="#objectItem.id#"/>
-				
-			<button type="submit" class="btn btn-default btn-sm" style="margin-right:0;" onclick="submitCopyItemForm();">
-            	<i class="icon-copy"></i> Copiar como
-            </button>		
-			<select name="item_type" style="width:100px; margin:0;" onchange="submitCopyItemForm();">
-				<cfif itemTypeId IS NOT 1>
-				<option value="message">Mensaje</option>
-				</cfif>
-				
-				<cfif APPLICATION.moduleWeb EQ true>
-					<cfif itemTypeId IS NOT 2>
-					<option value="entry">Contenido web</option>
-					</cfif>
-					<cfif itemTypeId IS NOT 3 AND APPLICATION.identifier EQ "vpnet">
-					<option value="link">Enlace</option>
-					</cfif>
-					<cfif itemTypeId IS NOT 4>
-					<option value="news">Noticia</option>
-					</cfif>
-				</cfif>
-				
-				<cfif itemTypeId IS NOT 5>
-					<option value="event">Evento</option>
-				</cfif>
-				<cfif APPLICATION.identifier EQ "dp" AND itemTypeId IS NOT 6>
-				<option value="task">Tarea</option>
-				</cfif>
-			</select>
-		</form>--->
 		
 		<cfif itemTypeId LT 10>
 			

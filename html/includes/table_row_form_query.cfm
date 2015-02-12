@@ -41,6 +41,11 @@
 			<cfinvokeargument name="with_types" value="true"/>
 		</cfinvoke>
 		<cfset fields = fieldsResult.tableFields>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		</cfinvoke>
 		
 	</cfif> 
 
@@ -78,8 +83,6 @@
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 		</cfinvoke>
 
-		<cfset area_id = table.area_id>
-
 	<cfelse><!--- MODIFY --->
 
 		<cfif isDefined("URL.row") AND isNumeric(URL.row)>
@@ -96,8 +99,11 @@
 
 		<cfset row = getRowResponse.row>
 
-		<cfset area_id = getRowResponse.table.area_id>
+		<cfset table = getRowResponse.table>
 
 	</cfif>
+
+	<cfset area_id = table.area_id>
+
 
 </cfif>

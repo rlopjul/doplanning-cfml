@@ -264,6 +264,7 @@
 
 				<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val(),'');">
 					<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Todas</option>
+					<option value="null" <cfif selected_typology_id EQ "null">selected="selected"</cfif> lang="es">Básica</option>
 					<cfif areasTypologies.recordCount GT 0>
 						<cfloop query="areasTypologies">
 							<option value="#areasTypologies.id#" <cfif areasTypologies.id IS selected_typology_id>selected="selected"</cfif>>#areasTypologies.title#</option>

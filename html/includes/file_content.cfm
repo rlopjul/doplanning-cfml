@@ -199,33 +199,36 @@
 									</cfif></b>
 								</p>
 
-								<cfif version.revised IS false AND SESSION.user_id IS objectFile.reviser_user>
-									<!--- validateFileVersion --->
-									<p>
-										Debe validar o rechazar la versión de este archivo:<br/>
-										<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=true&return_path=#return_path#" onclick="return confirmValidateFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Validar versión</span></a>
-										<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=false&return_path=#return_path#" onclick="return confirmValidateFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
-										<a href="file_reject_revision.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
-									</p>
-
-								<cfelseif version.revised IS true AND SESSION.user_id IS objectFile.approver_user>
-									<!--- approveFileVersion --->
-									<p>
-										Debe aprobar o rechazar la versión de este archivo:<br/>
-										<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=true&return_path=#return_path#" onclick="return confirmApproveFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar versión</span></a>
-										<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=false&return_path=#return_path#" onclick="return confirmApproveFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
-										<a href="file_reject_approval.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
-									</p>
-
-								</cfif>
-
-								<cfif version.revised IS false>
-									<!--- cancelRevisionRequest --->
-									<p>
-										<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=cancelRevisionRequest&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmAction('cancelar el proceso de revisión');" class="btn btn-warning btn-sm"><i class="icon-undo"></i> <span lang="es">Cancelar revisión</span></a>
-									</p>								
-								</cfif>
+								<cfif objectArea.read_only IS false>
 								
+									<cfif version.revised IS false AND SESSION.user_id IS objectFile.reviser_user>
+										<!--- validateFileVersion --->
+										<p>
+											Debe validar o rechazar la versión de este archivo:<br/>
+											<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=true&return_path=#return_path#" onclick="return confirmValidateFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Validar versión</span></a>
+											<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=false&return_path=#return_path#" onclick="return confirmValidateFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
+											<a href="file_reject_revision.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
+										</p>
+
+									<cfelseif version.revised IS true AND SESSION.user_id IS objectFile.approver_user>
+										<!--- approveFileVersion --->
+										<p>
+											Debe aprobar o rechazar la versión de este archivo:<br/>
+											<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=true&return_path=#return_path#" onclick="return confirmApproveFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar versión</span></a>
+											<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=false&return_path=#return_path#" onclick="return confirmApproveFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
+											<a href="file_reject_approval.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
+										</p>
+
+									</cfif>
+
+									<cfif version.revised IS false>
+										<!--- cancelRevisionRequest --->
+										<p>
+											<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=cancelRevisionRequest&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmAction('cancelar el proceso de revisión');" class="btn btn-warning btn-sm"><i class="icon-undo"></i> <span lang="es">Cancelar revisión</span></a>
+										</p>								
+									</cfif>
+
+								</cfif>
 								
 							</div>
 							<div class="div_file_page_label">
@@ -360,59 +363,133 @@
 
 		<cfif APPLICATION.publicationScope IS true AND fileTypeId IS NOT 3>
 
-			<div class="div_message_page_label"><span lang="es">Ámbito de publicación:</span> <span class="text_message_page">#objectFile.publication_scope_name#</span></div>
+			<div class="div_file_page_label"><span lang="es">Ámbito de publicación:</span> <span class="text_message_page">#objectFile.publication_scope_name#</span></div>
 
 		</cfif>
 
 
 		<cfif APPLICATION.moduleAntiVirus IS true>
 
-			<div class="div_message_page_label"><span lang="es"><cfif fileTypeId IS 3>Última versión de archivo analizada por Antivirus<cfelse>Analizado por Antivirus</cfif>:</span>
+			<div class="div_file_page_label"><span lang="es"><cfif fileTypeId IS 3>Última versión de archivo analizada por Antivirus<cfelse>Analizado por Antivirus</cfif>:</span>
 			<span class="text_message_page" lang="es"><cfif objectFile.anti_virus_check IS true>Sí<cfelse>No</cfif></span></div>
 
 		</cfif>
 
-		<!---fileUrl--->
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
-			<cfinvokeargument name="file_id" value="#objectFile.id#">
-			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
-			<cfinvokeargument name="area_id" value="#area_id#">
 
-			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-		</cfinvoke>
+		<div style="clear:both">
 
-		<div class="div_message_page_label"><span lang="es">URL del archivo en #APPLICATION.title#:</span></div>
-		<input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
+			<button class="btn btn-default btn-sm" type="button" id="showFilesUrls" data-toggle="collapse" data-target="##fileUrlsContainer" aria-expanded="false" aria-controls="fileUrlsContainer">
+			  <i class="icon-expand-alt" style="font-size:16px;"></i> Mostrar URLs del archivo
+			</button>
 
-		<!---getDownloadFileUrl--->
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
-			<cfinvokeargument name="file_id" value="#objectFile.id#">
-			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+			<button class="btn btn-default btn-sm" type="button" id="hideFilesUrls" data-toggle="collapse" data-target="##fileUrlsContainer" aria-expanded="false" aria-controls="fileUrlsContainer" style="display:none">
+			  <i class="icon-collapse-alt" style="font-size:16px;"></i> Ocultar URLs del archivo
+			</button>
 
-			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-		</cfinvoke>
+			<div class="collapse" id="fileUrlsContainer">
+				<div>
 
-		<div class="div_message_page_label"><span lang="es">URL de descarga desde #APPLICATION.title#:</span></div>
-		<input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
+					<!---fileUrl--->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
+						<cfinvokeargument name="file_id" value="#objectFile.id#">
+						<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+						<cfinvokeargument name="area_id" value="#area_id#">
+
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+					</cfinvoke>
+
+					<div class="div_file_page_label"><span lang="es">URL del archivo en #APPLICATION.title#:</span></div>
+					<div class="div_file_page_user"><input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/></div>
+
+					<!---getDownloadFileUrl--->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
+						<cfinvokeargument name="file_id" value="#objectFile.id#">
+						<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+					</cfinvoke>
+
+					<div class="div_file_page_label"><span lang="es">URL de <b>descarga</b> desde #APPLICATION.title#:</span></div>
+					<div class="div_file_page_user"><input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/></div>
+
+					<!---<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-dropdowns-enhancement/css/dropdowns-enhancement.min.css" rel="stylesheet">
+					<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-dropdowns-enhancement/js/dropdowns-enhancement.min.js"></script>
+
+					<div class="dropdown">
+
+					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+					    Obtener URL del archivo
+					    <span class="caret"></span>
+					  </button>
+
+					  <ul class="dropdown-menu noclose" role="menu" aria-labelledby="dropdownMenu1">
+					    <li role="presentation">
+					    	<span lang="es">URL de <b>descarga</b> desde #APPLICATION.title#:</span><br/>
+					    	<input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text;width:400px;"/></li>
+					    <li role="presentation">URL de desde #APPLICATION.title#:</span><br/>
+					    	<input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text;width:400px;"/></li>
+					  </ul>
+
+					</div>--->
+
+					<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
+
+					<cfif (area_type EQ "web" OR area_type EQ "intranet") AND isDefined("webPath")>
+
+						<!---fileWebUrl--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
+							<cfinvokeargument name="file_id" value="#objectFile.id#">
+							<cfinvokeargument name="area_id" value="#area_id#">
+						</cfinvoke>
+						<cfset fileWebUrl = "/#webPath#/#filePage#">
+
+						<div class="div_file_page_label"><span lang="es">URL <b>relativa en la #area_type#</b> <cfif APPLICATION.publicationValidation IS true AND objectFile.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif>:</span></div>
+						<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/></div>
 
 
-		<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
+					<cfelseif APPLICATION.publicationScope IS true AND SESSION.client_abb EQ "hcs" AND ( objectFile.publication_scope_id IS 2 OR objectFile.publication_scope_id IS 3 )><!--- Scope IS Web OR Intranet --->
 
-		<cfif (area_type EQ "web" OR area_type EQ "intranet") AND isDefined("webPath")>
+						<!--- Permite que se muestre esta URL para los archivos que tienen asociado el ámbito WEB o INTRANET --->
 
-			<!---fileWebUrl--->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
-				<cfinvokeargument name="file_id" value="#objectFile.id#">
-				<cfinvokeargument name="area_id" value="#area_id#">
-			</cfinvoke>
-			<cfset fileWebUrl = "/#webPath#/#filePage#">
+						<cfif objectFile.publication_scope_id IS 2>
+							<cfset webPath = "intranet">
+						<cfelse>
+							<cfset webPath = "web">
+						</cfif>
 
-			<div class="div_message_page_label"><span lang="es">URL <b>relativa en la #area_type#</b>:</span></div>
-			<input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
+						<!---fileWebUrl--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
+							<cfinvokeargument name="file_id" value="#objectFile.id#">
+						</cfinvoke>
+						<cfset fileWebUrl = "/#webPath#/#filePage#">
 
-		</cfif>
-			
-		<!---</cfif>--->
+						<div class="div_file_page_label"><span lang="es">URL <b>relativa en la #webPath#</b> para enlazar el archivo:</span></div>
+						<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/></div>
+
+					</cfif>
+
+					<!---</cfif>--->
+
+				</div>
+			</div>
+				
+		</div>
+
+
+		<script>
+
+			$('##fileUrlsContainer').on('hidden.bs.collapse', function () {
+				$('##showFilesUrls').show();
+				$('##hideFilesUrls').hide();
+
+			});
+
+			$('##fileUrlsContainer').on('shown.bs.collapse', function () {
+				$('##showFilesUrls').hide();
+				$('##hideFilesUrls').show();
+			});			
+
+		</script>
 
 		<!---Typology--->
 		<cfif APPLICATION.modulefilesWithTables IS true>
@@ -433,7 +510,7 @@
 				<cfset table = getRowResponse.table>
 				<cfset row = getRowResponse.row>--->
 
-				<div class="div_message_page_label">Tipología: <span class="text_message_page"><strong>#table.title#</strong></span></div>
+				<div class="div_file_page_label">Tipología: <span class="text_message_page"><strong>#table.title#</strong></span></div>
 
 				<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">--->
 

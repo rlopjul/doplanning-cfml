@@ -270,6 +270,8 @@ curLangText["es"] = {
 			
 			"area_created" : "Se ha creado el área",
 			"you_are_responsible" : "y usted ha sido asociado como responsable de la misma",
+
+			"new_user_in_area" : "Nuevo usuario asociado al área",
 			
 		},
 		
@@ -579,12 +581,14 @@ curLangText["en"] = {
 		
 		"assign_user": {
 		
-			"has_been_added_as_user" : "You have been added as a user",
+			"has_been_added_as_user" : "You have been added as a area user",
 			"has_been_added_as_responsible" : "You have been associated as responsible of the area",
 			"has_been_added_to_area" : "You have been added to the area",
 			
 			"area_created" : "A new area has been created",
 			"you_are_responsible" : "and you have been associated as responsible of this area",
+
+			"new_user_in_area" : "Nuevo usuario asociado al área",
 			
 		},
 		

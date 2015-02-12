@@ -21,21 +21,24 @@
 			
 			<!---Botón antiguo<a href="area_file_new.cfm?area=#area_id#" onclick="openUrl('area_file_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-sm btn-info" title="Subir nuevo archivo" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nuevo Archivo</span></a> --->
 
-			<div class="btn-group">
-				<a href="area_file_new.cfm?area=#area_id#&fileTypeId=1" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo Archivo" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file.png" style="height:22px;"/></a>
-			</div>
+				
+			<cfif objectArea.item_type_10_enabled IS true AND objectArea.read_only IS false>
 
-			<div class="btn-group">
-				<cfif APPLICATION.moduleAreaFilesLite IS true AND len(area_type) IS 0>
-				<a href="area_file_new.cfm?area=#area_id#&fileTypeId=2" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo Archivo de área" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" style="height:22px;"/></a>
-				</cfif>
-			</div>
+				<div class="btn-group">
+					<a href="area_file_new.cfm?area=#area_id#&fileTypeId=1" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo Archivo" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file.png" style="height:22px;"/></a>
+				</div>
 
-			<div class="btn-group">
-				<a href="area_files_upload.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Subir varios archivos" lang="es"><i class="icon-upload" style="color:##5BB75B;font-size:19px;line-height:23px;"></i> <span lang="es">Subir varios archivos</span></a>
-			</div>
-			
-		
+				<div class="btn-group">
+					<cfif APPLICATION.moduleAreaFilesLite IS true AND len(area_type) IS 0>
+					<a href="area_file_new.cfm?area=#area_id#&fileTypeId=2" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe', event)" class="btn btn-default btn-sm" title="Nuevo Archivo de área" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" style="height:22px;"/></a>
+					</cfif>
+				</div>
+
+				<div class="btn-group">
+					<a href="area_files_upload.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Subir varios archivos" lang="es"><i class="icon-upload" style="color:##5BB75B;font-size:19px;line-height:23px;"></i> <span lang="es">Subir varios archivos</span></a>
+				</div>
+
+			</cfif>			
 			
 			<!---Opción deshabilitada definitivamente<a href="file_associate.cfm?area=#area_id#" onclick="openUrl('file_associate.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Asociar archivo existente" lang="es"><i class="icon-plus-sign"></i> <span lang="es">Asociar Archivo</span></a>--->
 			
@@ -44,6 +47,14 @@
 					<a href="typologies.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Tipologías de documentos" lang="es"><i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i> <span lang="es">Tipologías de documentos</span></a>
 				</cfif>
 			</div>
+
+			<cfif objectArea.item_type_10_enabled IS false OR objectArea.read_only IS true>
+
+				<div class="btn-group">
+					<button class="btn btn-link disabled" lang="es">Está deshabilitada la creación de nuevos archivos en esta área</button>
+				</div>
+
+			</cfif>
 
 			<!---<span class="divider">&nbsp;</span>--->
 

@@ -44,13 +44,23 @@
 
 	<div class="div_head_subtitle_area">
 
-		<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Archivo" lang="es"> <img style="height:22px;" src="/html/assets/icons/file_edited.png">&nbsp;&nbsp;<span lang="es">Archivo</span></a>
+		<div class="btn-toolbar" style="padding-right:5px;">
 
-		<span class="divider">&nbsp;</span>
+			<!---<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Archivo" lang="es"> <img style="height:22px;" src="/html/assets/icons/file_edited.png">&nbsp;&nbsp;<span lang="es">Archivo</span></a>--->
 
-		<cfif app_version NEQ "mobile">
-			<a href="#APPLICATION.htmlPath#/file_areas.cfm?file=#file_id#&area=#area_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
-		</cfif>
+			<div class="btn-group">
+				<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Área" lang="es"> <img src="/html/assets/icons_dp/area_small.png" style="height:17px;" alt="Área" lang="es">&nbsp;<span lang="es">Área</span></a>
+			</div>
+
+			<!---<span class="divider">&nbsp;</span>--->
+
+			<cfif app_version NEQ "mobile">
+				<div class="btn-group pull-right">
+					<a href="#APPLICATION.htmlPath#/file_areas.cfm?file=#file_id#&area=#area_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px;"></i></a>
+				</div>
+			</cfif>
+
+		</div>
 
 	</div>
 	</cfoutput>

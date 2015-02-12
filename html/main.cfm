@@ -39,6 +39,10 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
     <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
 <![endif]-->
 
+<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
+<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
+
+
 <cfif APPLICATION.identifier EQ "dp">
 <link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp2.min.css"/>
 <cfelse>
@@ -63,6 +67,25 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 <script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
 
 <script src="#APPLICATION.bootstrapJSPath#"></script>
+
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modal.js"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
+
+<script>
+	<!---To enable the loading spinner in Bootstrap 3--->
+	$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
+    '<div class="loading-spinner" style="width: 200px; margin-left: -100px;">' +
+        '<div class="progress progress-striped active">' +
+            '<div class="progress-bar" style="width: 100%;"></div>' +
+        '</div>' +
+    '</div>';
+    <!--- To set modal max height --->
+	$.fn.modal.defaults.maxHeight = function(){
+	    return $(window).height() - 170; 
+	}
+</script>
+
+<script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
@@ -118,9 +141,15 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 <script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.92"></script>
 </cfoutput>
 
+<cfif APPLICATION.homeTab IS true AND SESSION.client_abb NEQ "asebio">
+	<cfset homeTabEnabled = true>
+<cfelse>
+	<cfset homeTabEnabled = false>
+</cfif> 
+
 <script>
 
-	<cfif APPLICATION.homeTab IS true>
+	<cfif homeTabEnabled IS true>
 		currentTab = "#tab0";
 	</cfif>
 	
@@ -226,7 +255,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 		resizeIframe();
 
-		<!---<cfif APPLICATION.homeTab IS true>
+		<!---<cfif homeTabEnabled IS true>
 			loadHome();
 		</cfif>--->
 
@@ -341,10 +370,10 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 		<div class="tabbable"><!---Tab Panel--->
 	
 		  <ul class="nav nav-pills" id="dpTab" style="clear:none;padding-bottom:5px;">
-		  	<cfif APPLICATION.homeTab IS true>
+		  	<cfif homeTabEnabled IS true>
 		  		<li class="active"><a href="#tab0" data-toggle="tab" lang="es"><i class="icon-home"></i></a></li>
 		  	</cfif>
-			<li <cfif APPLICATION.homeTab IS false>class="active"</cfif>><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
+			<li <cfif homeTabEnabled IS false>class="active"</cfif>><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Búsqueda</a></li>
 		  </ul>
@@ -418,7 +447,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 		  
 		  <div class="tab-content" style="clear:both;">
 
-		  	<cfif APPLICATION.homeTab IS true>
+		  	<cfif homeTabEnabled IS true>
 		  	<div class="tab-pane active" id="tab0"><!---Tab Home--->
 
 		  		<!---homeContainer--->
@@ -431,7 +460,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 		  	</div>
 		  	</cfif>
 		  
-			<div class="tab-pane <cfif APPLICATION.homeTab IS false>active</cfif>" id="tab1"><!---Tab Tree--->
+			<div class="tab-pane <cfif homeTabEnabled IS false>active</cfif>" id="tab1"><!---Tab Tree--->
 				
 				<div class="container" style="width:100%;">
 					<div class="row" style="padding-bottom:5px;">
@@ -524,9 +553,9 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 						<a id="areaImageAnchor" onClick="goToAreaLink()"><!---Banner--->
 						<cfoutput>
 							<cfif isNumeric(area_id)>
-								<img src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#" id="areaImage" alt="Imagen del área" style="max-width:100%;" />
+								<img src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#" id="areaImage" alt="Imagen del área" style="max-width:100%;max-height:110px" />
 							<cfelse>
-								<img src="#APPLICATION.resourcesPath#/#APPLICATION.identifier#_banner.png" id="areaImage" alt="Imagen del área" style="max-width:100%" />
+								<img src="#APPLICATION.resourcesPath#/#APPLICATION.identifier#_banner.png" id="areaImage" alt="Imagen del área" style="max-width:100%;max-height:110px" />
 							</cfif>
 						</cfoutput>
 						</a>
@@ -575,6 +604,9 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 		<div style="clear:both"><!-- --></div>
 		
 	</div>
+
+	<!---Alert modal--->
+	<div id="alertModal" class="modal container fade" tabindex="-1"></div>
 	
 	<div style="clear:both"><!-- --></div>
 	<div class="msg_div_error" id="errorMessage"></div>
@@ -583,6 +615,31 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 <!---Download File--->
 <!--- <cfinclude template="#APPLICATION.htmlPath#/includes/open_download_file.cfm"> --->
+
+
+<!--- Alert modal --->
+<script type="text/x-tmpl" id="tmpl-alert-modal">
+
+{% if(o.error==true) { %}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="text-danger"><i class="icon-warning-sign"></i>&nbsp;Error</h4>
+</div>
+{% } %}
+
+<div class="modal-body">
+	<br/>
+	{%=o.msg%}
+</div>
+<div class="modal-footer">
+	{% if(o.confirm==true) { %}
+		<button class="btn btn-default" data-dismiss="modal" aria-hidden="true" lang="es">Cancelar</button>
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" lang="es" onclick="{%=o.callBackFunction%}()">Aceptar</button>
+	{% } else { %}
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" lang="es">Aceptar</button>
+	{% } %}
+</div>
+</script>
 
 </body>
 </html>

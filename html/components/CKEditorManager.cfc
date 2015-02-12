@@ -38,7 +38,11 @@
 				</cfif>
 			</cfif>
 			
-			<script type="text/javascript">
+			<script>
+				<!--- Enable CKEDITOR in mobile browsers --->
+				if ( window.CKEDITOR && ( !CKEDITOR.env.ie || CKEDITOR.env.version > 7 ) )
+   					CKEDITOR.env.isCompatible = true;
+
 				CKEDITOR.replace('#arguments.name#', {toolbar:'#arguments.toolbar#', toolbarStartupExpanded:#arguments.toolbarStartupExpanded#, 
 					toolbarCanCollapse:#arguments.toolbarCanCollapse#, readOnly:#arguments.readOnly#,
 					language:'#arguments.language#'
@@ -51,7 +55,7 @@
 					<cfif SESSION.client_administrator EQ SESSION.user_id>
 					, forcePasteAsPlainText:false
 					</cfif>	
-				});
+				});				
 			</script>
 			
 		</cfoutput>

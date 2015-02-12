@@ -29,21 +29,31 @@
 
 <div class="div_head_subtitle_area">
 
-	<!---
-	Para habilitar esta funcionalidad aquí habría que cambiar la página de resultado a la que se va tras la subida de una nueva versión
-	<cfif file.locked IS true AND file.lock_user_id IS SESSION.user_id>
-		<a href="area_file_replace.cfm?file=#file_id#&fileTypeId=#fileTypeId#&area=#area_id#" onclick="openUrl('area_file_replace.cfm?file=#file_id#&fileTypeId=#fileTypeId#&area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm"><i class="icon-upload-alt"></i> <span lang="es">Nueva versión</span></a>
+	<div class="btn-toolbar" style="padding-right:5px;">
 
-		<span class="divider">&nbsp;</span>
-	</cfif>--->
+		<!---
+		Para habilitar esta funcionalidad aquí habría que cambiar la página de resultado a la que se va tras la subida de una nueva versión
+		<cfif file.locked IS true AND file.lock_user_id IS SESSION.user_id>
+			<a href="area_file_replace.cfm?file=#file_id#&fileTypeId=#fileTypeId#&area=#area_id#" onclick="openUrl('area_file_replace.cfm?file=#file_id#&fileTypeId=#fileTypeId#&area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm"><i class="icon-upload-alt"></i> <span lang="es">Nueva versión</span></a>
 
-	<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Archivo" lang="es"> <img style="height:22px;" src="/html/assets/icons/file_edited.png">&nbsp;&nbsp;<span lang="es">Archivo</span></a>
+			<span class="divider">&nbsp;</span>
+		</cfif>--->
 
-	<span class="divider">&nbsp;</span>
+		<!---<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Archivo" lang="es"> <img style="height:22px;" src="/html/assets/icons/file_edited.png">&nbsp;&nbsp;<span lang="es">Archivo</span></a>--->
 
-	<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/file_versions.cfm?file=#file_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
-	</cfif>
+		<div class="btn-group">
+			<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Área" lang="es"> <img src="/html/assets/icons_dp/area_small.png" style="height:17px;" alt="Área" lang="es">&nbsp;<span lang="es">Área</span></a>
+		</div>
+
+		<!---<span class="divider">&nbsp;</span>--->
+
+		<cfif app_version NEQ "mobile">
+			<div class="btn-group pull-right">
+				<a href="#APPLICATION.htmlPath#/file_versions.cfm?file=#file_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px;"></i></a>
+			</div>
+		</cfif>
+
+	</div>
 
 </div>
 

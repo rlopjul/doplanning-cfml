@@ -133,7 +133,7 @@
 </cfif>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
-		<a href="preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="logout.cfm" class="text_user_logged" title="Cerrar sesi�n" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+		<a href="preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 	</div>
 </div>
 </cfoutput>
@@ -141,6 +141,7 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 <cfset tableTypeId = 2>
+<cfset return_path = "#APPLICATION.htmlPath#/">
 <cfinclude template="#APPLICATION.htmlPath#/includes/table_rows.cfm">
 
 <cfset return_page = "area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#">

@@ -11,7 +11,7 @@
 		<div class="container-fluid">
 			<span class="navbar-brand">Usuarios de la organización</span>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
-				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a>
+				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="font-size:14px"></i> Nuevo usuario</a><!---color:##5BB75B;--->
 				
 
 				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/all_administrators.cfm');"><i class="icon-group icon-white"></i> <span lang="es">Administradores</span></a>

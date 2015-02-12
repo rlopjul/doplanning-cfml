@@ -139,13 +139,14 @@
         <cfargument name="position" type="numeric" required="false">
         <cfargument name="list_area_id" type="numeric" required="false">
         <cfargument name="field_input_type" type="string" required="false">
+        <cfargument name="list_values" type="string" required="false">
 				
 		<cfset var method = "createField">
 
 		<cfset var response = structNew()>
 		
 		<cftry>
-					
+
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="createField" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
 			
@@ -176,6 +177,7 @@
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="list_area_id" type="numeric" required="false">
         <cfargument name="field_input_type" type="string" required="false">
+        <cfargument name="list_values" type="string" required="false">
 		
 		<cfset var method = "updateField">
 

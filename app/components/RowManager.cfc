@@ -264,7 +264,7 @@
 
 						<cfset fieldName = "field_#fields.field_id#">
 
-						<cfset fieldValue = fileArray[curRow][curColumn]>
+						<cfset fieldValue = trim(fileArray[curRow][curColumn])>
 
 						<cfif fields.field_type_id IS 5><!---DECIMAL--->
 
@@ -336,7 +336,7 @@
 
 							</cfif>
 							
-						<cfelseif fields.field_type_id EQ 9 OR fields.field_type_id EQ 10><!--- LISTS --->
+						<cfelseif fields.field_type_id EQ 9 OR fields.field_type_id EQ 10><!--- AREAS LISTS --->
 
 							<cfset fieldAreasQuery = areasQueries[fields.field_id]>
 
@@ -382,7 +382,31 @@
 								</cfif>
 
 							</cfif>
+
+						<cfelseif fields.field_type_id EQ 15 OR fields.field_type_id EQ 16><!--- LISTS TEXT VALUES --->
 						
+							
+							<cfif fields.field_type_id IS 16><!--- Multiple areas selection --->
+								
+								<cfif listLen(fieldValue, ";") GT 0>
+
+									<cfset fieldValue = listToArray(fieldValue,";")>
+
+								<cfelse>
+									<cfset fieldValue = arrayNew(1)>
+								</cfif>
+
+							<cfelse>
+
+								<cfif len(fieldValue) GT 0>
+									<!--- List values required array --->
+									<cfset fieldValue = [fieldValue]>
+								<cfelse>
+									<cfset fieldValue = arrayNew(1)>
+								</cfif>
+
+							</cfif>
+
 
 						<cfelse>
 

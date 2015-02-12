@@ -32,6 +32,10 @@ function getMaxZIndex(){
     return maxZ;
 }
 
+function generateRandom() {
+	return Math.floor(Math.random()*1001);
+}
+
 function showAlertMessage(msg, res){
 
 	//if($("#alertContainer").is(":visible"))
@@ -79,6 +83,21 @@ function showAlertModal(msg){
 	$("#alertModal").modal( {width:650, backdrop:'static'} );
 }
 
+/*function showConfirmModal(msg, callBackFunction){
+
+	var data = {
+	    "msg": msg,
+	    "error": false,
+	    "confirm": true,
+	    "callBackFunction": callBackFunction
+	};
+
+	$("#alertModal").html( tmpl("tmpl-alert-modal", data) );
+	$("#alertModal").modal( {width:650, backdrop:'static'} );
+
+	return false;
+}*/
+
 function showAlertErrorModal(msg){
 
 	var data = {
@@ -93,6 +112,13 @@ function showAlertErrorModal(msg){
 function loadModal(url){
  
 	$('body').modalmanager('loading');
+
+	var noCacheNumber = generateRandom();
+
+	if(url.indexOf("?") == -1)
+		url = url+"?n"+noCacheNumber;
+	else
+		url = url+"&n"+noCacheNumber;
 
 	$modal.load(url, '', function(){
 	  $modal.modal({width:740, backdrop:'static'});/*680*/
@@ -309,7 +335,7 @@ function loadTree() {
 	$("#loadingContainer").show();
 	$("#treeContainer").css('visibility', 'hidden');
 
-	var noCacheNumber = Math.floor(Math.random()*1001);
+	var noCacheNumber = generateRandom();
 	$("#treeContainer").load("html_content/tree.cfm?n="+noCacheNumber, function() {
 		showTree(true);	  
 	});

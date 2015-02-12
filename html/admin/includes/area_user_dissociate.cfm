@@ -114,9 +114,9 @@
 		    <cfif objectArea.user_in_charge NEQ user_id>
 		    	
 		    	<cfif isUserInAreaResponse.isUserInArea IS true>
-			    	<button class="btn btn-primary" id="areaModifySubmit" onclick="submitDissociateModal(event)">Quitar usuario del área</button>
+			    	<button class="btn btn-primary" id="areaDissociateSubmitButton" data-loading-text="Quitando..." onclick="submitDissociateModal(event)">Quitar usuario del área</button>
 			    <cfelseif getNearestAreaResponse.result IS true>
-			    	<button class="btn btn-warning" id="areaModifySubmit" onclick="submitDissociateModal(event)">Quitar usuario del área superior</button>
+			    	<button class="btn btn-warning" id="areaDissociateSubmitButton" data-loading-text="Quitando..." onclick="submitDissociateModal(event)">Quitar usuario del área superior</button>
 			    </cfif>
 
 		    </cfif>
@@ -128,6 +128,8 @@
 
 			    if(e.preventDefault)
 					e.preventDefault();
+
+				$("##areaDissociateSubmitButton").button('loading');
 
 				postModalForm("##dissociateForm", "#APPLICATION.htmlComponentsPath#/User.cfc?method=dissociateUserFromArea", "#return_page#", "areaIframe");
 

@@ -264,11 +264,19 @@
 
 	<cffunction name="getFileWebPage" access="public" returntype="string">
 		<cfargument name="file_id" type="numeric" required="true">
-		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
 
 		<cfset var fileWebUrl = "">
 
-		<cfset fileWebUrl = "download_file.cfm?file=#arguments.file_id#&area=#arguments.area_id#&open">
+		<cfset fileWebUrl = "download_file.cfm?file=#arguments.file_id#">
+
+		<cfif isDefined("arguments.area_id")>
+			
+			<cfset fileWebUrl = fileWebUrl&"&area=#arguments.area_id#">
+
+		</cfif>
+
+		<cfset fileWebUrl = fileWebUrl&"&open">
 		
 		<cfreturn fileWebUrl>
 	</cffunction>

@@ -312,6 +312,8 @@
 		<cfargument name="dni" type="string" required="true">
 		<cfargument name="mobile_phone" type="string" required="true">
 		<cfargument name="mobile_phone_ccode" type="string" required="true">
+		<cfargument name="telephone" type="string" required="true">
+		<cfargument name="telephone_ccode" type="string" required="true">
 		<cfargument name="address" type="string" required="true">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
@@ -319,6 +321,8 @@
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
+		<cfargument name="linkedin_url" type="string" required="false">
+		<cfargument name="twitter_url" type="string" required="false">
 		<cfargument name="information" type="string" required="true">
 		<cfargument name="internal_user" type="boolean" required="false">
 		<cfargument name="enabled" type="boolean" required="false">
@@ -364,6 +368,8 @@
 						<cfinvokeargument name="files" value="#arguments.files#">
 						<cfinvokeargument name="hide_not_allowed_areas" value="#arguments.hide_not_allowed_areas#">
 
+						<cfinvokeargument name="linkedin_url" value="#arguments.linkedin_url#">
+						<cfinvokeargument name="twitter_url" value="#arguments.twitter_url#">
 						<cfinvokeargument name="information" value="#arguments.information#">
 						<cfinvokeargument name="internal_user" value="#arguments.internal_user#">
 						<cfinvokeargument name="enabled" value="#arguments.enabled#">
@@ -407,6 +413,8 @@
 		<cfargument name="dni" type="string" required="true">
 		<cfargument name="mobile_phone" type="string" required="true">
 		<cfargument name="mobile_phone_ccode" type="string" required="true">
+		<cfargument name="telephone" type="string" required="true">
+		<cfargument name="telephone_ccode" type="string" required="true">
 		<cfargument name="address" type="string" required="true">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
@@ -414,6 +422,8 @@
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
+		<cfargument name="linkedin_url" type="string" required="false">
+		<cfargument name="twitter_url" type="string" required="false">
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
@@ -464,6 +474,8 @@
 						<cfinvokeargument name="files" value="#arguments.files#">
 						<cfinvokeargument name="hide_not_allowed_areas" value="#arguments.hide_not_allowed_areas#">
 
+						<cfinvokeargument name="linkedin_url" value="#arguments.linkedin_url#">
+						<cfinvokeargument name="twitter_url" value="#arguments.twitter_url#">
 						<cfinvokeargument name="information" value="#arguments.information#">
 						<cfinvokeargument name="internal_user" value="#arguments.internal_user#">
 						<cfinvokeargument name="enabled" value="#arguments.enabled#">
@@ -527,6 +539,12 @@
 		<!--- <cfargument name="notify_dissociate_file" type="boolean" required="false" default="false"> --->
 		<cfargument name="notify_delete_file" type="boolean" required="false" default="false">
 		<cfargument name="notify_lock_file" type="boolean" required="false" default="false">
+
+		<cfargument name="notify_new_user_in_area" type="boolean" required="false" default="false">
+		<cfargument name="notify_been_associated_to_area" type="boolean" required="false" default="false">
+
+		<cfargument name="notify_app_news" type="boolean" required="false" default="false">
+		<cfargument name="notify_app_features" type="boolean" required="false" default="false">
 		
 		<cfset var method = "updateUserPreferences">
 		
@@ -851,19 +869,32 @@
 			#objectUser.family_name# #objectUser.name#</div>
 			<div class="div_separator"><!-- --></div>
 			<div class="div_user_page_user">
-				<div class="div_user_page_label"><span lang="es">Email:</span> <a href="mailto:#objectUser.email#" class="div_user_page_text">#objectUser.email#</a></div>
+				<div class="div_user_page_label"><!---<span lang="es">Email:</span>---><i class="icon-inbox" style="font-size:18px"></i>  <a href="mailto:#objectUser.email#" class="div_user_page_text">#objectUser.email#</a></div>
 
 				<cfif SESSION.client_abb NEQ "hcs"><!---OR showAdminFields IS true--->
 					<cfif len(objectUser.dni) GT 0>
 					<div class="div_user_page_label"><span lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif>:</span> <span class="div_user_page_text">#objectUser.dni#</span></div>
 					</cfif>
-					<div class="div_user_page_label"><span lang="es">Teléfono:</span> <a href="tel:#objectUser.telephone#" class="div_user_page_text"><cfif len(objectUser.telephone) GT 0>#objectUser.telephone_ccode#</cfif> #objectUser.telephone#</a></div>
-					<div class="div_user_page_label"><span lang="es">Teléfono móvil:</span> <a href="tel:#objectUser.mobile_phone#" class="div_user_page_text"><cfif len(objectUser.mobile_phone) GT 0>#objectUser.mobile_phone_ccode#</cfif> #objectUser.mobile_phone#</a></div>
+					<cfif len(objectUser.telephone) GT 0>
+						<div class="div_user_page_label"><!---<span lang="es">Teléfono:</span>---><i class="icon-phone-sign" style="font-size:20px"></i> <a href="tel:#objectUser.telephone#" class="div_user_page_text"><cfif len(objectUser.telephone) GT 0>#objectUser.telephone_ccode#</cfif> #objectUser.telephone#</a></div>
+					</cfif>
+					<cfif len(objectUser.mobile_phone) GT 0>
+						<div class="div_user_page_label"><!---<span lang="es">Teléfono móvil:</span>--->&nbsp;<i class="icon-mobile-phone" style="font-size:18px"></i> <a href="tel:#objectUser.mobile_phone#" class="div_user_page_text"><cfif len(objectUser.mobile_phone) GT 0>#objectUser.mobile_phone_ccode#</cfif> #objectUser.mobile_phone#</a></div>
+					</cfif>
+				</cfif>
+
+
+				<cfif len(objectUser.linkedin_url) GT 0>
+					<div class="div_user_page_label"><i class="icon-linkedin-sign" style="font-size:18px;"></i> <a href="#objectUser.linkedin_url#" target="_blank">#objectUser.linkedin_url#</a></div> 
+				</cfif>
+
+				<cfif len(objectUser.twitter_url) GT 0>
+					<div class="div_user_page_label"><i class="icon-twitter-sign" style="font-size:18px;"></i> <a href="#objectUser.twitter_url#" target="_blank">#objectUser.twitter_url#</a></div> 
 				</cfif>
 				
 				<cfif len(objectUser.address) GT 0>
-				<div class="div_user_page_label"><span lang="es">Dirección:</span></div> 
-				<div class="div_user_page_address">#objectUser.address#</div>
+					<div class="div_user_page_label"><!---<span lang="es">Dirección:</span>---><i class="icon-envelope" style="font-size:18px"></i></div> 
+					<div class="div_user_page_address">#objectUser.address#</div>
 				</cfif>
 
 				<cfif arguments.showAdminFields IS true>
@@ -872,7 +903,9 @@
 					<div class="div_user_page_address">#objectUser.information#</div>
 
 					<cfif SESSION.client_abb EQ "hcs">
-						<div class="div_user_page_label"><span lang="es">Login #APPLICATION.ldapName#:</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
+						<cfif SESSION.client_administrator EQ SESSION.user_id>
+							<div class="div_user_page_label"><span lang="es">Login #APPLICATION.ldapName#:</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
+						</cfif>
 						<div class="div_user_page_label"><span lang="es">Perfil de cabecera:</span> <span class="div_user_page_text">#objectUser.perfil_cabecera#</span></div>
 					</cfif>
 

@@ -1652,7 +1652,7 @@
 					</cfsavecontent>
 					</cfprocessingdirective>				
 				
-					<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus"> 
 							<cfinvokeargument name="from_name" value="#actionUserName#">
@@ -1680,7 +1680,7 @@
 					</cfsavecontent>
 					</cfprocessingdirective>				
 				
-					<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfinvokeargument name="from_name" value="#objectFile.user_full_name#">
 						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
@@ -1824,6 +1824,355 @@
 		<cfset footContent = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #APPLICATION.title# #langText[arguments.language].new_item.foot_content_2# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p>'>
 		
 		<cfreturn footContent>
+
+	</cffunction>
+
+
+
+	<!--- -------------------------------------- assignUserToArea ------------------------------------ --->
+	
+	<cffunction name="assignUserToArea" access="public" returntype="void">
+		<cfargument name="objectUser" type="query" required="yes">
+		<cfargument name="area_id" type="numeric" required="yes">
+		<cfargument name="new_area" type="boolean" required="no" default="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+				
+		<cfset var method = "assignUserToArea">
+        
+        <cfset var root_area = structNew()>
+        <cfset var curLang = "">
+
+        <cfset var objectArea = "">
+        <cfset var access_content = "">
+
+        <!---getArea--->
+        <cfinvoke component="AreaQuery" method="getArea" returnvariable="objectArea">
+            <cfinvokeargument name="area_id" value="#area_id#">
+            <cfinvokeargument name="with_user" value="false">
+            <cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+        </cfinvoke>
+        	
+        <!---getRootArea--->
+		<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
+			<cfinvokeargument name="onlyId" value="false">
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		</cfinvoke>
+		<!---En el asunto se pone el nombre del área raiz--->
+
+		<!--- getAreaPath --->
+		<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		</cfinvoke>
+
+        <cfif objectUser.enabled IS true>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserPreferences" returnvariable="userPreferences">
+				<cfinvokeargument name="user_id" value="#objectUser.id#"/>
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#"/>
+			</cfinvoke>
+
+			<cfif userPreferences.notify_been_associated_to_area IS true>
+				
+				<cfset curLang = objectUser.language>
+
+				<!---
+				<!---getArea--->
+		        <cfinvoke component="AreaQuery" method="getArea" returnvariable="objectArea">
+		            <cfinvokeargument name="area_id" value="#area_id#">
+		            <cfinvokeargument name="with_user" value="false">
+		            <cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		        </cfinvoke>
+		        	
+		        <!---getRootArea--->
+				<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
+					<cfinvokeargument name="onlyId" value="false">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+				--->
+				
+		        <cfif arguments.new_area IS false>
+					<cfset subject_user = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_user#: "&objectArea.name>
+				<cfelse>
+					<cfset subject_user = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_responsible#: "&objectArea.name>
+				</cfif>
+
+				<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="access_content_user">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+					<cfinvokeargument name="language" value="#curLang#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				</cfinvoke>
+
+				<cfsavecontent variable="html_text">
+				<cfoutput>
+				<br />
+		<cfif arguments.new_area IS false>
+		#langText[curLang].assign_user.has_been_added_to_area#: <strong>#objectArea.name#</strong> #langText[curLang].common.of_the_organization# #root_area.name#.<br />
+		<cfelse>
+		#langText[curLang].assign_user.area_created#: <strong>#objectArea.name#</strong>, #langText[curLang].assign_user.you_are_responsible#.<br />
+		</cfif>
+		<cfif objectUser.whole_tree_visible IS true><!---INTERNAL USER--->
+			<cfif len(area_path) GT 0>
+				#langText[curLang].common.area_path#: #area_path#<br />
+			</cfif>
+		</cfif>
+		<br />
+		<cfif len(objectArea.description) GT 0>
+		#langText[curLang].common.area_description#:<br /> 
+		#objectArea.description#<br />
+		</cfif>
+		<br/>
+		<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content_user#</div>	
+				</cfoutput>		
+				</cfsavecontent>
+
+				<cfset foot_content_user = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>		
+				
+				<cfinvoke component="EmailManager" method="sendEmail">
+					<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+					<cfinvokeargument name="to" value="#objectUser.email#">
+					<cfinvokeargument name="subject" value="#subject_user#">
+					<cfinvokeargument name="content" value="#html_text#">
+					<cfinvokeargument name="foot_content" value="#foot_content_user#">
+				</cfinvoke>
+
+			</cfif><!---END notify_been_associated_to_area IS true--->
+
+		</cfif>
+
+
+
+		<cfif arguments.new_area IS false><!--- NO es la notificación de responsable de nueva área --->
+
+	        <cfsavecontent variable="getUsersParameters">
+				<cfoutput>
+					 <user id="" email="" whole_tree_visible="">
+						<family_name><![CDATA[]]></family_name>
+						<name><![CDATA[]]></name>	
+					</user>
+					<area id="#arguments.area_id#"/> 
+					<order parameter="family_name" order_type="asc" />
+					<preferences 
+						notify_new_user_in_area="true">				
+					</preferences>
+				</cfoutput>
+			</cfsavecontent>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="getUsersRequest">
+				<cfinvokeargument name="request_parameters" value="#getUsersParameters#">
+			</cfinvoke>
+	        
+	        <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
+				<cfinvokeargument name="request" value="#getUsersRequest#"/>
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+			
+			<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
+			<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
+
+			<!---<cfif isDefined("arguments.user_id")>
+				<cfinvoke component="UserQuery" method="getUser" returnvariable="actionUserQuery">
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
+					<cfinvokeargument name="format_content" value="default">
+					<cfinvokeargument name="with_ldap" value="false">
+					<cfinvokeargument name="with_vpnet" value="false">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+				<cfset actionUserName = actionUserQuery.user_full_name>
+			</cfif>--->
+			
+			<cfloop list="#APPLICATION.languages#" index="curLang">
+
+				<!--- Delete user from lists --->
+
+				<cfset listInternalUsers = internalUsersEmails[curLang]>
+				<cfset listExternalUsers = externalUsersEmails[curLang]>
+
+				<cfset listInternalUserPos = listContains(listInternalUsers, objectUser.email, ";")>
+
+				<cfif listInternalUserPos GT 0>
+					
+					<cfset listInternalUsers = listDeleteAt(listInternalUsers, listInternalUserPos, ";")>
+
+				<cfelse>
+
+					<cfset listExternalUserPos = listContains(listExternalUsers, objectUser.email, ";")>
+
+					<cfif listExternalUserPos GT 0>
+						<cfset listExternalUsers = listDeleteAt(listExternalUsers, listExternalUserPos, ";")>
+					</cfif>
+
+				</cfif>
+
+
+				<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
+
+					<!---En el asunto se pone el nombre del área raiz--->
+			        <!---<cfif arguments.new_area IS false>
+						<cfset subject = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_user#: "&objectArea.name>
+					<cfelse>
+						<cfset subject = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_responsible#: "&objectArea.name>
+					</cfif>--->
+
+					<cfset subject = "[#root_area.name#] #langText[curLang].assign_user.new_user_in_area#: "&objectArea.name>
+					<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>
+
+					<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="accessContent">
+						<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+						<cfinvokeargument name="language" value="#curLang#">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					</cfinvoke>
+
+					<cfsavecontent variable="alertContent">
+					<cfoutput>
+					<br />
+			#langText[curLang].assign_user.new_user_in_area#: <strong>#objectArea.name#</strong> #langText[curLang].common.of_the_organization# #root_area.name#.<br />
+			<br />
+			#langText[curLang].common.user#: <b>#objectUser.user_full_name#</b><br/>
+			<cfif len(objectArea.description) GT 0>
+			#langText[curLang].common.area_description#:<br /> 
+			#objectArea.description#<br />
+			</cfif>
+				
+					</cfoutput>	
+					</cfsavecontent>
+
+					<!---INTERNAL USERS--->
+					<cfif listLen(listInternalUsers, ";") GT 0>
+
+						<cfsavecontent variable="contentInternal">
+						<cfoutput>
+						#alertContent#
+						<cfif len(area_path) GT 0>
+							#langText[curLang].common.area_path#: #area_path#<br />
+						</cfif>
+						<br/>
+						<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#accessContent#</div>
+						</cfoutput>
+						</cfsavecontent>
+
+						<cfinvoke component="EmailManager" method="sendEmail">
+							<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
+							<!---<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus"> 
+								<cfinvokeargument name="from_name" value="#actionUserName#">
+							</cfif>--->
+							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#"><!------>
+							<cfinvokeargument name="bcc" value="#listInternalUsers#">
+							<cfinvokeargument name="subject" value="#subject#">
+							<cfinvokeargument name="content" value="#contentInternal#">
+							<cfinvokeargument name="foot_content" value="#foot_content#">
+						</cfinvoke>
+
+					</cfif>
+
+
+					<!---EXTERNAL USERS--->
+					<cfif listLen(listExternalUsers, ";") GT 0>
+
+						<cfsavecontent variable="contentExternal">
+						<cfoutput>
+						#alertContent#
+						<br/>
+						<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#accessContent#</div>						
+						</cfoutput>
+						</cfsavecontent>
+
+						<cfinvoke component="EmailManager" method="sendEmail">
+							<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
+							<!---<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus"> 
+								<cfinvokeargument name="from_name" value="#actionUserName#">
+							</cfif>--->
+							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
+							<cfinvokeargument name="bcc" value="#listExternalUsers#">
+							<cfinvokeargument name="subject" value="#subject#">
+							<cfinvokeargument name="content" value="#contentExternal#">
+							<cfinvokeargument name="foot_content" value="#foot_content#">
+						</cfinvoke>
+
+					</cfif>
+
+				</cfif>
+
+			</cfloop>
+
+
+		</cfif>
+		
+	</cffunction>
+
+
+
+	<!--- --------------------------- getAreaAccessContent --------------------------- --->
+	
+	<cffunction name="getAreaAccessContent" access="public" returntype="string">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="language" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+ 				
+		<cfset var method = "getAreaAccessContent">
+
+		<cfset var accessContent = "">
+		<cfset var accessClient = "">
+
+		<!---areaUrl--->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+		</cfinvoke>
+		
+		<cfif APPLICATION.twoUrlsToAccess IS false>
+		
+			<cfsavecontent variable="accessContent">
+			<cfoutput>
+			-&nbsp;#langText[arguments.language].common.access_to_area#:
+			<a target="_blank" href="#areaUrl#">#areaUrl#</a>
+
+
+			<cfif arguments.client_abb EQ "hcs">
+				<cfset accessClient = "doplanning">
+			<cfelseif isDefined("SESSION.client_id")>
+				<cfset accessClient = SESSION.client_id>
+			</cfif>
+
+			<cfif len(accessClient) GT 0>
+				<br/>-&nbsp;#langText[arguments.language].common.access_to_application#:
+				<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>
+			</cfif>
+			
+			</cfoutput>
+			</cfsavecontent>
+			
+		<cfelse>
+		
+			<cfsavecontent variable="accessContent">
+			<cfoutput>
+			#langText[arguments.language].common.access_to_area_links#: <br/>
+			-&nbsp;#langText[arguments.language].common.access_internal# <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/?area=#area_id#&abb=#arguments.client_abb#">#APPLICATION.mainUrl##APPLICATION.path#/?area=#area_id#&abb=#arguments.client_abb#</a><br/>
+			-&nbsp;#langText[arguments.language].common.access_external# <a target="_blank" href="#APPLICATION.alternateUrl#/?area=#area_id#&abb=#arguments.client_abb#">#APPLICATION.alternateUrl#/?area=#area_id#&abb=#arguments.client_abb#</a>
+			</cfoutput>
+			</cfsavecontent>
+			
+		</cfif>
+		
+		<cfreturn accessContent>
 
 	</cffunction>
 

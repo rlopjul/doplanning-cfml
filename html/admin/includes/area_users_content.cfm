@@ -35,9 +35,12 @@
 <div class="div_head_menu"><!---container--->
 	<div class="navbar navbar-default navbar-static-top" style="margin-bottom:0">
 		<div class="container-fluid">
-
-			<i class="icon-info-sign more_info_img" id="openAreaImg" onclick="openAreaInfo()" title="Mostrar información del área"></i>
-			<i class="icon-info-sign more_info_img" id="closeAreaImg" onclick="openAreaInfo()" title="Ocultar información del área" style="display:none;"></i>
+			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Mostrar información del área" id="openAreaImg">
+				<i class="icon-info-sign more_info_img"></i>
+			</a>
+			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Ocultar información del área" id="closeAreaImg" style="display:none;">
+				<i class="icon-info-sign more_info_img"></i>
+			</a>
 			<span class="navbar_brand">#area_name#</span><br/>
 
 			<p style="padding-top:0px;clear:left;font-size:12px;"><!--- class="navbar_brand" color:##737373 --->
@@ -60,13 +63,21 @@
 <cfoutput>
 <div class="div_head_subtitle_area">
 	
-	<!---<div class="div_head_subtitle_area_text"><strong>USUARIOS</strong><br/> del área</div>--->
+	<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
 
-	<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/area_modify.cfm?area=#area_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
-	
-	<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a>
+		<!---<div class="div_head_subtitle_area_text"><strong>USUARIOS</strong><br/> del área</div>--->
 
-	<a href="area_users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
+		<div class="btn-group">
+			<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/area_modify.cfm?area=#area_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
+		</div>
+		<div class="btn-group">
+			<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a>
+		</div>
+		<div class="btn-group pull-right">
+			<a href="area_users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i></a>
+		</div>
+
+	</div>
 
 </div>
 
@@ -164,6 +175,12 @@
 				<cfinvokeargument name="open_url_target" value="userAreaIframe">
 				<cfinvokeargument name="filter_enabled" value="true">
 			</cfinvoke>
+
+			<cfif objectArea.users_visible IS false>
+				<div><small class="help-block">Estos usuarios no se muestran visibles en esta área</small></div>								
+			</cfif>
+
+			<div style="height:40px;"></div>
 
 			<cfoutput>
 

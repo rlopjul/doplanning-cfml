@@ -8,6 +8,7 @@
 		
 	<cffunction name="getWeb" output="false" returntype="query" access="public">
 		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="area_type" type="string" required="false">
 		<cfargument name="path" type="string" required="false">
 		
 		<cfargument name="client_abb" type="string" required="true">

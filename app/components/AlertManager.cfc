@@ -1261,9 +1261,11 @@
         
 			<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
 
-				<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="access_content">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaAccessContent" returnvariable="access_content">
 					<cfinvokeargument name="area_id" value="#objectArea.id#"/>
 					<cfinvokeargument name="language" value="#curLang#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
 				</cfinvoke>
 				
 				<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">'&langText[curLang].common.foot_content_default_3&' #APPLICATION.title#.</p>'>	
@@ -1342,7 +1344,7 @@
 
 	<!--- --------------------------- getAreaAccessContent --------------------------- --->
 	
-	<cffunction name="getAreaAccessContent" access="private" returntype="string">
+	<!---<cffunction name="getAreaAccessContent" access="private" returntype="string">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="language" type="string" required="true">
  				
@@ -1391,11 +1393,12 @@
 		
 		<cfreturn accessContent>
 
-	</cffunction>
+	</cffunction>--->
     
 	
 	<!--- -------------------------------------- assignUserToArea ------------------------------------ --->
 	
+<!---
 	<cffunction name="assignUserToArea" access="public" returntype="void">
 		<cfargument name="objectUser" type="query" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">
@@ -1410,74 +1413,84 @@
 		
 		<cfif objectUser.enabled IS true>
 
-			<cfset curLang = objectUser.language>
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUserPreferences" returnvariable="getUserPreferencesResult">
+				<cfinvokeargument name="get_user_id" value="#objectUser.id#"/>
+			</cfinvoke>
 
-	        <cfinvoke component="AreaManager" method="getArea" returnvariable="objectArea">
-	            <cfinvokeargument name="get_area_id" value="#area_id#">
-	            <cfinvokeargument name="format_content" value="default">
-	            <cfinvokeargument name="return_type" value="object">
-	        </cfinvoke>
-	        	
-	        <cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
-	        </cfinvoke>
-	        <!---En el asunto se pone el nombre del área raiz--->
-	        <cfif arguments.new_area IS false>
-				<cfset subject = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_user#: "&objectArea.name>
-			<cfelse>
-				<cfset subject = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_responsible#: "&objectArea.name>
-			</cfif>
-	        
-			<cfif objectUser.whole_tree_visible IS true><!---INTERNAL USER--->
-				<!---<cfset subject="[#APPLICATION.title#] Tiene acceso a una nueva área: "&objectArea.name>--->
+			<cfset userPreferences = getUserPreferencesResult.preferences>
+
+			<cfif userPreferences.notify_been_associated_to_area IS true>
 				
-				<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
-					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfset curLang = objectUser.language>
+
+		        <cfinvoke component="AreaManager" method="getArea" returnvariable="objectArea">
+		            <cfinvokeargument name="get_area_id" value="#area_id#">
+		            <cfinvokeargument name="format_content" value="default">
+		            <cfinvokeargument name="return_type" value="object">
+		        </cfinvoke>
+		        	
+		        <cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
+		        </cfinvoke>
+		        <!---En el asunto se pone el nombre del área raiz--->
+		        <cfif arguments.new_area IS false>
+					<cfset subject = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_user#: "&objectArea.name>
+				<cfelse>
+					<cfset subject = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_responsible#: "&objectArea.name>
+				</cfif>
+		        
+				<cfif objectUser.whole_tree_visible IS true><!---INTERNAL USER--->
+					<!---<cfset subject="[#APPLICATION.title#] Tiene acceso a una nueva área: "&objectArea.name>--->
+					
+					<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+						<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					</cfinvoke>
+					
+				<!---<cfelse>
+					<cfset subject="[#APPLICATION.title#][#SESSION.client_name#] Tiene acceso a una nueva área: "&objectArea.name>--->
+				</cfif>
+						
+				<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="access_content">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+					<cfinvokeargument name="language" value="#curLang#">
 				</cfinvoke>
 				
-			<!---<cfelse>
-				<cfset subject="[#APPLICATION.title#][#SESSION.client_name#] Tiene acceso a una nueva área: "&objectArea.name>--->
-			</cfif>
-					
-			<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="access_content">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
-				<cfinvokeargument name="language" value="#curLang#">
-			</cfinvoke>
-			
-			<cfsavecontent variable="html_text">
-			<cfoutput>
-			<br />
-	<cfif arguments.new_area IS false>
-	#langText[curLang].assign_user.has_been_added_to_area#: <strong>#objectArea.name#</strong> #langText[curLang].common.of_the_organization# #root_area.name#.<br />
-	<cfelse>
-	#langText[curLang].assign_user.area_created#: <strong>#objectArea.name#</strong>, #langText[curLang].assign_user.you_are_responsible#.<br />
-	</cfif>
-	<cfif objectUser.whole_tree_visible IS true>
-	#langText[curLang].common.area_path#: #area_path#.<br />
-	</cfif>
-	<br />
-	<cfif len(objectArea.description) GT 0>
-	#langText[curLang].common.area_description#:<br /> 
-	#objectArea.description#<br />
-	</cfif>
-	<br/>
-	<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>	
-			</cfoutput>		
-			</cfsavecontent>
+				<cfsavecontent variable="html_text">
+				<cfoutput>
+				<br />
+		<cfif arguments.new_area IS false>
+		#langText[curLang].assign_user.has_been_added_to_area#: <strong>#objectArea.name#</strong> #langText[curLang].common.of_the_organization# #root_area.name#.<br />
+		<cfelse>
+		#langText[curLang].assign_user.area_created#: <strong>#objectArea.name#</strong>, #langText[curLang].assign_user.you_are_responsible#.<br />
+		</cfif>
+		<cfif objectUser.whole_tree_visible IS true>
+		#langText[curLang].common.area_path#: #area_path#.<br />
+		</cfif>
+		<br />
+		<cfif len(objectArea.description) GT 0>
+		#langText[curLang].common.area_description#:<br /> 
+		#objectArea.description#<br />
+		</cfif>
+		<br/>
+		<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>	
+				</cfoutput>		
+				</cfsavecontent>
 
-			<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>		
-			
-			<cfinvoke component="EmailManager" method="sendEmail">
-				<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-				<cfinvokeargument name="to" value="#objectUser.email#">
-				<cfinvokeargument name="subject" value="#subject#">
-				<cfinvokeargument name="content" value="#html_text#">
-				<cfinvokeargument name="foot_content" value="#foot_content#">
-			</cfinvoke>
+				<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>		
+				
+				<cfinvoke component="EmailManager" method="sendEmail">
+					<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+					<cfinvokeargument name="to" value="#objectUser.email#">
+					<cfinvokeargument name="subject" value="#subject#">
+					<cfinvokeargument name="content" value="#html_text#">
+					<cfinvokeargument name="foot_content" value="#foot_content#">
+				</cfinvoke>
+
+			</cfif><!---END notify_been_associated_to_area IS true--->
 
 		</cfif>
 		
 	</cffunction>
-
+--->
 
 
 	<!--- -------------------------------------- addUserToTable ------------------------------------ --->

@@ -21,6 +21,7 @@
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="item_type_id" type="numeric" required="false">
         <cfargument name="mask_type_id" type="string" required="false">
+        <cfargument name="list_values" type="string" required="false">
 
 		<cfset var method = "createField">
 
@@ -83,6 +84,7 @@
 					<cfinvokeargument name="field_input_type" value="#arguments.field_input_type#">
 					<cfinvokeargument name="item_type_id" value="#arguments.item_type_id#">
 					<cfinvokeargument name="mask_type_id" value="#arguments.mask_type_id#">
+					<cfinvokeargument name="list_values" value="#arguments.list_values#">
 				</cfinvoke>
 
 			</cftransaction>
@@ -123,6 +125,7 @@
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="item_type_id" type="numeric" required="false">
         <cfargument name="mask_type_id" type="string" required="false">
+        <cfargument name="list_values" type="string" required="false">
 
 		<cfset var method = "createFieldInDatabase">
 
@@ -166,7 +169,7 @@
 				sort_by_this = <cfqueryparam value="#arguments.sort_by_this#" cfsqltype="cf_sql_varchar">,
 				default_value = <cfqueryparam value="#arguments.default_value#" cfsqltype="cf_sql_longvarchar">,
 				position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">
-				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10 OR arguments.field_type_id IS 7><!--- IS SELECT OR BOOLEAN--->
+				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10 OR arguments.field_type_id IS 7 OR arguments.field_type_id IS 15 OR arguments.field_type_id IS 16><!--- IS SELECT OR BOOLEAN--->
 					, field_input_type = <cfqueryparam value="#arguments.field_input_type#" cfsqltype="cf_sql_varchar">
 				<cfelse>
 					, field_input_type = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
@@ -181,6 +184,9 @@
 				</cfif>
 				<cfif isDefined("arguments.mask_type_id") AND isNumeric(arguments.mask_type_id)>
 					, mask_type_id = <cfqueryparam value="#arguments.mask_type_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif isDefined("arguments.list_values")>
+					, list_values = <cfqueryparam value="#arguments.list_values#" cfsqltype="cf_sql_varchar">
 				</cfif>
 				;
 			</cfquery>
@@ -226,6 +232,7 @@
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="item_type_id" type="numeric" required="false">
         <cfargument name="mask_type_id" type="string" required="false">
+        <cfargument name="list_values" type="string" required="false">
 
 		<cfset var method = "updateField">
 
@@ -283,7 +290,7 @@
 					<cfif isDefined("arguments.position")>
 						, position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">
 					</cfif>
-					<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10 OR arguments.field_type_id IS 7><!--- IS SELECT OR BOOLEAN--->
+					<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10 OR arguments.field_type_id IS 7 OR arguments.field_type_id IS 15 OR arguments.field_type_id IS 16><!--- IS SELECT OR BOOLEAN--->
 						, field_input_type = <cfqueryparam value="#arguments.field_input_type#" cfsqltype="cf_sql_varchar">
 					<cfelse>
 						, field_input_type = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
@@ -302,6 +309,9 @@
 						<cfelse>
 							, mask_type_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
 						</cfif>
+					</cfif>
+					<cfif isDefined("arguments.list_values")>
+						, list_values = <cfqueryparam value="#arguments.list_values#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>

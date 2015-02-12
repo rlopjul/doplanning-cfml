@@ -84,6 +84,7 @@
 <!-- InstanceBeginEditable name="content" -->
 
 <cfset tableTypeId = 2>
+<cfset return_path = "#APPLICATION.htmlPath#/iframes/">
 <cfinclude template="#APPLICATION.htmlPath#/includes/table_rows.cfm">
 
 <!-- InstanceEndEditable -->

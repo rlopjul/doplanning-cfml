@@ -197,7 +197,7 @@
 	
 	<div class="tab-pane" id="tab2"><!---Tab Notificaciones--->
 		<cfoutput>
-		<iframe src="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm" marginheight="0" marginwidth="0" scrolling="auto" frameborder="0" style="width:100%;height:630px;background-color:##FFFFFF;clear:none;"></iframe>
+		<iframe src="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm" marginheight="0" marginwidth="0" scrolling="auto" frameborder="0" style="width:100%;height:655px;background-color:##FFFFFF;clear:none;"></iframe>
 		</cfoutput>
 		
 	</div><!---END Tab Area--->

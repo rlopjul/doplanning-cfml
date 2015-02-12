@@ -57,7 +57,7 @@
 
 			<cfif isUserInAreaResponse.isUserInArea IS false>
 
-				<small class="help-block">Se le enviará notificación por email, si el usuario está activo.</small>
+				<small class="help-block">Se enviará notificación por email al usuario asociado y a los usuarios del área.</small>
 
 				<form id="associateForm" method="post">
 					<input type="hidden" name="area_id" value="#objectArea.id#"/>
@@ -71,7 +71,7 @@
 		<div class="modal-footer">
 		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
 		    <cfif isUserInAreaResponse.isUserInArea IS false>
-		   		<button class="btn btn-primary" id="areaModifySubmit" onclick="submitAssociateModal(event)">Asociar usuario</button>
+		   		<button class="btn btn-primary" id="areaAssociateSubmitButton" data-loading-text="Asociando..." onclick="submitAssociateModal(event)">Asociar usuario</button>
 		   	</cfif>
 		</div>
 
@@ -80,6 +80,8 @@
 
 			    if(e.preventDefault)
 					e.preventDefault();
+
+				$("##areaAssociateSubmitButton").button('loading');
 
 				postModalForm("##associateForm", "#APPLICATION.htmlComponentsPath#/User.cfc?method=assignUserToArea", "#return_page#", "areaIframe");
 

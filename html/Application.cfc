@@ -18,6 +18,8 @@
 			<cfif isDefined("URL.abb")>
 				<cfset destination_page = URLEncodedFormat(CGI.SCRIPT_NAME&"?"&CGI.QUERY_STRING)>
 				<cflocation url="#APPLICATION.htmlPath#/login/?client_abb=#URL.abb#&dpage=#destination_page#" addtoken="no">
+			<!---<cfelseif isDefined("APPLICATION.dpWebClientAbb") AND APPLICATION.dpWebClientAbb EQ "hcs">
+				<cflocation url="#APPLICATION.htmlPath#/login/?client_abb=#APPLICATION.dpWebClientAbb#&dpage=#destination_page#" addtoken="no">--->
 			<cfelse>
 				<cflocation url="#APPLICATION.mainUrl#" addtoken="no">
 			</cfif>

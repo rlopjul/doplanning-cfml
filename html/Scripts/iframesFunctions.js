@@ -35,3 +35,8 @@ function showAlertMessage(msg, res){
 
 	parent.showAlertMessage(msg, res);
 }
+
+/*function showConfirmModal(msg, callbackFunction){
+
+	parent.showConfirmModal(msg, callbackFunction);
+}*/

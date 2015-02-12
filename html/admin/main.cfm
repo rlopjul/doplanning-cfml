@@ -514,7 +514,7 @@
 								</div>
 
 								<div class="btn-group">
-									<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white" style="color:#5BB75B"></i> <span lang="es">Nueva área</span></a>
+									<a onClick="openAreaNewModal()" class="btn btn-info" title="Nueva área" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nueva área</span></a><!---color:#5BB75B--->
 
 									<a onclick="openAreaModifyModal()" class="btn btn-info" title="Modificar área" lang="es"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 
@@ -670,7 +670,7 @@
 	<div style="clear:both"><!-- --></div>
 	<div class="msg_div_error" id="errorMessage"></div>
 
-	<div id="prueba"></div>
+	<!---<div id="prueba"></div>--->
 
 </div>
 

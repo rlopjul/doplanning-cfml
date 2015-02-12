@@ -8,7 +8,7 @@ var area_menu_en_regex = {
 
 		[/^Descripción:?$/, "Description"],
 		[/^Responsable:?$/, "Responsible"],
-		[/^Fecha de creación:?$/, "Creation date"],
+		[/^Fecha de creación:?$/, "Creation date"]
 	]
 
 };

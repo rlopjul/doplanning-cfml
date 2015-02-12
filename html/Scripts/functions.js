@@ -37,7 +37,7 @@ function goToUrl(url){
 	window.location.href = url;
 }
 
-function openAreaInfo(){
+/*function openAreaInfo(){
 	var openElement = document.getElementById('openAreaImg');
 	var closeElement = document.getElementById('closeAreaImg');
 	
@@ -50,7 +50,7 @@ function openAreaInfo(){
 	}
 	
 	showHideDiv('areaInfo');
-}
+}*/
 
 function confirmAction(actionText) {
 	

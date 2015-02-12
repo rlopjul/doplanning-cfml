@@ -599,6 +599,8 @@
 		<cfargument name="dni" type="string" required="true">
 		<cfargument name="mobile_phone" type="string" required="true">
 		<cfargument name="mobile_phone_ccode" type="string" required="true">
+		<cfargument name="telephone" type="string" required="true">
+		<cfargument name="telephone_ccode" type="string" required="true">
 		<cfargument name="address" type="string" required="true">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
@@ -606,6 +608,8 @@
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
+		<cfargument name="linkedin_url" type="string" required="false">
+		<cfargument name="twitter_url" type="string" required="false">
 		<cfargument name="information" type="string" required="true">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
@@ -695,7 +699,7 @@
 						<cfif APPLICATION.identifier EQ "vpnet">
 
 							<cfinvoke component="UserLDAPManager" method="getLDAPUser" returnvariable="xmlResponseUser">
-								<cfinvokeargument name="login_ldap" value="#objectUser.login_ldap#">
+								<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
 								<cfinvokeargument name="return_type" value="xml">
 							</cfinvoke>
 
@@ -703,13 +707,13 @@
 						
 					</cfif>
 
-					<cfif isDefined("arguments.login_diraya") AND len(objectUser.login_diraya) GT 0>
+					<cfif isDefined("arguments.login_diraya") AND len(arguments.login_diraya) GT 0>
 			
 						<!---Check if login already used--->
 						<cfquery name="checkLoginDiraya" datasource="#client_dsn#">
 							SELECT *
 							FROM #client_abb#_users
-							WHERE login_diraya=<cfqueryparam value="#objectUser.login_diraya#" cfsqltype="cf_sql_varchar">;
+							WHERE login_diraya = <cfqueryparam value="#arguments.login_diraya#" cfsqltype="cf_sql_varchar">;
 						</cfquery>
 						
 						<cfif checkLoginDiraya.recordCount GT 0><!---User LDAP login already assigned to another user--->
@@ -750,7 +754,9 @@
 					hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">,
 					information = <cfqueryparam value="#arguments.information#" cfsqltype="cf_sql_longvarchar">,
 					internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">,
-					enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
+					enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">,
+					linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
+					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">
 					<cfif APPLICATION.moduleLdapUsers EQ true>
 						<cfif isDefined("arguments.login_ldap") AND len(arguments.login_ldap) GT 0>
 						, login_ldap = <cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
@@ -885,12 +891,16 @@
 		<cfargument name="dni" type="string" required="true">
 		<cfargument name="mobile_phone" type="string" required="true">
 		<cfargument name="mobile_phone_ccode" type="string" required="true">
+		<cfargument name="telephone" type="string" required="true">
+		<cfargument name="telephone_ccode" type="string" required="true">
 		<cfargument name="address" type="string" required="true">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="password" type="string" required="false">
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
+		<cfargument name="linkedin_url" type="string" required="false">
+		<cfargument name="twitter_url" type="string" required="false">
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
@@ -968,7 +978,9 @@
 					telephone_ccode = <cfqueryparam value = "#arguments.telephone_ccode#" cfsqltype="cf_sql_integer">,
 					mobile_phone_ccode = <cfqueryparam value = "#arguments.mobile_phone_ccode#" cfsqltype="cf_sql_integer">,
 					dni = <cfqueryparam value="#arguments.dni#" cfsqltype="cf_sql_varchar">,
-					hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">
+					hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">,
+					linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
+					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.password") AND len(arguments.password) GT 0>
 						, password = <cfqueryparam value = "#arguments.password#" cfsqltype="cf_sql_varchar">
 					</cfif> 
@@ -1117,6 +1129,8 @@
 	<!--- ------------------- UPDATE USER PREFERENCES -------------------------------- --->
 
 	<cffunction name="updateUserPreferences" returntype="struct" output="true" access="public">
+		<cfargument name="update_user_id" type="numeric" required="false" default="#SESSION.user_id#">
+
 		<cfargument name="notify_new_message" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_file" type="boolean" required="false" default="false">
 		<cfargument name="notify_replace_file" type="boolean" required="false" default="false">
@@ -1141,6 +1155,12 @@
 		<cfargument name="notify_delete_file" type="boolean" required="false" default="false">
 		<cfargument name="notify_lock_file" type="boolean" required="false" default="false">
 
+		<cfargument name="notify_new_user_in_area" type="boolean" required="false" default="false">
+		<cfargument name="notify_been_associated_to_area" type="boolean" required="false" default="false">
+
+		<cfargument name="notify_app_news" type="boolean" required="false" default="false">
+		<cfargument name="notify_app_features" type="boolean" required="false" default="false">
+
 		<cfset var method = "updateUserPreferences">
 		
 		<cfset var response = structNew()>
@@ -1152,7 +1172,7 @@
 			<cfquery name="selectQuery" datasource="#client_dsn#">
 				SELECT id
 				FROM #client_abb#_users
-				WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+				WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>	
 			
 			<cfif selectQuery.recordCount GT 0>
@@ -1197,7 +1217,11 @@
 					, notify_new_form_row = <cfqueryparam value="#arguments.notify_new_form_row#" cfsqltype="cf_sql_bit">
 					, notify_new_form_view = <cfqueryparam value="#arguments.notify_new_form_view#" cfsqltype="cf_sql_bit">
 					</cfif>
-					WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
+					, notify_new_user_in_area = <cfqueryparam value="#arguments.notify_new_user_in_area#" cfsqltype="cf_sql_bit">
+					, notify_been_associated_to_area = <cfqueryparam value="#arguments.notify_been_associated_to_area#" cfsqltype="cf_sql_bit">
+					, notify_app_news = <cfqueryparam value="#arguments.notify_app_news#" cfsqltype="cf_sql_bit">
+					, notify_app_features = <cfqueryparam value="#arguments.notify_app_features#" cfsqltype="cf_sql_bit">
+					WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
 			<cfelse><!---The user does not exist--->
@@ -1546,7 +1570,8 @@
 	<cffunction name="assignUserToArea" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="add_user_id" type="numeric" required="true">
-		
+		<cfargument name="send_alert" type="boolean" required="false" default="true">
+
 		<cfset var method = "assignUserToArea">
 
 		<cfset var response = structNew()>
@@ -1585,12 +1610,20 @@
 				<cfinvokeargument name="get_user_id" value="#arguments.add_user_id#">
 				<cfinvokeargument name="return_type" value="query"/>
 			</cfinvoke>	
-		
-			<cfinvoke component="AlertManager" method="assignUserToArea">
-				<cfinvokeargument name="objectUser" value="#objectUser#">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="new_area" value="false">
-			</cfinvoke>
+			
+			<cfif arguments.send_alert IS true>
+				
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="assignUserToArea">
+					<cfinvokeargument name="objectUser" value="#objectUser#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="new_area" value="false">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfif>
+			
 
 			<!--- deleteUserCacheTree --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
@@ -2769,7 +2802,8 @@
 	
 	
 	<!--- ----------------------- GET USER PREFERENCES -------------------------------- --->
-	<cffunction name="getUserPreferences" returntype="struct" output="false" access="public">		
+	<cffunction name="getUserPreferences" returntype="struct" output="false" access="public">
+		<cfargument name="get_user_id" type="numeric" required="false" default="#SESSION.user_id#">	
 		
 		<cfset var method = "getUserPreferences">
 
@@ -2779,7 +2813,7 @@
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 		
-			<cfquery name="getUserPreferencesQuery" datasource="#client_dsn#">
+			<!---<cfquery name="getUserPreferencesQuery" datasource="#client_dsn#">
 				SELECT id, notify_new_message, notify_new_file, notify_replace_file, notify_new_area,
 				notify_new_event, notify_new_task
 				, notify_delete_file <!---, notify_dissociate_file--->
@@ -2811,10 +2845,20 @@
 					</cfif>
 					, notify_new_entry, notify_new_news, notify_new_image
 				</cfif>
-
+				, notify_new_user_in_area
+				, notify_been_associated_to_area
+				, notify_app_news
+				, notify_app_features
 				FROM #client_abb#_users		
-				WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;			
-			</cfquery>
+				WHERE id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;			
+			</cfquery>--->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserPreferences" returnvariable="getUserPreferencesQuery">
+				<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 			
 			<cfif getUserPreferencesQuery.recordCount GT 0>
 

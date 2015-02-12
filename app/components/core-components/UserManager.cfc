@@ -176,6 +176,8 @@
 
 		<cfset var notify_delete_file = "">
 		<cfset var notify_lock_file = "">
+
+		<cfset var notify_new_user_in_area = "">
 			
 			
 			<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="xmlRequest" returnvariable="xmlRequest">
@@ -280,6 +282,10 @@
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_lock_file")>
 					<cfset notify_lock_file = xmlPreferences.preferences.xmlAttributes.notify_lock_file>
 				</cfif>
+
+				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_user_in_area")>
+					<cfset notify_new_user_in_area = xmlPreferences.preferences.xmlAttributes.notify_new_user_in_area>
+				</cfif>
 				
 			</cfif>
 			
@@ -312,6 +318,8 @@
 
 				<cfinvokeargument name="notify_delete_file" value="#notify_delete_file#">
 				<cfinvokeargument name="notify_lock_file" value="#notify_lock_file#">
+
+				<cfinvokeargument name="notify_new_user_in_area" value="#notify_new_user_in_area#">
 
 				<cfinvokeargument name="enabled" value="true">
 				<cfinvokeargument name="emailDefined" value="true">
@@ -367,6 +375,8 @@
 
 		<cfargument name="notify_delete_file" type="string" required="false" default="">
 		<cfargument name="notify_lock_file" type="string" required="false" default="">
+
+		<cfargument name="notify_new_user_in_area" type="string" required="false" default="">
 		
 		<cfargument name="with_external" type="string" required="false" default="true">
 		<cfargument name="enabled" type="boolean" required="false">
@@ -468,6 +478,10 @@
 					</cfif>
 					<cfif arguments.notify_new_pubmed NEQ "">
 					AND u.notify_new_pubmed = <cfqueryparam value="#arguments.notify_new_pubmed#" cfsqltype="cf_sql_bit">
+					</cfif>
+					
+					<cfif arguments.notify_new_user_in_area NEQ "">
+					AND u.notify_new_user_in_area = <cfqueryparam value="#arguments.notify_new_user_in_area#" cfsqltype="cf_sql_bit">
 					</cfif>
 					
 					<cfif arguments.with_external EQ "false">

@@ -178,6 +178,7 @@
 		<cfargument name="with_user" type="boolean" required="true" default="false">
 		<cfargument name="with_area" type="boolean" required="false" default="false">
 		<cfargument name="with_typology" type="boolean" required="false" default="false">
+		<cfargument name="with_null_typology" type="boolean" required="false" default="false">
 		
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
@@ -270,6 +271,9 @@
 				WHERE files.status = 'ok'
 				<cfif arguments.with_typology IS false AND isDefined("arguments.typology_id")>
 					AND files.typology_id = <cfqueryparam value="#arguments.typology_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif isDefined("arguments.with_null_typology") AND arguments.with_null_typology IS true>
+					AND files.typology_id IS NULL
 				</cfif>
 				<cfif len(search_text_re) GT 0><!---Search--->
 				AND (files.name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">

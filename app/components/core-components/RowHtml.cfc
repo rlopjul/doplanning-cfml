@@ -50,7 +50,7 @@
 				<cfset field_required_att = "">
 			</cfif>
 			
-			<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS SELECT --->
+			<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT --->
 				<cfset field_value = row[field_name]>
 			</cfif>
 
@@ -58,7 +58,7 @@
 
 			<div class="col-md-12">
 
-				<cfif fields.field_input_type NEQ "checkbox" OR fields.field_type_group EQ "list">
+				<cfif ( fields.field_input_type NEQ "checkbox" OR fields.field_type_group EQ "list" ) AND len(field_label) GT 0>
 					<label for="#field_name#" class="control-label">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
 				</cfif>
 				
@@ -84,7 +84,11 @@
 								<cfinvokeargument name="name" value="#field_name#">
 								<cfinvokeargument name="language" value="#SESSION.user_language#"/>
 							</cfinvoke>--->
-							<script type="text/javascript">
+							<!--- Enable CKEDITOR in mobile browsers --->
+							<script>
+								if ( window.CKEDITOR && ( !CKEDITOR.env.ie || CKEDITOR.env.version > 7 ) )
+   									CKEDITOR.env.isCompatible = true;
+
 								CKEDITOR.replace('#field_name#', {toolbar:'DP', toolbarStartupExpanded:true, language:'#arguments.language#'});
 							</script>
 						</cfif>
@@ -223,7 +227,7 @@
 				<cfelseif fields.field_type_group IS "short_text"><!--- TEXT --->
 
 
-					<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" />
+					<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" <cfif len(field_label) IS 0><!---PARA DP ASEBIO (campo otros)--->style="margin-left:35px;width:80%;"</cfif> />
 
 					<cfif fields.required IS true AND arguments.search_inputs IS false>
 						<script type="text/javascript">
@@ -292,6 +296,9 @@
 				<cfelseif fields.field_type_group IS "list"><!--- SELECT --->
 
 
+					<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
+
+						
 						<cfif NOT isDefined("FORM.tableTypeId")>
 
 							<cfif action EQ "create">
@@ -303,7 +310,7 @@
 								</cfif>
 
 							<cfelse>
-
+									
 								<!--- Get selected areas --->
 								<cfinvoke component="RowQuery" method="getRowSelectedAreas" returnvariable="getRowAreasQuery">
 									<cfinvokeargument name="table_id" value="#arguments.table_id#">
@@ -331,11 +338,39 @@
 						</cfif>
 
 
-						<cfif fields.field_input_type EQ "radio" OR fields.field_input_type EQ "checkbox"><!---RADIO / CHECKBOX--->
+					<cfelse><!--- List text values ---> 
 
-							<!---<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
-								<option value=""></option>
-							</cfif>--->
+
+						<cfif NOT isDefined("FORM.tableTypeId")>
+
+							<cfif action EQ "create">
+
+								<cfif isArray(field_value)>
+									<cfset field_value = arrayToList(selectedAreasList,";")>
+								</cfif>
+
+							</cfif>
+
+						<cfelse><!---FORM is Defined--->
+
+							<cfif isDefined("FORM.#field_name#")>
+								<cfset field_value = arrayToList(field_value,";")>
+							<cfelse>
+								<cfset field_value = "">
+							</cfif>
+							
+						</cfif>
+
+
+					</cfif>
+
+					<cfif fields.field_input_type EQ "radio" OR fields.field_input_type EQ "checkbox"><!---RADIO / CHECKBOX--->
+
+						<!---<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
+							<option value=""></option>
+						</cfif>--->
+
+						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
 
 							<cfinvoke component="AreaHtml" method="outputSubAreasInput">
 								<cfinvokeargument name="area_id" value="#fields.list_area_id#">
@@ -345,34 +380,60 @@
 								<cfinvokeargument name="recursive" value="false">
 								<cfinvokeargument name="field_name" value="#field_name#"/>
 								<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
-								<!---<cfif fields.required IS true AND arguments.search_inputs IS false>
-									<cfinvokeargument name="field_required" value="true">
-								<cfelse>
-									<cfinvokeargument name="field_required" value="false">
-								</cfif>--->
 								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 							</cfinvoke>
 
-							<cfif fields.required IS true AND arguments.search_inputs IS false>
-								<cfif fields.field_input_type EQ "radio">
-									<script>
-										addRailoRequiredRadio("#field_name#[]", "Campo '#field_label#' obligatorio");
-									</script>
-								<cfelseif fields.field_input_type EQ "checkbox">
-									<script>
-										addRailoRequiredCheckBox("#field_name#[]", "Campo '#field_label#' obligatorio");
-									</script>
-								</cfif>
-							</cfif>	
+						<cfelse><!--- List text values --->
 
-						<cfelse><!---SELECT--->
+							<div class="row">
+								<div class="col-sm-offset-1 col-sm-10" style="margin-bottom:10px;">
+								
+								<cfloop list="#fields.list_values#" delimiters="#chr(13)##chr(10)#" index="list_value">
+
+									<cfset list_value = trim(list_value)>
+
+									<cfif listFind(field_value, list_value, "#chr(13)##chr(10)#") GT 0>
+										<cfset value_selected = true>
+									<cfelse>
+										<cfset value_selected = false>
+									</cfif>
+
+									<div class="radio">
+									  <label>
+									    <input type="#fields.field_input_type#" name="#field_name#[]" value="#list_value#" <cfif value_selected>checked</cfif> />&nbsp;#list_value#
+									  </label>
+									</div>
+									<div clas="clearfix"></div>
+			
+								</cfloop>
+
+								</div>
+							</div>
+
+						</cfif>
+
+						<cfif fields.required IS true AND arguments.search_inputs IS false>
+							<cfif fields.field_input_type EQ "radio">
+								<script>
+									addRailoRequiredRadio("#field_name#[]", "Campo '#field_label#' obligatorio");
+								</script>
+							<cfelseif fields.field_input_type EQ "checkbox">
+								<script>
+									addRailoRequiredCheckBox("#field_name#[]", "Campo '#field_label#' obligatorio");
+								</script>
+							</cfif>
+						</cfif>	
+
+					<cfelse><!---SELECT--->
 
 
-							<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>multiple style="height:90px"</cfif>>
-								<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
-									<option value=""></option>
-								</cfif>
+						<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif (fields.field_type_id IS 10 OR fields.field_type_id IS 16) AND arguments.search_inputs IS false>multiple style="height:90px"</cfif>>
+							<cfif ( (fields.field_type_id IS 9 OR fields.field_type_id IS 15) AND fields.required IS false ) OR arguments.search_inputs IS true>
+								<option value=""></option>
+							</cfif>
+
+							<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
 
 								<cfinvoke component="AreaHtml" method="outputSubAreasSelect">
 									<cfinvokeargument name="area_id" value="#fields.list_area_id#">
@@ -384,19 +445,34 @@
 									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 									<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 								</cfinvoke>
-							</select>
-							<cfif fields.field_type_id IS 10 AND arguments.search_inputs IS false>
-								<small class="help-block">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
+
+							<cfelse><!--- List text values --->
+
+								<cfloop list="#fields.list_values#" delimiters="#chr(13)##chr(10)#" index="list_value">
+									<cfset list_value = trim(list_value)>
+									<cfif listFind(field_value, list_value, "#chr(13)##chr(10)#") GT 0>
+										<cfset value_selected = true>
+									<cfelse>
+										<cfset value_selected = false>
+									</cfif>
+									<option value="#list_value#" <cfif value_selected>selected</cfif>>#list_value#</option>		
+								</cfloop>
+
 							</cfif>
 
-							<cfif fields.required IS true AND arguments.search_inputs IS false>
-								<script>
-									addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
-								</script>
-							</cfif>	
-
-
+						</select>
+						<cfif ( fields.field_type_id IS 10 OR fields.field_type_id IS 16) AND arguments.search_inputs IS false>
+							<small class="help-block">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
 						</cfif>
+
+						<cfif fields.required IS true AND arguments.search_inputs IS false>
+							<script>
+								addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
+							</script>
+						</cfif>	
+
+
+					</cfif>
 						
 
 				<cfelseif fields.field_type_group IS "user"><!--- doplanning_user USER --->
@@ -808,6 +884,14 @@
 									</cfif>
 
 								</cfif>
+
+							<cfelseif fields.field_type_id IS 15 OR fields.field_type_id IS 16><!--- Text values list --->
+
+								<cfset field_value = tableRows['field_#fields.field_id#']>
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
+									<cfinvokeargument name="string" value="#field_value#">
+								</cfinvoke>
 								
 							<cfelse><!--- IS NOT LIST --->
 

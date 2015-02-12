@@ -241,7 +241,7 @@ page_types
 		<div class="col-sm-5 col-md-5"><!--- col-md-offset-1--->
 
 			<div class="row">
-				<div class="col-sm-10">
+				<div class="col-sm-8">
 
 					<label for="dni" class="control-label" lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif>:</label>
 					<input type="text" name="dni" id="dni" value="#objectUser.dni#" class="form-control" />
@@ -286,7 +286,25 @@ page_types
 					</div>
 
 				</div>
-			</div>			
+			</div>	
+
+			<div class="row">
+				<div class="col-sm-12">
+
+					<label for="linkedin_url" class="control-label" lang="es">URL Perfil LinkedIn:</label>
+					<input type="text" name="linkedin_url" id="linkedin_url" value="#objectUser.linkedin_url#" class="form-control" />
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12">
+
+					<label for="twitter_url" class="control-label" lang="es">URL Perfil Twitter:</label>
+					<input type="text" name="twitter_url" id="twitter_url" value="#objectUser.twitter_url#" class="form-control" />
+
+				</div>
+			</div>		
 				
 			<div class="row">
 				<div class="col-sm-12">

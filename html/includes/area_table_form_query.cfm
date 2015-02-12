@@ -17,20 +17,29 @@
 	</cfinvoke>
 
 	<cfif actionResponse.result IS true>
-		
-		<cfif page_type IS 1>
-			<cfset return_page = "#tableTypeName#_fields.cfm?">	
-		<cfelse>
-			<cfif tableTypeId IS 3>
-				<cfset return_page = "#tableTypeNameP#.cfm?area=#actionResponse.area_id#&">	
-			<cfelse>
-				<cfset return_page = "area_items.cfm?area=#actionResponse.area_id#&">
-			</cfif>
-		</cfif>
 
 		<cfset msg = urlEncodedFormat(actionResponse.message)>
+		
+		<cfif NOT isDefined("URL.return_page")>
+			
+			<cfif page_type IS 1>
+				<cfset return_page = "#tableTypeName#_fields.cfm?">	
+			<cfelse>
+				<cfif tableTypeId IS 3>
+					<cfset return_page = "#tableTypeNameP#.cfm?area=#actionResponse.area_id#&">	
+				<cfelse>
+					<cfset return_page = "area_items.cfm?area=#actionResponse.area_id#&">
+				</cfif>
+			</cfif>
 
-		<cflocation url="#return_page##tableTypeName#=#actionResponse.table_id#&res=#actionResponse.result#&msg=#msg#" addtoken="no">
+			<cflocation url="#return_page##tableTypeName#=#actionResponse.table_id#&res=#actionResponse.result#&msg=#msg#" addtoken="no">
+
+		<cfelse>
+
+			<cflocation url="#URL.return_page#&res=#actionResponse.result#&msg=#msg#" addtoken="no">
+
+		</cfif>
+			
 
 	<cfelse>
 		

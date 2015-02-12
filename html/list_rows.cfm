@@ -141,6 +141,7 @@
 <div class="div_contenedor_contenido">
 <!-- InstanceBeginEditable name="contenido" -->
 <cfset tableTypeId = 1>
+<cfset return_path = "#APPLICATION.htmlPath#/">
 <cfinclude template="#APPLICATION.htmlPath#/includes/table_rows.cfm">
 
 <cfset return_page = "area.cfm?area=#area_id#">

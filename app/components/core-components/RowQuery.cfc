@@ -122,6 +122,15 @@
 
 							<cfif fields.field_type_id IS 7 AND fields.required IS false AND NOT isDefined("arguments[field_name]")><!--- EMPTY BOOLEAN --->
 								<cfset field_value = "">
+							<cfelseif fields.field_type_id IS 15 OR fields.field_type_id IS 16><!---List text values with multiple--->
+
+								<cfif fields.required IS false AND NOT isDefined("arguments[field_name]")><!--- EMPTY CHECKBOX SELECTION --->
+									<cfset field_value = "">
+								<cfelse>
+									<cfset field_values = arguments[field_name]>
+									<cfset field_value = arrayToList(field_values, "#chr(13)##chr(10)#")>
+								</cfif>
+								
 							<cfelse>
 								<cfset field_value = arguments[field_name]>
 							</cfif>

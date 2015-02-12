@@ -16,6 +16,8 @@
 
 		function submitUserNewModal(){
 
+			$("##createUserSubmitButton").button('loading');
+
 			postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=createUser");
 
 		}
@@ -45,7 +47,7 @@
 
 	<div class="modal-footer">
 	    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-	    <button class="btn btn-primary" onclick="submitUserNewModal()">Guardar</button>
+	    <button class="btn btn-primary" id="createUserSubmitButton" data-loading-text="Guardando..." onclick="submitUserNewModal()">Guardar</button>
 	</div>
 
 

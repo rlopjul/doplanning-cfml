@@ -2651,7 +2651,14 @@
 					        }
 
 					        var itemUrl = row.data("item-url");
-						    openUrlLite(itemUrl,'itemIframe');
+					        var itemTypeId = row.data("item-type-id");
+
+					        if(itemTypeId == 11 || itemTypeId == 12 || itemTypeId == 14 || itemTypeId == 15){
+					        	openUrlLite(itemUrl,'areaIframe');
+					        } else {
+					        	openUrlLite(itemUrl,'itemIframe');
+					        }
+						    
 
 					    });
 						
@@ -2692,11 +2699,13 @@
 						<cfelse>
 							<cfset rpage = "#lCase(itemTypeNameP)#.cfm?area=#itemsQuery.area_id#">
 						</cfif>
-						
-						<cfif itemTypeId NEQ 10>
-							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
-						<cfelse><!---Files--->
+													
+						<cfif itemTypeId EQ 10><!---Files--->
 							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#area_id#&return_page=#URLEncodedFormat(rpage)#">
+						<cfelseif itemTypeId EQ 11 OR itemTypeId EQ 12 OR itemTypeId EQ 14 OR itemTypeId EQ 15><!--- List AND Forms --->
+							<cfset item_page_url = "#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#&area=#area_id#">
+						<cfelse>
+							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
 						</cfif>
 						
 						<!---Item selection--->
@@ -2708,6 +2717,8 @@
 
 								<cfif isDefined("URL.reply")>
 									<cfset onpenUrlHtml2 = "#itemTypeName#_new.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+								<cfelseif itemTypeId EQ 11 OR itemTypeId EQ 12 OR itemTypeId EQ 14 OR itemTypeId EQ 15><!--- List AND Forms --->
+									<cfset onpenUrlHtml2 = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
 								<cfelse>
 									<cfset onpenUrlHtml2 = item_page_url>
 								</cfif>
@@ -2726,7 +2737,7 @@
 						
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 											
-						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#"><!--- onclick="openUrl('#item_page_url#','itemIframe',event)"--->
+						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-type-id="#itemsQuery.itemTypeId#"><!--- onclick="openUrl('#item_page_url#','itemIframe',event)"--->
 							<td style="text-align:center">
 								<cfif itemTypeId IS 6><!---Tasks--->
 									
@@ -2808,7 +2819,8 @@
 							</td>
 							<td>
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 14 OR itemTypeId IS 15 OR itemTypeId IS 16><!---Lists, Forms And Views--->
-									<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
+									<!---<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>--->
+									<a href="#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#','itemIframe',event)" title="Más información de #itemTypeNameEs#"><i class="icon-info-sign" style="font-size:15px;"></i></a>
 								</cfif>
 
 								<!---Attached files--->
@@ -2835,8 +2847,11 @@
 								</cfif>	
 							</td>
 							<td>
-								<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringDate">
+								<!---<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringDate">
 									<cfinvokeargument name="timestamp_date" value="#itemsQuery.creation_date#">
+								</cfinvoke>--->
+								<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringDate">
+									<cfinvokeargument name="timestamp_date" value="#itemsQuery.last_update_date#">
 								</cfinvoke>							
 								<cfset spacePos = findOneOf(" ", stringDate)>
 								<span>

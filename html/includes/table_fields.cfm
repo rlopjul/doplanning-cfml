@@ -32,31 +32,46 @@
 
 <div class="div_head_subtitle_area">
 
-	<cfif tableTypeId IS NOT 3>
-		<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
-	<cfelse>
-		<a href="typologies.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <i class="icon-file-text" style="font-size:17px; color:##7A7A7A"></i>&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
-	</cfif>
+	<div class="btn-toolbar" style="padding-right:5px;">
 
-	<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i> <span>Añadir campo</span></a>
+		<cfif tableTypeId IS NOT 3>
+			<!---<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>--->
+			<div class="btn-group">
+				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
+			</div>
+		<cfelse>
+			<div class="btn-group">
+				<a href="typologies.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP#" lang="es"> <i class="icon-file-text" style="font-size:15px; color:##7A7A7A"></i>&nbsp;&nbsp;<span lang="es">#itemTypeNameEsP#</span></a>
+			</div>
+		</cfif>
 
-	<a href="#tableTypeName#_fields_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Copiar de plantilla" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar de plantilla</span></a>
+		<div class="btn-group">
+			<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-info btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span>Añadir campo</span></a><!---color:##5BB75B;--->
+		</div>
 
-	<cfif tableTypeId IS NOT 3>
-		<span class="divider">&nbsp;</span>
+		<div class="btn-group">
+			<a href="#tableTypeName#_fields_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Copiar de plantilla" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar de plantilla</span></a>
+		</div>
 
-		<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
-	</cfif>
-	
-	<!---<a href="#tableTypeNameP#.cfm?area=#area_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>--->
+		<!---<cfif tableTypeId IS NOT 3>
+			<span class="divider">&nbsp;</span>
 
-	<span class="divider">&nbsp;</span>
+			<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
+		</cfif>--->
+		
+		<!---<a href="#tableTypeNameP#.cfm?area=#area_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>--->
 
-	<cfif app_version NEQ "mobile">
-		<a href="#APPLICATION.htmlPath#/#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
-	</cfif>
+		<!---<span class="divider">&nbsp;</span>--->
 
-	<!---<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>--->
+		<cfif app_version NEQ "mobile">
+			<div class="btn-group pull-right">
+				<a href="#APPLICATION.htmlPath#/#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px;"></i></a>
+			</div>
+		</cfif>
+
+		<!---<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>--->
+
+	</div>
 
 </div>
 

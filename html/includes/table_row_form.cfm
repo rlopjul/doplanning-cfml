@@ -97,6 +97,11 @@
 				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-default" style="float:right">Cancelar</a>
 			</cfif>
 		</div>
+
+		<cfif tableTypeId NEQ 3>
+			<div>#table.description#</div>
+		</cfif>
+
 		<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
 		<input type="hidden" name="area_id" value="#area_id#"/>
 

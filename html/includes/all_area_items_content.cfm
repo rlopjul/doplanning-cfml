@@ -19,38 +19,140 @@
 	
 	<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
 
-		<div class="btn-group" style="margin:0">
+		<cfif objectArea.read_only IS false>
 
-			<a class="btn btn-link btn-sm" style="cursor:default;"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:20px;line-height:22px;"></i></a>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+			</cfinvoke>
 
-		</div>
+			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
+			<cfif len(area_type) GT 0>
+				<cfset areaTypeWeb = true>
+			<cfelse>
+				<cfset areaTypeWeb = false>
+			</cfif>
+
+			<cfset previousLoopCurButton = 0>
+
+			<cfloop array="#itemTypesArray#" index="itemTypeId">
+
+				<cfif itemTypeId NEQ 13 AND itemTypeId NEQ 14 AND itemTypeId NEQ 15>
+					<cfif ( ( areaTypeWeb AND itemTypesStruct[itemTypeId].web ) OR ( areaTypeWeb IS false AND itemTypesStruct[itemTypeId].noWeb ) ) AND objectArea["item_type_#itemTypeId#_enabled"] IS true>
+
+						<cfset previousLoopCurButton = previousLoopCurButton+1>
+
+					</cfif>
+
+				</cfif>
+
+			</cfloop>
+
+
+			<cfif previousLoopCurButton GT 0>
+				
+				<div class="btn-group" style="margin:0">
+
+					<a class="btn btn-link btn-sm" style="cursor:default;"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:20px;line-height:22px;"></i></a>
+
+				</div>
+
+				<cfset loopCurButton = 0>
+
+				<cfloop array="#itemTypesArray#" index="itemTypeId">
+
+					<cfif itemTypeId NEQ 13 AND itemTypeId NEQ 14 AND itemTypeId NEQ 15>
+						<cfif objectArea["item_type_#itemTypeId#_enabled"] IS true AND ( ( areaTypeWeb AND itemTypesStruct[itemTypeId].web ) OR ( areaTypeWeb IS false AND itemTypesStruct[itemTypeId].noWeb ) ) AND ( (itemTypeId NEQ 11 AND itemTypeId NEQ 12) OR is_user_area_responsible )>
+
+							<cfset loopCurButton = loopCurButton+1>
+
+							<cfif itemTypesStruct[itemTypeId].gender EQ "male">
+								<cfset newItemTitle = "Nuevo">
+							<cfelse>
+								<cfset newItemTitle = "Nueva">
+							</cfif>
+							
+							<div class="btn-group" <cfif loopCurButton IS 1>style="margin-left:0"</cfif>>
+								
+								<cfif itemTypeId IS 10><!---File--->
+									<a href="area_file_new.cfm?area=#area_id#&fileTypeId=1" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="#newItemTitle# #itemTypesStruct[itemTypeId].label#" lang="es">
+								<cfelse>
+									<a href="#itemTypesStruct[itemTypeId].name#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypesStruct[itemTypeId].name#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="#newItemTitle# #itemTypesStruct[itemTypeId].label#" lang="es">
+								</cfif>
+								
+								<cfif itemTypeId IS 7><!---Consultations--->
+									<i class="icon-exchange" style="font-size:19px;line-height:22px;color:##0088CC"></i>
+								<cfelseif itemTypeId IS 13><!---Typologies--->
+									<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
+								<cfelse>
+									<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#newItemTitle# #itemTypesStruct[itemTypeId].label#" lang="es"/>
+								</cfif>
+								</a>
+								
+							</div>
+
+							<cfif itemTypeId IS 10>
+								
+								<div class="btn-group">
+
+									<cfif APPLICATION.moduleAreaFilesLite IS true AND len(area_type) IS 0>
+									<a href="area_file_new.cfm?area=#area_id#&fileTypeId=2" onclick="openUrl('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="Nuevo Archivo de área" lang="es"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" /></a>
+									</cfif>
+
+								</div>
+
+							</cfif>
+
+							<cfif loopCurButton EQ previousLoopCurButton>
+								<cfbreak>
+							</cfif>
+									
+						</cfif>
+					</cfif>
+
+				</cfloop>
+
+			<cfelse>
+
+				<!---<div class="btn-group" style="margin-left:0">
+					<button class="btn btn-link disabled" lang="es">Está deshabilitada la creación de nuevos elementos en esta área</button>
+				</div>--->
+
+			</cfif>
+
+
+		</cfif>
+
+
+		<!---
+
+		<cfif len(area_type) IS 0 AND objectArea.item_type_1_enabled>
 		<div class="btn-group" style="margin-left:0">
 
 			<!---<a class="btn btn-default btn-sm"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:20px;line-height:22px;"></i></a>--->
 
-			<cfif len(area_type) IS 0>
+			
 			<a href="message_new.cfm?area=#area_id#" onclick="openUrl('message_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="Nuevo Mensaje" lang="es"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/message.png" alt="Nuevo Mensaje" lang="es"/></a>
+			
+
+		</div>
+		</cfif>
+
+		<cfif len(area_type) IS NOT 0><!---WEB--->
+
+			<cfif objectArea.item_type_2_enabled>
+			<div class="btn-group" style="margin-left:0">
+				<a href="entry_new.cfm?area=#area_id#" onclick="openUrl('entry_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="Nuevo elemento de contenido" lang="es"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/entry.png"/></a>	
+			</div>
 			</cfif>
 
-		</div>
-		<div class="btn-group" style="margin-left:0">
+			<div class="btn-group">
+				<a href="news_new.cfm?area=#area_id#" onclick="openUrl('news_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="Nueva Noticia" lang="es"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/news.png"/></a>
+			</div>
+			<div class="btn-group">
+				<a href="image_new.cfm?area=#area_id#" onclick="openUrl('image_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="Nueva Imagen" lang="es"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;---><img src="#APPLICATION.htmlPath#/assets/icons/image.png"/></a>
+			</div>
 
-			<cfif len(area_type) IS NOT 0><!---WEB--->
-			<a href="entry_new.cfm?area=#area_id#" onclick="openUrl('entry_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="Nuevo elemento de contenido" lang="es"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/entry.png"/></a>	
-
-		</div>
-		<div class="btn-group">
-
-			<a href="news_new.cfm?area=#area_id#" onclick="openUrl('news_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="Nueva Noticia" lang="es"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/news.png"/></a>
-
-		</div>
-		<div class="btn-group">
-
-			<a href="image_new.cfm?area=#area_id#" onclick="openUrl('image_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm btn-new-item-dp" title="Nueva Imagen" lang="es"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>&nbsp;---><img src="#APPLICATION.htmlPath#/assets/icons/image.png"/></a>
-			</cfif>
-
-		</div>
+		</cfif>
 		
 		<div class="btn-group">
 
@@ -119,13 +221,17 @@
 		
 		<!---<span class="divider">&nbsp;</span>--->
 
+		--->
+
+
+
 		<div class="btn-group pull-right">
 
 			<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Exportar contenido" lang="es">
 				<i class="icon-circle-arrow-down" style="font-size:14px; line-height:23px;"></i> <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu" role="menu">
-				<li><a href="#APPLICATION.htmlPath#/area_items_pdf.cfm?area=#area_id#" target="blank" title="PDF" lang="es">PDF</a></li>
+				<li><a href="#APPLICATION.htmlPath#/area_items_pdf.cfm?area=#area_id#" target="_blank" title="PDF" lang="es">PDF</a></li>
 				<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=exportAreaItemsDownload&area_id=#area_id#" onclick="return downloadFileLinked(this,event)" title="CSV" lang="es">CSV</a></li>
 			</ul>
 

@@ -37,6 +37,187 @@
 	</div>	
 
 	<cfinclude template="area_menu_inputs.cfm" />
+
+
+	<div class="row">
+		<div class="col-sm-12">
+			<label class="control-label" lang="es">En esta área se pueden crear los siguientes elementos:</label>
+		</div>
+	</div>	
+
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="checkbox">
+				<label class="control-label">
+					<input type="checkbox" name="select_all" checked="checked" onclick="toggleCheckboxesChecked(this.checked);"/> Seleccionar/quitar todos
+				</label>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+
+		<!---<cfif len(area_type) IS 0>
+			<div class="col-xs-4">
+				<div class="checkbox" style="margin-top:5px;">
+					<label class="control-label" for="item_type_1_enabled" lang="es">
+						<input id="item_type_1_enabled" name="item_type_1_enabled" type="checkbox" value="true" <cfif objectArea.item_type_1_enabled IS true>checked="checked"</cfif> />
+						<img src="#APPLICATION.htmlPath#/assets/icons/message.png" alt="Mensaje" lang="es"/> Mensajes
+					</label>
+				</div>
+			</div>
+		</cfif>		
+
+		<div class="col-xs-4">
+			<div class="checkbox" style="margin-top:5px;">
+				<label class="control-label" for="item_type_10_enabled" lang="es">
+					<input id="item_type_10_enabled" name="item_type_10_enabled" type="checkbox" value="true" <cfif objectArea.item_type_10_enabled IS true>checked="checked"</cfif> />
+					<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" lang="es" /> Archivos
+				</label>
+			</div>
+		</div>	
+
+		<div class="col-xs-4">
+			<div class="checkbox" style="margin-top:5px;">
+				<label class="control-label" for="item_type_20_enabled" lang="es">
+					<input id="item_type_20_enabled" name="item_type_20_enabled" type="checkbox" value="true" <cfif objectArea.item_type_20_enabled IS true>checked="checked"</cfif> />
+					<img src="#APPLICATION.htmlPath#/assets/icons/entry.png" alt="Entrada" lang="es" /> Documentos DoPlanning
+				</label>
+			</div>
+		</div>--->
+
+		<div class="col-xs-12">
+			<ul class="list-inline">
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+					<!---<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">--->
+				</cfinvoke>
+
+				<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
+				<cfif len(area_type) GT 0>
+					<cfset areaTypeWeb = true>
+				<cfelse>
+					<cfset areaTypeWeb = false>
+				</cfif>
+
+				<cfloop array="#itemTypesArray#" index="itemTypeId">
+					<cfif itemTypeId NEQ 14 AND itemTypeId NEQ 15>
+						<cfif ( areaTypeWeb AND itemTypesStruct[itemTypeId].web ) OR ( areaTypeWeb IS false AND itemTypesStruct[itemTypeId].noWeb )>
+							<li>
+								<div class="checkbox">
+									<label class="control-label" for="item_type_#itemTypeId#_enabled" lang="es">
+										<input id="item_type_#itemTypeId#_enabled" name="item_type_#itemTypeId#_enabled" type="checkbox" value="true" <cfif NOT isDefined('objectArea["item_type_#itemTypeId#_enabled"]') OR objectArea["item_type_#itemTypeId#_enabled"] IS true>checked="checked"</cfif> />
+										<cfif itemTypeId IS 7><!---Consultations--->
+											<i class="icon-exchange" style="font-size:19px;line-height:22px;color:##0088CC"></i>
+										<cfelseif itemTypeId IS 13><!---Typologies--->
+											<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
+										<cfelse>
+											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].label#" lang="es"/>
+										</cfif>
+										<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span>&nbsp;
+									</label>
+								</div>
+							</li>
+						<cfelse>
+							<input id="item_type_#itemTypeId#_enabled" name="item_type_#itemTypeId#_enabled" type="hidden" value="true" />				
+						</cfif>
+					</cfif>
+				</cfloop>
+
+				<!---<li>
+					<label class="control-label" for="item_type_1_enabled" lang="es">
+						<input id="item_type_1_enabled" name="item_type_1_enabled" type="checkbox" value="true" <cfif objectArea.item_type_1_enabled IS true>checked="checked"</cfif> />
+						<img src="#APPLICATION.htmlPath#/assets/icons/message.png" alt="Mensaje" lang="es"/> <span lang="es">Mensajes</span>&nbsp;
+					</label>
+				</li>
+				<li>
+					<label class="control-label" for="item_type_10_enabled" lang="es">
+						<input id="item_type_10_enabled" name="item_type_10_enabled" type="checkbox" value="true" <cfif objectArea.item_type_10_enabled IS true>checked="checked"</cfif> />
+						<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" lang="es" /> <span lang="es">Archivos</span>&nbsp;
+					</label>
+				</li>
+				<li>
+					<label class="control-label" for="item_type_20_enabled" lang="es">
+						<input id="item_type_20_enabled" name="item_type_20_enabled" type="checkbox" value="true" <cfif objectArea.item_type_20_enabled IS true>checked="checked"</cfif> />
+						<img src="#APPLICATION.htmlPath#/assets/icons/entry.png" alt="Entrada" lang="es" /> <span lang="es">Documentos DoPlanning</span>&nbsp;
+					</label>
+				</li>
+				<li>
+					<label class="control-label" for="item_type_1_enabled" lang="es">
+						<input id="item_type_5_enabled" name="item_type_5_enabled" type="checkbox" value="true" <cfif objectArea.item_type_1_enabled IS true>checked="checked"</cfif> />
+						<img src="#APPLICATION.htmlPath#/assets/icons/event.png" alt="Mensaje" lang="es"/> Eventos
+					</label>
+				</li>
+				<li>
+					<label class="control-label" for="item_type_10_enabled" lang="es">
+						<input id="item_type_6_enabled" name="item_type_6_enabled" type="checkbox" value="true" <cfif objectArea.item_type_10_enabled IS true>checked="checked"</cfif> />
+						<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" lang="es" /> Tareas
+					</label>
+				</li>
+				<li>
+					<label class="control-label" for="item_type_2_enabled" lang="es">
+						<input id="item_type_11_enabled" name="item_type_11_enabled" type="checkbox" value="true" <cfif objectArea.item_type_2_enabled IS true>checked="checked"</cfif> />
+						<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="Entrada" lang="es" /> Listas 
+					</label>
+				</li>--->
+
+			</ul>
+
+			<small class="help-block" style="margin-bottom:0">
+				Esta selección no afecta a los elementos ya existentes en el área
+			</small>
+		</div>
+	</div>	
+
+	<div class="row">
+		<div class="col-xs-12">
+
+			<div class="checkbox">
+				<label class="control-label" for="users_visible" lang="es">
+					<input id="users_visible" name="users_visible" type="checkbox" value="true" class="checkbox_locked" <cfif NOT isDefined("objectArea.users_visible") OR objectArea.users_visible IS true>checked="checked"</cfif> />
+						<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuarios" lang="es"/>
+					<span lang="es">Mostrar visible el listado de usuarios del área</span>&nbsp;
+				</label>
+				<small class="help-block">
+					Esta opción no afecta a los elementos en los que es necesario acceder a la lista de usuarios del área para su creación y edición como: tareas<cfif APPLICATION.moduleListsWithPermissions IS true>, archivos de área, listas y formularios.
+					<cfelse>y archivos de área.</cfif>
+				</small>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+
+			<div class="checkbox">
+				<label class="control-label" for="read_only" lang="es">
+					<input id="read_only" name="read_only" type="checkbox" value="true" class="checkbox_locked" <cfif isDefined("objectArea.read_only") AND objectArea.read_only IS true>checked="checked"</cfif> />
+					&nbsp;&nbsp;<i class="icon-lock" style="font-size:18px"></i>&nbsp;&nbsp;<span lang="es">Área de sólo lectura</span>&nbsp;
+				</label>
+			</div>
+
+		</div>
+	</div>
+
+	<cfif isDefined("area_id")><!--- Modify area --->
+	<div class="row">
+		<div class="col-xs-12">
+
+			<div class="checkbox">
+				<label class="control-label" for="items_enabled_subareas" lang="es">
+					<input id="items_enabled_subareas" name="items_enabled_subareas" type="checkbox" value="true" class="checkbox_locked" />
+					Aplicar selección anterior de elementos, usuarios disponibles y sólo lectura a todas las áreas inferiores
+				</label>
+				<small class="help-block">
+					Esta definición se puede modificar posteriormente de forma individual para cada área.
+				</small>
+			</div>
+
+		</div>
+	</div>
+	</cfif>
 	
 			
 </form>
