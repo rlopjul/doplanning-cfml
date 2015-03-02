@@ -81,7 +81,7 @@ function onSubmitForm()
 	
 	
 	<script type="text/javascript">
-		var railo_custom_form=new RailoForms('item_form');
+		var railo_custom_form=new LuceeForms('item_form');
 	</script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 

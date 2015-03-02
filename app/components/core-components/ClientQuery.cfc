@@ -14,7 +14,7 @@
 			
 			<cfquery name="selectClientQuery" datasource="#APPLICATION.dsn#">
 				SELECT *
-				FROM `APP_clients`
+				FROM `app_clients`
 				WHERE abbreviation = <cfqueryparam value="#arguments.client_abb#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
 		
@@ -31,7 +31,7 @@
 			
 			<cfquery name="selectClientsQuery" datasource="#APPLICATION.dsn#">
 				SELECT *
-				FROM `APP_clients`;
+				FROM `app_clients`;
 			</cfquery>
 		
 		<cfreturn selectClientsQuery>

@@ -35,6 +35,9 @@
 				0: { 
 					sorter: false 
 				},
+				1: {
+					sorter: "text"
+				},
 				4: { 
 					sorter: "datetime" 
 				},

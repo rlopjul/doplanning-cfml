@@ -13,7 +13,7 @@
 	
 	<cfquery datasource="#APPLICATION.dsn#" name="getClients">
 		SELECT *
-		FROM APP_clients;
+		FROM app_clients;
 	</cfquery>
 
 	<cfloop query="getClients">

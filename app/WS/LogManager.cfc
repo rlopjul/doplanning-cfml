@@ -135,11 +135,11 @@
 					<cfif isDefined("date_to")>
 					AND logs.time < <cfqueryparam value="#date_to#" cfsqltype="cf_sql_timestamp">
 					</cfif>
-					LEFT JOIN APP_methods AS methods ON logs.method = methods.name
+					LEFT JOIN app_methods AS methods ON logs.method = methods.name
 					<cfif isDefined("action_id")>
 					AND methods.id = <cfqueryparam value="#action_id#" cfsqltype="cf_sql_integer">
 					</cfif>
-					LEFT JOIN APP_components AS components ON logs.component = components.name
+					LEFT JOIN app_components AS components ON logs.component = components.name
 					
 					GROUP BY logs.id
 					ORDER BY #order_by# #order_type#;
@@ -157,8 +157,8 @@
 				SELECT SQL_CALC_FOUND_ROWS *, logs.id AS log_id 
 				FROM #client_abb#_logs AS logs 
 				LEFT JOIN #client_abb#_users AS users ON logs.user_id = users.id
-				<!---LEFT JOIN APP_methods AS methods ON logs.method = methods.name
-				LEFT JOIN APP_components AS components ON logs.component = components.name
+				<!---LEFT JOIN app_methods AS methods ON logs.method = methods.name
+				LEFT JOIN app_components AS components ON logs.component = components.name
 				WHERE methods.action_es != ''--->
 				WHERE logs.id != 0
 				<cfif isDefined("user_log")>
@@ -180,12 +180,12 @@
 			
 			<cfquery datasource="#APPLICATION.dsn#" name="methods">
 				SELECT *
-				FROM APP_methods AS methods; <!---ON logs.method = methods.name--->
+				FROM app_methods AS methods; <!---ON logs.method = methods.name--->
 			</cfquery>
 			
 			<cfquery datasource="#APPLICATION.dsn#" name="components">
 				SELECT *
-				FROM APP_components AS components; <!---ON logs.component = components.name--->
+				FROM app_components AS components; <!---ON logs.component = components.name--->
 			</cfquery>
 			
 			<cfquery dbtype="query" name="getLog">
@@ -265,7 +265,7 @@
 			
 			<cfquery datasource="#APPLICATION.dsn#" name="getLogActions">
 				SELECT *
-				FROM APP_methods AS methods
+				FROM app_methods AS methods
 				WHERE action_es != ''
 				ORDER BY action_es ASC;
 			</cfquery>

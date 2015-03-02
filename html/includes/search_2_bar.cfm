@@ -194,7 +194,7 @@
 <cfform method="get" name="search_form" action="#CGI.SCRIPT_NAME#" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
-		var railo_custom_form=new RailoForms('search_form');
+		var railo_custom_form=new LuceeForms('search_form');
 	</script>
 
 	<cfif isDefined("URL.field") AND isDefined("URL.itemTypeId")><!---SELECT ITEM PAGE--->

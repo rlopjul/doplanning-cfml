@@ -2073,7 +2073,7 @@
 
 				<cfquery name="checkClientAdministrator" datasource="#APPLICATION.dsn#">
 					SELECT id 
-					FROM APP_clients				
+					FROM app_clients				
 					WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">
 					AND administrator_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;			
 				</cfquery>

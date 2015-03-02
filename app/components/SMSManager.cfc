@@ -252,7 +252,7 @@
 		
 			<cfquery name="checkNumber" datasource="#APPLICATION.dsn#">
 				SELECT number_of_sms_used, number_of_sms_paid
-				FROM APP_clients
+				FROM app_clients
 				WHERE abbreviation = <cfqueryPARAM value = "#client_abb#" CFSQLType = "CF_SQL_varchar">			
 			</cfquery>
 			
@@ -300,7 +300,7 @@
 				</cfif>
 				
 				<cfquery name="updateSMSUsed" datasource="#APPLICATION.dsn#">
-					UPDATE APP_clients
+					UPDATE app_clients
 					SET number_of_sms_used = <cfqueryparam value="#num_sms_total#" cfsqltype="cf_sql_integer">
 					WHERE abbreviation = <cfqueryPARAM value = "#client_abb#" CFSQLType = "CF_SQL_varchar">;
 				</cfquery>

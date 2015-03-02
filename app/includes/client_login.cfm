@@ -21,7 +21,7 @@ En la nueva versión sin flash, esto no se usa
 <cfset swf_height = "250">
 <cfquery datasource="#APPLICATION.dsn#" name="getClient">
 	SELECT *
-	FROM APP_clients
+	FROM app_clients
 	WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">;
 </cfquery>
 <!---<cfset client_email_support = getClient.email_support>--->

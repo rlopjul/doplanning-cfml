@@ -265,10 +265,10 @@
 </script>
 
 
-<script type="text/javascript">
-	var railo_custom_form=new RailoForms('item_form');
+<script>
+	var railo_custom_form=new LuceeForms('item_form');
 </script>
-<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
+<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 
 <cfif itemTypeId IS 1 OR itemTypeId IS 7>

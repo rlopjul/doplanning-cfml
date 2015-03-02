@@ -171,7 +171,7 @@ Asociar archivo a áreas
 	<cfoutput>
 	
 	<script type="text/javascript">
-		var railo_custom_form=new RailoForms('add_file_to_areas');
+		var railo_custom_form=new LuceeForms('add_file_to_areas');
 	</script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 	

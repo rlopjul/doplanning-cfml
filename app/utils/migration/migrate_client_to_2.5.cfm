@@ -445,9 +445,9 @@ ALTER TABLE `dp_software7`.`software7_lists_views` ADD COLUMN `include_creation_
  ADD COLUMN `notify_new_form_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_form_row`;
 
 
-<!--- APP_clients --->
+<!--- app_clients --->
 
-ALTER TABLE `doplanning_app`.`APP_clients` ADD COLUMN `default_language` VARCHAR(10) NOT NULL DEFAULT 'es' AFTER `email_support`,
+ALTER TABLE `doplanning_app`.`app_clients` ADD COLUMN `default_language` VARCHAR(10) NOT NULL DEFAULT 'es' AFTER `email_support`,
  ADD COLUMN `force_notifications` BOOLEAN NOT NULL DEFAULT 0 AFTER `default_language`,
  ADD COLUMN `tasks_reminder_notifications` BOOLEAN NOT NULL DEFAULT 1 AFTER `force_notifications`,
  ADD COLUMN `tasks_reminder_days` INTEGER UNSIGNED NOT NULL DEFAULT 30 AFTER `tasks_reminder_notifications`;
@@ -585,8 +585,8 @@ ALTER TABLE `dp_software7`.`software7_users` MODIFY COLUMN `email` VARCHAR(255) 
 
 
 
-<!--- CAMBIOS TABLA DoPlanning APP_clients---> 
-ALTER TABLE `doplanning_app`.`APP_clients` 
+<!--- CAMBIOS TABLA DoPlanning app_clients---> 
+ALTER TABLE `doplanning_app`.`app_clients` 
 ADD COLUMN `default_language` VARCHAR(10) NOT NULL DEFAULT 'es' AFTER `email_support`,
 ADD COLUMN `force_notifications` TINYINT(1) NOT NULL DEFAULT 0 AFTER `default_language`,
 ADD COLUMN `tasks_reminder_notifications` TINYINT(1) NOT NULL DEFAULT 1 AFTER `force_notifications`,

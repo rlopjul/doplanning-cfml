@@ -49,7 +49,7 @@
 				</cfquery>
 			<cfelse>			
 				<cfquery datasource="#APPLICATION.dsn#" name="saveErrorQuery">
-					INSERT INTO APP_errors_log (code, content, method, component)
+					INSERT INTO app_errors_log (code, content, method, component)
 					VALUES (#error_code#, '#arguments.error_content#', '#error_method#', '#error_component#');
 				</cfquery>
 			</cfif>
@@ -175,7 +175,7 @@
 						
 			<cfquery datasource="#APPLICATION.dsn#" name="getError">
 				SELECT title_#user_language# AS title, description_#user_language# AS description, show_in_client, restart_client_app, handled
-				FROM APP_errors
+				FROM app_errors
 				WHERE code = #error_code#;
 			</cfquery>
 			

@@ -29,12 +29,12 @@
 			
 			
 			<cfquery datasource="#APPLICATION.dsn#" name="getFileTypesConversion">
-				SELECT APP_file_types.file_type, APP_file_types.name_es, APP_file_types.name_en
-				FROM APP_file_types
-				INNER JOIN APP_file_types_conversion ON APP_file_types.file_type = APP_file_types_conversion.file_type_to
-				WHERE APP_file_types_conversion.file_type_from = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">
-				AND APP_file_types_conversion.enabled = <cfqueryparam value="1" cfsqltype="cf_sql_tinyint">
-				ORDER BY APP_file_types_conversion.order ASC;
+				SELECT app_file_types.file_type, app_file_types.name_es, app_file_types.name_en
+				FROM app_file_types
+				INNER JOIN app_file_types_conversion ON app_file_types.file_type = app_file_types_conversion.file_type_to
+				WHERE app_file_types_conversion.file_type_from = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">
+				AND app_file_types_conversion.enabled = <cfqueryparam value="1" cfsqltype="cf_sql_tinyint">
+				ORDER BY app_file_types_conversion.order ASC;
 			</cfquery>
 			
 			<cfif arguments.return_type EQ "query">

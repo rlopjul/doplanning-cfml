@@ -141,12 +141,12 @@
 			
 			<cfquery datasource="#APPLICATION.dsn#" name="methods">
 				SELECT *
-				FROM APP_methods AS methods; 
+				FROM app_methods AS methods; 
 			</cfquery>
 			
 			<cfquery datasource="#APPLICATION.dsn#" name="components">
 				SELECT *
-				FROM APP_components AS components; 
+				FROM app_components AS components; 
 			</cfquery>
 			
 			<cfquery dbtype="query" name="getLog">
@@ -363,7 +363,7 @@
 			
 			<cfquery datasource="#APPLICATION.dsn#" name="getLogActions">
 				SELECT *
-				FROM APP_methods AS methods
+				FROM app_methods AS methods
 				WHERE action_es != ''
 				ORDER BY action_es ASC;
 			</cfquery>

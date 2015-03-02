@@ -208,9 +208,13 @@
 				
 				<cfthrow errorcode="#error_code#"> 
 				
-			</cfif>--->
+			</cfif>
+
+			MUY IMPORTANTE: esto hay que corregirlo para que aquí no se use ni sea necesaria la SESION
 			
-			<cfif SESSION.client_force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>				
+		--->
+			
+			<cfif ( (isDefined("SESSION.client_force_notifications") AND SESSION.client_force_notifications IS false) OR NOT isDefined("SESSION.client_force_notifications") ) AND isDefined("xmlRequest.request.parameters.preferences")>				
 				
 				<cfxml variable="xmlPreferences">
 					<cfoutput>#xmlRequest.request.parameters.preferences#</cfoutput>

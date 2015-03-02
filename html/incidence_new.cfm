@@ -153,7 +153,7 @@ Nueva incidencia
 	
 	<cfquery datasource="#APPLICATION.dsn#" name="incidences_types">
 		SELECT *
-		FROM APP_incidences_types;
+		FROM app_incidences_types;
 	</cfquery>
 	
 	<label>Tipo:</label><cfselect name="type_id" query="incidences_types" value="id" display="title_es" multiple="no">

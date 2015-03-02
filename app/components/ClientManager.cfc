@@ -251,7 +251,7 @@
 			<cfif getClientQuery.recordCount GT 0>
 	
 				<cfquery name="updateClient" datasource="#APPLICATION.dsn#">
-					UPDATE `APP_clients`
+					UPDATE `app_clients`
 					SET default_language = <cfqueryparam value="#arguments.default_language#" cfsqltype="cf_sql_varchar">,
 						force_notifications = <cfqueryparam value="#arguments.force_notifications#" cfsqltype="cf_sql_bit">,
 						tasks_reminder_notifications = <cfqueryparam value="#arguments.tasks_reminder_notifications#" cfsqltype="cf_sql_bit">,
@@ -325,7 +325,7 @@
 			<cfset new_client_abb = objectClient.abbreviation>
 			
 			<cfquery name="insertClientQuery" datasource="#APPLICATION.dsn#">							
-				INSERT INTO `APP_clients` (`id`, `name`, `administrator_id`, `root_area_id`, `number_of_users`, `space`, `abbreviation`, `creation_date`, `number_of_sms_used`, `number_of_sms_paid`, `email_support`) VALUES 
+				INSERT INTO `app_clients` (`id`, `name`, `administrator_id`, `root_area_id`, `number_of_users`, `space`, `abbreviation`, `creation_date`, `number_of_sms_used`, `number_of_sms_paid`, `email_support`) VALUES 
 					(<cfqueryPARAM value="#objectClient.id#" CFSQLType="CF_SQL_varchar">,
 					<cfqueryPARAM value="#objectClient.name#" CFSQLType="CF_SQL_varchar">,					
 					<cfqueryPARAM value="#objectClient.administrator_id#" CFSQLType = "CF_SQL_varchar">,

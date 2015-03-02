@@ -24,7 +24,7 @@
 <!---Aquí se añade COLLATE utf8_bin para que sea case sensitive en la comparación--->
 <cfquery datasource="#APPLICATION.dsn#" name="getClient">
 	SELECT *
-	FROM APP_clients
+	FROM app_clients
 	WHERE abbreviation LIKE <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar"> COLLATE utf8_bin;
 </cfquery>
 

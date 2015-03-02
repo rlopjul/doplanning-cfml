@@ -4,7 +4,7 @@ OR SESSION.user_id EQ "93" OR SESSION.user_id EQ "152" OR SESSION.user_id EQ "1"
 <cfset no_include_clients="software7,web4bio7,organizacion,empresa,democlientes,demo,era7,pruebas,hospitalgranada,aliente">
 <cfquery datasource="#APPLICATION.dsn#" name="getClients">
 	SELECT *
-	FROM APP_clients;
+	FROM app_clients;
 </cfquery>
 
 <cfheader name="Content-Disposition" value="attachment;filename=usuarios_doplanning.csv;" charset="iso-8859-1">

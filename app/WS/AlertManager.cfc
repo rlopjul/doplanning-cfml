@@ -1299,9 +1299,9 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
-			<cfquery datasource="#APPLICATION.dsn#" name="APP_alert_messages">
+			<cfquery datasource="#APPLICATION.dsn#" name="app_alert_messages">
 				SELECT * 
-				FROM APP_alert_messages 
+				FROM app_alert_messages 
 				WHERE expiration_date > NOW();
 			</cfquery>
 			
@@ -1312,7 +1312,7 @@
 			</cfquery>
 			
 			<cfquery dbtype="query" name="getAlertMessage">
-				SELECT * FROM APP_alert_messages
+				SELECT * FROM app_alert_messages
 				UNION ALL
 				SELECT * FROM alert_messages;	
 			</cfquery>

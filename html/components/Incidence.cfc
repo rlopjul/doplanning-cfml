@@ -76,7 +76,7 @@
 			</cfquery>
 			<cfquery datasource="#APPLICATION.dsn#" name="types">
 				SELECT *
-				FROM APP_incidences_types AS incidences_types; 
+				FROM app_incidences_types AS incidences_types; 
 			</cfquery>
 			<cfquery dbtype="query" name="get_incidence">
 				SELECT *

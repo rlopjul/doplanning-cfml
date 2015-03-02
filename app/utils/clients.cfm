@@ -37,7 +37,7 @@ table.clients td {
 	
 <cfquery datasource="#APPLICATION.dsn#" name="getClients">
 	SELECT *
-	FROM APP_clients;
+	FROM app_clients;
 </cfquery>
 
 <cfoutput>

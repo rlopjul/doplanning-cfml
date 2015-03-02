@@ -1967,7 +1967,7 @@
 			
 			<cfoutput>
 
-				<script type="text/javascript">
+				<script>
 
 					$(document).ready(function() { 
 						
@@ -2016,6 +2016,9 @@
 								0: { 
 									sorter: false 
 								},
+								1: {
+									sorter: "text"
+								},
 								4: { 
 									sorter: "datetime" 
 								}
@@ -2025,6 +2028,9 @@
 										sorter: "datetime" 
 									}
 									<cfelse>--->
+									1: {
+										sorter: "text"
+									},
 									7: { 
 										sorter: "datetime" 
 									},
@@ -2577,12 +2583,15 @@
 							sortList: [[4,1]] ,
 							</cfif>
 							headers: { 
-								<cfif numItems GT 600>
-								4: { 
+								1: {
+									sorter: "text"
+								}
+								<cfif numItems GT 610>
+								, 4: { 
 									sorter: "false" 
 								}
 								<cfelse>
-								4: { 
+								, 4: { 
 									sorter: "datetime" 
 								}
 								</cfif>

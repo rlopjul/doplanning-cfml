@@ -75,7 +75,7 @@
 			<!---Get client data--->
 			<cfquery name="getClient" datasource="#APPLICATION.dsn#">
 				SELECT id, name, administrator_id, email_support
-				FROM APP_clients
+				FROM app_clients
 				WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
 			
@@ -554,7 +554,7 @@
 			
 			<cfquery datasource="#APPLICATION.dsn#" name="getClient">
 				SELECT *
-				FROM APP_clients
+				FROM app_clients
 				WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
 			

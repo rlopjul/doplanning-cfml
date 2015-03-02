@@ -197,7 +197,7 @@ function onSubmitForm()
 <cfform action="#APPLICATION.htmlPath#/my_files_upload_file.cfm?user_id=#SESSION.user_id#&client_abb=#SESSION.client_abb#&language=#SESSION.user_language#&folder_id=#parent_id#&session_id=#SESSION.SessionID#" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
-		var railo_custom_form=new RailoForms('file_form');
+		var railo_custom_form=new LuceeForms('file_form');
 	</script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 	

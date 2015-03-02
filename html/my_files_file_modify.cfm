@@ -181,7 +181,7 @@ function onSubmitForm()
 <cfform action="#APPLICATION.htmlComponentsPath#/File.cfc?method=updateFile" method="post" name="file_form" onsubmit="return onSubmitForm();">
 	
 	<script type="text/javascript">
-		var railo_custom_form=new RailoForms('file_form');
+		var railo_custom_form=new LuceeForms('file_form');
 	</script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 

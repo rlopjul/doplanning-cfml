@@ -412,7 +412,7 @@
 	<div class="row" id="listTextValues">
 		<div class="col-md-12">
 			<label for="list_values">Valores de la lista</label>
-			<textarea name="list_values" id="list_values" class="form-control" maxlength="1000" rows="4" <cfif field.field_type_id NEQ 15>disabled="disabled"</cfif>><cfif isDefined("field.list_values")>#field.list_values#</cfif><!--- ESTE IF SE QUITA CUANDO SE AÑADA ESTA FUNCIONALIDAD PARA TODOS LOS DP----></textarea>
+			<textarea name="list_values" id="list_values" class="form-control" maxlength="5000" rows="5" <cfif field.field_type_id NEQ 15>disabled="disabled"</cfif>>#field.list_values#<!--- <cfif isDefined("field.list_values")> ESTE IF SE QUITA CUANDO SE AÑADA ESTA FUNCIONALIDAD PARA TODOS LOS DP----></textarea>
 			<small class="help-block">Introduce cada valor de la lista en una línea distinta<!---<br/>Ejemplo: Azul<br/>Verde<br/>Amarillo---></small>
 		</div>
 	</div>

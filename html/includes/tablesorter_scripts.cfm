@@ -1,6 +1,6 @@
 <cfoutput>
-<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.min.js?v=2.18"></script>
-<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.widgets.min.js?v=2.18"></script>
+<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.min.js?v=2.19"></script>
+<script src="#APPLICATION.path#/jquery/tablesorter/jquery.tablesorter.widgets.min.js?v=2.19"></script>
 <script src="#APPLICATION.path#/jquery/tablesorter/widgets/widget-math.js?v=2.1"></script>
 
 <cfset curPageFile = GetFileFromPath(CGI.SCRIPT_NAME)>

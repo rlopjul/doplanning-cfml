@@ -1008,7 +1008,7 @@
 				<!---SI ES ADMINISTRADOR GENERAL SE LE PASA EL ARBOL ENTERO, Y SI NO SOLO LAS ÁREAS QUE LE CORRESPONDA--->
 				<!---<cfquery name="isUserGeneralAdministrator" datasource="#APPLICATION.dsn#">
 					SELECT *
-					FROM APP_clients
+					FROM app_clients
 					WHERE abbreviation = '#client_abb#' AND administrator_id = #user_id#;
 				</cfquery>--->
 				

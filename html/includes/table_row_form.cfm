@@ -87,7 +87,7 @@
 	<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="row_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 
 		<script type="text/javascript">
-			var railo_custom_form=new RailoForms('row_form');
+			var railo_custom_form=new LuceeForms('row_form');
 		</script>
 
 		<div id="submitDiv1" style="margin-bottom:10px;">

@@ -648,24 +648,39 @@
 				
 				$("##dataTable#arguments.tableTypeId#_#arguments.table_id#").tablesorter({  <!--- Se le asigna un id único a la tabla por si hay más en la misma página --->
 
+					showProcessing: true,
+					delayInit: true,
 					widgets: ['zebra','filter','stickyHeaders','math'],<!---'select',--->
 
 					<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 					dateFormat : "ddmmyyyy", // set the default date format
 
 					headers: { 
+
+						0: {
+							sorter: "digit"
+						}
 						
 						<cfset sortArray = arrayNew(1)>
-						<cfset fieldsWithDate = false>
+						<!---<cfset fieldsWithHeader = false>--->
 
 						<cfloop query="fields">
 
 							<cfif fields.field_id IS "creation_date" OR fields.field_id IS "last_update_date" OR fields.field_type_id IS 6><!--- DATE --->
-								<cfif fieldsWithDate IS true>,</cfif>#fields.currentRow#: { 
+
+								<!---<cfif fieldsWithHeader IS true>,</cfif>--->, #fields.currentRow#: { 
 									<!---sorter: "datetime"--->
 									sorter: "shortDate"
 								}
-								<cfset fieldsWithDate = true>
+								<!---<cfset fieldsWithHeader = true>--->
+
+							<cfelseif fields.field_id NEQ 4 AND fields.field_id NEQ 5><!--- IS NOT INTEGER OR DECIMAL --->
+
+								<!---<cfif fieldsWithHeader IS true>,</cfif>--->, #fields.currentRow#: { 
+									sorter: "text"
+								}
+								<!---<cfset fieldsWithHeader = true>--->
+
 							</cfif>
 
 							<cfif len(fields.sort_by_this) GT 0>
@@ -697,7 +712,9 @@
 						</cfloop> ],
 
 					<cfelse>
-						sortList: [[0,1]] ,
+						<cfif tableRows.recordCount LT 100><!---Ordenar de nuevo la tabla por el campo por defecto ralentiza las tablas con muchas filas--->
+							sortList: [[0,1]] ,
+						</cfif>
 					</cfif>
 
 					widgetOptions : {
