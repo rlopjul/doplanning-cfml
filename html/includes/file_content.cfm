@@ -15,6 +15,7 @@
 	<cfif isDefined("area_id")>
 	<cfinvokeargument name="area_id" value="#area_id#">
 	</cfif>
+	<cfinvokeargument name="with_owner_area" value="true"> 		
 </cfinvoke>
 
 <cfset fileTypeId = objectFile.file_type_id>
@@ -157,7 +158,12 @@
 
 			</cfloop>
 			
-			<a href="#requestUrl#?file_path=#URLEncodedFormat('/html/file_download.cfm?id=#file_id#')#" target="_blank" class="btn btn-success btn-sm"><i class="icon-asterisk"></i> <span>#table.title#</span></a>
+			<cfif len(requestUrl) GT 0>
+				
+				<a href="#requestUrl#?file_path=#URLEncodedFormat('/html/file_download.cfm?id=#file_id#')#" target="_blank" class="btn btn-success btn-sm"><i class="icon-asterisk"></i> <span>#table.title#</span></a>
+
+			</cfif>
+			
 
 		</cfif>
 
@@ -266,22 +272,62 @@
 
 				</cfif>
 
-				<div class="div_file_page_label">
-					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="fileArea">
-						<cfinvokeargument name="area_id" value="#objectFile.area_id#">
+
+				<cfif NOT isDefined("loggedUser")>
+						
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 					</cfinvoke>
 
-					<b><span lang="es">Propiedad del área:</span></b>
+				</cfif>
+
+				<div class="div_file_page_label">
+					<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="fileArea">
+						<cfinvokeargument name="area_id" value="#objectFile.area_id#">
+					</cfinvoke>--->
+
+					<cfset file_area_allowed = false>
+
+					<cfif loggedUser.internal_user IS false>
+						
+						<!---area_allowed--->
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="canUserAccessToArea" returnvariable="file_area_allowed">
+							<cfinvokeargument name="area_id" value="#objectFile.area_id#">
+						</cfinvoke>
+
+					</cfif>
+
+					<cfif loggedUser.internal_user IS true OR file_area_allowed>
+						
+						<b><span lang="es">Propiedad del área:</span></b>
 					
-					<a onclick="openUrl('area_items.cfm?area=#objectFile.area_id#&file=#objectFile.id#','areaIframe',event)" style="cursor:pointer">#fileArea.name#</a>
+						<a onclick="openUrl('area_items.cfm?area=#objectFile.area_id#&file=#objectFile.id#','areaIframe',event)" style="cursor:pointer">#objectFile.area_name#</a>
+
+					</cfif>
+
 				</div>
 
-				<cfif objectFile.file_type_id IS 3 AND isNumeric(version.publication_area_id) AND isNumeric(version.publication_file_id)>
+				<cfif objectFile.file_type_id IS 3 AND isNumeric(version.publication_area_id) AND isNumeric(version.publication_file_id)><!--- Published file --->
 
-					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="publicationArea">
-						<cfinvokeargument name="area_id" value="#version.publication_area_id#">
-					</cfinvoke>
-					<div class="div_file_page_label"><span lang="es">Versión de archivo publicada en el área:</span> <a onclick="openUrl('area_items.cfm?area=#version.publication_area_id#&file=#version.publication_file_id#','areaIframe',event)" style="cursor:pointer">#publicationArea.name#</a></div>
+					<cfset file_publication_area_allowed = false>
+
+					<cfif loggedUser.internal_user IS false>
+						
+						<!---area_allowed--->
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="canUserAccessToArea" returnvariable="file_publication_area_allowed">
+							<cfinvokeargument name="area_id" value="#version.publication_area_id#">
+						</cfinvoke>
+
+					</cfif>
+
+					<cfif loggedUser.internal_user IS true OR file_publication_area_allowed>
+
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="publicationArea">
+							<cfinvokeargument name="area_id" value="#version.publication_area_id#">
+						</cfinvoke>
+						<div class="div_file_page_label"><span lang="es">Versión de archivo publicada en el área:</span> <a onclick="openUrl('area_items.cfm?area=#version.publication_area_id#&file=#version.publication_file_id#','areaIframe',event)" style="cursor:pointer">#publicationArea.name#</a></div>
+
+					</cfif>
 
 				</cfif>
 
@@ -510,7 +556,7 @@
 				<cfset table = getRowResponse.table>
 				<cfset row = getRowResponse.row>--->
 
-				<div class="div_file_page_label">Tipología: <span class="text_message_page"><strong>#table.title#</strong></span></div>
+				<div class="div_file_page_label">Tipología: <span class="text_message_page"><span class="label label-default" style="font-size:11px">#table.title#</span></span></div>
 
 				<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">--->
 

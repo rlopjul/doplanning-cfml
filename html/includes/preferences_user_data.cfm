@@ -18,6 +18,9 @@ Datos Personales
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.iframe-transport.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload.js"></script>
 
+<script src="#APPLICATION.path#/jquery/jquery-mask/jquery.mask.min.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-validate/jquery.validate.min.js"></script>
+
 <script>
 	
 	function setLanguageBeforeSend() {
@@ -35,14 +38,14 @@ Datos Personales
 
 		setLanguageBeforeSend();
 
-		var formId = "##updateUserData";
+		var updateUserFormId = "##updateUserData";
 
 		if( $('##file').val().length == 0) { //Sin archivo
 
 			$.ajax({
 				  type: "POST",
 				  url: requestUrl,
-				  data: $(formId).serialize(),
+				  data: $(updateUserFormId).serialize(),
 				  success: function(data, status) {
 
 				  	if(status == "success"){
@@ -58,7 +61,7 @@ Datos Personales
 
 		} else {
 	
-			$(formId).fileupload('send', {fileInput: $('##file'), url: requestUrl})
+			$(updateUserFormId).fileupload('send', {fileInput: $('##file'), url: requestUrl})
 				.success(function ( data, status, jqXHR ) {
 
 					if(status == "success"){
@@ -118,13 +121,32 @@ Datos Personales
 		
 		});
 
+		<cfinclude template="#APPLICATION.htmlPath#/includes/jquery_validate_bootstrap_scripts.cfm">
+
+		$("##updateUserData").validate({
+
+			submitHandler: function(form) {
+
+				postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser");
+		  
+			}
+
+		});
+
+
 	});
 
-	function submitUserModifyModal(){
+	/*function submitUserModifyModal(){
+
+		$(".selector").validate({
+		  submitHandler: function(form) {
+		    $(form).ajaxSubmit();
+		  }
+		});
 
 		postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser");
 
-	}
+	}*/
 
 </script>
 
@@ -136,7 +158,7 @@ Datos Personales
 
 	<div class="row">
 		<div class="col-sm-12">
-			<button type="button" class="btn btn-primary" id="saveUserData" onclick="submitUserModifyModal()" lang="es" style="margin-bottom:2px;">Guardar</button>
+			<button type="button" class="btn btn-primary" id="saveUserData" onclick="$('#updateUserData').submit()" lang="es" style="margin-bottom:2px;">Guardar</button>
 		</div>
 	</div>
 

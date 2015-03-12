@@ -1,10 +1,12 @@
 function postUserDataForm(requestUrl) {
 
 	$('body').modalmanager('loading');
+	$("#userSubmitButton").button('loading');
 
 	var formId = "#updateUserData";
 
 	if( $('#file').val().length == 0) { //Sin archivo
+
 
 		$.ajax({
 			  type: "POST",
@@ -28,7 +30,8 @@ function postUserDataForm(requestUrl) {
 			  		} else {
 			  			/*$("#errorMessageModal").modal();	
 			  			$("#modalErrorMessage").text(message);*/
-			  			showAlertErrorModal(message);		  			
+			  			showAlertErrorModal(message);	
+			  			$("#userSubmitButton").button("reset");	  			
 			  		}
 			  			
 			  	}else
@@ -59,7 +62,8 @@ function postUserDataForm(requestUrl) {
 			  		} else {
 						/*$("#errorMessageModal").modal();	
 			  			$("#modalErrorMessage").text(message);*/
-			  			showAlertErrorModal(message);					  			
+			  			showAlertErrorModal(message);
+			  			$("#userSubmitButton").button("reset");					  			
 			  		}			  		
 
 			  	}else

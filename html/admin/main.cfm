@@ -72,6 +72,9 @@
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/jquery.fileupload.js"></script>
 <script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
 
+<script src="#APPLICATION.path#/jquery/jquery-mask/jquery.mask.min.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery-validate/jquery.validate.min.js"></script>
+
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8"></script>--->
@@ -397,6 +400,9 @@
 			hideAlertMessage();
 
 		});
+
+
+		<cfinclude template="#APPLICATION.htmlPath#/includes/jquery_validate_bootstrap_scripts.cfm">
 				
 	});
 	

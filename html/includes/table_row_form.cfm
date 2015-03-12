@@ -28,7 +28,7 @@
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
-	<script src="#APPLICATION.path#/jquery/jquery-mask/jquery.mask.min.js"></script>
+	<!---<script src="#APPLICATION.path#/jquery/jquery-mask/jquery.mask.min.js"></script>--->
 	<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
 	<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
@@ -86,8 +86,13 @@
 
 	<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="row_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 
-		<script type="text/javascript">
-			var railo_custom_form=new LuceeForms('row_form');
+		<script>
+			var railo_custom_form;
+
+			if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+				railo_custom_form = new LuceeForms('row_form');
+			else
+				railo_custom_form = new RailoForms('row_form');
 		</script>
 
 		<div id="submitDiv1" style="margin-bottom:10px;">

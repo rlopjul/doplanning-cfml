@@ -396,7 +396,7 @@
 		<cfargument name="openRowOnSelect" type="boolean" required="true">
 		<cfargument name="app_version" type="string" required="true">
 		
-		<cfset var method = "outputRowFormInputs">
+		<cfset var method = "outputRowList">
 		
 		<cftry>
 					

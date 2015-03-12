@@ -51,14 +51,27 @@
 			
 			});
 
+
+			$("##updateUserData").validate({
+
+				submitHandler: function(form) {
+
+					postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser");
+			  
+				}
+
+			});
+
+
 		});
 
-
+		
+		<!---
 		function submitUserModifyModal(){
 
 			postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser");
 
-		}
+		}--->
 
 	</script>
 	</cfoutput>
@@ -79,7 +92,7 @@
 
 	<div class="modal-footer">
 	    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-	    <button class="btn btn-primary" onclick="submitUserModifyModal()">Guardar cambios</button>
+	    <button class="btn btn-primary" id="userSubmitButton" data-loading-text="Guardando..." onclick="$('#updateUserData').submit()">Guardar cambios</button>
 	</div>
 
 	<!---<cfinclude template="#APPLICATION.htmlPath#/admin/includes/error_modal.cfm"/>--->

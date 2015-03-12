@@ -46,13 +46,24 @@ page_types
 		        .append('<br/>')
 		        .append($('<span class="text-danger"/>').text(file.error));
 		    }
-		});*/
+		});*/		
 
+	 	$('##telephone').mask('000000000');
+	 	$('##mobile_phone').mask('000000000');
+
+	 	$('##telephone_ccode').mask('0000');
+	 	$('##mobile_phone_ccode').mask('0000');
+
+	 	<cfif APPLICATION.showDniTitle IS true>
+	 	$("##dni").mask('00000000A');
+	 	</cfif>
 	});
 	
 </script>
 
-<cfform id="updateUserData" method="post" enctype="multipart/form-data" class="form-horizontal" onsubmit="return postUserDataForm()">
+<!--- Importante: este formulario no se envía como formulario HTML, se obtienen sus valores y se envian mediante JavaScript --->
+
+<form id="updateUserData" method="post" enctype="multipart/form-data" class="form-horizontal">
 	<input type="hidden" name="user_id" value="#objectUser.user_id#" />
 
 	<cfif page_type IS 1>
@@ -96,7 +107,7 @@ page_types
 
 					<label class="control-label" for="file" lang="es">Imagen del usuario:</label>
 
-					<noscript><b>Debe habilitar JavaScript para la subida de archivos</b></noscript>
+					<noscript><b>Debe habilitar JavaScript para la subida de archivos y poder guardar cambios de este formulario</b></noscript>
 					<input type="file" name="files[]" id="file" multiple accept="image/*" class="form-control">
 				
 				</div>
@@ -124,12 +135,13 @@ page_types
 			<div class="row">
 				<div class="col-sm-12 col-md-12">
 		
-				<label for="email" class="control-label" lang="es">Email:</label>
-					<cfif APPLICATION.userEmailRequired IS true>
+					<label for="email" class="control-label" lang="es">Email:</label>
+					<!---<cfif APPLICATION.userEmailRequired IS true>
 						<cfinput type="text" name="email" id="email" value="#objectUser.email#" required="true" validate="email" message="Dirección de email válida requerida" class="form-control"/>
-					<cfelse>
-						<input type="email" name="email" id="email" value="#objectUser.email#" class="form-control" autocomplete="off"/>
-					</cfif>
+					<cfelse>--->
+						<input type="email" name="email" id="email" value="#objectUser.email#" class="form-control" autocomplete="off" title="Introduzca una dirección de email válida" <cfif APPLICATION.userEmailRequired IS true>required="true"</cfif>/>
+					<!---<label id="email-error" class="label label-danger" for="email" lang="es">Introduzca una dirección de email correcta.</label>--->
+					<!---</cfif>--->
 				</div>
 			</div>		
 
@@ -268,7 +280,7 @@ page_types
 					<label for="mobile_phone" class="control-label" lang="es">Teléfono móvil:</label>
 
 					<div class="input-group">
-						<input type="text" name="mobile_phone_ccode" value="#objectUser.mobile_phone_ccode#" class="form-control" style="width:42px;"/>
+						<input type="text" name="mobile_phone_ccode" id="mobile_phone_ccode" value="#objectUser.mobile_phone_ccode#" class="form-control" style="width:42px;"/>
 						<input type="text" name="mobile_phone" id="mobile_phone" value="#objectUser.mobile_phone#" class="form-control" style="width:150px;"/>
 					</div>
 
@@ -281,7 +293,7 @@ page_types
 					<label for="telephone" class="control-label" lang="es">Teléfono:</label>
 
 					<div class="input-group">
-						<input type="text" name="telephone_ccode" value="#objectUser.telephone_ccode#" class="form-control" style="width:42px;"/>
+						<input type="text" name="telephone_ccode" id="telephone_ccode" value="#objectUser.telephone_ccode#" class="form-control" style="width:42px;"/>
 						<input type="text" name="telephone" id="telephone" value="#objectUser.telephone#" class="form-control" style="width:150px;"/>
 					</div>
 
@@ -292,7 +304,7 @@ page_types
 				<div class="col-sm-12">
 
 					<label for="linkedin_url" class="control-label" lang="es">URL Perfil LinkedIn:</label>
-					<input type="text" name="linkedin_url" id="linkedin_url" value="#objectUser.linkedin_url#" class="form-control" />
+					<input type="url" name="linkedin_url" id="linkedin_url" value="#objectUser.linkedin_url#" class="form-control" title="Introduzca una URL válida" />
 
 				</div>
 			</div>
@@ -301,7 +313,7 @@ page_types
 				<div class="col-sm-12">
 
 					<label for="twitter_url" class="control-label" lang="es">URL Perfil Twitter:</label>
-					<input type="text" name="twitter_url" id="twitter_url" value="#objectUser.twitter_url#" class="form-control" />
+					<input type="url" name="twitter_url" id="twitter_url" value="#objectUser.twitter_url#" class="form-control" title="Introduzca una URL válida" />
 
 				</div>
 			</div>		
@@ -352,5 +364,5 @@ page_types
 		<input type="submit" class="btn btn-primary" name="modify" value="Guardar" lang="es" />
 	</div> --->
 	
-</cfform>
+</form>
 </cfoutput>

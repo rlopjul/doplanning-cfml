@@ -98,7 +98,7 @@
 				    #spaces#<input type="#arguments.field_input_type#" name="#arguments.field_name#[]" value="#areas.id#" <cfif area_selected>checked</cfif> />&nbsp;#areas.name#
 				  </label>
 				</div>
-				<div clas="clearfix"></div>
+				<div class="clearfix"></div>
 
 				<cfif arguments.recursive IS true>
 					<cfinvoke component="AreaHtml" method="outputSubAreasInput">

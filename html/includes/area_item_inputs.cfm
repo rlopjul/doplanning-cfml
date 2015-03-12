@@ -266,7 +266,12 @@
 
 
 <script>
-	var railo_custom_form=new LuceeForms('item_form');
+	var railo_custom_form;
+
+	if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+		railo_custom_form = new LuceeForms('item_form');
+	else
+		railo_custom_form = new RailoForms('item_form');
 </script>
 <script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 

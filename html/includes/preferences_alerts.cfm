@@ -406,36 +406,39 @@ Preferencias de notificaciones
 			</label>--->
 		</cfif>
 
+		<cfif SESSION.client_abb NEQ "hcs">
 
-		<div class="form_separator"></div>
+			<div class="form_separator"></div>
 
-		<div class="row">
-			<div class="col-sm-1" style="padding-right:0px;text-align:center;">
-				<cfif APPLICATION.title EQ "DoPlanning">
-					<img src="#APPLICATION.htmlPath#/assets/icons_dp/organization.png" alt="DoPlanning" />
-				</cfif>
-			</div>
-			<div class="col-sm-11">
+			<div class="row">
+				<div class="col-sm-1" style="padding-right:0px;text-align:center;">
+					<cfif APPLICATION.title EQ "DoPlanning">
+						<img src="#APPLICATION.htmlPath#/assets/icons_dp/organization.png" alt="DoPlanning" />
+					</cfif>
+				</div>
+				<div class="col-sm-11">
 
-				<div class="row">
+					<div class="row">
 
-			      <div class="col-sm-6">
-			    	<label class="checkbox">
-						<input type="checkbox" name="notify_app_features" value="true" <cfif preferences.notify_app_features IS true>checked="checked"</cfif> />
-						<span lang="es">Nuevas funcionalidades de #APPLICATION.title#</span>
-					</label>
-				  </div>
+				      <div class="col-sm-6">
+				    	<label class="checkbox">
+							<input type="checkbox" name="notify_app_features" value="true" <cfif preferences.notify_app_features IS true>checked="checked"</cfif> />
+							<span lang="es">Nuevas funcionalidades de #APPLICATION.title#</span>
+						</label>
+					  </div>
 
-				  <div class="col-sm-6">
-				  	<label class="checkbox">
-						<input type="checkbox" name="notify_app_news" value="true" <cfif preferences.notify_app_news IS true>checked="checked"</cfif> />
-						<span lang="es">Noticias de #APPLICATION.title#</span>
-					</label>
-				  </div>
+					  <div class="col-sm-6">
+					  	<label class="checkbox">
+							<input type="checkbox" name="notify_app_news" value="true" <cfif preferences.notify_app_news IS true>checked="checked"</cfif> />
+							<span lang="es">Noticias de #APPLICATION.title#</span>
+						</label>
+					  </div>
 
+					</div>
 				</div>
 			</div>
-		</div>
+
+		</cfif>
 
 			<!---<table  class="table table-bordered">
 

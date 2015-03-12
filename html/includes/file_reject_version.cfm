@@ -79,7 +79,12 @@ page_type
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
 	
 	<script>
-		var railo_custom_form=new LuceeForms('file_form');
+		var railo_custom_form;
+
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+			railo_custom_form = new LuceeForms('file_form');
+		else
+			railo_custom_form = new RailoForms('file_form');
 	</script>
 	
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />

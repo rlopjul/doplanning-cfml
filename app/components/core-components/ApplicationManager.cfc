@@ -367,7 +367,8 @@
 					<cfinvokeargument name="moduleLdapUsers" value="true">
 					<cfinvokeargument name="moduleWeb" value="true">
 					<cfinvokeargument name="moduleWebRTC" value="true">
-					<cfinvokeargument name="showDniTitle" value="false">
+					<!---<cfinvokeargument name="showDniTitle" value="true">--->
+					<cfinvokeargument name="showDniTitle" value="true">
 					<cfinvokeargument name="modulePubMedComments" value="true">
 					<cfinvokeargument name="moduleListsWithPermissions" value="true">
 					<cfinvokeargument name="changeElementsArea" value="true">

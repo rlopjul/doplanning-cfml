@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2015
 
 	Date of file creation: 16-05-2012
 	File created by: alucena
@@ -28,6 +28,7 @@
 		<cfargument name="status" type="string" required="false" default="ok"><!--- ok --->
 		<cfargument name="ignore_status" type="boolean" required="false" default="false">
 		<cfargument name="published" type="boolean" required="false" default="true">
+		<cfargument name="with_owner_area" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -39,7 +40,7 @@
 			<cfset fileTypeTable = "files">
 
 			<cfquery name="selectFileQuery" datasource="#client_dsn#">		
-				SELECT files.id, files.id AS file_id, physical_name, user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user
+				SELECT files.id, files.id AS file_id, physical_name, files.user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user
 					, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				<cfif isDefined("arguments.area_id")>
 					, areas_files.association_date
@@ -49,6 +50,9 @@
 						, areas_files.publication_date
 					</cfif>
 					, areas_files.publication_validated
+				</cfif>
+				<cfif arguments.with_owner_area IS true><!--- Only for fileTypes 2 OR 3 --->
+					, areas.name AS area_name
 				</cfif>
 				<cfif arguments.with_lock IS true>
 				, locks.user_id AS lock_user_id, locks.lock_user_full_name
@@ -89,7 +93,6 @@
 				ON files.reviser_user = users_reviser.id
 				LEFT JOIN #client_abb#_users AS users_approver
 				ON files.approver_user = users_approver.id
-
 				<cfif arguments.with_lock IS true>
 				LEFT JOIN (
 					SELECT files_locks.file_id, files_locks.lock_date, files_locks.lock, files_locks.user_id,
@@ -100,6 +103,12 @@
 					LIMIT 1
 				) AS locks ON locks.file_id = files.id
 				</cfif>
+
+				<cfif arguments.with_owner_area IS true><!--- Only for fileTypes 2 OR 3 --->
+					LEFT JOIN #client_abb#_areas AS areas
+					ON files.area_id = areas.id
+				</cfif>
+
 				<cfif isDefined("arguments.area_id")>
 					INNER JOIN #client_abb#_areas_files AS areas_files 
 					ON files.id = areas_files.file_id
@@ -111,6 +120,7 @@
 						</cfif>
 					</cfif>
 				</cfif>
+
 				<cfif APPLICATION.publicationScope IS true>
 					LEFT JOIN #client_abb#_scopes AS scopes ON files.publication_scope_id = scopes.scope_id
 				</cfif>;

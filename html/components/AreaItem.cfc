@@ -1898,7 +1898,7 @@
 					<div class="div_message_page_label"><span lang="es">URL en #APPLICATION.title#:</span></div>
 					<input type="text" value="#areaItemUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
-					<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->
+					<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
 
 						<cfif (area_type EQ "web" OR area_type EQ "intranet") AND (itemTypeId IS 4 OR itemTypeId IS 5) AND isDefined("arguments.webPath")>
 
@@ -1914,7 +1914,7 @@
 							<input type="text" value="#itemWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 						</cfif>
 						
-					</cfif>
+					<!---</cfif>--->
 				</div>
 			</cfoutput>			
 

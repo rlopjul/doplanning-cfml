@@ -34,7 +34,7 @@
 	<div class="div_message_page_label"><span lang="es">URL del área en #APPLICATION.title#:</span></div>
 	<input type="text" value="#areaUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 
-	<cfif SESSION.client_abb EQ "hcs"><!---DoPlanning HCS--->
+	<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
 		
 		<cfif area_type EQ "web" OR area_type EQ "intranet">
 			<!---areaWebUrl--->
@@ -48,7 +48,7 @@
 			<input type="text" value="#areaWebUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
 		</cfif>
 
-	</cfif>
+	<!---</cfif>--->
 </div>
 
 <script>

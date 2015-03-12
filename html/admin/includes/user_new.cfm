@@ -14,13 +14,30 @@
 	<cfoutput>
 	<script>
 
+		$(function () {
+
+
+			$("##updateUserData").validate({
+
+				submitHandler: function(form) {
+
+					postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=createUser");
+			  
+				}
+
+			});
+
+
+		});
+
+		<!---
 		function submitUserNewModal(){
 
 			$("##createUserSubmitButton").button('loading');
 
 			postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=createUser");
 
-		}
+		}--->
 
 	</script>
 	</cfoutput>
@@ -47,7 +64,7 @@
 
 	<div class="modal-footer">
 	    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-	    <button class="btn btn-primary" id="createUserSubmitButton" data-loading-text="Guardando..." onclick="submitUserNewModal()">Guardar</button>
+	    <button class="btn btn-primary" id="userSubmitButton" data-loading-text="Guardando..." onclick="$('#updateUserData').submit()">Guardar</button>
 	</div>
 
 

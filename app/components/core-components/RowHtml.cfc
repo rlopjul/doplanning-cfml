@@ -404,7 +404,7 @@
 									    <input type="#fields.field_input_type#" name="#field_name#[]" value="#list_value#" <cfif value_selected>checked</cfif> />&nbsp;#list_value#
 									  </label>
 									</div>
-									<div clas="clearfix"></div>
+									<div class="clearfix"></div>
 			
 								</cfloop>
 

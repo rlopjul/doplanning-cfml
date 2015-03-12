@@ -193,8 +193,13 @@
 <div class="container div_search_bar">
 <cfform method="get" name="search_form" action="#CGI.SCRIPT_NAME#" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
-	<script type="text/javascript">
-		var railo_custom_form=new LuceeForms('search_form');
+	<script>
+		var railo_custom_form;
+
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+			railo_custom_form = new LuceeForms('search_form');
+		else
+			railo_custom_form = new RailoForms('search_form');
 	</script>
 
 	<cfif isDefined("URL.field") AND isDefined("URL.itemTypeId")><!---SELECT ITEM PAGE--->

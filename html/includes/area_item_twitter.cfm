@@ -80,8 +80,13 @@ function onSubmitForm()
 <cfform action="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=postItemToTwitter" method="post" enctype="multipart/form-data" name="item_form" onsubmit="return onSubmitForm();">
 	
 	
-	<script type="text/javascript">
-		var railo_custom_form=new LuceeForms('item_form');
+	<script>
+		var railo_custom_form;
+
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+			railo_custom_form = new LuceeForms('item_form');
+		else
+			railo_custom_form = new RailoForms('item_form');
 	</script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 

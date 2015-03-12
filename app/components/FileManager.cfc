@@ -1786,6 +1786,7 @@
 		<cfargument name="itemTypeId" type="numeric" required="no">
 		<!---<cfargument name="format_content" type="string" required="no" default="default">--->
         <cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
+        <cfargument name="with_owner_area" type="boolean" required="false">
 		
 		<cfset var method = "getFile">
 		
@@ -1815,7 +1816,8 @@
 					<cfinvokeargument name="with_lock" value="true">
 				</cfif>
 				<cfinvokeargument name="parse_dates" value="true">
-				<cfinvokeargument name="published" value="false">		
+				<cfinvokeargument name="published" value="false">
+				<cfinvokeargument name="with_owner_area" value="#arguments.with_owner_area#">		
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
