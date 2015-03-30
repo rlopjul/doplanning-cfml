@@ -28,7 +28,7 @@
 				</div>
 			</div>
 
-			<div>Ten en cuenta que <b>se eliminarán definitivamente todos los elementos del área</b>: mensajes, tareas, eventos...</div>
+			<div>Ten en cuenta que <b>se eliminarán DEFINITIVAMENTE todos los elementos del área</b>: mensajes, archivos, tareas, eventos...</div>
 
 			<form id="deleteAreaForm" method="post">
 				<input type="hidden" name="area_id" value="#objectArea.id#"/>
@@ -38,7 +38,7 @@
 
 		<div class="modal-footer">
 		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-danger" id="areaModifySubmit" onclick="submitAssociateModal(event)">Eliminar área</button>
+		    <button class="btn btn-danger" id="areaDeleteSubmit" data-loading-text="Eliminando..." onclick="submitAssociateModal(event)">Eliminar área</button>
 		</div>
 
 		<script>
@@ -46,6 +46,8 @@
 
 			    if(e.preventDefault)
 					e.preventDefault();
+
+				$("##areaDeleteSubmit").button('loading');
 				
 				postModalFormTree("##deleteAreaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=deleteArea");
 

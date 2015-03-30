@@ -182,7 +182,20 @@
 									<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Impedir la publicación en web"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a></li>					
 								</cfif>
 
-								<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_path_delete#" onclick="return confirmAction('eliminar');" title="Eliminar"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a></li>
+								<!--- getClient --->
+								<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+									<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+								</cfinvoke>
+
+								<cfif clientQuery.bin_enabled IS true><!--- BIN Enabled --->
+
+									<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_path_delete#" onclick="return confirmReversibleAction('eliminar');" title="Eliminar"><i class="icon-trash"></i> <span lang="es">Eliminar</span></a></li>
+
+								<cfelse>
+
+									<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_path_delete#" onclick="return confirmAction('eliminar');" title="Eliminar"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a></li>
+
+								</cfif>
 								
 
 							</cfif>

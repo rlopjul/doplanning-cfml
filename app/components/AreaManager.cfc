@@ -3133,12 +3133,6 @@
 			
 			<!--- -------------------DELETE AREAS_FILES------------------------ --->
 
-			<!---<cfquery name="deleteAreasFiles" datasource="#client_dsn#">
-				DELETE 
-				FROM #client_abb#_areas_files
-				WHERE area_id = #arguments.area_id#;
-			</cfquery>--->
-
 			<cfinvoke component="FileManager" method="deleteAreaFiles" returnvariable="deleteAreaFilesResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>

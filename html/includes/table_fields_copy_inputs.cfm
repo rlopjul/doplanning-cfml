@@ -41,7 +41,7 @@
 
 		<cfelse>				
 
-			<div class="div_text_result"><span lang="es">Esta tipología no tiene campos para copiar.</span></div>
+			<div class="div_text_result"><span lang="es">No tiene campos para copiar.</span></div>
 
 		</cfif>
 		</cfoutput>

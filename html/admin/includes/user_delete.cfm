@@ -26,7 +26,9 @@
 				</div>
 			</div>
 
-			<div class="alert alert-danger"><i class="icon-warning-sign"></i> Ten en cuenta que <b>se eliminarán definitivamente todos los contenidos del usuario</b>: mensajes, archivos, tareas, eventos, ...</div>
+			<div class="alert alert-danger"><i class="icon-warning-sign"></i> Ten en cuenta que <b>se eliminarán definitivamente todos los contenidos del usuario</b>: mensajes, archivos, tareas, eventos, ...<br/>
+			En las áreas en las que este usuario esté asignado como responsable, el administrador general de la organización pasará a ser el responsable.
+			</div>
 
 			<form id="deleteUserForm" method="post">
 				<input type="hidden" name="user_id" value="#user_id#"/>

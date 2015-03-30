@@ -50,6 +50,7 @@
 		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
 		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
 		<cfargument name="cacheTree" type="boolean" required="false" default="true">
+		<!---<cfargument name="moduleBin" type="boolean" required="false" default="false">--->
 
 		<cfargument name="homeTab" type="boolean" required="false" default="false">
 		<cfargument name="moduleDPDocuments" type="boolean" required="false" default="false">
@@ -99,6 +100,7 @@
 			<cfset APPLICATION.moduleAntiVirus = arguments.moduleAntiVirus>
 			<cfset APPLICATION.cacheTree = arguments.cacheTree>
 			<cfset APPLICATION.homeTab = arguments.homeTab>
+			<!---<cfset APPLICATION.moduleBin = arguments.moduleBin>--->
 
 			<cfset APPLICATION.moduleDPDocuments = arguments.moduleDPDocuments>
 
@@ -198,6 +200,12 @@
 					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.cfm"
 					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(1,5,0)#"
 					interval="daily" requestTimeOut="50" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.txt')#">
+
+				<!---deleteBinItems schedule--->
+				<cfschedule action="update"	task="deleteBinItems" operation="HTTPRequest"
+					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/deleteBinItems.cfm"
+					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(1,30,0)#"
+					interval="daily" requestTimeOut="50" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/deleteBinItems.txt')#">
 
 
 			</cfif>
@@ -307,7 +315,7 @@
 					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
 					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
 					
-					<cfinvokeargument name="serverIp" value="176.34.253.2">
+					<cfinvokeargument name="serverIp" value="54.246.102.99">
 
 					<cfinvokeargument name="mainUrl" value="http://curso.doplanning.net">
 					<cfinvokeargument name="signOutUrl" value="http://curso.doplanning.net">
@@ -325,6 +333,7 @@
 					<cfinvokeargument name="publicationValidation" value="true">
 					<cfinvokeargument name="userEmailRequired" value="false">
 					<cfinvokeargument name="moduleAntiVirus" value="true">
+					<!---<cfinvokeargument name="moduleBin" value="false">--->
 
 					<cfinvokeargument name="homeTab" value="true">
 					<cfinvokeargument name="moduleDPDocuments" value="true">

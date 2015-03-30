@@ -420,6 +420,9 @@
 							<cfif isNumeric(fields.item_type_id)>
 								<cfinvokeargument name="item_type_id" value="#fields.item_type_id#">
 							</cfif>
+							<cfif len(fields.list_values) GT 0>
+								<cfinvokeargument name="list_values" value="#fields.list_values#">
+							</cfif>
 						</cfinvoke>
 
 					</cfif>
@@ -663,6 +666,15 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="deleteTableFields">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<!---
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
@@ -691,6 +703,7 @@
 				</cfif>
 
 			</cfloop>
+			--->
 			
 	</cffunction>
 

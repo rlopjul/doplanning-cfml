@@ -31,6 +31,7 @@
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="published" type="boolean" required="false" default="true">
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
+		<cfargument name="status" type="string" required="false">
 		
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
@@ -40,7 +41,7 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 			
 			<cfquery name="selectItemQuery" datasource="#client_dsn#">
-				SELECT items.id, items.id AS item_id, items.parent_id, items.parent_kind, items.user_in_charge,  items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link,
+				SELECT items.id, items.id AS item_id, items.parent_id, items.parent_kind, items.user_in_charge,  items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link, items.status,
 				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				<cfif arguments.parse_dates IS true>
 					, DATE_FORMAT(CONVERT_TZ(items.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date 
@@ -156,6 +157,9 @@
 						AND ( items.publication_validated IS NULL OR items.publication_validated = true )
 						</cfif>
 					</cfif>
+				</cfif>
+				<cfif isDefined("arguments.status")>
+					AND items.status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				</cfif>; 
 			</cfquery>
 			<!---AND status='ok'???? Esto no se pone por si se necesitan obtener mensajes desde la aplicación con el status pending--->
@@ -651,16 +655,26 @@
 		<cfargument name="withLists" type="boolean" required="false" default="false">
 		<cfargument name="withForms" type="boolean" required="false" default="false">
 		<cfargument name="withDPDocuments" type="boolean" required="false" default="false">
+		<cfargument name="withArea" type="boolean" required="false" default="false">
 
 		<cfargument name="published" type="boolean" required="false" default="true">
+
+		<cfargument name="delete_user_id" type="numeric" required="false">
+		<cfargument name="status" type="string" required="false" default="ok"><!--- ok / deleted --->
 		
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">		
 		
 		<cfset var method = "listAllAreaItems">
 			
-			<cfif NOT isDefined("arguments.area_id") AND NOT isDefined("arguments.areas_ids")>
-				<cfthrow message="Areas requerida">
+			<cfif NOT isDefined("arguments.area_id") AND NOT isDefined("arguments.areas_ids") AND NOT isDefined("arguments.delete_user_id")>
+
+				<cfif NOT isDefined("SESSION.client_administrator") OR NOT isDefined("SESSION.user_id") OR SESSION.client_administrator NEQ SESSION.user_id>
+					
+					<cfthrow message="Área o usuario requerido">
+
+				</cfif>
+
 			</cfif>
 
 			<cfset var commonColums = "id, title, creation_date, IFNULL(last_update_date,creation_date) AS last_update_date, description, user_in_charge, last_update_user_id, area_id, NULL AS file_type_id, NULL AS locked">
@@ -730,13 +744,21 @@
 							, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
 						</cfif>
 					</cfif>
+					<cfif arguments.withArea IS true>
+					, areas.name AS area_name
+					</cfif>
+					<cfif arguments.status EQ "deleted">
+					, items_deleted.delete_date, items_deleted.delete_area_id
+					</cfif>
 				FROM (
 				<cfif NOT isDefined("arguments.area_type") OR len(arguments.area_type) IS 0><!--- IS NOT WEB --->
+
+
 					<!--- Messages --->
 					( SELECT #commonColumsWithoutLastUpdate#, #attachedFileColum#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 1 AS itemTypeId
 					FROM #client_abb#_messages AS messages 
-					WHERE status='ok'
-					<cfif NOT isDefined("arguments.areas_ids")>
+					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+					<cfif isDefined("arguments.area_id")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
@@ -744,8 +766,8 @@
 					UNION ALL <!--- Consultations --->
 					( SELECT #commonColumsWithoutLastUpdate#, #attachedFileColum#, #webColumsNull#, #consultationColums#, #iframeColumsNull# #displayColumsNull# 7 AS itemTypeId
 					FROM #client_abb#_consultations AS consultations
-					WHERE status='ok'
-					<cfif NOT isDefined("arguments.areas_ids")>
+					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+					<cfif isDefined("arguments.area_id")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
@@ -754,8 +776,8 @@
 					UNION ALL <!--- Tasks --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColumsNull#, #taskColums#, #iframeColumsNull# #displayColumsNull# 6 AS itemTypeId
 					FROM #client_abb#_tasks AS tasks
-					WHERE status='ok'
-					<cfif NOT isDefined("arguments.areas_ids")>
+					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+					<cfif isDefined("arguments.area_id")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
@@ -764,13 +786,12 @@
 					UNION ALL <!--- DoPlanning Documents --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 20 AS itemTypeId
 					FROM #client_abb#_dp_documents AS dp_documents
-					WHERE status='ok'
-					<cfif NOT isDefined("arguments.areas_ids")>
+					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+					<cfif isDefined("arguments.area_id")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
 					</cfif>
-
 
 
 				</cfif>
@@ -781,8 +802,8 @@
 					<!--- Entries --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColums# #displayColums# 2 AS itemTypeId
 					FROM #client_abb#_entries AS entries
-					WHERE status='ok'
-					<cfif NOT isDefined("arguments.areas_ids")>
+					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+					<cfif isDefined("arguments.area_id")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
@@ -790,8 +811,8 @@
 					UNION ALL <!--- Links --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 3 AS itemTypeId
 					FROM #client_abb#_links AS links
-					WHERE status='ok' 
-					<cfif NOT isDefined("arguments.areas_ids")>
+					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar"> 
+					<cfif isDefined("arguments.area_id")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
@@ -799,16 +820,16 @@
 					UNION ALL <!--- News --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColums# #displayColumsNull# 4 AS itemTypeId
 					FROM #client_abb#_news AS news
-					WHERE status='ok'
-					<cfif NOT isDefined("arguments.areas_ids")>
+					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+					<cfif isDefined("arguments.area_id")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
 					UNION ALL <!--- Images --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 9 AS itemTypeId
 					FROM #client_abb#_images AS images
-					WHERE status='ok'
-					<cfif NOT isDefined("arguments.areas_ids")>
+					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+					<cfif isDefined("arguments.area_id")>
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 					</cfif>
 					)
@@ -816,8 +837,8 @@
 				UNION ALL <!--- Events --->
 				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #eventColums#, #iframeColums# #displayColumsNull# 5 AS itemTypeId
 				FROM #client_abb#_events AS events
-				WHERE status='ok'
-				<cfif NOT isDefined("arguments.areas_ids")>
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				<cfif isDefined("arguments.area_id")>
 				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 				</cfif>
 				)
@@ -826,8 +847,8 @@
 				UNION ALL
 				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #pubmedColums#, #iframeColumsNull# #displayColumsNull# 8 AS itemTypeId
 				FROM #client_abb#_pubmeds AS pubmeds
-				WHERE status='ok'
-				<cfif NOT isDefined("arguments.areas_ids")>
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				<cfif isDefined("arguments.area_id")>
 				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
 				</cfif>
 				)
@@ -837,16 +858,16 @@
 				UNION ALL
 				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 11 AS itemTypeId
 				FROM #client_abb#_lists AS lists
-				WHERE status='ok' 
-				<cfif NOT isDefined("arguments.areas_ids")>
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar"> 
+				<cfif isDefined("arguments.area_id")>
 				AND lists.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>
 				)
 				UNION ALL <!--- List Views --->
 				( SELECT #getColumsWithTable(commonColums, "lists_views")#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 14 AS itemTypeId
 				FROM #client_abb#_lists_views AS lists_views
+				INNER JOIN `#client_abb#_lists` AS lists_v ON lists_views.table_id = lists_v.id
 				<cfif arguments.published IS true>
-					INNER JOIN `#client_abb#_lists` AS lists_v ON lists_views.table_id = lists_v.id
 					AND ( lists_views.publication_date IS NULL OR lists_views.publication_date <= NOW() )
 					AND ( lists_v.publication_date IS NULL OR lists_v.publication_date <= NOW() )
 					<cfif APPLICATION.publicationValidation IS true>
@@ -854,8 +875,9 @@
 					AND ( lists_v.publication_validated IS NULL OR lists_v.publication_validated = true )
 					</cfif>
 				</cfif>
-				<cfif NOT isDefined("arguments.areas_ids")>
-				WHERE lists_views.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				<cfif isDefined("arguments.area_id")>
+				AND lists_views.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>)
 				</cfif>
 
@@ -864,16 +886,16 @@
 				UNION ALL
 				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 12 AS itemTypeId
 				FROM #client_abb#_forms AS forms
-				WHERE status='ok'
-				<cfif NOT isDefined("arguments.areas_ids")>
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				<cfif isDefined("arguments.area_id")>
 				AND forms.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>
 				)
 				UNION ALL <!--- Form Views --->
 				( SELECT #getColumsWithTable(commonColums, "forms_views")#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 15 AS itemTypeId
 				FROM #client_abb#_forms_views AS forms_views
+				INNER JOIN `#client_abb#_forms` AS forms_v ON forms_views.table_id = forms_v.id
 				<cfif arguments.published IS true>
-					INNER JOIN `#client_abb#_forms` AS forms_v ON forms_views.table_id = forms_v.id
 					AND ( forms_views.publication_date IS NULL OR forms_views.publication_date <= NOW() )
 					AND ( forms_v.publication_date IS NULL OR forms_v.publication_date <= NOW() )
 					<cfif APPLICATION.publicationValidation IS true>
@@ -881,8 +903,9 @@
 					AND ( forms_v.publication_validated IS NULL OR forms_v.publication_validated = true )
 					</cfif>
 				</cfif>
-				<cfif NOT isDefined("arguments.areas_ids")>
-				WHERE forms_views.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				<cfif isDefined("arguments.area_id")>
+				AND forms_views.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>)
 				</cfif>
 
@@ -892,13 +915,13 @@
 				FROM #client_abb#_files AS files
 
 				INNER JOIN #client_abb#_areas_files AS area_files ON files.id = area_files.file_id 
-					<cfif NOT isDefined("arguments.areas_ids")>
+					<cfif isDefined("arguments.area_id")>
 					AND area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
-					AND files.status='ok')
+					AND files.status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">)
 				) AS items
 
-				<cfif NOT isDefined("arguments.area_id")>
+				<cfif isDefined("arguments.areas_ids")>
 					INNER JOIN #client_abb#_areas AS areas
 					ON items.area_id = areas.id AND items.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_integer" list="true">)					
 				</cfif>
@@ -906,10 +929,26 @@
 				INNER JOIN #client_abb#_users AS users
 				ON items.user_in_charge = users.id
 
-				<!---<cfif arguments.with_area IS true>
+				<cfif arguments.withArea IS true><!--- AREAS --->
+
 					INNER JOIN #client_abb#_areas AS areas
 					ON items.area_id = areas.id
-				</cfif>--->
+
+				</cfif>
+
+				<cfif arguments.status EQ "deleted">
+					
+					INNER JOIN #client_abb#_items_deleted AS items_deleted
+					ON items.id = items_deleted.item_id
+					AND items.itemTypeId = items_deleted.item_type_id
+
+					<cfif isDefined("arguments.delete_user_id")>
+						
+						AND items_deleted.delete_user_id = <cfqueryparam value="#arguments.delete_user_id#" cfsqltype="cf_sql_integer">
+
+					</cfif> 
+
+				</cfif>
 
 				<cfif isDefined("arguments.area_type") AND len(arguments.area_type) GT 0><!---WEB--->
 					LEFT JOIN #client_abb#_items_position AS items_position

@@ -8,11 +8,6 @@ var areaWithLink = false;
 var currentTab = "#tab1";
 var disableNextTabChange = false;
 
-function windowHeight() {
-	var de = document.documentElement;
-	return de.clientHeight;
-}	
-
 function getURLParameterFromPath(name, path) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec( path )||[,""])[1].replace(/\+/g, '%20'))||null;
 }
@@ -83,7 +78,7 @@ function showAlertModal(msg){
 	$("#alertModal").modal( {width:650, backdrop:'static'} );
 }
 
-/*function showConfirmModal(msg, callBackFunction){
+function showConfirmModal(msg, callBackFunction){
 
 	var data = {
 	    "msg": msg,
@@ -96,7 +91,7 @@ function showAlertModal(msg){
 	$("#alertModal").modal( {width:650, backdrop:'static'} );
 
 	return false;
-}*/
+}
 
 function showAlertErrorModal(msg){
 

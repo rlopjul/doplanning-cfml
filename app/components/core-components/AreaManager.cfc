@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2014 --->
+<!--- Copyright Era7 Information Technologies 2007-2015 --->
 <cfcomponent output="false">
 	
 	<cfset component = "AreaManager">

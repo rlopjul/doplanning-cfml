@@ -193,7 +193,7 @@
 
 		<cftry>
 
-			<cfinclude template="includes/functionStartOnlySession.cfm">
+			<!---<cfinclude template="includes/functionStartOnlySession.cfm">--->
 			
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="selectClientQuery">
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
@@ -231,6 +231,8 @@
 		<cfargument name="force_notifications" type="boolean" required="false" default="false">
 		<cfargument name="tasks_reminder_notifications" type="boolean" required="false" default="false">
 		<cfargument name="tasks_reminder_days" type="numeric" required="true">
+		<cfargument name="bin_enabled" type="boolean" required="false" default="false">
+		<cfargument name="bin_days" type="numeric" required="true">
 		
 		<cfset var method = "updateClientAdminOptions">
 		
@@ -250,12 +252,15 @@
 
 			<cfif getClientQuery.recordCount GT 0>
 	
-				<cfquery name="updateClient" datasource="#APPLICATION.dsn#">
-					UPDATE `app_clients`
+				<!---<cfquery name="updateClient" datasource="#APPLICATION.dsn#">--->
+				<cfquery name="updateClient" datasource="#client_dsn#">
+					UPDATE `doplanning_app`.`app_clients`
 					SET default_language = <cfqueryparam value="#arguments.default_language#" cfsqltype="cf_sql_varchar">,
 						force_notifications = <cfqueryparam value="#arguments.force_notifications#" cfsqltype="cf_sql_bit">,
 						tasks_reminder_notifications = <cfqueryparam value="#arguments.tasks_reminder_notifications#" cfsqltype="cf_sql_bit">,
-						tasks_reminder_days = <cfqueryparam value="#arguments.tasks_reminder_days#" cfsqltype="cf_sql_integer">
+						tasks_reminder_days = <cfqueryparam value="#arguments.tasks_reminder_days#" cfsqltype="cf_sql_integer">,
+						bin_enabled = <cfqueryparam value="#arguments.bin_enabled#" cfsqltype="cf_sql_bit">,
+						bin_days = <cfqueryparam value="#arguments.bin_days#" cfsqltype="cf_sql_integer">
 					WHERE abbreviation = <cfqueryparam value="#SESSION.client_abb#" cfsqltype="cf_sql_varchar">;
 				</cfquery>
 

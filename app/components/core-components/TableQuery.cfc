@@ -212,6 +212,64 @@
 		<cfreturn getTableUsersQuery>
 				
 	</cffunction>
+
+
+	<!--- ------------------------------------ deleteTableInDatabase -----------------------------------  --->
+		
+	<cffunction name="deleteTableInDatabase" output="false" access="public" returntype="void">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfargument name="user_id" type="numeric" required="false">
+
+		<cfargument name="send_alert" type="boolean" required="false" default="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "deleteTableInDatabase">
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRowsInDatabase">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="deleteTableFields">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+			<cfif tableTypeId NEQ 3><!--- IS NOT Typology --->
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/ViewManager" method="deleteTableViews">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+					<cfinvokeargument name="send_alert" value="#arguments.send_alert#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+			</cfif>
+			
+			<cfquery name="deleteTable" datasource="#client_dsn#">
+				DROP TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
+			</cfquery>	
+
+			<cfinclude template="includes/logRecord.cfm">
+
+	</cffunction>
 	
 
 </cfcomponent>	

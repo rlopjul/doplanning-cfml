@@ -38,8 +38,10 @@
 		<cfargument name="force_notifications" type="boolean" required="false" default="false">
 		<cfargument name="tasks_reminder_notifications" type="boolean" required="false" default="false">
 		<cfargument name="tasks_reminder_days" type="numeric" required="true">
+		<cfargument name="bin_enabled" type="boolean" required="false" default="false">
+		<cfargument name="bin_days" type="numeric" required="true">
 		
-		<cfset var method = "force_notifications">
+		<cfset var method = "updateClientAdminOptions">
 
 		<cfset var response = structNew()>
 					
@@ -50,6 +52,8 @@
 				<cfinvokeargument name="force_notifications" value="#arguments.force_notifications#">
 				<cfinvokeargument name="tasks_reminder_notifications" value="#arguments.tasks_reminder_notifications#">
 				<cfinvokeargument name="tasks_reminder_days" value="#arguments.tasks_reminder_days#">
+				<cfinvokeargument name="bin_enabled" value="#arguments.bin_enabled#">
+				<cfinvokeargument name="bin_days" value="#arguments.bin_days#">
 			</cfinvoke>
 			
 			<cfif response.result IS true>

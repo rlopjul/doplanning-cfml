@@ -21,7 +21,7 @@
 
 	function confirmDeleteView() {
 	
-		var message_delete = "Si ELIMINA la vista, dejará de estar disponible en el área correspondiente. ¿Seguro que desea eliminar la vista?";
+		var message_delete = "Si ELIMINA la vista, dejará de estar disponible en el área correspondiente. ¿Seguro que desea eliminar DEFINITIVAMENTE la vista?";
 		return confirm(message_delete);
 	}
 
@@ -146,7 +146,7 @@
 		<cfif page_type IS 2>
 			<span class="divider">&nbsp;&nbsp;</span>
 
-			<a href="#APPLICATION.htmlComponentsPath#/View.cfc?method=deleteViewRemote&view_id=#view_id#&itemTypeId=#itemTypeId##url_return_path#" onclick="return confirmDeleteView();" title="Eliminar campo" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+			<a href="#APPLICATION.htmlComponentsPath#/View.cfc?method=deleteViewRemote&view_id=#view_id#&itemTypeId=#itemTypeId##url_return_path#" onclick="return confirmDeleteView();" title="Eliminar" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 		</cfif>
 	</div>
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>

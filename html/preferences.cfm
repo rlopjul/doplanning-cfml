@@ -134,7 +134,7 @@
 </cfif>
 <div style="float:right">
 	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
-		<a href="preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="logout.cfm" class="text_user_logged" title="Cerrar sesi�n" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+		<a href="preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 	</div>
 </div>
 </cfoutput>
@@ -158,9 +158,18 @@
 
 </div>--->
 
-<script type="text/javascript">
+<script>
+
 	
-	$(window).load( function() {		
+	function resizeIframes() {
+		var newHeight = windowHeight()-74;
+
+		$(".iframes").height(newHeight);
+	}
+	
+	$(window).load( function() {	
+
+		resizeIframes();	
 		
 		$('#preferencesTab a').click( function (e) {
 			if(e.preventDefault)
@@ -170,17 +179,36 @@
 		})
 		
 	} );
+
+	$(window).resize( function() {
+		resizeIframes();
+	});
 	
 </script>
+
+<!--- getClient --->
+<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+	<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+</cfinvoke>
 
 <div style="clear:both"><!-- --></div>
 
 <div class="tabbable"><!---Tab Panel--->
+
+	<div style="clear:none;float:right;padding-top:5px; padding-right:6px;"><!---width:200px; --->
+		<cfoutput>
+		<a href="main.cfm?abb=#SESSION.client_abb#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
+		</cfoutput>
+	</div>
 	
-  <ul class="nav nav-pills" id="preferencesTab" style="margin-bottom:5px;">
-	<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Datos personales</a></li>
-	<li><a href="#tab2" data-toggle="tab" lang="es">Notificaciones</a></li>
-  </ul>
+	<ul class="nav nav-pills" id="preferencesTab" style="clear:none; padding-bottom:5px;">
+		<li class="active"><a href="#tab1" data-toggle="tab" lang="es"><i class="icon-user"></i> Datos personales</a></li>
+		<li><a href="#tab2" data-toggle="tab" lang="es"><i class="icon-envelope-alt"></i> Notificaciones</a></li>
+		<cfif clientQuery.bin_enabled IS true>
+			<li><a href="#tab3" data-toggle="tab" lang="es"><i class="icon-trash"></i> Papelera</a></li>
+		</cfif>
+	</ul>
+
   
   <div class="tab-content">
   
@@ -192,25 +220,38 @@
 		<cfinclude template="#APPLICATION.htmlPath#/includes/preferences_user_data.cfm"/>
 						
 	
-	</div><!---END Tab Tree--->
+	</div><!---END Tab Datos personales--->
 	
 	
 	<div class="tab-pane" id="tab2"><!---Tab Notificaciones--->
 		<cfoutput>
-		<iframe src="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm" marginheight="0" marginwidth="0" scrolling="auto" frameborder="0" style="width:100%;height:655px;background-color:##FFFFFF;clear:none;"></iframe>
+		<iframe src="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm" marginheight="0" marginwidth="0" scrolling="auto" frameborder="0" class="iframes" style="width:100%;height:100%;background-color:##FFFFFF;clear:none;"></iframe>
 		</cfoutput>
 		
-	</div><!---END Tab Area--->
+	</div><!---END Tab Notificaciones--->
+
+
+	<cfif clientQuery.bin_enabled IS true>
+
+		<div class="tab-pane" id="tab3"><!---Tab Papelera--->
+
+			<cfoutput>
+			<iframe src="#APPLICATION.htmlPath#/iframes/bin.cfm" marginheight="0" marginwidth="0" scrolling="auto" frameborder="0" class="iframes" style="width:100%;height:100%;background-color:##FFFFFF;clear:none;"></iframe>
+			</cfoutput>
+			
+		</div><!---END Tab Notificaciones--->
+
+	</cfif>
 	
 	
   </div>
   
 </div><!---END TabPanel--->
 
-<cfset return_page = "index.cfm">
+<!---<cfset return_page = "index.cfm">
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
 	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>
+</cfinvoke>--->
 <!-- InstanceEndEditable -->
 </div>
 </body>

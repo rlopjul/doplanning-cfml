@@ -136,7 +136,7 @@ Datos Personales
 
 	});
 
-	/*function submitUserModifyModal(){
+	<!---function submitUserModifyModal(){
 
 		$(".selector").validate({
 		  submitHandler: function(form) {
@@ -146,7 +146,7 @@ Datos Personales
 
 		postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser");
 
-	}*/
+	}--->
 
 </script>
 

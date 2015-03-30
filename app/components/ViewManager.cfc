@@ -467,6 +467,20 @@
 				<cfinvokeargument name="area_id" value="#table_area_id#">
 			</cfinvoke>
 
+			<!--- deleteView --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ViewManager" method="deleteView" returnvariable="response">
+				<cfinvokeargument name="view_id" value="#arguments.view_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="with_transaction" value="#arguments.with_transaction#">
+
+				<cfinvokeargument name="viewQuery" value="#view#">
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<!---
 			<cftry>
 				
 				<cfif arguments.with_transaction IS true>
@@ -519,7 +533,7 @@
 				<cfinvokeargument name="action" value="delete">
 			</cfinvoke>
 
-			<cfset response = {result=true, view_id=#arguments.view_id#}>
+			<cfset response = {result=true, view_id=#arguments.view_id#}>--->
 
 			<cfcatch>
 
@@ -532,10 +546,9 @@
 			
 	</cffunction>
 
-
-
-	<!--- ------------------------------------ deleteTableViews -----------------------------------  --->
 		
+	<!---
+
 	<cffunction name="deleteTableViews" output="false" access="package" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -581,6 +594,8 @@
 			</cfquery>--->
 
 	</cffunction>
+
+	--->
 
 
 

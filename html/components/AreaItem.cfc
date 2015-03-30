@@ -19,6 +19,7 @@
 	<cffunction name="getItem" output="false" returntype="query" access="public">
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="status" type="string" required="false">
 
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
 
@@ -36,6 +37,10 @@
 				
 				<!---<cfinvokeargument name="return_type" value="object">--->
 				<cfinvokeargument name="return_type" value="query">
+
+				<cfif isDefined("arguments.status")>
+					<cfinvokeargument name="status" value="#arguments.status#">
+				</cfif>
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -1112,11 +1117,12 @@
 	</cffunction>
 	
 	
-	
+	<!--- deleteItem --->
 	<cffunction name="deleteItem" returntype="void" access="remote">
 		<cfargument name="item_id" type="string" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="moveToBin" type="boolean" required="false" default="true">
 		<cfargument name="return_page" type="string" required="true">
 		
 		<cfset var method = "deleteItem">
@@ -1136,6 +1142,7 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="deleteItem" returnvariable="deleteItemResponse">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
 			</cfinvoke>	
 
 			<cfif deleteItemResponse.result IS true>
@@ -1147,14 +1154,21 @@
 				</cfif>
 				<cfset msg = URLEncodedFormat(msg)>
             
-
-				<cflocation url="#arguments.return_page#&msg=#msg#&res=1" addtoken="no">	
+				<cfif findOneOf(arguments.return_page, "?") GT 0>
+					<cflocation url="#arguments.return_page#&msg=#msg#&res=1" addtoken="no">	
+				<cfelse>
+					<cflocation url="#arguments.return_page#?msg=#msg#&res=1" addtoken="no">
+				</cfif>
 
 			<cfelse>
 
 				<cfset msg = URLEncodedFormat(deleteItemResponse.message)>
 
-				<cflocation url="#arguments.return_page#&msg=#msg#&res=0" addtoken="no">	
+				<cfif findOneOf(arguments.return_page, "?") GT 0>
+					<cflocation url="#arguments.return_page#&msg=#msg#&res=0" addtoken="no">	
+				<cfelse>
+					<cflocation url="#arguments.return_page#?msg=#msg#&res=0" addtoken="no">	
+				</cfif>
 				
 			</cfif>
 
@@ -1165,8 +1179,8 @@
 		</cftry>
 		
 	</cffunction>
-	
-	
+
+
 	<!--- ----------------------- DELETE ITEM ATTACHED FILE -------------------------------- --->
 	
 	<cffunction name="deleteItemAttachedFileRemote" returntype="void" access="remote">
@@ -1638,7 +1652,6 @@
 		<cfreturn response>
 		
 	</cffunction>
-
 
 
 	<!--- lockAreaItem --->
@@ -2918,6 +2931,7 @@
 		<cfargument name="return_page" type="string" required="false">
 		<cfargument name="showLastUpdate" type="boolean" required="false" default="false">
 		<cfargument name="generatePdf" type="boolean" required="false" default="false"><!--- true = Generate PDF --->
+		<cfargument name="deletedItems" type="boolean" required="false" default="false"><!--- true = Elementos de la papelera --->
 		<!---<cfargument name="app_version" type="string" required="true">--->
 		
 		<cfset var method = "outputAllItemsFullList">
@@ -2962,6 +2976,9 @@
 										  		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 													<cfinvokeargument name="file_id" value="#itemsQuery.id#">
 													<cfinvokeargument name="area_id" value="#itemsQuery.area_id#">
+													<cfif arguments.deletedItems IS true>
+														<cfinvokeargument name="status" value="deleted">
+													</cfif>
 												</cfinvoke>
 
 										  	</cfif>
@@ -3061,7 +3078,24 @@
 													<span>#right(stringLastDate, len(stringLastDate)-spacePosLast)#</span>
 												</cfif>
 
-											</cfif>								
+											</cfif>	
+
+											<cfif arguments.deletedItems IS true><!--- Bin items --->
+
+												<b>Fecha de eliminación:</b> 
+												
+												<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringDeleteDate">
+													<cfinvokeargument name="timestamp_date" value="#itemsQuery.delete_date#">
+												</cfinvoke>							
+												<cfset spacePosLast = findOneOf(" ", stringDeleteDate)>
+												<span>
+													#left(stringDeleteDate, spacePosLast)#
+												</span>
+												<cfif spacePosLast GT 0>
+													<span>#right(stringDeleteDate, len(stringDeleteDate)-spacePosLast)#</span>
+												</cfif>			
+
+											</cfif>				
 
 										</div>
 									</div>
@@ -3107,7 +3141,7 @@
 															<cfset fileIcon = "">
 														</cfif>
 
-														<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file#fileIcon#.png" style="width:40px;"/></a>
+														<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file#fileIcon#.png" style="width:40px;"/></a>
 
 													</cfif>
 
@@ -3177,6 +3211,9 @@
 										<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
 											<cfinvokeargument name="item_id" value="#itemsQuery.id#">
 											<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+											<cfif arguments.deletedItems IS true>
+												<cfinvokeargument name="status" value="deleted">
+											</cfif>
 										</cfinvoke>
 
 										<b lang="es">Fecha de inicio</b> <span>#objectItem.start_date#
@@ -3219,7 +3256,7 @@
 
 									<cfif itemTypeId EQ 10><!--- Files --->
 
-										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><i class="icon-download-alt"></i> #itemsQuery.file_name#</a><br>
+										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><i class="icon-download-alt"></i> #itemsQuery.file_name#</a><br>
 
 									<cfelse>
 
@@ -3346,42 +3383,69 @@
 
 							<cfif arguments.generatePdf IS false>
 							<div class="row">
-								<div class="col-sm-12">									
+								<div class="col-sm-12">			
+
+									<cfif arguments.deletedItems IS true><!--- Bin items --->
+
+										<!---<cfif isDefined("itemsQuery.area_name")>--->		
+													
+											<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small.png" alt="Area" title="Ver área"> Área: <a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#','areaIframe',event)" style="cursor:pointer"><span lang="es">#itemsQuery.area_name#</span></a>&nbsp;<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#','areaIframe',event)" class="btn btn-sm btn-info" title="Ir al área"><span lang="es">Ir al área</span></a>--->
+
+											<img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small.png" alt="Area" title="Ver área"> Área: <a href="#APPLICATION.htmlPath#/index.cfm?abb=#SESSION.client_abb#&area=#itemsQuery.area_id#" target="_parent"><span lang="es">#itemsQuery.area_name#</span></a>&nbsp;<a href="#APPLICATION.htmlPath#/index.cfm?abb=#SESSION.client_abb#&area=#itemsQuery.area_id#" target="_parent" class="btn btn-sm btn-info" title="Ir al área"><span lang="es">Ir al área</span></a>
+
+
+
+										<!---</cfif>--->
+
+									</cfif>						
 
 									<div class="pull-right">
 
 										<!---Attached files--->
 										<cfif itemTypeId IS 10><!--- File --->
-											<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i></a>
+											<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i></a>
 											<span class="divider">&nbsp;</span>
 										</cfif>
 
-										<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 14 OR itemTypeId IS 15 OR itemTypeId IS 16><!---Lists, Forms And Views--->
-											<a onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="btn btn-sm btn-default" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
-										</cfif>
+										<cfif arguments.deletedItems IS false>
 
-										<cfset item_id = itemsQuery.id>
-
-										<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#")>
-										<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#")>
-
-										<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Solo para mensajes y consultas--->
-
-											<cfif itemTypeId IS 1 OR itemsQuery.state NEQ "closed">
-												<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#&reply','areaIframe',event)" class="btn btn-sm btn-primary" title="Responder" lang="es"><i class="icon-reply"></i></a>
-												<span class="divider">&nbsp;</span>
+											<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 14 OR itemTypeId IS 15 OR itemTypeId IS 16><!---Lists, Forms And Views--->
+												<a onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="btn btn-sm btn-default" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>
 											</cfif>
-									
-										</cfif>
-										
-											
-										<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#&area=#itemsQuery.area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i></a>
-										<span class="divider">&nbsp;</span>
 
-										<cfif NOT isDefined("arguments.area_id")>
-											<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small.png" alt="Area" title="Ver en área"><span lang="es">Ver en área</span></a>
-										<cfelse>
-											<a onclick="openUrl('#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#','itemIframe',event)" class="btn btn-sm btn-info" title="Ir al área"><span lang="es">Ver #itemTypeNameEs#</span></a>
+											<cfset item_id = itemsQuery.id>
+
+											<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#")>
+											<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#")>
+
+											<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Solo para mensajes y consultas--->
+
+												<cfif itemTypeId IS 1 OR itemsQuery.state NEQ "closed">
+													<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#&reply','areaIframe',event)" class="btn btn-sm btn-primary" title="Responder" lang="es"><i class="icon-reply"></i></a>
+													<span class="divider">&nbsp;</span>
+												</cfif>
+										
+											</cfif>
+												
+											<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#&area=#itemsQuery.area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i></a>
+											<span class="divider">&nbsp;</span>
+
+											<cfif NOT isDefined("arguments.area_id")>
+												<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small.png" alt="Area" title="Ver en área"><span lang="es">Ver en área</span></a>
+											<cfelse>
+												<a onclick="openUrl('#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#','itemIframe',event)" class="btn btn-sm btn-info" title="Ir al área"><span lang="es">Ver #itemTypeNameEs#</span></a>
+											</cfif>
+
+
+										<cfelse><!--- Bin items --->
+
+											<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/iframes/bin.cfm")>
+
+											<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItem&item_id=#itemsQuery.id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-sm btn-primary" title="Restaurar" lang="es"><i class="icon-undo"></i> Restaurar</a>
+
+											<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=deleteBinItem&item_id=#itemsQuery.id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" class="btn btn-sm btn-danger" title="Eliminar definitivamente" lang="es"><i class="icon-remove"></i> Eliminar definitivamente</a>
+
+
 										</cfif>
 
 									</div>

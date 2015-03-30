@@ -56,12 +56,19 @@
 	<cfif isDefined("URL.fileTypeId")>
 		<cfinvokeargument name="fileTypeId" value="#URL.fileTypeId#"/>
 	</cfif>
+	<cfif isDefined("URL.bin") AND URL.bin IS true>
+		<cfinvokeargument name="status" value="deleted"/>
+	</cfif>
 	<cfinvokeargument name="return_type" value="query">
 </cfinvoke>		
 
 <cfif isDefined("APPLICATION.moduleAntiVirus") AND APPLICATION.moduleAntiVirus IS true AND objectFile.anti_virus_check IS 0>
 
 	<b>Archivo pendiente de analizar por el sistema Anti Virus, intente descargarlo de nuevo pasados unos minutos.</b>
+
+<cfelseif isDefined("URL.bin") AND URL.bin IS true AND objectFile.user_in_charge NEQ user_id AND user_id NEQ SESSION.client_administrator>
+
+	<b>Sin permiso de acceso.</b>
 
 <cfelse>
 

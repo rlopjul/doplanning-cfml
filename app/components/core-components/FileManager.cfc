@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2014 --->
+<!--- Copyright Era7 Information Technologies 2007-2015 --->
 
 <cfcomponent output="false">
 
@@ -48,11 +48,13 @@
 	
 	<cffunction name="deleteFile" returntype="struct" output="false" access="public">		
 		<cfargument name="file_id" type="numeric" required="true">
-		<!---<cfargument name="area_id" type="numeric" required="false">--->
 		<cfargument name="forceDeleteVirus" type="boolean" required="false" default="false">
 		<cfargument name="fileQuery" type="query" required="false">
 		<cfargument name="user_id" type="numeric" required="true">
 		<cfargument name="with_transaction" type="boolean" required="false" default="true">
+
+		<cfargument name="moveToBin" type="boolean" required="false" default="true">
+		<cfargument name="area_id" type="numeric" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">	
@@ -93,173 +95,232 @@
 
 			<cfset fileTypeId = fileQuery.file_type_id>
 			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
-		
+
+
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			</cfinvoke>
+
 			<!---getFileAreas--->
+			<!--- get file areas before delete --->
 			<cfquery datasource="#client_dsn#" name="getFileAreasQuery">
 				SELECT area_id
 				FROM #client_abb#_areas_files
 				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 
-			<cfif arguments.with_transaction IS true>
-				<!--- <cftransaction nested="true"> --->
-				<cfquery datasource="#client_dsn#" name="startTransaction">
-					START TRANSACTION;
-				</cfquery>
-			</cfif>
+			<cfif arguments.forceDeleteVirus IS false AND clientQuery.bin_enabled IS true AND arguments.moveToBin IS true><!--- MOVE TO BIN --->
 
-			<cftry>
-							
-				<!---Delete typology--->
-				<cfif isNumeric(fileQuery.typology_id) AND isNumeric(fileQuery.typology_row_id)>
-					
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
-						<cfinvokeargument name="row_id" value="#fileQuery.typology_row_id#"/>
-						<cfinvokeargument name="table_id" value="#fileQuery.typology_id#"/>
-						<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
 
-						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-					</cfinvoke>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/BinQuery" method="moveItemToBin">
+					<cfinvokeargument name="item_id" value="#arguments.file_id#">
+					<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
+					<cfinvokeargument name="delete_area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="delete_user_id" value="#arguments.user_id#">
+					<cfinvokeargument name="with_transaction" value="false">
 
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+
+			<cfelse><!--- DELETE FILE --->
+
+				<cfif arguments.with_transaction IS true>
+					<!--- <cftransaction nested="true"> --->
+					<cfquery datasource="#client_dsn#" name="startTransaction">
+						START TRANSACTION;
+					</cfquery>
 				</cfif>
 
-				<!--- Delete file versions --->
-				<cfif fileQuery.file_type_id IS 3><!--- Area file with versions --->
-				
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersions" returnvariable="fileVersionsQuery">
-						<cfinvokeargument name="file_id" value="#arguments.file_id#">
-						<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+				<cftry>
+								
+					<!---Delete typology--->
+					<cfif isNumeric(fileQuery.typology_id) AND isNumeric(fileQuery.typology_row_id)>
 						
-						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-					</cfinvoke>
-
-					<cfloop query="fileVersionsQuery">
-						
-						<!--- deleteFileVersion --->
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFileVersion" returnvariable="deleteFileVersionResponse">
-							<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
-							<cfinvokeargument name="version_id" value="#fileVersionsQuery.version_id#"/>
-							<cfinvokeargument name="fileQuery" value="#fileQuery#"/>
-							<cfinvokeargument name="send_alert" value="false"/>
-							<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#"/>
-							<cfinvokeargument name="user_id" value="#arguments.user_id#"/>
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
+							<cfinvokeargument name="row_id" value="#fileQuery.typology_row_id#"/>
+							<cfinvokeargument name="table_id" value="#fileQuery.typology_id#"/>
+							<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
 
 							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 						</cfinvoke>
 
-						<cfif deleteFileVersionResponse.result IS false>
-							<cfthrow message="#deleteFileVersionResponse.message#">
-						</cfif>
+					</cfif>
 
-					</cfloop>
-
-				</cfif>
-
-
-				<!--- Delete association areas --->
-				<cfquery name="deleteAssociationAreaQuery" datasource="#client_dsn#">
-					DELETE 
-					FROM #client_abb#_areas_files
-					WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>	
-
-				<!--- Delete areas positions --->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="deleteItemPosition">
-					<cfinvokeargument name="item_id" value="#arguments.file_id#">
-					<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
-
-					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-				</cfinvoke>
-				
-				<!--- Delete association folder file --->
-				<cfquery name="deleteAssociationFolderQuery" datasource="#client_dsn#">
-					DELETE 
-					FROM #client_abb#_folders_files
-					WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>		
-				
-				<!--- Deletion of the row representing the file --->
-				<cfquery name="deleteFileQuery" datasource="#client_dsn#">		
-					DELETE
-					FROM #client_abb#_files 
-					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-				
-				<cfif fileQuery.file_type_id IS NOT 3><!--- IS NOT file with versions --->
-
-					<cfset path = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#/'>	
-					<cfset filePath = path & fileQuery.physical_name>			
+					<!--- Delete file versions --->
+					<cfif fileQuery.file_type_id IS 3><!--- Area file with versions --->
 					
-					<!--- Now we delete physically the file on the server --->
-					<cfif FileExists(filePath)><!---If the physical file exist--->
-						<cffile action="delete" file="#filePath#">
-					<cfelse><!---The physical file does not exist--->
-						<!---<cfset error_code = 608>
-						<cfthrow errorcode="#error_code#">--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersions" returnvariable="fileVersionsQuery">
+							<cfinvokeargument name="file_id" value="#arguments.file_id#">
+							<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+							
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+						</cfinvoke>
+
+						<cfloop query="fileVersionsQuery">
+							
+							<!--- deleteFileVersion --->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFileVersion" returnvariable="deleteFileVersionResponse">
+								<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+								<cfinvokeargument name="version_id" value="#fileVersionsQuery.version_id#"/>
+								<cfinvokeargument name="fileQuery" value="#fileQuery#"/>
+								<cfinvokeargument name="send_alert" value="false"/>
+								<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#"/>
+								<cfinvokeargument name="user_id" value="#arguments.user_id#"/>
+
+								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+							</cfinvoke>
+
+							<cfif deleteFileVersionResponse.result IS false>
+								<cfthrow message="#deleteFileVersionResponse.message#">
+							</cfif>
+
+						</cfloop>
+
 					</cfif>
-					
-					<!---Update User Space Used--->
-					<cfif fileQuery.status EQ "ok" AND fileQuery.file_type_id IS 1>
-						<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
-							UPDATE #client_abb#_users
-							SET space_used = space_used-#fileQuery.file_size#
-							WHERE id = <cfqueryparam value="#fileQuery.user_in_charge#" cfsqltype="cf_sql_integer">;
-						</cfquery>
-					</cfif>
-
-				</cfif>
 
 
-				<cfcatch>
+					<!--- Delete association areas --->
+					<cfquery name="deleteAssociationAreaQuery" datasource="#client_dsn#">
+						DELETE 
+						FROM #client_abb#_areas_files
+						WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>	
 
-					<cfif arguments.with_transaction IS true>
-						<cfquery datasource="#client_dsn#" name="rollbackTransaction">
-							ROLLBACK;
-						</cfquery>
-					</cfif>
+					<!--- Delete areas positions --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="deleteItemPosition">
+						<cfinvokeargument name="item_id" value="#arguments.file_id#">
+						<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
 
-					<cfrethrow/>
-
-				</cfcatch>
-
-			</cftry>
-			
-			<cfif arguments.with_transaction IS true>
-				<!--- </cftransaction> --->
-				<cfquery datasource="#client_dsn#" name="endTransaction">
-					COMMIT;
-				</cfquery>
-			</cfif>
-
-			<!--- saveLog --->
-			<cfinclude template="includes/logRecord.cfm">
-
-			<cfif getFileAreasQuery.recordCount GT 0>
-				
-				<cfloop query="getFileAreasQuery">
-
-					<!--- Alert --->
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
-						<cfinvokeargument name="objectFile" value="#fileQuery#">
-						<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
-						<cfinvokeargument name="area_id" value="#getFileAreasQuery.area_id#">
-						<cfinvokeargument name="user_id" value="#arguments.user_id#">
-						<cfif arguments.forceDeleteVirus IS true>
-							<cfinvokeargument name="action" value="delete_virus">
-						<cfelse>
-							<cfinvokeargument name="action" value="delete">
-						</cfif>
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 					</cfinvoke>
 					
-				</cfloop>
+					<!--- Delete association folder file --->
+					<cfquery name="deleteAssociationFolderQuery" datasource="#client_dsn#">
+						DELETE 
+						FROM #client_abb#_folders_files
+						WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>		
+					
+					<!--- Deletion of the row representing the file --->
+					<cfquery name="deleteFileQuery" datasource="#client_dsn#">		
+						DELETE
+						FROM #client_abb#_files 
+						WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+					
+					<cfif fileQuery.file_type_id IS NOT 3><!--- IS NOT file with versions --->
+
+						<cfset path = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#/'>	
+						<cfset filePath = path & fileQuery.physical_name>			
+						
+						<!--- Now we delete physically the file on the server --->
+						<cfif FileExists(filePath)><!---If the physical file exist--->
+							<cffile action="delete" file="#filePath#">
+						<cfelse><!---The physical file does not exist--->
+							<!---<cfset error_code = 608>
+							<cfthrow errorcode="#error_code#">--->
+						</cfif>
+						
+						<!---Update User Space Used--->
+						<cfif fileQuery.status EQ "ok" AND fileQuery.file_type_id IS 1>
+							<cfquery name="updateUserSpaceUsed" datasource="#client_dsn#">
+								UPDATE #client_abb#_users
+								SET space_used = space_used-#fileQuery.file_size#
+								WHERE id = <cfqueryparam value="#fileQuery.user_in_charge#" cfsqltype="cf_sql_integer">;
+							</cfquery>
+						</cfif>
+
+					</cfif>
+
+
+					<cfif clientQuery.bin_enabled IS true><!---Bin enabled--->
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/BinQuery" method="updateBinItemDeleted">
+							<cfinvokeargument name="item_id" value="#arguments.file_id#">
+							<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif>
+
+
+					<cfcatch>
+
+						<cfif arguments.with_transaction IS true>
+							<cfquery datasource="#client_dsn#" name="rollbackTransaction">
+								ROLLBACK;
+							</cfquery>
+						</cfif>
+
+						<cfif clientQuery.bin_enabled IS true>
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/BinQuery" method="updateBinItemWithError">
+								<cfinvokeargument name="item_id" value="#arguments.file_id#">
+								<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
+								<cfinvokeargument name="error_message" value="#cfcatch.message#">
+								<cfinvokeargument name="error_detail" value="#cfcatch.detail#">
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+						</cfif>
+
+						<cfrethrow/>
+
+					</cfcatch>
+
+				</cftry>
+				
+				<cfif arguments.with_transaction IS true>
+					<!--- </cftransaction> --->
+					<cfquery datasource="#client_dsn#" name="endTransaction">
+						COMMIT;
+					</cfquery>
+				</cfif>
+
+				<!--- saveLog --->
+				<cfinclude template="includes/logRecord.cfm">
+
+				
+			</cfif><!--- END DELETE --->
+
+			<cfif ( arguments.forceDeleteVirus IS false AND clientQuery.bin_enabled IS true AND fileQuery.status NEQ "deleted") OR clientQuery.bin_enabled IS false OR arguments.forceDeleteVirus IS true>
+
+				<cfif getFileAreasQuery.recordCount GT 0>
+					
+					<cfloop query="getFileAreasQuery">
+
+						<!--- Alert --->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
+							<cfinvokeargument name="objectFile" value="#fileQuery#">
+							<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
+							<cfinvokeargument name="area_id" value="#getFileAreasQuery.area_id#">
+							<cfinvokeargument name="user_id" value="#arguments.user_id#">
+							<cfif arguments.forceDeleteVirus IS true>
+								<cfinvokeargument name="action" value="delete_virus">
+							<cfelse>
+								<cfinvokeargument name="action" value="delete">
+							</cfif>
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+						</cfinvoke>
+						
+					</cfloop>
+
+				</cfif>
 
 			</cfif>
+
 
 			<cfset response = {result=true, file_id=#arguments.file_id#}>
 

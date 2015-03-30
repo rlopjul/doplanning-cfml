@@ -104,7 +104,7 @@
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
-<script src="../scripts/functions.min.js?v=2.4"></script>
+<script src="../scripts/functions.min.js?v=2.5"></script>
 </cfoutput>
 
 <script>

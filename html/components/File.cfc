@@ -56,6 +56,7 @@
 		<cfargument name="item_id" type="numeric" required="false">
 		<cfargument name="itemTypeId" type="numeric" required="false">
 		<cfargument name="with_owner_area" type="boolean" required="false">
+		<cfargument name="status" type="string" required="false">
 		
 		<cfset var method = "getFile">
 		
@@ -80,6 +81,7 @@
 				</cfif>
 				<cfinvokeargument name="return_type" value="query">
 				<cfinvokeargument name="with_owner_area" value="#arguments.with_owner_area#">
+				<cfinvokeargument name="status" value="#arguments.status#">
 			</cfinvoke>
 			
 			<cfcatch>

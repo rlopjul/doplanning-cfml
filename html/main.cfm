@@ -136,7 +136,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 </script>
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.3"></script>
+<script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.5"></script>
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.2"></script>
 <script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.92"></script>
 </cfoutput>

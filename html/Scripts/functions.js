@@ -1,5 +1,10 @@
 var showLoading = true;
 
+function windowHeight() {
+	var de = document.documentElement;
+	return de.clientHeight;
+}	
+
 function onUnloadPage(){
 	if(showLoading)
 		showLoadingPage(true);

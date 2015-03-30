@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/preferences_alerts_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/preferences_alerts_en.js" charset="utf-8"></script>
 </cfoutput>
 
 <cfinclude template="alert_message.cfm">

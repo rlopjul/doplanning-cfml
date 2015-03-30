@@ -414,6 +414,7 @@
 							<cfinvokeargument name="file_id" value="#cur_file_id#">
 							<cfinvokeargument name="area_id" value="#arguments.area_id#">
 							<cfinvokeargument name="with_transaction" value="false">
+							<cfinvokeargument name="moveToBin" value="false">
 						</cfinvoke>
 
 						<cfif deleteFileResult.result IS false>
@@ -462,12 +463,12 @@
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="forceDeleteVirus" type="boolean" required="false" default="false">
 		<cfargument name="with_transaction" type="boolean" required="false" default="true">
+		<cfargument name="moveToBin" type="boolean" required="false" default="true">
 		
 		<cfset var method = "deleteFile">
 		
 		<cfset var response = structNew()>
 
-		<cfset var area_id = "">
 		<cfset var fileQuery = "">
 		<cfset var fileTypeId = "">
 		<cfset var path = "">
@@ -557,6 +558,23 @@
 					</cfif>
 
 				</cfif>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="response">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#">
+					<cfinvokeargument name="fileQuery" value="#fileQuery#">
+					<cfinvokeargument name="user_id" value="#user_id#">					
+					<cfinvokeargument name="with_transaction" value="#arguments.with_transaction#">
+					<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
+					<cfif isDefined("area_id")>
+						<cfinvokeargument name="area_id" value="#area_id#">
+					</cfif>
+
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
 
 				<!--- 
 
@@ -693,19 +711,6 @@
 				</cfif>
 
 				<cfset response = {result=true, file_id=#arguments.file_id#}> --->
-
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="response">
-					<cfinvokeargument name="file_id" value="#file_id#">
-					<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#">
-					<cfinvokeargument name="fileQuery" value="#fileQuery#">
-					<cfinvokeargument name="user_id" value="#user_id#">
-					<cfinvokeargument name="with_transaction" value="#arguments.with_transaction#">
-
-
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
 
 			</cfif>
 
@@ -1787,6 +1792,7 @@
 		<!---<cfargument name="format_content" type="string" required="no" default="default">--->
         <cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
         <cfargument name="with_owner_area" type="boolean" required="false">
+        <cfargument name="status" type="string" required="false" default="ok"><!--- ok/deleted --->
 		
 		<cfset var method = "getFile">
 		
@@ -1817,7 +1823,8 @@
 				</cfif>
 				<cfinvokeargument name="parse_dates" value="true">
 				<cfinvokeargument name="published" value="false">
-				<cfinvokeargument name="with_owner_area" value="#arguments.with_owner_area#">		
+				<cfinvokeargument name="with_owner_area" value="#arguments.with_owner_area#">
+				<cfinvokeargument name="status" value="#arguments.status#">		
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

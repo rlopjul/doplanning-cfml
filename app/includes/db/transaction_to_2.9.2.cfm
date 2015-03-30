@@ -35,11 +35,11 @@
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
-			INSERT INTO `#new_client_abb#_tables_fields_types` (`field_type_id`, `field_type_group`, `input_type`, `name`, `max_length`, `mysql_type`, `cf_sql_type`, `enabled`, `position`) VALUES ('15', 'list', 'select', 'Lista de opciones con selección simple', '255', 'VARCHAR(255)', 'cf_sql_varchar', '1', '15');
+			INSERT INTO `#new_client_abb#_tables_fields_types` (`field_type_id`, `field_type_group`, `input_type`, `name`, `max_length`, `mysql_type`, `cf_sql_type`, `enabled`, `position`) VALUES ('15', 'list', 'select', 'Lista de opciones con selección simple', '255', 'TEXT', 'cf_sql_longvarchar', '1', '15');
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
-			INSERT INTO `#new_client_abb#_tables_fields_types` (`field_type_id`, `field_type_group`, `input_type`, `name`, `max_length`, `mysql_type`, `cf_sql_type`, `enabled`, `position`) VALUES ('16', 'list', 'select', 'Lista de opciones con selección múltiple', '255', 'VARCHAR(255)', 'cf_sql_varchar', '1', '16');
+			INSERT INTO `#new_client_abb#_tables_fields_types` (`field_type_id`, `field_type_group`, `input_type`, `name`, `max_length`, `mysql_type`, `cf_sql_type`, `enabled`, `position`) VALUES ('16', 'list', 'select', 'Lista de opciones con selección múltiple', '255', 'TEXT', 'cf_sql_longvarchar', '1', '16');
 		</cfquery>
 
 

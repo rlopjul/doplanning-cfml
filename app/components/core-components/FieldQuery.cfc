@@ -258,6 +258,50 @@
 		<cfreturn {position=position}>
 		
 	</cffunction>
+
+
+
+	<!--- ------------------------------------ deleteTableFields -----------------------------------  --->
+		
+	<cffunction name="deleteTableFields" output="false" access="package" returntype="void">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "deleteTableFields">
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_types" value="false">
+				
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+			<cfloop query="fields">
+
+				<cfquery name="deleteField" datasource="#client_dsn#">
+					DELETE FROM `#client_abb#_#tableTypeTable#_fields`
+					WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+				<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT --->
+
+					<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
+						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+						DROP COLUMN `field_#fields.field_id#`;
+					</cfquery>
+
+				</cfif>
+
+			</cfloop>
+			
+	</cffunction>
 	
 
 </cfcomponent>

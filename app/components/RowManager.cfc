@@ -222,10 +222,19 @@
 				<!--- Delete Rows --->
 				<cfif arguments.delete_rows IS true>
 					
-					<cfinvoke component="RowManager" method="deleteTableRowsInDatabase">
+					<!---<cfinvoke component="RowManager" method="deleteTableRowsInDatabase">
 						<cfinvokeargument name="table_id" value="#arguments.table_id#">
 						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 						<cfinvokeargument name="resetAutoIncrement" value="true">
+					</cfinvoke>--->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRowsInDatabase">
+						<cfinvokeargument name="table_id" value="#arguments.table_id#">
+						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+						<cfinvokeargument name="resetAutoIncrement" value="true">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
 				</cfif>
@@ -348,6 +357,8 @@
 									
 									<cfloop list="#fieldValue#" index="curFieldValue" delimiters=";">
 										
+										<!---
+										De esta forma dan problemas algunos caracteres especiales porque al hacer la comparación con el LIKE no concuerdan
 										<cfquery dbtype="query" name="getAreaValue">
 											SELECT id
 											FROM fieldAreasQuery
@@ -356,7 +367,17 @@
 
 										<cfif getAreaValue.recordCount GT 0>
 											<cfset arrayAppend(newFieldValue, getAreaValue.id)>
-										</cfif>
+										</cfif>--->
+
+										<cfloop query="fieldAreasQuery">
+									
+											<cfif fieldAreasQuery.name EQ curFieldValue>
+												
+												<cfset arrayAppend(newFieldValue, getAreaValue.id)>
+
+											</cfif>
+
+										</cfloop>
 
 									</cfloop>
 
@@ -368,6 +389,8 @@
 
 							<cfelse>
 
+								<!---
+								De esta forma dan problemas algunos caracteres especiales porque al hacer la comparación con el LIKE no concuerdan
 								<cfquery dbtype="query" name="getAreaValue">
 									SELECT id
 									FROM fieldAreasQuery
@@ -380,6 +403,21 @@
 								<cfelse>
 									<cfset fieldValue = arrayNew(1)>
 								</cfif>
+								--->
+								<cfset fieldValueText = fieldValue>
+								<cfset fieldValue = arrayNew(1)>
+
+								<cfloop query="fieldAreasQuery">
+									
+									<cfif fieldAreasQuery.name EQ fieldValueText>
+										
+										<!--- List values required array --->
+										<cfset fieldValue = [fieldAreasQuery.id]>
+
+									</cfif>
+
+								</cfloop>
+
 
 							</cfif>
 
@@ -998,9 +1036,8 @@
 			
 	</cffunction>
 
-
-	<!--- ------------------------------------ deleteTableRowsInDatabase -----------------------------------  --->
 	
+	<!---
 	<cffunction name="deleteTableRowsInDatabase" output="false" access="package" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -1009,6 +1046,18 @@
 		<cfset var method = "deleteTableRowsInDatabase">
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="deleteTableRowsInDatabase">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="resetAutoIncrement" value="#arguments.resetAutoIncrement#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+
+			<!---
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
@@ -1029,8 +1078,10 @@
 					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AUTO_INCREMENT = 1;
 				</cfquery>
 			</cfif>
+			--->
 
 	</cffunction>
+	--->
 
 
 	<!--- ------------------------------------- getTableRows -------------------------------------  --->

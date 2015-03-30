@@ -196,7 +196,7 @@
 			<!--- ORDER --->
 			<cfinclude template="#APPLICATION.componentsPath#/includes/usersOrder.cfm">
 			
-			<!---
+			
 			<!--- getClient --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="selectClientQuery">
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
@@ -210,11 +210,14 @@
 				
 			</cfif>
 
-			MUY IMPORTANTE: esto hay que corregirlo para que aquí no se use ni sea necesaria la SESION
+			<!---	
+			MUY IMPORTANTE: esto había que corregirlo para que aquí no se usara ni fuese necesaria la SESION
 			
+			<cfif ( (isDefined("SESSION.client_force_notifications") AND SESSION.client_force_notifications IS false) OR NOT isDefined("SESSION.client_force_notifications") ) AND isDefined("xmlRequest.request.parameters.preferences")>	
+
 		--->
-			
-			<cfif ( (isDefined("SESSION.client_force_notifications") AND SESSION.client_force_notifications IS false) OR NOT isDefined("SESSION.client_force_notifications") ) AND isDefined("xmlRequest.request.parameters.preferences")>				
+
+			<cfif selectClientQuery.force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>
 				
 				<cfxml variable="xmlPreferences">
 					<cfoutput>#xmlRequest.request.parameters.preferences#</cfoutput>

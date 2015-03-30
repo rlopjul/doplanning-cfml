@@ -22,7 +22,7 @@
 
 	  			<div class="row">
 					<div class="col-sm-12">
-						<label class="control-label" for="default_language" lang="es">Idioma por defecto de la aplicación</label>
+						<label for="default_language" lang="es">Idioma por defecto de la aplicación</label>
 
 						<div class="row">
 							<div class="col-sm-4">
@@ -75,11 +75,44 @@
 
 				<div class="row">
 					<div class="col-sm-12">
-						<label class="control-label" for="tasks_reminder_days" lang="es">Número de días previos a caducidad para enviar recordatorio de tareas</label>
+						<label for="tasks_reminder_days" lang="es">Número de días previos a caducidad para enviar recordatorio de tareas</label>
 
 						<div class="row">
 							<div class="col-sm-2">
-								<input type="text" name="tasks_reminder_days" id="tasks_reminder_days" value="#clientQuery.tasks_reminder_days#" required="true" message="Número de días obligatorio" class="form-control" />
+								<input type="number" name="tasks_reminder_days" id="tasks_reminder_days" value="#clientQuery.tasks_reminder_days#" required="true" min="1" max="500" message="Número de días obligatorio" class="form-control" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-sm-12">
+						<h4>Papelera</h4>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="checkbox">
+						    <label>
+						    	<input type="checkbox" name="bin_enabled" value="true" <cfif clientQuery.bin_enabled IS true>checked</cfif>> Habilitar papelera
+						    </label>
+						    <small class="help-block">
+								Los archivos se mantendrán en la papelera el número de días especificados a continuación.<br/>
+								Si se deshabilita la papelera después de habilitarla, los usuarios dejarán de tener acceso a los elementos almacenados en la misma.
+							</small>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="bin_days" lang="es">Número de días que se mantendrán los archivos en la papelera</label>
+
+						<div class="row">
+							<div class="col-sm-2">
+								<input type="text" name="bin_days" id="bin_days" value="#clientQuery.bin_days#" required="true" min="1" max="500" message="Número de días obligatorio" class="form-control" />
 							</div>
 						</div>
 					</div>

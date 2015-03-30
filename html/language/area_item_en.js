@@ -247,9 +247,10 @@ var area_item_content_en = {
 		'No hay interconsultas en esta área.':'There are no interconsultations in this area.',
 		'No hay noticias en esta área.':'There are no news in this area.',
 		'No hay elementos de contenido web en esta área.':'There are no web content elements in this area.',
-		'No hay elementos en esta área.':'There are no elements in this area.',
 		'No hay archivos en esta área.':'There area no files in this area.',
 		'No hay usuarios.':'There are no users.',
+		/*'No hay elementos en esta área.':'There are no elements in this area.',*/
+		'Aún nadie ha puesto información aquí, ¿por qué no ser el primero?':'No one has yet posted information here, why not be the first?',
 		
 		/*search*/
 		'Introduzca unos parámetros de búsqueda y haga click en "Buscar".':'Enter search parameters and click "Search".',

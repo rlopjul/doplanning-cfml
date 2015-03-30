@@ -165,28 +165,31 @@
 </script>
 </cfoutput>
 
+<cfif isDefined("xmlItems.#itemTypeNameP#.#itemTypeName#")>
 
-<div class="form-inline" style="margin-left:2px;margin-top:2px;margin-bottom:2px;clear:both">
+	<div class="form-inline" style="margin-left:2px;margin-top:2px;margin-bottom:2px;clear:both">
 
-	<div class="btn-toolbar">
-								
-		<div class="btn-group">
-			<div class="input-group input-group-sm" style="width:260px;" >
-				<input type="text" name="text" id="searchText" value="" class="form-control"/>
-				<span class="input-group-btn">
-					<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
-				</span>
+		<div class="btn-toolbar">
+									
+			<div class="btn-group">
+				<div class="input-group input-group-sm" style="width:260px;" >
+					<input type="text" name="text" id="searchText" value="" class="form-control"/>
+					<span class="input-group-btn">
+						<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+					</span>
+				</div>
 			</div>
-		</div>
 
-		<div class="btn-group btn-group-sm">
-			<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
-			<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+			<div class="btn-group btn-group-sm">
+				<a onClick="expandTree();" class="btn btn-default" title="Expandir todo el árbol" lang="es"><i class="icon-plus"></i> <span lang="es">Expandir</span></a>
+				<a onClick="collapseTree();" class="btn btn-default" title="Colapsar todo el árbol" lang="es"><i class="icon-minus"></i> <span lang="es">Colapsar</span></a>
+			</div>
+
 		</div>
 
 	</div>
-
-</div>
+	
+</cfif>
 
 <div id="treeContainer" style="clear:both">
 
@@ -213,13 +216,14 @@
 	</cfloop>
 	</ul>
 <cfelse>
-	<script type="text/javascript">
+	<script>
 		loadTree = false;
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>
 	<cfoutput>
 	<div class="div_items">
-	<div class="div_text_result"><span lang="es">No hay #lCase(itemTypeNameEsP)# en esta área.</span></div>
+		<!---<div class="div_text_result"><span lang="es">No hay #lCase(itemTypeNameEsP)# en esta área.</span></div>--->
+		<div class="alert alert-info" role="alert" style="margin:10px;"><i class="icon-info-sign"></i> <span lang="es">No hay #lCase(itemTypeNameEsP)# en esta área.</span></div>
 	</div>
 	</cfoutput>
 </cfif>

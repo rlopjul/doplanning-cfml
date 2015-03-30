@@ -701,7 +701,51 @@
 	</div>
 </cfif>
 
-<div style="clear:both; height:15px;"><!-- --></div>
+<cfif read_only IS false AND itemTypeId IS 20><!--- DoPlanning Document --->
+
+	<cfif page_type IS 1 OR objectItem.user_in_charge EQ SESSION.user_id>
+
+		<div class="row">
+			<div class="col-xs-12 col-sm-8">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="area_editable" id="area_editable" value="true" <cfif isDefined("objectItem.area_editable") AND objectItem.area_editable IS true>checked="checked"</cfif> /> <span lang="es">Documento editable por los usuarios del área</span>
+					</label>
+					<small class="help-block" lang="es">Permite que los usuarios del área puedan editar el documento y habilita el sistema de bloqueo del documento</small>
+				</div>
+			</div>
+		</div>
+
+	</cfif>
+	
+	<cfif objectItem.area_editable IS true>
+		<div class="row">
+			<div class="col-xs-12">
+
+				<div class="checkbox">
+				    <label>
+				    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras guardar modificación
+				    </label>
+				    <small class="help-block" lang="es">Si el archivo está bloqueado no puede ser editado por otros usuarios</small>
+			  	</div>
+
+			</div>
+		</div>
+	<cfelseif page_type NEQ 1>
+
+		<input type="hidden" name="unlock" value="true" checked>
+
+	</cfif>
+
+</cfif>
+
+<div class="row">
+	<div class="col-xs-12">
+
+		<div style="clear:both; height:15px;"><!-- --></div>
+
+	</div>
+</div>
 
 <div class="row">
 
@@ -710,41 +754,16 @@
 	</div>
 
 </div>
-<div style="height:10px;"><!-- --></div>	
+
+<div class="row">
+	<div class="col-xs-12">
+
+		<div style="height:10px;"><!-- --></div>	
+
+	</div>
+</div>
 
 <cfif read_only IS false>
-	
-	<cfif itemTypeId IS 20><!--- DoPlanning Document --->
-
-		<cfif page_type IS 1 OR objectItem.user_in_charge EQ SESSION.user_id>
-			<div class="row">
-				<div class="col-xs-12 col-sm-8">
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" name="area_editable" id="area_editable" value="true" <cfif isDefined("objectItem.area_editable") AND objectItem.area_editable IS true>checked="checked"</cfif> /> <span lang="es">Documento editable por los usuarios del área</span>
-						</label>
-						<small class="help-block" lang="es">Permite que los usuarios del área puedan editar el documento y habilita el sistema de bloqueo del documento</small>
-					</div>
-				</div>
-			</div>
-		</cfif>
-		
-		<cfif objectItem.area_editable IS true>
-			
-			<div class="checkbox">
-			    <label>
-			    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras guardar modificación
-			    </label>
-			    <small class="help-block" lang="es">Si el archivo está bloqueado no puede ser editado por otros usuarios</small>
-		  	</div>
-
-		<cfelseif page_type NEQ 1>
-
-			<input type="hidden" name="unlock" value="true" checked>
-
-		</cfif>
-
-	</cfif>
 	
 	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9 AND itemTypeId IS NOT 20>
 	

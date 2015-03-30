@@ -227,7 +227,8 @@
 	</script>				
 
 	<cfoutput>
-	<div class="div_text_result"><span lang="es">No hay elementos en esta área.</span></div>
+	<!---<div class="div_text_result"><span lang="es">No hay elementos en esta área.</span></div>--->
+	<div class="alert alert-info" role="alert" style="margin:10px;"><i class="icon-info-sign"></i> <span lang="es">Aún nadie ha puesto información aquí, ¿por qué no ser el primero?</span></div>
 	</cfoutput>
 </cfif>
 </div>

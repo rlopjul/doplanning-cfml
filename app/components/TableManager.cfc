@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2014 --->
+<!--- Copyright Era7 Information Technologies 2007-2015 --->
 
 <cfcomponent output="false">
 	
@@ -40,9 +40,9 @@
 	</cffunction>
 
 
-
-	<!--- ------------------------------------ deleteTableInDatabase -----------------------------------  --->
 		
+	<!---
+
 	<cffunction name="deleteTableInDatabase" output="false" access="package" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -51,7 +51,7 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+			<!---<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
 			<cfinvoke component="RowManager" method="deleteTableRowsInDatabase">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
@@ -72,11 +72,23 @@
 			
 			<cfquery name="deleteTable" datasource="#client_dsn#">
 				DROP TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
-			</cfquery>	
+			</cfquery>--->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="deleteTableInDatabase">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">		
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>	
 
 			<cfinclude template="includes/logRecord.cfm">
 
 	</cffunction>
+
+	--->
 
 
 

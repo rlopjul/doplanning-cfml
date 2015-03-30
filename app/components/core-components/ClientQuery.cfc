@@ -11,10 +11,13 @@
 		<cfargument name="client_abb" type="string" required="true">
 		
 		<cfset var method = "getClient">
+
+		<cfset var client_dsn = "#APPLICATION.identifier#_#arguments.client_abb#">
 			
-			<cfquery name="selectClientQuery" datasource="#APPLICATION.dsn#">
+			<!---<cfquery name="selectClientQuery" datasource="#APPLICATION.dsn#">--->
+			<cfquery name="selectClientQuery" datasource="#client_dsn#">
 				SELECT *
-				FROM `app_clients`
+				FROM `doplanning_app`.`app_clients`
 				WHERE abbreviation = <cfqueryparam value="#arguments.client_abb#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
 		
@@ -26,12 +29,12 @@
 	<!---getClients--->
 		
 	<cffunction name="getClients" output="false" returntype="query" access="public">
-		
+
 		<cfset var method = "getClients">
 			
 			<cfquery name="selectClientsQuery" datasource="#APPLICATION.dsn#">
 				SELECT *
-				FROM `app_clients`;
+				FROM `doplanning_app`.`app_clients`;
 			</cfquery>
 		
 		<cfreturn selectClientsQuery>

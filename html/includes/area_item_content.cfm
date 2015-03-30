@@ -223,17 +223,31 @@
 		<cfif ( itemTypeId IS NOT 7 OR objectItem.state EQ "created" ) AND objectArea.read_only IS false><!---Is not consultation or is not created--->
 
 			<cfif objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 1 AND SESSION.user_id IS SESSION.client_administrator)>
-		
-				<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 
-				<!--- PENDIENTE DE CAMBIAR O NO --->
-				<!---<script>
+				<!--- getClient --->
+				<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				</cfinvoke>
+
+				<cfif clientQuery.bin_enabled IS true><!--- BIN Enabled --->
+					
+					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmReversibleAction('eliminar');" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-trash"></i> <span lang="es">Eliminar</span></a>
+
+				<cfelse>
+
+					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+
+				</cfif>
+				
+				<!---
+				Esto no se puede usar porque la alerta de confirmación se tiene que mostrar en la ventana padre, y al responder no se puede acceder a este frame para ejecutar el método correspondiente a la respuesta
+				<script>
 					function eliminarElemento(){
 
 						confirmAction('eliminar');
 					}
 				</script>
-				<a onclick="return showConfirmModal('eliminar',eliminarElemento);" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>---->
+				<a onclick="return parent.showConfirmModal('¿Seguro que desea eliminar?',function(){ confirmAction('eliminar'); })" title="Eliminar #itemTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>--->
 		
 			</cfif>
 

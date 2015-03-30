@@ -118,12 +118,21 @@
 		</cfif>
 
 		<!--- Hack para posibilitar la selección de los checkboxs en el árbol al hacer click sobre ellos --->
+		<!---
+		De esta forma no funcionaba bien cuando se navegaba por el árbol
 		$("#areasTreeContainer input:checkbox").click(function(event) {
 			var inputId = "#"+this.id;
 			setTimeout(function(){
 		       $(inputId).prop("checked",!($(inputId).is(":checked"))); 
 		    }, 100);
 
+		});--->
+
+		$("#areasTreeContainer").on('click', 'input:checkbox', function(event) {
+			var inputId = "#"+this.id;
+			setTimeout(function(){
+		       $(inputId).prop("checked",!($(inputId).is(":checked"))); 
+		    }, 100);
 		});
 
 	});
@@ -262,7 +271,7 @@ Asociar archivo a áreas
 	</cfinvoke>
 	</div>
 	
-	<script type="text/javascript">
+	<script>
 		addRailoRequiredCheckBox("areas_ids[]","Debe seleccionar al menos un área");			
 	</script>
 

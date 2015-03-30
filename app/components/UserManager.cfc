@@ -1282,8 +1282,8 @@
 					<!---Se quita al usuario de las áreas que tiene a su cargo y se pone al administrador de la organización--->
 					<cfquery name="changeUserAreasInCharge" datasource="#client_dsn#">
 						UPDATE #client_abb#_areas 
-						SET user_in_charge=<cfqueryparam value="#SESSION.client_administrator#" cfsqltype="cf_sql_integer">
-						WHERE user_in_charge=<cfqueryparam value="#getUserQuery.id#" cfsqltype="cf_sql_integer">;
+						SET user_in_charge = <cfqueryparam value="#SESSION.client_administrator#" cfsqltype="cf_sql_integer">
+						WHERE user_in_charge = <cfqueryparam value="#getUserQuery.id#" cfsqltype="cf_sql_integer">;
 					</cfquery>		
 					
 					<!--- DELETE USER AREAS LINKS --->
