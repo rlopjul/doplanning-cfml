@@ -628,6 +628,7 @@
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="openRowOnSelect" type="boolean" required="false" default="false">
 		<cfargument name="app_version" type="string" required="false" default="mobile">
+		<cfargument name="columnSelectorContainer" type="string" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -648,9 +649,13 @@
 				
 				$("##dataTable#arguments.tableTypeId#_#arguments.table_id#").tablesorter({  <!--- Se le asigna un id único a la tabla por si hay más en la misma página --->
 
+					<!---widthFixed: true,--->
 					showProcessing: true,
 					delayInit: true,
-					widgets: ['zebra','filter','stickyHeaders','math'],<!---'select',--->
+					widgets: ['zebra','uitheme','filter','stickyHeaders','math','saveSort'<cfif isDefined("arguments.columnSelectorContainer")>,'columnSelector'</cfif>],<!---'select',--->
+
+					theme : "bootstrap",
+					headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
 
 					<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 					dateFormat : "ddmmyyyy", // set the default date format
@@ -718,6 +723,8 @@
 					</cfif>
 
 					widgetOptions : {
+
+						<!--- Filter options --->
 						filter_childRows : false,
 						filter_columnFilters : true,
 						filter_cssFilter : 'tablesorter-filter',
@@ -732,6 +739,7 @@
 						filter_serversideFiltering: false,
 						filter_startsWith : false,
 						filter_useParsedRow : false
+						<!--- END Filter options --->						
 
 						<!--- Suma de valores de las columnas --->
 							, math_data     : 'math' // data-math attribute
@@ -751,9 +759,55 @@
 						        return txt;
 						    }--->
 						<!--- Fin suma de los valores de las columnas --->
+
+
+						<!---,stickyHeaders_attachTo : '##pageHeaderContainer' Esto no funciona--->
+
+						<cfif isDefined("arguments.columnSelectorContainer")>
+
+							<!--- Column selector options --->
+
+							// target the column selector markup
+							, columnSelector_container : $('###arguments.columnSelectorContainer#')
+							// column status, true = display, false = hide
+							// disable = do not display on list
+							, columnSelector_columns : {
+								0: 'disable' /* set to disabled; not allowed to unselect it */
+							},
+							// remember selected columns (requires $.tablesorter.storage)
+							columnSelector_saveColumns: true,
+
+							// container layout
+							columnSelector_layout : '<li><label><input type="checkbox">{name}</label>&nbsp;&nbsp;&nbsp;&nbsp;</li>',
+							// data attribute containing column name to use in the selector container
+							columnSelector_name  : 'data-selector-name',
+
+							/* Responsive Media Query settings */
+							// enable/disable mediaquery breakpoints
+							columnSelector_mediaquery: false,
+							// toggle checkbox name
+							columnSelector_mediaqueryName: '<i>Selección de columnas automática</i>',
+							// breakpoints checkbox initial setting
+							columnSelector_mediaqueryState: true,
+							// responsive table hides columns with priority 1-6 at these breakpoints
+							// see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/##Applyingapresetbreakpoint
+							// *** set to false to disable ***
+							columnSelector_breakpoints : [ '20em', '30em', '40em', '50em', '60em', '70em' ],
+							// data attribute containing column priority
+							// duplicates how jQuery mobile uses priorities:
+							// http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
+							columnSelector_priority : 'data-priority',
+
+							// class name added to checked checkboxes - this fixes an issue with Chrome not updating FontAwesome
+							// applied icons; use this class name (input.checked) instead of input:checked
+							columnSelector_cssChecked : 'checked'
+
+						    <!--- END column selector options --->
+
+						</cfif>
 				    }
 				});
-
+	
 
 				<cfif arguments.openRowOnSelect IS true>
 				<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
@@ -777,7 +831,23 @@
 			    });
 
 				</cfif>
-				
+	
+				$('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#').doubleScroll({
+				    onlyIfScroll: true, // top scrollbar is not shown if the bottom one is not present
+				    resetOnWindowResize: true 
+				});
+
+				<!---$('##dataTablePopover#arguments.tableTypeId#_#arguments.table_id#').popover({
+				      placement: 'right',
+				      html: true, // required if content has HTML
+				      content: '<ul class="list-inline" id="popoverTarget#arguments.tableTypeId#_#arguments.table_id#"></ul>'
+				    })
+				    // bootstrap popover event triggered when the popover opens
+				    .on('shown.bs.popover', function () {
+				      // call this function to copy the column selection code into the popover
+				      $.tablesorter.columnSelector.attachTo( $("##dataTable#arguments.tableTypeId#_#arguments.table_id#"), '##popoverTarget#arguments.tableTypeId#_#arguments.table_id#');
+				});--->
+
 			}); 
 		</script>
 
@@ -788,353 +858,369 @@
 			<cfset selectFirst = false>
 		</cfif>
 
-		<table id="dataTable#arguments.tableTypeId#_#arguments.table_id#" class="data-table table-hover" style="margin-top:5px;">
-			<thead>
-				<tr>
-					<th style="width:25px;">##</th>
-					<!---<th>Fecha última modificación</th>--->
-					<cfloop query="fields">
-						<th>#fields.label#</th>
-						<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10><!--- LISTS --->
-							<cfset listFields = true>
-						</cfif>
-					</cfloop>
-				</tr>
-			</thead>
+		<!---<div class="columnSelectorWrapper">
+		  <input id="colSelect1" type="checkbox" class="hidden">
+		  <label class="columnSelectorButton" for="colSelect1">Column</label>
+		  <div id="columnSelector" class="columnSelector">
+		    <!-- this div is where the column selector is added -->
+		  </div>
+		</div>--->
 
-			<tbody>
-			<cfif listFields IS true>
-				
-				<!--- Get selected areas --->
-				<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRowSelectedAreas" returnvariable="getRowSelectedAreasResponse">
-					<cfinvokeargument name="table_id" value="#table_id#">
-					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-				</cfinvoke>
+		<!---<button id="dataTablePopover#arguments.tableTypeId#_#arguments.table_id#" type="button" class="btn btn-default btn-sm">
+		  <i class="fa-eye-slash"></i> Mostrar/ocultar columnas
+		</button>--->
 
-				<cfset selectedAreas = getRowSelectedAreasResponse.areas>---->
+			<div id="tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#">
 
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getRowSelectedAreas" returnvariable="selectedAreas">
-					<cfinvokeargument name="table_id" value="#table_id#">
-					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-
-					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-				</cfinvoke>
-
-			</cfif>
-
-			<!---<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>--->
-
-			<cfset alreadySelected = false>
-
-			<cfloop query="tableRows">
-
-				<cfif isDefined("arguments.view_id")>
-					<cfset rpage = "#tableTypeName#_view_rows.cfm?#tableTypeName#_view=#arguments.view_id#">
-					<cfset row_page_url = "#tableTypeName#_view_row.cfm?#tableTypeName#_view=#arguments.view_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
-				<cfelse>
-					<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
-					<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
-				</cfif>
-				
-
-				<!---Row selection--->
-				<cfset dataSelected = false>
-				
-				<cfif alreadySelected IS false>
-
-					<cfif ( isDefined("URL.row") AND URL.row IS tableRows.row_id ) OR ( selectFirst IS true AND tableRows.currentRow IS 1 AND app_version NEQ "mobile" ) ><!--- tableRows.recordCount --->
-
-						<!--- ESTO PUESTO AQUÍ HACE QUE FALLE EL TABLESORTER PARA LAS SUMAS --->
-						<!---<script>
-							openUrlHtml2('#row_page_url#','itemIframe');
-						</script>--->
-						<cfset onpenUrlHtml2 = row_page_url>
-
-						<cfset dataSelected = true>
-						<cfset alreadySelected = true>
-																		
-					</cfif>
-					
-				</cfif>
-
-				<tr <cfif dataSelected IS true>class="selected"</cfif> <cfif arguments.openRowOnSelect IS true>data-item-url="#row_page_url#"</cfif>>
-
-					<td>#tableRows.row_id#</td>
-					
-					<cfset row_id = tableRows.row_id>
-					<cfloop query="fields">
-
-						<cfif fields.field_id IS "creation_date"><!--- CREATION DATE --->
-
-							<td>#DateFormat(tableRows.creation_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>
-
-						<cfelseif fields.field_id IS "last_update_date"><!--- LAST UPDATE DATE --->
-							
-							<td><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
-
-						<cfelseif fields.field_id IS "insert_user"><!--- INSERT USER --->
-
-							<td>#insert_user_full_name#</td>
-
-						<cfelseif fields.field_id IS "update_user"><!--- UPDATE USER --->
-
-							<td>#update_user_full_name#</td>
-
-						<cfelse><!--- TABLE FIELDS --->
-
-							<cfset field_value = "">
-
-							<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS LIST --->
-
-								<cfif selectedAreas.recordCount GT 0>
-
-									<cfquery dbtype="query" name="rowSelectedAreas">
-										SELECT name
-										FROM selectedAreas
-										WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
-										AND row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">;
-									</cfquery>
-
-									<cfif rowSelectedAreas.recordCount GT 0>
-										<cfset field_value = valueList(rowSelectedAreas.name, "<br/>")>
-									</cfif>
-
+				<table id="dataTable#arguments.tableTypeId#_#arguments.table_id#" class="data-table table-hover" style="margin-top:5px;">
+					<thead>
+						<tr>
+							<th style="width:25px;">##</th>
+							<!---<th>Fecha última modificación</th>--->
+							<cfloop query="fields">
+								<th>#fields.label#</th>
+								<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10><!--- LISTS --->
+									<cfset listFields = true>
 								</cfif>
+							</cfloop>
+						</tr>
+					</thead>
 
-							<cfelseif fields.field_type_id IS 15 OR fields.field_type_id IS 16><!--- Text values list --->
+					<tbody>
+					<cfif listFields IS true>
+						
+						<!--- Get selected areas --->
+						<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRowSelectedAreas" returnvariable="getRowSelectedAreasResponse">
+							<cfinvokeargument name="table_id" value="#table_id#">
+							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+						</cfinvoke>
 
-								<cfset field_value = tableRows['field_#fields.field_id#']>
+						<cfset selectedAreas = getRowSelectedAreasResponse.areas>---->
 
-								<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
-									<cfinvokeargument name="string" value="#field_value#">
-								</cfinvoke>
-								
-							<cfelse><!--- IS NOT LIST --->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getRowSelectedAreas" returnvariable="selectedAreas">
+							<cfinvokeargument name="table_id" value="#table_id#">
+							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 
-								<cfset field_value = tableRows['field_#fields.field_id#']>
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+						</cfinvoke>
 
-								<cfif len(field_value) GT 0>
+					</cfif>
 
-									<cfif fields.field_type_id IS 5><!--- DECIMAL --->
+					<!---<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>--->
 
-										<cfif isNumeric(fields.mask_type_id)>
+					<cfset alreadySelected = false>
 
-											<cfset field_mask_type_id = fields.mask_type_id>
+					<cfloop query="tableRows">
 
-											<cfset cf_data_mask = maskTypesStruct[field_mask_type_id].cf_data_mask>
-											<cfset cf_prefix = maskTypesStruct[field_mask_type_id].cf_prefix>
-											<cfset cf_sufix = maskTypesStruct[field_mask_type_id].cf_sufix>
-											<cfset cf_locale = maskTypesStruct[field_mask_type_id].cf_locale>
-											<cfset field_value = cf_prefix&LSnumberFormat(field_value, cf_data_mask, cf_locale)&cf_sufix>
+						<cfif isDefined("arguments.view_id")>
+							<cfset rpage = "#tableTypeName#_view_rows.cfm?#tableTypeName#_view=#arguments.view_id#">
+							<cfset row_page_url = "#tableTypeName#_view_row.cfm?#tableTypeName#_view=#arguments.view_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
+						<cfelse>
+							<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
+							<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
+						</cfif>
+						
 
-											<!---<cfset field_value = LSnumberFormat(field_value, ",.__", getLocale())>--->
+						<!---Row selection--->
+						<cfset dataSelected = false>
+						
+						<cfif alreadySelected IS false>
 
-										<cfelse>
-											<!---<cfset field_value = LSnumberFormat(field_value, ".__", "en_US")>--->
+							<cfif ( isDefined("URL.row") AND URL.row IS tableRows.row_id ) OR ( selectFirst IS true AND tableRows.currentRow IS 1 AND app_version NEQ "mobile" ) ><!--- tableRows.recordCount --->
 
-											<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="trimDecimal" returnvariable="field_value">
-												<cfinvokeargument name="value" value="#field_value#">
-											</cfinvoke>
-											
-										</cfif>
-										
-										
-									<cfelseif fields.field_type_id IS 6><!--- DATE --->
-										<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
-									<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
-										<cfif field_value IS true>
-											<cfset field_value = "Sí">
-										<cfelseif field_value IS false>
-											<cfset field_value = "No">
-										</cfif>
-										<cfset field_value = '<span lang="es">#field_value#</span>'>
+								<!--- ESTO PUESTO AQUÍ HACE QUE FALLE EL TABLESORTER PARA LAS SUMAS --->
+								<!---<script>
+									openUrlHtml2('#row_page_url#','itemIframe');
+								</script>--->
+								<cfset onpenUrlHtml2 = row_page_url>
 
-									<cfelseif fields.field_type_id IS 12><!--- USER --->
+								<cfset dataSelected = true>
+								<cfset alreadySelected = true>
+																				
+							</cfif>
+							
+						</cfif>
 
-										<cfif isNumeric(field_value)>
-								
-											<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
-												<cfinvokeargument name="user_id" value="#field_value#">
+						<tr <cfif dataSelected IS true>class="selected"</cfif> <cfif arguments.openRowOnSelect IS true>data-item-url="#row_page_url#"</cfif>>
 
-												<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-												<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-											</cfinvoke>
-											<cfif userQuery.recordCount GT 0>
-												<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
-													<cfset field_value = userQuery.user_full_name>
-												<cfelse>
-													<cfset field_value = "<i>USUARIO SIN NOMBRE</i>">
-												</cfif>
-											<cfelse>
-												<cfset field_value = '<i lang="es">USUARIO NO ENCONTRADO</i>'>
+							<td>#tableRows.row_id#</td>
+							
+							<cfset row_id = tableRows.row_id>
+							<cfloop query="fields">
+
+								<cfif fields.field_id IS "creation_date"><!--- CREATION DATE --->
+
+									<td>#DateFormat(tableRows.creation_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>
+
+								<cfelseif fields.field_id IS "last_update_date"><!--- LAST UPDATE DATE --->
+									
+									<td><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
+
+								<cfelseif fields.field_id IS "insert_user"><!--- INSERT USER --->
+
+									<td>#insert_user_full_name#</td>
+
+								<cfelseif fields.field_id IS "update_user"><!--- UPDATE USER --->
+
+									<td>#update_user_full_name#</td>
+
+								<cfelse><!--- TABLE FIELDS --->
+
+									<cfset field_value = "">
+
+									<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS LIST --->
+
+										<cfif selectedAreas.recordCount GT 0>
+
+											<cfquery dbtype="query" name="rowSelectedAreas">
+												SELECT name
+												FROM selectedAreas
+												WHERE field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
+												AND row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">;
+											</cfquery>
+
+											<cfif rowSelectedAreas.recordCount GT 0>
+												<cfset field_value = valueList(rowSelectedAreas.name, "<br/>")>
 											</cfif>
-											
+
 										</cfif>
 
+									<cfelseif fields.field_type_id IS 15 OR fields.field_type_id IS 16><!--- Text values list --->
 
-									<cfelseif fields.field_type_id IS 13><!--- ITEM --->
+										<cfset field_value = tableRows['field_#fields.field_id#']>
 
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
+											<cfinvokeargument name="string" value="#field_value#">
+										</cfinvoke>
+										
+									<cfelse><!--- IS NOT LIST --->
 
-										<cfif isNumeric(field_value)>
+										<cfset field_value = tableRows['field_#fields.field_id#']>
 
-											<cfif fields.item_type_id IS 10><!--- FILE --->
+										<cfif len(field_value) GT 0>
 
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
-													<cfinvokeargument name="file_id" value="#field_value#">
-													<cfinvokeargument name="parse_dates" value="false"/>
-													<cfinvokeargument name="published" value="false"/>
+											<cfif fields.field_type_id IS 5><!--- DECIMAL --->
 
-													<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-													<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-												</cfinvoke>
+												<cfif isNumeric(fields.mask_type_id)>
 
-												<cfif fileQuery.recordCount GT 0>
-													<cfif len(fileQuery.name) GT 0>
-														<cfset field_value = fileQuery.name>
-													<cfelse>
-														<cfset field_value = "<i>ARCHIVO SIN TÍTULO</i>">
-													</cfif>
+													<cfset field_mask_type_id = fields.mask_type_id>
+
+													<cfset cf_data_mask = maskTypesStruct[field_mask_type_id].cf_data_mask>
+													<cfset cf_prefix = maskTypesStruct[field_mask_type_id].cf_prefix>
+													<cfset cf_sufix = maskTypesStruct[field_mask_type_id].cf_sufix>
+													<cfset cf_locale = maskTypesStruct[field_mask_type_id].cf_locale>
+													<cfset field_value = cf_prefix&LSnumberFormat(field_value, cf_data_mask, cf_locale)&cf_sufix>
+
+													<!---<cfset field_value = LSnumberFormat(field_value, ",.__", getLocale())>--->
+
 												<cfelse>
-													<cfset field_value = "<i>ARCHIVO NO DISPONIBLE</i>">
+													<!---<cfset field_value = LSnumberFormat(field_value, ".__", "en_US")>--->
+
+													<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="trimDecimal" returnvariable="field_value">
+														<cfinvokeargument name="value" value="#field_value#">
+													</cfinvoke>
+													
 												</cfif>
 												
-											<cfelse><!--- ITEM --->
+												
+											<cfelseif fields.field_type_id IS 6><!--- DATE --->
+												<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
+											<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
+												<cfif field_value IS true>
+													<cfset field_value = "Sí">
+												<cfelseif field_value IS false>
+													<cfset field_value = "No">
+												</cfif>
+												<cfset field_value = '<span lang="es">#field_value#</span>'>
 
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
-													<cfinvokeargument name="item_id" value="#field_value#">
-													<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
-													<cfinvokeargument name="parse_dates" value="false"/>
-													<cfinvokeargument name="published" value="false"/>
+											<cfelseif fields.field_type_id IS 12><!--- USER --->
 
-													<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-													<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-												</cfinvoke>
+												<cfif isNumeric(field_value)>
+										
+													<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
+														<cfinvokeargument name="user_id" value="#field_value#">
 
-												<cfif itemQuery.recordCount GT 0>
-													<cfif len(itemQuery.title) GT 0>
-														<cfset field_value = itemQuery.title>
+														<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+														<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+													</cfinvoke>
+													<cfif userQuery.recordCount GT 0>
+														<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+															<cfset field_value = userQuery.user_full_name>
+														<cfelse>
+															<cfset field_value = "<i>USUARIO SIN NOMBRE</i>">
+														</cfif>
 													<cfelse>
-														<cfset field_value = "<i>ELEMENTO SIN TÍTULO</i>">
+														<cfset field_value = '<i lang="es">USUARIO NO ENCONTRADO</i>'>
 													</cfif>
-												<cfelse>
-													<cfset field_value = "<i>ELEMENTO NO DISPONIBLE</i>">
+													
 												</cfif>
 
-											</cfif>
 
+											<cfelseif fields.field_type_id IS 13><!--- ITEM --->
+
+
+												<cfif isNumeric(field_value)>
+
+													<cfif fields.item_type_id IS 10><!--- FILE --->
+
+														<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+															<cfinvokeargument name="file_id" value="#field_value#">
+															<cfinvokeargument name="parse_dates" value="false"/>
+															<cfinvokeargument name="published" value="false"/>
+
+															<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+															<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+														</cfinvoke>
+
+														<cfif fileQuery.recordCount GT 0>
+															<cfif len(fileQuery.name) GT 0>
+																<cfset field_value = fileQuery.name>
+															<cfelse>
+																<cfset field_value = "<i>ARCHIVO SIN TÍTULO</i>">
+															</cfif>
+														<cfelse>
+															<cfset field_value = "<i>ARCHIVO NO DISPONIBLE</i>">
+														</cfif>
+														
+													<cfelse><!--- ITEM --->
+
+														<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+															<cfinvokeargument name="item_id" value="#field_value#">
+															<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
+															<cfinvokeargument name="parse_dates" value="false"/>
+															<cfinvokeargument name="published" value="false"/>
+
+															<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+															<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+														</cfinvoke>
+
+														<cfif itemQuery.recordCount GT 0>
+															<cfif len(itemQuery.title) GT 0>
+																<cfset field_value = itemQuery.title>
+															<cfelse>
+																<cfset field_value = "<i>ELEMENTO SIN TÍTULO</i>">
+															</cfif>
+														<cfelse>
+															<cfset field_value = "<i>ELEMENTO NO DISPONIBLE</i>">
+														</cfif>
+
+													</cfif>
+
+												</cfif>
+
+
+											<cfelse>
+
+												<cfif fields.field_type_id IS 2 OR fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- TEXTAREAS --->
+													
+													<cfif len(field_value) GT 60><!---200--->
+
+														<cfif fields.field_type_id IS 2>
+															
+															<cfset field_value = HTMLEditFormat(field_value)>
+
+														<cfelse>
+
+															<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="removeHTML" returnvariable="field_value">
+																<cfinvokeargument name="string" value="#field_value#">
+															</cfinvoke>
+
+														</cfif>
+
+														<cfset summary_value = left(field_value, 55)&"...">
+
+														<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="summary_value">
+															<cfinvokeargument name="string" value="#summary_value#">
+														</cfinvoke>--->
+														<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="summary_value">
+															<cfinvokeargument name="string" value="#summary_value#">
+														</cfinvoke>
+
+														<cfif fields.field_type_id IS NOT 11><!--- IS NOT Very long text --->
+															<cfset field_value = '#summary_value#<span class="hidden">#field_value#</span>'>
+														<cfelse>
+															<cfset field_value = summary_value>
+														</cfif>											
+
+													<cfelseif fields.field_type_id IS 2>
+
+														<cfset field_value = HTMLEditFormat(field_value)>
+
+														<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
+															<cfinvokeargument name="string" value="#field_value#">
+														</cfinvoke>---->
+
+														<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
+															<cfinvokeargument name="string" value="#field_value#">
+														</cfinvoke>
+
+													</cfif>
+
+												</cfif>
+												
+											</cfif>
 										</cfif>
 
+									</cfif>
+									
+									<cfif fields.field_type_id IS 5 AND isDefined("cf_locale") AND cf_locale EQ "es_ES"><!---Esto es neceario para que se sume correctamente, el valor que se suma es el de data-text--->
+
+										<cfif tableRows['field_#fields.field_id#'] GT 0>
+											<td data-text="#tableRows['field_#fields.field_id#']#">#field_value#</td>
+										<cfelse>
+											<td data-text="0">#field_value#</td>
+										</cfif>
+
+									<cfelseif fields.field_type_id IS 4 OR fields.field_type_id IS 5>
+
+										<!--- Para que las sumas de los campos numéricos sean correctas deben introducirse 0 en los valores vacíos --->
+										<cfif tableRows['field_#fields.field_id#'] GT 0>
+											<td>#field_value#</td>
+										<cfelse>
+											<td data-text="0">#field_value#</td>
+										</cfif>
 
 									<cfelse>
 
-										<cfif fields.field_type_id IS 2 OR fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- TEXTAREAS --->
-											
-											<cfif len(field_value) GT 60><!---200--->
+										<td>#field_value#</td>
 
-												<cfif fields.field_type_id IS 2>
-													
-													<cfset field_value = HTMLEditFormat(field_value)>
-
-												<cfelse>
-
-													<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="removeHTML" returnvariable="field_value">
-														<cfinvokeargument name="string" value="#field_value#">
-													</cfinvoke>
-
-												</cfif>
-
-												<cfset summary_value = left(field_value, 55)&"...">
-
-												<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="summary_value">
-													<cfinvokeargument name="string" value="#summary_value#">
-												</cfinvoke>--->
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="summary_value">
-													<cfinvokeargument name="string" value="#summary_value#">
-												</cfinvoke>
-
-												<cfif fields.field_type_id IS NOT 11><!--- IS NOT Very long text --->
-													<cfset field_value = '#summary_value#<span class="hidden">#field_value#</span>'>
-												<cfelse>
-													<cfset field_value = summary_value>
-												</cfif>											
-
-											<cfelseif fields.field_type_id IS 2>
-
-												<cfset field_value = HTMLEditFormat(field_value)>
-
-												<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
-													<cfinvokeargument name="string" value="#field_value#">
-												</cfinvoke>---->
-
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
-													<cfinvokeargument name="string" value="#field_value#">
-												</cfinvoke>
-
-											</cfif>
-
-										</cfif>
-										
 									</cfif>
+
 								</cfif>
 
-							</cfif>
-							
-							<cfif fields.field_type_id IS 5 AND isDefined("cf_locale") AND cf_locale EQ "es_ES"><!---Esto es neceario para que se sume correctamente, el valor que se suma es el de data-text--->
-
-								<cfif tableRows['field_#fields.field_id#'] GT 0>
-									<td data-text="#tableRows['field_#fields.field_id#']#">#field_value#</td>
-								<cfelse>
-									<td data-text="0">#field_value#</td>
-								</cfif>
-
-							<cfelseif fields.field_type_id IS 4 OR fields.field_type_id IS 5>
-
-								<!--- Para que las sumas de los campos numéricos sean correctas deben introducirse 0 en los valores vacíos --->
-								<cfif tableRows['field_#fields.field_id#'] GT 0>
-									<td>#field_value#</td>
-								<cfelse>
-									<td data-text="0">#field_value#</td>
-								</cfif>
-
-							<cfelse>
-
-								<td>#field_value#</td>
-
-							</cfif>
-
-						</cfif>
-
+							</cfloop>
+						</tr>
 					</cfloop>
-				</tr>
-			</cfloop>
-			</tbody>
+					</tbody>
 
-			<tfoot>
-			   <tr>
-					<th></th>
-					<cfloop query="fields">
-						<cfif fields.field_type_id EQ 4><!--- INTEGER --->
-							<th data-math="col-sum" data-math-mask="##"></th><!---data-math-mask="##000"--->
-						<cfelseif fields.field_type_id IS 5><!--- DECIMAL --->
-
-							<cfif isNumeric(fields.mask_type_id)>
-								<cfset field_mask_type_id = fields.mask_type_id>
-								<th data-math="col-sum" data-math-mask="#maskTypesStruct[field_mask_type_id].tablesorterd_data_mask#"></th>
-							<cfelse>
-								<th data-math="col-sum" data-math-mask="####.00"></th>
-							</cfif>
-
-							<!---<th data-math="col-sum" data-math-mask="##.00"></th>--->
-							
-						<cfelse>
+					<tfoot>
+					   <tr>
 							<th></th>
-						</cfif>
-					</cfloop>
-				</tr>
-			</tfoot>
+							<cfloop query="fields">
+								<cfif fields.field_type_id EQ 4><!--- INTEGER --->
+									<th data-math="col-sum" data-math-mask="##"></th><!---data-math-mask="##000"--->
+								<cfelseif fields.field_type_id IS 5><!--- DECIMAL --->
 
-		</table>
+									<cfif isNumeric(fields.mask_type_id)>
+										<cfset field_mask_type_id = fields.mask_type_id>
+										<th data-math="col-sum" data-math-mask="#maskTypesStruct[field_mask_type_id].tablesorterd_data_mask#"></th>
+									<cfelse>
+										<th data-math="col-sum" data-math-mask="####.00"></th>
+									</cfif>
+
+									<!---<th data-math="col-sum" data-math-mask="##.00"></th>--->
+									
+								<cfelse>
+									<th></th>
+								</cfif>
+							</cfloop>
+						</tr>
+					</tfoot>
+
+				</table>
+
+			</div>
 
 		<cfif isDefined("onpenUrlHtml2")>
 			

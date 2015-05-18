@@ -26,8 +26,10 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <cfoutput>
-<div class="div_message_page_title">#table.title#</div>
-<div class="div_separator"><!-- --></div>
+<cfif app_version NEQ "mobile">
+	<div class="div_message_page_title">#table.title#</div>
+	<div class="div_separator"><!-- --></div>
+</cfif>
 
 <div class="div_head_subtitle_area">
 
@@ -41,7 +43,7 @@
 
 		<!---<cfif objectArea.read_only IS false>--->
 			<div class="btn-group">
-				<a href="#tableTypeName#_view_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_view_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-info btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span>Nueva vista</span></a><!---color:##5BB75B;--->
+				<a href="#tableTypeName#_view_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_view_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span>Nueva vista</span></a><!---color:##5BB75B;--->
 			</div>
 		<!---</cfif>--->
 		<!---<a href="#tableTypeName#_views_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Copiar de plantilla" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar de plantilla</span></a>

@@ -9,7 +9,8 @@
 
 	<!---<cfset item_id = FORM.item_id>--->
 	
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="copyItemToAreas" returnvariable="resultCopyItem">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="copyItemToAreas" argumentcollection="#FORM#" returnvariable="resultCopyItem">
+	<!---
 		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 		<!---<cfinvokeargument name="item_id" value="#item_id#">--->
 		<cfinvokeargument name="areas_ids" value="#FORM.areas_ids#">
@@ -87,6 +88,14 @@
 		<cfif isDefined("FORM.identifier")>
 			<cfinvokeargument name="identifier" value="#FORM.identifier#">
 		</cfif>
+		<cfif isDefined("FORM.price")>
+			<cfinvokeargument name="price" value="#FORM.price#">
+		</cfif>
+		<cfif isDefined("FORM.sub_type_id")>
+			<cfinvokeargument name="sub_type_id" value="#FORM.sub_type_id#">
+		</cfif>
+
+	--->
 		<!---<cfinvokeargument name="return_path" type="string" required="yes">--->
 	</cfinvoke>
 	<cfset msg = resultCopyItem.message>
@@ -113,9 +122,10 @@
 <cfelseif isDefined("URL.sourceItemTypeId") AND isNumeric(URL.sourceItemTypeId)>
 	
 	<cfset sourceItemTypeId = URL.sourceItemTypeId>
+
+	<cfset sourceItemTypeName = itemTypesStruct[sourceItemTypeId].name>
 	
-	<cfswitch expression="#sourceItemTypeId#">
-		
+	<!---<cfswitch expression="#sourceItemTypeId#">
 		<cfcase value="1">
 			<cfset sourceItemTypeName = "message">
 		</cfcase>
@@ -143,8 +153,7 @@
 		<cfcase value="7">
 			<cfset sourceItemTypeName = "consultation">
 		</cfcase>
-	
-	</cfswitch>
+	</cfswitch>--->
 	
 	<cfset item_id = URL[sourceItemTypeName]>
 	<cfset return_page = "#return_path##sourceItemTypeName#.cfm?#sourceItemTypeName#=#item_id#">
@@ -161,19 +170,20 @@
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
-
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
-
-<!--- <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.css" rel="stylesheet" type="text/css" /> --->
-<!--- <script type="text/javascript">
-	var applicationId = "#APPLICATION.identifier#";
-</script> --->
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
+
+
+<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 20>
+	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
+<cfelse>
+	<cfinclude template="#APPLICATION.htmlPath#/includes/summernote_scripts.cfm">
+</cfif>
+
 </cfoutput>
 
-<script type="text/javascript">
+<script>
 	
 	function treeLoaded() { 
 
@@ -199,10 +209,6 @@
 	
 	$(window).load( function() {		
 
-		$('.collapse').collapse({
-			parent:"#accordion"
-		});
-
 		$("#searchText").on("keydown", function(e) { 
 			
 			if(e.which == 13) { //Enter key
@@ -219,13 +225,23 @@
 		showTree(true);
 
 		<!--- Hack para posibilitar la selección de los checkboxs en el árbol al hacer click sobre ellos --->
+
+		<!---De esta forma no funcionaba bien cuando se navegaba por el árbol
 		$("#areasTreeContainer input:checkbox").click(function(event) {
 			var inputId = "#"+this.id;
 			setTimeout(function(){
 		       $(inputId).prop("checked",!($(inputId).is(":checked"))); 
 		    }, 100);
 
+		});--->
+
+		$("#areasTreeContainer").on('click', 'input:checkbox', function(event) {
+			var inputId = "#"+this.id;
+			setTimeout(function(){
+		       $(inputId).prop("checked",!($(inputId).is(":checked"))); 
+		    }, 100);
 		});
+
 		
 	});
 
@@ -252,19 +268,12 @@
 	</cfif>
 </cfinvoke>
 
-<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="objectItem" returnvariable="objectItem">
-	<cfif isDefined("sourceItemTypeId")><!---Si se va a copiar de un mensaje o de otro tipo de elemento--->
-		<cfinvokeargument name="itemTypeId" value="#sourceItemTypeId#">
-	<cfelse>
-		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-	</cfif>
-	<cfinvokeargument name="xml" value="#xmlItem#">
-	<cfinvokeargument name="return_type" value="object">
-</cfinvoke>--->
-
 <cfset objectItem.id = ""><!---Se borra el id para que no se pueda hacer nada sobre el original--->
 
 <cfset area_id = objectItem.area_id>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+
 
 <cfif itemTypeId IS 2><!--- Entries --->
 	
@@ -310,10 +319,29 @@
 		<cfset queryAddColumn(objectItem, "real_value")>
 	</cfif>
 
-<cfelseif itemTypeId IS 7 OR itemTypeId IS 8><!--- Consultations, Pubmed --->
+	<cfif NOT isDefined("objectItem.price")>
+		<cfset queryAddColumn(objectItem, "price")>
+	</cfif>
+
+<cfelseif itemTypeId IS 7><!--- Consultation --->
 
 	<cfif NOT isDefined("objectItem.identifier")>
 		<cfset queryAddColumn(objectItem, "identifier")>
+	</cfif>
+
+<cfelseif itemTypeId IS 8><!--- Pubmed --->
+
+	<cfif NOT isDefined("objectItem.identifier")>
+		<cfset queryAddColumn(objectItem, "identifier")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.sub_type_id")>
+		<cfset queryAddColumn(objectItem, "sub_type_id")>
+	</cfif>
+
+	<cfif NOT isDefined("objectItem.price")>
+		<cfset queryAddColumn(objectItem, "price")>
+		<cfset querySetCell(objectItem, "price", "0")>
 	</cfif>
 
 </cfif>
@@ -339,14 +367,15 @@
 </cfif>
 
 <cfoutput>
-<div class="div_file_page_name">#objectItem.title#</div>
+
+<!---<div class="div_file_page_name">#objectItem.title#</div>---->
 
 <div class="div_head_subtitle"><span lang="es">Copiar #itemTypeNameEs# a áreas</span>
 </div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
 
-<script type="text/javascript">
+<!---<script type="text/javascript">
 function onSubmitForm()
 {
 	if(check_custom_form())
@@ -368,7 +397,11 @@ function onSubmitForm()
 	else
 		return false;
 }
-</script>
+</script>--->
+
+<cfset read_only = false>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form_js.cfm">
 
 <div id="mainContainer" style="clear:both; margin-left:5px;">		
 <cfform name="item_form" method="post" enctype="multipart/form-data" action="#CGI.SCRIPT_NAME#" style="clear:both;" onsubmit="return onSubmitForm();">
@@ -377,10 +410,13 @@ function onSubmitForm()
 	<input type="hidden" name="sourceItemTypeId" value="#sourceItemTypeId#">
 	</cfif>
 	<input type="hidden" name="area_id" value="#area_id#">
-	<input type="submit" class="btn btn-primary" value="Añadir #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-bottom:3px;" />
-	
-	<a href="#return_page#" class="btn btn-default" lang="es" style="float:right;">Cancelar</a>
-	
+
+	<div id="submitDiv1">
+		<input type="submit" class="btn btn-primary" value="Añadir #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-bottom:3px;" />
+
+		<a href="#return_page#" class="btn btn-default" lang="es" style="float:right;">Cancelar</a>
+	</div>
+
 	<div class="panel-group" id="accordion">
 
 		<div class="panel panel-default" style="width:100%;"><!---Tab1--->
@@ -389,11 +425,12 @@ function onSubmitForm()
 				<h4 class="panel-title"><a data-toggle="collapse" data-parent="##accordion" href="##collapseOne" lang="es">Editar contenido</a></h4>
 			</div>
 
-			<div id="collapseOne" class="panel-collapse collapse in">
+			<div id="collapseOne" class="panel-collapse collapse">
 				
 				<div class="panel-body">
 
 					<div class="form-horizontal">
+						<cfset page_type = 1>
 						<cfset read_only = false>
 						<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_inputs.cfm">
 					</div>
@@ -410,7 +447,7 @@ function onSubmitForm()
 				<h4 class="panel-title"><a data-toggle="collapse" data-parent="##accordion" href="##collapseTwo" lang="es">Áreas a las que copiar</a></h4>
 			</div>
 
-			<div id="collapseTwo" class="panel-collapse collapse">
+			<div id="collapseTwo" class="panel-collapse collapse in">
 				
 				<div class="panel-body">
 
@@ -443,18 +480,13 @@ function onSubmitForm()
 							<cfif itemTypeNoWeb IS false>
 								<cfinvokeargument name="disable_input_area" value="true"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
 							</cfif>
-
-							<!---
-							<cfif itemTypeId IS 1 OR itemTypeId IS 6 OR itemTypeId IS 7><!---No se pueden copiar a web los mensajes, las tareas y las interconsultas--->
-								<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan copiar mensajes a las áreas WEB--->
-							<cfelseif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---No se pueden copiar a no web las entradas, enlaces y noticias--->
-								<cfinvokeargument name="disable_input_area" value="true"><!---Esto es para que no se puedan copiar elementos WEB a las áreas no WEB--->
-							</cfif>--->
 						</cfinvoke>
 					</div>
 					
-					<script type="text/javascript">
-						addRailoRequiredCheckBox("areas_ids[]",window.lang.translate("Debe seleccionar al menos un área"));
+					<script>
+						$(function() {
+						  addRailoRequiredCheckBox("areas_ids[]",window.lang.translate("Debe seleccionar al menos un área"));
+						});
 					</script>
 
 				</div>
@@ -464,9 +496,13 @@ function onSubmitForm()
 		</div><!---END Tab2--->
 
 	</div><!---END accordion--->
-	<input name="submit" type="submit" class="btn btn-primary" value="Copiar #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-top:3px;"/>
 	
-	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
+	<div id="submitDiv2">
+		<input name="submit" type="submit" class="btn btn-primary" value="Copiar #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-top:3px;"/>
+
+		<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
+	</div>
+	
 	
 </cfform>
 

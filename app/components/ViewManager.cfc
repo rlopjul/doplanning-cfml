@@ -480,61 +480,6 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<!---
-			<cftry>
-				
-				<cfif arguments.with_transaction IS true>
-					
-					<!--- <cftransaction> --->
-					<cfquery datasource="#client_dsn#" name="startTransaction">
-						START TRANSACTION;
-					</cfquery>
-
-				</cfif>
-			
-				<!---DELETE ITEM POSITION--->
-				<cfinvoke component="AreaItemManager" method="deleteItemPosition">
-					<cfinvokeargument name="item_id" value="#arguments.view_id#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				</cfinvoke>
-
-				<cfquery name="deleteView" datasource="#client_dsn#">
-					DELETE FROM `#client_abb#_#itemTypeTable#`
-					WHERE id = <cfqueryparam value="#arguments.view_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-
-				<cfif arguments.with_transaction IS true>
-					<!--- </cftransaction> --->
-					<cfquery datasource="#client_dsn#" name="endTransaction">
-						COMMIT;
-					</cfquery>
-				</cfif>
-
-				<cfcatch>
-
-					<cfif arguments.with_transaction IS true>
-						<cfquery datasource="#client_dsn#" name="rollbackTransaction">
-							ROLLBACK;
-						</cfquery>
-					</cfif>
-
-					<cfrethrow/>
-
-				</cfcatch>
-
-			</cftry>
-			
-			<cfinclude template="includes/logRecord.cfm">
-
-			<!--- Alert --->
-			<cfinvoke component="AlertManager" method="newAreaItem">
-				<cfinvokeargument name="objectItem" value="#view#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				<cfinvokeargument name="action" value="delete">
-			</cfinvoke>
-
-			<cfset response = {result=true, view_id=#arguments.view_id#}>--->
-
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -545,6 +490,67 @@
 		<cfreturn response>
 			
 	</cffunction>
+
+
+	<!--- ----------------------- DELETE AREA VIEWS -------------------------------- --->
+	
+	<cffunction name="deleteAreaViews" returntype="struct" access="package">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+		
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+			
+			<cfinclude template="includes/checkAreaAdminAccess.cfm">
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+			
+			<!--- --------------DELETE AREA VIEWS------------------------- --->
+			<cfquery name="itemsQuery" datasource="#client_dsn#">
+				SELECT id 
+				FROM #client_abb#_#itemTypeTable# 
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+			<cfif itemsQuery.recordCount GT 0>
+			
+				<cfloop query="itemsQuery">
+
+					<!--- deleteView --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/ViewManager" method="deleteView" returnvariable="deleteViewResponse">
+						<cfinvokeargument name="view_id" value="#itemsQuery.id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfif deleteViewResponse.result IS false>
+						<cfthrow message="#deleteViewResponse.message#">
+					</cfif>
+					
+				</cfloop>
+				
+			</cfif>
+
+			<cfset response = {result=true}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
 
 		
 	<!---

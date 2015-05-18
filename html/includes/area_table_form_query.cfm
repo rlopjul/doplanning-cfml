@@ -4,6 +4,7 @@
 --->
 
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 <cfif page_type IS 1>
 	<cfset methodAction = "createTable">

@@ -149,7 +149,7 @@
 			<cfif NOT isDefined("areaXml.xmlAttributes.type") OR areaXml.xmlAttributes.type EQ "">
 				<cfset li_rel = "allowed">
 			<cfelse>
-				<cfset li_rel = "allowed-web">
+				<cfset li_rel = "allowed-#areaXml.xmlAttributes.type#">
 			</cfif>
 			<cfif arguments.admin IS false>
 				<cfset a_href = "area_items.cfm?area=#areaXml.xmlAttributes.id#">		
@@ -161,7 +161,7 @@
 			<cfif NOT isDefined("areaXml.xmlAttributes.type") OR areaXml.xmlAttributes.type EQ "">
 				<cfset li_rel = "not-allowed">
 			<cfelse>
-				<cfset li_rel = "not-allowed-web">
+				<cfset li_rel = "not-allowed-#areaXml.xmlAttributes.type#">
 			</cfif>	
 			<cfset a_href = "area.cfm?area=#areaXml.xmlAttributes.id#">
 		</cfif>
@@ -192,7 +192,7 @@
 				<cfif NOT isDefined("areaXml.xmlAttributes.type") OR areaXml.xmlAttributes.type EQ "">
 					<cfset li_rel = "not-allowed">
 				<cfelse>
-					<cfset li_rel = "not-allowed-web">
+					<cfset li_rel = "not-allowed-#areaXml.xmlAttributes.type#">
 				</cfif>	
 
 			</cfif>

@@ -249,11 +249,15 @@
 	
 	<cffunction name="getAreaPath" returntype="string" access="public">
 		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="from_area_id" type="numeric" required="no"><!---Define el área a partir de la cual se muestra la ruta (sin incluirla)--->
+		<cfargument name="from_area_id" type="numeric" required="no"><!---Define el área a partir de la cual se muestra la ruta--->
+		<cfargument name="include_from_area" type="boolean" required="false" default="false">
 		<cfargument name="path" type="string" required="no" default="">
 		<cfargument name="separator" type="string" required="no" default="/">
 		<cfargument name="with_base_link" type="string" required="no" default=""><!---Define si se debe enlazar el área y cuál es la url base a la que se añadirá el id del área--->
 		<cfargument name="hide_menu_type_area" type="boolean" required="false" default="false">
+		<cfargument name="cur_area_link_class" type="string" required="false" default="">
+		<cfargument name="cur_area_link_styles" type="string" required="false" default="">
+		<cfargument name="area_link_styles" type="string" required="false" default="">
 		
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">	
@@ -264,7 +268,7 @@
 		<cfset var cur_area = "">
 		<cfset var area_dot = 0>
 						
-		<cfif NOT isDefined("arguments.from_area_id") OR arguments.area_id NEQ arguments.from_area_id><!---Si el área de inicio no es el área actual (no se incluye el área de inicio en la ruta)--->
+		<cfif NOT isDefined("arguments.from_area_id") OR arguments.include_from_area IS true OR arguments.area_id NEQ arguments.from_area_id><!---Si el área de inicio no es el área actual o se incluye el área de inicio en la ruta)--->
 						
 			<cfquery name="getAreaQuery" datasource="#client_dsn#">
 				SELECT name, parent_id, menu_type_id
@@ -288,7 +292,14 @@
 								<cfset cur_area = right(cur_area, len(cur_area)-(area_dot+1))>
 							</cfif>
 							
-							<cfset cur_area = '<a href="'&arguments.with_base_link&arguments.area_id&'">'&cur_area&'</a>'>
+							<cfif len(arguments.cur_area_link_class) GT 0>
+								<cfset arguments.cur_area_link_class = 'class="#arguments.cur_area_link_class#"'>
+							</cfif>
+							<cfif len(arguments.area_link_styles) GT 0 OR len(arguments.cur_area_link_styles) GT 0>
+								<cfset arguments.cur_area_link_styles = ' style="#arguments.area_link_styles##arguments.cur_area_link_styles#"'>
+							</cfif>
+
+							<cfset cur_area = '<a href="'&arguments.with_base_link&arguments.area_id&'" #arguments.cur_area_link_class##arguments.cur_area_link_styles#>'&cur_area&'</a>'>
 						</cfif>
 						
 						<cfif len(arguments.path) GT 0>
@@ -299,20 +310,29 @@
 							
 					</cfif>
 
-					<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
-						<cfinvokeargument name="area_id" value="#getAreaQuery.parent_id#">
-						<cfif isDefined("arguments.from_area_id")>
-						<cfinvokeargument name="from_area_id" value="#arguments.from_area_id#">
-						</cfif>
-						<cfinvokeargument name="path" value="#arguments.path#">
-						<cfinvokeargument name="separator" value="#arguments.separator#">
-						<cfinvokeargument name="with_base_link" value="#arguments.with_base_link#">
-						<cfinvokeargument name="hide_menu_type_area" value="#arguments.hide_menu_type_area#">
+					<cfif isDefined("arguments.from_area_id") AND arguments.area_id EQ arguments.from_area_id>
 						
-						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-					</cfinvoke>
-					
+						<cfset area_path = arguments.path>
+
+					<cfelse>
+
+						<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
+							<cfinvokeargument name="area_id" value="#getAreaQuery.parent_id#">
+							<cfif isDefined("arguments.from_area_id")>
+							<cfinvokeargument name="from_area_id" value="#arguments.from_area_id#">
+							<cfinvokeargument name="include_from_area" value="#arguments.include_from_area#">
+							</cfif>
+							<cfinvokeargument name="path" value="#arguments.path#">
+							<cfinvokeargument name="separator" value="#arguments.separator#">
+							<cfinvokeargument name="with_base_link" value="#arguments.with_base_link#">
+							<cfinvokeargument name="hide_menu_type_area" value="#arguments.hide_menu_type_area#">
+							<cfinvokeargument name="area_link_styles" value="#arguments.area_link_styles#">
+							
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+						</cfinvoke>
+
+					</cfif>
 
 				<cfelse>
 					

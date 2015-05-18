@@ -4,7 +4,7 @@
 <cfset structInsert(itemTypesStruct, 1, {id=1, position=1, name="message", namePlural="messages", table="messages", label="Mensaje", labelPlural="Mensajes", gender="male", web=false, noWeb=true, showInSelect=true})>
 
 <!---entries--->
-<cfset structInsert(itemTypesStruct, 2, {id=2, position=2, name="entry", namePlural="entries", table="entries", label="Elemento de contenido genérico", labelPlural="Elementos de contenido genérico", gender="male", web=true, noWeb=false, showInSelect=true})>
+<cfset structInsert(itemTypesStruct, 2, {id=2, position=2, name="entry", namePlural="entries", table="entries", label="Elemento web", labelPlural="Elementos web", gender="male", web=true, noWeb=false, showInSelect=true})>
 
 <cfif APPLICATION.identifier EQ "vpnet">
 	<!---links--->
@@ -21,7 +21,7 @@
 <cfset structInsert(itemTypesStruct, 6, {id=6, position=9, name="task", namePlural="tasks", table="tasks",  label="Tarea", labelPlural="Tareas", gender="female", web=false, noWeb=true, showInSelect=true})>
 
 <!---consultations--->
-<cfset structInsert(itemTypesStruct, 7, {id=7, position=13, name="consultation", namePlural="consultations", table="consultations", label="Interconsulta", labelPlural="Interconsultas", gender="female", web=false, noWeb=true, showInSelect=true})>
+<cfset structInsert(itemTypesStruct, 7, {id=7, position=13, name="consultation", namePlural="consultations", table="consultations", label="Consulta", labelPlural="Consultas", gender="female", web=false, noWeb=true, showInSelect=true})>
 
 <cfif APPLICATION.modulePubMedComments IS true>
 	<!---publications--->
@@ -41,7 +41,7 @@
 <cfset structInsert(itemTypesStruct, 12, {id=12, position=11, name="form", namePlural="forms", table="forms", label="Formulario", labelPlural="Formularios", gender="male", web=true, noWeb=true, showInSelect=true, tableTypeId=2})>
 
 <!---typologies (files)--->
-<cfset structInsert(itemTypesStruct, 13, {id=13, position=12, name="typology", namePlural="typologies", table="typologies", label="Tipología", labelPlural="Tipologías", gender="female", web=false, noWeb=true, showInSelect=false, tableTypeId=3})>
+<cfset structInsert(itemTypesStruct, 13, {id=13, position=12, name="typology", namePlural="typologies", table="typologies", label="Tipología de archivo", labelPlural="Tipologías de archivos", gender="female", web=false, noWeb=true, showInSelect=false, tableTypeId=3})>
 
 <!---lists views--->
 <cfset structInsert(itemTypesStruct, 14, {id=14, position=15, name="list_view", namePlural="lists_views", table="lists_views", label="Vista de Lista", labelPlural="Vistas de Listas", gender="female", web=true, noWeb=true, showInSelect=false, tableTypeId=1, tableTypeName="list"})>

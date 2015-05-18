@@ -1,4 +1,20 @@
-<cfswitch expression="#tableTypeId#"> 
+
+<cfinvoke component="#APPLICATION.coreComponentsPath#/TableManager" method="getTableTypeStruct" returnvariable="tableTypeStruct">
+	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+</cfinvoke>
+
+<cfset tableTypeName = tableTypeStruct.name>
+<cfset tableTypeNameP = tableTypeStruct.namePlural>
+<cfset tableTypeTable = tableTypeStruct.table>
+
+<cfset tableTypeNameEs = tableTypeStruct.label>
+
+<cfset tableTypeGender = tableTypeStruct.gender>
+
+<cfset itemTypeId = tableTypeStruct.itemTypeId>
+<cfset viewTypeId = tableTypeStruct.viewTypeId>
+
+<!---<cfswitch expression="#tableTypeId#"> 
 	
 	<cfcase value="1"><!---lists--->
 		
@@ -45,4 +61,4 @@
 	
    	</cfcase> 
 
-</cfswitch>
+</cfswitch>--->

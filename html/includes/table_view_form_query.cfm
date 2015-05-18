@@ -62,6 +62,14 @@
 		
 		<cfset area_id = table.area_id>
 
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/TableManager" method="getTableTypeStruct" returnvariable="tableTypeStruct">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		</cfinvoke>
+
+		<!--- Variables necesarias para la cabecera de la página --->
+		<cfset tableTypeName = tableTypeStruct.name>
+		<cfset tableTypeNameEs = tableTypeStruct.label>
+
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 		<cfoutput>

@@ -1,21 +1,26 @@
-<!---
-AQUÍ OBTIENE SI SE ESTÁ EN LA VERSIÓN standard o móvil
-app_version almacena si es la versión móvil o la estandar--->
-<cfif find("iframes2",CGI.SCRIPT_NAME) GT 0>
-	<cfset app_version = "html2">
-<cfelseif find("iframes",CGI.SCRIPT_NAME) GT 0>
-	<cfset app_version = "standard">
-<cfelse>
-	<cfset app_version = "mobile">
-</cfif>
+<cfinclude template="#APPLICATION.htmlPath#/includes/app_version.cfm">
 
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+	<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+</cfinvoke>
 
 <cfset curPage = getFileFromPath(CGI.SCRIPT_NAME)>
 <cfset curElement = "">
 
+
+<!--- itemTypesArray --->
+<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+</cfinvoke>
+
+<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>--->
+
 <cfif isDefined("itemTypeId")>
 
+	<cfset curElement = itemTypesStruct[itemTypeId].name>
+
+	<!---
 	<cfswitch expression="#itemTypeId#">
+
 		<cfcase value="1">
 			<cfset curElement = "messages">
 		</cfcase>
@@ -69,15 +74,16 @@ app_version almacena si es la versión móvil o la estandar--->
 		</cfcase>
 		
 	</cfswitch>
+	--->
 	
 <cfelse>
 	
 	<cfif find("items",curPage) GT 0>
 		<cfset curElement = "items">
 	<cfelseif find("file",curPage) GT 0>
-		<cfset curElement = "files">
+		<cfset curElement = "file">
 	<cfelseif find("user",curPage) GT 0>
-		<cfset curElement = "users">
+		<cfset curElement = "user">
 	</cfif>
 	
 </cfif>
@@ -124,6 +130,14 @@ app_version almacena si es la versión móvil o la estandar--->
 		
 
 	</cfif>
+
+	<!--- areaTypeWeb --->
+	<cfif len(area_type) GT 0>
+		<cfset areaTypeWeb = true>
+	<cfelse>
+		<cfset areaTypeWeb = false>
+	</cfif>
+
 
 	<!---is_user_area_responsible--->
 	<cfif isDefined("objectArea")>

@@ -26,6 +26,7 @@
 	<!--- getAreaItemTypeStruct --->
 
 	<cffunction name="getAreaItemTypeStruct" returntype="struct" access="public">
+		<cfargument name="itemTypeId" type="numeric" required="true">
 
 		<cfset var itemTypesStruct = structNew()>
 
@@ -63,6 +64,8 @@
 		<cfargument name="itemQuery" type="query" required="true">
 		<cfargument name="forceDeleteVirus" type="string" required="true">
 		<cfargument name="anti_virus_check_result" type="string" required="false">
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
 
 		<cfargument name="file_type" type="string" required="true"><!--- file / image --->
 
@@ -71,7 +74,7 @@
 		
 		<cfset var method = "deleteItemAttachedFile">
 		
-		<cfset var area_id = "">
+		<!--- <cfset var area_id = ""> --->
 									
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 		
@@ -88,9 +91,10 @@
 			
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="deleteFileResult">
 					<cfinvokeargument name="file_id" value="#itemQuery['attached_#arguments.file_type#_id']#">
-					<cfinvokeargument name="area_id" value="#area_id#">
 					<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#">
-					<cfinvokeargument name="user_id" value="#user_id#">
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="moveToBin" value="false">
 
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">

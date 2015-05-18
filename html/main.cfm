@@ -1,3 +1,5 @@
+<cflocation url="index.cfm" addtoken="false">
+
 <cfprocessingdirective suppresswhitespace="true">
 <!DOCTYPE html>
 
@@ -42,14 +44,17 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
 
+<link href="#APPLICATION.dpCSSPath#" rel="stylesheet" />
 
+<!---
 <cfif APPLICATION.identifier EQ "dp">
-<link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp2.min.css"/>
+<link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp.min.css"/>
 <cfelse>
 <link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
+--->
 
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.0" rel="stylesheet" />
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.1" rel="stylesheet" />
 
 <cfif APPLICATION.identifier EQ "vpnet">
 	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
@@ -88,7 +93,13 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 <script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
+<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8"></script>
+
+
+<script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
+<!---<script src="#APPLICATION.path#/jquery/jquery.html5.history.min.js" charset="utf-8"></script>
+--->
+
 <script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>
 
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
@@ -246,6 +257,27 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 		});
 	}
 
+
+	<!---
+
+	<!--- history.js --->
+
+	function pushState(data, title, url){
+
+		History.pushState(data, title, url);
+
+	}
+
+	(function(window,undefined){
+
+	    // Bind to StateChange Event
+	    History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
+	        var State = History.getState(); // Note: We are using History.getState() instead of event.state
+	    });
+
+	})(window);
+
+	--->
 	
 	$(window).resize( function() {
 		resizeIframe();
@@ -261,7 +293,8 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 		<!---loadTree();--->
 		showTree(true);	
-		
+
+		<!---var jsTreeContent = $('#areasTreeContainer').jstree(true).get_json('#', {'no_state':true, 'no_id':true, 'no_data':true, 'flat':true});--->	
 		<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
 		Messenger.Private.initGetNewConversations();
 		</cfif>
@@ -308,13 +341,13 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 		})
 		
-		
 		$("#searchText").on("keydown", function(e) { 
 		
 			if(e.which == 13) //Enter key
 				searchTextInTree();
 			
 		});
+
 		
 	});
 	
@@ -453,6 +486,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 		  		<!---homeContainer--->
 				<div id="homeContainer" style="overflow:auto;">
 
+					<cfset rightContent = true>
 					<cfinclude template="#APPLICATION.htmlPath#/includes/home_content.cfm">
 
 				</div>
@@ -469,7 +503,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 							<div class="btn-toolbar">
 								<div class="btn-group">
 									<div class="input-group" style="width:260px;">
-										<input type="text" name="text" id="searchText" value="" class="form-control" placeholder="Búsqueda de área" lang="es"/>
+										<input type="text" name="text" id="searchText" value="" class="form-control typeahead" placeholder="Búsqueda de área" lang="es"/>
 										<span class="input-group-btn">
 											<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
 										</span>

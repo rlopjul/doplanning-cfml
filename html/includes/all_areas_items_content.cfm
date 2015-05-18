@@ -5,7 +5,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
+<script src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
 </cfoutput>
 
 
@@ -116,7 +116,7 @@
 	
 		<div class="div_items">
 		<cfoutput>
-		<div class="div_text_result"><span lang="es">No hay #lCase(itemTypeNameEsP)#.</span></div>
+		<div class="div_text_result"><span lang="es">No se han encontrado #lCase(itemTypeNameEsP)#.</span></div>
 		</cfoutput>
 		</div>
 	</cfif>
@@ -127,7 +127,7 @@
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>
 	
-	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca unos parámetros de búsqueda y haga click en "Buscar".</span></div>
+	<div class="alert" style="margin:10px;margin-top:30px;background-color:#65C5BD"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en "BUSCAR"</span></div>
 
 </cfif>
 

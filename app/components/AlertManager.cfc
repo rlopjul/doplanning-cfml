@@ -1220,6 +1220,7 @@
 		<cfset var listExternalUsers = "">
         
         <cfset var root_area = structNew()>
+        <cfset var head_content = "">
 		<cfset var foot_content = "">
 		
 		<cfinclude template="includes/functionStartOnlySession.cfm">
@@ -1268,6 +1269,12 @@
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 				</cfinvoke>
 				
+				<!--- getHeadContent --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="head_content">
+					<cfinvokeargument name="language" value="#curLang#">
+					<cfinvokeargument name="client_abb" value="#client_abb#"/>
+				</cfinvoke>
+
 				<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">'&langText[curLang].common.foot_content_default_3&' #APPLICATION.title#.</p>'>	
 				
 				<cfset subject = "[#root_area.name#][#langText[curLang].new_area.new_area#] #objectArea.name#">
@@ -1330,6 +1337,7 @@
 						<cfinvokeargument name="bcc" value="#listExternalUsers#">
 						<cfinvokeargument name="subject" value="#subjectExternal#">
 						<cfinvokeargument name="content" value="#contentExternal#">
+						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
 					</cfinvoke>	
 					

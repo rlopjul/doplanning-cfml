@@ -1,5 +1,5 @@
 <cfoutput>
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.3" rel="stylesheet" />
 
 <script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.2"></script>
 

@@ -49,7 +49,7 @@
 		<cfset URL.res = 0>
 		<cfset URL.msg = actionResponse.message>
 
-		<cfset file = FORM>
+		<cfset objectFile = FORM>
 
 		<cfif page_type IS 3>
 			<cfset publicationArea = FORM>
@@ -61,7 +61,7 @@
 
 	<cfif page_type IS 1><!--- New file --->
 		
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getEmptyFile" returnvariable="file">
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getEmptyFile" returnvariable="objectFile">
 		</cfinvoke>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
@@ -70,10 +70,10 @@
 			<cfinvokeargument name="return_type" value="query">
 		</cfinvoke>
 
-		<cfset file.reviser_user = userQuery.id>
-		<cfset file.reviser_user_full_name = userQuery.user_full_name>
-		<cfset file.approver_user = userQuery.id>
-		<cfset file.approver_user_full_name = userQuery.user_full_name>
+		<cfset objectFile.reviser_user = userQuery.id>
+		<cfset objectFile.reviser_user_full_name = userQuery.user_full_name>
+		<cfset objectFile.approver_user = userQuery.id>
+		<cfset objectFile.approver_user_full_name = userQuery.user_full_name>
 
 	<cfelse>
 
@@ -91,7 +91,7 @@
 			</cfif>
 		</cfif>
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 			<cfinvokeargument name="file_id" value="#file_id#">
 			<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 		</cfinvoke>
@@ -103,10 +103,10 @@
 			<cfset publicationArea.publication_area_name = "">
 
 			<cfset curDateTime = DateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
-			<cfset queryAddColumn(file, "publication_date")>
-			<cfset queryAddColumn(file, "publication_validated")>
-			<cfset querySetCell(file, "publication_date", curDateTime)>
-			<cfset querySetCell(file, "publication_validated", true)>
+			<cfset queryAddColumn(objectFile, "publication_date")>
+			<cfset queryAddColumn(objectFile, "publication_validated")>
+			<cfset querySetCell(objectFile, "publication_date", curDateTime)>
+			<cfset querySetCell(objectFile, "publication_validated", true)>
 
 		</cfif>
 

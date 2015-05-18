@@ -21,7 +21,9 @@
 		
 		
 		$("#dataTable").tablesorter({ 
-			widgets: ['zebra'], <!---,'select'--->
+			widgets: ['zebra','uitheme'], <!---,'select'--->
+			theme : "bootstrap",
+			headerTemplate : '{content} {icon}',
 			sortList: [[0,1]] ,
 			<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 			dateFormat: "ddmmyyyy", // set the default date format

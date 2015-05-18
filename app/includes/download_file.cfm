@@ -8,7 +8,9 @@
 <!---checkParameters--->
 <cfif isDefined("URL.id")>
 	<cfset file_id = URL.id>
-<cfelseif isDefined("URL.fileDownload")>
+<cfelseif isDefined("URL.file")>
+	<cfset file_id = URL.file>
+<cfelseif isDefined("URL.fileDownload")><!--- Esta opcion ya no se usa pero se mantiene para retrocompatibilidad --->
 	<cfset file_id = URL.fileDownload>
 <cfelse><!---No value given for one or more required parameters--->
 	<cfset error_code = 610>

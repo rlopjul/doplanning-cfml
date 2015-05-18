@@ -41,7 +41,7 @@
 
 </cfif>
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 	<cfinvokeargument name="file_id" value="#file_id#">
 	<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
 </cfinvoke>

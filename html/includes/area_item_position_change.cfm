@@ -25,10 +25,16 @@
 	
 	<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 	
-	<cfif changeAreaItemPositionResult.result IS true>
-		<cflocation url="area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#" addtoken="no">
+	<cfif isDefined("URL.mode")>
+		<cfset page_mode = "&mode=#URL.mode#">
 	<cfelse>
-		<cflocation url="area_items.cfm?area=#area_id#&res=0&msg=#URLEncodedFormat('#changeAreaItemPositionResult.message#')#" addtoken="no">
+		<cfset page_mode = "">
+	</cfif>
+
+	<cfif changeAreaItemPositionResult.result IS true>
+		<cflocation url="area_items.cfm?area=#area_id#&#itemTypeName#=#item_id##page_mode#" addtoken="no">
+	<cfelse>
+		<cflocation url="area_items.cfm?area=#area_id#&res=0&msg=#URLEncodedFormat('#changeAreaItemPositionResult.message#')##page_modes#" addtoken="no">
 	</cfif>
 
 </cfif>

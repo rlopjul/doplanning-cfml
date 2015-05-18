@@ -54,14 +54,35 @@
 		
 		<cfset var fileUrl = "">
 		
-		<cfif isDefined("arguments.item_id") AND isDefined("arguments.itemTypeName")>
+		<!---<cfif isDefined("arguments.item_id") AND isDefined("arguments.itemTypeName")>
 			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&fileDownload=#arguments.file_id#&#arguments.itemTypeName#=#arguments.item_id#">
 		<cfelse>
 			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&fileDownload=#arguments.file_id#">		
+		</cfif>--->
+
+		<cfif isDefined("arguments.item_id") AND isDefined("arguments.itemTypeName")>
+			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&file=#arguments.file_id#&download&#arguments.itemTypeName#=#arguments.item_id#">
+		<cfelse>
+			<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&file=#arguments.file_id#&download">		
 		</cfif>
 		
 		<cfreturn fileUrl>
 	</cffunction>
+
+
+	<!--- ----------------------- getFilePublicUrl -------------------------------- --->
+	<cffunction name="getFilePublicUrl" access="public" returntype="string">
+		<cfargument name="file_public_id" type="string" required="yes">
+
+		<cfargument name="client_abb" type="string" required="true">
+		
+		<cfset var fileUrl = "">
+		
+		<cfset fileUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&file_public=#arguments.file_public_id#">
+		
+		<cfreturn fileUrl>
+	</cffunction>
+
 
 
 	<!--- ----------------------- getAreaItemUrl -------------------------------- --->

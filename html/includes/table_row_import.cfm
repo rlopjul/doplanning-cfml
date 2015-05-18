@@ -50,10 +50,12 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<cfoutput>
-<div class="div_message_page_title">#table.title#</div>
-<div class="div_separator"><!-- --></div>
-</cfoutput>
+<cfif app_version NEQ "mobile">
+	<cfoutput>
+	<div class="div_message_page_title">#table.title#</div>
+	<div class="div_separator"><!-- --></div>
+	</cfoutput>
+</cfif>
 
 <div class="div_head_subtitle">
 	<span lang="es">Importar registros</span>
@@ -61,9 +63,9 @@
 
 <div class="div_separator"><!-- --></div>
 
-<div class="contenedor_fondo_blanco">
-
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+
+<div class="contenedor_fondo_blanco">
 
 <cfoutput>
 

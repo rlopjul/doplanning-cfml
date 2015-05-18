@@ -79,53 +79,92 @@
 
 <div class="div_elements_menu"><!---div_elements_menu--->
 	
-	<cfif ( is_user_area_responsible OR table_edit_permission IS true ) AND objectArea.read_only IS false>
+	<div class="btn-toolbar" role="toolbar">
 
-		<cfif tableTypeId IS NOT 2><!--- IS NOT Form --->
-			<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-sm btn-info"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+		<cfif tableTypeId IS NOT 3>
+			<div class="btn-group">
+				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
+			</div>
+		<cfelse>
+			<div class="btn-group">
+				<a href="typologies.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP#" lang="es"> <i class="icon-file-text" style="font-size:15px; color:##7A7A7A"></i>&nbsp;&nbsp;<span lang="es">#itemTypeNameEsP#</span></a>
+			</div>
 		</cfif>
 		
-		<a href="#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowRemote&table_id=#table_id#&row_id=#row_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteRow();" title="Eliminar registro" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
-		
-	</cfif>
+		<cfif ( is_user_area_responsible OR table_edit_permission IS true ) AND objectArea.read_only IS false>
 
-	<cfif app_version NEQ "mobile">
-	<a href="#APPLICATION.htmlPath#/#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
-	</cfif>
+			<cfif tableTypeId IS NOT 2><!--- IS NOT Form --->
+				<div class="btn-group">
+					<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+				</div>
+			</cfif>
+			
+			<div class="btn-group">
+				<a href="#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowRemote&table_id=#table_id#&row_id=#row_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteRow();" title="Eliminar registro" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+			</div>
+			
+		</cfif>
 
-</div>
+		<cfif app_version NEQ "mobile">
+			<div class="btn-group">
+				<a href="#APPLICATION.htmlPath#/#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+			</div>
+		</cfif>
 
+	</div><!--- END btn-toolbar --->
 
-<div class="div_message_page_message">
+</div><!---END div_elements_menu--->
 
-	<!--- Fields --->
-	<!--- <cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm"> --->
+<div class="panel panel-default"><!---class="div_message_page_message"--->
+	<div class="panel-body">
 
-	<!---outputRowContent--->
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowContent">
-		<cfinvokeargument name="table_id" value="#table_id#">
-		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-		<cfinvokeargument name="area_id" value="#area_id#">
-		<cfinvokeargument name="row" value="#row#">
-	</cfinvoke>
+		<div class="row">
 
-	<div style="height:10px;clear:both"></div>
+			<div class="col-xs-12">
 
-	<!---tableRowUrl--->
-	<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="tableRowUrl">
-		<cfinvokeargument name="table_id" value="#table_id#">
-		<cfinvokeargument name="tableTypeName" value="#tableTypeName#">
-		<cfinvokeargument name="row_id" value="#row_id#">
-		<cfinvokeargument name="area_id" value="#area_id#">
+				<!--- Fields --->
+				<!--- <cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm"> --->
 
-		<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-	</cfinvoke>
+				<!---outputRowContent--->
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowContent">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="row" value="#row#">
+				</cfinvoke>
 
-	<div class="div_message_page_label"><span lang="es">URL en #APPLICATION.title#:</span></div>
-	<input type="text" value="#tableRowUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>
+				<div style="height:10px;clear:both"></div>
 
+				<!---tableRowUrl--->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="tableRowUrl">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeName" value="#tableTypeName#">
+					<cfinvokeargument name="row_id" value="#row_id#">
+					<cfinvokeargument name="area_id" value="#area_id#">
 
-</div>
+					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				</cfinvoke>
+
+				<!---<div class="div_message_page_label"><span lang="es">URL en #APPLICATION.title#:</span></div>
+				<input type="text" value="#tableRowUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text"/>--->
+
+				<div class="clearfix">
+
+					<div class="input-group">
+
+						<span class="input-group-addon" style="padding-left:0"><i class="fa fa-share-alt" style="font-size: 16px;"></i></span>
+						<input type="text" value="#tableRowUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/>
+
+					</div>
+				</div>
+
+			</div><!--- END col-xs-12 --->
+
+		</div><!--- END row --->
+
+	</div><!--- END panel-body --->
+
+</div><!---END panel panel-default--->
 
 <div style="height:10px;clear:both"></div>
 

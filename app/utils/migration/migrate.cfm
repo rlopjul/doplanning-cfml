@@ -95,6 +95,7 @@
 							<option value="2.9.2">2.9.2 (Nuevos tipos de campos listas y deshabilitar elementos de áreas)</option>
 							<option value="2.9.3">2.9.3 (Áreas de sólo lectura, ocultar usuarios de área, nuevas preferencias en notificaciones)</option>
 							<option value="2.10">2.10 (Papelera de elementos de área)</option>
+							<option value="3.0.1">3.0.1 (Archivos con URL pública)</option>
 						</select>
 					</div>
 

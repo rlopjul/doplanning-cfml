@@ -16,56 +16,6 @@ function getFilename(url) {
    return url.substring(url.lastIndexOf('/')+1);
 }
 
-function getMaxZIndex(){
-
-	var maxZ = Math.max.apply(null,$.map($('body > *'), function(e,n){
-           if($(e).css('position')=='absolute' || $(e).css('position')=='fixed')
-                return parseInt($(e).css('z-index'))||1 ;
-           })
-    );
-
-    return maxZ;
-}
-
-function generateRandom() {
-	return Math.floor(Math.random()*1001);
-}
-
-function showAlertMessage(msg, res){
-
-	//if($("#alertContainer").is(":visible"))
-	if($("#alertContainer span").length != 0)
-		$("#alertContainer span").remove();
-
-	if(res == true)
-		$("#alertContainer").attr("class", "alert alert-success");
-	else
-		$("#alertContainer").attr("class", "alert alert-danger");
-	
-	$("#alertContainer button").after('<span>'+msg+'</span>');
-
-	var maxZIndex = getMaxZIndex();
-
-    $("#alertContainer").css('zIndex',maxZIndex+1);
-
-	$("#alertContainer").fadeIn('slow');
-
-
-	setTimeout(function(){
-		    
-	    hideAlertMessage();
-
-	    }, 9500);	
-}
-
-function hideAlertMessage(){
-
-	$("#alertContainer").fadeOut('slow', function() {
-	    $("#alertContainer span").remove();
-	});
-
-}
-
 function showAlertModal(msg){
 
 	//loadModal( "html_content/alert_modal.cfm?msg="+encodeURIComponent(msg) );

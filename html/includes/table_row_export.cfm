@@ -16,10 +16,12 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<cfoutput>
-<div class="div_message_page_title">#table.title#</div>
-<div class="div_separator"><!-- --></div>
-</cfoutput>
+<cfif app_version NEQ "mobile">
+	<cfoutput>
+	<div class="div_message_page_title">#table.title#</div>
+	<div class="div_separator"><!-- --></div>
+	</cfoutput>
+</cfif>
 
 <div class="div_head_subtitle">
 	<span lang="es">Exportar registros</span>

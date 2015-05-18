@@ -34,6 +34,7 @@
 	<!--- ----------------------------------- updateClientAdminOptions -------------------------------------- --->
 
 	<cffunction name="updateClientAdminOptions" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="app_title" type="string" required="true">
 		<cfargument name="default_language" type="string" required="true">
 		<cfargument name="force_notifications" type="boolean" required="false" default="false">
 		<cfargument name="tasks_reminder_notifications" type="boolean" required="false" default="false">
@@ -48,6 +49,7 @@
 		<cftry>
 	
 			<cfinvoke component="#APPLICATION.componentsPath#/ClientManager" method="updateClientAdminOptions" returnvariable="response">
+				<cfinvokeargument name="app_title" value="#arguments.app_title#">
 				<cfinvokeargument name="default_language" value="#arguments.default_language#">
 				<cfinvokeargument name="force_notifications" value="#arguments.force_notifications#">
 				<cfinvokeargument name="tasks_reminder_notifications" value="#arguments.tasks_reminder_notifications#">

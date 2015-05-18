@@ -4,8 +4,8 @@
 	<cflocation url="area.cfm" addtoken="no">
 </cfif>
 
-<cfif app_version NEQ "html2">
+<!---<cfif app_version NEQ "html2">
 <div class="div_head_subtitle">
 Archivo
 </div>
-</cfif>
+</cfif>--->

@@ -4,6 +4,9 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 </cfoutput>
 
+<cfset itemTypeId = 10>
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaFiles" returnvariable="getAreaFilesResponse">
@@ -15,13 +18,12 @@
 <cfoutput>
 <div class="div_head_subtitle_area">
 	
+	<!---
+
 	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 
 		<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
-			
-			<!---Botón antiguo<a href="area_file_new.cfm?area=#area_id#" onclick="openUrl('area_file_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-sm btn-info" title="Subir nuevo archivo" lang="es"><i class="icon-plus icon-white"></i> <span lang="es">Nuevo Archivo</span></a> --->
-
-				
+							
 			<cfif objectArea.item_type_10_enabled IS true AND objectArea.read_only IS false>
 
 				<div class="btn-group">
@@ -38,9 +40,7 @@
 					<a href="area_files_upload.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Subir varios archivos" lang="es"><i class="icon-upload" style="color:##5BB75B;font-size:19px;line-height:23px;"></i> <span lang="es">Subir varios archivos</span></a>
 				</div>
 
-			</cfif>			
-			
-			<!---Opción deshabilitada definitivamente<a href="file_associate.cfm?area=#area_id#" onclick="openUrl('file_associate.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Asociar archivo existente" lang="es"><i class="icon-plus-sign"></i> <span lang="es">Asociar Archivo</span></a>--->
+			</cfif>		
 			
 			<div class="btn-group">
 				<cfif APPLICATION.modulefilesWithTables AND is_user_area_responsible>
@@ -75,6 +75,10 @@
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_files_menu_vpnet.cfm">
 	
 	</cfif>
+
+	--->
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
 	
 </div>
 </cfoutput>
@@ -87,10 +91,18 @@
 	$(document).ready(function() { 
 
 		<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
-		$('#listTable').bind('select.tablesorter.select', function(event, ts){
+		<!---$('#listTable').bind('select.tablesorter.select', function(event, ts){
 		    var itemUrl= $(ts.elem).data("item-url");
 		    openUrlLite(itemUrl,'itemIframe');
-		});
+		});--->
+
+		$('#listTable tbody tr').on('click', function(e) {
+
+	        var row = $(this);
+	        var itemUrl = row.data("item-url");
+	        goToUrl(itemUrl);
+
+	    });
 
 	});
 

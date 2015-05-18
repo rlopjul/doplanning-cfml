@@ -209,46 +209,95 @@
 
 	<cfelse><!---SEARCH ITEMS PAGE--->
 
-		<div class="row">
+		<div class="row" style="margin-bottom:40px">
 
-	    	<label for="search_page" class="col-sm-2 control-label" lang="es">Buscar en</label>
+	    	<label for="search_page" class="col-xs-5 col-sm-3 control-label" lang="es" style="color:##36948C;font-size:17px;">Tipo de elemento a buscar</label>
 
-	    	<div class="col-sm-4">
-		    	<select name="search_page" id="search_page" class="form-control" onchange="goToUrl($('##search_page').val(),'');">
-		    		<option value="messages_search.cfm" <cfif curElement EQ "messages">selected="selected"</cfif> lang="es">Mensajes</option>
-		    		<option value="files_search.cfm" <cfif curElement EQ "files">selected="selected"</cfif> lang="es">Archivos</option>
-		    		<cfif APPLICATION.moduleDPDocuments IS true>
-		    			<option value="dp_documents_search.cfm" <cfif curElement EQ "dp_documents">selected="selected"</cfif> lang="es">Documentos DoPlanning</option>
-		    		</cfif>
-		    		<option value="events_search.cfm" <cfif curElement EQ "events">selected="selected"</cfif> lang="es">Eventos</option>
-		    		<option value="tasks_search.cfm" <cfif curElement EQ "tasks">selected="selected"</cfif> lang="es">Tareas</option>
-		    		<cfif APPLICATION.moduleLists IS true>
-		    			<option value="lists_search.cfm" <cfif curElement EQ "lists">selected="selected"</cfif> lang="es">Listas</option>
-		    		</cfif>
+	    	<div class="col-xs-7 col-md-4 col-lg-3">
 
-		    		<cfif APPLICATION.moduleForms IS true>
-		    			<option value="forms_search.cfm" <cfif curElement EQ "forms">selected="selected"</cfif> lang="es">Formularios</option>
-		    		</cfif>
-		    		
-		    		<cfif APPLICATION.moduleConsultations IS true>
-		    			<option value="consultations_search.cfm" <cfif curElement EQ "consultations">selected="selected"</cfif> lang="es">Interconsultas</option>
-					</cfif>
-				
-					<cfif APPLICATION.modulePubMedComments IS true>
-						<option value="pubmeds_search.cfm" <cfif curElement EQ "pubmeds">selected="selected"</cfif> lang="es">Publicaciones</option>
-					</cfif>
-				
-					<cfif APPLICATION.moduleWeb EQ true>
-						<option value="entries_search.cfm" <cfif curElement EQ "entries">selected="selected"</cfif> lang="es">Elementos de contenido genérico</option>
+		    	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+				</cfinvoke>
 
-						<option value="newss_search.cfm" <cfif curElement EQ "news">selected="selected"</cfif> lang="es">Noticias</option>
+				<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
-						<option value="images_search.cfm" <cfif curElement EQ "images">selected="selected"</cfif> lang="es">Imágenes</option>
-					</cfif>
+				<div class="btn-group btn-block">
 
-					<option value="users_search.cfm" <cfif curElement EQ "users">selected="selected"</cfif> lang="es">Usuarios</option>
-			
-		    	</select>
+					<button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="text-align:left;">
+
+						<cfif isNumeric(itemTypeId)>
+							
+							<cfif itemTypeId IS 13><!---Typologies--->
+								<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
+							<cfelse>
+								<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].labelPlural#" lang="es" style="width:35px"/>
+							</cfif>
+
+							<cfif itemTypeId IS 2>
+								<span lang="es">Elementos de contenido</span> <span class="caret"></span>
+							<cfelse>
+								<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span> <span class="caret"></span>
+							</cfif>
+
+						<cfelse><!--- Users --->
+
+							<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuarios" lang="es" style="width:35px"/> <span lang="es">Usuarios</span> <span class="caret"></span>
+
+						</cfif>
+						
+					</button>
+
+					<ul class="dropdown-menu" role="menu">
+
+				    	<cfloop array="#itemTypesArray#" index="curItemTypeId">
+
+				    		<cfif curItemTypeId NEQ 13 AND curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.moduleForms IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
+
+								<li>
+									
+									<a href="#itemTypesStruct[curItemTypeId].namePlural#_search.cfm" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
+								
+										<cfif curItemTypeId IS 13><!---Typologies--->
+											<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
+										<cfelse>
+											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" style="width:35px"/>
+										</cfif>
+
+										&nbsp;<span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span>
+									</a>
+									
+								</li>
+
+								<!---
+								<cfif curItemTypeId IS 10>
+									
+									<li>
+
+										<cfif APPLICATION.moduleAreaFilesLite IS true>
+										<a title="Archivos de área" lang="es" class="btn-new-item-dp"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" />
+											<span title="Archivos de área" lang="es">Archivos de área</span> <!---href="area_file_new.cfm?area=#area_id#&fileTypeId=2"--->
+										</a>
+										</cfif>
+
+									</li>
+
+								</cfif>
+								--->
+
+							</cfif>
+
+						</cfloop>
+
+						<li>
+							<a href="users_search.cfm" title="Usuarios" lang="es">
+								<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuarios" lang="es" style="width:35px"/>&nbsp;<span lang="es">Usuarios</span>
+							</a>
+						</li>
+
+					</ul>
+
+				</div>
+
+
 			</div>
 	  	</div>
 
@@ -263,9 +312,9 @@
 
 		<div class="row">
 
-			<label for="typology_id" class="col-sm-2 control-label" lang="es">Tipología</label>
+			<label for="typology_id" class="col-xs-5 col-sm-3 control-label" lang="es">Tipología</label>
 
-			<div class="col-sm-10">
+			<div class="col-xs-7 col-sm-9">
 
 				<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val(),'');">
 					<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Todas</option>
@@ -301,22 +350,22 @@
 		</cfif>
 
 		<div class="row">
-			<label for="name" class="col-sm-2 control-label" lang="es">Nombre</label>
-			<div class="col-sm-10">
+			<label for="name" class="col-xs-5 col-sm-3 control-label" lang="es">Nombre</label>
+			<div class="col-xs-7 col-sm-9">
 				<input type="text" name="name" id="name" value="#file_name#" class="form-control">
 			</div>
 		</div>
 
 		<div class="row">
-			<label for="file_name" class="col-sm-2 control-label" lang="es">Nombre físico</label>
-			<div class="col-sm-10">
+			<label for="file_name" class="col-xs-5 col-sm-3 control-label" lang="es">Nombre físico</label>
+			<div class="col-xs-7 col-sm-9">
 				<input type="text" name="file_name" id="file_name" value="#file_file_name#" class="form-control">
 			</div>
 		</div>
 
 		<div class="row">
-			<label for="description" class="col-sm-2 control-label" lang="es">Descripción</label>
-			<div class="col-sm-10">
+			<label for="description" class="col-xs-5 col-sm-3 control-label" lang="es">Descripción</label>
+			<div class="col-xs-7 col-sm-9">
 				<input type="text" name="description" id="description" value="#file_description#" class="form-control">
 			</div>
 		</div>
@@ -324,20 +373,18 @@
 	<cfelse>
 
 		<div class="row">
-			<cfif APPLICATION.hideInputLabels IS false>
-				<label for="text" class="col-xs-2 control-label" lang="es">Buscar texto</label>
-			</cfif>
-			
-			<div class="col-xs-10 col-sm-5">
+			<label for="text" class="col-xs-5 col-sm-3 control-label" lang="es">Texto a buscar</label>
+
+			<div class="col-xs-7 col-sm-9">
 				
-				<div class="input-group">
+				<!---<div class="input-group">
 					<cfif APPLICATION.hideInputLabels IS true>
 						<span class="input-group-addon"><label for="text"><i class="icon-search"></i></label></span>
 					<cfelse>
 						<span class="input-group-addon"><i class="icon-search"></i></span>
-					</cfif>
-				  <input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control" placeholder="Buscar texto" lang="es"/>
-				</div>
+					</cfif>--->
+				  <input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control" lang="es"/>
+				<!---</div>--->
 			</div>
 		</div>
 
@@ -349,53 +396,56 @@
 				
 		<div class="row">
 
-			<cfif APPLICATION.hideInputLabels IS false>
-				<label for="from_date" class="col-xs-2 control-label" lang="es">Fecha desde</label> 
-			</cfif>
+			<label for="from_date" class="col-xs-5 col-sm-3 control-label" lang="es"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha desde</span></label> 
 
-			<div class="col-xs-4 col-sm-4">
-				<cfif APPLICATION.hideInputLabels IS true>
+			<div class="col-xs-7 col-sm-9">
+				<!---<cfif APPLICATION.hideInputLabels IS true>
 					<div class="input-group">	
 						 <span class="input-group-addon"><label for="from_date"><i class="icon-calendar"></i></label></span>
 						<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()" placeholder="Fecha desde" lang="es">
 					</div>
-				<cfelse>
-					<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()">
-				</cfif>
+				<cfelse>--->
+				<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()">
 			</div>
 
-			<cfif APPLICATION.hideInputLabels IS false>
-				<label for="end_date" class="col-xs-2 control-label" lang="es">Fecha hasta</label> 
-			</cfif>
+		</div>
 
-			<div class="col-xs-4 col-sm-4">
-				<cfif APPLICATION.hideInputLabels IS true>
-					<div class="input-group">	
-						<span class="input-group-addon"><label for="end_date"><i class="icon-calendar"></i></label> </span>		
-						<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()" placeholder="Fecha hasta" lang="es"/>
-					</div>
-				<cfelse>
-					<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()"/>
-				</cfif>
+		<div class="row">
+
+			<label for="end_date" class="col-xs-5 col-sm-3 control-label"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha hasta</span></label> 
+
+			<div class="col-xs-7 col-sm-9">
+				<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()"/>
 			</div>
 
 		</div>
 		
+		<!---<div class="row">
+
+			<div class="col-xs-7 col-xs-offset-5 col-sm-offset-3 col-sm-9">
+
+				<hr style="margin-top:35px; border-top:1px solid ##ddd">
+
+			</div>
+
+		</div>--->
 
 		<cfif itemTypeId IS 6><!---Tasks--->
 			<div class="row">
-				<label for="done" class="col-sm-2 control-label" lang="es">Hecha</label> 
+				<label for="done" class="col-xs-5 col-sm-3 control-label" lang="es">Tarea realizada</label> 
 
-				<div class="col-sm-4">
-					<select name="done" id="done" class="input-mini">
+				<div class="col-xs-7 col-sm-9">
+					<select name="done" id="done" class="form-control">
 						<option value="1" <cfif is_done IS 1>selected="selected"</cfif> lang="es">Sí</option>
 						<option value="0" <cfif is_done IS 0>selected="selected"</cfif> lang="es">No</option>
 					</select>
 				</div>
-			
-				<label for="to_user" class="col-sm-2 control-label" lang="es">Para</label> 
+			</div>
 
-				<div class="col-sm-4">
+			<div class="row">
+				<label for="to_user" class="col-xs-5 col-sm-3 control-label" lang="es">Tarea para</label> 
+
+				<div class="col-xs-7 col-sm-9">
 					<select name="to_user" lang="to_user" class="form-control">
 						<option value="" lang="es">Todos</option>
 						<cfloop index="objectUser" array="#users#">	
@@ -408,16 +458,16 @@
 				
 		<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, Publications--->
 			<div class="row">
-				<label for="identifier" class="col-sm-2 control-label" lang="es">Identificador</label> 
+				<label for="identifier" class="col-xs-5 col-sm-3 control-label" lang="es">Identificador</label> 
 
-				<div class="col-sm-4">
+				<div class="col-xs-7 col-sm-9">
 					<input type="text" name="identifier" id="identifier" value="#identifier#" class="form-control"/>
 				</div>
 
 				<cfif itemTypeId IS 7><!--- Consultations --->		
-					<label for="done" class="col-sm-2 control-label" lang="es">Estado actual</label> 
+					<label for="done" class="col-xs-5 col-sm-3 control-label" lang="es">Estado actual</label> 
 
-					<div class="col-sm-4">
+					<div class="col-xs-7 col-sm-9">
 						<select name="state" id="state" class="form-control">
 							<option value="" lang="es">Todos</option>
 							<option value="created" <cfif cur_state EQ "created">selected="selected"</cfif> lang="es">Enviada</option>
@@ -437,9 +487,9 @@
 
 		<cfif NOT isDefined("curElement") OR curElement NEQ "users">
 			
-			<label for="from_user" class="col-xs-2 col-sm-2 control-label" lang="es">Usuario</label> 
+			<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es"><cfif itemTypeId IS 6>Tarea encargada por<cfelse>Usuario</cfif></label> 
 
-			<div class="col-xs-5 col-sm-5">
+			<div class="col-xs-7 col-sm-9">
 
 				<select name="from_user" id="from_user" class="form-control"><!---class="selectpicker" data-live-search="true"--->
 					<option value="" lang="es">Todos</option>
@@ -452,9 +502,9 @@
 
 		</cfif>
 
-		<label for="limit" class="col-xs-2 control-label" lang="es">Nº resultados</label>
+		<label for="limit" class="col-xs-5 col-sm-3 control-label" lang="es">Nº resultados a mostrar</label>
 
-		<div class="col-xs-3"> 
+		<div class="col-xs-7 col-sm-9"> 
 			<select name="limit" id="limit" class="form-control">
 				<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
 				<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>
@@ -512,8 +562,11 @@
 	</cfif>
 
 	<div class="row">
-		<div class="col-sm-offset-2 col-sm-10"> 
-			<input type="submit" name="search" class="btn btn-primary" lang="es" value="Buscar" />
+		<div class="col-xs-offset-0 col-xs-12 col-sm-offset-3 col-sm-7 col-md-offset-3 col-md-4 col-lg-3"> 
+			<!---<input type="submit" name="search" class="btn btn-success" lang="es" value="Buscar" />--->
+
+			<button type="submit" name="search" class="btn btn-success btn-lg btn-block" style="margin-top:30px;text-align:left;"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
+
 		</div>
 	</div>
 	

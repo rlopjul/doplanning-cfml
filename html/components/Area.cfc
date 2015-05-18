@@ -625,5 +625,201 @@
 		
 	</cffunction>
 
+
+	<!--- ----------------------- GET LAST USED AREAS -------------------------------- --->
+	
+	<cffunction name="getLastUsedAreas" returntype="struct" access="public">
+		<cfargument name="limit" type="numeric" required="false">
+				
+		<cfset var method = "getLastUsedAreas">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getLastUsedAreas" returnvariable="response">
+				<cfinvokeargument name="limit" value="#arguments.limit#">
+			</cfinvoke>	
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+	<!--- outputAreasFullList --->
+
+	<cffunction name="outputAreasFullList" returntype="void" output="true" access="public">
+		<cfargument name="areasQuery" type="query" required="true">
+		<cfargument name="loggedUser" type="query" required="false">
+		
+		<cfset var method = "outputAreasFullList">
+		
+		<cftry>
+
+			<cfoutput>
+			
+			<cfloop query="areasQuery">			
+				<div class="row">
+					<div class="col-sm-12">
+
+						<div class="panel panel-default">
+						  	<div class="panel-body">
+
+							   	<div class="row">
+
+									<div class="col-xs-11">
+										
+										<h4>#areasQuery.area_name#
+
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+										<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringLastDate">
+											<cfinvokeargument name="timestamp_date" value="#areasQuery.last_update_date#">
+										</cfinvoke>							
+										<cfset spacePosLast = findOneOf(" ", stringLastDate)>
+										<small class="text_date">
+											#left(stringLastDate, spacePosLast)#
+										</small>&nbsp;&nbsp;&nbsp;
+										<cfif spacePosLast GT 0>
+											<small class="text_hour">#right(stringLastDate, len(stringLastDate)-spacePosLast)#</small>
+										</cfif>
+
+										</h4>
+
+										<cfif loggedUser.internal_user IS true>
+
+											<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
+												<cfinvokeargument name="area_id" value="#area_id#">
+												<cfinvokeargument name="separator" value=" > ">
+												<cfinvokeargument name="cur_area_link_class" value="current_area">
+
+												<cfinvokeargument name="with_base_link" value="area_items.cfm?area="/>
+											</cfinvoke>
+
+										<cfelse>
+
+											<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getHighestAreaUserAssociated" returnvariable="getHighestAreaResponse">
+												<cfinvokeargument name="area_id" value="#area_id#"/>
+												<cfinvokeargument name="user_id" value="#SESSION.user_id#"/>
+												<cfinvokeargument name="userType" value="users"/>
+											</cfinvoke>
+
+											<cfif getHighestAreaResponse.result IS true>
+
+												<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
+													<cfinvokeargument name="area_id" value="#area_id#">
+													<cfinvokeargument name="separator" value=" > ">
+													<cfinvokeargument name="from_area_id" value="#getHighestAreaResponse.highest_area_id#">
+													<cfinvokeargument name="include_from_area" value="true">
+													<cfinvokeargument name="cur_area_link_class" value="current_area">
+
+													<cfinvokeargument name="with_base_link" value="area_items.cfm?area="/>
+												</cfinvoke>
+
+											</cfif>
+
+										</cfif>
+
+										<p style="font-size:15px;">#area_path#</p>
+
+									</div>
+
+									<div class="col-xs-1">
+
+										<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/area.png" alt="Area" title="Ver área">--->
+
+									</div>
+
+								</div><!--- END row --->
+
+								<div class="row">
+
+									<div class="col-sm-12">
+
+										<div class="pull-right">
+
+											<a href="area_items.cfm?area=#areasQuery.area_id#" class="btn btn-sm btn-info" title="Ir al área"><span lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small_white.png" alt="Area" title="Ver área"> Ir al área</span></a>
+												
+										</div>
+
+									</div>
+
+								</div><!--- END row --->
+
+							</div><!--- END panel-body --->
+						</div><!--- END panel panel-default --->
+					
+					</div><!--- END col --->
+				</div><!---END row item container--->
+			</cfloop>
+		
+
+			<!---
+			<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
+			<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
+
+			<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modal.js"></script>
+			<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
+
+			<script>
+				<!---To enable the loading spinner in Bootstrap 3--->
+				$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
+			    '<div class="loading-spinner" style="width: 200px; margin-left: -100px;">' +
+			        '<div class="progress progress-striped active">' +
+			            '<div class="progress-bar" style="width: 100%;"></div>' +
+			        '</div>' +
+			    '</div>';
+			    <!--- To set modal max height --->
+				$.fn.modal.defaults.maxHeight = function(){
+				    return $(window).height() - 170; 
+				}
+			</script>
+
+			<script>
+				// Modal
+				var $modal = null;
+
+				function loadAreaTree(areaId){
+		 
+					$('body').modalmanager('loading');
+
+					var noCacheNumber = generateRandom();
+
+					var url = "html_content/tree_modal.cfm?area="+areaId;
+
+					$modal.load(url, '', function(){
+					  $modal.modal({width:740, backdrop:'static'});/*680*/
+					});
+				}
+
+				$(document).ready(function () {
+				
+					// Modal
+					$modal = $('#ajax-modal');
+
+				});
+			</script>
+
+			<!--- Modal Window --->
+			<div id="ajax-modal" class="modal container fade" tabindex="-1"></div><!---hide funcionaba en bs2--->--->
+
+			</cfoutput>			
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
 	
 </cfcomponent>

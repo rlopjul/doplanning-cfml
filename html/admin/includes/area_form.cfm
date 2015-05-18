@@ -108,14 +108,15 @@
 								<div class="checkbox">
 									<label class="control-label" for="item_type_#itemTypeId#_enabled" lang="es">
 										<input id="item_type_#itemTypeId#_enabled" name="item_type_#itemTypeId#_enabled" type="checkbox" value="true" <cfif NOT isDefined('objectArea["item_type_#itemTypeId#_enabled"]') OR objectArea["item_type_#itemTypeId#_enabled"] IS true>checked="checked"</cfif> />
+										<!---
 										<cfif itemTypeId IS 7><!---Consultations--->
 											<i class="icon-exchange" style="font-size:19px;line-height:22px;color:##0088CC"></i>
 										<cfelseif itemTypeId IS 13><!---Typologies--->
 											<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
-										<cfelse>
-											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].label#" lang="es"/>
-										</cfif>
-										<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span>&nbsp;
+										<cfelse>--->
+											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].label#" lang="es" style="width:30px"/>
+										<!---</cfif>--->
+										<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#<cfif itemTypeId IS 10> y archivos de área</cfif></span>&nbsp;
 									</label>
 								</div>
 							</li>
@@ -176,7 +177,7 @@
 			<div class="checkbox">
 				<label class="control-label" for="users_visible" lang="es">
 					<input id="users_visible" name="users_visible" type="checkbox" value="true" class="checkbox_locked" <cfif NOT isDefined("objectArea.users_visible") OR objectArea.users_visible IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuarios" lang="es"/>
+						<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuarios" lang="es" style="width:30px"/>
 					<span lang="es">Mostrar visible el listado de usuarios del área</span>&nbsp;
 				</label>
 				<small class="help-block">

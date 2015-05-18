@@ -395,6 +395,7 @@
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="openRowOnSelect" type="boolean" required="true">
 		<cfargument name="app_version" type="string" required="true">
+		<cfargument name="columnSelectorContainer" type="string" required="false">
 		
 		<cfset var method = "outputRowList">
 		
@@ -410,6 +411,7 @@
 				<cfinvokeargument name="fields" value="#arguments.fields#">
 				<cfinvokeargument name="openRowOnSelect" value="#arguments.openRowOnSelect#">
 				<cfinvokeargument name="app_version" value="#arguments.app_version#">
+				<cfinvokeargument name="columnSelectorContainer" value="#arguments.columnSelectorContainer#">
 
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -512,12 +514,81 @@
 			</cfinvoke>
 
 			<cfoutput>
+
+			<cfif NOT isDefined("arguments.view_id")><!--- IS LIST ROW --->
+
+				<div class="row">
+
+					<div class="col-xs-12">
+
+				   		<div class="media"><!--- item user name and date --->
+
+							<a href="area_user.cfm?area=#arguments.area_id#&user=#row.insert_user_id#" class="media-left"><cfif len(row.insert_user_image_type) GT 0>
+								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.insert_user_id#&type=#row.insert_user_image_type#&small=" alt="#row.insert_user_full_name#" class="user_img" style="margin-right:2px;"/>									
+							<cfelse>							
+								<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#row.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+							</cfif></a>
+
+							<div class="media-body">
+
+								<a href="area_user.cfm?area=#arguments.area_id#&user=#row.insert_user_id#" class="link_user">#row.insert_user_full_name#</a>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<span class="text_date">#DateFormat(row.creation_date, APPLICATION.dateFormat)#</span>
+								&nbsp;&nbsp;&nbsp;
+								<span class="text_hour">#TimeFormat(row.creation_date, "HH:mm:ss")#</span>
+
+							</div>
+
+						
+						</div><!--- END media --->
+
+					</div><!--- END col-xs-12 --->
+
+				</div><!--- END row --->
+
+				<cfif isNumeric(row.last_update_user_id)>
+
+					<div class="row">
+
+						<div class="col-xs-12">
+
+					   		<div class="media"><!--- Usuario última modificación --->
+
+								<a href="area_user.cfm?area=#arguments.area_id#&user=#row.last_update_user_id#" class="media-left"><cfif len(row.update_user_image_type) GT 0>
+									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.last_update_user_id#&type=#row.update_user_image_type#&small=" alt="#row.update_user_full_name#" class="user_img" style="margin-right:2px;"/>									
+								<cfelse>							
+									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#row.update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+								</cfif></a>
+
+								<div class="media-body">
+
+									<a href="area_user.cfm?area=#arguments.area_id#&user=#row.last_update_user_id#" class="link_user">#row.update_user_full_name#</a>
+									&nbsp;&nbsp;&nbsp;&nbsp;
+									<span class="text_date">#DateFormat(row.last_update_date, APPLICATION.dateFormat)#</span>
+									&nbsp;&nbsp;&nbsp;
+									<span class="text_hour">#TimeFormat(row.last_update_date, "HH:mm:ss")#</span> <span class="text_hour" lang="es">(Última modificación)</span>
+
+								</div>
+
+							
+							</div><!--- END media --->
+
+						</div><!--- END col-xs-12 --->
+
+					</div><!--- END row --->
+
+				</cfif>
+
+			</cfif>
+
 			<cfloop query="fields">
 
 
 				<cfif fields.field_id IS "creation_date"><!--- CREATION DATE --->
 
-					<div class="div_message_page_label"><span lang="es">Fecha de creación:</span> <span class="text_message_page">#DateFormat(row.creation_date, APPLICATION.dateFormat)# #TimeFormat(row.creation_date, "HH:mm")#</span></div>
+					<cfif isDefined("arguments.view_id")>
+						<div class="div_message_page_label"><span lang="es">Fecha de creación:</span> <span class="text_message_page">#DateFormat(row.creation_date, APPLICATION.dateFormat)# #TimeFormat(row.creation_date, "HH:mm")#</span></div>
+					</cfif>
 
 				<cfelseif fields.field_id IS "last_update_date"><!--- LAST UPDATE DATE --->
 					
@@ -525,16 +596,18 @@
 
 				<cfelseif fields.field_id IS "insert_user"><!--- INSERT USER --->
 
-					<div class="div_message_page_label">Creado por: 
-				
-						<a href="area_user.cfm?area=#arguments.area_id#&user=#row.insert_user_id#"><cfif len(row.insert_user_image_type) GT 0>
-							<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.insert_user_id#&type=#row.insert_user_image_type#&small=" alt="#row.insert_user_full_name#" class="item_img" style="margin-right:2px;"/>									
-						<cfelse>							
-							<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#row.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
-						</cfif></a>
-						
-						<a href="area_user.cfm?area=#arguments.area_id#&user=#row.insert_user_id#">#row.insert_user_full_name#</a>
-					</div>
+					<cfif isDefined("arguments.view_id")>
+						<div class="div_message_page_label">Creado por: 
+					
+							<a href="area_user.cfm?area=#arguments.area_id#&user=#row.insert_user_id#"><cfif len(row.insert_user_image_type) GT 0>
+								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.insert_user_id#&type=#row.insert_user_image_type#&small=" alt="#row.insert_user_full_name#" class="item_img" style="margin-right:2px;"/>									
+							<cfelse>							
+								<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#row.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+							</cfif></a>
+							
+							<a href="area_user.cfm?area=#arguments.area_id#&user=#row.insert_user_id#">#row.insert_user_full_name#</a>
+						</div>
+					</cfif>
 
 
 				<cfelseif fields.field_id IS "update_user"><!--- UPDATE USER --->
@@ -559,9 +632,7 @@
 					<cfset field_label = fields.label&":">
 					<cfset field_name = "field_#fields.field_id#">		
 				
-					<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10 OR fields.field_type_id IS 15 OR fields.field_type_id IS 16><!--- LISTS --->
-
-						
+					<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10 OR fields.field_type_id IS 15 OR fields.field_type_id IS 16><!--- LISTS --->						
 
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- Area lists --->
 
@@ -610,7 +681,7 @@
 									</cfinvoke>
 								</cfif>
 
-								<div class="div_message_page_description">#field_value#</div>
+								<div class="lead div_message_page_description">#field_value#</div>
 							</cfif> 
 
 						<cfelseif fields.field_type_id IS 8><!---URL--->

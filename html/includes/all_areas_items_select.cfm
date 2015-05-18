@@ -46,20 +46,24 @@
 
 			});--->
 
-			$('##listTable').bind('select.tablesorter.select', function(e, ts){
+			<!---$('##listTable').bind('select.tablesorter.select', function(e, ts){--->
 
+			$('##listTable tbody tr').on('click', function(e) {
 			   	var itemId = null;
 				var itemName = "";
 
-				// Selección de item
-				itemId = $("##listTable tr.selected").data("item-id");
+				<!---itemId = $("##listTable tr.selected").data("item-id");--->
+
+				var $row = $(this);
+				var itemId = $row.data("item-id");
 				
 				if(itemId != null) {
 			
-					itemName = $("##listTable tr.selected a.text_item").text();
+					<!---itemName = $("##listTable tr.selected a.text_item").text();--->
+
+					itemName = $row.find("a.text_item").text();
 
 					window.opener.setSelectedItem(itemId, itemName, '#URL.field#');
-					
 					window.close();	
 
 				}else{
@@ -91,20 +95,6 @@
 			<cfset numItems = files.recordCount>
 			
 			<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numItems# <span lang="es"><cfif numItems IS 1>Archivo<cfelse>Archivos</cfif></span></div>
-
-			<!---<script>
-		
-				$(document).ready(function() { 
-
-					<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
-					$('##listTable').bind('select.tablesorter.select', function(e, ts){
-					    var itemUrl= $(ts.elem).data("item-url");
-					    openUrl(itemUrl,'itemIframe',event);
-					});
-
-				});
-
-			</script>--->
 
 			<cfset full_content = true>
 			<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">
@@ -211,7 +201,7 @@
 
 	<cfelse>
 
-		<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca unos parámetros de búsqueda y haga click en "Buscar".</span></div>
+		<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en "BUSCAR"</span></div>
 
 	</cfif>
 

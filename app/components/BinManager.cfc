@@ -174,8 +174,8 @@
 					
 					<cfelseif arguments.itemTypeId IS 7 AND itemQuery.state NEQ "created"><!---Consultations--->
 
-						<!---Las interconsultas solo se pueden eliminar si están en estado creadas (enviadas)
-						Los administradores sí pueden borrar las interconsultas cuando borran un área--->
+						<!---Las consultas solo se pueden eliminar si están en estado creadas (enviadas)
+						Los administradores sí pueden borrar las consultas cuando borran un área--->
 						<cfinclude template="includes/checkAreaAdminAccess.cfm">
 
 					</cfif>

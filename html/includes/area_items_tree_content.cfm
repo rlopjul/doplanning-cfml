@@ -6,57 +6,64 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 <div class="div_head_subtitle_area">
-<cfoutput>
-<!---<div class="div_head_subtitle_area_text"><strong>#uCase(itemTypeNameEsP)#</strong><br/>del área</div>--->
 
-<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
-	<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
 
-		<cfif objectArea["item_type_#itemTypeId#_enabled"] IS true AND objectArea.read_only IS false>
-			<div class="btn-group">
-				<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>  
-					<cfif itemTypeId IS 7>
-						<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
-					<cfelse>
-						<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
-					</cfif></a>
-			</div>
-		<cfelse>
+<!---
 
-			<div class="btn-group">
-				<button class="btn btn-link disabled" lang="es">Está deshabilitada la creación de <cfif itemTypeGender EQ "male">nuevos<cfelse>nuevas</cfif> #itemTypeNameEsP# en esta área</button>
-			</div>
+	<cfoutput>
+	<!---<div class="div_head_subtitle_area_text"><strong>#uCase(itemTypeNameEsP)#</strong><br/>del área</div>--->
 
-		</cfif>
+	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
+		<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
 
-		<!---<span class="divider">&nbsp;</span>--->
+			<cfif objectArea["item_type_#itemTypeId#_enabled"] IS true AND objectArea.read_only IS false>
+				<div class="btn-group">
+					<a href="#itemTypeName#_new.cfm?area=#area_id#" onclick="openUrl('#itemTypeName#_new.cfm?area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="<cfif itemTypeGender EQ 'male'>Nuevo<cfelse>Nueva</cfif> #itemTypeNameEs#" lang="es"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>  
+						<cfif itemTypeId IS 7>
+							<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
+						<cfelse>
+							<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
+						</cfif></a>
+				</div>
+			<cfelse>
 
+				<div class="btn-group">
+					<button class="btn btn-link disabled" lang="es">Está deshabilitada la creación de <cfif itemTypeGender EQ "male">nuevos<cfelse>nuevas</cfif> #itemTypeNameEsP# en esta área</button>
+				</div>
 
-		<!---<span class="divider">&nbsp;</span>--->
-		
-		<cfif app_version NEQ "mobile">
+			</cfif>
+
+			<!---<span class="divider">&nbsp;</span>--->
+
+			<!---<span class="divider">&nbsp;</span>--->
+			
+			<cfif app_version NEQ "mobile">
+				<div class="btn-group pull-right">
+					<a href="#APPLICATION.htmlPath#/#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+				</div>
+			</cfif>
+
 			<div class="btn-group pull-right">
-				<a href="#APPLICATION.htmlPath#/#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
+				<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
 			</div>
-		</cfif>
 
-		<div class="btn-group pull-right">
-			<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=tree" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
+			<div class="btn-group pull-right">
+				<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=list" class="btn btn-default btn-sm"><i class="icon-th-list" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo lista</span></a>
+			</div>
+		
 		</div>
+		
+	<cfelse><!---VPNET--->
 
-		<div class="btn-group pull-right">
-			<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=list" class="btn btn-default btn-sm"><i class="icon-th-list" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo lista</span></a>
-		</div>
-	
-	</div>
-	
-<cfelse><!---VPNET--->
+		<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_tree_menu_vpnet.cfm">
+		
+	</cfif>
 
-	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_tree_menu_vpnet.cfm">
-	
-</cfif>
+	</cfoutput>
 
-</cfoutput>
+--->
+
 </div>
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
@@ -99,6 +106,9 @@
 				"types" : {
 					"message" : {
 						"icon" : "#APPLICATION.htmlPath#/assets/icons/message_small.png"
+					},
+					"consultation" : {
+						"icon" : "#APPLICATION.htmlPath#/assets/icons/consultation_small.png"
 					}
 				},
 				"plugins" : [ "types", "search" ]

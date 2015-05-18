@@ -1,15 +1,14 @@
-/*Copyright Era7 Information Technologies 2007-2012*/
+/*Copyright Era7 Information Technologies 2007-2015*/
 html {
-	/*background-color:#CCCCCC;*/
-	/*background-color:#E0E0E0;*/
 	background-color:#FFFFFF;
 }
 .body_global {
-	/*background-color:#E0E0E0;*/
 	background-color:#FFFFFF;
 }
 .body_tree {
-	background-color:#E0E0E0;
+	padding-left:2px;
+	padding-right:2px;
+	padding-top:5px;
 }
 .menu_bar{
 	background-color:#EFEFEF; clear:both; vertical-align:middle; padding-bottom:4px; padding-top:4px; padding-left:5px; padding-right:5px; height:34px;
@@ -17,30 +16,122 @@ html {
 .menu_bar a img{
 	margin-right:1px;
 }
-.link_user_logged {font-size:12px; color:#333333; font-weight:bold;}
+.link_user_logged {font-size:12px; color:#333333; font-weight:bold; line-height:16px;}
 .link_user_logout {font-size:12px; line-height:18px;}
-.link_bottom_small {font-size:12px; color:#333333;}
+.link_bottom_small {font-size:12px; color:#333333; line-height:16px;}
 #mainContainer{
-	clear:both; height:100%;display:none;margin-top:5px;
+	clear:both; height:100%;display:none;
 }
 #treeWrapper{
-	float:left; width:28%; height:100%; border-color:#666666; border-style:solid; border-width:1px; background-color:#FFFFFF;
+	height:100%; 
+	border-color:#CCCCCC; border-style:solid; border-width:1px;
+	background-color:#FFFFFF;
 }
-#areaContainer{
-	float:right; width:71%; height:100%; border-color:#666666; border-style:solid; border-width:1px;
+#areaContainer, #searchContainer{
+	height:100%; 
+	overflow:hidden; /*PARA IE8*/
 }
+#itemsContainer, #searchItemsContainer, #logItemsContainer{
+	width:62%;float:left;clear:left; border-color:#CCCCCC; border-style:solid; border-width:1px;
+}
+#itemContainer, #searchItemContainer, #logItemContainer{
+	width:37%;float:right;clear:right; border-color:#CCCCCC; border-style:solid; border-width:1px;
+}
+
+#areaUsersContainer {
+	width:45%;float:left;clear:left; border-color:#CCCCCC; border-style:solid; border-width:1px;
+}
+#usersContainer {
+	width:54%;float:right;clear:right; border-color:#CCCCCC; border-style:solid; border-width:1px;
+}
+
 .link_web {
 	font-size:12px; 
 	color:#0574A2;
 	font-weight:bold;
 }
-/*.div_head_subtitle_area {
+.div_head_subtitle_area {
 	height: 30px;
-}*/
-/*.div_head_subtitle_area_text {
-	line-height:12px;
-}*/
-
+}
 .text_user_logged {
 	font-size:12px; line-height:18px;
 }
+
+.loading_position{
+	position:absolute; top:50%; left:50%; margin:-12px 0 0 -12px; width:200px; margin-left:-100px;
+}
+
+.main_title  {
+	line-height:35px; color:#666666; font-size:15px;
+}
+
+/*BOOTSTRAP CSS CHANGES*/
+.nav-pills:after{
+	clear:none;
+}
+/* END BOOTSTRAP CSS CHANGES*/
+
+
+/****************************************TYPEHEAD BOOTSTRAP 3*******************************************/
+
+/*https://github.com/bassjobsen/typeahead.js-bootstrap-css*/
+
+span.twitter-typeahead .tt-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  text-align: left;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+span.twitter-typeahead .tt-suggestion > p {
+  display: block;
+  padding: 3px 20px;
+  margin-bottom: 0px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333333;
+  white-space: nowrap;
+}
+span.twitter-typeahead .tt-suggestion > p:hover,
+span.twitter-typeahead .tt-suggestion > p:focus {
+  color: #ffffff;
+  text-decoration: none;
+  outline: 0;
+  background-color: #428bca;
+}
+span.twitter-typeahead .tt-suggestion.tt-cursor {
+  color: #ffffff;
+  background-color: #428bca;
+}
+span.twitter-typeahead {
+  width: 100%;
+}
+.input-group span.twitter-typeahead {
+  display: block !important;
+}
+.input-group span.twitter-typeahead .tt-dropdown-menu {
+  top: 32px !important;
+}
+.input-group.input-group-lg span.twitter-typeahead .tt-dropdown-menu {
+  top: 44px !important;
+}
+.input-group.input-group-sm span.twitter-typeahead .tt-dropdown-menu {
+  top: 28px !important;
+}
+
+/********************************* END TYPEHEAD BOOTSTRAP 3 *****************************************/

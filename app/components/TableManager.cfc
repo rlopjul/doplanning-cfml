@@ -252,6 +252,7 @@
 		<cfargument name="user_in_charge" type="numeric" required="false">
 		<cfargument name="limit" type="numeric" required="false">
 		<cfargument name="structure_available" type="boolean" required="false">
+		<cfargument name="with_user" type="boolean" required="false" default="false">
 
 		<cfset var method = "getAreaTables">
 
@@ -292,7 +293,7 @@
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				<cfinvokeargument name="listFormat" value="true">
 				<cfinvokeargument name="format_content" value="default">
-				<cfinvokeargument name="with_user" value="false">
+				<cfinvokeargument name="with_user" value="#arguments.with_user#">
 				<cfinvokeargument name="parse_dates" value="true"/>
 				<cfif isDefined("arguments.limit")>
 					<cfinvokeargument name="limit" value="#arguments.limit#">
@@ -336,7 +337,7 @@
 		<cfargument name="structure_available" type="boolean" required="false">--->
 
 
-		<cfset var method = "getAreaTables">
+		<cfset var method = "getAllAreasTypologies">
 
 		<cfset var response = structNew()>
 

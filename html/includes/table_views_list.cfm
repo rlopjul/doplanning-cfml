@@ -10,7 +10,9 @@
 		
 		<cfif views_selectable IS false>
 			$("#dataTable").tablesorter({ 
-				widgets: ['zebra','select','filter','stickyHeaders'],
+				widgets: ['zebra','uitheme','select','filter','stickyHeaders'],
+				theme : "bootstrap",
+				headerTemplate : '{content} {icon}',
 				sortList: [[2,1]],
 				headers: {
 			      0: { sorter: false },
@@ -36,7 +38,9 @@
 			});
 		<cfelse>
 			$("#dataTable").tablesorter({ 
-				widgets: ['zebra','stickyHeaders'],
+				widgets: ['zebra','uitheme','stickyHeaders'],
+				theme : "bootstrap",
+				headerTemplate : '{content} {icon}',
 				sortList: [[3,0]] ,
 				headers: {
 			      0: { sorter: false },

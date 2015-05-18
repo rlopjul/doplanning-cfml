@@ -1,3 +1,6 @@
+<cfset itemTypeId = 10>
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
 <cfif isDefined("URL.file") AND isNumeric(URL.file) AND isDefined("URL.area") AND isNumeric(URL.area)>
 
 	<cfset file_id = URL.file>
@@ -39,30 +42,29 @@
 	<!---<cfinclude template="#APPLICATION.htmlPath#/includes/file_name_head.cfm">--->
 
 	<cfoutput>
-	<div class="div_message_page_title">#objectFile.name#</div>
-	<div class="div_separator"><!-- --></div>
+	<!---<div class="div_message_page_title">#objectFile.name#</div>
+	<div class="div_separator"><!-- --></div>--->
 
-	<div class="div_head_subtitle_area">
+	<cfif app_version NEQ "mobile">
 
-		<div class="btn-toolbar" style="padding-right:5px;">
+		<div class="div_head_subtitle_area">
 
-			<!---<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Archivo" lang="es"> <img style="height:22px;" src="/html/assets/icons/file_edited.png">&nbsp;&nbsp;<span lang="es">Archivo</span></a>--->
+			<div class="btn-toolbar" style="padding-right:5px;">
 
-			<div class="btn-group">
-				<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Área" lang="es"> <img src="/html/assets/icons_dp/area_small.png" style="height:17px;" alt="Área" lang="es">&nbsp;<span lang="es">Área</span></a>
-			</div>
+				<!---<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Archivo" lang="es"> <img style="height:22px;" src="/html/assets/icons/file_edited.png">&nbsp;&nbsp;<span lang="es">Archivo</span></a>--->
 
-			<!---<span class="divider">&nbsp;</span>--->
+				<div class="btn-group">
+					<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Área" lang="es"> <img src="/html/assets/icons_dp/area_small.png" style="height:17px;" alt="Área" lang="es">&nbsp;<span lang="es">Área</span></a>
+				</div>
 
-			<cfif app_version NEQ "mobile">
 				<div class="btn-group pull-right">
 					<a href="#APPLICATION.htmlPath#/file_areas.cfm?file=#file_id#&area=#area_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px;"></i></a>
 				</div>
-			</cfif>
+				
+			</div>
 
 		</div>
-
-	</div>
+	</cfif>
 	</cfoutput>
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
@@ -98,7 +100,9 @@
 			$(document).ready(function() { 
 
 				$("##listTable").tablesorter({ 
-					widgets: ['zebra'], <!---,'select'--->
+					widgets: ['zebra','uitheme'], <!---,'select'--->
+					theme : "bootstrap",
+					headerTemplate : '{content} {icon}',
 					sortList: [[1,1]] ,
 					<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 					dateFormat: "ddmmyyyy", // set the default date format
@@ -192,7 +196,9 @@
 			$(document).ready(function() { 
 
 				$("##listTable").tablesorter({ 
-					widgets: ['zebra'], <!---,'select'--->
+					widgets: ['zebra','uitheme'], <!---,'select'--->
+					theme : "bootstrap",
+					headerTemplate : '{content} {icon}',
 					sortList: [[4,1]] ,
 					<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 					dateFormat: "ddmmyyyy", // set the default date format

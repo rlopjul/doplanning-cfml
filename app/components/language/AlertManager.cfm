@@ -7,7 +7,7 @@ curLangText["es"] = {
 				"name" : "Mensaje",
 			},
 			"2": {
-				"name" : "Elemento de contenido genérico",
+				"name" : "Elemento web",
 			},
 			"3": {
 				"name" : "Enlace",
@@ -22,7 +22,7 @@ curLangText["es"] = {
 				"name" : "Tarea",
 			},
 			"7": {
-				"name" : "Interconsulta",
+				"name" : "Consulta",
 			},
 			"8": {
 				"name" : "Publicación",
@@ -31,6 +31,10 @@ curLangText["es"] = {
 				"name" : "Imagen",
 			},
 
+
+			"10": {
+				"name" : "Archivo",
+			},
 
 
 			"11": {
@@ -64,6 +68,9 @@ curLangText["es"] = {
 			//"foot_content_default_2" : 'No responda a este email.<br /> Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación.',
 			"foot_content_default_3" : "No responda a este email.<br />Este es un email automático enviado por la aplicación",
 			
+			"view_in_area" : "Ver en área",
+			"go_to_item" : "Ir al elemento",
+
 			"access_internal" : "Acceso interno",
 			"access_external" : "Acceso externo",
 			"access_to_application" : "Acceda a la aplicación en la siguiente dirección",
@@ -96,16 +103,17 @@ curLangText["es"] = {
 			"access_to_item_link" : "mediante el siguiente enlace",
 			"access_to_item_links" : "mediante los siguientes enlaces",
 			"reply_in" : "Responder en",
+			"reply" : "Responder",
 			
 			"new_male" : "Nuevo",
 			"new_female" : "Nueva",
 			"answer_to" : "Respuesta a",
-			"deleted_male" : "eliminado",
-			"deleted_female" : "eliminada",
-			"modified_male" : "modificado",
-			"modified_female" : "modificada",
-			"done_female" : "realizada",
-			"closed_female" : "cerrada",
+			"deleted_male" : "Eliminado",
+			"deleted_female" : "Eliminada",
+			"modified_male" : "Modificado",
+			"modified_female" : "Modificada",
+			"done_female" : "Realizada",
+			"closed_female" : "Cerrada",
 			"attached_file_of" : "Archivo adjunto de",
 			"attached_image_of" : "Imagen adjunta de",
 			"deleted_virus_male" : "eliminado por contener virus",
@@ -114,6 +122,8 @@ curLangText["es"] = {
 			"subject" : "Asunto",
 			"title" : "Título",
 			"user" : "Usuario",
+			"creation_user_male" : "Creado por",
+			"creation_user_female" : "Creada por",
 			"last_update_user" : "Usuario última modificación",
 			"assigned_to" : "Asignada a",
 			"creation_date" : "Fecha de creación",
@@ -173,16 +183,16 @@ curLangText["es"] = {
 			"canceled_revision" : "Revisión de archivo cancelada",
 			"changed_owner_to_area" : "Archivo de usuario convertido en archivo de área",
 			
-			"created" : "creado",
-			"added" : "añadido",
-			"replaced" : "reemplazado",
-			"dissociated" : "quitado",
-			"deleted" : "eliminado",
-			"locked" : "bloqueado",
-			"unlocked" : "desbloqueado",
-			"validated" : "validado",
-			"rejected" : "rechazado",
-			"approved" : "aprobado",
+			"created" : "Creado",
+			"added" : "Añadido",
+			"replaced" : "Reemplazado",
+			"dissociated" : "Quitado",
+			"deleted" : "Eliminado",
+			"locked" : "Bloqueado",
+			"unlocked" : "Desbloqueado",
+			"validated" : "Validado",
+			"rejected" : "Rechazado",
+			"approved" : "Aprobado",
 			
 			"it_has" : "Se ha",
 			"a_file_on_the_area" : "un archivo en el área",
@@ -326,7 +336,7 @@ curLangText["en"] = {
 				"name" : "Message",
 			},
 			"2": {
-				"name" : "Generic content element",
+				"name" : "Web element",
 			},
 			"3": {
 				"name" : "Link",
@@ -341,7 +351,7 @@ curLangText["en"] = {
 				"name" : "Task",
 			},
 			"7": {
-				"name" : "Interconsultation",
+				"name" : "Consultation",
 			},
 			"8": {
 				"name" : "Publication",
@@ -350,6 +360,10 @@ curLangText["en"] = {
 				"name" : "Image",
 			},
 
+
+			"10": {
+				"name" : "File",
+			},
 
 
 			"11": {
@@ -382,6 +396,9 @@ curLangText["en"] = {
 			"foot_content_default_1" : "This is an automated email sent by the application",
 			//"foot_content_default_2" : 'Do not reply to this email.<br />If you do not want to receive these emails, you can disable these notifications the application preferences.',
 			"foot_content_default_3" : "Do not reply to this email.<br />This is an automated email sent by the application",
+
+			"view_in_area" : "View in area",
+			"go_to_item" : "Go to item",
 			
 			"access_internal" : "Internal access",
 			"access_external" : "External access",
@@ -415,16 +432,17 @@ curLangText["en"] = {
 			"access_to_item_link" : "through the following link",
 			"access_to_item_links" : "through the following links",
 			"reply_in" : "Reply in",
+			"reply" : "Reply",
 			
 			"new_male" : "New",
 			"new_female" : "New",
 			"answer_to" : "Reply to",
-			"deleted_male" : "deleted",
-			"deleted_female" : "deleted",
-			"modified_male" : "modified",
-			"modified_female" : "modified",
-			"done_female" : "done",
-			"closed_female" : "closed",
+			"deleted_male" : "Deleted",
+			"deleted_female" : "Deleted",
+			"modified_male" : "Modified",
+			"modified_female" : "Modified",
+			"done_female" : "Done",
+			"closed_female" : "Closed",
 			"attached_file_of" : "Attached file of",
 			"attached_image_of" : "Attached image of",
 			"deleted_virus_male" : "deleted for virus detection",
@@ -433,6 +451,8 @@ curLangText["en"] = {
 			"subject" : "Subject",
 			"title" : "Title",
 			"user" : "User",
+			"creation_user_male" : "Created by",
+			"creation_user_female" : "Created by",
 			"last_update_user" : "Last update user",
 			"assigned_to" : "Assigned to",
 			"creation_date" : "Creation date",
@@ -492,16 +512,16 @@ curLangText["en"] = {
 			"canceled_revision" : "File revision canceled",
 			"changed_owner_to_area" : "User file converted to area file",
 			
-			"created" : "created",
-			"added" : "added",
-			"replaced" : "replaced",
-			"dissociated" : "dissociated",
-			"deleted" : "deleted",
-			"locked" : "locked",
-			"unlocked" : "unlocked",
-			"validated" : "validated",
-			"rejected" : "rejected",
-			"approved" : "approved",
+			"created" : "Created",
+			"added" : "Added",
+			"replaced" : "Replaced",
+			"dissociated" : "Dissociated",
+			"deleted" : "Deleted",
+			"locked" : "Locked",
+			"unlocked" : "Unlocked",
+			"validated" : "Validated",
+			"rejected" : "Rejected",
+			"approved" : "Approved",
 			
 			"it_has" : "A user has",
 			"a_file_on_the_area" : "a file in the area",

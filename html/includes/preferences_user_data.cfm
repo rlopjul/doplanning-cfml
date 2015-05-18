@@ -152,15 +152,17 @@ Datos Personales
 
 </cfoutput>
 
-<div class="container-fluid">
+<!---<div class="container-fluid">--->
 	<cfset page_type = 2>
 	<cfinclude template="#APPLICATION.htmlPath#/includes/user_data_form.cfm"/>
 
-	<div class="row">
-		<div class="col-sm-12">
-			<button type="button" class="btn btn-primary" id="saveUserData" onclick="$('#updateUserData').submit()" lang="es" style="margin-bottom:2px;">Guardar</button>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-offset-4 col-sm-3 col-md-2">
+				<button type="button" class="btn btn-primary btn-block" id="saveUserData" onclick="$('#updateUserData').submit()" lang="es" style="margin-top:25px;margin-bottom:2px;">Guardar</button>
+			</div>
 		</div>
 	</div>
 
-</div>
+<!---</div>--->
 

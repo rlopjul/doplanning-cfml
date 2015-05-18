@@ -1,5 +1,5 @@
 <cfif (SESSION.client_abb EQ "era7" AND (SESSION.user_id EQ "3" OR SESSION.user_id EQ "111" 
-OR SESSION.user_id EQ "93" OR SESSION.user_id EQ "152" OR SESSION.user_id EQ "1")) OR (SESSION.client_abb EQ "web4bio7" AND SESSION.user_id EQ "4") OR (SESSION.client_abb EQ "software7" AND SESSION.user_id EQ "2") OR (SESSION.client_abb EQ "bioinformatics7" AND SESSION.user_id EQ "10")>
+OR SESSION.user_id EQ "93" OR SESSION.user_id EQ "152" OR SESSION.user_id EQ "1")) OR (SESSION.client_abb EQ "web4bio7" AND SESSION.user_id EQ "9") OR (SESSION.client_abb EQ "software7" AND SESSION.user_id EQ "2") OR (SESSION.client_abb EQ "bioinformatics7" AND SESSION.user_id EQ "10")>
 
 <cfset no_include_clients="software7,web4bio7,organizacion,empresa,democlientes,demo,era7,pruebas,hospitalgranada,aliente">
 <cfquery datasource="#APPLICATION.dsn#" name="getClients">
@@ -20,7 +20,8 @@ OR SESSION.user_id EQ "93" OR SESSION.user_id EQ "152" OR SESSION.user_id EQ "1"
 		<cfquery datasource="#client_dsn#" name="getUsers">
 			SELECT *
 			FROM #client_abb#_users
-			WHERE enabled = true;
+			WHERE enabled = true
+			AND ( notify_app_news = 1 OR notify_app_features =  1 );
 		</cfquery>
 			
 		<cfoutput>

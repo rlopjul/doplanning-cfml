@@ -227,6 +227,7 @@
 	<!--- ------------------- UPDATE CLIENT ADMIN OPTIONS -------------------------------- --->
 
 	<cffunction name="updateClientAdminOptions" returntype="struct" output="true" access="public">
+		<cfargument name="app_title" type="string" required="true">
 		<cfargument name="default_language" type="string" required="true">
 		<cfargument name="force_notifications" type="boolean" required="false" default="false">
 		<cfargument name="tasks_reminder_notifications" type="boolean" required="false" default="false">
@@ -260,7 +261,8 @@
 						tasks_reminder_notifications = <cfqueryparam value="#arguments.tasks_reminder_notifications#" cfsqltype="cf_sql_bit">,
 						tasks_reminder_days = <cfqueryparam value="#arguments.tasks_reminder_days#" cfsqltype="cf_sql_integer">,
 						bin_enabled = <cfqueryparam value="#arguments.bin_enabled#" cfsqltype="cf_sql_bit">,
-						bin_days = <cfqueryparam value="#arguments.bin_days#" cfsqltype="cf_sql_integer">
+						bin_days = <cfqueryparam value="#arguments.bin_days#" cfsqltype="cf_sql_integer">,
+						app_title = <cfqueryparam value="#arguments.app_title#" cfsqltype="cf_sql_varchar">
 					WHERE abbreviation = <cfqueryparam value="#SESSION.client_abb#" cfsqltype="cf_sql_varchar">;
 				</cfquery>
 
@@ -1191,7 +1193,11 @@
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.9.2.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.9.3.cfm">							
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.9.3.cfm">	
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.10.cfm">		
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.1.cfm">						
 			
 			<!---createClientFolders--->
 			<cfinvoke component="ClientManager" method="createClientFolders">

@@ -1,4 +1,4 @@
-<cfif isDefined("URL.fileDownload")>
+<cfif isDefined("URL.fileDownload") OR ( isDefined("URL.file") AND isDefined("URL.download") )>
 	<cflocation url="#APPLICATION.htmlPath#/file_download.cfm?#CGI.QUERY_STRING#" addtoken="no">
 <cfelse>
 
@@ -11,8 +11,10 @@
 	</cfif>
 
 	<cfset olderBrowser = false>
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="isMobileBrowser" returnvariable="isMobileBrowser">
-	</cfinvoke>
+	<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="isMobileBrowser" returnvariable="isMobileBrowser">
+	</cfinvoke>--->
+
+	<cfset isMobileBrowser = true>
 
 	<cfif isMobileBrowser IS false>
 		<cfif client_abb NEQ "agsna" AND ( FindNoCase('MSIE 6',CGI.HTTP_USER_AGENT) GT 0 OR FindNoCase('MSIE 7',CGI.HTTP_USER_AGENT) GT 0 OR ( FindNoCase('MSIE 8',CGI.HTTP_USER_AGENT) GT 0 AND client_abb EQ "hcs" ) ) AND FindNoCase('Opera',CGI.HTTP_USER_AGENT) LT 1><!--- Opción deshabilitada para el AGSNA para que siempre muestre la versión estándar. La última versión con pestaña Home no funciona en IE8 en el HCS por el tamaño del árbol --->

@@ -44,12 +44,6 @@
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 <script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
-<!--- 
-<script type="text/javascript">
-	var applicationId = "#APPLICATION.identifier#";
-	var applicationPath = "#APPLICATION.path#";
-</script> --->
-
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
 
 <cfif APPLICATION.moduleWeb IS true>
@@ -146,10 +140,6 @@
 	<cfset folder_id = URL.folder>
 </cfif>
 
-<cfif isDefined("area_id")>
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-</cfif>
-
 <cfinclude template="#APPLICATION.htmlPath#/includes/file_head.cfm">
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
@@ -158,9 +148,23 @@
 	<cfinvokeargument name="area_id" value="#area_id#">
 	</cfif>--->
 </cfinvoke>
-<cfoutput>
+
+<cfif isDefined("area_id")>
+<!---<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">--->
+
+	<cfset itemTypeId = 10>
+	<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+	
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_id.cfm">
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
+
+</cfif>
+
+<!---<cfoutput>
 <div class="div_file_page_name">#objectFile.name#</div>
-</cfoutput>
+</cfoutput>--->
 
 <div class="div_head_subtitle">
 <cfif page_type IS 1>

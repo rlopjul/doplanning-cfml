@@ -20,7 +20,15 @@
 
 <cfset area_id = objectFile.area_id>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+<!---<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">--->
+
+<cfset itemTypeId = 10>
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_id.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>

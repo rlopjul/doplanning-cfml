@@ -18,7 +18,8 @@
 			<cfquery name="selectClientQuery" datasource="#client_dsn#">
 				SELECT *
 				FROM `doplanning_app`.`app_clients`
-				WHERE abbreviation = <cfqueryparam value="#arguments.client_abb#" cfsqltype="cf_sql_varchar">;
+				<!---WHERE abbreviation = <cfqueryparam value="#arguments.client_abb#" cfsqltype="cf_sql_varchar">--->
+				WHERE abbreviation LIKE <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar"> COLLATE utf8_bin;
 			</cfquery>
 		
 		<cfreturn selectClientQuery>

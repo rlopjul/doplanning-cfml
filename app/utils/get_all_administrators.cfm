@@ -26,8 +26,13 @@ OR SESSION.user_id EQ "93" OR SESSION.user_id EQ "152" OR SESSION.user_id EQ "1"
 				FROM #cur_client_abb#_users AS users
 				WHERE users.id = #getClients.administrator_id#;
 			</cfquery>
+
+			<cfquery datasource="#client_dsn#" name="getClientLastConnection">
+				SELECT MAX(last_connection) AS client_last_connection
+				FROM #cur_client_abb#_users AS users;
+			</cfquery>
 	
-		<cfset fileContent = fileContent&"#getClients.name#;#getClientAdministrator.family_name# #getClientAdministrator.name#;#getClientAdministrator.email##newLine#">
+		<cfset fileContent = fileContent&"#getClients.name#;#getClientAdministrator.family_name# #getClientAdministrator.name#;#getClientAdministrator.email#;#DateFormat(getClientLastConnection.client_last_connection, "DD-MM-YYYY")##newLine#">
 			
 	</cfloop>
 

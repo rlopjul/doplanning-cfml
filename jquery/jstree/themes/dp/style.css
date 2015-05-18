@@ -333,8 +333,9 @@
 }
 .jstree-dp .jstree-search {
   font-style: italic;
-  color: #8b0000;
-  font-weight: bold;
+  /*color: #8b0000;
+  font-weight: bold;*/
+  color: #E4514B;
 }
 .jstree-dp .jstree-no-checkboxes .jstree-checkbox {
   display: none !important;
@@ -921,32 +922,41 @@
 /*DOPLANNING*/
 .jstree-dp li a { font-family:Verdana, Arial; }
 .jstree-dp li[rel="allowed"] > a > .jstree-icon {
-   background-image: url("../../../../html/assets/icons_dp/area_small.png");
+   background-image: url("../../../../html/assets/v3/icons_dp/area_small.png");
    background-position: 0 3px;
 }
 .jstree-dp li[rel="allowed-web"] > a > .jstree-icon {
-   background-image: url("../../../../html/assets/icons_dp/area_web_small.png");
+   background-image: url("../../../../html/assets/v3/icons_dp/area_web_small.png");
+   background-position: 0 3px;
+}
+.jstree-dp li[rel="allowed-intranet"] > a > .jstree-icon {
+   background-image: url("../../../../html/assets/v3/icons_dp/area_intranet_small.png");
    background-position: 0 3px;
 }
 .jstree-dp li[rel="not-allowed"] > a > .jstree-icon {
-   background-image: url("../../../../html/assets/icons_dp/area_small_disabled.png");
+   background-image: url("../../../../html/assets/v3/icons_dp/area_small_disabled.png");
    background-position: 0 3px;
 }
 .jstree-dp li[rel="not-allowed-web"] > a > .jstree-icon {
-   background-image: url("../../../../html/assets/icons_dp/area_web_small_disabled.png");
+   background-image: url("../../../../html/assets/v3/icons_dp/area_web_small_disabled.png");
    background-position: 0 3px;
 }
-
+.jstree-dp li[rel="not-allowed-intranet"] > a > .jstree-icon {
+   background-image: url("../../../../html/assets/v3/icons_dp/area_intranet_small_disabled.png");
+   background-position: 0 3px;
+}
 .jstree-dp li[rel="allowed-admin"] > a > .jstree-icon {
-   background-image: url("../../../../html/assets/icons_dp/area_small_admin.png");
+   background-image: url("../../../../html/assets/v3/icons_dp/area_small_admin.png");
    background-position: 0 3px;
 }
 .jstree-dp li[rel="allowed-web-admin"] > a > .jstree-icon {
-   background-image: url("../../../../html/assets/icons_dp/area_web_small_admin.png");
+   background-image: url("../../../../html/assets/v3/icons_dp/area_web_small_admin.png");
    background-position: 0 3px;
 }
-/*.jstree-dp li[rel="message"] > a > .jstree-icon {
-   background-image: url("../../../../html/assets/icons/message_small.png");
-   background-position: 0 0;
-}*/
+.jstree-dp li[rel="allowed-intranet-admin"] > a > .jstree-icon {
+   background-image: url("../../../../html/assets/v3/icons_dp/area_intranet_small_admin.png");
+   background-position: 0 3px;
+}
+
+
 /*DOPLANNING END*/

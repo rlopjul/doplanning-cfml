@@ -44,6 +44,7 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+	<cfinvokeargument name="with_user" value="true">
 </cfinvoke>
 
 <cfset areaTables = getAreaTablesResponse.areaTables>
@@ -53,18 +54,32 @@
 <div class="div_items">
 <cfif numItems GT 0>
 	
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="outputTablesList">
-		<cfinvokeargument name="itemsQuery" value="#areaTables#">
-		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-		<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
-		<cfinvokeargument name="app_version" value="#app_version#">
-		<cfif isDefined("default_table_id") AND isNumeric(default_table_id)>
-			<cfinvokeargument name="default_table_id" value="#default_table_id#"/>
-		</cfif>
-		<cfif tableTypeId IS 3><!--- Typology --->
+	<cfif isDefined("URL.mode") AND URL.mode EQ "list">
+		
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="outputTablesList">
+			<cfinvokeargument name="itemsQuery" value="#areaTables#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
+			<cfinvokeargument name="app_version" value="#app_version#">
+			<cfif isDefined("default_table_id") AND isNumeric(default_table_id)>
+				<cfinvokeargument name="default_table_id" value="#default_table_id#"/>
+			</cfif>
+			<cfif tableTypeId IS 3><!--- Typology --->
+				<cfinvokeargument name="area_id" value="#area_id#"/>
+			</cfif>
+		</cfinvoke>	
+
+	<cfelse>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="outputTablesFullList">
+			<cfinvokeargument name="itemsQuery" value="#areaTables#">
+			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+			<cfinvokeargument name="return_path" value="#APPLICATION.htmlPath#/">
 			<cfinvokeargument name="area_id" value="#area_id#"/>
-		</cfif>
-	</cfinvoke>
+			<cfinvokeargument name="app_version" value="#app_version#">
+		</cfinvoke>
+
+	</cfif>
 
 <cfelse>
 	

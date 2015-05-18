@@ -1,4 +1,4 @@
-<div class="btn-toolbar">
+<div class="btn-toolbar" style="background-color:#FFFFFF;">
 
 	<div class="btn-group">
 		<div class="input-group input-group-sm" style="width:260px;" >

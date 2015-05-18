@@ -36,8 +36,10 @@
 
 </script>--->
 
-<div class="div_message_page_title">#table.title#</div>
-<div class="div_separator"><!-- --></div>
+<cfif app_version NEQ "mobile">
+	<div class="div_message_page_title">#table.title#</div>
+	<div class="div_separator"><!-- --></div>
+</cfif>
 
 <div class="div_head_subtitle_area">
 
@@ -49,7 +51,7 @@
 		</div>
 
 		<div class="btn-group">
-			<a  href="#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-info btn-sm"><i class="icon-plus icon-white" style="font-size:14px;line-height:20px;"></i> <span>Añadir editores</span></a><!---color:##5BB75B;--->
+			<a  href="#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;line-height:20px;"></i> <span>Añadir editores</span></a><!---color:##5BB75B;--->
 		</div>
 
 		<!---<span class="divider">&nbsp;</span>--->
@@ -96,7 +98,9 @@
 		</script>				
 
 		<cfoutput>
-		<div class="div_text_result"><span lang="es">Haga clic en Añadir editores parar añadir un nuevo usuario.</span></div>
+		<div class="alert alert-info" style="margin-top:10px;">
+			<i class="icon-info-sign"></i>&nbsp;<span lang="es">Haga clic en Añadir editores parar añadir un nuevo usuario.</span>
+		</div>
 		</cfoutput>
 
 	</cfif>

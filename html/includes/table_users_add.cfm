@@ -1,33 +1,33 @@
 
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+<!---<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">--->
 
-<cfif isDefined("FORM.page")>
-
+<cfif isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
+	<cfset table_id = URL[tableTypeName]>
 <cfelse>
-
-	<cfif isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
-		<cfset table_id = URL[tableTypeName]>
-	<cfelse>
-		<cflocation url="empty.cfm" addtoken="no">
-	</cfif>
-
-	<!---Table--->
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
-		<cfinvokeargument name="table_id" value="#table_id#">
-		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-	</cfinvoke>
-	<cfset area_id = table.area_id>
-
-	<!---Table users--->
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableUsers" returnvariable="tableUsersResult">
-		<cfinvokeargument name="table_id" value="#table_id#">
-		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-		<cfinvokeargument name="with_table" value="true">
-	</cfinvoke>
-	<cfset tableUsers = tableUsersResult.tableUsers>
-	<cfset tableUsersArray = listToArray(valueList(tableUsers.user_id, ","))>
-
+	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
+
+<!---Table--->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
+	<cfinvokeargument name="table_id" value="#table_id#">
+	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+</cfinvoke>
+<cfset area_id = table.area_id>
+
+<!---Table users--->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableUsers" returnvariable="tableUsersResult">
+	<cfinvokeargument name="table_id" value="#table_id#">
+	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+	<cfinvokeargument name="with_table" value="true">
+</cfinvoke>
+<cfset tableUsers = tableUsersResult.tableUsers>
+<cfset tableUsersArray = listToArray(valueList(tableUsers.user_id, ","))>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_id.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
 
 <div class="div_head_subtitle"><span lang="es">Añadir editores</span></div>
 

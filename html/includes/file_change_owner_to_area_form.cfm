@@ -44,9 +44,9 @@
 
 <script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
-<div class="contenedor_fondo_blanco">
-
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+
+<div class="contenedor_fondo_blanco">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 	

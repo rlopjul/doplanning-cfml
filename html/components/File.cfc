@@ -610,6 +610,7 @@
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false">
 		<cfargument name="version_index" type="string" required="false">
+		<cfargument name="public" type="boolean" required="false">
 		
 		<cfset var method = "createFile">
 		
@@ -965,7 +966,8 @@
 			</cfif>
 				
 			<cfset msg = URLEncodedFormat(msg)>
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+			<!---<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">--->
+			<cflocation url="#arguments.return_path##fileTypeName#.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1500,6 +1502,103 @@
 	<cffunction name="getFileIconsTypes" returntype="string" output="false" access="public">
 
 		<cfreturn "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">
+		
+	</cffunction>
+
+
+
+	<!--- ----------------------- getFileIcon -------------------------------- --->
+	
+	<cffunction name="getFileIcon" returntype="string" output="false" access="public">
+		<cfargument name="file_name" type="string" required="true">
+
+		<cfset var icon = "file">
+		<!---<cfset var color = "#82D0CA">--->
+
+		<cfset var fileType = lCase(listLast(arguments.file_name, "."))>
+
+		<cfscript>
+
+			switch(fileType){
+
+				case "xls":
+				case "xlsx":
+				case "xlsm":
+				case "csv":
+					icon = "file-excel-o";
+					<!---color = "#33975B";--->
+				break;
+
+				case "pdf":
+					icon = "file-pdf-o";
+					<!--- color = "#E4514B"; --->
+				break;
+
+				case "mp3":
+				case "waw":
+					icon = "file-sound-o";
+					<!--- color = "#254E65"; --->
+				break;
+
+				case "doc":
+				case "docx":
+				case "odt":
+					icon = "file-word-o";
+					<!--- color = "#019ED3"; --->
+				break;
+
+				case "zip":
+				case "rar":
+					icon = "file-archive-o";
+					<!--- color = "#777777"; --->
+				break;
+
+				case "mp4":
+				case "flv":
+					icon = "file-movie-o";
+					<!--- color = "#254E65"; --->
+				break;
+
+				case "js":
+				case "cfm":
+				case "css":
+				case "html":
+				case "xml":
+					icon = "file-code-o";
+					<!--- color = "#222222"; --->
+				break;
+
+				case "ppt":
+				case "pptx":
+				case "pps":
+				case "ppsx":
+					icon = "file-powerpoint-o";
+					<!--- color = "#D24625"; --->
+				break;
+
+				case "jpg":
+				case "jpeg":
+				case "png":
+				case "gif":
+				case "bmp":
+					icon = "file-image-o";
+					<!--- color = "#E6C81E"; --->
+				break;
+
+				case "txt":
+					icon = "file-text-o";
+				break;
+
+				case "tsv":
+				case "fasta":
+					icon = "file-text";
+				break;
+
+			}
+
+		</cfscript>
+		
+		<cfreturn "fa fa-"&icon>
 		
 	</cffunction>
 	

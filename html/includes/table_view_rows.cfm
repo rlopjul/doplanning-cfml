@@ -35,40 +35,42 @@
 
 <cfoutput>
 
-<div class="div_message_page_title">#view.title#</div>
-<div class="div_separator"><!-- --></div>
+<cfif app_version NEQ "mobile">
+	<div class="div_message_page_title">#view.title#</div>
+	<div class="div_separator"><!-- --></div>
 
-<div class="div_head_subtitle_area">
+	<div class="div_head_subtitle_area">
 
-	<div class="btn-toolbar" style="padding-right:5px;">
+		<div class="btn-toolbar" style="padding-right:5px;">
 
-		<div class="btn-group">
-			<!---<a href="area_items.cfm?area=#area_id#&#itemTypeName#=#view_id#" class="btn btn-default btn-sm" title="#itemTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#itemTypeNameEs#">&nbsp;&nbsp;<span lang="es">#itemTypeNameEs#</span></a>--->
+			<div class="btn-group">
+				<!---<a href="area_items.cfm?area=#area_id#&#itemTypeName#=#view_id#" class="btn btn-default btn-sm" title="#itemTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#itemTypeNameEs#">&nbsp;&nbsp;<span lang="es">#itemTypeNameEs#</span></a>--->
 
-			<a href="area_items.cfm?area=#area_id#&#itemTypeName#=#view_id#" class="btn btn-default btn-sm" title="Área" lang="es"><img style="height:17px;" src="/html/assets/icons_dp/area_small.png" alt="Área" lang="es">&nbsp;<span lang="es">Área</span></a>
-		</div>
-		
-		<!---<a href="#itemTypeName#_row_export.cfm?#itemTypeName#=#table_id#" onclick="openUrl('#itemTypeName#_row_export.cfm?#itemTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down" style="font-size:15px;line-height:20px;"></i> <span>Exportar</span></a>
-
-		<span class="divider">&nbsp;</span>--->
-		
-		<!---<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>
-
-		<span class="divider">&nbsp;</span>--->
-
-		<cfif app_version NEQ "mobile">
-			<div class="btn-group pull-right">
-				<a href="#APPLICATION.htmlPath#/#itemTypeName#_rows.cfm?#itemTypeName#=#view_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px;"></i></a>
+				<a href="area_items.cfm?area=#area_id#&#itemTypeName#=#view_id#" class="btn btn-default btn-sm" title="Área" lang="es"><img style="height:17px;" src="/html/assets/icons_dp/area_small.png" alt="Área" lang="es">&nbsp;<span lang="es">Área</span></a>
 			</div>
-		</cfif>
+			
+			<!---<a href="#itemTypeName#_row_export.cfm?#itemTypeName#=#table_id#" onclick="openUrl('#itemTypeName#_row_export.cfm?#itemTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down" style="font-size:15px;line-height:20px;"></i> <span>Exportar</span></a>
 
-		<div class="btn-group pull-right">
-			<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#view_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px;"></i></a>
+			<span class="divider">&nbsp;</span>--->
+			
+			<!---<a href="#itemTypeNameP#.cfm?area=#area_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>
+
+			<span class="divider">&nbsp;</span>--->
+
+			<cfif app_version NEQ "mobile">
+				<div class="btn-group pull-right">
+					<a href="#APPLICATION.htmlPath#/#itemTypeName#_rows.cfm?#itemTypeName#=#view_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px;"></i></a>
+				</div>
+			</cfif>
+
+			<div class="btn-group pull-right">
+				<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#view_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px;"></i></a>
+			</div>
+
 		</div>
 
 	</div>
-
-</div>
+</cfif>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 

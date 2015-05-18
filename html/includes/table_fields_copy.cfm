@@ -91,8 +91,10 @@ function loadTableFields(tableId) {
 }
 </script>
 
-<div class="div_message_page_title">#table.title#</div>
-<div class="div_separator"><!-- --></div>
+<cfif app_version NEQ "mobile">
+	<div class="div_message_page_title">#table.title#</div>
+	<div class="div_separator"><!-- --></div>
+</cfif>
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="copy_fields_form" id="copy_fields_form" onsubmit="return onSubmitForm();">
 	

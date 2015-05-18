@@ -6,7 +6,7 @@
 <script type="text/javascript" src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
 </cfoutput>
 
-
+<cfset itemTypeId = 10>
 <cfinclude template="#APPLICATION.htmlPath#/includes/search_2_bar.cfm">
 
 
@@ -49,23 +49,35 @@
 	<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numItems# <span lang="es"><cfif numItems IS 1>Archivo<cfelse>Archivos</cfif></span></div>
 	</cfoutput>
 
-	
-	<script>
+	<cfif numItems GT 0>
 		
-		$(document).ready(function() { 
+		<script>
+		
+			$(document).ready(function() { 
 
-			<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
-			$('#listTable').bind('select.tablesorter.select', function(e, ts){
-			    var itemUrl= $(ts.elem).data("item-url");
-			    openUrlLite(itemUrl,'itemIframe');
+				<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
+				<!---$('#listTable').bind('select.tablesorter.select', function(e, ts){
+				    var itemUrl= $(ts.elem).data("item-url");
+				    openUrlLite(itemUrl,'itemIframe');
+				});--->
+
+				$('#listTable tbody tr').on('click', function(e) {
+
+			        var row = $(this);
+			        var itemUrl = row.data("item-url");
+			        goToUrl(itemUrl);
+
+			    });
+
 			});
 
-		});
+		</script>
 
-	</script>
+		<cfset full_content = true>
+		<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">
 
-	<cfset full_content = true>
-	<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">
+
+	</cfif>
 	
 <cfelse>
 
@@ -73,7 +85,7 @@
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>
 
-	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca unos parámetros de búsqueda y haga click en "Buscar".</span></div>
+	<div class="alert alert-info" style="margin:10px;margin-top:30px;background-color:#65C5BD"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en "BUSCAR"</span></div>
 
 </cfif>
 

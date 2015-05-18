@@ -4,6 +4,7 @@
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="objectUser">
 	<cfinvokeargument name="user_id" value="#user_id#">
+	<cfinvokeargument name="format_content" value="all">
 </cfinvoke>
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUser">

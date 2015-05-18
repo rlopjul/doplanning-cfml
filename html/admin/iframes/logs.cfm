@@ -38,7 +38,7 @@
 <cfif APPLICATION.identifier EQ "vpnet">
 <link href="../../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
 <cfelse>
-<link href="../../styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../../styles/styles_dp.min.css" rel="stylesheet" type="text/css" media="all" />
 </cfif>
 <link href="../../styles/styles_iframes.css" rel="stylesheet" type="text/css" media="all" />
 
@@ -48,6 +48,8 @@
 <!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>--->
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
+
+<script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
 
 <script src="../../scripts/functions.min.js?v=2.4"></script>
 <script src="../../scripts/iframesFunctions.min.js?v=2.1"></script>

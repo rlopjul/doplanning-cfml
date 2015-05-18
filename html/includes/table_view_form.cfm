@@ -133,9 +133,9 @@
 
 <cfset passthrough = "">
 
-<div class="contenedor_fondo_blanco">
-
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+
+<div class="contenedor_fondo_blanco">
 
 <cfoutput>
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" onsubmit="return onSubmitForm();">

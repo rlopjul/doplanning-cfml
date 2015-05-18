@@ -28,8 +28,11 @@
 		
 		<cfset var client_dsn = APPLICATION.identifier&"_"&client_abb>
 						
-		<cfset var small_width = 32>
-		<cfset var small_height = 32>
+		<!---<cfset var small_width = 32>
+		<cfset var small_height = 32>--->
+
+		<cfset var small_width = 60>
+		<cfset var small_height = 60>
 		
 		<cfset var medium_width = 400>
 		<cfset var medium_height = 400>

@@ -20,7 +20,8 @@
 	<!---getFile--->
 	
 	<cffunction name="getFile" output="false" returntype="query" access="public">
-		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="file_id" type="numeric" required="false">
+		<cfargument name="file_public_id" type="string" required="false">
 		<cfargument name="fileTypeId" type="numeric" required="false">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
@@ -40,7 +41,7 @@
 			<cfset fileTypeTable = "files">
 
 			<cfquery name="selectFileQuery" datasource="#client_dsn#">		
-				SELECT files.id, files.id AS file_id, physical_name, files.user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user
+				SELECT files.id, files.id AS file_id, physical_name, files.user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user, files.public, files.file_public_id
 					, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				<cfif isDefined("arguments.area_id")>
 					, areas_files.association_date
@@ -82,7 +83,11 @@
 				, IF(files.approver_user IS NOT NULL, CONCAT_WS(' ', users_approver.family_name, users_approver.name), '' ) AS approver_user_full_name
 				FROM #client_abb#_#fileTypeTable# AS files
 				INNER JOIN #client_abb#_users AS users 
-				ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> 
+				<cfif isDefined("arguments.file_public_id")>
+					ON files.file_public_id = <cfqueryparam value="#arguments.file_public_id#" cfsqltype="cf_sql_varchar"> 
+				<cfelse>
+					ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer"> 
+				</cfif>
 				AND files.user_in_charge = users.id
 				<cfif arguments.ignore_status IS false>
 					AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">

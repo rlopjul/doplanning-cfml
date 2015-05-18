@@ -274,7 +274,7 @@
 				<cfif image_info.width GT required_width OR image_info.height GT required_height>
 					
 					<cfimage source="#destination##temp_file#" name="imageToScale">			
-					<cfset ImageScaleToFit(imageToScale, required_width, arguments.maxheight, "highQuality")>
+					<cfset ImageScaleToFit(imageToScale, required_width, required_height, "highQuality")>
 					<cfimage action="write" source="#imageToScale#" destination="#destination##temp_file#" quality="0.85" overwrite="yes">
 
 				<!---

@@ -1,0 +1,13 @@
+html{background-color:#fff}.body_global{background-color:#fff}.body_tree{padding-left:2px;padding-right:2px;padding-top:5px}.menu_bar{background-color:#efefef;clear:both;vertical-align:middle;padding-bottom:4px;padding-top:4px;padding-left:5px;padding-right:5px;height:34px}
+.menu_bar a img{margin-right:1px}.link_user_logged{font-size:12px;color:#333;font-weight:bold;line-height:16px}.link_user_logout{font-size:12px;line-height:18px}
+.link_bottom_small{font-size:12px;color:#333;line-height:16px}#mainContainer{clear:both;height:100%;display:none}#treeWrapper{height:100%;border-color:#ccc;border-style:solid;border-width:1px;background-color:#fff}
+#areaContainer,#searchContainer{height:100%;overflow:hidden}#itemsContainer,#searchItemsContainer,#logItemsContainer{width:62%;float:left;clear:left;border-color:#ccc;border-style:solid;border-width:1px}
+#itemContainer,#searchItemContainer,#logItemContainer{width:37%;float:right;clear:right;border-color:#ccc;border-style:solid;border-width:1px}#areaUsersContainer{width:45%;float:left;clear:left;border-color:#ccc;border-style:solid;border-width:1px}
+#usersContainer{width:54%;float:right;clear:right;border-color:#ccc;border-style:solid;border-width:1px}.link_web{font-size:12px;color:#0574a2;font-weight:bold}
+.div_head_subtitle_area{height:30px}.text_user_logged{font-size:12px;line-height:18px}.loading_position{position:absolute;top:50%;left:50%;margin:-12px 0 0 -12px;width:200px;margin-left:-100px}
+.main_title{line-height:35px;color:#666;font-size:15px}.nav-pills:after{clear:none}span.twitter-typeahead .tt-dropdown-menu{position:absolute;top:100%;left:0;z-index:1000;display:none;float:left;min-width:160px;padding:5px 0;margin:2px 0 0;list-style:none;font-size:14px;text-align:left;background-color:#fff;border:1px solid #ccc;border:1px solid rgba(0,0,0,0.15);border-radius:4px;-webkit-box-shadow:0 6px 12px rgba(0,0,0,0.175);box-shadow:0 6px 12px rgba(0,0,0,0.175);background-clip:padding-box}
+span.twitter-typeahead .tt-suggestion>p{display:block;padding:3px 20px;margin-bottom:0;clear:both;font-weight:normal;line-height:1.42857143;color:#333;white-space:nowrap}
+span.twitter-typeahead .tt-suggestion>p:hover,span.twitter-typeahead .tt-suggestion>p:focus{color:#fff;text-decoration:none;outline:0;background-color:#428bca}
+span.twitter-typeahead .tt-suggestion.tt-cursor{color:#fff;background-color:#428bca}span.twitter-typeahead{width:100%}.input-group span.twitter-typeahead{display:block!important}
+.input-group span.twitter-typeahead .tt-dropdown-menu{top:32px!important}.input-group.input-group-lg span.twitter-typeahead .tt-dropdown-menu{top:44px!important}
+.input-group.input-group-sm span.twitter-typeahead .tt-dropdown-menu{top:28px!important}

@@ -36,13 +36,17 @@
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
 
+<link href="#APPLICATION.dpCSSPath#" rel="stylesheet" />
+
+
 <cfif APPLICATION.identifier EQ "dp">
-<link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp2.min.css"/>
+<link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_dp.min.css"/>
 <cfelse>
 <link rel="stylesheet" media="all" href="#APPLICATION.htmlPath#/styles/styles_vpnet.css"/>
 </cfif>
 
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.0" rel="stylesheet" />
+
+<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.2" rel="stylesheet" />
 
 <script src="#APPLICATION.jqueryJSPath#"></script>
 <script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
@@ -78,6 +82,9 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8"></script>--->
+
+<script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
+
 <script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>
 
 </cfoutput>
@@ -129,9 +136,9 @@
 </script>
 
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.5"></script>
+<script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.7"></script>
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.2"></script>
-<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.92"></script>
+<script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.94"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 </cfoutput>
@@ -139,7 +146,7 @@
 <script>
 	
 	function resizeIframe() {
-		var newHeight = windowHeight()-66;
+		var newHeight = windowHeight()-78;
 		$(".iframes").height(newHeight);
 		
 		var userIframeHeight = 300;
@@ -473,11 +480,19 @@
 					
 						<div class="btn-group">
 							<a href="../preferences.cfm" title="Preferencias del usuario" lang="es">
-							<cfif len(objectUser.image_file) GT 0>
+							<!---<cfif len(objectUser.image_file) GT 0>
 								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
 							<cfelse>
 								<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
-							</cfif>
+							</cfif>--->
+
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
+								<cfinvokeargument name="user_id" value="#objectUser.id#">
+								<cfinvokeargument name="user_id" value="#objectUser.id#">
+								<cfinvokeargument name="user_full_name" value="#objectUser.family_name# #objectUser.name#">
+								<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
+								<cfinvokeargument name="width_px" value="30">
+							</cfinvoke>
 							</a>
 						</div>
 
@@ -550,7 +565,7 @@
 
 				<div class="form-inline" style="padding-bottom:5px; padding-left:5px;">
 					<label class="checkbox">
-						<input type="checkbox" id="changeTabDisabled" value="true" style="width:15px;height:15px"/> <span style="font-size:15px;">No cambiar de pestaña al seleccionar área</span>
+						<input type="checkbox" id="changeTabDisabled" value="true" style="width:15px;height:15px"/>&nbsp;&nbsp;<span style="font-size:15px;">No cambiar de pestaña al seleccionar área</span>
 					</label>
 				</div>
 				

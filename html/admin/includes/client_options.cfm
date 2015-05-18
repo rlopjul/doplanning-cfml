@@ -22,18 +22,33 @@
 
 	  			<div class="row">
 					<div class="col-sm-12">
+						<label for="app_title" lang="es">Título de la aplicación</label>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<input type="text" name="app_title" id="app_title" value="#clientQuery.app_title#" class="form-control" required />
+								<small class="help-block">
+									Título que aparece en la parte superior de la aplicación y en la pantalla de login.<br>
+									Una vez modificado es necesario salir y volver acceder a la aplicación para que el cambio se vea reflejado.
+								</small>
+							</div>
+						</div>
+					</div>					
+				</div>
+
+	  			<div class="row">
+					<div class="col-sm-12">
 						<label for="default_language" lang="es">Idioma por defecto de la aplicación</label>
 
 						<div class="row">
-							<div class="col-sm-4">
+							<div class="col-sm-12">
 								<select name="default_language" id="default_language" class="form-control">
 									<option value="es" <cfif clientQuery.default_language EQ "es">selected="selected"</cfif>>Español</option>
 									<option value="en" <cfif clientQuery.default_language EQ "en">selected="selected"</cfif>>English</option>
 								</select>
-							</div>
-							<div class="col-sm-8">
 								<small class="help-block">
-									Los usuarios podrán modificar el idioma en que se muestra la aplicación
+									Idioma en el que se muestra por defecto la pantalla de login de la aplicación y el que se define por defecto al crear un nuevo usuario.<br>
+									Cada usuario tiene definido su propio idioma, que puede cambiarlo en cualquier momento.
 								</small>
 							</div>
 						</div>
@@ -82,6 +97,12 @@
 								<input type="number" name="tasks_reminder_days" id="tasks_reminder_days" value="#clientQuery.tasks_reminder_days#" required="true" min="1" max="500" message="Número de días obligatorio" class="form-control" />
 							</div>
 						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<br>
 					</div>
 				</div>
 

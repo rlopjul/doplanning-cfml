@@ -347,7 +347,33 @@
 			
 	
 	</cffunction>
+
+
+	<!--- PROVISIONAL 
+
+		Esto hay que quitarlo cuando se actualice a Lucee, ya que Lucee incluye una función para esto
+--->
 	
+	<cfscript>
+	    function GetQueryRow(query, rowNumber) {
+	        var i = 0;
+	        var rowData = StructNew();
+	        var cols    = ListToArray(query.columnList);
+	        for (i = 1; i lte ArrayLen(cols); i = i + 1) {
+	            rowData[cols[i]] = query[cols[i]][rowNumber];
+	        }
+	        return rowData;
+	    }
+	</cfscript>
+
+	<!---   
+	http://www.neiland.net/blog/article/converting-a-query-row-into-a-structure/
+
+	<cfloop list="#arguments.queryObj.columnList#" index="colname">
+      <cfset "returnStruct.#colname#" = arguments.queryObj[colname][arguments.row]>
+    </cfloop>
+
+    ---->
 
 
 	<!--- ---------------------------- getAreaUsers ------------------------------- --->
@@ -415,7 +441,9 @@
 			<cfif listLen(usersList) GT 0>
 			
 				<cfquery name="areaUsersQuery" datasource="#client_dsn#">
-					SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type, language
+					SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type, language, CONCAT_WS(' ', family_name, name) AS user_full_name,
+						<!---The following columns are only used in full lists--->
+						linkedin_url, twitter_url, dni, address, enabled
 					FROM #client_abb#_users AS u
 					WHERE u.id IN (#usersList#)
 					<cfif isDefined("arguments.include_user_log_in") AND arguments.include_user_log_in NEQ true>
@@ -505,6 +533,7 @@
 				<cfif areaUsersQuery.recordCount GT 0>
 						
 					<cfloop query="areaUsersQuery">
+						<!---
 						<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="user">
 							<cfinvokeargument name="id" value="#areaUsersQuery.id#">
 							<cfinvokeargument name="email" value="#areaUsersQuery.email#">	
@@ -535,6 +564,20 @@
 							
 							<cfinvokeargument name="return_type" value="object">
 						</cfinvoke>
+						--->
+
+						<!---<cfset user = queryRowData(areaUsersQuery, areaUsersQuery.currentRow)>--->
+
+						<cfset user = GetQueryRow(areaUsersQuery, areaUsersQuery.currentRow)>
+
+						<cfset user.whole_tree_visible = areaUsersQuery.internal_user>
+						<cfset user.areas_administration = "">
+
+						<cfif listFind(areaMembersList, areaUsersQuery.id) GT 0>
+							<cfset user.area_member = 1>
+						<cfelse>
+							<cfset user.area_member = 0>
+						</cfif>
 						
 						<cfinvoke component="UserManager" method="appendUser" returnvariable="usersArrayUpdated">
 							<cfinvokeargument name="usersArray" value="#usersArray#">

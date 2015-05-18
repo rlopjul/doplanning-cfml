@@ -229,17 +229,26 @@
 	<cffunction name="getAreaPath" returntype="string" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="separator" type="string" required="false" default="/">
-		<!---<cfargument name="path" type="string" required="no" default="">--->
+		<cfargument name="from_area_id" type="numeric" required="false">
+		<cfargument name="include_from_area" type="boolean" required="false">
+
+		<cfargument name="with_base_link" type="string" required="false">
+		<cfargument name="cur_area_link_class" type="string" required="false">
 		
 		<cfset var method = "getAreaPath">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+					
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 		
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaPath" returnvariable="area_path">
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			<cfinvokeargument name="separator" value="#arguments.separator#"/>
+
+			<cfinvokeargument name="from_area_id" value="#arguments.from_area_id#"><!---Define el área a partir de la cual se muestra la ruta--->
+			<cfinvokeargument name="include_from_area" value="#arguments.include_from_area#">
+
+			<cfinvokeargument name="with_base_link" value="#arguments.with_base_link#">
+			<cfinvokeargument name="cur_area_link_class" value="#arguments.cur_area_link_class#">
+
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>
@@ -716,6 +725,45 @@
 			<cfset var client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 						
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="getNearestAreaUserAssociated" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+				<cfinvokeargument name="userType" value="#arguments.userType#">
+
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+	<!--- -------------------------- getHighestAreaUserAssociated -------------------------------- --->
+	
+	<cffunction name="getHighestAreaUserAssociated" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="yes">
+		<cfargument name="user_id" type="numeric" required="yes">
+
+		<cfargument name="userType" type="string" required="false" default="users"><!---users/administrators--->
+		
+		<cfset var method = "getHighestAreaUserAssociated">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+		
+			<cfset var client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+						
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="getHighestAreaUserAssociated" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="user_id" value="#arguments.user_id#">
 
@@ -2150,45 +2198,14 @@
 						</cfquery>
 					</cfif>
 
-					<cfinvoke component="AreaManager" method="setAreaEnabledItems" argumentcollection="#arguments#">
-						<cfinvokeargument name="client_abb" value="#client_abb#"/>
-						<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
-					</cfinvoke>
+					<cfif NOT isDefined("arguments.link")><!--- Si arguments.link está definido es porque se accede desde la página de modificar la imagen del área que no pasa estos parámetros --->
 
-					<!---<cfif arguments.items_enabled_subareas IS true>
-						
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
-							<cfinvokeargument name="area_id" value="#arguments.area_id#">
-
-							<cfinvokeargument name="client_abb" value="#client_abb#">
-							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						<cfinvoke component="AreaManager" method="setAreaEnabledItems" argumentcollection="#arguments#">
+							<cfinvokeargument name="client_abb" value="#client_abb#"/>
+							<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
 						</cfinvoke>
 
 					</cfif>
-
-					<cfquery name="itemsEnabledQuery" datasource="#client_dsn#">
-						UPDATE #client_abb#_areas
-						SET item_type_1_enabled = <cfqueryparam value="#arguments.item_type_1_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_2_enabled = <cfqueryparam value="#arguments.item_type_2_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_3_enabled = <cfqueryparam value="#arguments.item_type_3_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_4_enabled = <cfqueryparam value="#arguments.item_type_4_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_5_enabled = <cfqueryparam value="#arguments.item_type_5_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_6_enabled = <cfqueryparam value="#arguments.item_type_6_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_7_enabled = <cfqueryparam value="#arguments.item_type_7_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_8_enabled = <cfqueryparam value="#arguments.item_type_8_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_9_enabled = <cfqueryparam value="#arguments.item_type_9_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_10_enabled = <cfqueryparam value="#arguments.item_type_10_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_11_enabled = <cfqueryparam value="#arguments.item_type_11_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_12_enabled = <cfqueryparam value="#arguments.item_type_12_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_13_enabled = <cfqueryparam value="#arguments.item_type_13_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_14_enabled = <cfqueryparam value="#arguments.item_type_14_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_15_enabled = <cfqueryparam value="#arguments.item_type_15_enabled#" cfsqltype="cf_sql_bit">,
-						item_type_20_enabled = <cfqueryparam value="#arguments.item_type_20_enabled#" cfsqltype="cf_sql_bit">
-						WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-						<cfif arguments.items_enabled_subareas IS true>
-							OR id IN (<cfqueryparam value="#subAreasIds#" cfsqltype="cf_sql_longvarchar" list="true">)
-						</cfif>;
-					</cfquery>--->
 				
 					<!---<cfquery name="commitQuery" datasource="#client_dsn#">
 						COMMIT;
@@ -3109,6 +3126,12 @@
 					<cfinvokeargument name="itemTypeId" value="11">
 				</cfinvoke>
 
+				<!--- -----------------DELETE AREA LISTS VIEWS------------------------- --->
+				<cfinvoke component="ViewManager" method="deleteAreaViews">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="itemTypeId" value="14">
+				</cfinvoke>
+
 			</cfif>
 
 			<cfif APPLICATION.moduleForms IS true>
@@ -3117,6 +3140,12 @@
 				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 					<cfinvokeargument name="itemTypeId" value="12">
+				</cfinvoke>
+
+				<!--- -----------------DELETE AREA FORMS VIEWS------------------------- --->
+				<cfinvoke component="ViewManager" method="deleteAreaViews">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="itemTypeId" value="15">
 				</cfinvoke>
 
 			</cfif>
@@ -3948,6 +3977,56 @@
 
 					
 	</cffunction>
+
+
+	<!--- -------------------------- GET LAST USED AREAS -------------------------------- --->
+	
+	<cffunction name="getLastUsedAreas" returntype="struct" access="public">
+		<cfargument name="limit" type="numeric" required="false">
+		
+		<cfset var method = "getLastUsedAreas">
+		
+		<cfset var response = structNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
+				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
+				<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+				<cfinvokeargument name="limit" value="#arguments.limit#">
+				
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="withConsultations" value="#APPLICATION.moduleConsultations#">
+				<cfinvokeargument name="withPubmedsComments" value="#APPLICATION.modulePubMedComments#">
+				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
+				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
+				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
+
+				<cfinvokeargument name="onlyAreas" value="true">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset response = {result=true, query=#getAreaItemsResult.query#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>		
+		
+					
+	</cffunction>	
 
 
 </cfcomponent>

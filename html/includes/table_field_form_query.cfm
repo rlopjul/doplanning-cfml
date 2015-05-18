@@ -4,6 +4,7 @@
 --->
 
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 <!---<cfif app_version EQ "mobile">
 	<cfset return_path = "#APPLICATION.htmlPath#/#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">

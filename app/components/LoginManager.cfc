@@ -52,12 +52,15 @@
 				<cfif isDefined("SESSION.client_name")>
 					<cfset StructDelete(SESSION, "client_name")>
 				</cfif>
+				<cfif isDefined("SESSION.client_app_title")>
+					<cfset StructDelete(SESSION, "client_app_title")>
+				</cfif>
 				<cfif isDefined("SESSION.client_administrator")>
 					<cfset StructDelete(SESSION, "client_administrator")>
 				</cfif>
-				<cfif isDefined("SESSION.app_client_version")>
+				<!---<cfif isDefined("SESSION.app_client_version")>
 					<cfset StructDelete(SESSION, "app_client_version")>
-				</cfif>
+				</cfif>--->
 				<cfif isDefined("SESSION.client_email_support")>
 					<cfset StructDelete(SESSION, "client_email_support")>
 				</cfif>
@@ -78,6 +81,7 @@
 			<cfset client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 			
 			<!---Get client data--->
+			<!---
 			<cfquery name="getClient" datasource="#APPLICATION.dsn#">
 				SELECT id, name, administrator_id, email_support, force_notifications
 				FROM app_clients
@@ -90,7 +94,14 @@
 	
 				<cfthrow errorcode="#error_code#">
 		
-			</cfif>
+			</cfif>--->
+
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.componentsPath#/ClientManager" method="getClient" returnvariable="getClientResponse">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			</cfinvoke>
+
+			<cfset getClient = getClientResponse.client>
 			
 			<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
 				<cfinvokeargument name="email" value="#arguments.login#"/>
@@ -218,6 +229,7 @@
 					
 				<cfset SESSION.client_id = objectClient.id>
 				<cfset SESSION.client_name = objectClient.name>
+				<cfset SESSION.client_app_title = objectClient.app_title>
 				<cfset SESSION.client_administrator = objectClient.administrator_id>
 				<cfset SESSION.client_email_support = objectClient.email_support>
 				<!---<cfset SESSION.client_email_from = """#APPLICATION.title#"" <#objectClient.email_support#>">--->
@@ -334,12 +346,15 @@
 			<cfif isDefined("SESSION.client_name")>
 				<cfset StructDelete(SESSION, "client_name")>
 			</cfif>
+			<cfif isDefined("SESSION.client_app_title")>
+				<cfset StructDelete(SESSION, "client_app_title")>
+			</cfif>
 			<cfif isDefined("SESSION.client_administrator")>
 				<cfset StructDelete(SESSION, "client_administrator")>
 			</cfif>
-			<cfif isDefined("SESSION.app_client_version")>
+			<!---<cfif isDefined("SESSION.app_client_version")>
 				<cfset StructDelete(SESSION, "app_client_version")>
-			</cfif>
+			</cfif>--->
 			<cfif isDefined("SESSION.client_email_support")>
 				<cfset StructDelete(SESSION, "client_email_support")>
 			</cfif>
@@ -408,53 +423,6 @@
 	
 	</cffunction>
 
-
-	<!--- ONE USER IS ALREADY LOGGED IN --->
-
-	<!--- Deshabilitado: sólo usado en cliente Flex
-	<cffunction name="oneUserIsAlreadyLoggedIn" returntype="String" output="false" access="public">
-			<cfargument name="request" type="string" required="yes">
-			
-			<cfset var method = "oneUserIsAlreadyLoggedIn">
-			
-			<cftry>
-				<cfinclude template="includes/functionStartNoSession.cfm">			
-				
-				<cfset app_client_login_version = xmlRequest.request.parameters.app_client_version.xmlText>
-				
-				
-				<cfif APPLICATION.clientLoginVersion NEQ app_client_login_version>
-					
-					<cfset error_code = 1004>
-							
-					<cfthrow errorcode="#error_code#">
-					
-				</cfif>
-				
-				<cfif getAuthUser() NEQ "">
-				
-					<cfset result = true>
-				
-				<cfelse>
-					
-					<cfset result = false>
-					
-				</cfif>
-				
-				<cfset xmlResponseContent = "<value><![CDATA[#result#]]></value>">
-			
-				<cfinclude template="includes/functionEndNoLog.cfm">
-				
-				<cfcatch>
-					<cfset xmlResponseContent = "">
-					<cfinclude template="includes/errorHandler.cfm">
-				</cfcatch>
-			</cftry>
-			
-			<cfreturn xmlResponse>
-			
-		</cffunction> --->
-	
 
 
 	<!--- GET USER LOGGED IN --->

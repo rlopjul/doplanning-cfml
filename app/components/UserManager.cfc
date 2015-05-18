@@ -2064,7 +2064,9 @@
 				<cfif APPLICATION.identifier EQ "vpnet">
 					<cfinvokeargument name="with_vpnet" value="true">
 				</cfif>
-
+				<cfif arguments.format_content EQ "all">
+					<cfinvokeargument name="parse_dates" value="true">					
+				</cfif>
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -3211,6 +3213,62 @@
 		<cfreturn response>
 			
 	</cffunction>
+
+
+	<!--- -------------------------- GET LAST ACTIVITY USERS -------------------------------- --->
+	
+	<cffunction name="getLastActivityUsers" returntype="struct" access="public">
+		<cfargument name="limit" type="numeric" required="false">
+		
+		<cfset var method = "getLastActivityUsers">
+		
+		<cfset var response = structNew()>
+
+		<cfset var usersArray = arrayNew()>
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
+				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
+				<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+				<cfinvokeargument name="limit" value="#arguments.limit#">
+				
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="withConsultations" value="#APPLICATION.moduleConsultations#">
+				<cfinvokeargument name="withPubmedsComments" value="#APPLICATION.modulePubMedComments#">
+				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
+				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
+				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
+
+				<cfinvokeargument name="onlyUsers" value="true">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToArray" returnvariable="usersArray">
+				<cfinvokeargument name="data" value="#getAreaItemsResult.query#">
+			</cfinvoke>
+
+			<cfset response = {result=true, query=#getAreaItemsResult.query#, users=#usersArray#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>		
+		
+					
+	</cffunction>	
 
 	
 	

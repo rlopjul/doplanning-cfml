@@ -196,7 +196,7 @@ $(function () {
 
 <div class="div_head_subtitle"><span lang="es">Subir varios archivos</span></div>
 
-<div class="container-fluid">
+<div><!---class="container-fluid"--->
 
     <!---
     <div class="row">
@@ -228,13 +228,13 @@ $(function () {
             <div class="row fileupload-buttonbar">
                 <div class="col-lg-7">
                     <!-- The fileinput-button span is used to style the file input field as button -->
-                    <span class="btn btn-success fileinput-button">
+                    <span class="btn btn-primary fileinput-button">
                         <i class="icon-plus icon-white"></i>
                         <span lang="es">Añadir archivos</span>
                         <input type="file" name="files[]" multiple>
                     </span>
                     
-                    <button type="submit" class="btn btn-primary start">
+                    <button type="submit" class="btn btn-default start">
                         <i class="icon-upload"></i>
                         <span lang="es">Iniciar todos</span>
                     </button>
@@ -262,7 +262,7 @@ $(function () {
                 <div class="col-lg-5 fileupload-progress fade">
                     <!-- The global progress bar -->
                     <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                        <div class="progress-bar progress-bar-info" style="width:0%;"></div>
+                        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
                     </div>
                     <!-- The extended global progress state -->
                     <div class="progress-extended">&nbsp;</div>
@@ -312,43 +312,86 @@ $(function () {
 
         <td colspan="3">
 
+
             <span class="name">{%=file.name%} (<span class="size">Processing...</span>)</span><br/>
+
             <cfoutput>
             <input type="hidden" name="area_id" value="#area_id#"/>
             <input type="hidden" name="reviser_user" id="reviser_user" value="#file_reviser_user#" />
             <input type="hidden" name="approver_user" id="approver_user" value="#file_approver_user#" />
             </cfoutput>
-            <label for="fileTypeId{%=curFile%}" lang="es">Tipo</label>
-            <select name="fileTypeId" id="fileTypeId{%=curFile%}" class="form-control" onchange="setFileTypeId($('#fileTypeId{%=curFile%}').val(),{%=curFile%});">
-                <option value="1" selected="selected" lang="es">Archivo de usuario</option>
-                <option value="2" lang="es">Archivo de área sin circuito de calidad</option>
-                <option value="3" lang="es">Archivo de área con circuito de calidad</option>
-            </select>
-            <label for="name{%=curFile%}" lang="es">Nombre</label>
-            <input type="text" name="name" id="name{%=curFile%}" value="{%=file.name%}" required/>
-            <div id="documentVersionIndex{%=curFile%}" style="display:none">
-                <label lang="es" for="version_index{%=curFile%}">Número de versión</label>
-                <input type="number" name="version_index" id="version_index{%=curFile%}" value="1" min="0" class="form-control" style="width:100px;" />
-            </div>
-            <label for="description{%=curFile%}" lang="es">Descripción</label>
-            <input type="text" name="description" id="description{%=curFile%}" value=""/>
+            <div class="form-horizontal">
 
-            <cfif scopesQuery.recordCount GT 0>
-                <label for="publication_scope_id{%=curFile%}" class="control-label" lang="es">Ámbito de publicación</label>
-                <select name="publication_scope_id" id="publication_scope_id{%=curFile%}" class="form-control">
-                    <cfoutput>
-                    <cfloop query="scopesQuery">
-                        <option value="#scopesQuery.scope_id#" <cfif FindNoCase(area_type, scopesQuery.name) GT 0>selected="selected"</cfif>>#scopesQuery.name#</option>
-                    </cfloop>
-                    </cfoutput>
-                </select>
-            </cfif>
+                <div class="form-group">
+
+                    <label for="fileTypeId{%=curFile%}" class="col-sm-2 control-label" lang="es">Tipo</label>
+
+                    <div class="col-sm-10">
+                        <select name="fileTypeId" id="fileTypeId{%=curFile%}" class="form-control" onchange="setFileTypeId($('#fileTypeId{%=curFile%}').val(),{%=curFile%});">
+                            <option value="1" selected="selected" lang="es">Archivo de usuario</option>
+                            <option value="2" lang="es">Archivo de área sin circuito de calidad</option>
+                            <option value="3" lang="es">Archivo de área con circuito de calidad</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="name{%=curFile%}" class="col-sm-2 control-label" lang="es">Nombre</label>
+
+                    <div class="col-sm-10">
+                        <input type="text" name="name" id="name{%=curFile%}" value="{%=file.name%}" class="form-control" required/>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="description{%=curFile%}" class="col-sm-2 control-label" lang="es">Descripción</label>
+
+                    <div class="col-sm-10">
+                        <input type="text" name="description" id="description{%=curFile%}" value="" class="form-control"/>
+                    </div>
+
+                </div>
+
+                <div class="form-group" id="documentVersionIndex{%=curFile%}" style="display:none">
+
+                    <label lang="es" for="version_index{%=curFile%}" class="col-sm-2 control-label">Número de versión</label>
+
+                    <div class="col-sm-10">
+                        <input type="number" name="version_index" id="version_index{%=curFile%}" value="1" min="0" class="form-control" style="width:100px;" />
+                    </div>
+
+                </div>
+
+                <cfif scopesQuery.recordCount GT 0>
+                    <div class="form-group">
+
+                        <label for="publication_scope_id{%=curFile%}" class="col-sm-2 control-label" lang="es">Ámbito de publicación</label>
+
+                        <div class="col-sm-10">
+                            <select name="publication_scope_id" id="publication_scope_id{%=curFile%}" class="form-control">
+                                <cfoutput>
+                                <cfloop query="scopesQuery">
+                                    <option value="#scopesQuery.scope_id#" <cfif FindNoCase(area_type, scopesQuery.name) GT 0>selected="selected"</cfif>>#scopesQuery.name#</option>
+                                </cfloop>
+                                </cfoutput>
+                            </select>
+                        </div>
+
+                    </div>
+                </cfif>
+
+
+            </div>
 
             <strong class="error text-danger"></strong>
 
             <div style="height:5px;"></div>
             
-            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-info" style="width:0%;"></div></div>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
 
 
             {% if (!i && !o.options.autoUpload) { %}
@@ -363,6 +406,8 @@ $(function () {
                     <span lang="es">Cancelar</span>
                 </button>
             {% } %}
+
+
         </td>
 
     </tr>
@@ -412,7 +457,7 @@ $(function () {
                 </button>
             {% } %}
             {% if (file.file_id) { %}
-                <a class="btn btn-info" onclick="openUrl('area_file_modify.cfm?area={%=area_id%}&file={%=file.file_id%}&fileTypeId={%=file.fileTypeId%}&return_page=file.cfm','itemIframe',event)">
+                <a class="btn btn-default" onclick="openUrl('area_file_modify.cfm?area={%=area_id%}&file={%=file.file_id%}&fileTypeId={%=file.fileTypeId%}&return_page=file.cfm','itemIframe',event)">
                     <i class="icon-edit"></i>
                     <span lang="es">Modificar datos</span>
                 </a>

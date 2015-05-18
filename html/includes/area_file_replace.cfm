@@ -4,6 +4,9 @@
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
 
+<cfset itemTypeId = 10>
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <div class="div_head_subtitle"><span lang="es"><cfif fileTypeId IS 3>Subir nueva versión de<cfelse>Reemplazar</cfif> Archivo</span></div>
@@ -38,13 +41,13 @@ function onSubmitForm()
 	<div class="row">
 		<div class="col-sm-12">
 			<label lang="es"><cfif fileTypeId IS 3>Nueva versión de archivo:<cfelse>Archivo a reemplazar:</cfif></label>
-			<span>#file.name#</span>
+			<span>#objectFile.name#</span>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-sm-12">
-			<label lang="es" id="filedata">Archivo:</label>
+			<label lang="es" id="filedata">Nuevo Archivo:</label>
 			<cfinput type="file" name="Filedata" id="filedata" value="" required="yes" message="Debe seleccionar un archivo"/>
 		</div>
 	</div>

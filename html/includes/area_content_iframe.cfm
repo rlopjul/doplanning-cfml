@@ -39,7 +39,9 @@
 	 	<script type="text/javascript">
 			openUrlHtml2('empty.cfm','itemIframe');
 		</script>	
-	 	<div class="div_text_result"><span lang="es">No tiene acceso a los contenidos de esta área.</span></div>
+	 	<!---<div class="div_text_result"><span lang="es">No tiene acceso a los contenidos de esta área.</span></div>--->
+
+	 	<div class="alert alert-warning" style="margin:10px;"><i class="icon-warning-sign"></i>&nbsp;<span lang="es">No tiene acceso a los contenidos de esta área.</span></div>
 	 </cfif>
 	
 </cfif>

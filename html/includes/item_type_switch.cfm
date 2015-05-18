@@ -22,8 +22,8 @@
 		<!--- <cfset itemTypeNameU = "Entry"> --->
 		<cfset itemTypeNameP = "entries">
 		
-		<cfset itemTypeNameEs = "Elemento de contenido genérico">
-		<cfset itemTypeNameEsP = "Elementos de contenido genérico">
+		<cfset itemTypeNameEs = "Elemento web">
+		<cfset itemTypeNameEsP = "Elementos web">
 
 		<cfset itemTypeGender = "male">
 	
@@ -87,8 +87,8 @@
 		<!--- <cfset itemTypeNameU = "Consultation"> --->
 		<cfset itemTypeNameP = "consultations">
 		
-		<cfset itemTypeNameEs = "Interconsulta">
-		<cfset itemTypeNameEsP = "Interconsultas">
+		<cfset itemTypeNameEs = "Consulta">
+		<cfset itemTypeNameEsP = "Consultas">
 
 		<cfset itemTypeGender = "female">
 	

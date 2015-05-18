@@ -7,7 +7,15 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
+<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 20>
+	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
+<cfelse>
+	<!---<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.4/summernote.min.css" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.4/summernote.min.js"></script>
+	<script src="#APPLICATION.path#/jquery/summernote/plugin/summernote-ext-fontstyle.js"></script>
+	<script src="#APPLICATION.path#/jquery/summernote/lang/summernote-es-ES.js"></script>--->
+	<cfinclude template="#APPLICATION.htmlPath#/includes/summernote_scripts.cfm">
+</cfif>
 
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
@@ -17,6 +25,7 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
+<!---
 <div class="div_head_subtitle">
 	<cfoutput>
 	<cfif page_type IS 1>
@@ -30,8 +39,9 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 	</cfif> 
 	</cfoutput>
 </div>
+--->
 
-<div class="contenedor_fondo_blanco">
+<!---<div class="contenedor_fondo_blanco">--->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
@@ -49,102 +59,14 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 	</cfif>
 </cfif>
 
-<cfif objectArea["item_type_#itemTypeId#_enabled"] IS false><!---Está deshabilitada la creación de nuevos mensajes en esta área--->
+<cfif objectArea.read_only IS true OR ( page_type IS NOT 1 AND objectArea["item_type_#itemTypeId#_enabled"] IS false )><!---Está deshabilitada la creación de nuevos mensajes en esta área--->
 	
-	<cflocation url="#return_page#" addtoken="no">
+	<cfset msg = UrlEncodedFormat("Edición del elemento deshabilitada en el área")>
+	<cflocation url="#return_page#&res=0&msg=#msg#" addtoken="no">
 
 </cfif>
 
-<cfoutput>
-
-<script>
-
-var editor;
-
-var preventClose = false;
-var sendForm = false;
-	
-$(window).on('beforeunload', function(event){
-
-	<!---ESTO DABA PROBLEMAS EN CHROME (cuando se envía un formulario aparece la ventana de abandonar página)--->
-	<!--- editor.updateElement(); //Update CKEditor state to update preventClose value: esto no funciona porque parece que el evento que cambia la variable preventClose se llama después de la comprobación siguiente de esta variable --->
-	
-	if( sendForm!=true && (preventClose || editor.checkDirty()) )  <!--- Si el editor está modificado y no se va a enviar el formulario--->
-	{
-		showLoadingPage(false);
-
-		var alertMessage = window.lang.translate('Tiene texto sin enviar, si abandona esta página lo perderá');
-		
-		return alertMessage;
-	
-	}
-
-});
-
-
-$(document).ready(function() {
-  
-  	$('input').change(function() {
-		preventClose = true;
-	});
-	
-	/*$('textarea').change(function() {
-		preventClose = true;
-	});*/	
-
-	// The instanceReady event is fired, when an instance of CKEditor has finished
-	// its initialization.
-
-	CKEDITOR.on('instanceReady', function( ev )	{
-		editor = ev.editor;
-	
-		<cfif read_only IS true>
-		editor.setReadOnly(true);
-		</cfif>
-		
-		editor.on('saveSnapshot', function(e) { 
-			preventClose = true;
-		});
-		
-		editor.on('blur', function(e) {
-			if (e.editor.checkDirty()) { //CKEDITOR cambiado
-				preventClose = true;
-				//alert("CKEDITOR modificado");
-			}
-		});		
-	});
-  
-});
-
-
-function onSubmitForm()
-{
-	if(check_custom_form())
-	{
-		var submitForm = true;
-		
-		<cfif itemTypeId IS 5>
-		if(!checkDates("start_date", "end_date")) {
-			submitForm = false;
-			alert(window.lang.translate("Fechas incorrectas. Compruebe que la fecha de fin del evento es igual o posterior a la fecha de inicio y tiene el formato adecuado."));
-		}
-		</cfif>
-		
-		if(submitForm){		
-			document.getElementById("submitDiv1").innerHTML = window.lang.translate('Enviando...');
-			document.getElementById("submitDiv2").innerHTML = window.lang.translate('Enviando...');
-
-			preventClose = false;
-			sendForm = true;
-		}
-		
-		return submitForm;
-	}
-	else
-		return false;
-}
-</script>
-</cfoutput>
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form_js.cfm">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-horizontal"  onsubmit="return onSubmitForm();"><!--- class="form-horizontal" class="form-inline" --->
 	<cfinput type="hidden" name="itemTypeId" value="#itemTypeId#">
@@ -188,9 +110,9 @@ function onSubmitForm()
 					<cfloop index="objectUser" array="#areaUsers#">	
 						<li>
 						<cfif len(objectUser.image_type) GT 0>
-							<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" style="max-width:20px;max-height:20px;" />									
+							<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" style="max-width:22px;max-height:22px;" />									
 						<cfelse>							
-							<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" style="width:20px;" />
+							<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" style="width:22px;" />
 						</cfif>
 						&nbsp;<small style="font-size:11px;">#objectUser.family_name# #objectUser.name#</small>
 						</li>
@@ -255,4 +177,36 @@ function onSubmitForm()
 	</cfoutput>
 </cfform>
 
-</div>
+
+<cfif page_type IS 1 AND isDefined("URL.#itemTypeName#")>
+
+	<cfif NOT isDefined("getItemObject")>
+		
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="getItemObject">
+			<cfinvokeargument name="item_id" value="#URL[#itemTypeName#]#">
+			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+		</cfinvoke>
+
+	</cfif>
+
+	<div>
+		<hr>
+		<h3>Respondiendo a:</h3>
+		<cfoutput>
+			<h5>#getItemObject.title#</h5>
+		</cfoutput>
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItem">
+			<cfinvokeargument name="objectItem" value="#getItemObject#">
+			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+			<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+			<cfinvokeargument name="area_type" value="#area_type#">
+			<cfif isDefined("webPath")>
+				<cfinvokeargument name="webPath" value="#webPath#">
+			</cfif>
+		</cfinvoke>
+
+	</div>
+
+</cfif>
+
+<!---</div>--->

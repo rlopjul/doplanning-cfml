@@ -76,26 +76,15 @@
 				<script type="text/javascript">
 					$(document).ready(function() { 
 						
-						$.tablesorter.addParser({
-							id: "datetime",
-							is: function(s) {
-								return false; 
-							},
-							format: function(s,table) {
-								s = s.replace(/\-/g,"/");
-								s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$2/$1");
-								return $.tablesorter.formatFloat(new Date(s).getTime());
-							},
-							type: "numeric"
-						});
-						
 						$("##listTable").tablesorter({ 
 							<cfif arguments.full_content IS false>
-							widgets: ['zebra','filter','select','stickyHeaders'],
+							widgets: ['zebra','uitheme','select','filter','stickyHeaders'],
 							<cfelse>
-							widgets: ['zebra','select','stickyHeaders'],
+							widgets: ['zebra','uitheme','select','stickyHeaders'],
 							</cfif>
-		
+							
+							theme : "bootstrap",
+							headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
 
 							sortList: [[2,1]] ,
 

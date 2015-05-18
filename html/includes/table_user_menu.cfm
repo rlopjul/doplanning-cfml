@@ -1,4 +1,5 @@
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+<!---<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">--->
 
 <cfif isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
 
@@ -10,6 +11,11 @@
 	</cfinvoke>
 
 	<cfset area_id = table.area_id>
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_id.cfm">
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
 
 	<cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
 		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##URL.return_page#")>

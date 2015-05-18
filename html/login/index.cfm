@@ -2,11 +2,6 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_diseno_general_doplanning.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<!--Developed and copyright by Era7 Information Technologies & Web4Bio 2007-2014 (www.doplanning.net)-->
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
-<!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
 <cfinclude template="#APPLICATION.corePath#/includes/login_query.cfm">
@@ -38,93 +33,13 @@
 
 <title>#APPLICATION.title# - #getClient.name#</title>
 <!-- InstanceEndEditable -->
-<link href="../assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
-<link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
-<link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
-<link href="#APPLICATION.dpCSSPath#" rel="stylesheet" type="text/css" media="all" />
-<cfif len(APPLICATION.themeCSSPath) GT 0>
-<link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
-</cfif>
-<!---
-	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
-    <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
-    <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
---->
-<!--[if lt IE 9]>
-	<script src="#APPLICATION.htmlPath#/scripts/html5shiv/html5shiv.js"></script>
-    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.min.js"></script>
-<![endif]-->
-<!--[if lt IE 8]>
-  	<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-ie7/bootstrap-ie7.css" rel="stylesheet" rel="stylesheet">
-<![endif]-->
-<!---<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet">--->
-<!--[if IE 7]>
-	<link href="#APPLICATION.htmlPath#/font-awesome/css/font-awesome-ie7.min.css" rel="stylesheet">
-<![endif]-->
 
-<!---<link href="../html/styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />--->
-<cfif APPLICATION.identifier EQ "vpnet">
-<link href="../styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
-<cfelse>
-<link href="../styles/styles_dp.css" rel="stylesheet" type="text/css" media="all" />
-</cfif>
-<!---using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"--->  
-<link href="../styles/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
-<link href="../styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
-<!---<link href="../html/styles_mobiles.css" rel="stylesheet" type="text/css" media="handheld" />
-<link href="../html/styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
-</cfoutput>
-
-<cfif APPLICATION.identifier EQ "vpnet">
-	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
-	<script src="../../SpryAssets/includes/xpath.js"></script>
-	<script src="../../SpryAssets/includes/SpryData.js"></script>
-	<script src="../../SpryAssets/includes/SpryXML.js"></script>
-	<script src="../../SpryAssets/includes/SpryDOMUtils.js"></script>
-	<cfif APPLICATION.moduleMessenger EQ true>
-		<script src="../../app/scripts/App.js"></script>
-		<script src="../scripts/MessengerControl.js"></script>
-		<cfif isDefined("SESSION.user_id")>
-		<script>
-		window.onload = function (){
-			Messenger.Private.initGetNewConversations();
-		}
-		</script>
-		</cfif>
-	</cfif>
-</cfif>
-
-<cfoutput>
-<script src="#APPLICATION.jqueryJSPath#"></script>
-<script src="#APPLICATION.bootstrapJSPath#"></script>
-<!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>--->
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
-<script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
-<script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
-<script src="../scripts/functions.min.js?v=2.5"></script>
-</cfoutput>
-
-<script>
-	//Language
-	<!---
-	jquery_lang_js.prototype.defaultLang = 'es';
-	jquery_lang_js.prototype.currentLang = 'es';
-	window.lang = new jquery_lang_js();
-	
-	$().ready(function () {
-		window.lang.run();
-	});
-	--->
-	
-	window.lang = new Lang('es');
-</script>
+<cfinclude template="#APPLICATION.htmlPath#/includes/html_head.cfm">
 
 <!-- InstanceBeginEditable name="head" -->
 
 <!-- InstanceEndEditable -->
+</cfoutput>
 </head>
 
 <body onBeforeUnload="onUnloadPage()" onLoad="onLoadPage()" class="body_global">
@@ -136,10 +51,24 @@
 		<div class="div_separador_header"><!-- --></div>
 	</div>
 </cfif>
+
 <!-- InstanceBeginEditable name="header" -->
 <!-- InstanceEndEditable -->
-<div class="div_contenedor_contenido">
-<!-- InstanceBeginEditable name="contenido" -->
+
+<div id="wrapper"><!--- wrapper --->
+        
+	<!---<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2">
+				<h1></h1>
+				<p></p>
+							
+			</div>
+		</div>
+	</div>--->
+
+	<!---<div class="div_contenedor_contenido">--->
+	<!-- InstanceBeginEditable name="contenido" -->
 <cfoutput>
 <div class="container"><!---login_container--->
 
@@ -167,11 +96,13 @@
 		<cfset show_title = true>
 	</cfif>
 
+	
+
 	<cfif show_logo OR show_banner OR show_help>
 		
 	<div class="row">
 		
-		<cfif APPLICATION.identifier EQ "dp" AND show_logo>
+		<!---<cfif APPLICATION.identifier EQ "dp" AND show_logo>
 			<div class="col-md-2">
 				<div class="row">
 					<div class="col-xs-6">
@@ -186,19 +117,21 @@
 					</cfif>
 				</div>
 			</div>
-		</cfif>
+		</cfif>--->
+
 		
 		<cfif APPLICATION.identifier EQ "dp" AND show_banner>
-			<div class="col-md-8" style="text-align:center">
-				<img src="download_login_image.cfm?abb=#client_abb#" alt="Login Banner" />
+			<div class="col-sm-offset-3 col-sm-5" style="text-align:right; padding-top:60px;">
+				<img src="download_login_image.cfm?abb=#client_abb#&v=3" alt="Login Banner" />
 			</div>
 		</cfif>
+
 		
-		<cfif APPLICATION.title EQ "DoPlanning" AND show_help>
+		<!---<cfif APPLICATION.title EQ "DoPlanning" AND show_help>
 			<div class="col-md-2" style="text-align:right;">
 				<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" class="hidden-sm hidden-xs" lang="es"><i class="icon-question-sign"></i></a>
 			</div>
-		</cfif>
+		</cfif>--->
 		
 	</div>
 
@@ -206,19 +139,25 @@
 
 	<cfif show_title IS true>
 		<div class="row">
-			<div class="col-sm-offset-3 col-sm-6" style="text-align:center;padding-top:30px;">
-				<p class="texto_normal">
+			<div class="col-sm-offset-2 col-sm-6" style="text-align:center;padding-top:40px;padding-bottom:20px;">
+				<!---
 				<cfif APPLICATION.identifier EQ "dp" >
 					<cfif APPLICATION.title EQ "DoPlanning">
 						<span lang="es">Acceso a DoPlanning</span> 
 					</cfif><strong>#getClient.name#</strong>
 				<cfelseif APPLICATION.identifier EQ "vpnet">
 				Acceso a Colabora.
-				</cfif>
-				</p>
+				</cfif>--->
+				<cfoutput>
+					<div class="page-header" style="text-align:left;">
+					  <h5 style="margin-bottom:0;color:##878787;font-size:17px;font-weight:100">#getClient.app_title#</h5>
+					</div>
+				</cfoutput>
 			</div>
 		</div>
 	</cfif>
+
+	
 	
 	
 	<cfif isDefined("URL.dpage")>
@@ -227,7 +166,7 @@
 		<cfset destination_page = "">
 	</cfif>
 	<div class="row">
-		<div class="col-sm-offset-3 col-sm-5">
+		<div class="col-sm-offset-2 col-md-offset-3 col-sm-7 col-md-5">
 		
 		<!---<div class="div_login_form">--->
 			<cfinclude template="#APPLICATION.corePath#/includes/login_form.cfm">
@@ -261,10 +200,30 @@
 	</cfif>
 	--->
 
+	<div class="row">
+
+		<div class="col-sm-offset-2 col-sm-6">
+
+			<div class="panel panel-default" style="margin-top:35px;">
+			  <div class="panel-body">
+			    <h5>¡Bienvenido a la nueva versión de DoPlanning!</h5>
+				<p>Danos tu opinión a través del email <a href="mailto:support@doplanning.net" onclick="showLoading = false">support@doplanning.net</a></b></p>
+			  </div>
+			</div>
+
+		</div>
+
+	</div>
+
+
 </div>
 </cfoutput>
 <!-- InstanceEndEditable -->
+	<!---</div>--->
+	
 </div>
+<!--- END wrapper --->
+
 </body>
 <!-- InstanceEnd --></html>
 </cfprocessingdirective>

@@ -38,8 +38,10 @@
 
 <cfoutput>
 
-<div class="div_message_page_title">#objectItem.title#</div>
-<div class="div_separator"><!-- --></div>
+<cfif app_version NEQ "mobile">
+	<div class="div_message_page_title">#objectItem.title#</div>
+	<div class="div_separator"><!-- --></div>
+</cfif>
 
 <div class="div_elements_menu"><!---div_elements_menu--->
 	
@@ -55,6 +57,12 @@
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_table_area_responsible">				
 		<cfinvokeargument name="area_id" value="#objectItem.table_area_id#">
 	</cfinvoke>
+
+	<!---<cfif app_version NEQ "mobile">
+	<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#view_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
+	</cfif>--->
+
+	<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#view_id#&area=#objectItem.area_id#" class="btn btn-primary btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
 
 	<cfif is_user_table_area_responsible><!--- Table Area Responsible --->
 
@@ -75,12 +83,6 @@
 		</cfif>
 
 	</cfif>
-		
-	<!---<cfif app_version NEQ "mobile">
-	<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#view_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
-	</cfif>--->
-
-	<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#view_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
 
 	<cfif app_version NEQ "mobile">
 		<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#view_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>

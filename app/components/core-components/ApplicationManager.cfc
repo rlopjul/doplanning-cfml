@@ -66,9 +66,9 @@
 		<cfargument name="twitterAccessToken" type="string" required="false">
 		<cfargument name="twitterAccessTokenSecret" type="string" required="false">
 
-		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/paper/bootstrap.min.css">
 
-		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.3">
+		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.14">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">
 
 			<cfset APPLICATION.dsn = "doplanning_app">
@@ -125,6 +125,9 @@
 			<cfset APPLICATION.languages = "es,en">
 				
 			<cfset APPLICATION.dateFormat = "dd-mm-yyyy">
+			<cfset APPLICATION.dbDateFormat = "%d-%m-%Y">
+			<cfset APPLICATION.dbDateTimeFormat = "%d-%m-%Y %H:%i:%s">
+			<cfset APPLICATION.dbTimeZoneTo = "Europe/Madrid">
 
 			<cfset APPLICATION.serverIp = arguments.serverIp>
 			
@@ -163,9 +166,10 @@
 			
 			<!---<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">--->
 			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
-			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js">
+			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js">
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
 	        <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
+	        <cfset APPLICATION.functionsJSPath = APPLICATION.htmlPath&"/scripts/functions.min.js?v=2.8">
 
 	        <cfset APPLICATION.ckeditorJSPath = "#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4">
 			
@@ -294,7 +298,7 @@
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
-					<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+					<!---<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">--->
 
 				</cfinvoke>
 
@@ -340,12 +344,13 @@
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
-					<!---<cfinvokeargument name="hideInputLabels" value="true">
-					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/paper/bootstrap.min.css">
+					<cfinvokeargument name="hideInputLabels" value="true">
+					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/paper/bootstrap.min.css">
 
-					<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_paper.css">--->
-					<cfinvokeargument name="hideInputLabels" value="false">
-					<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+					<!---<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_paper.css">--->
+					
+					<!---<cfinvokeargument name="hideInputLabels" value="false">
+					<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">--->
 				</cfinvoke>
 				
 			</cfcase>
@@ -419,7 +424,7 @@
 					<cfinvokeargument name="mainUrl" value="https://era7bioinformatics.com">
 					<cfinvokeargument name="signOutUrl" value="https://era7bioinformatics.com/bioinformatics7">
 
-					<cfinvokeargument name="title" value="Era7">
+					<!---<cfinvokeargument name="title" value="Era7">--->
 					<cfinvokeargument name="moduleWeb" value="true">
 					<cfinvokeargument name="moduleWebRTC" value="true">
 
@@ -427,6 +432,8 @@
 					<cfinvokeargument name="moduleDPDocuments" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+
+					<cfinvokeargument name="hideInputLabels" value="true">
 				</cfinvoke>
 
 			</cfcase>

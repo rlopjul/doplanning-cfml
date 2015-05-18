@@ -17,43 +17,48 @@
     </cfif>	
   
     <div class="form-group">
-      <cfif APPLICATION.hideInputLabels IS false>
-        <label for="email" id="emailLabel" lang="es" class="col-sm-3 control-label">Email:</label>
-      <cfelse>
+      <!---<cfif APPLICATION.hideInputLabels IS false>--->
+        <label for="email" id="emailLabel" lang="es" class="col-sm-5 col-md-4 control-label" style="color:##458DB8;font-size:22px;font-weight:100;">Email</label>
+      <!---<cfelse>
         <label for="email" id="emailLabel" lang="es" class="sr-only">Email:</label>
-      </cfif>
-      <cfif APPLICATION.hideInputLabels IS false>
-      <div class="col-sm-9">
-      <cfelse>
+      </cfif>--->
+      <!---<cfif APPLICATION.hideInputLabels IS false>--->
+      <div class="col-sm-7 col-md-8">
+      <!---<cfelse>
       <div class="col-sm-offset-3 col-sm-9">
-      </cfif>        <cfif APPLICATION.moduleLdapUsers NEQ true>
-        <input name="email" type="email" id="email" required autofocus class="form-control" placeholder="Email" lang="es"/>
+      </cfif>--->        <cfif APPLICATION.moduleLdapUsers NEQ true>
+        <input name="email" type="email" id="email" required autofocus class="form-control" lang="es"/>
         <cfelse><!--- LDAP --->
-        <input name="email" type="text" id="email" required autofocus class="form-control" placeholder="Email" lang="es"/>
+        <input name="email" type="text" id="email" required autofocus class="form-control" lang="es"/>
         </cfif>
       </div>
     </div>
     
     <div class="form-group">
 
-      <cfif APPLICATION.hideInputLabels IS false>
-        <label for="password" lang="es" class="col-sm-3 control-label">Contraseña:</label>
-      <cfelse>
+      <!---<cfif APPLICATION.hideInputLabels IS false>--->
+        <label for="password" lang="es" class="col-sm-5 col-md-4 control-label" style="color:##458DB8;font-size:22px;font-weight:100;">Contraseña</label>
+      <!---<cfelse>
         <label for="password" lang="es" class="sr-only">Contraseña:</label>
-      </cfif>
+      </cfif>--->
 
-      <cfif APPLICATION.hideInputLabels IS false>
-      <div class="col-sm-9">
-      <cfelse>
+      <!---<cfif APPLICATION.hideInputLabels IS false>--->
+      <div class="col-sm-7 col-md-8">
+      <!---<cfelse>
       <div class="col-sm-offset-3 col-sm-9">
-      </cfif>
-        <input name="password" type="password" id="password" required class="form-control" placeholder="Contraseña" lang="es"/>
+      </cfif>--->
+        <input name="password" type="password" id="password" required class="form-control" lang="es"/>
       </div>
     </div>
     
     <cfif APPLICATION.moduleLdapUsers EQ true><!--- LDAP --->
     <div class="form-group">
-      <div class="col-sm-offset-3 col-sm-9">
+
+      <div class="col-sm-5 col-md-4">
+
+      </div>
+      <div class="col-sm-7 col-md-8">
+        
         <small lang="es">Identificar con usuario y contraseña de:</small>
         
         <cfif APPLICATION.identifier EQ "vpnet">
@@ -102,12 +107,14 @@
     
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-9">
-          <input name="login" type="submit" class="btn btn-primary" value="Entrar" data-loading-text="Loading" title="Acceder a la aplicación" lang="es"/>
-          <!---<button type="submit" class="btn btn-primary" data-loading-text="Enviando">Entrar</button>--->
-        
-          <cfif APPLICATION.identifier EQ "dp">
-            <a href="remember_password.cfm?client_abb=#client_abb#" title="¿Olvidó su contraseña?" class="btn btn-default" lang="es"><span lang="es">Resetear contraseña</span></a>
-          </cfif>
+          <div class="pull-right">
+            <cfif APPLICATION.identifier EQ "dp">
+              <a href="remember_password.cfm?client_abb=#client_abb#" title="¿Olvidó su contraseña?" class="btn btn-default" lang="es"><span lang="es">Resetear contraseña</span></a>
+            </cfif>
+
+            <input name="login" type="submit" class="btn btn-info" value="Entrar" data-loading-text="Loading" title="Acceder a la aplicación" lang="es"/>
+            <!---<button type="submit" class="btn btn-primary" data-loading-text="Enviando">Entrar</button>--->
+          </div>
         </div>
     </div>
 </form>
@@ -147,9 +154,9 @@
   function setSelectedLdap(value) {
 
     if(value == "doplanning")
-      document.getElementById('emailLabel').innerHTML = "Email:";
+      document.getElementById('emailLabel').innerHTML = "Email";
     else
-      document.getElementById('emailLabel').innerHTML = "Usuario:";
+      document.getElementById('emailLabel').innerHTML = "Usuario";
 
   }
 

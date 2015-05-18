@@ -4,6 +4,9 @@
 
 	<cfset component = "UserQuery">
 
+	<cfset dateTimeFormat = APPLICATION.dbDateTimeFormat>
+	<cfset timeZoneTo = APPLICATION.dbTimeZoneTo>
+
 	<!--- ------------------------------------- getUser -------------------------------------  --->
 	
 	<cffunction name="getUser" output="false" access="public" returntype="query">
@@ -11,6 +14,7 @@
 		<cfargument name="format_content" type="string" required="false" default="default">
 		<cfargument name="with_ldap" type="boolean" required="false" default="false">
 		<cfargument name="with_vpnet" type="boolean" required="false" default="false">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -21,7 +25,13 @@
 				SELECT id, id AS user_id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, internal_user AS whole_tree_visible, image_file, image_type, dni, language, enabled, information, hide_not_allowed_areas, linkedin_url, twitter_url,
 					CONCAT_WS(' ', family_name, name) AS user_full_name
 				<cfif arguments.format_content EQ "all">
-				, space_used, number_of_connections, last_connection, connected, session_id, creation_date, root_folder_id, sms_allowed
+				, space_used, number_of_connections, connected, session_id, root_folder_id, sms_allowed
+					<cfif arguments.parse_dates IS true>
+						, DATE_FORMAT(CONVERT_TZ(last_connection,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_connection 
+						, DATE_FORMAT(CONVERT_TZ(creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date 
+					<cfelse>
+						, last_connection, creation_date
+					</cfif>
 				</cfif> 
 				<cfif arguments.with_ldap IS true>
 				, login_ldap
@@ -39,6 +49,9 @@
 				FROM `#arguments.client_abb#_users`
 				WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
+
+
+
 
 		<cfreturn getUserQuery>
 

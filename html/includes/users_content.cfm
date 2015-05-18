@@ -1,10 +1,8 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
+<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 </cfoutput>
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <!---<script type="text/javascript">
 	function submitUsersForm(){
@@ -13,22 +11,12 @@
 	}
 </script>--->
 
+<!---
 <cfoutput>
 <div class="div_head_subtitle_area">
-	
-	<!---<div class="div_head_subtitle_area_text"><strong>USUARIOS</strong><br/> del área</div>--->
-	
+		
 	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
-	
-		<!---<form action="#CGI.SCRIPT_NAME#" method="get" id="user_form" class="form-inline">
-			<input type="hidden" name="area_id" value="#area_id#"/>
-			<!---<label for="users_select">Mostrar</label>--->
-			<select name="all" id="users_select" onchange="submitUsersForm()" style="width:250px;">
-				<option value="0" <cfif all_users IS false>selected="selected"</cfif>>Usuarios de esta área</option>
-				<option value="1" <cfif all_users IS true>selected="selected"</cfif>>Usuarios con acceso a esta área</option>
-			</select>
-			<button type="submit" class="btn btn-default btn-sm" title="Actualizar"><i class="icon-refresh"></i> Actualizar</button>
-		</form>--->
+
 		<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
 
 			<cfif app_version NEQ "mobile">
@@ -52,14 +40,6 @@
 		
 	</cfif>
 	
-	
-	
-<!---Las funcionalidades que requerían el form ya no están disponibles en ninguna versión--->
-<!---<form action="users.cfm?area=#area_id#" method="post" style="padding:0; margin:0; clear:none;">--->
-	<!---<div class="div_element_menu">
-		<div class="div_icon_menus"><input type="image" name="notification" src="#APPLICATION.htmlPath#/assets/icons/notifications.gif" title="Enviar email a usuarios seleccionados" /></div>
-		<div class="div_text_menus"><span class="span_text_menus">Enviar <br /> email</span></div>	
-	</div>--->
 	<!--- 
 	<cfif APPLICATION.identifier NEQ "dp"><!---Deshabilitado para DoPlanning--->
 			<cfif objectUser.sms_allowed IS true>
@@ -72,63 +52,83 @@
 	
 </div>
 </cfoutput>
+--->
 
-<!---<cfset page_type = 1>
-<cfinclude template="#APPLICATION.htmlPath#/includes/users_list.cfm">--->
 
-<!---<cfif all_users IS true>--->
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<cfif objectArea.users_visible IS true>
+<div class="row">
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
+</div>
 
-	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
+<div>
+	<cfif objectArea.users_visible IS true>
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
-			<cfinvokeargument name="area_id" value="#area_id#">
-		</cfinvoke>
+		
+		<!---<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->--->
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+
+		<!---<cfelse>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaMembers" returnvariable="usersResponse">	
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+			
+		</cfif>--->
+
+		<cfset users = usersResponse.users>
+		<cfset numUsers = ArrayLen(users)>
+
+		<!---<div class="div_users">--->
+			
+			<cfif numUsers GT 0>
+
+				<cfif isDefined("URL.mode") AND URL.mode EQ "list">
+
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
+						<cfinvokeargument name="users" value="#users#">
+						<cfinvokeargument name="area_id" value="#area_id#">
+						<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
+						<cfinvokeargument name="show_area_members" value="true">
+						<!---
+						<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
+							<cfinvokeargument name="show_area_members" value="true">
+						</cfif>--->
+					</cfinvoke>	
+
+				<cfelse>
+
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersFullList">
+						<cfinvokeargument name="usersArray" value="#users#">
+						<cfinvokeargument name="area_id" value="#area_id#">
+						<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
+					</cfinvoke>	
+
+				</cfif>
+
+				
+
+			<cfelse>
+
+				<script>
+					openUrlHtml2('empty.cfm','itemIframe');
+				</script>	
+			
+				<span lang="es">No hay usuarios.</span>
+			</cfif>
+			
+		<!---</div>--->
 
 	<cfelse>
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaMembers" returnvariable="usersResponse">	
-			<cfinvokeargument name="area_id" value="#area_id#">
-		</cfinvoke>
-		
+		<script>
+			openUrlHtml2('empty.cfm','itemIframe');
+		</script>	
+
+		<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Los usuarios de esta área no están visibles.</span></div>
+
 	</cfif>
-
-	<cfset users = usersResponse.users>
-	<cfset numUsers = ArrayLen(users)>
-
-	<div class="div_users">
-		
-		<cfif numUsers GT 0>
-
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
-				<cfinvokeargument name="users" value="#users#">
-				<cfinvokeargument name="area_id" value="#area_id#">
-				<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
-				<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
-					<cfinvokeargument name="show_area_members" value="true">
-				</cfif>
-			</cfinvoke>	
-
-		<cfelse>
-
-			<script>
-				openUrlHtml2('empty.cfm','itemIframe');
-			</script>	
-		
-			<span lang="es">No hay usuarios.</span>
-		</cfif>
-		
-	</div>
-
-<cfelse>
-
-	<script>
-		openUrlHtml2('empty.cfm','itemIframe');
-	</script>	
-
-	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Los usuarios de esta área no están visibles.</span></div>
-
-</cfif>
-
-<!---</form>--->
+</div>

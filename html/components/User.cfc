@@ -563,7 +563,9 @@
 
 			<cfset msg = URLEncodedFormat(msg)>
             
-            <cflocation url="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">
+            <!---<cflocation url="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">--->
+
+            <cflocation url="#APPLICATION.htmlPath#/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">
 			
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -586,22 +588,6 @@
 		
 		<cftry>
 			
-			<!---<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<user id="#arguments.user_id#" 
-						language="#arguments.language#">
-					</user>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="updateUser">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>
-			
-			<cfset response = {result="true", message=""}>--->
-
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUserLanguage" returnvariable="response">
 				<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
 				<cfinvokeargument name="language" value="#arguments.language#">
@@ -851,20 +837,70 @@
 	<cffunction name="outputUser" returntype="void" output="true" access="public">
 		<cfargument name="objectUser" type="query" required="true">
 		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
-		
+
 		<cfset var method = "outputUser">
-		
-		<cfset var user_page = "">
-		
+				
 		<cftry>
 			
 			<cfoutput>
+
+			<div class="row">
+				<div class="col-sm-12">
+
+					<div class="panel panel-default">
+					  	<div class="panel-body">
+
+						   	<div class="row">
+
+						   		<div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
+
+						   			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
+										<cfinvokeargument name="user_id" value="#objectUser.id#">
+										<cfinvokeargument name="user_id" value="#objectUser.id#">
+										<cfinvokeargument name="user_full_name" value="#objectUser.family_name# #objectUser.name#">
+										<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
+										<cfinvokeargument name="class" value="img-thumbnail img-responsive"/>
+									</cfinvoke>
+
+						   		</div>
+
+								<div class="col-xs-8">
+
+						 			<h5>#objectUser.family_name# #objectUser.name#</h5>
+
+									<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserData">
+										<cfinvokeargument name="objectUser" value="#objectUser#">
+										<cfinvokeargument name="showAdminFields" value="#arguments.showAdminFields#"/>
+										<cfinvokeargument name="showVirtualMeeting" value="true"/>
+									</cfinvoke>
+
+								</div>
+
+							</div><!--- END row --->
+
+						</div><!--- END panel-body --->
+					</div><!--- END panel panel-default --->
+				
+				</div><!--- END col --->
+			</div><!---END row item container--->
+
+
+			<!---
+
 			<div class="div_user_page_title">
-			<cfif len(objectUser.image_type) GT 0>
-				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&medium=" alt="#objectUser.family_name# #objectUser.name#" class="item_img" style="margin-right:2px;"/>									
+
+			<!---<cfif len(objectUser.image_type) GT 0>
+				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&medium=" alt="#objectUser.family_name# #objectUser.name#" class="img-thumbnail" style="margin-right:2px;"/>									
 			<cfelse>							
-				<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="item_img_default" style="margin-right:2px;"/>
-			</cfif><br/>
+				<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="img-thumbnail" style="margin-right:2px;"/>
+			</cfif><br/>--->
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
+				<cfinvokeargument name="user_id" value="#objectUser.id#">
+				<cfinvokeargument name="user_full_name" value="#objectUser.family_name# #objectUser.name#">
+				<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
+				<cfinvokeargument name="class" value="img-thumbnail"/>
+			</cfinvoke><br/>
 			
 			#objectUser.family_name# #objectUser.name#</div>
 			<div class="div_separator"><!-- --></div>
@@ -911,6 +947,12 @@
 
 					<div class="div_user_page_label"><span lang="es">Usuario interno:</span> <span class="div_user_page_text" lang="es"><cfif objectUser.internal_user IS true><b>Sí</b><cfelse>No</cfif></span></div>	
 
+					<cfif SESSION.client_administrator EQ SESSION.user_id>
+						<div class="div_user_page_label"><span>Fecha de creación:</span> <span class="div_user_page_text">#objectUser.creation_date#</span></div>
+						<div class="div_user_page_label"><span>Fecha de última conexión:</span> <span class="div_user_page_text">#objectUser.last_connection#</span></div>
+						<div class="div_user_page_label"><span>Número de conexiones:</span> <span class="div_user_page_text">#objectUser.number_of_connections#</span></div>
+					</cfif>
+
 				</cfif>
 
 				<div class="div_user_page_label"><span lang="es">Activo:</span> <span class="div_user_page_text" lang="es"><cfif objectUser.enabled IS true>Sí<cfelse><b>No</b></cfif></span></div>
@@ -932,7 +974,7 @@
 				
 				
 			</div>
-			
+			---->
 			</cfoutput>								
 			
 			<cfcatch>
@@ -943,6 +985,104 @@
 		
 	</cffunction>
 	
+
+
+	<!--- outputUserData --->
+		
+	<cffunction name="outputUserData" returntype="void" output="true" access="public">
+		<cfargument name="objectUser" type="any" required="true">
+		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
+		<cfargument name="showVirtualMeeting" type="boolean" required="false" default="false">
+
+		
+		<cfset var method = "outputUser">
+				
+		<cftry>
+
+			<cfoutput>
+
+				<div><i class="icon-inbox" style="font-size:18px"></i>  <a href="mailto:#objectUser.email#" class="link_external">#objectUser.email#</a></div>
+
+				<cfif len(objectUser.linkedin_url) GT 0>
+					<div class="div_user_page_label"><i class="icon-linkedin-sign" style="font-size:18px;"></i> <a href="#objectUser.linkedin_url#" target="_blank" class="link_external">#objectUser.linkedin_url#</a></div> 
+				</cfif>
+
+				<cfif len(objectUser.twitter_url) GT 0>
+					<div class="div_user_page_label"><i class="icon-twitter-sign" style="font-size:18px;"></i> <a href="#objectUser.twitter_url#" target="_blank" class="link_external">#objectUser.twitter_url#</a></div> 
+				</cfif>
+
+				<!---<cfif SESSION.client_abb NEQ "hcs">---><!---OR showAdminFields IS true--->
+					<cfif len(objectUser.telephone) GT 0>
+						<div class="div_user_page_label"><!---<span lang="es">Teléfono:</span>---><i class="icon-phone-sign" style="font-size:20px"></i> <a href="tel:#objectUser.telephone#" class="div_user_page_text"><cfif len(objectUser.telephone) GT 0>#objectUser.telephone_ccode#</cfif> #objectUser.telephone#</a></div>
+					</cfif>
+					<cfif len(objectUser.mobile_phone) GT 0>
+						<div class="div_user_page_label"><!---<span lang="es">Teléfono móvil:</span>--->&nbsp;<i class="icon-mobile-phone" style="font-size:20px"></i> <a href="tel:#objectUser.mobile_phone#" class="div_user_page_text">&nbsp;<cfif len(objectUser.mobile_phone) GT 0>#objectUser.mobile_phone_ccode#</cfif> #objectUser.mobile_phone#</a></div>
+					</cfif>
+					<cfif len(objectUser.dni) GT 0>
+						<div class="div_user_page_label"><span lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif></span> <span class="div_user_page_text">#objectUser.dni#</span></div>
+					</cfif>
+				<!---</cfif>--->
+
+				<cfif len(objectUser.address) GT 0>
+					<div class="div_user_page_label"><!---<span lang="es">Dirección:</span>---><i class="icon-envelope" style="font-size:18px"></i> #objectUser.address#</div> 
+				</cfif>
+
+				<cfif arguments.showAdminFields IS true>
+					
+					<cfif len(objectUser.information) GT 0>
+						<div class="div_user_page_label"><span lang="es">Información</span></div> 
+						<div class="div_user_page_address">#objectUser.information#</div>
+					</cfif>
+					
+					<cfif SESSION.client_abb EQ "hcs">
+						<cfif SESSION.client_administrator EQ SESSION.user_id>
+							<div class="div_user_page_label"><span lang="es">Login #APPLICATION.ldapName#</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
+						</cfif>
+						<div class="div_user_page_label"><span lang="es">Perfil de cabecera</span> <span class="div_user_page_text">#objectUser.perfil_cabecera#</span></div>
+					</cfif>
+
+					<div class="div_user_page_label"><span lang="es">Usuario interno</span> <span class="div_user_page_text" lang="es"><cfif objectUser.internal_user IS true><b>Sí</b><cfelse>No</cfif></span></div>	
+
+					<cfif SESSION.client_administrator EQ SESSION.user_id>
+						<div class="div_user_page_label"><span>Fecha de creación:</span> <span class="div_user_page_text">#objectUser.creation_date#</span></div>
+						<div class="div_user_page_label"><span>Fecha de última conexión:</span> <span class="div_user_page_text">#objectUser.last_connection#</span></div>
+						<div class="div_user_page_label"><span>Número de conexiones:</span> <span class="div_user_page_text">#objectUser.number_of_connections#</span></div>
+					</cfif>
+
+				</cfif>
+
+				<div class="div_user_page_label"><span lang="es">Activo</span> <span class="div_user_page_text" lang="es"><cfif objectUser.enabled IS true>Sí<cfelse><b>No</b></cfif></span></div>
+
+
+				<cfif arguments.showAdminFields IS false AND arguments.showVirtualMeeting IS true AND objectUser.enabled IS true>
+
+					<cfif APPLICATION.moduleWebRTC IS true>
+					<div style="padding-top:8px; clear:both;">
+						<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/user_meeting.png" width="20" alt="Reunión virtual" lang="es"/>--->
+						
+						<div><!--- href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" 
+								onclick="openUrl('#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" --->
+						<a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#" target="_blank" title="Reunión virtual" lang="es" class="btn btn-sm btn-info"><i class="icon-facetime-video"></i>&nbsp; <span lang="es">Reunión virtual</span></a>
+						</div>
+						<div class="div_user_page_label"><span lang="es">URL de acceso a reunión virtual con este usuario:</span></div>
+						<textarea class="form-control" readonly="readonly" style="height:50px; cursor:text">#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#</textarea>
+														
+					</div>
+					</cfif>
+
+				</cfif>
+
+			</cfoutput>								
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
 	
 	<cffunction name="outputUserList" returntype="void" output="true" access="public">
 		<cfargument name="xmlUser" type="xml" required="true">
@@ -1059,13 +1199,12 @@
 						$("###usersTableId#").tablesorter({ 
 							<!---<cfif page_type IS 1>--->
 							<cfif arguments.filter_enabled IS true>
-							widgets: ['zebra','filter'],
+							widgets: ['zebra','uitheme','filter'],
 							<cfelse>
-							widgets: ['zebra'],
+							widgets: ['zebra','uitheme'],
 							</cfif>
-							<!---<cfelse>
-							widgets: ['zebra','select'],
-							</cfif>--->
+							theme : "bootstrap",
+							headerTemplate : '{content} {icon}',
 							sortList: [[1,0]] ,
 							headers: { 
 								0: { 
@@ -1326,10 +1465,12 @@
 
 						$("###usersTableId#").tablesorter({ 
 							<cfif arguments.filter_enabled IS true>
-							widgets: ['zebra','filter','stickyHeaders'],<!---'select',--->
+							widgets: ['zebra','uitheme','filter','stickyHeaders'],<!---'select',--->
 							<cfelse>
-							widgets: ['zebra'],<!---,'select'--->
+							widgets: ['zebra','uitheme',],<!---,'select'--->
 							</cfif>
+							theme : "bootstrap",
+							headerTemplate : '{content} {icon}',
 							<cfif arrayLen(arguments.users) LT 500><!---El orden del tablesorter en listados con muchos registros es muy lento--->
 								sortList: [[1,0]] ,
 							</cfif>
@@ -1473,11 +1614,21 @@
 							</td>
 							</cfif>
 							<td style="text-align:center">
+
+								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
+									<cfinvokeargument name="user_id" value="#objectUser.id#">
+									<cfinvokeargument name="user_full_name" value="#objectUser.family_name# #objectUser.name#">
+									<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
+									<cfinvokeargument name="width_px" value="50">
+								</cfinvoke>
+
+								<!---
 								<cfif len(objectUser.image_type) GT 0>
 									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>									
 								<cfelse>							
 									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
 								</cfif>
+								---->
 							</td>
 							<td class="text_item">#objectUser.family_name#</td>
 							<td class="text_item">#objectUser.name#</td>
@@ -1550,10 +1701,12 @@
 
 						$("###usersTableId#").tablesorter({ 
 							<cfif arguments.filter_enabled IS true>
-							widgets: ['zebra','filter'],<!--- 'select','stickyHeaders' stickyHeaders no sale bien, se muestra fuera de la ventana--->
+							widgets: ['zebra','uitheme','filter'],<!--- 'select','stickyHeaders' stickyHeaders no sale bien, se muestra fuera de la ventana--->
 							<cfelse>
-							widgets: ['zebra'],<!--- ,'select' --->
+							widgets: ['zebra','uitheme'],<!--- ,'select' --->
 							</cfif>
+							theme : "bootstrap",
+							headerTemplate : '{content} {icon}',
 							sortList: [[1,0]] ,
 							headers: { 
 								0: { 
@@ -1585,6 +1738,11 @@
 						    </cfif>
 
 						});
+
+						<!---
+						$('###usersTableId# tbody tr').on('click', function(e) {
+
+					    });--->
 						
 					}); 
 				</script>
@@ -1741,6 +1899,321 @@
 			
 		</cftry>
 
+	</cffunction>
+
+
+	<!--- ----------------------- GET LAST ACTIVITY USERS -------------------------------- --->
+	
+	<cffunction name="getLastActivityUsers" returntype="struct" access="public">
+		<cfargument name="limit" type="numeric" required="false">
+				
+		<cfset var method = "getLastUsedAreas">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getLastActivityUsers" returnvariable="response">
+				<cfinvokeargument name="limit" value="#arguments.limit#">
+			</cfinvoke>	
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+	<!--- outputUserImage --->
+
+	<cffunction name="outputUserImage" returntype="void" output="true" access="public">
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="user_full_name" type="string" required="true">
+		<cfargument name="user_image_type" type="string" required="true">
+		<cfargument name="width_px" type="numeric" required="false">
+		<cfargument name="class" type="string" required="false">
+
+		<cfoutput>
+
+			<cfif NOT isDefined("arguments.width_px") OR arguments.width_px GT 60>
+				<cfset image_size = "medium">
+			<cfelse>
+				<cfset image_size = "small">
+			</cfif>
+
+			<cfif NOT isDefined("arguments.width_px") AND NOT isDefined("arguments.class")>
+				<cfset arguments.width_px = 48>
+			</cfif>
+
+			<cfif len(arguments.user_image_type) GT 0>
+
+				<cfif NOT isDefined("arguments.class")>
+					<cfset arguments.class = "user_img">
+				</cfif>
+
+				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#arguments.user_id#&type=#arguments.user_image_type#&#image_size#=" alt="#arguments.user_full_name#" class="#arguments.class#" <cfif isDefined("arguments.width_px")>style="width:#arguments.width_px#px"</cfif> />								
+			<cfelse>		
+
+				<!---<cfif image_size EQ "small">
+					<cfset default_image_file = "user_default.png">
+				<cfelse>
+					<cfset default_image_file = "user_default_medium.png">
+				</cfif>--->
+
+				
+				<cfif find("img-responsive", arguments.class) GT 0>
+					<cfset arguments.class = "user_letter_thumbnail_responsive">
+				<cfelseif isDefined("arguments.width_px") AND arguments.width_px LT 48>
+					<cfset arguments.class = "user_letter_thumbnail_small">
+				</cfif>
+
+				<cfif NOT isDefined("arguments.class")>
+					<cfset arguments.class = "user_img_default">
+				</cfif>
+
+
+				<!---<img src="#APPLICATION.htmlPath#/assets/icons/#default_image_file#" alt="#arguments.user_full_name#" class="#arguments.class#" <cfif isDefined("arguments.width_px")>style="width:#arguments.width_px#px"</cfif> />--->
+
+				<cfset firstLetter = uCase(left(arguments.user_full_name,1))>
+				<cfset letterColor = "##CCCCCC">
+
+				<cfscript>
+					switch(firstLetter){
+
+						case "A":
+						case "K":
+						case "P":
+							letterColor = "##E4514B";
+						break;
+
+						case "B":
+						case "E":
+						case "N":
+						case "O":
+						case "U":
+							letterColor = "##64C8BE";
+						break;
+
+						case "C":
+						case "L":
+							letterColor = "##579CC1";
+						break;
+
+						case "D":
+						case "J":
+						case "T":
+							letterColor = "##36948C";
+						break;
+
+						case "F":
+						case "Q":
+						case "Z":
+							letterColor = "##EAD144";
+						break;
+
+						case "G":
+						case "H":
+						case "X":
+							letterColor = "##F1B861";
+						break;
+
+						case "I":
+						case "R":
+						case "Y":
+							letterColor = "##25AAD7";
+						break;
+
+						case "M":
+						case "S":
+							letterColor = "##9DE7FF";
+						break;
+
+						case "V":
+						case "W":
+							letterColor = "##EC8C86";
+						break;
+					}
+				</cfscript>
+
+				<span class="user_letter_thumbnail #arguments.class#" style="<cfif isDefined("arguments.width_px")>width:#arguments.width_px#px;height:#arguments.width_px#px</cfif>;color:#letterColor#">#firstLetter#</span>
+			</cfif>
+
+		</cfoutput>
+
+	</cffunction>
+
+
+	<!--- outputUsersFullList --->
+
+	<cffunction name="outputUsersFullList" returntype="void" output="true" access="public">
+		<cfargument name="usersArray" type="array" required="true">
+		<!---<cfargument name="itemTypesStruct" type="struct" required="false">--->
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
+		<cfargument name="user_in_charge" type="numeric" required="false">
+		
+		<cfset var method = "outputUsersFullList">
+		
+		<cftry>
+
+			<cfoutput>
+			
+			<cfloop array="#usersArray#" index="user">	
+
+				<cfif isDefined("user.user_id")>
+					<cfset cur_user_id = user.user_id>
+				<cfelse>
+					<cfset cur_user_id = user.id>
+				</cfif>
+
+				<cfif isDefined("user.user_full_name")>
+					<cfset cur_user_full_name = user.user_full_name>
+				<cfelse>
+					<cfset cur_user_full_name = "#user.family_name# #user.name#">
+				</cfif>
+
+				<div class="row">
+					<div class="col-sm-12">
+
+						<div class="panel panel-default">
+						  	<div class="panel-body">
+
+							   	<div class="row">
+
+							   		<div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
+
+							   			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
+											<cfinvokeargument name="user_id" value="#cur_user_id#">
+											<cfinvokeargument name="user_full_name" value="#cur_user_full_name#">
+											<cfif isDefined("user.user_image_type")>
+												<cfinvokeargument name="user_image_type" value="#user.user_image_type#">
+											<cfelse>
+												<cfinvokeargument name="user_image_type" value="#user.image_type#">
+											</cfif>
+											<!--- <cfinvokeargument name="width_px" value="130"> --->
+											<cfinvokeargument name="class" value="img-thumbnail img-responsive"/>
+										</cfinvoke>
+
+							   		</div>
+
+									<div class="col-xs-8">
+
+							 			<cfif isDefined("arguments.area_id")>
+							 				<cfset page_user = "area_user.cfm?user=#cur_user_id#&area=#arguments.area_id#">
+							 			<cfelse>
+							 				<cfset page_user = "user.cfm?user=#cur_user_id#">
+							 			</cfif>
+
+										<a href="#page_user#" class="link_user">#cur_user_full_name#</a>
+
+										<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserData">
+											<cfinvokeargument name="objectUser" value="#user#">
+											<cfinvokeargument name="showAdminFields" value="#arguments.showAdminFields#"/>
+											<cfinvokeargument name="showVirtualMeeting" value="false"/>
+										</cfinvoke>
+
+										<!---
+										<div><i class="icon-inbox" style="font-size:18px"></i>  <a href="mailto:#user.email#" class="link_external">#user.email#</a></div>
+
+										<cfif len(user.linkedin_url) GT 0>
+											<div class="div_user_page_label"><i class="icon-linkedin-sign" style="font-size:18px;"></i> <a href="#user.linkedin_url#" target="_blank" class="link_external">#user.linkedin_url#</a></div> 
+										</cfif>
+
+										<cfif len(user.twitter_url) GT 0>
+											<div class="div_user_page_label"><i class="icon-twitter-sign" style="font-size:18px;"></i> <a href="#user.twitter_url#" target="_blank" class="link_external">#user.twitter_url#</a></div> 
+										</cfif>
+
+										<!---<cfif SESSION.client_abb NEQ "hcs">---><!---OR showAdminFields IS true--->
+											<cfif len(user.telephone) GT 0>
+												<div class="div_user_page_label"><!---<span lang="es">Teléfono:</span>---><i class="icon-phone-sign" style="font-size:20px"></i> <a href="tel:#user.telephone#" class="div_user_page_text"><cfif len(user.telephone) GT 0>#user.telephone_ccode#</cfif> #user.telephone#</a></div>
+											</cfif>
+											<cfif len(user.mobile_phone) GT 0>
+												<div class="div_user_page_label"><!---<span lang="es">Teléfono móvil:</span>--->&nbsp;<i class="icon-mobile-phone" style="font-size:20px"></i> <a href="tel:#user.mobile_phone#" class="div_user_page_text">&nbsp;<cfif len(user.mobile_phone) GT 0>#user.mobile_phone_ccode#</cfif> #user.mobile_phone#</a></div>
+											</cfif>
+											<cfif len(user.dni) GT 0>
+												<div class="div_user_page_label"><span lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif></span> <span class="div_user_page_text">#user.dni#</span></div>
+											</cfif>
+										<!---</cfif>--->
+
+										<cfif len(user.address) GT 0>
+											<div class="div_user_page_label"><!---<span lang="es">Dirección:</span>---><i class="icon-envelope" style="font-size:18px"></i> #user.address#</div> 
+										</cfif>
+
+										<cfif arguments.showAdminFields IS true>
+											
+											<div class="div_user_page_label"><span lang="es">Información</span></div> 
+											<div class="div_user_page_address">#user.information#</div>
+
+											<cfif SESSION.client_abb EQ "hcs">
+												<cfif SESSION.client_administrator EQ SESSION.user_id>
+													<div class="div_user_page_label"><span lang="es">Login #APPLICATION.ldapName#</span> <span class="div_user_page_text">#user.login_ldap#</span></div>
+												</cfif>
+												<div class="div_user_page_label"><span lang="es">Perfil de cabecera</span> <span class="div_user_page_text">#user.perfil_cabecera#</span></div>
+											</cfif>
+
+											<div class="div_user_page_label"><span lang="es">Usuario interno</span> <span class="div_user_page_text" lang="es"><cfif user.internal_user IS true><b>Sí</b><cfelse>No</cfif></span></div>	
+
+											<!---<cfif SESSION.client_administrator EQ SESSION.user_id>
+												<div class="div_user_page_label"><span>Fecha de creación:</span> <span class="div_user_page_text">#user.creation_date#</span></div>
+												<div class="div_user_page_label"><span>Fecha de última conexión:</span> <span class="div_user_page_text">#user.last_connection#</span></div>
+												<div class="div_user_page_label"><span>Número de conexiones:</span> <span class="div_user_page_text">#user.number_of_connections#</span></div>
+											</cfif>--->
+
+										</cfif>
+
+										<div class="div_user_page_label"><span lang="es">Activo</span> <span class="div_user_page_text" lang="es"><cfif user.enabled IS true>Sí<cfelse><b>No</b></cfif></span></div>
+
+										--->
+
+										<cfif isDefined("user.area_member")>
+											<div class="div_user_page_label"><span lang="es">De esta área</span> <span class="div_user_page_text" lang="es"><cfif user.area_member IS true>Sí<cfelse><b>No</b></cfif></span></div>
+										</cfif>
+
+										<cfif isDefined("arguments.user_in_charge") AND arguments.user_in_charge IS cur_user_id>
+											<div class="div_user_page_label" lang="es">Responsable del área</div>
+										</cfif>
+
+										
+										<!---<cfif isDefined("user.itemTypeId")>
+											
+											Ultima acción sobre: <a href="#itemTypesStruct[user.itemTypeId].name#.cfm?#itemTypesStruct[user.itemTypeId].name#=#user.item_id#&area=#user.area_id#">#itemTypesStruct[user.itemTypeId].label#</a>
+
+										</cfif>--->
+
+									</div>
+
+								</div><!--- END row --->
+
+								<!---
+								<div class="row">
+
+									<div class="col-sm-12" style="padding-top:10px;">
+
+									</div>
+
+								</div><!--- END row --->
+								--->
+
+							</div><!--- END panel-body --->
+						</div><!--- END panel panel-default --->
+					
+					</div><!--- END col --->
+				</div><!---END row item container--->
+			</cfloop>
+
+			</cfoutput>			
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
 	</cffunction>
 
 	

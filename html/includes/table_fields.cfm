@@ -27,8 +27,12 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <cfoutput>
-<div class="div_message_page_title">#table.title#</div>
-<div class="div_separator"><!-- --></div>
+
+
+<cfif app_version NEQ "mobile">
+	<div class="div_message_page_title">#table.title#</div>
+	<div class="div_separator"><!-- --></div>
+</cfif>
 
 <div class="div_head_subtitle_area">
 
@@ -37,16 +41,17 @@
 		<cfif tableTypeId IS NOT 3>
 			<!---<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>--->
 			<div class="btn-group">
-				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
+				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/v3/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
 			</div>
 		<cfelse>
 			<div class="btn-group">
-				<a href="typologies.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP#" lang="es"> <i class="icon-file-text" style="font-size:15px; color:##7A7A7A"></i>&nbsp;&nbsp;<span lang="es">#itemTypeNameEsP#</span></a>
+				<a href="typology.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/v3/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
+				<!---<a href="typologies.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP#" lang="es"> <i class="icon-file-text" style="font-size:15px; color:##7A7A7A"></i>&nbsp;&nbsp;<span lang="es">#itemTypeNameEsP#</span></a>--->
 			</div>
 		</cfif>
 
 		<div class="btn-group">
-			<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-info btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span>Añadir campo</span></a><!---color:##5BB75B;--->
+			<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span>Añadir campo</span></a><!---color:##5BB75B;--->
 		</div>
 
 		<div class="btn-group">

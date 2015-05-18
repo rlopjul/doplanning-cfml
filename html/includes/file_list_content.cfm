@@ -8,7 +8,7 @@
 <cfset page_type = 3>
 
 
-<script type="text/javascript">
+<script>
 	$(document).ready(function() { 
 		
 		$.tablesorter.addParser({
@@ -26,10 +26,12 @@
 		
 		$("#listTable").tablesorter({ 
 			<cfif full_content IS false>
-			widgets: ['zebra','filter','select'],
+			widgets: ['zebra','uitheme','filter','select'],
 			<cfelse>
-			widgets: ['zebra','select'],
+			widgets: ['zebra','uitheme','select'],
 			</cfif>
+			theme : "bootstrap",
+			headerTemplate : '{content} {icon}',
 			sortList: [[5,1]] ,
 			headers: { 
 				0: { 
@@ -81,8 +83,8 @@
 
 <!---<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">--->
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIconsTypes" returnvariable="iconTypes">
-</cfinvoke>
+<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIconsTypes" returnvariable="iconTypes">
+</cfinvoke>--->
 
 <cfset numFiles = files.recordCount>
 <div class="div_items">
@@ -172,15 +174,23 @@
 					</form>
 				<cfelse>
 
-					<cfset fileType = lCase(replace(files.file_type,".",""))>
+					<!---<cfset fileType = lCase(replace(files.file_type,".",""))>
 					<cfif listFind (iconTypes, fileType)>
 						<cfset fileIcon = "_"&fileType>
 					<cfelse>
 						<cfset fileIcon = "">
 					</cfif>
 
-					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file#fileIcon#.png" class="img_file" style="max-width:none;"/></a>
-					<!---<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" class="img_file" style="max-width:none;"/></a>--->
+					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file#fileIcon#.png" class="img_file" style="max-width:none;"/></a>--->
+
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="file_icon">
+						<cfinvokeargument name="file_name" value="#files.file_name#"/>
+					</cfinvoke>
+
+					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar">
+						<i class="#file_icon#" style="font-size:24px"></i>
+					</a>
+					
 				</cfif><!---style="max-width:none;" Requerido para corregir un bug con Bootstrap en Chrome--->
 			</td>
 			<td><cfif isDefined("page_type")>
@@ -195,11 +205,19 @@
 			<td><span>#files.file_type#</span></td>
 			<td><cfif files.file_type_id IS 1>
 
-				<cfif len(files.user_image_type) GT 0>
+				<!---<cfif len(files.user_image_type) GT 0>
 					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#files.user_in_charge#&type=#files.user_image_type#&small=" alt="#files.user_full_name#" class="item_img"/>									
 				<cfelse>							
 					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#files.user_full_name#" class="item_img_default" />
-				</cfif>
+				</cfif>--->
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
+					<cfinvokeargument name="user_id" value="#files.user_in_charge#">
+					<cfinvokeargument name="user_full_name" value="#files.user_full_name#">
+					<cfinvokeargument name="user_image_type" value="#files.user_image_type#">
+					<cfinvokeargument name="width_px" value="40">
+				</cfinvoke>
+				&nbsp;
 				<span>#files.user_full_name#</span>
 
 			<cfelse><i><span lang="es">Área</span></i></cfif>

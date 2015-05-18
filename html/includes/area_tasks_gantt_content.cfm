@@ -50,9 +50,13 @@
 	</cfoutput>
 </div>
 
+<!--- 
 <div style="margin-left:2px; margin-right:2px;">
+ --->
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+<!--- 
 </div>
+ --->
 
 <div class="div_items">
 
@@ -158,8 +162,7 @@
 
 	<!---<script>
 
-		function comienza()
-		{
+		function comienza()	{
 
     		//alert("PASO POR TEST");
     		aClient = new HttpClient();

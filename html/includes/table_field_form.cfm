@@ -468,13 +468,13 @@
 	<div class="row" id="dateDefaultValue">
 		<div class="col-md-12">
 			<label for="default_value_date" class="control-label">Valor por defecto</label>
-			<input type="text" name="default_value" id="default_value_date" value="#field.default_value#" maxlength="10" class="input_datepicker" <cfif field.field_type_id NEQ 6>disabled="disabled"</cfif>/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
+			<input type="text" name="default_value" id="default_value_date" value="#field.default_value#" maxlength="10" class="form-control input_datepicker" <cfif field.field_type_id NEQ 6>disabled="disabled"</cfif>/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
 		</div>
 	</div>
 	<div class="row" id="booleanDefaultValue">
 		<div class="col-md-12">
 			<label for="default_value_boolean" class="control-label">Valor por defecto</label>
-			<select name="default_value" id="default_value_boolean" class="input-sm" <cfif field.field_type_id NEQ 7>disabled="disabled"</cfif>>
+			<select name="default_value" id="default_value_boolean" class="form-control" <cfif field.field_type_id NEQ 7>disabled="disabled"</cfif>>
 				<option value=""></option>
 				<option value="0" <cfif field.default_value IS false>selected="selected"</cfif>>No</option>
 				<option value="1" <cfif field.default_value IS true>selected="selected"</cfif>>Sí</option>

@@ -21,7 +21,7 @@ Lang.prototype.pack.en = {
 		"Preferencias del usuario":"User preferences",
 		"Versión móvil":"Mobile version",
 		
-		"Últimos elementos":"Last items",
+		"Lo último":"Last items",
 		"Ver en área":"View in area",
 		"Mostrar":"Show",
 		"Listas":"Lists",

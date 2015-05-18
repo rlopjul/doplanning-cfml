@@ -58,16 +58,16 @@
 
 <cfoutput>
 
-<div class="div_head_subtitle">
+<!---<div class="div_head_subtitle">
 	<span lang="es"><cfif page_type IS 1><cfif tableTypeGender EQ "male">Nuevo<cfelse>Nueva</cfif><cfelse>Modificar</cfif> #tableTypeNameEs#</span>
-</div>
+</div>--->
 
-<!---<div class="div_message_page_title">#table.label#</div>--->
-<div class="div_separator"><!-- --></div>
-
-<div class="contenedor_fondo_blanco">
+<!---<div class="div_message_page_title">#table.label#</div>
+<div class="div_separator"><!-- --></div>--->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+
+<div class="contenedor_fondo_blanco">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" onsubmit="return onSubmitForm();">
 
@@ -87,8 +87,8 @@
 	</cfif>
 
 	<div class="row">
-		<div class="col-xs-12 col-sm-8">
-			<label for="label" class="control-label" lang="es">Nombre</label>
+		<div class="col-xs-12 col-sm-12">
+			<label for="label" class="control-label"><span lang="es">Nombre</span> <span lang="es">#tableTypeNameEs#</span>: *</label>
 			<cfinput type="text" name="title" id="label" value="#table.title#" maxlength="200" required="true" message="Nombre requerido" class="form-control"/>
 		</div>
 	</div>
@@ -114,7 +114,7 @@
 			</cfif>
 
 			<div class="col-xs-6 col-md-3">
-				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
+				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span> <span lang="es">#tableTypeNameEs#</span>:</label>
 				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#table.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 			</div>
 						
@@ -163,7 +163,7 @@
 		<cfif APPLICATION.publicationValidation IS true AND is_user_area_responsible IS true>
 			
 			<div class="row">
-				<div class="col-xs-12 col-sm-8">
+				<div class="col-xs-12 col-sm-12">
 					<div class="checkbox">
 						<label>
 							<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("table.publication_validated") AND table.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
@@ -178,14 +178,14 @@
 	</cfif>
 
 	<div class="row">
-		<div class="col-xs-12 col-sm-8">
-			<label for="description" class="control-label" lang="es">Descripción</label>
+		<div class="col-xs-12 col-sm-12">
+			<label for="description" class="control-label" lang="es"><span lang="es">Descripción</span> <span lang="es">#tableTypeNameEs#</span>:</label>
 			<textarea name="description" id="description" class="form-control" maxlength="1000">#table.description#</textarea>
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="col-xs-12 col-sm-8">
+		<div class="col-xs-12 col-sm-12">
 			<div class="checkbox">
 				<label>
 					<input type="checkbox" name="structure_available" id="structure_available" value="true" <cfif isDefined("table.structure_available") AND table.structure_available IS true>checked="checked"</cfif> /> <span lang="es">Permitir copiar la estructura de campos de <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)#</span>
@@ -198,7 +198,7 @@
 	<cfif tableTypeId IS 3 AND SESSION.client_administrator EQ SESSION.user_id>
 		
 	<div class="row">
-		<div class="col-xs-12 col-sm-8">
+		<div class="col-xs-12 col-sm-12">
 			<div class="checkbox">
 				<label>
 					<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> <span lang="es">Habilitar como #lCase(tableTypeNameEs)# general</span>
@@ -222,7 +222,7 @@
 			
 			<div class="row">
 				<div class="col-sm-12 col-sm-8">
-					<label for="publication_scope_id" class="control-label" lang="es">Ámbito de publicación</label>
+					<label for="publication_scope_id" class="control-label"><span lang="es">Ámbito de publicación</span>:</label>
 					<select name="publication_scope_id" id="publication_scope_id" class="form-control">
 						<cfloop query="scopesQuery">
 							<option value="#scopesQuery.scope_id#" <cfif table.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>

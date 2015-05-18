@@ -51,7 +51,7 @@
 				openUrlHtml2('empty.cfm','itemIframe');
 			</script>
 		
-			<span lang="es">No hay usuarios.</span>
+			<span lang="es">No se han encontrado usuarios.</span>
 		</cfif>
 		
 	</div>	
@@ -62,6 +62,6 @@
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>
 	
-	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca unos parámetros de búsqueda y haga click en "Buscar".</span></div>
+	<div class="alert alert-info" style="margin:10px;background-color:#65C5BD"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en "BUSCAR"</span></div>
 	
 </cfif>

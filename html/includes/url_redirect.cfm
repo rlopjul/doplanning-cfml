@@ -8,7 +8,13 @@
 	<!---<cfset redirect_area_page = "files.cfm?file=#URL.file#&area=#URL.area#">--->
 	<cfset redirect_area_page = "area_items.cfm?file=#URL.file#&area=#URL.area#&download=#file_download#">
 <cfelseif isDefined("URL.message")>
-	<cfset redirect_page = "message.cfm?message=#URL.message#">
+	
+	<cfif isDefined("URL.reply")>
+		<cfset redirect_page = "message_new.cfm?message=#URL.message#">
+	<cfelse>
+		<cfset redirect_page = "message.cfm?message=#URL.message#">
+	</cfif>
+	
 	<!---<cfset redirect_area_page = "messages.cfm?message=#URL.message#&area=#URL.area#">--->
 	<cfset redirect_area_page = "area_items.cfm?message=#URL.message#&area=#URL.area#">
 <cfelseif isDefined("URL.entry")>
@@ -37,6 +43,9 @@
 <cfelseif isDefined("URL.file_edited")>
 	<cfset redirect_page = "file_edited.cfm?file_edited=#URL.file_edited#">
 	<cfset redirect_area_page = "area_items.cfm?file_edited=#URL.file_edited#&area=#URL.area#">
+<cfelseif isDefined("URL.dp_document")>
+	<cfset redirect_page = "dp_document.cfm?dp_document=#URL.dp_document#">
+	<cfset redirect_area_page = "area_items.cfm?dp_document=#URL.dp_document#&area=#URL.area#">
 <cfelseif APPLICATION.moduleConsultations AND isDefined("URL.consultation")>
 	<cfset redirect_page = "consultation.cfm?consultation=#URL.consultation#">
 	<!---<cfset redirect_area_page = "consultations.cfm?consultation=#URL.consultation#&area=#URL.area#">--->
@@ -77,6 +86,8 @@
 		<cfset redirect_area_page = "area_items.cfm?form_view=#URL.form_view#&area=#URL.area#">
 	</cfif>
 <cfelseif APPLICATION.modulefilesWithTables IS true AND isDefined("URL.typology")>
-	<cfset redirect_page = "typology.cfm?typology=#URL.typology#">
+	<cfset redirect_page = "typology.cfm?typology=#URL.typology#&area=#URL.area#">
 	<cfset redirect_area_page = "typologies.cfm?typology=#URL.typology#&area=#URL.area#">
+<cfelseif isDefined("URL.area")>
+	<cfset redirect_page = "area_items.cfm?area=#URL.area#">
 </cfif>

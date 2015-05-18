@@ -2573,7 +2573,7 @@
 					<cfinvokeargument name="area_id" value="#area_id#">
 				</cfinvoke>
 			
-				<cfif APPLICATION.publicationValidation IS true AND isUserAreaResponsible IS true>
+				<cfif APPLICATION.publicationValidation IS true AND isUserAreaResponsible IS true><!---Si APPLICATION.publicationValidation es false es que no se puede publicar y despublicar--->
 				
 					<cfquery name="changeItemPublication" datasource="#client_dsn#">		
 						UPDATE #client_abb#_#itemTypeTable#
@@ -2893,8 +2893,8 @@
 				
 				<cfelseif arguments.itemTypeId IS 7 AND itemQuery.state NEQ "created"><!---Consultations--->
 
-					<!---Las interconsultas solo se pueden eliminar si están en estado creadas (enviadas)
-					Los administradores sí pueden borrar las interconsultas cuando borran un área--->
+					<!---Las consultas solo se pueden eliminar si están en estado creadas (enviadas)
+					Los administradores sí pueden borrar las consultas cuando borran un área--->
 					<cfinclude template="includes/checkAreaAdminAccess.cfm">
 
 				</cfif>
@@ -3157,6 +3157,7 @@
 					<cfinvokeargument name="itemQuery" value="#getItemQuery#">
 					<cfinvokeargument name="forceDeleteVirus" value="false">
 					<cfinvokeargument name="user_id" value="#user_id#">
+					<cfinvokeargument name="area_id" value="#area_id#">
 
 					<cfinvokeargument name="file_type" value="#arguments.file_type#">
 
@@ -3185,133 +3186,6 @@
 				
 	</cffunction>
 	<!--- ---------------------------------------------------------------------------------- --->
-	
-	
-	
-	
-	<!--- ----------------------- DELETE ITEM ATTACHED IMAGE -------------------------------- --->
-	
-	<!---
-	<cffunction name="deleteItemAttachedImage" returntype="string" access="public">
-		<cfargument name="item_id" type="string" required="yes">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
-		
-		<cfset var method = "deleteItemAttachedImage">
-		
-		<cfset var area_id = "">
-		<cfset var area_type = "">
-						
-			<cfinclude template="includes/functionStart.cfm">
-			
-			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-
-			<!---<cfquery name="getItemQuery" datasource="#client_dsn#">		
-				SELECT id,parent_kind,parent_id,attached_file_id,area_id,user_in_charge
-				FROM #client_abb#_#itemTypeTable#
-				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;		
-			</cfquery>--->
-		
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="getItemQuery">
-				<cfinvokeargument name="item_id" value="#arguments.item_id#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				<cfinvokeargument name="parse_dates" value="true">
-				<cfinvokeargument name="published" value="false">
-				
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-			
-			<cfif getItemQuery.recordCount GT 0>
-				
-				<!---checkAreaAccess--->
-				<cfset area_id = getItemQuery.area_id>
-				
-				<cfinclude template="includes/checkAreaAccess.cfm">
-				
-				<cfif getItemQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que intenta modificar--->
-					
-					<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">				
-						<cfinvokeargument name="area_id" value="#area_id#">
-					</cfinvoke>
-				
-					<cfset area_type = areaTypeResult.areaType>
-					
-					<!---Si el área es web o intranet, los items pueden modificarlos todos los que tengan acceso a ese área--->
-					<cfif area_type NEQ "web" AND area_type NEQ "intranet">
-					
-						<cfset error_code = 103><!---Access denied--->
-							
-						<cfthrow errorcode="#error_code#">
-						
-					</cfif>
-				</cfif>		
-				
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItemAttachedFile">
-					<cfinvokeargument name="item_id" value="#getItemQuery.id#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="itemQuery" value="#getItemQuery#">
-					<cfinvokeargument name="forceDeleteVirus" value="false">
-					<cfinvokeargument name="user_id" value="#user_id#">
-
-					<cfinvokeargument name="file_type" value="image">
-
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
-				
-				<!--- 
-
-				<!--- DELETE IN DB  --->
-				<cfquery name="deleteAttachedFile" datasource="#client_dsn#">
-					UPDATE #client_abb#_#itemTypeTable#
-					SET	attached_image_name = <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">,
-					attached_image_id = <cfqueryparam cfsqltype="cf_sql_integer" null="yes">
-					WHERE id = <cfqueryparam value="#getItemQuery.id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-				
-					
-				<!---DELETE ATTACHED_IMAGE FILE--->
-				<cfif getItemQuery.attached_image_id NEQ "NULL" AND getItemQuery.attached_image_id NEQ "" AND getItemQuery.attached_image_id NEQ "-1">
-				
-					<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-						<cfinvokeargument name="file_id" value="#getItemQuery.attached_image_id#">
-						<cfinvokeargument name="area_id" value="#area_id#">
-					</cfinvoke>
-					
-					<cfif resultDeleteFile.result IS false><!---File delete failed--->
-						<cfset error_code = 605>
-	
-						<cfthrow errorcode="#error_code#">
-					
-					</cfif>
-					
-				<cfelse>
-				
-					<cfset error_code = 601>
-	
-					<cfthrow errorcode="#error_code#">
-					
-				</cfif>
-
-				<cfinclude template="includes/logRecord.cfm"> --->
-				
-				<cfset xmlResponseContent = '<#itemTypeName# id="#arguments.item_id#"/>'>
-				
-			<cfelse><!---Item does not exist--->
-			
-				<cfset error_code = 501>
-			
-				<cfthrow errorcode="#error_code#">
-					
-			</cfif>	
-			
-						
-		<cfreturn xmlResponseContent>
-				
-	</cffunction>
-	<!--- ---------------------------------------------------------------------------------- --->
-	--->
-	
 	
 	
 	<!--- ------------------------- GET SUB ITEMS ------------------------------------------ --->
@@ -3872,6 +3746,7 @@
 	<cffunction name="getAllItems" output="false" returntype="struct" access="public">
 		<cfargument name="limit" type="numeric" required="false" default="50">
 		<cfargument name="full_content" type="boolean" required="false" default="true">
+		<cfargument name="withArea" type="boolean" required="false">
 		
 		<cfset var method = "getAllItems">
 
@@ -3899,6 +3774,7 @@
 				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
+				<cfinvokeargument name="withArea" value="#arguments.withArea#">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

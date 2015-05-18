@@ -17,6 +17,9 @@
 <script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
 </cfoutput>
 
+<cfset itemTypeId = 10>
+<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <div class="div_head_subtitle"><span lang="es"><cfif page_type IS 1>Nuevo Archivo<cfelseif page_type IS 2>Modificar Archivo<cfelseif page_type IS 3>Publicar versión de archivo</cfif><cfif fileTypeId IS 2> de área</cfif></span></div>
@@ -73,8 +76,8 @@
 
 		<cfif APPLICATION.modulefilesWithTables IS true><!--- Typologies --->
 
-			<cfif isNumeric(file.typology_id)>
-				<cfset selected_typology_id = file.typology_id>
+			<cfif isNumeric(objectFile.typology_id)>
+				<cfset selected_typology_id = objectFile.typology_id>
 			<cfelseif page_type IS NOT 2><!---IS NOT modify file page--->
 				<cfset selected_typology_id = default_typology_id>
 			<cfelse>
@@ -84,8 +87,8 @@
 			<cfif isNumeric(selected_typology_id)>
 				<cfif page_type IS 1>
 					loadTypology(#selected_typology_id#, '');
-				<cfelseif isDefined("file.typology_row_id") AND isNumeric(file.typology_row_id)>
-					loadTypology(#selected_typology_id#, #file.typology_row_id#);
+				<cfelseif isDefined("objectFile.typology_row_id") AND isNumeric(objectFile.typology_row_id)>
+					loadTypology(#selected_typology_id#, #objectFile.typology_row_id#);
 				<cfelse>
 					loadTypology(#selected_typology_id#, '');
 				</cfif>
@@ -265,10 +268,9 @@
 
 <script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
 
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <div class="contenedor_fondo_blanco">
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
@@ -347,7 +349,7 @@
 		</cfif>		
 			
 		<div id="documentUsersContainer">
-			<cfif page_type IS NOT 3 AND ( page_type IS NOT 2 OR ( (isDefined("file.file_type_id") AND file.file_type_id IS 3) OR (isDefined("fileTypeId") AND fileTypeId IS 3) ) )>
+			<cfif page_type IS NOT 3 AND ( page_type IS NOT 2 OR ( (isDefined("objectFile.file_type_id") AND objectFile.file_type_id IS 3) OR (isDefined("fileTypeId") AND fileTypeId IS 3) ) )>
 				<div class="row">
 					<div class="col-sm-12">
 
@@ -355,8 +357,8 @@
 
 						<div class="row">
 							<div class="col-sm-5" style="padding-right:0;">
-								<input type="hidden" name="reviser_user" id="reviser_user" value="#file.reviser_user#" />
-								<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#file.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" /> 
+								<input type="hidden" name="reviser_user" id="reviser_user" value="#objectFile.reviser_user#" />
+								<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#objectFile.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" /> 
 							</div>
 							<div class="col-sm-7">
 								<button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
@@ -373,8 +375,8 @@
 						
 						<div class="row">
 							<div class="col-sm-5" style="padding-right:0;">
-								<input type="hidden" name="approver_user" id="approver_user" value="#file.approver_user#" />
-								<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#file.approver_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" />
+								<input type="hidden" name="approver_user" id="approver_user" value="#objectFile.approver_user#" />
+								<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#objectFile.approver_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" />
 							</div>
 							<div class="col-sm-7">
 								<button onclick="openApproverUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
@@ -404,7 +406,7 @@
 
 		<div class="row">
 			<div class="col-sm-12">
-				<label for="typology_id" class="control-label"><span lang="es">Tipología</span> *</label>
+				<label for="typology_id" class="control-label"><span lang="es">Tipología</span>: *</label>
 				<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val(),'');" class="form-control">
 					<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Básica</option>
 					<cfif areaTables.recordCount GT 0>
@@ -421,7 +423,7 @@
 	<cfif page_type IS 1>
 		<div class="row">
 			<div class="col-sm-12">
-				<label for="formFile" class="control-label"><span lang="es">Archivo</span> *</label>
+				<label for="formFile" class="control-label"><span lang="es">Archivo</span>: *</label>
 				<input type="file" name="Filedata" value="" id="formFile" required="required" />
 
 				<script type="text/javascript">
@@ -433,8 +435,8 @@
 	
 	<div class="row">
 		<div class="col-sm-12">
-			<label for="formFileName" class="control-label" lang="es"><span lang="es">Nombre</span> *</label>
-			<input type="text" name="name" value="#file.name#" id="formFileName" required="required" class="form-control"/>
+			<label for="formFileName" class="control-label" lang="es"><span lang="es">Nombre</span>: *</label>
+			<input type="text" name="name" value="#objectFile.name#" id="formFileName" required="required" class="form-control"/>
 
 			<script type="text/javascript">
 				addRailoRequiredTextInput("name", "Debe especificar un nombre para el archivo");
@@ -448,7 +450,7 @@
 
 			<div class="row">
 				<div class="col-sm-12">
-					<label lang="es" for="version_index">Número de versión</label>
+					<label for="version_index"><span lang="es">Número de versión</span>:</label>
 				</div>
 		  	</div>		
 		  	<div class="row">
@@ -463,8 +465,8 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-			<label for="description" class="control-label" lang="es">Descripción</label> 
-			<textarea name="description" id="description" class="form-control">#file.description#</textarea>
+			<label for="description" class="control-label"><span lang="es">Descripción</span>:</label> 
+			<textarea name="description" id="description" class="form-control">#objectFile.description#</textarea>
 		</div>
 	</div>
 
@@ -478,14 +480,14 @@
 			
 			<div class="row" id="publicationScopeContainer">
 				<div class="col-sm-12">
-					<label for="publication_scope_id" class="control-label" lang="es">Ámbito de publicación</label>
+					<label for="publication_scope_id" class="control-label"><span lang="es">Ámbito de publicación</span>:</label>
 					<select name="publication_scope_id" id="publication_scope_id" class="form-control">
 						<cfloop query="scopesQuery">
-							<option value="#scopesQuery.scope_id#" <cfif file.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
+							<option value="#scopesQuery.scope_id#" <cfif objectFile.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
 						</cfloop>
 					</select>
-					<small class="help-block" lang="es">Define dónde se podrá publicar el documento.
-						<cfif SESSION.client_abb EQ "hcs">
+					<small class="help-block" lang="es">Define las áreas del árbol donde se podrá asociar el documento.
+						<cfif SESSION.client_abb EQ "hcs"><!---OR SESSION.client_abb EQ "bioinformatics7" OR SESSION.client_abb EQ "era7bioinfo"--->
 							<br/><b>Importante:</b> los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.
 						</cfif>
 					</small>
@@ -496,29 +498,40 @@
 		
 	</cfif>
 
+	<cfif fileTypeId IS 1 OR fileTypeId IS 2>
+		
+		<div class="checkbox">
+		    <label>
+		    	<input type="checkbox" name="public" value="true" <cfif isDefined("objectFile.public") AND objectFile.public IS true>checked</cfif>> Habilitar URL pública para poder <b>compartir el archivo con cualquier usuario</b>
+		    </label>
+		    <small class="help-block">El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL</small>
+	  	</div>
+
+	</cfif>
+
 	<cfif ( len(area_type) GT 0 OR page_type IS 3 ) AND page_type IS NOT 2><!--- WEB or Publish file version--->
 
 		<div class="row">
 
-			<cfif isDefined("file.publication_hour")><!--- After send FORM --->
+			<cfif isDefined("objectFile.publication_hour")><!--- After send FORM --->
 
-				<cfset publication_hour = file.publication_hour>
-				<cfset publication_minute = file.publication_minute>
+				<cfset publication_hour = objectFile.publication_hour>
+				<cfset publication_minute = objectFile.publication_minute>
 
 			<cfelse>
 				
-				<cfset publication_hour = timeFormat(file.publication_date, "HH")>
-				<cfset publication_minute = timeFormat(file.publication_date, "mm")>
+				<cfset publication_hour = timeFormat(objectFile.publication_date, "HH")>
+				<cfset publication_minute = timeFormat(objectFile.publication_date, "mm")>
 
-				<cfif len(file.publication_date) GT 10>
-					<cfset file.publication_date = left(file.publication_date, findOneOf(" ", file.publication_date))>
+				<cfif len(objectFile.publication_date) GT 10>
+					<cfset objectFile.publication_date = left(objectFile.publication_date, findOneOf(" ", objectFile.publication_date))>
 				</cfif>
 
 			</cfif>
 
 			<div class="col-xs-6 col-md-3">
-				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
-				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#file.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
+				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span>:</label>
+				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectFile.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
 			</div>
 						
 			<div class="col-xs-6">
@@ -573,7 +586,7 @@
 					<div class="col-xs-12 col-sm-8">
 						<div class="checkbox">
 							<label>
-								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("file.publication_validated") AND file.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("objectFile.publication_validated") AND objectFile.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
 							</label>
 							<small class="help-block" lang="es">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
 						</div>

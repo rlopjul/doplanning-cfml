@@ -25,7 +25,7 @@ function openUrlHtml2(url,target){
 	
 	var parentPage = parent.location.href.split('/').pop();
 		
-	if(parentPage.search("main.cfm") != -1) { //Esto debe cambiarse si se cambia la página de main.cfm o acmin/
+	if(parentPage.search("main.cfm") != -1) { //Esto debe cambiarse si se cambia la página de main.cfm o admin/
 		openUrlLite(url,target);		
 	}
 	
