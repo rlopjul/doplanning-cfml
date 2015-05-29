@@ -1,8 +1,10 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_replace_query.cfm">
 
+<!--- 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
+</cfoutput> --->
+
 
 <cfset itemTypeId = 10>
 <cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">

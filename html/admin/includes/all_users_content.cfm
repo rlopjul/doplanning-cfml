@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
+<!--- <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script> --->
 <script src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
@@ -9,9 +9,9 @@
 <div class="div_head_menu">
 	<div class="navbar navbar-default navbar-static-top">
 		<div class="container-fluid">
-			<span class="navbar-brand">Usuarios de la organización</span>
+			<span class="navbar-brand" lang="es">Usuarios de la organización</span>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
-				<a class="btn btn-primary btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="font-size:14px"></i> Nuevo usuario</a><!---color:##5BB75B;--->
+				<a class="btn btn-primary btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="font-size:14px"></i> <span lang="es">Nuevo usuario</span></a><!---color:##5BB75B;--->
 				
 
 				<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/all_administrators.cfm');"><i class="icon-group icon-white"></i> <span lang="es">Administradores</span></a>
@@ -21,20 +21,11 @@
 					<!---</div>--->
 				<!---</cfif>--->
 
-				<a class="btn btn-default btn-sm navbar-btn" href="#APPLICATION.htmlComponentsPath#/User.cfc?method=exportUsersDownload" onclick="return downloadFileLinked(this,event)" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> Exportar usuarios</a>
+				<a class="btn btn-default btn-sm navbar-btn" href="#APPLICATION.htmlComponentsPath#/User.cfc?method=exportUsersDownload" onclick="return downloadFileLinked(this,event)" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> <span lang="es">Exportar usuarios</span></a>
 			</cfif>
 		</div>
 	</div>
 </div>
-
-<!---<cfif SESSION.client_administrator IS SESSION.user_id>
-<div class="btn-toolbar" style="margin-left:10px;margin-bottom:10px;">
-	<div class="btn-group">
-		
-	</div>
-</div>
-</cfif>--->
-
 
 <!---
 <div class="div_head_subtitle_area">
@@ -85,6 +76,7 @@
 			</script>
 		
 			<span lang="es">No se han encontrado usuarios.</span>
+			
 		</cfif>
 		
 	</div>	
@@ -95,7 +87,7 @@
 		openUrlHtml2('empty.cfm','userAdminIframe');
 	</script>
 	
-	<p class="bg-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en "Buscar" para listar usuarios de la organización.</span></p><!---text-info--->
+	<p class="bg-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en Buscar para listar usuarios de la organización.</span></p><!---text-info--->
 
 </cfif>
 

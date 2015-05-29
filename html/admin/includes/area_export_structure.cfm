@@ -12,7 +12,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4>Exportar estructura de áreas</h4>
+		    <h4 lang="es">Exportar estructura de áreas</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -22,7 +22,7 @@
 				<cfif isDefined("objectParentArea")>
 				<div class="row">
 					<div class="col-sm-12">
-						<span>Área a exportar:</span> <strong>#objectParentArea.name#</strong>
+						<span lang="es">Área a exportar:</span> <strong>#objectParentArea.name#</strong>
 					</div>
 				</div>
 				</cfif>
@@ -30,7 +30,7 @@
 				<div class="row">
 					<div class="col-sm-12">
 
-						<p class="help-block" style="font-size:12px;">
+						<p class="help-block" style="font-size:12px;" lang="es">
 							Se generará un archivo en formato xml que se podrá usar para realizar importaciones de estructuras de áreas en la aplicación.<br/>
 							Este archivo contendrá la estructura de todas las áreas desde el área seleccionada hacia abajo.
 						</p>
@@ -43,8 +43,8 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-primary" onclick="submitAreaExportModal(event)">Exportar</button>
+		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span lang="es">Cancelar</span></button>
+		    <button class="btn btn-primary" onclick="submitAreaExportModal(event)"><span lang="es">Exportar</span></button>
 		</div>
 
 		<script>

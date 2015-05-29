@@ -209,7 +209,7 @@
 						</div>
 						<div class="col-xs-6 col-sm-9" style="padding-top:5px;">
 
-							<small>Fecha formato DD-MM-AAAA</small>
+							<small lang="es">Fecha formato DD-MM-AAAA</small>
 
 						</div>
 					</div>
@@ -462,7 +462,7 @@
 
 						</select>
 						<cfif ( fields.field_type_id IS 10 OR fields.field_type_id IS 16) AND arguments.search_inputs IS false>
-							<small class="help-block">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
+							<small class="help-block" lang="es">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
 						</cfif>
 
 						<cfif fields.required IS true AND arguments.search_inputs IS false>
@@ -1025,7 +1025,8 @@
 												
 												
 											<cfelseif fields.field_type_id IS 6><!--- DATE --->
-												<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>
+												<!---<cfset field_value = DateFormat(dateConvert("local2Utc",field_value), APPLICATION.dateFormat)>--->
+												<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
 											<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
 												<cfif field_value IS true>
 													<cfset field_value = "Sí">

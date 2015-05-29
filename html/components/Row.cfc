@@ -587,17 +587,17 @@
 				<cfif fields.field_id IS "creation_date"><!--- CREATION DATE --->
 
 					<cfif isDefined("arguments.view_id")>
-						<div class="div_message_page_label"><span lang="es">Fecha de creación:</span> <span class="text_message_page">#DateFormat(row.creation_date, APPLICATION.dateFormat)# #TimeFormat(row.creation_date, "HH:mm")#</span></div>
+						<div class="div_message_page_label"><span lang="es">Fecha de creación</span>: <span class="text_message_page">#DateFormat(row.creation_date, APPLICATION.dateFormat)# #TimeFormat(row.creation_date, "HH:mm")#</span></div>
 					</cfif>
 
 				<cfelseif fields.field_id IS "last_update_date"><!--- LAST UPDATE DATE --->
 					
-					<div class="div_message_page_label"><span lang="es">Fecha de última modificación:</span> <span class="text_message_page">#DateFormat(row.last_update_date, APPLICATION.dateFormat)# #TimeFormat(row.last_update_date, "HH:mm")#</span></div>
+					<div class="div_message_page_label"><span lang="es">Fecha de última modificación</span>: <span class="text_message_page">#DateFormat(row.last_update_date, APPLICATION.dateFormat)# #TimeFormat(row.last_update_date, "HH:mm")#</span></div>
 
 				<cfelseif fields.field_id IS "insert_user"><!--- INSERT USER --->
 
 					<cfif isDefined("arguments.view_id")>
-						<div class="div_message_page_label">Creado por: 
+						<div class="div_message_page_label"><span lang="es">Creado por</span>: 
 					
 							<a href="area_user.cfm?area=#arguments.area_id#&user=#row.insert_user_id#"><cfif len(row.insert_user_image_type) GT 0>
 								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.insert_user_id#&type=#row.insert_user_image_type#&small=" alt="#row.insert_user_full_name#" class="item_img" style="margin-right:2px;"/>									
@@ -614,7 +614,7 @@
 
 					<cfif isNumeric(row.last_update_user_id)>
 
-						<div class="div_message_page_label">Última modificación por: 
+						<div class="div_message_page_label"><span lang="es">Última modificación por</span>: 
 							
 							<a href="area_user.cfm?area=#arguments.area_id#&user=#row.last_update_user_id#"><cfif len(row.update_user_image_type) GT 0>
 								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.last_update_user_id#&type=#row.update_user_image_type#&small=" alt="#row.update_user_full_name#" class="item_img" style="margin-right:2px;"/>									
@@ -713,7 +713,7 @@
 										<a href="user.cfm?user=#userQuery.user_id#">#field_value_user#</a>
 
 									<cfelse>
-										<span><i>Usuario no encontrado</i></span>
+										<i lang="es">Usuario no encontrado</i>
 									</cfif>
 
 								</cfif>
@@ -743,12 +743,12 @@
 											<cfif len(fileQuery.name) GT 0>
 												<cfset field_value_item = fileQuery.name>
 											<cfelse>
-												<cfset field_value_item = "<i>Archivo sin título</i>">
+												<cfset field_value_item = '<i lang="es">Archivo sin título</i>'>
 											</cfif>
 
 											<a href="file.cfm?file=#fileQuery.file_id#">#field_value_item#</a>
 										<cfelse>
-											<i>ARCHIVO NO DISPONIBLE</i>
+											<i lang="es">ARCHIVO NO DISPONIBLE</i>
 										</cfif>
 										
 									<cfelse><!--- ITEM --->
@@ -767,12 +767,12 @@
 											<cfif len(itemQuery.title) GT 0>
 												<cfset field_value_item = itemQuery.title>
 											<cfelse>
-												<cfset field_value_item = "<i>Elemento sin título</i>">
+												<cfset field_value_item = '<i lang="es">Elemento sin título</i>'>
 											</cfif>
 
 											<a href="#itemTypesStruct[fields.item_type_id].name#.cfm?#itemTypesStruct[fields.item_type_id].name#=#itemQuery.item_id#">#field_value_item#</a>
 										<cfelse>
-											<i>ELEMENTO NO DISPONIBLE</i>
+											<i lang="es">ELEMENTO NO DISPONIBLE</i>
 										</cfif>
 
 									</cfif>
@@ -820,9 +820,9 @@
 							<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
 								
 								<cfif field_value IS true>
-									<cfset field_value = "Sí">
+									<cfset field_value = '<span lang="es">Sí</span>'>
 								<cfelseif field_Value IS false>
-									<cfset field_value = "No">
+									<cfset field_value = '<span lang="es">No</span>'>
 								</cfif>
 
 							</cfif>

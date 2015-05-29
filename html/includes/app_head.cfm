@@ -28,6 +28,10 @@
 </ul>
 --->
 
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+  <cfinvokeargument name="user_id" value="#SESSION.user_id#">
+</cfinvoke>
+
 <cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 </cfinvoke>
 
@@ -46,33 +50,33 @@
             </a>
         </li>
         <li>
-            <a href="last_items.cfm"><i class="icon-home"></i> <span lang="es">Lo último</span></a>
+            <a href="last_items.cfm?abb=#SESSION.client_abb#"><i class="icon-home"></i> <span lang="es">Lo último</span></a>
         </li>
         <li>
-            <a href="tree.cfm"><i class="icon-sitemap"></i> <span lang="es">Árbol</span></a>
+            <a href="tree.cfm?abb=#SESSION.client_abb#"><i class="icon-sitemap"></i> <span lang="es">Árbol</span></a>
         </li>
         <li class="dropdown">
           <a href="##" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-search"></i> <span lang="es">Búsqueda</span> <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu" style="padding-left:15px;">
             <!---<li class="dropdown-header">Dropdown heading</li>--->
 
+            <li><a href="areas_search.cfm?abb=#SESSION.client_abb#" lang="es">Áreas</a></li>
+
       			<cfloop array="#itemTypesArray#" index="curItemTypeId">
 
       				<cfif curItemTypeId NEQ 13 AND curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.moduleForms IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
 
                         <!---<cfif curItemTypeId NEQ 2>--->
-                            <li><a href="#itemTypesStruct[curItemTypeId].namePlural#_search.cfm" lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</a></li>
+                            <li><a href="#itemTypesStruct[curItemTypeId].namePlural#_search.cfm?abb=#SESSION.client_abb#" lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</a></li>
                         <!---<cfelse>
                             <li><a href="#itemTypesStruct[curItemTypeId].namePlural#_search.cfm" lang="es">Elementos de contenido</a></li>
                         </cfif>--->
                  				
-                 		</cfif>
+              </cfif>
 
             </cfloop>
 
-             <li><a href="users_search.cfm" lang="es">Usuarios</a></li>
-
-            <li><a href="search_areas.cfm" lang="es">Áreas</a></li>
+            <li><a href="users_search.cfm?abb=#SESSION.client_abb#" lang="es">Usuarios</a></li>
 
           </ul>
         </li>
@@ -85,13 +89,13 @@
           </ul>
         </li>
         <li>
-            <a href="bin.cfm"><i class="icon-trash"></i> <span lang="es">Papelera</span></a>
+            <a href="bin.cfm?abb=#SESSION.client_abb#"><i class="icon-trash"></i> <span lang="es">Papelera</span></a>
         </li>
         <li>
-            <a href="admin/main.cfm"><i class="icon-wrench"></i> <span lang="es">Administración</span></a>
+            <a href="admin/main.cfm?abb=#SESSION.client_abb#"><i class="icon-wrench"></i> <span lang="es">Administración</span></a>
         </li>
         <li>
-            <a href="logout.cfm"><i class="icon-signout"></i> <span lang="es">Cerrar sesión</span><br><!---<i>#getAuthUser()#</i>---></a>
+            <a href="logout.cfm?abb=#SESSION.client_abb#"><i class="icon-signout"></i> <span lang="es">Cerrar sesión</span><br><!---<i>#getAuthUser()#</i>---></a>
         </li>
     </ul>
 </nav>

@@ -1,6 +1,6 @@
-<cfoutput>
+<!---<cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_content_en.js?v=1" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
+</cfoutput>--->
 
 <cfoutput>
 <div class="div_head_title">

@@ -58,7 +58,7 @@
 			else
 				$("#pageAlertContainer").attr("class", "alert alert-danger");
 			
-			$("#pageAlertContainer button").after('<span>'+msg+'</span>');
+			$("#pageAlertContainer button").after('<span>'+window.lang.translate(msg)+'</span>');
 
 			$("#pageAlertContainer").fadeIn('slow');
 

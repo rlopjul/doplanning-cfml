@@ -14,21 +14,21 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4>Eliminar área</h3>
+		    <h4 lang="es">Eliminar área</h3>
 		</div>
 
 	 	<div class="modal-body">
 	  		
-			¿Seguro que deseas eliminar definitivamente esta área?:<br/>
+			<span lang="es">¿Seguro que deseas eliminar definitivamente esta área?</span>:<br/>
 			<div style="padding-left:50px; padding-top:15px; padding-bottom:15px;">
 
-				<div style="margin-top:10px;">Area:
+				<div style="margin-top:10px;"><span lang="es">Área</span>:
 					<strong>#objectArea.name#</strong><br/>
-					<span>Ruta: #area_path#</span>
+					<span lang="es">Ruta</span><span>: #area_path#</span>
 				</div>
 			</div>
 
-			<div>Ten en cuenta que <b>se eliminarán DEFINITIVAMENTE todos los elementos del área</b>: mensajes, archivos, tareas, eventos...</div>
+			<div><span lang="es">Ten en cuenta que <b>se eliminarán DEFINITIVAMENTE todos los elementos del área</b>: mensajes, archivos, tareas, eventos...</span></div>
 
 			<form id="deleteAreaForm" method="post">
 				<input type="hidden" name="area_id" value="#objectArea.id#"/>
@@ -37,8 +37,8 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-danger" id="areaDeleteSubmit" data-loading-text="Eliminando..." onclick="submitAssociateModal(event)">Eliminar área</button>
+		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span lang="es">Cancelar</span></button>
+		    <button class="btn btn-danger" id="areaDeleteSubmit" data-loading-text="Eliminando..." onclick="submitAssociateModal(event)"><span lang="es">Eliminar área</span></button>
 		</div>
 
 		<script>

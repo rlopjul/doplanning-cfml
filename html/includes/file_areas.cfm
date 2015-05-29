@@ -136,8 +136,8 @@
 			<thead>
 				<tr>
 					<!---<th style="width:25px;">##</th>--->
-					<th>Área</th>
-					<th>Fecha de asociación</th>
+					<th><span lang="es">Área</span></th>
+					<th><span lang="es">Fecha de asociación</span></th>
 				</tr>
 			</thead>
 

@@ -3,7 +3,7 @@
 
 	<div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	    <h4>Seleccionar usuario</h4>
+	    <h4 lang="es">Seleccionar usuario</h4>
 	</div>
 
  	<div class="modal-body">

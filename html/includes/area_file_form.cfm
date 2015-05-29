@@ -7,7 +7,9 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form_query.cfm">
 
 <cfoutput>
+<!--- 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
+ --->
 
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
@@ -435,7 +437,7 @@
 	
 	<div class="row">
 		<div class="col-sm-12">
-			<label for="formFileName" class="control-label" lang="es"><span lang="es">Nombre</span>: *</label>
+			<label for="formFileName" class="control-label"><span lang="es">Nombre</span>: *</label>
 			<input type="text" name="name" value="#objectFile.name#" id="formFileName" required="required" class="form-control"/>
 
 			<script type="text/javascript">
@@ -486,9 +488,9 @@
 							<option value="#scopesQuery.scope_id#" <cfif objectFile.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
 						</cfloop>
 					</select>
-					<small class="help-block" lang="es">Define las áreas del árbol donde se podrá asociar el documento.
+					<small class="help-block"><span lang="es">Define las áreas del árbol donde se podrá asociar el documento.</span>
 						<cfif SESSION.client_abb EQ "hcs"><!---OR SESSION.client_abb EQ "bioinformatics7" OR SESSION.client_abb EQ "era7bioinfo"--->
-							<br/><b>Importante:</b> los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.
+							<br/><b lang="es">Importante</b>: <span lang="es">los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.</span>
 						</cfif>
 					</small>
 				</div>
@@ -502,9 +504,9 @@
 		
 		<div class="checkbox">
 		    <label>
-		    	<input type="checkbox" name="public" value="true" <cfif isDefined("objectFile.public") AND objectFile.public IS true>checked</cfif>> Habilitar URL pública para poder <b>compartir el archivo con cualquier usuario</b>
+		    	<input type="checkbox" name="public" value="true" <cfif isDefined("objectFile.public") AND objectFile.public IS true>checked</cfif>> <span lang="es">Habilitar URL pública para poder</span> <b lang="es">compartir el archivo con cualquier usuario</b>
 		    </label>
-		    <small class="help-block">El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL</small>
+		    <small class="help-block" lang="es">El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL</small>
 	  	</div>
 
 	</cfif>

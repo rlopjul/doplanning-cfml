@@ -199,7 +199,9 @@
 		<cfargument name="end_date" type="string" required="no">
 
 		<cfargument name="from_start_date" type="string" required="no">
-		<cfargument name="to_end_date" type="string" required="no">		
+		<cfargument name="to_end_date" type="string" required="no">
+
+		<cfargument name="order_by" type="string" required="false">
 		
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">	
@@ -306,10 +308,10 @@
 					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5>
 						INNER JOIN #client_abb#_iframes_display_types AS iframes_display_types ON items.iframe_display_type_id = iframes_display_types.iframe_display_type_id
 					</cfif>
-					<cfif isDefined("arguments.area_id")>
-					LEFT JOIN #client_abb#_items_position AS items_position
-					ON items.id = items_position.item_id AND items_position.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
-					AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					<cfif isDefined("arguments.area_id") AND arguments.with_position IS true>
+						LEFT JOIN #client_abb#_items_position AS items_position
+						ON items.id = items_position.item_id AND items_position.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+						<!---AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">--->
 					</cfif>
 					WHERE
 					<cfif arguments.all_areas IS false>
@@ -385,19 +387,28 @@
 					<cfelseif arguments.itemTypeId IS 4 AND NOT isDefined("arguments.areas_ids")><!---News--->
 					ORDER BY items.position DESC
 					<cfelse>--->
-					<cfif arguments.itemTypeId IS NOT 6>
-						<cfif isDefined("arguments.area_id") AND arguments.with_position IS true>
-							ORDER BY items_position.position DESC, items.creation_date DESC
-						<cfelse>
-							ORDER BY items.creation_date DESC		
+
+					<cfif NOT isDefined("arguments.order_by")>
+						
+						<cfif arguments.itemTypeId IS NOT 6>
+							<cfif isDefined("arguments.area_id") AND arguments.with_position IS true>
+								ORDER BY items_position.position DESC, items.creation_date DESC
+							<cfelse>
+								ORDER BY items.creation_date DESC		
+							</cfif>	
+						<cfelse><!--- Tasks --->
+							<cfif isDefined("arguments.area_id")>
+								ORDER BY items.end_date DESC
+							<cfelse>
+								ORDER BY items.end_date ASC
+							</cfif>		
 						</cfif>	
-					<cfelse><!--- Tasks --->
-						<cfif isDefined("arguments.area_id")>
-							ORDER BY items.end_date DESC
-						<cfelse>
-							ORDER BY items.end_date ASC
-						</cfif>		
-					</cfif>						
+
+					<cfelse>
+
+						ORDER BY #arguments.order_by#
+
+					</cfif>								
 					
 					<cfif isDefined("arguments.limit")>
 					LIMIT <cfif isDefined("arguments.offset")>#arguments.offset#, </cfif>#arguments.limit#

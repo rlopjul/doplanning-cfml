@@ -6,7 +6,7 @@
 
 <cfoutput>
 
-<link href="../html/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<link href="#APPLICATION.htmlPath#/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -24,6 +24,9 @@
 <!--[if lt IE 9]>
 	<script src="#APPLICATION.htmlPath#/scripts/html5shiv/html5shiv.js"></script>
     <script src="#APPLICATION.htmlPath#/scripts/respond/respond.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
+    <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>	
 <![endif]-->
 <!--[if lt IE 8]>
   	<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-ie7/bootstrap-ie7.css" rel="stylesheet" rel="stylesheet">
@@ -72,10 +75,11 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery.html5.history.min.js" charset="utf-8"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
-<script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
-<script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
+<!---<script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
+<script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>--->
+<script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.functionsJSPath#"></script>
-</cfoutput>
+
 
 <script>
 	//Language
@@ -90,7 +94,9 @@
 	--->
 	
 	window.lang = new Lang('es');
+	<!---window.lang.dynamic('en', '#APPLICATION.htmlPath#/language/dp_en.json');--->
 </script>
+</cfoutput>
 <script>
 	function openUrlLite(url,target){
 		window.location.href = url;

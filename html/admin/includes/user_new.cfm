@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>
+<!---<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>--->
 <script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js"></script>
 </cfoutput>
 
@@ -44,7 +44,7 @@
 
 	<div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	    <h4>Nuevo usuario</h4>
+	    <h4 lang="es">Nuevo usuario</h4>
 	</div>
 
 	<div class="modal-body">
@@ -55,7 +55,7 @@
 
 			<div class="row">
 				<div class="col-sm-12">
-					<small class="help-block">Si el usuario se marca como activo, se le enviará una <b>notificación por email</b> con los datos de acceso a la aplicación, incluyendo la contraseña.</small>
+					<small class="help-block" lang="es">Si el usuario se marca como activo, se le enviará una <b>notificación por email</b> con los datos de acceso a la aplicación, incluyendo la contraseña.</small>
 				</div>
 			</div>
 		</div>
@@ -63,8 +63,8 @@
 	</div>
 
 	<div class="modal-footer">
-	    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-	    <button class="btn btn-primary" id="userSubmitButton" data-loading-text="Guardando..." onclick="$('#updateUserData').submit()">Guardar</button>
+	    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span lang="es">Cancelar</span></button>
+	    <button class="btn btn-primary" id="userSubmitButton" data-loading-text="Guardando..." onclick="$('#updateUserData').submit()"><span lang="es">Guardar</span></button>
 	</div>
 
 

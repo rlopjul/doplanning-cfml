@@ -1,9 +1,19 @@
 <cfoutput>
+<!--- 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
+ --->
 <cfif itemTypeId IS 20>
 	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.2"></script>
 </cfif>
 </cfoutput>
+
+<!--- https://github.com/twitter/twemoji --->
+<!---<script src="//cdnjs.cloudflare.com/ajax/libs/twemoji/1.3.2/twemoji.min.js"></script>--->
+
+<!--- http://emojione.com/ --->
+<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />
+
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
@@ -56,6 +66,15 @@
 		<cfoutput>
 		History.replaceState(History.getState().data, History.options.initialTitle, "#APPLICATION.htmlPath#/?abb=#SESSION.client_abb#&area=#area_id#&#itemTypeName#=#item_id#");
 		</cfoutput>
+
+		<!---twemoji.parse(document.body);--->
+
+		<!---var emojiInput = document.getElementsByClassName("div_message_page_description")[0].value;
+    	var output = emojione.shortnameToImage(input);
+   		 document.getElementById('outputText').innerHTML = output;--->
+
+   		 $(".div_message_page_description").html(emojione.shortnameToImage($(".div_message_page_description").html()));
+
 	}); 
 
 	function confirmLockDocument(value) {
@@ -81,18 +100,6 @@
 </cfif>--->
 
 <cfoutput>
-
-<!---
-<div class="div_message_page_title"><img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" alt="#itemTypeNameEs#" /> #objectItem.title#
-	
-	<a href="area_items.cfm?area=#area_id####itemTypeName##objectItem.id#" class="btn btn-sm btn-info" style="float:right"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small_white.png" alt="Área" lang="es"/> Ver en área</a>
-
-</div>
---->
-
-<!---<div class="div_separator"><!-- --></div>--->
-
-<!---<hr style="color:##019ED3;margin-top:3px;"/>--->
 
 <div class="div_elements_menu"><!---div_elements_menu--->
 <div class="btn-toolbar" role="toolbar">

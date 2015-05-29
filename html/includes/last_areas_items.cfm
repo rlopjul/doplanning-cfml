@@ -84,10 +84,18 @@
 										<cfelse>
 											<a onclick="setItemsFilter('*')">		
 										</cfif>
-												<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" title="Todos los elementos de área" alt="Todos los elementos de áreas" lang="es" style="height:35px;" />
+												<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" title="Todos los elementos de área" alt="Todos los elementos de área" lang="es" style="height:35px;" />
 												<span lang="es">Elementos de áreas</span>
 											</a>
 
+									</li>
+
+									<li>
+										<a href="#CGI.SCRIPT_NAME#?filter=area&limit=#limit_to#" title="Áreas" lang="es">
+											<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Áreas" lang="es" style="height:35px"/>
+											<span lang="es">Áreas</span>
+										</a>
+									 
 									</li>
 
 
@@ -120,7 +128,7 @@
 
 										</cfif>
 
-										<cfif curItemTypeId EQ 6><!--- Cierra la primera columna --->
+										<cfif curItemTypeId EQ 5><!--- Cierra la primera columna --->
 											
 											</ul><!--- END list-unstyled col-md-6 --->
 											<ul class="list-unstyled col-md-6">   
@@ -128,15 +136,7 @@
 										</cfif>
 
 									</cfloop>
-
-									<li>
-										<a href="#CGI.SCRIPT_NAME#?filter=area&limit=#limit_to#" title="Áreas" lang="es">
-											<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Areas" lang="es" style="height:35px"/>
-											<span lang="es">Áreas</span>
-										</a>
-									 
-									</li>
-									
+								
 									<li> 
 									
 										<a href="#CGI.SCRIPT_NAME#?filter=user&limit=#limit_to#" title="Usuarios" lang="es">
@@ -187,13 +187,13 @@
 
 						<cfif isDefined("URL.filter") AND filter EQ "area">
 							<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" title="Todos los elementos del área" alt="Todos los elementos del área" lang="es" id="curFilterImg" style="height:26px;" />
-							<span lang="es" id="curFilterLabel">Areas con actividad reciente</span>
+							<span lang="es" id="curFilterLabel">Áreas con actividad reciente</span>
 						<cfelseif isDefined("URL.filter") AND filter EQ "user">
 							<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/users.png" title="Todos los elementos del área" alt="Todos los elementos del área" lang="es" id="curFilterImg" style="height:26px;" />
 							<span lang="es" id="curFilterLabel">Usuarios con actividad reciente</span>
 						<cfelse>
 							<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" title="Todos los elementos del área" alt="Todos los elementos del área" lang="es" id="curFilterImg" style="height:26px;" />
-							<span lang="es" id="curFilterLabel">Elementos de área</span>
+							<span lang="es" id="curFilterLabel">Elementos de áreas</span>
 						</cfif>
 
 					</span>
@@ -276,7 +276,7 @@
 
 
 <div class="row">
-	<div class="col-sm-12" id="lastItemsContainer" >
+	<div class="col-sm-12" id="lastItemsContainer">
 
 
 <cfif isDefined("URL.filter") AND URL.filter EQ "area">
@@ -322,9 +322,9 @@
 
 	<cfif isDefined("URL.filter") AND URL.filter EQ "area">
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+		<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
 			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-		</cfinvoke>
+		</cfinvoke>--->
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="outputAreasFullList">
 			<cfinvokeargument name="areasQuery" value="#itemsQuery#">

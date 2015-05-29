@@ -47,8 +47,11 @@ function showTree(selectable) {
 			"not-allowed" : {},
 			"not-allowed-web" : {}	
 		},*/
-
-		"plugins" : [ "search" ] /*"types", */
+		"state" : { 
+			"key" : "main_dp",
+			"events" : "open_node.jstree close_node.jstree"
+		},
+		"plugins" : [ "search", "state" ] /*"types", */
   	});
 	
 }

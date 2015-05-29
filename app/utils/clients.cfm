@@ -1,5 +1,5 @@
 <cfif (SESSION.client_abb EQ "era7" AND (SESSION.user_id EQ "3" OR SESSION.user_id EQ "111" 
-OR SESSION.user_id EQ "93" OR SESSION.user_id EQ "152" OR SESSION.user_id EQ "1")) OR (SESSION.client_abb EQ "web4bio7" AND (SESSION.user_id EQ "4" OR SESSION.user_id EQ "9")) OR (SESSION.client_abb EQ "software7" AND SESSION.user_id EQ "2") OR (SESSION.client_abb EQ "era7it" AND SESSION.user_id EQ "3") OR (APPLICATION.identifier EQ "vpnet" AND SESSION.user_id IS 1) OR (SESSION.client_abb EQ "bioinformatics7" AND SESSION.user_id IS 10)>
+OR SESSION.user_id EQ "93" OR SESSION.user_id EQ "152" OR SESSION.user_id EQ "1")) OR (SESSION.client_abb EQ "web4bio7" AND (SESSION.user_id EQ "4" OR SESSION.user_id EQ "9" OR SESSION.user_id EQ 7 OR SESSION.user_id EQ 11 OR SESSION.user_id EQ 13)) OR (SESSION.client_abb EQ "software7" AND SESSION.user_id EQ "2") OR (SESSION.client_abb EQ "era7it" AND SESSION.user_id EQ "3") OR (APPLICATION.identifier EQ "vpnet" AND SESSION.user_id IS 1) OR (SESSION.client_abb EQ "bioinformatics7" AND SESSION.user_id IS 10)>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_menu_en.js?v=1" charset="utf-8"></script>
+<!---<script src="#APPLICATION.htmlPath#/language/area_menu_en.js?v=1" charset="utf-8"></script>--->
 <script src="#APPLICATION.path#/jquery/jquery-shorten/jquery.shorten.min.js"></script>
 
 <!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">

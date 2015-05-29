@@ -30,9 +30,11 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
 
+<!--- 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
+ --->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 

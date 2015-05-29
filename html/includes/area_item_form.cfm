@@ -5,7 +5,9 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form_query.cfm">
 
 <cfoutput>
+<!--- 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
+ --->
 
 <cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 20>
 	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
@@ -137,7 +139,7 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 			<cfif lockResponse.result IS true>
 				<cfif objectItem.area_editable IS true>
 					<div class="alert alert-info">
-						<span>Se ha bloqueado el archivo para poder editarlo.</span>
+						<span lang="es">Se ha bloqueado el archivo para poder editarlo.</span>
 					</div>
 				</cfif>
 				
@@ -191,9 +193,9 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 
 	<div>
 		<hr>
-		<h3>Respondiendo a:</h3>
+		<h3 lang="es">Respondiendo a:</h3>
 		<cfoutput>
-			<h5>#getItemObject.title#</h5>
+			<h5 lang="es">#getItemObject.title#</h5>
 		</cfoutput>
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItem">
 			<cfinvokeargument name="objectItem" value="#getItemObject#">

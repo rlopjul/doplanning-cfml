@@ -122,6 +122,8 @@
 	</cffunction>
 	
 	
+	<!--- getAreas --->
+
 	<cffunction name="getUsers" returntype="struct" output="false" access="public">
 		<cfargument name="search_text" type="string" required="false" default="">
 		<cfargument name="order_by" type="string" required="false" default="family_name">
@@ -132,31 +134,6 @@
 				
 		<cftry>
 			
-			<!---<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<user id="" mobile_phone_ccode="" mobile_phone="" email="" image_type="">
-						<family_name><![CDATA[]]></family_name>
-						<name><![CDATA[]]></name>		
-					</user>
-					<cfif len(arguments.order_by) GT 0>
-					<order parameter="#arguments.order_by#" order_type="#arguments.order_type#"/>
-					</cfif>
-					<cfif len(arguments.search_text) GT 0>
-					<search_text><![CDATA[#arguments.search_text#]]></search_text>
-					</cfif>
-				</cfoutput>
-			</cfsavecontent>
-			
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>
-			
-			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>--->		
-
 			<cfxml variable="xmlUser">
 				<cfoutput>
 					<user id="" mobile_phone_ccode="" mobile_phone="" email="" image_type="">
@@ -1041,7 +1018,7 @@
 						<div class="div_user_page_label"><span lang="es">Perfil de cabecera</span> <span class="div_user_page_text">#objectUser.perfil_cabecera#</span></div>
 					</cfif>
 
-					<div class="div_user_page_label"><span lang="es">Usuario interno</span> <span class="div_user_page_text" lang="es"><cfif objectUser.internal_user IS true><b>Sí</b><cfelse>No</cfif></span></div>	
+					<div class="div_user_page_label"><span lang="es">Usuario interno</span> <span class="div_user_page_text" lang="es"><cfif objectUser.internal_user IS true><b lang="es">Sí</b><cfelse>No</cfif></span></div>	
 
 					<cfif SESSION.client_administrator EQ SESSION.user_id>
 						<div class="div_user_page_label"><span>Fecha de creación:</span> <span class="div_user_page_text">#objectUser.creation_date#</span></div>
@@ -1381,11 +1358,17 @@
 					<cfloop index="objectUser" array="#users#">	
 						<tr>
 							<td style="text-align:center">
-								<cfif len(objectUser.image_type) GT 0>
+								<!---<cfif len(objectUser.image_type) GT 0>
 									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>									
 								<cfelse>							
 									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
-								</cfif>
+								</cfif>--->
+								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
+									<cfinvokeargument name="user_id" value="#objectUser.id#">
+									<cfinvokeargument name="user_full_name" value="#objectUser.user_full_name#">
+									<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
+									<cfinvokeargument name="width_px" value="50">
+								</cfinvoke>
 							</td>
 							<td><input type="hidden" name="user_id" value="#objectUser.id#"/>
 							<input type="hidden" name="user_full_name" value="#objectUser.family_name# #objectUser.name#"/>
@@ -1472,7 +1455,11 @@
 							theme : "bootstrap",
 							headerTemplate : '{content} {icon}',
 							<cfif arrayLen(arguments.users) LT 500><!---El orden del tablesorter en listados con muchos registros es muy lento--->
-								sortList: [[1,0]] ,
+								<cfif arguments.select_enabled IS true>
+									sortList: [[2,0]] ,
+								<cfelse>
+									sortList: [[1,0]] ,
+								</cfif>
 							</cfif>
 							headers: { 
 								<cfif arguments.select_enabled IS true>
@@ -1534,8 +1521,9 @@
 						
 					}); 
 				</script>
-				
+
 				<cfoutput>
+			
 				<table id="#usersTableId#" class="users-table table-hover">
 					<thead>
 						<tr>
@@ -1755,7 +1743,7 @@
 							<th lang="es">Nombre</th>
 							<th lang="es">Apellidos</th>
 							<th lang="es">Email</th>
-							<th style="width:38px;">Activo</th>
+							<th style="width:38px;"><span lang="es">Activo</span></th>
 							<th lang="es">Área</th>
 							<th class="filter-false"></th>
 							
@@ -1938,6 +1926,8 @@
 		<cfargument name="width_px" type="numeric" required="false">
 		<cfargument name="class" type="string" required="false">
 
+		<cfset cropImage = false>
+
 		<cfoutput>
 
 			<cfif NOT isDefined("arguments.width_px") OR arguments.width_px GT 60>
@@ -1953,10 +1943,16 @@
 			<cfif len(arguments.user_image_type) GT 0>
 
 				<cfif NOT isDefined("arguments.class")>
+					<cfset cropImage = true>
 					<cfset arguments.class = "user_img">
+					<div style="height:#arguments.width_px#px;overflow:hidden;"><!---crop the image--->
 				</cfif>
 
-				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#arguments.user_id#&type=#arguments.user_image_type#&#image_size#=" alt="#arguments.user_full_name#" class="#arguments.class#" <cfif isDefined("arguments.width_px")>style="width:#arguments.width_px#px"</cfif> />								
+						<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#arguments.user_id#&type=#arguments.user_image_type#&#image_size#=" alt="#arguments.user_full_name#" class="#arguments.class#" <cfif isDefined("arguments.width_px")>style="width:#arguments.width_px#px"</cfif> />		
+
+				<cfif cropImage IS true>
+					</div>
+				</cfif>						
 			<cfelse>		
 
 				<!---<cfif image_size EQ "small">
@@ -2189,20 +2185,11 @@
 
 								</div><!--- END row --->
 
-								<!---
-								<div class="row">
-
-									<div class="col-sm-12" style="padding-top:10px;">
-
-									</div>
-
-								</div><!--- END row --->
-								--->
 
 							</div><!--- END panel-body --->
 						</div><!--- END panel panel-default --->
 					
-					</div><!--- END col --->
+					</div><!--- END col-sm-12 --->
 				</div><!---END row item container--->
 			</cfloop>
 

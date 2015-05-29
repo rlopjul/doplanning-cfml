@@ -141,7 +141,7 @@
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" onsubmit="return onSubmitForm();">
 
 	<div id="submitDiv1" style="margin-bottom:10px;">
-		<input type="submit" value="Guardar" class="btn btn-primary"/>
+		<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 
 		<cfif page_type IS 2>
 			<span class="divider">&nbsp;&nbsp;</span>
@@ -159,7 +159,7 @@
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
-			<label for="title" class="control-label">Nombre *</label>
+			<label for="title" class="control-label"><span lang="es">Nombre</span> *</label>
 			<cfinput type="text" name="title" id="title" value="#view.title#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
 		</div>
 	</div>
@@ -175,11 +175,11 @@
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
-			<label class="control-label" for="area_name" lang="es">Área de publicación *</label>
+			<label class="control-label" for="area_name"><span lang="es">Área de publicación</span> *</label>
 			<input type="hidden" name="area_id" id="area_id" value="#view.area_id#" validate="integer" required="true"/>
 			<cfinput type="text" name="area_name" id="area_name" value="#areaName#" readonly="true" required="true" message="Debe seleccionar una nueva área" onclick="openAreaSelector()" class="form-control" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
 			<cfif APPLICATION.publicationScope IS true AND isNumeric(table.publication_scope_id)>
-				<span class="help-block">Ámbito de publicación definido: #table.publication_scope_name#</span>
+				<span class="help-block"><span lang="es">Ámbito de publicación definido:</span> #table.publication_scope_name#</span>
 			</cfif>
 		</div>
 	</div>
@@ -245,7 +245,7 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-			<small class="help-block">Si está definida, <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
+			<small class="help-block" lang="es">Si está definida, <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
 		</div>
 	</div>
 
@@ -262,9 +262,9 @@
 				<div class="col-xs-12 col-sm-8">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("view.publication_validated") AND view.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+							<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("view.publication_validated") AND view.publication_validated IS true>checked="checked"</cfif> /> <span lang="es">Aprobar publicación</span>
 						</label>
-						<small class="help-block">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif> (sólo para publicación en web e intranet).</small>
+						<small class="help-block" lang="es">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif> (sólo para publicación en web e intranet).</small>
 					</div>
 				</div>
 			</div>
@@ -275,14 +275,14 @@
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
-			<label for="description" class="control-label">Descripción</label>
+			<label for="description" class="control-label" lang="es">Descripción</label>
 			<textarea name="description" id="description" class="form-control" maxlength="1000">#view.description#</textarea>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-sm-12">
-			<label class="control-label">Campos *</label>
+			<label class="control-label"><span lang="es">Campos</span> *</label>
 		</div>
 	</div>
 	<div class="row">
@@ -309,8 +309,8 @@
 					<thead>
 						<tr>
 							<th style="width:25px;text-align:center;"><input type="checkbox" name="select_all" onclick="toggleCheckboxesChecked(this.checked);"/></th>
-							<th style="width:35%">Nombre del campo</th>
-							<th>Tipo de campo</th>
+							<th style="width:35%"><span lang="es">Nombre del campo</span></th>
+							<th><span lang="es">Tipo de campo</span></th>
 							<th style="width:45px;">##</th>
 						</tr>
 					</thead>
@@ -453,7 +453,7 @@
 
 			<cfelse>
 
-				<span>No hay campos para seleccionar</span>
+				<span lang="es">No hay campos para seleccionar</span>
 
 			</cfif>
 
@@ -461,7 +461,7 @@
 	</div>
 
 	<div id="submitDiv2" style="margin-top:20px;">
-		<input type="submit" value="Guardar" class="btn btn-primary"/>
+		<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 		<!---<a href="area_items.cfm?area=#area_id#" class="btn btn-default">Cancelar</a>--->
 	</div>
 	

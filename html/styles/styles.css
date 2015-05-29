@@ -1303,6 +1303,7 @@ fieldset[disabled] .btn-warning.active {
 }
 
 #newItemDropDown a,
+#selectSearchElements a,
 #filterAreaElements a {
 	cursor: pointer;
 	color: #666666;
@@ -1311,8 +1312,6 @@ fieldset[disabled] .btn-warning.active {
 	white-space: nowrap;
 	/*text-transform: none;*/
 	display: block;
-
-
 }
 
 /*#newItemDropDown ul li,

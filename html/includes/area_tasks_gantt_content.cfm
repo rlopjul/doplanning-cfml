@@ -1,5 +1,7 @@
 <cfoutput>
+<!--- 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
+ --->
 
 <!---<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">--->
 

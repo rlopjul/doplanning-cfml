@@ -1,5 +1,5 @@
 <cfoutput>
-<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>
+<!---<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>--->
 <script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js"></script>
 </cfoutput>
 
@@ -78,7 +78,7 @@
 
 	<div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	    <h4>Modificar usuario</h4>
+	    <h4 lang="es">Modificar usuario</h4>
 	</div>
 
  	<div class="modal-body">
@@ -91,8 +91,8 @@
 	</div>
 
 	<div class="modal-footer">
-	    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-	    <button class="btn btn-primary" id="userSubmitButton" data-loading-text="Guardando..." onclick="$('#updateUserData').submit()">Guardar cambios</button>
+	    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span lang="es">Cancelar</span></button>
+	    <button class="btn btn-primary" id="userSubmitButton" data-loading-text="Guardando..." onclick="$('#updateUserData').submit()"><span lang="es">Guardar cambios</span></button>
 	</div>
 
 	<!---<cfinclude template="#APPLICATION.htmlPath#/admin/includes/error_modal.cfm"/>--->

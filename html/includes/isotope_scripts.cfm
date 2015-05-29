@@ -81,7 +81,8 @@ $( document ).ready( function() {
   
   $itemsContainer = $('.elements_container').isotope({
     itemSelector: '.element_item',
-    layoutMode: 'vertical'
+    layoutMode: 'vertical',
+    transitionDuration: 0 <!--- en iPad las transiciones dan problemas https://github.com/metafizzy/isotope/issues/502--->
     /*containerStyle : null*/
     /*masonry: {
 	  columnWidth: '.grid-sizer'

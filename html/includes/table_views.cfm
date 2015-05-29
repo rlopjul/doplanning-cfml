@@ -43,7 +43,7 @@
 
 		<!---<cfif objectArea.read_only IS false>--->
 			<div class="btn-group">
-				<a href="#tableTypeName#_view_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_view_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span>Nueva vista</span></a><!---color:##5BB75B;--->
+				<a href="#tableTypeName#_view_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_view_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span lang="es">Nueva vista</span></a><!---color:##5BB75B;--->
 			</div>
 		<!---</cfif>--->
 		<!---<a href="#tableTypeName#_views_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Copiar de plantilla" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar de plantilla</span></a>

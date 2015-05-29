@@ -1,8 +1,10 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_version.cfm">
 
+<!--- 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
 	<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-</cfinvoke>
+</cfinvoke> --->
+
 
 <cfset curPage = getFileFromPath(CGI.SCRIPT_NAME)>
 <cfset curElement = "">

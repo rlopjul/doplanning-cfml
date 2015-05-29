@@ -168,14 +168,14 @@
 
 <div class="div_head_subtitle">
 <cfif page_type IS 1>
-Asociar archivo a áreas
+<span lang="es">Asociar archivo a áreas</span>
 <cfelse>
 <!---Copiar archivo a áreas--->
-Asociar archivo a áreas
+<span lang="es">Asociar archivo a áreas</span>
 </cfif>
 </div>
 
-<div class="alert alert-info" style="margin:5px;">Seleccione las áreas a las que desea asociar el archivo:</div>
+<div class="alert alert-info" style="margin:5px;"><span lang="es">Seleccione las áreas a las que desea asociar el archivo</span></div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
 			
@@ -213,13 +213,13 @@ Asociar archivo a áreas
 
 	<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
 		<div>
-			<span class="help-block">Ámbito de publicación definido para el archivo: #objectFile.publication_scope_name#</span>
+			<span class="help-block"><span lang="es">Ámbito de publicación definido para el archivo:</span> #objectFile.publication_scope_name#</span>
 		</div>
 	</cfif>
 	
-	<input type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas" />
+	<input type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas" lang="es" />
 	
-	<a href="#return_page#" class="btn btn-default" style="float:right;">Cancelar</a>
+	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 	
 	<div style="margin-top:2px;">
 
@@ -343,7 +343,7 @@ Asociar archivo a áreas
 
 		<div class="row">
 			<div class="col-sm-12">
-				<small class="help-block">Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
+				<small class="help-block" lang="es">Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
 			</div>
 		</div>
 
@@ -356,9 +356,9 @@ Asociar archivo a áreas
 					<div class="col-xs-12 col-sm-8">
 						<div class="checkbox">
 							<label>
-								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif NOT isDefined("FORM.publication_validated") OR FORM.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif NOT isDefined("FORM.publication_validated") OR FORM.publication_validated IS true>checked="checked"</cfif> /> <span lang="es">Aprobar publicación</span>
 							</label>
-							<small class="help-block">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
+							<small class="help-block" lang="es">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
 						</div>
 					</div>
 				</div>
@@ -370,8 +370,8 @@ Asociar archivo a áreas
 	</cfif>
 
 	
-	<cfinput name="submit" type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas"/>
-	<a href="#return_page#" class="btn btn-default" style="float:right;">Cancelar</a>
+	<input name="submit" type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas" lang="es"/>
+	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 	</cfoutput>
 </cfform>
 	

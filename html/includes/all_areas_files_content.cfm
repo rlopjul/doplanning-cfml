@@ -1,9 +1,10 @@
 <cfoutput>
+<!--- 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
+ --->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
 </cfoutput>
 
 <cfset itemTypeId = 10>
@@ -85,7 +86,7 @@
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>
 
-	<div class="alert alert-info" style="margin:10px;margin-top:30px;background-color:#65C5BD"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en "BUSCAR"</span></div>
+	<div class="alert alert-info" style="margin:10px;margin-top:30px;background-color:#65C5BD"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en BUSCAR</span></div>
 
 </cfif>
 

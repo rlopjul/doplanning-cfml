@@ -54,7 +54,7 @@ encrypt_key (remember_password_query.cfm)
 		<div class="col-sm-offset-3 col-sm-9">
 			<div style="height:10px;"></div>
 			<div class="pull-right">
-				<a href="index.cfm?client_abb=#client_abb#" class="btn btn-default">Cancelar</a>
+				<a href="index.cfm?client_abb=#client_abb#" class="btn btn-default" lang="es">Cancelar</a>
 				<input name="send" type="submit" class="btn btn-primary" value="Enviar" data-loading-text="Loading" lang="es"/>
 			</div>
 		</div>

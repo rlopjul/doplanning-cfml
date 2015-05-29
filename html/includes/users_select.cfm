@@ -5,7 +5,9 @@
 --->
 
 <cfoutput>
+<!--- 
 <script src="#APPLICATION.htmlPath#/language/area_users_select_en.js" charset="utf-8" type="text/javascript"></script>
+ --->
 
 <!---Este script hay que quitarlo de aquí, porque en la administración se incluye, y no es necesario incluirlo ya que está incluído en el main.cfm--->
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">

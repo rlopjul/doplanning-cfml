@@ -43,9 +43,11 @@
 
 <cfset versions = fileVersionsResult.fileVersions>
 
+<!--- 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
+</cfoutput> --->
+
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 

@@ -20,7 +20,9 @@
 <noscript><link rel="stylesheet" href="#APPLICATION.path#/jquery/jquery-file-upload/css/jquery.fileupload-noscript.css"></noscript>
 <noscript><link rel="stylesheet" href="#APPLICATION.path#/jquery/jquery-file-upload/css/jquery.fileupload-ui-noscript.css"></noscript>
 
+<!--- 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
+ --->
 
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>

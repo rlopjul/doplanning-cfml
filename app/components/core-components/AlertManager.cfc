@@ -538,7 +538,7 @@
 
 						#itemButtonsContent#
 
-						<table style="width:100%;border-radius:4px;border-color:##dddddd;border-style:solid;border-width:1px;margin-top:15px;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:15px;"><!--- item container table --->
+						<table style="width:100%;border-radius:4px;border-color:##dddddd;border-style:solid;border-width:1px;margin-top:10px;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:15px;"><!--- item container table --->
 
 							#userAndDateContent#
 
@@ -1017,8 +1017,26 @@
 				<tr>
 					<td style="text-align:left;">
 
-						<cfif arguments.action NEQ "delete" AND arguments.itemTypeId IS 1><!--- Reply --->
-							<a href="#arguments.itemUrl#&reply" target="_blank" title="#uCase(langText[arguments.language].new_item.reply)#"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/btn_reply.png" alt="#uCase(langText[arguments.language].new_item.reply)#" title="#uCase(langText[arguments.language].new_item.reply)#"/></a><br/>
+						<cfif arguments.action NEQ "delete" AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus">
+
+							<cfif arguments.itemTypeId IS 1>
+								
+								<!--- Reply --->
+								<a href="#arguments.itemUrl#&reply" target="_blank" title="#uCase(langText[arguments.language].new_item.reply)#"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/btn_reply_#arguments.language#.png" alt="#uCase(langText[arguments.language].new_item.reply)#" title="#uCase(langText[arguments.language].new_item.reply)#"/></a><!--- <br/> --->
+
+							<cfelseif arguments.itemTypeId IS 10>
+								
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="downloadFileUrl">
+									<cfinvokeargument name="file_id" value="#arguments.item_id#">
+									<cfinvokeargument name="area_id" value="#arguments.area_id#">
+									<cfinvokeargument name="download" value="true">
+									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+								</cfinvoke>
+
+								<!--- Download --->
+								<a href="#downloadFileUrl#" target="_blank" title="#uCase(langText[arguments.language].new_file.download)#"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/btn_download_#arguments.language#.png" alt="#uCase(langText[arguments.language].new_file.download)#" title="#uCase(langText[arguments.language].new_file.download)#"/></a>
+
+							</cfif>
 
 							<!---
 							BOTON CON TABLA
@@ -1039,7 +1057,7 @@
 					<td style="text-align:right;">
 
 						<cfif arguments.action NEQ "delete"><!--- View in area --->
-							<a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/area_items.cfm?abb=#arguments.client_abb#&area=#arguments.area_id####arguments.itemTypeName##arguments.item_id#" title="Ver en área"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/btn_view_in_area.png" alt="#uCase(langText[arguments.language].common.view_in_area)#" title="#uCase(langText[arguments.language].common.view_in_area)#"/></a>
+							<a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/area_items.cfm?abb=#arguments.client_abb#&area=#arguments.area_id####arguments.itemTypeName##arguments.item_id#" title="Ver en área"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/btn_view_in_area_#arguments.language#.png" alt="#uCase(langText[arguments.language].common.view_in_area)#" title="#uCase(langText[arguments.language].common.view_in_area)#"/></a>
 						</cfif>
 
 					</td>
@@ -1499,7 +1517,7 @@
 
 					#itemButtonsContent#
 
-					<table style="width:100%;border-radius:4px;border-color:##dddddd;border-style:solid;border-width:1px;margin-top:15px;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:15px;"><!--- item container table --->
+					<table style="width:100%;border-radius:4px;border-color:##dddddd;border-style:solid;border-width:1px;margin-top:10px;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:15px;"><!--- item container table --->
 
 						#userAndDateContent#
 
@@ -2264,7 +2282,7 @@
 
 					#itemButtonsContent#
 
-					<table style="width:100%;border-radius:4px;border-color:##dddddd;border-style:solid;border-width:1px;margin-top:15px;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:15px;"><!--- item container table --->
+					<table style="width:100%;border-radius:4px;border-color:##dddddd;border-style:solid;border-width:1px;margin-top:10px;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:15px;"><!--- item container table --->
 
 
 						<cfif arguments.action NEQ "delete_version" AND arguments.action NEQ "delete_version_virus">
@@ -2275,7 +2293,6 @@
 
 						<tr style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0">
 							<td style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:14px;">
-
 
 
 							<!---<cfif arguments.action NEQ "new" AND arguments.action NEQ "associate">

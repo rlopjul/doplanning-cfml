@@ -1,8 +1,10 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_change_user_query.cfm">
 
+<!--- 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
-</cfoutput>
+</cfoutput> --->
+
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
@@ -67,14 +69,14 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-			<span>#itemTypeNameEs#:</span>
+			<span lang="es">#itemTypeNameEs#</span>:
 			<strong>#item.title#</strong>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-sm-12">
-			<span>Propietario actual:</span>
+			<span lang="es">Propietario actual</span>:
 			<strong>#item.user_full_name#</strong>
 		</div>
 	</div>

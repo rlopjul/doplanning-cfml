@@ -9,6 +9,7 @@
 <cfoutput>
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <!---<!--[if lt IE 9]>
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -48,6 +49,7 @@
 <!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>--->
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
+<script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>
 
 <script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
 
@@ -65,14 +67,13 @@
    		window.lang.run();
 	});--->
 	
-	Lang.prototype.pack.en = {};
-	Lang.prototype.pack.en.token = {};
+	<!---Lang.prototype.pack.en = {};
+	Lang.prototype.pack.en.token = {};--->
 	
 	$().ready(function () {
 		window.lang = new Lang('es');
 	});
 </script>
-<script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
 
 </cfoutput>
 <!-- InstanceBeginEditable name="head" -->
@@ -114,7 +115,7 @@
 	<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 	<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.2"></script>
 	<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.2"></script>
-	<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
+	<!---<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>--->
 		
 	<script>
 		

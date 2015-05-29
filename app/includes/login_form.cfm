@@ -84,7 +84,7 @@
           </div>
         </cfif>
 
-        <cfif client_abb EQ "hcs" OR client_abb EQ "software7">
+        <cfif client_abb EQ "hcs">
           <div class="radio">
             <label for="ldap_portalep_hcs"> 
               <input type="radio" name="ldap_id" value="portalep_hcs" id="ldap_portalep_hcs" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#

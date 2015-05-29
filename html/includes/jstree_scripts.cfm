@@ -5,7 +5,7 @@
 
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.2"></script>
 
-<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
+<!--- <script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script> --->
 </cfoutput>
 
 <script>

@@ -234,7 +234,7 @@
 									<h1 style="color:##009ED2;">#objectFile.name#</h1>
 								</div>
 								<div class="col-sm-2">
-									<a href="area_items.cfm?area=#area_id####itemTypeName##objectFile.id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> Ver en área</a></h1>
+									<a href="area_items.cfm?area=#area_id####itemTypeName##objectFile.id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> <span lang="es">Ver en área</span></a></h1>
 								</div>
 							</div>
 
@@ -343,7 +343,7 @@
 
 					<div class="#head_col_1_class#">
 						<!---<div style="width:56px;height:54px;background:##82D0CA"></div>--->
-						<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_preferences.png" alt="User" lang="es" />	
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_preferences.png" alt="Usuario" lang="es" />	
 					</div>
 
 					<div class="#head_col_2_class#">
@@ -353,6 +353,8 @@
 								<h1 style="color:##82D0CA" lang="es">Datos personales</h1>
 							<cfelseif find("preferences_alerts.cfm", CGI.SCRIPT_NAME) GT 0>
 								<h1 style="color:##82D0CA" lang="es">Preferencias de notificaciones</h1>
+							<cfelse><!--- preferences.cfm --->
+								<h1 style="color:##82D0CA" lang="es">Preferencias </h1>
 							</cfif> 
 						</div>
 

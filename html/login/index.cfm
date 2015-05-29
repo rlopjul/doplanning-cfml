@@ -206,8 +206,8 @@
 
 			<div class="panel panel-default" style="margin-top:35px;">
 			  <div class="panel-body">
-			    <h5>¡Bienvenido a la nueva versión de DoPlanning!</h5>
-				<p>Danos tu opinión a través del email <a href="mailto:support@doplanning.net" onclick="showLoading = false">support@doplanning.net</a></b></p>
+			    <h5 lang="es">¡Bienvenido a la nueva versión de DoPlanning!</h5>
+				<p><span lang="es">Danos tu opinión a través del email</span> <a href="mailto:support@doplanning.net" onclick="showLoading = false">support@doplanning.net</a></b></p>
 			  </div>
 			</div>
 

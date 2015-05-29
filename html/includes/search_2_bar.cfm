@@ -5,6 +5,8 @@
 	<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 	<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
 
+	<script src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
+
 	<!---bootstrap-select--->
 	<!---<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>--->
@@ -22,7 +24,11 @@
 		<script>
 			$(document).ready(function() {
 			  <!---$(".text_item").highlight("#search_text#");--->
-			  $(".text_item").highlight(["#search_text_highlight#"]);	
+			  <cfif NOT isDefined("curElement") OR curElement NEQ "areas">
+				$(".text_item").highlight(["#search_text_highlight#"]);	
+			  <cfelse>
+			  	$("h5").highlight(["#search_text_highlight#"]);	
+			  </cfif>
 			});			
 		</script>
 	</cfoutput>
@@ -190,7 +196,7 @@
 
 
 <cfoutput>
-<div class="container div_search_bar">
+<div class="div_search_bar">
 <cfform method="get" name="search_form" action="#CGI.SCRIPT_NAME#" class="form-horizontal" onsubmit="return onSubmitForm();">
 	
 	<script>
@@ -220,27 +226,28 @@
 
 				<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
-				<div class="btn-group btn-block">
+				<div class="btn-group btn-block" id="selectSearchElements">
 
 					<button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="text-align:left;">
 
 						<cfif isNumeric(itemTypeId)>
 							
+							<!---
 							<cfif itemTypeId IS 13><!---Typologies--->
 								<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
-							<cfelse>
-								<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].labelPlural#" lang="es" style="width:35px"/>
-							</cfif>
+							<cfelse>--->
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].labelPlural#" lang="es" style="width:35px"/>
+							<!---</cfif>--->
 
-							<cfif itemTypeId IS 2>
-								<span lang="es">Elementos de contenido</span> <span class="caret"></span>
-							<cfelse>
-								<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span> <span class="caret"></span>
-							</cfif>
+							<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span> <span class="caret"></span>
 
-						<cfelse><!--- Users --->
+						<cfelseif curElement EQ "users"><!--- Users --->
 
-							<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuarios" lang="es" style="width:35px"/> <span lang="es">Usuarios</span> <span class="caret"></span>
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/users.png" alt="Usuarios" lang="es" style="width:35px"/> <span lang="es">Usuarios</span> <span class="caret"></span>
+
+						<cfelse><!--- Areas --->
+
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="áreas" lang="es" style="width:35px"/> <span lang="es">Áreas</span> <span class="caret"></span>
 
 						</cfif>
 						
@@ -248,55 +255,80 @@
 
 					<ul class="dropdown-menu" role="menu">
 
-				    	<cfloop array="#itemTypesArray#" index="curItemTypeId">
+						<li>
 
-				    		<cfif curItemTypeId NEQ 13 AND curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.moduleForms IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
+							<div class="row" style="width:450px;">
 
-								<li>
-									
-									<a href="#itemTypesStruct[curItemTypeId].namePlural#_search.cfm" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
-								
-										<cfif curItemTypeId IS 13><!---Typologies--->
-											<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
-										<cfelse>
-											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" style="width:35px"/>
-										</cfif>
+					            <ul class="list-unstyled col-md-6">
 
-										&nbsp;<span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span>
-									</a>
-									
-								</li>
-
-								<!---
-								<cfif curItemTypeId IS 10>
-									
-									<li>
-
-										<cfif APPLICATION.moduleAreaFilesLite IS true>
-										<a title="Archivos de área" lang="es" class="btn-new-item-dp"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" />
-											<span title="Archivos de área" lang="es">Archivos de área</span> <!---href="area_file_new.cfm?area=#area_id#&fileTypeId=2"--->
+					            	<li>
+										<a href="areas_search.cfm" title="Áreas" lang="es">
+											<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Áreas" lang="es" style="width:35px"/>&nbsp;<span lang="es">Áreas</span>
 										</a>
-										</cfif>
-
 									</li>
 
-								</cfif>
-								--->
+							    	<cfloop array="#itemTypesArray#" index="curItemTypeId">
 
-							</cfif>
+							    		<cfif curItemTypeId NEQ 13 AND curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.moduleForms IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
 
-						</cfloop>
+											<li>
+												
+												<a href="#itemTypesStruct[curItemTypeId].namePlural#_search.cfm" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
+											
+													<!---
+													<cfif curItemTypeId IS 13><!---Typologies--->
+														<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
+													<cfelse>--->
+														<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" style="width:35px"/>
+													<!---</cfif>--->
 
-						<li>
-							<a href="users_search.cfm" title="Usuarios" lang="es">
-								<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuarios" lang="es" style="width:35px"/>&nbsp;<span lang="es">Usuarios</span>
-							</a>
+													&nbsp;<span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span>
+												</a>
+												
+											</li>
+
+											<!---
+											<cfif curItemTypeId IS 10>
+												
+												<li>
+
+													<cfif APPLICATION.moduleAreaFilesLite IS true>
+													<a title="Archivos de área" lang="es" class="btn-new-item-dp"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" />
+														<span title="Archivos de área" lang="es">Archivos de área</span> <!---href="area_file_new.cfm?area=#area_id#&fileTypeId=2"--->
+													</a>
+													</cfif>
+
+												</li>
+
+											</cfif>
+											--->
+
+										</cfif>
+
+										<cfif curItemTypeId EQ 20><!--- Cierra la primera columna --->
+												
+											</ul><!--- END list-unstyled col-md-6 --->
+											<ul class="list-unstyled col-md-6">   
+
+										</cfif>
+
+									</cfloop>
+
+									<li>
+										<a href="users_search.cfm" title="Usuarios" lang="es">
+											<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/users.png" alt="Usuarios" lang="es" style="width:35px"/>&nbsp;<span lang="es">Usuarios</span>
+										</a>
+									</li>
+
+								</ul><!--- END list-unstyled col-md-6 --->
+
+			           		</div><!--- END row --->
+
 						</li>
 
-					</ul>
+					</ul><!--- END dropdown-menu --->
 
-				</div>
-
+				</div><!--- END btn-group --->
 
 			</div>
 	  	</div>
@@ -392,7 +424,7 @@
 
 
 
-	<cfif NOT isDefined("curElement") OR curElement NEQ "users">
+	<cfif NOT isDefined("curElement") OR ( curElement NEQ "users" AND curElement NEQ "areas" ) >
 				
 		<div class="row">
 
@@ -485,7 +517,7 @@
 	
 	<div class="row">
 
-		<cfif NOT isDefined("curElement") OR curElement NEQ "users">
+		<cfif NOT isDefined("curElement") OR ( curElement NEQ "users" AND curElement NEQ "areas" )>
 			
 			<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es"><cfif itemTypeId IS 6>Tarea encargada por<cfelse>Usuario</cfif></label> 
 

@@ -74,7 +74,7 @@ page_types
 	
 		<cfif APPLICATION.identifier NEQ "vpnet">
 
-		<div class="col-sm-2 col-md-2">
+		<div class="col-sm-3">
 
 			<div class="row">
 				<div class="col-sm-12">
@@ -99,24 +99,34 @@ page_types
 
 				--->
 
-					<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
-						<cfinvokeargument name="user_id" value="#objectUser.id#">
-						<cfinvokeargument name="user_id" value="#objectUser.id#">
-						<cfinvokeargument name="user_full_name" value="#objectUser.family_name# #objectUser.name#">
-						<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
-						<cfinvokeargument name="class" value="img-thumbnail img-responsive"/>
-					</cfinvoke>
+					<cfif isNumeric(objectUser.id)>
+						
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
+							<cfinvokeargument name="user_id" value="#objectUser.id#">
+							<cfinvokeargument name="user_id" value="#objectUser.id#">
+							<cfinvokeargument name="user_full_name" value="#objectUser.family_name# #objectUser.name#">
+							<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
+							<cfinvokeargument name="class" value="img-thumbnail img-responsive"/>
+						</cfinvoke>
 
-					<cfif len(objectUser.image_file) GT 0 AND len(objectUser.image_type)>
-						<button type="button" id="deleteImageButton" title="Eliminar imagen" class="btn btn-danger btn-xs" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar imagen</span></button>
+						<cfif len(objectUser.image_file) GT 0 AND len(objectUser.image_type)>
+							<div>
+								<button type="button" id="deleteImageButton" title="Eliminar imagen" class="btn btn-danger btn-xs" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar imagen</span></button>
+							</div>
+						</cfif>
+
+					<cfelse>
+
+						<img src="#APPLICATION.htmlPath#/assets/icons/user_default_medium.png" id="userImage" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
+
 					</cfif>
-
+					
 				</div>
 			</div>
 
 		</div>
 	
-		<div class="col-sm-10"><!---col-md-offset-1--->
+		<div class="col-sm-9"><!---col-md-offset-1--->
 			
 			<div class="row">
 

@@ -714,6 +714,78 @@
 		</cfquery>
 		
 	</cffunction>
+
+
+	<!--- -------------------------- getAreas -------------------------------- --->
+
+	<cffunction name="getAreas" returntype="struct" output="false" access="public">
+		<cfargument name="areas_ids" type="string" required="false">
+		<cfargument name="search_text" type="string" required="false" default="">
+		<!---<cfargument name="order_by" type="string" required="false" default="name">
+		<cfargument name="order_type" type="string" required="false" default="asc">--->
+		<cfargument name="limit" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">			
+				
+		<cfset var method = "getAreas">
+		
+		<cfset var response = structNew()>
+		
+		<cfset var text_re = "">
+							
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="text_re">
+				<cfinvokeargument name="text" value="#arguments.search_text#">
+			</cfinvoke>
+						
+			<!---
+			<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
+				<cfinvokeargument name="get_user_id" value="#user_id#"> 
+			</cfinvoke>
+			
+			<cfif internal_user IS false>
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllUserAreasList" returnvariable="allUserAreasList">
+					<cfinvokeargument name="get_user_id" value="#user_id#">
+				</cfinvoke>			
+			</cfif>--->
+			
+			<cfquery datasource="#client_dsn#" name="areasQuery">
+				SELECT <!--- SQL_CALC_FOUND_ROWS ---> *, areas.id AS area_id, areas.name AS area_name
+				FROM #client_abb#_areas AS areas
+				WHERE (areas.name REGEXP <cfqueryparam value="#text_re#" cfsqltype="cf_sql_varchar">
+				OR areas.description REGEXP <cfqueryparam value="#text_re#" cfsqltype="cf_sql_varchar">)
+				<cfif isDefined("arguments.areas_id")>
+				AND areas.id IN (<cfqueryparam value="#arguments.areas_ids#" list="true" cfsqltype="cf_sql_varchar"/>)
+				</cfif>
+				ORDER BY areas.name ASC
+				<!---LIMIT #init_item#, #items_page#--->
+				LIMIT #arguments.limit#;
+			</cfquery>
+			
+			<!---
+			<cfquery datasource="#client_dsn#" name="getCount">
+				SELECT FOUND_ROWS() AS count;
+			</cfquery>
+			
+			<cfset num_items = getCount.count>
+			
+			<cfset num_pages = ceiling(num_items/items_page)>
+			
+			<cfset xmlResult = '<areas total="#num_items#" pages="#num_pages#" page="#current_page#">'>
+			
+			<cfloop query="areasQuery">
+				<cfset xmlArea='<area id="#areasQuery.id#" name="#xmlFormat(areasQuery.name)#" parent_id="#areasQuery.parent_id#" creation_date="#areasQuery.creation_date#" label="#xmlFormat(areasQuery.name)#" user_in_charge="#areasQuery.user_in_charge#" allowed="true" image_id="#image_id#" with_link="false"/>'>
+				
+				<cfset xmlResult = xmlResult&xmlArea>
+			</cfloop>			
+			
+			<cfset xmlResponseContent = xmlResult&"</areas>">--->
+			
+			<cfset response = {result=true, areas=#areasQuery#}>
+												
+		<cfreturn response>
+		
+	</cffunction>
 	
     
   

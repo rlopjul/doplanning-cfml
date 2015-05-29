@@ -26,7 +26,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4>Importar áreas</h4>
+		    <h4 lang="es">Importar áreas</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -151,14 +151,14 @@
 					<div class="col-sm-12">
 						<label class="control-label" for="user_full_name" lang="es">Responsable</label>
 						<input type="hidden" name="user_in_charge" id="user_in_charge" value="#objectArea.user_in_charge#" required="true"/>
-						<input type="text" name="user_in_charge_full_name" id="user_in_charge_full_name" value="#objectArea.user_full_name#" required="true" readonly="true" class="form-control" /> <button type="button" class="btn btn-default" onclick="showSelectUserModal()">Seleccionar usuario</button>
+						<input type="text" name="user_in_charge_full_name" id="user_in_charge_full_name" value="#objectArea.user_full_name#" required="true" readonly="true" class="form-control" /> <button type="button" class="btn btn-default" onclick="showSelectUserModal()"><span lang="es">Seleccionar usuario</span></button>
 					</div>
 				</div>
 
 				<cfinclude template="area_menu_inputs.cfm" />
 
 				<div class="row">
-					<label for="import_type" class="col-xs-5 col-sm-2 col-md-3 control-label" style="text-align:left">Tipo de importación</label>
+					<label for="import_type" class="col-xs-5 col-sm-2 col-md-3 control-label" style="text-align:left" lang="es">Tipo de importación</label>
 					<div class="col-xs-7 col-sm-10 col-md-9">
 						<select name="import_type" id="importType" class="form-control" onchange="setImportType($('##importType').val());">
 							<option value="xml" <cfif isDefined("FORM.import_type") AND FORM.import_type EQ "xml">selected="selected"</cfif>>Archivo XML (importación de varios niveles de áreas)</option>
@@ -178,11 +178,11 @@
 				<div id="cssImportInputs">
 
 					<div class="row">
-						<label for="delimiter" class="col-xs-6 col-sm-3 col-md-4 control-label" style="text-align:left">Delimitador de campos</label>
+						<label for="delimiter" class="col-xs-6 col-sm-3 col-md-4 control-label" style="text-align:left" lang="es">Delimitador de campos</label>
 						<div class="col-xs-5 col-sm-3 col-md-4">
 							<select name="delimiter" id="delimiter" class="form-control">
-								<option value=";" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ ";">selected="selected"</cfif>>Punto y coma ;</option>
-								<option value="tab" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ "tab">selected="selected"</cfif>>Tabulación</option>
+								<option value=";" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ ";">selected="selected"</cfif> lang="es">Punto y coma ;</option>
+								<option value="tab" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ "tab">selected="selected"</cfif> lang="es">Tabulación</option>
 							</select>
 						</div>
 					</div>
@@ -191,15 +191,15 @@
 						<div class="col-sm-12">
 					      <div class="checkbox">
 					        <label>
-					          <input type="checkbox" name="start_row" value="1"<cfif isDefined("FORM.start_row")>checked</cfif>> Importar primera fila del archivo
+					          <input type="checkbox" name="start_row" value="1"<cfif isDefined("FORM.start_row")>checked</cfif>> <span lang="es">Importar primera fila del archivo</span>
 					        </label>
-					        <small class="help-block">Por defecto no se importa la primera fila del archivo (fila para los títulos de las columnas)</small>
+					        <small class="help-block" lang="es">Por defecto no se importa la primera fila del archivo (fila para los títulos de las columnas)</small>
 					      </div>
 					    </div>
 					</div>
 
 
-					<p class="help-block" style="font-size:12px;">
+					<p class="help-block" style="font-size:12px;" lang="es">
 						El archivo utilizado para realizar esta importación deberá tener las siguientes características:<br/>
 					
 							-Tipo de archivo: <strong>.csv o .txt</strong> delimitado por ; o por tabulaciones.<br/>
@@ -222,7 +222,7 @@
 
 				<div id="xmlImportInputs">
 
-					<p class="help-block" style="font-size:12px;">
+					<p class="help-block" style="font-size:12px;" lang="es">
 						El archivo utilizado para realizar esta importación deberá tener las siguientes características:<br/>
 					
 							-Tipo de archivo: <strong>.xml</strong><br/>
@@ -238,7 +238,7 @@
 	</area>
 </area></cfsavecontent>
 							#HTMLCodeFormat(areaFormatContent)#
-					<p class="help-block" style="font-size:12px;">
+					<p class="help-block" style="font-size:12px;" lang="es">
 						Puede obtener un ejemplo de archivo de este tipo utilizando la funcionalidad de exportar áreas.<br/>
 						Si se produce un error durante la importación, no se importará ningún área.<br/>
 						No se enviará notificación de ninguna acción relacionada con esta importación a los usuarios.<br/>
@@ -254,8 +254,8 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-primary" onclick="submitAreaModal(event)">Importar</button>
+		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span lang="es">Cancelar</span></button>
+		    <button class="btn btn-primary" onclick="submitAreaModal(event)"><span lang="es">Importar</span></button>
 		</div>
 
 		<script>

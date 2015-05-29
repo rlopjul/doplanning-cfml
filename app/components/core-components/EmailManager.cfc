@@ -155,7 +155,7 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 			
 				<cftry>
 					
-					<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult">
+					<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult" timeout="65">
 						<cfhttpparam type="header" name="Content-Type" value="application/json" />
 						<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
 					</cfhttp>

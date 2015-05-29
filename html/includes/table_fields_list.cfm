@@ -54,10 +54,10 @@
 			<th style="width:25px;text-align:center;"><input type="checkbox" name="select_all" checked="checked" onclick="toggleCheckboxesChecked(this.checked);"/></th>
 			</cfif>
 			<!---<th style="width:25px;">##</th>--->
-			<th style="width:35%">Nombre del campo</th>
-			<th>Tipo de campo</th>
-			<th>Obligatorio</th>
-			<th style="width:25%">Valor por defecto</th>
+			<th style="width:35%"><span lang="es">Nombre del campo</span></th>
+			<th><span lang="es">Tipo de campo</span></th>
+			<th><span lang="es">Obligatorio</span></th>
+			<th style="width:25%"><span lang="es">Valor por defecto</span></th>
 			<th>##</th>
 		</tr>
 	</thead>
@@ -108,10 +108,10 @@
 				<span class="field_label">#fields.label#</span>
 			</td>
 			<td>
-				#fields.name#
+				<span lang="es">#fields.name#</span>
 			</td>
 			<td>
-				<cfif fields.required IS true>Sí<cfelse>No</cfif>
+				<span lang="es"><cfif fields.required IS true>Sí<cfelse>No</cfif></span>
 			</td>
 			<td>
 				<cfset field_default_value = "">
@@ -152,7 +152,7 @@
 							<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
 								<cfset field_default_value = userQuery.user_full_name>
 							<cfelse>
-								<cfset field_default_value = "<i>USUARIO SIN NOMBRE</i>">
+								<cfset field_default_value = '<i lang="es">USUARIO SIN NOMBRE</i>'>
 							</cfif>
 						<cfelse>
 							<cfset field_default_value = '<i lang="es">USUARIO NO ENCONTRADO</i>'>
@@ -179,10 +179,10 @@
 								<cfif len(fileQuery.name) GT 0>
 									<cfset field_default_value = fileQuery.name>
 								<cfelse>
-									<cfset field_default_value = "<i>ARCHIVO SIN TÍTULO</i>">
+									<cfset field_default_value = '<span lang="es"><i>ARCHIVO SIN TÍTULO</i></span>'>
 								</cfif>
 							<cfelse>
-								<cfset field_default_value = "<i>ARCHIVO NO DISPONIBLE</i>">
+								<cfset field_default_value = '<span lang="es"><i>ARCHIVO NO DISPONIBLE</i></span>'>
 							</cfif>
 							
 						<cfelse><!--- ITEM --->
@@ -201,10 +201,10 @@
 								<cfif len(itemQuery.title) GT 0>
 									<cfset field_default_value = itemQuery.title>
 								<cfelse>
-									<cfset field_default_value = "<i>ELEMENTO SIN TÍTULO</i>">
+									<cfset field_default_value = '<span lang="es"><i>ELEMENTO SIN TÍTULO</i></span>'>
 								</cfif>
 							<cfelse>
-								<cfset field_default_value = "<i>ELEMENTO NO DISPONIBLE</i>">
+								<cfset field_default_value = '<span lang="es"><i>ELEMENTO NO DISPONIBLE</i></span>'>
 							</cfif>
 
 						</cfif>
@@ -217,9 +217,9 @@
 					<cfif len(field_default_value) GT 0>
 						<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
 							<cfif field_default_value IS true>
-								<cfset field_default_value = "Sí">
+								<cfset field_default_value = '<span lang="es">Sí</span>'>
 							<cfelse>
-								<cfset field_default_value = "No">
+								<cfset field_default_value = '<span lang="es">No</span>'>
 							</cfif>
 						</cfif>
 					</cfif>

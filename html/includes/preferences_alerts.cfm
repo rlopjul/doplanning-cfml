@@ -1,6 +1,6 @@
-<cfoutput>
+<!---<cfoutput>
 <script src="#APPLICATION.htmlPath#/language/preferences_alerts_en.js" charset="utf-8"></script>
-</cfoutput>
+</cfoutput>--->
 
 <cfinclude template="alert_message.cfm">
 
@@ -58,7 +58,7 @@ Preferencias de notificaciones
 
 						<div class="col-sm-offset-1 col-sm-11">
 							<label class="checkbox" style="margin-bottom:15px;">
-								<input type="checkbox" name="select_all" checked="checked" onclick="toggleCheckboxesChecked(this.checked);"/> Seleccionar/quitar todas
+								<input type="checkbox" name="select_all" checked="checked" onclick="toggleCheckboxesChecked(this.checked);"/> <span lang="es">Seleccionar/quitar todas</span>
 							</label>
 						</div>
 					</div>

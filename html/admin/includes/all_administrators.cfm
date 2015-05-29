@@ -3,7 +3,7 @@
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h4>Usuarios administradores de áreas</h3>
+    <h4 lang="es">Usuarios administradores de áreas</h4>
 </div>
 
 <div class="modal-body">
@@ -18,7 +18,7 @@
 		<cfset users = usersResponse.usersArray>
 		<cfset numUsers = ArrayLen(users)>
 
-		<span class="help-block">Puede añadir o quitar administradores accediendo al área correspondiente</span>
+		<span class="help-block" lang="es">Puede añadir o quitar administradores accediendo al área correspondiente</span>
 
 		<div class="div_items">
 			

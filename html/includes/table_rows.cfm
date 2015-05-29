@@ -102,17 +102,17 @@
 
 				<cfif ( is_user_area_responsible OR table_edit_permission IS true ) AND objectArea.read_only IS false>
 					<div class="btn-group">
-						<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm" title="Nuevo registro" lang="es"><i class="icon-plus" style="font-size:14px;"></i> <span>Nuevo registro</span></a><!---color:##5BB75B;--->
+						<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm" title="Nuevo registro" lang="es"><i class="icon-plus" style="font-size:14px;"></i> <span lang="es">Nuevo registro</span></a><!---color:##5BB75B;--->
 					</div>
 
 					<div class="btn-group">
-						<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span>Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
+						<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
 
 				<cfelse>
 					<div class="btn-group">
 				</cfif>	
 				
-					<a href="#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down" style="font-size:15px;"></i> <span>Exportar</span></a>
+					<a href="#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down" style="font-size:15px;"></i> <span lang="es">Exportar</span></a>
 
 				</div>
 
@@ -138,7 +138,7 @@
 					<!---<button id="dataTablePopover#tableTypeId#_#table_id#" type="button" class="btn btn-default btn-sm" data-trigger="focus" title="Filtrado de columnas">--->
 
 					<button id="dataTablePopover#tableTypeId#_#table_id#" type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="##columnSelectorCollapse" aria-expanded="false" aria-controls="columnSelectorCollapse">
-					  <i class="fa fa-eye-slash"></i> Mostrar/ocultar columnas
+					  <i class="fa fa-eye-slash"></i> <span lang="es">Mostrar/ocultar columnas</span>
 					</button>
 
 				</div>
@@ -278,7 +278,7 @@
 
 			<div class="collapse" id="columnSelectorCollapse">
 				<div class="well">
-					<p>Selecciona las columnas que quieres ver</p>
+					<p lang="es">Selecciona las columnas que quieres ver</p>
 				  	<ul class="list-inline" id="columnSelector#tableTypeId#_#table_id#">
 				    
 				  	</ul>

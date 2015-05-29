@@ -9,6 +9,7 @@
 <cfoutput>
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <!---<!--[if lt IE 9]>
 	<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <link href="//netdna.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
@@ -48,6 +49,7 @@
 <!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>--->
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
+<script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>
 
 <script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
 
@@ -65,14 +67,13 @@
    		window.lang.run();
 	});--->
 	
-	Lang.prototype.pack.en = {};
-	Lang.prototype.pack.en.token = {};
+	<!---Lang.prototype.pack.en = {};
+	Lang.prototype.pack.en.token = {};--->
 	
 	$().ready(function () {
 		window.lang = new Lang('es');
 	});
 </script>
-<script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>
 
 </cfoutput>
 <!-- InstanceBeginEditable name="head" -->
@@ -96,13 +97,13 @@
 		<cfif isDefined("user_id")>
 
 
-			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar al área</a>
+			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar al área</span></a>
 
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 
 				<span class="divider">&nbsp;</span>
 			
-				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateAdministratorModal(#user_id#);"><i class="icon-plus icon-white"></i> Asociar como administrador del área</a>
+				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateAdministratorModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar como administrador del área</span></a>
 
 				<!--- <a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a> --->
 
@@ -116,8 +117,8 @@
 				    <i class="icon-sitemap icon-white"></i> Ver árbol <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
-				   	<li><a onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');" style="cursor:pointer">De áreas</a></li>
-				    <li><a onclick="parent.loadModal('html_content/user_tree_admin.cfm?user=#user_id#');" style="cursor:pointer">De administración</a></li>
+				   	<li><a onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');" style="cursor:pointer" lang="es">De áreas</a></li>
+				    <li><a onclick="parent.loadModal('html_content/user_tree_admin.cfm?user=#user_id#');" style="cursor:pointer" lang="es">De administración</a></li>
 				  </ul>
 				</div>
 

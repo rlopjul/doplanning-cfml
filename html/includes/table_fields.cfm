@@ -51,7 +51,7 @@
 		</cfif>
 
 		<div class="btn-group">
-			<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span>Añadir campo</span></a><!---color:##5BB75B;--->
+			<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span lang="es">Añadir campo</span></a><!---color:##5BB75B;--->
 		</div>
 
 		<div class="btn-group">

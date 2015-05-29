@@ -36,7 +36,7 @@
 <cfoutput>
 
 	<p class="help-block" style="font-size:12px;">
-		Se generará un archivo con codificación iso-8859-1 con el contenido de los registros.
+		<span lang="es">Se generará un archivo con codificación iso-8859-1 con el contenido de los registros.</span>
 	</p>
 
 	<script type="text/javascript">
@@ -56,18 +56,18 @@
 		<input type="hidden" name="tableTypeId" value="#tableTypeId#" />
 
 		<div class="row">
-			<label for="delimiter" class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:left">Delimitador de campos</label>
+			<label for="delimiter" class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:left" lang="es">Delimitador de campos</label>
 			<div class="col-xs-5 col-sm-3 col-md-3">
 				<select name="delimiter" id="delimiter" class="form-control">
-					<option value=";" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ ";">selected="selected"</cfif>>Punto y coma ;</option>
-					<option value="tab" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ "tab">selected="selected"</cfif>>Tabulación</option>
+					<option value=";" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ ";">selected="selected"</cfif> lang="es">Punto y coma ;</option>
+					<option value="tab" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ "tab">selected="selected"</cfif> lang="es">Tabulación</option>
 				</select>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-sm-12">
-		      <b>Incluir las siguientes columnas:</b>
+		      <b lang="es">Incluir las siguientes columnas:</b>
 		    </div>
 		</div>
 
@@ -75,7 +75,8 @@
 			<div class="col-xs-offset-1 col-xs-11">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="include_creation_date" value="true">Fecha de creación</label>
+		          <input type="checkbox" name="include_creation_date" value="true"><span lang="es">Fecha de creación</span>
+		      	</label>
 		      </div>
 		    </div>
 		</div>
@@ -84,7 +85,8 @@
 			<div class="col-xs-offset-1 col-xs-11">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="include_last_update_date" value="true">Fecha de última modificación</label>
+		          <input type="checkbox" name="include_last_update_date" value="true"><span lang="es">Fecha de última modificación</span>
+		      	</label>
 		      </div>
 		    </div>
 		</div>
@@ -93,7 +95,8 @@
 			<div class="col-xs-offset-1 col-xs-11">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="include_insert_user" value="true">Usuario creación</label>
+		          <input type="checkbox" name="include_insert_user" value="true"><span lang="es">Usuario creación</span>
+		      	</label>
 		      </div>
 		    </div>
 		</div>
@@ -102,7 +105,8 @@
 			<div class="col-xs-offset-1 col-xs-11">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="include_update_user" value="true">Usuario última modificación</label>
+		          <input type="checkbox" name="include_update_user" value="true"><span lang="es">Usuario última modificación</span>
+		      </label>
 		      </div>
 		    </div>
 		</div>
@@ -117,8 +121,8 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="decimals_with_mask" value="true">Aplicar máscaras a los valores decimales exportados.
-		       <br/>Use esta opción para poder exportar los valores decimales delimitados por coma en lugar de punto para que sean interpretados correctamente en Excel</label>
+		          <input type="checkbox" name="decimals_with_mask" value="true"><span lang="es">Aplicar máscaras a los valores decimales exportados.</span>
+		       <br/><span lang="es">Use esta opción para poder exportar los valores decimales delimitados por coma en lugar de punto para que sean interpretados correctamente en Excel</span></label>
 		      </div>
 		    </div>
 		</div>
@@ -127,7 +131,8 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="ms_excel_compatibility" value="true">Habilitar compatibilidad de apertura con las nuevas versiones de Microsoft Office Excel (versiones a partir de 2010) </label>
+		          <input type="checkbox" name="ms_excel_compatibility" value="true"><span lang="es">Habilitar compatibilidad de apertura con las nuevas versiones de Microsoft Office Excel (versiones a partir de 2010)</span>
+		      	</label>
 		      </div>
 		    </div>
 		</div>

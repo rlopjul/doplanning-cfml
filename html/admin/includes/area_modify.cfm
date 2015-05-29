@@ -10,7 +10,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4>Modificar área</h4>
+		    <h4 lang="es">Modificar área</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -20,8 +20,8 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)">Guardar cambios</button>
+		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span lang="es">Cancelar</span></button>
+		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)"><span lang="es">Guardar cambios</span></button>
 		</div>
 
 		<script>
@@ -39,12 +39,12 @@
 			    	if( $("##name").val().length > 0 ){
 			    		postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea");
 			    	} else {
-			    		showAlertModal("Debe introducir un nombre de área");
+			    		showAlertModal(window.lang.translate("Debe introducir un nombre de área"));
 			    	}
 
 				} else {
 
-					showAlertModal("Debe seleccionar un usuario responsable");
+					showAlertModal(window.lang.translate("Debe seleccionar un usuario responsable"));
 				}
 
 			}

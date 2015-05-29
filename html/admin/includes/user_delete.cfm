@@ -10,12 +10,12 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4>Eliminar usuario</h4>
+		    <h4 lang="es">Eliminar usuario</h4>
 		</div>
 
 	 	<div class="modal-body">
 	  		
-			¿Seguro que deseas eliminar definitivamente este usuario?:<br/>
+			<span lang="es">¿Seguro que deseas eliminar definitivamente este usuario?</span>:<br/>
 			<div style="padding-left:50px; padding-top:15px; padding-bottom:15px;">
 				<div>
 					<cfif len(objectUser.image_type) GT 0>
@@ -26,8 +26,8 @@
 				</div>
 			</div>
 
-			<div class="alert alert-danger"><i class="icon-warning-sign"></i> Ten en cuenta que <b>se eliminarán definitivamente todos los contenidos del usuario</b>: mensajes, archivos, tareas, eventos, ...<br/>
-			En las áreas en las que este usuario esté asignado como responsable, el administrador general de la organización pasará a ser el responsable.
+			<div class="alert alert-danger"><i class="icon-warning-sign"></i> <span lang="es">Ten en cuenta que <b>se eliminarán definitivamente todos los contenidos del usuario</b>: mensajes, archivos, tareas, eventos, ...<br/>
+			En las áreas en las que este usuario esté asignado como responsable, el administrador general de la organización pasará a ser el responsable.</span>
 			</div>
 
 			<form id="deleteUserForm" method="post">
@@ -37,8 +37,8 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-danger" id="deleteUserSubmitButton" data-loading-text="Eliminando..." onclick="submitUserModal(event)">Eliminar usuario</button>
+		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span lang="es">Cancelar</span></button>
+		    <button class="btn btn-danger" id="deleteUserSubmitButton" data-loading-text="Eliminando..." onclick="submitUserModal(event)"><span lang="es">Eliminar usuario</span></button>
 		</div>
 
 		<script>

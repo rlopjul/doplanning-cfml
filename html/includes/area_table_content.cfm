@@ -1,6 +1,8 @@
+<!--- 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
-</cfoutput>
+</cfoutput> --->
+
 
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">

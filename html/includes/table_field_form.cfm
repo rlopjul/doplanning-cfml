@@ -274,7 +274,7 @@
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" onsubmit="return onSubmitForm();">
 
 	<div id="submitDiv1" style="margin-bottom:10px;">
-		<input type="submit" value="Guardar" class="btn btn-primary"/>
+		<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 
 		<cfif page_type IS 2>
 			<span class="divider">&nbsp;&nbsp;</span>
@@ -293,7 +293,7 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<label for="label" class="control-label">Nombre *</label>
+			<label for="label" class="control-label"><span lang="es">Nombre</span> *</label>
 			<cfif tableTypeId IS 2>
 				<cfset labelMaxLength = "500">
 			<cfelse>
@@ -308,19 +308,19 @@
 			<cfif page_type IS 2>
 				<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
 			</cfif>
-			<label for="field_type_id" class="control-label">Tipo *</label>
+			<label for="field_type_id" class="control-label"><span lang="es">Tipo</span> *</label>
 			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled=</cfif>>
 				<cfloop query="fieldTypes">
 
 					<cfif ( tableTypeId EQ 2 AND (fieldTypes.field_type_group EQ "user" OR fieldTypes.field_type_group EQ "doplanning_item") ) OR ( tableTypeId NEQ 3 AND fieldTypes.field_type_id EQ 14 )><!---Los campos "user" y "doplanning_item" no están disponibles en los formularios. El campo "Request URL" sólo está disponible en archivos--->
 						<cfcontinue>
 					<cfelse>
-						<option value="#fieldTypes.field_type_id#" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>						
+						<option value="#fieldTypes.field_type_id#" lang="es" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>						
 					</cfif>
 					
 				</cfloop>
 			</select>
-			<small class="help-block">No se puede modificar el tipo una vez creado el campo.</small>
+			<small class="help-block" lang="es">No se puede modificar el tipo una vez creado el campo.</small>
 		</div>
 	</div>
 		
@@ -340,11 +340,11 @@
 			<select name="item_type_id" id="item_type_id" class="form-control" onchange="fieldItemTypeChange($('##item_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
 				<cfloop array="#itemTypesArray#" index="itemTypeId">
 					<cfif itemTypesStruct[itemTypeId].showInSelect IS true>
-						<option value="#itemTypeId#" lang="es" <cfif field.item_type_id IS itemTypeId>selected="selected"</cfif>>#itemTypesStruct[itemTypeId].label#</option>
+						<option value="#itemTypeId#" lang="es" <cfif isDefined("field.item_type_id") AND field.item_type_id IS itemTypeId>selected="selected"</cfif>>#itemTypesStruct[itemTypeId].label#</option>
 					</cfif>
 				</cfloop>
 			</select>
-			<small class="help-block">No se puede modificar el tipo de elemento DoPlanning una vez creado el campo.</small>
+			<small class="help-block" lang="es">No se puede modificar el tipo de elemento DoPlanning una vez creado el campo.</small>
 
 		</div>
 	</div>
@@ -359,33 +359,33 @@
 
 			<cfset maskTypesArray = structSort(maskTypesStruct, "numeric", "ASC", "position")>
 
-			<label for="mask_type_id" class="control-label">Máscara</label>
+			<label for="mask_type_id" class="control-label" lang="es">Máscara</label>
 			<select name="mask_type_id" id="mask_type_id" class="form-control"><!---onchange="fieldItemTypeChange($('##item_type_id').val());"--->
 				<option value="">Sin máscara</option>
 				<cfloop array="#maskTypesArray#" index="maskTypeId">
 					<option value="#maskTypeId#" lang="es" <cfif field.mask_type_id IS maskTypeId>selected="selected"</cfif>>#maskTypesStruct[maskTypeId].label# (#maskTypesStruct[maskTypeId].description#)</option>
 				</cfloop>
 			</select>
-			<small class="help-block">Permite definir como se mostrará el valor numérico introducido.</small>
+			<small class="help-block" lang="es">Permite definir como se mostrará el valor numérico introducido.</small>
 		</div>
 	</div>
 
 	<div class="row" id="fieldInputTypeList">
 		<div class="col-md-12">
-			<label for="field_input_type_list" class="control-label">Mostrar opciones en</label>
+			<label for="field_input_type_list" class="control-label" lang="es">Mostrar opciones en</label>
 			<select name="field_input_type" id="field_input_type_list" class="form-control">
-				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif>>Lista desplegable</option>
-				<option value="radio" <cfif field.field_input_type EQ "radio">selected="selected"</cfif>>Radio (se muestran visibles todas las opciones)</option>
+				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista desplegable</option>
+				<option value="radio" <cfif field.field_input_type EQ "radio">selected="selected"</cfif> lang="es">Radio (se muestran visibles todas las opciones)</option>
 			</select>
 		</div>
 	</div>
 
 	<div class="row" id="fieldInputTypeListMultiple">
 		<div class="col-md-12">
-			<label for="field_input_type_list_multiple" class="control-label">Mostrar opciones en</label>
+			<label for="field_input_type_list_multiple" class="control-label" lang="es">Mostrar opciones en</label>
 			<select name="field_input_type" id="field_input_type_list_multiple" class="form-control">
-				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif>>Lista</option>
-				<option value="checkbox" <cfif field.field_input_type EQ "checkbox">selected="selected"</cfif>>Checkbox (se muestran visibles todas las opciones)</option>
+				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista</option>
+				<option value="checkbox" <cfif field.field_input_type EQ "checkbox">selected="selected"</cfif> lang="es">Checkbox (se muestran visibles todas las opciones)</option>
 			</select>
 		</div>
 	</div>
@@ -401,7 +401,7 @@
 			<cfelse>
 				<cfset list_area_name = "">
 			</cfif>
-			<label for="default_value_text" class="control-label">Área a para generar la lista</label>
+			<label for="default_value_text" class="control-label" lang="es">Área a para generar la lista</label>
 			<div class="controls">
 				<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
 				<cfinput type="text" name="list_area_name" id="list_area_name" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" type="button" class="btn btn-default" lang="es">Seleccionar área</button>
@@ -411,9 +411,9 @@
 
 	<div class="row" id="listTextValues">
 		<div class="col-md-12">
-			<label for="list_values">Valores de la lista</label>
+			<label for="list_values" lang="es">Valores de la lista</label>
 			<textarea name="list_values" id="list_values" class="form-control" maxlength="5000" rows="5" <cfif field.field_type_id NEQ 15>disabled="disabled"</cfif>>#field.list_values#<!--- <cfif isDefined("field.list_values")> ESTE IF SE QUITA CUANDO SE AÑADA ESTA FUNCIONALIDAD PARA TODOS LOS DP----></textarea>
-			<small class="help-block">Introduce cada valor de la lista en una línea distinta<!---<br/>Ejemplo: Azul<br/>Verde<br/>Amarillo---></small>
+			<small class="help-block" lang="es">Introduce cada valor de la lista en una línea distinta<!---<br/>Ejemplo: Azul<br/>Verde<br/>Amarillo---></small>
 		</div>
 	</div>
 
@@ -421,9 +421,9 @@
 		<div class="col-md-12">
 			<div class="checkbox">
 				<label for="required">
-					<input type="checkbox" name="required" id="required" value="true" <cfif isDefined("field.required") AND field.required IS true>checked="checked"</cfif> /> Obligatorio<br/>
+					<input type="checkbox" name="required" id="required" value="true" <cfif isDefined("field.required") AND field.required IS true>checked="checked"</cfif> /> <span lang="es">Obligatorio</span>
 				</label>
-				<small class="help-block">Indica si el campo deber rellenarse de forma obligatoria</small>
+				<small class="help-block" lang="es">Indica si el campo deber rellenarse de forma obligatoria</small>
 			</div>
 		</div>
 	</div>
@@ -432,13 +432,13 @@
 		
 	<div class="row">
 		<div class="col-md-12">
-			<label for="sort_by_this" class="control-label">Ordenar por defecto por este campo</label>
+			<label for="sort_by_this" class="control-label" lang="es">Ordenar por defecto por este campo</label>
 			<select name="sort_by_this" id="sort_by_this" class="form-control">
-				<option value="" <cfif field.sort_by_this IS "">selected="selected"</cfif>>No</option>
-				<option value="asc" <cfif field.sort_by_this IS "asc">selected="selected"</cfif>>Orden ascendente</option>
-				<option value="desc" <cfif field.sort_by_this IS "desc">selected="selected"</cfif>>Orden descendente</option>
+				<option value="" <cfif field.sort_by_this IS "">selected="selected"</cfif> lang="es">No</option>
+				<option value="asc" <cfif field.sort_by_this IS "asc">selected="selected"</cfif> lang="es">Orden ascendente</option>
+				<option value="desc" <cfif field.sort_by_this IS "desc">selected="selected"</cfif> lang="es">Orden descendente</option>
 			</select>
-			<small class="help-block">Se mostrarán ordenados los registros en el orden especificado por el primer campo que tenga seleccionada esta opción</small>
+			<small class="help-block" lang="es">Se mostrarán ordenados los registros en el orden especificado por el primer campo que tenga seleccionada esta opción</small>
 			<!---<div class="checkbox">
 				<label for="sort_by_this">
 					<input type="checkbox" name="sort_by_this" id="sort_by_this" value="true" <cfif isDefined("field.sort_by_this") AND field.sort_by_this IS true>checked="checked"</cfif> /> Ordenar por defecto por este campo<br/>
@@ -454,37 +454,37 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<label for="description" class="control-label">Descripción</label>
+			<label for="description" class="control-label" lang="es">Descripción</label>
 			<textarea name="description" id="description" class="form-control" maxlength="1000">#field.description#</textarea>
 		</div>
 	</div>
 
 	<div class="row" id="textDefaultValue">
 		<div class="col-md-12">
-			<label for="default_value_text">Valor por defecto</label>
+			<label for="default_value_text" lang="es">Valor por defecto</label>
 			<textarea name="default_value" id="default_value_text" class="form-control" maxlength="1000" rows="4" <cfif field.field_type_id IS 6 OR field.field_type_id IS 7>disabled="disabled"</cfif>>#field.default_value#</textarea>
 		</div>
 	</div>
 	<div class="row" id="dateDefaultValue">
 		<div class="col-md-12">
-			<label for="default_value_date" class="control-label">Valor por defecto</label>
-			<input type="text" name="default_value" id="default_value_date" value="#field.default_value#" maxlength="10" class="form-control input_datepicker" <cfif field.field_type_id NEQ 6>disabled="disabled"</cfif>/> <span class="help-inline">Fecha formato DD-MM-AAAA</span>
+			<label for="default_value_date" class="control-label" lang="es">Valor por defecto</label>
+			<input type="text" name="default_value" id="default_value_date" value="#field.default_value#" maxlength="10" class="form-control input_datepicker" <cfif field.field_type_id NEQ 6>disabled="disabled"</cfif>/> <span class="help-inline" lang="es">Fecha formato DD-MM-AAAA</span>
 		</div>
 	</div>
 	<div class="row" id="booleanDefaultValue">
 		<div class="col-md-12">
-			<label for="default_value_boolean" class="control-label">Valor por defecto</label>
+			<label for="default_value_boolean" class="control-label" lang="es">Valor por defecto</label>
 			<select name="default_value" id="default_value_boolean" class="form-control" <cfif field.field_type_id NEQ 7>disabled="disabled"</cfif>>
 				<option value=""></option>
-				<option value="0" <cfif field.default_value IS false>selected="selected"</cfif>>No</option>
-				<option value="1" <cfif field.default_value IS true>selected="selected"</cfif>>Sí</option>
+				<option value="0" <cfif field.default_value IS false>selected="selected"</cfif> lang="es">No</option>
+				<option value="1" <cfif field.default_value IS true>selected="selected"</cfif> lang="es">Sí</option>
 			</select>
 		</div>
 	</div>
 
 	<div class="row" id="listDefaultValue">
 		<div class="col-md-12">
-			<label for="default_value_boolean" class="control-label">Valor por defecto</label>
+			<label for="default_value_boolean" class="control-label" lang="es">Valor por defecto</label>
 			<select name="default_value" id="default_value_list" class="selectpicker span5" <cfif field.field_type_id NEQ 9 OR field.field_type_id NEQ 10>disabled="disabled"</cfif>><!---multiple---></select>
 		</div>
 	</div>
@@ -518,7 +518,7 @@
 
 			<div class="row">
 				<div class="col-md-12">
-					<label for="default_value_user" class="control-label">Valor por defecto</label>
+					<label for="default_value_user" class="control-label" lang="es">Valor por defecto</label>
 				</div>
 			</div>
 			<div class="row">
@@ -600,7 +600,7 @@
 
 			<div class="row">
 				<div class="col-md-12">
-					<label for="default_value_item" class="control-label">Valor por defecto</label>
+					<label for="default_value_item" class="control-label" lang="es">Valor por defecto</label>
 				</div>
 			</div>
 
@@ -628,7 +628,7 @@
 	<cfinput type="text" name="position" id="position" value="#field.position#" required="true" validate="integer" message="Posición debe ser un número entero" style="width:50px;">--->
 
 	<div id="submitDiv2" style="margin-top:20px;">
-		<input type="submit" value="Guardar" class="btn btn-primary"/>
+		<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 		<!---<a href="area_items.cfm?area=#area_id#" class="btn btn-default">Cancelar</a>--->
 	</div>
 	

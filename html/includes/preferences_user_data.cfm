@@ -1,6 +1,6 @@
-<cfoutput>
+<!---<cfoutput>
 <script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>
-</cfoutput>
+</cfoutput>--->
 
 <!---<div class="div_head_subtitle">
 Datos Personales

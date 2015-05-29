@@ -77,7 +77,7 @@
 
 <cfif APPLICATION.identifier NEQ "vpnet">
 <div class="alert text-danger" style="clear:both">
-<h4>IMPORTANTE</h4> El apartado de Mis Documentos ya no está disponible en las nuevas versiones de la aplicación.<br/><br/>
+<h4 lang="es">IMPORTANTE</h4> El apartado de Mis Documentos ya no está disponible en las nuevas versiones de la aplicación.<br/><br/>
 
 Desde aquí ya no se pueden crear nuevos documentos ni directorios, solo modificar los existentes.<br/>
 A partir de ahora <b>los documentos deben gestionarse en las áreas de la organización</b>.<br/>

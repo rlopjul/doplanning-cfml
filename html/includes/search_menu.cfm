@@ -73,6 +73,11 @@
 		<cfset curTitle = "Documentos de Doplanning">
 	</cfcase>
 
+	<cfcase value="areas_search.cfm">
+		<cfset curElement = "areas">
+		<cfset curTitle = "Áreas">
+	</cfcase>
+
 </cfswitch>
 
 <cfoutput>

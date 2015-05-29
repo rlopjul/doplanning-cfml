@@ -1,5 +1,7 @@
 <cfoutput>
+<!--- 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
+ --->
 
 <!---<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>--->
 </cfoutput>
@@ -58,8 +60,8 @@
 
 				
 			<ul class="nav nav-tabs" role="tablist" id="binTab">
-			  <li class="active"><a href="#tab1">Eliminados por mi</a></li>
-			  <li><a href="#tab2">Todos los de la organización</a></li>
+			  <li class="active"><a href="#tab1" lang="es">Eliminados por mi</a></li>
+			  <li><a href="#tab2" lang="es">Todos los de la organización</a></li>
 			</ul>
 
 
@@ -88,11 +90,11 @@
 							<cfif myItemsQuery.recordCount GT 0>
 								<div class="btn-toolbar" role="toolbar">
 									<div class="btn-group">
-										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItems&delete_user_id=#SESSION.user_id##url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-primary btn-sm navbar-btn"><i class="icon-undo icon-white"></i> Restaurar todo</a>
+										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItems&delete_user_id=#SESSION.user_id##url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-primary btn-sm navbar-btn"><i class="icon-undo icon-white"></i> <span lang="es">Restaurar todo</span></a>
 									</div>	
 
 									<div class="btn-group">
-										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=deleteBinItems&delete_user_id=#SESSION.user_id##url_return_page#" onclick="return confirmAction('eliminar');" class="btn btn-danger btn-sm navbar-btn"><i class="icon-remove icon-white"></i> Eliminar todo definitivamente</a>
+										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=deleteBinItems&delete_user_id=#SESSION.user_id##url_return_page#" onclick="return confirmAction('eliminar');" class="btn btn-danger btn-sm navbar-btn"><i class="icon-remove icon-white"></i> <span lang="es">Eliminar todo definitivamente</span></a>
 									</div>
 								</div>
 							</cfif>	
@@ -101,7 +103,7 @@
 								<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm navbar-btn navbar-right" style="margin-left:8px;margin-right:5px;"><i class="icon-refresh icon-white"></i></a>
 							</cfif>--->
 							
-							<p class="navbar-text navbar-right">#myItemsQuery.recordCount# <cfif myItemsQuery.recordCount IS 1>elemento<cfelse>elementos</cfif>&nbsp;&nbsp;&nbsp;</p>	
+							<p class="navbar-text navbar-right">#myItemsQuery.recordCount# <cfif myItemsQuery.recordCount IS 1><span lang="es">elemento</span><cfelse><span lang="es">elementos</span></cfif>&nbsp;&nbsp;&nbsp;</p>	
 
 							</cfoutput>
 								
@@ -159,11 +161,11 @@
 							<cfif itemsQuery.recordCount GT 0>
 								<div class="btn-toolbar" role="toolbar">
 									<div class="btn-group">
-										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItems#url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-primary btn-sm navbar-btn"><i class="icon-undo icon-white"></i> Restaurar todo</a>	
+										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItems#url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-primary btn-sm navbar-btn"><i class="icon-undo icon-white"></i> <span lang="es">Restaurar todo</span></a>	
 									</div>
 
 									<div class="btn-group">
-										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=deleteBinItems#url_return_page#" onclick="return confirmAction('eliminar');" class="btn btn-danger btn-sm navbar-btn"><i class="icon-remove icon-white"></i> Eliminar todo definitivamente</a>
+										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=deleteBinItems#url_return_page#" onclick="return confirmAction('eliminar');" class="btn btn-danger btn-sm navbar-btn"><i class="icon-remove icon-white"></i> <span lang="es">Eliminar todo definitivamente</span></a>
 									</div>
 								</div>
 							</cfif>	
@@ -172,7 +174,7 @@
 								<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm navbar-btn navbar-right" style="margin-left:8px;margin-right:5px;"><i class="icon-refresh icon-white"></i></a>	
 							</cfif>--->
 
-							<p class="navbar-text navbar-right">#itemsQuery.recordCount# <cfif itemsQuery.recordCount IS 1>elemento<cfelse>elementos</cfif>&nbsp;&nbsp;&nbsp;</p>
+							<p class="navbar-text navbar-right">#itemsQuery.recordCount# <cfif itemsQuery.recordCount IS 1><span lang="es">elemento</span><cfelse><span lang="es">elementos</span></cfif>&nbsp;&nbsp;&nbsp;</p>
 
 							</cfoutput>
 

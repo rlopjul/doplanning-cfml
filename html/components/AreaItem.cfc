@@ -2011,7 +2011,7 @@
 
 
 							<cfif APPLICATION.publicationScope IS true AND itemTypeId IS 11 OR itemTypeId IS 12>
-								<div class="div_message_page_label">Ámbito de publicación: <span class="text_message_page">#objectItem.publication_scope_name#</span></div>
+								<div class="div_message_page_label"><span lang="es">Ámbito de publicación:</span> <span class="text_message_page">#objectItem.publication_scope_name#</span></div>
 							</cfif>		
 									
 
@@ -3146,7 +3146,7 @@
 		
 		<cfset var method = "outputAllItemsFullList">
 		
-		<!---<cftry>--->	
+		<cftry>
 
 			<cfoutput>
 
@@ -3378,7 +3378,7 @@
 
 												<cfelseif itemTypeId IS NOT 3><!---No es link--->
 												
-													<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#.png" alt="#itemTypeNameEs#" title="#itemTypeNameEs#" style="width:60px;"/>
+													<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#.png" alt="#itemTypeNameEs#" title="#itemTypeNameEs#" lang="es" style="width:60px;"/>
 														
 												<cfelse><!---style="max-width:none;" Requerido para corregir un bug con Bootstrap en Chrome--->
 													<a href="#APPLICATION.htmlPath#/go_to_link_link.cfm?#itemTypeName#=#itemsQuery.id#" style="float:left;" target="_blank" title="Visitar el enlace" onclick="openUrl('#APPLICATION.htmlPath#/go_to_link_link.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)"><img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#.png" style="width:60px;"/></a>
@@ -3684,12 +3684,12 @@
 												</cfif>
 											<cfelse>
 												<!---onclick="openUrl('#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#','itemIframe',event)"--->
-												<a href="#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#" class="btn btn-sm btn-info" title="Ver #itemTypeNameEs#"><span lang="es">Ver #itemTypeNameEs#</span></a>
+												<a href="#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#" class="btn btn-sm btn-info" title="Ver #itemTypeNameEs#"><span lang="es">Ver</span> <span lang="es">#itemTypeNameEs#</span></a>
 											</cfif>
 
 										<cfelse><!--- Deleted item --->
 
-											<a href="#APPLICATION.htmlPath#/index.cfm?abb=#SESSION.client_abb#&area=#itemsQuery.area_id#" target="_parent" class="btn btn-sm btn-info" title="Ir al área"><span lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver área"> Ir al área</span></a>
+											<a href="#APPLICATION.htmlPath#/index.cfm?abb=#SESSION.client_abb#&area=#itemsQuery.area_id#" target="_parent" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver área"> <span lang="es">Ir al área</span></a>
 											
 										</cfif>
 
@@ -3735,12 +3735,12 @@
 			</cfoutput>			
 								
 			
-			<!---
+			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
 			
-		</cftry>--->
+		</cftry>
 		
 	</cffunction>
 	
@@ -3854,7 +3854,7 @@
 						<h1 style="color:##009ED2;">#arguments.item.title#
 					</div>
 					<div class="col-sm-2">
-						<a href="area_items.cfm?area=#area_id####itemTypeName##arguments.item_id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> Ver en área</a></h1>
+						<a href="area_items.cfm?area=#area_id####itemTypeName##arguments.item_id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> <span lang="es">Ver en área</span></a></h1>
 					</div>
 				</div>
 

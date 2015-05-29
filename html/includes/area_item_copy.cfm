@@ -163,7 +163,9 @@
 </cfif>
 
 <cfoutput>
+<!--- 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
+ --->
 
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
@@ -370,7 +372,7 @@
 
 <!---<div class="div_file_page_name">#objectItem.title#</div>---->
 
-<div class="div_head_subtitle"><span lang="es">Copiar #itemTypeNameEs# a áreas</span>
+<div class="div_head_subtitle"><span lang="es">Copiar</span> <span lang="es">#itemTypeNameEs#</span> <span lang="es">a áreas</span>
 </div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
@@ -412,7 +414,7 @@ function onSubmitForm()
 	<input type="hidden" name="area_id" value="#area_id#">
 
 	<div id="submitDiv1">
-		<input type="submit" class="btn btn-primary" value="Añadir #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-bottom:3px;" />
+		<input type="submit" class="btn btn-primary" value="Copiar #itemTypeNameEs# a áreas seleccionadas" lang="es" style="margin-bottom:3px;" />
 
 		<a href="#return_page#" class="btn btn-default" lang="es" style="float:right;">Cancelar</a>
 	</div>
@@ -452,7 +454,7 @@ function onSubmitForm()
 				<div class="panel-body">
 
 					<div class="alert alert-info" style="margin-bottom:5px;">
-						<span lang="es">Seleccione las áreas a las que desea copiar <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs#:</span>
+						<span lang="es">Seleccione las áreas a las que desea copiar <cfif itemTypeGender EQ "male">el<cfelse>la</cfif></span> <span lang="es">#itemTypeNameEs#</span>:
 					</div>
 
 					<div>

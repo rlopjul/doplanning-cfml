@@ -170,17 +170,17 @@
 
 		<div class="row">
 			<div class="col-sm-6">
-				<label class="control-label" for="file">Archivo CSV con los registros a importar</label>
+				<label class="control-label" for="file" lang="es">Archivo CSV con los registros a importar</label>
 				<cfinput name="file" id="file" type="file" required="yes" accept=".csv,.tsv,text/plain" message="Archivo de datos requerido para la importación" class="form-control">
 			</div>
 		</div>
 
 		<div class="row">
-			<label for="delimiter" class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:left">Delimitador de campos</label>
+			<label for="delimiter" class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:left" lang="es">Delimitador de campos</label>
 			<div class="col-xs-5 col-sm-3 col-md-3">
 				<select name="delimiter" id="delimiter" class="form-control">
-					<option value=";" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ ";">selected="selected"</cfif>>Punto y coma ;</option>
-					<option value="tab" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ "tab">selected="selected"</cfif>>Tabulación</option>
+					<option value=";" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ ";">selected="selected"</cfif> lang="es">Punto y coma ;</option>
+					<option value="tab" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ "tab">selected="selected"</cfif> lang="es">Tabulación</option>
 				</select>
 			</div>
 		</div>
@@ -189,7 +189,7 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="delete_rows" value="true" <cfif isDefined("FORM.delete_rows")>checked</cfif>> Borrar registros existentes en <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs#
+		          <input type="checkbox" name="delete_rows" value="true" <cfif isDefined("FORM.delete_rows")>checked</cfif>> <span lang="es">Borrar registros existentes en <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs#</span>
 		        </label>
 		      </div>
 		    </div>
@@ -199,7 +199,7 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="cancel_on_error" value="false" <cfif isDefined("FORM.cancel_on_error")>checked</cfif>> No cancelar si hay errores en importación de registros 
+		          <input type="checkbox" name="cancel_on_error" value="false" <cfif isDefined("FORM.cancel_on_error")>checked</cfif>> <span lang="es">No cancelar si hay errores en importación de registros</span> 
 		        </label>
 		      </div>
 		    </div>
@@ -209,9 +209,9 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="start_row" value="1"<cfif isDefined("FORM.start_row")>checked</cfif>> Importar primera fila del archivo
+		          <input type="checkbox" name="start_row" value="1"<cfif isDefined("FORM.start_row")>checked</cfif>> <span lang="es">Importar primera fila del archivo</span>
 		        </label>
-		        <small class="help-block" style="margin-bottom:0">Por defecto no se importa la primera fila del archivo (fila para los títulos de las columnas)</small>
+		        <small class="help-block" style="margin-bottom:0" lang="es">Por defecto no se importa la primera fila del archivo (fila para los títulos de las columnas)</small>
 		      </div>
 		    </div>
 		</div>
@@ -220,16 +220,16 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          	<input type="checkbox" name="decimals_with_mask" value="1"<cfif isDefined("FORM.decimals_with_mask")>checked</cfif>> Los valores decimales usan las máscaras especificadas en la definición de los campos<br/>
+		          	<input type="checkbox" name="decimals_with_mask" value="1"<cfif isDefined("FORM.decimals_with_mask")>checked</cfif>> <span lang="es">Los valores decimales usan las máscaras especificadas en la definición de los campos</span><br/>
 		         	<cfif len(fieldsWithMask) GT 0>
-		       			Importante: los siguientes campos tienen una máscara seleccionada:<i>#fieldsWithMask#</i>
+		       			<span lang="es">Importante: los siguientes campos tienen una máscara seleccionada</span>:<i>#fieldsWithMask#</i>
 		        	<cfelse>
-		        		(No hay campos decimales definidos con máscara, esta opción se ignorará)
+		        		<span lang="es">(No hay campos decimales definidos con máscara, esta opción se ignorará)</span>
 		        	</cfif><br/>
-		        	 <b>Use esta opción para poder importar valores decimales delimitados por coma en lugar de punto</b><br/>
+		        	 <b lang="es">Use esta opción para poder importar valores decimales delimitados por coma en lugar de punto</b><br/>
 		        </label>
-		        <small class="help-block">Por defecto los campos decimales deben estar en el siguiente formato: 9999.99<br/>
-		        Si los decimales usan otro formato distinto, como por ejemplo separar la cifra decimal por coma en lugar de punto, debe especificarlo primero en la <a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#">definición de los campos</a> aplicándole una máscara, y posteriormente seleccionar esta opción en la importación para que se tenga en cuenta la máscara al realizar la importación.<br/>
+		        <small class="help-block"><span lang="es">Por defecto los campos decimales deben estar en el siguiente formato: 9999.99</span><br/>
+		        <span lang="es">Si los decimales usan otro formato distinto, como por ejemplo separar la cifra decimal por coma en lugar de punto, debe especificarlo primero en la </span><a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" lang="es">definición de los campos</a> <span lang="es">aplicándole una máscara, y posteriormente seleccionar esta opción en la importación para que se tenga en cuenta la máscara al realizar la importación.</span><br/>
 		    	
 		    	
 		      </div>
@@ -239,7 +239,7 @@
 
 		<div class="row" style="margin-top:20px">
 			<div class="col-sm-12" id="submitDiv1">
-				<input type="submit" value="Importar registros" class="btn btn-primary" />
+				<input type="submit" value="Importar registros" class="btn btn-primary" lang="es" />
 
 				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 			</div>

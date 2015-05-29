@@ -4029,4 +4029,60 @@
 	</cffunction>	
 
 
+	<!--- ---------------------------- GET AREAS -------------------------------- --->
+	
+	<cffunction name="getAreas" returntype="struct" output="false" access="public">
+		<cfargument name="search_text" type="string" required="true">
+		<!---<cfargument name="order_by" type="string" required="false" default="name">
+		<cfargument name="order_type" type="string" required="false" default="asc">--->
+		<cfargument name="limit" type="numeric" required="true">
+		
+		<cfset var method = "getAreas">
+
+		<cfset var response = structNew()>
+
+		<cfset var internal_user = "">
+		<cfset var allUserAreasList = "">
+			
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
+				<cfinvokeargument name="get_user_id" value="#user_id#"> 
+			</cfinvoke>
+			
+			<cfif internal_user IS false>
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllUserAreasList" returnvariable="allUserAreasList">
+					<cfinvokeargument name="get_user_id" value="#user_id#">
+				</cfinvoke>			
+			</cfif>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreas" returnvariable="response">
+				<cfinvokeargument name="search_text" value="#arguments.search_text#"/>
+				<!---<cfif len(arguments.order_by) GT 0>
+					<cfinvokeargument name="order_by" value="#arguments.order_by#"/>
+					<cfinvokeargument name="order_type" value="#arguments.order_type#"/>
+				</cfif>--->
+				<cfif internal_user IS false>
+					<cfinvokeargument name="areas_ids" value="#allUserAreasList#"/>					
+				</cfif>
+				<cfinvokeargument name="limit" value="#arguments.limit#"/>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
 </cfcomponent>

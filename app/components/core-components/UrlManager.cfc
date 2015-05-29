@@ -22,7 +22,7 @@
 	<!--- ----------------------- getAreaFileUrl -------------------------------- --->
 	<cffunction name="getAreaFileUrl" access="public" returntype="string">
 		<cfargument name="file_id" type="numeric" required="true">
-		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="false">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="download" type="boolean" required="false" default="false">
 
@@ -46,7 +46,7 @@
 	<!--- ----------------------- getDownloadFileUrl -------------------------------- --->
 	<cffunction name="getDownloadFileUrl" access="public" returntype="string">
 		<cfargument name="file_id" type="numeric" required="yes">
-		<cfargument name="fileTypeId" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="false">
 		<cfargument name="item_id" type="numeric" required="no">
 		<cfargument name="itemTypeName" type="string" required="no">
 

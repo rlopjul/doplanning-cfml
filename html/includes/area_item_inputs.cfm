@@ -17,7 +17,11 @@
 			  format: 'dd-mm-yyyy', 
 			  autoclose: true,
 			  weekStart: 1,
-			  language: 'es',
+			  <cfif SESSION.user_language EQ "es">
+			  	language: 'es',
+			  <cfelse>
+			  	language: 'en',
+			  </cfif>
 			  todayBtn: 'linked'
 				}).on('changeDate', function(ev){
 					var startDateVal = $('##start_date').val();	
@@ -30,7 +34,11 @@
 			$('##end_date').datepicker({
 			  format: 'dd-mm-yyyy',
 			  weekStart: 1,
-			  language: 'es',
+			  <cfif SESSION.user_language EQ "es">
+			  	language: 'es',
+			  <cfelse>
+			  	language: 'en',
+			  </cfif>
 			  todayBtn: 'linked', 
 			  autoclose: true,
 			  startDate: $('##start_date').val() 
@@ -43,7 +51,11 @@
 			$('##publication_date').datepicker({
 			  format: 'dd-mm-yyyy',
 			  weekStart: 1,
-			  language: 'es',
+			  <cfif SESSION.user_language EQ "es">
+			  	language: 'es',
+			  <cfelse>
+			  	language: 'en',
+			  </cfif>
 			  todayBtn: 'linked', 
 			  autoclose: true
 			});
@@ -70,10 +82,7 @@
 		if(startDateParts[2].length != 4 || endDateParts[2].length != 4)
 			return false;
 		
-		/*var startDate = $.datepicker.parseDate("dd-mm-yy", startDateVal);
-		var endDate = $.datepicker.parseDate("dd-mm-yy", endDateVal);*/
-				
-		return startDateVal <= endDateVal;
+		return true;
 		
 	}
 
@@ -1037,6 +1046,11 @@
 	
 <script>
 	$(document).ready(function() {
+
+		<!---<cfoutput>
+		document.emojiSource = '#APPLICATION.htmlPath#/assets/emojis'; //relative path to emojis
+		</cfoutput>--->
+
 		$('#summernote').summernote({
 			height: "400px"
 			
@@ -1058,6 +1072,7 @@
 			    ['insert', ['link', 'picture', 'hr']],
 			    ['view', ['fullscreen']],
 			    ['help', ['help']]
+			    <!---, ['misc', ['emoji']]--->
 			  ]
 			<cfif SESSION.user_language EQ "es">
 				, lang: 'es-ES'

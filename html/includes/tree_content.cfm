@@ -1,11 +1,11 @@
 <cfoutput>
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.2" rel="stylesheet" />
 
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
+<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.1.1"></script>
 
 <script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
 
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.2"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.1"></script>
 </cfoutput>
 
 <script>
@@ -58,6 +58,7 @@
 	
 		<!---curAreaId = areaId;--->
 
+		$('#openNewTab').is(':checked')
 		goToUrl(areaUrl);
 		
 	}
@@ -133,6 +134,13 @@
 		</div>
 
 		<input type="hidden" id="changeTabDisabled" value="true"/><!---No cambiar de pestaña al seleccionar área--->
+
+
+		<!---<div class="form-inline" style="padding-bottom:5px; padding-left:5px;">
+			<label class="checkbox">
+				<input type="checkbox" id="openNewTab" value="true" style="width:15px;height:15px"/>&nbsp;&nbsp;<span style="font-size:15px;" lang="es">Abrir las áreas en nuevas pestañas</span>
+			</label>
+		</div>--->
 
 	</div>
 

@@ -132,7 +132,70 @@
 				#xmlAreas.areas.area[xmlIndex]#
 				</cfxml>			
 				
-				<div class="div_area"><div class="div_img_area_area"><a href="area.cfm?area=#xmlArea.area.xmlAttributes.id#"><cfif xmlArea.area.xmlAttributes.allowed EQ true><img src="assets/icons_#APPLICATION.identifier#/area_small.png"/><cfelse><img src="assets/icons_#APPLICATION.identifier#/area_small_disabled.png"/></cfif></a></div><div class="div_text_area"><a href="area.cfm?area=#xmlArea.area.xmlAttributes.id#" class="a_area_area">#xmlArea.area.xmlAttributes.name#</a></div></div>		
+				<!---<div class="div_area">
+
+					<div class="div_img_area_area"><a href="area_items.cfm?abb=#SESSION.client_abb#&area=#xmlArea.area.xmlAttributes.id#"><cfif xmlArea.area.xmlAttributes.allowed EQ true><img src="assets/icons_#APPLICATION.identifier#/area_small.png"/><cfelse><img src="assets/icons_#APPLICATION.identifier#/area_small_disabled.png"/></cfif></a></div>
+					<div class="div_text_area">
+						<a href="area.cfm?area=#xmlArea.area.xmlAttributes.id#" class="a_area_area">#xmlArea.area.xmlAttributes.name#</a><br/>--->
+
+					
+
+					<div class="row">
+						<div class="col-sm-12">
+
+							<a href="area_items.cfm?abb=#SESSION.client_abb#&area=#xmlArea.area.xmlAttributes.id#"><cfif xmlArea.area.xmlAttributes.allowed EQ true><img src="assets/icons_#APPLICATION.identifier#/area_small.png"/><cfelse><img src="assets/icons_#APPLICATION.identifier#/area_small_disabled.png"/></cfif></a>
+
+							<a href="area.cfm?area=#xmlArea.area.xmlAttributes.id#" class="a_area_area">#xmlArea.area.xmlAttributes.name#</a>
+
+						</div>
+					</div>
+
+
+						<cfif loggedUser.internal_user IS true>
+
+							<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
+								<cfinvokeargument name="area_id" value="#xmlArea.area.xmlAttributes.id#">
+								<cfinvokeargument name="separator" value=" > ">
+								<cfinvokeargument name="cur_area_link_class" value="current_area">
+
+								<cfinvokeargument name="with_base_link" value="area_items.cfm?area="/>
+							</cfinvoke>
+
+						<cfelse>
+
+							<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getHighestAreaUserAssociated" returnvariable="getHighestAreaResponse">
+								<cfinvokeargument name="area_id" value="#xmlArea.area.xmlAttributes.id#"/>
+								<cfinvokeargument name="user_id" value="#SESSION.user_id#"/>
+								<cfinvokeargument name="userType" value="users"/>
+							</cfinvoke>
+
+							<cfif getHighestAreaResponse.result IS true>
+
+								<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
+									<cfinvokeargument name="area_id" value="#xmlArea.area.xmlAttributes.id#">
+									<cfinvokeargument name="separator" value=" > ">
+									<cfinvokeargument name="from_area_id" value="#getHighestAreaResponse.highest_area_id#">
+									<cfinvokeargument name="include_from_area" value="true">
+									<cfinvokeargument name="cur_area_link_class" value="current_area">
+
+									<cfinvokeargument name="with_base_link" value="area_items.cfm?area="/>
+								</cfinvoke>
+
+							</cfif>
+
+						</cfif>
+
+						<div class="row">
+							<div class="col-sm-12">
+
+								<p style="font-size:10px;">#area_path#</p>
+
+							</div>
+						</div>
+
+					<!---</div>
+
+				</div>--->	
 			</cfloop>
 			</cfoutput>
 	
@@ -144,7 +207,7 @@
 
 <cfelse>
 
-	<div class="alert" style="margin:10px;margin-top:30px;background-color:#65C5BD"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en "BUSCAR"</span></div>
+	<div class="alert" style="margin:10px;margin-top:30px;background-color:#65C5BD"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en BUSCAR</span></div>
 
 </cfif>
 

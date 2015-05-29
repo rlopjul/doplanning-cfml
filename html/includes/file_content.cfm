@@ -57,9 +57,11 @@
 
 </cfif>
 
+<!--- 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
+</cfoutput> --->
+
 
 <!---<div class="contenedor_fondo_blanco">--->
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">

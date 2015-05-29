@@ -100,7 +100,8 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 <!---<script src="#APPLICATION.path#/jquery/jquery.html5.history.min.js" charset="utf-8"></script>
 --->
 
-<script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>
+<!---<script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>--->
+<script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>
 
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
 </cfoutput>

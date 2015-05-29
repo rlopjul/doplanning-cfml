@@ -75,13 +75,15 @@
 	<div class="container app_main_container">
 		<!-- InstanceBeginEditable name="contenido_app" -->
 
-<cfoutput>
-<script src="#APPLICATION.htmlPath#/language/preferences_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
+	<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
 
-<cfif APPLICATION.identifier EQ "vpnet">
+<!---<cfoutput>
+<script src="#APPLICATION.htmlPath#/language/preferences_en.js" charset="utf-8" type="text/javascript"></script>
+</cfoutput>--->
+
+<!---<cfif APPLICATION.identifier EQ "vpnet">
 	<cfinclude template="includes/preferences_head.cfm">
-</cfif>
+</cfif>--->
 
 <cfset return_page = "index.cfm">
 <!---<div>
@@ -130,16 +132,16 @@
 
 	<div style="clear:none;float:right;padding-top:5px; padding-right:6px;"><!---width:200px; --->
 		<cfoutput>
-		<a href="main.cfm?abb=#SESSION.client_abb#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
+		<a href="#APPLICATION.htmlPath#/admin/main.cfm?abb=#SESSION.client_abb#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
 		</cfoutput>
 	</div>
 	
 	<ul class="nav nav-pills" id="preferencesTab" style="clear:none; padding-bottom:5px;">
 		<li class="active"><a href="#tab1" data-toggle="tab" lang="es"><i class="icon-user"></i> Datos personales</a></li>
 		<li><a href="#tab2" data-toggle="tab" lang="es"><i class="icon-envelope-alt"></i> Notificaciones</a></li>
-		<cfif clientQuery.bin_enabled IS true>
+		<!---<cfif clientQuery.bin_enabled IS true>
 			<li><a href="#tab3" data-toggle="tab" lang="es"><i class="icon-trash"></i> Papelera</a></li>
-		</cfif>
+		</cfif>--->
 	</ul>
 
   
@@ -164,7 +166,7 @@
 	</div><!---END Tab Notificaciones--->
 
 
-	<cfif clientQuery.bin_enabled IS true>
+	<!---<cfif clientQuery.bin_enabled IS true>
 
 		<div class="tab-pane" id="tab3"><!---Tab Papelera--->
 
@@ -174,7 +176,7 @@
 			
 		</div><!---END Tab Notificaciones--->
 
-	</cfif>
+	</cfif>---->
 	
 	
   </div>

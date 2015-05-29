@@ -41,7 +41,7 @@
 			ADD UNIQUE INDEX `file_public_id_UNIQUE` (`file_public_id` ASC);
 		</cfquery>
 
-		<!--- Falta cambiar esto en el resto de DPs de Era7 --->
+		<!--- Falta cambiar esto en el resto de DPs de Era7 Bioinfo--->
 		<cfquery datasource="#client_datasource#">
 			ALTER TABLE `dp_#new_client_abb#`.`#new_client_abb#_dp_documents` 
 			CHANGE COLUMN `description` `description` LONGTEXT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NOT NULL ;

@@ -1,8 +1,10 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_change_area_query.cfm">
 
+<!--- 
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
-</cfoutput>
+</cfoutput> --->
+
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
@@ -82,7 +84,7 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-			<span lang="es">#itemTypeNameEs#:</span>
+			<span lang="es">#itemTypeNameEs#</span>:
 			<strong>#item.title#</strong>
 		</div>
 	</div>
@@ -93,7 +95,7 @@
 	
 	<div class="row">
 		<div class="col-sm-12">
-			<span>Área actual:</span>
+			<span lang="es">Área actual</span>:
 			<strong>#itemArea.name#</strong>
 		</div>
 	</div>

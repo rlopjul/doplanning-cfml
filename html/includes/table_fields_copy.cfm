@@ -104,7 +104,7 @@ function loadTableFields(tableId) {
 	<div style="padding-left:2px; margin-top:5px;">
 	<cfif tables.recordCount GT 0>
 
-		<label for="copy_from_table_id">#tableTypeNameEs# <cfif tableTypeGender IS "male">del<cfelse>de la</cfif> que copiar los campos:</label>
+		<label for="copy_from_table_id" lang="es">#tableTypeNameEs# <cfif tableTypeGender IS "male">del<cfelse>de la</cfif> que copiar los campos:</label>
 		<select name="copy_from_table_id" id="copy_from_table_id" class="form-control" onchange="loadTableFields($('##copy_from_table_id').val());">
 			<cfloop query="tables">
 				<option value="#tables.id#">#tables.title#</option>
@@ -112,7 +112,7 @@ function loadTableFields(tableId) {
 		</select>
 
 	<cfelse>
-		No hay #tableTypeNameEs# disponible para copiar campos.
+		<span lang="es">No hay #tableTypeNameEs# disponible para copiar campos.</span>
 	</cfif>
 	</div>
 

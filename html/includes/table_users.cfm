@@ -51,7 +51,7 @@
 		</div>
 
 		<div class="btn-group">
-			<a  href="#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;line-height:20px;"></i> <span>Añadir editores</span></a><!---color:##5BB75B;--->
+			<a  href="#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;line-height:20px;"></i> <span lang="es">Añadir editores</span></a><!---color:##5BB75B;--->
 		</div>
 
 		<!---<span class="divider">&nbsp;</span>--->

@@ -659,6 +659,7 @@
 	<cffunction name="outputAreasFullList" returntype="void" output="true" access="public">
 		<cfargument name="areasQuery" type="query" required="true">
 		<cfargument name="loggedUser" type="query" required="false">
+		<cfargument name="small" type="boolean" required="false" default="false">
 		
 		<cfset var method = "outputAreasFullList">
 		
@@ -675,24 +676,39 @@
 
 							   	<div class="row">
 
-									<div class="col-xs-11">
+							   		<div class="col-xs-12">
 										
-										<h4>#areasQuery.area_name#
-
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-										<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringLastDate">
-											<cfinvokeargument name="timestamp_date" value="#areasQuery.last_update_date#">
-										</cfinvoke>							
-										<cfset spacePosLast = findOneOf(" ", stringLastDate)>
-										<small class="text_date">
-											#left(stringLastDate, spacePosLast)#
-										</small>&nbsp;&nbsp;&nbsp;
-										<cfif spacePosLast GT 0>
-											<small class="text_hour">#right(stringLastDate, len(stringLastDate)-spacePosLast)#</small>
+										<cfif arguments.small EQ true>
+											<h5>
+										<cfelse>
+											<h4>
 										</cfif>
 
-										</h4>
+											#areasQuery.area_name#
+
+											<cfif isDefined("areasQuery.last_update_date")>
+												
+												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+												<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringLastDate">
+													<cfinvokeargument name="timestamp_date" value="#areasQuery.last_update_date#">
+												</cfinvoke>							
+												<cfset spacePosLast = findOneOf(" ", stringLastDate)>
+												<small class="text_date">
+													#left(stringLastDate, spacePosLast)#
+												</small>&nbsp;&nbsp;&nbsp;
+												<cfif spacePosLast GT 0>
+													<small class="text_hour">#right(stringLastDate, len(stringLastDate)-spacePosLast)#</small>
+												</cfif>
+
+											</cfif>
+
+										<cfif arguments.small EQ true>
+											</h5>
+										<cfelse>
+											</h4>
+										</cfif>
+
 
 										<cfif loggedUser.internal_user IS true>
 
@@ -728,31 +744,57 @@
 
 										</cfif>
 
-										<p style="font-size:15px;">#area_path#</p>
-
 									</div>
 
-									<div class="col-xs-1">
-
-										<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/area.png" alt="Area" title="Ver área">--->
-
-									</div>
+									
 
 								</div><!--- END row --->
 
 								<div class="row">
 
-									<div class="col-sm-12">
+									<cfif arguments.small EQ true>
 
-										<div class="pull-right">
+										<div class="col-xs-10">
 
-											<a href="area_items.cfm?area=#areasQuery.area_id#" class="btn btn-sm btn-info" title="Ir al área"><span lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small_white.png" alt="Area" title="Ver área"> Ir al área</span></a>
-												
-										</div>
+									<cfelse>
+
+										<div class="col-xs-12">
+
+									</cfif>
+
+										<p style="<cfif arguments.small EQ true>font-size:12px;<cfelse>font-size:15px;</cfif>">#area_path#</p>
 
 									</div>
 
-								</div><!--- END row --->
+									<cfif arguments.small EQ true>
+
+										<div class="col-xs-2">
+
+											<div class="pull-right">
+												<a href="area_items.cfm?area=#areasQuery.area_id#" class="btn btn-sm btn-info" title="Ir al área"><span lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small_white.png" alt="Area" title="Ver área"> Ir al área</span></a>
+											</div>
+
+										</div>
+
+									</cfif>
+
+								</div>
+
+								<cfif arguments.small EQ false>
+									<div class="row">
+
+										<div class="col-sm-12">
+
+											<div class="pull-right">
+
+												<a href="area_items.cfm?area=#areasQuery.area_id#" class="btn btn-sm btn-info" title="Ir al área"><span lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small_white.png" alt="Area" title="Ver área"> Ir al área</span></a>
+													
+											</div>
+
+										</div>
+
+									</div><!--- END row --->
+								</cfif>
 
 							</div><!--- END panel-body --->
 						</div><!--- END panel panel-default --->
@@ -818,6 +860,41 @@
 			</cfcatch>										
 			
 		</cftry>
+		
+	</cffunction>
+
+
+
+	<!--- getAreas --->
+
+	<cffunction name="getAreas" returntype="struct" output="false" access="public">
+		<cfargument name="search_text" type="string" required="true">
+		<!---<cfargument name="order_by" type="string" required="false" default="name">
+		<cfargument name="order_type" type="string" required="false" default="asc">--->
+		<cfargument name="limit" type="numeric" required="true">
+		
+		<cfset var method = "getAreas">
+				
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreas" returnvariable="response">
+				<cfinvokeargument name="search_text" value="#arguments.search_text#"/>
+				<!---<cfif len(arguments.order_by) GT 0>
+					<cfinvokeargument name="order_by" value="#arguments.order_by#"/>
+					<cfinvokeargument name="order_type" value="#arguments.order_type#"/>
+				</cfif>--->
+				<cfinvokeargument name="limit" value="#arguments.limit#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
 		
 	</cffunction>
 

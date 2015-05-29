@@ -85,7 +85,8 @@
 
 <script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
 
-<script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>
+<!---<script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>--->
+<script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>
 
 </cfoutput>
 
@@ -220,7 +221,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_new.cfm?parent='+curAreaId);
 		else
-			showAlertModal("Debe seleccionar un área en la que crear la nueva");
+			showAlertModal(window.lang.translate("Debe seleccionar un área en la que crear la nueva"));
 	}
 
 	function openAreaImportModal(){
@@ -228,7 +229,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_import.cfm?parent='+curAreaId);
 		else
-			showAlertModal("Debe seleccionar un área en la que crear las nuevas áreas");
+			showAlertModal(window.lang.translate("Debe seleccionar un área en la que crear las nuevas áreas"));
 	}
 
 	function openAreaExportModal(){
@@ -236,7 +237,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_export_structure.cfm?parent='+curAreaId);
 		else
-			showAlertModal("Debe seleccionar un área para exportar");
+			showAlertModal(window.lang.translate("Debe seleccionar un área para exportar"));
 	}
 
 	function openAreaMoveModal(){
@@ -244,7 +245,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_cut.cfm?area='+curAreaId);
 		else
-			showAlertModal("Debe seleccionar un área para mover");
+			showAlertModal(window.lang.translate("Debe seleccionar un área para mover"));
 	}
 
 	function openAreaAssociateModal(userId){
@@ -252,7 +253,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_user_associate.cfm?area='+curAreaId+'&user='+userId);
 		else
-			showAlertModal("Debe seleccionar un área para asociar el usuario");
+			showAlertModal(window.lang.translate("Debe seleccionar un área para asociar el usuario"));
 	}
 
 	function openAreaAssociateUsersModal(usersIds){
@@ -261,7 +262,7 @@
 			loadModal('html_content/area_users_associate.cfm?area='+curAreaId+'&users='+usersIds);
 		else
 			//alert("Debe seleccionar un área para asociar los usuarios");
-			showAlertModal("Debe seleccionar un área para asociar los usuarios");
+			showAlertModal(window.lang.translate("Debe seleccionar un área para asociar los usuarios"));
 	}
 
 	function openAssociateUsersModal(usersIds, areaId){
@@ -269,7 +270,7 @@
 		if($.isNumeric(areaId))
 			loadModal('html_content/area_users_associate.cfm?area='+areaId+'&users='+usersIds);
 		else
-			showAlertModal("Debe seleccionar un área para asociar los usuarios");
+			showAlertModal(window.lang.translate("Debe seleccionar un área para asociar los usuarios"));
 	}
 
 	function openAreaAssociateAdministratorModal(userId){
@@ -277,7 +278,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_administrator_associate.cfm?area='+curAreaId+'&user='+userId);
 		else
-			showAlertModal("Debe seleccionar un área para asociar el administrador");
+			showAlertModal(window.lang.translate("Debe seleccionar un área para asociar el administrador"));
 	}
 
 	function openAreaModifyModal(){
@@ -285,7 +286,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_modify.cfm?area='+curAreaId);
 		else
-			showAlertModal("Debe seleccionar un área para modificar");
+			showAlertModal(window.lang.translate("Debe seleccionar un área para modificar"));
 	}
 
 	function openAreaDeleteModal(){
@@ -293,7 +294,7 @@
 		if($.isNumeric(curAreaId))
 			loadModal('html_content/area_delete.cfm?area='+curAreaId);
 		else
-			showAlertModal("Debe seleccionar un área para eliminar");
+			showAlertModal(window.lang.translate("Debe seleccionar un área para eliminar"));
 
 	}
 
@@ -565,7 +566,7 @@
 
 				<div class="form-inline" style="padding-bottom:5px; padding-left:5px;">
 					<label class="checkbox">
-						<input type="checkbox" id="changeTabDisabled" value="true" style="width:15px;height:15px"/>&nbsp;&nbsp;<span style="font-size:15px;">No cambiar de pestaña al seleccionar área</span>
+						<input type="checkbox" id="changeTabDisabled" value="true" style="width:15px;height:15px"/>&nbsp;&nbsp;<span style="font-size:15px;" lang="es">No cambiar de pestaña al seleccionar área</span>
 					</label>
 				</div>
 				
