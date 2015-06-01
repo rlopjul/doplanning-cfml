@@ -44,7 +44,7 @@
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 <script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
 
 <cfif APPLICATION.moduleWeb IS true>
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />

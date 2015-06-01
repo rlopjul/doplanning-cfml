@@ -48,7 +48,7 @@ function showTree(selectable) {
 			"not-allowed-web" : {}	
 		},*/
 		"state" : { 
-			"key" : "main_dp",
+			"key" : "main_tree",
 			"events" : "open_node.jstree close_node.jstree"
 		},
 		"plugins" : [ "search", "state" ] /*"types", */

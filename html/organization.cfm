@@ -74,7 +74,7 @@
 	</cfoutput>
 </script>
 
-<script type="text/javascript" src="scripts/tree.min.js?v=2.3"></script>
+<script type="text/javascript" src="scripts/tree.min.js?v=3.1.2"></script>
 <script type="text/javascript" src="scripts/organization.js"></script>
 
 <script type="text/javascript">

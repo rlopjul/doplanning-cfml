@@ -1570,30 +1570,35 @@
 						<!---Item selection--->
 						<cfset itemSelected = false>
 						
-						<cfif alreadySelected IS false>
-						
-							<cfif isDefined("URL.user")>
+						<cfif arguments.show_area_members IS true or arguments.showAdminFields IS true><!--- Selección de fila sólo disponible para listados de administración --->
+
+							<cfif alreadySelected IS false>
 							
-								<cfif URL.user IS objectUser.id>
+								<cfif isDefined("URL.user")>
+								
+									<cfif URL.user IS objectUser.id>
+										
+										<cfset onpenUrlHtml2 = user_page_url>
+
+										<cfset itemSelected = true>
+									</cfif>
 									
+								<cfelseif userIndex IS 1>
+								
 									<cfset onpenUrlHtml2 = user_page_url>
 
 									<cfset itemSelected = true>
+									
 								</cfif>
 								
-							<cfelseif userIndex IS 1>
-							
-								<cfset onpenUrlHtml2 = user_page_url>
-
-								<cfset itemSelected = true>
+								<cfif itemSelected IS true>
+									<cfset alreadySelected = true>
+								</cfif>
 								
 							</cfif>
-							
-							<cfif itemSelected IS true>
-								<cfset alreadySelected = true>
-							</cfif>
-							
+
 						</cfif>
+
 						
 						<tr <cfif itemSelected IS true>class="selected"</cfif> <cfif arguments.user_in_charge IS objectUser.id>style="font-weight:bold"</cfif> data-item-url="#user_page_url#"><!--- onclick="openUrl('#user_page_url#','#arguments.open_url_target#',event)"--->
 							<cfif arguments.select_enabled IS true>

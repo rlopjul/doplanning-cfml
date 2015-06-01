@@ -114,7 +114,7 @@
 
 	<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 	<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.2"></script>
-	<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.2"></script>
+	<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
 	<!---<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>--->
 		
 	<script>

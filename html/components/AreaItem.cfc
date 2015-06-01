@@ -2667,6 +2667,7 @@
 						<!---Item selection--->
 						<cfset itemSelected = false>
 						
+						<!---
 						<cfif arguments.openItemOnSelect IS true AND alreadySelected IS false>
 						
 							<cfif isDefined("URL.#itemTypeName#")>
@@ -2698,6 +2699,7 @@
 							</cfif>
 							
 						</cfif>
+						--->
 						
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 											

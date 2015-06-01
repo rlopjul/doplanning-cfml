@@ -125,6 +125,7 @@
 		<!---File selection--->
 		<cfset itemSelected = false>
 		
+		<!---
 		<cfif alreadySelected IS false AND NOT isDefined("URL.field")><!---No es selección de archivo--->
 		
 			<cfif isDefined("URL.file")>
@@ -152,16 +153,8 @@
 			</cfif>
 			
 		</cfif>
-		
-		<!---<cfif page_type IS 1>
-				onclick="goToUrl('my_files_file.cfm?folder=#folder_id#&file=#files.id#')"--->
-		<!---
-		<cfif page_type IS 2>
-			<!---onclick="submitForm('file_#files.id#')"--->
-		<cfelseif page_type IS 3>
-			<!---onclick="goToUrl('file.cfm?area=#area_id#&file=#files.id#')"--->
-			onclick="openUrl('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe',event)"
-		</cfif>---->
+		--->
+
 		<cfset item_page_url = "file.cfm?area=#files.area_id#&file=#files.id#">
 
 		<tr data-item-url="#item_page_url#" data-item-id="#files.id#" onclick="stopEvent(event)" <cfif itemSelected IS true>class="selected"</cfif>>

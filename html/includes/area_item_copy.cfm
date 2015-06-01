@@ -174,7 +174,7 @@
 <link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
 <script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
 
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
 
 
 <cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 20>

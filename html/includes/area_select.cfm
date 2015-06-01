@@ -20,15 +20,6 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/jstree_scripts.cfm">
 
-<!---<cfoutput>
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
-
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1"></script>
-
-<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>
-</cfoutput>--->
-
 <script>
 	
 	<cfoutput>
