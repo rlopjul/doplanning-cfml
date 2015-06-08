@@ -57,8 +57,11 @@ Lang.prototype.pack.en = {
 		"VER":"VIEW",
 		"Filtrar":"Filter",
 		"Ver en área":"View in area",
+		"Ir al área":"Go to area",
 		"Mostrar":"Show",
 		"Elementos de áreas":"Areas items",
+		"Áreas con actividad reciente":"Areas with recent activity",
+		"Messages":"Messages",
 
 		/*Este grupo se tiene que borrar al incluir area_item_en.js*/
 		"Tareas pendientes":"Pending tasks",
@@ -80,7 +83,6 @@ Lang.prototype.pack.en = {
 
 		"Fecha de inicio":"Start date",
 		"Fecha de fin":"End date",
-		"Lugar":"Place",
 		"Realizada":"Done",
 
 		"Nueva área":"New area",
@@ -89,11 +91,11 @@ Lang.prototype.pack.en = {
 		"Modificar":"Modify",
 		"Modificar área":"Area modify",
 		"Exportar":"Export",
-		"Exportar áreas":"Áreas export",
+		"Exportar áreas":"Export areas",
 		"Importar":"Import",
-		"Importar áreas":"Áreas import",
+		"Importar áreas":"Import areas",
 		"Eliminar":"Delete",
-		"Eliminar área":"Area delete",
+		"Eliminar área":"Delete area",
 		"Volver":"Return",
 
 		"Accede a las áreas de la organización a través de la pestaña":"You can access the areas of the organization through the tab",
@@ -108,7 +110,7 @@ Lang.prototype.pack.en = {
 		"Ocultar información del área":"Hide area information",
 		"Tipo de área:":"Area type:",
 		"No hay descripción del área":"No description of the area",
-		"URL del área en DoPlanning:":"DoPlanning area URL:",
+		"URL del área en DoPlanning:":"URL of the area in DoPlanning:",
 		"URL relativa en la <b>web</b>:":"Relative URL on the <b>web</b>:",
 		"URL relativa en la <b>intranet</b>:":"Relative URL on the <b>intranet</b>:",
 		"Ruta:":"Path:",
@@ -154,7 +156,7 @@ Lang.prototype.pack.en = {
 		"Modo completo":"Full mode",
 		"Actualizar":"Refresh",
 		"Abrir en nueva ventana":"Open in new window",
-		"URL del área en DoPlanning":"DoPlanning area URL",
+		"URL del área en DoPlanning":"URL of the area in DoPlanning",
 		"Elementos del área":"Area elements",
 		"CSV":"CSV",
 		"PDF":"PDF",
@@ -195,7 +197,7 @@ Lang.prototype.pack.en = {
 		"Listas":"Lists",
 		"Vista de Lista":"List view",
 		"Vistas de Listas":"Lists views",
-		"Formulario":"Formulario",
+		"Formulario":"Form",
 		"Formularios":"Forms",
 		"Vista de Formulario":"Form view",
 		"Vistas de Formularios":"Forms views",
@@ -234,6 +236,7 @@ Lang.prototype.pack.en = {
 		"Modificar Lista":"New List",
 		"Modificar Formulario":"New Form",
 		"Modificar Publicación":"Modify Publication",
+		"PubMed":"PubMed",
 
 		"Modificar Documento DoPlanning":"Modify DoPlanning Document",
 		"Archivo eliminado.":"File deleted.",
@@ -282,6 +285,55 @@ Lang.prototype.pack.en = {
 		"Campos":"Fields",
 		"Vistas":"Views",
 		"Editores":"Editors",
+		"Nuevo registro":"New record",
+		"Nuevo Registro":"New Record",
+		"Mostrar/ocultar columnas":"Show/hide columns",
+		"Exportar registros":"Export records",
+		"Importar registros":"Import records",
+		"Selecciona las columnas que quieres ver":"Select the columns you want to show",
+		"Más":"More",
+		"Registro guardado":"Record saved",
+		"Se generará un archivo con codificación iso-8859-1 con el contenido de los registros.":"A file with iso-8859-1 codification will be generated with the content of the records",
+		"Delimitador de campos":"Field delimiter",
+		"Punto y coma ;":"Semicolon ;",
+		"Tabulación":"Tab",
+		"Incluir las siguientes columnas:":"Include the following columns",
+		"Fecha de última modificación":"Last modified date",
+		"Usuario creación":"Creation user",
+		"Usuario última modificación":"Last modification user",
+		"Aplicar máscaras a los valores decimales exportados.":"Apply masks to exported decimal values",
+		"Use esta opción para poder exportar los valores decimales delimitados por coma en lugar de punto para que sean interpretados correctamente en Excel":"Use this option to export comma instead of dot-delimited decimal values, for them to be correctly interpreted in Excel",
+		"Habilitar compatibilidad de apertura con las nuevas versiones de Microsoft Office Excel (versiones a partir de 2010)":"Enable opening compatibility with new versions of Microsoft Office Excel (2010 versions and newer)",
+		"Mover Lista a otra área":"Move List to other area",
+		"Área actual":"Current area",
+		"Cambiar área":"Change area",
+		"Se enviará notificación por email del del cambio de área del Lista.":"An email notification will be sent informing about the area change",
+		"Selección de área":"Area selection",
+		"Nueva vista":"New view",
+		"Haga clic en Nueva vista para crear una nueva vista.":"Click in New view to create a new view.",
+		
+		"aplicándole una máscara, y posteriormente seleccionar esta opción en la importación para que se tenga en cuenta la máscara al realizar la importación.":"by applying a mask and afterwards selecting this option in the import, in order to use the mask during the import process.",
+		"definición de los campos":"field definition",
+		"Si los decimales usan otro formato distinto, como por ejemplo separar la cifra decimal por coma en lugar de punto, debe especificarlo primero en la":"If decimals use a different format, such as comma separation of the decimal cypher, you must specify it first in the",
+		"Por defecto los campos decimales deben estar en el siguiente formato: 9999.99":"By default, decimal fields must be in this format: 9999.99",
+		"Use esta opción para poder importar valores decimales delimitados por coma en lugar de punto": "Use this option to import decimal values separated by comma instead of dot",
+		"(No hay campos decimales definidos con máscara, esta opción se ignorará)":"(There are no defined decimal value fields with mask, this option will be ingnored)",
+		"Los valores decimales usan las máscaras especificadas en la definición de los campos":"Decimal values use the masks specified in the field definition",
+		"Por defecto no se importa la primera fila del archivo (fila para los títulos de las columnas)":"The first row of the file is not imported by default (row for the column titles)",
+		"Importar primera fila del archivo":"Import first row of the file",
+		"No cancelar si hay errores en importación de registros":"Do not cancel if there are errors in record import",
+		"Borrar registros existentes en la Lista":"Delete previous records from the List",
+		"Archivo CSV con los registros a importar":"CSV file with records to import",
+		"-Si el orden de las columnas no corresponde con el anterior la importación no se realizará correctamente.":"-If column order does not correspond with that from the list, import will not be made properly",
+		"-Campos listas: para que la importación de los campos de listas se realice correctamente, el valor importado de estos campos deberá coincidir exactamente con uno de los valores existentes en la lista.":"LIsts fields: for proper performance of import, the imported value must match exactly with one of the values exsiting in the list.",
+		"-Campos Sí/No: los valores válidos para estos campos son Sí/No, Yes/No, true/false, 0/1.":"-Yes/NO fields: valid values for these fields are: Sí/No, Yes/No, true/false, 0/1.",
+		"-Campos fecha: formatos válidos las fechas: DD-MM-AAAA, DD/MM/AAAA.":"Date fields: valid formats for dates are: DD-MM-YYYY, DD/MM/YYYY.",
+		"-Campos de listas con selección múltiple: los valores seleccionados de estos campos deberán delimitarse por ; y delimitando a su vez el campo que contiene estos valores por ":"Multiple selection lists fields: selected values for these fields should be delimited by ;, delimiting in turn the field containing this values with ",
+		"-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.":"If these conditions are not met, import will not perform correctly.",
+		"No se enviará notificación de los nuevos registros a los usuarios.":"No notification of the new records will be sent to users.",
+		"Una vez pulsado el botón \"Importar registros\" debe esperar hasta que se complete la operación.":"Once the \"Import records\"  button has been clicked, you must wait until the process is completed.",
+
+		
 		
 		"Archivo":"File",
 		"Archivo adjunto:":"Attached file:",
@@ -293,23 +345,28 @@ Lang.prototype.pack.en = {
 		"Eliminar archivo adjunto":"Delete attached file",
 		"Eliminar imagen adjunta":"Delete attached image",
 		
-		"* Campos obligatorios.":"* Required fields",
+		"* Campos obligatorios.":"* Required fields.",
 			
 		"Enviando...":"Sending...",
-		"Fechas incorrectas. Compruebe que la fecha de fin del evento es igual o posterior a la fecha de inicio y tiene el formato adecuado.":"Incorrect dates. Make sure the event ending date is on or after the start date and the proper format.",
+		"Fechas incorrectas. Compruebe que la fecha de fin del evento es igual o posterior a la fecha de inicio y tiene el formato adecuado.":"Incorrect dates. Make sure the event ending date is on or after the start date and has the proper format.",
 		
 		"Tiene texto sin enviar, si abandona esta página lo perderá":"You have text without send, if you leave this page you will lose it",
 
 		"Documento editable por los usuarios del área":"The document can be edited by area users",
-		"Permite que los usuarios del área puedan editar el documento y habilita el sistema de bloqueo del documento":"Allows area users to edit the document and enable document locking system",
-		"Si el archivo está bloqueado no puede ser editado por otros usuarios":"If the file is locked can not be edited by other users",
+		"Permite que los usuarios del área puedan editar el documento y habilita el sistema de bloqueo del documento":"Allows area users to edit the document and enables document locking system",
+		"Si el archivo está bloqueado no puede ser editado por otros usuarios":"If the file is locked it can not be edited by other users",
+		"Mover Documento DoPlanning a otra área":"Move DoPlanning Document to other area",
+		"Se enviará notificación por email del del cambio de área del Documento DoPlanning.":"An email notification will be sent informing about the area change",
+		"Propietario actual":"Current owner",
+		"Nuevo propietario":"New owner",
+		"Se enviará notificación por email del cambio al nuevo propietario y al anterior.":"An email notification will be sent both to the new owner and to the preceding one",
 
 		
 		/*functions.js*/
 		"¿Seguro que desea ":"Are you sure you want ",
 		"?. Esta acción no es reversible.":"?. This action is not reversible.",
 		
-		"eliminar":"delete",
+		"eliminar":"to delete",
 		"eliminar el archivo adjunto":"to delete the attached file",
 		"eliminar la imagen adjunta":"to delete the attached image",
 		"cerrar la Consulta":"to close the Consultation",
@@ -327,7 +384,7 @@ Lang.prototype.pack.en = {
 		"Adjunto":"Attached",
 		"Copiar como":"Copy as",
 		"Cambiar propietario":"Change owner",
-		"Mover a otra área":"Move to another area",
+		"Mover a otra área":"Move to other area",
 		"Bloquear":"Lock",
 		"Desbloquear":"Unlock",
 		
@@ -381,14 +438,38 @@ Lang.prototype.pack.en = {
 		"Áreas a las que copiar":"Áreas to copy",
 		"Debe seleccionar al menos un área":"You must select at least one area",
 		/*END area_item_copy.cfm*/
-
+		
+		/*item_change_area.cfm*/
+		
+		"Mover Mensaje a otra área":"Move Message to other area",
+		"Mover Imagen a otra área":"Move Image to other area",
+		"Mover Evento a otra área":"Move Event to other area",
+		"Mover Tarea a otra área":"Move Task to other area",
+		"Mover Consulta a otra área":"Move Consultation to other area",
+		"Mover Elemento web a otra área":"Move Web element to other area",
+		"Mover Noticia a otra área":"Move News to other area",
+		"Mover Publicación a otra área":"Move Publication to other area",
+		"Mover Documento DoPlanning a otra área":"Move DoPlanning Document to other area",
+		"Mover Formulario a otra área":"Move Form to other area",
+		
+		
+		"Se enviará notificación por email del cambio de área del Mensaje.":"An email notification will be sent informing of the area change of the Message.",
+		"Se enviará notificación por email del cambio de área de la Imagen.":"An email notification will be sent informing of the area change of the Image.",
+		"Se enviará notificación por email del cambio de área del Evento.":"An email notification will be sent informing of the area change of the Event.",
+		"Se enviará notificación por email del cambio de área del Elemento web":"An email notification will be sent informing of the area change of the Web element.",
+		"Se enviará notificación por email del cambio de área de la Tarea":"An email notification will be sent informing of the area change of the Task.",
+		"Se enviará notificación por email del cambio de área de la Noticia":"An email notification will be sent informing of the area change of the News.",
+		"Se enviará notificación por email del cambio de área de la Consulta":"An email notification will be sent informing of the area change of the Consultation.",
+		"Se enviará notificación por email del cambio de área de la Publicación":"An email notification will be sent informing of the area change of the Publication.",
+		"Se enviará notificación por email del cambio de área del Documento DoPlanning":"An email notification will be sent informing of the area change of the DoPlanning DOcument.",
+		"Se enviará notificación por email del cambio de área del Formulario":"An email notification will be sent informing of the area change of the Form.",
 
 		/*area_items_content*/
-		"No tiene acceso para ver los mensajes de esta área":"Not have access to view messages from this area",
-		"No tiene acceso para ver los archivos de esta área":"Not have access to view files from this area",
-		"No tiene acceso para ver los eventos de esta área":"Not have access to view events from this area",
-		"No tiene acceso para ver las tareas de esta área":"Not have access to view tasks from this area",
-		"No tiene acceso para ver los usuarios de esta área":"Not have access to view users from this area",
+		"No tiene acceso para ver los mensajes de esta área":"You do not have access to view messages from this area",
+		"No tiene acceso para ver los archivos de esta área":"You do not have access to view files from this area",
+		"No tiene acceso para ver los eventos de esta área":"You do not have access to view events from this area",
+		"No tiene acceso para ver las tareas de esta área":"You do not have access to view tasks from this area",
+		"No tiene acceso para ver los usuarios de esta área":"You do not have access to view users from this area",
 		
 		"De":"From",
 		"Para":"To",
@@ -401,12 +482,14 @@ Lang.prototype.pack.en = {
 		"Estado":"State",
 		"Tipo":"Type",
 		"Fecha asociación":"Association date",
+		"Fecha de asociación":"Association date",
 		"Última versión":"Last version",
 		"Archivo sin nombre":"Unnamed file",
 		"Nombre":"Name",
 		"Apellidos":"Last name",
 		"Email":"Email",
 		"De esta área":"From this area",
+		"Responsable del área":"Area manager",
 		"Reunión virtual":"Virtual meeting",
 		"Fecha desde":"Date from",
 		"Fecha hasta":"Date to",
@@ -421,7 +504,8 @@ Lang.prototype.pack.en = {
 		"No hay archivos en esta área.":"There area no files in this area.",
 		"No hay usuarios.":"There are no users.",
 		/*"No hay elementos en esta área.":"There are no elements in this area.",*/
-		"Aún nadie ha puesto información aquí, ¿por qué no ser el primero?":"No one has yet posted information here, why not be the first?",
+		"Aún nadie ha puesto información aquí, ¿por qué no ser el primero?":"No one has posted information here yet, why not be the first?",
+		"Exportar contenido":"Export content",
 		
 		/*search*/
 		"Rellene el formulario y haga click en BUSCAR":"Enter search parameters and click Search",
@@ -432,6 +516,8 @@ Lang.prototype.pack.en = {
 		"Resultado:":"Result:",
 		"Buscar en":"Search",
 		"Buscar texto":"Search text",
+		"Tipo de elemento a buscar":"Type of element to search",
+		"Estructura compartida":"Shared structure",
 		/*END search*/
 		
 		
@@ -479,8 +565,22 @@ Lang.prototype.pack.en = {
 		"Ha ocurrido un error al subir la imagen.":"Failed to upload image.",
 		
 		"Tarea marcada como realizada":"Task marked as done",
+	  	"Tarea no realizada": "Undone task",
 		/*END AreaItem.cfc*/
 		
+		"Cambiar propietario del Documento DoPlanning":"Change owner of the DoPlanning Document",
+		"Cambiar propietario del Elemento web":"Change owner of the Web Element",
+		"Cambiar propietario de la Noticia":"Change owner of the news",
+		"Cambiar propietario de la Imagen":"Change owner of the Image",
+		"Cambiar usuario propietario":"Change owner user",
+		"Convertir en archivo del área":"Convert to area file",
+		"Cambiar propietario del archivo":"Change owner fo the file",
+		"Cambiar propietario del Evento":"Change owner of the Event",
+		"Cambiar propietario de la Tarea":"Change owner of the Task",
+		"Cambiar propietario de la Lista":"Change owner of the List",
+		"Cambiar propietario del Formulario":"Change owner of the Form",
+		"Cambiar propietario de la Consulta":"Change owner of the Consultation",
+		"Cambiar propietario de la Publicación":"Change owner of the Publication",
 
 		/*File.cfc*/
 		"Archivo asociado al área.":"File added to area.",
@@ -534,6 +634,25 @@ Lang.prototype.pack.en = {
 		"Motivo de rechazo en aprobación":"Reason for rejection on approval",
 		"Motivo de rechazo en revisión":"Reason for rejection on revision",
 		"Analizado por Antivirus":"Analyzed by Antivirus",
+		"URL para enlazar a":"URL link to",
+		"URL para compartir el archivo con":"URL to share the file with",
+		"usuarios de DoPlanning":"Doplanning users",
+		"descargar el archivo desde DoPlanning":"download the file from DoPlanning",
+		"URL pública para": "Public URL to",
+		"enlazar el archivo en la web":"link the file in the web",
+		"URL relativa para":"Relative URL to",
+		"Última versión de archivo analizada por Antivirus":"Last file version analysed with antivirus",
+		"Archivo en proceso de revisión y aprobación":"File in process of revision and approval",
+		"Estado actual pendiente de ser revisado por":"Currently pending of revision by",
+		"Archivo bloqueado por el usuario":"File blocked by user",
+		"Fecha de bloqueo":"Blocking date",
+		"Publicar versión":"Publish version",
+		"Convertir en archivo de área":"Convert to area file",
+		"Área propietaria del archivo":"Owner area of the file",
+		"El archivo pasará a ser propiedad del área seleccionada y podrá ser modificado por cualquier usuario de la misma.":"The file will become property of the selected area and will be modifiable by any user of that area.",
+		"El archivo seguirá estando accesible desde el área actual.":"The file will still be accesible from the current area.",
+		"Se enviará notificación por email del cambio a los usuarios del área propietaria.":"An email notification with this change will be sent to users of the owner area.",
+		
 		
 		"Subir varios archivos":"Upload multiple files",
 		"Añadir archivos":"Add files",
@@ -553,17 +672,21 @@ Lang.prototype.pack.en = {
 		"Archivo":"File",
 		"Nombre":"Name",
 		"Número de versión":"Version number",
-		"Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.":"After clicking the button, the application will take depending on the file size.",
+		"Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.":"After clicking the button, the request will take some time depending on the file size.",
 		"Enviando archivo...":"Sending file...",
 
-		"Este archivo te pertenecerá a ti y sólo tú podrás modificarlo. Cada vez que subas una versión del archivo se sobreescribirá la anterior.":"This file will belong to you and only you can change it. Each time you upload a file version will overwrite the previous.",
+		"Este archivo te pertenecerá a ti y sólo tú podrás modificarlo. Cada vez que subas una versión del archivo se sobreescribirá la anterior.":"This file will belong to you and only you can change it. Each time you upload a file version the previous version will be overwritten.",
 
 		"Este archivo pertenecerá a esta":"This file will belong to this",
 		"área":"area",
 		"y podrá ser modificado por cualquier usuario con acceso a la misma.":"and anyone with access to this area will be able to modify it.",
+		
+		"Define las áreas del árbol donde se podrá asociar el documento.":"This defines the areas of the tree in which the document can be associated",
+		"Importante":"Important",
+		"los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.":" files with scope PUBLIC WEB or INTRANET may be accessed by their URL through web or intranet without having to associate them to areas or approving their publication.",
 
 		"-Sin circuito de calidad: cada vez que se suba una versión del archivo se sobreescribirá la anterior (no se guardan las versiones previas del archivo)<br><br>-Con circuito de calidad: se guardan las distintas versiones del archivo y es requerido un proceso de revisión y aprobación de las versiones.":
-		"-Without quality circuit: each time a file is uploaded will overwrite the previous version (previous versions of the file are not saved)<br><br>-With quality circuit: different versions of the file are saved and is required a process of review and approval of the versions",
+		"-Without quality circuit: each time a file is uploaded, the previous version will be overwritten(previous versions of the file are not saved)<br><br>-With quality circuit: different versions of the file are saved and it is required a process of review and approval of the versions",
 
 		"Área de publicación":"Publication area",
 		"Seleccionar área":"Select area",
@@ -576,7 +699,7 @@ Lang.prototype.pack.en = {
 		"Seleccionar usuario":"Select user",
 		"Básica":"Basic",
 
-		"Define dónde se podrá publicar el documento":"Set the areas where the document can be published",
+		"Define dónde se podrá publicar el documento":"This sets the areas where the document can be published",
 
 		"Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set, the file will be published on the specified date (for publication on web and intranet only).",
 
@@ -584,6 +707,26 @@ Lang.prototype.pack.en = {
 		"Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).":"Validates the file so that it can be published (only for publication on website and intranet)",
 		"Habilitar URL pública para poder":"Enable public URL to",
 		"compartir el archivo con cualquier usuario":"share the file with any user",
+		"El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL":"The file will be public and acccesible to any user knowing this URL",
+		"Seleccionar elemento":"Select element",
+		"Quitar elemento seleccionado":"Remove selected element",
+		"Utilice la tecla Ctrl para seleccionar varios elementos de la lista":"Use the CTRL key to select several elements from the list",
+		"Fecha formato DD-MM-AAAA":"Date format DD-MM-YYYY",
+		"Los decimales se deben introducir con un punto, ejemplo: 9999.99<br>Al valor introducido se le aplicará posteriormente la siguiente máscara para mostrarlo: 9.999,99":"Decimals must be entered as dots, for instance: 9999.99<br>The inserted value will be transformed using the following mask to show it: 9.999,99",
+		"Campo 1 de la tipología *":"Field 1 of the typology",
+		"Este es el primer campo de esta tipología":"This is the first field of this typology",
+		"Fecha *":"Date *",
+		"¿Esto es una prueba?":"Is this a test?",
+		"Número entero":"Integer",
+		"Texto plano obligatorio *":"Oblicatory plain text",
+		"Lista desplegable":"Dropdown list",
+		"Lista selección múltiple *":"Multiple-selection list",
+		"Usuario *":"User *",
+		"Tarea":"Task",
+		"Mensaje":"Message",
+		"Decimal con máscara":"Masked decimal number",
+		"URL petición":"URL request",
+		
 		/*END area_file_new.cfm*/
 		
 		/*area_file_modify.cfm*/
@@ -619,8 +762,104 @@ Lang.prototype.pack.en = {
 		"Se muestran las tipologías usadas en al menos un archivo":"The typologies listed are used at least in one file",
 		/*END search_2_bar.cfm*/
 
-
-
+		/*admin/main.cfm*/
+		"Preferencias del usuario":"User preferences",
+		"Administración general":"General administration",
+		"No cambiar de pestaña al seleccionar área":"Do not change tab when an area is selected",
+		"Administradores":"Administrators",
+		"Nuevo usuario":"New user",
+		"Opciones de la organización":"Organization options",
+		"En esta área se pueden crear los siguientes elementos:":"In this area you can create the following elements:",
+		"Archivos y archivos de área":"Files and area files",
+		"Esta definición se puede modificar posteriormente de forma individual para cada área.":"This definition can be modified later individually for each area",
+		"Aplicar selección anterior de elementos, usuarios disponibles y sólo lectura a todas las áreas inferiores":"Apply element selection, available users and read only to all lower areas",
+		"Área de sólo lectura":"Read only area",
+		"Esta opción no afecta a los elementos en los que es necesario acceder a la lista de usuarios del área para su creación y edición como: tareas, archivos de área, listas y formularios.":"This option does not affect those elements in which it is necessary to access the user list for their creation and edition, such as: tasks, area files, lists and forms.",
+		"Mostrar visible el listado de usuarios del área":"Show list of area users",
+		"Esta selección no afecta a los elementos ya existentes en el área":"This selection does not affect those elements already existing in the area",
+		"Seleccionar/quitar todos":"Select/unselect all",
+		"Cambiar imagen":"Change image",
+		"La imagen que se muestra es la heredada de las áreas superiores. Puede asignar una imagen a esta área y pasará a ser la que se muestre en esta y en las áreas inferiores, siempre que las inferiores no tengan una imagen definida.":"The image shown is the one inherited from upper areas. You can assing an image to this area; it will become the one shown in this and the lower areas, provided that lower areas do not already have an assigned image.",
+		"Quitar de administrador del área":"Remove as area administrator",
+		"Exportar usuarios":"Export users",
+		"Buscar usuario":"Search user",
+		"Introduzca un texto y haga click en Buscar para listar usuarios de la organización.":"Enter a text and click on Search to list organization users",
+		"Ruta:":"Route:",
+		"Logs":"Logs",
+		"Usuarios de la organización":"Users of the organization",
+		"Asociar estos usuarios a otra área":"Associate these users to other area",
+		"Seleccione un área del árbol para ver sus usuarios.":"Select an area from the tree to view its users.",
+		"Se muestra en negrita el responsable del área":"Area manager is shown in bold",
+		"Usuario interno":"Internal user",
+		"Perfil de cabecera":"Header profile",
+		"Quitar administrador":"Remove administrator",
+		"Quitar Usuario":"Remove User",
+		"Eliminar usuario":"Remove User",
+		"Ver árbol":"View tree",
+		"De administración":"From administration",
+		"De áreas":"From áreas",
+		"Modificar usuario":"Modify user",
+		"Asociar como administrador del área":"Associate as area administrator",
+		"Asociar al área":"Associate to area",
+		
+		/*END admin/main.cfm*/
+		
+		/*admin - new/modify user window form*/
+		"Activo":"Active",
+		"Si el usuario se marca como activo, se le enviará una":"If user is marked as active, he/she will receive a",
+		"con los datos de acceso a la aplicación, incluyendo la contraseña.":"with data to access the application, including the password.",
+		"Información":"Information",
+		"Los usuarios internos pueden ver todo el árbol de la organización, y no sólo las áreas a las que tienen acceso.":"Internal users can see the whole organization tree, and not only the areas to which they have access.",
+		"Los usuarios no activos no podrán acceder a la aplicación ni recibirán notificaciones por email y seguirán siendo visibles en todos los listados de la aplicación.":"Non-active users will not be able to access the application and they will not receive email alerts, though they will ramein visible in all application listings.",
+		"Sólo visible desde la administración para todos los usuarios administradores.":"Only visible from administration for all administrators",
+		"Guardar cambios":"Save changes",
+		"Quitar":"Remove",
+		"Puede añadir o quitar administradores accediendo al área correspondiente":"You can add or remove administrators accessing the corresponding area",
+		"Usuarios administradores de áreas": "Area administrators",
+		"URL:":"URL:",
+		"Fecha de creación:":"Creation date:",
+		"Fecha de última conexión:":"Last connection date:",
+		"Número de conexiones:":"Number of connections:",
+		
+		/*END admin - new user window form*/
+		
+		"Fecha de última modificación":"Last modification date",
+		
+		
+		/*Admin - organization options form*/
+		"Opciones de la organización":"Organization options",
+		"Título de la aplicación":"Application title",
+		"Título que aparece en la parte superior de la aplicación y en la pantalla de login.":"Title that appears in the upper part of the application and in the login screen.",
+		"Una vez modificado es necesario salir y volver acceder a la aplicación para que el cambio se vea reflejado.":"Once modified it is necessary to log out and access again to the application to view the change.",
+		"Idioma por defecto de la aplicación":"Application's default language",
+		"Idioma en el que se muestra por defecto la pantalla de login de la aplicación y el que se define por defecto al crear un nuevo usuario.":"Language shown by default in the login screeen and used by default to create a new user.",
+		"Cada usuario tiene definido su propio idioma, que puede cambiarlo en cualquier momento.":"Each user has a defined language, which can be changed by the user at any time.",
+		"Notificaciones automáticas por email":"Automatic email notifications",
+		"Habilitar a todos los usuarios todas las notificaciones por email de forma obligatoria":"Enable obligatory automatic email notifications for all users",
+		"Los usuarios no podrán deshabilitar las notificaciones que envía la aplicación":"Users will not be able to disable notifications sent by the application.",
+		"Habilitar notificaciones para recordar tareas":"Enable task expiration notifications",
+		"Se enviará una notificación por email el número de días antes especificado a continuación y el mismo día que caduque la tarea.":"An email notification will be sent the number of days before expiration that are specified in the following field and another one in the task's expiration date.",
+		"Número de días previos a caducidad para enviar recordatorio de tareas":"Number of days to send the notification before task expiration",
+		"Habilitar papelera":"Enable bin",
+		"Los archivos se mantendrán en la papelera el número de días especificados a continuación.":"Files will be maintained in the bin for the number of days specified in the following field.",
+		"Si se deshabilita la papelera después de habilitarla, los usuarios dejarán de tener acceso a los elementos almacenados en la misma.":"If the bin is disabled after enabling it, users will stop having access to the elements stored in it.",
+		"English":"English",
+		"Español":"Español",
+		"Número de días que se mantendrán los archivos en la papelera":"Number of days to maintain files in the bin",
+		/*END Admin - organization options form*/
+		
+		/*Admin - image modify form*/
+		"Modificar imagen de área":"Modify area image",
+		"Si no se asigna una imagen a esta área se mostrará la heredada de las áreas superiores.":"If no image is selected, the area will show the inherited image from upper areas.",
+		"El tamaño que se muestra en la previsualización no es el tamaño en el que se mostrará la imagen.":"The previsualization size is not the final size at which the image will be shown.",
+		"Debe subir la imagen al tamaño que desea que aparezca en DoPlanning o en la web.":"You must upload the image at the final size you want it to appear in DoPlanning or in the web.",
+		"URL a la que se enlazará al hacer clic en la imagen (opcional).":"URL to which the image will be linked on click (optional).",
+		"Ningún archivo seleccionado":"No file selected",
+		"Eliminar imagen actual":"Delete current image",
+		/*END Admin - image modify form*/
+		
+		
+		
 		/*user*/
 		"Usuario":"User",
 		"Nombre":"Name",
@@ -663,7 +902,7 @@ Lang.prototype.pack.en = {
 		"Confirmar contraseña":"Confirm new password:",
 		"Modificación guardada.":"Modification saved.",
 		"Mostrar sólo áreas con acceso":"Show only areas with access permission",
-		"En el árbol de áreas sólo se mostrarán las áreas con permiso de acceso.":"The areas tree only will show the areas with access permission.",
+		"En el árbol de áreas sólo se mostrarán las áreas con permiso de acceso.":"The areas tree will only show the areas with access permission.",
 		"Login Portal del Empleado":"Employee Portal login",
 		/*END preferences_user_data.cfm*/
 
@@ -675,13 +914,26 @@ Lang.prototype.pack.en = {
 		"Un enlace ha sido creado, modificado o eliminado":"A link has been created, modified or deleted",
 		"Un elemento de contenido web ha sido creado, modificado o eliminado":"A web content item has been created, modified or deleted",
 		"Una noticia ha sido creada, modificada o eliminada":"A news item has been created, modified or deleted",
-		"Un evento ha sido creado, modificado o eliminado":"A event has been created, modified or deleted",
+		"Un evento ha sido creado, modificado o eliminado":"An event has been created, modified or deleted",
 		"Una tarea ha sido creada, modificada o eliminada":"A task has been created, modified or deleted",
 		"Una consulta ha sido creada, respondida, cerrada o eliminada":"A consultation has been created, modified or deleted",
 		"Una publicación ha sido creada, modificada o eliminada":"A publication has been created, modified or deleted",
 		"Un archivo ha sido asociado a un área":"A file has been added to an area",
 		"Un archivo asociado a un área ha sido reemplazado":"A file has been replaced",
 		"Un área nueva ha sido creada":"A new area has been created",
+		"Un formulario ha sido creado, modificado o eliminado":"A form has been created, modified or deleted",
+		"Una vista de lista ha sido creada, modificada o eliminada":"A list view has been created, modified or deleted",
+		"Un registro de lista ha sido creado, modificado o eliminado":"A list record has been created, modified or deleted",
+		"Una lista ha sido creada, modificada o eliminada":"A list has been created, modified or deleted",
+		"Una vista de formulario ha sido creada, modificada o eliminada":"A form view has been created, modified or deleted",
+		"Un registro de formulario ha sido creado, modificado o eliminado":"A form record has been created, modified or deleted",
+		"Un archivo de área ha sido bloqueado/desbloqueado":"An area file has been locked/unlocked",
+		"Un archivo ha sido eliminado/quitado de un área": "A file has been deleted/removed from an area",
+		"Un archivo ha sido reemplazado":"A file has been replaced",
+		"He sido asociado como usuario a un área":"I have been associated as user to an area",
+		"Un usuario ha sido asociado a un área":"A user has been associated to an area",
+		"Una tipología ha sido creada, modificada o eliminada":"A typology has been created, modified or deleted",
+		"Una imagen ha sido creada, modificada o eliminada":"A typology has been created, modified or deleted",
 		"Su organización tiene deshabilitadas las opciones de preferencias de notificaciones. Contacte con el administrador pará más información.":"Your organization disabled the notifications options. Contact the administrator for more information.",
 		/*END preferences_alerts*/
 
@@ -699,18 +951,116 @@ Lang.prototype.pack.en = {
 		"Descripción":"Description",
 		"Ámbito de publicación":"Publication scope",
 
-		"Permitir copiar la estructura de campos de esta lista":"Allow copy the structure of fields from this list",
-		"Permitir copiar la estructura de campos de este formulario":"Allow copy the structure of fields from this form",
-		"Permitir copiar la estructura de campos de esta tipología":"Allow copy the structure of fields from this typology",
-
-		"Indica si la definición de campos de esta lista está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Set if the definition of fields of this list is available to be used as a template for any user in the organization",
-		"Indica si la definición de campos de este formulario está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Set if the definition of fields of this form is available to be used as a template for any user in the organization",
-		"Indica si la definición de campos de esta tipología está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Set if the definition of fields of this typology is available to be used as a template for any user in the organization",
+		"Permitir copiar la estructura de campos de esta lista":"Allow to copy the field structure from this list",
+		"Permitir copiar la estructura de campos de este formulario":"Allow to copy the field structure from this form",
+		"Permitir copiar la estructura de campos de esta tipología":"Allow to copy the field structure from this typology",
 		
-		"Habilitar como tipología general":"Set as general typology",
+		"Valida el Formulario para que pueda ser publicado.":"Mark checkbox if you want the Form to be published",
+		"Si está definida, el Formulario se publicará en la fecha especificada.":"If defined, the Form will be published in the specified date.",
+		"Valida la Lista para que pueda ser publicada.":"Mark checkbox if you want the List to be published",
+		"Si está definida, la Lista se publicará en la fecha especificada.":"If defined, the List will be published in the specified date.",
+		"Valida el Evento para que pueda ser publicado.":"Mark checkbox if you want the Event to be published",
+
+		"Indica si la definición de campos de esta lista está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this list is available to be used as a template by any user in the organization",
+		"Indica si la definición de campos de este formulario está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this form is available to be used as a template by any user in the organization",
+		"Indica si la definición de campos de esta tipología está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this typology is available to be used as a template by any user in the organization",
+		
+		"Habilitar como tipología general":"Enable as general typology",
 		"Se podrá utilizar esta tipología en cualquier área de la organización.":"This typology may be used in any area of the organization",
-		"Define dónde se podrán publicar vistas de la Lista":"Set the areas where can be published views of the List",
-		"Define dónde se podrán publicar vistas del Formulario":"Set the areas where can be published views of the Form",
+		"Define dónde se podrán publicar vistas de la Lista":"Set the area type where views of this List can be published",
+		"Define dónde se podrán publicar vistas del Formulario":"Set the area type where views of this Form can be published",
+		
+		"Añadir campo":"Add field",
+		"Copiar de plantilla":"Copy from template",
+		"Haga clic en Añadir campo para crear un nuevo campo.":"Click in ADD FIELD to create a new field.",
+		
+		"Nuevo campo":"New field",
+		"Texto plano 1 línea (máx. 255 caracteres)":"Plain text, 1 line (255 characters max.)",
+		"Texto plano varias líneas (máx. 21000 caracteres)":"Plain text, several lines (21000 characters max.)",
+		"Texto varias líneas con formato (máx. 21000 caracteres)":"Formatted text, several lines (21000 characters max.)",
+		"Texto muy grande con formato":"Very large formatted text",
+		"Número decimal":"Decimal number",
+		"Fecha (formato DD-MM-AAAA)":"Date (DD-MM-YYYY)",
+		"Booleano (Sí/No)":"Boolean (Yes/No)",
+		"Lista de opciones con selección simple":"List of options, single selection",
+		"Lista de opciones con selección múltiple":"list of options, multiple selection",
+		"Lista de opciones con selección simple a partir de área":"List of options, single selection from an area",
+		"Lista de opciones con selección múltiple a partir de área":"List of options, multiple selection from an area",
+		"Usuario de DoPlanning":"DoPlanning user",
+		"Elemento de DoPlanning":"DoPlanning element",
+		"No se puede modificar el tipo una vez creado el campo.":"Type cannot be modified once the field is created",
+		
+		"Obligatorio":"Obligatory",
+		"Indica si el campo deber rellenarse de forma obligatoria":"Mark checkbox if this field must be necessarily filled in",
+		
+		"Ordenar por defecto por este campo":"Order by default from this field",
+		
+		"Orden descendente":"Descending order",
+		"Orden ascendente":"Ascending order",
+		"Se mostrarán ordenados los registros en el orden especificado por el primer campo que tenga seleccionada esta opción":"Records will be ordered in the order specified by the first field having this option enabled",
+		
+		"Valor por defecto":"Default value",
+		
+		"Quitar usuario seleccionado":"Remove selected user",
+		"Introduce cada valor de la lista en una línea distinta":"Enter each value of the list in a different line",
+		"Valores de la lista":"Values of the list",
+		"Área a para generar la lista":"Area to generate the list",
+		"Checkbox (se muestran visibles todas las opciones)":"Checkbox (all options are shown)",
+		"Mostrar opciones en":"Show options in",
+		"Radio (se muestran visibles todas las opciones)":"Radio (all options are shown)",
+		"Permite definir como se mostrará el valor numérico introducido.":"Allows to define how the numeric value will be entered",
+		"$9,999.99 (Moneda $ con comas en los miles, puntos en los decimales y se muestran dos decimales)":"$9,999.99 ($ currency with commas in thousands, dot in decimals, two decimals shown)",
+		"9.999,99 € (Moneda € con puntos en los miles, comas en los decimales y se muestran dos decimales)":"9.999,99 € (€ currency with dots in thousands, comma in decimals, two decimals shown)",
+		"9.999,99 (Puntos en los miles, comas en los decimales y se muestran dos decimales)":"9.999,99 (dots in thousands, comma in decimals, two decimals shown)",
+		"9999.99 (Sólo puntos en los decimales y se muestran dos decimales)":"9999.99 (dots only in decimals, two decimals shown)",
+		"Máscara":"Mask",
+		"Sin máscara":"No mask",
+		"No se puede modificar el tipo de elemento DoPlanning una vez creado el campo.":"Element type cannot be modified once field is created",
+		"Tipo de elemento de DoPlanning":"Type of DoPlanning element",
+		"URL":"URL",
+		
+		"Selección de Mensaje":"Message selection",
+		"Selección de Elemento web":"Web element selection",
+		"Selección de Noticia":"News selection",
+		"Selección de Imagen":"Image selection",
+		"Selección de Archivo":"File selection",
+		"Selección de Evento":"Event selection",
+		"Selección de Tarea":"Task selection",
+		"Selección de Lista":"List selection",
+		"Selección de Formulario":"Form selection",
+		"Selección de Consulta":"Consultation selection",
+		"Selección de Publicación":"Publication selection",
+		
+		
+		"Texto a buscar":"Text to search",
+		"Nº resultados a mostrar":"No. of results to show",
+		
+		"Introduzca el nombre, apellidos o email del usuario y haga click en \"Buscar\".":"Enter the user's name, family name or email and click on \"Search\".",
+		"Campo creado":"Field created",
+		"Nombre del campo":"Field name",
+		"Tipo de campo":"Field type",
+		
+		"Lista de la que copiar los campos:":"List from which to copy fields",
+		"Copiar campos":"Copy fields",
+		
+		"Formulario creado, ahora debe definir los campos.":"Form created. Now you must define the fields.",
+		
+		"Desaprobar publicación":"Disapprove publication",
+		"Fecha de publicación:":"Publication date",
+		"Publicación aprobada:":"Approved publication",
+		"Ámbito de publicación:":"Publication scope",
+		"Publicación invalidada":"Void publication",
+		"Tipo de área":"Area type",
+		"Nueva Imagen":"New Image",
+		"Ver en web":"Watch in web",
+		"Vista previa en web (incluye elementos no publicados)":"Preview in web (includes unpublished elements)",
+		"URL relativa en la":"Relative URL in the",
+		"El ámbito de publicación seleccionado no es compatible con el área actual":"The publication scope is not compatible with the current area",
+		"Formulario modificado.":"Form modified.",
+		 "No hay datos introducidos.":"No data introduced.",
+		 "No hay campos definidos para rellenar.":"There are no defined fields to fill.",
+		 "Formulario del que copiar los campos:":"Form from which to copy the fields", 
+		 
 
 		/*END area_table_form*/
 
@@ -736,9 +1086,31 @@ Lang.prototype.pack.en = {
 		"Para retransmitir su webcam, haga clic en el botón Retransmitir webcam.":"To broadcast your webcam, click the Start webcam button.",
 		"El usuario está conectado a la reunión pero no está retransmitiendo su cámara ni su audio.":"The user is connected to the meeting but does not broadcast his camera and audio",
 		/*END user_meeting_opentok.cfm*/
-
+		
+		/*bin*/
+		"Eliminar definitivamente":"Remove permanently",
+		"Restaurar":"Restore",
+		"elementos":"elements",
+		"Eliminar todo definitivamente":"Remove all permanently",
+		"Restaurar todo":"Restore all",
+		"Todos los de la organización":"All from the organization",
+		"Eliminados por mi":"Removed by me",
+		"elemento":"element",
+		"Elemento eliminado.":"Element removed.",
+		/*END bin*/
+		
+		"Error inesperado":"Unexpected error",
+		"Respondiendo a:":"Answering to",
+		
+		"Añadir editores":"Add editors",
+		"Haga clic en Añadir editores parar añadir un nuevo usuario.":"Click on Add editors to add a new editor.",
+		"Los usuarios responsables de este área tienen el permiso de editores por defecto.":"Users that are managers of this area have edition rights by default.",
+		
+		
 	}
-
+		
+		
+		
 	, "regex": [
 		[/^Email:?$/, "Email"],
 		[/^Contraseña:?$/, "Password"],
@@ -753,7 +1125,7 @@ Lang.prototype.pack.en = {
 		[/^Precio:?$/, "Price:"],
 
 		[/^Descripción:?$/, "Description"],
-		[/^Responsable:?$/, "Responsible"],
+		[/^Responsable:?$/, "Area manager:"],
 		[/^Fecha de creación:?$/, "Creation date"]
 	]
 };

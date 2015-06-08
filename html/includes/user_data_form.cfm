@@ -245,9 +245,9 @@ page_types
 	
 						<div class="checkbox">
 							<label>
-								<input type="checkbox" name="internal_user" id="internal_user" value="true" <cfif isDefined("objectUser.internal_user") AND objectUser.internal_user IS true>checked="checked"</cfif> /> Usuario interno
+								<input type="checkbox" name="internal_user" id="internal_user" value="true" <cfif isDefined("objectUser.internal_user") AND objectUser.internal_user IS true>checked="checked"</cfif> /> <span lang="es">Usuario interno</span>
 							</label>
-							<small class="help-block">Los usuarios internos pueden ver todo el árbol de la organización, y no sólo las áreas a las que tienen acceso.</small>
+							<small class="help-block" lang="es">Los usuarios internos pueden ver todo el árbol de la organización, y no sólo las áreas a las que tienen acceso.</small>
 						</div>
 
 					</div>
@@ -275,9 +275,9 @@ page_types
 	
 						<div class="checkbox">
 							<label>
-								<input type="checkbox" name="enabled" id="enabled" value="true" <cfif isDefined("objectUser.enabled") AND objectUser.enabled IS true>checked="checked"</cfif> /> Activo
+								<input type="checkbox" name="enabled" id="enabled" value="true" <cfif isDefined("objectUser.enabled") AND objectUser.enabled IS true>checked="checked"</cfif> /> <span lang="es">Activo</span>
 							</label>
-							<small class="help-block">Los usuarios no activos no podrán acceder a la aplicación ni recibirán notificaciones por email y seguirán siendo visibles en todos los listados de la aplicación.</small>
+							<small class="help-block" lang="es">Los usuarios no activos no podrán acceder a la aplicación ni recibirán notificaciones por email y seguirán siendo visibles en todos los listados de la aplicación.</small>
 						</div>
 
 					</div>
@@ -375,7 +375,7 @@ page_types
 
 						<div class="col-xs-7 col-sm-8 col-md-9">
 							<input type="text" name="perfil_cabecera" id="perfil_cabecera" value="#objectUser.perfil_cabecera#" class="form-control" />
-							<small class="help-block">Sólo visible desde la administración para todos los usuarios administradores.</small>
+							<small class="help-block" lang="es">Sólo visible desde la administración para todos los usuarios administradores.</small>
 						</div>
 
 					</div>
@@ -388,7 +388,7 @@ page_types
 
 					<div class="col-xs-7 col-sm-8 col-md-9">
 						<textarea type="text" name="information" id="information" class="form-control" rows="2">#objectUser.information#</textarea>
-						<small class="help-block">Sólo visible desde la administración para todos los usuarios administradores.</small>
+						<small class="help-block" lang="es">Sólo visible desde la administración para todos los usuarios administradores.</small>
 					</div>
 
 				</div>

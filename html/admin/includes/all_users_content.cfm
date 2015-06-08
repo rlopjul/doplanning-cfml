@@ -134,7 +134,7 @@
 <nav class="navbar navbar-default navbar-fixed-bottom" id="addSelectedUsersNavBar">
   	<div class="container-fluid">
   	
-		<a class="btn btn-info btn-sm navbar-btn" onclick="openAreaAssociateUsers()"><i class="icon-plus icon-white"></i> Asociar usuarios seleccionados al área</a>
+		<a class="btn btn-info btn-sm navbar-btn" onclick="openAreaAssociateUsers()"><i class="icon-plus icon-white"></i> <span lang="es">Asociar usuarios seleccionados al área</span></a>
 
   	</div>
 </nav>

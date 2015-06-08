@@ -38,7 +38,7 @@
 		<div class="row">
 			<div class="col-sm-12">
 
-				<p style="font-size:15px;">#area_path#<a onclick="loadAreaTree(#area_id#)" class="btn btn-link" style="padding-top:0;padding-left:10px;"><img src="#APPLICATION.htmlPath#/assets/icons/plus.png"/></a></p>
+				<p style="font-size:15px;"><span class="sr-only" lang="es">Ruta del área:</span> #area_path#<a onclick="loadAreaTree(#area_id#)" class="btn btn-link" style="padding-top:0;padding-left:10px;" title="Abrir árbol con ruta expandida" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/plus.png" alt="Abrir árbol con ruta expandida" lang="es"/></a></p>
 
 			</div>
 		</div>
@@ -95,7 +95,7 @@
 	</script>
 
 	<!--- Modal Window --->
-	<div id="ajax-modal" class="modal container fade" style="width: 500px;" tabindex="-1"></div><!---hide funcionaba en bs2--->
+	<div id="ajax-modal" class="modal container fade" role="dialog" style="width: 500px;" tabindex="-1"></div><!---hide funcionaba en bs2--->
 
 	
 </cfif>

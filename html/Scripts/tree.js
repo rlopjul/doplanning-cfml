@@ -46,12 +46,16 @@ function showTree(selectable) {
 			"allowed-web" : {},
 			"not-allowed" : {},
 			"not-allowed-web" : {}	
-		},*/
+		},
+		Plugin state da problemas en MAC porque se guarda la selección de área
 		"state" : { 
 			"key" : "main_tree",
 			"events" : "open_node.jstree close_node.jstree"
-		},
-		"plugins" : [ "search", "state" ] /*"types", */
+		},*/
+
+		"plugins" : [ "search" ] /*"types", "state" */
+
+
   	});
 	
 }

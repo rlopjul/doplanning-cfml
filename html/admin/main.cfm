@@ -448,7 +448,7 @@
 		  	<span class="main_title"><b lang="es"><cfif SESSION.client_administrator IS SESSION.user_id>Administración general<cfelse>Administración de áreas</cfif></b></span>
 		  
 		  	<div style="float:right; text-align:right; clear:none;">
-				<a href="../preferences.cfm" title="Preferencias del usuario" class="link_user_logged">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
+				<a href="../preferences.cfm" title="Preferencias del usuario" class="link_user_logged" lang="es"><span>#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</span></a><br/>
 				
 				<a href="../logout.cfm" title="Cerrar sesión" class="link_user_logout"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 
@@ -684,7 +684,7 @@
 	</div>
 
 	<!--- Modal Window --->
-	<div id="ajax-modal" class="modal container fade" tabindex="-1"></div><!---hide funcionaba en bs2--->
+	<div id="ajax-modal" class="modal container fade" role="dialog" tabindex="-1"></div><!---hide funcionaba en bs2--->
 
 	<!---Alert modal--->
 	<div id="alertModal" class="modal container fade" tabindex="-1"></div>

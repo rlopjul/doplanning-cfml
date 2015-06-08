@@ -36,7 +36,7 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+		    <button class="btn btn-default" data-dismiss="modal">Cancelar</button>
 		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)">Guardar</button>
 		</div>
 

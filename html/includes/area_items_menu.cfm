@@ -67,7 +67,7 @@
 
 					<div class="btn-group" id="newItemDropDown">
 					  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-					    <i class="icon-plus icon-white" style="color:##35938B;font-size:18px;"></i>
+					    <i class="icon-plus" style="color:##35938B;font-size:18px;"></i><span class="sr-only" lang="es">Nuevo elemento</span></span>
 					  </button>
 					  <ul class="dropdown-menu" role="menu">
 

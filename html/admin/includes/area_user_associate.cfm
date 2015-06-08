@@ -26,18 +26,18 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3>Asociar usuario a área</h3>
+		    <h4 lang="es">Asociar usuario a área</h4>
 		</div>
 
 	 	<div class="modal-body">
 
 	 		<cfif isUserInAreaResponse.isUserInArea IS false>
 
-				<p>¿Seguro que desea asociar este usuario a esta área?</p>
+				<p lang="es">¿Seguro que desea asociar este usuario a esta área?</p>
 
 			<cfelse>
 
-				<p>Este usuario <b>ya está asociado a esta área</b></p>
+				<p lang="es">Este usuario ya está asociado a esta área</p>
 
 			</cfif>
 	  		
@@ -49,15 +49,15 @@
 						<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="item_img_default" style="margin-right:2px;"/>
 					</cfif> <strong>#objectUser.family_name# #objectUser.name#</strong> (#objectUser.email#)<br/>
 				</div>
-				<div class="well well-sm">Área:
+				<div class="well well-sm"><span lang="es">Área</span>:
 					<strong>#objectArea.name#</strong><br/>
-					<span>Ruta del área: #area_path#
+					<span lang="es">Ruta del área</span>: #area_path#
 				</div>
 			</div>
 
 			<cfif isUserInAreaResponse.isUserInArea IS false>
 
-				<small class="help-block">Se enviará notificación por email al usuario asociado y a los usuarios del área.</small>
+				<small class="help-block" lang="es">Se enviará notificación por email al usuario asociado y a los usuarios del área.</small>
 
 				<form id="associateForm" method="post">
 					<input type="hidden" name="area_id" value="#objectArea.id#"/>
@@ -69,9 +69,9 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+		    <button class="btn btn-default" data-dismiss="modal" lang="es">Cancelar</button>
 		    <cfif isUserInAreaResponse.isUserInArea IS false>
-		   		<button class="btn btn-primary" id="areaAssociateSubmitButton" data-loading-text="Asociando..." onclick="submitAssociateModal(event)">Asociar usuario</button>
+		   		<button class="btn btn-primary" id="areaAssociateSubmitButton" data-loading-text="Asociando..." onclick="submitAssociateModal(event)" lang="es">Asociar usuario</button>
 		   	</cfif>
 		</div>
 

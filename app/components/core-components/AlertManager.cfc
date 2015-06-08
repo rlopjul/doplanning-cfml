@@ -517,7 +517,7 @@
 										<img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/icon_share.png" alt="#langText[curLang].common.go_to_item#"/>
 									</td>
 									<td style="padding-top:5px;">
-										<a href="#areaItemUrl#" style="color:##ababab;font-size:16px;text-decoration:none">#areaItemUrl#</a>
+										<a href="#areaItemUrl#" title="#langText[curLang].common.go_to_item#" style="color:##ababab;font-size:16px;text-decoration:none">#areaItemUrl#</a>
 									</td>
 								</tr>
 								<tr>
@@ -1022,7 +1022,7 @@
 							<cfif arguments.itemTypeId IS 1>
 								
 								<!--- Reply --->
-								<a href="#arguments.itemUrl#&reply" target="_blank" title="#uCase(langText[arguments.language].new_item.reply)#"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/btn_reply_#arguments.language#.png" alt="#uCase(langText[arguments.language].new_item.reply)#" title="#uCase(langText[arguments.language].new_item.reply)#"/></a><!--- <br/> --->
+								<a href="#arguments.itemUrl#&reply" target="_blank" title="#langText[arguments.language].new_item.reply#"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/btn_reply_#arguments.language#.png" alt="#uCase(langText[arguments.language].new_item.reply)#" title="#uCase(langText[arguments.language].new_item.reply)#"/></a><!--- <br/> --->
 
 							<cfelseif arguments.itemTypeId IS 10>
 								
@@ -1497,7 +1497,7 @@
 									<img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/icon_share.png" alt="#langText[curLang].common.go_to_item#"/>
 								</td>
 								<td style="padding-top:5px;">
-									<a href="#tableRowUrl#" style="color:##ababab;font-size:16px;text-decoration:none">#tableRowUrl#</a>
+									<a href="#tableRowUrl#" title="#langText[curLang].common.go_to_item#" style="color:##ababab;font-size:16px;text-decoration:none">#tableRowUrl#</a>
 								</td>
 							</tr>
 							<tr>
@@ -2358,7 +2358,7 @@
 											<img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/icon_share.png" alt="#langText[curLang].common.go_to_item#"/>
 										</td>
 										<td style="padding-top:5px;">
-											<a href="#areaFileUrl#" style="color:##ababab;font-size:16px;text-decoration:none">#areaFileUrl#</a>
+											<a href="#areaFileUrl#" title="#langText[curLang].common.go_to_item#" style="color:##ababab;font-size:16px;text-decoration:none">#areaFileUrl#</a>
 										</td>
 									</tr>
 									<tr>
@@ -2624,10 +2624,22 @@
 		<!---En el asunto se pone el nombre del área raiz--->
 
 		<!--- getAreaPath --->
-		<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
+		<!---<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
 			<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		</cfinvoke>--->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaPathContent" returnvariable="area_path">
+			<cfinvokeargument name="area_id" value="#objectArea.id#">
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		</cfinvoke>
+
+		<!---areaUrl--->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
+			<cfinvokeargument name="area_id" value="#objectArea.id#">
+
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 		</cfinvoke>
 
         <cfif objectUser.enabled IS true>
@@ -2643,48 +2655,84 @@
 				
 				<cfset curLang = objectUser.language>
 
-				<!---
-				<!---getArea--->
-		        <cfinvoke component="AreaQuery" method="getArea" returnvariable="objectArea">
-		            <cfinvokeargument name="area_id" value="#area_id#">
-		            <cfinvokeargument name="with_user" value="false">
-		            <cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-		        </cfinvoke>
-		        	
-		        <!---getRootArea--->
-				<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
-					<cfinvokeargument name="onlyId" value="false">
-					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-				</cfinvoke>
-				--->
-				
 		        <cfif arguments.new_area IS false>
 					<cfset subject_user = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_user#: "&objectArea.name>
 				<cfelse>
 					<cfset subject_user = "[#root_area.name#] #langText[curLang].assign_user.has_been_added_as_responsible#: "&objectArea.name>
 				</cfif>
 
-				<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="access_content_user">
+				<!---<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="access_content_user">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 					<cfinvokeargument name="language" value="#curLang#">
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				</cfinvoke>--->
+
+				<!--- getAreaHeadContent --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaHeadContent" returnvariable="areaHeadContentUser">
+					<cfinvokeargument name="objectArea" value="#objectArea#"/>
+					<cfinvokeargument name="areaUrl" value="#areaUrl#"/>
+
+					<cfinvokeargument name="language" value="#curLang#">
+					<cfinvokeargument name="client_abb" value="#client_abb#"/>
 				</cfinvoke>
 
 				<cfsavecontent variable="html_text">
 				<cfoutput>
-				<br />
+
+					<cfif objectUser.whole_tree_visible IS true><!---INTERNAL USER--->
+						#area_path#
+					</cfif>
+
+					#areaHeadContentUser#
+
+					<tr style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0">
+						<td style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:14px;">
+						
+							<p style="font-size:16px;padding-left:5px;"><cfif arguments.new_area IS false>
+							#langText[curLang].assign_user.has_been_added_to_area#
+							<cfelse>
+							#langText[curLang].assign_user.area_created# #langText[curLang].assign_user.you_are_responsible#
+							</cfif></p>
+
+							<cfif len(objectArea.description) GT 0>
+							<p>#langText[curLang].common.area_description#:<br /> 
+							#objectArea.description#
+							</p>
+							</cfif>
+
+							<table style="width:100%;margin-top:20px;">
+								<tr>
+									<td><!--- Share icon --->
+										<img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/icon_share.png" alt="#langText[curLang].common.go_to_area#"/>
+									</td>
+									<td style="padding-top:5px;">
+										<a href="#areaUrl#" style="color:##ababab;font-size:16px;text-decoration:none">#areaUrl#</a>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td style="background:none; border-top: 1px solid ##ddd; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-bottom:10px;">&nbsp;
+									</td>
+								</tr>
+							</table>
+
+						</td>
+					</tr>
+				</table><!--- END item container table --->
+
+
+		<!---		<br />
 		<cfif arguments.new_area IS false>
 		#langText[curLang].assign_user.has_been_added_to_area#: <strong>#objectArea.name#</strong> #langText[curLang].common.of_the_organization# #root_area.name#.<br />
 		<cfelse>
 		#langText[curLang].assign_user.area_created#: <strong>#objectArea.name#</strong>, #langText[curLang].assign_user.you_are_responsible#.<br />
 		</cfif>
 		<cfif objectUser.whole_tree_visible IS true><!---INTERNAL USER--->
-			<cfif len(area_path) GT 0>
+			<!---<cfif len(area_path) GT 0>
 				#langText[curLang].common.area_path#: #area_path#<br />
-			</cfif>
+			</cfif>--->
+			#area_path#
 		</cfif>
 		<br />
 		<cfif len(objectArea.description) GT 0>
@@ -2692,7 +2740,7 @@
 		#objectArea.description#<br />
 		</cfif>
 		<br/>
-		<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content_user#</div>	
+		<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content_user#</div>--->
 				</cfoutput>		
 				</cfsavecontent>
 
@@ -2806,7 +2854,7 @@
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
 					</cfinvoke>
 
-					<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="accessContent">
+					<!---<cfinvoke component="AlertManager" method="getAreaAccessContent" returnvariable="accessContent">
 						<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 						<cfinvokeargument name="language" value="#curLang#">
 
@@ -2825,19 +2873,102 @@
 			</cfif>
 				
 					</cfoutput>	
+					</cfsavecontent>--->
+
+					<cfset actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
+
+					<cfsavecontent variable="alertContent">
+					<cfoutput>
+						<a href="#areaUrl#"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/go_to_area_#curLang#.png" alt="#langText[curLang].common.go_to_area#" title="#langText[curLang].common.go_to_area#" /></a>
+
+						<table style="width:100%;border-radius:4px;border-color:##dddddd;border-style:solid;border-width:1px;margin-top:10px;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:15px;"><!--- item container table --->
+
+							<tr style="padding-bottom:0;margin-bottom:0">
+								<td style="padding-bottom:0;margin-bottom:0">
+
+									<table style="width:100%;">
+										<tr>
+											<td><!--- Area and date --->
+
+												<table>
+													<tr>
+														<td style="vertical-align:middle">
+															<span style="font-size:25px;color:##35938c;font-weight:100">#objectUser.user_full_name#</span>&nbsp;&nbsp;&nbsp;&nbsp;
+														</td>
+														<td style="vertical-align:middle">
+															<cfset spacePos = findOneOf(" ", actionDate)>
+															<span style="font-size:20px;color:##254c65;font-weight:100;white-space:nowrap;">#left(actionDate, spacePos)#</span>&nbsp;&nbsp;&nbsp;
+														</td>
+														<td style="vertical-align:middle">
+															<span style="font-size:20px;color:##888;font-weight:100;white-space:nowrap;">#right(actionDate, len(actionDate)-spacePos)#</span>&nbsp;&nbsp;
+														</td>
+														<td style="vertical-align:middle">
+															<!---#actionBox#--->
+														</td>
+													</tr>
+												</table>
+												
+											</td>
+										</tr>
+
+										<!---<tr>
+											<td style="background:none; border-top: 1px solid ##eeeeee; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-top:10px;">
+												&nbsp;
+											</td>
+										</tr>--->
+									</table>
+
+								</td>
+							</tr>
+						
+							<tr style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0">
+								<td style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:14px;">
+
+									<p style="font-size:16px;padding-left:5px;">
+										#langText[curLang].assign_user.new_user_in_area#
+									</p>
+			
+
+									<table style="width:100%;margin-top:20px;">
+										<tr>
+											<td><!--- Share icon --->
+												<img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/icon_share.png" alt="#langText[curLang].common.go_to_area#"/>
+											</td>
+											<td style="padding-top:5px;">
+												<a href="#areaUrl#" style="color:##ababab;font-size:16px;text-decoration:none">#areaUrl#</a>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td style="background:none; border-top: 1px solid ##ddd; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-bottom:10px;">&nbsp;
+											</td>
+										</tr>
+									</table>
+
+								</td>
+							</tr>
+						</table><!--- END item container table --->
+					</cfoutput>
 					</cfsavecontent>
+
+					<!--- getAreaHeadContent --->
+					<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaHeadContent" returnvariable="areaHeadContentUser">
+						<cfinvokeargument name="objectArea" value="#objectArea#"/>
+						<cfinvokeargument name="areaUrl" value="#areaUrl#"/>
+
+						<cfinvokeargument name="language" value="#curLang#">
+						<cfinvokeargument name="client_abb" value="#client_abb#"/>
+					</cfinvoke>--->
+
 
 					<!---INTERNAL USERS--->
 					<cfif listLen(listInternalUsers, ";") GT 0>
 
 						<cfsavecontent variable="contentInternal">
 						<cfoutput>
-						#alertContent#
-						<cfif len(area_path) GT 0>
-							#langText[curLang].common.area_path#: #area_path#<br />
-						</cfif>
-						<br/>
-						<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#accessContent#</div>
+							#area_path#
+
+							#alertContent#
 						</cfoutput>
 						</cfsavecontent>
 
@@ -2862,12 +2993,11 @@
 
 						<cfsavecontent variable="contentExternal">
 						<cfoutput>
-						#alertContent#
-						<br/>
-						<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#accessContent#</div>						
+							<p><a href="#areaUrl#" style="color:##009ed2;text-decoration:underline;font-size:15px;">#objectArea.name#</a></p>
+
+							#alertContent#
 						</cfoutput>
 						</cfsavecontent>
-
 						<cfinvoke component="EmailManager" method="sendEmail">
 							<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 							<!---<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus"> 
@@ -2877,7 +3007,7 @@
 							<cfinvokeargument name="bcc" value="#listExternalUsers#">
 							<cfinvokeargument name="subject" value="#subject#">
 							<cfinvokeargument name="content" value="#contentExternal#">
-							<cfinvokeargument name="foot_content" value="#head_content#">
+							<cfinvokeargument name="head_content" value="#head_content#">
 							<cfinvokeargument name="foot_content" value="#foot_content#">
 						</cfinvoke>
 
@@ -2889,6 +3019,297 @@
 
 
 		</cfif>
+		
+	</cffunction>
+
+
+
+	<!--- --------------------------- getAreaHeadContent --------------------------- --->
+	
+	<cffunction name="getAreaHeadContent" access="private" returntype="string">
+		<cfargument name="objectArea" type="query" required="true">
+		<cfargument name="areaUrl" type="string" required="true">
+		<cfargument name="action" type="string" required="false">
+		<cfargument name="language" type="string" required="true">
+
+
+		<cfargument name="client_abb" type="string" required="true">
+
+		<cfset var method = "getAreaHeadContent">
+
+		<cfset var headContent = "">
+
+		<cfset var actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
+
+
+		<cfsavecontent variable="headContent"><cfoutput>
+			<a href="#areaUrl#"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/go_to_area_#arguments.language#.png" alt="#langText[arguments.language].common.go_to_area#" title="#langText[arguments.language].common.go_to_area#" /></a>
+
+			<table style="width:100%;border-radius:4px;border-color:##dddddd;border-style:solid;border-width:1px;margin-top:10px;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:15px;"><!--- item container table --->
+
+				<tr style="padding-bottom:0;margin-bottom:0">
+					<td style="padding-bottom:0;margin-bottom:0">
+
+						<table style="width:100%;">
+							<tr>
+								<td><!--- Area and date --->
+
+									<table>
+										<tr>
+											<td style="vertical-align:middle">
+												<span style="font-size:25px;color:##444444;font-weight:100">#objectArea.name#</span>&nbsp;&nbsp;&nbsp;&nbsp;
+											</td>
+											<td style="vertical-align:middle">
+												<cfset spacePos = findOneOf(" ", actionDate)>
+												<span style="font-size:20px;color:##254c65;font-weight:100;white-space:nowrap;">#left(actionDate, spacePos)#</span>&nbsp;&nbsp;&nbsp;
+											</td>
+											<td style="vertical-align:middle">
+												<span style="font-size:20px;color:##888;font-weight:100;white-space:nowrap;">#right(actionDate, len(actionDate)-spacePos)#</span>&nbsp;&nbsp;
+											</td>
+											<td style="vertical-align:middle">
+												<!---#actionBox#--->
+											</td>
+										</tr>
+									</table>
+									
+								</td>
+							</tr>
+
+							<!---<tr>
+								<td style="background:none; border-top: 1px solid ##eeeeee; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-top:10px;">
+									&nbsp;
+								</td>
+							</tr>--->
+						</table>
+
+					</td>
+				</tr>
+		</cfoutput></cfsavecontent>
+		
+		<cfreturn headContent>
+
+	</cffunction>
+
+
+
+
+
+	<!--- -------------------------------------- newArea ------------------------------------ --->
+	
+	<cffunction name="newArea" access="public" returntype="void">
+		<cfargument name="objectArea" type="query" required="yes">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+				
+		<cfset var method = "newArea">
+		
+		<cfset var internalUsersEmails = "">
+		<cfset var externalUsersEmails = "">
+		<cfset var listInternalUsers = "">
+		<cfset var listExternalUsers = "">
+        
+        <cfset var root_area = "">
+        <cfset var head_content = "">
+		<cfset var foot_content = "">
+		<cfset var alertContent = "">
+		
+		<!---<cfinclude template="includes/functionStartOnlySession.cfm">--->
+		
+        <cfsavecontent variable="getUsersParameters">
+			<cfoutput>
+				 <user id="" email=""	
+			telephone="" sms_allowed="" whole_tree_visible="">
+					<family_name><![CDATA[]]></family_name>
+					<name><![CDATA[]]></name>	
+				</user>
+				<area id="#objectArea.id#"/> 
+				<order parameter="family_name" order_type="asc" />
+				<preferences notify_new_area="true">				
+				</preferences>
+			</cfoutput>
+		</cfsavecontent>
+		
+		<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="getUsersRequest">
+			<cfinvokeargument name="request_parameters" value="#getUsersParameters#">
+		</cfinvoke>
+        
+        <cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
+			<cfinvokeargument name="request" value="#getUsersRequest#"/>
+
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		</cfinvoke>
+		
+		<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
+		<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
+
+		<cfloop list="#APPLICATION.languages#" index="curLang">
+		
+			<cfset listInternalUsers = internalUsersEmails[curLang]>
+			<cfset listExternalUsers = externalUsersEmails[curLang]>
+        
+			<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
+
+				<!---getRootArea--->
+				<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
+					<cfinvokeargument name="onlyId" value="false">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+				<!---En el asunto se pone el nombre del área raiz--->
+
+				<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaAccessContent" returnvariable="access_content">
+					<cfinvokeargument name="area_id" value="#objectArea.id#"/>
+					<cfinvokeargument name="language" value="#curLang#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+				</cfinvoke>--->
+				
+				<!--- getHeadContent --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="head_content">
+					<cfinvokeargument name="language" value="#curLang#">
+					<cfinvokeargument name="client_abb" value="#client_abb#"/>
+				</cfinvoke>
+
+				<!---areaUrl--->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
+					<cfinvokeargument name="area_id" value="#objectArea.id#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				</cfinvoke>
+
+				<!--- getAreaHeadContent --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaHeadContent" returnvariable="areaHeadContent">
+					<cfinvokeargument name="objectArea" value="#objectArea#"/>
+					<cfinvokeargument name="areaUrl" value="#areaUrl#"/>
+
+					<cfinvokeargument name="language" value="#curLang#">
+					<cfinvokeargument name="client_abb" value="#client_abb#"/>
+				</cfinvoke>
+
+				<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">'&langText[curLang].common.foot_content_default_3&' #APPLICATION.title#.</p>'>	
+				<cfset subject = "[#root_area.name#][#langText[curLang].new_area.new_area#] #objectArea.name#">
+
+				<cfsavecontent variable="alertContent">
+				<cfoutput>
+
+						#areaHeadContent#
+
+						<tr style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0">
+							<td style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:14px;">
+
+								<p style="font-size:16px;padding-left:5px;">#langText[curLang].new_area.area_created#</p>
+
+								<cfif len(objectArea.description) GT 0>
+								<p style="font-size:16px;padding-left:5px;"><b>#langText[curLang].common.area_description#:</b><br /> 
+								#objectArea.description#
+								</p>
+								</cfif>
+
+								<table style="width:100%;margin-top:20px;">
+									<tr>
+										<td><!--- Share icon --->
+											<img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/icon_share.png" alt="#langText[curLang].common.go_to_area#"/>
+										</td>
+										<td style="padding-top:5px;">
+											<a href="#areaUrl#" style="color:##ababab;font-size:16px;text-decoration:none">#areaUrl#</a>
+										</td>
+									</tr>
+									<tr>
+										<td></td>
+										<td style="background:none; border-top: 1px solid ##ddd; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-bottom:10px;">&nbsp;
+										</td>
+									</tr>
+								</table>
+
+							</td>
+						</tr>
+					</table><!--- END item container table --->
+
+				</cfoutput>
+				</cfsavecontent>
+
+
+				<!---INTERNAL USERS--->
+				<cfif len(listInternalUsers) GT 0>
+				
+					<!---<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+						<cfinvokeargument name="area_id" value="#objectArea.id#">
+					</cfinvoke>--->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaPathContent" returnvariable="area_path">
+						<cfinvokeargument name="area_id" value="#objectArea.id#">
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+					
+					<cfset subjectInternal = subject>
+				
+					<cfsavecontent variable="contentInternal">
+					<cfoutput>
+						#area_path#
+
+						#alertContent#
+
+			<!---<br />
+			#langText[curLang].new_area.area_created#: <strong>#objectArea.name#</strong> #langText[curLang].new_area.on_the_organization# #root_area.name#, #langText[curLang].new_area.and_you_have_access#.<br />
+			#langText[curLang].common.area_path#:#area_path#<br /><br />
+			<br/>
+			<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>--->
+					</cfoutput>		
+					</cfsavecontent>
+					
+					<cfinvoke component="EmailManager" method="sendEmail">
+						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
+						<cfinvokeargument name="bcc" value="#listInternalUsers#">
+						<cfinvokeargument name="subject" value="#subjectInternal#">
+						<cfinvokeargument name="content" value="#contentInternal#">
+						<cfinvokeargument name="head_content" value="#head_content#">
+						<cfinvokeargument name="foot_content" value="#foot_content#">
+					</cfinvoke>	
+					
+				</cfif>
+				
+				<!---EXTERNAL USERS--->
+				<cfif len(listExternalUsers) GT 0>
+					
+					<cfset subjectExternal = subject>
+					
+					<cfsavecontent variable="contentExternal">
+					<cfoutput>
+
+						<p><a href="#areaUrl#" style="color:##009ed2;text-decoration:underline;font-size:15px;">#objectArea.name#</a></p>
+
+						#alertContent#
+
+					<!---<br />
+			#langText[curLang].new_area.area_created#: <strong>#objectArea.name#</strong> #langText[curLang].new_area.on_the_organization# #root_area.name#, #langText[curLang].new_area.and_you_have_access#.<br /><br />
+			<cfif len(objectArea.description) GT 0>
+			#langText[curLang].common.area_description#:<br /> 
+			#objectArea.description#<br />
+			</cfif>
+			<br/>
+			<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>--->
+					</cfoutput>		
+					</cfsavecontent>
+					
+					<cfinvoke component="EmailManager" method="sendEmail">
+						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
+						<cfinvokeargument name="bcc" value="#listExternalUsers#">
+						<cfinvokeargument name="subject" value="#subjectExternal#">
+						<cfinvokeargument name="content" value="#contentExternal#">
+						<cfinvokeargument name="head_content" value="#head_content#">
+						<cfinvokeargument name="foot_content" value="#foot_content#">
+					</cfinvoke>	
+					
+				</cfif>
+		
+			</cfif><!---END len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0--->
+			
+		</cfloop><!---END APPLICATION.languages loop--->
 		
 	</cffunction>
 

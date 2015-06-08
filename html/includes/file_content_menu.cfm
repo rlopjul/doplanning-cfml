@@ -222,9 +222,9 @@
 							<i class="icon-user"></i> <span lang="es">Cambiar propietario</span> <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								
-								<li><a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#">Cambiar usuario propietario</a></li>
+								<li><a href="file_change_user.cfm?file=#objectFile.id#&area=#area_id#" lang="es">Cambiar usuario propietario</a></li>
 								
-								<li><a href="file_change_owner_to_area.cfm?file=#objectFile.id#&area=#area_id#">Convertir en archivo del área</a></li>
+								<li><a href="file_change_owner_to_area.cfm?file=#objectFile.id#&area=#area_id#" lang="es">Convertir en archivo del área</a></li>
 
 							</ul>
 						</div>

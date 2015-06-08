@@ -702,6 +702,8 @@
 					// default "emptyTo"
 		   			emptyTo: 'zero',
 					<!---textExtraction: 'basic',--->
+					 // Enable use of the characterEquivalents reference
+    				sortLocaleCompare : true,
 					textAttribute: "data-text",
 					textExtraction: "basic",
 					usNumberFormat: true, <!--- Requerido para que la suma de los valores de las comlumnas con decimales separados por . sea correcta (esto hace que los decimales separados por , no se sumen correctamente, pero para eso se usa la opción de definir el valor de la columena en data-text)  ---->
@@ -878,7 +880,11 @@
 							<th style="width:25px;">##</th>
 							<!---<th>Fecha última modificación</th>--->
 							<cfloop query="fields">
-								<th>#fields.label#</th>
+								<cfif fields.field_id EQ "last_update_date">
+									<th><span lang="es">#fields.label#</span></th>
+								<cfelse>
+									<th>#fields.label#</th>
+								</cfif>
 								<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10><!--- LISTS --->
 									<cfset listFields = true>
 								</cfif>

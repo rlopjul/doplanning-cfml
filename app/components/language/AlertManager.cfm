@@ -70,6 +70,7 @@ curLangText["es"] = {
 			
 			"view_in_area" : "Ver en área",
 			"go_to_item" : "Ir al elemento",
+			"go_to_area" : "Ir al área",
 
 			"access_internal" : "Acceso interno",
 			"access_external" : "Acceso externo",
@@ -400,6 +401,7 @@ curLangText["en"] = {
 
 			"view_in_area" : "View in area",
 			"go_to_item" : "Go to item",
+			"go_to_area" : "Go to area",
 			
 			"access_internal" : "Internal access",
 			"access_external" : "External access",

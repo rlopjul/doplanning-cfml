@@ -361,7 +361,7 @@
 
 			<label for="mask_type_id" class="control-label" lang="es">Máscara</label>
 			<select name="mask_type_id" id="mask_type_id" class="form-control"><!---onchange="fieldItemTypeChange($('##item_type_id').val());"--->
-				<option value="">Sin máscara</option>
+				<option value="" lang="es">Sin máscara</option>
 				<cfloop array="#maskTypesArray#" index="maskTypeId">
 					<option value="#maskTypeId#" lang="es" <cfif field.mask_type_id IS maskTypeId>selected="selected"</cfif>>#maskTypesStruct[maskTypeId].label# (#maskTypesStruct[maskTypeId].description#)</option>
 				</cfloop>

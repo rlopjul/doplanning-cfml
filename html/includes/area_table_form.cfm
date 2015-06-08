@@ -157,7 +157,7 @@
 
 		<div class="row">
 			<div class="col-sm-12">
-				<small class="help-block">Si está definida, <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs# se publicará en la fecha especificada.</small>
+				<small class="help-block" lang="es">Si está definida, <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs# se publicará en la fecha especificada.</small>
 			</div>
 		</div>
 
@@ -167,9 +167,9 @@
 				<div class="col-xs-12 col-sm-12">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("table.publication_validated") AND table.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+							<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("table.publication_validated") AND table.publication_validated IS true>checked="checked"</cfif> /> <span lang="es">Aprobar publicación</span>
 						</label>
-						<small class="help-block">Valida <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs# para que pueda ser <cfif tableTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
+						<small class="help-block" lang="es">Valida <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs# para que pueda ser <cfif tableTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
 					</div>
 				</div>
 			</div>

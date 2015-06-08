@@ -146,8 +146,8 @@
 <cfif SESSION.client_administrator IS SESSION.user_id>
 
 	<ul class="nav nav-tabs" role="tablist">
-	  <li class="active"><a href="#users" role="tab" data-toggle="tab">Usuarios</a></li>
-	  <li><a href="#administrators" role="tab" data-toggle="tab">Administradores</a></li>
+	  <li class="active"><a href="#users" role="tab" data-toggle="tab"><span lang="es">Usuarios</span></a></li>
+	  <li><a href="#administrators" role="tab" data-toggle="tab"><span lang="es">Administradores</span></a></li>
 	</ul>
 
 	<!--- Tab panes --->
@@ -177,7 +177,7 @@
 			</cfinvoke>
 
 			<cfif objectArea.users_visible IS false>
-				<div><small class="help-block">Estos usuarios no se muestran visibles en esta área</small></div>								
+				<div><small class="help-block" lang="es">Estos usuarios no se muestran visibles en esta área</small></div>								
 			</cfif>
 
 			<div style="height:40px;"></div>
@@ -189,7 +189,7 @@
 				  	
 						<!---<a class="btn btn-info btn-sm navbar-btn" onclick="openAreaAssociateUsers()"><i class="icon-plus icon-white"></i> Asociar usuarios seleccionados al área</a>--->
 
-						<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/area_users_associate_select.cfm?area=#area_id#');"><i class="icon-plus icon-white"></i> Asociar estos usuarios a otra área</a>
+						<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/area_users_associate_select.cfm?area=#area_id#');"><i class="icon-plus icon-white"></i> <span lang="es">Asociar estos usuarios a otra área</span></a>
 
 				  	</div>
 				</nav>

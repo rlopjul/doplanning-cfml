@@ -49,7 +49,7 @@
 		<div class="col-sm-12">
 			<div class="checkbox">
 				<label class="control-label">
-					<input type="checkbox" name="select_all" checked="checked" onclick="toggleCheckboxesChecked(this.checked);"/> Seleccionar/quitar todos
+					<input type="checkbox" name="select_all" checked="checked" onclick="toggleCheckboxesChecked(this.checked);"/> <span lang="es">Seleccionar/quitar todos</span>
 				</label>
 			</div>
 		</div>
@@ -165,9 +165,7 @@
 
 			</ul>
 
-			<small class="help-block" style="margin-bottom:0">
-				Esta selección no afecta a los elementos ya existentes en el área
-			</small>
+			<small class="help-block" style="margin-bottom:0" lang="es">Esta selección no afecta a los elementos ya existentes en el área</small>
 		</div>
 	</div>	
 
@@ -180,10 +178,8 @@
 						<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuarios" lang="es" style="width:30px"/>
 					<span lang="es">Mostrar visible el listado de usuarios del área</span>&nbsp;
 				</label>
-				<small class="help-block">
-					Esta opción no afecta a los elementos en los que es necesario acceder a la lista de usuarios del área para su creación y edición como: tareas<cfif APPLICATION.moduleListsWithPermissions IS true>, archivos de área, listas y formularios.
-					<cfelse>y archivos de área.</cfif>
-				</small>
+				<small class="help-block" lang="es">Esta opción no afecta a los elementos en los que es necesario acceder a la lista de usuarios del área para su creación y edición como: tareas<cfif APPLICATION.moduleListsWithPermissions IS true>, archivos de área, listas y formularios.
+					<cfelse>y archivos de área.</cfif></small>
 			</div>
 
 		</div>
@@ -207,13 +203,11 @@
 		<div class="col-xs-12">
 
 			<div class="checkbox">
-				<label class="control-label" for="items_enabled_subareas" lang="es">
+				<label class="control-label" for="items_enabled_subareas">
 					<input id="items_enabled_subareas" name="items_enabled_subareas" type="checkbox" value="true" class="checkbox_locked" />
-					Aplicar selección anterior de elementos, usuarios disponibles y sólo lectura a todas las áreas inferiores
+					<span lang="es">Aplicar selección anterior de elementos, usuarios disponibles y sólo lectura a todas las áreas inferiores</span>
 				</label>
-				<small class="help-block">
-					Esta definición se puede modificar posteriormente de forma individual para cada área.
-				</small>
+				<small class="help-block" lang="es">Esta definición se puede modificar posteriormente de forma individual para cada área.</small>
 			</div>
 
 		</div>

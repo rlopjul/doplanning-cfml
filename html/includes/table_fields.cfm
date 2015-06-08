@@ -94,7 +94,7 @@
 			openUrlHtml2('empty.cfm','itemIframe');
 		</script>				
 
-		<div class="div_text_result"><span lang="es">Haga clic en Añadir campo parar crear un nuevo campo.</span></div>
+		<div class="div_text_result"><span lang="es">Haga clic en Añadir campo para crear un nuevo campo.</span></div>
 
 	</cfif>
 

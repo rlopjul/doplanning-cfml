@@ -26,7 +26,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3>Quitar usuario de área</h3>
+		    <h4 lang="es">Quitar usuario de área</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -34,18 +34,18 @@
 	  		
 			<cfif objectArea.user_in_charge IS user_id>
 
-				<p>Este usuario es el responsable del área, debe asignar a otro usuario como responsable para poder quitar a este del área.</p>
+				<p lang="es">Este usuario es el responsable del área, debe asignar a otro usuario como responsable para poder quitar a este del área.</p>
 
 			<cfelse>
 
 
 				<cfif isUserInAreaResponse.isUserInArea IS true><!--- The user already is in the area  --->
 
-					<p>¿Seguro que desea quitar este usuario de esta área?:</p>
+					<p lang="es">¿Seguro que desea quitar este usuario de esta área?:</p>
 
 				<cfelse>
 
-					<p><span class="label label-warning">CUIDADO</span> Este usuario no está asociado directamente a esta área, esta asociado a un área superior:</p>
+					<p><span class="label label-warning" lang="es">CUIDADO</span> <span lang="es">Este usuario no está asociado directamente a esta área, esta asociado a un área superior</span>:</p>
 
 				</cfif>
 
@@ -59,9 +59,9 @@
 
 				<cfif isUserInAreaResponse.isUserInArea IS true><!--- The user already is in the area  --->
 				
-					<div class="well well-sm">Area:
+					<div class="well well-sm"><span lang="es">Área</span>:
 						<strong>#objectArea.name#</strong><br/>
-						Ruta del área: #area_path#
+						<span lang="es">Ruta del área</span>: #area_path#
 					</div>
 
 					<form id="dissociateForm" method="post">
@@ -84,12 +84,12 @@
 							<cfinvokeargument name="area_id" value="#getNearestAreaResponse.area_id#">
 						</cfinvoke>
 
-						<div class="well well-sm">Area superior:
+						<div class="well well-sm"><span lang="es">Area superior</span>:
 							<strong>#getNearestAreaResponse.area_name#</strong><br/>
-							Ruta del área: #nearest_area_path#
+							<span lang="es">Ruta del área</span>: #nearest_area_path#
 						</div>
 
-						<p>Si quita el usuario de esta área superior lo estará quitando del resto de áreas inferiores.</p>
+						<p lang="es">Si quita el usuario de esta área superior lo estará quitando del resto de áreas inferiores.</p>
 
 						<form id="dissociateForm" method="post">
 							<input type="hidden" name="area_id" value="#getNearestAreaResponse.area_id#"/>
@@ -100,7 +100,7 @@
 
 				</cfif>
 
-				<small class="help-block">No se enviará notificación por email de esta acción</small>
+				<small class="help-block" lang="es">No se enviará notificación por email de esta acción</small>
 
 				
 			</cfif>
@@ -109,14 +109,14 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+		    <button class="btn btn-default" data-dismiss="modal" lang="es">Cancelar</button>
 
 		    <cfif objectArea.user_in_charge NEQ user_id>
 		    	
 		    	<cfif isUserInAreaResponse.isUserInArea IS true>
-			    	<button class="btn btn-primary" id="areaDissociateSubmitButton" data-loading-text="Quitando..." onclick="submitDissociateModal(event)">Quitar usuario del área</button>
+			    	<button class="btn btn-primary" id="areaDissociateSubmitButton" data-loading-text="Quitando..." onclick="submitDissociateModal(event)" lang="es">Quitar usuario del área</button>
 			    <cfelseif getNearestAreaResponse.result IS true>
-			    	<button class="btn btn-warning" id="areaDissociateSubmitButton" data-loading-text="Quitando..." onclick="submitDissociateModal(event)">Quitar usuario del área superior</button>
+			    	<button class="btn btn-warning" id="areaDissociateSubmitButton" data-loading-text="Quitando..." onclick="submitDissociateModal(event)" lang="es">Quitar usuario del área superior</button>
 			    </cfif>
 
 		    </cfif>

@@ -88,9 +88,9 @@
 	</div>
 
 	<p class="help-block" style="font-size:12px;">
-		El archivo pasará a ser propiedad del área seleccionada y podrá ser modificado por cualquier usuario de la misma.<br>
-		El archivo seguirá estando accesible desde el área actual.<br>
-		Se enviará notificación por email del cambio a los usuarios del área propietaria.
+		<span lang="es">El archivo pasará a ser propiedad del área seleccionada y podrá ser modificado por cualquier usuario de la misma.</span><br>
+		<span lang="es">El archivo seguirá estando accesible desde el área actual.</span><br>
+		<span lang="es">Se enviará notificación por email del cambio a los usuarios del área propietaria.</span>
 	</p>
 	
 	<div style="height:10px;"><!--- ---></div>

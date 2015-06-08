@@ -31,11 +31,12 @@ function setItemsFilter(filterValue) {
 		$("##curFilterImg").attr("src", "#APPLICATION.htmlPath#/assets/icons_dp/area.png");
 
 		<cfif isDefined("area_id")>
-			$("##curFilterLabel").text(window.lang.translate("Elementos del área"));
+			<!---$("##curFilterLabel").text(window.lang.translate("Elementos del área"));--->
+			$("##curFilterLabel").text("Elementos del área");
 			$("##listModeLink").attr("href", "area_items.cfm?area=#area_id#&modeList");
 			$("##listModeLink").show();
 		<cfelse>
-			$("##curFilterLabel").text(window.lang.translate("Elementos de área"));
+			$("##curFilterLabel").text("Elementos de área");
 		</cfif>
 
 	} else {
@@ -48,7 +49,8 @@ function setItemsFilter(filterValue) {
 
 			if(itemType.name == filterValue) {
 				
-				$("##curFilterLabel").text(window.lang.translate(itemType.labelPlural));
+				<!---$("##curFilterLabel").text(window.lang.translate(itemType.labelPlural));--->
+				$("##curFilterLabel").text(itemType.labelPlural);
 				$("##curFilterImg").attr("src", "#APPLICATION.htmlPath#/assets/icons/"+itemType.name+".png");
 
 				<cfif isDefined("area_id")>

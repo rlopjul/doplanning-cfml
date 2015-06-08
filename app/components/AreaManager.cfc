@@ -1893,8 +1893,10 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<cfinvoke component="AlertManager" method="newArea">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newArea">
 				<cfinvokeargument name="objectArea" value="#areaQuery#">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>	
             
 			<!---Alerta al usuario que que es responsable de la misma--->

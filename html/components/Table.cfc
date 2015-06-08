@@ -762,7 +762,7 @@
 							<th class="filter-false" style="width:55px;"></th>
 							</cfif>
 							<th style="width:20%;"><span lang="es">Fecha</span></th>
-							<th>Estructura compartida</th>
+							<th><span lang="es">Estructura compartida</span></th>
 							<cfif tableTypeId IS 3><!---Typologies--->
 							<th><span lang="es">De esta área</span></th>
 							<th><span lang="es">General</span></th>	

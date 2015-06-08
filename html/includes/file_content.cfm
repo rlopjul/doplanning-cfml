@@ -84,7 +84,7 @@
 		else
 			messageLock = "¿Seguro que desea desbloquear el archivo?.";
 		
-		return confirm(messageLock);
+		return confirm(window.lang.translate(messageLock));
 	}
 
 	function confirmValidateFile(value) {
@@ -96,7 +96,7 @@
 		else
 			messageLock = "¿Seguro que desea rechazar esta versión del archivo?.";
 		
-		return confirm(messageLock);
+		return confirm(window.lang.translate(messageLock));
 	}
 
 	function confirmApproveFile(value) {
@@ -108,7 +108,7 @@
 		else
 			messageLock = "¿Seguro que desea rechazar esta versión del archivo?.";
 		
-		return confirm(messageLock);
+		return confirm(window.lang.translate(messageLock));
 	}
 
 </script>
@@ -266,11 +266,11 @@
 
 					<cfif objectFile.locked IS true>
 						<div class="alert alert-warning">
-							<span>Archivo bloqueado por el usuario <a href="area_user.cfm?area=#objectFile.area_id#&user=#objectFile.lock_user_id#">#objectFile.lock_user_full_name#</a>.</span>
+							<span lang="es">Archivo bloqueado por el usuario</span> <a href="area_user.cfm?area=#objectFile.area_id#&user=#objectFile.lock_user_id#">#objectFile.lock_user_full_name#</a>
 						</div>
 
 						<div class="div_file_page_label">
-							<span>Fecha de bloqueo</span> <span class="text_file_page">#objectFile.lock_date#</span>
+							<span lang="es">Fecha de bloqueo</span> <span class="text_file_page">#objectFile.lock_date#</span>
 						</div>
 					<cfelse>
 
@@ -278,12 +278,12 @@
 
 							<div class="panel panel-warning">
 
-								<div class="panel-heading"><h5 class="panel-title">Archivo en proceso de revisión y aprobación</h5></div>
+								<div class="panel-heading"><h5 class="panel-title" lang="es">Archivo en proceso de revisión y aprobación</h5></div>
 
 								<div class="panel-body">
 									<p>
-										Estado actual
-										<b><cfif version.revised IS true>
+										<span lang="es">Estado actual</span>
+										<b lang="es"><cfif version.revised IS true>
 											pendiente de aprobación <a href="area_user.cfm?area=#area_id#&user=#objectFile.approver_user#">#objectFile.approver_user_full_name#</a>.
 										<cfelse>
 											pendiente de ser revisado por <a href="area_user.cfm?area=#area_id#&user=#objectFile.reviser_user#">#objectFile.reviser_user_full_name#</a>.
@@ -295,7 +295,7 @@
 										<cfif version.revised IS false AND SESSION.user_id IS objectFile.reviser_user>
 											<!--- validateFileVersion --->
 											
-												Debe validar o rechazar la versión de este archivo<br/>
+												<span lang="es">Debe validar o rechazar la versión de este archivo</span><br/>
 												<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=true&return_path=#return_path#" onclick="return confirmValidateFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Validar versión</span></a>
 
 
@@ -306,7 +306,7 @@
 										<cfelseif version.revised IS true AND SESSION.user_id IS objectFile.approver_user>
 											<!--- approveFileVersion --->
 											
-												Debe aprobar o rechazar la versión de este archivo<br/>
+												<span lang="es">Debe aprobar o rechazar la versión de este archivo</span><br/>
 												<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=true&return_path=#return_path#" onclick="return confirmApproveFile(true);" class="btn btn-default btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar versión</span></a>
 												<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=false&return_path=#return_path#" onclick="return confirmApproveFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
 												<a href="file_reject_approval.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
@@ -327,11 +327,11 @@
 							</div><!--- END panel-warning --->
 
 							<div class="div_file_page_label">
-								<span>Fecha de envío a revisión</span> <span class="text_file_page">#version.revision_request_date#</span>
+								<span lang="es">Fecha de envío a revisión</span> <span class="text_file_page">#version.revision_request_date#</span>
 							</div>
 							<cfif len(version.revision_date)>
 							<div class="div_file_page_label">
-								<span>Fecha de envío a revisión</span> <span class="text_file_page">#version.revision_date#</span>
+								<span lang="es">Fecha de envío a revisión</span> <span class="text_file_page">#version.revision_date#</span>
 							</div>
 							</cfif>
 
@@ -510,7 +510,7 @@
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>
 
-			<div class="div_file_page_label"><span lang="es">URL para compartir el archivo con <b>usuarios de #APPLICATION.title#</b></span>:</div>
+			<div class="div_file_page_label"><span lang="es">URL para compartir el archivo con</span> <b lang="es">usuarios de #APPLICATION.title#</b>:</div>
 			<div class="div_file_page_user"><input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
 
 			<!---getDownloadFileUrl--->
@@ -521,7 +521,7 @@
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>
 
-			<div class="div_file_page_label"><span lang="es">URL para enlazar a <b>descargar</b> el archivo desde #APPLICATION.title#</span>:</div>
+			<div class="div_file_page_label"><span lang="es">URL para enlazar a</span> <b lang="es">descargar el archivo desde #APPLICATION.title#</b>:</div>
 			<div class="div_file_page_user"><input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
 
 			<!---<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-dropdowns-enhancement/css/dropdowns-enhancement.min.css" rel="stylesheet">
@@ -555,7 +555,7 @@
 				</cfinvoke>
 				<cfset fileWebUrl = "/#webPath#/#filePage#">
 
-				<div class="div_file_page_label"><span lang="es">URL <b>relativa</b> para enlazar el archivo <b>en la #area_type#</b><cfif APPLICATION.publicationValidation IS true AND objectFile.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif></span>:</div>
+				<div class="div_file_page_label"><span lang="es">URL</span> <b lang="es">relativa para enlazar el archivo en la #area_type#</b><cfif APPLICATION.publicationValidation IS true AND objectFile.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif></span>:</div>
 				<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
 
 
@@ -575,7 +575,7 @@
 				</cfinvoke>
 				<cfset fileWebUrl = "/#webPath#/#filePage#">
 
-				<div class="div_file_page_label"><span lang="es">URL relativa para enlazar el archivo <b>en la #webPath#</b></span>:</div>
+				<div class="div_file_page_label"><span lang="es">URL relativa para</span> <b lang="es">enlazar el archivo en la #webPath#</b>:</div>
 				<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
 
 			</cfif>
@@ -591,7 +591,7 @@
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 				</cfinvoke>
 				
-				<div class="div_file_page_label"><span lang="es">URL pública para compartir el archivo <b>con cualquier usuario</b></span>:</div>
+				<div class="div_file_page_label"><span lang="es">URL pública para</span> <b lang="es">compartir el archivo con cualquier usuario</b>:</div>
 				<div class="div_file_page_user"><input type="text" value="#filePublicUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
 
 			</cfif>
@@ -653,7 +653,7 @@
 				<cfset table = getRowResponse.table>
 				<cfset row = getRowResponse.row>--->
 
-				<div class="div_file_page_label">Tipología <span class="text_message_page"><span class="label label-default" style="font-size:11px">#table.title#</span></span></div>
+				<div class="div_file_page_label"><span lang="es">Tipología</span> <span class="text_message_page"><span class="label label-default" style="font-size:11px">#table.title#</span></span></div>
 
 				<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">--->
 

@@ -104,12 +104,13 @@
 	<cfset listFields = true>
 
 	<p class="help-block" style="font-size:12px;">
-		El archivo utilizado para realizar esta importación deberá tener las siguientes características:<br/>
+		<span lang="es">El archivo utilizado para realizar esta importación deberá tener las siguientes características:</span><br/>
 	
-			-Tipo de archivo: <strong>.csv o .txt</strong> delimitado por ; o por tabulaciones.<br>Punto y coma es la delimitación por defecto en el SO Windows en España (esto varía en configuraciones por defecto de otros paises o idiomas).<br/>
-			-Codificación: <strong>Windows-1252</strong> (codificación por defecto en Windows).<br /><!---iso-8859-1--->
-			-Número de columnas: <strong>#fields.recordCount#</strong>.<br />
-			-<strong>Orden de las columnas</strong>:<br />
+			<span lang="es">-Tipo de archivo:</span> <strong lang="es">.csv o .txt</strong> <span lang="es">delimitado por ; o por tabulaciones.</span><br>
+			<span lang="es">Punto y coma es la delimitación por defecto en el SO Windows en España (esto varía en configuraciones por defecto de otros paises o idiomas).</span><br/>
+			-<span lang="es">Codificación</span>: <strong>Windows-1252</strong> <span lang="es">(codificación por defecto en Windows)</span>.<br /><!---iso-8859-1--->
+			-<span lang="es">Número de columnas</span>: <strong>#fields.recordCount#</strong>.<br />
+			-<strong lang="es">Orden de las columnas</strong>:<br />
 			<em>
 				<cfset fieldsWithMask = "">
 				<cfloop query="fields">
@@ -131,26 +132,26 @@
 
 				</cfloop>
 			</em><br/>
-			-Si el orden de las columnas no corresponde con el anterior la importación no se realizará correctamente.<br/>
+			<span lang="es">-Si el orden de las columnas no corresponde con el anterior la importación no se realizará correctamente.</span><br/>
 			<!---<cfif listFields IS true>--->
-			-<strong>Campos listas</strong>: para que la importación de los campos de listas se realice correctamente, el valor importado de estos campos deberá coincidir exactamente con uno de los valores existentes en la lista.<br/>
+			-<strong lang="es">Campos listas</strong>: <span lang="es">para que la importación de los campos de listas se realice correctamente, el valor importado de estos campos deberá coincidir exactamente con uno de los valores existentes en la lista.</span><br/>
 			<!---</cfif>
 			<cfif booleanFields IS true>--->
-			-<strong>Campos Sí/No</strong>: los valores válidos para estos campos son <i>Sí/No, Yes/No, true/false, 0/1</i>.<br/>
+			-<strong lang="es">Campos Sí/No</strong>: <span lang="es">los valores válidos para estos campos son Sí/No, Yes/No, true/false, 0/1</span>.<br/>
 			<!---</cfif>
 			<cfif dateFields IS true>--->
-			-<strong>Campos fecha</strong>: formatos válidos las fechas: <i>DD-MM-AAAA, DD/MM/AAAA</i>.<br/>
+			-<strong lang="es">Campos fecha</strong>: <span lang="es">formatos válidos las fechas:</span> <i lang="es">DD-MM-AAAA, DD/MM/AAAA</i>.<br/>
 			<!---</cfif>--->
-			-<strong>Campos de listas con selección múltiple</strong>: los valores seleccionados de estos campos deberán delimitarse por ; y delimitando a su vez el campo que contiene estos valores por "<br/>
+			-<strong lang="es">Campos de listas con selección múltiple</strong>: <span lang="es">los valores seleccionados de estos campos deberán delimitarse por ; y delimitando a su vez el campo que contiene estos valores por "</span><br/>
 
 			<!----En el archivo no debe aparecer ninguna fila con los títulos de las columnas.<br/>--->
 			<!----La primera fila del archivo corresponderá a los títulos de las columnas. Los títulos de las columnas pueden ser diferentes a los indicados, pero <strong>no pueden contener espacios, tildes o caracteres especiales</strong>.<br/>--->
-			-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.
+			<span lang="es">-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.</span>
 			<br/>
 			<!--- -<a href="usuarios_ejemplo.csv">Aquí</a> puede descargar un archivo de ejemplo.<br/>--->
 		<br/>
-		No se enviará notificación de los nuevos registros a los usuarios.<br/>
-		Una vez pulsado el botón "Importar registros" debe esperar hasta que se complete la operación.
+		<span lang="es">No se enviará notificación de los nuevos registros a los usuarios.</span><br/>
+		<span lang="es">Una vez pulsado el botón "Importar registros" debe esperar hasta que se complete la operación.</span>
 	</p>
 
 	<script type="text/javascript">

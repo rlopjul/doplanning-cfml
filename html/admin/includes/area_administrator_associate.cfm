@@ -21,7 +21,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3>Asociar administrador de área</h3>
+		    <h4 lang="es">Asociar administrador de área</h4>
 		</div>
 
 		<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAssociatedAsAdministrator" returnvariable="isAreaAdministratorResponse">
@@ -34,11 +34,11 @@
 
   			<cfif isAreaAdministratorResponse.isUserAdministrator IS false>
 
-				<p>¿Seguro que desea asociar este usuario como <b>administrador</b> de esta área?:</p>
+				<p><span lang="es">¿Seguro que desea asociar este usuario como</span> <b lang="es">administrador de esta área</b>?:</p>
 
 			<cfelse>
 
-				<p>Este usuario <b>ya es administrador de esta área</b>.</p>
+				<p><span lang="es">Este usuario</span> <b lang="es">ya es administrador de esta área</b>.</p>
 
 			</cfif>
 
@@ -52,13 +52,13 @@
 				</div>
 				<div class="well well-sm">Área:
 					<strong>#objectArea.name#</strong><br/>
-					<span>Ruta del área: #area_path#
+					<span lang="es">Ruta del área</span>: #area_path#
 				</div>
 			</div>
 
 			<cfif isAreaAdministratorResponse.isUserAdministrator IS false>
 
-				<small class="help-block">No se enviará notificación por email de esta acción</small>
+				<small class="help-block" lang="es">No se enviará notificación por email de esta acción</small>
 
 				<form id="associateForm" method="post">
 					<input type="hidden" name="area_id" value="#objectArea.id#"/>
@@ -71,9 +71,9 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+		    <button class="btn btn-default" data-dismiss="modal" lang="es">Cancelar</button>
 		    <cfif isAreaAdministratorResponse.isUserAdministrator IS false>
-		   		<button class="btn btn-primary" id="areaModifySubmit" onclick="submitAssociateAdministratorModal(event)">Asociar administrador</button>
+		   		<button class="btn btn-primary" id="areaModifySubmit" onclick="submitAssociateAdministratorModal(event)" lang="es">Asociar administrador</button>
 		   	</cfif>
 		</div>
 

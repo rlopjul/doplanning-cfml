@@ -14,7 +14,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4 id="areaModalLabel">Asociar usuarios a otra área</h4>
+		    <h4 id="areaModalLabel" lang="es">Asociar usuarios a otra área</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -30,7 +30,7 @@
 
 				<div class="tab-pane active" id="destinationArea">--->
 
-			 		Selecciona el área de destino:
+			 		<span lang="es">Selecciona el área de destino:</span>
 
 			 		<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" src="iframes/area_users_associate_select_tree.cfm?area=#area_id#" style="height:365px;background-color:##FFFFFF;"></iframe>
 
@@ -96,8 +96,8 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaUsersAssociateSelect(event)">Asociar usuarios al área seleccionada</button>
+		    <button class="btn btn-default" data-dismiss="modal" lang="es">Cancelar</button>
+		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaUsersAssociateSelect(event)" lang="es">Asociar usuarios al área seleccionada</button>
 		</div>
 
 		<script>

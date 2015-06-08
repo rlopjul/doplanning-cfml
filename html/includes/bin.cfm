@@ -24,7 +24,7 @@
 
 <cfelse>
 
-	<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/iframes/bin.cfm")>
+	<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/bin.cfm")>
 
 	<div><!--- class="contenedor_fondo_blanco"--->
 
@@ -119,7 +119,7 @@
 
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputAllItemsFullList">
 									<cfinvokeargument name="itemsQuery" value="#myItemsQuery#">
-									<cfinvokeargument name="return_path" value="#APPLICATION.htmlPath#/iframes/">
+									<cfinvokeargument name="return_path" value="#APPLICATION.htmlPath#/">
 									<cfinvokeargument name="showLastUpdate" value="false">
 									<cfinvokeargument name="deletedItems" value="true">
 								</cfinvoke>
@@ -190,7 +190,7 @@
 
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputAllItemsFullList">
 									<cfinvokeargument name="itemsQuery" value="#itemsQuery#">
-									<cfinvokeargument name="return_path" value="#APPLICATION.htmlPath#/iframes/">
+									<cfinvokeargument name="return_path" value="#APPLICATION.htmlPath#/">
 									<cfinvokeargument name="showLastUpdate" value="false">
 									<cfinvokeargument name="deletedItems" value="true">
 								</cfinvoke>

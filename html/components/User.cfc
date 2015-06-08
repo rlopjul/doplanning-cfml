@@ -1021,9 +1021,9 @@
 					<div class="div_user_page_label"><span lang="es">Usuario interno</span> <span class="div_user_page_text" lang="es"><cfif objectUser.internal_user IS true><b lang="es">Sí</b><cfelse>No</cfif></span></div>	
 
 					<cfif SESSION.client_administrator EQ SESSION.user_id>
-						<div class="div_user_page_label"><span>Fecha de creación:</span> <span class="div_user_page_text">#objectUser.creation_date#</span></div>
-						<div class="div_user_page_label"><span>Fecha de última conexión:</span> <span class="div_user_page_text">#objectUser.last_connection#</span></div>
-						<div class="div_user_page_label"><span>Número de conexiones:</span> <span class="div_user_page_text">#objectUser.number_of_connections#</span></div>
+						<div class="div_user_page_label"><span lang="es">Fecha de creación:</span> <span class="div_user_page_text">#objectUser.creation_date#</span></div>
+						<div class="div_user_page_label"><span lang="es">Fecha de última conexión:</span> <span class="div_user_page_text">#objectUser.last_connection#</span></div>
+						<div class="div_user_page_label"><span lang="es">Número de conexiones:</span> <span class="div_user_page_text">#objectUser.number_of_connections#</span></div>
 					</cfif>
 
 				</cfif>
@@ -1342,9 +1342,9 @@
 					<thead>
 						<tr>
 							<th style="width:35px;" class="filter-false"></th>
-							<th lang="es">Nombre</th>
-							<th lang="es">Apellidos</th>
-							<th lang="es">Email</th>
+							<th><span lang="es">Nombre</span></th>
+							<th><span lang="es">Apellidos</span></th>
+							<th><span lang="es">Email</span></th>
 						</tr>
 					</thead>
 					
@@ -1531,17 +1531,17 @@
 							<th style="width:35px;" class="filter-false"></th>
 							</cfif>
 							<th style="width:35px;" class="filter-false"></th>
-							<th lang="es">Nombre</th>
-							<th lang="es">Apellidos</th>
-							<th lang="es">Email</th>
+							<th><span lang="es">Nombre</span></th>
+							<th><span lang="es">Apellidos</span></th>
+							<th><span lang="es">Email</span></th>
 							<cfif arguments.show_area_members IS true>
-							<th style="width:110px;" lang="es">De esta área</th>
+							<th style="width:110px;"><span lang="es">De esta área</span></th>
 							</cfif>
 							<cfif arguments.showAdminFields IS true>
 								<cfif SESSION.client_abb IS "hcs">
-								<th>Perfil cabecera</th>
+								<th><span lang="es">Perfil cabecera</span></th>
 								</cfif>
-								<th style="width:38px;">Activo</th>
+								<th style="width:38px;"><span lang="es">Activo</span></th>
 							</cfif>
 							<!---<cfif APPLICATION.moduleWebRTC IS true>
 							<th style="width:40px;" lang="es"></th>

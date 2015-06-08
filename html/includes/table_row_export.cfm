@@ -141,7 +141,7 @@
 
 		<div class="row" style="margin-top:20px">
 			<div class="col-sm-12" id="submitDiv1">
-				<input type="submit" value="Exportar registros" class="btn btn-primary" />
+				<input type="submit" value="Exportar registros" class="btn btn-primary" lang="es" />
 				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 			</div>
 		</div>

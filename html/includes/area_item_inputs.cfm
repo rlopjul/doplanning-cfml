@@ -461,9 +461,9 @@
 					<div class="col-xs-12 col-sm-8">
 						<div class="checkbox">
 							<label>
-								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("objectItem.publication_validated") AND objectItem.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("objectItem.publication_validated") AND objectItem.publication_validated IS true>checked="checked"</cfif> /> <span lang="es">Aprobar publicación</span>
 							</label>
-							<small class="help-block">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
+							<small class="help-block" lang="es">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
 						</div>
 					</div>
 				</div>
@@ -472,8 +472,8 @@
 
 		<cfelse>
 
-			<input type="hidden" name="publication_validated"  value="false"/>
-			<small class="help-block">La publicación del elemento deberá ser <b>aprobada</b> en cada una de las áreas en las que se publique.</small>
+			<input type="hidden" name="publication_validated" value="false"/>
+			<small class="help-block" lang="es">La publicación del elemento deberá ser aprobada en cada una de las áreas en las que se publique.</small>
 
 		</cfif>		
 
@@ -496,7 +496,7 @@
 		</div>
 		<div class="col-xs-6">
 			<br/>
-			<span style="font-size:10px" lang="es">Formato DD-MM-AAAA.<br/> Ejemplo:</span><span style="font-size:10px"> #DateFormat(now(), "DD-MM-YYYY")#</span>
+			<span style="font-size:10px"><span lang="es">Formato DD-MM-AAAA</span>.<br/> <span lang="es">Ejemplo</span>:</span><span style="font-size:10px"> #DateFormat(now(), "DD-MM-YYYY")#</span>
 
 		</div>
 	</div>
@@ -759,6 +759,7 @@
 <div class="row">
 
 	<div class="col-md-12">
+		<label class="sr-only" for="summernote" lang="es">Contenido</label>
 <!---style="margin-bottom:10px; margin-top:5px;"---><textarea name="description" class="form-control" id="summernote" style="height:200px;" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea>
 	</div>
 

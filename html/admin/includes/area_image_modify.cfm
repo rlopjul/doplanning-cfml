@@ -89,7 +89,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3 id="areaModalLabel">Modificar imagen de área</h3>
+		    <h4 id="areaModalLabel" lang="es">Modificar imagen de área</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -110,24 +110,24 @@
 						<cfif isNumeric(objectArea.image_id)>
 							<button type="button" id="deleteAreaImageButton" title="Eliminar imagen actual" class="btn btn-danger btn-xs" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></button>
 						</cfif>
-						<p class="bg-info" style="padding:5px;" id="imageHelp">La imagen que se muestra es la heredada de las áreas superiores. Puede asignar una imagen a esta área y pasará a ser la que se muestre en esta y en las áreas inferiores, siempre que las inferiores no tengan una imagen definida.</p><!---text-info--->
+						<p class="bg-info" style="padding:5px;" id="imageHelp" lang="es">La imagen que se muestra es la heredada de las áreas superiores. Puede asignar una imagen a esta área y pasará a ser la que se muestre en esta y en las áreas inferiores, siempre que las inferiores no tengan una imagen definida.</p><!---text-info--->
 					</div>
 				</div>
 				<div class="row" style="margin-top:5px;">
 					<div class="col-sm-12">
-						Área: <strong>#objectArea.name#</strong>
+						<span lang="es">Área</span>: <strong>#objectArea.name#</strong>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-12">
 						<label class="control-label" for="image_file" lang="es">Imagen:</label>
 						<!---<cfinput type="file" name="image_file" id="image_file" class="form-control" /><br/>--->
-						<noscript><b>Debe habilitar JavaScript para la subida de archivos</b></noscript>
+						<noscript><b lang="es">Debe habilitar JavaScript para la subida de archivos</b></noscript>
 						<input type="file" name="files[]" id="file" multiple accept="image/*" class="form-control">
 						<small class="help-block">
-							Si no se asigna una imagen a esta área se mostrará la heredada de las áreas superiores.<br>
-							El tamaño que se muestra en la previsualización no es el tamaño en el que se mostrará la imagen.<br>
-							Debe subir la imagen al tamaño que desea que aparezca en DoPlanning o en la web. 
+							<span lang="es">Si no se asigna una imagen a esta área se mostrará la heredada de las áreas superiores.</span><br>
+							<span lang="es">El tamaño que se muestra en la previsualización no es el tamaño en el que se mostrará la imagen.</span><br>
+							<span lang="es">Debe subir la imagen al tamaño que desea que aparezca en DoPlanning o en la web.</span>
 						</small>
 					</div>
 				</div>
@@ -136,7 +136,7 @@
 					<div class="col-sm-12">
 						<label class="control-label" for="link" lang="es">URL:</label>
 						<cfinput type="text" name="link" id="link" value="#objectArea.link#" required="false" class="form-control" />
-						<small class="help-block">URL a la que se enlazará al hacer clic en la imagen (opcional).</small>
+						<small class="help-block" lang="es">URL a la que se enlazará al hacer clic en la imagen (opcional).</small>
 					</div>
 				</div>
 
@@ -145,8 +145,8 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)">Guardar cambios</button>
+		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" lang="es">Cancelar</button>
+		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)" lang="es">Guardar cambios</button>
 		</div>
 
 		<script>

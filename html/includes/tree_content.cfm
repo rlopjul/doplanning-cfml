@@ -5,7 +5,7 @@
 
 <script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
 
-<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.3"></script>
 </cfoutput>
 
 <script>

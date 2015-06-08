@@ -114,7 +114,7 @@
 
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-				    <i class="icon-sitemap icon-white"></i> Ver árbol <span class="caret"></span>
+				    <i class="icon-sitemap icon-white"></i> <span lang="es">Ver árbol</span> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
 				   	<li><a onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');" style="cursor:pointer" lang="es">De áreas</a></li>

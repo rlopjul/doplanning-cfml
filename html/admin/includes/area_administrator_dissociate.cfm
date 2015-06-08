@@ -33,11 +33,11 @@
 
 	 		<cfif isAdministratorResponse.isUserAdministrator IS true>
 				
-	  			<p>¿Seguro que desea quitar este usuario de <b>administrador</b> de esta área?:</p>
+	  			<p lang="es">¿Seguro que desea quitar este usuario de administrador de esta área?:</p>
 
 	  		<cfelse>
 
-				<p><span class="label label-warning">CUIDADO</span> Este usuario no está asociado como administrador directamente a esta área, ha sido asociado a la siguiente área superior:</p> 
+				<p><span class="label label-warning" lang="es">CUIDADO</span> <span lang="es">Este usuario no está asociado como administrador directamente a esta área, ha sido asociado a la siguiente área superior</span>:</p> 
 
 			</cfif>
 
@@ -53,9 +53,9 @@
 
 			<cfif isAdministratorResponse.isUserAdministrator IS true>
 				
-				<div class="well well-sm">Area:
+				<div class="well well-sm"><span lang="es">Área</span>:
 					<strong>#objectArea.name#</strong><br/>
-					<span>Ruta del área: #area_path#
+					<span lang="es">Ruta del área</span>: #area_path#
 				</div>
 
 				<form id="dissociateForm" method="post">
@@ -77,9 +77,9 @@
 						<cfinvokeargument name="area_id" value="#getNearestAreaResponse.area_id#">
 					</cfinvoke>
 
-					<div class="well well-sm">Area superior:
+					<div class="well well-sm"><span lang="es">Area superior</span>:
 						<strong>#getNearestAreaResponse.area_name#</strong><br/>
-						Ruta del área: #nearest_area_path#
+						<span lang="es">Ruta del área</span>: #nearest_area_path#
 					</div>
 
 					<p>Debe quitar al usuario de administrador en el área anterior para que deje de tener acceso en la actual.</p>
@@ -91,22 +91,22 @@
 
 				<cfelseif SESSION.client_administrator IS user_id>
 
-					<p><b>Este usuario es el administrador general, tiene acceso de administración por defecto a todas las áreas.</b></p>
+					<p><b lang="es">Este usuario es el administrador general, tiene acceso de administración por defecto a todas las áreas.</b></p>
 
 				</cfif>
 
 			</cfif>
 
-			<small class="help-block">No se enviará notificación por email de esta acción</small>
+			<small class="help-block" lang="es">No se enviará notificación por email de esta acción</small>
 			
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+		    <button class="btn btn-default" data-dismiss="modal" lang="es">Cancelar</button>
 		    <cfif isAdministratorResponse.isUserAdministrator IS true>
-		   		<button class="btn btn-primary" id="areaModifySubmit" onclick="submitDissociateAdministratorModal(event)">Quitar administrador</button>
+		   		<button class="btn btn-primary" id="areaModifySubmit" onclick="submitDissociateAdministratorModal(event)" lang="es">Quitar administrador</button>
 		   	<cfelseif getNearestAreaResponse.result IS true>
-		   		<button class="btn btn-warning" id="areaModifySubmit" onclick="submitDissociateAdministratorModal(event)">Quitar administrador del área superior</button>
+		   		<button class="btn btn-warning" id="areaModifySubmit" onclick="submitDissociateAdministratorModal(event)" lang="es">Quitar administrador del área superior</button>
 		   	</cfif>
 		</div>
 

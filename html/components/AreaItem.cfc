@@ -2412,10 +2412,10 @@
 								<cfif itemTypeId IS 6><!---Tasks--->
 									
 									<cfif itemsQuery.done IS true>
-										<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_done.png" alt="Tarea realizada" title="Tarea realizada" class="item_img" style="width:30px"/>
+										<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_done.png" alt="Tarea realizada" title="Tarea realizada" class="item_img" style="width:30px" lang="es"/>
 										<span class="hidden">1</span>
 									<cfelse>
-										<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_not_done.png" alt="Tarea no realizada" title="Tarea no realizada" class="item_img" style="width:30px"/><span class="hidden">0</span>
+										<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_not_done.png" alt="Tarea no realizada" title="Tarea no realizada" class="item_img" style="width:30px" lang="es"/><span class="hidden">0</span>
 									</cfif>
 									
 								<cfelseif itemTypeId IS NOT 3><!---No es link--->
@@ -3350,9 +3350,9 @@
 												<cfif itemTypeId IS 6><!---Tasks--->
 											
 													<cfif itemsQuery.done IS true>
-														<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_done.png" alt="Tarea realizada" title="Tarea realizada" style="width:60px;"/>
+														<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_done.png" alt="Tarea realizada" title="Tarea realizada" style="width:60px;" lang="es"/>
 													<cfelse>
-														<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_not_done.png" alt="Tarea no realizada" title="Tarea no realizada" style="width:60px;"/>
+														<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_not_done.png" alt="Tarea no realizada" title="Tarea no realizada" style="width:60px;" lang="es"/>
 													</cfif>
 													
 												<cfelseif itemTypeId IS 10><!--- File --->
@@ -3575,14 +3575,14 @@
 													
 											<!---<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Area" title="Ver área"> Área: <a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#','areaIframe',event)" style="cursor:pointer"><span lang="es">#itemsQuery.area_name#</span></a>&nbsp;<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#','areaIframe',event)" class="btn btn-sm btn-info" title="Ir al área"><span lang="es">Ir al área</span></a>--->
 										<p>
-											Área: <a href="#APPLICATION.htmlPath#/index.cfm?abb=#SESSION.client_abb#&area=#itemsQuery.area_id#" target="_parent"><span lang="es">#itemsQuery.area_name#</span></a><br/>
+											<span lang="es">Área</span>: <a href="#APPLICATION.htmlPath#/index.cfm?abb=#SESSION.client_abb#&area=#itemsQuery.area_id#" target="_parent">#itemsQuery.area_name#</a><br/>
 										</p>
 
 
 										<!---</cfif>--->
 
 
-										<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/iframes/bin.cfm")>
+										<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path#bin.cfm")>
 
 										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItem&item_id=#itemsQuery.id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-sm btn-primary" title="Restaurar" lang="es"><i class="icon-undo"></i> Restaurar</a>
 
