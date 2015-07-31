@@ -18,7 +18,7 @@
 <cfset files = getAreaFilesResponse.files>
 
 <cfoutput>
-<div class="div_head_subtitle_area">
+<div class="row"><!---div_head_subtitle_area--->
 	
 	<!---
 

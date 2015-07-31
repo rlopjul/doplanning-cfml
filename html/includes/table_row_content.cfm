@@ -45,7 +45,7 @@
 	function confirmDeleteRow() {
 	
 		var message_delete = "Si ELIMINA el registro, se borrarán definitivamente todos los contenidos que almacena. ¿Seguro que desea eliminar el registro?";
-		return confirm(message_delete);
+		return confirm(window.lang.translate(message_delete));
 	}
 
 </script>

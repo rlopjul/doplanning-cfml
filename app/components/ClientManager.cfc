@@ -582,12 +582,15 @@
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;		
 				</cfquery>
 				
-				<cfquery datasource="#client_datasource#">
+				<!---<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_iframes_display_types` (`iframe_display_type_id`,`width`,`width_unit`,`height`,`height_unit`,`enabled`,`iframe_display_type_title_es`,`iframe_display_type_title_en`) VALUES
 		 (1,100,'%',400,'px',1,'Ancho de página x 400','100% x 400px'),
 		 (2,560,'px',315,'px',1,'560 x 315','560 x 315');
-				</cfquery>
+				</cfquery>--->
 				
+				<cfquery datasource="#client_datasource#">
+					INSERT INTO `#new_client_abb#_iframes_display_types` VALUES (1,100,'%',400,'px',1,'Ancho de página x 400','100% x 400px'),(2,560,'px',315,'px',1,'560 x 315','560 x 315'),(3,0,'',0,'',1,'Visor 16:9','16:9 viewer'),(4,0,'',0,'',1,'Visor 4:3','4:3 viewer');
+				</cfquery>
 				
 				
 					
@@ -1197,7 +1200,9 @@
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.10.cfm">		
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.1.cfm">						
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.1.cfm">	
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.2.cfm">						
 			
 			<!---createClientFolders--->
 			<cfinvoke component="ClientManager" method="createClientFolders">

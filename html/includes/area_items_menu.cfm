@@ -4,17 +4,18 @@
 
 		$(function() {
 
+			$('##areaItemsMenu').on('affix.bs.affix', function () {
+			     $('##areaItemsMenu').css("top", $('##mainNavBarFixedTop').height());
+			     <!---$("##areaItemsMenu").css("z-index", 1);--->
+			});
+
+
 			$('##areaItemsMenu').affix({
 		      	offset: {
 		       		top: $('##mainNavBarFixedTop').height()-$('##areaItemsMenu').height()+1
 		      	}
 			});	
 			
-			$('##areaItemsMenu').on('affix.bs.affix', function () {
-			     $('##areaItemsMenu').css("top", $('##mainNavBarFixedTop').height());
-			     <!---$("##areaItemsMenu").css("z-index", 1);--->
-			});
-
 			<!---$(window).bind('scroll', function() {
 			    ($(window).scrollTop() > 100) ? $('##areaItemsMenu').addClass('goToTop') : $('##areaItemsMenu').removeClass('goToTop');
 			 });--->
@@ -66,14 +67,14 @@
 				<cfif previousLoopCurButton GT 0>
 
 					<div class="btn-group" id="newItemDropDown">
-					  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+					  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-controls="newItemMenu" title="Nuevo elemento" lang="es">
 					    <i class="icon-plus" style="color:##35938B;font-size:18px;"></i><span class="sr-only" lang="es">Nuevo elemento</span></span>
 					  </button>
-					  <ul class="dropdown-menu" role="menu">
+					  <ul class="dropdown-menu" id="newItemMenu">
 
 					  		<li>
 
-					  		<div class="row" style="width:450px;">
+					  		<div class="row" style="width:450px;" role="menu">
 
 					        	<ul class="list-unstyled col-md-6"> 
 
@@ -97,9 +98,9 @@
 										<li>
 											
 											<cfif curItemTypeId IS 10><!---File--->
-												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" class="btn-new-item-dp"><!--- href="area_file_new.cfm?area=#area_id#&fileTypeId=1" --->
+												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" role="menuitem" class="btn-new-item-dp"><!--- href="area_file_new.cfm?area=#area_id#&fileTypeId=1" --->
 											<cfelse>
-												<a onclick="openUrlLite('#itemTypesStruct[curItemTypeId].name#_new.cfm?area=#area_id#', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" class="btn-new-item-dp"><!--- href="#itemTypesStruct[curItemTypeId].name#_new.cfm?area=#area_id#" --->
+												<a onclick="openUrlLite('#itemTypesStruct[curItemTypeId].name#_new.cfm?area=#area_id#', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" role="menuitem" class="btn-new-item-dp"><!--- href="#itemTypesStruct[curItemTypeId].name#_new.cfm?area=#area_id#" --->
 											</cfif>
 											
 											<!---
@@ -119,7 +120,7 @@
 											<li>
 
 												<cfif APPLICATION.moduleAreaFilesLite IS true AND len(area_type) IS 0>
-												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe')" title="Nuevo Archivo de área" lang="es" class="btn-new-item-dp"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_area.png" />
+												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe')" title="Nuevo Archivo de área" lang="es" class="btn-new-item-dp" role="menuitem"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_area.png" />
 													<span lang="es">Nuevo Archivo de área</span> <!---href="area_file_new.cfm?area=#area_id#&fileTypeId=2"--->
 												</a>
 												</cfif>
@@ -127,7 +128,7 @@
 											</li>
 
 											<li>
-												<a onclick="openUrlLite('area_files_upload.cfm?area=#area_id#', 'itemIframe')" class="btn-new-item-dp" title="Subir varios archivos" lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons/files.png" />
+												<a onclick="openUrlLite('area_files_upload.cfm?area=#area_id#', 'itemIframe')" class="btn-new-item-dp" title="Subir varios archivos" lang="es" role="menuitem"><img src="#APPLICATION.htmlPath#/assets/v3/icons/files.png" />
 													<span lang="es">Subir varios archivos</span>
 												</a>
 											</li>
@@ -175,7 +176,7 @@
 
 				<div class="btn-group" id="filterAreaElements">
 
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Filtrar" lang="es">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-controls="filterAreaElementsMenu" title="Filtrar" lang="es">
 
 						<i class="icon-filter" style="color:##EAD142"></i>
 							
@@ -183,23 +184,23 @@
 
 					</button>
 
-					<ul class="dropdown-menu" role="menu"> <!---dropdown-menu-right--->
+					<ul class="dropdown-menu" id="filterAreaElementsMenu"> <!---dropdown-menu-right--->
 
 						<li>
 
-						<div class="row" style="width:450px;">
+						<div class="row" style="width:450px;" role="menu">
 
 					         <ul class="list-unstyled col-md-6"> 
 
 
 									<li>
 
-										<cfif find("user",CGI.SCRIPT_NAME) GT 0><!--- No está en el listado de todos los elementos, está en listado de un tipo de elemento --->
-											<a href="area_items.cfm?area=#area_id#">
-										<cfelseif isDefined("itemTypeId") OR isDefined("URL.mode") AND URL.mode EQ "list">
-											<a href="area_items.cfm?area=#area_id#&mode=list">
+										<cfif find("user",CGI.SCRIPT_NAME) GT 0 OR ( isDefined("itemTypeId") AND itemTypeId EQ 13 AND ( NOT isDefined("URL.mode") OR URL.mode NEQ "list" ) )><!--- No está en el listado de todos los elementos, está en listado de un tipo de elemento --->
+											<a href="area_items.cfm?area=#area_id#" role="menuitem">
+										<cfelseif isDefined("itemTypeId") OR ( isDefined("URL.mode") AND URL.mode EQ "list" )>
+											<a href="area_items.cfm?area=#area_id#&mode=list" role="menuitem">
 										<cfelse><!--- Está en el listado desarrollado de todos los elementos --->
-											<a onclick="setItemsFilter('*')">
+											<a onclick="setItemsFilter('*')" role="menuitem">
 										</cfif>
 											<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" title="Todos los elementos del área" alt="Todos los elementos del área" lang="es" style="height:35px;" />
 											<span lang="es">Elementos del área</span>
@@ -221,19 +222,25 @@
 
 													<cfif find("user",CGI.SCRIPT_NAME) GT 0><!---Listado de usuarios--->
 
-														<a href="area_items.cfm?area=#area_id#&filter=#itemTypesStruct[curItemTypeId].name#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
+														<a href="area_items.cfm?area=#area_id#&filter=#itemTypesStruct[curItemTypeId].name#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" role="menuitem">
 
 													<cfelseif isDefined("itemTypeId") OR isDefined("URL.mode") AND URL.mode EQ "list"><!--- No está en el listado de todos los elementos, está en listado de un tipo de elemento --->
 
 														<cfif curItemTypeId NEQ 14 AND curItemTypeId NEQ 15><!--- Si no es vista de lista o vista de formulario --->
-															<a href="#itemTypesStruct[curItemTypeId].namePlural#.cfm?area=#area_id#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
+															<a href="#itemTypesStruct[curItemTypeId].namePlural#.cfm?area=#area_id#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" role="menuitem">
 														<cfelse>
-															<a href="area_items.cfm?area=#area_id#&filter=#itemTypesStruct[curItemTypeId].name#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
+															<a href="area_items.cfm?area=#area_id#&filter=#itemTypesStruct[curItemTypeId].name#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" role="menuitem">
 														</cfif>
 
 													<cfelse><!--- Está en el listado desarrollado de todos los elementos --->
 
-														<a onclick="setItemsFilter('#itemTypesStruct[curItemTypeId].name#')" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
+
+														<cfif curItemTypeId NEQ 13>
+															<a onclick="setItemsFilter('#itemTypesStruct[curItemTypeId].name#')" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" role="menuitem">
+														<cfelse><!--- Typologies --->
+															<a href="typologies.cfm?area=#area_id#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" role="menuitem">
+														</cfif>
+														
 
 							    					</cfif>
 														
@@ -271,7 +278,7 @@
 									--->
 										
 									<li><!---Users--->
-										<a href="users.cfm?area=#area_id#" lang="es">
+										<a href="users.cfm?area=#area_id#" lang="es" role="menuitem">
 											<!---<i class="icon-group" style="margin-left:2px;margin-right:2px;"></i>--->
 											<img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/users.png" title="Usuarios del área" alt="Usuarios del área" lang="es" style="height:35px"/>
 											<span lang="es">Usuarios</span>

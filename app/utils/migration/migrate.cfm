@@ -96,6 +96,7 @@
 							<option value="2.9.3">2.9.3 (Áreas de sólo lectura, ocultar usuarios de área, nuevas preferencias en notificaciones)</option>
 							<option value="2.10">2.10 (Papelera de elementos de área)</option>
 							<option value="3.0.1">3.0.1 (Archivos con URL pública)</option>
+							<option value="3.0.2">3.0.2 (Acciones en modificaciones de registros de listas y formularios)</option>
 						</select>
 					</div>
 

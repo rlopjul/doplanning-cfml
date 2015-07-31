@@ -14,18 +14,19 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<div class="div_head_subtitle_area">
+<div class="row">
 	<cfoutput>
 
-	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
+	<!---<cfif APPLICATION.identifier NEQ "vpnet">---><!---DP--->
 	
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
 		
+	<!---
 	<cfelse><!---VPNET--->
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu_vpnet.cfm">
 		
-	</cfif>
+	</cfif>--->
 	
 	</cfoutput>
 </div>

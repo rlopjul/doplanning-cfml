@@ -1,4 +1,4 @@
-<!---Este include no se debe usar directamente, se debe usar sólo el método getTableFieldFormats del componente TableManager--->
+<!---Este include no se debe usar directamente, se debe usar sólo el método getTableFieldFormats del componente FieldManager--->
 
 <!---Decimal con puntos--->
 <cfset structInsert(fieldMasksStruct, 1, {id=1, position=1, name="decimal_point", label="9999.99", description="Sólo puntos en los decimales y se muestran dos decimales", tablesorterd_data_mask="##.00", cf_data_mask=".__", cf_prefix="", cf_locale="en_US", cf_sufix="", decimal_delimiter="." })>

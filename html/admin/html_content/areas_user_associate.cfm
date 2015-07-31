@@ -1,0 +1,1 @@
+<cfinclude template="#APPLICATION.htmlPath#/admin/includes/areas_user_associate.cfm">

@@ -40,57 +40,6 @@
 	</cffunction>
 
 
-		
-	<!---
-
-	<cffunction name="deleteTableInDatabase" output="false" access="package" returntype="void">
-		<cfargument name="table_id" type="numeric" required="true">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-
-		<cfset var method = "deleteTableFields">
-			
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<!---<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-
-			<cfinvoke component="RowManager" method="deleteTableRowsInDatabase">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-			</cfinvoke>
-
-			<cfinvoke component="FieldManager" method="deleteTableFields">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-			</cfinvoke>
-
-			<cfif tableTypeId NEQ 3><!--- IS NOT Typology --->
-				<cfinvoke component="ViewManager" method="deleteTableViews">
-					<cfinvokeargument name="table_id" value="#arguments.table_id#">
-					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				</cfinvoke>
-			</cfif>
-			
-			<cfquery name="deleteTable" datasource="#client_dsn#">
-				DROP TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
-			</cfquery>--->
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="deleteTableInDatabase">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				
-				<cfinvokeargument name="user_id" value="#SESSION.user_id#">		
-				
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>	
-
-			<cfinclude template="includes/logRecord.cfm">
-
-	</cffunction>
-
-	--->
-
-
 
 	<!--- ------------------------------------- getTable -------------------------------------  --->
 	
@@ -575,6 +524,56 @@
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="fields" value="#arguments.fields#">
 			</cfinvoke>
+								
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
+
+
+	<!--- ------------------------------------- getTableActions -------------------------------------  --->
+	
+	<cffunction name="getTableActions" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getTableActions">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionQuery" method="getTableActions" returnvariable="getTableActionsQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_table" value="true">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif getTableActionsQuery.recordCount GT 0>
+
+				<cfset area_id = getTableActionsQuery.area_id>
+
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+			</cfif>
+
+			<cfset response = {result=true, tableActions=getTableActionsQuery}>
 								
 			<cfcatch>
 

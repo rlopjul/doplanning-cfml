@@ -9,15 +9,15 @@
 
 	$(function() {
 
+		$('#lastItemsHead').on('affix.bs.affix', function () {
+		     $('#lastItemsHead').css("top", $('#mainNavBarFixedTop').height());
+		});
+
 		$('#lastItemsHead').affix({
 	      	offset: {
 	       		top: 1 <!--- top 1 para corregir un fallo de que al hacer clic sobre la barra se aplica affix ---> 
 	      	}
 		});	
-		
-		$('#lastItemsHead').on('affix.bs.affix', function () {
-		     $('#lastItemsHead').css("top", $('#mainNavBarFixedTop').height());
-		});
 
 	});
 

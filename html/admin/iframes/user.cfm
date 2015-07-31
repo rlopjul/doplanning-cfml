@@ -91,26 +91,33 @@
 </cfif>
 
 <cfoutput>
-<div class="navbar navbar-default navbar-fixed-top" style="z-index:1029"><!--- z-index necesario para que se oculte cuando se están cargando datos --->
+<div class="navbar navbar-default navbar-fixed-top navbar_admin" style="z-index:1029"><!--- z-index necesario para que se oculte cuando se están cargando datos --->
 	<div class="container-fluid">
 
 		<cfif isDefined("user_id")>
 
 
-			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar al área</span></a>
+			<div class="btn-group">
+			  <button type="button" class="btn btn-info btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			    <i class="icon-plus icon-white"></i> <span lang="es">Asociar usuario</span> <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu">
+			   	<li><a onclick="parent.openAreaAssociateModal(#user_id#);" style="cursor:pointer;text-transform:uppercase" lang="es">Al área seleccionada</a></li>
+			    <li><a onclick="parent.openAreasAssociateModal(#user_id#);" style="cursor:pointer;text-transform:uppercase" lang="es">A varias áreas</a></li>
+			  </ul>
+			</div>
+
+			<!---<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar al área</span></a>
+
+			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreasAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar a varias áreas</span></a>--->
 
 			<cfif SESSION.client_administrator IS SESSION.user_id>
-
-				<span class="divider">&nbsp;</span>
 			
 				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateAdministratorModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar como administrador del área</span></a>
 
 				<!--- <a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a> --->
 
 				<span class="divider">&nbsp;</span>
-	 			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar usuario</span></a>
-
-	 			<!---<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');"><i class="icon-sitemap icon-white"></i> <span lang="es">Árbol de áreas</span></a>--->
 
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default btn-sm navbar-btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -122,9 +129,11 @@
 				  </ul>
 				</div>
 
-				<span class="divider">&nbsp;</span>
-				
-	 			<a class="btn btn-danger btn-sm navbar-btn" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#user_id#');"><i class="icon-remove"></i> <span lang="es">Eliminar usuario</span></a>
+	 			<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar usuario</span></a>
+
+	 			<!---<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');"><i class="icon-sitemap icon-white"></i> <span lang="es">Árbol de áreas</span></a>--->
+
+	 			<a class="btn btn-danger btn-sm navbar-btn" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#user_id#');" title="Eliminar usuario" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 
 			</cfif>
 

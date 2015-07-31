@@ -12,7 +12,7 @@ $(window).on('beforeunload', function(event){
 	<!---ESTO DABA PROBLEMAS EN CHROME (cuando se envía un formulario aparece la ventana de abandonar página)--->
 	<!--- editor.updateElement(); //Update CKEditor state to update preventClose value: esto no funciona porque parece que el evento que cambia la variable preventClose se llama después de la comprobación siguiente de esta variable --->
 	
-	<cfif itemTypeId NEQ 1 AND itemTypeId NEQ 20>
+	<cfif editorApp EQ "ckeditor">
 
 		if( editor.checkDirty() )
 			preventClose = true;
@@ -21,7 +21,8 @@ $(window).on('beforeunload', function(event){
 
 	if( sendForm != true && preventClose )  <!--- Si el editor está modificado y no se va a enviar el formulario--->
 	{
-		showLoadingPage(false);
+		<!---showLoadingPage(false); Así no funciona --->
+		showLoading = false;
 
 		var alertMessage = window.lang.translate('Tiene texto sin enviar, si abandona esta página lo perderá');
 		
@@ -38,12 +39,12 @@ $(document).ready(function() {
 		preventClose = true;
 	});
 	
-	/*$('textarea').change(function() {
+	<!---$('textarea').change(function() {
 		preventClose = true;
-	});*/	
+	});--->	
 
 
-	<cfif itemTypeId NEQ 1 AND itemTypeId NEQ 20>
+	<cfif editorApp EQ "ckeditor">
 
 		// The instanceReady event is fired, when an instance of CKEditor has finished
 		// its initialization.
@@ -87,7 +88,7 @@ function onSubmitForm()
 		
 		if(submitForm){
 
-			<cfif itemTypeId IS 1>
+			<cfif editorApp EQ "summernote">
 				
 				$('textarea[name="description"]').html($('##summernote').code());
 

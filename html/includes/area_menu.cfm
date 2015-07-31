@@ -372,13 +372,3 @@
 <!---<div style="clear:both; height:2px;"></div>--->
 
 </cfoutput>
-
-<!---<script>
-
-	$('.div_head_menu').affix({
-	      offset: {
-	        top: 60
-	      }
-	});	
-
-</script>--->

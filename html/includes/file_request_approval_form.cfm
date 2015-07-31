@@ -92,32 +92,32 @@
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
 	<div class="form-group">
-		<span>Nombre del archivo:</span>
+		<span lang="es">Nombre del archivo:</span>
 		<strong>#file.name#</strong>
 	</div>
 
 	<div class="form-group">
-		<span>Fecha de versión:</span>
+		<span lang="es">Fecha de versión:</span>
 		<strong>#versions.uploading_date#</strong>
 	</div>
 
 	<div class="form-group">
-		<span>Usuario revisor:</span>
+		<span lang="es">Usuario revisor:</span>
 		<strong>#file.reviser_user_full_name#</strong>
 	</div>
 
 	<div class="form-group">
-		<span>Usuario aprobador:</span>
+		<span lang="es">Usuario aprobador:</span>
 		<strong>#file.approver_user_full_name#</strong>
 	</div>
 
 	<p class="help-block" style="font-size:12px;">
-		Proceso de aprobación:<br/>
-		1º Se enviará el archivo al usuario revisor.<br/>
-		2º El usuario revisor debe validar el documento.<br/>
-		3º Si el usuario revisor valida el documento, se envía el documento al usuario aprobador.<br/>
-		4º El usuario aprobador debe validar el documento.<br/>
-		Si el documento no es validado por el revisor o el aprobador, se debe iniciar de nuevo el proceso de aprobación con una nueva versión del archivo.
+		<span lang="es">Proceso de aprobación:</span><br/>
+		<span lang="es">1º Se enviará el archivo al usuario revisor.</span><br/>
+		<span lang="es">2º El usuario revisor debe validar el documento.</span><br/>
+		<span lang="es">3º Si el usuario revisor valida el documento, se envía el documento al usuario aprobador.</span><br/>
+		<span lang="es">4º El usuario aprobador debe validar el documento.</span><br/>
+		<span lang="es">Si el documento no es validado por el revisor o el aprobador, se debe iniciar de nuevo el proceso de aprobación con una nueva versión del archivo.</span>
 	</p>
 	
 	<div style="height:10px;"><!--- ---></div>
@@ -125,7 +125,7 @@
 	<div id="submitDiv">
 		<input type="submit" class="btn btn-primary" name="modify" value="Iniciar proceso de aprobación" lang="es"/>
 
-		<a href="file.cfm?file=#file_id#&area=#area_id#" class="btn btn-default" style="float:right">Cancelar</a>
+		<a href="file.cfm?file=#file_id#&area=#area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 	</div>
 
 </cfform>

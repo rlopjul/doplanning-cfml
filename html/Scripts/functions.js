@@ -7,7 +7,7 @@ function windowHeight() {
 
 function onUnloadPage(){
 	if(showLoading)
-		showLoadingPage(true);
+		showLoadingPage(true);	
 	
 	showLoading = true;
 }
@@ -17,7 +17,7 @@ function onLoadPage(){
 }
 
 function showLoadingPage(value){
-
+	
 	if(value)
 		document.getElementById("pageLoadingContainer").style.display = "block";
 	else

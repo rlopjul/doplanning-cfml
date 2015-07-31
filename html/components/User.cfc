@@ -282,7 +282,7 @@
 
 	<!--- createUser --->
 
-	<cffunction name="createUser" output="true" returntype="void" access="remote">
+	<cffunction name="createUser" output="false" returntype="string" returnformat="plain" access="remote">
 		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE--->
 		<cfargument name="family_name" type="string" required="true">
 		<cfargument name="email" type="string" required="false" default="">
@@ -372,7 +372,8 @@
 			
 		</cftry>
 
-		<cfoutput>#serializeJSON(response)#</cfoutput>
+		<!---<cfoutput>#serializeJSON(response)#</cfoutput>--->
+		<cfreturn serializeJSON(response)>
 		
 	</cffunction>
 
@@ -666,6 +667,38 @@
 			
 			<cfif response.result IS true>
 				<cfset response.message = "Usuario asociado">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+
+
+	<!--- ----------------------------------- assignUserToAreas -------------------------------------- --->
+
+	<cffunction name="assignUserToAreas" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="areas_ids" type="string" required="true">
+		<cfargument name="user_id" type="numeric" required="true" />
+		
+		<cfset var method = "assignUserToAreas">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="assignUserToAreas" returnvariable="response">
+				<cfinvokeargument name="areas_ids" value="#arguments.areas_ids#"/>
+				<cfinvokeargument name="add_user_id" value="#arguments.user_id#"/>
+			</cfinvoke>
+			
+			<cfif response.result IS true>
+				<cfset response.message = "Usuario asociado a las áreas seleccionadas">
 			</cfif>
 
 			<cfcatch>
@@ -981,11 +1014,11 @@
 				<div><i class="icon-inbox" style="font-size:18px"></i>  <a href="mailto:#objectUser.email#" class="link_external">#objectUser.email#</a></div>
 
 				<cfif len(objectUser.linkedin_url) GT 0>
-					<div class="div_user_page_label"><i class="icon-linkedin-sign" style="font-size:18px;"></i> <a href="#objectUser.linkedin_url#" target="_blank" class="link_external">#objectUser.linkedin_url#</a></div> 
+					<div><i class="icon-linkedin-sign" style="font-size:18px;"></i> <a href="#objectUser.linkedin_url#" target="_blank" class="link_external">#objectUser.linkedin_url#</a></div> 
 				</cfif>
 
 				<cfif len(objectUser.twitter_url) GT 0>
-					<div class="div_user_page_label"><i class="icon-twitter-sign" style="font-size:18px;"></i> <a href="#objectUser.twitter_url#" target="_blank" class="link_external">#objectUser.twitter_url#</a></div> 
+					<div><i class="icon-twitter-sign" style="font-size:18px;"></i> <a href="#objectUser.twitter_url#" target="_blank" class="link_external">#objectUser.twitter_url#</a></div> 
 				</cfif>
 
 				<!---<cfif SESSION.client_abb NEQ "hcs">---><!---OR showAdminFields IS true--->

@@ -122,6 +122,7 @@
 		$("##itemDefaultValue").hide();
 
 		$("##listAreaSelector").hide();
+		$("##listAreaHelpText").hide();
 		$("##fieldInputTypeList").hide();
 		$("##fieldInputTypeListMultiple").hide();
 		$("##fieldInputItemType").hide();
@@ -169,6 +170,8 @@
 				$("##default_value_list").prop('disabled', false);
 				$("##list_area_id").prop('disabled', false);
 
+				$("##listAreaText").text(window.lang.translate('Área a para generar la lista'));
+
 			} else { // List of text values
 
 				$("##textDefaultValue").show();
@@ -200,15 +203,20 @@
 
 			$("##default_value_user").prop('disabled', false);
 
-		}else if(typeId == 13){ //Item
+		}else if(typeId == 13){ //DoPlanning Item
 
 			$("##fieldInputItemType").show();
 			$("##itemDefaultValue").show();
+			$("##listAreaSelector").show();
 
 			<cfif page_type IS 1>
 				$("##item_type_id").prop('disabled', false);
 			</cfif>
 			$("##default_value_item").prop('disabled', false);
+			$("##list_area_id").prop('disabled', false);
+
+			$("##listAreaText").text(window.lang.translate('Área desde la que habrá que seleccionar el elemento de DoPlanning'));
+			$("##listAreaHelpText").show();
 
 		}else {
 
@@ -281,6 +289,8 @@
 
 			<a href="#APPLICATION.htmlComponentsPath#/Field.cfc?method=deleteFieldRemote&field_id=#field_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteField();" title="Eliminar campo" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 		</cfif>
+
+		<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 	</div>
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
 	<input type="hidden" name="table_id" value="#table_id#"/>
@@ -401,11 +411,18 @@
 			<cfelse>
 				<cfset list_area_name = "">
 			</cfif>
-			<label for="default_value_text" class="control-label" lang="es">Área a para generar la lista</label>
-			<div class="controls">
-				<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
-				<cfinput type="text" name="list_area_name" id="list_area_name" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" /> <button onclick="return openAreaSelector()" type="button" class="btn btn-default" lang="es">Seleccionar área</button>
+
+			<label for="list_area_id" id="listAreaText" class="control-label" lang="es">Área a para generar la lista</label>
+			<div class="row">
+				<div class="col-sm-4">
+					<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
+					<cfinput type="text" name="list_area_name" id="list_area_name" class="form-control" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" /> 
+				</div>
+				<div class="col-sm-8">
+					<button onclick="return openAreaSelector()" type="button" class="btn btn-default" lang="es">Seleccionar área</button>
+				</div>
 			</div>
+			<small class="help-block" id="listAreaHelpText" lang="es">Opcional, definir sólo si el elemento seleccionado debe ser de un área específica de forma obligatoria.<br/>IMPORTANTE: si el usuario no tiene acceso al área seleccionada, no podrá seleccionar ningún elemento.</small>
 		</div>
 	</div>
 
@@ -543,6 +560,8 @@
 	<div class="row" id="itemDefaultValue">
 		<div class="col-md-12">
 
+			<!---El tipo de campo Elemento de DoPlanning no está disponible en formularios porque no se puede acceder a la selección o elementos desde la web--->
+
 			<cfset field_default_value = field.default_value>
 
 			<cfif field.field_type_id IS 13 AND isNumeric(field_default_value)>
@@ -630,6 +649,8 @@
 	<div id="submitDiv2" style="margin-top:20px;">
 		<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 		<!---<a href="area_items.cfm?area=#area_id#" class="btn btn-default">Cancelar</a>--->
+
+		<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 	</div>
 	
 </cfform>

@@ -174,7 +174,7 @@
 				<cfelse>
 					, field_input_type = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
 				</cfif>
-				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10><!--- IS SELECT --->
+				<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10 OR ( arguments.field_type_id IS 13 AND isNumeric(arguments.field_type_id) )><!--- IS SELECT OR DoPlanning Item--->
 					, list_area_id = <cfqueryparam value="#arguments.list_area_id#" cfsqltype="cf_sql_integer">
 				<cfelse>
 					, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
@@ -667,7 +667,7 @@
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="deleteTableFields">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="deleteTableFields">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 

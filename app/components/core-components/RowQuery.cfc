@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2013 --->
+<!--- Copyright Era7 Information Technologies 2007-2015 --->
 
 <cfcomponent output="false">
 
@@ -249,14 +249,49 @@
 			</cfif>
 
 			<cfif arguments.tableTypeId IS NOT 3 AND arguments.send_alert IS true><!--- IS NOT typology --->
+
+				<!--- getRow --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="row_id" value="#row_id#">
+					<cfinvokeargument name="fields" value="#fields#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 				
 				<!--- Alert --->
-				<cfinvoke component="AlertManager" method="newTableRow">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newTableRow">
 					<cfinvokeargument name="row_id" value="#row_id#">
+					<cfinvokeargument name="rowQuery" value="#rowQuery#">
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					<cfinvokeargument name="user_id" value="#arguments.user_id#">
 					<cfinvokeargument name="action" value="#arguments.action#">
+					<cfinvokeargument name="fields" value="#fields#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+			</cfif>
+
+			<cfif arguments.tableTypeId IS NOT 3>
+
+				<cfif arguments.action IS CREATE_ROW>
+					<cfset actionEventTypeId = 1><!--- New row --->
+				<cfelse>
+					<cfset actionEventTypeId = 2><!--- Update row --->
+				</cfif>
+
+				<!--- Action --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionManager" method="throwAction">
+					<cfinvokeargument name="row_id" value="#row_id#">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="action_event_type_id" value="#actionEventTypeId#">
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">

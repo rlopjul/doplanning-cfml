@@ -9,14 +9,21 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
  --->
 
-<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 20>
-	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
-<cfelse>
-	<!---<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.4/summernote.min.css" rel="stylesheet">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.6.4/summernote.min.js"></script>
-	<script src="#APPLICATION.path#/jquery/summernote/plugin/summernote-ext-fontstyle.js"></script>
-	<script src="#APPLICATION.path#/jquery/summernote/lang/summernote-es-ES.js"></script>--->
+<cfif (itemTypeId IS 1 OR itemTypeId IS 20) AND arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) IS 0><!---Messages o DP Documents--->
+
+	<!--- arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) IS TO CHECK INTERNET EXPLORER 11 
+	summernote fails in IE--->
+
+	<cfset editorApp = "summernote">
+
 	<cfinclude template="#APPLICATION.htmlPath#/includes/summernote_scripts.cfm">
+
+<cfelse>
+
+	<cfset editorApp = "ckeditor">
+
+	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
+
 </cfif>
 
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />

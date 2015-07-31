@@ -662,6 +662,8 @@
 		<cfargument name="small" type="boolean" required="false" default="false">
 		
 		<cfset var method = "outputAreasFullList">
+
+		<cfset var area_path = "">
 		
 		<cftry>
 
@@ -728,7 +730,7 @@
 												<cfinvokeargument name="userType" value="users"/>
 											</cfinvoke>
 
-											<cfif getHighestAreaResponse.result IS true>
+											<!---<cfif getHighestAreaResponse.result IS true>--->
 
 												<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
 													<cfinvokeargument name="area_id" value="#area_id#">
@@ -740,7 +742,7 @@
 													<cfinvokeargument name="with_base_link" value="area_items.cfm?area="/>
 												</cfinvoke>
 
-											</cfif>
+											<!---</cfif>--->
 
 										</cfif>
 

@@ -2072,12 +2072,12 @@
 	<cffunction name="updateArea" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="name" type="string" required="false"/>
+		<cfargument name="description" type="string" required="false"/>
 		<!---<cfargument name="parent_id" type="numeric" required="false"/>--->
 		<cfargument name="with_link" type="string" required="false"/>
 		<cfargument name="link" type="string" required="false"/>
 		<cfargument name="with_image" type="boolean" required="false"/>
 		<cfargument name="user_in_charge" type="numeric" required="false"/>
-		<cfargument name="description" type="string" required="false"/>
 		<cfargument name="image_file" type="string" required="false"/>
 		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
 		<cfargument name="menu_type_id" type="numeric" required="false"/>
@@ -2126,6 +2126,12 @@
 						<cfquery name="nameQuery" datasource="#client_dsn#">
 							UPDATE #client_abb#_areas SET name = <cfqueryPARAM value = "#arguments.name#" CFSQLType = "CF_SQL_varchar">
 							WHERE id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+						</cfquery>
+					</cfif>
+					<cfif isDefined("arguments.description")>
+						<cfquery name="descriptionQuery" datasource="#client_dsn#">
+							UPDATE #client_abb#_areas SET description = <cfqueryPARAM value = "#arguments.description#" CFSQLType="cf_sql_longvarchar">
+							WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
 					</cfif>
 					<!---
@@ -2192,12 +2198,6 @@
 										<cfqueryPARAM value = "#arguments.user_in_charge#" CFSQLType="cf_sql_integer">);					
 							</cfquery>
 						</cfif>				
-					</cfif>
-					<cfif isDefined("arguments.description") AND arguments.description NEQ "">
-						<cfquery name="descriptionQuery" datasource="#client_dsn#">
-							UPDATE #client_abb#_areas SET description = <cfqueryPARAM value = "#arguments.description#" CFSQLType="cf_sql_longvarchar">
-							WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
 					</cfif>
 
 					<cfif NOT isDefined("arguments.link")><!--- Si arguments.link está definido es porque se accede desde la página de modificar la imagen del área que no pasa estos parámetros --->

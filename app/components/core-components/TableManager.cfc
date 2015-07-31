@@ -32,6 +32,4 @@
 
 	</cffunction>
 
-
-
 </cfcomponent>

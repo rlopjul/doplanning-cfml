@@ -80,7 +80,7 @@
 	
 	<div class="row">
 		<div class="col-sm-12">
-			<span>Área actual:</span>
+			<span lang="es">Área actual:</span>
 			<strong>#fileArea.name#</strong>
 		</div>
 	</div>
@@ -102,7 +102,7 @@
 	</div>
 
 	<br/>
-	<small class="help-block" lang="es">Se enviará notificación por email del del cambio de área del archivo.</small>
+	<small class="help-block" lang="es">Se enviará notificación por email del cambio de área del archivo.</small>
 </cfform>
 
 </div>

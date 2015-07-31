@@ -177,10 +177,21 @@
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
 
 
-<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 20>
-	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
-<cfelse>
+<cfif (itemTypeId IS 1 OR itemTypeId IS 20) AND arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) IS 0><!---Messages o DP Documents--->
+
+	<!--- arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) IS TO CHECK INTERNET EXPLORER 11 
+	summernote fails in IE--->
+
+	<cfset editorApp = "summernote">
+
 	<cfinclude template="#APPLICATION.htmlPath#/includes/summernote_scripts.cfm">
+
+<cfelse>
+
+	<cfset editorApp = "ckeditor">
+
+	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
+
 </cfif>
 
 </cfoutput>

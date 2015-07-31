@@ -21,6 +21,7 @@ Lang.prototype.pack.en = {
 		"Ayuda DoPlanning":"DoPlanning Help",
 		"Identificar con usuario y contraseña de:":"Identify with user and password of:",
 		"Usuario o contraseña incorrecta.":"Incorrect user or password",
+		"Para una mejor experiencia con DoPlanning recomendamos el uso de un navegador moderno distinto a Internet Explorer":"For the best experience with DoPlanning we recommend using a different browser than Internet Explorer",
 		/*END login*/
 		
 		/*remember_password.cfm*/
@@ -134,6 +135,7 @@ Lang.prototype.pack.en = {
 		"Acceder a Reunión virtual del área (SOLO para PCs)":"Virtual meeting (only for PCs)",
 		"Acceder a Presentación virtual del área (SOLO PCs)":"Virtual presentation (only for PCs)",
 		
+		"Nuevo elemento":"New element",
 		"Nuevo Mensaje":"New Message",
 		"Nuevo Archivo":"New File",
 		"Nuevo Archivo de área":"New area File",
@@ -312,6 +314,26 @@ Lang.prototype.pack.en = {
 		"Nueva vista":"New view",
 		"Haga clic en Nueva vista para crear una nueva vista.":"Click in New view to create a new view.",
 		
+		"El archivo utilizado para realizar esta importación deberá tener las siguientes características:":"The import file must have the following features:",
+		"-Tipo de archivo:":"-File type:",
+		".csv o .txt":".csv or .txt",
+		"delimitado por ; o por tabulaciones.":"delimited by ; or by tabs.",
+		"Punto y coma es la delimitación por defecto en el SO Windows en España (esto varía en configuraciones por defecto de otros paises o idiomas).":"Semicolon is the default delimitation in Spain for Windows OS (these default configurations change for other countries or languages).",
+		"Codificación":"Codification",
+		"(codificación por defecto en Windows)":"(codification by default in Windows)",
+		"Número de columnas":"Number of columns",
+		"Orden de las columnas":"Column order",
+		"Campos listas":"Lists fields",
+		"para que la importación de los campos de listas se realice correctamente, el valor importado de estos campos deberá coincidir exactamente con uno de los valores existentes en la lista.":"for correct performance of list import, the imported value of these fields must match exactly with one of the values already existing in the list.",
+		"Campos Sí/No":"Yes/No fields",
+		"los valores válidos para estos campos son Sí/No, Yes/No, true/false, 0/1":"Valid values for these fields are Sí/No, Yes/No, true/false, 0/1",
+		"Campos fecha":"Date fields",
+		"formatos válidos las fechas:":"valid date formats:",
+		"DD-MM-AAAA, DD/MM/AAAA":"DD-MM-YYYY, DD/MM/YYYY",
+		"Campos de listas con selección múltiple":"Multiple selection list fields",
+		"los valores seleccionados de estos campos deberán delimitarse por ; y delimitando a su vez el campo que contiene estos valores por \"":"the selected values for these fields must be delimited with ; and conversely delimiting the field containing these values with \"",
+		"Borrar registros existentes en el Formulario":"Delete existing fields in the Form",
+		
 		"aplicándole una máscara, y posteriormente seleccionar esta opción en la importación para que se tenga en cuenta la máscara al realizar la importación.":"by applying a mask and afterwards selecting this option in the import, in order to use the mask during the import process.",
 		"definición de los campos":"field definition",
 		"Si los decimales usan otro formato distinto, como por ejemplo separar la cifra decimal por coma en lugar de punto, debe especificarlo primero en la":"If decimals use a different format, such as comma separation of the decimal cypher, you must specify it first in the",
@@ -325,10 +347,6 @@ Lang.prototype.pack.en = {
 		"Borrar registros existentes en la Lista":"Delete previous records from the List",
 		"Archivo CSV con los registros a importar":"CSV file with records to import",
 		"-Si el orden de las columnas no corresponde con el anterior la importación no se realizará correctamente.":"-If column order does not correspond with that from the list, import will not be made properly",
-		"-Campos listas: para que la importación de los campos de listas se realice correctamente, el valor importado de estos campos deberá coincidir exactamente con uno de los valores existentes en la lista.":"LIsts fields: for proper performance of import, the imported value must match exactly with one of the values exsiting in the list.",
-		"-Campos Sí/No: los valores válidos para estos campos son Sí/No, Yes/No, true/false, 0/1.":"-Yes/NO fields: valid values for these fields are: Sí/No, Yes/No, true/false, 0/1.",
-		"-Campos fecha: formatos válidos las fechas: DD-MM-AAAA, DD/MM/AAAA.":"Date fields: valid formats for dates are: DD-MM-YYYY, DD/MM/YYYY.",
-		"-Campos de listas con selección múltiple: los valores seleccionados de estos campos deberán delimitarse por ; y delimitando a su vez el campo que contiene estos valores por ":"Multiple selection lists fields: selected values for these fields should be delimited by ;, delimiting in turn the field containing this values with ",
 		"-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.":"If these conditions are not met, import will not perform correctly.",
 		"No se enviará notificación de los nuevos registros a los usuarios.":"No notification of the new records will be sent to users.",
 		"Una vez pulsado el botón \"Importar registros\" debe esperar hasta que se complete la operación.":"Once the \"Import records\"  button has been clicked, you must wait until the process is completed.",
@@ -511,7 +529,7 @@ Lang.prototype.pack.en = {
 		"Rellene el formulario y haga click en BUSCAR":"Enter search parameters and click Search",
 		"Todos":"All",		
 		"Nº resultados":"Max results",
-		"Estado actual":"Actual state",
+		"Estado actual":"Current state",
 		"Buscar":"Search",
 		"Resultado:":"Result:",
 		"Buscar en":"Search",
@@ -643,7 +661,9 @@ Lang.prototype.pack.en = {
 		"URL relativa para":"Relative URL to",
 		"Última versión de archivo analizada por Antivirus":"Last file version analysed with antivirus",
 		"Archivo en proceso de revisión y aprobación":"File in process of revision and approval",
-		"Estado actual pendiente de ser revisado por":"Currently pending of revision by",
+		"Estado actual":"Current state",
+		"pendiente de ser revisado por":"pending of review by:",
+		"Debe validar o rechazar la versión de este archivo":"You must validate or reject this version of the file",
 		"Archivo bloqueado por el usuario":"File blocked by user",
 		"Fecha de bloqueo":"Blocking date",
 		"Publicar versión":"Publish version",
@@ -765,6 +785,7 @@ Lang.prototype.pack.en = {
 		/*admin/main.cfm*/
 		"Preferencias del usuario":"User preferences",
 		"Administración general":"General administration",
+		"Administración de áreas":"Areas administration",
 		"No cambiar de pestaña al seleccionar área":"Do not change tab when an area is selected",
 		"Administradores":"Administrators",
 		"Nuevo usuario":"New user",
@@ -775,6 +796,7 @@ Lang.prototype.pack.en = {
 		"Aplicar selección anterior de elementos, usuarios disponibles y sólo lectura a todas las áreas inferiores":"Apply element selection, available users and read only to all lower areas",
 		"Área de sólo lectura":"Read only area",
 		"Esta opción no afecta a los elementos en los que es necesario acceder a la lista de usuarios del área para su creación y edición como: tareas, archivos de área, listas y formularios.":"This option does not affect those elements in which it is necessary to access the user list for their creation and edition, such as: tasks, area files, lists and forms.",
+		"Esta opción no afecta a los elementos en los que es necesario acceder a la lista de usuarios del área para su creación y edición como: tareas y archivos de área.":"This option does not affect those elements in which it is necessary to access the user list for their creation and edition, such as: tasks and area files.",
 		"Mostrar visible el listado de usuarios del área":"Show list of area users",
 		"Esta selección no afecta a los elementos ya existentes en el área":"This selection does not affect those elements already existing in the area",
 		"Seleccionar/quitar todos":"Select/unselect all",
@@ -960,6 +982,7 @@ Lang.prototype.pack.en = {
 		"Valida la Lista para que pueda ser publicada.":"Mark checkbox if you want the List to be published",
 		"Si está definida, la Lista se publicará en la fecha especificada.":"If defined, the List will be published in the specified date.",
 		"Valida el Evento para que pueda ser publicado.":"Mark checkbox if you want the Event to be published",
+		"La publicación del elemento deberá ser aprobada en cada una de las áreas en las que se publique.":"Publication of the element must be approved in every area in which it is published.",
 
 		"Indica si la definición de campos de esta lista está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this list is available to be used as a template by any user in the organization",
 		"Indica si la definición de campos de este formulario está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this form is available to be used as a template by any user in the organization",
@@ -1106,8 +1129,88 @@ Lang.prototype.pack.en = {
 		"Haga clic en Añadir editores parar añadir un nuevo usuario.":"Click on Add editors to add a new editor.",
 		"Los usuarios responsables de este área tienen el permiso de editores por defecto.":"Users that are managers of this area have edition rights by default.",
 		
+		/*associate users*/
+		"Asociar usuarios a otra área":"Associate users to other area",
+		"Selecciona el área de destino:":"Select target area",
+		"Asociar usuarios al área seleccionada":"Associate users to selected area",
+		"Estos usuarios no se muestran visibles en esta área":"These users are not shown as visible in this area",
+		"Asociar usuarios seleccionados al área":"Associate selected users to area",
+		"Debe seleccionar un área para asociar los usuarios":"You must select an area to associate users",
+		"Asociar usuario a área":"Associate user to area",
+		"Este usuario ya está asociado a esta área":"This user is already associated to this area",
+		"Asociar usuario a área":"Associate user to area",
+		"¿Seguro que desea asociar este usuario a esta área?":"Are you sure you want to associate this user to this area?",
+		"Se enviará notificación por email al usuario asociado y a los usuarios del área.":"An email notification will be sent to the associated user and to area users.",
+		"Asociar usuario":"Associate user",
+		"Asociar usuarios a área":"Associate users to area",
+		"Comprueba los usuarios seleccionados:":"Check selected users:",
+		"Se enviará notificación a los usuarios asociados y a los usuarios del área.":"A notification will be sent to associated users and to area users.",
+		"Asociar usuarios":"Associate users",
+		"Asociar usuario a áreas":"Associate user to areas",
+		"Asociar usuario a áreas seleccionadas":"Associate user to selected areas",
+		"Al área seleccionada":"To selected areas",
+		"A varias áreas":"To several areas",
+		"Confirma las áreas seleccionadas:":"Confirm the selected areas",
+		"Se enviará notificación al usuario y a los usuarios del área.":"Selected user and users of the area will be notified by email.",
+		/*END associate users to areas*/
 		
-	}
+		/*associate area administrator*/
+		"Asociar administrador de área":"Associate area administrator",
+		"¿Seguro que desea asociar este usuario como":"Are you sure you want to associate this user as",
+		"administrador de esta área":"administrator of this area",
+		"Asociar administrador":"Associate administrator",
+		"Perfil cabecera":"Header profile",
+
+		/*remove users form area*/
+		"Quitar usuario del área":"Remove user from area",
+		"¿Seguro que desea quitar este usuario de esta área?:":"Are you sure you want to remove this user form this area?",
+		
+		/*remove area administrator*/
+		"CUIDADO":"WARNING",
+		"Quitar administrador de área":"Remove area administrator",
+		"¿Seguro que desea quitar este usuario de administrador de esta área?:":"Are you sure you want to remove this user as administrator of this area?:",
+		"Ruta del área":"Area route",
+		"Este usuario no está asociado como administrador directamente a esta área, ha sido asociado a la siguiente área superior":"This user is not directly associated as administrator to this area, he/she has been associated in the preceding upper area",
+		"Este usuario es el administrador general, tiene acceso de administración por defecto a todas las áreas.":"This user is the general administrator, and has administration access by default to all areas.",
+		"No se enviará notificación por email de esta acción":"No email notification will be sent from this action",
+		"Area superior":"Upper area",
+		"Quitar administrador del área superior":"Remove administrator from upper area",
+		"Debe quitar al usuario de administrador en el área anterior para que deje de tener acceso en la actual.":"You must remove user as administrator in the upper area so as to remove access from the current area.",
+		
+		/*area documetn approval*/
+		"Menú principal":"Main menu",
+		"Ruta del área:":"Area route:",
+		"Abrir árbol con ruta expandida":"Open tree with expanded route",
+		"Solicitar aprobación de documento":"Request document approval",
+		"Iniciar proceso de aprobación":"Start approval process",
+		"Proceso de aprobación:":"Approval process",
+		"Nombre del archivo:":"File name:",
+		"Usuario revisor:":"Reviewer user:",
+		"Usuario aprobador:":"Approver user:",
+		"1º Se enviará el archivo al usuario revisor.":"1st The file will be sent to reviewer user.",
+		"2º El usuario revisor debe validar el documento.":"2nd The reviewer user must validate the document.",
+		"3º Si el usuario revisor valida el documento, se envía el documento al usuario aprobador.":"3rd If the reviewer user validates the document, it is sent to the approver user.",
+		"4º El usuario aprobador debe validar el documento.":"4th Tha approver user must validate the document.",
+		"Si el documento no es validado por el revisor o el aprobador, se debe iniciar de nuevo el proceso de aprobación con una nueva versión del archivo.":"If the document is not validated by the reviewer or the approver, the process must start again with a new version of the file.",
+		
+		/*actions*/
+		"Acciones":"Actions",
+		"Añadir acción":"Add action",
+		"Nombre de la acción":"Name of the action",
+		"Tipo de acción":"Type of action",
+		"Enviar email":"Send email",
+		"Nuevo registro rellenado en Formulario":"New record added in form",
+		"Registro eliminado en Formulario":"Record deleted from form",
+		"Nueva acción":"New action",
+		"No se puede modificar el tipo una vez creada la acción":"Type cannot be modified once the action has been created",
+		"Evento que lanza la acción":"Event that triggers the action",
+		"Se realizará la acción cuando ocurra este evento":"Action will be performed when the event occurs",
+		"Campo del Formulario con la dirección de email":"Field from the Form with the email address",
+		"Sólo están disponibles para seleccionar los campos del tipo Email":"Only fields with type Email are available to select",
+		"Asunto del email":"Email subject",
+		"Contenido del email":"Email content",
+	}	
+	
 		
 		
 		

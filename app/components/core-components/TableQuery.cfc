@@ -247,6 +247,8 @@
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
 
+			<!--- Aquí se deben borrar también las acciones --->
+
 			<cfif tableTypeId NEQ 3><!--- IS NOT Typology --->
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/ViewManager" method="deleteTableViews">

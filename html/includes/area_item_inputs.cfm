@@ -760,7 +760,7 @@
 
 	<div class="col-md-12">
 		<label class="sr-only" for="summernote" lang="es">Contenido</label>
-<!---style="margin-bottom:10px; margin-top:5px;"---><textarea name="description" class="form-control" id="summernote" style="height:200px;" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea>
+<!---style="margin-bottom:10px; margin-top:5px;"---><textarea name="description" class="form-control summernote" id="summernote" style="height:200px;" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea>
 	</div>
 
 </div>
@@ -1043,8 +1043,8 @@
 </cfif>
 <div style="clear:both"></div>
 
-<cfif itemTypeId IS 1 OR itemTypeId IS 20><!---Messages o DP Documents--->
-	
+<cfif editorApp IS "summernote"><!---Messages o DP Documents--->
+
 <script>
 	$(document).ready(function() {
 
@@ -1053,13 +1053,15 @@
 		</cfoutput>--->
 
 		$('#summernote').summernote({
-			height: "400px"
+			height: 300
 			
 			<!---
+			Esto da problemas en Internet Explorer
 			, onChange: function(contents, $editable) {
 			    preventClose = true;
 			}
 			--->
+			
 			, disableDragAndDrop: true,
 			maximumImageFileSize: 40960,
 			toolbar: [

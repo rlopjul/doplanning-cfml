@@ -120,11 +120,18 @@
 				
 
 
-				<cfif is_user_area_responsible  AND objectArea.read_only IS false>
+				<cfif is_user_area_responsible AND objectArea.read_only IS false>
 					
 					<div class="btn-group">
 						<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos</span></a>
 					</div>
+
+					<cfif tableTypeId IS NOT 3>
+						<div class="btn-group">
+							<a href="#tableTypeName#_actions.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Acciones" lang="es"><i class="fa fa-cogs"></i> <span lang="es">Acciones</span></a>
+						</div>
+					</cfif>
+
 
 					<cfif APPLICATION.moduleListsWithPermissions IS true AND itemTypeId IS 11><!---List with permissions--->
 						<div class="btn-group">

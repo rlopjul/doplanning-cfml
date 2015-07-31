@@ -49,7 +49,7 @@
 					<cfset bar_bg = "##E86C66">
 
 					<div class="#head_col_1_class#">
-						<img src="#APPLICATION.htmlPath#/assets/v3/icons/home.png" alt="Lo último" lang="es" />
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/home.png" alt="Lo último" lang="es" aria-hidden="true" />
 					</div>
 
 					<div class="#head_col_2_class#">
@@ -66,7 +66,7 @@
 					<cfset bar_bg = "##2F6380">
 					
 					<div class="#head_col_1_class#">
-						<img src="#APPLICATION.htmlPath#/assets/v3/icons/tree.png" alt="Árbol" lang="es" />
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/tree.png" alt="Árbol" lang="es" aria-hidden="true" />
 					</div>
 
 					<div class="#head_col_2_class#">
@@ -82,7 +82,7 @@
 					<cfset bar_bg = "##4FBFB7">
 
 					<div class="#head_col_1_class#">
-						<img src="#APPLICATION.htmlPath#/assets/v3/icons/search.png" alt="Búsqueda" lang="es" />
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/search.png" alt="Búsqueda" lang="es" aria-hidden="true" />
 					</div>
 
 					<div class="#head_col_2_class#">
@@ -202,7 +202,7 @@
 						</cfif>--->
 
 
-						<img src="#APPLICATION.htmlPath#/assets/v3/#area_image#" alt="Area" style="display:inline"> 
+						<img src="#APPLICATION.htmlPath#/assets/v3/#area_image#" alt="Area" aria-hidden="true" style="display:inline"> 
 
 
 					</div>
@@ -238,7 +238,7 @@
 					<!---<div style="width:56px;height:54px;background:##EAD144"></div>--->
 
 					<div class="#head_col_1_class#">
-						<img src="#APPLICATION.htmlPath#/assets/v3/icons/bin.png" alt="Papelera" lang="es" />
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/bin.png" alt="Papelera" lang="es" aria-hidden="true" />
 					</div>
 
 
@@ -256,7 +256,7 @@
 
 					<div class="#head_col_1_class#">
 						<!---<div style="width:56px;height:54px;background:##82D0CA"></div>--->
-						<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_preferences.png" alt="Usuario" lang="es" />	
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_preferences.png" alt="Usuario" lang="es" aria-hidden="true" />	
 					</div>
 
 					<div class="#head_col_2_class#">

@@ -860,8 +860,7 @@
 	</cffunction>
 	
 
-	<cffunction name="queryToStruct" access="public" returntype="any" output="false"
-hint="Converts an entire query or the given record to a struct. This might return a structure (single record) or an array of structures.">
+	<cffunction name="queryToStruct" access="public" returntype="any" output="false" hint="Converts an entire query or the given record to a struct. This might return a structure (single record) or an array of structures.">
 		<!--- Define arguments. --->
 		<cfargument name="Query" type="query" required="true" />
 		<cfargument name="Row" type="numeric" required="false" default="0" />

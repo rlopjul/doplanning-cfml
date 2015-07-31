@@ -82,13 +82,13 @@
 
 					<cfset myItemsQuery = getMyItemsResult.query>
 						
-					<div class="navbar navbar-default navbar-static-top">
+					<div class="navbar navbar-default"><!---navbar-static-top--->
 						<div class="container-fluid">
 
 							<cfoutput>
 
 							<cfif myItemsQuery.recordCount GT 0>
-								<div class="btn-toolbar" role="toolbar">
+								<div class="btn-toolbar navbar-left" role="toolbar">
 									<div class="btn-group">
 										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItems&delete_user_id=#SESSION.user_id##url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-primary btn-sm navbar-btn"><i class="icon-undo icon-white"></i> <span lang="es">Restaurar todo</span></a>
 									</div>	
@@ -153,13 +153,13 @@
 				<div class="tab-pane" id="tab2">
 
 					
-					<div class="navbar navbar-default navbar-static-top">
+					<div class="navbar navbar-default"><!---navbar-static-top--->
 						<div class="container-fluid">
 							
 							<cfoutput>
 
 							<cfif itemsQuery.recordCount GT 0>
-								<div class="btn-toolbar" role="toolbar">
+								<div class="btn-toolbar navbar-left" role="toolbar">
 									<div class="btn-group">
 										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItems#url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-primary btn-sm navbar-btn"><i class="icon-undo icon-white"></i> <span lang="es">Restaurar todo</span></a>	
 									</div>

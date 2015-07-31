@@ -43,6 +43,20 @@
 	</cffunction>
 
 
+	<!--- ----------------------- GET FILE PATH -------------------------------- --->
+	
+	<cffunction name="getFilePath" returntype="string" output="false" access="public">		
+		<cfargument name="physical_name" type="string" required="true">
+		<cfargument name="files_directory" type="string" required="false" default="files"/>
+
+		<cfargument name="client_abb" type="string" required="true">
+
+
+		<cfreturn "#APPLICATION.filesPath#/#arguments.client_abb#/#arguments.files_directory#/#arguments.physical_name#">
+
+	</cffunction>
+
+
 
 	<!--- ----------------------- DELETE FILE -------------------------------- --->
 	

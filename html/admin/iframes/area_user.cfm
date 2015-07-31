@@ -92,7 +92,7 @@
 </cfif>
 
 <cfoutput>
-<div class="navbar navbar-default navbar-fixed-top">
+<div class="navbar navbar-default navbar-fixed-top navbar_admin">
 	<div class="container-fluid">
 		
 		<cfif isDefined("user_id") AND isDefined("area_id")>

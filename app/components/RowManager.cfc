@@ -589,47 +589,29 @@
 	</cffunction>
 
 
-
-	<!--- ------------------------------------- exportRows -------------------------------------  --->
+	<!--- ------------------------------------- generateRowsQuery -------------------------------------  --->
 	
-	<cffunction name="exportRows" output="false" access="public" returntype="struct">
+	<cffunction name="generateRowsQuery" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
-		<cfargument name="delimiter" type="string" required="true">
 		<cfargument name="include_creation_date" type="boolean" required="false" default="false">
 		<cfargument name="include_last_update_date" type="boolean" required="false" default="false">
 		<cfargument name="include_insert_user" type="boolean" required="false" default="false">
 		<cfargument name="include_update_user" type="boolean" required="false" default="false">
 		<cfargument name="decimals_with_mask" type="boolean" required="false" default="false">
-		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
+
+		<cfargument name="client_abb" type="string" required="true"/>
+		<cfargument name="client_dsn" type="string" required="true"/>
 
 		<cfset var method = "exportRows">
 
 		<cfset var response = structNew()>
 
+		<cfset var rowsQuery = "">
 		<cfset var listFields = false>
 		<cfset var fieldsNames = "">
 		<cfset var fieldsLabels = "">
-		<cfset var exportContent = "">
-		<cfset var rowValues = structNew()>
 
-		<cftry>
-			
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
-			<!---checkAreaAccess in getTable--->
-			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-			</cfinvoke>
-			
-			<cfif getTableResponse.result IS false>
-				<cfreturn getTableResponse>
-			</cfif>
-
-			<cfset tableQuery = getTableResponse.table>	
 
 			<!---Table fields--->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
@@ -797,7 +779,76 @@
 					</cfif>
 
 				</cfif>
+				
+			</cfif>
 
+			<cfset response = {result=true, table_id=arguments.table_id, rowsQuery=#rowsQuery#, fieldsNames=#fieldsNames#, fieldsLabels=#fieldsLabels# }>
+
+		<cfreturn response>
+
+
+	</cffunction>
+
+
+	<!--- ------------------------------------- exportRows -------------------------------------  --->
+	
+	<cffunction name="exportRows" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="delimiter" type="string" required="true">
+		<cfargument name="include_creation_date" type="boolean" required="false" default="false">
+		<cfargument name="include_last_update_date" type="boolean" required="false" default="false">
+		<cfargument name="include_insert_user" type="boolean" required="false" default="false">
+		<cfargument name="include_update_user" type="boolean" required="false" default="false">
+		<cfargument name="decimals_with_mask" type="boolean" required="false" default="false">
+		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
+
+		<cfset var method = "exportRows">
+
+		<cfset var response = structNew()>
+
+		<cfset var rowsQuery = "">
+		<cfset var fieldsNames = "">
+		<cfset var fieldsLabels = "">
+		<cfset var exportContent = "">
+
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+			
+			<!---checkAreaAccess in getTable--->
+			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+			
+			<cfif getTableResponse.result IS false>
+				<cfreturn getTableResponse>
+			</cfif>
+
+			<!---<cfset tableQuery = getTableResponse.table>--->	
+
+			<cfinvoke component="RowManager" method="generateRowsQuery" returnvariable="generateRowsQueryResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="include_creation_date" value="#arguments.include_creation_date#">
+				<cfinvokeargument name="include_last_update_date" value="#arguments.include_last_update_date#">
+				<cfinvokeargument name="include_insert_user" value="#arguments.include_insert_user#">
+				<cfinvokeargument name="include_update_user" value="#arguments.include_update_user#">
+				<cfinvokeargument name="decimals_with_mask" value="#arguments.decimals_with_mask#">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset rowsQuery = generateRowsQueryResponse.rowsQuery>
+			<cfset fieldsNames = generateRowsQueryResponse.fieldsNames>
+			<cfset fieldsLabels = generateRowsQueryResponse.fieldsLabels>
+
+			<cfif rowsQuery.recordCount GT 0>
+				
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToCSV" returnvariable="exportContent">
 					<cfinvokeargument name="query" value="#rowsQuery#">
 					<cfinvokeargument name="fields" value="#fieldsNames#">
@@ -815,9 +866,9 @@
 					<cfset exportContent = "sep=;#chr(10)#"&exportContent>
 
 				</cfif>
-				
+
 			</cfif>
-			
+
 			<cfinclude template="includes/logRecord.cfm">
 
 			<cfset response = {result=true, table_id=arguments.table_id, content=#exportContent#}>
@@ -937,6 +988,7 @@
 		<cfset var response = structNew()>
 
 		<cfset var area_id = "">
+		<cfset var rowQuery = "">
 
 		<cftry>
 			
@@ -996,7 +1048,7 @@
 				<cfreturn getRowResponse>
 			</cfif>
 
-			<!---<cfset row = getRowResponse.row>--->
+			<cfset rowQuery = getRowResponse.row>
 
 			<!--- Delete Row In DataBase--->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
@@ -1013,9 +1065,25 @@
 				<!--- Alert --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newTableRow">
 					<cfinvokeargument name="row_id" value="#arguments.row_id#">
+					<cfinvokeargument name="rowQuery" value="#rowQuery#">
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					<cfinvokeargument name="action" value="delete">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset actionEventTypeId = 3><!--- Delete row --->
+
+				<!--- Action --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionManager" method="throwAction">
+					<cfinvokeargument name="row_id" value="#arguments.row_id#">
+					<cfinvokeargument name="rowQuery" value="#rowQuery#"/>
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="action_event_type_id" value="#actionEventTypeId#">
+					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1499,6 +1567,75 @@
 		<cfreturn response>
 			
 	</cffunction>
+
+
+
+	<!--- ------------------------------------- getRowJSON -------------------------------------  --->
+	
+	<cffunction name="getRowJSON" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="view_id" type="numeric" required="false">
+		<cfargument name="row_id" type="numeric" required="true">
+		<cfargument name="rowQuery" type="query" required="false">
+		<cfargument name="file_id" type="numeric" required="false"><!---Only for typology--->
+		<cfargument name="fields" type="query" required="false">
+
+		<cfargument name="client_abb" type="string" required="true"/>
+		<cfargument name="client_dsn" type="string" required="true"/>
+
+		<cfset var method = "getRowJSON">
+
+		<cfset var response = structNew()>
+
+			<cfif NOT isDefined("arguments.rowQuery")>
+				
+				<!--- getRow --->
+				<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="getRow" returnvariable="getRowResponse">
+					<cfinvokeargument name="table_id" value="#table_id#"/>
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
+					<cfinvokeargument name="row_id" value="#arguments.row_id#"/>
+					<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+				</cfinvoke>
+				<cfset table = getRowResponse.table>
+				<cfset rowQuery = getRowResponse.row>
+
+			</cfif>
+
+			<cfif NOT isDefined("arguments.fields")>
+				
+				<!---Table fields--->
+				<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableFields" returnvariable="fieldsResult">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="with_types" value="true"/>
+					<cfinvokeargument name="file_id" value="#file_id#"/>
+				</cfinvoke>
+
+				<cfset fields = fieldsResult.tableFields>
+
+			</cfif>
+
+			<!---generateRowJSON--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="generateRowJSON" returnvariable="rowJSON">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="view_id" value="#arguments.view_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="rowQuery" value="#rowQuery#">
+				<cfinvokeargument name="fields" value="#fields#">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+
+
+				<cfinvokeargument name="client_abb" value="#client_abb#"/>
+				<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
+			</cfinvoke>
+
+		<cfset response = {result=true, rowJSON=#rowJSON#}>
+
+		<cfreturn response>
+			
+	</cffunction>
+
 
 
 </cfcomponent>

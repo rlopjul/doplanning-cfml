@@ -121,7 +121,7 @@
 
 				} else {
 
-					showAlertModal("Debe seleccionar un área para asociar los usuarios");
+					showAlertModal(window.lang.translate("Debe seleccionar un área para asociar los usuarios"));
 				}
 
 			}

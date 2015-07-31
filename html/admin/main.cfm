@@ -256,6 +256,15 @@
 			showAlertModal(window.lang.translate("Debe seleccionar un área para asociar el usuario"));
 	}
 
+	function openAreasAssociateModal(userId){
+
+		if($.isNumeric(curAreaId))
+			loadModal('html_content/areas_user_associate_tree.cfm?user='+userId+'&area='+curAreaId);
+		else
+			loadModal('html_content/areas_user_associate_tree.cfm?user='+userId);
+		
+	}
+
 	function openAreaAssociateUsersModal(usersIds){
 
 		if($.isNumeric(curAreaId))

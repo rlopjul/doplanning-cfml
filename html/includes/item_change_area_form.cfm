@@ -117,7 +117,7 @@
 	</div>
 
 	<br/>
-	<small class="help-block" lang="es">Se enviará notificación por email del del cambio de área del #itemTypeNameEs#.</small>
+	<small class="help-block" lang="es">Se enviará notificación por email del cambio de área <cfif itemTypeGender EQ "male">del<cfelse>de la</cfif> #itemTypeNameEs#.</small>
 </cfform>
 
 </div>

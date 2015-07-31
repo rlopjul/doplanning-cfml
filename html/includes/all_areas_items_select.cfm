@@ -77,11 +77,14 @@
 		}); 
 	</script>
 
-	<cfinclude template="#APPLICATION.htmlPath#/includes/search_2_bar.cfm">
+	<div class="container">
+		<cfinclude template="#APPLICATION.htmlPath#/includes/search_2_bar.cfm">
+	</div>
 
 	<cfif isDefined("URL.search")>
 
 		<cfif itemTypeId IS 10><!--- Files --->
+		
 			
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getAllAreasFiles" argumentcollection="#URL#" returnvariable="getAllAreasFilesResponse">
 				<cfif len(search_text) GT 0>
@@ -100,6 +103,7 @@
 
 			<cfset full_content = true>
 			<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">
+
 
 		<cfelse><!--- Items --->
 

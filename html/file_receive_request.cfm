@@ -1,0 +1,1 @@
+<cfinclude template="#APPLICATION.htmlPath#/includes/file_receive_request.cfm">

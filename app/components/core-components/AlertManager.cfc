@@ -1239,10 +1239,12 @@
 	
 	<cffunction name="newTableRow" access="public" returntype="void">
 		<cfargument name="row_id" type="numeric" required="true">
+		<cfargument name="rowQuery" type="query" required="true">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="user_id" type="numeric" required="false">
 		<cfargument name="action" type="string" required="true"><!---create/modify/delete--->
+		<cfargument name="fields" type="query" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">	
@@ -1263,9 +1265,11 @@
 		<cfset var alertContent = "">
 		<cfset var actionUserName = "">
 		<cfset var userAndDateContent = "">
+		<cfset var rowStruct = structNew()>
 		
 		<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
+		<!--- getTable --->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="getTableQuery">
 			<cfinvokeargument name="table_id" value="#arguments.table_id#">
 			<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
@@ -1287,6 +1291,37 @@
 			<cfthrow errorcode="#error_code#">
 
 		</cfif>
+
+		<cfif NOT isDefined("arguments.fields")>
+			
+			<!---Table fields--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_types" value="true">
+				<cfinvokeargument name="with_table" value="false">
+				
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+		</cfif>
+		
+		<!---generateRowStruct--->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="generateRowStruct" returnvariable="generateRowStructResponse">
+			<cfinvokeargument name="table_id" value="#arguments.table_id#">
+			<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			<cfinvokeargument name="rowQuery" value="#rowQuery#">
+			<cfinvokeargument name="fields" value="#fields#">
+
+			<cfinvokeargument name="withDateFormatted" value="true"/>
+			<cfinvokeargument name="withDoPlanningElements" value="true"/>
+
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#"/>
+		</cfinvoke>
+
+		<cfset rowStruct = generateRowStructResponse.rowStruct>
 
 		<!---Get area name--->
 		<cfquery name="selectAreaQuery" datasource="#client_dsn#">
@@ -1385,20 +1420,6 @@
 
 				<cfset subject = "[#root_area.name#][#subject_action#] "&getTableQuery.title>
 
-				<!---<cfif arguments.action NEQ "delete">
-					
-					<cfinvoke component="AlertManager" method="getTableRowAccessContent" returnvariable="access_content">
-						<cfinvokeargument name="item_id" value="#arguments.table_id#"/>
-						<cfinvokeargument name="itemTypeId" value="#itemTypeId#"/>
-						<cfinvokeargument name="row_id" value="#arguments.row_id#"/>
-						<cfinvokeargument name="area_id" value="#area_id#"/>
-						<cfinvokeargument name="language" value="#curLang#">
-
-						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-					</cfinvoke>
-
-				</cfif>--->
-
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="head_content">
 					<cfinvokeargument name="language" value="#curLang#">
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
@@ -1464,8 +1485,7 @@
 
 				<cfsavecontent variable="alertItemContent">
 					<cfoutput>
-					#subject_action# <!---: <strong style="font-size:14px;">#getTableQuery.title#</strong>---><br/>
-					#langText[curLang].new_table_row.register_number#: #arguments.row_id#<br/>
+					
 					<!---<cfif len(actionUserName) GT 0>
 						#langText[curLang].common.user#: <strong>#actionUserName#</strong><br/>
 					</cfif>--->
@@ -1473,6 +1493,31 @@
 					<!---<cfif arguments.action NEQ "create">
 						#langText[curLang].new_item.last_update_date#: <strong>#objectItem.last_update_date#</strong><br/>
 					</cfif>--->
+
+					<p style="font-size:16px;">
+
+						#subject_action#<br/>
+						<span style="color:##326686">#langText[curLang].new_table_row.register_number#</span>: #arguments.row_id#<br/><br/>
+
+						<cfloop query="fields">
+
+							<cfset field_name = "field_#fields.field_id#">
+							<cfset field_value = rowStruct[field_name]>
+
+							<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
+
+								<cfif field_value IS true>
+									<cfset field_value = langText[curLang].new_item.yes>
+								<cfelseif field_Value IS false>
+									<cfset field_value = langText[curLang].new_item.no>
+								</cfif>
+
+							</cfif>
+
+							<span style="color:##326686">#fields.label#</span>: #field_value#<br/>
+
+						</cfloop>
+					</p>
 
 					<cfif arguments.action NEQ "delete">
 

@@ -95,14 +95,6 @@
 
 			<cftransaction>
 
-				<!---<cfinvoke component="ViewManager" method="createViewInDatabase" returnvariable="view_id">
-					<cfinvokeargument name="table_id" value="#arguments.table_id#">
-					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-					<cfinvokeargument name="title" value="#arguments.title#">
-					<cfinvokeargument name="description" value="#arguments.description#">
-					<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				</cfinvoke>--->
-
 				<cfquery name="createView" datasource="#client_dsn#">
 					INSERT INTO `#client_abb#_#itemTypeTable#`
 					SET table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">,

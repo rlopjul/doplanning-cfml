@@ -38,7 +38,8 @@
 		<div class="row">
 			<div class="col-sm-12">
 
-				<p style="font-size:15px;"><span class="sr-only" lang="es">Ruta del área:</span> #area_path#<a onclick="loadAreaTree(#area_id#)" class="btn btn-link" style="padding-top:0;padding-left:10px;" title="Abrir árbol con ruta expandida" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/plus.png" alt="Abrir árbol con ruta expandida" lang="es"/></a></p>
+				<h3 class="sr-only" lang="es">Ruta del área:</h3>
+				<p style="font-size:15px;">#area_path#<a onclick="loadAreaTree(#area_id#)" class="btn btn-link" style="padding-top:0;padding-left:10px;" title="Abrir árbol con ruta expandida" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/plus.png" alt="Abrir árbol con ruta expandida" lang="es"/></a></p>
 
 			</div>
 		</div>

@@ -77,9 +77,15 @@
 		
 		<cftry>
 			
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getMainTreeAdmin" returnvariable="getMainTreeResponse">
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getMainTreeAdmin" returnvariable="getMainTreeResponse">
 				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 			</cfinvoke>
+
+			<cfif getMainTreeResponse.result IS false>
+					
+				<cfthrow errorcode="#getMainTreeResponse.error_code#">
+			
+			</cfif>
 
 			<cfxml variable="xmlAreas">
 				<cfoutput>
@@ -106,11 +112,22 @@
 			<cfelse>
 				<!---User without areas to admin--->
 				<!---<cfthrow errorcode="403">--->
-				<ul><li rel="not-allowed"><a class="jstree-node" style="font-weight:bold" onClick="event.stopPropagation()">No tiene asignada ningún área de la organización para poder administrar. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</a></li></ul>
+				<ul><li rel="not-allowed"><a class="jstree-node" style="font-weight:bold" onClick="event.stopPropagation()" lang="es">No tiene asignada ningún área de la organización para poder administrar. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</a></li></ul>
 			</cfif>
 			
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+
+				<cfif cfcatch.errorcode IS 404>
+					
+					<ul><li rel="not-allowed"><a class="jstree-node" style="font-weight:bold" onClick="event.stopPropagation()" lang="es">No tiene asignada ningún área de la organización para poder administrar. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</a></li></ul>
+
+				<cfelse>
+
+					<cfinclude template="includes/errorHandler.cfm">
+
+				</cfif>
+
+				
 			</cfcatch>										
 			
 		</cftry>

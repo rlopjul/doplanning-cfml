@@ -26,7 +26,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3>Quitar administrador de área</h3>
+		    <h4 lang="es">Quitar administrador de área</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -82,7 +82,7 @@
 						<span lang="es">Ruta del área</span>: #nearest_area_path#
 					</div>
 
-					<p>Debe quitar al usuario de administrador en el área anterior para que deje de tener acceso en la actual.</p>
+					<p lang="es">Debe quitar al usuario de administrador en el área anterior para que deje de tener acceso en la actual.</p>
 
 					<form id="dissociateForm" method="post">
 						<input type="hidden" name="area_id" value="#getNearestAreaResponse.area_id#"/>

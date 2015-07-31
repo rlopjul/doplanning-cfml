@@ -66,9 +66,9 @@
 		<cfargument name="twitterAccessToken" type="string" required="false">
 		<cfargument name="twitterAccessTokenSecret" type="string" required="false">
 
-		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/paper/bootstrap.min.css">
+		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css">
 
-		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.14">
+		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.17">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">
 
 			<cfset APPLICATION.dsn = "doplanning_app">
@@ -164,9 +164,9 @@
 			<cfset APPLICATION.htmlPath = APPLICATION.path&"/html">
 			<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
 			
-			<!---<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">--->
-			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
-			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js">
+			<!---<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">--->
+			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
 	        <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
 	        <cfset APPLICATION.functionsJSPath = APPLICATION.htmlPath&"/scripts/functions.min.js?v=2.8">
@@ -345,7 +345,7 @@
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
 					<cfinvokeargument name="hideInputLabels" value="true">
-					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/paper/bootstrap.min.css">
+					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css">
 
 					<!---<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_paper.css">--->
 					

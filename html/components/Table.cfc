@@ -410,6 +410,37 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- getTableActions ------------------------------------- --->
+	
+	<cffunction name="getTableActions" returntype="struct" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getTableActions">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableActions" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
+
+
 
 	<!--- ----------------------------------- addUsersToTable -------------------------------------- --->
 
@@ -896,7 +927,7 @@
 		
 		<cfset var method = "outputTablesFullList">
 
-		<!---<cftry>--->
+		<cftry>
 							
 			<cfoutput>
 
@@ -1074,9 +1105,57 @@
 								</div>
 
 
+								<!---<cfif arguments.deletedItems IS false>--->
+								<div class="row">
+									<div class="col-sm-12"><!--- URL --->
+
+										<!---itemUrl--->
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+											<cfinvokeargument name="item_id" value="#itemsQuery.id#">
+											<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+											<cfinvokeargument name="area_id" value="#itemsQuery.area_id#">
+
+											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+										</cfinvoke>
+
+										<cfif arguments.generatePdf IS false>
+
+											<div style="margin-bottom:15px;">
+
+												<div class="input-group">
+
+													<span class="input-group-addon" style="padding-left:0"><i class="fa fa-share-alt" style="font-size: 16px;"></i></span>
+													<input type="text" value="#areaItemUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text;border-bottom:none"/>
+
+												</div>
+
+											</div>
+
+										<cfelse>
+
+											<div style="margin-top:10px;">
+												<a href="#areaItemUrl#" target="_blank">#areaItemUrl#</a>
+											</div>
+
+											<hr style="margin-bottom:35px;"/>
+
+										</cfif>
+										
+
+									</div>
+								</div>
+								<!---</cfif>--->
+
+
 								<cfif arguments.generatePdf IS false>
 								<div class="row">
-									<div class="col-sm-12">			
+									<div class="col-sm-12">
+
+
+										<cfif tableTypeId IS 3>
+											<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-primary" title="Campos"><i class="icon-wrench" style="font-size:15px;"></i> <span lang="es">Campos</span></a>	
+										</cfif> 
+												
 
 										<div class="pull-right">
 
@@ -1111,31 +1190,6 @@
 								</div>
 								</cfif>
 
-								<cfif arguments.generatePdf IS true>
-								<div class="row">
-
-									<div class="col-sm-12">
-
-										<!---itemUrl--->
-										<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
-											<cfinvokeargument name="item_id" value="#itemsQuery.id#">
-											<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-											<cfinvokeargument name="area_id" value="#itemsQuery.area_id#">
-
-											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-										</cfinvoke>
-
-										<div style="margin-top:10px;">
-											<a href="#areaItemUrl#" target="_blank">#areaItemUrl#</a>
-										</div>
-
-										<hr style="margin-bottom:35px;"/>
-									</div>
-
-								</div>
-								</cfif>
-
-
 
 								</div>
 							</div>
@@ -1147,12 +1201,12 @@
 				</cfoutput>			
 								
 			
-			<!---
+			
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>										
 			
-		</cftry>--->
+		</cftry>
 		
 	</cffunction>
 

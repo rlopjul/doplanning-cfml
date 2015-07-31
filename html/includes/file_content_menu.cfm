@@ -283,6 +283,103 @@
 			</div>
 		</cfif> 
 	</cfif>
+
+
+
+	<!---Typology--->
+	<cfif APPLICATION.modulefilesWithTables IS true>
+
+		<!---Typology fields--->
+		<cfset table_id = objectFile.typology_id>
+		<cfset tableTypeId = 3>
+		<cfset row_id = objectFile.typology_row_id>
+
+		<cfif isNumeric(table_id) AND isNumeric(row_id)>
+			
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
+				<cfinvokeargument name="table_id" value="#table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
+				<cfinvokeargument name="row_id" value="#row_id#"/>
+				<cfinvokeargument name="file_id" value="#objectFile.id#"/>
+			</cfinvoke>
+			<cfset table = getRowResponse.table>
+			<cfset row = getRowResponse.row>
+
+			<!---Table fields--->
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
+				<cfinvokeargument name="table_id" value="#table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="with_types" value="true"/>
+				<cfinvokeargument name="file_id" value="#file_id#"/>
+			</cfinvoke>
+
+			<cfset fields = fieldsResult.tableFields>
+
+			<cfset requestUrl = "">
+
+			<cfloop query="fields">
+				
+				<cfif fields.field_type_id IS 14><!---REQUEST URL--->
+
+					<cfset field_name = "field_#fields.field_id#">
+
+					<cfif len(row[field_name]) GT 0>
+						<cfset requestUrl = row[field_name]>
+					</cfif>
+
+				</cfif>
+
+			</cfloop>
+			
+			<cfif len(requestUrl) GT 0>
+
+				<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
+				<!---getRowJSONResponse--->
+				<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="getRowJSON" returnvariable="getRowJSONResponse">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="row_id" value="#row_id#">
+					<cfinvokeargument name="rowQuery" value="#row#">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="fields" value="#fields#">
+
+					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset rowJSON = getRowJSONResponse.rowJSON>
+
+				<cfset rowJSON.file_download_path = "/html/file_download.cfm?id=#file_id#">
+				<cfset rowJSON.file_id = file_id>
+
+				<!---<div class="btn-group">
+					<a href="#requestUrl#?file_path=#URLEncodedFormat('/html/file_download.cfm?id=#file_id#')#" target="_blank" class="btn btn-success btn-sm"><i class="icon-asterisk"></i> <span>#table.title#</span></a>
+				</div>--->
+
+				<form method="post" id="fileRowForm" target="_blank" action="#requestUrl#?file_path=#URLEncodedFormat('/html/file_download.cfm?id=#file_id#')#">
+					<input type="hidden" name="data" value='#serializeJSON(rowJSON)#'/>
+					<!---<input type="submit" value="Enviar"/>--->
+				</form>
+
+				<div class="btn-group">
+					<a onclick="document.getElementById('fileRowForm').submit();" class="btn btn-success btn-sm"><i class="icon-asterisk"></i> <span>#table.title#</span></a>
+				</div>
+
+				<!---<div class="btn-group">
+					<a href="file_send_request.cfm?file=#file_id#&method=post" target="_blank" class="btn btn-default btn-sm"> Petición</a>
+				</div>--->
+			</cfif>
+			
+
+		</cfif>
+
+
+	</cfif>
+
+
+
+
 	</cfoutput>
 
 </div><!---END class="btn-toolbar"--->

@@ -158,6 +158,21 @@
 	</cfif>
 
 	
+
+
+  <cfif FindNoCase('MSIE',CGI.HTTP_USER_AGENT) GT 0 OR arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) GT 0>
+    <div class="row">
+
+    	<div class="col-sm-offset-2 col-sm-6">
+
+		    <div class="alert alert-warning" role="alert">
+		      <span lang="es">Para una mejor experiencia con DoPlanning recomendamos el uso de un navegador moderno distinto a Internet Explorer</span>
+		    </div>
+
+		</div>
+
+	</div>
+  </cfif>
 	
 	
 	<cfif isDefined("URL.dpage")>
@@ -200,7 +215,7 @@
 	</cfif>
 	--->
 
-	<div class="row">
+	<!---<div class="row">
 
 		<div class="col-sm-offset-2 col-sm-6">
 
@@ -213,7 +228,7 @@
 
 		</div>
 
-	</div>
+	</div>--->
 
 
 </div>

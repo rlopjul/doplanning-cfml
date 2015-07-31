@@ -1,6 +1,6 @@
 <cfoutput>
 <!---<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>--->
-<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js"></script>
+<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.4"></script>
 </cfoutput>
 
 

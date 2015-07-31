@@ -7,7 +7,7 @@
 <!---<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>--->
 
 <div class="div_head_menu">
-	<div class="navbar navbar-default navbar-static-top">
+	<div class="navbar navbar-default navbar-static-top navbar_admin">
 		<div class="container-fluid">
 			<span class="navbar-brand" lang="es">Usuarios de la organización</span>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
@@ -17,7 +17,7 @@
 				<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/all_administrators.cfm');"><i class="icon-group icon-white"></i> <span lang="es">Administradores</span></a>
 				<!---<cfif SESSION.client_abb NEQ "hcs">--->
 					<!---<div class="btn-group">--->
-						<a class="btn btn-info btn-default navbar-btn" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
+						<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
 					<!---</div>--->
 				<!---</cfif>--->
 
@@ -131,7 +131,7 @@
 	});
 </script>
 
-<nav class="navbar navbar-default navbar-fixed-bottom" id="addSelectedUsersNavBar">
+<nav class="navbar navbar-default navbar-fixed-bottom navbar_admin" id="addSelectedUsersNavBar">
   	<div class="container-fluid">
   	
 		<a class="btn btn-info btn-sm navbar-btn" onclick="openAreaAssociateUsers()"><i class="icon-plus icon-white"></i> <span lang="es">Asociar usuarios seleccionados al área</span></a>

@@ -68,14 +68,14 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-			<span>Nombre del archivo:</span>
+			<span lang="es">Nombre del archivo:</span>
 			<strong>#file.name#</strong>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-sm-12">
-			<span>Propietario actual:</span>
+			<span lang="es">Propietario actual:</span>
 			<strong>#file.user_full_name#</strong>
 		</div>
 	</div>

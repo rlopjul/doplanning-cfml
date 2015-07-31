@@ -184,7 +184,7 @@
 
 			<cfoutput>
 
-				<nav class="navbar navbar-default navbar-fixed-bottom">
+				<nav class="navbar navbar-default navbar-fixed-bottom navbar_admin">
 				  	<div class="container-fluid">
 				  	
 						<!---<a class="btn btn-info btn-sm navbar-btn" onclick="openAreaAssociateUsers()"><i class="icon-plus icon-white"></i> Asociar usuarios seleccionados al área</a>--->

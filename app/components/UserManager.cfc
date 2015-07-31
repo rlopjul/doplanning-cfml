@@ -1661,7 +1661,6 @@
 		<cfset var response = structNew()>
 
 		<cfset var cur_user_id = "">
-		<cfset var client_abb = "">
 			
 		<cftry>
 			
@@ -1687,6 +1686,53 @@
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
 			
 			<cfset response = {result=true, area_id=#arguments.area_id#}>
+		
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>	
+				
+	</cffunction>
+
+
+	<!------------------------ ASSIGN USER TO AREAS-------------------------------------->
+
+	<cffunction name="assignUserToAreas" returntype="struct" output="false" access="public">
+		<cfargument name="areas_ids" type="string" required="true"/>
+		<cfargument name="add_user_id" type="numeric" required="true"/>
+		
+		<cfset var method = "assignUserToAreas">
+
+		<cfset var response = structNew()>
+
+		<cfset var curAreaId = "">
+			
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+					
+			<cfloop index="curAreaId" list="#arguments.areas_ids#">
+				
+				<cfinvoke component="UserManager" method="assignUserToArea" returnvariable="responseAssignUser">
+					<cfinvokeargument name="area_id" value="#curAreaId#"/>
+					<cfinvokeargument name="add_user_id" value="#arguments.add_user_id#"/>
+				</cfinvoke>
+				
+				<cfif responseAssignUser.result IS false><!---User assign failed--->
+					
+					<cfreturn responseAssignUser>
+				
+				</cfif>
+
+			</cfloop>	
+			
+			<cfinclude template="includes/functionEndOnlyLog.cfm">
+			
+			<cfset response = {result=true, user_id=#arguments.add_user_id#}>
 		
 			<cfcatch>
 

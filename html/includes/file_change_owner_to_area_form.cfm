@@ -67,21 +67,21 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-			<span>Nombre del archivo:</span>
+			<span lang="es">Nombre del archivo:</span>
 			<strong>#file.name#</strong>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-sm-12">
-			<span>Propietario actual:</span>
+			<span lang="es">Propietario actual:</span>
 			<strong>#file.user_full_name#</strong>
 		</div>
 	</div>
 	
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
-			<label class="control-label" for="new_area_name" lang="es">Área propietaria del ártivo</label>
+			<label class="control-label" for="new_area_name" lang="es">Área propietaria del archivo</label>
 			<input type="hidden" name="new_area_id" id="new_area_id" value="#ownerArea.new_area_id#" validate="integer" required="true"/>
 			<cfinput type="text" name="new_area_name" id="new_area_name" value="#ownerArea.new_area_name#" readonly="true" required="true" message="Debe seleccionar una nueva área" onclick="openAreaSelector()" class="form-control" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
 		</div>

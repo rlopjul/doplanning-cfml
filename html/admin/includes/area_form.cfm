@@ -173,13 +173,13 @@
 		<div class="col-xs-12">
 
 			<div class="checkbox">
-				<label class="control-label" for="users_visible" lang="es">
+				<label class="control-label" for="users_visible">
 					<input id="users_visible" name="users_visible" type="checkbox" value="true" class="checkbox_locked" <cfif NOT isDefined("objectArea.users_visible") OR objectArea.users_visible IS true>checked="checked"</cfif> />
 						<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuarios" lang="es" style="width:30px"/>
 					<span lang="es">Mostrar visible el listado de usuarios del área</span>&nbsp;
 				</label>
 				<small class="help-block" lang="es">Esta opción no afecta a los elementos en los que es necesario acceder a la lista de usuarios del área para su creación y edición como: tareas<cfif APPLICATION.moduleListsWithPermissions IS true>, archivos de área, listas y formularios.
-					<cfelse>y archivos de área.</cfif></small>
+					<cfelse> y archivos de área.</cfif></small>
 			</div>
 
 		</div>
@@ -189,7 +189,7 @@
 		<div class="col-xs-12">
 
 			<div class="checkbox">
-				<label class="control-label" for="read_only" lang="es">
+				<label class="control-label" for="read_only">
 					<input id="read_only" name="read_only" type="checkbox" value="true" class="checkbox_locked" <cfif isDefined("objectArea.read_only") AND objectArea.read_only IS true>checked="checked"</cfif> />
 					&nbsp;&nbsp;<i class="icon-lock" style="font-size:18px"></i>&nbsp;&nbsp;<span lang="es">Área de sólo lectura</span>&nbsp;
 				</label>

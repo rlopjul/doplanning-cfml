@@ -185,7 +185,7 @@
 		<cfargument name="with_area" type="boolean" required="no" default="false">
 		<cfargument name="with_position" type="boolean" required="false" default="true">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
-		<cfargument name="limit" type="numeric" required="no"><!---Limita el número de elementos a mostrar. Solo debe usarse si listFormat es false--->
+		<cfargument name="limit" type="numeric" required="no"><!---Limita el número de elementos a mostrar. Solo debe usarse si listFormat es true--->
 		<cfargument name="done" type="boolean" required="no">
 		<cfargument name="state" type="string" required="no">
 		<cfargument name="offset" type="numeric" required="no">

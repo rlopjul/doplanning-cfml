@@ -14,7 +14,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4 id="areaModalLabel">Mover área</h4>
+		    <h4 id="areaModalLabel" lang="es">Mover área</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -24,9 +24,12 @@
 				<span>Ruta: #area_path#</span>
 			</div>
 
-	 		Selecciona el área de destino:
+	 		<span lang="es">Selecciona el área de destino:</span>
 
-	 		<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" src="iframes/area_cut_tree.cfm?area=#area_id#" style="height:350px;background-color:##FFFFFF;"></iframe>
+	 		<!---<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" src="iframes/area_cut_tree.cfm?area=#area_id#" style="height:350px;background-color:##FFFFFF;"></iframe>--->
+
+	 		<cfinclude template="#APPLICATION.htmlPath#/admin/includes/area_cut_tree_inline.cfm">
+
 
 	 		<form id="cutAreaForm" method="post">
 				<input type="hidden" name="area_id" value="#objectArea.id#"/>
@@ -36,8 +39,8 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)">Mover área</button>
+		    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" lang="es">Cancelar</button>
+		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)" lang="es">Mover área</button>
 		</div>
 
 		<script>

@@ -22,13 +22,15 @@
 			<cfset client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 		
 			<cfquery name="recordLog" datasource="#client_dsn#">
-				INSERT INTO #client_abb#_logs (user_id, request_content, component, method)
-				VALUES 
-				(<cfif isDefined("arguments.user_id")>
+				INSERT INTO #client_abb#_logs 
+				SET user_id = <cfif isDefined("arguments.user_id")>
 					<cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
 				 <cfelse>
 					<cfqueryparam null="true" cfsqltype="cf_sql_integer">
-				 </cfif>, '#log_content#', '#log_component#', '#log_method#');
+				 </cfif>,
+				request_content = <cfqueryparam value="#arguments.log_content#" cfsqltype="cf_sql_longvarchar">,
+				component = <cfqueryparam value="#arguments.log_component#" cfsqltype="cf_sql_varchar">,
+				method = <cfqueryparam value="#arguments.log_method#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
 		
 	</cffunction>

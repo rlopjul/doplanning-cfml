@@ -3257,7 +3257,7 @@
 
 											<a href="area_user.cfm?area=#itemsQuery.area_id#&user=#itemsQuery.user_in_charge#" class="link_user">#userFullName#</a> 
 								
-											&nbsp;&nbsp;&nbsp;&nbsp;
+											<span class="hidden-xs">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
 											<cfif arguments.showLastUpdate IS false OR itemTypeId EQ 1 OR itemTypeId EQ 7 OR itemsQuery.creation_date EQ itemsQuery.last_update_date><!--- Creation date --->
 
@@ -3558,7 +3558,48 @@
 
 							</div>
 
+							<cfif arguments.deletedItems IS false>
+							<div class="row">
+								<div class="col-sm-12"><!--- URL --->
 
+									<!---itemUrl--->
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+										<cfinvokeargument name="item_id" value="#itemsQuery.id#">
+										<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+										<cfinvokeargument name="area_id" value="#itemsQuery.area_id#">
+
+										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+									</cfinvoke>
+
+									<cfif arguments.generatePdf IS false>
+
+										<div style="margin-bottom:15px;">
+
+											<div class="input-group">
+
+												<span class="input-group-addon" style="padding-left:0"><i class="fa fa-share-alt" style="font-size: 16px;"></i></span>
+												<input type="text" value="#areaItemUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text;border-bottom:none"/>
+
+											</div>
+
+										</div>
+
+									<cfelse>
+
+										<div style="margin-top:10px;">
+											<a href="#areaItemUrl#" target="_blank">#areaItemUrl#</a>
+										</div>
+
+										<hr style="margin-bottom:35px;"/>
+
+									</cfif>
+									
+
+								</div>
+							</div>
+							</cfif>
+
+							
 							<cfif arguments.generatePdf IS false>
 							<div class="row">
 								<div class="col-sm-12">			
@@ -3595,36 +3636,35 @@
 
 											<a onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="btn btn-sm btn-primary" title="Registros"><i class="icon-list" style="font-size:15px;"></i> <span lang="es">Registros</span></a>
 										
+										<!---<cfelseif itemTypeId IS 13>
 
-										<cfelseif itemTypeId IS 1 OR itemTypeId IS 7><!---Solo para mensajes y consultas--->
+											<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-primary" title="Campos"><i class="icon-list" style="font-size:15px;"></i> <span lang="es">Campos</span></a>--->
 
-										<!---<cfset item_id = itemsQuery.id>
+										<cfelseif ( isDefined("arguments.area_read_only") AND arguments.area_read_only IS false ) OR ( isDefined("itemsQuery.area_read_only") AND itemsQuery.area_read_only IS false )>
 
-										<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#")>
-										<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#item_id#")>--->
 
-											<cfif itemTypeId IS 1 OR itemsQuery.state NEQ "closed">
+											<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Solo para mensajes y consultas--->
 
-												<cfif app_version EQ "mobile">
+												<cfif itemTypeId IS 1 OR itemsQuery.state NEQ "closed">
 
-													<a href="#itemTypeName#_new.cfm?#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-primary" title="Responder" lang="es"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
+													<cfif app_version EQ "mobile">
 
-												<cfelse>
+														<a href="#itemTypeName#_new.cfm?#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-primary" title="Responder" lang="es"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
+
+													<cfelse>
+														
+														<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#&reply','areaIframe',event)" class="btn btn-sm btn-primary" title="Responder" lang="es"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
+
+													</cfif>
 													
-													<a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#&reply','areaIframe',event)" class="btn btn-sm btn-primary" title="Responder" lang="es"><i class="icon-reply"></i> <span lang="es">Responder</span></a>
-
 												</cfif>
-												
-											</cfif>
 
-										<cfelseif itemTypeId IS 20><!--- DPDocuments --->
+											<cfelseif itemTypeId IS 20><!--- DPDocuments --->
 
-											<cfif ( isDefined("arguments.area_read_only") AND arguments.area_read_only IS false ) OR itemsQuery.area_read_only IS false>
 
 												<cfif itemsQuery.area_editable IS false AND itemsQuery.user_in_charge EQ SESSION.user_id>
 
 													<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-primary" title="Modificar" lang="es"><i class="icon-pencil"></i> <span lang="es">Modificar</span></a>
-
 
 												<cfelseif itemsQuery.area_editable IS true>
 
@@ -3647,15 +3687,19 @@
 
 												</cfif>
 
+
+											<cfelse>
+
+
+												<cfif ( isDefined("arguments.area_type") AND len(area_type) GT 0 ) OR itemsQuery.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND itemsQuery.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma---> <!--- --->
+
+													<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-primary" title="Modificar" lang="es"><i class="icon-pencil"></i> <span lang="es">Modificar</span></a>
+
+												</cfif>
+												
+
 											</cfif>
 
-										<cfelseif ( isDefined("arguments.area_read_only") AND arguments.area_read_only IS false ) OR itemsQuery.area_read_only IS false>
-
-											<cfif ( isDefined("arguments.area_type") AND len(area_type) GT 0 ) OR itemsQuery.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND itemsQuery.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma---> <!--- --->
-
-												<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-primary" title="Modificar" lang="es"><i class="icon-pencil"></i> <span lang="es">Modificar</span></a>
-
-											</cfif>
 									
 										</cfif>
 
@@ -3700,32 +3744,6 @@
 								</div>
 							</div>
 							</cfif>
-
-							<cfif arguments.generatePdf IS true>
-							<div class="row">
-
-								<div class="col-sm-12">
-
-									<!---itemUrl--->
-									<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
-										<cfinvokeargument name="item_id" value="#itemsQuery.id#">
-										<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-										<cfinvokeargument name="area_id" value="#itemsQuery.area_id#">
-
-										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-									</cfinvoke>
-
-									<div style="margin-top:10px;">
-										<a href="#areaItemUrl#" target="_blank">#areaItemUrl#</a>
-									</div>
-
-									<hr style="margin-bottom:35px;"/>
-								</div>
-
-							</div>
-							</cfif>
-
-
 
 							</div>
 						</div>

@@ -83,6 +83,9 @@
 
 				$("##areaAssociateSubmitButton").button('loading');
 
+				var formId = "##associateAreasForm";
+				var requestUrl = "#APPLICATION.htmlComponentsPath#/User.cfc?method=assignUserToAreas";
+
 				postModalForm("##associateForm", "#APPLICATION.htmlComponentsPath#/User.cfc?method=assignUserToArea", "#return_page#", "areaIframe");
 
 			}

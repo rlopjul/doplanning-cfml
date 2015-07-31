@@ -5,6 +5,15 @@ function postUserDataForm(requestUrl) {
 
 	var formId = "#updateUserData";
 
+
+	var launchOpenAreasAssociateModal = function(event) { //Esto es necesario porque si no se hace así se cuelga la aplicación porque se accede a $modal para volver a mostrarlo cuando no está terminado de ocultar
+	  	
+		$($modal).unbind( "hidden.bs.modal", launchOpenAreasAssociateModal );
+
+		openAreasAssociateModal(event.data.userId);
+		
+	};
+
 	if( $('#file').val().length == 0) { //Sin archivo
 
 
@@ -21,12 +30,20 @@ function postUserDataForm(requestUrl) {
 			  		$('body').modalmanager('removeLoading');
 
 			  		if(data.result == true) {
+
 						var userId = data.user_id;
 			  			//openUrl("all_users.cfm?user="+userId, "allUsersIframe");
 			  			openUrl("user.cfm?user="+userId, "userAdminIframe");
 
-			  			hideDefaultModal();	
-			  			showAlertMessage(message, data.result);	  			
+			  			if( requestUrl.indexOf("createUser") > 0 ){
+
+			  				$($modal).on('hidden.bs.modal', { userId: userId }, launchOpenAreasAssociateModal);
+
+			  			}
+
+			  			hideDefaultModal();
+			  			showAlertMessage(message, data.result);	  	
+
 			  		} else {
 			  			/*$("#errorMessageModal").modal();	
 			  			$("#modalErrorMessage").text(message);*/
@@ -57,8 +74,15 @@ function postUserDataForm(requestUrl) {
 			  			//openUrl("all_users.cfm?user="+userId, "allUsersIframe");
 			  			openUrl("user.cfm?user="+userId, "userAdminIframe");
 
+			  			if( requestUrl.indexOf("createUser") > 0 ){
+
+			  				$($modal).on('hidden.bs.modal', { userId: userId }, launchOpenAreasAssociateModal);
+
+			  			}
+
 			  			hideDefaultModal();
 			  			showAlertMessage(message, result.result);
+			  			
 			  		} else {
 						/*$("#errorMessageModal").modal();	
 			  			$("#modalErrorMessage").text(message);*/
