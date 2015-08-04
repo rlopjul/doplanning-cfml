@@ -15,11 +15,15 @@
 		<cfargument name="head_content" type="string" required="false">
 		<cfargument name="foot_content" type="string" required="false">
 		<cfargument name="styles" type="boolean" required="no" default="true">
+		<cfargument name="attachment_type" type="string" required="false">
+		<cfargument name="attachment_name" type="string" required="false">
+		<cfargument name="attachment_content" type="string" required="false">
 
 		<cfset var toEmails = "">
 		<cfset var jsonFields = "">
 		<cfset var fromName = "">
 		<cfset var responseResult = "">
+		<cfset var attachmentbase64Value = "">
 				
 		<!--- <cfset head_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">No responda a este email.</span><br />Este email ha sido enviado mediante la aplicación #APPLICATION.title#.</p>'> --->
 
@@ -137,6 +141,21 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 				},
 				"async": true
 			}>
+
+			<cfif isDefined("arguments.attachment_content")>
+
+       			<cfset attachmentbase64Value = binaryEncode(arguments.attachment_content.getBytes("UTF-8"),"base64")/>
+
+				<cfset jsonFields.message.attachments = [
+		            {
+		                "type": "#arguments.attachment_type#",
+		                "name": "#arguments.attachment_name#",
+		                "content": "#attachmentbase64Value#"
+		            }
+	        	]>
+
+			</cfif>
+			
 			
 			<!---"to": [
 				{

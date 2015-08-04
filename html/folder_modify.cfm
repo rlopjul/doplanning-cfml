@@ -111,7 +111,7 @@
 <cfset return_page = "my_files.cfm?folder=#folder_id#">
 
 <cfoutput>
-<div class="div_element_folder"><div style="float:left;"><img src="#APPLICATION.htmlPath#/assets/icons/folder.png" /></div><span class="text_item">#objectFolder.name#</span></div>
+<div class="div_element_folder"><div style="float:left;"><img src="#APPLICATION.htmlPath#/assets/v3/icons/folder.png" /></div><span class="text_item">#objectFolder.name#</span></div>
 </cfoutput>
 
 <div class="div_head_subtitle">

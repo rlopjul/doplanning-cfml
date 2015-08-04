@@ -82,7 +82,7 @@
 			<a href="area_user.cfm?area=#area_id#&user=#row.insert_user_id#"><cfif len(row.insert_user_image_type) GT 0>
 				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.insert_user_id#&type=#row.insert_user_image_type#&small=" alt="#row.insert_user_full_name#" class="item_img" style="margin-right:2px;"/>									
 			<cfelse>							
-				<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#row.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+				<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#row.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 			</cfif></a>
 			
 			<a href="area_user.cfm?area=#area_id#&user=#row.insert_user_id#">#row.insert_user_full_name#</a>
@@ -95,7 +95,7 @@
 				<a href="area_user.cfm?area=#area_id#&user=#row.last_update_user_id#"><cfif len(row.update_user_image_type) GT 0>
 					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#row.last_update_user_id#&type=#row.update_user_image_type#&small=" alt="#row.update_user_full_name#" class="item_img" style="margin-right:2px;"/>									
 				<cfelse>							
-					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#row.update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#row.update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 				</cfif></a>
 				
 				<a href="area_user.cfm?area=#area_id#&user=#row.last_update_user_id#">#row.update_user_full_name#</a>

@@ -54,9 +54,9 @@
 				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemXml.xmlAttributes.user_in_charge#&type=#itemXml.xmlAttributes.user_image_type#&small=" alt="#itemXml.xmlAttributes.user_full_name#" class="item_img" style="margin-right:2px;"/>
 			<cfelse>
 				<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
-					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#itemXml.xmlAttributes.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#itemXml.xmlAttributes.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 				<cfelse>
-					<img src="#APPLICATION.htmlPath#/assets/icons/message.png" alt="#itemTypeNameEs#" class="item_img" style="margin-right:2px;"/>
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" alt="#itemTypeNameEs#" class="item_img" style="margin-right:2px;"/>
 				</cfif>
 			</cfif>--->
 			<a href="#item_page_url#"><!--- class="jstree-node"--->

@@ -662,7 +662,7 @@
 
 			<label>
 				<input type="checkbox" name="done" value="true" title="Tarea realizada" lang="es" <cfif isDefined("objectItem.done") AND objectItem.done IS true>checked="checked"</cfif>>
-				<img src="#APPLICATION.htmlPath#/assets/icons/task_done.png" alt="Tarea realizada" style="width:45px"/>
+				<img src="#APPLICATION.htmlPath#/assets/v3/icons/task_done.png" alt="Tarea realizada" style="width:45px"/>
 				<span lang="es">Tarea realizada</span>
 			</label>
 
@@ -1032,7 +1032,7 @@
 			<div class="col-md-12">
 
 				<label class="checkbox">
-				<img src="#APPLICATION.htmlPath#/assets/icons/sms.png" alt="Enviar SMS"/> <cfinput type="checkbox" name="notify_by_sms" value="true" title="Enviar notificación por SMS"> Enviar notificación por SMS
+				<img src="#APPLICATION.htmlPath#/assets/v3/icons/sms.png" alt="Enviar SMS"/> <cfinput type="checkbox" name="notify_by_sms" value="true" title="Enviar notificación por SMS"> Enviar notificación por SMS
 				</label>
 
 			 </div>

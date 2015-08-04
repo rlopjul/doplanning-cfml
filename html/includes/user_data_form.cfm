@@ -93,7 +93,7 @@ page_types
 					
 				<cfelse>
 					
-					<img src="#APPLICATION.htmlPath#/assets/icons/user_default_medium.png" id="userImage" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default_medium.png" id="userImage" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
 					
 				</cfif>
 
@@ -117,7 +117,7 @@ page_types
 
 					<cfelse>
 
-						<img src="#APPLICATION.htmlPath#/assets/icons/user_default_medium.png" id="userImage" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default_medium.png" id="userImage" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
 
 					</cfif>
 					

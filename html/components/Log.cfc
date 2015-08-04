@@ -224,7 +224,7 @@
 				<cfif len(log.image_type) GT 0>
 					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#log.user_id#&type=#log.image_type#&medium=" alt="#log.name#" class="item_img" style="margin-right:2px;"/>	
 				<cfelse>							
-					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#log.name#" class="item_img_default" style="margin-right:2px;"/>
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#log.name#" class="item_img_default" style="margin-right:2px;"/>
 				</cfif><br/>
 				<span lang="es" class="div_log_page_label">Usuario</span>
 			</div>

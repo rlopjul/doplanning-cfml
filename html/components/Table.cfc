@@ -985,7 +985,7 @@
 													<cfif len(userImageType) GT 0>
 														<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#userInCharge#&type=#userImageType#&small=" alt="#userFullName#" class="user_img" style="width:48px" />								
 													<cfelse>							
-														<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#userFullName#" class="user_img_default" style="width:48px" />
+														<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#userFullName#" class="user_img_default" style="width:48px" />
 													</cfif>
 
 												</cfif>
@@ -1066,7 +1066,7 @@
 
 													<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#">
 													
-														<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" alt="#itemTypeNameEs#" title="#itemTypeNameEs#" style="width:60px;"/>
+														<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#.png" alt="#itemTypeNameEs#" title="#itemTypeNameEs#" style="width:60px;"/>
 															
 													</a>
 

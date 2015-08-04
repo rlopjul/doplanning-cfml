@@ -76,7 +76,7 @@
 									<cfif len(objectUser.image_type) GT 0>
 										<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" style="max-width:20px;max-height:20px;" />									
 									<cfelse>							
-										<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" style="width:20px;" />
+										<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.user_full_name#" style="width:20px;" />
 									</cfif>
 									&nbsp;<small style="font-size:11px;">#objectUser.family_name# #objectUser.name#</small>
 									</li>

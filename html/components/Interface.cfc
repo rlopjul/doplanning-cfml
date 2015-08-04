@@ -151,31 +151,6 @@
 	</cffunction>--->
 
 
-	<!--- replaceBR --->
-
-	<!---
-	<cffunction name="replaceBR" returntype="string" access="public">
-		<cfargument name="string" type="string" required="true">
-
-		<cfset string = replace(string,"<br />",chr(13),"ALL")>
-
-		<cfreturn string>
-
-	</cffunction>--->
-
-	<!--- replaceP --->
-
-	<cffunction name="replaceP" returntype="string" access="public">
-		<cfargument name="string" type="string" required="true">
-
-		<cfset string = replace(string,"<p>","","ALL")>
-		<cfset string = replace(string,"</p>",chr(13),"ALL")>
-
-		<cfreturn string>
-
-	</cffunction>
-
-
 	<!--- removeHTML --->
 
 	<!---

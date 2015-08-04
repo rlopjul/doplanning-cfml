@@ -2,6 +2,10 @@
 <script src="#APPLICATION.htmlPath#/language/preferences_alerts_en.js" charset="utf-8"></script>
 </cfoutput>--->
 
+<!---
+IMPORTANTE: Falta por añadir las notificaciones del Documento DoPlanning
+--->
+
 <cfinclude template="alert_message.cfm">
 
 <!---<div class="div_head_subtitle">
@@ -66,7 +70,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/icons/message.png" alt="Nuevo mensaje" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" alt="Nuevo mensaje" />
 						</div>
 						
 						<div class="col-sm-11">
@@ -83,7 +87,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/icons/link_new.png" alt="Nuevo enlace" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/link_new.png" alt="Nuevo enlace" />
 						</div>
 
 						<div class="col-sm-11">
@@ -98,7 +102,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/icons/entry.png" alt="Nuevo elemento de contenido web" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/entry.png" alt="Nuevo elemento de contenido web" />
 						</div>
 
 						<div class="col-sm-11">
@@ -112,7 +116,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/icons/news.png" alt="Nueva noticia" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/news.png" alt="Nueva noticia" />
 						</div>
 
 						<div class="col-sm-11">
@@ -126,7 +130,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/icons/image.png" alt="Nueva noticia" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/image.png" alt="Nueva noticia" />
 						</div>
 
 						<div class="col-sm-11">
@@ -142,7 +146,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/icons/event.png" alt="Nuevo evento" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/event.png" alt="Nuevo evento" />
 						</div>
 
 						<div class="col-sm-11">
@@ -158,7 +162,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/icons/task.png" alt="Nueva tarea" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/task.png" alt="Nueva tarea" />
 						</div>
 
 						<div class="col-sm-11">
@@ -196,7 +200,7 @@ Preferencias de notificaciones
 
 							<label class="checkbox" style="margin-bottom:15px;">
 								<input type="checkbox" name="notify_new_consultation" value="true" <cfif preferences.notify_new_consultation IS true>checked="checked"</cfif> />
-								<!---<img src="#APPLICATION.htmlPath#/assets/icons/consultation.png" alt="Nueva consulta" />---><span lang="es">Una consulta ha sido creada, respondida, cerrada o eliminada</span>
+								<!---<img src="#APPLICATION.htmlPath#/assets/v3/icons/consultation.png" alt="Nueva consulta" />---><span lang="es">Una consulta ha sido creada, respondida, cerrada o eliminada</span>
 							</label>
 
 						</div>
@@ -207,7 +211,7 @@ Preferencias de notificaciones
 						<cfif APPLICATION.modulePubMedComments IS true>
 						<div class="row">
 							<div class="col-sm-1" style="text-align:center;">
-								<img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" alt="Nueva publicación" />
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/pubmed.png" alt="Nueva publicación" />
 							</div>
 
 							<div class="col-sm-11">
@@ -221,7 +225,7 @@ Preferencias de notificaciones
 
 						<div class="row">
 							<div class="col-sm-1" style="text-align:center;">
-								<img src="#APPLICATION.htmlPath#/assets/icons/area_new.png" alt="Crear area" />	
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" alt="Crear area" />	
 							</div>
 
 							<div class="col-sm-11">
@@ -274,7 +278,7 @@ Preferencias de notificaciones
 						<!--- Files --->
 						<div class="row">
 						    <div class="col-sm-1" style="text-align:center;">
-						    	<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" />
+						    	<img src="#APPLICATION.htmlPath#/assets/v3/icons/file.png" alt="Archivo" />
 						    </div>
 						    <div class="col-sm-11">
 
@@ -282,7 +286,7 @@ Preferencias de notificaciones
 						          <div class="col-sm-12">
 							    	<label class="checkbox">
 										<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
-										<!--- <img src="#APPLICATION.htmlPath#/assets/icons/file_new.png" alt="Archivo asociado" /> --->
+										<!--- <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_new.png" alt="Archivo asociado" /> --->
 										<span lang="es">Un archivo ha sido asociado a un área</span>
 									</label>
 						          </div>
@@ -292,7 +296,7 @@ Preferencias de notificaciones
 						         <div class="col-sm-12">
 						          	<label class="checkbox">
 										<input type="checkbox" name="notify_replace_file" value="true" <cfif preferences.notify_replace_file IS true>checked="checked"</cfif> />
-										<!--- <img src="#APPLICATION.htmlPath#/assets/icons/file_replace.png" alt="Archivo reemplazado" /> --->
+										<!--- <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_replace.png" alt="Archivo reemplazado" /> --->
 										<span lang="es">Un archivo ha sido reemplazado</span>
 									</label>
 						          </div>
@@ -343,7 +347,7 @@ Preferencias de notificaciones
 
 					  <div class="row">
 					    <div class="col-sm-1" style="text-align:center;">
-					    	<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="Lista" />
+					    	<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" alt="Lista" />
 					    </div>
 					    <div class="col-sm-11">
 
@@ -387,7 +391,7 @@ Preferencias de notificaciones
 					<!---<div class="form-group">
 					<label class="checkbox">
 						<input type="checkbox" name="notify_new_list" value="true" <cfif preferences.notify_new_list IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="Nueva lista" />
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" alt="Nueva lista" />
 						<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
 					</label>
 					</div>--->	
@@ -400,7 +404,7 @@ Preferencias de notificaciones
 
 					  <div class="row">
 					    <div class="col-sm-1" style="text-align:center;">
-					    	<img src="#APPLICATION.htmlPath#/assets/icons/form.png" alt="Formulario" />
+					    	<img src="#APPLICATION.htmlPath#/assets/v3/icons/form.png" alt="Formulario" />
 					    </div>
 					    <div class="col-sm-11">
 
@@ -441,7 +445,7 @@ Preferencias de notificaciones
 					  </div>
 					<!---<label class="checkbox">
 						<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons/form.png" alt="Nuevo formulario" />
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/form.png" alt="Nuevo formulario" />
 						<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
 					</label>--->
 				</cfif>
@@ -488,7 +492,7 @@ Preferencias de notificaciones
 
 						<tr>
 							<td rowspan="3">
-								<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" />
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/file.png" alt="Archivo" />
 							</td>
 							<td>
 								<label class="checkbox">

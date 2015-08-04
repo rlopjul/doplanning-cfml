@@ -31,7 +31,7 @@
 	</cfif>
 </cfif>
 
-<title>#APPLICATION.title# - #getClient.name#</title>
+<title><cfif APPLICATION.title NEQ getClient.name>#APPLICATION.title# - #getClient.name#<cfelse>#getClient.name#</cfif></title>
 <!-- InstanceEndEditable -->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/html_head.cfm">

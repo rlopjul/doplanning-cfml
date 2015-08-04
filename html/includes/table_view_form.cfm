@@ -439,10 +439,10 @@
 
 								<div class="item_position">#fieldsOrdered.currentRow#</div><div class="change_position"><!---<cfif fieldsOrdered.currentRow NEQ 1>--->
 								<cfset up_field_id = fieldsOrdered.field_id[fieldsOrdered.currentRow-1]>
-								<a class="up"><img src="#APPLICATION.htmlPath#/assets/icons/up.jpg" alt="Subir" title="Subir"/></a><!---<cfelse><br></cfif>--->
+								<a class="up"><img src="#APPLICATION.htmlPath#/assets/v3/icons/up.jpg" alt="Subir" title="Subir"/></a><!---<cfelse><br></cfif>--->
 								<!---<cfif fieldsOrdered.currentRow NEQ fieldsOrdered.recordCount>--->
 									<cfset down_field = fieldsOrdered.field_id[fieldsOrdered.currentRow+1]>
-									<a class="down"><img src="#APPLICATION.htmlPath#/assets/icons/down.jpg" alt="Bajar" title="Bajar"/></a>
+									<a class="down"><img src="#APPLICATION.htmlPath#/assets/v3/icons/down.jpg" alt="Bajar" title="Bajar"/></a>
 								<!---</cfif>---></div></td>
 						</tr>
 					</cfloop>

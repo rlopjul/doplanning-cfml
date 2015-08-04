@@ -231,7 +231,7 @@
 				<cfif len(objectUser.image_file) GT 0>
 					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
 				<cfelse>
-					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
 				</cfif>
 				</a>
 			</div>
@@ -247,8 +247,8 @@
 		<div id="treeWrapper">
 			<cfoutput>
 			<div style="cursor:pointer;float:right;clear:both;">
-			<img src="#APPLICATION.htmlPath#/assets/icons/maximize.png" title="Maximizar Árbol" id="maximizeTree" />
-			<img src="#APPLICATION.htmlPath#/assets/icons/restore.png" title="Restaurar Árbol" id="restoreTree" style="display:none;"/>
+			<img src="#APPLICATION.htmlPath#/assets/v3/icons/maximize.png" title="Maximizar Árbol" id="maximizeTree" />
+			<img src="#APPLICATION.htmlPath#/assets/v3/icons/restore.png" title="Restaurar Árbol" id="restoreTree" style="display:none;"/>
 			</div>
 			</cfoutput>
 			<div id="treeContainer" style="overflow:auto;clear:both;"></div>			
@@ -257,8 +257,8 @@
 		<div id="areaContainer">
 			<cfoutput>
 			<div style="cursor:pointer;float:right;">
-			<img src="#APPLICATION.htmlPath#/assets/icons/maximize.png" title="Maximizar" id="maximizeArea" />
-			<img src="#APPLICATION.htmlPath#/assets/icons/restore.png" title="Restaurar" id="restoreArea" style="display:none;"/>
+			<img src="#APPLICATION.htmlPath#/assets/v3/icons/maximize.png" title="Maximizar" id="maximizeArea" />
+			<img src="#APPLICATION.htmlPath#/assets/v3/icons/restore.png" title="Restaurar" id="restoreArea" style="display:none;"/>
 			</div>
 			</cfoutput>
 			<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="iframes/area.cfm" style="height:100%;background-color:#FFFFFF;clear:none;" id="areaIframe" onload="areaIframeLoaded()"></iframe>

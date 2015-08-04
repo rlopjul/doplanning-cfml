@@ -121,7 +121,7 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 						<cfif len(objectUser.image_type) GT 0>
 							<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" style="max-width:22px;max-height:22px;" />									
 						<cfelse>							
-							<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" style="width:22px;" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.user_full_name#" style="width:22px;" />
 						</cfif>
 						&nbsp;<small style="font-size:11px;">#objectUser.family_name# #objectUser.name#</small>
 						</li>
@@ -166,7 +166,7 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 	<div class="row">
 		<div class="col-sm-12">
 			<label class="checkbox">
-				<img src="#APPLICATION.htmlPath#/assets/icons/twitter_icon.png" alt="Twitter"/> <cfinput type="checkbox" name="post_to_twitter" value="true" title="Enviar #itemTypeNameEs# a Twitter"> Publicar #itemTypeNameEs# en Twitter
+				<img src="#APPLICATION.htmlPath#/assets/v3/icons/twitter_icon.png" alt="Twitter"/> <cfinput type="checkbox" name="post_to_twitter" value="true" title="Enviar #itemTypeNameEs# a Twitter"> Publicar #itemTypeNameEs# en Twitter
 			</label>			
 		</div>
 	</div>

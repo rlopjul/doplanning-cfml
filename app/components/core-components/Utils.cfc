@@ -131,6 +131,43 @@
 	</cffunction>
 
 
+	<!--- replaceBR --->
+
+	<!---<cffunction name="replaceBR" returntype="string" access="public">
+		<cfargument name="string" type="string" required="true">
+
+		<cfset string = replace(string,"<br />",chr(13)&chr(10),"ALL")>
+
+		<cfreturn string>
+
+	</cffunction>--->
+
+
+	<!--- replaceP --->
+
+	<!---<cffunction name="replaceP" returntype="string" access="public">
+		<cfargument name="string" type="string" required="true">
+
+		<cfset string = replace(string,"<p>","","ALL")>
+		<cfset string = replace(string,"</p>",chr(13)&chr(10),"ALL")>
+
+		<cfreturn string>
+
+	</cffunction>--->
+
+
+	<!---http://speeves.erikin.com/2009/06/coldfusion-replace-html-ized-characters.html--->
+
+	<cffunction name="HtmlUnEditFormat" access="public" returntype="string" output="no" displayname="HtmlUnEditFormat" hint="Undo escaped characters">
+      <cfargument name="str" type="string" required="Yes" />
+      <cfscript>
+         var lEntities = "&##xE7;,&##xF4;,&##xE2;,&Icirc;,&Ccedil;,&Egrave;,&Oacute;,&Ecirc;,&OElig,&Acirc;,&laquo;,&raquo;,&Agrave;,&Eacute;,&le;,&yacute;,&chi;,&sum;,&prime;,&yuml;,&sim;,&beta;,&lceil;,&ntilde;,&szlig;,&bdquo;,&acute;,&middot;,&ndash;,&sigmaf;,&reg;,&dagger;,&oplus;,&otilde;,&eta;,&rceil;,&oacute;,&shy;,&gt;,&phi;,&ang;,&rlm;,&alpha;,&cap;,&darr;,&upsilon;,&image;,&sup3;,&rho;,&eacute;,&sup1;,&lt;,&cent;,&cedil;,&pi;,&sup;,&divide;,&fnof;,&iquest;,&ecirc;,&ensp;,&empty;,&forall;,&emsp;,&gamma;,&iexcl;,&oslash;,&not;,&agrave;,&eth;,&alefsym;,&ordm;,&psi;,&otimes;,&delta;,&ouml;,&deg;,&cong;,&ordf;,&lsaquo;,&clubs;,&acirc;,&ograve;,&iuml;,&diams;,&aelig;,&and;,&loz;,&egrave;,&frac34;,&amp;,&nsub;,&nu;,&ldquo;,&isin;,&ccedil;,&circ;,&copy;,&aacute;,&sect;,&mdash;,&euml;,&kappa;,&notin;,&lfloor;,&ge;,&igrave;,&harr;,&lowast;,&ocirc;,&infin;,&brvbar;,&int;,&macr;,&frac12;,&curren;,&asymp;,&lambda;,&frasl;,&lsquo;,&hellip;,&oelig;,&pound;,&hearts;,&minus;,&atilde;,&epsilon;,&nabla;,&exist;,&auml;,&mu;,&frac14;,&nbsp;,&equiv;,&bull;,&larr;,&laquo;,&oline;,&or;,&euro;,&micro;,&ne;,&cup;,&aring;,&iota;,&iacute;,&perp;,&para;,&rarr;,&raquo;,&ucirc;,&omicron;,&sbquo;,&thetasym;,&ni;,&part;,&rdquo;,&weierp;,&permil;,&sup2;,&sigma;,&sdot;,&scaron;,&yen;,&xi;,&plusmn;,&real;,&thorn;,&rang;,&ugrave;,&radic;,&zwj;,&there4;,&uarr;,&times;,&thinsp;,&theta;,&rfloor;,&sub;,&supe;,&uuml;,&rsquo;,&zeta;,&trade;,&icirc;,&piv;,&zwnj;,&lang;,&tilde;,&uacute;,&uml;,&prop;,&upsih;,&omega;,&crarr;,&tau;,&sube;,&rsaquo;,&prod;,&quot;,&lrm;,&spades;";
+         var lEntitiesChars = "ç,ô,â,Î,Ç,È,Ó,Ê,Œ,Â,«,»,À,É,?,ý,?,?,?,Ÿ,?,?,?,ñ,ß,„,´,·,–,?,®,‡,?,õ,?,?,ó,­,>,?,?,?,?,?,?,?,?,³,?,é,¹,<,¢,¸,?,?,÷,ƒ,¿,ê,?,?,?,?,?,¡,ø,¬,à,ð,?,º,?,?,?,ö,°,?,ª,‹,?,â,ò,ï,?,æ,?,?,è,¾,&,?,?,“,?,ç,ˆ,©,á,§,—,ë,?,?,?,?,ì,?,?,ô,?,¦,?,¯,½,¤,?,?,?,‘,…,œ,£,?,?,ã,?,?,?,ä,?,¼, ,?,•,?,«,?,?,€,µ,?,?,å,?,í,?,¶,?,»,û,?,‚,?,?,?,”,?,‰,²,?,?,š,¥,?,±,?,þ,?,ù,?,?,?,?,×,?,?,?,?,?,ü,’,?,™,î,?,?,?,˜,ú,¨,?,?,?,?,?,?,›,?,"",?,?";
+      </cfscript>
+      <cfreturn ReplaceList(arguments.str, lEntities, lEntitiesChars) />
+   </cffunction>
+
+
 	<!---    queryToCSV     --->
 	<cffunction	name="queryToCSV" access="public" returntype="string" output="false" hint="I take a query and convert it to a comma separated value string.">
 	 
@@ -974,6 +1011,135 @@
 		//return the string
 		return string;
 	}
+
+
+
+	/**
+	 * Produces output used by the vCalendar standard for PIM's (such as Outlook).
+	 * There are other tags available such as (CF_AdvancedEmail) that will support multi-part mime encoding where the text of the attachment can be imbeded right into the email
+	 * 
+	 * @param stEvent 	 Structure containg the key/value pairs comprising the vCalendar data.  Keys are shown below: 
+	 * @param stEvent.description 	 Description for the event. 
+	 * @param stEvent.subject 	 Subject of the event. 
+	 * @param stEvent.location 	 Location for the event. 
+	 * @param stEvent.startTime 	 Event's start time in GMT. 
+	 * @param stEvent.endTime 	 Event's end time in GMT. 
+	 * @param stEvent.priority 	 Numeric priority for the event (1,2,3). 
+	 * @param strEvent.url
+	 * @param strEvent.type event(default)/task
+	 * @return Returns a string. 
+	 * @author Chris Wigginton (cwigginton@macromedia.com)
+	 * @version 2
+	 * modified by alucea
+	 */
+	function vCal(stEvent)
+	{
+
+		var description = "";
+		var vCal = "";
+		
+		var CRLF=chr(13)&chr(10);
+		
+		if (NOT IsDefined("stEvent.startTime"))
+			stEvent.startTime = DateConvert('local2Utc', Now());
+
+		if (NOT IsDefined("stEvent.endTime"))
+			stEvent.endTime = DateConvert('local2Utc', Now());
+			
+		if (NOT IsDefined("stEvent.location"))
+			stEvent.location = "N/A";
+					
+		if (NOT IsDefined("stEvent.subject"))
+			stEvent.subject = "Auto vCalendar Generated";
+			
+		if (NOT IsDefined("stEvent.description"))
+			stEvent.description = "Autobot VCalendar Generated";
+			
+		if (NOT IsDefined("stEvent.priority"))
+			stEvent.priority = "1";
+				
+		if (NOT IsDefined("stEvent.type"))
+			stEvent.type = "event";
+				
+
+		vCal = "BEGIN:VCALENDAR" & CRLF;
+		vCal = vCal & "PRODID:-//Microsoft Corporation//OutlookMIMEDIR//EN" & CRLF;
+		//vCal = vCal & "VERSION:1.0" & CRLF;
+		vCal = vCal & "VERSION:2.0" & CRLF;
+
+		/*if(stEvent.type EQ "task")
+			vCal = vCal & "BEGIN:VTODO" & CRLF;
+		else*/
+			vCal = vCal & "BEGIN:VEVENT" & CRLF;
+
+		vCal = vCal & "DTSTAMP:" &
+			DateFormat(now(),"yyyymmdd") & "T" & 
+			TimeFormat(now(), "HHmmss") & "Z" & CRLF;
+		
+
+		if(stEvent.type EQ "task"){
+
+			vCal = vCal & "DTSTART;VALUE=DATE:" & 
+				DateFormat(stEvent.startTime,"yyyymmdd") & CRLF;
+
+			stEvent.endTime = dateAdd("d", 1, stEvent.endTime);
+
+			vCal = vCal & "DTEND;VALUE=DATE:" & 
+				DateFormat(stEvent.endTime, "yyyymmdd") & CRLF;
+
+			/*vCal = vCal & "DUE:" & DateFormat(stEvent.endTime, "yyyymmdd") & "T" & 
+				TimeFormat(stEvent.endTime, "HHmmss") & "Z" & CRLF;*/
+
+		} else {
+
+			vCal = vCal & "DTSTART:" & 
+				DateFormat(stEvent.startTime,"yyyymmdd") & "T" & 
+				TimeFormat(stEvent.startTime, "HHmmss") & "Z" & CRLF;
+
+			vCal = vCal & "DTEND:" & DateFormat(stEvent.endTime, "yyyymmdd") & "T" & 
+				TimeFormat(stEvent.endTime, "HHmmss") & "Z" & CRLF;
+			vCal = vCal & "LOCATION:" & stEvent.location & CRLF;
+			
+		}
+			
+		if ( IsDefined("stEvent.url") )
+			vCal = vCal & "URL:" & stEvent.url & CRLF;
+		
+		vCal = vCal & "SUMMARY;ENCODING=QUOTED-PRINTABLE:" & stEvent.subject & CRLF;
+		
+		vCal = vCal & "DESCRIPTION:"; //;ENCODING=QUOTED-PRINTABLE
+
+		description = ReplaceNoCase(stEvent.description,"<br />","","ALL");
+		description = ReplaceNoCase(stEvent.description,"<br/>","","ALL");
+		description = ReplaceNoCase(stEvent.description,"<br>","","ALL");
+		description = ReplaceNoCase(description,"<p>","","ALL");
+		description = ReplaceNoCase(description,"</p>","","ALL");
+
+		description = removeHTML(description);
+		description = HtmlUnEditFormat(description);
+
+		// Convert CF_CRLF (13_10) into =0D=0A with CR/LF and indent sequences*
+		// Esto da problemas e impide que el contenido de description salga bien
+		//description = REReplace(description,"[#Chr(13)##Chr(10)#]", "=0D=0A=#Chr(13)##Chr(10)#     ", "ALL");
+		description = ReplaceNoCase(description, chr(13)&chr(10), "\n", "ALL");
+		vCal = vCal & description & CRLF;
+		
+		//Esto no funciona
+		//vCal = vCal & "X-ALT-DESC;FMTTYPE=text/html:<!DOCTYPE html><html><body>" & stEvent.description & "</body></html>" & CRLF;
+
+		vCal = vCal & "PRIORITY:" & stEvent.priority & CRLF;
+
+		/*if(stEvent.type EQ "task")
+			vCal = vCal & "END:VTODO" & CRLF;
+		else*/
+			vCal = vCal & "END:VEVENT" & CRLF;
+		
+		vCal = vCal & "END:VCALENDAR" & CRLF;	
+		
+		return vCal;
+		
+	}
+	
 	</cfscript>
 
 </cfcomponent>

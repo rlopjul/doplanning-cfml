@@ -259,12 +259,6 @@
 							AND parent_kind = <cfqueryparam value="item" cfsqltype="cf_sql_varchar">;
 						</cfquery>
 
-						<!---DELETE ITEM POSITION--->
-						<!---<cfinvoke component="AreaItemManager" method="deleteItemPosition">
-							<cfinvokeargument name="item_id" value="#itemQuery.id#">
-							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-						</cfinvoke>--->
-
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="deleteItemPosition">
 							<cfinvokeargument name="item_id" value="#itemQuery.id#">
 							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
@@ -332,7 +326,6 @@
 
 						<cfif clientQuery.bin_enabled IS true><!---Bin enabled--->
 
-
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/BinQuery" method="updateBinItemDeleted">
 								<cfinvokeargument name="item_id" value="#arguments.item_id#">
 								<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
@@ -340,17 +333,6 @@
 								<cfinvokeargument name="client_abb" value="#client_abb#">
 								<cfinvokeargument name="client_dsn" value="#client_dsn#">
 							</cfinvoke>
-
-							<!--- 
-							<cfquery name="updateItemDelete" datasource="#client_dsn#">		
-								UPDATE #client_abb#_items_deleted
-								SET in_bin = 0,
-								final_delete_date = NOW(),
-								final_delete_status = <cfqueryparam value="ok" cfsqltype="cf_sql_varchar">
-								WHERE item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
-								AND item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">;
-							</cfquery> --->
-							
 
 						</cfif>									
 					
@@ -409,8 +391,103 @@
 		<cfreturn response>
 				
 	</cffunction>
-	<!--- ----------------------------------------------------------------------- --->	
+	<!--- ----------------------------------------------------------------------- --->
+
+
+	<!--- ----------------------- EXPORT ICALENDAR ITEM -------------------------------- --->
+	
+	<cffunction name="exportICalendarItem" output="false" access="public" returntype="struct">
+		<cfargument name="item_id" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="itemQuery" type="query" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "exportICalendarItem">
+		
+		<cfset var response = structNew()>
+		<cfset var eventStruct = structNew()>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+			
+			<cfif NOT isDefined("arguments.itemQuery")>
+				
+				<!--- getItem --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+					<cfinvokeargument name="item_id" value="#arguments.item_id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="parse_dates" value="false">
+					<cfinvokeargument name="published" value="false">
+					
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+				<cfif itemQuery.recordCount IS 0><!---Item does not exist--->
+			
+					<cfset error_code = 501>
+			
+					<cfthrow errorcode="#error_code#">
+
+				</cfif>
+
+			</cfif>
+
+			<!---itemUrl--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+				<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			</cfinvoke>
+
+			<cfset eventStruct.subject = itemQuery.title>
+			<cfset eventStruct.description = itemQuery.description&chr(13)&chr(10)&chr(13)&chr(10)&areaItemUrl>
+			
+			<cfif itemTypeId IS 5><!--- Event --->
+
+				<cfset eventStruct.location = itemQuery.place>
+
+				<cfset startDateTime = createDateTime(year(itemQuery.start_date), month(itemQuery.start_date), day(itemQuery.start_date), hour(itemQuery.start_time), minute(itemQuery.start_time), second(itemQuery.start_time))>
+				<cfset endDateTime = createDateTime(year(itemQuery.end_date), month(itemQuery.end_date), day(itemQuery.end_date), hour(itemQuery.end_time), minute(itemQuery.end_time), second(itemQuery.end_time))>
+
+				<cfset startDateTime = DateConvert("local2Utc", startDateTime)>
+				<cfset endDateTime = DateConvert("local2Utc", endDateTime)>
+
+			<cfelse><!--- Task --->
+
+				<!--- Las tareas tienen fechas, sin hora de inicio ni de fin, por lo que la fecha definida no debe afectarse por el cambio de zona horaria --->
+
+				<!--- Convert time to GMT using UTC Offset --->
+				<cfset startTime = DateAdd("s", GetTimeZoneInfo().UTCTotalOffset, createTime(0,0,0) ) >
+				<cfset endTime = DateAdd("s", GetTimeZoneInfo().UTCTotalOffset, createTime(0,0,0) ) >
+
+				<cfset startDateTime = createDateTime(year(itemQuery.start_date), month(itemQuery.start_date), day(itemQuery.start_date), hour(startTime), minute(startTime), second(startTime))>
+				<cfset endDateTime = createDateTime(year(itemQuery.end_date), month(itemQuery.end_date), day(itemQuery.end_date), hour(endTime), minute(endTime), second(endTime))>
+
+			</cfif>
+
+			<cfset eventStruct.startTime = startDateTime>
+			<cfset eventStruct.endTime = endDateTime>
+			<cfset eventStruct.url = areaItemUrl>
+			<cfif arguments.itemTypeId IS 6><!--- Task --->
+				<cfset eventStruct.type = "task">
+			<cfelse>
+				<cfset eventStruct.type = "event">
+			</cfif>
+			<!--- <cfset eventStruct.priority = itemQuery.priority> --->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="vCal" returnvariable="icalendar">
+				<cfinvokeargument name="stEvent" value="#eventStruct#">
+			</cfinvoke>
+
+			<cfset response = {result=true, item_id=#arguments.item_id#, icalendar=#icalendar#}>
+
+		<cfreturn response>
+				
+	</cffunction>
 
 
 </cfcomponent>
-	

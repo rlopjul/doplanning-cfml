@@ -25,7 +25,7 @@
 						<cfif itemTypeId IS 7>
 							<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
 						<cfelse>
-							<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#.png" style="height:22px;"/>
 						</cfif></a>
 				</div>
 			<cfelse>
@@ -107,10 +107,10 @@
 				},
 				"types" : {
 					"message" : {
-						"icon" : "#APPLICATION.htmlPath#/assets/icons/message_small.png"
+						"icon" : "#APPLICATION.htmlPath#/assets/v3/icons/message_small.png"
 					},
 					"consultation" : {
-						"icon" : "#APPLICATION.htmlPath#/assets/icons/consultation_small.png"
+						"icon" : "#APPLICATION.htmlPath#/assets/v3/icons/consultation_small.png"
 					}
 				},
 				"plugins" : [ "types", "search" ]

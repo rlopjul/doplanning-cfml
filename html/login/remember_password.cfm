@@ -16,7 +16,7 @@
 	<cfset client_abb = URL.client_abb>
 </cfif>
 
-<!---Aqu� se a�ade COLLATE utf8_bin para que sea case sensitive en la comparaci�n--->
+<!---Aquí se añade COLLATE utf8_bin para que sea case sensitive en la comparaci�n--->
 <cfquery datasource="#APPLICATION.dsn#" name="getClient">
 	SELECT *
 	FROM app_clients
@@ -31,7 +31,7 @@
 	</cfif>
 </cfif>
 
-<title>#APPLICATION.title#-#getClient.name#: obtener nueva contrase&ntilde;a</title>
+<title><cfif APPLICATION.title NEQ getClient.name>#APPLICATION.title# - #getClient.name#<cfelse>#getClient.name#</cfif>: obtener nueva contrase&ntilde;a</title>
 <!-- InstanceEndEditable -->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/html_head.cfm">
@@ -111,7 +111,7 @@
 		<div class="col-sm-offset-2 col-sm-6" style="text-align:center;padding-top:40px;padding-bottom:20px;">
 			<cfoutput>
 				<div class="page-header" style="text-align:left;">
-					<h5 style="margin-bottom:0;color:##878787;font-size:17px;font-weight:100"><span lang="es">Obtener una nueva contrase&ntilde;a para #APPLICATION.title#</span> <strong>#getClient.name#</strong></h5>
+					<h5 style="margin-bottom:0;color:##878787;font-size:17px;font-weight:100"><span lang="es">Obtener una nueva contrase&ntilde;a para <cfif APPLICATION.title EQ "DoPlanning">#APPLICATION.title#</cfif></span> <strong>#getClient.name#</strong></h5>
 				</div>
 			</cfoutput>
 		</div>

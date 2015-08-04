@@ -30,7 +30,7 @@
 
 					<div class="col-xs-1 hidden-sm" style="vertical-align:middle;">
 
-						<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="#listTypeNameEs#" title="#listTypeNameEs#"/> 
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" alt="#listTypeNameEs#" title="#listTypeNameEs#"/> 
 
 					</div>
 					<div class="col-xs-11" style="vertical-align:middle;line-height:30px;">
@@ -54,7 +54,7 @@
 					<li onclick="openUrl('#listTypeName#_rows.cfm?#listTypeName#=#listsQuery.id#','areaIframe',event)" class="list-group-item" style="padding:5px;cursor:pointer"><!---area_items.cfm?area=#listsQuery.area_id#&#listTypeName#=#listsQuery.id#--->
 						<div class="row">
 							<!---<div class="col-xs-1" style="vertical-align:middle;">
-								<img src="#APPLICATION.htmlPath#/assets/icons/list.png" class="item_img" alt="Lista" title="Lista"/>
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" class="item_img" alt="Lista" title="Lista"/>
 							</div>--->
 							<div class="col-xs-12">
 								#listsQuery.title#
@@ -106,7 +106,7 @@
 
 					<div class="col-xs-1 hidden-sm" style="vertical-align:middle;">
 
-						<img src="#APPLICATION.htmlPath#/assets/icons/task_not_done.png" alt="Tarea no realizada" title="Tarea no realizada" /> 
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/task_not_done.png" alt="Tarea no realizada" title="Tarea no realizada" /> 
 
 					</div>
 					<div class="col-xs-11" style="vertical-align:middle;line-height:30px;">
@@ -131,14 +131,14 @@
 					<div class="row">
 						<div class="col-xs-1 hidden-sm" style="vertical-align:middle;">
 							<!---<cfif tasksQuery.done IS true>
-								<img src="#APPLICATION.htmlPath#/assets/icons/task_done.png" alt="Tarea realizada" title="Tarea realizada" />
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/task_done.png" alt="Tarea realizada" title="Tarea realizada" />
 							<cfelse>
-								<img src="#APPLICATION.htmlPath#/assets/icons/task_not_done.png" alt="Tarea no realizada" title="Tarea no realizada" />
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/task_not_done.png" alt="Tarea no realizada" title="Tarea no realizada" />
 							</cfif>--->
 							<cfif len(tasksQuery.user_image_type) GT 0>
 								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#tasksQuery.user_in_charge#&type=#tasksQuery.user_image_type#&small=" alt="#tasksQuery.user_full_name#" class="item_img"/>									
 							<cfelse>							
-								<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#tasksQuery.user_full_name#" class="item_img_default" />
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#tasksQuery.user_full_name#" class="item_img_default" />
 							</cfif>
 						</div>
 						<div class="col-xs-11">
@@ -203,7 +203,7 @@
 
 					<div class="col-xs-1 hidden-sm" style="vertical-align:middle;">
 
-						<img src="#APPLICATION.htmlPath#/assets/icons/event.png" alt="Evento" title="Evento"/> 
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/event.png" alt="Evento" title="Evento"/> 
 
 					</div>
 					<div class="col-xs-11" style="vertical-align:middle;line-height:30px;">
@@ -227,7 +227,7 @@
 					<li onclick="openUrl('area_items.cfm?area=#eventsQuery.area_id#&#eventTypeName#=#eventsQuery.id#','areaIframe',event)" class="list-group-item" style="padding:5px;cursor:pointer">
 						<div class="row">
 							<!---<div class="col-xs-1" style="vertical-align:middle;">
-								<img src="#APPLICATION.htmlPath#/assets/icons/list.png" class="item_img" alt="Lista" title="Lista"/>
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" class="item_img" alt="Lista" title="Lista"/>
 							</div>--->
 							<div class="col-xs-12">
 								#eventsQuery.title# <!---<i>#eventsQuery.start_date#</i>--->

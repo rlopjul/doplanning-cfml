@@ -61,7 +61,7 @@
 
 <!---
 
-	IMPORTANTE: la versión anterior a esta (3.0) requiere este cambio
+	IMPORTANTE: la versión anterior a esta (3.0) requiere este cambio en doplanning_app
 
 	ALTER TABLE `doplanning_app`.`app_clients` 
 	ADD COLUMN `app_title` VARCHAR(100) NOT NULL DEFAULT 'DoPlanning' AFTER `name`;

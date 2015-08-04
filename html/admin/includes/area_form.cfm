@@ -62,7 +62,7 @@
 				<div class="checkbox" style="margin-top:5px;">
 					<label class="control-label" for="item_type_1_enabled" lang="es">
 						<input id="item_type_1_enabled" name="item_type_1_enabled" type="checkbox" value="true" <cfif objectArea.item_type_1_enabled IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons/message.png" alt="Mensaje" lang="es"/> Mensajes
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" alt="Mensaje" lang="es"/> Mensajes
 					</label>
 				</div>
 			</div>
@@ -72,7 +72,7 @@
 			<div class="checkbox" style="margin-top:5px;">
 				<label class="control-label" for="item_type_10_enabled" lang="es">
 					<input id="item_type_10_enabled" name="item_type_10_enabled" type="checkbox" value="true" <cfif objectArea.item_type_10_enabled IS true>checked="checked"</cfif> />
-					<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" lang="es" /> Archivos
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/file.png" alt="Archivo" lang="es" /> Archivos
 				</label>
 			</div>
 		</div>	
@@ -81,7 +81,7 @@
 			<div class="checkbox" style="margin-top:5px;">
 				<label class="control-label" for="item_type_20_enabled" lang="es">
 					<input id="item_type_20_enabled" name="item_type_20_enabled" type="checkbox" value="true" <cfif objectArea.item_type_20_enabled IS true>checked="checked"</cfif> />
-					<img src="#APPLICATION.htmlPath#/assets/icons/entry.png" alt="Entrada" lang="es" /> Documentos DoPlanning
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/entry.png" alt="Entrada" lang="es" /> Documentos DoPlanning
 				</label>
 			</div>
 		</div>--->
@@ -114,7 +114,7 @@
 										<cfelseif itemTypeId IS 13><!---Typologies--->
 											<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
 										<cfelse>--->
-											<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].label#" lang="es" style="width:30px"/>
+											<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].label#" lang="es" style="width:30px"/>
 										<!---</cfif>--->
 										<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#<cfif itemTypeId IS 10> y archivos de área</cfif></span>&nbsp;
 									</label>
@@ -129,37 +129,37 @@
 				<!---<li>
 					<label class="control-label" for="item_type_1_enabled" lang="es">
 						<input id="item_type_1_enabled" name="item_type_1_enabled" type="checkbox" value="true" <cfif objectArea.item_type_1_enabled IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons/message.png" alt="Mensaje" lang="es"/> <span lang="es">Mensajes</span>&nbsp;
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" alt="Mensaje" lang="es"/> <span lang="es">Mensajes</span>&nbsp;
 					</label>
 				</li>
 				<li>
 					<label class="control-label" for="item_type_10_enabled" lang="es">
 						<input id="item_type_10_enabled" name="item_type_10_enabled" type="checkbox" value="true" <cfif objectArea.item_type_10_enabled IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" lang="es" /> <span lang="es">Archivos</span>&nbsp;
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/file.png" alt="Archivo" lang="es" /> <span lang="es">Archivos</span>&nbsp;
 					</label>
 				</li>
 				<li>
 					<label class="control-label" for="item_type_20_enabled" lang="es">
 						<input id="item_type_20_enabled" name="item_type_20_enabled" type="checkbox" value="true" <cfif objectArea.item_type_20_enabled IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons/entry.png" alt="Entrada" lang="es" /> <span lang="es">Documentos DoPlanning</span>&nbsp;
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/entry.png" alt="Entrada" lang="es" /> <span lang="es">Documentos DoPlanning</span>&nbsp;
 					</label>
 				</li>
 				<li>
 					<label class="control-label" for="item_type_1_enabled" lang="es">
 						<input id="item_type_5_enabled" name="item_type_5_enabled" type="checkbox" value="true" <cfif objectArea.item_type_1_enabled IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons/event.png" alt="Mensaje" lang="es"/> Eventos
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/event.png" alt="Mensaje" lang="es"/> Eventos
 					</label>
 				</li>
 				<li>
 					<label class="control-label" for="item_type_10_enabled" lang="es">
 						<input id="item_type_6_enabled" name="item_type_6_enabled" type="checkbox" value="true" <cfif objectArea.item_type_10_enabled IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons/file.png" alt="Archivo" lang="es" /> Tareas
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/file.png" alt="Archivo" lang="es" /> Tareas
 					</label>
 				</li>
 				<li>
 					<label class="control-label" for="item_type_2_enabled" lang="es">
 						<input id="item_type_11_enabled" name="item_type_11_enabled" type="checkbox" value="true" <cfif objectArea.item_type_2_enabled IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/icons/list.png" alt="Entrada" lang="es" /> Listas 
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" alt="Entrada" lang="es" /> Listas 
 					</label>
 				</li>--->
 

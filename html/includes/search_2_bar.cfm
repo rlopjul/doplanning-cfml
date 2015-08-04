@@ -293,7 +293,7 @@
 												<li>
 
 													<cfif APPLICATION.moduleAreaFilesLite IS true>
-													<a title="Archivos de área" lang="es" class="btn-new-item-dp"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/icons/file_area.png" />
+													<a title="Archivos de área" lang="es" class="btn-new-item-dp"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_area.png" />
 														<span title="Archivos de área" lang="es">Archivos de área</span> <!---href="area_file_new.cfm?area=#area_id#&fileTypeId=2"--->
 													</a>
 													</cfif>

@@ -43,6 +43,7 @@
 		<cfset var alertContent = "">
 		<cfset var actionUser = "">
 		<cfset var actionUserName = "">
+		<cfset var icalendarContent = "">
 		
 		<cfset var includeItemContent = true>
 				
@@ -117,7 +118,23 @@
 			</cfif>
 
 		</cfif>
-		
+
+		<!--- icalendarContent --->
+		<cfif ( arguments.itemTypeId IS 5 OR arguments.itemTypeId IS 6 ) AND includeItemContent IS true><!--- Event OR Task --->
+						
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="exportICalendarItem" returnvariable="exportICalendarItemResponse">
+				<cfinvokeargument name="item_id" value="#objectItem.id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<!---<cfinvokeargument name="itemQuery" value="#objectItem#">--->
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+			<cfset icalendarContent = exportICalendarItemResponse.icalendar>
+
+		</cfif>
+
 		<!---getRootArea--->
 		<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
 			<cfinvokeargument name="onlyId" value="false">
@@ -126,7 +143,6 @@
 		</cfinvoke>
 		<!---En el asunto se pone el nombre del área raiz--->
 
-		
 		<cfsavecontent variable="getUsersParameters">
 			<cfoutput>
 				<user id="" email=""
@@ -161,7 +177,6 @@
 
 		<cfset internalUsersPhones = usersToNotifyLists.structInternalUsersPhones>
 		<cfset externalUsersPhones = usersToNotifyLists.structExternalUsersPhones>
-		
 
 		<cfloop list="#APPLICATION.languages#" index="curLang">
 		
@@ -611,7 +626,7 @@
 					</cfoutput>		
 					</cfsavecontent>
 
-					<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/EmailManager" method="sendEmail">
 						<!--- <cfinvokeargument name="from" value="#SESSION.client_email_from#"> --->
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfif arguments.action NEQ "attached_file_deleted_virus" AND arguments.action NEQ "attached_image_deleted_virus">
@@ -627,6 +642,14 @@
 						<cfinvokeargument name="content" value="#contentInternal#">
 						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
+						
+						<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>
+							
+							<cfinvokeargument name="attachment_type" value="text/calendar">
+							<cfinvokeargument name="attachment_name" value="#itemTypeName#_#objectItem.id#.ics">
+							<cfinvokeargument name="attachment_content" value="#icalendarContent#">
+
+						</cfif>
 					</cfinvoke>	
 					
 					<!---SMS--->
@@ -660,7 +683,7 @@
 					</cfsavecontent>
 					
 					
-					<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/EmailManager" method="sendEmail">
 						<!--- <cfinvokeargument name="from" value="#SESSION.client_email_from#"> --->
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfif arguments.action NEQ "attached_file_deleted_virus" AND arguments.action NEQ "attached_image_deleted_virus">
@@ -676,6 +699,14 @@
 						<cfinvokeargument name="content" value="#contentExternal#">
 						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
+
+						<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>
+							
+							<cfinvokeargument name="attachment_type" value="text/calendar">
+							<cfinvokeargument name="attachment_name" value="#itemTypeName#_#objectItem.id#.ics">
+							<cfinvokeargument name="attachment_content" value="#icalendarContent#">
+
+						</cfif>
 					</cfinvoke>	
 					
 					<!---SMS--->

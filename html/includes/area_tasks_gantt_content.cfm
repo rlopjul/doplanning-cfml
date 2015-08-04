@@ -31,7 +31,7 @@
 		<cfif itemTypeId IS 7>
 			<i class="icon-exchange" style="font-size:18px; color:##0088CC"></i>
 		<cfelse>
-			<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#.png" style="height:22px;"/>
+			<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#.png" style="height:22px;"/>
 		</cfif></a>
 	
 		<span class="divider">&nbsp;</span>

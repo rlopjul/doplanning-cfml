@@ -61,7 +61,7 @@
 <div style="float:left">
 	<div>
 		<div id="subscriberConnectionWaitingAlert" class="alert alert-block" style="margin-top:10px;">
-			<img src="#APPLICATION.htmlPath#/assets/icons/loading.gif" alt="Loading" title="Loading" style="text-align:center; margin-right:8px; margin-bottom:8px;" /><strong lang="es">Esperando conexión del usuario solicitado...</strong><br/>
+			<img src="#APPLICATION.htmlPath#/assets/v3/icons/loading.gif" alt="Loading" title="Loading" style="text-align:center; margin-right:8px; margin-bottom:8px;" /><strong lang="es">Esperando conexión del usuario solicitado...</strong><br/>
 			<span lang="es">El usuario debe acceder a la siguiente dirección para entrar en esta reunión:</span><br/>
 			<i>#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#loggedUser.id#&abb=#SESSION.client_abb#</i>
 		</div>
@@ -76,7 +76,7 @@
 		<cfif len(meetingUser.image_type) GT 0>
 			<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#meetingUser.id#&type=#meetingUser.image_type#&small=" alt="#meeting_user_name#" class="item_img" style="margin-right:2px;"/>									
 		<cfelse>							
-			<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#meeting_user_name#" class="item_img_default" style="margin-right:2px;"/>
+			<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#meeting_user_name#" class="item_img_default" style="margin-right:2px;"/>
 		</cfif>
 		<span>#meeting_user_name#</span>
 	</div>
@@ -98,7 +98,7 @@
 		<cfif len(loggedUser.image_type) GT 0>
 			<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#loggedUser.id#&type=#loggedUser.image_type#&small=" alt="#logged_user_name#" class="item_img" style="margin-right:2px;"/>									
 		<cfelse>							
-			<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#logged_user_name#" class="item_img_default" style="margin-right:2px;"/>
+			<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#logged_user_name#" class="item_img_default" style="margin-right:2px;"/>
 		</cfif>
 		<span>#logged_user_name#</span>
 	</div>

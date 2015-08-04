@@ -546,7 +546,7 @@
 								<a href="area_user.cfm?area=#arguments.area_id#&user=#rowStruct.insert_user_id#" class="media-left"><cfif len(rowStruct.insert_user_image_type) GT 0>
 									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#rowStruct.insert_user_id#&type=#rowStruct.insert_user_image_type#&small=" alt="#rowStruct.insert_user_full_name#" class="user_img" style="margin-right:2px;"/>									
 								<cfelse>							
-									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#rowStruct.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#rowStruct.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 								</cfif></a>
 
 								<div class="media-body">
@@ -577,7 +577,7 @@
 									<a href="area_user.cfm?area=#arguments.area_id#&user=#rowStruct.last_update_user_id#" class="media-left"><cfif len(rowStruct.update_user_image_type) GT 0>
 										<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#rowStruct.last_update_user_id#&type=#rowStruct.update_user_image_type#&small=" alt="#rowStruct.update_user_full_name#" class="user_img" style="margin-right:2px;"/>									
 									<cfelse>							
-										<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#rowStruct.update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+										<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#rowStruct.update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 									</cfif></a>
 
 									<div class="media-body">
@@ -624,7 +624,7 @@
 							<a href="area_user.cfm?area=#arguments.area_id#&user=#rowStruct.insert_user_id#"><cfif len(rowStruct.insert_user_image_type) GT 0>
 								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#rowStruct.insert_user_id#&type=#rowStruct.insert_user_image_type#&small=" alt="#rowStruct.insert_user_full_name#" class="item_img" style="margin-right:2px;"/>									
 							<cfelse>							
-								<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#rowStruct.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#rowStruct.insert_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 							</cfif></a>
 							
 							<a href="area_user.cfm?area=#arguments.area_id#&user=#rowStruct.insert_user_id#">#rowStruct.insert_user_full_name#</a>
@@ -641,7 +641,7 @@
 							<a href="area_user.cfm?area=#arguments.area_id#&user=#rowStruct.last_update_user_id#"><cfif len(rowStruct.update_user_image_type) GT 0>
 								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#rowStruct.last_update_user_id#&type=#rowStruct.update_user_image_type#&small=" alt="#rowStruct.update_user_full_name#" class="item_img" style="margin-right:2px;"/>									
 							<cfelse>							
-								<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#rowStruct.update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#rowStruct.update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 							</cfif></a>
 							
 							<a href="area_user.cfm?area=#arguments.area_id#&user=#rowStruct.last_update_user_id#">#rowStruct.update_user_full_name#</a>
@@ -733,7 +733,7 @@
 										<cfif len(userQuery.image_type) GT 0>
 											<a href="user.cfm?user=#userQuery.user_id#"><img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#field_value#&type=#userQuery.image_type#&small=" alt="#field_value_user#" class="item_img" style="margin-right:2px;"/></>									
 										<cfelse>						
-											<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#userQuery.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+											<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#userQuery.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 										</cfif>
 										<a href="user.cfm?user=#userQuery.user_id#">#field_value_user#</a>
 

@@ -116,7 +116,7 @@
 				<cfif len(versions.user_image_type) GT 0>
 					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#versions.user_in_charge#&type=#versions.user_image_type#&small=" alt="#versions.user_full_name#" class="item_img"/>									
 				<cfelse>							
-					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#versions.user_full_name#" class="item_img_default" />
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#versions.user_full_name#" class="item_img_default" />
 				</cfif>
 				<span>#versions.user_full_name#</span>
 			</td>

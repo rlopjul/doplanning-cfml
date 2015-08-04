@@ -153,8 +153,8 @@
 			<div id="treeWrapper" style="border-style:none;margin-top:22px;">
 				<!---<cfoutput>
 				<div style="cursor:pointer;float:right;clear:both;">
-				<img src="#APPLICATION.htmlPath#/assets/icons/maximize.png" title="Maximizar Árbol" id="maximizeTree" />
-				<img src="#APPLICATION.htmlPath#/assets/icons/restore.png" title="Restaurar Árbol" id="restoreTree" style="display:none;"/>
+				<img src="#APPLICATION.htmlPath#/assets/v3/icons/maximize.png" title="Maximizar Árbol" id="maximizeTree" />
+				<img src="#APPLICATION.htmlPath#/assets/v3/icons/restore.png" title="Restaurar Árbol" id="restoreTree" style="display:none;"/>
 				</div>
 				</cfoutput>--->
 				<div id="treeContainer" style="overflow:auto;clear:both;">

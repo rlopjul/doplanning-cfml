@@ -46,7 +46,7 @@
     <ul class="nav sidebar-nav">
         <li class="sidebar-brand">
             <a href="https://doplanning.net" target="_blank">
-               <img src="#APPLICATION.htmlPath#/assets/logo_doplanning_menu.png" alt="DoPlanning" title="DoPlanning" />
+               <img src="#APPLICATION.htmlPath#/assets/v3/logo_doplanning_menu.png" alt="DoPlanning" title="DoPlanning" />
             </a>
         </li>
         <li>

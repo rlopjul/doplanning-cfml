@@ -163,7 +163,7 @@
 						<input type="hidden" name="area_id" value="#files.area_id#" />
 						<input type="hidden" name="file_id" value="#files.id#" />
 						<input type="hidden" name="return_path" value="#return_path#" />
-						<input type="image" src="#APPLICATION.htmlPath#/assets/icons/new_file.gif" class="img_file" title="Añadir archivo"/>
+						<input type="image" src="#APPLICATION.htmlPath#/assets/v3/icons/new_file.gif" class="img_file" title="Añadir archivo"/>
 					</form>
 				<cfelse>
 
@@ -174,7 +174,7 @@
 						<cfset fileIcon = "">
 					</cfif>
 
-					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/icons/file#fileIcon#.png" class="img_file" style="max-width:none;"/></a>--->
+					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/v3/icons/file#fileIcon#.png" class="img_file" style="max-width:none;"/></a>--->
 
 					<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="file_icon">
 						<cfinvokeargument name="file_name" value="#files.file_name#"/>
@@ -201,7 +201,7 @@
 				<!---<cfif len(files.user_image_type) GT 0>
 					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#files.user_in_charge#&type=#files.user_image_type#&small=" alt="#files.user_full_name#" class="item_img"/>									
 				<cfelse>							
-					<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#files.user_full_name#" class="item_img_default" />
+					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#files.user_full_name#" class="item_img_default" />
 				</cfif>--->
 
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">

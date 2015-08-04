@@ -45,7 +45,7 @@
 	<input type="text" name="recipients" class="input_message_recipients" value="#phone_list#">
 	
 	<input type="image" name="select_users" src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/users.gif" alt="Agregar usuarios" value="select_users" title="Seleccionar usuarios" />&nbsp;
-	<input type="image" name="select_contacts" src="#APPLICATION.htmlPath#/assets/icons/contacts.png" alt="Agregar contactos" value="select_contacts" title="Seleccionar contactos" />
+	<input type="image" name="select_contacts" src="#APPLICATION.htmlPath#/assets/v3/icons/contacts.png" alt="Agregar contactos" value="select_contacts" title="Seleccionar contactos" />
 	</div>
 	
 	    

@@ -52,8 +52,8 @@
 		<cfargument name="cacheTree" type="boolean" required="false" default="true">
 		<!---<cfargument name="moduleBin" type="boolean" required="false" default="false">--->
 
-		<cfargument name="homeTab" type="boolean" required="false" default="false">
-		<cfargument name="moduleDPDocuments" type="boolean" required="false" default="false">
+		<cfargument name="homeTab" type="boolean" required="false" default="true">
+		<cfargument name="moduleDPDocuments" type="boolean" required="false" default="true">
 
 		<cfargument name="hideInputLabels" type="boolean" required="false" default="false">
 

@@ -155,7 +155,7 @@ Versión de archivo
 			<cfif len(version.user_image_type) GT 0>
 				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#version.user_in_charge#&type=#version.user_image_type#&small=" alt="#version.user_full_name#" class="item_img" style="margin-right:2px;"/>									
 			<cfelse>						
-				<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#version.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
+				<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#version.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 			</cfif></a> <a href="area_user.cfm?area=#area_id#&user=#objectFile.user_in_charge#">#objectFile.user_full_name#</a>
 		</div>
 

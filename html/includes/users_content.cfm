@@ -36,7 +36,7 @@
 	<cfelse><!---VPNET--->
 	
 		<div class="div_element_menu">
-			<div class="div_icon_menus"><a href="users.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/refresh.png" alt="Actualizar" title="Actualizar"/></a></div>
+			<div class="div_icon_menus"><a href="users.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/refresh.png" alt="Actualizar" title="Actualizar"/></a></div>
 			<div class="div_text_menus"><a href="users.cfm?area=#area_id#" lang="es">Actualizar</a></div>
 		</div>
 		
@@ -46,7 +46,7 @@
 	<cfif APPLICATION.identifier NEQ "dp"><!---Deshabilitado para DoPlanning--->
 			<cfif objectUser.sms_allowed IS true>
 			<div class="div_element_menu">
-				<div class="div_icon_menus"><input type="image" name="sms" src="#APPLICATION.htmlPath#/assets/icons/sms.png" title="Enviar SMS a usuarios seleccionados" /></div>
+				<div class="div_icon_menus"><input type="image" name="sms" src="#APPLICATION.htmlPath#/assets/v3/icons/sms.png" title="Enviar SMS a usuarios seleccionados" /></div>
 				<div class="div_text_menus"><span class="span_text_menus">Enviar<br />SMS</span></div>
 			</div>
 			</cfif>

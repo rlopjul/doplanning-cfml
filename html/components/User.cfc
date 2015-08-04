@@ -902,7 +902,7 @@
 			<!---<cfif len(objectUser.image_type) GT 0>
 				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&medium=" alt="#objectUser.family_name# #objectUser.name#" class="img-thumbnail" style="margin-right:2px;"/>									
 			<cfelse>							
-				<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="img-thumbnail" style="margin-right:2px;"/>
+				<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="img-thumbnail" style="margin-right:2px;"/>
 			</cfif><br/>--->
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
@@ -1394,7 +1394,7 @@
 								<!---<cfif len(objectUser.image_type) GT 0>
 									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>									
 								<cfelse>							
-									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
 								</cfif>--->
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 									<cfinvokeargument name="user_id" value="#objectUser.id#">
@@ -1652,7 +1652,7 @@
 								<cfif len(objectUser.image_type) GT 0>
 									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>									
 								<cfelse>							
-									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
 								</cfif>
 								---->
 							</td>
@@ -1839,7 +1839,7 @@
 								<cfif len(objectUser.image_type) GT 0>
 									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>									
 								<cfelse>							
-									<img src="#APPLICATION.htmlPath#/assets/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
 								</cfif>
 							</td>
 							<td class="text_item">#objectUser.family_name#</td>
@@ -2011,7 +2011,7 @@
 				</cfif>
 
 
-				<!---<img src="#APPLICATION.htmlPath#/assets/icons/#default_image_file#" alt="#arguments.user_full_name#" class="#arguments.class#" <cfif isDefined("arguments.width_px")>style="width:#arguments.width_px#px"</cfif> />--->
+				<!---<img src="#APPLICATION.htmlPath#/assets/v3/icons/#default_image_file#" alt="#arguments.user_full_name#" class="#arguments.class#" <cfif isDefined("arguments.width_px")>style="width:#arguments.width_px#px"</cfif> />--->
 
 				<cfset firstLetter = uCase(left(arguments.user_full_name,1))>
 				<cfset letterColor = "##CCCCCC">

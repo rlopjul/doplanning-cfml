@@ -51,7 +51,7 @@ function setItemsFilter(filterValue) {
 				
 				<!---$("##curFilterLabel").text(window.lang.translate(itemType.labelPlural));--->
 				$("##curFilterLabel").text(itemType.labelPlural);
-				$("##curFilterImg").attr("src", "#APPLICATION.htmlPath#/assets/icons/"+itemType.name+".png");
+				$("##curFilterImg").attr("src", "#APPLICATION.htmlPath#/assets/v3/icons/"+itemType.name+".png");
 
 				<cfif isDefined("area_id")>
 					$("##listModeLink").attr("href", itemType.namePlural+".cfm?area=#area_id#");

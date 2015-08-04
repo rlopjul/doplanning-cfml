@@ -237,6 +237,14 @@
 		
 		</cfif>
 
+		<cfif itemTypeId IS 5 OR itemTypeId IS 6><!--- Event OR Task --->
+			
+			<div class="btn-group">
+				<a href="item_icalendar_download.cfm?item=#item_id#&itemTypeId=#itemTypeId#" title="Eportar en formato iCalendar (.ics)" class="btn btn-default btn-sm" onclick="return downloadFileLinked(this,event)" lang="es"><i class="fa fa-arrow-down"></i> <span lang="es">Exportar para calendario externo</span></a>
+			</div>
+
+		</cfif>
+
 		<cfif itemTypeId IS 20><!--- DoPlanning document--->
 
 			<div class="btn-group">
@@ -333,7 +341,7 @@
 								
 								<input type="hidden" name="#itemTypeName#" value="#objectItem.id#" />
 								
-								<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/icons/view_file.gif" title="Visualizar el archivo"/></div>
+								<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/v3/icons/view_file.gif" title="Visualizar el archivo"/></div>
 								<div class="div_text_menus"><a href="##" onclick="showHideDiv('convert_file_loading');submitForm('convert_file');" class="text_menus" lang="es">Ver adjunto en </a>
 								<select name="file_type" style="width:90px;" onchange="showHideDiv('convert_file_loading');submitForm('convert_file');">
 									<cfloop query="objectFile.file_types_conversion">

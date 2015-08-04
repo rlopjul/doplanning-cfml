@@ -898,6 +898,45 @@
 		<cfreturn response>
 				
 	</cffunction>
+
+
+
+	<!--- ----------------------------------- exportICalendarItem -------------------------------------- --->
+
+	<cffunction name="exportICalendarItem" output="false" returntype="struct" access="public">
+		<cfargument name="item_id" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="itemQuery" type="query" required="false">
+
+		<cfset var method = "exportICalendarItem">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="exportICalendarItem" returnvariable="response">
+				<cfinvokeargument name="item_id" value="#item_id#">
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="itemQuery" value="#arguments.itemQuery#">
+
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+					
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
+			
+		</cftry>
+		
+		<cfreturn response>
+			
+	</cffunction>
+	
 	
 	
 	<!--- ---------------------------------copyItemToAreas------------------------------- --->
@@ -1872,7 +1911,7 @@
 									<cfinvokeargument name="file_name" value="#objectItem.attached_file_name#"/>
 								</cfinvoke>
 
-								<div class="div_message_page_label"><!---<span lang="es">Archivo:</span>---><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="link_attached"> <i class="#attached_file_icon#"></i>  #objectItem.attached_file_name#</a></div>
+								<div><!---<span lang="es">Archivo:</span>---><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="link_attached"> <i class="#attached_file_icon#"></i>  #objectItem.attached_file_name#</a></div>
 
 							</cfif>
 
@@ -1882,20 +1921,20 @@
 									<cfinvokeargument name="file_name" value="#objectItem.attached_image_name#"/>
 								</cfinvoke>
 
-								<div class="div_message_page_label"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="link_attached"><i class="#attached_image_icon#"></i> #objectItem.attached_image_name#</a></div>
+								<div><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="link_attached"><i class="#attached_image_icon#"></i> #objectItem.attached_image_name#</a></div>
 							</cfif>
 							
 											
 							<cfif len(objectItem.link) GT 0>
-								<div class="div_message_page_label"><!---<span lang="es"><cfif itemTypeId IS 3>URL del enlace<cfelse>Más información</cfif>:</span><br/>---> <a href="#objectItem.link#" target="_blank" class="link_external"><i class="icon-link"></i> #objectItem.link#</a></div>
+								<div><!---<span lang="es"><cfif itemTypeId IS 3>URL del enlace<cfelse>Más información</cfif>:</span><br/>---> <a href="#objectItem.link#" target="_blank" class="link_external"><i class="icon-link"></i> #objectItem.link#</a></div>
 							</cfif>
 
 							<cfif itemTypeId IS 8 AND len(objectItem.identifier) GT 0 AND isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
-								<div class="div_message_page_label"> <span class="text_message_page"><a href="http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#</a></span></div>
+								<div> <span class="text_message_page"><a href="http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#</a></span></div>
 							</cfif>
 
 							<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
-								<div class="div_message_page_label"><span lang="es">URL contenido incrustado:</span><br/> <a href="#objectItem.iframe_url#" target="_blank">#objectItem.iframe_url#</a></div>
+								<div><span lang="es">URL contenido incrustado:</span><br/> <a href="#objectItem.iframe_url#" target="_blank">#objectItem.iframe_url#</a></div>
 							</cfif>
 
 							<cfif NOT isDefined("objectItem.last_update_user_id") OR NOT isNumeric(objectItem.last_update_user_id)>

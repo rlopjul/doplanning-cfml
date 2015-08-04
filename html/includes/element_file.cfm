@@ -25,10 +25,10 @@
 			<input type="hidden" name="area_id" value="#area_id#" />
 			<input type="hidden" name="file_id" value="#objectFile.id#" />
 			<input type="hidden" name="return_path" value="#return_path#" />
-			<input type="image" src="#APPLICATION.htmlPath#/assets/icons/file_new.png" class="img_file" title="Añadir archivo"/>
+			<input type="image" src="#APPLICATION.htmlPath#/assets/v3/icons/file_new.png" class="img_file" title="Añadir archivo"/>
 		</form>
 		<cfelse>
-		<a href="file_download.cfm?id=#objectFile.id#"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" class="img_file"/></a>
+		<a href="file_download.cfm?id=#objectFile.id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/file_download.png" class="img_file"/></a>
 		</cfif>
 		<!---</div>--->
 		

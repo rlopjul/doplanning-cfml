@@ -405,6 +405,8 @@ Lang.prototype.pack.en = {
 		"Mover a otra área":"Move to other area",
 		"Bloquear":"Lock",
 		"Desbloquear":"Unlock",
+		"Exportar para calendario externo":"Export to external calendar",
+		"Eportar en formato iCalendar (.ics)":"Export in iCalendar format (.ics)",
 		
 		"Asignada a:":"Asigned to:",
 		"Estado:":"State:",
@@ -1148,7 +1150,7 @@ Lang.prototype.pack.en = {
 		"Asociar usuarios":"Associate users",
 		"Asociar usuario a áreas":"Associate user to areas",
 		"Asociar usuario a áreas seleccionadas":"Associate user to selected areas",
-		"Al área seleccionada":"To selected areas",
+		"Al área seleccionada":"To selected area",
 		"A varias áreas":"To several areas",
 		"Confirma las áreas seleccionadas:":"Confirm the selected areas",
 		"Se enviará notificación al usuario y a los usuarios del área.":"Selected user and users of the area will be notified by email.",

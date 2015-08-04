@@ -88,7 +88,7 @@
 
 <div style="text-align:center; padding-top:130px;">
 <cfoutput>
-	<img src="#APPLICATION.htmlPath#/assets/icons/loading.gif" alt="Loading" title="Loading" style="text-align:center;" /> 
+	<img src="#APPLICATION.htmlPath#/assets/v3/icons/loading.gif" alt="Loading" title="Loading" style="text-align:center;" /> 
 </cfoutput>
 </div>
 <!-- InstanceEndEditable -->

@@ -1,11 +1,11 @@
 <cfif itemTypeId IS 1><!---Solo para mensajes--->
 <div class="div_element_menu">
-	<div class="div_icon_menus"><a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#"><img src="#APPLICATION.htmlPath#/assets/icons/message_reply.png" title="Responder #itemTypeNameEs#" alt="Responder #itemTypeNameEs#"/></a></div><div class="div_text_menus"><a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#"> <span class="texto_normal">Responder</span></a></div>
+	<div class="div_icon_menus"><a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/message_reply.png" title="Responder #itemTypeNameEs#" alt="Responder #itemTypeNameEs#"/></a></div><div class="div_text_menus"><a href="#itemTypeName#_new.cfm?#itemTypeName#=#objectItem.id#"> <span class="texto_normal">Responder</span></a></div>
 </div>
 </cfif>
 <cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
 <div class="div_element_menu" style="padding-left:5px;">
-<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="downloadLinkedFile(this,event)"><img src="#APPLICATION.htmlPath#/assets/icons/file_download.png" alt="Descargar adjunto"/></a></div><div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="downloadLinkedFile(this,event)"><span class="texto_normal"> Descargar adjunto</span></a></div>
+<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="downloadLinkedFile(this,event)"><img src="#APPLICATION.htmlPath#/assets/v3/icons/file_download.png" alt="Descargar adjunto"/></a></div><div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="downloadLinkedFile(this,event)"><span class="texto_normal"> Descargar adjunto</span></a></div>
 </div>
 	<cfif APPLICATION.moduleConvertFiles EQ true>
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
@@ -23,7 +23,7 @@
 					
 					<input type="hidden" name="#itemTypeName#" value="#objectItem.id#" />
 					
-					<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/icons/view_file.gif" title="Visualizar el archivo"/></div>
+					<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/v3/icons/view_file.gif" title="Visualizar el archivo"/></div>
 					<div class="div_text_menus"><a href="##" onclick="showHideDiv('convert_file_loading');submitForm('convert_file');" class="text_menus">Ver adjunto en </a>
 					<select name="file_type" style="width:90px;" onchange="showHideDiv('convert_file_loading');submitForm('convert_file');">
 						<cfloop query="objectFile.file_types_conversion">
@@ -38,7 +38,7 @@
 </cfif>
 
 <div class="div_element_menu">
-	<div class="div_icon_menus"><a href="#itemTypeName#_copy.cfm?#itemTypeName#=#item_id#"><img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_copy.png" title="Copiar #itemTypeNameEs# a otras áreas" alt="Copiar #itemTypeNameEs# a otras áreas"/></a></div><div class="div_text_menus"><a href="#itemTypeName#_copy.cfm?#itemTypeName#=#item_id#"><span class="texto_normal">Copiar a<br/>otras áreas</span></a></div>
+	<div class="div_icon_menus"><a href="#itemTypeName#_copy.cfm?#itemTypeName#=#item_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_copy.png" title="Copiar #itemTypeNameEs# a otras áreas" alt="Copiar #itemTypeNameEs# a otras áreas"/></a></div><div class="div_text_menus"><a href="#itemTypeName#_copy.cfm?#itemTypeName#=#item_id#"><span class="texto_normal">Copiar a<br/>otras áreas</span></a></div>
 </div>
 
 
@@ -50,7 +50,7 @@
 		
 		<!---<input type="hidden" name="itemTypeId" value="#itemTypeId#" />--->
 		
-		<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_copy.png" title="Copiar a otras áreas como" onclick="submitCopyItemForm();"/></div>
+		<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_copy.png" title="Copiar a otras áreas como" onclick="submitCopyItemForm();"/></div>
 		<div class="div_text_menus"><a href="##" onclick="submitCopyItemForm();"><span class="texto_normal">Copiar como</span></a>
 		<select name="item_type" style="width:90px;" onchange="submitCopyItemForm();">
 			<cfif itemTypeId IS NOT 1>
@@ -91,7 +91,7 @@
 			
 			<!---<input type="hidden" name="itemTypeId" value="#itemTypeId#" />--->
 			
-			<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_copy.png" title="Copiar a áreas" onclick="submitCopyItemForm();"/></div>
+			<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_copy.png" title="Copiar a áreas" onclick="submitCopyItemForm();"/></div>
 			<div class="div_text_menus"><a href="##" onclick="submitCopyItemForm();"><span class="texto_normal">Copiar como</span></a>
 			<select name="item_type" style="width:90px;" onchange="submitCopyItemForm();">
 				<option value="message">Mensaje</option>
@@ -111,7 +111,7 @@
 
 	<cfif itemTypeId IS NOT 1><!---Si no es mensaje--->
 	<div class="div_element_menu">
-		<div class="div_icon_menus"><a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#"><img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_modify.png" title="Modificar #itemTypeNameEs#" alt="Modificar #itemTypeNameEs#"/></a></div><div class="div_text_menus"><a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#"><span class="texto_normal">Modificar</span></a></div>
+		<div class="div_icon_menus"><a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_modify.png" title="Modificar #itemTypeNameEs#" alt="Modificar #itemTypeNameEs#"/></a></div><div class="div_text_menus"><a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#"><span class="texto_normal">Modificar</span></a></div>
 	</div>
 	</cfif>
 	
@@ -120,7 +120,7 @@
 
 <cfif APPLICATION.moduleWeb EQ true AND APPLICATION.moduleTwitter IS true AND area_type EQ "web">
 <div class="div_element_menu">
-	<div class="div_icon_menus"><a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#"><img src="#APPLICATION.htmlPath#/assets/icons/twitter_icon.png" title="Publicar #itemTypeNameEs# en Twitter" alt="Publicar #itemTypeNameEs# en Twitter"/></a></div><div class="div_text_menus"><a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#"><span class="texto_normal">Publicar en<br/> Twitter</span></a></div>
+	<div class="div_icon_menus"><a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/twitter_icon.png" title="Publicar #itemTypeNameEs# en Twitter" alt="Publicar #itemTypeNameEs# en Twitter"/></a></div><div class="div_text_menus"><a href="#itemTypeName#_twitter.cfm?#itemTypeName#=#item_id#"><span class="texto_normal">Publicar en<br/> Twitter</span></a></div>
 </div>
 </cfif>
 
@@ -133,7 +133,7 @@
 </cfif>
 
 <div class="div_element_menu">
-	<div class="div_icon_menus"><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');"><img src="#APPLICATION.htmlPath#/assets/icons/#itemTypeName#_delete.png" title="Eliminar #itemTypeNameEs#" alt="Eliminar #itemTypeNameEs#"/></a></div>
+	<div class="div_icon_menus"><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');"><img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#_delete.png" title="Eliminar #itemTypeNameEs#" alt="Eliminar #itemTypeNameEs#"/></a></div>
 	<div class="div_text_menus"><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');"> <span class="texto_normal">Eliminar</span></a></div>
 </div>
 

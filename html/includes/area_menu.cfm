@@ -165,7 +165,7 @@
 								<cfelseif itemTypeId IS 13><!---Typologies--->
 									<i class="icon-file-text" style="font-size:19px; line-height:22px; color:##7A7A7A"></i>
 								<cfelse>
-									<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].labelPlural#" style="height:22px;" lang="es"/>
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].labelPlural#" style="height:22px;" lang="es"/>
 								</cfif>
 
 								<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span> <span class="caret"></span>
@@ -204,7 +204,7 @@
 												<cfelseif curItemTypeId IS 13><!---Typologies--->
 													<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
 												<cfelse>
-													<img src="#APPLICATION.htmlPath#/assets/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es"/>
+													<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es"/>
 												</cfif>
 
 												<span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span>
@@ -245,51 +245,51 @@
 									
 								<cfif APPLICATION.moduleWeb EQ true AND area_type EQ "web" OR area_type EQ "intranet">
 
-									<li <cfif curElement EQ "entries">class="active"</cfif>><a href="entries.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/entry.png" title="Elementos de contenidos WEB del área" alt="Elementos e contenidos WEB del área" lang="es"/></a></li>
+									<li <cfif curElement EQ "entries">class="active"</cfif>><a href="entries.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/entry.png" title="Elementos de contenidos WEB del área" alt="Elementos e contenidos WEB del área" lang="es"/></a></li>
 									
-									<li <cfif curElement EQ "news">class="active"</cfif>><a href="newss.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/news.png" title="Noticias WEB del área" alt="Noticias WEB del área" lang="es"/></a></li>
+									<li <cfif curElement EQ "news">class="active"</cfif>><a href="newss.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/news.png" title="Noticias WEB del área" alt="Noticias WEB del área" lang="es"/></a></li>
 									
 									<cfif APPLICATION.identifier EQ "vpnet">
-									<li <cfif curElement EQ "links">class="active"</cfif>><a href="links.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/link.png" title="Enlaces del área" alt="Enlaces del área" lang="es"/></a></li>
+									<li <cfif curElement EQ "links">class="active"</cfif>><a href="links.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/link.png" title="Enlaces del área" alt="Enlaces del área" lang="es"/></a></li>
 									</cfif>
 
-									<li <cfif curElement EQ "images">class="active"</cfif>><a href="images.cfm?area=#area_id#" title="Imágenes del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/image.png" title="Imágenes del área" alt="Imágenes del área" lang="es"/></a></li>	
+									<li <cfif curElement EQ "images">class="active"</cfif>><a href="images.cfm?area=#area_id#" title="Imágenes del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons/image.png" title="Imágenes del área" alt="Imágenes del área" lang="es"/></a></li>	
 									
 								</cfif>
 								
 								<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0>
-								<li <cfif curElement EQ "messages">class="active"</cfif>><a href="messages.cfm?area=#area_id#&mode=tree"><img src="#APPLICATION.htmlPath#/assets/icons/message.png" title="Mensajes del área" alt="Mensajes del área" lang="es"/></a></li>
+								<li <cfif curElement EQ "messages">class="active"</cfif>><a href="messages.cfm?area=#area_id#&mode=tree"><img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" title="Mensajes del área" alt="Mensajes del área" lang="es"/></a></li>
 								</cfif>
 								
-								<li <cfif curElement EQ "files">class="active"</cfif>><a href="files.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/file.png" title="Archivos del área" alt="Archivos del área" lang="es"/></a></li>
+								<li <cfif curElement EQ "files">class="active"</cfif>><a href="files.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/file.png" title="Archivos del área" alt="Archivos del área" lang="es"/></a></li>
 								
 								<cfif APPLICATION.moduleDPDocuments IS true AND ( APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0 )><!--- DoPlanning Documents --->
 
-									<li <cfif curElement EQ "dp_documents">class="active"</cfif>><a href="dp_documents.cfm?area=#area_id#" title="Documentos DoPlanning del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/dp_document.png" title="Documentos DoPlanning del área" alt="Documentos DoPlanning del área" lang="es"/></a></li>
+									<li <cfif curElement EQ "dp_documents">class="active"</cfif>><a href="dp_documents.cfm?area=#area_id#" title="Documentos DoPlanning del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons/dp_document.png" title="Documentos DoPlanning del área" alt="Documentos DoPlanning del área" lang="es"/></a></li>
 
 								</cfif>
 
 								<cfif APPLICATION.identifier EQ "dp" OR (APPLICATION.moduleWeb EQ true AND area_type EQ "web" OR area_type EQ "intranet")><!---Events--->
-									<li <cfif curElement EQ "events">class="active"</cfif>><a href="events.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/event.png" title="Eventos del área" alt="Eventos del área" lang="es"/></a></li>
+									<li <cfif curElement EQ "events">class="active"</cfif>><a href="events.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/event.png" title="Eventos del área" alt="Eventos del área" lang="es"/></a></li>
 								</cfif>
 								
 								<cfif APPLICATION.moduleWeb NEQ true OR len(area_type) IS 0>
 								
 									<cfif APPLICATION.identifier EQ "dp"><!---Tasks--->
-										<li <cfif curElement EQ "tasks">class="active"</cfif>><a href="tasks.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/icons/task.png" title="Tareas del área" alt="Tareas del área" lang="es"/></a></li>			
+										<li <cfif curElement EQ "tasks">class="active"</cfif>><a href="tasks.cfm?area=#area_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/task.png" title="Tareas del área" alt="Tareas del área" lang="es"/></a></li>			
 									</cfif>
 						
 								</cfif>
 								
 								<cfif APPLICATION.moduleLists IS true><!--- Lists --->
 
-									<li <cfif curElement EQ "lists">class="active"</cfif>><a href="lists.cfm?area=#area_id#" title="Listas del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/list.png" title="Listas del área" alt="Listas del área" lang="es"/></a></li>
+									<li <cfif curElement EQ "lists">class="active"</cfif>><a href="lists.cfm?area=#area_id#" title="Listas del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" title="Listas del área" alt="Listas del área" lang="es"/></a></li>
 
 								</cfif>
 
 								<cfif APPLICATION.moduleForms IS true><!--- Forms --->
 
-									<li <cfif curElement EQ "forms">class="active"</cfif>><a href="forms.cfm?area=#area_id#" title="Formularios del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/form.png" title="Formularios del área" alt="Formularios del área" lang="es"/></a></li>
+									<li <cfif curElement EQ "forms">class="active"</cfif>><a href="forms.cfm?area=#area_id#" title="Formularios del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons/form.png" title="Formularios del área" alt="Formularios del área" lang="es"/></a></li>
 
 								</cfif>
 
@@ -301,7 +301,7 @@
 
 								<cfif APPLICATION.modulePubMedComments IS true><!--- PubMed Comments --->
 
-									<li <cfif curElement EQ "pubmeds">class="active"</cfif>><a href="pubmeds.cfm?area=#area_id#" title="Publicaciones del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/icons/pubmed.png" title="Publicaciones" alt="Publicaciones" lang="es"/></a></li>
+									<li <cfif curElement EQ "pubmeds">class="active"</cfif>><a href="pubmeds.cfm?area=#area_id#" title="Publicaciones del área" lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons/pubmed.png" title="Publicaciones" alt="Publicaciones" lang="es"/></a></li>
 
 								</cfif>
 
@@ -326,17 +326,17 @@
 													
 							<cfelse><!---Sin acceso--->
 							
-								<li style="padding-left:10px;"><a><img src="#APPLICATION.htmlPath#/assets/icons/message_disabled.png" title="No tiene acceso para ver los mensajes de esta área" alt="Mensajes" lang="es"/></a></li>
-								<li><a><img src="#APPLICATION.htmlPath#/assets/icons/file_disabled.png" title="No tiene acceso para ver los archivos de esta área" alt="Archivos" lang="es"/></a></li>
+								<li style="padding-left:10px;"><a><img src="#APPLICATION.htmlPath#/assets/v3/icons/message_disabled.png" title="No tiene acceso para ver los mensajes de esta área" alt="Mensajes" lang="es"/></a></li>
+								<li><a><img src="#APPLICATION.htmlPath#/assets/v3/icons/file_disabled.png" title="No tiene acceso para ver los archivos de esta área" alt="Archivos" lang="es"/></a></li>
 								
 								<!---<cfif APPLICATION.identifier NEQ "vpnet">--->
-									<li><a><img src="#APPLICATION.htmlPath#/assets/icons/event_disabled.png" title="No tiene acceso para ver los eventos de esta área" alt="Eventos" lang="es"/></a></li>
-									<li><a><img src="#APPLICATION.htmlPath#/assets/icons/task_disabled.png" title="No tiene acceso para ver las tareas de esta área" alt="Tareas" lang="es"/></a></li>
+									<li><a><img src="#APPLICATION.htmlPath#/assets/v3/icons/event_disabled.png" title="No tiene acceso para ver los eventos de esta área" alt="Eventos" lang="es"/></a></li>
+									<li><a><img src="#APPLICATION.htmlPath#/assets/v3/icons/task_disabled.png" title="No tiene acceso para ver las tareas de esta área" alt="Tareas" lang="es"/></a></li>
 								<!---</cfif>--->
 
 								<cfif APPLICATION.moduleLists IS true><!--- Lists --->
 
-									<li><a><img src="#APPLICATION.htmlPath#/assets/icons/list_disabled.png" title="No tiene acceso para ver las listas de esta área" alt="Listas" lang="es"/></a></li>
+									<li><a><img src="#APPLICATION.htmlPath#/assets/v3/icons/list_disabled.png" title="No tiene acceso para ver las listas de esta área" alt="Listas" lang="es"/></a></li>
 
 								</cfif>
 										
