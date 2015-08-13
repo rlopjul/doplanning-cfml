@@ -46,11 +46,18 @@
 	<cfset item_id = URL.image>
 	<cfset itemTypeId = 9>
 </cfif>
+
+<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+	<cfset area_id = URL.area>	
+</cfif>
 	
 
 <!---Al llamar a este método se comprueba si el usuario tiene acceso al documento--->
 <cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFile" returnvariable="objectFile">				
 	<cfinvokeargument name="get_file_id" value="#file_id#">
+	<cfif isDefined("area_id")>
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfif>
 	<cfif isDefined("item_id") AND isDefined("itemTypeId")>
 		<cfinvokeargument name="item_id" value="#item_id#">
 		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">

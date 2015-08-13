@@ -158,7 +158,8 @@
 		<cfset item_page_url = "file.cfm?area=#files.area_id#&file=#files.id#">
 
 		<tr data-item-url="#item_page_url#" data-item-id="#files.id#" onclick="stopEvent(event)" <cfif itemSelected IS true>class="selected"</cfif>>
-			<td style="text-align:center"><cfif isDefined("page_type") AND page_type IS 2>
+			<td style="text-align:center">
+				<cfif isDefined("page_type") AND page_type IS 2>
 					<form name="file_#files.id#" action="#APPLICATION.htmlComponentsPath#/File.cfc?method=associateFile" method="post" style="float:left;">
 						<input type="hidden" name="area_id" value="#files.area_id#" />
 						<input type="hidden" name="file_id" value="#files.id#" />
@@ -167,22 +168,20 @@
 					</form>
 				<cfelse>
 
-					<!---<cfset fileType = lCase(replace(files.file_type,".",""))>
-					<cfif listFind (iconTypes, fileType)>
-						<cfset fileIcon = "_"&fileType>
-					<cfelse>
-						<cfset fileIcon = "">
-					</cfif>
-
-					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar"><img src="#APPLICATION.htmlPath#/assets/v3/icons/file#fileIcon#.png" class="img_file" style="max-width:none;"/></a>--->
-
 					<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="file_icon">
 						<cfinvokeargument name="file_name" value="#files.file_name#"/>
 					</cfinvoke>
 
-					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar">
+					<cfif page_type IS 3>
+						<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#&area=#area_id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar">
+							<i class="#file_icon#" style="font-size:24px"></i>
+						</a>
+					<cfelse>
+						<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#files.id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar">
 						<i class="#file_icon#" style="font-size:24px"></i>
 					</a>
+					</cfif>
+					
 					
 				</cfif><!---style="max-width:none;" Requerido para corregir un bug con Bootstrap en Chrome--->
 			</td>
@@ -198,19 +197,14 @@
 			<td><span>#files.file_type#</span></td>
 			<td><cfif files.file_type_id IS 1>
 
-				<!---<cfif len(files.user_image_type) GT 0>
-					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#files.user_in_charge#&type=#files.user_image_type#&small=" alt="#files.user_full_name#" class="item_img"/>									
-				<cfelse>							
-					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#files.user_full_name#" class="item_img_default" />
-				</cfif>--->
-
+				<div style="float:left;margin-right:5px;">
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 					<cfinvokeargument name="user_id" value="#files.user_in_charge#">
 					<cfinvokeargument name="user_full_name" value="#files.user_full_name#">
 					<cfinvokeargument name="user_image_type" value="#files.user_image_type#">
 					<cfinvokeargument name="width_px" value="40">
 				</cfinvoke>
-				&nbsp;
+				</div>
 				<span>#files.user_full_name#</span>
 
 			<cfelse><i><span lang="es">Área</span></i></cfif>

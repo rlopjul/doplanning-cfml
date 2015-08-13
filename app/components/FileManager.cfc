@@ -2285,32 +2285,6 @@
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
-			<!---<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-			</cfinvoke>
-			<cftransaction>
-				
-				<cfquery name="createFileQuery" datasource="#client_dsn#" result="createFileResult">
-					INSERT INTO #client_abb#_files
-(name,file_name,user_in_charge,file_size,file_type,uploading_date,description,status)
-					VALUES(	<cfqueryparam value="#fileQuery.name#" cfsqltype="cf_sql_varchar">,
-							<cfqueryparam value="#fileQuery.file_name#" cfsqltype="cf_sql_varchar">,
-							<cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-							<cfqueryparam value="#fileQuery.file_size#" cfsqltype="cf_sql_integer">,
-							<cfqueryparam value="#fileQuery.file_type#" cfsqltype="cf_sql_varchar">,
-							<cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,			
-							<cfqueryparam value="#fileQuery.description#" cfsqltype="cf_sql_varchar">,
-							<cfqueryparam value="pending" cfsqltype="cf_sql_varchar">
-						);
-				</cfquery>
-	
-				<cfquery name="getLastInsertId" datasource="#client_dsn#">
-					SELECT LAST_INSERT_ID() AS insert_file_id FROM #client_abb#_files;
-				</cfquery>
-				<cfset new_file_id = getLastInsertId.insert_file_id>
-				<cfset new_file_physical_name = new_file_id>
-				
-			</cftransaction>--->
 
 			<cfinvoke component="FileManager" method="createFile" returnvariable="createFileResult">
 				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
@@ -5866,6 +5840,49 @@
 		
 	</cffunction>
 	<!---  ----------------------------------------------------------------------------- --->
+
+
+	<!---getFilesDownloads--->
+	
+	<cffunction name="getFilesDownloads" output="false" returntype="struct" access="public">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+		<cfargument name="from_date" type="string" required="false">
+		<cfargument name="end_date" type="string" required="false">
+		
+		<cfset var method = "getFilesDownloads">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="includes/checkAdminAccess.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFilesDownloads" returnvariable="filesDownloadsQuery">
+				<cfinvokeargument name="parse_dates" value="#arguments.parse_dates#">
+				<cfif isDefined("arguments.from_date")>
+					<cfinvokeargument name="from_date" value="#arguments.from_date#"/>
+				</cfif>
+				<cfif isDefined("arguments.end_date")>
+					<cfinvokeargument name="end_date" value="#arguments.end_date#"/>
+				</cfif>
+				<cfinvokeargument name="client_abb" value="#client_abb#"/>
+				<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
+			</cfinvoke>
+
+			<cfset response = {result=true, query=#filesDownloadsQuery#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+			
+		<cfreturn response>
+		
+	</cffunction>
 
 
 

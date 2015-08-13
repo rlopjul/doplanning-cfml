@@ -144,9 +144,9 @@
 					<thead>
 						<tr>
 							<th style="width:40px" class="filter-false"></th>
-							<th lang="es">De</th>
-							<th lang="es">Fecha</th>	
-							<th lang="es">Acción</th>		
+							<th><span lang="es">De</span></th>
+							<th><span lang="es">Fecha</span></th>	
+							<th><span lang="es">Acción</span></th>		
 						</tr>
 					</thead>
 					
@@ -232,25 +232,27 @@
 			<div class="div_separator"><!-- --></div>
 
 			<div class="div_user_page_user">
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Nombre:</span> #log.name#</div>
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Email:</span> <!---<a href="mailto:#log.email#" class="div_user_page_text">--->#log.email#<!---</a>---></div>	
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">&nbsp;</span></div>				
+				<div class="div_log_page_label"><span lang="es">Nombre</span>: <span class="div_log_page_text">#log.name#</span></div>
+				<div class="div_log_page_label"><span lang="es">Email</span>: <span class="div_log_page_text">#log.email#</span></div>	
+				<div style="clear:both;">&nbsp;</div>	
 			</div>			
 	
 			<div class="div_log_page_log">
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Log ID:</span> #log.log_id#</div>
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Acción:</span> #log.method#</div>
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Componente:</span> #log.component#</div>
-				<div class="div_log_page_label"><span lang="es" style="font-weight:bold">Fecha:</span> #DateFormat(log.time, APPLICATION.dateFormat)# #TimeFormat(log.time, "HH:mm:ss")#</div>
+				<div class="div_log_page_label"><span lang="es">Log ID:</span> <span class="div_log_page_text">#log.log_id#</span></div>
+				<div class="div_log_page_label"><span lang="es">Acción</span>: <span class="div_log_page_text">#log.method#</span></div>
+				<div class="div_log_page_label"><span lang="es">Componente:</span> <span class="div_log_page_text">#log.component#</span></div>
+				<div class="div_log_page_label"><span lang="es">Fecha:</span> <span class="div_log_page_text">#DateFormat(log.time, APPLICATION.dateFormat)# #TimeFormat(log.time, "HH:mm:ss")#</span></div>
 				<div class="div_log_page_label">
-					<span lang="es" style="font-weight:bold">Petición:</span>
+					<span lang="es">Petición:</span>
 				</div> 
 				<!---<cfif IsXML(log.request_content)>
 					<cfdump var="#xmlParse(log.request_content)#">
 				<cfelse>--->
-					<textarea readonly="readonly" class="form-control" style="height:350px">#log.request_content#</textarea>
+					<!---<textarea readonly="readonly" class="form-control" style="height:350px">#log.request_content#</textarea>--->
 				<!---</cfif>--->
-				
+			</div>
+			<div style="clear:both;">
+				<pre>#log.request_content#</pre>
 			</div>
 			
 			

@@ -496,5 +496,45 @@
 		<cfreturn selectImageQuery>
 		
 	</cffunction>
+
+
+	<!---getFilesDownloads--->
+	
+	<cffunction name="getFilesDownloads" output="false" returntype="query" access="public">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+		<cfargument name="from_date" type="string" required="false">
+		<cfargument name="end_date" type="string" required="false">
+		
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">		
+		
+		<cfset var method = "getFilesDownloads">
+					
+		<cfquery name="getFilesDownloads" datasource="#client_dsn#">
+			SELECT files.file_name, files.name, files.file_type, files.item_id, files.item_type_id, files_downloads.area_id, files_downloads.file_id, count(*) AS downloads
+			<cfif arguments.parse_dates IS true>
+				, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date 
+				, DATE_FORMAT(CONVERT_TZ(files.replacement_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS replacement_date
+			<cfelse>
+				, files.uploading_date
+				, files.replacement_date
+			</cfif>
+			FROM #client_abb#_files_downloads AS files_downloads
+			INNER JOIN #client_abb#_files AS files 
+			ON files.id = files_downloads.file_id
+			<cfif isDefined("arguments.from_date")>
+				AND download_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
+			</cfif>
+			<cfif isDefined("arguments.end_date")>
+				AND download_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
+			</cfif>
+			GROUP BY file_id
+			ORDER BY downloads DESC, download_date DESC;
+		</cfquery>
+			
+		<cfreturn getFilesDownloads>
+		
+	</cffunction>
+
   
 </cfcomponent>

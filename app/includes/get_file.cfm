@@ -9,11 +9,28 @@ files_directory
 <cfif FileExists(source)>
 	<cfset file_size = objectFile.file_size>
 	
-	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUserDownloadedSpace">
-		<cfinvokeargument name="add_space" value="#file_size#">
-	</cfinvoke>
-	<!---Hay que guardar tambien el espacio total descargado por todos los usuarios por si se borra un usuario--->
+	
+	<cfif fileTypeId NEQ 4><!--- Si no es imagen de área --->
 
+		<!--- Esto antes se guardaba también en las imágenes de área --->
+		<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUserDownloadedSpace">
+			<cfinvokeargument name="add_space" value="#file_size#">
+		</cfinvoke>
+		<!---Hay que guardar tambien el espacio total descargado por todos los usuarios por si se borra un usuario--->
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="addFileDownload">
+			<cfinvokeargument name="file_id" value="#objectFile.id#">
+			<cfinvokeargument name="user_id" value="#user_id#">
+			<cfinvokeargument name="file_size" value="#file_size#">
+			<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+				<cfinvokeargument name="area_id" value="#URL.area#">
+			</cfif>
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+
+	</cfif>
+	
 	<cfset file_name = objectFile.file_name>
 	<cfset file_type = objectFile.file_type>
 	

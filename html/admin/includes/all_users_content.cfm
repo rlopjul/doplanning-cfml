@@ -87,7 +87,9 @@
 		openUrlHtml2('empty.cfm','userAdminIframe');
 	</script>
 	
-	<p class="bg-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en Buscar para listar usuarios de la organización.</span></p><!---text-info--->
+	<!---<p class="bg-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en Buscar para listar usuarios de la organización.</span></p>--->
+
+	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Seleccione un área del árbol para ver sus usuarios.</span></div>
 
 </cfif>
 

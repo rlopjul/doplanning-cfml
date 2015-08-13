@@ -297,7 +297,7 @@
 						
 						<cfcatch><!---Este catch se utiliza para cuando un archivo no es una imagen--->
 						
-							<cfset response = {result="false", message="El archivo no es una imagen. "&#cfcatch.message#, item_id=#createdItemId#}>	
+							<cfset response = {result="false", message="Error al subir el archivo, compruebe el formato. "&#cfcatch.message#, item_id=#createdItemId#}>	
 							<cfreturn response>
 						
 						</cfcatch>
@@ -988,74 +988,6 @@
 					<cfinvokeargument name="parent_id" value="#cur_area#">
 					<cfinvokeargument name="parent_kind" value="area">
 					<cfinvokeargument name="area_id" value="#cur_area#">
-
-					<!---
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="title" value="#arguments.title#">
-					<cfinvokeargument name="link" value="#arguments.link#">
-					<cfinvokeargument name="link_target" value="#arguments.link_target#">
-					<cfinvokeargument name="description" value="#arguments.description#">
-					<cfinvokeargument name="Filedata" value="#arguments.Filedata#">
-					<cfinvokeargument name="imagedata" value="#arguments.imagedata#">
-					<cfif isDefined("arguments.notify_by_sms")>
-					<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
-					</cfif>
-					<cfif isDefined("arguments.post_to_twitter")>
-					<cfinvokeargument name="post_to_twitter" value="#arguments.post_to_twitter#">
-					</cfif>
-					<cfif isDefined("arguments.creation_date")>
-						<cfinvokeargument name="creation_date" value="#arguments.creation_date#">
-					</cfif>
-					<cfif isDefined("arguments.start_date")>
-						<cfinvokeargument name="start_date" value="#arguments.start_date#">
-					</cfif>
-					<cfif isDefined("arguments.end_date")>
-						<cfinvokeargument name="end_date" value="#arguments.end_date#">
-					</cfif>
-					<cfif isDefined("arguments.start_hour") AND isDefined("arguments.start_minute")>
-						<cfinvokeargument name="start_hour" value="#arguments.start_hour#">
-						<cfinvokeargument name="start_minute" value="#arguments.start_minute#">
-					</cfif>
-					<cfif isDefined("arguments.end_hour") AND isDefined("arguments.end_minute")>
-						<cfinvokeargument name="end_hour" value="#arguments.end_hour#">
-						<cfinvokeargument name="end_minute" value="#arguments.end_minute#">
-					</cfif>
-					<cfif isDefined("arguments.place")>
-						<cfinvokeargument name="place" value="#arguments.place#">
-					</cfif>
-					<cfif isDefined("arguments.recipient_user")>
-						<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
-					</cfif>
-					<cfif isDefined("arguments.estimated_value")>
-						<cfinvokeargument name="estimated_value" value="#arguments.estimated_value#">
-					</cfif>
-					<cfif isDefined("arguments.real_value")>
-						<cfinvokeargument name="real_value" value="#arguments.real_value#">
-					</cfif>
-					<cfif isDefined("arguments.done")>
-						<cfinvokeargument name="done" value="#arguments.done#">
-					</cfif>
-					<cfif isDefined("arguments.position")>
-						<cfinvokeargument name="position" value="#arguments.position#">
-					</cfif>
-					<cfif isDefined("arguments.display_type_id")>
-						<cfinvokeargument name="display_type_id" value="#arguments.display_type_id#">
-					</cfif>
-					<cfif isDefined("arguments.iframe_url")>
-						<cfinvokeargument name="iframe_url" value="#arguments.iframe_url#">
-					</cfif>
-					<cfif isDefined("arguments.iframe_display_type_id")>
-						<cfinvokeargument name="iframe_display_type_id" value="#arguments.iframe_display_type_id#">
-					</cfif>
-					<cfif isDefined("arguments.identifier")>
-						<cfinvokeargument name="identifier" value="#arguments.identifier#">
-					</cfif>
-					<cfif isDefined("arguments.price")>
-						<cfinvokeargument name="price" value="#arguments.price#">
-					</cfif>
-					<cfif isDefined("arguments.sub_type_id")>
-						<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
-					</cfif>--->
 				</cfinvoke>
 				
 				<cfif createItemResult.result IS NOT true>
@@ -3082,7 +3014,7 @@
 
 								<!---Attached files--->
 								<cfif itemTypeId IS 10><!--- File --->
-								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i><span class="hidden">3</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&area=#itemsQuery.area_id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i><span class="hidden">3</span></a>
 								<cfelseif isNumeric(itemsQuery.attached_file_id)>
 								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip" style="font-size:14px;"></i><span class="hidden">1</span></a>
 								</cfif>
@@ -3100,14 +3032,14 @@
 									<cfelse>							
 										<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#itemsQuery.user_full_name#" class="user_img_default" />
 									</cfif>--->
-
-									<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
-										<cfinvokeargument name="user_id" value="#itemsQuery.user_in_charge#">
-										<cfinvokeargument name="user_full_name" value="#itemsQuery.user_full_name#">
-										<cfinvokeargument name="user_image_type" value="#itemsQuery.user_image_type#">
-										<cfinvokeargument name="width_px" value="40">
-									</cfinvoke>
-									&nbsp;
+									<div style="float:left;margin-right:5px;">
+										<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
+											<cfinvokeargument name="user_id" value="#itemsQuery.user_in_charge#">
+											<cfinvokeargument name="user_full_name" value="#itemsQuery.user_full_name#">
+											<cfinvokeargument name="user_image_type" value="#itemsQuery.user_image_type#">
+											<cfinvokeargument name="width_px" value="40">
+										</cfinvoke>
+									</div>
 									<span>#itemsQuery.user_full_name#</span>
 
 								<cfelse><!--- Area files --->
@@ -3451,7 +3383,7 @@
 											<cfinvokeargument name="file_name" value="#itemsQuery.file_name#"/>
 										</cfinvoke>
 
-										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar" class="link_attached"><i class="#file_icon#"></i> #itemsQuery.file_name#</a><br>
+										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&area=#arguments.area_id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar" class="link_attached"><i class="#file_icon#"></i> #itemsQuery.file_name#</a><br>
 
 									<cfelse>
 
@@ -3645,7 +3577,7 @@
 
 									<!---Attached files--->
 									<cfif itemTypeId IS 10><!--- File --->
-										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i> <span lang="es">Descargar</span></a>
+										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&area=#arguments.area_id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i> <span lang="es">Descargar</span></a>
 										<span class="divider">&nbsp;</span>
 									</cfif>
 

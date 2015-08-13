@@ -182,7 +182,7 @@
 
 	<div class="row">
 		<div class="col-sm-offset-2 col-sm-10"> 
-			<input type="submit" name="search" class="btn btn-primary" lang="es" value="Filtrar" />
+			<input type="submit" name="search" class="btn btn-primary" lang="es" value="Filtrar" style="margin-top:30px;" />
 		</div>
 	</div>
 

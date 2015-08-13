@@ -513,7 +513,6 @@ Lang.prototype.pack.en = {
 		"Reunión virtual":"Virtual meeting",
 		"Fecha desde":"Date from",
 		"Fecha hasta":"Date to",
-		"Formato DD-MM-AAAA. Ejemplo:":"Format DD-MM-AAAA. Example:",
 
 		"No hay messages en esta área.":"There are no messages in this area.",
 		"No hay eventos en esta área.":"There are no events in this area.",
@@ -530,7 +529,7 @@ Lang.prototype.pack.en = {
 		/*search*/
 		"Rellene el formulario y haga click en BUSCAR":"Enter search parameters and click Search",
 		"Todos":"All",		
-		"Nº resultados":"Max results",
+		"Nº resultados":"Number of results",
 		"Estado actual":"Current state",
 		"Buscar":"Search",
 		"Resultado:":"Result:",
@@ -808,7 +807,6 @@ Lang.prototype.pack.en = {
 		"Exportar usuarios":"Export users",
 		"Buscar usuario":"Search user",
 		"Introduzca un texto y haga click en Buscar para listar usuarios de la organización.":"Enter a text and click on Search to list organization users",
-		"Ruta:":"Route:",
 		"Logs":"Logs",
 		"Usuarios de la organización":"Users of the organization",
 		"Asociar estos usuarios a otra área":"Associate these users to other area",
@@ -1211,6 +1209,30 @@ Lang.prototype.pack.en = {
 		"Sólo están disponibles para seleccionar los campos del tipo Email":"Only fields with type Email are available to select",
 		"Asunto del email":"Email subject",
 		"Contenido del email":"Email content",
+
+		/*logs*/
+		"Acción":"Action",
+		"Rellene el formulario y haga click en FILTRAR.":"Enter filter parameters and click FILTER",
+		"No hay logs.":"There is no log.",
+		"Detalles del log":"Log details",
+		"Id:":"Id:",
+		"Componente:":"Component:",
+		"Usuario:":"User:",
+		"Fecha:":"Date:",
+		"Petición:":"Request:",
+		"No se ha seleccionado ningún log":"There is no log selected",
+
+		/*statistics*/
+		"Estadísticas":"Statistics",
+		"Generales":"General",
+		"Estadísticas generales":"General statistics",
+		"Estadísticas de descarga archivos":"Files downloads statistics",
+		"Total elementos de área":"Area elements total",
+		"Elemento":"Item",
+		"Descargas":"Downloads",
+		"Adjunto de":"Attached of",
+		"Accesos a la aplicación":"Access to the application",
+		"Login fallidos":"Failed login"
 	}	
 	
 		

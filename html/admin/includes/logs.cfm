@@ -1,11 +1,8 @@
 <div class="div_message_page_title">Logs</div>
 
-<!---<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">--->
-
-<cfoutput>
+<!---<cfoutput>
 <script src="#APPLICATION.htmlPath#/admin/language/logs_content_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
-
+</cfoutput>--->
 
 <cfoutput>
 <!--- 
@@ -95,7 +92,7 @@
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>
 	
-	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca los parámetros que desee y haga click en "Filtrar".</span></div>
+	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en FILTRAR.</span></div>
 
 </cfif>
 

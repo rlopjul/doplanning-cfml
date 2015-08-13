@@ -23,7 +23,11 @@
 <div style="clear:both; height:5px;"><!-- --></div>
 
 <cfif listFind(".gif,.jpg,.png",objectFile.file_type) GT 0>
-	<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" />	
+	<cfif isDefined("area_id")>
+		<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&area=#area_id#" />
+	<cfelse>
+		<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#" />
+	</cfif>
 </cfif>
 <div style="clear:both; height:10px;"><!-- --></div>
 </cfoutput>

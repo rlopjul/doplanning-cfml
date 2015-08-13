@@ -358,6 +358,8 @@
 						SET file_size = <cfqueryparam value="#uploadedFile.fileSize#" cfsqltype="cf_sql_integer">, 
 						file_type = <cfqueryparam value="#objectFile.file_type#" cfsqltype="cf_sql_varchar">,
 						file_name = <cfqueryparam value="#objectFile.file_name#" cfsqltype="cf_sql_varchar">,
+						item_id = <cfqueryparam value="#item_id#" cfsqltype="cf_sql_integer">,
+						item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">,
 						status = 'uploaded'
 						WHERE id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
 					</cfquery>

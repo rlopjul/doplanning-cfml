@@ -3,28 +3,35 @@
 	<cfoutput>
 
 		<div class="btn-group">
-			<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&abb=#SESSION.client_abb#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
+
+			<cfif page_type IS 1>
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&abb=#SESSION.client_abb#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
+			<cfelse>
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&area=#area_id#&abb=#SESSION.client_abb#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
+			</cfif>
 		</div>
 
 	<cfif listFind(".zip,.rar,.exe,.avi",objectFile.file_type) IS 0>
 		
 		<div class="btn-group">
-			<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
+			<cfif page_type IS 1>
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
+			<cfelse>
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&area=#area_id#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
+			</cfif>
 		</div>
 	
 	</cfif>
 		
 	<cfif listFind(".gif,.jpg,.png",objectFile.file_type) GT 0>
 
+		<div class="btn-group">
 		<cfif page_type IS 1>
-			<div class="btn-group">
-				<a href="my_files_file_view.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-default btn-sm"><i class="icon-eye-open"></i> <span lang="es">Visualizar</span></a>
-			</div>
+			<a href="my_files_file_view.cfm?file=#objectFile.id#&folder=#folder_id#" class="btn btn-default btn-sm"><i class="icon-eye-open"></i> <span lang="es">Visualizar</span></a>
 		<cfelse>
-			<div class="btn-group">
-				<a href="area_file_view.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-eye-open"></i> <span lang="es">Visualizar</span></a>
-			</div>
+			<a href="area_file_view.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-eye-open"></i> <span lang="es">Visualizar</span></a>
 		</cfif>
+		</div>
 		
 	</cfif>
 

@@ -518,4 +518,39 @@
 	</cffunction>
 
 
+	<!--- ---------------------------- addFileDownload ------------------------------- --->
+	
+	<cffunction name="addFileDownload" access="public" returntype="void">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="false">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="file_size" type="numeric" required="true">
+		<!---<cfargument name="item_id" type="numeric" required="false">
+		<cfargument name="item_type_id" type="numeric" required="false">--->
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+		
+		<cfset var method = "addFileDownload">
+				
+		<cfquery name="addFileDownload" datasource="#client_dsn#">
+			INSERT INTO #client_abb#_files_downloads
+			SET file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">,
+			download_date = NOW(),
+			<cfif isDefined("arguments.user_id")>
+				user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">,
+			</cfif>
+			<cfif isDefined("arguments.area_id")>
+				area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
+			</cfif>
+			<!---<cfif isDefined("arguments.item_id")>
+				item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">,
+				item_type_id = <cfqueryparam value="#arguments.item_type_id#" cfsqltype="cf_sql_integer">
+			</cfif>--->
+			file_size = <cfqueryparam value="#arguments.file_size#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+	
+	</cffunction>
+
+
 </cfcomponent>

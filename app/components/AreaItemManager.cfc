@@ -1718,6 +1718,8 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 			
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfset files_table = "files">
 			
 			<!---Se duplica el archivo--->
 			<cfinvoke component="FileManager" method="duplicateFile" returnvariable="objectFile">
@@ -1728,14 +1730,26 @@
 				<cfset arguments.file_type = "image">
 			</cfif>
 			
-			<!---Se añade la referencia al mensaje--->
-			<cfquery datasource="#client_dsn#" name="addFileToItem">
-				UPDATE #client_abb#_#itemTypeTable#
-				SET attached_#arguments.file_type#_id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">,
-				attached_#arguments.file_type#_name = <cfqueryparam value="#objectFile.file_name#" cfsqltype="cf_sql_varchar">,						
-				status = 'ok'
-				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
-			</cfquery>
+			<cftransaction>
+				
+				<!---Se añade la referencia al mensaje y al archivo--->
+				<cfquery datasource="#client_dsn#" name="addFileToItem">
+					UPDATE #client_abb#_#itemTypeTable#
+					SET attached_#arguments.file_type#_id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">,
+					attached_#arguments.file_type#_name = <cfqueryparam value="#objectFile.file_name#" cfsqltype="cf_sql_varchar">,						
+					status = 'ok'
+					WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+				</cfquery>
+
+				<cfquery datasource="#client_dsn#" name="updateFile">
+					UPDATE #client_abb#_#files_table#
+					SET
+					item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">,
+					item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+					WHERE id = <cfqueryparam value="#objectFile.id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+			</cftransaction>
 			
 			
 		<cfreturn objectFile>		

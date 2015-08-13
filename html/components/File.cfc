@@ -1601,6 +1601,43 @@
 		<cfreturn "fa fa-"&icon>
 		
 	</cffunction>
+
+
+
+	<!--- ----------------------- GET FILES DOWNLOADS -------------------------------- --->
+	
+	<cffunction name="getFilesDownloads" returntype="struct" access="public">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+		<cfargument name="from_date" type="string" required="false">
+		<cfargument name="end_date" type="string" required="false">
+				
+		<cfset var method = "getFilesDownloads">
+
+		<cfset var response = structNew()>
+		
+		<cftry>
+			
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFilesDownloads" returnvariable="response">
+				<cfinvokeargument name="parse_dates" value="#arguments.parse_dates#">
+				<cfif isDefined("arguments.from_date")>
+					<cfinvokeargument name="from_date" value="#arguments.from_date#"/>
+				</cfif>
+				<cfif isDefined("arguments.end_date")>
+					<cfinvokeargument name="end_date" value="#arguments.end_date#"/>
+				</cfif>
+			</cfinvoke>		
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+            
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+
+		<cfreturn response>
+		
+	</cffunction>
 	
 	
 </cfcomponent>

@@ -86,9 +86,9 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<!---<p class="bg-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Seleccione un área del árbol para ver sus usuarios.</span></p>--->
+<cfinclude template="#APPLICATION.htmlPath#/admin/includes/statistics.cfm">
 
-<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Seleccione un área del árbol para ver sus usuarios.</span></div>
+
 <!-- InstanceEndEditable -->
 </body>
 <!-- InstanceEnd --></html>

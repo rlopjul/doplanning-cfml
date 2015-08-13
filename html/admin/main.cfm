@@ -156,6 +156,9 @@
 		$("#allUsersIframe").height(newHeight-userIframeHeight-5);
 		$("#logItemIframe").height(newHeight);
 		$("#treeContainer").height(newHeight-79);
+
+		$("#statisticsGeneralIframe").height(newHeight-36);
+		$("#statisticsFilesIframe").height(newHeight-36);
 	}
 
 	function changeLanguage() {
@@ -187,6 +190,22 @@
 
 		if($("#mainContainer").is(":hidden"))
 			$("#mainContainer").show();
+	}
+
+	function statisticsGeneralIframeLoaded() {
+
+		if($("#statisticsGeneralIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
+			$("#loadingContainer").hide();
+		}
+			
+	}
+
+	function statisticsFilesIframeLoaded() {
+
+		/*if($("#statisticsFilesIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
+			$("#loadingContainer").hide();
+		}*/
+			
 	}
 
 	function logIframeLoaded() {
@@ -363,10 +382,18 @@
 			var pattern=/#.+/gi //use regex to get anchor(==selector)
 			currentTab = e.target.toString().match(pattern)[0];
 
-			if(currentTab == "#tab3" && $("#logIframe").attr('src') == "about:blank") { //Load logs page
+			if(currentTab == "#tab3" && $("#statisticsGeneralIframe").attr('src') == "about:blank") { //Load statistics page
+				$("#statisticsGeneralIframe").attr('src', 'iframes/statistics.cfm');
+				$("#statisticsFilesIframe").attr('src', 'iframes/statistics_files.cfm');
+				$("#loadingContainer").show();
+			}
+
+			if(currentTab == "#tab4" && $("#logIframe").attr('src') == "about:blank") { //Load logs page
 				$("#logIframe").attr('src', 'iframes/logs.cfm');
 				$("#loadingContainer").show();
 			}
+
+
 
 		})
 		
@@ -447,7 +474,8 @@
 			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
-			<li><a href="#tab3" data-toggle="tab" lang="es">Logs</a></li>
+			<li><a href="#tab3" data-toggle="tab" lang="es">Estadísticas</a></li>
+			<li><a href="#tab4" data-toggle="tab" lang="es">Logs</a></li>
 			</cfif>
 		  </ul>
 		  
@@ -658,7 +686,50 @@
 			
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 
-			<div class="tab-pane" id="tab3"><!---Tab Logs--->
+
+			<div class="tab-pane" id="tab3"><!---Tab Statistics--->
+				
+				<!---statisticsContainer--->
+				<!---<div id="statisticsContainer">
+					
+					<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="statisticsIframe" onload="statisticsIframeLoaded()"></iframe>
+					
+				</div>--->
+
+
+
+				<div class="tabbable"><!---Tab Panel--->
+
+					<ul class="nav nav-pills" id="statisticsTab" style="clear:none; padding-bottom:5px;">
+						<li class="active"><a href="#statisticsTab1" data-toggle="tab" lang="es">Generales</a></li>
+						<li><a href="#statisticsTab2" data-toggle="tab" lang="es">Archivos</a></li>
+					</ul>
+
+					<div class="tab-content">
+	  
+						<div class="tab-pane active" id="statisticsTab1"><!---Tab Generales--->
+						
+							<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="statisticsGeneralIframe" onload="statisticsGeneralIframeLoaded()"></iframe>
+											
+						</div><!---END Tab Generales--->
+						
+						<div class="tab-pane" id="statisticsTab2"><!---Tab Archivos--->
+
+							<cfoutput>
+							<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="statisticsFilesIframe" onload="statisticsFilesIframeLoaded()"></iframe>
+							</cfoutput>
+							
+						</div><!---END Tab Archivos--->
+
+					</div>
+				  
+				</div><!---END TabPanel--->
+
+
+				
+			</div><!---END Tab Statistics--->
+
+			<div class="tab-pane" id="tab4"><!---Tab Logs--->
 				
 				<!---logContainer--->
 				<div id="logContainer">
@@ -666,13 +737,13 @@
 					
 					<div id="logItemsContainer"><!---Items Log--->
 						
-						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="logIframe" onload="logIframeLoaded()"></iframe>
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="logIframe" onload="logIframeLoaded()"></iframe>
 					
 					</div>
 					
 					<div id="logItemContainer"><!---Item Log--->
 					
-						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="logItem" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="logItemIframe"></iframe>
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="logItem" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="logItemIframe"></iframe>
 						
 					</div>
 					

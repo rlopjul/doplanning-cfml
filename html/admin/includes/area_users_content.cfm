@@ -35,16 +35,16 @@
 <div class="div_head_menu"><!---container--->
 	<div class="navbar navbar-default navbar-static-top" style="margin-bottom:0">
 		<div class="container-fluid">
-			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Mostrar información del área" id="openAreaImg">
+			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Mostrar información del área" id="openAreaImg" lang="es">
 				<i class="icon-info-sign more_info_img"></i>
 			</a>
-			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Ocultar información del área" id="closeAreaImg" style="display:none;">
+			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Ocultar información del área" id="closeAreaImg" lang="es" style="display:none;">
 				<i class="icon-info-sign more_info_img"></i>
 			</a>
 			<span class="navbar_brand">#area_name#</span><br/>
 
 			<p style="padding-top:0px;clear:left;font-size:12px;"><!--- class="navbar_brand" color:##737373 --->
-				<cfif SESSION.client_id EQ "hcs" OR internal_user IS true>Ruta: #area_path#<cfelse>&nbsp;</cfif>
+				<cfif SESSION.client_id EQ "hcs" OR internal_user IS true><span lang="es">Ruta:</span> #area_path#<cfelse>&nbsp;</cfif>
 			</p>
 		</div>
 	</div>

@@ -232,12 +232,7 @@
 
 						<cfif isNumeric(itemTypeId)>
 							
-							<!---
-							<cfif itemTypeId IS 13><!---Typologies--->
-								<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
-							<cfelse>--->
-								<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].labelPlural#" lang="es" style="width:35px"/>
-							<!---</cfif>--->
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].labelPlural#" lang="es" style="width:35px"/>
 
 							<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span> <span class="caret"></span>
 
@@ -275,12 +270,7 @@
 												
 												<a href="#itemTypesStruct[curItemTypeId].namePlural#_search.cfm" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
 											
-													<!---
-													<cfif curItemTypeId IS 13><!---Typologies--->
-														<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
-													<cfelse>--->
-														<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" style="width:35px"/>
-													<!---</cfif>--->
+													<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" style="width:35px"/>
 
 													&nbsp;<span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span>
 												</a>

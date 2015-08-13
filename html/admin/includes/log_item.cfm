@@ -1,6 +1,6 @@
-<cfoutput>
+<!---<cfoutput>
 <script src="#APPLICATION.htmlPath#/admin/language/log_item_content_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput>
+</cfoutput>--->
 
 <cfif isDefined("URL.log") AND isNumeric(URL.log)>
 	<cfset log_id = URL.log>

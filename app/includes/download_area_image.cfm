@@ -46,6 +46,7 @@ id / image
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>
 		
+		<cfset fileTypeId = 4><!--- Areas images --->
 		<cfset files_directory = "areas_images">
 		
 		<cfinclude template="get_file.cfm">	
