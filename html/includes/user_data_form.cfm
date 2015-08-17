@@ -396,6 +396,98 @@ page_types
 			</cfif>
 
 
+			<!--- Users Typologies --->
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAllTypologies" returnvariable="getAllTypologiesResponse">
+				<cfinvokeargument name="tableTypeId" value="4">
+			</cfinvoke>
+			<cfset typologies = getAllTypologiesResponse.query>
+
+			<cfif typologies.recordCount GT 0>
+
+				<cfif typologies.recordCount IS 1>
+					<cfset default_typology_id = typologies.id>
+				<cfelse>
+					<cfset default_typology_id = "">
+				</cfif>
+
+				<cfif isNumeric(objectUser.typology_id)>
+					<cfset selected_typology_id = objectUser.typology_id>
+				<cfelseif page_type IS NOT 2><!---IS NOT modify user page--->
+					<cfset selected_typology_id = default_typology_id>
+				<cfelse>
+					<cfset selected_typology_id = "">
+				</cfif>
+
+				<script>
+
+					function loadTypology(typologyId,rowId) {
+
+						if(!isNaN(typologyId)){
+
+							<!---showLoadingPage(true);--->
+
+							$("##typologyContainer").html('<span lang="es">Cargando...</span>');
+
+							var typologyPage = "#APPLICATION.htmlPath#/html_content/user_typology_row_form_inputs.cfm?typology="+typologyId;
+
+							if(!isNaN(rowId)){
+								typologyPage = typologyPage+"&row="+rowId;
+							}
+
+							$("##typologyContainer").load(typologyPage, function() {
+
+								<!---showLoadingPage(false);--->
+
+							});
+
+						} else {
+
+							$("##typologyContainer").empty();
+						}
+					}
+
+					$(function () {
+
+						<cfif isNumeric(selected_typology_id)>
+							<cfif page_type IS 1 AND NOT isNumeric(objectUser.user_id)>
+								loadTypology(#selected_typology_id#, '');
+							<cfelseif isDefined("objectUser.typology_row_id") AND isNumeric(objectUser.typology_row_id)>
+								loadTypology(#selected_typology_id#, #objectUser.typology_row_id#);
+							<cfelse>
+								loadTypology(#selected_typology_id#, '');
+							</cfif>
+						</cfif>
+
+					});
+
+				</script>	
+
+				<cfif typologies.recordCount IS 1>
+					
+					<input type="hidden" name="typology_id" id="typology_id" value="#typologies.id#">
+
+				<cfelse>
+
+					<div class="row">
+						<div class="col-sm-12">
+							<label for="typology_id" class="control-label"><span lang="es">Tipología</span>: *</label>
+							<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val(),'');" class="form-control">
+								<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Básica</option>
+								<cfloop query="typologies">
+									<option value="#typologies.id#" <cfif typologies.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS typologies.id>style="font-weight:bold"</cfif>>#typologies.title#</option>
+								</cfloop>
+							</select>
+						</div>
+					</div>
+
+				</cfif>
+
+				<!--- Typology fields --->
+				<div id="typologyContainer"></div>
+
+			</cfif>
+
+
 		</div>
 			
 		<!---<div class="fileupload fileupload-new" data-provides="fileupload">

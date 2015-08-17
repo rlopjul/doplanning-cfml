@@ -107,6 +107,9 @@
 </cfif>
 
 
+
+
+
 <script>
 	
 	$(function() {
@@ -264,7 +267,7 @@
 
 							    	<cfloop array="#itemTypesArray#" index="curItemTypeId">
 
-							    		<cfif curItemTypeId NEQ 13 AND curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.moduleForms IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
+							    		<cfif curItemTypeId NEQ 13 AND curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND curItemTypeId NEQ 16 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.moduleForms IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
 
 											<li>
 												
@@ -327,7 +330,10 @@
 
 
 	<cfif APPLICATION.modulefilesWithTables IS true AND isDefined("curElement") AND curElement IS "files"><!--- Files Typologies --->
-			
+
+		<!--- Typology fields --->
+		<cfset typologyTableTypeId = 3>
+
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAllAreasTypologies" returnvariable="getAreaTypologiesResponse">
 		</cfinvoke>
 		<cfset areasTypologies = getAreaTypologiesResponse.query>	
@@ -393,6 +399,45 @@
 		</div>
 
 	<cfelse>
+
+
+		<cfif curElement EQ "users">
+
+			<cfset typologyTableTypeId = 4>
+			
+			<!--- Users Typologies --->
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAllTypologies" returnvariable="getAllTypologiesResponse">
+				<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+			</cfinvoke>
+			<cfset typologies = getAllTypologiesResponse.query>
+
+			<cfif typologies.recordCount GT 0>
+
+				<div class="row">
+
+					<label for="typology_id" class="col-xs-5 col-sm-3 control-label" lang="es">Tipología</label>
+
+					<div class="col-xs-7 col-sm-9">
+
+						<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val(),'');">
+							<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Todas</option>
+							<option value="null" <cfif selected_typology_id EQ "null">selected="selected"</cfif> lang="es">Básica</option>
+							<cfif typologies.recordCount GT 0>
+								<cfloop query="typologies">
+									<option value="#typologies.id#" <cfif typologies.id IS selected_typology_id>selected="selected"</cfif>>#typologies.title#</option>
+								</cfloop>
+							</cfif>
+						</select>
+
+					</div>
+
+				</div>
+
+			</cfif>
+
+		</cfif>
+
+
 
 		<div class="row">
 			<label for="text" class="col-xs-5 col-sm-3 control-label" lang="es">Texto a buscar</label>
@@ -538,19 +583,16 @@
 
 	<cfif isNumeric(selected_typology_id)>
 
-		<!--- Typology fields --->
-		<cfset tableTypeId = 3>
-
 		<!---Table fields--->
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="getFieldsResponse">
 			<cfinvokeargument name="table_id" value="#selected_typology_id#"/>
-			<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
+			<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
 			<cfinvokeargument name="with_types" value="true"/>
 		</cfinvoke>
 
 		<cfset fields = getFieldsResponse.tableFields>
 
-		<cfif isDefined("URL.name") AND isDefined("URL.typology_id") AND URL.typology_id IS selected_typology_id>
+		<cfif isDefined("URL.search") AND isDefined("URL.typology_id") AND URL.typology_id IS selected_typology_id><!---isDefined("URL.name") AND --->
 			
 			<cfset row = URL>
 
@@ -558,14 +600,14 @@
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
 				<cfinvokeargument name="table_id" value="#selected_typology_id#">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
 				<cfinvokeargument name="fields" value="#fields#">
 			</cfinvoke>
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="fillEmptyRow" returnvariable="row">
 				<cfinvokeargument name="emptyRow" value="#emptyRow#">
 				<cfinvokeargument name="fields" value="#fields#">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
 				<cfinvokeargument name="withDefaultValues" value="false">
 			</cfinvoke>
 
@@ -575,11 +617,89 @@
 		<!--- outputRowFormInputs --->
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowFormInputs">
 			<cfinvokeargument name="table_id" value="#selected_typology_id#">
-			<cfinvokeargument name="tableTypeId" value="3">
+			<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
 			<cfinvokeargument name="row" value="#row#">
 			<cfinvokeargument name="fields" value="#fields#">
 			<cfinvokeargument name="search_inputs" value="true">
 		</cfinvoke>
+
+
+
+				<!--- Users Typologies --->
+				<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAllTypologies" returnvariable="getAllTypologiesResponse">
+					<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+				</cfinvoke>
+				<cfset typologies = getAllTypologiesResponse.query>
+
+				<cfif typologies.recordCount GT 0>
+
+					<div class="row">
+
+						<label for="typology_id" class="col-xs-5 col-sm-3 control-label" lang="es">Tipología</label>
+
+						<div class="col-xs-7 col-sm-9">
+
+							<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val(),'');">
+								<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Todas</option>
+								<option value="null" <cfif selected_typology_id EQ "null">selected="selected"</cfif> lang="es">Básica</option>
+								<cfif typologies.recordCount GT 0>
+									<cfloop query="typologies">
+										<option value="#typologies.id#" <cfif areasTypologies.id IS selected_typology_id>selected="selected"</cfif>>#typologies.title#</option>
+									</cfloop>
+								</cfif>
+							</select>
+
+						</div>
+
+					</div>
+
+					<cfif isNumeric(selected_typology_id)>
+
+						<!--- Typology fields --->
+
+						<!---Table fields--->
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="getFieldsResponse">
+							<cfinvokeargument name="table_id" value="#selected_typology_id#"/>
+							<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
+							<cfinvokeargument name="with_types" value="true"/>
+						</cfinvoke>
+
+						<cfset fields = getFieldsResponse.tableFields>
+
+						<cfif isDefined("URL.name") AND isDefined("URL.typology_id") AND URL.typology_id IS selected_typology_id>
+							
+							<cfset row = URL>
+
+						<cfelse>
+
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
+								<cfinvokeargument name="table_id" value="#selected_typology_id#">
+								<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+								<cfinvokeargument name="fields" value="#fields#">
+							</cfinvoke>
+
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="fillEmptyRow" returnvariable="row">
+								<cfinvokeargument name="emptyRow" value="#emptyRow#">
+								<cfinvokeargument name="fields" value="#fields#">
+								<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+								<cfinvokeargument name="withDefaultValues" value="false">
+							</cfinvoke>
+
+						</cfif>
+							
+						<!--- outputRowFormInputs --->
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowFormInputs">
+							<cfinvokeargument name="table_id" value="#selected_typology_id#">
+							<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+							<cfinvokeargument name="row" value="#row#">
+							<cfinvokeargument name="fields" value="#fields#">
+							<cfinvokeargument name="search_inputs" value="true">
+						</cfinvoke>
+
+					</cfif>
+
+				</cfif>--->
+
 
 	</cfif>
 

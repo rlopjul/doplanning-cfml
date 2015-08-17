@@ -61,8 +61,18 @@
 		</cfinvoke>
 		
 		<cfset area_id = table.area_id>
+		
+		<cfif tableTypeId IS 4><!--- Users typologies --->
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+			<cfinclude template="area_id.cfm">
+
+			<cfinclude template="area_checks.cfm">
+			
+		<cfelse>
+
+			<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+			
+		</cfif>
 
 		<div class="div_head_subtitle">
 			<span lang="es">Nuevo campo</span>
@@ -84,7 +94,17 @@
 		<cfset table_id = field.table_id>
 		<cfset area_id = field.area_id>
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+		<cfif tableTypeId IS 4><!--- Users typologies --->
+
+			<cfinclude template="area_id.cfm">
+
+			<cfinclude template="area_checks.cfm">
+			
+		<cfelse>
+
+			<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+			
+		</cfif>
 
 		<cfoutput>
 

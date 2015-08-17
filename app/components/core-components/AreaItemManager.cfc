@@ -229,7 +229,7 @@
 
 						<!---IMPORTANTE: esto se hacía fuera de <cftransaction> porque si se hacía dentro da error, ya que al enviar las notificaciones por email de la elminicación de registros se accedía a otro Datasource dentro de la misma transacción--->
 
-						<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---List, Forms, Typologies--->
+						<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16><!---List, Forms, Typologies, Users typologies--->
 						
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="deleteTableInDatabase">
 								<cfinvokeargument name="table_id" value="#arguments.item_id#">

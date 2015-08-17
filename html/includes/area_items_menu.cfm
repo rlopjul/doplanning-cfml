@@ -52,7 +52,7 @@
 
 				<cfloop array="#itemTypesArray#" index="curItemTypeId">
 
-					<cfif curItemTypeId NEQ 14 AND curItemTypeId NEQ 15>
+					<cfif curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND curItemTypeId NEQ 16>
 						<cfif ( ( areaTypeWeb AND itemTypesStruct[curItemTypeId].web ) OR ( areaTypeWeb IS false AND itemTypesStruct[curItemTypeId].noWeb ) ) AND objectArea["item_type_#curItemTypeId#_enabled"] IS true>
 
 							<cfset previousLoopCurButton = previousLoopCurButton+1>
@@ -83,7 +83,7 @@
 
 							<cfloop array="#itemTypesArray#" index="curItemTypeId">
 
-								<cfif curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.modulefilesWithTables IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
+								<cfif curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND curItemTypeId NEQ 16 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.modulefilesWithTables IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
 
 									<cfif objectArea["item_type_#curItemTypeId#_enabled"] IS true AND ( ( areaTypeWeb AND itemTypesStruct[curItemTypeId].web ) OR ( areaTypeWeb IS false AND itemTypesStruct[curItemTypeId].noWeb ) ) AND ( (curItemTypeId NEQ 11 AND curItemTypeId NEQ 12 AND curItemTypeId NEQ 13) OR is_user_area_responsible )>
 

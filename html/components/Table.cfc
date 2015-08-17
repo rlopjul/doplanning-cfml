@@ -252,6 +252,38 @@
 
 
 
+	<!--- ----------------------------------- getAllTypologies ------------------------------------- --->
+	
+	<cffunction name="getAllTypologies" returntype="struct" access="public">
+		<cfargument name="tableTypeId" type="string" required="true">
+		<cfargument name="with_area" type="boolean" required="false">
+		<cfargument name="parse_dates" type="boolean" required="false">
+		
+		<cfset var method = "getAllTypologies">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getAllTypologies" returnvariable="response">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+				<cfinvokeargument name="with_area" value="#arguments.with_area#"/>
+				<cfinvokeargument name="parse_dates" value="#arguments.parse_dates#"/>
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+		<cfreturn response>
+		
+	</cffunction>
+
+
 	<!--- ---------------------------- getTablesWithStructureAvailable ---------------------------------- --->
 	
 	<cffunction name="getTablesWithStructureAvailable" returntype="struct" access="public">
@@ -816,11 +848,20 @@
 							<cfset rpage = "#lCase(itemTypeNameP)#.cfm?area=#itemsQuery.area_id#">
 						</cfif>
 
-						<cfif isDefined("arguments.area_id")>
-							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#arguments.area_id#&return_page=#URLEncodedFormat(rpage)#">
+						<cfif tableTypeId IS 4>
+
+							<cfset item_page_url = "#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+
 						<cfelse>
-							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+
+							<cfif isDefined("arguments.area_id")>
+								<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#arguments.area_id#&return_page=#URLEncodedFormat(rpage)#">
+							<cfelse>
+								<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+							</cfif>
+
 						</cfif>
+						
 						
 						<!---Item selection--->
 						<cfset itemSelected = false>
@@ -859,7 +900,7 @@
 						
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 						
-						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#" onclick="stopEvent(event)">
+						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#"><!---onclick="stopEvent(event)"--->
 							<td><a href="#APPLICATION.path#/html/#item_page_url#" class="text_item" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 							<td>
@@ -912,9 +953,210 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- outputAllTypologiesList ------------------------------------- --->
+
+	<cffunction name="outputAllTypologiesList" returntype="void" output="true" access="public">
+		<cfargument name="itemsQuery" type="query" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="full_content" type="boolean" required="no" default="false">
+		<cfargument name="return_page" type="string" required="no">
+		<cfargument name="app_version" type="string" required="true">
+		<cfargument name="default_table_id" type="numeric" required="false" default="0">
+		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
+
+		<cfset var method = "outputAllTypologiesList">
+
+		<cftry>
+			
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
+			
+			<cfset numItems = itemsQuery.recordCount>
+			
+			<cfif numItems GT 0>
+				
+				<cfoutput>
+
+				<script type="text/javascript">
+					$(document).ready(function() { 
+						
+						$("##listTable").tablesorter({ 
+							<cfif arguments.full_content IS false>
+							widgets: ['zebra','uitheme','filter'],
+							<cfelse>
+							widgets: ['zebra','uitheme'],
+							</cfif>
+							theme : "bootstrap",
+							headerTemplate : '{content} {icon}',
+							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
+							sortList: [[2,1]],
+							headers: { 
+								1: { 
+									sorter: false 
+								},
+								2: { 
+									sorter: "datetime" 
+								}								
+							}
+							<cfelse><!--- Typologies --->
+							sortList: [[1,1]],
+							headers: { 
+								1: { 
+									sorter: "datetime" 
+								}								
+							}
+							</cfif>
+							<cfif arguments.full_content IS false>
+							, widgetOptions : {
+								filter_childRows : false,
+								filter_columnFilters : true,
+								filter_cssFilter : 'tablesorter-filter',
+								filter_filteredRow   : 'filtered',
+								filter_formatter : null,
+								filter_functions : null,
+								filter_hideFilters : false,
+								filter_ignoreCase : true,
+								filter_liveSearch : true,
+								//filter_reset : 'button.reset',
+								filter_searchDelay : 300,
+								filter_serversideFiltering: false,
+								filter_startsWith : false,
+								filter_useParsedData : false,
+						    } 
+						    </cfif> 
+						});
+
+
+						<cfif arguments.openItemOnSelect IS true>
+						$('##listTable tbody tr').on('click', function(e) {
+
+					        var row = $(this);
+
+					        var itemUrl = row.data("item-url");
+					        goToUrl(itemUrl);
+
+					    });
+						</cfif>
+						
+					}); 
+				</script>
+				
+				
+				<table id="listTable">
+					<thead>
+						<tr>
+							<th><span lang="es">Nombre</span></th>
+							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
+							<th class="filter-false" style="width:55px;"></th>
+							</cfif>
+							<th style="width:20%;"><span lang="es">Fecha</span></th>
+							<th><span lang="es">Estructura compartida</span></th>
+							<cfif tableTypeId IS 3><!---Typologies--->
+							<th><span lang="es">General</span></th>	
+							<th><span lang="es">Área</span></th>
+							</cfif>
+						</tr>
+					</thead>
+					
+					<tbody>
+					
+					<cfset alreadySelected = false>
+					
+					<cfloop query="itemsQuery">
+						
+						<cfif isDefined("arguments.return_page")>
+							<cfset rpage = arguments.return_page>
+						<cfelse>
+							<cfset rpage = "#lCase(itemTypeNameP)#.cfm?area=#itemsQuery.area_id#">
+						</cfif>
+
+						<cfif tableTypeId IS 4>
+
+							<cfset item_page_url = "#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+
+						<cfelse>
+
+							<!---<cfif isDefined("arguments.area_id")>--->
+								<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#&return_page=#URLEncodedFormat(rpage)#">
+							<!---<cfelse>
+								<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+							</cfif>--->
+
+						</cfif>
+						
+						
+						<!---Item selection--->
+						<cfset itemSelected = false>
+						
+						<cfif arguments.openItemOnSelect IS true AND alreadySelected IS false>
+						
+							<cfif isDefined("URL.#itemTypeName#")>
+							
+								<cfif URL[itemTypeName] IS itemsQuery.id>
+								
+									<!---Esta acción solo se completa si está en la versión HTML2--->
+									<script type="text/javascript">
+										openUrlHtml2('#item_page_url#','itemIframe');
+									</script>
+									<cfset itemSelected = true>
+									
+								</cfif>
+								
+							</cfif>
+							
+							<cfif itemSelected IS true>
+								<cfset alreadySelected = true>
+							</cfif>
+							
+						</cfif>
+						
+						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
+						
+						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#">
+							<td><a href="#APPLICATION.path#/html/#item_page_url#" target="_blank" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
+							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
+							<td>
+								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="stopPropagation(event)" title="Registros" lang="es"><i class="icon-list" style="font-size:15px;"></i></a>
+							</td>
+							</cfif>
+							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>
+								<span>#left(itemsQuery.creation_date, spacePos)#</span>
+								<span class="hidden">#right(itemsQuery.creation_date, len(itemsQuery.creation_date)-spacePos)#</span>
+							</td>
+							<td><span lang="es"><cfif itemsQuery.structure_available IS true>Sí<cfelse>No</cfif></span></td>
+							<cfif arguments.tableTypeId IS 3><!---Typologies--->
+								<td><span lang="es"><cfif itemsQuery.general IS true>Sí<cfelse>No</cfif></span></td>
+								<td><a href="#APPLICATION.htmlPath#/area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#" target="_blank" class="link_blue">#itemsQuery.area_name#</a></td>
+							</cfif>							
+						</tr>
+					</cfloop>
+					</tbody>
+				
+				</table>
+
+				<cfif arguments.default_table_id IS NOT 0>
+					<div style="margin-top:10px">
+						<small class="help-block" lang="es">* #tableTypeNameEs# por defecto en esta área</small>
+					</div>
+				</cfif>
+				
+				</cfoutput>
+			</cfif>	
+
+			
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>										
+			
+		</cftry>
+		
+	</cffunction>
+
+
+
 	<!--- outputTablesFullList --->
 
-	
 	<cffunction name="outputTablesFullList" returntype="void" output="true" access="public">
 		<cfargument name="itemsQuery" type="query" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">

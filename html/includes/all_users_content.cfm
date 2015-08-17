@@ -13,15 +13,16 @@
 
 <cfif isDefined("URL.search")>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="usersResponse">
-		<cfif len(search_text) GT 0>
-		<cfinvokeargument name="search_text" value="#search_text#">	
-		</cfif>
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" argumentcollection="#URL#" returnvariable="usersResponse">
+		<!---<cfif len(search_text) GT 0>
+			<cfinvokeargument name="search_text" value="#search_text#">	
+		</cfif>--->
 		<cfif isNumeric(limit_to)>
-		<cfinvokeargument name="limit" value="#limit_to#">
+			<cfinvokeargument name="limit" value="#limit_to#">
 		</cfif>
 	</cfinvoke>
-	
+
+			
 	<!---<cfset full_content = true>--->
 
 	<!---<cfxml variable="xmlUsers">

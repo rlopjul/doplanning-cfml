@@ -56,7 +56,7 @@
 		<cftry>
 
 			<cfif arguments.with_transaction IS true>
-				<!--- <cftransaction nested="true"> <!---Aquí debería estar definido nested="true", pero Railo/Lucee no permite definirlo (parece que hay un bug)---> --->
+				<!--- <cftransaction nested="true"> Aquí debería estar definido nested="true", pero Railo/Lucee no permite definirlo (parece que hay un bug)--->
 				<cfquery datasource="#client_dsn#" name="startTransaction">
 					START TRANSACTION;
 				</cfquery>

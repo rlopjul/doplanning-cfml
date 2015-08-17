@@ -50,8 +50,12 @@
 				<cfset field_required_att = "">
 			</cfif>
 			
-			<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT --->
-				<cfset field_value = row[field_name]>
+			<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT FROM AREA--->
+				<cfif isDefined("row[field_name]")>
+					<cfset field_value = row[field_name]>
+				<cfelse>
+					<cfset field_value = ""><!---Empty booleans and text lists--->
+				</cfif>
 			</cfif>
 
 			<div class="row">
@@ -305,10 +309,16 @@
 
 							<cfif action EQ "create">
 								
-								<cfset selectedAreasList = row[field_name]>
+								<cfif isDefined("row[field_name]")>
 
-								<cfif isArray(selectedAreasList)>
-									<cfset selectedAreasList = arrayToList(selectedAreasList)>
+									<cfset selectedAreasList = row[field_name]>
+
+									<cfif isArray(selectedAreasList)>
+										<cfset selectedAreasList = arrayToList(selectedAreasList)>
+									</cfif>
+
+								<cfelse><!--- Empty field in searchs --->
+									<cfset selectedAreasList = "">
 								</cfif>
 
 							<cfelse>
@@ -348,7 +358,7 @@
 							<cfif action EQ "create">
 
 								<cfif isArray(field_value)>
-									<cfset field_value = arrayToList(selectedAreasList,";")>
+									<cfset field_value = arrayToList(field_value,"#chr(13)##chr(10)#")>
 								</cfif>
 
 							</cfif>
@@ -356,11 +366,11 @@
 						<cfelse><!---FORM is Defined--->
 
 							<cfif isDefined("FORM.#field_name#")>
-								<cfset field_value = arrayToList(field_value,";")>
+								<cfset field_value = arrayToList(field_value,"#chr(13)##chr(10)#")>
 							<cfelse>
 								<cfset field_value = "">
 							</cfif>
-							
+
 						</cfif>
 
 
@@ -430,8 +440,8 @@
 					<cfelse><!---SELECT--->
 
 
-						<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif (fields.field_type_id IS 10 OR fields.field_type_id IS 16) AND arguments.search_inputs IS false>multiple style="height:90px"</cfif>>
-							<cfif ( (fields.field_type_id IS 9 OR fields.field_type_id IS 15) AND fields.required IS false ) OR arguments.search_inputs IS true>
+						<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif (fields.field_type_id IS 10 OR fields.field_type_id IS 16)>multiple style="height:90px"</cfif>><!---AND arguments.search_inputs IS false--->
+							<cfif ( (fields.field_type_id IS 9 OR fields.field_type_id IS 15) AND fields.required IS false ) OR ( arguments.search_inputs IS true AND (fields.field_type_id NEQ 10 AND fields.field_type_id NEQ 16) )>
 								<option value=""></option>
 							</cfif>
 
@@ -451,12 +461,15 @@
 							<cfelse><!--- List text values --->
 
 								<cfloop list="#fields.list_values#" delimiters="#chr(13)##chr(10)#" index="list_value">
+
 									<cfset list_value = trim(list_value)>
+
 									<cfif listFind(field_value, list_value, "#chr(13)##chr(10)#") GT 0>
 										<cfset value_selected = true>
 									<cfelse>
 										<cfset value_selected = false>
 									</cfif>
+
 									<option value="#list_value#" <cfif value_selected>selected</cfif>>#list_value#</option>		
 								</cfloop>
 

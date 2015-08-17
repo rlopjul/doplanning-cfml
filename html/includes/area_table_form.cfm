@@ -17,7 +17,16 @@
 <script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
 </cfoutput>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+<cfif tableTypeId IS NOT 4>
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+	
+<cfelse><!--- Users typologies --->
+	<cfinclude template="area_id.cfm">
+
+	<cfinclude template="area_checks.cfm">
+</cfif>
+
 
 <cfoutput>
 <cfif tableTypeId IS NOT 3 AND len(area_type) GT 0><!--- WEB --->
@@ -213,7 +222,7 @@
 	
 	<!--- <cfdump var="#table#"> --->
 	
-	<cfif APPLICATION.publicationScope IS true AND tableTypeId IS NOT 3>
+	<cfif APPLICATION.publicationScope IS true AND ( tableTypeId IS 1 OR tableTypeId IS 2 )>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopes" returnvariable="getScopesResult">
 		</cfinvoke>

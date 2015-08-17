@@ -248,7 +248,7 @@
 				</cfquery>
 			</cfif>
 
-			<cfif arguments.tableTypeId IS NOT 3 AND arguments.send_alert IS true><!--- IS NOT typology --->
+			<cfif ( arguments.tableTypeId IS 1 OR arguments.tableTypeId IS 2 ) AND arguments.send_alert IS true><!--- IS NOT typology --->
 
 				<!--- getRow --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
@@ -277,7 +277,7 @@
 
 			</cfif>
 
-			<cfif arguments.tableTypeId IS NOT 3>
+			<cfif arguments.tableTypeId IS 1 OR arguments.tableTypeId IS 2>
 
 				<cfif arguments.action IS CREATE_ROW>
 					<cfset actionEventTypeId = 1><!--- New row --->
@@ -543,53 +543,77 @@
 					<cfif len(description_re) GT 0>
 						AND	files.description REGEXP <cfqueryparam value="#description_re#" cfsqltype="cf_sql_varchar">
 					</cfif>
-					<cfloop query="fields">
+
+					<cfloop query="fields"><!--- Este loop debe ser igual que el que hay en UserQuery.cfc --->
 						
 						<cfset field_name = "field_#fields.field_id#">
+
+						<cfif isDefined("arguments[field_name]")>
 							
-						<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT FIELD--->
+							<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT FIELD FROM AREA--->
 
-							<cfset field_value = arguments[field_name]>
-							
-							<cfif len(field_value) GT 0>
-								<cfif fields.cf_sql_type IS "cf_sql_varchar" OR fields.cf_sql_type IS "cf_sql_longvarchar">
+								<cfset field_value = arguments[field_name]>
+								
+								<cfif len(field_value) GT 0>
 
-									<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="field_value_re">
-										<cfinvokeargument name="text" value="#field_value#">
-									</cfinvoke>
+									<cfif fields.cf_sql_type IS "cf_sql_varchar" OR fields.cf_sql_type IS "cf_sql_longvarchar">
 
-									AND field_#fields.field_id# REGEXP 
-									<cfif fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- Text with HTML format --->
-										<cfqueryparam value=">.*#field_value_re#.*<" cfsqltype="cf_sql_varchar">
+
+										<cfif fields.field_type_id IS 15 OR fields.field_type_id IS 16><!--- SELECT FIELD FROM LIST --->
+
+											<cfif len(arguments[field_name][1]) GT 0>
+
+												<cfset field_values = arguments[field_name]>
+
+												<cfloop array="#field_values#" index="select_value">
+													AND <cfqueryparam value="#select_value#" cfsqltype="cf_sql_varchar"> REGEXP REPLACE(field_#fields.field_id#, '#chr(13)##chr(10)#', '|') 
+												</cfloop>
+												
+											</cfif>
+											
+										<cfelse>
+
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="field_value_re">
+												<cfinvokeargument name="text" value="#field_value#">
+											</cfinvoke>
+
+											AND field_#fields.field_id# REGEXP 
+											<cfif fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- Text with HTML format --->
+												<cfqueryparam value=">.*#field_value_re#.*<" cfsqltype="cf_sql_varchar">
+											<cfelse>
+												<cfqueryparam value="#field_value_re#" cfsqltype="cf_sql_varchar">
+											</cfif>
+
+										</cfif>
+										
+										
 									<cfelse>
-										<cfqueryparam value="#field_value_re#" cfsqltype="cf_sql_varchar">
-									</cfif>
-									
-								<cfelse>
 
-									AND field_#fields.field_id# = 
-									<cfif fields.mysql_type IS "DATE"><!--- DATE --->
-										STR_TO_DATE('#field_value#','#dateFormat#')
-									<cfelse>
-										<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
-									</cfif>
+										AND field_#fields.field_id# = 
+										<cfif fields.mysql_type IS "DATE"><!--- DATE --->
+											STR_TO_DATE('#field_value#','#dateFormat#')
+										<cfelse>
+											<cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
+										</cfif>
 
+									</cfif>
 								</cfif>
-							</cfif>
 
-						<cfelse><!--- SELECT FIELDS --->
+							<cfelse><!--- SELECT FIELDS --->
 
-							<cfif isDefined("arguments.#field_name#")>
-								<!---<cfset selectFields = true>--->
-								<cfset field_values = arguments[field_name]>
-								<cfloop array="#field_values#" index="select_value">
-									<cfif isNumeric(select_value)>
-									AND table_row.row_id IN ( SELECT row_id FROM `#client_abb#_#tableTypeTable#_rows_areas` 
-										WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-										AND field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer"> 
-										AND area_id = <cfqueryparam value="#select_value#" cfsqltype="cf_sql_integer"> ) 
-									</cfif>
-								</cfloop>
+								<!---<cfif isDefined("arguments.#field_name#")>--->
+									<!---<cfset selectFields = true>--->
+									<cfset field_values = arguments[field_name]>
+									<cfloop array="#field_values#" index="select_value">
+										<cfif isNumeric(select_value)>
+										AND table_row.row_id IN ( SELECT row_id FROM `#client_abb#_#tableTypeTable#_rows_areas` 
+											WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+											AND field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer"> 
+											AND area_id = <cfqueryparam value="#select_value#" cfsqltype="cf_sql_integer"> ) 
+										</cfif>
+									</cfloop>
+								<!---</cfif>--->
+
 							</cfif>
 
 						</cfif>
@@ -633,6 +657,7 @@
 		<cfreturn {query=getTableRows, count=count}>
 		
 	</cffunction>
+
 
 
 	<!---getRowLastPosition--->
@@ -730,7 +755,6 @@
 				WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 			
-
 		</cftransaction>
 		
 		<!--- saveLog --->

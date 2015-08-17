@@ -24,7 +24,18 @@
 
 <cfset area_id = table.area_id>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+<cfif tableTypeId IS 4><!--- Users typologies --->
+
+	<cfinclude template="area_id.cfm">
+
+	<cfinclude template="area_checks.cfm">
+	
+<cfelse>
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+	
+</cfif>
+
 
 <cfoutput>
 
@@ -38,25 +49,62 @@
 
 	<div class="btn-toolbar" style="padding-right:5px;">
 
-		<cfif tableTypeId IS NOT 3>
-			<!---<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>--->
+		<cfif tableTypeId IS 1 OR tableTypeId IS 2>
 			<div class="btn-group">
 				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/v3/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
 			</div>
 		<cfelse>
-			<div class="btn-group">
-				<a href="typology.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/v3/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
-				<!---<a href="typologies.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP#" lang="es"> <i class="icon-file-text" style="font-size:15px; color:##7A7A7A"></i>&nbsp;&nbsp;<span lang="es">#itemTypeNameEsP#</span></a>--->
-			</div>
+
+			<cfif tableTypeId IS 4><!--- Users typologies --->
+				
+				<div class="btn-group">
+					<a href="#tableTypeName#_modify.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+				</div>
+
+			<cfelse>
+
+				<div class="btn-group">
+					<a href="typology.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/v3/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
+				</div>
+
+			</cfif>
+			
 		</cfif>
 
 		<div class="btn-group">
-			<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span lang="es">Añadir campo</span></a><!---color:##5BB75B;--->
+			<a href="#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;"></i> <span lang="es">Añadir campo</span></a><!---onclick="openUrl('#tableTypeName#_field_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
 		</div>
 
 		<div class="btn-group">
 			<a href="#tableTypeName#_fields_copy.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Copiar de plantilla" lang="es"><i class="icon-copy "></i> <span lang="es">Copiar de plantilla</span></a>
 		</div>
+
+		<cfif tableTypeId IS 4>
+				
+			<span class="divider">&nbsp;</span>
+
+			<cfset url_return_path_delete = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/admin/iframes/users_typologies.cfm?area=#area_id#")>
+
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
+
+			<cfif clientQuery.bin_enabled IS true><!--- BIN Enabled --->
+
+				<a class="btn btn-default btn-sm" href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_path_delete#" onclick="return confirmReversibleAction('eliminar');" title="Eliminar"><i class="icon-trash"></i> <span lang="es">Eliminar Tipología</span></a>
+
+			<cfelse>
+
+				<a class="btn btn-default btn-sm" href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_path_delete#" onclick="return confirmAction('eliminar');" title="Eliminar"><i class="icon-remove"></i> <span lang="es">Eliminar Tipología</span></a>
+
+			</cfif>
+
+			<span class="divider">&nbsp;</span>
+
+			<a href="#tableTypeNameP#.cfm" class="btn btn-default btn-sm" title="Tipologías" lang="es"><img style="height:17px;" src="/html/assets/v3/icons/#tableTypeName#.png" alt="#tableTypeNameEs#"> <span lang="es">Tipologías de usuarios</span></a>
+
+		</cfif>
 
 		<!---<cfif tableTypeId IS NOT 3>
 			<span class="divider">&nbsp;</span>
@@ -68,11 +116,12 @@
 
 		<!---<span class="divider">&nbsp;</span>--->
 
-		<cfif app_version NEQ "mobile">
+		<cfif app_version NEQ "mobile" AND tableTypeId NEQ 4>
 			<div class="btn-group pull-right">
 				<a href="#APPLICATION.htmlPath#/#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px;"></i></a>
 			</div>
 		</cfif>
+
 
 		<!---<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>--->
 

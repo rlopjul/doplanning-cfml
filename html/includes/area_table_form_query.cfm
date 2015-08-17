@@ -23,7 +23,7 @@
 		
 		<cfif NOT isDefined("URL.return_page")>
 			
-			<cfif page_type IS 1>
+			<cfif page_type IS 1 OR tableTypeId IS 4>
 				<cfset return_page = "#tableTypeName#_fields.cfm?">	
 			<cfelse>
 				<cfif tableTypeId IS 3>

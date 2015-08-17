@@ -37,10 +37,20 @@
 </cfinvoke>
 <cfset tables = getAreaTablesResponse.tables>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+<cfif tableTypeId IS 4><!--- Users typologies --->
+
+	<cfinclude template="area_id.cfm">
+
+	<cfinclude template="area_checks.cfm">
+	
+<cfelse>
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+	
+</cfif>
 
 <cfoutput>
-<script type="text/javascript">
+<script>
 
 $(document).ready(function() {
 

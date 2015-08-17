@@ -674,6 +674,8 @@
 		<cfargument name="withPubmedsComments" type="boolean" required="false" default="false">
 		<cfargument name="withLists" type="boolean" required="false" default="false">
 		<cfargument name="withForms" type="boolean" required="false" default="false">
+		<cfargument name="withFilesTypologies" type="boolean" required="false" default="false">
+		<cfargument name="withUsersTypologies" type="boolean" required="false" default="false">
 		<cfargument name="withDPDocuments" type="boolean" required="false" default="false">
 		<cfargument name="withArea" type="boolean" required="false" default="false">
 
@@ -964,6 +966,28 @@
 				<cfif isDefined("arguments.area_id")>
 				AND forms_views.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>)
+				</cfif>
+
+				<cfif arguments.withFilesTypologies IS true><!--- Typologies --->
+				UNION ALL
+				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 13 AS itemTypeId
+				FROM #client_abb#_typologies AS typologies
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar"> 
+				<cfif isDefined("arguments.area_id")>
+				AND typologies.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				)
+				</cfif>
+
+				<cfif arguments.withUsersTypologies IS true><!--- Users Typologies --->
+				UNION ALL
+				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 16 AS itemTypeId
+				FROM #client_abb#_users_typologies AS users_typologies
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar"> 
+				<cfif isDefined("arguments.area_id")>
+				AND users_typologies.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				)
 				</cfif>
 
 				<!--- Files --->

@@ -19,65 +19,6 @@
 <cfif isDefined("itemTypeId")>
 
 	<cfset curElement = itemTypesStruct[itemTypeId].name>
-
-	<!---
-	<cfswitch expression="#itemTypeId#">
-
-		<cfcase value="1">
-			<cfset curElement = "messages">
-		</cfcase>
-		
-		<cfcase value="2">
-			<cfset curElement = "entries">
-		</cfcase>
-		
-		<cfcase value="3">
-			<cfset curElement = "links">
-		</cfcase>
-		
-		<cfcase value="4">
-			<cfset curElement = "news">
-		</cfcase>
-		
-		<cfcase value="5">
-			<cfset curElement = "events">
-		</cfcase>
-		
-		<cfcase value="6">
-			<cfset curElement = "tasks">
-		</cfcase>
-		
-		<cfcase value="7">
-			<cfset curElement = "consultations">
-		</cfcase>
-
-		<cfcase value="8">
-			<cfset curElement = "pubmeds">
-		</cfcase>
-		
-		<cfcase value="9">
-			<cfset curElement = "images">
-		</cfcase>
-		
-		<cfcase value="11">
-			<cfset curElement = "lists">
-		</cfcase>
-
-		<cfcase value="12">
-			<cfset curElement = "forms">
-		</cfcase>
-
-		<cfcase value="12">
-			<cfset curElement = "forms">
-		</cfcase>
-
-		<cfcase value="20">
-			<cfset curElement = "dp_documents">
-		</cfcase>
-		
-	</cfswitch>
-	--->
-	
 <cfelse>
 	
 	<cfif find("items",curPage) GT 0>

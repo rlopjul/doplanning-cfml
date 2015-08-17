@@ -38,9 +38,11 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_id.cfm">
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
+<cfif tableTypeId IS NOT 4><!--- IS NOT users typologies --->
+	<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_path.cfm">
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_path.cfm">
+</cfif>
 
 <!---<cfif app_version EQ "mobile">
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
@@ -127,7 +129,7 @@
 				<a href="#tableTypeName#_modify.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-sm btn-default"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 			</div>
 
-			<cfif APPLICATION.moduleWeb IS true AND tableTypeId NEQ 3><!--- Debe poder aprobarse la publicación en las listas y formularios aunque no estén en áreas web para poder publicar sus vistas en áreas web --->
+			<cfif APPLICATION.moduleWeb IS true AND (tableTypeId IS 1 OR tableTypeId IS 2)><!--- Debe poder aprobarse la publicación en las listas y formularios aunque no estén en áreas web para poder publicar sus vistas en áreas web --->
 
 				<!--- publication --->
 				<cfif objectItem.publication_validated IS false>

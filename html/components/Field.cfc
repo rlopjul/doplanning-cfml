@@ -137,7 +137,7 @@
 		<cfargument name="sort_by_this" type="string" required="true">
         <cfargument name="default_value" type="string" required="true">
         <cfargument name="position" type="numeric" required="false">
-        <cfargument name="list_area_id" type="numeric" required="false">
+        <cfargument name="list_area_id" type="string" required="false">
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="list_values" type="string" required="false">
 				
@@ -175,7 +175,7 @@
 		<cfargument name="required" type="boolean" required="false" default="false">
 		<cfargument name="sort_by_this" type="string" required="true">
         <cfargument name="default_value" type="string" required="true">
-        <cfargument name="list_area_id" type="numeric" required="false">
+        <cfargument name="list_area_id" type="string" required="false">
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="list_values" type="string" required="false">
 		

@@ -157,6 +157,9 @@
 		$("#logItemIframe").height(newHeight);
 		$("#treeContainer").height(newHeight-79);
 
+		$("#typologiesUsersIframe").height(newHeight-36);
+		$("#typologiesFilesIframe").height(newHeight-36);
+
 		$("#statisticsGeneralIframe").height(newHeight-36);
 		$("#statisticsFilesIframe").height(newHeight-36);
 	}
@@ -190,6 +193,18 @@
 
 		if($("#mainContainer").is(":hidden"))
 			$("#mainContainer").show();
+	}
+
+	function typologiesUsersIframeLoaded() {
+
+		if($("#typologiesUsersIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
+			$("#loadingContainer").hide();
+		}
+			
+	}
+
+	function typologiesFilesIframeLoaded() {
+			
 	}
 
 	function statisticsGeneralIframeLoaded() {
@@ -382,13 +397,19 @@
 			var pattern=/#.+/gi //use regex to get anchor(==selector)
 			currentTab = e.target.toString().match(pattern)[0];
 
-			if(currentTab == "#tab3" && $("#statisticsGeneralIframe").attr('src') == "about:blank") { //Load statistics page
+			if(currentTab == "#tab3" && $("#typologiesUsersIframe").attr('src') == "about:blank") { //Load statistics page
+				$("#typologiesUsersIframe").attr('src', 'iframes/users_typologies.cfm');
+				$("#typologiesFilesIframe").attr('src', 'iframes/files_typologies.cfm');
+				$("#loadingContainer").show();
+			}
+
+			if(currentTab == "#tab5" && $("#statisticsGeneralIframe").attr('src') == "about:blank") { //Load statistics page
 				$("#statisticsGeneralIframe").attr('src', 'iframes/statistics.cfm');
 				$("#statisticsFilesIframe").attr('src', 'iframes/statistics_files.cfm');
 				$("#loadingContainer").show();
 			}
 
-			if(currentTab == "#tab4" && $("#logIframe").attr('src') == "about:blank") { //Load logs page
+			if(currentTab == "#tab6" && $("#logIframe").attr('src') == "about:blank") { //Load logs page
 				$("#logIframe").attr('src', 'iframes/logs.cfm');
 				$("#loadingContainer").show();
 			}
@@ -474,8 +495,9 @@
 			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
-			<li><a href="#tab3" data-toggle="tab" lang="es">Estadísticas</a></li>
-			<li><a href="#tab4" data-toggle="tab" lang="es">Logs</a></li>
+			<li><a href="#tab3" data-toggle="tab" lang="es">Tipologías</a></li>
+			<li><a href="#tab5" data-toggle="tab" lang="es">Estadísticas</a></li>
+			<li><a href="#tab6" data-toggle="tab" lang="es">Logs</a></li>
 			</cfif>
 		  </ul>
 		  
@@ -687,17 +709,39 @@
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 
 
-			<div class="tab-pane" id="tab3"><!---Tab Statistics--->
+			<div class="tab-pane" id="tab3"><!---Tab Typologies--->
 				
-				<!---statisticsContainer--->
-				<!---<div id="statisticsContainer">
-					
-					<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="statisticsIframe" onload="statisticsIframeLoaded()"></iframe>
-					
-				</div>--->
+				<div class="tabbable"><!---Tab Panel--->
+
+					<ul class="nav nav-pills" id="typologiesTab" style="clear:none; padding-bottom:5px;">
+						<li class="active"><a href="#typologiesTab1" data-toggle="tab" lang="es">Usuarios</a></li>
+						<li><a href="#typologiesTab2" data-toggle="tab" lang="es">Archivos</a></li>
+					</ul>
+
+					<div class="tab-content">
+	  
+						<div class="tab-pane active" id="typologiesTab1"><!---Tab Users--->
+						
+							<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="typologiesUsersIframe" onload="typologiesUsersIframeLoaded()"></iframe>
+											
+						</div><!---END Tab Users--->
+						
+						<div class="tab-pane" id="typologiesTab2"><!---Tab Files--->
+
+							<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="typologiesFilesIframe" onload="typologiesFilesIframeLoaded()"></iframe>
+							
+						</div><!---END Tab Files--->
+
+					</div>
+				  
+				</div><!---END TabPanel--->
+
+				
+			</div><!---END Tab Statistics--->
 
 
-
+			<div class="tab-pane" id="tab5"><!---Tab Statistics--->
+				
 				<div class="tabbable"><!---Tab Panel--->
 
 					<ul class="nav nav-pills" id="statisticsTab" style="clear:none; padding-bottom:5px;">
@@ -715,9 +759,7 @@
 						
 						<div class="tab-pane" id="statisticsTab2"><!---Tab Archivos--->
 
-							<cfoutput>
 							<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="statisticsFilesIframe" onload="statisticsFilesIframeLoaded()"></iframe>
-							</cfoutput>
 							
 						</div><!---END Tab Archivos--->
 
@@ -725,11 +767,12 @@
 				  
 				</div><!---END TabPanel--->
 
-
 				
 			</div><!---END Tab Statistics--->
 
-			<div class="tab-pane" id="tab4"><!---Tab Logs--->
+
+
+			<div class="tab-pane" id="tab6"><!---Tab Logs--->
 				
 				<!---logContainer--->
 				<div id="logContainer">

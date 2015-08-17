@@ -634,6 +634,10 @@
 					
 				</cfif>
 			
+			<cfelseif itemTypeId IS 16><!--- Users typologies --->
+
+				<cfinclude template="includes/checkAdminAccess.cfm">
+
 			<cfelse>
 
 				<!---checkAreaAccess--->
@@ -766,7 +770,7 @@
 							<!---, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">--->
 						</cfif>
 						<!--- publicationValidation --->
-						<cfif APPLICATION.publicationValidation IS true AND itemTypeId IS NOT 13><!--- IS NOT Typologies --->
+						<cfif APPLICATION.publicationValidation IS true AND ( itemTypeId IS NOT 13 AND itemTypeId IS NOT 16 )><!--- IS NOT Typologies --->
 							<cfif isUserAreaResponsible IS true AND arguments.publication_validated IS true>
 								, publication_validated = <cfqueryparam value="true" cfsqltype="cf_sql_bit">
 								, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
@@ -811,7 +815,7 @@
 						</cfif>
 					</cfif>
 
-					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
+					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16><!---Lists, Forms, Typologies, Users typologies--->
 					, structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
 						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
 						, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
@@ -853,7 +857,7 @@
 					
 				</cfif>
 
-				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 OR arguments.itemTypeId IS 13><!---Lists, Forms, Typologies--->
+				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 OR arguments.itemTypeId IS 13 OR arguments.itemTypeId IS 16><!---Lists, Forms, Typologies, Users typologies--->
 					
 					<cfinvoke component="TableManager" method="createTableInDatabase">
 						<cfinvokeargument name="table_id" value="#item_id#">
@@ -2913,7 +2917,7 @@
 
 				</cfif>
 
-				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---List, Forms, Typologies--->
+				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16><!---List, Forms, Typologies, Users typologies--->
 
 					<!---checkAreaResponsibleAccess--->
 					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
@@ -2932,6 +2936,21 @@
 						<cfif tableFilesQuery.recordCount GT 0>
 							
 							<cfthrow message="No se puede borrar una tipología que está usada en archivos. Debe eliminar los archivos o cambiar su tipología para poder eliminarla.">
+
+						</cfif>
+
+					<cfelseif itemTypeId IS 16><!--- Users typology --->
+
+						<!--- Get typology users --->			
+						<cfquery name="usersTypologyQuery" datasource="#client_dsn#">
+							SELECT id 
+							FROM #client_abb#_users
+							WHERE typology_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+						<cfif usersTypologyQuery.recordCount GT 0>
+							
+							<cfthrow message="No se puede borrar una tipología que está usada en usuarios. Debe eliminar los usuarios o cambiar su tipología por otra para poder eliminarla.">
 
 						</cfif>
 

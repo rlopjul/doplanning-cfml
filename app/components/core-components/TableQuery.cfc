@@ -4,10 +4,10 @@
 
 	<cfset component = "TableQuery">	
 	
-	<cfset dateFormat = "%d-%m-%Y"><!---Formato de fecha en la que se debe recibir los parámetros--->
-	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
+	<cfset dateFormat = APPLICATION.dbDateFormat><!---Formato de fecha en la que se debe recibir los parámetros--->
+	<cfset dateTimeFormat = APPLICATION.dbDateTimeFormat>
 	<!--- <cfset timeZoneTo = "+1:00"> --->
-	<cfset timeZoneTo = "Europe/Madrid">
+	<cfset timeZoneTo = APPLICATION.dbTimeZoneTo>
 
 
 	<!---getTable--->
@@ -40,11 +40,11 @@
 				<cfelse>
 					, tables.creation_date, tables.last_update_date
 				</cfif>
-				<cfif APPLICATION.publicationScope IS true AND tableTypeId IS NOT 3>
+				<cfif APPLICATION.publicationScope IS true AND (tableTypeId IS 1 OR tableTypeId IS 2)>
 					<!--- Antes si se ponía tables.publication_scope_id NO devolvía el valor correcto de esa columna (siempre devolvía 1) --->
 					, tables.publication_scope_id, scopes.name AS publication_scope_name
 				</cfif>
-				<cfif tableTypeId IS NOT 3>
+				<cfif tableTypeId IS 1 OR tableTypeId IS 2>
 					<cfif arguments.parse_dates IS true>
 					, DATE_FORMAT(CONVERT_TZ(tables.publication_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS publication_date
 					<cfelse>
@@ -55,11 +55,11 @@
 				FROM #client_abb#_#tableTypeTable# AS tables
 				INNER JOIN #client_abb#_users AS users ON tables.user_in_charge = users.id
 				<!--- LEFT JOIN #client_abb#_files AS files ON files.id = tables.attached_file_id --->
-				<cfif APPLICATION.publicationScope IS true AND tableTypeId IS NOT 3>
+				<cfif APPLICATION.publicationScope IS true AND (tableTypeId IS 1 OR tableTypeId IS 2)>
 					LEFT JOIN #client_abb#_scopes AS scopes ON tables.publication_scope_id = scopes.scope_id
 				</cfif>
 				WHERE tables.id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-				<cfif arguments.published IS true AND  tableTypeId IS NOT 3>
+				<cfif arguments.published IS true AND (tableTypeId IS 1 OR tableTypeId IS 2)>
 					AND ( tables.publication_date IS NULL OR tables.publication_date <= NOW() )
 					<cfif APPLICATION.publicationValidation IS true>
 					AND ( tables.publication_validated IS NULL OR tables.publication_validated = true )
@@ -247,9 +247,9 @@
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
 
-			<!--- Aquí se deben borrar también las acciones --->
+			<!--- Las acciones se deben borrar de forma automática en MySQL --->
 
-			<cfif tableTypeId NEQ 3><!--- IS NOT Typology --->
+			<cfif tableTypeId IS 1 OR tableTypeId IS 2><!--- IS NOT Typology --->
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/ViewManager" method="deleteTableViews">
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">

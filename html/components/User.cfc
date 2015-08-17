@@ -122,7 +122,7 @@
 	</cffunction>
 	
 	
-	<!--- getAreas --->
+	<!--- getUsers --->
 
 	<cffunction name="getUsers" returntype="struct" output="false" access="public">
 		<cfargument name="search_text" type="string" required="false" default="">
@@ -143,9 +143,9 @@
 				</cfoutput>
 			</cfxml>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUsers" returnvariable="response">
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUsers" argumentcollection="#arguments#" returnvariable="response">
 				<cfinvokeargument name="xmlUser" value="#xmlUser#"/>
-				<cfif len(arguments.search_text) GT 0>
+				<!---<cfif len(arguments.search_text) GT 0>
 					<cfinvokeargument name="search_text" value="#arguments.search_text#"/>
 				</cfif>
 				<cfif len(arguments.order_by) GT 0>
@@ -154,7 +154,7 @@
 				</cfif>
 				<cfif isDefined("arguments.limit")>
 					<cfinvokeargument name="limit" value="#arguments.limit#"/>
-				</cfif>
+				</cfif>--->
 			</cfinvoke>
 			
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -307,6 +307,8 @@
 		<cfargument name="login_ldap" type="string" required="false">
 		<cfargument name="login_diraya" type="string" required="false">
 		<cfargument name="perfil_cabecera" type="string" required="false">
+
+		<cfargument name="typology_id" type="string" required="false">
 		
 		<cfset var method = "createUser">
 
@@ -328,7 +330,10 @@
 
 					<cfset password_encoded = hash(arguments.password)>
 					
-					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="createUser" returnvariable="response">
+					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
+						<cfinvokeargument name="password" value="#password_encoded#">
+						<cfinvokeargument name="password_temp" value="#arguments.password#">
+						<!---
 						<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
 						<cfinvokeargument name="email" value="#arguments.email#">
 						<cfinvokeargument name="mobile_phone_ccode" value="#arguments.mobile_phone_ccode#">
@@ -336,8 +341,6 @@
 						<cfinvokeargument name="telephone_ccode" value="#arguments.telephone_ccode#">
 						<cfinvokeargument name="telephone" value="#arguments.telephone#">
 						<cfinvokeargument name="language" value="#arguments.language#">
-						<cfinvokeargument name="password" value="#password_encoded#">
-						<cfinvokeargument name="password_temp" value="#arguments.password#">
 						<cfinvokeargument name="family_name" value="#arguments.family_name#">
 						<cfinvokeargument name="name" value="#arguments.name#">
 						<cfinvokeargument name="address" value="#arguments.address#">
@@ -353,7 +356,7 @@
 
 						<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
 						<cfinvokeargument name="login_diraya" value="#arguments.login_diraya#">
-						<cfinvokeargument name="perfil_cabecera" value="#arguments.perfil_cabecera#">
+						<cfinvokeargument name="perfil_cabecera" value="#arguments.perfil_cabecera#">--->
 					</cfinvoke>
 					
 					<cfif response.result IS true>
@@ -411,6 +414,8 @@
 		<cfargument name="perfil_cabecera" type="string" required="false">
 
 		<cfargument name="adminFields" type="boolean" required="false" default="false">
+
+		<cfargument name="typology_id" type="string" required="false">
 		
 		<cfset var method = "updateUser">
 
@@ -434,24 +439,23 @@
 						<cfset password_encoded = hash(arguments.password)>
 					</cfif>
 					
-					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUser" returnvariable="response">
+					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUser" argumentcollection="#arguments#" returnvariable="response">
 						<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
-						<cfinvokeargument name="email" value="#arguments.email#">
+						<cfif isDefined("password_encoded")>
+							<cfinvokeargument name="password" value="#password_encoded#">
+						</cfif>
+						<!---<cfinvokeargument name="email" value="#arguments.email#">
 						<cfinvokeargument name="mobile_phone_ccode" value="#arguments.mobile_phone_ccode#">
 						<cfinvokeargument name="mobile_phone" value="#arguments.mobile_phone#">
 						<cfinvokeargument name="telephone_ccode" value="#arguments.telephone_ccode#">
 						<cfinvokeargument name="telephone" value="#arguments.telephone#">
 						<cfinvokeargument name="language" value="#arguments.language#">
-						<cfif isDefined("password_encoded")>
-							<cfinvokeargument name="password" value="#password_encoded#">
-						</cfif>
 						<cfinvokeargument name="family_name" value="#arguments.family_name#">
 						<cfinvokeargument name="name" value="#arguments.name#">
 						<cfinvokeargument name="address" value="#arguments.address#">
 						<cfinvokeargument name="dni" value="#arguments.dni#">
 						<cfinvokeargument name="files" value="#arguments.files#">
 						<cfinvokeargument name="hide_not_allowed_areas" value="#arguments.hide_not_allowed_areas#">
-
 						<cfinvokeargument name="linkedin_url" value="#arguments.linkedin_url#">
 						<cfinvokeargument name="twitter_url" value="#arguments.twitter_url#">
 						<cfinvokeargument name="information" value="#arguments.information#">
@@ -461,7 +465,7 @@
 						<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
 						<cfinvokeargument name="login_diraya" value="#arguments.login_diraya#">
 						<cfinvokeargument name="perfil_cabecera" value="#arguments.perfil_cabecera#">
-						<cfinvokeargument name="adminFields" value="#arguments.adminFields#">
+						<cfinvokeargument name="adminFields" value="#arguments.adminFields#">--->
 					</cfinvoke>
 					
 					<cfif response.result IS true>

@@ -98,6 +98,7 @@
 							<option value="3.0.1">3.0.1 (Archivos con URL pública)</option>
 							<option value="3.0.2">3.0.2 (Acciones en modificaciones de registros de listas y formularios)</option>
 							<option value="3.0.3">3.0.3 Registro de descarga de archivos y pestaña estadísticas administración</option>
+							<option value="3.0.4">3.0.4 Tipologías de usuarios, nueva pestaña tipologías administración</option>
 						</select>
 					</div>
 

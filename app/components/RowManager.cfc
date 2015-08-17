@@ -1060,7 +1060,7 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<cfif arguments.tableTypeId IS NOT 3><!--- IS NOT typology --->
+			<cfif arguments.tableTypeId IS 1 OR arguments.tableTypeId IS 2><!--- IS NOT typology --->
 
 				<!--- Alert --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newTableRow">

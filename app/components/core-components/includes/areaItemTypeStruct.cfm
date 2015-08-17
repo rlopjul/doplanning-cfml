@@ -49,6 +49,9 @@
 <!---form views--->
 <cfset structInsert(itemTypesStruct, 15, {id=15, position=16, name="form_view", namePlural="forms_views", table="forms_views", label="Vista de Formulario", labelPlural="Vistas de Formularios", gender="female", web=true, noWeb=true, showInSelect=false, tableTypeId=2, tableTypeName="form"})>
 
+<!---typologies (users)--->
+<cfset structInsert(itemTypesStruct, 16, {id=16, position=17, name="user_typology", namePlural="users_typologies", table="users_typologies", label="Tipología de usuario", labelPlural="Tipologías de usuarios", gender="female", web=false, noWeb=false, showInSelect=false, tableTypeId=4})>
+
 <!---DoPlanning Documents--->
 <cfif APPLICATION.moduleDPDocuments IS true>
 	<cfset structInsert(itemTypesStruct, 20, {id=20, position=7, name="dp_document", namePlural="dp_documents", table="dp_documents", label="Documento DoPlanning", labelPlural="Documentos DoPlanning", gender="male", web=false, noWeb=true, showInSelect=false})>

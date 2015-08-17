@@ -285,6 +285,7 @@ Lang.prototype.pack.en = {
 
 		"Registros":"Records",
 		"Campos":"Fields",
+		"Campo":"Field",
 		"Vistas":"Views",
 		"Editores":"Editors",
 		"Nuevo registro":"New record",
@@ -366,6 +367,7 @@ Lang.prototype.pack.en = {
 		"* Campos obligatorios.":"* Required fields.",
 			
 		"Enviando...":"Sending...",
+		"Cargando...":"Loading...",
 		"Fechas incorrectas. Compruebe que la fecha de fin del evento es igual o posterior a la fecha de inicio y tiene el formato adecuado.":"Incorrect dates. Make sure the event ending date is on or after the start date and has the proper format.",
 		
 		"Tiene texto sin enviar, si abandona esta página lo perderá":"You have text without send, if you leave this page you will lose it",
@@ -976,6 +978,7 @@ Lang.prototype.pack.en = {
 		"Permitir copiar la estructura de campos de esta lista":"Allow to copy the field structure from this list",
 		"Permitir copiar la estructura de campos de este formulario":"Allow to copy the field structure from this form",
 		"Permitir copiar la estructura de campos de esta tipología":"Allow to copy the field structure from this typology",
+		"Permitir copiar la estructura de campos de esta tipología de usuario":"Allow to copy the field structure from this user typology",
 		
 		"Valida el Formulario para que pueda ser publicado.":"Mark checkbox if you want the Form to be published",
 		"Si está definida, el Formulario se publicará en la fecha especificada.":"If defined, the Form will be published in the specified date.",
@@ -987,6 +990,7 @@ Lang.prototype.pack.en = {
 		"Indica si la definición de campos de esta lista está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this list is available to be used as a template by any user in the organization",
 		"Indica si la definición de campos de este formulario está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this form is available to be used as a template by any user in the organization",
 		"Indica si la definición de campos de esta tipología está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this typology is available to be used as a template by any user in the organization",
+		"Indica si la definición de campos de esta tipología de usuario está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this user typology is available to be used as a template",
 		
 		"Habilitar como tipología general":"Enable as general typology",
 		"Se podrá utilizar esta tipología en cualquier área de la organización.":"This typology may be used in any area of the organization",
@@ -1006,7 +1010,7 @@ Lang.prototype.pack.en = {
 		"Fecha (formato DD-MM-AAAA)":"Date (DD-MM-YYYY)",
 		"Booleano (Sí/No)":"Boolean (Yes/No)",
 		"Lista de opciones con selección simple":"List of options, single selection",
-		"Lista de opciones con selección múltiple":"list of options, multiple selection",
+		"Lista de opciones con selección múltiple":"List of options, multiple selection",
 		"Lista de opciones con selección simple a partir de área":"List of options, single selection from an area",
 		"Lista de opciones con selección múltiple a partir de área":"List of options, multiple selection from an area",
 		"Usuario de DoPlanning":"DoPlanning user",
@@ -1232,7 +1236,15 @@ Lang.prototype.pack.en = {
 		"Descargas":"Downloads",
 		"Adjunto de":"Attached of",
 		"Accesos a la aplicación":"Access to the application",
-		"Login fallidos":"Failed login"
+		"Login fallidos":"Failed login",
+
+		"Tipologías":"Typologies",
+		"Tipología de usuario":"User typology",
+		"Nueva tipología de usuario":"New user typology",
+		"Si se crea sólo una tipología de usuario, se mostrará por defecto seleccionada para todos los usuarios y no será opcional":"If there is only one typology of user defined, it will be shown by default selected for all users and will not be optional",
+		"Las tipologías de archivos se gestionan en las áreas a las que pertenecen por los usuarios con permiso.":"The typologies of files are managed in their areas by the users with permission",
+		"Eliminar Tipología":"Delete typology"
+
 	}	
 	
 		

@@ -18,6 +18,8 @@
 <cfcomponent output="false">
 	
 	<cfset component = "UserManager">
+
+	<cfset typologyTableTypeId = 4>
 	
 	<cfinclude template="includes/functions.cfm">
 	
@@ -625,6 +627,8 @@
 		<cfargument name="other_1" type="string" required="false">
 		<cfargument name="other_2" type="string" required="false">
 
+		<cfargument name="typology_id" type="string" required="false">
+
 		<cfset var method = "createUser">
 		
 		<cfset var user_id = "">
@@ -810,6 +814,23 @@
 					SET root_folder_id = #root_folder_id#
 					WHERE id = <cfqueryparam value="#new_user_id#" CFSQLType="cf_sql_integer">;
 				</cfquery>
+
+
+				<!--- setUserTypology --->
+				<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+					
+					<cfinvoke component="UserManager" method="setUserTypology" argumentcollection="#arguments#" returnvariable="setUserTypologyResponse">
+						<cfinvokeargument name="update_user_id" value="#new_user_id#"/>
+					</cfinvoke>
+
+					<cfif setUserTypologyResponse.result IS false>
+
+						<cfthrow message="#setUserTypologyResponse.message#">
+	
+					</cfif>
+
+				</cfif>	
+
 			
 			</cftransaction>
 
@@ -880,7 +901,7 @@
 		<cfreturn response>
 			
 	</cffunction>
-	
+
 
 	<!---  -----------------------UPDATE USER------------------------------------- --->
 
@@ -1017,6 +1038,47 @@
 						WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 				
+				</cfif>
+
+
+				<!--- setUserTypology --->
+				<cfif isDefined("arguments.typology_id")>
+
+					<cfif userQuery.typology_id NEQ arguments.typology_id AND isNumeric(userQuery.typology_row_id)><!---File typology was changed--->
+						
+						<!--- Delete old row --->
+						<cfinvoke component="RowManager" method="deleteRow" returnvariable="deleteRowResponse">
+							<cfinvokeargument name="row_id" value="#userQuery.typology_row_id#"/>
+							<cfinvokeargument name="table_id" value="#userQuery.typology_id#"/>
+							<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
+						</cfinvoke>
+
+						<cfif deleteRowResponse.result IS false>
+							<cfthrow message="#deleteRowResponse.message#">
+						</cfif>
+
+					</cfif>
+
+					<cfif isNumeric(arguments.typology_id)><!--- Typology selected --->
+					
+						<cfinvoke component="UserManager" method="setUserTypology" argumentcollection="#arguments#" returnvariable="setUserTypologyResponse">
+						</cfinvoke>
+
+						<cfif setUserTypologyResponse.result IS false>
+							<cfthrow message="#setUserTypologyResponse.message#">
+						</cfif>
+
+					<cfelse><!--- Clear user typology --->
+
+						<cfinvoke component="UserManager" method="clearUserTypology" argumentcollection="#arguments#" returnvariable="clearUserTypologyResponse">
+						</cfinvoke>
+
+						<cfif clearUserTypologyResponse.result IS false>
+							<cfthrow message="#clearUserTypologyResponse.message#">
+						</cfif>
+
+					</cfif>
+
 				</cfif>
 			
 			</cftransaction>
@@ -1245,6 +1307,85 @@
 
 		<cfreturn response>		
 		
+	</cffunction>
+
+
+
+	<!--- ----------------------------------- setUserTypology -------------------------------------- --->
+
+	<cffunction name="setUserTypology" output="false" returntype="struct" access="public">
+		<cfargument name="update_user_id" type="numeric" required="true">
+		<cfargument name="table_id" type="numeric" required="true"><!---Este parámetro viene incluído junto con el resto de campos de la tabla en el método outputRowFormInputs en RowHtml--->
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="action" type="string" required="true">
+
+		<cfset var method = "setUserTypology">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="RowManager" method="saveRow" argumentcollection="#arguments#" returnvariable="response">
+				<cfinvokeargument name="with_transaction" value="false">
+			</cfinvoke>
+
+			<cfif response.result IS true AND arguments.action IS "create">
+
+				<cfquery datasource="#client_dsn#" name="setUserTypology">
+					UPDATE #client_abb#_users
+					SET typology_id = <cfqueryparam value="#response.table_id#" cfsqltype="cf_sql_integer">,
+					typology_row_id = <cfqueryparam value="#response.row_id#" cfsqltype="cf_sql_integer">
+					WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
+	</cffunction>
+	
+	
+
+	<!--- ----------------------------------- clearUserTypology -------------------------------------- --->
+
+	<cffunction name="clearUserTypology" output="false" returntype="struct" access="public">
+		<cfargument name="update_user_id" type="numeric" required="true">
+
+		<cfset var method = "clearUserTypology">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfquery datasource="#client_dsn#" name="clearUserTypology">
+				UPDATE #client_abb#_users
+				SET typology_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">,
+				typology_row_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfset response = {result=true, user_id=#arguments.update_user_id#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+			
 	</cffunction>
 
 
@@ -2436,6 +2577,7 @@
 		<cfargument name="order_by" type="string" required="false"/>
 		<cfargument name="order_type" type="string" required="false"/>
 		<cfargument name="limit" type="numeric" required="false"/>
+		<cfargument name="users_ids" type="string" required="false">
 		
 		<cfset var method = "getUsers">
 
@@ -2461,12 +2603,12 @@
 			<!---Si el usuario esta en la raiz o whole_tree_visible=true se le pasa la lista de todos los usuarios--->
 			<cfif root_user EQ true OR internal_user EQ true>
 				
-				<cfinvoke component="UserManager" method="getAllUsers" returnvariable="response" argumentcollection="#arguments#">
+				<cfinvoke component="UserManager" method="getAllUsers" argumentcollection="#arguments#" returnvariable="response">
 				</cfinvoke>
 				
 			<cfelse><!---The user is not root user AND not has whole_tree_visible--->
 				
-				<cfinvoke component="UserManager" method="getUsersExternal" returnvariable="response" argumentcollection="#arguments#">
+				<cfinvoke component="UserManager" method="getUsersExternal" argumentcollection="#arguments#" returnvariable="response">
 				</cfinvoke>
 			
 			</cfif>
@@ -2508,7 +2650,8 @@
 		
 			
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-					
+			
+			<!---		
 			<!--- ORDER --->
 			<cfinclude template="includes/usersOrderParameters.cfm">
 			
@@ -2517,13 +2660,13 @@
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
 					<cfinvokeargument name="text" value="#arguments.search_text#">
 				</cfinvoke>
-			</cfif>
+			</cfif>--->
 			
 			<!---Obtiene las áreas del usuario--->		
 			<cfquery name="getUserAreas" datasource="#client_dsn#">
 				SELECT area_id
 				FROM #client_abb#_areas_users
-				WHERE user_id = <cfqueryparam value = "#user_id#" cfsqltype="cf_sql_varchar">;
+				WHERE user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_varchar">;
 			</cfquery>			
 			
 			<cfloop query="getUserAreas">
@@ -2540,24 +2683,16 @@
 
 				<cfset usersList = usersIdsResult.usersList>
 				<cfset areasArray = usersIdsResult.areasArray>
-
-				<!---Obtiene los usuarios de las áreas hacia arriba--->
-				<!---<cfinvoke component="UserManager" method="getAreaUsersIds" returnvariable="usersIdsAscResult">
-					<cfinvokeargument name="area_id" value="#getUserAreas.area_id#">
-					<cfinvokeargument name="usersList" value="#usersList#">
-					<cfinvokeargument name="areasArray" value="#areasAscArray#">
-			
-					<cfinvokeargument name="get_orientation" value="asc">	
-				</cfinvoke>
-				
-				<cfset usersList = usersIdsAscResult.usersList>
-				<cfset areasAscArray = usersIdsAscResult.areasArray>--->
 			
 			</cfloop>
 						
 			<cfif listLen(usersList) GT 0>
+
+				<cfinvoke component="UserManager" method="getAllUsers" argumentcollection="#arguments#" returnvariable="response">
+					<cfinvokeargument name="users_ids" value="#usersList#">
+				</cfinvoke>
 			
-				<cfquery name="membersQuery" datasource="#client_dsn#">
+				<!---<cfquery name="membersQuery" datasource="#client_dsn#">
 					SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type,
 						CONCAT_WS(' ', family_name, name) AS user_full_name, enabled
 					<cfif SESSION.client_abb EQ "hcs">
@@ -2587,12 +2722,15 @@
 						<cfinvokeargument name="data" value="#membersQuery#">
 					</cfinvoke>	
 
-				</cfif>	
+				</cfif>	--->
+
+			<cfelse>
+
+				<cfset response = {result=true, users=#usersArray#}>
 			
 			</cfif>
 						
-			<cfset response = {result=true, users=#usersArray#}>
-
+			
 		<cfreturn response>
 			
 	
@@ -2609,6 +2747,7 @@
 		<cfargument name="order_by" type="string" required="false"/>
 		<cfargument name="order_type" type="string" required="false"/>
 		<cfargument name="limit" type="numeric" required="false">
+		<cfargument name="users_ids" type="string" required="false">
 		
 		<cfset var method = "getAllUsers">
 
@@ -2635,7 +2774,8 @@
 				</cfinvoke>
 			</cfif>
 
-            <cfif isDefined("xmlUser.user.xmlAttributes.space_used") OR isDefined("xmlUser.user.xmlAttributes.number_of_connections")>
+            <!---<cfif isDefined("xmlUser.user.xmlAttributes.space_used") OR isDefined("xmlUser.user.xmlAttributes.number_of_connections")>
+            
                 <cfquery name="getTotals" datasource="#client_dsn#">
                     SELECT
                     <cfif isDefined("xmlUser.user.xmlAttributes.space_used")>
@@ -2669,20 +2809,29 @@
 						</cfif>)
 					</cfif>
 
+					<cfif isDefined("arguments.users_ids")>
+					
+						<cfif arguments.with_external EQ false OR len(arguments.search_text_re) GT 0>
+							AND
+						<cfelse>
+							WHERE
+						</cfif>
+						u.id IN (<cfqueryparam value="#arguments.users_ids#" cfsqltype="cf_sql_varchar" list="true">)
+
+					</cfif>
+
 					<cfif isDefined("arguments.limit")>
 					LIMIT #arguments.limit#
 					</cfif>;
                 </cfquery>
                 
-            </cfif>
+            </cfif>--->
 
             <!--- getAllUsers --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getAllUsers" returnvariable="getAllUsersQuery">
-				<cfinvokeargument name="with_external" value="#arguments.with_external#">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getAllUsers" argumentcollection="#arguments#" returnvariable="getAllUsersQuery">
 				<cfinvokeargument name="search_text_re" value="#search_text_re#">
 				<cfinvokeargument name="order_by" value="#order_by#">
 				<cfinvokeargument name="order_type" value="#order_type#">
-				<cfinvokeargument name="limit" value="#arguments.limit#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

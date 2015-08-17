@@ -12,6 +12,12 @@
 	<cfset search_text = "">
 </cfif>
 
+<cfif isDefined("URL.typology_id")>
+	<cfset selected_typology_id = URL.typology_id>
+<cfelse>
+	<cfset selected_typology_id = "">
+</cfif>
+
 <!---<cfif isDefined("URL.limit") AND isNumeric(URL.limit)>
 	<cfset limit_to = URL.limit>
 <cfelse>

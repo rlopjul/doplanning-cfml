@@ -13,7 +13,7 @@
 <cfset itemTypeWeb = itemTypeStruct.web>
 <cfset itemTypeNoWeb = itemTypeStruct.noWeb>
 
-<cfif itemTypeId GT 10 AND itemTypeId LT 16>
+<cfif itemTypeId GT 10 AND itemTypeId LT 17>
 	<cfset tableTypeId = itemTypeStruct.tableTypeId>
 	<cfif itemTypeId IS 14 OR itemTypeId IS 15>
 		<cfset tableTypeName = itemTypeStruct.tableTypeName>

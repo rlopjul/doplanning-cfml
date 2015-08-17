@@ -27,6 +27,30 @@
 			});
 		</cfif>
 
+
+		$('#dataTable tbody tr').on('click', function(e) {
+
+	       	var row = $(this);
+
+	       	<cfif fields_selectable IS false>
+
+	       		<!---openUrl('#field_page_url#','itemIframe',event)--->
+		       	var itemUrl= row.data("item-url");
+		       	openUrlLite(itemUrl,'_self');
+
+	       	<cfelse>
+
+	       		var fieldId = row.data("field-id");
+	       		toggleCheckboxChecked('#field_'+fieldId)
+
+	       	</cfif>
+
+	        
+		    
+
+	    });
+
+
 	}); 
 
 	<!---<cfif fields_selectable IS true>
@@ -99,7 +123,7 @@
 
 		</cfif>
 
-		<tr <cfif fieldSelected IS true>class="selected"</cfif> onclick="<cfif fields_selectable IS false>openUrl('#field_page_url#','itemIframe',event)<cfelse>toggleCheckboxChecked('##field_#fields.field_id#')</cfif>">
+		<tr <cfif fieldSelected IS true>class="selected"</cfif> data-item-url="#field_page_url#" data-field-id="#fields.field_id#"><!---onclick="<cfif fields_selectable IS false>openUrl('#field_page_url#','itemIframe',event)<cfelse>toggleCheckboxChecked('##field_#fields.field_id#')</cfif>"--->
 			<cfif fields_selectable IS true>
 				<td style="text-align:center;"><input type="checkbox" name="fields_ids[]" id="field_#fields.field_id#" value="#fields.field_id#" checked="checked" onClick="stopPropagation(event);" /></td>
 			</cfif>	
