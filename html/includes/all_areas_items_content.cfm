@@ -60,6 +60,9 @@
 		<cfif len(identifier) GT 0>
 			<cfinvokeargument name="identifier" value="#identifier#">
 		</cfif>
+		<cfif isDefined("URL.categories_ids")>
+			<cfinvokeargument name="categories_ids" value="#URL.categories_ids#">
+		</cfif>
 
 		
 	</cfinvoke>

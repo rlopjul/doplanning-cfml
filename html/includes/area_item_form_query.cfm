@@ -68,14 +68,17 @@
 			<cfset parent_id = URL[#itemTypeName#]>
 			<cfset parent_kind = "#itemTypeName#">
 			
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="getItemObject">
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="getItemResponse">
 				<cfinvokeargument name="item_id" value="#parent_id#">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="with_categories" value="true"/>
 			</cfinvoke>
 			
+			<cfset getItemObject = getItemResponse.item>
 			<cfset area_id = getItemObject.area_id>
-			
 			<cfset title_default = "Re: "&getItemObject.title>
+
+			<cfset itemCategories = getItemResponse.categories>
 			
 			<cfset return_page = "#itemTypeName#.cfm?#itemTypeName#=#parent_id#">
 			
@@ -101,12 +104,16 @@
 		<cfif isDefined("URL.#itemTypeName#")>
 			<cfset item_id = URL[#itemTypeName#]>
 			
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="getItemResponse">
 				<cfinvokeargument name="item_id" value="#item_id#">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="with_categories" value="true"/>
 			</cfinvoke>
 			
+			<cfset objectItem = getItemResponse.item>
 			<cfset area_id = objectItem.area_id>
+
+			<cfset itemCategories = getItemResponse.categories>
 			
 			<cfset return_page = "#itemTypeName#.cfm?#itemTypeName#=#item_id#">
 			

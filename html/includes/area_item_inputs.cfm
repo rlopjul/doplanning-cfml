@@ -911,6 +911,80 @@
 </cfif>
 
 
+<!--- Categories --->
+
+<!--- getAreaItemTypesOptions --->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItemType" method="getAreaItemTypesOptions" returnvariable="getItemTypesOptionsResponse">
+	<cfinvokeargument name="itemTypeId" value="#itemTypeId#"/>
+</cfinvoke>
+
+<cfset itemTypeOptions = getItemTypesOptionsResponse.query>
+
+<cfif isNumeric(itemTypeOptions.category_area_id)>
+
+	<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
+	<div class="row">
+
+		<div class="col-md-12">
+
+			<label class="control-label" for="categories_ids" lang="es">Categorías</label>
+			
+		</div>
+
+	</div>
+
+	<div class="row">
+
+		<div class="col-sm-11 col-sm-offset-1" style="margin-bottom:10px">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
+				<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">				
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif subAreas.recordCount GT 0>
+
+				<cfif isDefined("itemCategories") AND itemCategories.recordCount GT 0>
+					<cfset selectedAreasList = valueList(itemCategories.category_id)>
+				<cfelseif isDefined("objectItem.categories_ids") AND isArray(objectItem.categories_ids)>
+					<cfset selectedAreasList = arrayToList(objectItem.categories_ids)>
+				<cfelse>
+					<cfset selectedAreasList = "">
+				</cfif>
+				
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
+					<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
+					<cfinvokeargument name="subAreas" value="#subAreas#">
+					<cfif len(selectedAreasList) GT 0>
+						<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+					</cfif>
+					<cfinvokeargument name="recursive" value="false">
+					<cfinvokeargument name="field_name" value="categories_ids"/>
+					<cfinvokeargument name="field_input_type" value="checkbox">
+					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<script>
+				addRailoRequiredCheckBox("categories_ids[]", "Debe seleccionar al menos una categoría");
+				</script>
+
+				<p class="help-block" lang="es">Estas categorías permiten a los usuarios clasificar los elementos y filtrar las notificaciones por email que se reciben</p>
+
+			<cfelse>
+
+				<p class="help-block" lang="es">Este elemento tiene un área para categorías seleccionada pero esta área no tiene subareas para definir las categorías</p>
+
+			</cfif>	
+
+		</div>
+
+	</div>
+
+</cfif>
+
 <cfif itemTypeId IS 2 OR itemTypeId IS 4 OR itemTypeId IS 5>
 
 	<cfif APPLICATION.moduleWeb EQ true>
@@ -941,10 +1015,6 @@
 		
 			<cfinvoke component="#APPLICATION.componentsPath#/IframeDisplayTypeManager" method="getDisplayTypes" returnvariable="iframeDisplayTypeQuery">
 			</cfinvoke>
-		
-			<!---<cfset iframe_display_type_options = "Ancho de página, 560 x 315">
-			<cfset iframe_display_type_values = "1,2">
-			<option value="#iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframe_display_type_id>selected="selected"</cfif>>#listGetAt(iframe_display_type_options,iframe_display_type_id)#</option>--->
 	
 			<select name="iframe_display_type_id" id="iframe_display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
 				<cfloop query="iframeDisplayTypeQuery">
@@ -1041,6 +1111,24 @@
 		</cfoutput>
 	</cfif>
 </cfif>
+
+<cfif itemTypeId NEQ 1>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectItem.no_notify") AND objectItem.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
+				</label>
+				<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+			</div>
+		</div>
+	</div>
+
+</cfif>
+
+
+
 <div style="clear:both"></div>
 
 <cfif editorApp IS "summernote"><!---Messages o DP Documents--->

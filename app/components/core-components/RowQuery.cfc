@@ -439,6 +439,7 @@
 		<cfargument name="file_name" type="string" required="false">
 		<cfargument name="description" type="string" required="false">
 		<cfargument name="user_in_charge" type="numeric" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="limit" type="numeric" required="false">
 
 		<cfargument name="from_date" type="string" required="no">
@@ -526,6 +527,19 @@
 					<cfif isDefined("arguments.user_in_charge")>
 						AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
 					</cfif>
+
+					<cfif isDefined("arguments.categories_ids")>
+
+						<cfloop array="#arguments.categories_ids#" index="category_id">
+							<cfif isNumeric(category_id)>
+							AND files.id IN ( SELECT item_id FROM `#client_abb#_items_categories`
+								WHERE item_type_id = 10
+								AND area_id = <cfqueryparam value="#category_id#" cfsqltype="cf_sql_integer"> )
+							</cfif>
+						</cfloop>
+
+					</cfif>
+
 					<cfif isDefined("arguments.from_date") AND len(arguments.from_date) GT 0>
 						AND ( files.uploading_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
 							OR files.replacement_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#') )
@@ -612,6 +626,28 @@
 											AND area_id = <cfqueryparam value="#select_value#" cfsqltype="cf_sql_integer"> ) 
 										</cfif>
 									</cfloop>
+
+									<!---Esta opción es la adecuada para que se incluyan los elementos con al menos una de las opciones seleccionadas--->
+									<!---<cfif arrayLen(field_values) GT 1 OR ( arrayLen(field_values) IS 1 AND isNumeric(field_values[1]) )>
+										AND table_row.row_id IN (
+											SELECT row_id FROM `#client_abb#_#tableTypeTable#_rows_areas` 
+											WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+											AND field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer"> 
+											AND (
+											<cfset curValueCount = 1>
+											<cfloop array="#field_values#" index="select_value">
+												<cfif isNumeric(select_value)>
+													<cfif curValueCount GT 1>
+														OR
+													</cfif>
+													area_id = <cfqueryparam value="#select_value#" cfsqltype="cf_sql_integer">
+													<cfset curValueCount = curValueCount+1>
+												</cfif>
+											</cfloop>
+											)
+										)
+									</cfif>--->
+									
 								<!---</cfif>--->
 
 							</cfif>
@@ -623,20 +659,20 @@
 					<!---
 					<cfif selectFields IS true><!--- Select fields values ---->
 						AND table_row.row_id IS IN ( SELECT row_id FROM `#client_abb#_#tableTypeTable#_rows_areas` 
-										WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-										<cfloop query="fields">
+							WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+							<cfloop query="fields">
 
-											<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- SELECT --->
-												<cfif isDefined("arguments.#field_name#") AND isNumeric(arguments[field_name])>
+								<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- SELECT --->
+									<cfif isDefined("arguments.#field_name#") AND isNumeric(arguments[field_name])>
 
-													AND ( field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
-													AND area_id = <cfqueryparam value="#arguments[field_name]#" cfsqltype="cf_sql_integer"> ) 
+										AND ( field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
+										AND area_id = <cfqueryparam value="#arguments[field_name]#" cfsqltype="cf_sql_integer"> ) 
 
-												</cfif>
+									</cfif>
 
-											</cfif>
+								</cfif>
 
-										</cfloop>)
+							</cfloop>)
 
 					</cfif>--->
 					ORDER BY last_version_date DESC

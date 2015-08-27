@@ -1223,6 +1223,10 @@
 		<cfargument name="notify_app_news" type="boolean" required="false" default="false">
 		<cfargument name="notify_app_features" type="boolean" required="false" default="false">
 
+		<cfargument name="no_notifications" type="boolean" required="false" default="false">
+
+		<cfargument name="notifications_digest_type_id" type="string" required="true">
+
 		<cfset var method = "updateUserPreferences">
 		
 		<cfset var response = structNew()>
@@ -1283,8 +1287,25 @@
 					, notify_been_associated_to_area = <cfqueryparam value="#arguments.notify_been_associated_to_area#" cfsqltype="cf_sql_bit">
 					, notify_app_news = <cfqueryparam value="#arguments.notify_app_news#" cfsqltype="cf_sql_bit">
 					, notify_app_features = <cfqueryparam value="#arguments.notify_app_features#" cfsqltype="cf_sql_bit">
+					, no_notifications = <cfqueryparam value="#arguments.no_notifications#" cfsqltype="cf_sql_bit">
+					<cfif NOT isNumeric(arguments.notifications_digest_type_id)>
+						, notifications_digest_type_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+					<cfelse>
+						, notifications_digest_type_id = <cfqueryparam value="#arguments.notifications_digest_type_id#" cfsqltype="cf_sql_integer">
+					</cfif>
 					WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
+
+
+				<!--- deleteUserNotificationsCategoriesDisable --->
+				<cfinvoke component="UserManager" method="deleteUserNotificationsCategoriesDisabled">
+					<cfinvokeargument name="update_user_id" value="#arguments.update_user_id#">
+				</cfinvoke>
+
+				<!--- setUserNotificationsCategoriesDisabled --->
+				<cfinvoke component="UserManager" method="setUserNotificationsCategoriesDisabled" argumentcollection="#arguments#">
+				</cfinvoke>
+
 
 			<cfelse><!---The user does not exist--->
 				
@@ -1307,6 +1328,93 @@
 
 		<cfreturn response>		
 		
+	</cffunction>
+
+
+	<!--- ----------------------------------- deleteUserNotificationsCategoriesDisabled -------------------------------------- --->
+
+	<cffunction name="deleteUserNotificationsCategoriesDisabled" output="false" returntype="void" access="public">
+		<cfargument name="update_user_id" type="numeric" required="true">
+
+		<cfset var method = "deleteUserNotificationsCategoriesDisabled">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfquery datasource="#client_dsn#" name="deleteUserNotificationsCategoriesDisabled">
+				DELETE 
+				FROM `#client_abb#_users_notifications_categories_disabled`
+				WHERE user_id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+	</cffunction>
+
+
+
+	<!--- ----------------------------------- setUserNotificationsCategoriesDisabled -------------------------------------- --->
+
+	<cffunction name="setUserNotificationsCategoriesDisabled" output="false" returntype="void" access="public">
+		<cfargument name="update_user_id" type="numeric" required="true">
+
+		<cfset var method = "setUserNotificationsCategoriesDisabled">					
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+			</cfinvoke>
+
+			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
+			<!--- getAreaItemTypesOptions --->
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItemType" method="getAreaItemTypesOptions" returnvariable="getItemTypesOptionsResponse">
+			</cfinvoke>
+
+			<cfset itemsTypesQuery = getItemTypesOptionsResponse.query>
+
+			<cfloop array="#itemTypesArray#" index="itemTypeId">
+
+				<cfset itemTypeName = itemTypesStruct[itemTypeId].name>
+
+				<cfif itemTypeId NEQ 13 AND itemTypeId NEQ 14 AND itemTypeId NEQ 15 AND itemTypeId NEQ 16>
+
+					<cfquery dbtype="query" name="itemTypeQuery">
+						SELECT *
+						FROM itemsTypesQuery
+						WHERE item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+
+					<cfif itemTypeQuery.recordCount GT 0 AND isNumeric(itemTypeQuery.category_area_id)>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
+							<cfinvokeargument name="area_id" value="#itemTypeQuery.category_area_id#">				
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfif subAreas.recordCount GT 0>
+
+							<cfloop query="subAreas">
+
+								<cfif NOT isDefined("arguments.categories_#itemTypeName#_ids") OR ArrayFind(arguments['categories_#itemTypeName#_ids'], subAreas.id) IS 0>
+									
+									<cfquery name="addUserCategoryDisabled" datasource="#client_dsn#">
+										INSERT INTO `#client_abb#_users_notifications_categories_disabled` (user_id, item_type_id, area_id)
+										VALUES ( <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">,
+											<cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">,
+											<cfqueryparam value="#subAreas.id#" cfsqltype="cf_sql_integer">);
+									</cfquery>
+
+								</cfif>
+								
+							</cfloop>
+
+						</cfif>
+
+					</cfif>					
+
+				</cfif>
+
+			</cfloop>
+			
 	</cffunction>
 
 
@@ -1742,9 +1850,10 @@
 			</cfif>
 		
 			<cfquery name="assignUser" datasource="#client_dsn#">
-				INSERT INTO #client_abb#_areas_users (area_id, user_id)
+				INSERT INTO #client_abb#_areas_users (area_id, user_id, association_date)
 				VALUES(<cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
-					<cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">);
+					<cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">,
+					NOW());
 			</cfquery>	
 			
 			<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
@@ -2859,14 +2968,15 @@
     <!--- ---------------------------- GET USERS TO NOTIFY LISTS ------------------------------- --->
 	
 	<cffunction name="getUsersToNotifyLists" returntype="struct" output="false" access="public">	
-		<cfargument name="request" type="string" required="yes">
+		<!---<cfargument name="request" type="string" required="yes">--->
+		<cfargument name="area_id" type="numeric" required="true"/>
 	
 		<cfset var method = "getUsersToNotifyLists">
 		
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getUsersToNotifyLists" returnvariable="structResponse">
-			<cfinvokeargument name="request" value="#arguments.request#"/>
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getUsersToNotifyLists" argumentcollection="#arguments#" returnvariable="structResponse">
+			<!---<cfinvokeargument name="request" value="#arguments.request#"/>--->
 
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -3010,46 +3120,6 @@
 		
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 		
-			<!---<cfquery name="getUserPreferencesQuery" datasource="#client_dsn#">
-				SELECT id, notify_new_message, notify_new_file, notify_replace_file, notify_new_area,
-				notify_new_event, notify_new_task
-				, notify_delete_file <!---, notify_dissociate_file--->
-				<cfif APPLICATION.moduleAreaFilesLite IS true>
-				, notify_lock_file
-				</cfif>
-				<cfif APPLICATION.moduleConsultations IS true>
-				, notify_new_consultation
-				</cfif>
-				<cfif APPLICATION.modulePubMedComments IS true>
-				, notify_new_pubmed
-				</cfif>
-				<cfif APPLICATION.modulefilesWithTables IS true>
-				, notify_new_typology	
-				</cfif>
-				<cfif APPLICATION.moduleLists IS true>
-				, notify_new_list
-				, notify_new_list_row
-				, notify_new_list_view
-				</cfif>
-				<cfif APPLICATION.moduleForms IS true>
-				, notify_new_form
-				, notify_new_form_row
-				, notify_new_form_view
-				</cfif>
-				<cfif APPLICATION.moduleWeb IS true>
-					<cfif APPLICATION.identifier EQ "vpnet">
-					, notify_new_link
-					</cfif>
-					, notify_new_entry, notify_new_news, notify_new_image
-				</cfif>
-				, notify_new_user_in_area
-				, notify_been_associated_to_area
-				, notify_app_news
-				, notify_app_features
-				FROM #client_abb#_users		
-				WHERE id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;			
-			</cfquery>--->
-
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserPreferences" returnvariable="getUserPreferencesQuery">
 				<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
 

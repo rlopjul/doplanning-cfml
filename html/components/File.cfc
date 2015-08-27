@@ -611,6 +611,8 @@
 		<cfargument name="publication_validated" type="boolean" required="false">
 		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="public" type="boolean" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 		
 		<cfset var method = "createFile">
 		
@@ -652,6 +654,8 @@
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 		
 		<cfset var method = "updateFile">
 		
@@ -728,6 +732,7 @@
 		<cfargument name="Filedata" type="string" required="true">
 		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="unlock" type="boolean" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 		
 		<cfset var method = "replaceFile">
 		
@@ -1404,6 +1409,7 @@
 	<cffunction name="getAllAreasFiles" returntype="struct" output="false" access="public">
 		<cfargument name="search_text" type="string" required="no">
 		<cfargument name="user_in_charge" type="numeric" required="no">
+		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="limit" type="numeric" required="no">
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">

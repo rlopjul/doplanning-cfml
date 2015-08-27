@@ -10,7 +10,7 @@
 
 	<cfset component = "AreaQuery">	
 	
-	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
+	<cfset dbDateTimeFormat = "%d-%m-%Y %H:%i:%s">
 	<!--- <cfset timeZoneTo = "+1:00"> --->
 	<cfset timeZoneTo = "Europe/Madrid">
 	
@@ -28,7 +28,7 @@
 			
 			<cfquery name="selectAreaQuery" datasource="#client_dsn#">
 				SELECT areas.id, areas.name, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id, areas.link, areas.type, areas.default_typology_id, areas.hide_in_menu, areas.menu_type_id, areas.item_type_1_enabled, areas.item_type_2_enabled, areas.item_type_3_enabled, areas.item_type_4_enabled, areas.item_type_5_enabled, areas.item_type_6_enabled,  areas.item_type_7_enabled, areas.item_type_8_enabled, areas.item_type_9_enabled, areas.item_type_10_enabled, areas.item_type_11_enabled, areas.item_type_12_enabled, areas.item_type_13_enabled, areas.item_type_14_enabled, areas.item_type_15_enabled, areas.item_type_16_enabled, areas.item_type_20_enabled, areas.users_visible, areas.read_only
-				, DATE_FORMAT(CONVERT_TZ(areas.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
+				, DATE_FORMAT(CONVERT_TZ(areas.creation_date,'SYSTEM','#timeZoneTo#'), '#dbDateTimeFormat#') AS creation_date
 				<cfif arguments.with_user IS true>
 				, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				</cfif>
@@ -721,9 +721,12 @@
 	<cffunction name="getAreas" returntype="struct" output="false" access="public">
 		<cfargument name="areas_ids" type="string" required="false">
 		<cfargument name="search_text" type="string" required="false" default="">
-		<!---<cfargument name="order_by" type="string" required="false" default="name">
-		<cfargument name="order_type" type="string" required="false" default="asc">--->
-		<cfargument name="limit" type="numeric" required="true">
+		<cfargument name="from_date" type="string" required="no">
+		<cfargument name="end_date" type="string" required="no">
+		<cfargument name="order_by" type="string" required="false" default="name">
+		<cfargument name="order_type" type="string" required="false" default="ASC">
+		<cfargument name="limit" type="numeric" required="false">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">			
@@ -733,59 +736,97 @@
 		<cfset var response = structNew()>
 		
 		<cfset var text_re = "">
-							
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="text_re">
-				<cfinvokeargument name="text" value="#arguments.search_text#">
-			</cfinvoke>
-						
-			<!---
-			<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
-				<cfinvokeargument name="get_user_id" value="#user_id#"> 
-			</cfinvoke>
 			
-			<cfif internal_user IS false>
-				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllUserAreasList" returnvariable="allUserAreasList">
-					<cfinvokeargument name="get_user_id" value="#user_id#">
-				</cfinvoke>			
-			</cfif>--->
+			<cfif len(arguments.search_text) GT 0>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="text_re">
+					<cfinvokeargument name="text" value="#arguments.search_text#">
+				</cfinvoke>
+			</cfif>
 			
 			<cfquery datasource="#client_dsn#" name="areasQuery">
-				SELECT <!--- SQL_CALC_FOUND_ROWS ---> *, areas.id AS area_id, areas.name AS area_name
-				FROM #client_abb#_areas AS areas
-				WHERE (areas.name REGEXP <cfqueryparam value="#text_re#" cfsqltype="cf_sql_varchar">
-				OR areas.description REGEXP <cfqueryparam value="#text_re#" cfsqltype="cf_sql_varchar">)
-				<cfif isDefined("arguments.areas_id")>
-				AND areas.id IN (<cfqueryparam value="#arguments.areas_ids#" list="true" cfsqltype="cf_sql_varchar"/>)
+				SELECT areas.id, areas.name, areas.parent_id, areas.user_in_charge, areas.description, areas.image_id, areas.link, areas.type, areas.default_typology_id, areas.hide_in_menu, areas.menu_type_id, areas.item_type_1_enabled, areas.item_type_2_enabled, areas.item_type_3_enabled, areas.item_type_4_enabled, areas.item_type_5_enabled, areas.item_type_6_enabled,  areas.item_type_7_enabled, areas.item_type_8_enabled, areas.item_type_9_enabled, areas.item_type_10_enabled, areas.item_type_11_enabled, areas.item_type_12_enabled, areas.item_type_13_enabled, areas.item_type_14_enabled, areas.item_type_15_enabled, areas.item_type_16_enabled, areas.item_type_20_enabled, areas.users_visible, areas.read_only, areas.id AS area_id, areas.name AS area_name
+				<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(CONVERT_TZ(areas.creation_date,'SYSTEM','#timeZoneTo#'), '#dbDateTimeFormat#') AS creation_date
+				<cfelse>
+					, areas.creation_date
 				</cfif>
-				ORDER BY areas.name ASC
-				<!---LIMIT #init_item#, #items_page#--->
-				LIMIT #arguments.limit#;
+				FROM #client_abb#_areas AS areas
+				WHERE 1=1
+				<cfif isDefined("arguments.areas_id")>
+					AND areas.id IN (<cfqueryparam value="#arguments.areas_ids#" list="true" cfsqltype="cf_sql_varchar"/>)
+				</cfif>
+				<cfif isDefined("arguments.from_date")>
+					AND areas.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
+				</cfif>
+				<cfif isDefined("arguments.end_date")>
+					AND areas.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dbDateTimeFormat#')
+				</cfif>
+				<cfif len(arguments.search_text) GT 0>
+					AND
+					(areas.name REGEXP <cfqueryparam value="#text_re#" cfsqltype="cf_sql_varchar">
+					OR areas.description REGEXP <cfqueryparam value="#text_re#" cfsqltype="cf_sql_varchar">)
+				</cfif>
+				ORDER BY #arguments.order_by# #arguments.order_type#
+				<cfif isDefined("arguments.limit")>
+					LIMIT #arguments.limit#
+				</cfif>;
 			</cfquery>
-			
-			<!---
-			<cfquery datasource="#client_dsn#" name="getCount">
-				SELECT FOUND_ROWS() AS count;
-			</cfquery>
-			
-			<cfset num_items = getCount.count>
-			
-			<cfset num_pages = ceiling(num_items/items_page)>
-			
-			<cfset xmlResult = '<areas total="#num_items#" pages="#num_pages#" page="#current_page#">'>
-			
-			<cfloop query="areasQuery">
-				<cfset xmlArea='<area id="#areasQuery.id#" name="#xmlFormat(areasQuery.name)#" parent_id="#areasQuery.parent_id#" creation_date="#areasQuery.creation_date#" label="#xmlFormat(areasQuery.name)#" user_in_charge="#areasQuery.user_in_charge#" allowed="true" image_id="#image_id#" with_link="false"/>'>
-				
-				<cfset xmlResult = xmlResult&xmlArea>
-			</cfloop>			
-			
-			<cfset xmlResponseContent = xmlResult&"</areas>">--->
 			
 			<cfset response = {result=true, areas=#areasQuery#}>
 												
 		<cfreturn response>
 		
 	</cffunction>
+
+
+	<!--- ---------------------------- getAreaUsers ------------------------------- --->
+
+	<!--- Hay un método en UserManager que se llama igual que este, pero este es más simple --->
+	
+	<cffunction name="getAreaUsers" returntype="query" output="false" access="public">
+		<cfargument name="area_id" type="string" required="false">
+		<cfargument name="areas_ids" type="string" required="false">
+		<cfargument name="from_date" type="string" required="no">
+		<cfargument name="end_date" type="string" required="no">
+		<cfargument name="order_by" type="string" required="false" default="name">
+		<cfargument name="order_type" type="string" required="false" default="ASC">
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+		<cfargument name="with_area" type="boolean" required="false" default="false">
+
+		<cfquery name="membersQuery" datasource="#client_dsn#">
+			SELECT users.id, users.email, users.name, users.telephone, users.family_name, users.mobile_phone, users.telephone_ccode, users.mobile_phone_ccode, users.image_type
+			, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, areas_users.area_id
+			<cfif arguments.parse_dates IS true>
+				, DATE_FORMAT(CONVERT_TZ(areas_users.association_date,'SYSTEM','#timeZoneTo#'), '#dbDateTimeFormat#') AS association_date
+			<cfelse>
+				, areas_users.association_date
+			</cfif>
+			<cfif arguments.with_area IS true>
+				, areas.name AS area_name
+			</cfif>
+			FROM #client_abb#_users AS users
+			INNER JOIN #client_abb#_areas_users AS areas_users ON users.id = areas_users.user_id
+			<cfif arguments.with_area IS true>
+				INNER JOIN #client_abb#_areas AS areas ON areas.id = areas_users.area_id
+			</cfif>
+			<cfif isDefined("arguments.from_date")>
+				AND areas_users.association_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
+			</cfif>
+			<cfif isDefined("arguments.end_date")>
+				AND areas_users.association_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dbDateTimeFormat#')
+			</cfif>
+			<cfif isDefined("arguments.area_id")>
+				AND areas_users.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+			<cfelseif isDefined("arguments.areas_ids")>
+				AND areas_users.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="true">)
+			</cfif>
+			ORDER BY #arguments.order_by# #arguments.order_type#;
+		</cfquery>
+
+		<cfreturn membersQuery>
+
+	</cffunction>
+
 	
     
   

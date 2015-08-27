@@ -319,7 +319,11 @@
 				<cfif field.field_type_id NEQ 9 AND field.field_type_id NEQ 10><!--- IS NOT SELECT --->
 
 					<cfquery name="updateFieldInTable" datasource="#client_dsn#">
-						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+						ALTER 
+						<cfif arguments.required IS true AND field.required IS false AND field.mysql_type NEQ "DATE">
+							IGNORE <!--- Para evitar el error de Data truncated for column debido a valores NULL introducidos en registros existentes, y no tener que modificar esos valores --->
+						</cfif>
+						TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
 						MODIFY COLUMN `field_#field_id#` #field.mysql_type# 
 						<cfif arguments.required IS true AND field.mysql_type NEQ "DATE">
 						NOT NULL	

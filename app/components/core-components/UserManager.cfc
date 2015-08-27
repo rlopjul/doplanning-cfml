@@ -59,7 +59,11 @@
 	<!--- ---------------------------- GET USERS TO NOTIFY LISTS ------------------------------- --->
 	
 	<cffunction name="getUsersToNotifyLists" returntype="struct" output="false" access="public">	
-		<cfargument name="request" type="string" required="yes">
+		<!---<cfargument name="request" type="string" required="yes">--->
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="categories_ids" type="string" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -74,11 +78,8 @@
 		
         <cfset var structResponse = structNew()>
 		
-        <cfinvoke component="UserManager" method="getUsersToNotify" returnvariable="arrayUsersToNotify">
-			<cfinvokeargument name="request" value="#arguments.request#"/>
-
-			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+        <cfinvoke component="UserManager" method="getUsersToNotify" argumentcollection="#arguments#" returnvariable="arrayUsersToNotify">
+			<!---<cfinvokeargument name="request" value="#arguments.request#"/>--->
 		</cfinvoke>
 		
 		<cfloop list="#APPLICATION.languages#" index="curLang">
@@ -138,21 +139,54 @@
 	<!--- ---------------------------- GET USERS TO NOTIFY  ------------------------------- --->
 	
 	<cffunction name="getUsersToNotify" returntype="array" output="false" access="public">	
-		<cfargument name="request" type="string" required="yes">
+		<!---<cfargument name="request" type="string" required="yes">--->
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="categories_ids" type="string" required="false">
+
+		<cfargument name="notify_new_message" type="string" required="no" default="">
+		<cfargument name="notify_new_file" type="string" required="no" default="">
+		<cfargument name="notify_replace_file" type="string" required="no" default="">
+		<cfargument name="notify_new_area" type="string" required="no" default="">
+		
+		<cfargument name="notify_new_entry" type="string" required="no" default="">
+		<cfargument name="notify_new_link" type="string" required="no" default="">
+		<cfargument name="notify_new_news" type="string" required="no" default="">
+		<cfargument name="notify_new_event" type="string" required="no" default="">
+		<cfargument name="notify_new_task" type="string" required="no" default="">
+		<cfargument name="notify_new_consultation" type="string" required="no" default="">
+
+		<cfargument name="notify_new_image" type="string" required="false" default="">
+		<cfargument name="notify_new_typology" type="string" required="false" default="">
+		<cfargument name="notify_new_list" type="string" required="false" default="">
+		<cfargument name="notify_new_list_row" type="string" required="false" default="">
+		<cfargument name="notify_new_list_view" type="string" required="false" default="">
+		<cfargument name="notify_new_form" type="string" required="false" default="">
+		<cfargument name="notify_new_form_row" type="string" required="false" default="">
+		<cfargument name="notify_new_form_view" type="string" required="false" default="">
+		<cfargument name="notify_new_pubmed" type="string" required="false" default="">
+
+		<cfargument name="notify_delete_file" type="string" required="false" default="">
+		<cfargument name="notify_lock_file" type="string" required="false" default="">
+
+		<cfargument name="notify_new_user_in_area" type="string" required="false" default="">
+
+		<cfargument name="no_notifications" type="string" required="false" default="">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 	
 		<cfset var method = "getUsersToNotify">
 		
-		<cfset var xmlUser = "">
-		<cfset var init_area_id = "">
+		<!---<cfset var xmlUser = "">
+		<cfset var init_area_id = "">--->
 
 		<cfset var usersArray = ArrayNew(1)>
 		<cfset var areasArray = ArrayNew(1)>
 		
 		<!---PREFERENCES--->
-		<cfset var notify_new_message = "">
+		<!---<cfset var notify_new_message = "">
 		<cfset var notify_new_file = "">
 		<cfset var notify_replace_file = "">
 		<cfset var notify_new_area = "">
@@ -177,10 +211,10 @@
 		<cfset var notify_delete_file = "">
 		<cfset var notify_lock_file = "">
 
-		<cfset var notify_new_user_in_area = "">
+		<cfset var notify_new_user_in_area = "">--->
 			
 			
-			<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="xmlRequest" returnvariable="xmlRequest">
+			<!---<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="xmlRequest" returnvariable="xmlRequest">
 				<cfinvokeargument name="request" value="#arguments.request#">
 			</cfinvoke>
 			
@@ -190,7 +224,7 @@
 				</cfoutput>
 			</cfxml>
 			
-			<cfset init_area_id = xmlRequest.request.parameters.area.xmlAttributes.id>
+			<cfset init_area_id = xmlRequest.request.parameters.area.xmlAttributes.id>--->
 			
 			
 			<!--- ORDER --->
@@ -211,13 +245,13 @@
 			</cfif>
 
 			<!---	
-			MUY IMPORTANTE: esto había que corregirlo para que aquí no se usara ni fuese necesaria la SESION
+			MUY IMPORTANTE: aquí no se puede usar la sesion
 			
 			<cfif ( (isDefined("SESSION.client_force_notifications") AND SESSION.client_force_notifications IS false) OR NOT isDefined("SESSION.client_force_notifications") ) AND isDefined("xmlRequest.request.parameters.preferences")>	
 
 		--->
 
-			<cfif selectClientQuery.force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>
+			<!---<cfif selectClientQuery.force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>
 				
 				<cfxml variable="xmlPreferences">
 					<cfoutput>#xmlRequest.request.parameters.preferences#</cfoutput>
@@ -294,39 +328,49 @@
 					<cfset notify_new_user_in_area = xmlPreferences.preferences.xmlAttributes.notify_new_user_in_area>
 				</cfif>
 				
-			</cfif>
+			</cfif>--->
 			
 			<cfinvoke component="UserManager" method="getAreaUsers" returnvariable="returnArrays">
-				<cfinvokeargument name="area_id" value="#init_area_id#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="areasArray" value="#areasArray#">
 				<cfinvokeargument name="include_user_log_in" value="true">
 				<cfinvokeargument name="get_orientation" value="asc">
-				<cfinvokeargument name="notify_new_message" value="#notify_new_message#">
-				<cfinvokeargument name="notify_new_file" value="#notify_new_file#">
-				<cfinvokeargument name="notify_replace_file" value="#notify_replace_file#">
-				<cfinvokeargument name="notify_new_area" value="#notify_new_area#">
-				
-				<cfinvokeargument name="notify_new_entry" value="#notify_new_entry#">
-				<cfinvokeargument name="notify_new_link" value="#notify_new_link#">	
-				<cfinvokeargument name="notify_new_news" value="#notify_new_news#">
-				<cfinvokeargument name="notify_new_event" value="#notify_new_event#">
-				<cfinvokeargument name="notify_new_task" value="#notify_new_task#">	
-				<cfinvokeargument name="notify_new_consultation" value="#notify_new_consultation#">
 
-				<cfinvokeargument name="notify_new_image" value="#notify_new_image#">
-				<cfinvokeargument name="notify_new_typology" value="#notify_new_typology#">
-				<cfinvokeargument name="notify_new_list" value="#notify_new_list#">
-				<cfinvokeargument name="notify_new_list_row" value="#notify_new_list_row#">
-				<cfinvokeargument name="notify_new_list_view" value="#notify_new_list_view#">
-				<cfinvokeargument name="notify_new_form" value="#notify_new_form#">
-				<cfinvokeargument name="notify_new_form_row" value="#notify_new_form_row#">
-				<cfinvokeargument name="notify_new_form_view" value="#notify_new_form_view#">
-				<cfinvokeargument name="notify_new_pubmed" value="#notify_new_pubmed#">
+				<cfif selectClientQuery.force_notifications IS false>
 
-				<cfinvokeargument name="notify_delete_file" value="#notify_delete_file#">
-				<cfinvokeargument name="notify_lock_file" value="#notify_lock_file#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
 
-				<cfinvokeargument name="notify_new_user_in_area" value="#notify_new_user_in_area#">
+					<cfinvokeargument name="notify_new_message" value="#arguments.notify_new_message#">
+					<cfinvokeargument name="notify_new_file" value="#arguments.notify_new_file#">
+					<cfinvokeargument name="notify_replace_file" value="#arguments.notify_replace_file#">
+					<cfinvokeargument name="notify_new_area" value="#arguments.notify_new_area#">
+					
+					<cfinvokeargument name="notify_new_entry" value="#arguments.notify_new_entry#">
+					<cfinvokeargument name="notify_new_link" value="#arguments.notify_new_link#">	
+					<cfinvokeargument name="notify_new_news" value="#arguments.notify_new_news#">
+					<cfinvokeargument name="notify_new_event" value="#arguments.notify_new_event#">
+					<cfinvokeargument name="notify_new_task" value="#arguments.notify_new_task#">	
+					<cfinvokeargument name="notify_new_consultation" value="#notify_new_consultation#">
+
+					<cfinvokeargument name="notify_new_image" value="#arguments.notify_new_image#">
+					<cfinvokeargument name="notify_new_typology" value="#arguments.notify_new_typology#">
+					<cfinvokeargument name="notify_new_list" value="#arguments.notify_new_list#">
+					<cfinvokeargument name="notify_new_list_row" value="#arguments.notify_new_list_row#">
+					<cfinvokeargument name="notify_new_list_view" value="#arguments.notify_new_list_view#">
+					<cfinvokeargument name="notify_new_form" value="#arguments.notify_new_form#">
+					<cfinvokeargument name="notify_new_form_row" value="#arguments.notify_new_form_row#">
+					<cfinvokeargument name="notify_new_form_view" value="#arguments.notify_new_form_view#">
+					<cfinvokeargument name="notify_new_pubmed" value="#arguments.notify_new_pubmed#">
+
+					<cfinvokeargument name="notify_delete_file" value="#arguments.notify_delete_file#">
+					<cfinvokeargument name="notify_lock_file" value="#arguments.notify_lock_file#">
+
+					<cfinvokeargument name="notify_new_user_in_area" value="#arguments.notify_new_user_in_area#">
+
+					<cfinvokeargument name="no_notifications" value="false">
+					
+				</cfif>
 
 				<cfinvokeargument name="enabled" value="true">
 				<cfinvokeargument name="emailDefined" value="true">
@@ -377,12 +421,17 @@
 
 
 	<!--- ---------------------------- getAreaUsers ------------------------------- --->
+
+	<!--- Hay un método en AreaQuery que se llama igual que este, pero este es más avanzado --->
 	
 	<cffunction name="getAreaUsers" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="string" required="yes">
 		<cfargument name="areasArray" type="array" required="yes">
 		<cfargument name="include_user_log_in" type="boolean" required="no" default="false">
 		<cfargument name="get_orientation" type="string" required="no" default="desc">
+
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="categories_ids" type="string" required="false">
 		
 		<cfargument name="notify_new_message" type="string" required="no" default="">
 		<cfargument name="notify_new_file" type="string" required="no" default="">
@@ -410,6 +459,8 @@
 		<cfargument name="notify_lock_file" type="string" required="false" default="">
 
 		<cfargument name="notify_new_user_in_area" type="string" required="false" default="">
+
+		<cfargument name="no_notifications" type="string" required="false" default="">
 		
 		<cfargument name="with_external" type="string" required="false" default="true">
 		<cfargument name="enabled" type="boolean" required="false">
@@ -439,12 +490,12 @@
 			<cfset areaMembersList = usersIdsResult.areaMembersList>
 			
 			<cfif listLen(usersList) GT 0>
-			
+
 				<cfquery name="areaUsersQuery" datasource="#client_dsn#">
 					SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type, language, CONCAT_WS(' ', family_name, name) AS user_full_name,
 						<!---The following columns are only used in full lists--->
 						linkedin_url, twitter_url, dni, address, enabled
-					FROM #client_abb#_users AS u
+					FROM `#client_abb#_users` AS u
 					WHERE u.id IN (#usersList#)
 					<cfif isDefined("arguments.include_user_log_in") AND arguments.include_user_log_in NEQ true>
 					AND u.id != #user_id#
@@ -519,6 +570,10 @@
 					AND u.notify_new_user_in_area = <cfqueryparam value="#arguments.notify_new_user_in_area#" cfsqltype="cf_sql_bit">
 					</cfif>
 					
+					<cfif arguments.no_notifications NEQ "">
+					AND u.no_notifications = <cfqueryparam value="#arguments.no_notifications#" cfsqltype="cf_sql_bit">
+					</cfif>
+
 					<cfif arguments.with_external EQ "false">
 					AND u.internal_user = true
 					</cfif>
@@ -527,7 +582,23 @@
 					</cfif>
 					<cfif isDefined("arguments.emailDefined") AND arguments.emailDefined IS true>
 					AND LENGTH(email) > 0	
-					</cfif>;
+					</cfif>
+
+					<cfif isDefined("arguments.itemTypeId") AND listLen(arguments.categories_ids) GT 0>
+					AND u.id NOT IN (
+						<!---Obtiene los usuarios que tienen deshabilitadas TODAS las categorías pasadas en sus notificaciones--->
+						SELECT users_categories_disabled.user_id 
+						FROM (
+								SELECT user_id, count(*) AS matches  
+								FROM `#client_abb#_users_notifications_categories_disabled` AS categories_disabled
+								WHERE item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+								AND	area_id IN (<cfqueryparam value="#arguments.categories_ids#" cfsqltype="cf_sql_varchar" list="true">) 
+								GROUP by user_id
+							) AS users_categories_disabled
+						WHERE users_categories_disabled.matches = <cfqueryparam value="#listLen(arguments.categories_ids)#" cfsqltype="cf_sql_integer">
+						)
+					</cfif>
+					;
 				</cfquery>
 				
 				<cfif areaUsersQuery.recordCount GT 0>

@@ -1989,9 +1989,10 @@
 			<cfset area_id = getLastInsertId.last_insert_id>
 		
 			<cfquery name="insertUserQuery" datasource="#client_dsn#">
-				INSERT INTO #client_abb#_areas_users
+				INSERT INTO #client_abb#_areas_users (area_id, user_id, association_date)
 				VALUES (<cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">,
-						<cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
+						<cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">,
+						NOW()
 				);
 			</cfquery>	
 
@@ -3405,14 +3406,23 @@
 
 			</cfif>		
 			
-			<cfquery name="membersQuery" datasource="#client_dsn#">
+			<!---<cfquery name="membersQuery" datasource="#client_dsn#">
 				SELECT users.id, users.email, users.name, users.telephone, users.family_name, users.mobile_phone, users.telephone_ccode, users.mobile_phone_ccode, users.image_type
 				FROM #client_abb#_users AS users
 				INNER JOIN #client_abb#_areas_users AS areas_users ON users.id = areas_users.user_id
 				WHERE areas_users.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				ORDER BY #arguments.order_by# #arguments.order_type#;
-			</cfquery>
-						
+			</cfquery>--->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaUsers" returnvariable="membersQuery">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>					
+				<cfinvokeargument name="order_by" value="#arguments.order_by#">
+				<cfinvokeargument name="order_type" value="#arguments.order_type#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
 			<cfset xmlResult = '<users>'>
 			
 			<cfif membersQuery.recordCount GT 0>

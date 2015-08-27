@@ -8,6 +8,7 @@
 	
 	<cffunction name="outputSubAreasSelect" access="public" returntype="void" output="true">
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="subAreas" type="query" required="false">
 		<cfargument name="selected_areas_ids" type="string" required="false">
 		<cfargument name="level" type="numeric" required="false" default="1">
 		<cfargument name="recursive" type="boolean" required="false" default="false">
@@ -15,31 +16,34 @@
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">	
 
-		<cfset var areas = "">
 		<cfset var spaces = "">
 		<cfset var area_selected = false>
 
-		<cfinvoke component="AreaQuery" method="getSubAreas" returnvariable="areas">
-			<cfinvokeargument name="area_id" value="#arguments.area_id#">				
-			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-		</cfinvoke>
+		<cfif NOT isDefined("arguments.subAreas")>
+
+			<cfinvoke component="AreaQuery" method="getSubAreas" returnvariable="subAreas">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">				
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+		</cfif>
 
 		<cfloop from="2" to="#arguments.level#" step="1" index="index">
 			<cfset spaces = spaces&"&nbsp;&nbsp;&nbsp;">				
 		</cfloop>
 
 		<cfoutput>
-		<cfloop query="areas">
-			<cfif isDefined("selected_areas_ids") AND listFind(arguments.selected_areas_ids, areas.id) GT 0>
+		<cfloop query="subAreas">
+			<cfif isDefined("selected_areas_ids") AND listFind(arguments.selected_areas_ids, subAreas.id) GT 0>
 				<cfset area_selected = true>
 			<cfelse>
 				<cfset area_selected = false>
 			</cfif>
-			<option value="#areas.id#" <cfif area_selected>selected</cfif>>#spaces##areas.name#</option>
+			<option value="#subAreas.id#" <cfif area_selected>selected</cfif>>#spaces##subAreas.name#</option>
 			<cfif arguments.recursive IS true>
 				<cfinvoke component="AreaHtml" method="outputSubAreasSelect">
-					<cfinvokeargument name="area_id" value="#areas.id#"/>
+					<cfinvokeargument name="area_id" value="#subAreas.id#"/>
 					<cfif isDefined("arguments.selected_areas_ids")>
 						<cfinvokeargument name="selected_areas_ids" value="#arguments.selected_areas_ids#">
 					</cfif>
@@ -60,6 +64,7 @@
 	
 	<cffunction name="outputSubAreasInput" access="public" returntype="void" output="true">
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="subAreas" type="query" required="false">
 		<cfargument name="selected_areas_ids" type="string" required="false">
 		<cfargument name="level" type="numeric" required="false" default="1">
 		<cfargument name="recursive" type="boolean" required="false" default="false">
@@ -69,25 +74,29 @@
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">	
 
-		<cfset var areas = "">
 		<cfset var spaces = "">
 		<cfset var area_selected = false>
 
-		<cfinvoke component="AreaQuery" method="getSubAreas" returnvariable="areas">
-			<cfinvokeargument name="area_id" value="#arguments.area_id#">				
-			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-		</cfinvoke>
+		<cfif NOT isDefined("arguments.subAreas")>
+			
+			<cfinvoke component="AreaQuery" method="getSubAreas" returnvariable="subAreas">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">				
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+		</cfif>
 
 		<cfloop from="2" to="#arguments.level#" step="1" index="index">
 			<cfset spaces = spaces&"&nbsp;&nbsp;&nbsp;">				
 		</cfloop>
 
-		<div class="row">
-			<div class="col-sm-offset-1 col-sm-10" style="margin-bottom:10px;">
+		<!---<div class="row">
+			<div class="col-sm-offset-1 col-sm-10" style="margin-bottom:10px;">--->
+			
 			<cfoutput>
-			<cfloop query="areas">
-				<cfif isDefined("selected_areas_ids") AND listFind(arguments.selected_areas_ids, areas.id) GT 0>
+			<cfloop query="subAreas">
+				<cfif isDefined("selected_areas_ids") AND listFind(arguments.selected_areas_ids, subAreas.id) GT 0>
 					<cfset area_selected = true>
 				<cfelse>
 					<cfset area_selected = false>
@@ -95,14 +104,14 @@
 
 				<div class="radio">
 				  <label>
-				    #spaces#<input type="#arguments.field_input_type#" name="#arguments.field_name#[]" value="#areas.id#" <cfif area_selected>checked</cfif> />&nbsp;#areas.name#
+				    #spaces#<input type="#arguments.field_input_type#" name="#arguments.field_name#[]" value="#subAreas.id#" <cfif area_selected>checked</cfif> />&nbsp;#subAreas.name#
 				  </label>
 				</div>
 				<div class="clearfix"></div>
 
 				<cfif arguments.recursive IS true>
 					<cfinvoke component="AreaHtml" method="outputSubAreasInput">
-						<cfinvokeargument name="area_id" value="#areas.id#"/>
+						<cfinvokeargument name="area_id" value="#subAreas.id#"/>
 						<cfif isDefined("arguments.selected_areas_ids")>
 							<cfinvokeargument name="selected_areas_ids" value="#arguments.selected_areas_ids#">
 						</cfif>
@@ -116,8 +125,9 @@
 				</cfif>				
 			</cfloop>
 			</cfoutput>
-			</div>
-		</div>
+			
+			<!---</div>
+		</div>--->
 
 	</cffunction>
 

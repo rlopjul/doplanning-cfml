@@ -94,6 +94,14 @@ function toggleCheckboxesChecked(checked) {
 	})
 }
 
+function toggleContainerCheckboxesChecked(containerId, checked) {
+	//$("input:checkbox").prop("checked",checked); 
+	$("#"+containerId+" input:checkbox").each( function() {
+		if($(this).hasClass("checkbox_locked") == false)	
+			$(this).prop("checked",checked); 
+	})
+}
+
 /**
 Esta función no se debe usar porque no funciona en los accesos externos del SAS
 Se mantiene para cuando no se puede incluir un <a> y se tiene que utilizar un <span> (AreaItemTree.cfc)

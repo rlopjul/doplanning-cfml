@@ -22,7 +22,7 @@
 		<cfset var method = "getUser">
 
 			<cfquery name="getUserQuery" datasource="#arguments.client_dsn#">
-				SELECT id, id AS user_id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, internal_user AS whole_tree_visible, image_file, image_type, dni, language, enabled, information, hide_not_allowed_areas, linkedin_url, twitter_url, typology_id, typology_row_id,
+				SELECT id, id AS user_id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, internal_user AS whole_tree_visible, image_file, image_type, dni, language, enabled, information, hide_not_allowed_areas, linkedin_url, twitter_url, typology_id, typology_row_id, no_notifications,
 					CONCAT_WS(' ', family_name, name) AS user_full_name
 				<cfif arguments.format_content EQ "all">
 				, space_used, number_of_connections, connected, session_id, root_folder_id, sms_allowed
@@ -63,6 +63,8 @@
 	
 	<cffunction name="getUserPreferences" output="false" access="public" returntype="query">
 		<cfargument name="user_id" type="numeric" required="true">
+
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -105,12 +107,41 @@
 				, notify_been_associated_to_area
 				, notify_app_news
 				, notify_app_features
+				, no_notifications
+				, notifications_digest_type_id
+				
+				<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(CONVERT_TZ(notifications_last_digest_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS notifications_last_digest_date 
+				<cfelse>
+					, notifications_last_digest_date
+				</cfif>
 				FROM #arguments.client_abb#_users		
 				WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;			
 			</cfquery>
 
 		<cfreturn getUserPreferencesQuery>
 
+	</cffunction>
+
+
+	<!---  -------------------GET USER NOTIFICATIONS CATEGORIES DISABLED----------------------   --->
+
+	<cffunction name="getUserNotificationsCategoriesDisabled" returntype="query" output="false" access="public">
+		<cfargument name="user_id" required="yes" type="numeric">
+		
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">
+		
+		<cfset var method = "getUserNotificationsCategoriesDisabled">
+							
+			<cfquery name="getUserNotificationsCategoriesDisabled" datasource="#client_dsn#">
+				SELECT users_notifications.user_id, users_notifications.item_type_id, users_notifications.area_id
+				FROM `#client_abb#_users_notifications_categories_disabled` AS users_notifications
+				WHERE users_notifications.user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">; 
+			</cfquery>
+			
+		<cfreturn getUserNotificationsCategoriesDisabled>
+		
 	</cffunction>
 
 

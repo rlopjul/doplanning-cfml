@@ -86,8 +86,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_page_div.cfm">
 
 <!-- InstanceBeginEditable name="content" -->
-<br/>
-<p lang="es" style="padding-left:10px;">Las tipologías de archivos se gestionan en las áreas a las que pertenecen por los usuarios con permiso.</p>
+
 <cfset tableTypeId = 3>
 <cfinclude template="#APPLICATION.htmlPath#/admin/includes/typologies.cfm">
 

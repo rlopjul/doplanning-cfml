@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2014
+<!---Copyright Era7 Information Technologies 2007-2015
 
 	Date of file creation: 30-09-2008
 	File created by: alucena
@@ -447,7 +447,7 @@
 		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="files" type="array" required="false"/>
 		
-		<cfset var method = "updateArea">
+		<cfset var method = "updateAreaImage">
 
 		<cfset var response = structNew()>
 					

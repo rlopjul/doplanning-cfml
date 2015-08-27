@@ -442,6 +442,35 @@
 
 		</cfif>
 
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItemCategories" returnvariable="getItemCategoriesResult">
+			<cfinvokeargument name="item_id" value="#file_id#">
+			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+		</cfinvoke>
+
+		<cfset categories = getItemCategoriesResult.query>
+							
+		<cfif categories.recordCount GT 0>
+			
+			<div class="row">
+
+				<div class="col-xs-12">
+
+					<div class="div_message_page_label"><span lang="es">Categorías</span>
+
+					<cfloop query="#categories#">
+
+						<span class="label label-default">#categories.category_name#</span>
+
+					</cfloop>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</cfif>
+
 
 		<div class="well well-sm" style="clear:both;margin-bottom:10px">
 
@@ -597,7 +626,7 @@
 				<cfset table = getRowResponse.table>
 				<cfset row = getRowResponse.row>--->
 
-				<div class="div_file_page_label"><span lang="es">Tipología</span> <span class="text_message_page"><span class="label label-default" style="font-size:11px">#table.title#</span></span></div>
+				<div class="div_file_page_label"><span lang="es">Tipología</span> <span class="text_message_page"><span class="label label-primary">#table.title#</span></span></div>
 
 				<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">--->
 

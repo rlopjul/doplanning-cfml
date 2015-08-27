@@ -199,17 +199,24 @@
 
 			<cfif arguments.addSchedules IS true>
 				
+				
+				<!---sendAllDiaryAlerts schedule--->
+				<cfschedule action="update"	task="sendAllDiaryAlerts" operation="HTTPRequest"
+					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/sendAllDiaryAlerts.cfm"
+					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(0,30,0)#"
+					interval="daily" requestTimeOut="220" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/sendAllDiaryAlerts.txt')#">
+
 				<!---sendDiaryAlerts schedule--->
 				<cfschedule action="update"	task="sendDiaryAlerts" operation="HTTPRequest"
 					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.cfm"
 					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(1,5,0)#"
-					interval="daily" requestTimeOut="50" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.txt')#">
+					interval="daily" requestTimeOut="60" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.txt')#">
 
 				<!---deleteBinItems schedule--->
 				<cfschedule action="update"	task="deleteBinItems" operation="HTTPRequest"
 					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/deleteBinItems.cfm"
 					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(1,30,0)#"
-					interval="daily" requestTimeOut="50" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/deleteBinItems.txt')#">
+					interval="daily" requestTimeOut="60" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/deleteBinItems.txt')#">
 
 
 			</cfif>

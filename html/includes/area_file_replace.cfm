@@ -92,6 +92,19 @@ function onSubmitForm()
 		</div>
 
 	</cfif>
+
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
+				</label>
+				<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+			</div>
+
+		</div>
+	</div>
 	
 	<div class="row">
 		<div class="col-sm-12">

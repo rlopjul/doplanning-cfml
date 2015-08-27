@@ -311,6 +311,14 @@
 			<cfif ( arguments.forceDeleteVirus IS false AND clientQuery.bin_enabled IS true AND fileQuery.status NEQ "deleted") OR clientQuery.bin_enabled IS false OR arguments.forceDeleteVirus IS true>
 
 				<cfif getFileAreasQuery.recordCount GT 0>
+
+					<!--- getItemCategories --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
+						<cfinvokeargument name="item_id" value="#arguments.file_id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.fileItemTypeId#">
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
 					
 					<cfloop query="getFileAreasQuery">
 
@@ -318,6 +326,7 @@
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
 							<cfinvokeargument name="objectFile" value="#fileQuery#">
 							<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
+							<cfinvokeargument name="itemCategories" value="#itemCategories#"/>
 							<cfinvokeargument name="area_id" value="#getFileAreasQuery.area_id#">
 							<cfinvokeargument name="user_id" value="#arguments.user_id#">
 							<cfif arguments.forceDeleteVirus IS true>

@@ -18,6 +18,10 @@
 	<cfset scope_id = URL.scope>
 </cfif>
 
+<cfif isDefined("URL.itemTypeId") AND isNumeric(URL.itemTypeId)>
+	<cfset itemTypeId = URL.itemTypeId>	
+</cfif>
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/jstree_scripts.cfm">
 
 <script>
@@ -26,13 +30,11 @@
 		var allEnabled = #allEnabled#;
 		var webEnabled = #webEnabled#;
 		var noWebEnabled = #noWebEnabled#;
+		<cfif isDefined("itemTypeId")>
+		var itemTypeId = #itemTypeId#;
+		</cfif>
 	</cfoutput>
 	
-	<!---function treeLoaded() { 
-		
-		$("#loadingContainer").hide();
-		
-	}--->
 
 	function areaSelected(areaId, areaUrl, withLink)  {
 
@@ -55,30 +57,16 @@
 
 		}
 
-		//var areaName = $.trim( $("#"+areaId+" a:first").text() );
 		var areaName = $.trim( $(areaNode).find("a:first").text() );
 
-		window.opener.setSelectedArea(areaId, areaName);
+		<cfif isDefined("itemTypeId")><!--- select area to items categories --->
+			window.opener.setSelectedArea(areaId, areaName, itemTypeId);
+		<cfelse>
+			window.opener.setSelectedArea(areaId, areaName);
+		</cfif>
+		
 		window.close();			
 	}
-
-	<!---
-	function searchTextInTree(){
-		searchInTree(document.getElementById('searchText').value);	
-	}
-
-	$(window).load( function() {		
-
-		showTree(true);
-
-		$("#searchText").on("keydown", function(e) { 
-			
-			if(e.which == 13) //Enter key
-				searchTextInTree();
-			
-		});
-
-	});--->
 
 </script>
 
@@ -100,10 +88,6 @@
 
 <div class="form-inline" style="margin-top:2px;">
 
-	<!---<div class="input-group">
-		<input type="text" name="text" id="searchText" value="" class="input-medium" />
-		<button onClick="searchTextInTree()" class="btn btn-default" type="button" title="Buscar área en el árbol" lang="es"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
-	</div>--->
 	<div class="btn-toolbar">
 								
 		<div class="btn-group">
@@ -125,13 +109,6 @@
 </div>
 
 <cfif APPLICATION.publicationScope IS true AND isDefined("scope_id")>
-
-	<!--- 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
-			<cfinvokeargument name="scope_id" value="#scope_id#">
-		</cfinvoke>
-		<cfset scopesQuery = getScopesResult.scopesAreas>
-		<cfset scopeAreasList = valueList(scopesQuery.area_id)> --->
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
 		<cfinvokeargument name="user_id" value="#SESSION.user_id#">

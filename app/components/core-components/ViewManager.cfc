@@ -205,8 +205,8 @@
 						<cfinvokeargument name="objectItem" value="#viewQuery#">
 						<cfinvokeargument name="itemTypeId" value="#viewTypeId#">
 						<cfinvokeargument name="action" value="delete">
-						
 						<cfinvokeargument name="user_id" value="#arguments.user_id#">
+						
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 					</cfinvoke>

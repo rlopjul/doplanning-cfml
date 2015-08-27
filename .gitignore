@@ -30,6 +30,9 @@ Application_POZOBLANCO_ANTERIOR.cfc
 index_POZOBLANCO.cfm
 /app/vpnet_banner.png
 /app/sendMail.jsp
+/app/hla_ipbln/
+/html/styles/styles.min_HCS.css
+project.sublime-workspace
 
 
 #################

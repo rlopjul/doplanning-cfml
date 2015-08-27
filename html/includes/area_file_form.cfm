@@ -500,14 +500,111 @@
 		
 	</cfif>
 
+
+	<!--- Categories --->
+
+	<!--- getAreaItemTypesOptions --->
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItemType" method="getAreaItemTypesOptions" returnvariable="getItemTypesOptionsResponse">
+		<cfinvokeargument name="itemTypeId" value="#itemTypeId#"/>
+	</cfinvoke>
+
+	<cfset itemTypeOptions = getItemTypesOptionsResponse.query>
+
+	<cfif isNumeric(itemTypeOptions.category_area_id)>
+
+		<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
+		<div class="row">
+
+			<div class="col-md-12">
+
+				<label class="control-label" for="categories_ids" lang="es">Categorías</label>
+
+			</div>
+
+		</div>
+
+		<div class="row">
+
+			<div class="col-sm-11 col-sm-offset-1" style="margin-bottom:10px">
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
+					<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">				
+					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif subAreas.recordCount GT 0>
+
+					<cfif page_type IS NOT 1>
+		
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItemCategories" returnvariable="getItemCategoriesResult">
+							<cfinvokeargument name="item_id" value="#file_id#">
+							<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+						</cfinvoke>
+
+						<cfset fileCategories = getItemCategoriesResult.query>
+
+						<cfif fileCategories.recordCount GT 0>
+							<cfset selectedAreasList = valueList(fileCategories.category_id)>
+						<cfelse>
+							<cfset selectedAreasList = "">
+						</cfif>
+
+					<cfelse>
+
+						<cfset selectedAreasList = "">
+
+					</cfif>
+					
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
+						<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
+						<cfinvokeargument name="subAreas" value="#subAreas#">
+						<cfif len(selectedAreasList) GT 0>
+							<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+						</cfif>
+						<cfinvokeargument name="recursive" value="false">
+						<cfinvokeargument name="field_name" value="categories_ids"/>
+						<cfinvokeargument name="field_input_type" value="checkbox">
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<script>
+					addRailoRequiredCheckBox("categories_ids[]", "Debe seleccionar al menos una categoría");
+					</script>
+
+					<p class="help-block" lang="es">Estas categorías permiten a los usuarios clasificar los elementos y filtrar las notificaciones por email que se reciben</p>
+
+				<cfelse>
+
+					<p class="help-block" lang="es">Este elemento tiene un área para categorías seleccionada pero esta área no tiene subareas para definir las categorías</p>
+
+				</cfif>	
+
+			</div>
+
+		</div>
+
+	</cfif>
+
+
 	<cfif fileTypeId IS 1 OR fileTypeId IS 2>
 		
-		<div class="checkbox">
-		    <label>
-		    	<input type="checkbox" name="public" value="true" <cfif isDefined("objectFile.public") AND objectFile.public IS true>checked</cfif>> <span lang="es">Habilitar URL pública para poder</span> <b lang="es">compartir el archivo con cualquier usuario</b>
-		    </label>
-		    <small class="help-block" lang="es">El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL</small>
-	  	</div>
+		<div class="row">
+
+			<div class="col-md-12">
+
+				<div class="checkbox">
+				    <label>
+				    	<input type="checkbox" name="public" value="true" <cfif isDefined("objectFile.public") AND objectFile.public IS true>checked</cfif>> <span lang="es">Habilitar URL pública para poder</span> <b lang="es">compartir el archivo con cualquier usuario</b>
+				    </label>
+				    <small class="help-block" lang="es">El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL</small>
+			  	</div>
+
+			</div>
+
+		</div>
 
 	</cfif>
 
@@ -602,6 +699,7 @@
 	</cfif>
 
 
+
 	<!--- Typology fields --->
 	<div id="typologyContainer"></div>
 
@@ -612,6 +710,23 @@
 		    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras guardar modificación
 		    </label>
 	  	</div>
+
+	</cfif>
+
+	<cfif page_type IS 1>
+		
+		<div class="row">
+			<div class="col-md-12">
+
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
+					</label>
+					<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+				</div>
+
+			</div>
+		</div>
 
 	</cfif>
 	

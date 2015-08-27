@@ -207,6 +207,14 @@
 			
 	}
 
+	function categoriesGeneralIframeLoaded() {
+
+		if($("#categoriesGeneralIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
+			$("#loadingContainer").hide();
+		}
+			
+	}
+
 	function statisticsGeneralIframeLoaded() {
 
 		if($("#statisticsGeneralIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
@@ -362,22 +370,6 @@
 		<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
 		Messenger.Private.initGetNewConversations();
 		</cfif>
-		
-		<!---/*$("#maximizeTree").click( function() {
-			maximizeTree();
-		} );
-		
-		$("#restoreTree").click( function() {
-			restoreTree();
-		} );
-		
-		$("#maximizeArea").click( function() {
-			maximizeArea();
-		} );
-		
-		$("#restoreArea").click( function() {
-			restoreArea();
-		} );*/--->
 				
 		<!---$("#areaImage").load( function () {
 			areaImgHeight = $("#areaImage").height();			
@@ -400,6 +392,11 @@
 			if(currentTab == "#tab3" && $("#typologiesUsersIframe").attr('src') == "about:blank") { //Load statistics page
 				$("#typologiesUsersIframe").attr('src', 'iframes/users_typologies.cfm');
 				$("#typologiesFilesIframe").attr('src', 'iframes/files_typologies.cfm');
+				$("#loadingContainer").show();
+			}
+
+			if(currentTab == "#tab4" && $("#categoriesGeneralIframe").attr('src') == "about:blank") { //Load statistics page
+				$("#categoriesGeneralIframe").attr('src', 'iframes/categories.cfm');
 				$("#loadingContainer").show();
 			}
 
@@ -496,6 +493,7 @@
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Tipologías</a></li>
+			<li><a href="#tab4" data-toggle="tab" lang="es">Categorías</a></li>
 			<li><a href="#tab5" data-toggle="tab" lang="es">Estadísticas</a></li>
 			<li><a href="#tab6" data-toggle="tab" lang="es">Logs</a></li>
 			</cfif>
@@ -507,7 +505,7 @@
 		  	<span class="main_title"><b lang="es"><cfif SESSION.client_administrator IS SESSION.user_id>Administración general<cfelse>Administración de áreas</cfif></b></span>
 		  
 		  	<div style="float:right; text-align:right; clear:none;">
-				<a href="../preferences.cfm" title="Preferencias del usuario" class="link_user_logged" lang="es"><span>#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</span></a><br/>
+				<a href="../preferences_user_data.cfm" title="Datos personales" class="link_user_logged" lang="es"><span>#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</span></a><br/>
 				
 				<a href="../logout.cfm" title="Cerrar sesión" class="link_user_logout"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 
@@ -740,6 +738,18 @@
 			</div><!---END Tab Statistics--->
 
 
+			<div class="tab-pane" id="tab4"><!---Tab Categories--->
+				
+				<div class="tabbable"><!---Tab Panel--->
+		
+					<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="categoriesGeneralIframe" onload="categoriesGeneralIframeLoaded()"></iframe>				
+				  
+				</div><!---END TabPanel--->
+
+				
+			</div><!---END Tab Categories--->
+
+
 			<div class="tab-pane" id="tab5"><!---Tab Statistics--->
 				
 				<div class="tabbable"><!---Tab Panel--->
@@ -769,7 +779,6 @@
 
 				
 			</div><!---END Tab Statistics--->
-
 
 
 			<div class="tab-pane" id="tab6"><!---Tab Logs--->

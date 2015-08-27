@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2012
+<!---Copyright Era7 Information Technologies 2007-2015
 
 	Date of file creation: 02-10-2008
 	File created by: alucena
@@ -9,19 +9,20 @@
 --->
 <cfcomponent output="true">
 
-	<cfset component = "Item">
+	<cfset component = "AreaItem">
 	<cfset request_component = "AreaItemManager">
 	
 	<!--- ----------------------------------- getItem -------------------------------------- --->
 
 	<!---Este método no hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Item directamente del AreaItemManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
 
-	<cffunction name="getItem" output="false" returntype="query" access="public">
+	<cffunction name="getItem" output="false" returntype="any" access="public">
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="status" type="string" required="false">
 
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
+		<cfargument name="with_categories" type="boolean" required="false" default="false">
 
 		<cfset var method = "getItem">
 
@@ -34,6 +35,7 @@
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 
 				<cfinvokeargument name="with_lock" value="#arguments.with_lock#">
+				<cfinvokeargument name="with_categories" value="#arguments.with_categories#">
 				
 				<!---<cfinvokeargument name="return_type" value="object">--->
 				<cfinvokeargument name="return_type" value="query">
@@ -50,8 +52,14 @@
 			</cfcatch>									
 			
 		</cftry>
+
+		<cfif arguments.with_categories IS false>
+			<cfreturn response.item>
+		<cfelse>
+			<cfreturn {result=true, item=response.item, categories=response.categories}>
+		</cfif>
 		
-		<cfreturn response.item>
+		
 			
 	</cffunction>
     
@@ -81,6 +89,38 @@
 		</cftry>
 		
 		<cfreturn response.item>
+			
+	</cffunction>
+
+
+	<!--- ----------------------------------- getItemCategories -------------------------------------- --->
+
+	<cffunction name="getItemCategories" output="false" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+
+		<cfset var method = "getItemCategories">
+
+		<cfset var response = structNew()>
+					
+		<cftry>
+	
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getItemCategories" returnvariable="response">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+			</cfinvoke>
+			
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>									
+			
+		</cftry>
+
+		<cfreturn response>
+		
+		
 			
 	</cffunction>
 	
@@ -127,6 +167,8 @@
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 		
 		<cfset var method = "createItem">
 				
@@ -178,8 +220,6 @@
 			
             <!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->
             <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" returnvariable="createItemResponse">
-				<!--- <cfinvokeargument name="objectItem" value="#objectItem#"/> --->
-
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
                 <cfinvokeargument name="title" value="#arguments.title#">
 				<cfinvokeargument name="link" value="#arguments.link#">
@@ -222,6 +262,8 @@
 				<cfinvokeargument name="price" value="#arguments.price#">
 				<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
 				<cfinvokeargument name="area_editable" value="#arguments.area_editable#">
+				<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
+				<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfif with_attached IS true OR with_image IS true><!---Hay archivo para subir--->
@@ -385,6 +427,11 @@
 					<cfinvokeargument name="file_id" value="#file_id#">
 					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 					<cfinvokeargument name="file_type" value="file">
+					<cfif arguments.no_notify IS false>
+						<cfinvokeargument name="send_alert" value="true">
+					<cfelse>
+						<cfinvokeargument name="send_alert" value="false">
+					</cfif>
 				</cfinvoke>
 				
 				<cfif itemTypeGender EQ "male">
@@ -404,7 +451,7 @@
 						<cfinvokeargument name="file_id" value="#image_id#">
 						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 						<cfinvokeargument name="file_type" value="image">
-						<cfif with_attached IS true><!---Esto es para que no se envíen 2 notificaciones--->
+						<cfif arguments.no_notify IS true OR with_attached IS true><!---Esto es para que no se envíen 2 notificaciones--->
 							<cfinvokeargument name="send_alert" value="false">
 						<cfelse>
 							<cfinvokeargument name="send_alert" value="true">
@@ -484,6 +531,8 @@
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
 		<cfargument name="unlock" type="boolean" required="false" default="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateItem">
 				
@@ -628,6 +677,8 @@
 					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
 					<cfinvokeargument name="area_editable" value="#arguments.area_editable#">
 					<cfinvokeargument name="unlock" value="#arguments.unlock#"/>
+					<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
+					<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
 				</cfinvoke>
 
 				<cfif updateItemResponse.result IS NOT true>
@@ -661,6 +712,8 @@
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					<cfinvokeargument name="price" value="#arguments.price#">
 					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
+					<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
+					<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
 				</cfinvoke>
 
 				<cfif updateItemWithAttachedResponse.result IS true>
@@ -731,9 +784,7 @@
 							
 							<!---IMPORTANTE: aquí da error si la sesión ha caducado--->
 							<cfset response_message = "Ha ocurrido un error al subir el archivo. El archivo no es una imagen.">
-							<!---<cfset response_message = URLEncodedFormat(response_message)>
-							<cflocation url="#arguments.return_path##itemTypeNameP#.cfm?area=#arguments.area_id#&msg=#response_message#&res=0" addtoken="no">--->
-
+							
 							<cfset response = {result=false, message=#response_message#}>	
 							<cfreturn response>
 							
@@ -763,7 +814,11 @@
 					<cfinvokeargument name="file_id" value="#file_id#">
 					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 					<cfinvokeargument name="file_type" value="file">
-					<cfinvokeargument name="send_alert" value="true">
+					<cfif arguments.no_notify IS false>
+						<cfinvokeargument name="send_alert" value="true">
+					<cfelse>
+						<cfinvokeargument name="send_alert" value="false">
+					</cfif>
 					<cfinvokeargument name="action" value="update">
 				</cfinvoke>
 				
@@ -786,7 +841,7 @@
 						<cfinvokeargument name="file_id" value="#image_id#">
 						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 						<cfinvokeargument name="file_type" value="image">
-						<cfif with_attached IS true><!---Esto es para que no se envíen 2 notificaciones--->
+						<cfif arguments.no_notify IS true OR with_attached IS true><!---Esto es para que no se envíen 2 notificaciones--->
 							<cfinvokeargument name="send_alert" value="false">
 						<cfelse>
 							<cfinvokeargument name="send_alert" value="true">
@@ -1510,6 +1565,7 @@
 		<cfargument name="end_date" type="string" required="no">
 		<cfargument name="to_end_date" type="string" required="no">
 		<cfargument name="identifier" type="string" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
 				
 		<cfset var method = "getAllAreasItems">
 		
@@ -1549,6 +1605,7 @@
 				<cfinvokeargument name="to_end_date" value="#arguments.to_end_date#">
 				</cfif>
 				<cfinvokeargument name="identifier" value="#arguments.identifier#">
+				<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
 				<cfinvokeargument name="with_area" value="true">
 			</cfinvoke>	
 
@@ -1684,6 +1741,7 @@
 	
 	<cffunction name="outputItem" returntype="void" output="true" access="public">
 		<cfargument name="objectItem" type="object" required="true">
+		<cfargument name="categories" type="query" required="false">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="itemTypeName" type="string" required="true">
 		<cfargument name="area_type" type="string" required="true">
@@ -1832,6 +1890,32 @@
 						<cfelse>
 
 							<hr style="margin-top:3px;">
+
+						</cfif>
+
+						<cfif isDefined("arguments.categories")>
+							
+							<cfif arguments.categories.recordCount GT 0>
+								
+								<div class="row">
+
+									<div class="col-xs-12">
+
+										<div class="div_message_page_label"><span lang="es">Categorías</span>
+
+										<cfloop query="#categories#">
+
+											<span class="label label-default">#categories.category_name#</span>
+
+										</cfloop>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							</cfif>
 
 						</cfif>
 

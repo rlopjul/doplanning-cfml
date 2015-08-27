@@ -87,9 +87,7 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-
-<cfset tableTypeId = 4>
-<cfinclude template="#APPLICATION.htmlPath#/admin/includes/typologies.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/admin/includes/categories.cfm">
 
 
 <!-- InstanceEndEditable -->

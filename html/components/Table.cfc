@@ -1114,7 +1114,7 @@
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 						
 						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#">
-							<td><a href="#APPLICATION.path#/html/#item_page_url#" target="_blank" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
+							<td><a <cfif tableTypeId NEQ 4>href="#APPLICATION.path#/html/#item_page_url#" target="_blank"</cfif> <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 							<td>
 								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="stopPropagation(event)" title="Registros" lang="es"><i class="icon-list" style="font-size:15px;"></i></a>

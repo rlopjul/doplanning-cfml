@@ -977,7 +977,9 @@
 		<cfargument name="area_id" type="numeric" required="yes">
 
 		<cfargument name="publication_date" type="string" required="false">
-		<cfargument name="publication_validated" type="boolean" required="false" default="false">			
+		<cfargument name="publication_validated" type="boolean" required="false" default="false">
+
+		<cfargument name="no_notify" type="boolean" required="false" default="false">			
 		
 		<cfset var method = "associateFileToArea">
 
@@ -1131,24 +1133,28 @@
 			
 				<cfthrow errorcode="#error_code#">
 			
+			</cfif>
+
+			<cfif arguments.no_notify IS false>
+
+				<!--- Alert --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
+					<cfinvokeargument name="objectFile" value="#fileQuery#">
+					<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="user_id" value="#user_id#">
+					<cfif objectFile.file_type_id IS 1 OR (objectFile.file_type_id IS 2 AND objectFile.area_id NEQ arguments.area_id)>
+						<cfinvokeargument name="action" value="associate">
+					<cfelse>
+						<cfinvokeargument name="action" value="new">
+					</cfif>
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
 			</cfif>			
 								
-			<!--- Alert --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
-				<cfinvokeargument name="objectFile" value="#fileQuery#">
-				<cfinvokeargument name="fileTypeId" value="#fileTypeId#"/>
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="user_id" value="#user_id#">
-				<cfif objectFile.file_type_id IS 1 OR (objectFile.file_type_id IS 2 AND objectFile.area_id NEQ arguments.area_id)>
-					<cfinvokeargument name="action" value="associate">
-				<cfelse>
-					<cfinvokeargument name="action" value="new">
-				</cfif>
-
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
 			<cfset response = {result=true, file_id=#objectFile.id#, area_id=#arguments.area_id#}>
 
 		<cfreturn response>
@@ -1661,6 +1667,8 @@
 		
 		<cfset var file_id = "">
 		<cfset var area_passed = false>
+
+		<cfset response = "">
 		
 		<!---<cfinclude template="includes/initVars.cfm">--->	
 			
@@ -1762,7 +1770,7 @@
 				
 				<cfif arguments.return_type EQ "query">
 				
-					<cfset xmlResponse = selectFileQuery>				
+					<cfset response = selectFileQuery>				
 				
 				<cfelse>
 					
@@ -1806,7 +1814,7 @@
 					
 					<cfif arguments.return_type EQ "object">
 						
-						<cfset xmlResponse = objectFile>
+						<cfset response = objectFile>
 					 
 					<cfelse>
 					
@@ -1814,7 +1822,7 @@
 							<cfinvokeargument name="objectFile" value="#objectFile#">
 						</cfinvoke>
 						
-						<cfset xmlResponse = xmlResponseContent>
+						<cfset response = xmlResponseContent>
 					
 					</cfif>
 				
@@ -1830,7 +1838,7 @@
 			</cfif>					
 			
 		
-		<cfreturn xmlResponse>		
+		<cfreturn response>		
 		
 	</cffunction>
 	
@@ -2636,10 +2644,14 @@
 							<cfif arguments.send_alert IS true>
 																
 								<!--- Alert --->
-								<cfinvoke component="AlertManager" method="newAreaItem">
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 									<cfinvokeargument name="objectItem" value="#itemQuery#">
 									<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 									<cfinvokeargument name="action" value="#arguments.action#">
+
+									<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
 								</cfinvoke>
 								
 							</cfif>
@@ -2904,6 +2916,7 @@
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="public" type="boolean" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
 
 		<!---<cfargument name="folder_id" type="numeric" required="false"/>--->
 		
@@ -3051,6 +3064,20 @@
 						uploading_date = NOW(),	
 						status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">;
 					</cfquery>
+
+				</cfif>
+
+				<cfif isDefined("arguments.categories_ids")>
+
+					<!--- setItemCategories --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="setItemCategories">
+						<cfinvokeargument name="item_id" value="#file_id#">
+						<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
+						<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#"/>
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
 
 				</cfif>
 				
@@ -3234,6 +3261,7 @@
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
 		
 		<cfset var method = "getAllAreasFiles">
 
@@ -3289,6 +3317,7 @@
 					<cfinvokeargument name="name" value="#arguments.name#">
 					<cfinvokeargument name="file_name" value="#arguments.file_name#">
 					<cfinvokeargument name="description" value="#arguments.description#">
+					<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
 					<cfif isDefined("arguments.from_date")>
 					<cfinvokeargument name="from_date" value="#arguments.from_date#">
 					</cfif>
@@ -3341,6 +3370,8 @@
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="public" type="boolean" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 
 		<cfset var method = "uploadNewFile">
 
@@ -3399,6 +3430,7 @@
 				<cfinvokeargument name="status" value="ok">
 				<cfinvokeargument name="version_index" value="#arguments.version_index#"/>
 				<cfinvokeargument name="public" value="#arguments.public#"/>
+				<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#"/>
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			</cfinvoke>	
@@ -3455,6 +3487,7 @@
 						<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
 					</cfif>
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+					<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
 				</cfinvoke>
 
 				<cfif associateFileResult.result IS false>
@@ -3647,39 +3680,66 @@
 
 			</cfif>		
 
-			<!---<cftransaction> No se puede usar aquí transacción porque dentro de setFileTypology hay transacciones--->
+			<cftransaction> 
 
-			<cfquery name="updateFileQuery" datasource="#client_dsn#">
-				UPDATE `#client_abb#_#fileTypeTable#`
-				SET name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
-				description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">
-				<cfif arguments.fileTypeId IS 3>
-					, reviser_user = <cfqueryparam value="#arguments.reviser_user#" cfsqltype="cf_sql_integer">
-					, approver_user = <cfqueryparam value="#arguments.approver_user#" cfsqltype="cf_sql_integer">
-				<cfelse>
-					<cfif isDefined("arguments.publication_scope_id")>
-						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
+				<cfquery name="updateFileQuery" datasource="#client_dsn#">
+					UPDATE `#client_abb#_#fileTypeTable#`
+					SET name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
+					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">
+					<cfif arguments.fileTypeId IS 3>
+						, reviser_user = <cfqueryparam value="#arguments.reviser_user#" cfsqltype="cf_sql_integer">
+						, approver_user = <cfqueryparam value="#arguments.approver_user#" cfsqltype="cf_sql_integer">
+					<cfelse>
+						<cfif isDefined("arguments.publication_scope_id")>
+							, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
+						</cfif>
+
+						<cfif arguments.fileTypeId IS 1 OR arguments.fileTypeId IS 2>
+							
+							<cfif fileQuery.public NEQ arguments.public>
+
+								, public = <cfqueryparam value="#arguments.public#" cfsqltype="cf_sql_bit">
+
+								<cfif arguments.public IS true>
+									, file_public_id = <cfqueryparam value="#file_public_id#" cfsqltype="cf_sql_varchar">
+								<cfelse>
+									, file_public_id = <cfqueryparam cfsqltype="cf_sql_varchar" null="true">
+								</cfif>
+							
+							</cfif> 
+
+						</cfif>
 					</cfif>
+					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
 
-					<cfif arguments.fileTypeId IS 1 OR arguments.fileTypeId IS 2>
-						
-						<cfif fileQuery.public NEQ arguments.public>
 
-							, public = <cfqueryparam value="#arguments.public#" cfsqltype="cf_sql_bit">
+				<!--- deleteItemCategories --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItemCategories">
+					<cfinvokeargument name="item_id" value="#arguments.file_id#">
+					<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
 
-							<cfif arguments.public IS true>
-								, file_public_id = <cfqueryparam value="#file_public_id#" cfsqltype="cf_sql_varchar">
-							<cfelse>
-								, file_public_id = <cfqueryparam cfsqltype="cf_sql_varchar" null="true">
-							</cfif>
-						
-						</cfif> 
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
-					</cfif>
-				</cfif>
-				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>	
+				<cfif isDefined("arguments.categories_ids")>
 
+					<!--- setItemCategories --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="setItemCategories">
+						<cfinvokeargument name="item_id" value="#arguments.file_id#">
+						<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
+						<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#"/>
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>	
+			
+			</cftransaction>
+
+			<!--- No se puede usar aquí transacción porque dentro de setFileTypology hay transacciones--->
 			<!--- setFileTypology --->
 			<cfif isDefined("arguments.typology_id")>
 
@@ -3828,6 +3888,7 @@
 		<cfargument name="Filedata" type="string" required="true"/>
 		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="unlock" type="boolean" required="false" default="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 		
 		<cfset var method = "replaceFile">
 
@@ -3871,8 +3932,6 @@
 				<cfreturn canUserModifyFileResponse>
 
 			</cfif>
-
-			<!---<cffile action="delete" file="#destination##fileQuery.physical_name#">--->	
 			
 			<cffile action="upload" filefield="Filedata" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
 				
@@ -4081,31 +4140,36 @@
 
 			<cfinclude template="includes/logRecord.cfm">
 
-			<!--- Alert --->
-			<cfif arguments.fileTypeId IS NOT 3><!--- User document --->
+			<cfif arguments.no_notify IS false>
 				
-				<!--- Replace file --->
-				<cfinvoke component="AlertManager" method="replaceFile">
-					<cfinvokeargument name="objectFile" value="#fileReplacedQuery#">
-				</cfinvoke>
+				<!--- Alert --->
+				<cfif arguments.fileTypeId IS NOT 3><!--- User document --->
+					
+					<!--- Replace file --->
+					<cfinvoke component="AlertManager" method="replaceFile">
+						<cfinvokeargument name="objectFile" value="#fileReplacedQuery#">
+					</cfinvoke>
 
-			<cfelse><!--- Area document --->
-			
-				<cfset area_id = fileQuery.area_id>
+				<cfelse><!--- Area document --->
+				
+					<cfset area_id = fileQuery.area_id>
 
-				<!--- New version --->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
-					<cfinvokeargument name="objectFile" value="#fileReplacedQuery#">
-					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
-					<cfinvokeargument name="area_id" value="#area_id#">
-					<cfinvokeargument name="user_id" value="#user_id#">
-					<cfinvokeargument name="action" value="new_version">
+					<!--- New version --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
+						<cfinvokeargument name="objectFile" value="#fileReplacedQuery#">
+						<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+						<cfinvokeargument name="area_id" value="#area_id#">
+						<cfinvokeargument name="user_id" value="#user_id#">
+						<cfinvokeargument name="action" value="new_version">
 
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>	
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>	
+
+				</cfif>
 
 			</cfif>
+			
 			
 			<!--- Unlock file --->
 			<cfif arguments.fileTypeId IS NOT 1 AND arguments.unlock IS true>

@@ -989,6 +989,7 @@
 
 		<cfset var area_id = "">
 		<cfset var rowQuery = "">
+		<cfset var itemCategories = "">
 
 		<cftry>
 			
@@ -1050,6 +1051,18 @@
 
 			<cfset rowQuery = getRowResponse.row>
 
+			<cfif arguments.tableTypeId IS 1 OR arguments.tableTypeId IS 2><!--- IS NOT typology --->
+
+				<!--- getItemCategories --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
+					<cfinvokeargument name="item_id" value="#arguments.table_id#">
+					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+			</cfif>
+
 			<!--- Delete Row In DataBase--->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
 				<cfinvokeargument name="row_id" value="#arguments.row_id#">
@@ -1068,6 +1081,7 @@
 					<cfinvokeargument name="rowQuery" value="#rowQuery#">
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="itemCategories" value="#itemCategories#">
 					<cfinvokeargument name="action" value="delete">
 
 					<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -1333,6 +1347,7 @@
 		<cfargument name="file_name" type="string" required="false">
 		<cfargument name="description" type="string" required="false">
 		<cfargument name="user_in_charge" type="string" required="no">
+		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="limit" type="numeric" required="true">
 
 		<cfargument name="areas_ids" type="string" required="true">

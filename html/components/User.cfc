@@ -527,6 +527,10 @@
 
 		<cfargument name="notify_app_news" type="boolean" required="false" default="false">
 		<cfargument name="notify_app_features" type="boolean" required="false" default="false">
+
+		<cfargument name="no_notifications" type="boolean" required="false" default="false">
+
+		<cfargument name="notifications_digest_type_id" type="string" required="true">
 		
 		<cfset var method = "updateUserPreferences">
 		

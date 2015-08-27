@@ -39,7 +39,7 @@ CKEDITOR.editorConfig = function( config ) {
 		['Format','FontSize','TextColor','BGColor'],
 		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
 		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar','Smiley'],
-		['Image'],['InsertPre']
+		['Image'],['InsertPre'],['TweetableText']
 	];
 
 	config.toolbar_DP_hcs =
@@ -70,12 +70,14 @@ CKEDITOR.editorConfig = function( config ) {
 		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
 		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
 		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar','Smiley'],
-		['Image','Flash','Iframe'],['InsertPre']
+		['Image','Flash','Iframe'],['InsertPre'],['TweetableText']
 	];
 	
 	//Insert pre tag plugin
 	//config.extraPlugins = 'insertpre';
 	//config.insertpre_class = '';
+
+	config.extraPlugins = 'tweetabletext';
 
 	//Para que solo se pueda introducir texto plano
 	config.forcePasteAsPlainText = true;

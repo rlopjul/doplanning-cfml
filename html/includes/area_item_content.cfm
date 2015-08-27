@@ -23,14 +23,17 @@
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="getItemResponse">
 	<cfinvokeargument name="item_id" value="#item_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 	<cfif itemTypeId IS 20>
 		<cfinvokeargument name="with_lock" value="true">
 	</cfif>
+	<cfinvokeargument name="with_categories" value="true"/>
 </cfinvoke>
 
+<cfset objectItem = getItemResponse.item>
+<cfset itemCategories = getItemResponse.categories>
 <cfset area_id = objectItem.area_id>
 
 <!---
@@ -474,6 +477,7 @@
 	<cfif isDefined("webPath")>
 		<cfinvokeargument name="webPath" value="#webPath#">
 	</cfif>
+	<cfinvokeargument name="categories" value="#itemCategories#"/>
 </cfinvoke>
 
 

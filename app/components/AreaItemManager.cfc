@@ -561,6 +561,8 @@
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 
 		<cfset var method = "createItem">
 		
@@ -857,6 +859,20 @@
 					
 				</cfif>
 
+				<cfif isDefined("arguments.categories_ids")>
+
+					<!--- setItemCategories --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="setItemCategories">
+						<cfinvokeargument name="item_id" value="#item_id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#"/>
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+
 				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 OR arguments.itemTypeId IS 13 OR arguments.itemTypeId IS 16><!---Lists, Forms, Typologies, Users typologies--->
 					
 					<cfinvoke component="TableManager" method="createTableInDatabase">
@@ -895,16 +911,25 @@
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
+
+				<cfif arguments.no_notify IS false>
+					
+					<!--- Alert --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
+						<cfinvokeargument name="objectItem" value="#itemQuery#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="action" value="new">
+						<cfif arguments.notify_by_sms EQ "true">
+							<cfinvokeargument name="send_sms" value="true">
+						</cfif>
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
 				
-				<!--- Alert --->
-				<cfinvoke component="AlertManager" method="newAreaItem">
-					<cfinvokeargument name="objectItem" value="#itemQuery#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="action" value="new">
-					<cfif arguments.notify_by_sms EQ "true">
-						<cfinvokeargument name="send_sms" value="true">
-					</cfif>
-				</cfinvoke>
 
 			</cfif>
 			
@@ -949,6 +974,8 @@
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
 		<cfargument name="unlock" type="boolean" required="false" default="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateItem">
 				
@@ -1224,6 +1251,29 @@
 					</cfif>
 					WHERE id = <cfqueryparam value="#objectItem.id#" cfsqltype="cf_sql_integer">;			
 				</cfquery>
+
+				<!--- deleteItemCategories --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItemCategories">
+					<cfinvokeargument name="item_id" value="#objectItem.id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif isDefined("arguments.categories_ids")>
+
+					<!--- setItemCategories --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="setItemCategories">
+						<cfinvokeargument name="item_id" value="#objectItem.id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#"/>
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
 				
 			</cftransaction>
 			
@@ -1253,17 +1303,25 @@
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
-				</cfif>				
+				</cfif>	
 
-				<!--- Alert --->
-				<cfinvoke component="AlertManager" method="newAreaItem">
-					<cfinvokeargument name="objectItem" value="#itemQuery#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="action" value="update">
-					<cfif objectItem.notify_by_sms EQ "true">
-						<cfinvokeargument name="send_sms" value="true">
-					</cfif>
-				</cfinvoke>
+				<cfif arguments.no_notify IS false>
+					
+					<!--- Alert --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
+						<cfinvokeargument name="objectItem" value="#itemQuery#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="action" value="update">
+						<cfif objectItem.notify_by_sms EQ "true">
+							<cfinvokeargument name="send_sms" value="true">
+						</cfif>
+
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>			
 
 			</cfif>
 		
@@ -1298,7 +1356,108 @@
 		<cfreturn response>
 		
 	</cffunction>
+
+
+	<!---  ----------------------------------GET ITEM CATEGORIES--------------------------------   --->
+
+	<cffunction name="getItemCategories" returntype="struct" output="false" access="public">
+		<cfargument name="item_id" required="true" type="numeric">
+		<cfargument name="itemTypeId" required="true" type="numeric">
+		
+		<cfset var method = "getItemCategories">
+
+		<cfset var response = structNew()>
+			
+		<cftry>
+			
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfif itemTypeId IS 10>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileAreas" returnvariable="getFileAreasQuery">
+					<cfinvokeargument name="file_id" value="#arguments.item_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>		
+				
+				<cfif getFileAreasQuery.recordCount GT 0>
+			
+					<cfif getFileAreasQuery.recordCount IS 1>
+					
+						<cfset area_id = getFileAreasQuery.area_id>	
+				
+						<cfinclude template="includes/checkAreaAccess.cfm">
+				
+					<cfelse>
+						
+						<cfset fileAreasList = valueList(getFileAreasQuery.area_id)>
+						<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreasAccess">
+							<cfinvokeargument name="areasList" value="#fileAreasList#">
+						</cfinvoke>							
+						
+					</cfif>
+				
+				<cfelse>
+				
+					<cfset error_code = 103>
+		
+					<cfthrow errorcode="#error_code#">
+				
+				</cfif>
+
+			<cfelse>
+				
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="selectItemQuery">
+					<cfinvokeargument name="item_id" value="#arguments.item_id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="parse_dates" value="false">
+					<cfinvokeargument name="published" value="false">
+
+					<cfinvokeargument name="with_lock" value="false">
+					
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif selectItemQuery.recordCount GT 0>
+
+					<cfset area_id = selectItemQuery.area_id>
+
+					<!---checkAreaAccess--->
+					<cfinclude template="includes/checkAreaAccess.cfm">
+
+				<cfelse>
+
+					<cfset error_code = 103>
+		
+					<cfthrow errorcode="#error_code#">
+
+				</cfif>
+
+			</cfif>
+
+			<!--- getItemCategories --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="getItemCategoriesResult">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			
+			<cfset response = {result=true, query=#getItemCategoriesResult#}>
+
+			<cfcatch>
 	
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+	
+			</cfcatch>
+		</cftry>
+			
+		<cfreturn response>
+
+	</cffunction>
+
 	
 	
 	<!--- ----------------------- UPDATE ITEM WITH ATTACHED -------------------------------- --->
@@ -1320,6 +1479,8 @@
 		<cfargument name="publication_validated" type="boolean" required="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
+		<cfargument name="categories_ids" type="array" required="false" default="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 		
 		<cfset var method = "updateItemWithAttachedFile">
 		
@@ -1341,6 +1502,8 @@
 					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					<cfinvokeargument name="price" value="#arguments.price#">
 					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
+					<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
+					<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
 				</cfinvoke>
 
 				<cfif updateItemResponse.result IS false>
@@ -1676,16 +1839,24 @@
 			</cfif>			
 
 			<!---Send Alert--->
-			<cfinvoke component="AlertManager" method="newAreaItem">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 				<cfinvokeargument name="objectItem" value="#itemQuery#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="action" value="delete">
+
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>	
 
-			<cfinvoke component="AlertManager" method="newAreaItem">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 				<cfinvokeargument name="objectItem" value="#newItemQuery#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="action" value="new">
+
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>	
 
 			<cfinclude template="includes/logRecord.cfm">
@@ -1879,6 +2050,7 @@
 		<cfargument name="status" type="string" required="false" default="ok"><!--- ok/pending/deleted --->
 
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
+		<cfargument name="with_categories" type="boolean" required="false" default="false">
 
 		<cfset var method = "getItem">
 
@@ -2032,8 +2204,25 @@
 					</cfif>
 					
 				</cfif>
+
+				<cfif arguments.with_categories IS true>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="categoriesQuery">
+						<cfinvokeargument name="item_id" value="#id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+					
+					<cfset response = {result=true, item=#resulItem#, categories=#categoriesQuery#}>
+
+				<cfelse>
+
+					<cfset response = {result=true, item=#resulItem#}>
+
+				</cfif>
 								
-				<cfset response = {result=true, item=#resulItem#}>
+				
 				
 			<cfelse><!---Item does not exist--->
 			
@@ -2427,10 +2616,14 @@
 					</cfinvoke>
 					
 					<!---Alert--->
-					<cfinvoke component="AlertManager" method="newAreaItem">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 						<cfinvokeargument name="objectItem" value="#itemQuery#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="action" value="close">
+
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
 					<cfinclude template="includes/logRecord.cfm">
@@ -2518,10 +2711,14 @@
 					</cfinvoke>
 
 					<!---Alert--->
-					<cfinvoke component="AlertManager" method="newAreaItem">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 						<cfinvokeargument name="objectItem" value="#itemQuery#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="action" value="done">
+
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
 					<cfinclude template="includes/logRecord.cfm">
@@ -2615,10 +2812,14 @@
 					</cfinvoke>
 
 					<!---Alert--->
-					 <cfinvoke component="AlertManager" method="newAreaItem">
+					 <cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 						<cfinvokeargument name="objectItem" value="#itemQuery#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="action" value="done">
+						
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke> --->
 
 					<cfinclude template="includes/logRecord.cfm">
@@ -2969,140 +3170,6 @@
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
-				
-
-				<!--- 
-				<cfif APPLICATION.moduleBin IS true AND arguments.moveToBin IS true><!--- MOVE TO BIN --->
-									
-				
-									<cftransaction><!---Aquí debería estar definido nested="true", pero Railo no permite definirlo (parece que hay un bug)--->
-										
-										<cfquery name="insertItemDelete" datasource="#client_dsn#">		
-											INSERT INTO #client_abb#_items_deleted
-											SET item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">,
-											item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">,
-											delete_area_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">,
-											delete_user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-											delete_date = NOW();
-										</cfquery>
-				
-										<cfquery name="deleteItemQuery" datasource="#client_dsn#">	
-											UPDATE #client_abb#_#itemTypeTable#
-											SET status = <cfqueryparam value="deleted" cfsqltype="cf_sql_varchar">
-											WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
-										</cfquery>
-				
-									</cftransaction> 
-				
-									<!---Alert--->
-									<cfinvoke component="AlertManager" method="newAreaItem">
-										<cfinvokeargument name="objectItem" value="#itemQuery#">
-										<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-										<cfinvokeargument name="action" value="delete">
-									</cfinvoke>
-				
-				
-				
-								<cfelse><!--- DELETE --->
-				
-				
-									<!---IMPORTANTE: esto se tiene que hacer fuera de <cftransaction> porque si se hace dentro da error, ya que al enviar las notificaciones por email de la elminicación de registros se accede a otro Datasource dentro de la misma transacción. Para solucionarlo habría que habilitar que se puediese acceder a la otra base de datos desde el mismo datasource--->
-									<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---List, Forms, Typologies--->
-										
-										<cfinvoke component="TableManager" method="deleteTableInDatabase">
-											<cfinvokeargument name="table_id" value="#arguments.item_id#">
-											<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-										</cfinvoke>
-				
-									</cfif>
-				
-									<cftransaction>
-										
-										<!--- CHANGE SUB ITEMS  --->
-										<!---Ya no se borran los submensajes de un mensaje, lo que se hace es que se ponen como hijos del nivel superior--->
-										<cfquery name="changeSubItemsQuery" datasource="#client_dsn#">
-											UPDATE #client_abb#_#itemTypeTable#
-											SET parent_id = #itemQuery.parent_id#, 
-											parent_kind = <cfqueryparam value="#itemQuery.parent_kind#" cfsqltype="cf_sql_varchar">			
-											WHERE parent_id = <cfqueryparam value="#itemQuery.id#" cfsqltype="cf_sql_integer"> 
-											AND parent_kind = <cfqueryparam value="item" cfsqltype="cf_sql_varchar">;
-										</cfquery>
-				
-										<!---DELETE ITEM POSITION--->
-										<cfinvoke component="AreaItemManager" method="deleteItemPosition">
-											<cfinvokeargument name="item_id" value="#itemQuery.id#">
-											<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-										</cfinvoke>
-										
-										<!---DELETE ITEM--->
-										<cfquery name="deleteItemQuery" datasource="#client_dsn#">	
-											DELETE FROM #client_abb#_#itemTypeTable#
-											WHERE id = <cfqueryparam value="#itemQuery.id#" cfsqltype="cf_sql_integer">;
-										</cfquery>										
-									
-									</cftransaction>
-				
-				
-									<cfif APPLICATION.moduleBin IS false>
-										
-										<!---Alert--->
-										<cfinvoke component="AlertManager" method="newAreaItem">
-											<cfinvokeargument name="objectItem" value="#itemQuery#">
-											<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-											<cfinvokeargument name="action" value="delete">
-										</cfinvoke>
-				
-									</cfif>
-				
-					
-									<!---DELETE ATTACHED_FILE FILE--->
-									<cfif isNumeric(itemQuery.attached_file_id) AND itemQuery.attached_file_id GT 0>
-									
-										<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteFile">
-											<cfinvokeargument name="file_id" value="#itemQuery.attached_file_id#">
-											<cfinvokeargument name="area_id" value="#area_id#">
-										</cfinvoke>
-										
-										<cfif resultDeleteFile.result IS false><!---File delete failed--->
-											
-											<cfset error_code = 605>
-						
-											<cfthrow errorcode="#error_code#">
-										
-										</cfif>
-										
-									</cfif>
-									
-									<cfif arguments.itemTypeId IS NOT 1>
-									
-										<!---DELETE ATTACHED_IMAGE FILE--->
-										<cfif isNumeric(itemQuery.attached_image_id) AND itemQuery.attached_image_id GT 0>
-										
-											<cfinvoke component="FileManager" method="deleteFile" returnvariable="resultDeleteImage">
-												<cfinvokeargument name="file_id" value="#itemQuery.attached_image_id#">
-												<cfinvokeargument name="area_id" value="#area_id#">
-											</cfinvoke>
-											
-											<cfif resultDeleteImage.result IS false><!---File delete failed--->
-												
-												<cfset error_code = 605>
-							
-												<cfthrow errorcode="#error_code#">
-											
-											</cfif>
-											
-										</cfif>
-										
-									</cfif>
-									
-				
-								</cfif><!--- END DELETE ---> 
-
-								<cfinclude template="includes/logRecord.cfm">
-
-								<cfset response = {result=true, item_id=#arguments.item_id#}>
-
-				--->
 
 			<cfelse><!---Item does not exist--->
 			
@@ -3642,6 +3709,7 @@
 		<cfargument name="end_date" type="string" required="no">
 		<cfargument name="to_end_date" type="string" required="no">
 		<cfargument name="identifier" type="string" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
 		
 		<cfset var method = "getAllAreasItems">
 
@@ -3695,6 +3763,7 @@
 				<cfinvokeargument name="to_end_date" value="#arguments.to_end_date#">
 				</cfif>
 				<cfinvokeargument name="identifier" value="#arguments.identifier#">
+				<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
 				<cfinvokeargument name="published" value="false">
 				
 				<cfinvokeargument name="client_abb" value="#client_abb#">

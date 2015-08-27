@@ -31,6 +31,7 @@
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="published" type="boolean" required="false" default="true">
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
+		<cfargument name="with_categories" type="boolean" required="false" default="false">
 		<cfargument name="status" type="string" required="false">
 		
 		<cfargument name="client_abb" type="string" required="true">
@@ -124,6 +125,9 @@
 						</cfif>
 					</cfif>
 				</cfif>
+				<!---<cfif isDefined("arguments.with_categories")>
+					, items_categories.area_id AS category_id
+				</cfif>--->
 				FROM #client_abb#_#itemTypeTable# AS items
 				INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
 				LEFT JOIN #client_abb#_files AS files ON files.id = items.attached_file_id
@@ -149,6 +153,11 @@
 					LIMIT 1
 				) AS locks ON locks.item_id = items.id
 				</cfif>
+				<!---<cfif isDefined("arguments.with_categories")>
+					LEFT JOIN #client_abb#_items_categories AS items_categories
+					ON items.id = items_categories.item_id
+					AND items.item_type_id = items_categories.item_type_id
+				</cfif>--->
 				WHERE items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
 				<cfif itemTypeWeb IS true><!--- WEB --->
 					<cfif arguments.published IS true>
@@ -193,10 +202,15 @@
 		<cfargument name="items_page" type="string" required="no">--->
 		<cfargument name="structure_available" type="boolean" required="false">
 		<cfargument name="published" type="boolean" required="false" default="true">
-		<cfargument name="identifier" type="string" required="false">		
-		
+		<cfargument name="identifier" type="string" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="categories_condition" type="string" required="false" default="AND">
+ 		
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
+
+		<!---<cfargument name="from_last_update_date" type="string" required="false">
+		<cfargument name="to_last_update_date" type="string" required="false">--->
 
 		<cfargument name="from_start_date" type="string" required="no">
 		<cfargument name="to_end_date" type="string" required="no">
@@ -240,7 +254,7 @@
 						, items.creation_date
 						<cfif arguments.itemTypeId IS NOT 1 AND itemTypeId IS NOT 7>, items.last_update_date</cfif>
 					</cfif>
-					, items.attached_file_name, items.attached_file_id, items.area_id
+					, items.area_id
 					<cfif arguments.with_user IS true>
 					, users.family_name, users.name AS user_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 						<cfif arguments.itemTypeId IS 6><!---Tasks--->
@@ -248,10 +262,13 @@
 						, items.recipient_user, recipient_users.family_name AS recipient_user_family_name, recipient_users.name AS recipient_user_name, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name, recipient_users.image_type AS recipient_user_image_type
 						</cfif>					
 					</cfif>
-					<cfif arguments.itemTypeId IS NOT 1>
+					<cfif arguments.itemTypeId NEQ 14 AND arguments.itemTypeId NEQ 15><!--- IS NOT Views --->
+						, items.attached_file_name, items.attached_file_id
+					</cfif>
+					<cfif arguments.itemTypeId IS NOT 1 AND arguments.itemTypeId NEQ 14 AND arguments.itemTypeId NEQ 15>
 					, items.attached_image_id, items.attached_image_name, items.link				
 					</cfif>
-					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7>
+					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7 AND arguments.itemTypeId NEQ 14 AND arguments.itemTypeId NEQ 15>
 					, items.link_target
 					</cfif>
 					<cfif (itemTypeId IS 5 OR itemTypeId IS 6)><!---Events, Tasks--->
@@ -313,6 +330,28 @@
 						ON items.id = items_position.item_id AND items_position.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
 						<!---AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">--->
 					</cfif>
+					<!---
+					<cfif isDefined("arguments.categories_ids")>
+
+						Para incluir en el resultado los elementos con al menos una de las categorías seleccionadas
+
+						INNER JOIN #client_abb#_items_categories AS categories
+						ON categories.item_id = items.id
+						AND categories.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+						AND (
+						<cfset categoryCount = 1>
+						<cfloop array="#arguments.categories_ids#" index="category_id">
+							<cfif isNumeric(category_id)>
+								<cfif categoryCount GT 1>
+								OR
+								</cfif>
+								categories.area_id = <cfqueryparam value="#category_id#" cfsqltype="cf_sql_integer">
+								<cfset categoryCount = categoryCount+1>
+							</cfif>
+						</cfloop>
+						)
+					</cfif>
+					--->
 					WHERE
 					<cfif arguments.all_areas IS false>
 						(<cfif isDefined("arguments.areas_ids")>
@@ -333,6 +372,22 @@
 					<cfif arguments.itemTypeId IS 6 AND isDefined("arguments.recipient_user")>
 					AND items.recipient_user = <cfqueryparam value="#arguments.recipient_user#" cfsqltype="cf_sql_integer">
 					</cfif>
+					<cfif isDefined("arguments.categories_ids") and arrayLen(arguments.categories_ids) GT 0>
+						AND (
+						<cfset categoryCount = 1>
+						<cfloop array="#arguments.categories_ids#" index="category_id">
+							<cfif isNumeric(category_id)>
+								<cfif categoryCount GT 1>
+									#arguments.categories_condition#
+								</cfif>
+									items.id IN ( SELECT item_id FROM `#client_abb#_items_categories`
+									WHERE item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+									AND area_id = <cfqueryparam value="#category_id#" cfsqltype="cf_sql_integer"> )
+								<cfset categoryCount = categoryCount+1>
+							</cfif>
+						</cfloop>
+						)
+					</cfif>
 					<cfif len(search_text_re) GT 0><!---Search--->
 					AND (items.title REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
 					OR items.description REGEXP <cfqueryparam value=">.*#search_text_re#.*<" cfsqltype="cf_sql_varchar">
@@ -343,7 +398,9 @@
 					</cfif>
 					)
 					</cfif>
+					<cfif arguments.itemTypeId NEQ 14 AND arguments.itemTypeId NEQ 15>
 					AND status='ok'
+					</cfif>
 					<cfif arguments.listFormat NEQ "true">
 					AND parent_kind='area' 
 					</cfif>
@@ -354,11 +411,25 @@
 					AND items.state = <cfqueryparam value="#arguments.state#" cfsqltype="cf_sql_varchar">
 					</cfif>					
 
-					<cfif isDefined("arguments.from_date")>
+					<!---<cfif isDefined("arguments.from_date")>
 					AND items.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
 					</cfif>
 					<cfif isDefined("arguments.end_date")>
 					AND items.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
+					</cfif>--->
+					<cfif isDefined("arguments.from_date")>
+						AND ( items.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+								<cfif arguments.itemTypeId IS NOT 1 AND itemTypeId IS NOT 7>
+								OR items.last_update_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+								</cfif>
+							)
+					</cfif>
+					<cfif isDefined("arguments.end_date")>
+						AND ( items.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
+							<cfif arguments.itemTypeId IS NOT 1 AND itemTypeId IS NOT 7>
+							AND IF( items.last_update_date IS NULL, true, items.last_update_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') )
+							</cfif>
+							)
 					</cfif>
 					<cfif isDefined("arguments.from_start_date")>
 					AND items.start_date <= STR_TO_DATE(<cfqueryparam value="#arguments.from_start_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
@@ -624,6 +695,34 @@
 					
 			</cfif>	
 
+		
+	</cffunction>
+
+
+	<!---  -------------------GET ITEM CATEGORIES----------------------   --->
+
+	<cffunction name="getItemCategories" returntype="query" output="false" access="public">
+		<cfargument name="item_id" required="yes" type="numeric">
+		<cfargument name="itemTypeId" required="yes" type="numeric">
+		
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">
+		
+		<cfset var method = "getItemCategories">
+				
+			<!---<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">--->
+			
+			<cfquery name="getItemCategories" datasource="#client_dsn#">
+				SELECT items_categories.*, items_categories.area_id AS category_id, areas.name AS category_name
+				FROM #client_abb#_items_categories AS items_categories
+				INNER JOIN #client_abb#_areas AS areas
+				ON items_categories.item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+				AND items_categories.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+				AND areas.id = items_categories.area_id
+				ORDER BY category_name ASC; 
+			</cfquery>
+			
+		<cfreturn getItemCategories>
 		
 	</cffunction>
 

@@ -5,58 +5,75 @@ curLangText["es"] = {
 
 			"1": {
 				"name" : "Mensaje",
+				"name_plural" : "Mensajes",
 			},
 			"2": {
 				"name" : "Elemento web",
+				"name_plural" : "Elementos web",
 			},
 			"3": {
 				"name" : "Enlace",
+				"name_plural" : "Enlaces",
 			},
 			"4": {
 				"name" : "Noticia",
+				"name_plural" : "Noticias",
 			},
 			"5": {
 				"name" : "Evento",
+				"name_plural" : "Eventos",
 			},
 			"6": {
 				"name" : "Tarea",
+				"name_plural" : "Tareas",
 			},
 			"7": {
 				"name" : "Consulta",
+				"name_plural" : "Consultas",
 			},
 			"8": {
 				"name" : "Publicación",
+				"name_plural" : "Publicaciones",
 			},
 			"9": {
 				"name" : "Imagen",
+				"name_plural" : "Imágenes",
 			},
 
 
 			"10": {
 				"name" : "Archivo",
+				"name_plural" : "Archivos",
 			},
 
 
 			"11": {
 				"name" : "Lista",
+				"name_plural" : "Listas",
 			},
 			"12": {
 				"name" : "Formulario",
+				"name_plural" : "Formularios",
 			},
 			"13": {
 				"name" : "Tipología",
+				"name_plural" : "Tipologías",
 			},
 			"14": {
 				"name" : "Vista de Lista",
+				"name_plural" : "Vistas de Listas",
 			},
 			"15": {
 				"name" : "Vista de Formulario",
+				"name_plural" : "Vistas de Formularios",
 			},
 			"16": {
 				"name" : "Tipología de usuario",
+				"name_plural" : "Tipologías de usuarios",
 			},
 			"20": {
 				"name" : "Documento DoPlanning",
+				"name_plural" : "Documentos DoPlanning",
 			},
 			
 		},
@@ -80,15 +97,20 @@ curLangText["es"] = {
 			"access_to_area_links" : "Acceda directamente al área mediante los siguientes enlaces",
 			
 			"area" : "Área",
+			"areas" : "Áreas",
 			"on_the_area" : "en el área",
 			"of_the_organization" : "de la organización",
 			"area_path" : "Ruta del área",
 			"area_description" : "Descripción del área",
+			"categories" : "Categorías",
+			"users" : "Usuarios",
 			
 			"user" : "Usuario",
 			"by_user" : "por el usuario",
 			"your_access_email" : "Su usuario de acceso es",
 			"you_must_change_password" : 'Debe cambiar la contraseña en el apartado "Preferencias" de la aplicación',
+
+			"no_title" : "sin título",
 			
 		},
 		
@@ -324,6 +346,14 @@ curLangText["es"] = {
 			"tasks_expire_days" : "Las siguientes tareas caducan en",
 			"days" : "días"
 
+		},
+
+		"notifications_digest": {
+
+			"activity_summary" : "Resumen de actividad",
+			"activity_summary_for_user" : "Resumen de actividad para el usuario",
+			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
+
 		}
 	};
 	
@@ -336,58 +366,75 @@ curLangText["en"] = {
 
 			"1": {
 				"name" : "Message",
+				"name_plural" : "Messages",
 			},
 			"2": {
 				"name" : "Web element",
+				"name_plural" : "Web elements",
 			},
 			"3": {
 				"name" : "Link",
+				"name_plural" : "Links",
 			},
 			"4": {
 				"name" : "News",
+				"name_plural" : "News",
 			},
 			"5": {
 				"name" : "Event",
+				"name_plural" : "Events",
 			},
 			"6": {
 				"name" : "Task",
+				"name_plural" : "Tasks",
 			},
 			"7": {
 				"name" : "Consultation",
+				"name_plural" : "Consultations",
 			},
 			"8": {
 				"name" : "Publication",
+				"name_plural" : "Publications",
 			},
 			"9": {
 				"name" : "Image",
+				"name_plural" : "Images",
 			},
 
 
 			"10": {
 				"name" : "File",
+				"name_plural" : "Files",
 			},
 
 
 			"11": {
 				"name" : "List",
+				"name_plural" : "Lists",
 			},
 			"12": {
 				"name" : "Form",
+				"name_plural" : "Forms",
 			},
 			"13": {
 				"name" : "Typology",
+				"name_plural" : "Typologies",
 			},
 			"14": {
-				"name" : "Lista view",
+				"name" : "List view",
+				"name_plural" : "List views",
 			},
 			"15": {
 				"name" : "Form view",
+				"name_plural" : "Form views",
 			},
 			"16": {
 				"name" : "User typology",
+				"name_plural" : "User typologies",
 			},
 			"20": {
 				"name" : "DoPlanning document",
+				"name_plural" : "DoPlanning documents",
 			},
 			
 		},
@@ -411,15 +458,20 @@ curLangText["en"] = {
 			"access_to_area_links" : "Go directly to the area through the following links",
 			
 			"area" : "Area",
+			"areas" : "Áreas",
 			"on_the_area" : "in the area",
 			"of_the_organization" : "of the organization",
 			"area_path" : "Area path",
 			"area_description" : "Area description",
+			"categories" : "Categories",
+			"users" : "Usuarios",
 			
 			"user" : "User",
 			"by_user" : "by user",
 			"your_access_email" : "Your access email is",
 			"you_must_change_password" : 'You must change your password at the application preferences',
+
+			"no_title" : "without title",
 			
 		},
 		
@@ -652,6 +704,14 @@ curLangText["en"] = {
 			"tasks_expire_today" : "The following tasks expire today",
 			"tasks_expire_days" : "The following tasks expire in",
 			"days" : "days"
+
+		},
+
+		"notifications_digest": {
+
+			"activity_summary" : "Activity summary",
+			"activity_summary_for_user" : "Summary of activity for the user",
+			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
 
 		}
 	};

@@ -953,7 +953,7 @@ Lang.prototype.pack.en = {
 		"Un registro de formulario ha sido creado, modificado o eliminado":"A form record has been created, modified or deleted",
 		"Un archivo de área ha sido bloqueado/desbloqueado":"An area file has been locked/unlocked",
 		"Un archivo ha sido eliminado/quitado de un área": "A file has been deleted/removed from an area",
-		"Un archivo ha sido reemplazado":"A file has been replaced",
+		"Un archivo ha sido reemplazado o ha cambiado su estado (ha sido validado, rechazado, ...)":"A file has been replaced or changed",
 		"He sido asociado como usuario a un área":"I have been associated as user to an area",
 		"Un usuario ha sido asociado a un área":"A user has been associated to an area",
 		"Una tipología ha sido creada, modificada o eliminada":"A typology has been created, modified or deleted",
@@ -1243,7 +1243,10 @@ Lang.prototype.pack.en = {
 		"Nueva tipología de usuario":"New user typology",
 		"Si se crea sólo una tipología de usuario, se mostrará por defecto seleccionada para todos los usuarios y no será opcional":"If there is only one typology of user defined, it will be shown by default selected for all users and will not be optional",
 		"Las tipologías de archivos se gestionan en las áreas a las que pertenecen por los usuarios con permiso.":"The typologies of files are managed in their areas by the users with permission",
-		"Eliminar Tipología":"Delete typology"
+		"Eliminar Tipología":"Delete typology",
+
+		"Categorías":"Categories",
+		"Categorías de elementos de área":"Area elements categories",
 
 	}	
 	

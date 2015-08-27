@@ -20,6 +20,9 @@
 		<cfif isDefined("FORM.unlock")>
 			<cfinvokeargument name="unlock" value="#FORM.unlock#"/>
 		</cfif>
+		<cfif isDefined("FORM.no_notify")>
+			<cfinvokeargument name="no_notify" value="#FORM.no_notify#"/>
+		</cfif>
 	</cfinvoke>	
 
 	<!--- <cfset fail_page = "area_file_replace.cfm?file=#FORM.file_id#&area=#FORM.area_id#"> --->

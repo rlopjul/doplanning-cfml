@@ -23,33 +23,6 @@
 	
 	<!--- -------------------------------------- newAreaItem ----------------------------------- --->
 	
-	<cffunction name="newAreaItem" access="public" returntype="void">
-		<cfargument name="objectItem" type="query" required="yes">
-		<cfargument name="itemTypeId" type="numeric" required="yes">
-		<cfargument name="action" type="string" required="yes">
-		<cfargument name="send_sms" type="boolean" required="no" default="false">
-		<cfargument name="anti_virus_check_result" type="string" required="false">
-			
-			<cfset var method = "newAreaItem">
-
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<!---Alert--->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
-				<cfinvokeargument name="objectItem" value="#arguments.objectItem#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				<cfinvokeargument name="action" value="#arguments.action#">
-				<cfinvokeargument name="send_sms" value="#arguments.send_sms#">
-				<cfinvokeargument name="anti_virus_check_result" value="#arguments.anti_virus_check_result#">
-
-				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-		
-	</cffunction>
-
-
 
 	<!--- -------------------------------------- changeItemUser ------------------------------------ --->
 
@@ -106,11 +79,14 @@
 		</cfinvoke>
 
 		<cfset newUserFullName = newUser.user_full_name>
-		
-		
-		<!---OLD USER--->
 
-		<cfif len(oldUser.email) GT 0>
+		<!--- getClient --->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+		</cfinvoke>
+
+		<!---OLD USER--->
+		<cfif len(oldUser.email) GT 0 AND oldUser.enabled IS true AND ( clientQuery.force_notifications IS true OR oldUser.no_notifications IS false )><!--- user notifications enabled --->		
 
 			<cfif itemTypeGender EQ "male">
 				<cfset actionContent = #langText[oldUser.language].change_owner_item.owner_changed_male#>
@@ -162,7 +138,7 @@
 				</cfprocessingdirective>
 
 			</cfif>
-			
+
 			<cfinvoke component="EmailManager" method="sendEmail">
 				<cfinvokeargument name="from" value="#SESSION.client_email_from#">
 				<cfinvokeargument name="to" value="#oldUser.email#">
@@ -172,15 +148,16 @@
 				<cfelse>
 					<cfinvokeargument name="content" value="#oldUserContentExternal#">
 				</cfif>
+				<cfinvokeargument name="head_content" value="#oldUserContent.headContent#">
 				<cfinvokeargument name="foot_content" value="#oldUserContent.footContent#">
 			</cfinvoke>
 
-		</cfif>
+		</cfif><!--- END user notifications enabled --->
 
 
 		<!---NEW USER--->
-
-		<cfif len(newUser.email) GT 0>
+		
+		<cfif len(newUser.email) GT 0 AND newUser.enabled IS true AND ( clientQuery.force_notifications IS true OR newUser.no_notifications IS false )><!--- user notifications enabled --->
 
 			<cfif itemTypeGender EQ "male">
 				<cfset actionContent = #langText[newUser.language].change_owner_item.owner_changed_male#>
@@ -241,10 +218,11 @@
 				<cfelse>
 					<cfinvokeargument name="content" value="#newUserContentExternal#">
 				</cfif>
+				<cfinvokeargument name="head_content" value="#newUserContent.headContent#">
 				<cfinvokeargument name="foot_content" value="#newUserContent.footContent#">
 			</cfinvoke>	
 		
-		</cfif>
+		</cfif><!--- END user notifications enabled --->
 				
 
 	</cffunction>
@@ -290,11 +268,18 @@
 			</cfoutput>
 		</cfsavecontent>
 
+		<!--- getHeadContent --->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="headContent">
+			<cfinvokeargument name="language" value="#arguments.language#">
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#"/>
+		</cfinvoke>
+
+		<!--- getItemFootContent --->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemFootContent" returnvariable="footContent">
 			<cfinvokeargument name="language" value="#arguments.language#">
 		</cfinvoke>
 
-		<cfreturn {alertContent=#alertContent#, footContent=#footContent#}>
+		<cfreturn {alertContent=#alertContent#, footContent=#footContent#, headContent=#headContent#}>
 
 	</cffunction>
 	
@@ -390,121 +375,138 @@
 
 		<cfset newUserFullName = newUser.user_full_name>
 		
-		
+
+		<!--- getClient --->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+		</cfinvoke>
+
 		<!---OLD USER--->
-		<cfset oldUsersubject = "[#root_area.name#][#langText[oldUser.language].change_owner_file.file_owner_changed#] "&objectFile.name>
 
-		<cfinvoke component="AlertManager" method="getChangeFileUserAlertContents" returnvariable="oldUserContent">
-			<cfinvokeargument name="language" value="#oldUser.language#">
-			<cfinvokeargument name="objectFile" value="#arguments.objectFile#"/>
-			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
-			<cfinvokeargument name="new_user_full_name" value="#newUserFullName#"/>
-		</cfinvoke>
+		<cfif len(oldUser.email) GT 0 AND oldUser.enabled IS true AND ( clientQuery.force_notifications IS true OR oldUser.no_notifications IS false )><!--- user notifications enabled --->
 
-		<cfif oldUser.internal_user IS true><!---INTERNAL USER--->
-			
-			<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfset oldUsersubject = "[#root_area.name#][#langText[oldUser.language].change_owner_file.file_owner_changed#] "&objectFile.name>
+
+			<cfinvoke component="AlertManager" method="getChangeFileUserAlertContents" returnvariable="oldUserContent">
+				<cfinvokeargument name="language" value="#oldUser.language#">
+				<cfinvokeargument name="objectFile" value="#arguments.objectFile#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="new_user_full_name" value="#newUserFullName#"/>
 			</cfinvoke>
-			
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="oldUserContentInternal">
-			<cfoutput>
-	#langText[oldUser.language].change_owner_file.your_file_was_changed#<br/><br/>
 
-	#langText[oldUser.language].common.area#: <strong>#area_name#</strong>.<br/>
-	#langText[oldUser.language].common.area_path#: #area_path#.<br/><br/>
-	
-	#oldUserContent.alertContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>				
-
-		<cfelse><!---EXTERNAL USER--->
-
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="oldUserContentExternal">
-			<cfoutput>
-	#langText[oldUser.language].change_owner_file.your_file_was_changed#<br/><br/>
-
-	#langText[oldUser.language].common.area#: <strong>#area_name#</strong> #langText[oldUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
-	
-	#oldUserContent.alertContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>
-
-		</cfif>
-		
-		<cfinvoke component="EmailManager" method="sendEmail">
-			<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-			<cfinvokeargument name="to" value="#oldUser.email#">
-			<cfinvokeargument name="subject" value="#oldUsersubject#">
 			<cfif oldUser.internal_user IS true><!---INTERNAL USER--->
-				<cfinvokeargument name="content" value="#oldUserContentInternal#">
-			<cfelse>
-				<cfinvokeargument name="content" value="#oldUserContentExternal#">
+				
+				<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+				
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="oldUserContentInternal">
+				<cfoutput>
+		#langText[oldUser.language].change_owner_file.your_file_was_changed#<br/><br/>
+
+		#langText[oldUser.language].common.area#: <strong>#area_name#</strong>.<br/>
+		#langText[oldUser.language].common.area_path#: #area_path#.<br/><br/>
+		
+		#oldUserContent.alertContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>				
+
+			<cfelse><!---EXTERNAL USER--->
+
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="oldUserContentExternal">
+				<cfoutput>
+		#langText[oldUser.language].change_owner_file.your_file_was_changed#<br/><br/>
+
+		#langText[oldUser.language].common.area#: <strong>#area_name#</strong> #langText[oldUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
+		
+		#oldUserContent.alertContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>
+
 			</cfif>
-			<cfinvokeargument name="foot_content" value="#oldUserContent.footContent#">
-		</cfinvoke>
+			
+			<cfinvoke component="EmailManager" method="sendEmail">
+				<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+				<cfinvokeargument name="to" value="#oldUser.email#">
+				<cfinvokeargument name="subject" value="#oldUsersubject#">
+				<cfif oldUser.internal_user IS true><!---INTERNAL USER--->
+					<cfinvokeargument name="content" value="#oldUserContentInternal#">
+				<cfelse>
+					<cfinvokeargument name="content" value="#oldUserContentExternal#">
+				</cfif>
+				<cfinvokeargument name="head_content" value="#oldUserContent.headContent#">
+				<cfinvokeargument name="foot_content" value="#oldUserContent.footContent#">
+			</cfinvoke>
+
+		</cfif><!--- END user notifications enabled ---> 	
 
 
 		<!---NEW USER--->
-		<cfset newUserSubject = "[#root_area.name#][#langText[newUser.language].change_owner_file.file_owner_changed#] "&objectFile.name>
 
-		<cfinvoke component="AlertManager" method="getChangeFileUserAlertContents" returnvariable="newUserContent">
-			<cfinvokeargument name="language" value="#newUser.language#">
-			<cfinvokeargument name="objectFile" value="#arguments.objectFile#"/>
-			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
-			<cfinvokeargument name="new_user_full_name" value="#newUserFullName#"/>
-		</cfinvoke>
+		<cfif len(newUser.email) GT 0 AND newUser.enabled IS true AND ( clientQuery.force_notifications IS true OR newUser.no_notifications IS false )><!--- user notifications enabled --->
 
-		<cfif newUser.internal_user IS true><!---INTERNAL USER--->
-			
-			<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfset newUserSubject = "[#root_area.name#][#langText[newUser.language].change_owner_file.file_owner_changed#] "&objectFile.name>
+
+			<cfinvoke component="AlertManager" method="getChangeFileUserAlertContents" returnvariable="newUserContent">
+				<cfinvokeargument name="language" value="#newUser.language#">
+				<cfinvokeargument name="objectFile" value="#arguments.objectFile#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="new_user_full_name" value="#newUserFullName#"/>
 			</cfinvoke>
-			
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="newUserContentInternal">
-			<cfoutput>
-	#langText[newUser.language].change_owner_file.you_have_new_file#<br/><br/>
 
-	#langText[newUser.language].common.area#: <strong>#area_name#</strong>.<br/>
-	#langText[newUser.language].common.area_path#: #area_path#.<br/><br/>
-	
-	#newUserContent.alertContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>				
-
-		<cfelse><!---EXTERNAL USER--->
-
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="newUserContentExternal">
-			<cfoutput>
-	#langText[newUser.language].change_owner_file.you_have_new_file#<br/><br/>
-
-	#langText[newUser.language].common.area#: <strong>#area_name#</strong> #langText[newUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
-	
-	#newUserContent.alertContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>
-
-		</cfif>
-		
-		<cfinvoke component="EmailManager" method="sendEmail">
-			<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-			<cfinvokeargument name="to" value="#newUser.email#">
-			<cfinvokeargument name="subject" value="#newUserSubject#">
 			<cfif newUser.internal_user IS true><!---INTERNAL USER--->
-				<cfinvokeargument name="content" value="#newUserContentInternal#">
-			<cfelse>
-				<cfinvokeargument name="content" value="#newUserContentExternal#">
+				
+				<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+				
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="newUserContentInternal">
+				<cfoutput>
+		#langText[newUser.language].change_owner_file.you_have_new_file#<br/><br/>
+
+		#langText[newUser.language].common.area#: <strong>#area_name#</strong>.<br/>
+		#langText[newUser.language].common.area_path#: #area_path#.<br/><br/>
+		
+		#newUserContent.alertContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>				
+
+			<cfelse><!---EXTERNAL USER--->
+
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="newUserContentExternal">
+				<cfoutput>
+		#langText[newUser.language].change_owner_file.you_have_new_file#<br/><br/>
+
+		#langText[newUser.language].common.area#: <strong>#area_name#</strong> #langText[newUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
+		
+		#newUserContent.alertContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>
+
 			</cfif>
-			<cfinvokeargument name="foot_content" value="#newUserContent.footContent#">
-		</cfinvoke>	
+			
+			<cfinvoke component="EmailManager" method="sendEmail">
+				<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+				<cfinvokeargument name="to" value="#newUser.email#">
+				<cfinvokeargument name="subject" value="#newUserSubject#">
+				<cfif newUser.internal_user IS true><!---INTERNAL USER--->
+					<cfinvokeargument name="content" value="#newUserContentInternal#">
+				<cfelse>
+					<cfinvokeargument name="content" value="#newUserContentExternal#">
+				</cfif>
+				<cfinvokeargument name="head_content" value="#newUserContent.headContent#">
+				<cfinvokeargument name="foot_content" value="#newUserContent.footContent#">
+			</cfinvoke>
+
+		</cfif><!--- END user notifications enabled ---> 	
 		
 				
 	</cffunction>
@@ -549,11 +551,17 @@
 			</cfoutput>
 		</cfsavecontent>
 
+		<!--- getHeadContent --->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="headContent">
+			<cfinvokeargument name="language" value="#arguments.language#">
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#"/>
+		</cfinvoke>
+
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileFootContent" returnvariable="footContent">
 			<cfinvokeargument name="language" value="#arguments.language#">
 		</cfinvoke>
 
-		<cfreturn {alertContent=#alertContent#, footContent=#footContent#}>
+		<cfreturn {alertContent=#alertContent#, footContent=#footContent#, headContent=#headContent#}>
 
 	</cffunction>
 
@@ -607,97 +615,108 @@
 			<cfset action_user_id = objectFile.approver_user>
 		</cfif>
 
+		<!--- getClient --->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+		</cfinvoke>
+
+		<!--- getUser --->
 		<cfinvoke component="UserManager" method="getUser" returnvariable="actionUser">
 			<cfinvokeargument name="get_user_id" value="#action_user_id#">
 			<cfinvokeargument name="format_content" value="default">
 			<cfinvokeargument name="return_type" value="query">
 		</cfinvoke>
 
-		<cfset actionUserFullName = actionUser.user_full_name>
-
-		<cfif arguments.action IS "revision">
-			<cfset actionSubject = langText[actionUser.language].file_revision.file_revision_request>
-			<cfset actionText = langText[actionUser.language].file_revision.you_have_to_revise>
-		<cfelse>
-			<cfset actionSubject = langText[actionUser.language].file_approval.file_approval_request>
-			<cfset actionText = langText[actionUser.language].file_approval.you_have_to_approve>
-		</cfif>
-
-		<!---ACTION USER--->
-		<cfset actionUserSubject = "[#root_area.name#][#actionSubject#] "&objectFile.name>
-					
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileAccessContent" returnvariable="accessContent">
-			<cfinvokeargument name="file_id" value="#objectFile.id#"/>
-			<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#"/>
-			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
-			<cfinvokeargument name="language" value="#actionUser.language#">
-
-			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-		</cfinvoke>
-
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileFootContent" returnvariable="footContent">
-			<cfinvokeargument name="language" value="#actionUser.language#">
-		</cfinvoke>
-
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileAlertContent" returnvariable="fileAlertContent">
-			<cfinvokeargument name="objectFile" value="#arguments.objectFile#">
-			<cfinvokeargument name="language" value="#actionUser.language#">
-		</cfinvoke>
-
-		<cfsavecontent variable="commonContent">
-			<cfoutput>
-			#fileAlertContent#
-			<br/>
-			<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#accessContent#</div>
-			</cfoutput>
-		</cfsavecontent>
-
-		<cfif actionUser.internal_user IS true><!---INTERNAL USER--->
-			
-			<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-			</cfinvoke>
-			
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="actionUserContentInternal">
-			<cfoutput>
-	#actionText#<br/><br/>
-
-	#langText[actionUser.language].common.area#: <strong>#area_name#</strong>.<br/>
-	#langText[actionUser.language].common.area_path#: #area_path#.<br/><br/>
-	
-	#commonContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>				
-
-		<cfelse><!---EXTERNAL USER--->
-
-			<cfprocessingdirective suppresswhitespace="true">
-			<cfsavecontent variable="actionUserContentExternal">
-			<cfoutput>
-	#actionText#<br/><br/>
-
-	#langText[actionUser.language].common.area#: <strong>#area_name#</strong> #langText[actionUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
-	
-	#commonContent#
-			</cfoutput>
-			</cfsavecontent>
-			</cfprocessingdirective>
-
-		</cfif>
+		<cfif len(actionUser.email) GT 0 AND actionUser.enabled IS true AND ( clientQuery.force_notifications IS true OR actionUser.no_notifications IS false )><!--- user notifications enabled --->
 		
-		<cfinvoke component="EmailManager" method="sendEmail">
-			<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-			<cfinvokeargument name="to" value="#actionUser.email#">
-			<cfinvokeargument name="subject" value="#actionUserSubject#">
-			<cfif actionUser.internal_user IS true><!---INTERNAL USER--->
-				<cfinvokeargument name="content" value="#actionUserContentInternal#">
+			<cfset actionUserFullName = actionUser.user_full_name>
+
+			<cfif arguments.action IS "revision">
+				<cfset actionSubject = langText[actionUser.language].file_revision.file_revision_request>
+				<cfset actionText = langText[actionUser.language].file_revision.you_have_to_revise>
 			<cfelse>
-				<cfinvokeargument name="content" value="#actionUserContentExternal#">
+				<cfset actionSubject = langText[actionUser.language].file_approval.file_approval_request>
+				<cfset actionText = langText[actionUser.language].file_approval.you_have_to_approve>
 			</cfif>
-			<cfinvokeargument name="foot_content" value="#footContent#">
-		</cfinvoke>	
+
+			<!---ACTION USER--->
+			<cfset actionUserSubject = "[#root_area.name#][#actionSubject#] "&objectFile.name>
+						
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileAccessContent" returnvariable="accessContent">
+				<cfinvokeargument name="file_id" value="#objectFile.id#"/>
+				<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="language" value="#actionUser.language#">
+
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileFootContent" returnvariable="footContent">
+				<cfinvokeargument name="language" value="#actionUser.language#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getFileAlertContent" returnvariable="fileAlertContent">
+				<cfinvokeargument name="objectFile" value="#arguments.objectFile#">
+				<cfinvokeargument name="language" value="#actionUser.language#">
+			</cfinvoke>
+
+			<cfsavecontent variable="commonContent">
+				<cfoutput>
+				#fileAlertContent#
+				<br/>
+				<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#accessContent#</div>
+				</cfoutput>
+			</cfsavecontent>
+
+			<cfif actionUser.internal_user IS true><!---INTERNAL USER--->
+				
+				<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+				
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="actionUserContentInternal">
+				<cfoutput>
+		#actionText#<br/><br/>
+
+		#langText[actionUser.language].common.area#: <strong>#area_name#</strong>.<br/>
+		#langText[actionUser.language].common.area_path#: #area_path#.<br/><br/>
+		
+		#commonContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>				
+
+			<cfelse><!---EXTERNAL USER--->
+
+				<cfprocessingdirective suppresswhitespace="true">
+				<cfsavecontent variable="actionUserContentExternal">
+				<cfoutput>
+		#actionText#<br/><br/>
+
+		#langText[actionUser.language].common.area#: <strong>#area_name#</strong> #langText[actionUser.language].common.of_the_organization# #root_area.name#.<br/><br/>
+		
+		#commonContent#
+				</cfoutput>
+				</cfsavecontent>
+				</cfprocessingdirective>
+
+			</cfif>
+			
+			<cfinvoke component="EmailManager" method="sendEmail">
+				<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+				<cfinvokeargument name="to" value="#actionUser.email#">
+				<cfinvokeargument name="subject" value="#actionUserSubject#">
+				<cfif actionUser.internal_user IS true><!---INTERNAL USER--->
+					<cfinvokeargument name="content" value="#actionUserContentInternal#">
+				<cfelse>
+					<cfinvokeargument name="content" value="#actionUserContentExternal#">
+				</cfif>
+				<cfinvokeargument name="foot_content" value="#footContent#">
+			</cfinvoke>
+
+
+		</cfif><!--- END user notifications enabled --->
 		
 				
 	</cffunction>
@@ -724,57 +743,62 @@
 		<cfset area_id = tableQuery.area_id>
 		<cfset curLang = userQuery.language>
 
-        <!---<cfinvoke component="AreaManager" method="getArea" returnvariable="objectArea">
-            <cfinvokeargument name="get_area_id" value="#area_id#">
-            <cfinvokeargument name="format_content" value="default">
-            <cfinvokeargument name="return_type" value="object">
-        </cfinvoke>--->
-        	
-        <cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
-        </cfinvoke>
-        <!---En el asunto se pone el nombre del área raiz--->
+        <!--- getClient --->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+		</cfinvoke>
 
-		<cfset subject = "[#root_area.name#] #langText[curLang].add_user_to_table.has_been_added_as_editor_of# #langText[curLang].item[itemTypeId].name#: "&tableQuery.title>
-        
-		<cfif userQuery.whole_tree_visible IS true><!---INTERNAL USER--->
+		<cfif len(userQuery.email) GT 0 AND userQuery.enabled IS true AND ( clientQuery.force_notifications IS true OR userQuery.no_notifications IS false )><!--- user notifications enabled --->
+
+        	
+	        <cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
+	        </cfinvoke>
+	        <!---En el asunto se pone el nombre del área raiz--->
+
+			<cfset subject = "[#root_area.name#] #langText[curLang].add_user_to_table.has_been_added_as_editor_of# #langText[curLang].item[itemTypeId].name#: "&tableQuery.title>
+	        
+			<cfif userQuery.whole_tree_visible IS true><!---INTERNAL USER--->
+				
+				<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+			</cfif>
+					
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemAccessContent" returnvariable="access_content">
+				<cfinvokeargument name="language" value="#curLang#">
+				<cfinvokeargument name="item_id" value="#tableQuery.table_id#"/>
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+				<cfinvokeargument name="area_id" value="#area_id#"/>
+
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
 			
-			<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
-				<cfinvokeargument name="area_id" value="#area_id#">
+			<cfsavecontent variable="html_text">
+			<cfoutput>
+			<br />
+	#langText[curLang].add_user_to_table.has_been_added_as_editor_of# #langText[curLang].item[itemTypeId].name#: <strong>#tableQuery.title#</strong><br />
+
+	<cfif userQuery.whole_tree_visible IS true>
+	#langText[curLang].common.area_path#: #area_path#.<br />
+	</cfif>
+	<br/>
+	<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>	
+			</cfoutput>		
+			</cfsavecontent>
+
+			<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>		
+			
+			<cfinvoke component="EmailManager" method="sendEmail">
+				<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+				<cfinvokeargument name="to" value="#userQuery.email#">
+				<cfinvokeargument name="subject" value="#subject#">
+				<cfinvokeargument name="content" value="#html_text#">
+				<cfinvokeargument name="foot_content" value="#foot_content#">
 			</cfinvoke>
 
-		</cfif>
-				
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemAccessContent" returnvariable="access_content">
-			<cfinvokeargument name="language" value="#curLang#">
-			<cfinvokeargument name="item_id" value="#tableQuery.table_id#"/>
-			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-			<cfinvokeargument name="area_id" value="#area_id#"/>
 
-			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-		</cfinvoke>
-		
-		<cfsavecontent variable="html_text">
-		<cfoutput>
-		<br />
-#langText[curLang].add_user_to_table.has_been_added_as_editor_of# #langText[curLang].item[itemTypeId].name#: <strong>#tableQuery.title#</strong><br />
-
-<cfif userQuery.whole_tree_visible IS true>
-#langText[curLang].common.area_path#: #area_path#.<br />
-</cfif>
-<br/>
-<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>	
-		</cfoutput>		
-		</cfsavecontent>
-
-		<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>		
-		
-		<cfinvoke component="EmailManager" method="sendEmail">
-			<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-			<cfinvokeargument name="to" value="#userQuery.email#">
-			<cfinvokeargument name="subject" value="#subject#">
-			<cfinvokeargument name="content" value="#html_text#">
-			<cfinvokeargument name="foot_content" value="#foot_content#">
-		</cfinvoke>
+		</cfif><!--- user notifications enabled --->
 		
 	</cffunction>
 	
@@ -793,89 +817,92 @@
 		<cfset var curLang = "">
 		
 		<cfinclude template="includes/functionStartOnlySession.cfm">	
-		
-		<cfif len(objectUser.language) IS 0>
-			<cfset curLang = APPLICATION.defaultLanguage>
-		<cfelse>
-			<cfset curLang = objectUser.language>
-		</cfif>
-
-        <cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
-        </cfinvoke>
-        <!---En el asunto se pone el nombre del área raiz--->
-        <cfset subject = "[#root_area.name#] #langText[curLang].new_user.you_has_been_registered_in_organization#.">
-		
-		<cfinvoke component="AlertManager" method="getApplicationAccess" returnvariable="access_content">
-			<cfinvokeargument name="client_id" value="#SESSION.client_id#">
-			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-			<cfinvokeargument name="curLang" value="#curLang#"/>
-		</cfinvoke>
-		
-		<!---Esto tiene que completarse con la generación de un código de ticket--->	
-		<!---IMPORTANTE: Para confirmar su alta debe acceder a la siguiente dirección: #APPLICATION.mainUrl#/#SESSION.client_id#--->		
-		<cfsavecontent variable="html_text">
-		<cfoutput>
-#langText[curLang].new_user.you_has_been_registered_in_application# #APPLICATION.title# #langText[curLang].common.of_the_organization# <b>#root_area.name#</b>.<br /><br />
-
-<cfif APPLICATION.identifier NEQ "vpnet"><!---Default User--->
-#langText[curLang].new_user.if_you_use_the_application#: <a href="#APPLICATION.termsOfUseUrl#">#APPLICATION.termsOfUseUrl#</a>.<br/><br/>
-
-#langText[curLang].common.your_access_email#: <b>#objectUser.email#</b><br />
-#langText[curLang].new_user.password#: <b>#arguments.password_temp#</b><br/>
-#langText[curLang].common.you_must_change_password#.<br /><br/>
-
-</cfif>
-<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP User--->
 	
-	<cfif APPLICATION.identifier NEQ "vpnet">
-		
-		#langText[curLang].new_user.also_you_can_use#: <br/>
+		<cfif len(objectUser.email) GT 0>
 
-		<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
-			#APPLICATION.ldapName#: <b>#arguments.objectUser.login_ldap#</b><br/>
-		</cfif>
-		<cfif isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0>
-			Diraya: <b>#arguments.objectUser.login_diraya#</b><br/>
-		</cfif>
+			<cfif len(objectUser.language) IS 0>
+				<cfset curLang = APPLICATION.defaultLanguage>
+			<cfelse>
+				<cfset curLang = objectUser.language>
+			</cfif>
+			
+	        <cfinvoke component="AreaManager" method="getRootArea" returnvariable="root_area">
+	        </cfinvoke>
+	        <!---En el asunto se pone el nombre del área raiz--->
+	        <cfset subject = "[#root_area.name#] #langText[curLang].new_user.you_has_been_registered_in_organization#.">
+			
+			<cfinvoke component="AlertManager" method="getApplicationAccess" returnvariable="access_content">
+				<cfinvokeargument name="client_id" value="#SESSION.client_id#">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				<cfinvokeargument name="curLang" value="#curLang#"/>
+			</cfinvoke>
+			
+			<!---Esto tiene que completarse con la generación de un código de ticket--->	
+			<!---IMPORTANTE: Para confirmar su alta debe acceder a la siguiente dirección: #APPLICATION.mainUrl#/#SESSION.client_id#--->		
+			<cfsavecontent variable="html_text">
+			<cfoutput>
+	#langText[curLang].new_user.you_has_been_registered_in_application# #APPLICATION.title# #langText[curLang].common.of_the_organization# <b>#root_area.name#</b>.<br /><br />
 
-	<cfelse><!---vpnet--->
+	<cfif APPLICATION.identifier NEQ "vpnet"><!---Default User--->
+	#langText[curLang].new_user.if_you_use_the_application#: <a href="#APPLICATION.termsOfUseUrl#">#APPLICATION.termsOfUseUrl#</a>.<br/><br/>
 
-		<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
-			<cfset ldap_name = APPLICATION.ldapName>
-			<cfset login_ldap = arguments.objectUser.login_ldap>
-		<cfelseif isDefined("arguments.objectUser.login_diraya")>
-			<cfset ldap_name = "Diraya">
-			<cfset login_ldap = arguments.objectUser.login_diraya>
-		</cfif>
-		#langText[curLang].new_user.user_access_identify_to# #ldap_name#.<br/>
-		#langText[curLang].common.user#: <b>#login_ldap#</b><br/>
+	#langText[curLang].common.your_access_email#: <b>#objectUser.email#</b><br />
+	#langText[curLang].new_user.password#: <b>#arguments.password_temp#</b><br/>
+	#langText[curLang].common.you_must_change_password#.<br /><br/>
 
 	</cfif>
-
-</cfif><br/>
-
-<cfif APPLICATION.identifier NEQ "vpnet">
-	#langText[curLang].new_user.to_view_tutorials_access#: <a href="#APPLICATION.helpUrl#">#APPLICATION.helpUrl#</a><br/>
-</cfif>
-<br/>
-
-<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;"><b>#access_content#</b></div>
-
-		</cfoutput>		
-		</cfsavecontent>
+	<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP User--->
 		
-		<!---<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>--->
+		<cfif APPLICATION.identifier NEQ "vpnet">
+			
+			#langText[curLang].new_user.also_you_can_use#: <br/>
 
-		<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[curLang].common.foot_do_not_reply#.</span><br/>#langText[curLang].common.foot_content_default_1# #APPLICATION.title#.</p>'>		
-		
-		<cfinvoke component="EmailManager" method="sendEmail">
-			<cfinvokeargument name="from" value="#SESSION.client_email_from#">
-			<cfinvokeargument name="to" value="#objectUser.email#">
-			<cfinvokeargument name="subject" value="#subject#">
-			<cfinvokeargument name="content" value="#html_text#">
-			<cfinvokeargument name="foot_content" value="#foot_content#">
-		</cfinvoke>
-		
+			<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
+				#APPLICATION.ldapName#: <b>#arguments.objectUser.login_ldap#</b><br/>
+			</cfif>
+			<cfif isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0>
+				Diraya: <b>#arguments.objectUser.login_diraya#</b><br/>
+			</cfif>
+
+		<cfelse><!---vpnet--->
+
+			<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
+				<cfset ldap_name = APPLICATION.ldapName>
+				<cfset login_ldap = arguments.objectUser.login_ldap>
+			<cfelseif isDefined("arguments.objectUser.login_diraya")>
+				<cfset ldap_name = "Diraya">
+				<cfset login_ldap = arguments.objectUser.login_diraya>
+			</cfif>
+			#langText[curLang].new_user.user_access_identify_to# #ldap_name#.<br/>
+			#langText[curLang].common.user#: <b>#login_ldap#</b><br/>
+
+		</cfif>
+
+	</cfif><br/>
+
+	<cfif APPLICATION.identifier NEQ "vpnet">
+		#langText[curLang].new_user.to_view_tutorials_access#: <a href="#APPLICATION.helpUrl#">#APPLICATION.helpUrl#</a><br/>
+	</cfif>
+	<br/>
+
+	<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;"><b>#access_content#</b></div>
+
+			</cfoutput>		
+			</cfsavecontent>
+			
+			<!---<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>--->
+
+			<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[curLang].common.foot_do_not_reply#.</span><br/>#langText[curLang].common.foot_content_default_1# #APPLICATION.title#.</p>'>		
+			
+			<cfinvoke component="EmailManager" method="sendEmail">
+				<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+				<cfinvokeargument name="to" value="#objectUser.email#">
+				<cfinvokeargument name="subject" value="#subject#">
+				<cfinvokeargument name="content" value="#html_text#">
+				<cfinvokeargument name="foot_content" value="#foot_content#">
+			</cfinvoke>
+
+		</cfif><!--- END len(objectUser.email) GT 0 --->
 		
 	</cffunction>	
 	

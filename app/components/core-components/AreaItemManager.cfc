@@ -16,7 +16,7 @@
 
 		<cfset var itemTypesStruct = structNew()>
 
-		<cfinclude template="includes/areaItemTypeStruct.cfm">
+			<cfinclude template="includes/areaItemTypeStruct.cfm">
 
 		<cfreturn itemTypesStruct>
 
@@ -30,8 +30,8 @@
 
 		<cfset var itemTypesStruct = structNew()>
 
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-		</cfinvoke>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+			</cfinvoke>
 
 		<cfreturn itemTypesStruct[arguments.itemTypeId]>
 
@@ -107,11 +107,15 @@
 				<cfelseif arguments.forceDeleteVirus IS true>
 
 					<!--- Alert --->
-					<cfinvoke component="#APPLICATION.componentsPath#/AlertManager" method="newAreaItem">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 						<cfinvokeargument name="objectItem" value="#itemQuery#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="action" value="attached_#arguments.file_type#_deleted_virus">
 						<cfinvokeargument name="anti_virus_check_result" value="#arguments.anti_virus_check_result#">
+
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 				
 				</cfif>
@@ -130,6 +134,59 @@
 	<!--- ---------------------------------------------------------------------------------- --->
 
 
+
+	<!--- ----------------------------------- deleteItemCategories -------------------------------------- --->
+
+	<cffunction name="deleteItemCategories" output="false" returntype="void" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "deleteItemCategories">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfquery name="deleteItemCategories" datasource="#client_dsn#">
+				DELETE FROM `#client_abb#_items_categories`
+				WHERE item_id =	<cfqueryparam value="#item_id#" cfsqltype="cf_sql_integer">
+				AND item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			
+	</cffunction>
+
+
+	<!--- ----------------------------------- setItemCategories -------------------------------------- --->
+
+	<cffunction name="setItemCategories" output="false" returntype="void" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="categories_ids" type="array" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "setItemCategories">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfloop array="#categories_ids#" index="category_id">
+
+				<cfif isNumeric(category_id)>
+					
+					<cfquery name="addItemCategory" datasource="#client_dsn#">
+						INSERT INTO `#client_abb#_items_categories` (item_id, item_type_id, area_id)
+						VALUES (<cfqueryparam value="#item_id#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#category_id#" cfsqltype="cf_sql_integer">);
+					</cfquery>
+
+				</cfif>
+
+			</cfloop>
+
+	</cffunction>
 
 
 	<!--- ----------------------- DELETE ITEM -------------------------------- --->
@@ -150,6 +207,7 @@
 		<cfset var response = structNew()>
 
 		<cfset var area_id = "">
+		<cfset var itemCategories = "">
 
 									
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -176,6 +234,14 @@
 				</cfif>
 
 			</cfif>
+
+			<!--- getItemCategories --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
 			
 			<!--- getClient --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
@@ -198,10 +264,10 @@
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 					<cfinvokeargument name="objectItem" value="#itemQuery#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="itemCategories" value="#itemCategories#">
 					<cfinvokeargument name="action" value="delete">
 
 					<cfinvokeargument name="user_id" value="#arguments.delete_user_id#">
-
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
@@ -213,7 +279,6 @@
 						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 
 						<cfinvokeargument name="user_id" value="#arguments.delete_user_id#">
-
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 					</cfinvoke>
@@ -259,7 +324,17 @@
 							AND parent_kind = <cfqueryparam value="item" cfsqltype="cf_sql_varchar">;
 						</cfquery>
 
+						<!--- deleteItemPosition --->
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="deleteItemPosition">
+							<cfinvokeargument name="item_id" value="#itemQuery.id#">
+							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<!--- deleteItemCategories --->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItemCategories">
 							<cfinvokeargument name="item_id" value="#itemQuery.id#">
 							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 
@@ -345,10 +420,10 @@
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 							<cfinvokeargument name="objectItem" value="#itemQuery#">
 							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+							<cfinvokeargument name="itemCategories" value="#itemCategories#">
 							<cfinvokeargument name="action" value="delete">
 
 							<cfinvokeargument name="user_id" value="#arguments.delete_user_id#">
-
 							<cfinvokeargument name="client_abb" value="#client_abb#">
 							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>

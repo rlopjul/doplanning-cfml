@@ -194,6 +194,8 @@
 		<cfargument name="with_area" type="boolean" required="false" default="false">
 		<cfargument name="with_typology" type="boolean" required="false" default="false">
 		<cfargument name="with_null_typology" type="boolean" required="false" default="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="categories_condition" type="string" required="false" default="AND">
 		
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
@@ -290,6 +292,22 @@
 				<cfif isDefined("arguments.with_null_typology") AND arguments.with_null_typology IS true>
 					AND files.typology_id IS NULL
 				</cfif>
+				<cfif isDefined("arguments.categories_ids") and arrayLen(arguments.categories_ids) GT 0>
+					AND (
+					<cfset categoryCount = 1>
+					<cfloop array="#arguments.categories_ids#" index="category_id">
+						<cfif isNumeric(category_id)>
+							<cfif categoryCount GT 1>
+								#arguments.categories_condition#
+							</cfif>
+								files.id IN ( SELECT item_id FROM `#client_abb#_items_categories`
+								WHERE item_type_id = <cfqueryparam value="10" cfsqltype="cf_sql_integer">
+								AND area_id = <cfqueryparam value="#category_id#" cfsqltype="cf_sql_integer"> )
+							<cfset categoryCount = categoryCount+1>
+						</cfif>
+					</cfloop>
+					)
+				</cfif>
 				<cfif len(search_text_re) GT 0><!---Search--->
 				AND (files.name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
 				OR files.file_name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
@@ -311,9 +329,9 @@
 				</cfif>
 				<cfif isDefined("arguments.end_date") AND len(arguments.end_date) GT 0>
 				AND ( files.uploading_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
-					OR files.replacement_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') )
+					<!---OR files.replacement_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')--->
+					AND IF( files.replacement_date IS NULL, true, files.replacement_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') ) )
 				</cfif>			
-				
 				ORDER BY last_version_date DESC
 				<cfif isDefined("arguments.limit")>
 				LIMIT #arguments.limit#

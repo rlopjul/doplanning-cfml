@@ -160,6 +160,7 @@
 				<cfinvokeargument name="parse_dates" value="true"/>
 				<cfinvokeargument name="published" value="false">
 				
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -167,10 +168,13 @@
 			<cfif getViewQuery.recordCount GT 0>
 
 				<!--- Alert --->
-				<cfinvoke component="AlertManager" method="newAreaItem">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 					<cfinvokeargument name="objectItem" value="#getViewQuery#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="action" value="new">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 			<cfelse><!---Item does not exist--->
@@ -372,26 +376,38 @@
 				<cfif view.area_id NEQ arguments.area_id><!--- Area changed --->
 
 					<!--- Alert --->
-					<cfinvoke component="AlertManager" method="newAreaItem">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 						<cfinvokeargument name="objectItem" value="#view#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="action" value="delete">
+
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 					
 					<!--- Alert --->
-					<cfinvoke component="AlertManager" method="newAreaItem">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 						<cfinvokeargument name="objectItem" value="#getViewQuery#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="action" value="new">
+
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
 				<cfelse>
 
 					<!--- Alert --->
-					<cfinvoke component="AlertManager" method="newAreaItem">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 						<cfinvokeargument name="objectItem" value="#getViewQuery#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="action" value="update">
+
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
 				</cfif>

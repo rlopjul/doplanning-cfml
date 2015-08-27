@@ -384,17 +384,39 @@
 
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
 
-							<cfinvoke component="AreaHtml" method="outputSubAreasInput">
-								<cfinvokeargument name="area_id" value="#fields.list_area_id#">
-								<cfif len(selectedAreasList) GT 0>
-									<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
-								</cfif>
-								<cfinvokeargument name="recursive" value="false">
-								<cfinvokeargument name="field_name" value="#field_name#"/>
-								<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
+								<cfinvokeargument name="area_id" value="#fields.list_area_id#">				
 								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 							</cfinvoke>
+
+							<cfif subAreas.recordCount GT 0>
+								
+								<div class="row">
+									<div class="col-sm-offset-1 col-sm-10" style="margin-bottom:10px;">
+
+									<cfinvoke component="AreaHtml" method="outputSubAreasInput">
+										<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+										<cfinvokeargument name="subAreas" value="#subAreas#">
+										<cfif len(selectedAreasList) GT 0>
+											<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+										</cfif>
+										<cfinvokeargument name="recursive" value="false">
+										<cfinvokeargument name="field_name" value="#field_name#"/>
+										<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
+										<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+										<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+									</cfinvoke>
+
+									</div>
+								</div>
+
+							<cfelse>
+
+								<p class="help-block" lang="es">No hay opciones definidas para seleccionar</p>
+
+							</cfif>
+							
 
 						<cfelse><!--- List text values --->
 
@@ -440,6 +462,22 @@
 					<cfelse><!---SELECT--->
 
 
+						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
+								<cfinvokeargument name="area_id" value="#fields.list_area_id#">				
+								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+							</cfinvoke>
+
+							<cfif subAreas.recordCount IS 0>
+
+								<p class="help-block" lang="es">No hay opciones definidas para seleccionar</p>
+
+							</cfif>
+
+						</cfif>
+
 						<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif (fields.field_type_id IS 10 OR fields.field_type_id IS 16)>multiple style="height:90px"</cfif>><!---AND arguments.search_inputs IS false--->
 							<cfif ( (fields.field_type_id IS 9 OR fields.field_type_id IS 15) AND fields.required IS false ) OR ( arguments.search_inputs IS true AND (fields.field_type_id NEQ 10 AND fields.field_type_id NEQ 16) )>
 								<option value=""></option>
@@ -449,6 +487,7 @@
 
 								<cfinvoke component="AreaHtml" method="outputSubAreasSelect">
 									<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+									<cfinvokeargument name="subAreas" value="#subAreas#">
 									<cfif len(selectedAreasList) GT 0>
 										<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
 									</cfif>
@@ -476,6 +515,8 @@
 							</cfif>
 
 						</select>
+
+
 						<cfif ( fields.field_type_id IS 10 OR fields.field_type_id IS 16) AND arguments.search_inputs IS false>
 							<small class="help-block" lang="es">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
 						</cfif>
