@@ -8,7 +8,7 @@
 	<cfset timeZoneTo = APPLICATION.dbTimeZoneTo>
 
 	<!--- ------------------------------------- getUser -------------------------------------  --->
-	
+
 	<cffunction name="getUser" output="false" access="public" returntype="query">
 		<cfargument name="user_id" type="numeric" required="true">
 		<cfargument name="format_content" type="string" required="false" default="default">
@@ -27,12 +27,12 @@
 				<cfif arguments.format_content EQ "all">
 				, space_used, number_of_connections, connected, session_id, root_folder_id, sms_allowed
 					<cfif arguments.parse_dates IS true>
-						, DATE_FORMAT(CONVERT_TZ(last_connection,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_connection 
-						, DATE_FORMAT(CONVERT_TZ(creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date 
+						, DATE_FORMAT(CONVERT_TZ(last_connection,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_connection
+						, DATE_FORMAT(CONVERT_TZ(creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
 					<cfelse>
 						, last_connection, creation_date
 					</cfif>
-				</cfif> 
+				</cfif>
 				<cfif arguments.with_ldap IS true>
 				, login_ldap
 				<!--- <cfif arguments.client_abb EQ "asnc" OR arguments.client_abb EQ "agsna"> --->
@@ -60,7 +60,7 @@
 
 
 	<!--- ------------------------------------- getUserPreferences -------------------------------------  --->
-	
+
 	<cffunction name="getUserPreferences" output="false" access="public" returntype="query">
 		<cfargument name="user_id" type="numeric" required="true">
 
@@ -85,7 +85,7 @@
 				, notify_new_pubmed
 				</cfif>
 				<cfif APPLICATION.modulefilesWithTables IS true>
-				, notify_new_typology	
+				, notify_new_typology
 				</cfif>
 				<cfif APPLICATION.moduleLists IS true>
 				, notify_new_list
@@ -109,14 +109,14 @@
 				, notify_app_features
 				, no_notifications
 				, notifications_digest_type_id
-				
+
 				<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(CONVERT_TZ(notifications_last_digest_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS notifications_last_digest_date 
+					, DATE_FORMAT(CONVERT_TZ(notifications_last_digest_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS notifications_last_digest_date
 				<cfelse>
 					, notifications_last_digest_date
 				</cfif>
-				FROM #arguments.client_abb#_users		
-				WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;			
+				FROM #arguments.client_abb#_users
+				WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 
 		<cfreturn getUserPreferencesQuery>
@@ -128,25 +128,25 @@
 
 	<cffunction name="getUserNotificationsCategoriesDisabled" returntype="query" output="false" access="public">
 		<cfargument name="user_id" required="yes" type="numeric">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">
-		
+
 		<cfset var method = "getUserNotificationsCategoriesDisabled">
-							
+
 			<cfquery name="getUserNotificationsCategoriesDisabled" datasource="#client_dsn#">
 				SELECT users_notifications.user_id, users_notifications.item_type_id, users_notifications.area_id
 				FROM `#client_abb#_users_notifications_categories_disabled` AS users_notifications
-				WHERE users_notifications.user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">; 
+				WHERE users_notifications.user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 		<cfreturn getUserNotificationsCategoriesDisabled>
-		
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- getAllUsers -------------------------------------  --->
-	
+
 	<cffunction name="getAllUsers" output="false" access="public" returntype="query">
 		<cfargument name="with_external" type="boolean" required="false" default="true"/>
 		<cfargument name="search_text_re" type="string" required="false" default="">
@@ -162,13 +162,13 @@
 		<cfset var method = "getAllUsers">
 
 			<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
-				
+
 				<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					<cfinvokeargument name="with_types" value="true">
 					<cfinvokeargument name="with_table" value="false">
-					
+
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
@@ -176,7 +176,7 @@
 			</cfif>
 
 			<cfquery name="getAllUsersQuery" datasource="#arguments.client_dsn#">
-                SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, u.creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type, 
+                SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, u.creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type,
                 	CONCAT_WS(' ', family_name, name) AS user_full_name, enabled
                 	<cfif arguments.client_abb EQ "hcs">
                 		, perfil_cabecera
@@ -186,7 +186,7 @@
                 <cfif isDefined("arguments.typology_id") AND ( isNumeric(arguments.typology_id) OR arguments.typology_id EQ "null") >
 
                 	<cfif arguments.typology_id EQ "null">
-                		
+
                 		WHERE u.typology_id IS NULL
 
                 	<cfelse>
@@ -195,17 +195,17 @@
 		                ON u.typology_row_id = table_row.row_id
 
 	                	<cfloop query="fields">
-							
+
 							<cfset field_name = "field_#fields.field_id#">
 
 							<cfif isDefined("arguments[field_name]")>
-								
+
 								<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT FIELD FROM AREA--->
 
 									<cfset field_value = arguments[field_name]>
-									
+
 									<cfif len(field_value) GT 0>
-											
+
 										<cfif fields.cf_sql_type IS "cf_sql_varchar" OR fields.cf_sql_type IS "cf_sql_longvarchar">
 
 
@@ -216,9 +216,9 @@
 													<cfset field_values = arguments[field_name]>
 
 													<cfloop array="#field_values#" index="select_value">
-														AND <cfqueryparam value="#select_value#" cfsqltype="cf_sql_varchar"> REGEXP REPLACE(field_#fields.field_id#, '#chr(13)##chr(10)#', '|') 
+														AND <cfqueryparam value="#select_value#" cfsqltype="cf_sql_varchar"> REGEXP REPLACE(field_#fields.field_id#, '#chr(13)##chr(10)#', '|')
 													</cfloop>
-													
+
 												</cfif>
 
 											<cfelse>
@@ -227,7 +227,7 @@
 													<cfinvokeargument name="text" value="#field_value#">
 												</cfinvoke>
 
-												AND field_#fields.field_id# REGEXP 
+												AND field_#fields.field_id# REGEXP
 												<cfif fields.field_type_id IS 3 OR fields.field_type_id IS 11><!--- Text with HTML format --->
 													<cfqueryparam value=">.*#field_value_re#.*<" cfsqltype="cf_sql_varchar">
 												<cfelse>
@@ -239,7 +239,7 @@
 
 										<cfelse>
 
-											AND field_#fields.field_id# = 
+											AND field_#fields.field_id# =
 											<cfif fields.mysql_type IS "DATE"><!--- DATE --->
 												STR_TO_DATE('#field_value#','#dateFormat#')
 											<cfelse>
@@ -256,10 +256,10 @@
 										<cfset field_values = arguments[field_name]>
 										<cfloop array="#field_values#" index="select_value">
 											<cfif isNumeric(select_value)>
-											AND table_row.row_id IN ( SELECT row_id FROM `#client_abb#_users_typologies_rows_areas` 
+											AND table_row.row_id IN ( SELECT row_id FROM `#client_abb#_users_typologies_rows_areas`
 												WHERE user_typology_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-												AND field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer"> 
-												AND area_id = <cfqueryparam value="#select_value#" cfsqltype="cf_sql_integer"> ) 
+												AND field_id = <cfqueryparam value="#fields.field_id#" cfsqltype="cf_sql_integer">
+												AND area_id = <cfqueryparam value="#select_value#" cfsqltype="cf_sql_integer"> )
 											</cfif>
 										</cfloop>
 									<!---</cfif>--->
@@ -275,7 +275,7 @@
                 </cfif>
 
 				<cfif arguments.with_external EQ false>
-					WHERE u.internal_user = true				
+					WHERE u.internal_user = true
 				</cfif>
 				<cfif len(arguments.search_text_re) GT 0>
 
@@ -298,7 +298,7 @@
 				</cfif>
 
 				<cfif isDefined("arguments.users_ids")>
-					
+
 					<cfif arguments.with_external EQ false OR len(arguments.search_text_re) GT 0>
 						AND
 					<cfelse>
@@ -321,7 +321,7 @@
 
 
 	<!--- ------------------------------------- getAllUsers -------------------------------------  --->
-	
+
 	<cffunction name="getAllUsersWithPreferences" output="false" access="public" returntype="query">
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -336,5 +336,28 @@
 		<cfreturn getAllUsersQuery>
 
 	</cffunction>
+
+
+	<!------------------------ ASSIGN USER TO AREA-------------------------------------->
+
+	<cffunction name="assignUserToArea" returntype="void" output="false" access="public">
+		<cfargument name="area_id" type="numeric" required="true"/>
+		<cfargument name="user_id" type="numeric" required="true"/>
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "assignUserToArea">
+
+				<cfquery name="assignUserToArea" datasource="#client_dsn#">
+					INSERT
+					INTO #client_abb#_areas_users (area_id, user_id, association_date)
+					VALUES(<cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
+							<cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">,
+							NOW());
+				</cfquery>
+
+	</cffunction>
+
 
 </cfcomponent>

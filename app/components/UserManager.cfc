@@ -3,7 +3,7 @@
     File created by: ppareja
     ColdFusion version required: 8
     Last file change by: alucena
-	
+
 	22-05-2012 alucena: quitado BEGIN y COMMIT de updateUserDownloadedSpace y cambiada la posición de BEGIN del método createUser
 	05-07-2012 alucena: modificados métodos para permitir preferencias de notificaciones de los nuevos elementos (entradas, enlaces, noticias y eventos).
 	20-12-2012 alucena: añadido image_file e image_type
@@ -13,25 +13,25 @@
 	07-05-2013 alucena: modificado getUsersToNotifyLists
 	19-06-2013 alucena: añadido password_temp a xmlUser y objectUser
 	18-09-2013 alucena: añadida comprobación de language para ver si es un valor válido
-	
+
 --->
 <cfcomponent output="false">
-	
+
 	<cfset component = "UserManager">
 
 	<cfset typologyTableTypeId = 4>
-	
+
 	<cfinclude template="includes/functions.cfm">
-	
+
 	<!--- ----------------------- XML USER -------------------------------- --->
-	
-	<cffunction name="xmlUser" returntype="string" output="false" access="public">		
+
+	<cffunction name="xmlUser" returntype="string" output="false" access="public">
 		<cfargument name="objectUser" type="struct" required="yes">
-		
+
 		<cfset var method = "xmlUser">
-		
+
 		<cftry>
-		
+
 			<cfprocessingdirective suppresswhitespace="true">
 			<cfxml variable="xmlResult"><cfoutput><user
 				<cfif len(objectUser.id) NEQ 0>
@@ -48,12 +48,12 @@
 				<cfif len(objectUser.password) NEQ 0>
 					password="#objectUser.password#"
 				</cfif>
-				<cfif len(objectUser.telephone) NEQ 0>			
+				<cfif len(objectUser.telephone) NEQ 0>
 					telephone="#objectUser.telephone#"
-				</cfif>	
+				</cfif>
 				<cfif len(objectUser.space_used_full) NEQ 0>
 					space_used_full="#objectUser.space_used_full#"
-				</cfif>	
+				</cfif>
 				<cfif len(objectUser.space_used) NEQ 0>
 					space_used="#objectUser.space_used#"
 				</cfif>
@@ -101,16 +101,16 @@
 				</cfif>
 				<cfif len(objectUser.user_in_charge) GT 0>
 					user_in_charge="#objectUser.user_in_charge#"
-				</cfif>	
+				</cfif>
 				<cfif len(objectUser.image_file) GT 0>
 					image_file="#objectUser.image_file#"
-				</cfif>	
+				</cfif>
 				<cfif len(objectUser.image_type) GT 0>
 					image_type="#objectUser.image_type#"
 				</cfif>
 				<cfif len(objectUser.area_member) GT 0>
 					area_member="#objectUser.area_member#"
-				</cfif>		
+				</cfif>
 				>
 				<cfif len(objectUser.family_name) NEQ 0>
 					<family_name><![CDATA[#objectUser.family_name#]]></family_name>
@@ -121,7 +121,7 @@
 				<cfif len(objectUser.user_full_name) NEQ 0>
 					<user_full_name><![CDATA[#objectUser.user_full_name#]]></user_full_name>
 				</cfif>
-				<cfif len(objectUser.address) NEQ 0>	
+				<cfif len(objectUser.address) NEQ 0>
 					<address><![CDATA[#objectUser.address#]]></address>
 				</cfif>
 				<cfif len(objectUser.perfil_cabecera) NEQ 0>
@@ -150,15 +150,15 @@
 					</cfif>
 					<cfif len(objectUser.other_2) GT 0>
 						<other_2><![CDATA[#objectUser.other_2#]]></other_2>
-					</cfif>	
+					</cfif>
 				</cfif>
 				<cfif len(objectUser.dni) GT 0>
 					<dni><![CDATA[#objectUser.dni#]]></dni>
 				</cfif>
-				<cfif len(objectUser.password_temp) NEQ 0>	
+				<cfif len(objectUser.password_temp) NEQ 0>
 					<password_temp><![CDATA[#objectUser.password_temp#]]></password_temp>
-				</cfif>	
-				<cfif len(objectUser.areas_administration) NEQ 0>	
+				</cfif>
+				<cfif len(objectUser.areas_administration) NEQ 0>
 					#objectUser.areas_administration#
 				</cfif>
 				</user></cfoutput></cfxml>
@@ -166,27 +166,27 @@
 
 			<!--- Remove xml declaration --->
 			<cfset xmlResult = REReplace( ToString(xmlResult), "<\?xml[^>]*>", "", "one" )>
-			
+
 			<cfreturn xmlResult>
-		
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 				<cfreturn null>
 			</cfcatch>
 		</cftry>
-		
+
 	</cffunction>
-	
+
 	<!--- ----------------------- USER OBJECT -------------------------------- --->
-	
-	<cffunction name="objectUser" returntype="any" output="false" access="public">	
-		
+
+	<cffunction name="objectUser" returntype="any" output="false" access="public">
+
 		<cfargument name="xml" type="string" required="no">
-		
+
 		<cfargument name="id" type="string" required="no" default="">
 		<cfargument name="email" type="string" required="no" default="">
-		<cfargument name="language" type="string" required="no" default="">		
-		<cfargument name="client_abb" type="string" required="no" default="">		
+		<cfargument name="language" type="string" required="no" default="">
+		<cfargument name="client_abb" type="string" required="no" default="">
 		<cfargument name="password" type="string" required="no" default="">
 		<cfargument name="password_temp" type="string" required="false" default=""/>
 		<cfargument name="telephone" type="string" required="no" default="">
@@ -216,7 +216,7 @@
 		<cfargument name="image_file" type="string" required="no" default="">
 		<cfargument name="image_type" type="string" required="no" default="">
 		<cfargument name="area_member" type="string" required="no" default="">
-		
+
 		<cfargument name="center_id" type="string" required="no" default="">
 		<cfargument name="category_id" type="string" required="no" default="">
 		<cfargument name="service_id" type="string" required="no" default="">
@@ -226,108 +226,108 @@
 		<cfargument name="dni" type="string" required="no" default="">
 
 		<cfargument name="perfil_cabecera" type="string" required="no" default="">
-		
+
 		<cfargument name="return_type" type="string" required="no">
-		
+
 		<cfset var method = "objectUser">
-		
+
 		<cfset var object = StructNew()>
-		
-		
+
+
 		<cftry>
-			
+
 			<cfif isDefined("arguments.xml")>
-			
+
 				<cfxml variable="xmlUser">
 				<cfoutput>
 				#arguments.xml#
 				</cfoutput>
 				</cfxml>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.id")>
 					<cfset id=xmlUser.user.XmlAttributes.id>
-				</cfif>	
-				
+				</cfif>
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.email")>
 					<cfset email=xmlUser.user.XmlAttributes.email>
-				</cfif>	
-					
+				</cfif>
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.language")>
 					<cfset language=#xmlUser.user.XmlAttributes.language#>
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.client_abb")>
 					<cfset client_abb="#xmlUser.user.XmlAttributes.client_abb#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.password")>
 					<cfset password="#xmlUser.user.XmlAttributes.password#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.telephone")>
 					<cfset telephone="#xmlUser.user.XmlAttributes.telephone#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.space_used_full")>
 					<cfset space_used_full="#xmlUser.user.XmlAttributes.space_used_full#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.space_used")>
 					<cfset space_used="#xmlUser.user.XmlAttributes.space_used#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.number_of_connections")>
 					<cfset number_of_connections="#xmlUser.user.XmlAttributes.number_of_connections#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.last_connection")>
 					<cfset last_connection="#xmlUser.user.XmlAttributes.last_connection#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.connected")>
 					<cfset connected="#xmlUser.user.XmlAttributes.connected#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.session_id")>
 					<cfset session_id="#xmlUser.user.XmlAttributes.session_id#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.creation_date")>
 					<cfset creation_date="#xmlUser.user.XmlAttributes.creation_date#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.whole_tree_visible")>
 					<cfset whole_tree_visible="#xmlUser.user.XmlAttributes.whole_tree_visible#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.internal_user")>
 					<cfset internal_user="#xmlUser.user.XmlAttributes.internal_user#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.root_folder_id")>
 					<cfset root_folder_id="#xmlUser.user.XmlAttributes.root_folder_id#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.general_administrator")>
 					<cfset general_administrator="#xmlUser.user.XmlAttributes.general_administrator#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.sms_allowed")>
 					<cfset sms_allowed="#xmlUser.user.XmlAttributes.sms_allowed#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.family_name.xmlText")>
 					<cfset family_name="#xmlUser.user.family_name.xmlText#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.name.xmlText")>
 					<cfset name="#xmlUser.user.name.xmlText#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.user_full_name")>
 					<cfset user_full_name=xmlUser.user.user_full_name.xmlText>
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.address.xmlText")>
 					<cfset address="#xmlUser.user.address.xmlText#">
 				</cfif>
@@ -335,43 +335,43 @@
 				<cfif isDefined("xmlUser.user.areas_administration")>
 					<cfset areas_administration="#xmlUser.user.areas_administration#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.mobile_phone")>
 					<cfset mobile_phone="#xmlUser.user.XmlAttributes.mobile_phone#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.telephone_ccode")>
 					<cfset telephone_ccode="#xmlUser.user.XmlAttributes.telephone_ccode#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.mobile_phone_ccode")>
 					<cfset mobile_phone_ccode="#xmlUser.user.XmlAttributes.mobile_phone_ccode#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.area_id")>
 					<cfset area_id=xmlUser.user.XmlAttributes.area_id>
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.user_in_charge")>
 					<cfset user_in_charge=xmlUser.user.XmlAttributes.user_in_charge>
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.image_file")>
 					<cfset image_file=xmlUser.user.XmlAttributes.image_file>
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.image_type")>
 					<cfset image_type=xmlUser.user.XmlAttributes.image_type>
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.XmlAttributes.area_member")>
 					<cfset area_member=xmlUser.user.XmlAttributes.area_member>
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.dni.xmlText")>
 					<cfset dni="#xmlUser.user.dni.xmlText#">
 				</cfif>
-				
+
 				<cfif isDefined("xmlUser.user.password_temp.xmlText")>
 					<cfset password_temp="#xmlUser.user.password_temp.xmlText#">
 				</cfif>
@@ -384,78 +384,78 @@
 					<cfset login_ldap="#xmlUser.user.login_ldap.xmlText#">
 				</cfif>
 
-				<cfif APPLICATION.moduleLdapUsers EQ true>					
+				<cfif APPLICATION.moduleLdapUsers EQ true>
 					<cfif isDefined("xmlUser.user.login_diraya.xmlText")>
 						<cfset login_diraya="#xmlUser.user.login_diraya.xmlText#">
 					</cfif>
 				</cfif>
-				
+
 				<cfif APPLICATION.identifier EQ "vpnet">
 					<!---<cfif isDefined("xmlUser.user.center.xmlText")>
 						<cfset center="#xmlUser.user.center.xmlText#">
 					</cfif>
-					
+
 					<cfif isDefined("xmlUser.user.category.xmlText")>
 						<cfset category="#xmlUser.user.category.xmlText#">
 					</cfif>--->
-					
+
 					<cfif isDefined("xmlUser.user.center.xmlAttributes.id")>
 						<cfset center_id="#xmlUser.user.center.xmlAttributes.id#">
 					</cfif>
-					
+
 					<cfif isDefined("xmlUser.user.category.xmlAttributes.id")>
 						<cfset category_id="#xmlUser.user.category.xmlAttributes.id#">
 					</cfif>
-					
+
 					<cfif isDefined("xmlUser.user.service.xmlAttributes.id")>
 						<cfset service_id="#xmlUser.user.service.xmlAttributes.id#">
 					</cfif>
-					
+
 					<cfif isDefined("xmlUser.user.service.xmlText")>
 						<cfset service="#xmlUser.user.service.xmlText#">
 					</cfif>
-					
+
 					<cfif isDefined("xmlUser.user.other_1.xmlText")>
 						<cfset other_1="#xmlUser.user.other_1.xmlText#">
 					</cfif>
-					
+
 					<cfif isDefined("xmlUser.user.other_2.xmlText")>
 						<cfset other_2="#xmlUser.user.other_2.xmlText#">
 					</cfif>
 
 				</cfif>
-				
+
 			</cfif>
-		
+
 			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringDateCreation">
 				<cfinvokeargument name="timestamp_date" value="#creation_date#">
 			</cfinvoke>
 			<cfset creation_date = stringDateCreation>
-			
+
 			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringDateConnection">
 				<cfinvokeargument name="timestamp_date" value="#last_connection#">
 			</cfinvoke>
 			<cfset last_connection = stringDateConnection>
-			
-			
+
+
 			<!---space_used in megabytes--->
 			<cfif NOT isDefined("space_used_full") AND len("#space_used#") GT 0>
-			
+
 				<cfset space_used_full = space_used><!---file_size_full is the file_size from database without parse to megabytes--->
 				<cfset space_used = space_used/(1024*1024)>
 				<cfset space_used = round(space_used*100)/100>
-								
+
 			<cfelse>
 				<cfset space_used_full = "">
 			</cfif>
-			
-			
+
+
 			<cfset object = {
 				id="#id#",
 				email="#email#",
 				language="#language#",
 				client_abb="#client_abb#",
-				password="#password#",				
+				password="#password#",
 				telephone="#telephone#",
 				password="#password#",
 				space_used_full="#space_used_full#",
@@ -489,54 +489,54 @@
 				other_1="#other_1#",
 				other_2="#other_2#",
 				dni="#dni#",
-				password_temp="#password_temp#",		
+				password_temp="#password_temp#",
 				image_file="#image_file#",
 				image_type="#image_type#",
 				area_member="#area_member#",
 				perfil_cabecera="#perfil_cabecera#"
 				}>
-			
-			
+
+
 			<cfif isDefined("arguments.return_type")>
-			
+
 				<cfif arguments.return_type EQ "object">
-				
+
 					<cfreturn object>
-					
+
 				<cfelseif arguments.return_type EQ "xml">
-				
+
 					<cfinvoke component="UserManager" method="xmlUser" returnvariable="xmlResult">
 						<cfinvokeargument name="objectUser" value="#object#">
 					</cfinvoke>
 					<cfreturn xmlResult>
-					
+
 				<cfelse>
-				
+
 					<cfreturn object>
-									
+
 				</cfif>
-				
+
 			<cfelse>
-			
+
 				<cfreturn object>
-				
+
 			</cfif>
-		
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>
 		</cftry>
-		
+
 	</cffunction>
-	
+
 	<!--- -------------------------- isInternalUser -------------------------------- --->
 	<!---Obtiene si el usuario es interno o no--->
-	
+
 	<cffunction name="isInternalUser" returntype="boolean" access="public">
  		<cfargument name="get_user_id" type="numeric" required="true">
-		
+
 		<cfset var method = "isInternalUser">
-		
+
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 
 		<cfquery datasource="#client_dsn#" name="isIternalUserQuery">
@@ -544,36 +544,36 @@
 			FROM #client_abb#_users AS users
 			WHERE users.id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
-		
+
 		<cfif isIternalUserQuery.internal_user IS 1>
 			<cfreturn true>
 		<cfelse>
 			<cfreturn false>
-		</cfif>		
-	
+		</cfif>
+
 	</cffunction>
-	
-	
+
+
 	<!--- -------------------------- isRootUser -------------------------------- --->
 	<!---Obtiene si el usuario está en la raiz de la organización o no--->
-	
+
 	<cffunction name="isRootUser" returntype="boolean" access="public">
  		<cfargument name="get_user_id" type="numeric" required="yes">
-		
+
 		<cfset var method = "isRootUser">
-				
+
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 
 		<!---<cfinvoke component="AreaManager" method="getRootAreaId" returnvariable="root_area_id">
-		</cfinvoke>	
+		</cfinvoke>
 
 		<cfquery name="isRootUserQuery" datasource="#client_dsn#">
-			SELECT user_id 
+			SELECT user_id
 			FROM #client_abb#_areas_users
-			WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer"> 
+			WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">
 			AND area_id = <cfqueryparam value="#root_area_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
-		
+
 		<cfif isRootUserQuery.recordCount GT 0>
 			<cfreturn true>
 		<cfelse>
@@ -581,19 +581,19 @@
 		</cfif>--->
 
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="isRootUser" returnvariable="root_user">
-			<cfinvokeargument name="get_user_id" value="#user_id#"> 
+			<cfinvokeargument name="get_user_id" value="#user_id#">
 
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
-		</cfinvoke>	
+		</cfinvoke>
 
-		<cfreturn root_user>	
-	
+		<cfreturn root_user>
+
 	</cffunction>
-	
-	
+
+
 	<!---  ---------------------CREATE USER------------------------------------ --->
-		
+
 	<cffunction name="createUser" returntype="struct" output="false" access="public">
 
 		<cfargument name="family_name" type="string" required="true">
@@ -630,21 +630,21 @@
 		<cfargument name="typology_id" type="string" required="false">
 
 		<cfset var method = "createUser">
-		
+
 		<cfset var user_id = "">
 		<cfset var client_abb = "">
 		<cfset var user_language = "">
-		
+
 		<cfset var new_user_id = "">
-	
+
 		<cftry>
-		
+
 			<!---<cfif APPLICATION.moduleLdapUsers NEQ true>---><!---Default User--->
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinclude template="includes/checkAdminAccess.cfm">
-			
+
 			<cfif listFind(APPLICATION.languages, arguments.language , ",") IS 0>
 				<!--- <cfset arguments.language = APPLICATION.defaultLanguage> --->
 				<cfset response = {result=false, message="Idioma no válido"}>
@@ -653,10 +653,10 @@
 
 			<cfset arguments.email = Trim(arguments.email)>
 			<cfset arguments.mobile_phone = Trim(arguments.mobile_phone)>
-			
-			
+
+
 			<cftransaction>
-				
+
 				<cfif APPLICATION.userEmailRequired IS true OR len(arguments.email) GT 0>
 
 					<!---checkEmail--->
@@ -670,14 +670,14 @@
 						FROM #client_abb#_users
 						WHERE email=<cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">;
 					</cfquery>
-					
+
 					<cfif checkEmail.recordCount GT 0><!---User email already used--->
 						<!---<cfset error_code = 205>
 						<cfthrow errorcode="#error_code#">--->
 						<cfset response = {result=false, message="La dirección de email introducida ya está asociada a otro usuario de la aplicación"}>
 						<cfreturn response>
 					</cfif>
-				
+
 				</cfif>
 
 				<cfif APPLICATION.moduleLdapUsers EQ true>
@@ -691,13 +691,13 @@
 							FROM #client_abb#_users
 							WHERE login_ldap=<cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">;
 						</cfquery>
-						
+
 						<cfif checkLoginLdap.recordCount GT 0><!---User LDAP login already assigned to another user--->
 							<!---<cfset error_code = 211>
 							<cfthrow errorcode="#error_code#">--->
 							<cfset response = {result=false, message="El login introducido ya está asociado a otro usuario de la aplicación"}>
 							<cfreturn response>
-						</cfif>		
+						</cfif>
 
 						<!---Check if exist in LDAP (ONLY VPNET)--->
 						<cfif APPLICATION.identifier EQ "vpnet">
@@ -707,31 +707,31 @@
 								<cfinvokeargument name="return_type" value="xml">
 							</cfinvoke>
 
-						</cfif>			
-						
+						</cfif>
+
 					</cfif>
 
 					<cfif isDefined("arguments.login_diraya") AND len(arguments.login_diraya) GT 0>
-			
+
 						<!---Check if login already used--->
 						<cfquery name="checkLoginDiraya" datasource="#client_dsn#">
 							SELECT *
 							FROM #client_abb#_users
 							WHERE login_diraya = <cfqueryparam value="#arguments.login_diraya#" cfsqltype="cf_sql_varchar">;
 						</cfquery>
-						
+
 						<cfif checkLoginDiraya.recordCount GT 0><!---User LDAP login already assigned to another user--->
 							<!---<cfset error_code = 211>
 							<cfthrow errorcode="#error_code#">--->
 							<cfset response = {result=false, message="El login de Diraya introducido ya está asociado a otro usuario de la aplicación"}>
 							<cfreturn response>
-						</cfif>					
-					
+						</cfif>
+
 					</cfif>
 
 				</cfif>
-				
-				<!---Insert User in DataBase--->			
+
+				<!---Insert User in DataBase--->
 				<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
 					INSERT INTO #client_abb#_users
 					SET email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">,
@@ -783,32 +783,32 @@
 					</cfif>
 					;
 				</cfquery>
-				
+
 				<!---Aquí se obtiene el id del usuario insertado en base de datos--->
 				<!---<cfset arguments.id = insertUserResult.GENERATED_KEY>--->
 				<cfquery name="getLastInsertId" datasource="#client_dsn#">
 					SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_users;
 				</cfquery>
 				<cfset new_user_id = getLastInsertId.last_insert_id>
-				
+
 				<!---Insert User Root Folder--->
 				<cfquery name="insertRootFolderQuery" datasource="#client_dsn#" result="insertRootFolderResult">
 					INSERT INTO #client_abb#_folders
 					(name, creation_date, user_in_charge, description)
 					VALUES(
-						'Mis documentos', 
+						'Mis documentos',
 						NOW(),
 						<cfqueryparam value="#new_user_id#" cfsqltype="cf_sql_integer">,
 						'Directorio raiz'
 						);
-				</cfquery>	
-				
+				</cfquery>
+
 				<!---<cfset root_folder_id = insertRootFolderResult.GENERATED_KEY>--->
 				<cfquery name="getLastInsertId" datasource="#client_dsn#">
 					SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_folders;
 				</cfquery>
 				<cfset root_folder_id = getLastInsertId.last_insert_id>
-				
+
 				<cfquery name="insertRootFolderInUser" datasource="#client_dsn#">
 					UPDATE #client_abb#_users
 					SET root_folder_id = #root_folder_id#
@@ -818,7 +818,7 @@
 
 				<!--- setUserTypology --->
 				<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
-					
+
 					<cfinvoke component="UserManager" method="setUserTypology" argumentcollection="#arguments#" returnvariable="setUserTypologyResponse">
 						<cfinvokeargument name="update_user_id" value="#new_user_id#"/>
 					</cfinvoke>
@@ -826,26 +826,26 @@
 					<cfif setUserTypologyResponse.result IS false>
 
 						<cfthrow message="#setUserTypologyResponse.message#">
-	
+
 					</cfif>
 
-				</cfif>	
+				</cfif>
 
-			
+
 			</cftransaction>
 
 			<cfif isDefined("arguments.files")>
-		
+
 				<!---Subida de imagen--->
-			
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="uploadUserImage">
 					<cfinvokeargument name="files" value="#arguments.files#">
 					<cfinvokeargument name="user_id" value="#new_user_id#">
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-				</cfinvoke>		
-				
+				</cfinvoke>
+
 				<!---FIN subida de imagen--->
-			
+
 			</cfif>
 
 
@@ -859,38 +859,38 @@
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfif selectUserQuery.recordCount IS 0><!---the user does not exist--->
-				
+
 				<cfset error_code = 204>
-				
-				<cfthrow errorcode="#error_code#"> 
-				
+
+				<cfthrow errorcode="#error_code#">
+
 			</cfif>
 
 			<cfif arguments.enabled IS true AND len(arguments.email) GT 0>
-				
+
 				<cfinvoke component="AlertManager" method="newUser">
 					<cfinvokeargument name="objectUser" value="#selectUserQuery#">
 					<cfinvokeargument name="password_temp" value="#arguments.password_temp#">
 				</cfinvoke>
 
 			</cfif>
-				
-			
+
+
 			<!---
 			<cfelse><!---LDAP User--->
-			
+
 				<cfinvoke component="UserLDAPManager" method="createUser" returnvariable="xmlResponseContent">
 					<cfinvokeargument name="request" value="#arguments.request#">
 				</cfinvoke>
-			
+
 			</cfif>--->
-			
+
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
-		
+
 			<cfset response = {result=true, user_id=new_user_id}>
-								
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -899,7 +899,7 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
@@ -939,7 +939,7 @@
 
 		<cfargument name="adminFields" type="boolean" required="false" default="false">
 
-		
+
 		<cfset var method = "updateUser">
 
 		<cfset var response = structNew()>
@@ -947,10 +947,10 @@
 		<cfset var user_id = "">
 		<cfset var client_abb = "">
 		<cfset var user_language = "">
-			
+
 		<cftry>
-			
-			<cfinclude template="includes/functionStartOnlySession.cfm">	
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfif arguments.update_user_id NEQ SESSION.user_id>
 				<cfinclude template="includes/checkAdminAccess.cfm">
@@ -959,10 +959,10 @@
 			<cfinvoke component="UserManager" method="getUser" returnvariable="userQuery">
 				<cfinvokeargument name="get_user_id" value="#arguments.update_user_id#">
 				<cfinvokeargument name="return_type" value="query"/>
-			</cfinvoke>	
-			
+			</cfinvoke>
+
 			<cfif APPLICATION.userEmailRequired IS true OR len(arguments.email) GT 0>
-				
+
 				<!---checkEmail--->
 				<cfif len(arguments.email) IS 0 OR NOT isValid("email", Trim(arguments.email))>
 					<cfthrow message="Email incorrecto"/>
@@ -973,23 +973,23 @@
 					FROM #client_abb#_users
 					WHERE email = <cfqueryparam value="#Trim(arguments.email)#" cfsqltype="cf_sql_varchar">;
 				</cfquery>
-				
+
 				<cfif checkEmail.recordCount GT 0><!---User email already used--->
 
 					<cfif checkEmail.id NEQ arguments.update_user_id><!---This user is not the user who has this email--->
 						<cfset response = {result=false, message="La dirección de email introducida ya está asociada a otro usuario de la aplicación"}>
-					
+
 						<cfreturn response>
 					</cfif>
 
 				</cfif>
 
-			</cfif>			
+			</cfif>
 
 			<cftransaction>
-				
+
 				<cfquery name="updateUser" datasource="#client_dsn#">
-					UPDATE #client_abb#_users 
+					UPDATE #client_abb#_users
 					SET email = <cfqueryparam value="#Trim(arguments.email)#" cfsqltype="cf_sql_varchar">,
 					name = <cfqueryparam value = "#arguments.name#" cfsqltype="cf_sql_varchar">,
 					family_name = <cfqueryparam value = "#arguments.family_name#" cfsqltype="cf_sql_varchar">,
@@ -1004,7 +1004,7 @@
 					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.password") AND len(arguments.password) GT 0>
 						, password = <cfqueryparam value = "#arguments.password#" cfsqltype="cf_sql_varchar">
-					</cfif> 
+					</cfif>
 					<cfif APPLICATION.moduleLdapUsers EQ true>
 						<cfif isDefined("arguments.login_ldap")>
 							, login_ldap = <cfqueryparam value = "#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
@@ -1013,7 +1013,7 @@
 							, login_diraya = <cfqueryparam value = "#arguments.login_diraya#" cfsqltype="cf_sql_varchar">
 						</cfif>
 					</cfif>
-					 
+
 					<cfif arguments.adminFields IS true AND SESSION.client_administrator EQ SESSION.user_id>
 						, information = <cfqueryparam value="#arguments.information#" cfsqltype="cf_sql_longvarchar">
 						, internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">
@@ -1026,9 +1026,9 @@
 				</cfquery>
 
 				<cfif APPLICATION.identifier EQ "vpnet">
-			
+
 					<cfquery name="updateUserOtherData" datasource="#client_dsn#">
-						UPDATE #client_abb#_users 
+						UPDATE #client_abb#_users
 						SET center_id = <cfqueryparam value="#arguments.center_id#" cfsqltype="cf_sql_integer">
 						SET category_id = <cfqueryparam value="#arguments.category_id#" cfsqltype="cf_sql_integer">
 						SET service_id = <cfqueryparam value="#arguments.service_id#" cfsqltype="cf_sql_integer">
@@ -1037,7 +1037,7 @@
 						SET other_2 = <cfqueryparam value="#arguments.other_2#" cfsqltype="cf_sql_varchar">
 						WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
-				
+
 				</cfif>
 
 
@@ -1045,7 +1045,7 @@
 				<cfif isDefined("arguments.typology_id")>
 
 					<cfif userQuery.typology_id NEQ arguments.typology_id AND isNumeric(userQuery.typology_row_id)><!---File typology was changed--->
-						
+
 						<!--- Delete old row --->
 						<cfinvoke component="RowManager" method="deleteRow" returnvariable="deleteRowResponse">
 							<cfinvokeargument name="row_id" value="#userQuery.typology_row_id#"/>
@@ -1060,7 +1060,7 @@
 					</cfif>
 
 					<cfif isNumeric(arguments.typology_id)><!--- Typology selected --->
-					
+
 						<cfinvoke component="UserManager" method="setUserTypology" argumentcollection="#arguments#" returnvariable="setUserTypologyResponse">
 						</cfinvoke>
 
@@ -1080,11 +1080,11 @@
 					</cfif>
 
 				</cfif>
-			
+
 			</cftransaction>
 
 			<cfif userQuery.hide_not_allowed_areas NEQ arguments.hide_not_allowed_areas OR (arguments.adminFields IS true AND SESSION.client_administrator EQ SESSION.user_id AND userQuery.internal_user NEQ arguments.internal_user)>
-				
+
 				<!--- deleteUserCacheTree --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
 					<cfinvokeargument name="user_id" value="#arguments.update_user_id#">
@@ -1099,32 +1099,32 @@
 			<cfinvoke component="UserManager" method="updateUserLanguage" returnvariable="updateUserResponse">
 				<cfinvokeargument name="update_user_id" value="#arguments.update_user_id#">
 				<cfinvokeargument name="language" value="#arguments.language#">
-			</cfinvoke>		
+			</cfinvoke>
 
 			<cfif updateUserResponse.result IS false>
-				
+
 				<cfreturn updateUserResponse>
 
 			</cfif>
-			
+
 			<cfif isDefined("arguments.files")>
-			
+
 				<!---Subida de imagen--->
-			
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="uploadUserImage">
 					<cfinvokeargument name="files" value="#arguments.files#">
 					<cfinvokeargument name="user_id" value="#arguments.update_user_id#">
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-				</cfinvoke>		
-				
+				</cfinvoke>
+
 				<!---FIN subida de imagen--->
-			
+
 			</cfif>
 
 			<cfinclude template="includes/logRecord.cfm">
 
 			<cfset response = {result=true, user_id=#arguments.update_user_id#}>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1132,10 +1132,10 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>	
-		
+		<cfreturn response>
+
 	</cffunction>
-	
+
 	<!--------------------------------------------------------------------------------->
 
 
@@ -1154,7 +1154,7 @@
 			<cfif arguments.update_user_id NEQ SESSION.user_id>
 				<cfinclude template="includes/checkAdminAccess.cfm">
 			</cfif>
-			
+
 			<cfif listFind(APPLICATION.languages, arguments.language) GT 0>
 
 				<cfquery name="updateUserLanguage" datasource="#client_dsn#">
@@ -1166,15 +1166,15 @@
 					<!--- Set language in current user SESSION --->
 					<cfset SESSION.user_language = arguments.language>
 				</cfif>
-				
+
 				<cfset response = {result=true, user_id=#arguments.update_user_id#}>
 
 			<cfelse><!---The application does not have this language--->
-				
+
 				<cfset error_code = 10000>
-				
+
 				<cfthrow errorcode="#error_code#" message="The application does not have defined this language: #arguments.language#">
-				
+
 			</cfif>
 
 			<cfcatch>
@@ -1184,7 +1184,7 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>	
+		<cfreturn response>
 	</cffunction>
 
 
@@ -1228,23 +1228,23 @@
 		<cfargument name="notifications_digest_type_id" type="string" required="true">
 
 		<cfset var method = "updateUserPreferences">
-		
+
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfquery name="selectQuery" datasource="#client_dsn#">
 				SELECT id
 				FROM #client_abb#_users
 				WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>	
-			
+			</cfquery>
+
 			<cfif selectQuery.recordCount GT 0>
 
 				<cfquery name="updateUserPreferences" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET 
+					UPDATE #client_abb#_users SET
 					notify_new_message = <cfqueryparam value="#arguments.notify_new_message#" cfsqltype="cf_sql_bit">
 					, notify_new_file = <cfqueryparam value="#arguments.notify_new_file#" cfsqltype="cf_sql_bit">
 					, notify_replace_file = <cfqueryparam value="#arguments.notify_replace_file#" cfsqltype="cf_sql_bit">
@@ -1271,7 +1271,7 @@
 					, notify_new_pubmed = <cfqueryparam value="#arguments.notify_new_pubmed#" cfsqltype="cf_sql_bit">
 					</cfif>
 					<cfif APPLICATION.modulefilesWithTables IS true>
-					, notify_new_typology = <cfqueryparam value="#arguments.notify_new_typology#" cfsqltype="cf_sql_bit">	
+					, notify_new_typology = <cfqueryparam value="#arguments.notify_new_typology#" cfsqltype="cf_sql_bit">
 					</cfif>
 					<cfif APPLICATION.moduleLists IS true>
 					, notify_new_list = <cfqueryparam value="#arguments.notify_new_list#" cfsqltype="cf_sql_bit">
@@ -1308,17 +1308,17 @@
 
 
 			<cfelse><!---The user does not exist--->
-				
+
 				<cfset error_code = 204>
-				
-				<cfthrow errorcode="#error_code#"> 
-				
-			</cfif>	
-		
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
 			<cfinclude template="includes/logRecord.cfm">
-			
+
 			<cfset response = {result=true}>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1326,8 +1326,8 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>		
-		
+		<cfreturn response>
+
 	</cffunction>
 
 
@@ -1341,11 +1341,11 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfquery datasource="#client_dsn#" name="deleteUserNotificationsCategoriesDisabled">
-				DELETE 
+				DELETE
 				FROM `#client_abb#_users_notifications_categories_disabled`
 				WHERE user_id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 	</cffunction>
 
 
@@ -1355,7 +1355,7 @@
 	<cffunction name="setUserNotificationsCategoriesDisabled" output="false" returntype="void" access="public">
 		<cfargument name="update_user_id" type="numeric" required="true">
 
-		<cfset var method = "setUserNotificationsCategoriesDisabled">					
+		<cfset var method = "setUserNotificationsCategoriesDisabled">
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
@@ -1385,7 +1385,7 @@
 					<cfif itemTypeQuery.recordCount GT 0 AND isNumeric(itemTypeQuery.category_area_id)>
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
-							<cfinvokeargument name="area_id" value="#itemTypeQuery.category_area_id#">				
+							<cfinvokeargument name="area_id" value="#itemTypeQuery.category_area_id#">
 							<cfinvokeargument name="client_abb" value="#client_abb#">
 							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
@@ -1395,7 +1395,7 @@
 							<cfloop query="subAreas">
 
 								<cfif NOT isDefined("arguments.categories_#itemTypeName#_ids") OR ArrayFind(arguments['categories_#itemTypeName#_ids'], subAreas.id) IS 0>
-									
+
 									<cfquery name="addUserCategoryDisabled" datasource="#client_dsn#">
 										INSERT INTO `#client_abb#_users_notifications_categories_disabled` (user_id, item_type_id, area_id)
 										VALUES ( <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">,
@@ -1404,17 +1404,17 @@
 									</cfquery>
 
 								</cfif>
-								
+
 							</cfloop>
 
 						</cfif>
 
-					</cfif>					
+					</cfif>
 
 				</cfif>
 
 			</cfloop>
-			
+
 	</cffunction>
 
 
@@ -1430,7 +1430,7 @@
 		<cfset var method = "setUserTypology">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
@@ -1458,10 +1458,10 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
-	
-	
+
+
 
 	<!--- ----------------------------------- clearUserTypology -------------------------------------- --->
 
@@ -1471,7 +1471,7 @@
 		<cfset var method = "clearUserTypology">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
@@ -1493,81 +1493,81 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 
-		
+
 	<!--- ----------------------- DELETE USER -------------------------------- --->
-	
+
 	<cffunction name="deleteUser" returntype="struct" output="false" access="public">
 		<cfargument name="delete_user_id" type="numeric" required="yes">
-		
+
 		<cfset var method = "deleteUser">
 
 		<cfset var response = structNew()>
 
 		<cfset var user_id = "">
 		<cfset var client_abb = "">
-		
+
 		<cftry>
-		
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinclude template="includes/checkAdminAccess.cfm">
-						
-			<cfquery name="getUserQuery" datasource="#client_dsn#">		
+
+			<cfquery name="getUserQuery" datasource="#client_dsn#">
 				SELECT id, root_folder_id, image_file
 				FROM #client_abb#_users
-				WHERE id=<cfqueryparam value="#arguments.delete_user_id#" cfsqltype="cf_sql_integer">;		
+				WHERE id=<cfqueryparam value="#arguments.delete_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 			<cfif getUserQuery.recordCount GT 0>
-				
+
 				<cftransaction>
-								
+
 					<!---REMOVE USER FROM AREAS IN CHARGE--->
 					<!---Se quita al usuario de las áreas que tiene a su cargo y se pone al administrador de la organización--->
 					<cfquery name="changeUserAreasInCharge" datasource="#client_dsn#">
-						UPDATE #client_abb#_areas 
+						UPDATE #client_abb#_areas
 						SET user_in_charge = <cfqueryparam value="#SESSION.client_administrator#" cfsqltype="cf_sql_integer">
 						WHERE user_in_charge = <cfqueryparam value="#getUserQuery.id#" cfsqltype="cf_sql_integer">;
-					</cfquery>		
-					
+					</cfquery>
+
 					<!--- DELETE USER AREAS LINKS --->
-					<cfquery name="deleteUserAreasQuery" datasource="#client_dsn#">	
+					<cfquery name="deleteUserAreasQuery" datasource="#client_dsn#">
 						DELETE FROM #client_abb#_areas_users
 						WHERE user_id = <cfqueryparam value="#getUserQuery.id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
-					
+
 					<!---DELETE USER CONTACTS--->
 					<!---All the user contacts are deleted in the database when the user is deleted--->
-					
+
 					<!--- -----------------DELETE USER MESSAGES------------------------- --->
 					<cfinvoke component="AreaItemManager" method="deleteUserItems">
 						<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 						<cfinvokeargument name="itemTypeId" value="1">
-					</cfinvoke>	
-					
+					</cfinvoke>
+
 					<cfif APPLICATION.moduleWeb EQ true>
-					
+
 						<!--- -----------------DELETE USER ENTRIES------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 							<cfinvokeargument name="itemTypeId" value="2">
 						</cfinvoke>
-						
+
 						<cfif APPLICATION.identifier EQ "vpnet">
-						
+
 							<!--- -----------------DELETE USER LINKS------------------------- --->
 							<cfinvoke component="AreaItemManager" method="deleteUserItems">
 								<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 								<cfinvokeargument name="itemTypeId" value="3">
 							</cfinvoke>
-						
+
 						</cfif>
-						
+
 						<!--- -----------------DELETE USER NEWS------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
@@ -1579,42 +1579,42 @@
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 							<cfinvokeargument name="itemTypeId" value="9">
 						</cfinvoke>
-					
+
 					</cfif>
-					
-					
+
+
 					<cfif APPLICATION.moduleWeb EQ true OR APPLICATION.identifier NEQ "vpnet">
-					
+
 						<!--- -----------------DELETE USER EVENTS------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 							<cfinvokeargument name="itemTypeId" value="5">
 						</cfinvoke>
-						
+
 					</cfif>
-					
+
 					<cfif APPLICATION.identifier NEQ "vpnet">
-					
+
 						<!--- -----------------DELETE USER TASKS------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 							<cfinvokeargument name="itemTypeId" value="6">
 						</cfinvoke>
-					
+
 					</cfif>
-					
+
 					<cfif APPLICATION.moduleConsultations IS true>
-					
+
 						<!--- -----------------DELETE USER CONSULTATIONS------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
 							<cfinvokeargument name="itemTypeId" value="7">
 						</cfinvoke>
-					
-					</cfif>	
+
+					</cfif>
 
 					<cfif APPLICATION.modulePubMedComments IS true>
-					
+
 						<!--- -----------------DELETE USER PUBMEDS------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
@@ -1624,7 +1624,7 @@
 					</cfif>
 
 					<cfif APPLICATION.moduleDPDocuments IS true>
-						
+
 						<!--- -----------------DELETE DPDOCUMENTS ------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
@@ -1640,7 +1640,7 @@
 					UNA SOLUCIÓN PARA ESTO PODRÍA SER PONER EL ADMINISTRADOR GENERAL DE PROPIETARIO DE LOS ELEMENTOS QUE NO SE DEBEN ELIMINAR
 
 					<cfif APPLICATION.moduleLists IS true>
-						
+
 						<!--- -----------------DELETE USER LISTS------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
@@ -1650,7 +1650,7 @@
 					</cfif>
 
 					<cfif APPLICATION.moduleForms IS true>
-						
+
 						<!--- -----------------DELETE USER FORMS------------------------- --->
 						<cfinvoke component="AreaItemManager" method="deleteUserItems">
 							<cfinvokeargument name="delete_user_id" value="#arguments.delete_user_id#">
@@ -1659,20 +1659,20 @@
 
 					</cfif>
 
-					--->					
-					
+					--->
+
 					<!---DELETE USER FOLDERS AND FILES--->
 					<cfinvoke component="FolderManager" method="deleteFolder" returnvariable="deleteFolderResult">
 						<cfinvokeargument name="request" value='<request><parameters><folder id="#getUserQuery.root_folder_id#"/></parameters></request>'>
 						<cfinvokeargument name="with_transaction" value="false"/>
 					</cfinvoke>
-					
+
 					<cfxml variable="xmlDeleteFolderResult">
 						<cfoutput>
 						#deleteFolderResult#
 						</cfoutput>
 					</cfxml>
-					
+
 					<cfif xmlDeleteFolderResult.response.xmlAttributes.status EQ "error"><!---Delete folder failed--->
 						<!--- RollBack the transaction --->
 						<!---<cfquery name="rollBackTransaction" datasource="#client_dsn#">
@@ -1681,23 +1681,23 @@
 						<cftransaction action="rollback"/>
 
 						<cfset error_code = 709>
-				
+
 						<cfthrow errorcode="#error_code#">
-												
+
 					</cfif>
 
 					<!--- DELETE USER FILES --->
 					<!---En las versiones más recientes de la aplicación los archivos ya no se añaden a un directorio del usuario--->
 					<cfquery name="filesQuery" datasource="#client_dsn#">
-						SELECT id 
-						FROM #client_abb#_files 
+						SELECT id
+						FROM #client_abb#_files
 						WHERE user_in_charge = <cfqueryparam value="#arguments.delete_user_id#" cfsqltype="cf_sql_integer">
 						AND status = 'ok'
 						AND file_type_id = 1;
 					</cfquery>
 
 					<cfloop query="filesQuery">
-						
+
 						<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
 							<cfinvokeargument name="file_id" value="#filesQuery.id#">
 							<cfinvokeargument name="with_transaction" value="false">
@@ -1710,55 +1710,55 @@
 								ROLLBACK;
 							</cfquery>--->
 							<cftransaction action="rollback"/>
-								
+
 							<cfthrow message="#deleteFileResult.message#">
 
 						</cfif>
 
 					</cfloop>
-					
-					
+
+
 					<!---DELETE USER IMAGE--->
 					<cfif len(getUserQuery.image_file) GT 0>
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="deleteUserImage">
 							<cfinvokeargument name="user_id" value="#arguments.delete_user_id#">
 							<cfinvokeargument name="client_abb" value="#client_abb#">
 						</cfinvoke>
-					</cfif>	
-					
-					
+					</cfif>
+
+
 					<!--- ------------------DELETE OTHER FILES (PENDING/CANCELED FILES)---------------------------- --->
 					<cfquery name="otherFilesQuery" datasource="#client_dsn#">
 						DELETE
-						FROM #client_abb#_files 
+						FROM #client_abb#_files
 						WHERE user_in_charge = <cfqueryparam value="#getUserQuery.id#" cfsqltype="cf_sql_integer">
 						AND file_type_id = 1;
 					</cfquery>
-					
+
 					<!--- --------------------------------------------------------------------------------- --->
-					
-									
+
+
 					<!--- DELETE USER DETAILS --->
-					<cfquery name="deleteUserQuery" datasource="#client_dsn#">	
-						DELETE FROM #client_abb#_users 
+					<cfquery name="deleteUserQuery" datasource="#client_dsn#">
+						DELETE FROM #client_abb#_users
 						WHERE id=#getUserQuery.id#;
-					</cfquery>				
-				
+					</cfquery>
+
 				</cftransaction>
 
 				<cfinclude template="includes/functionEndOnlyLog.cfm">
-		
-				<cfset response = {result=true, user_id=#arguments.delete_user_id#}>				
-								
-			
+
+				<cfset response = {result=true, user_id=#arguments.delete_user_id#}>
+
+
 			<cfelse><!---The user id is not found, user does not exist--->
-				
+
 				<cfset error_code = 204>
-				
+
 				<cfthrow errorcode="#error_code#">
-				
-			</cfif>			
-		
+
+			</cfif>
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1767,14 +1767,14 @@
 		</cftry>
 
 		<cfreturn response>
-		
-	</cffunction>
-	
-	<!--- ----------------------------------------------------------------------- --->
-			
-	
 
-	<!------------------------ IS USER ASSOCIATED TO AREA-------------------------------------->	
+	</cffunction>
+
+	<!--- ----------------------------------------------------------------------- --->
+
+
+
+	<!------------------------ IS USER ASSOCIATED TO AREA-------------------------------------->
 	<cffunction name="isUserAssociatedToArea" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="check_user_id" type="numeric" required="true"/>
@@ -1784,23 +1784,23 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<!---isUserInArea--->
 			<cfquery name="isUserInArea" datasource="#client_dsn#">
 				SELECT user_id
 				FROM #client_abb#_areas_users
-				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				AND user_id = <cfqueryparam value="#arguments.check_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 			<cfif isUserInArea.recordCount GT 0><!--- The user is in the area  --->
 				<cfset response = {result=true, isUserInArea=true}>
 			<cfelse>
 				<cfset response = {result=true, isUserInArea=false}>
 			</cfif>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1813,8 +1813,8 @@
 	</cffunction>
 
 
-		
-	<!------------------------ ASSIGN USER TO AREA-------------------------------------->	
+
+	<!------------------------ ASSIGN USER TO AREA-------------------------------------->
 
 	<cffunction name="assignUserToArea" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
@@ -1826,43 +1826,51 @@
 		<cfset var response = structNew()>
 
 		<cfset var user_id = "">
-		<cfset var client_abb = "">	
-			
+		<cfset var client_abb = "">
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-						
+
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
-		
+
 			<!---checkIfExist--->
 			<cfinvoke component="UserManager" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="check_user_id" value="#arguments.add_user_id#">
-			</cfinvoke>	
+			</cfinvoke>
 			<cfif isUserInAreaResponse.result IS false>
 				<cfreturn isUserInAreaResponse>
 			</cfif>
-			
+
 			<cfif isUserInAreaResponse.isUserInArea IS true><!--- The user already is in the area  --->
 				<cfset error_code = 408>
-			
+
 				<cfthrow errorcode="#error_code#">
 			</cfif>
-		
-			<cfquery name="assignUser" datasource="#client_dsn#">
+
+			<!---<cfquery name="assignUser" datasource="#client_dsn#">
 				INSERT INTO #client_abb#_areas_users (area_id, user_id, association_date)
 				VALUES(<cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
 					<cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">,
 					NOW());
-			</cfquery>	
-			
+			</cfquery>--->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="assignUserToArea">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="user_id" value="#arguments.add_user_id#"/>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
 			<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
 				<cfinvokeargument name="get_user_id" value="#arguments.add_user_id#">
 				<cfinvokeargument name="return_type" value="query"/>
-			</cfinvoke>	
-			
+			</cfinvoke>
+
 			<cfif arguments.send_alert IS true>
-				
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="assignUserToArea">
 					<cfinvokeargument name="objectUser" value="#objectUser#">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -1873,7 +1881,7 @@
 				</cfinvoke>
 
 			</cfif>
-			
+
 
 			<!--- deleteUserCacheTree --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
@@ -1883,11 +1891,11 @@
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
-			
+
 			<cfset response = {result=true, area_id=#arguments.area_id#, user_id=#arguments.add_user_id#}>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1896,47 +1904,47 @@
 		</cftry>
 
 		<cfreturn response>
-				
+
 	</cffunction>
-	
-	
+
+
 	<!------------------------ ASSIGN USERS TO AREA-------------------------------------->
 
 	<cffunction name="assignUsersToArea" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="users_ids" type="string" required="true"/>
-		
+
 		<cfset var method = "assignUsersToArea">
 
 		<cfset var response = structNew()>
 
 		<cfset var cur_user_id = "">
-			
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
-		
+
 			<cfloop index="cur_user_id" list="#arguments.users_ids#">
-				
+
 				<cfinvoke component="UserManager" method="assignUserToArea" returnvariable="responseAssignUser">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 					<cfinvokeargument name="add_user_id" value="#cur_user_id#"/>
 				</cfinvoke>
-				
+
 				<cfif responseAssignUser.result IS false><!---User assign failed--->
-					
+
 					<cfreturn responseAssignUser>
-				
+
 				</cfif>
 
-			</cfloop>	
-			
+			</cfloop>
+
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
-			
+
 			<cfset response = {result=true, area_id=#arguments.area_id#}>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1944,8 +1952,8 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>	
-				
+		<cfreturn response>
+
 	</cffunction>
 
 
@@ -1954,36 +1962,36 @@
 	<cffunction name="assignUserToAreas" returntype="struct" output="false" access="public">
 		<cfargument name="areas_ids" type="string" required="true"/>
 		<cfargument name="add_user_id" type="numeric" required="true"/>
-		
+
 		<cfset var method = "assignUserToAreas">
 
 		<cfset var response = structNew()>
 
 		<cfset var curAreaId = "">
-			
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-					
+
 			<cfloop index="curAreaId" list="#arguments.areas_ids#">
-				
+
 				<cfinvoke component="UserManager" method="assignUserToArea" returnvariable="responseAssignUser">
 					<cfinvokeargument name="area_id" value="#curAreaId#"/>
 					<cfinvokeargument name="add_user_id" value="#arguments.add_user_id#"/>
 				</cfinvoke>
-				
+
 				<cfif responseAssignUser.result IS false><!---User assign failed--->
-					
+
 					<cfreturn responseAssignUser>
-				
+
 				</cfif>
 
-			</cfloop>	
-			
+			</cfloop>
+
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
-			
+
 			<cfset response = {result=true, user_id=#arguments.add_user_id#}>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1991,17 +1999,17 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>	
-				
+		<cfreturn response>
+
 	</cffunction>
 
 
 	<!--- -------------------DISSOCIATE USER FROM AREA------------------------------------ --->
-	
+
 	<cffunction name="dissociateUserFromArea" returntype="struct" output="true" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="dissociate_user_id" type="numeric" required="true">
-		
+
 		<cfset var method = "dissociateUserFromArea">
 
 		<cfset var response = structNew()>
@@ -2010,27 +2018,27 @@
 		<cfset var client_abb = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-						
+
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
-			
+
 			<cfquery name="getArea" datasource="#client_dsn#">
 				SELECT user_in_charge
 				FROM #client_abb#_areas AS areas
 				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-						
+
 			<cfif getArea.recordCount GT 0>
 
 				<cfinvoke component="UserManager" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 					<cfinvokeargument name="check_user_id" value="#arguments.dissociate_user_id#">
-				</cfinvoke>	
+				</cfinvoke>
 				<cfif isUserInAreaResponse.result IS false>
 					<cfreturn isUserInAreaResponse>
 				</cfif>
-				
+
 				<cfif isUserInAreaResponse.isUserInArea IS false><!--- The user is not associated  --->
 					<cfset response = {result=false, message="Este usuario no está asociado directamente a esta área"}>
 					<cfreturn response>
@@ -2038,13 +2046,13 @@
 
 				<!---check if the user is the user_in_charge of the area--->
 				<cfif getArea.user_in_charge EQ arguments.dissociate_user_id>
-					
+
 					<cfset error_code = 411>
-					
+
 					<cfthrow errorcode="#error_code#">
-					
+
 				</cfif>
-			
+
 				<cfquery name="dissociateUser" datasource="#client_dsn#">
 					DELETE FROM #client_abb#_areas_users
 					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND user_id = <cfqueryparam value="#arguments.dissociate_user_id#" cfsqltype="cf_sql_integer">;
@@ -2058,19 +2066,19 @@
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
-			
+
 			<cfelse><!---The area does not exist--->
-				
+
 				<cfset error_code = 401>
-				
+
 				<cfthrow errorcode="#error_code#">
-			
+
 			</cfif>
 
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
-			
+
 			<cfset response = {result=true, message="", area_id=#arguments.area_id#}>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -2078,9 +2086,9 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>	
-				
-				
+		<cfreturn response>
+
+
 	</cffunction>
 
 
@@ -2089,50 +2097,50 @@
 	<cffunction name="associateAreaAdministrator" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="add_user_id" type="numeric" required="true">
-		
+
 		<cfset var method = "associateAreaAdministrator">
-				
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinclude template="includes/checkAdminAccess.cfm">
-						
+
 			<!---checkIfExist--->
 			<cfquery name="checkIfExist" datasource="#client_dsn#">
 				SELECT *
 				FROM #client_abb#_areas_administrators
-				WHERE user_id = <cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer"> 
+				WHERE user_id = <cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">
 				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 			<cfif checkIfExist.recordCount GT 0><!---The user already is an administrator of the area  --->
 				<!---<cfset error_code = 409>
 				<cfthrow errorcode="#error_code#">--->
 				<cfset response = {result=false, message="El usuario ya estaba asociado como administrador del área"}>
 				<cfreturn response>
 			</cfif>
-			
+
 			<cfquery name="getArea" datasource="#client_dsn#">
 				SELECT id, name
 				FROM #client_abb#_areas AS areas
 				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-						
+
 			<cfif getArea.recordCount GT 0>
-				
+
 				<cfquery name="getUser" datasource="#client_dsn#">
 					SELECT id, name, family_name
 					FROM #client_abb#_users
 					WHERE id = <cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
-				
+
 				<cfif getUser.recordCount GT 0>
-				
-					<cfquery name="insertAreaAdministratorQuery" datasource="#client_dsn#"  >					
+
+					<cfquery name="insertAreaAdministratorQuery" datasource="#client_dsn#"  >
 						INSERT INTO #client_abb#_areas_administrators
 						SET user_id = <cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">,
-						area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;			
+						area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 
 					<!--- deleteUserCacheTree --->
@@ -2143,27 +2151,27 @@
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
-				
+
 				<cfelse><!---the user does not exist--->
-				
+
 					<cfset error_code = 204>
-					
-					<cfthrow errorcode="#error_code#"> 
-				
+
+					<cfthrow errorcode="#error_code#">
+
 				</cfif>
-			
+
 			<cfelse><!---The area does not exist--->
-								
+
 				<cfset error_code = 401>
-				
+
 				<cfthrow errorcode="#error_code#">
-				
+
 			</cfif>
 
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
-			
+
 			<cfset response = {result=true, area_id=#arguments.area_id#, user_id=#arguments.add_user_id#}>
-			
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -2172,10 +2180,10 @@
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 	<!--- -----------------------------------------------------------------------  --->
-	
+
 
 
 	<!---    --------------------DISSOCIATE AREA ADMINISTRATOR-------------------------------------  --->
@@ -2183,13 +2191,13 @@
 	<cffunction name="dissociateAreaAdministrator" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="dissociate_user_id" type="numeric" required="true">
-		
+
 		<cfset var method = "dissociateAreaAdministrator">
-				
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinclude template="includes/checkAdminAccess.cfm">
 
 			<cfquery name="getArea" datasource="#client_dsn#">
@@ -2197,7 +2205,7 @@
 				FROM #client_abb#_areas AS areas
 				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-						
+
 			<cfif getArea.recordCount GT 0>
 
 				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAssociatedAsAdministrator" returnvariable="isAdministratorResponse">
@@ -2208,16 +2216,16 @@
 				<cfif isAdministratorResponse.result IS false>
 					<cfreturn isAdministratorResponse>
 				</cfif>
-				
+
 				<cfif isAdministratorResponse.isUserAdministrator IS false><!--- The user is not associated  --->
 					<cfset response = {result=false, message="Este usuario no está asociado directamente a esta área como administrador"}>
 					<cfreturn response>
 				</cfif>
 
-				<cfquery name="deleteQuery" datasource="#client_dsn#">					
-					DELETE FROM #client_abb#_areas_administrators 
+				<cfquery name="deleteQuery" datasource="#client_dsn#">
+					DELETE FROM #client_abb#_areas_administrators
 					WHERE user_id = <cfqueryparam value = "#arguments.dissociate_user_id#" cfsqltype="cf_sql_integer">
-					AND area_id = <cfqueryparam value = "#arguments.area_id#" cfsqltype="cf_sql_integer">;			
+					AND area_id = <cfqueryparam value = "#arguments.area_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
 				<!--- deleteUserCacheTree --->
@@ -2228,19 +2236,19 @@
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
-			
+
 			<cfelse><!---The area does not exist--->
-				
+
 				<cfset error_code = 401>
-				
+
 				<cfthrow errorcode="#error_code#">
-			
+
 			</cfif>
 
 			<cfinclude template="includes/functionEndOnlyLog.cfm">
-			
+
 			<cfset response = {result=true, area_id=#arguments.area_id#}>
-			
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -2248,101 +2256,101 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>	
-		
-			
+		<cfreturn response>
+
+
 	</cffunction>
 	<!--- -----------------------------------------------------------------------  --->
 
 
 	<!--- --------------------------SELECT USER ------------------------------ --->
-	
+
 	<cffunction name="selectUser" returntype="string" output="false" access="public">
 		<cfargument name="request" type="string" required="yes">
 		<!---<cfargument name="id" type="string" required="true">--->
-		
+
 		<cfset var method = "selectUser">
 		<cfset var user_id = "">
 <cfset var client_abb = "">
 <cfset var user_language = "">
-	
+
 <cfset var xmlRequest = "">
 <cfset var xmlResponseContent = "">
 
-		
+
 		<cftry>
-		
-			<cfinclude template="includes/functionStart.cfm"> 
-		
+
+			<cfinclude template="includes/functionStart.cfm">
+
 			<cfset select_user_id = xmlRequest.request.parameters.user.xmlAttributes.id>
-			
+
 			<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
 				<cfinvokeargument name="get_user_id" value="#select_user_id#">
-			</cfinvoke>	
-			
+			</cfinvoke>
+
 			<cfinclude template="includes/functionEndNoLog.cfm">
-			
+
 			<cfcatch>
 				<cfset xmlResponseContent = arguments.request>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>	
-		
+			</cfcatch>
+
+		</cftry>
+
 		<cfreturn xmlResponse>
-				
+
 	</cffunction>
-	
-	
+
+
 	<!--- --------------------------SELECT USER ADMIN------------------------------ --->
-	
+
 	<cffunction name="selectUserAdmin" returntype="string" output="false" access="public">
 		<cfargument name="request" type="string" required="yes">
 		<!---<cfargument name="id" type="string" required="true">--->
-		
+
 		<cfset var method = "selectUserAdmin">
 		<cfset var user_id = "">
 <cfset var client_abb = "">
 <cfset var user_language = "">
-	
+
 <cfset var xmlRequest = "">
 <cfset var xmlResponseContent = "">
 
-		
+
 		<cftry>
-		
-			<cfinclude template="includes/functionStart.cfm"> 
-		
+
+			<cfinclude template="includes/functionStart.cfm">
+
 			<cfset select_user_id = xmlRequest.request.parameters.user.xmlAttributes.id>
-			
+
 			<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
 				<cfinvokeargument name="get_user_id" value="#select_user_id#">
 				<cfinvokeargument name="format_content" value="all">
-			</cfinvoke>	
-			
+			</cfinvoke>
+
 			<cfinclude template="includes/functionEndNoLog.cfm">
-			
+
 			<cfcatch>
 				<cfset xmlResponseContent = arguments.request>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
-		</cftry>	
-		
+			</cfcatch>
+
+		</cftry>
+
 		<cfreturn xmlResponse>
-				
+
 	</cffunction>
-	
-	
+
+
 	<!--- --------------------------GET USER ------------------------------ --->
-	
+
 	<cffunction name="getUser" returntype="any" output="false" access="public">
 		<cfargument name="get_user_id" type="numeric" required="yes">
 		<cfargument name="format_content" type="string" required="no" default="default">
 		<cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
-		
+
 		<cfset var method = "getUser">
-		
+
 		<cfset var user_id = "">
 		<cfset var client_abb = "">
 		<cfset var user_language = "">
@@ -2350,9 +2358,9 @@
 		<cfset var objectUser = structNew()>
 
 		<cfset var response = "">
-		
-			<cfinclude template="includes/functionStartOnlySession.cfm"> 
-		
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
 				<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
 				<cfinvokeargument name="format_content" value="#arguments.format_content#">
@@ -2361,40 +2369,40 @@
 					<cfinvokeargument name="with_vpnet" value="true">
 				</cfif>
 				<cfif arguments.format_content EQ "all">
-					<cfinvokeargument name="parse_dates" value="true">					
+					<cfinvokeargument name="parse_dates" value="true">
 				</cfif>
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfif selectUserQuery.recordCount GT 0>
 
 				<cfquery name="checkClientAdministrator" datasource="#APPLICATION.dsn#">
-					SELECT id 
-					FROM app_clients				
+					SELECT id
+					FROM app_clients
 					WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">
-					AND administrator_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;			
+					AND administrator_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
-				
+
 				<cfif checkClientAdministrator.recordCount GT 0>
 					<!---<cfset general_administrator = true>--->
 					<cfset general_administrator = 1>
 				<cfelse>
 					<!---<cfset general_administrator = false>--->
 					<cfset general_administrator = 0>
-					
+
 					<cfquery name="checkAreaAdministrator" datasource="#client_dsn#">
-						SELECT user_id, area_id 
-						FROM #client_abb#_areas_administrators		
-						WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;			
+						SELECT user_id, area_id
+						FROM #client_abb#_areas_administrators
+						WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
-					
+
 				</cfif>
 
 				<cfif arguments.return_type EQ "query">
-                    
+
                     <cfset response = selectUserQuery>
-				
+
 				<cfelse>
 
 					<cfsavecontent variable="areasUser">
@@ -2409,8 +2417,8 @@
 						<cfelse>
 							<areas_administration />
 						</cfif>
-					</cfsavecontent>	
-					
+					</cfsavecontent>
+
 					<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
 						<cfinvokeargument name="id" value="#selectUserQuery.id#">
 						<cfinvokeargument name="email" value="#selectUserQuery.email#">
@@ -2422,14 +2430,14 @@
 						<cfinvokeargument name="mobile_phone" value="#selectUserQuery.mobile_phone#">
 						<cfinvokeargument name="mobile_phone_ccode" value="#selectUserQuery.mobile_phone_ccode#">
 						<cfinvokeargument name="whole_tree_visible" value="#selectUserQuery.internal_user#">
-						
+
 						<cfinvokeargument name="image_file" value="#selectUserQuery.image_file#">
 						<cfinvokeargument name="image_type" value="#selectUserQuery.image_type#">
 						<cfinvokeargument name="dni" value="#selectUserQuery.dni#">
 						<cfinvokeargument name="language" value="#selectUserQuery.language#">
 
-						<cfif arguments.format_content EQ "all">	
-							<cfinvokeargument name="client_abb" value="#client_abb#">		
+						<cfif arguments.format_content EQ "all">
+							<cfinvokeargument name="client_abb" value="#client_abb#">
 							<cfinvokeargument name="areas_administration" value="#areasUser#">
 							<cfinvokeargument name="space_used" value="#selectUserQuery.space_used#">
 							<cfinvokeargument name="number_of_connections" value="#selectUserQuery.number_of_connections#">
@@ -2455,42 +2463,42 @@
 								<cfinvokeargument name="other_2" value="#selectUserQuery.other_2#">
 							</cfif>
 						</cfif>
-						
-						
+
+
 						<cfinvokeargument name="return_type" value="object">
 					</cfinvoke>
-					
+
 					<cfif arguments.return_type EQ "object">
-	                    
+
 	                    <cfset response = objectUser>
-	                    
+
 	                <cfelse>
-	                
+
 	                	<cfinvoke component="UserManager" method="xmlUser" returnvariable="xmlResponseContent">
 	                        <cfinvokeargument name="objectUser" value="#objectUser#">
 	                    </cfinvoke>
-	                    
-	                    <cfset response = xmlResponseContent>
-	                
-	                </cfif>	
 
-	            </cfif>				
-						
+	                    <cfset response = xmlResponseContent>
+
+	                </cfif>
+
+	            </cfif>
+
 			<cfelse><!---the user does not exist--->
-				
+
 				<cfset error_code = 204>
-				
-				<cfthrow errorcode="#error_code#"> 
-				
+
+				<cfthrow errorcode="#error_code#">
+
 			</cfif>
-		
+
 		<cfreturn response>
-				
+
 	</cffunction>
-	
+
 
 	<!--- ------------------------------------- getEmptyUser -------------------------------------  --->
-	
+
 	<cffunction name="getEmptyUser" output="false" access="public" returntype="struct">
 
 		<cfset var method = "getEmptyUser">
@@ -2498,9 +2506,9 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfquery name="getEmptyUserQuery" datasource="#client_dsn#">
 				SELECT *, id AS user_id
 				FROM #client_abb#_users
@@ -2527,7 +2535,7 @@
 
 			<cfset queryAddColumn(getEmptyUserQuery, "new_password")>
 			<cfset querySetCell(getEmptyUserQuery, "new_password", newPassword)>
-			
+
 			<cfset response = {result=true, user=#getEmptyUserQuery#}>
 
 			<cfcatch>
@@ -2538,131 +2546,131 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
-	
+
 	<!--- ---------------------------- updateUserDownloadedSpace ------------------------------- --->
-	
-	<cffunction name="updateUserDownloadedSpace" access="public">	
+
+	<cffunction name="updateUserDownloadedSpace" access="public">
 		<cfargument name="add_space" type="numeric" required="true">
-		
+
 		<cfset var method = "updateUserDownloadedSpace">
-		
+
 		<cfinclude template="includes/functionStartOnlySession.cfm">
-		
+
 		<cfquery name="updateUserDownloadedSpace" datasource="#client_dsn#">
 			UPDATE #client_abb#_users
 			SET space_downloaded = space_downloaded+<cfqueryparam value="#add_space#" cfsqltype="cf_sql_integer">
 			WHERE id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
-	
+
 	</cffunction>
-		
-	
+
+
 	<!--- ----------------------- GET NUMBER OF USERS -------------------------------- --->
-	
+
 	<cffunction name="getNumberOfUsers" returntype="string" output="false" access="public">
-		
+
 		<cfset var method = "getNumberOfUsers">
 		<cfset var user_id = "">
 <cfset var client_abb = "">
 <cfset var user_language = "">
-	
+
 <cfset var xmlRequest = "">
 <cfset var xmlResponseContent = "">
-	
-			
+
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStart.cfm">
-		
+
 			<cfquery name="getUsersCountQuery" datasource="#client_dsn#">
-				SELECT count(*) 
+				SELECT count(*)
 				FROM #client_abb#_users
-			</cfquery>		
+			</cfquery>
 			<!---<cfreturn #getUsersCountQuery.count#>--->
-		
-		
+
+
 			<cfset xmlResponseContent = '<number_users>#getUsersCountQuery.count#</number_users>'>
-			
+
 			<cfinclude template="includes/functionEndNoLog.cfm">
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn xmlResponse>
 	</cffunction>
 
-	
+
 	<!--- ---------------------------- getAreaUsers ------------------------------- --->
-	
+
 	<cffunction name="getAreaUsers" returntype="struct" output="false" access="public">
-        
+
 		<cfset var method = "getAreaUsers">
 
 		<cfset var access_result = false>
-		
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<!--- checkAreaAccess --->
 			<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
-			
+
 			<cfif access_result IS NOT true>
-				
+
 				<!--- checkAreaAdminAccess --->
 				<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfinvoke>
 
 			</cfif>
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getAreaUsers" argumentcollection="#arguments#" returnvariable="response">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>		
+			</cfinvoke>
 
 			<cfreturn response>
-	
+
 	</cffunction>
 
 
 	<!--- ---------------------------- getAreaAdministrators ------------------------------- --->
-	
+
 	<!---<cffunction name="getAreaAdministrators" returntype="struct" output="false" access="public">
-        
+
 		<cfset var method = "getAreaAdministrators">
-		
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getAreaAdministrators" argumentcollection="#arguments#" returnvariable="response">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>		
+			</cfinvoke>
 
 			<cfreturn response>
-	
+
 	</cffunction>--->
-	
-	
+
+
 	<!--- ---------------------------- getAreaUsersIds ------------------------------- --->
-	
+
 	<cffunction name="getAreaUsersIds" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="string" required="yes">
 		<cfargument name="usersList" type="string" required="no" default="">
 		<cfargument name="areasArray" type="array" required="yes">
 		<!---<cfargument name="include_user_log_in" type="boolean" required="no" default="false">--->
 		<cfargument name="get_orientation" type="string" required="no" default="desc"><!---desc/asc/both---><!---both: obtiene los usuarios de las áreas superiores e inferiores--->
-        
+
 		<cfset var method = "getAreaUsersIds">
 		<cfset var areaMembersList = "">
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getAreaUsersIds" argumentcollection="#arguments#" returnvariable="response">
@@ -2670,15 +2678,15 @@
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfreturn response>
-	
+
 	</cffunction>
-	
-	
+
+
 	<!--- ---------------------------- GET USERS -------------------------------- --->
 	<!---Devuelve la lista de todos los usuarios según el usuario sea interno o externo--->
-	
+
 	<cffunction name="getUsers" returntype="struct" output="false" access="public">
 		<cfargument name="xmlUser" type="xml" required="true"/>
 		<cfargument name="with_external" type="boolean" required="false" default="true"/>
@@ -2687,7 +2695,7 @@
 		<cfargument name="order_type" type="string" required="false"/>
 		<cfargument name="limit" type="numeric" required="false"/>
 		<cfargument name="users_ids" type="string" required="false">
-		
+
 		<cfset var method = "getUsers">
 
 		<cfset var response = structNew()>
@@ -2695,33 +2703,33 @@
 		<cfset var user_id = "">
 		<cfset var client_abb = "">
 		<cfset var user_language = "">
-			
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinvoke component="UserManager" method="isRootUser" returnvariable="root_user">
-				<cfinvokeargument name="get_user_id" value="#user_id#"> 
-			</cfinvoke>	
-			
+				<cfinvokeargument name="get_user_id" value="#user_id#">
+			</cfinvoke>
+
 			<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
-				<cfinvokeargument name="get_user_id" value="#user_id#"> 
-			</cfinvoke>			
-			
-			
+				<cfinvokeargument name="get_user_id" value="#user_id#">
+			</cfinvoke>
+
+
 			<!---Si el usuario esta en la raiz o whole_tree_visible=true se le pasa la lista de todos los usuarios--->
 			<cfif root_user EQ true OR internal_user EQ true>
-				
+
 				<cfinvoke component="UserManager" method="getAllUsers" argumentcollection="#arguments#" returnvariable="response">
 				</cfinvoke>
-				
+
 			<cfelse><!---The user is not root user AND not has whole_tree_visible--->
-				
+
 				<cfinvoke component="UserManager" method="getUsersExternal" argumentcollection="#arguments#" returnvariable="response">
 				</cfinvoke>
-			
+
 			</cfif>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -2730,14 +2738,14 @@
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
-	
-	
+
+
 	<!--- ---------------------------- getUsersExternal------------------------------- --->
-	
+
 	<!---Obtiene todos los usuarios que tienen acceso a las áreas de un usuario externo que no está en la raiz--->
-	
+
 	<cffunction name="getUsersExternal" returntype="struct" output="false" access="public">
 		<!--- <cfargument name="xmlUser" type="xml" required="true"/> --->
 		<cfargument name="with_external" type="boolean" required="false" default="true"/>
@@ -2745,62 +2753,62 @@
 		<cfargument name="order_by" type="string" required="false"/>
 		<cfargument name="order_type" type="string" required="false"/>
 		<cfargument name="limit" type="numeric" required="false"/>
-		
+
 		<cfset var method = "getUsersExternal">
 
 		<cfset var response = structNew()>
-		
+
 		<!---<cfset var get_orientation = "desc">--->
 		<cfset var usersList = "">
 		<cfset var areasArray = arrayNew(1)>
 		<cfset var usersArray = arrayNew(1)>
-		
+
 		<cfset var search_text_re = "">
-		
-			
+
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
-			<!---		
+
+			<!---
 			<!--- ORDER --->
 			<cfinclude template="includes/usersOrderParameters.cfm">
-			
+
 			<!---SEARCH--->
 			<cfif isDefined("arguments.search_text") AND len(arguments.search_text) GT 0>
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
 					<cfinvokeargument name="text" value="#arguments.search_text#">
 				</cfinvoke>
 			</cfif>--->
-			
-			<!---Obtiene las áreas del usuario--->		
+
+			<!---Obtiene las áreas del usuario--->
 			<cfquery name="getUserAreas" datasource="#client_dsn#">
 				SELECT area_id
 				FROM #client_abb#_areas_users
 				WHERE user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_varchar">;
-			</cfquery>			
-			
+			</cfquery>
+
 			<cfloop query="getUserAreas">
-				
+
 				<!---Obtiene los usuarios de las áreas hacia abajo y hacia arriba--->
 				<!---En versiones anteriores de la aplicación sólo se mostraban los usuarios de las áreas inferiores, ya que los usuarios externos sólo podían ver los usuarios que estaban directamente asociados a las áreas a las que tienen acceso y sus áreas inferiores.--->
 				<cfinvoke component="UserManager" method="getAreaUsersIds" returnvariable="usersIdsResult">
 					<cfinvokeargument name="area_id" value="#getUserAreas.area_id#">
 					<cfinvokeargument name="usersList" value="#usersList#">
 					<cfinvokeargument name="areasArray" value="#areasArray#">
-			
+
 					<cfinvokeargument name="get_orientation" value="both">
 				</cfinvoke>
 
 				<cfset usersList = usersIdsResult.usersList>
 				<cfset areasArray = usersIdsResult.areasArray>
-			
+
 			</cfloop>
-						
+
 			<cfif listLen(usersList) GT 0>
 
 				<cfinvoke component="UserManager" method="getAllUsers" argumentcollection="#arguments#" returnvariable="response">
 					<cfinvokeargument name="users_ids" value="#usersList#">
 				</cfinvoke>
-			
+
 				<!---<cfquery name="membersQuery" datasource="#client_dsn#">
 					SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type,
 						CONCAT_WS(' ', family_name, name) AS user_full_name, enabled
@@ -2824,31 +2832,31 @@
 					LIMIT #arguments.limit#
 					</cfif>;
 				</cfquery>
-				
+
 				<cfif membersQuery.recordCount GT 0>
-					
+
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToArray" returnvariable="usersArray">
 						<cfinvokeargument name="data" value="#membersQuery#">
-					</cfinvoke>	
+					</cfinvoke>
 
 				</cfif>	--->
 
 			<cfelse>
 
 				<cfset response = {result=true, users=#usersArray#}>
-			
+
 			</cfif>
-						
-			
+
+
 		<cfreturn response>
-			
-	
+
+
 	</cffunction>
-	
-	
-	
+
+
+
 	<!--- --------------------------- GET ALL USERS -------------------------------- --->
-	
+
 	<cffunction name="getAllUsers" returntype="struct" output="false" access="public">
 		<cfargument name="xmlUser" type="xml" required="true"/>
 		<cfargument name="with_external" type="boolean" required="false" default="true"/>
@@ -2857,7 +2865,7 @@
 		<cfargument name="order_type" type="string" required="false"/>
 		<cfargument name="limit" type="numeric" required="false">
 		<cfargument name="users_ids" type="string" required="false">
-		
+
 		<cfset var method = "getAllUsers">
 
 		<cfset var response = structNew()>
@@ -2865,18 +2873,18 @@
 		<cfset var user_id = "">
 		<cfset var client_abb = "">
 		<cfset var user_language = "">
-			
+
 		<cfset var search_text_re = "">
 
 		<cfset var usersArray = arrayNew(1)>
-	
+
 		<cftry>
-		
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<!--- ORDER --->
 			<cfinclude template="includes/usersOrderParameters.cfm">
-			
+
 			<cfif isDefined("arguments.search_text") AND len(arguments.search_text) GT 0>
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
 					<cfinvokeargument name="text" value="#arguments.search_text#">
@@ -2884,7 +2892,7 @@
 			</cfif>
 
             <!---<cfif isDefined("xmlUser.user.xmlAttributes.space_used") OR isDefined("xmlUser.user.xmlAttributes.number_of_connections")>
-            
+
                 <cfquery name="getTotals" datasource="#client_dsn#">
                     SELECT
                     <cfif isDefined("xmlUser.user.xmlAttributes.space_used")>
@@ -2898,9 +2906,9 @@
                     </cfif>
                     FROM #client_abb#_users AS u
                     <cfif with_external EQ "false">
-					WHERE u.internal_user = true				
+					WHERE u.internal_user = true
 					</cfif>
-					
+
 					<cfif len(search_text_re) GT 0>
 						<cfif with_external EQ "false">
 						AND
@@ -2919,7 +2927,7 @@
 					</cfif>
 
 					<cfif isDefined("arguments.users_ids")>
-					
+
 						<cfif arguments.with_external EQ false OR len(arguments.search_text_re) GT 0>
 							AND
 						<cfelse>
@@ -2933,7 +2941,7 @@
 					LIMIT #arguments.limit#
 					</cfif>;
                 </cfquery>
-                
+
             </cfif>--->
 
             <!--- getAllUsers --->
@@ -2948,10 +2956,10 @@
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToArray" returnvariable="usersArray">
 				<cfinvokeargument name="data" value="#getAllUsersQuery#">
-			</cfinvoke>			
-		
+			</cfinvoke>
+
 			<cfset response = {result=true, users=#usersArray#}>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -2960,19 +2968,19 @@
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
-	
-	
-    
+
+
+
     <!--- ---------------------------- GET USERS TO NOTIFY LISTS ------------------------------- --->
-	
-	<cffunction name="getUsersToNotifyLists" returntype="struct" output="false" access="public">	
+
+	<cffunction name="getUsersToNotifyLists" returntype="struct" output="false" access="public">
 		<!---<cfargument name="request" type="string" required="yes">--->
 		<cfargument name="area_id" type="numeric" required="true"/>
-	
+
 		<cfset var method = "getUsersToNotifyLists">
-		
+
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getUsersToNotifyLists" argumentcollection="#arguments#" returnvariable="structResponse">
@@ -2981,46 +2989,46 @@
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>
-		
+
 		<cfreturn structResponse>
-	
+
 	</cffunction>
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	<!--- ---------------------------- GET ALL AREA USERS  ------------------------------- --->
 
 	<cffunction name="getAllAreaUsers" returntype="struct" output="false" access="public">
-		<cfargument name="area_id" type="numeric" required="true"/>	
+		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="xmlUser" type="xml" required="true"/>
 		<cfargument name="order_by" type="string" required="false"/>
 		<cfargument name="order_type" type="string" required="false"/>
 
 		<cfset var method = "getAllAreaUsers">
-		
+
 		<cfset var init_area_id = "">
-						
+
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfset init_area_id = arguments.area_id>
-			
+
 			<!--- ORDER --->
 			<cfinclude template="includes/usersOrderParameters.cfm">
-			
+
 			<cfset areasArray = ArrayNew(1)>
-			
+
 			<cfinvoke component="UserManager" method="getAreaUsers" returnvariable="returnArrays">
 				<cfinvokeargument name="area_id" value="#init_area_id#">
 				<cfinvokeargument name="areasArray" value="#areasArray#">
 				<cfinvokeargument name="include_user_log_in" value="true">
-				<cfinvokeargument name="get_orientation" value="asc">			
+				<cfinvokeargument name="get_orientation" value="asc">
 			</cfinvoke>
-			
+
 			<cfset usersArray = returnArrays.usersArray>
 			<!---<cfset areasArray = returnArrays.areasArray>--->
 
@@ -3038,35 +3046,35 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>		
-				
+		<cfreturn response>
+
 	</cffunction>
-	
+
 
 
 	<!--- ---------------------------- GET ALL AREA ADMINISTRATORS  ------------------------------- --->
 
 	<cffunction name="getAllAreaAdministrators" returntype="struct" output="false" access="public">
-		<cfargument name="area_id" type="numeric" required="true"/>	
+		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="xmlUser" type="xml" required="true"/>
 		<cfargument name="order_by" type="string" required="false"/>
 		<cfargument name="order_type" type="string" required="false"/>
 
 		<cfset var method = "getAllAreaAdministrators">
-		
+
 		<cfset var init_area_id = "">
-						
+
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfset init_area_id = arguments.area_id>
-			
+
 			<!--- ORDER --->
 			<cfinclude template="includes/usersOrderParameters.cfm">
-			
+
 			<cfset areasArray = ArrayNew(1)>
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getAreaAdministrators" returnvariable="returnArrays">
 				<cfinvokeargument name="area_id" value="#init_area_id#">
 				<cfinvokeargument name="areasArray" value="#areasArray#">
@@ -3074,9 +3082,9 @@
 				<cfinvokeargument name="get_orientation" value="asc">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">			
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfset usersArray = returnArrays.usersArray>
 			<!---<cfset areasArray = returnArrays.areasArray>--->
 
@@ -3094,51 +3102,51 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>		
-				
+		<cfreturn response>
+
 	</cffunction>
-	
-	
-	
-	
-	
+
+
+
+
+
 
 	<!--- ****************************************************************************************** --->
 	<!--- ********************************  USER PREFERENCES   ************************************* --->
 	<!--- ****************************************************************************************** --->
-	
-	
+
+
 	<!--- ----------------------- GET USER PREFERENCES -------------------------------- --->
 	<cffunction name="getUserPreferences" returntype="struct" output="false" access="public">
-		<cfargument name="get_user_id" type="numeric" required="false" default="#SESSION.user_id#">	
-		
+		<cfargument name="get_user_id" type="numeric" required="false" default="#SESSION.user_id#">
+
 		<cfset var method = "getUserPreferences">
 
-		<cfset var response = structNew()>	
-			
+		<cfset var response = structNew()>
+
 		<cftry>
-		
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-		
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserPreferences" returnvariable="getUserPreferencesQuery">
 				<cfinvokeargument name="user_id" value="#arguments.get_user_id#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfif getUserPreferencesQuery.recordCount GT 0>
 
 				<cfset response = {result=true, preferences=#getUserPreferencesQuery#}>
 
 			<cfelse><!---The user does not exist--->
-				
+
 				<cfset error_code = 204>
-				
-				<cfthrow errorcode="#error_code#"> 
-				
-			</cfif>		
-		
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -3146,10 +3154,10 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>		
-				
+		<cfreturn response>
+
 	</cffunction>
-	
+
 
 
 
@@ -3163,21 +3171,21 @@
 	<cffunction name="getUserContacts" returntype="string" output="true" access="public">
 		<cfargument name="request" type="string" required="yes">
 		<!---<cfargument name="userFormat" type="string" required="true">--->
-		
+
 		<cfset var method = "getUserContacts">
 		<cfset var user_format = "">
 		<cfset var user_id = "">
 <cfset var client_abb = "">
 <cfset var user_language = "">
-	
+
 <cfset var xmlRequest = "">
 <cfset var xmlResponseContent = "">
-	
-			
+
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStart.cfm">
-			
+
 			<cfif isDefined("xmlRequest.request.parameters.contact")>
 				<cfxml variable="xmlContact">
 					<cfoutput>
@@ -3193,21 +3201,21 @@
 					</contact>
 				</cfxml>
 			</cfif>
-						
+
 			<cfset user_format = xmlRequest.request.parameters.user_format.xmlText>
-			
+
 			<!--- ORDER --->
 			<cfinclude template="includes/usersOrder.cfm">
-		
+
 			<cfquery name="getContactsQuery" datasource="#client_dsn#">
-				SELECT * 
+				SELECT *
 				FROM #client_abb#_contacts
 				WHERE user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
-				ORDER BY #order_by# #order_type#;			
-			</cfquery>		
-			
+				ORDER BY #order_by# #order_type#;
+			</cfquery>
+
 			<cfif #getContactsQuery.recordCount# GT 0>
-				
+
 				<cfif "#user_format#" EQ "true" OR "#user_format#" EQ "1">
 					<cfset xmlResult = '<contacts>'>
 						<cfloop query="getContactsQuery">
@@ -3232,27 +3240,27 @@
 								</cfif>
 								<cfif isDefined("xmlContact.contact.address")>
 									<cfinvokeargument name="address" value="#getContactsQuery.address#">
-								</cfif>										
+								</cfif>
 								<cfif isDefined("xmlContact.contact.xmlAttributes.telephone_ccode")>
 								<cfinvokeargument name="telephone_ccode" value="#getContactsQuery.telephone_ccode#">
 								</cfif>
 								<cfif isDefined("xmlContact.contact.xmlAttributes.mobile_phone_ccode")>
 									<cfinvokeargument name="mobile_phone_ccode" value="#getContactsQuery.mobile_phone_ccode#">
 								</cfif>
-								
+
 								<cfinvokeargument name="return_type" value="xml">
 							</cfinvoke>
-							
+
 							<cfset xmlResult = xmlResult & xmlResultContact>
-							
+
 						</cfloop>
 					<cfset xmlResult = xmlResult&'</contacts>'>
-					
+
 				<cfelse>
-					
+
 					<cfset xmlResult = '<contacts>'>
 						<cfloop query="getContactsQuery">
-						
+
 							<cfinvoke component="ContactManager" method="objectContact" returnvariable="contact">
 								<cfif isDefined("xmlContact.contact.xmlAttributes.id")>
 									<cfinvokeargument name="id" value="#getContactsQuery.id#">
@@ -3288,20 +3296,20 @@
 									<cfinvokeargument name="mobile_phone_ccode" value="#getContactsQuery.mobile_phone_ccode#">
 								</cfif>
 							</cfinvoke>
-					
+
 							<cfinvoke component="ContactManager" method="xmlContact" returnvariable="xmlResultContact">
 								<cfinvokeargument name="objectContact" value="#contact#">
 							</cfinvoke>
-							
+
 							<cfset xmlResult = xmlResult & xmlResultContact>
-							
+
 						</cfloop>
 					<cfset xmlResult = xmlResult&'</contacts>'>
-						
+
 				</cfif>
-				
+
 				<cfset xmlResponseContent = xmlResult>
-				
+
 			<cfelse>
 				<cfsavecontent variable="emptyContacts">
 					<contacts/>
@@ -3309,45 +3317,45 @@
 
 				<cfset xmlResponseContent = emptyContacts>
 			</cfif>
-		
+
 			<cfinclude template="includes/functionEndNoLog.cfm">
-			
+
 			<cfcatch>
 				<cfset xmlResponseContent = arguments.request>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
-		<cfreturn xmlResponse>		
-		
+
+		<cfreturn xmlResponse>
+
 	</cffunction>
 
 
 	<!--- ----------------------- GET USERS AND CONTACTS -------------------------------- --->
 	<cffunction name="getUsersAndContacts" returntype="string" output="false" access="public">
-	
+
 		<cfset var method = "getUsersAndContacts">
 		<cfset var user_id = "">
 <cfset var client_abb = "">
 <cfset var user_language = "">
-	
+
 <cfset var xmlRequest = "">
 <cfset var xmlResponseContent = "">
-	
-			
+
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStart.cfm">
-		
-			<cfinvoke component="UserManager" method="getUsers" returnvariable="usersResult">				
+
+			<cfinvoke component="UserManager" method="getUsers" returnvariable="usersResult">
 				<cfinvokeargument name="request" value='<request><parameters><user id="" email="" telephone="" mobile_phone="" telephone_ccode="" mobile_phone_ccode=""><name/><family_name/></user></parameters></request>'>
 			</cfinvoke>
 			<cfinvoke component="UserManager" method="getUserContacts" returnvariable="contactsResult">
 				<cfinvokeargument name="request" value='<request><parameters><user_format><![CDATA[true]]></user_format></parameters></request>'>
 				<!---<cfinvokeargument name="userFormat" value="true">--->
 			</cfinvoke>
-			
+
 			<cfxml variable="xmlUsers">
 				<cfoutput>
 				#usersResult#
@@ -3358,7 +3366,7 @@
 				#contactsResult#
 				</cfoutput>
 			</cfxml>
-			
+
 			<cfprocessingdirective suppresswhitespace="yes">
 			<cfsavecontent variable="xmlResult">
 				<cfoutput>
@@ -3370,25 +3378,25 @@
 			</cfsavecontent>
 			</cfprocessingdirective>
 			<!---<cfreturn "#xmlResult#">--->
-		
+
 			<cfset xmlResponseContent = xmlResult>
-		
+
 			<cfinclude template="includes/functionEndNoLog.cfm">
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
-		<cfreturn xmlResponse>		
-		
+
+		<cfreturn xmlResponse>
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------- exportUsers -------------------------------------  --->
-	
+
 	<cffunction name="exportUsers" output="false" access="public" returntype="struct">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="delimiter" type="string" required="true">
@@ -3403,7 +3411,7 @@
 		<cfset var exportContent = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<!--- checkAdminAccess --->
@@ -3455,17 +3463,17 @@
 				</cfinvoke>
 
 				<cfif arguments.ms_excel_compatibility IS true>
-					
+
 					<cfset exportContent = "sep=;#chr(10)#"&exportContent>
 
 				</cfif>
-				
+
 			</cfif>
-			
+
 			<cfinclude template="includes/logRecord.cfm">
 
 			<cfset response = {result=true, content=#exportContent#}>
-			
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -3476,23 +3484,23 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- -------------------------- GET LAST ACTIVITY USERS -------------------------------- --->
-	
+
 	<cffunction name="getLastActivityUsers" returntype="struct" access="public">
 		<cfargument name="limit" type="numeric" required="false">
-		
+
 		<cfset var method = "getLastActivityUsers">
-		
+
 		<cfset var response = structNew()>
 
 		<cfset var usersArray = arrayNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
@@ -3502,7 +3510,7 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
 				<cfinvokeargument name="areas_ids" value="#userAreasIds#">
 				<cfinvokeargument name="limit" value="#arguments.limit#">
-				
+
 				<cfinvokeargument name="published" value="false">
 
 				<cfinvokeargument name="withConsultations" value="#APPLICATION.moduleConsultations#">
@@ -3512,7 +3520,7 @@
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
 
 				<cfinvokeargument name="onlyUsers" value="true">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -3530,11 +3538,11 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>		
-		
-					
-	</cffunction>	
+		<cfreturn response>
 
-	
-	
+
+	</cffunction>
+
+
+
 </cfcomponent>

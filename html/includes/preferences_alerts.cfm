@@ -19,7 +19,7 @@ Preferencias de notificaciones
 <div><!--- class="contenedor_fondo_blanco"--->
 
 <cfif clientQuery.force_notifications IS true>
-	
+
 	<div class="alert alert-info"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Su organización tiene deshabilitadas las opciones de preferencias de notificaciones. Contacte con el administrador pará más información.</span></div>
 
 <cfelse>
@@ -31,7 +31,7 @@ Preferencias de notificaciones
 
 	<cfoutput>
 	<form action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUserPreferences" method="post" id="updateUserAlertPreferences"><!---class="form-horizontal"--->
-	
+
 		<div class="form-horizontal"><!--- style="padding-left:10px"--->
 
 			<div class="row">
@@ -43,7 +43,7 @@ Preferencias de notificaciones
 			</div>
 
 			<div class="row">
-				
+
 				<div class="col-sm-12">
 
 					<h4 lang="es">Notificaciones instantáneas</h4>
@@ -90,7 +90,7 @@ Preferencias de notificaciones
 						<div class="col-sm-1" style="text-align:center;">
 							<img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" alt="Nuevo mensaje" />
 						</div>
-						
+
 						<div class="col-sm-11">
 							<label style="margin-bottom:15px;">
 							 	<input type="checkbox" name="notify_new_message" value="true" <cfif preferences.notify_new_message IS true>checked="checked"</cfif> />
@@ -160,7 +160,7 @@ Preferencias de notificaciones
 					</div>
 
 				</cfif>
-					
+
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
@@ -176,7 +176,7 @@ Preferencias de notificaciones
 					</div>
 
 				<cfif APPLICATION.identifier EQ "dp">
-					
+
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
@@ -190,7 +190,7 @@ Preferencias de notificaciones
 							</label>
 						</div>
 					</div>
-					
+
 				</cfif>
 
 				<cfif APPLICATION.modulefilesWithTables IS true>
@@ -205,7 +205,7 @@ Preferencias de notificaciones
 								<span lang="es">Una tipología ha sido creada, modificada o eliminada</span>
 							</label>
 						</div>
-					</div>	
+					</div>
 				</cfif>
 
 				<cfif APPLICATION.moduleConsultations IS true>
@@ -238,12 +238,12 @@ Preferencias de notificaciones
 									<span lang="es">Una publicación ha sido creada, modificada o eliminada</span>
 								</label>
 							</div>
-						</div>	
+						</div>
 						</cfif>
 
 						<div class="row">
 							<div class="col-sm-1" style="text-align:center;">
-								<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" alt="Crear area" />	
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" alt="Crear area" />
 							</div>
 
 							<div class="col-sm-11">
@@ -253,7 +253,7 @@ Preferencias de notificaciones
 									<span lang="es">Un área nueva ha sido creada</span>
 								</label>
 
-							</div>			
+							</div>
 						</div>
 
 						<div class="row">
@@ -262,7 +262,7 @@ Preferencias de notificaciones
 							</div>
 
 							<div class="col-sm-11">
-								
+
 								<div class="row">
 									<div class="col-sm-12">
 
@@ -272,7 +272,7 @@ Preferencias de notificaciones
 										</label>
 
 									</div>
-									
+
 								</div>
 
 								<div class="row">
@@ -287,7 +287,7 @@ Preferencias de notificaciones
 								</div>
 
 							</div>
-						</div>	
+						</div>
 
 
 
@@ -347,9 +347,9 @@ Preferencias de notificaciones
 						          </div>
 						        </div>
 
-						       
-					          	
-					          		
+
+
+
 					      		<!---<div class="row">
 						          <div class="col-sm-5">
 						          	<label>
@@ -415,7 +415,7 @@ Preferencias de notificaciones
 						<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" alt="Nueva lista" />
 						<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
 					</label>
-					</div>--->	
+					</div>--->
 				</cfif>
 
 
@@ -524,7 +524,7 @@ Preferencias de notificaciones
 			</div><!--- END class="row" --->
 
 			<div class="row">
-				
+
 				<div class="col-sm-12">
 
 					<h4 lang="es">Notificaciones periódicas</h4>
@@ -535,7 +535,7 @@ Preferencias de notificaciones
 
 
 			<div class="row">
-				
+
 				<div class="col-sm-12">
 
 					<div class="row">
@@ -571,7 +571,56 @@ Preferencias de notificaciones
 			</div>
 
 			<div class="row">
-				
+
+				<div class="col-sm-12">
+
+					<h4 lang="es">Notificaciones web</h4>
+
+				</div>
+
+			</div>
+
+
+			<!---<div class="row">
+
+				<div class="col-sm-12">
+
+					<div class="row">
+
+						<div class="col-sm-3">
+
+							<label for="notifications_digest_type_id">Enviar un resumen de la actividad:</label>
+
+						</div>
+
+						<div class="col-sm-9">
+
+							<select name="notifications_digest_type_id" id="notifications_digest_type_id" class="form-control">
+								<option value="" lang="es">Nunca</option>
+								<option value="1" <cfif preferences.notifications_digest_type_id IS 1>selected="selected"</cfif> lang="es">Diariamente</option>
+								<option value="2" <cfif preferences.notifications_digest_type_id IS 2>selected="selected"</cfif> lang="es">Semanalmente</option>
+								<option value="3" <cfif preferences.notifications_digest_type_id IS 3>selected="selected"</cfif> lang="es">Mensualmente</option>
+							</select>
+
+						</div>
+
+					</div>
+
+					<p class="help-block" lang="es">
+						<cfif len(preferences.notifications_last_digest_date) GT 0>
+							Fecha de envío de último resumen: #preferences.notifications_last_digest_date#.<br/>
+						</cfif>
+						Este resumen incluye notificaciones relativas a la creación y modificación de elementos de áreas. No incluye notificaciones de acciones tales como el bloqueo o solicitud de aprobación de archivos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios.
+					</p>
+
+				</div>
+
+			</div>--->
+
+
+
+			<div class="row">
+
 				<div class="col-sm-12">
 
 					<h4 lang="es">Categorías de notificaciones</h4>
@@ -586,20 +635,20 @@ Preferencias de notificaciones
 			</div>
 
 			<div class="row">
-				
+
 				<div class="col-sm-12">
 
 					<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserNotificationsCategoriesDisabled" returnvariable="
 userNotificationsDisabledQuery">
-						<cfinvokeargument name="user_id" value="#SESSION.user_id#">				
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
 					<cfif NOT isDefined("itemTypesArray")>
-						
+
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 						</cfinvoke>
 
@@ -621,7 +670,7 @@ userNotificationsDisabledQuery">
 							<cfif itemTypeOptions.recordCount GT 0 AND isNumeric(itemTypeOptions.category_area_id)>
 
 								<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
-									<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">				
+									<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
 									<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 									<cfinvokeargument name="client_dsn" value="#client_dsn#">
 								</cfinvoke>
@@ -643,17 +692,17 @@ userNotificationsDisabledQuery">
 											</cfquery>
 
 											<cfif userNotificationsDisabledItem.recordCount GT 0>
-												
+
 												<cfloop query="userNotificationsDisabledItem">
 
 													<cfset areaInListPosition = ListFind(selectedAreasList,userNotificationsDisabledItem.area_id)>
-													
+
 													<cfif areaInListPosition GT 0>
-														
+
 														<cfset selectedAreasList = listDeleteAt(selectedAreasList, areaInListPosition)>
 
 													</cfif>
-													
+
 												</cfloop>
 
 											</cfif>
@@ -701,7 +750,7 @@ userNotificationsDisabledQuery">
 			</div>
 
 			<div class="row">
-				
+
 				<div class="col-sm-12">
 
 					<h4 lang="es">Deshabilitar todas las notificaciones</h4>
