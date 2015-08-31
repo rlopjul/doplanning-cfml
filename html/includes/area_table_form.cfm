@@ -10,7 +10,7 @@
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
 
 <cfoutput>
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.htmlPath#/language/area_table_content_en.js" charset="utf-8"></script>
  --->
@@ -20,7 +20,7 @@
 <cfif tableTypeId IS NOT 4>
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-	
+
 <cfelse><!--- Users typologies --->
 	<cfinclude template="area_id.cfm">
 
@@ -38,7 +38,7 @@
 
 
 <script>
-	
+
 	$(function() {
 
 		<cfif tableTypeId IS NOT 3 AND len(area_type) GT 0><!--- WEB --->
@@ -47,7 +47,7 @@
 			  format: 'dd-mm-yyyy',
 			  weekStart: 1,
 			  language: 'es',
-			  todayBtn: 'linked', 
+			  todayBtn: 'linked',
 			  autoclose: true
 			});
 
@@ -90,7 +90,7 @@
 	</div>--->
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
 	<input type="hidden" name="tableTypeId" value="#tableTypeId#"/>
-	
+
 	<input type="hidden" name="area_id" value="#table.area_id#"/>
 	<cfif page_type IS 2>
 		<input type="hidden" name="table_id" value="#table_id#"/>
@@ -127,9 +127,9 @@
 				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span> <span lang="es">#tableTypeNameEs#</span>:</label>
 				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#table.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 			</div>
-						
+
 			<div class="col-xs-6">
-				<!--- 
+				<!---
 					<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
 									<div class="input-group" style="width:170px">
 										<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
@@ -156,12 +156,12 @@
 											</cfif>
 										</select>
 									</div> --->
-						
+
 			</div>
 
 			<input type="hidden" name="publication_hour" value="00"/>
 			<input type="hidden" name="publication_minute" value="00"/>
-			
+
 		</div>
 
 		<div class="row">
@@ -171,7 +171,7 @@
 		</div>
 
 		<cfif APPLICATION.publicationValidation IS true AND is_user_area_responsible IS true>
-			
+
 			<div class="row">
 				<div class="col-xs-12 col-sm-12">
 					<div class="checkbox">
@@ -204,9 +204,9 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<cfif tableTypeId IS 3 AND SESSION.client_administrator EQ SESSION.user_id>
-		
+
 	<div class="row">
 		<div class="col-xs-12 col-sm-12">
 			<div class="checkbox">
@@ -219,17 +219,17 @@
 	</div>
 
 	</cfif>
-	
+
 	<!--- <cfdump var="#table#"> --->
-	
+
 	<cfif APPLICATION.publicationScope IS true AND ( tableTypeId IS 1 OR tableTypeId IS 2 )>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopes" returnvariable="getScopesResult">
 		</cfinvoke>
 		<cfset scopesQuery = getScopesResult.scopes>
-		
+
 		<cfif scopesQuery.recordCount GT 0>
-			
+
 			<div class="row">
 				<div class="col-sm-12 col-sm-8">
 					<label for="publication_scope_id" class="control-label"><span lang="es">Ámbito de publicación</span>:</label>
@@ -243,7 +243,30 @@
 			</div>
 
 		</cfif>
-		
+
+	</cfif>
+
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_categories_inputs.cfm">
+
+	<!--- getClient --->
+	<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+		<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+	</cfinvoke>
+
+	<cfif clientQuery.force_notifications IS false>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("table.no_notify") AND table.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
+					</label>
+					<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+				</div>
+			</div>
+		</div>
+
 	</cfif>
 
 
@@ -253,7 +276,7 @@
 			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#URL.area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 		</cfif>
 	</div>
-	
+
 </cfform>
 </cfoutput>
 </div>

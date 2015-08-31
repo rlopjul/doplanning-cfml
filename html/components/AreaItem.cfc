@@ -133,11 +133,11 @@
 		<cfargument name="title" type="string" required="true">
 		<cfargument name="link" type="string" required="false">
 		<cfargument name="link_target" type="string" required="false">
-        <cfargument name="description" type="string" required="false" default="">
-        <cfargument name="parent_id" type="numeric" required="true">
-        <cfargument name="parent_kind" type="string" required="true">
+    <cfargument name="description" type="string" required="false" default="">
+    <cfargument name="parent_id" type="numeric" required="true">
+    <cfargument name="parent_kind" type="string" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
-        <cfargument name="Filedata" type="any" required="false" default="">
+    <cfargument name="Filedata" type="any" required="false" default="">
 		<cfargument name="imagedata" type="any" required="false" default="">
 		<cfargument name="notify_by_sms" type="boolean" required="false">
 		<cfargument name="post_to_twitter" type="boolean" required="false">
@@ -328,14 +328,14 @@
 
 						<!---Aquí el archivo se sube, pero no se marca como que se ha completado (eso se hace después en la llamada a getItemFileStatus--->
 						<cfinvoke component="AreaItemFile" method="uploadItemFile">
-		                    <cfinvokeargument name="item_id" value="#createdItemId#">
-		                    <cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-		                    <cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+		          <cfinvokeargument name="item_id" value="#createdItemId#">
+		          <cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+		          <cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 							<cfinvokeargument name="file_type" value="item_file_html">
 							<cfinvokeargument name="file_id" value="#file_id#">
 							<cfinvokeargument name="file_physical_name" value="#file_physical_name#">
 							<cfinvokeargument name="Filedata" value="#arguments.Filedata#">
-		                </cfinvoke>
+		      	</cfinvoke>
 
 						<cfcatch><!---Este catch se utiliza para cuando un archivo no es una imagen--->
 
