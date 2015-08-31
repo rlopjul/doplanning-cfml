@@ -109,11 +109,12 @@
 				, notify_app_features
 				, no_notifications
 				, notifications_digest_type_id
-
+				, notifications_web_digest_type_id
 				<cfif arguments.parse_dates IS true>
 					, DATE_FORMAT(CONVERT_TZ(notifications_last_digest_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS notifications_last_digest_date
+					, DATE_FORMAT(CONVERT_TZ(notifications_web_last_digest_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS notifications_web_last_digest_date
 				<cfelse>
-					, notifications_last_digest_date
+					, notifications_last_digest_date, notifications_web_last_digest_date
 				</cfif>
 				FROM #arguments.client_abb#_users
 				WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;

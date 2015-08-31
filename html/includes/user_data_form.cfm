@@ -1,4 +1,4 @@
-<!--- 
+<!---
 page_types
 1 create/update user from administration
 2 update user from preferences --->
@@ -46,7 +46,7 @@ page_types
 		        .append('<br/>')
 		        .append($('<span class="text-danger"/>').text(file.error));
 		    }
-		});*/		
+		});*/
 
 	 	$('##telephone').mask('000000000');
 	 	$('##mobile_phone').mask('000000000');
@@ -58,7 +58,7 @@ page_types
 	 	$("##dni").mask('00000000A');
 	 	</cfif>
 	});
-	
+
 </script>
 
 <!--- Importante: este formulario no se envía como formulario HTML, se obtienen sus valores y se envian mediante JavaScript --->
@@ -67,11 +67,11 @@ page_types
 	<input type="hidden" name="user_id" value="#objectUser.user_id#" />
 
 	<cfif page_type IS 1>
-		<input type="hidden" name="adminFields" value="true" />		
+		<input type="hidden" name="adminFields" value="true" />
 	</cfif>
-	
+
 	<div class="row">
-	
+
 		<cfif APPLICATION.identifier NEQ "vpnet">
 
 		<div class="col-sm-3">
@@ -84,23 +84,23 @@ page_types
 				<cfif len(objectUser.image_file) GT 0 AND len(objectUser.image_type)>
 					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&medium=" id="userImage" alt="Imagen del usuario" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" />
 					<br/>
-					
-					<!--- 
+
+					<!---
 					<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/iframes/preferences_user_data.cfm")>
 					<a href="#APPLICATION.htmlComponentsPath#/User.cfc?method=deleteUserImage#url_return_page#" onclick="return confirmAction('eliminar');" id="deleteImageButton" title="Eliminar imagen" class="btn btn-danger btn-xs" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a> --->
-					
+
 					<button type="button" id="deleteImageButton" title="Eliminar imagen" class="btn btn-danger btn-xs" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></button>
-					
+
 				<cfelse>
-					
+
 					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default_medium.png" id="userImage" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
-					
+
 				</cfif>
 
 				--->
 
 					<cfif isNumeric(objectUser.id)>
-						
+
 						<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 							<cfinvokeargument name="user_id" value="#objectUser.id#">
 							<cfinvokeargument name="user_id" value="#objectUser.id#">
@@ -120,14 +120,14 @@ page_types
 						<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default_medium.png" id="userImage" class="img-thumbnail" style="text-align:right; margin-bottom:3px;" alt="Usuario sin imagen" title="Usuario sin imagen" lang="es"/>
 
 					</cfif>
-					
+
 				</div>
 			</div>
 
 		</div>
-	
+
 		<div class="col-sm-9"><!---col-md-offset-1--->
-			
+
 			<div class="row">
 
 				<label class="col-xs-5 col-sm-4 col-md-3 control-label" for="file" lang="es">Imagen del usuario</label>
@@ -136,9 +136,9 @@ page_types
 					<noscript><b>Debe habilitar JavaScript para la subida de archivos y poder guardar cambios de este formulario</b></noscript>
 					<input type="file" name="files[]" id="file" multiple accept="image/*" class="form-control">
 				</div>
-				
+
 			</div>
-			
+
 			<div class="row">
 
 				<label for="family_name" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Nombre</label>
@@ -150,18 +150,18 @@ page_types
 			</div>
 
 			<div class="row">
-			
-				<label for="name" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Apellidos</label> 
+
+				<label for="name" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Apellidos</label>
 
 				<div class="col-xs-7 col-sm-8 col-md-9">
 					<input type="text" name="name" id="name" value="#objectUser.name#" class="form-control"/>
 				</div>
 
-			</div>	
+			</div>
 
 
 			<div class="row">
-		
+
 				<label for="email" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Email</label>
 				<!---<cfif APPLICATION.userEmailRequired IS true>
 					<cfinput type="text" name="email" id="email" value="#objectUser.email#" required="true" validate="email" message="Dirección de email válida requerida" class="form-control"/>
@@ -173,7 +173,7 @@ page_types
 				<!---<label id="email-error" class="label label-danger" for="email" lang="es">Introduzca una dirección de email correcta.</label>--->
 				<!---</cfif>--->
 
-			</div>		
+			</div>
 
 			<cfif APPLICATION.moduleLdapUsers EQ true><!--- LDAP --->
 
@@ -214,7 +214,7 @@ page_types
 				</div>
 
 			</div>
-			
+
 			<div class="row">
 
 				<label for="password_confirmation" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Confirmar contraseña</label>
@@ -228,21 +228,21 @@ page_types
 			<div class="row">
 
 				<label class="col-xs-5 col-sm-4 col-md-3 control-label" for="language" lang="es">Idioma</label>
-				
+
 				<div class="col-xs-7 col-sm-8 col-md-9">
 					<select name="language" id="language" class="form-control">
 						<option value="es" <cfif objectUser.language EQ "es">selected="selected"</cfif>>Español</option>
 						<option value="en" <cfif objectUser.language EQ "en">selected="selected"</cfif>>English</option>
 					</select>
 				</div>
-					
+
 			</div>
 
 			<cfif page_type IS 1>
-				
+
 				<div class="row">
 					<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
-	
+
 						<div class="checkbox">
 							<label>
 								<input type="checkbox" name="internal_user" id="internal_user" value="true" <cfif isDefined("objectUser.internal_user") AND objectUser.internal_user IS true>checked="checked"</cfif> /> <span lang="es">Usuario interno</span>
@@ -251,7 +251,7 @@ page_types
 						</div>
 
 					</div>
-				</div>	
+				</div>
 
 			</cfif>
 
@@ -266,13 +266,13 @@ page_types
 					</div>
 
 				</div>
-			</div>	
+			</div>
 
 			<cfif page_type IS 1>
 
 				<div class="row">
 					<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
-	
+
 						<div class="checkbox">
 							<label>
 								<input type="checkbox" name="enabled" id="enabled" value="true" <cfif isDefined("objectUser.enabled") AND objectUser.enabled IS true>checked="checked"</cfif> /> <span lang="es">Activo</span>
@@ -281,7 +281,7 @@ page_types
 						</div>
 
 					</div>
-				</div>	
+				</div>
 
 			</cfif>
 
@@ -294,7 +294,7 @@ page_types
 				</div>
 
 			</div>
-		
+
 			<div class="row">
 
 				<label for="mobile_phone" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Teléfono móvil</label>
@@ -333,7 +333,7 @@ page_types
 					</div>
 				</div>
 
-			</div>	
+			</div>
 
 			<div class="row">
 
@@ -353,8 +353,8 @@ page_types
 					<input type="url" name="twitter_url" id="twitter_url" value="#objectUser.twitter_url#" class="form-control" title="Introduzca una URL válida" />
 				</div>
 
-			</div>		
-				
+			</div>
+
 			<div class="row">
 
 				<label for="address" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Dirección</label>
@@ -364,11 +364,11 @@ page_types
 				</div>
 
 			</div>
-			
+
 			<cfif page_type IS 1>
 
 				<cfif SESSION.client_abb EQ "hcs">
-					
+
 					<div class="row">
 
 						<label for="perfil_cabecera" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Perfil de cabecera</label>
@@ -430,6 +430,9 @@ page_types
 
 							var typologyPage = "#APPLICATION.htmlPath#/html_content/user_typology_row_form_inputs.cfm?typology="+typologyId;
 
+							var noCacheNumber = generateRandom();
+							typologyPage = typologyPage+'&n='+noCacheNumber;
+
 							if(!isNaN(rowId)){
 								typologyPage = typologyPage+"&row="+rowId;
 							}
@@ -460,10 +463,10 @@ page_types
 
 					});
 
-				</script>	
+				</script>
 
-				<cfif typologies.recordCount IS 1>
-					
+				<cfif typologies.recordCount IS 1 OR page_type IS 2>
+
 					<input type="hidden" name="typology_id" id="typology_id" value="#typologies.id#">
 
 				<cfelse>
@@ -489,27 +492,27 @@ page_types
 
 
 		</div>
-			
+
 		<!---<div class="fileupload fileupload-new" data-provides="fileupload">
 		  <div class="input-group">
 			<div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="##" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
 		  </div>
 		</div>--->
-			
+
 		</cfif>
-		
-		
+
+
 		<div class="col-sm-5 col-md-5"><!--- col-md-offset-1--->
 
 
 		</div>
-		
+
 	</div>
-	
-	<!--- 
+
+	<!---
 	<div>
 		<input type="submit" class="btn btn-primary" name="modify" value="Guardar" lang="es" />
 	</div> --->
-	
+
 </form>
 </cfoutput>

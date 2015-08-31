@@ -5,16 +5,16 @@
 <cfoutput>
 
 <script>
-	
-	
+
+
 	<cfif read_only IS false>
-	
+
 	$(function() {
 
 		<cfif itemTypeId IS 5 OR itemTypeId IS 6 OR itemTypeId IS 4><!---Events, Tasks, News--->
 
 			$('##start_date').datepicker({
-			  format: 'dd-mm-yyyy', 
+			  format: 'dd-mm-yyyy',
 			  autoclose: true,
 			  weekStart: 1,
 			  <cfif SESSION.user_language EQ "es">
@@ -24,13 +24,13 @@
 			  </cfif>
 			  todayBtn: 'linked'
 				}).on('changeDate', function(ev){
-					var startDateVal = $('##start_date').val();	
+					var startDateVal = $('##start_date').val();
 			        $('##end_date').datepicker('setStartDate', startDateVal);
 			        if ( ev.date.valueOf() > $('##end_date').data('datepicker').date.valueOf() ){
 			            $('##end_date').datepicker('update', startDateVal);
 			        }
 		    	});
-		
+
 			$('##end_date').datepicker({
 			  format: 'dd-mm-yyyy',
 			  weekStart: 1,
@@ -39,9 +39,9 @@
 			  <cfelse>
 			  	language: 'en',
 			  </cfif>
-			  todayBtn: 'linked', 
+			  todayBtn: 'linked',
 			  autoclose: true,
-			  startDate: $('##start_date').val() 
+			  startDate: $('##start_date').val()
 			});
 
 		</cfif>
@@ -56,7 +56,7 @@
 			  <cfelse>
 			  	language: 'en',
 			  </cfif>
-			  todayBtn: 'linked', 
+			  todayBtn: 'linked',
 			  autoclose: true
 			});
 
@@ -65,44 +65,44 @@
 		<cfif itemTypeId IS 8>
 			subTypeChange($('##sub_type_id').val());
 		</cfif>
-		
+
 	});
-	
-	
+
+
 	function checkDates(startDateFieldName, endDateFieldName) {
-		
-		var startDateVal = $("input:text[name="+startDateFieldName+"]").val();	
-		var endDateVal = $("input:text[name="+endDateFieldName+"]").val();	
-		
+
+		var startDateVal = $("input:text[name="+startDateFieldName+"]").val();
+		var endDateVal = $("input:text[name="+endDateFieldName+"]").val();
+
 		var startDateParts = startDateVal.split('-');
 		var endDateParts = endDateVal.split('-');
-		
+
 		//Comprueba que el año tenga 4 cifras
 		//(Los años de 2 cifras generan fechas incorrectas al guardarse en MySQL)
 		if(startDateParts[2].length != 4 || endDateParts[2].length != 4)
 			return false;
-		
+
 		return true;
-		
+
 	}
 
 	function openUserSelector(){
 
 		 return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
 	}
-	
+
 	function setSelectedUser(userId, userName) {
-				
+
 		document.getElementById("recipient_user").value = userId;
 		document.getElementById("recipient_user_full_name").value = userName;
-		/*$("##recipient_user").val(userId); 
+		/*$("##recipient_user").val(userId);
 		$("##recipient_user_name").val(userName); */
 	}
-	
+
 
 	function subTypeChange(subTypeId){
 
-		if(subTypeId == 1){ 
+		if(subTypeId == 1){
 			$("##identifierLabel").text("PubMed ID");
 			$("##openInPubMedButton").show();
 			$("##getPublicationDataButton").show();
@@ -126,9 +126,9 @@
 	}
 
 	function getPublicationData(publicationId){
-					
+
 		if($.isNumeric(publicationId)){
-		
+
 			showLoadingPage(true);
 
 			<!---
@@ -137,7 +137,7 @@
 			Con PubMed no funciona, con otras páginas sí.
 			Está quitado el plugin ya que no es necesario para peticiones en el mismo servidor.
 			--->
-			
+
 			$.ajax({
 			   type: "GET",
 			   //url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi&db=pubmed&id="+publicationId+"&retmode=xml",
@@ -155,7 +155,7 @@
 
 			   }
 			 });
-				 
+
 		}else{
 			alert(window.lang.translate("PubMed Id no válido"));
 		}
@@ -163,10 +163,10 @@
 	}
 
 	function handleXmlPublicationResponse(response){
-			
+
 		var xmlDoc = $.parseXML($.trim(response));
 		var jXml = $(xmlDoc);
-		
+
 		if(jXml.find("PubmedArticleSet").length != 0) {
 
 			var jTitle = jXml.find("PubmedArticleSet").find("PubmedArticle").find("MedlineCitation").find("Article").find("ArticleTitle");
@@ -176,35 +176,35 @@
 			var jAuthors = jXml.find("PubmedArticleSet").find("PubmedArticle").find("MedlineCitation").find("Article").find("AuthorList").find("Author");
 			var jJournal = jXml.find("PubmedArticleSet").find("PubmedArticle").find("MedlineCitation").find("MedlineJournalInfo").find("MedlineTA");
 			var eLocationId = jXml.find("PubmedArticleSet").find("ELocationID");
-					
+
 			var authors = "";
-			
+
 			jAuthors.each(function(){
-			
-				var jAuthor = $(this);  
-				
+
+				var jAuthor = $(this);
+
 				var author = jAuthor.find("FirstName").text();
-				
+
 				var lastName = jAuthor.find("LastName").text();
-				
+
 				if(author != "" && lastName != "")
 					author += " ";
-				
+
 				author += lastName;
-				
+
 				var initials = jAuthor.find("Initials").text();
-				
+
 				if(author != "" && initials != "")
 					author += " ";
-					
+
 				author += initials;
-				
+
 				if(authors != "" && author != "")
 					authors += ", ";
 				authors += author;
-				
+
 			});
-			
+
 
 			if( $("##item_title").val().length == 0 )
 				$("##item_title").val(jTitle.text());
@@ -221,7 +221,7 @@
 			if( jMonth.text().length > 0 ) {
 				publicationContent = publicationContent+jMonth.text()+' ';
 			}
-			
+
 			if( $.isNumeric(jYear.text()) ) {
 				publicationContent = publicationContent+jYear.text();
 			}
@@ -235,49 +235,49 @@
 			publicationContent = publicationContent+'<p>'+jAbstract.text()+'</p>';
 
 			editor.setData(publicationContent);
-				
+
 		}else{
 			alert("No se han encontrado datos relacionados con este id");
 		}
-						
+
 		showLoadingPage(false);
 	}
 	</cfif>
 
 
 	<cfif isDefined("objectItem.id") AND read_only IS false>
-				
+
 		function deleteAttachedFile() {
-		
+
 			if(confirmAction('eliminar el archivo adjunto')) {
-			
+
 				goToUrl("#delete_attached_file_action#&item_id=#objectItem.id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#objectItem.id#')#");
-				
+
 			}
 			return false;
 		}
-		
+
 		function deleteAttachedImage() {
-		
+
 			if(confirmAction('eliminar la imagen adjunta')) {
-			
+
 				goToUrl("#delete_attached_image_action#&item_id=#objectItem.id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#objectItem.id#')#");
-				
+
 			}
 			return false;
 		}
-		
+
 	</cfif>
 
 	</cfif><!--- END read_only IS false --->
-	
+
 </script>
 
 
 <script>
 	var railo_custom_form;
 
-	if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+	if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 		railo_custom_form = new LuceeForms('item_form');
 	else
 		railo_custom_form = new RailoForms('item_form');
@@ -320,7 +320,7 @@
 	</cfif>
 </cfif>
 <cfif itemTypeId IS 5 OR itemTypeId IS 8>
-	<cfset t_price = "Precio">
+	<cfset t_price = "Valor">
 </cfif>
 <cfif itemTypeId IS 7 OR itemTypeId IS 8>
 	<cfset t_identifier = "Identificador/Número">
@@ -340,7 +340,7 @@
 
 <cfif itemTypeId IS 8>
 <div class="row">
-	
+
 	<div class="col-md-6">
 
 		<label class="control-label" for="sub_type_id" id="subTypeLabel"><span lang="es">#t_sub_type#</span> <span lang="es">#itemTypeNameEs#</span> *</label>
@@ -348,7 +348,7 @@
 		<cfinvoke component="#APPLICATION.componentsPath#/ItemSubTypeManager" method="getSubTypes" returnvariable="subTypeQuery">
 			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 		</cfinvoke>
-		
+
 		<select name="sub_type_id" id="sub_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif> onchange="subTypeChange($('##sub_type_id').val());">
 			<cfloop query="subTypeQuery">
 				<option value="#subTypeQuery.sub_type_id#" lang="es" <cfif objectItem.sub_type_id IS subTypeQuery.sub_type_id>selected="selected"</cfif>>#subTypeQuery.sub_type_title_es#</option>
@@ -387,7 +387,7 @@
 			<!---<cfif len(objectItem.publication_time) IS 0>
 				<cfset objectItem.publication_time = createTime(0,0,0)>
 			</cfif>--->
-			
+
 			<cfset publication_hour = timeFormat(objectItem.publication_date, "HH")>
 			<cfset publication_minute = timeFormat(objectItem.publication_date, "mm")>
 
@@ -403,9 +403,9 @@
 			<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span> <span lang="es">#itemTypeNameEs#</span>:</label>
 			<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectItem.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 		</div>
-					
+
 		<div class="col-xs-6">
-			<!--- 
+			<!---
 				<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
 							<div class="input-group" style="width:170px">
 								<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
@@ -432,14 +432,14 @@
 									</cfif>
 								</select>
 							</div> --->
-					
+
 		</div>
 
-		
+
 		<input type="hidden" name="publication_hour" value="00"/>
 		<input type="hidden" name="publication_minute" value="00"/>
-		
-		
+
+
 	</div>
 
 	<cfif isDefined("area_type")>
@@ -452,11 +452,11 @@
 	</cfif>
 
 	<cfif APPLICATION.publicationValidation IS true>
-		
+
 		<cfif isDefined("is_user_area_responsible")><!--- Está definida el área en la que se va a publicar el elemento --->
-			
+
 			<cfif is_user_area_responsible IS true>
-			
+
 				<div class="row">
 					<div class="col-xs-12 col-sm-8">
 						<div class="checkbox">
@@ -475,7 +475,7 @@
 			<input type="hidden" name="publication_validated" value="false"/>
 			<small class="help-block" lang="es">La publicación del elemento deberá ser aprobada en cada una de las áreas en las que se publique.</small>
 
-		</cfif>		
+		</cfif>
 
 	</cfif>
 
@@ -490,7 +490,7 @@
 				<cfset objectItem.creation_date = left(objectItem.creation_date, findOneOf(" ", objectItem.creation_date))>
 			</cfif>
 
-			<label class="control-label" for="creation_date" lang="es"><span lang="es">#t_creation_date#</span> <span lang="es">#itemTypeNameEs#</span>:</label>		
+			<label class="control-label" for="creation_date" lang="es"><span lang="es">#t_creation_date#</span> <span lang="es">#itemTypeNameEs#</span>:</label>
 			<cfinput type="text" name="creation_date" id="creation_date" class="form-control" value="#objectItem.creation_date#" required="true" message="#t_creation_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 
 		</div>
@@ -536,15 +536,15 @@
 		<label class="control-label" for="start_date"><span lang="es">#t_start_date#</span> <span lang="es">#itemTypeNameEs#</span>: *</label>
 		<cfinput type="text" name="start_date" id="start_date" class="form-control input_datepicker" value="#objectItem.start_date#" required="true" message="#t_start_date# válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 	</div>
-	
+
 	<cfif itemTypeId IS 5>
-		
+
 		<cfif isDefined("objectItem.start_time")>
-			
+
 			<cfif len(objectItem.start_time) IS 0>
 				<cfset objectItem.start_time = createTime(0,0,0)>
 			</cfif>
-			
+
 			<cfset start_hour = hour(objectItem.start_time)>
 			<cfset start_minute = minute(objectItem.start_time)>
 
@@ -554,7 +554,7 @@
 			<cfset start_minute = objectItem.start_minute>
 
 		</cfif>
-		
+
 		<div class="col-xs-6">
 			<label class="control-label" for="start_hour"><span lang="es">#t_start_time#</span>:</label>
 			<div class="input-group" style="width:180px">
@@ -571,11 +571,11 @@
 						<option value="#minutes#" <cfif minutes EQ start_minute>selected="selected"</cfif>>#minutes#</option>
 					</cfloop>
 				</select>
-			</div>	
+			</div>
 		</div>
-	
+
 	</cfif>
-	
+
 </div>
 
 <div class="row">
@@ -586,13 +586,13 @@
 	</div>
 
 	<cfif itemTypeId IS 5>
-		
+
 		<cfif isDefined("objectItem.end_time")>
 
 			<cfif len(objectItem.end_time) IS 0>
 				<cfset objectItem.end_time = createTime(0,0,0)>
 			</cfif>
-		
+
 			<cfset end_hour = hour(objectItem.end_time)>
 			<cfset end_minute = minute(objectItem.end_time)>
 
@@ -602,7 +602,7 @@
 			<cfset end_minute = objectItem.end_minute>
 
 		</cfif>
-		
+
 		<div class="col-xs-6">
 			<label class="control-label" for="end_hour"><span lang="es">Hora de fin</span>: </label>
 			<div class="input-group" style="width:180px">
@@ -621,7 +621,7 @@
 				</select>
 			</div>
 		</div>
-	
+
 	</cfif>
 </div>
 
@@ -656,7 +656,7 @@
 </div>
 
 <div class="row">
-    
+
     <div class="col-md-12">
 	    <div class="checkbox">
 
@@ -668,7 +668,7 @@
 
 		</div>
 	</div>
-	
+
 </div>
 
 </cfif>
@@ -677,11 +677,11 @@
 
 	<!---<label class="control-label">##</label>--->
 	<div class="row">
-    
+
     	<div class="col-xs-6 col-md-3">
     		<label class="control-label" for="identifier" id="identifierLabel"><span lang="es">#t_identifier#</span> <span lang="es">#itemTypeNameEs#</span>: *</label>
 			<cfinput type="text" name="identifier" id="identifier" class="form-control" value="#objectItem.identifier#" placeholder="Identificador" passthrough="#passthrough#" lang="es">
-			
+
 		</div>
 
 		<!---<div class="col-xs-6 col-md-3">
@@ -705,7 +705,7 @@
 	<div class="row" id="fieldPrice">
 		<div class="col-xs-6 col-md-3">
 			<label class="control-label" for="price"><span lang="es">#t_price#</span> <span lang="es">#itemTypeNameEs#</span>: *</label>
-			<cfinput type="text" name="price" id="price" class="form-control" value="#objectItem.price#" required="true" validate="float" message="#t_price# debe ser un decimal" passthrough="#passthrough#" placeholder="Precio">
+			<cfinput type="text" name="price" id="price" class="form-control" value="#objectItem.price#" required="true" validate="float" message="#t_price# debe ser un número entero o decimal" passthrough="#passthrough#" placeholder="Valor">
 		</div>
 	</div>
 </cfif>
@@ -726,7 +726,7 @@
 		</div>
 
 	</cfif>
-	
+
 	<cfif isDefined("objectItem.area_editable") AND objectItem.area_editable IS true>
 		<div class="row">
 			<div class="col-xs-12">
@@ -768,32 +768,32 @@
 <div class="row">
 	<div class="col-xs-12">
 
-		<div style="height:10px;"><!-- --></div>	
+		<div style="height:10px;"><!-- --></div>
 
 	</div>
 </div>
 
 <cfif read_only IS false>
-	
+
 	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9 AND itemTypeId IS NOT 20>
-	
+
 		<cfif isDefined("objectItem.attached_file_name") AND len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
-			
+
 			<cfif isNumeric(objectItem.id)><!---No es para copiar elemento--->
-				
+
 				<div class="row">
 					<div class="col-xs-12">
 
 						<label class="control-label" lang="es">Archivo adjunto</label> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_file_name#</a>
-				
+
 						<button onclick="return deleteAttachedFile()" class="btn btn-xs btn-danger"><i class="icon-remove"></i> <span lang="es">Eliminar archivo adjunto</span></button>
-				
+
 					</div>
 				</div>
 
-			
+
 			<cfelse><!---Es para copiar elemento--->
-			
+
 				<cfif itemTypeId IS NOT 3 AND isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0><!---No es enlace y el archivo está definido--->
 					<div class="row">
 						<div class="col-xs-12">
@@ -804,16 +804,16 @@
 								</label>
 
 							</div>
-							
+
 						</div>
 					</div>
 				</cfif>
-			
+
 			</cfif>
 
-			
+
 		<cfelse>
-			
+
 			<div class="row">
 				<div class="col-md-12">
 
@@ -823,29 +823,29 @@
 				</div>
 			</div>
 		</cfif>
-	
+
 	</cfif>
-	
+
 	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 20>
-	
+
 		<cfif isDefined("objectItem.attached_image_name") AND len(objectItem.attached_image_name) GT 0 AND objectItem.attached_image_name NEQ "-">
-		
+
 			<cfif isNumeric(objectItem.id)><!---No es para copiar elemento--->
-			
+
 				<div class="row">
 					<div class="col-md-12">
 
 						<label class="control-label" lang="es">Imagen adjunta</label> <a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)">#objectItem.attached_image_name#</a>
-					
+
 						<button onclick="return deleteAttachedImage()" class="btn btn-xs btn-danger"><i class="icon-remove"></i> <span lang="es">Eliminar imagen adjunta</span></button>
 
-					</div>	
+					</div>
 				</div>
-			
+
 			<cfelse><!---Es para copiar elemento--->
-			
+
 				<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0><!---No es mensaje y el archivo está definido--->
-					
+
 					<div class="row">
 						<div class="col-md-12">
 
@@ -854,9 +854,9 @@
 
 						</div>
 					</div>
-						
+
 				</cfif>
-			
+
 			</cfif>
 		<cfelse>
 			<div class="row">
@@ -872,13 +872,13 @@
 				</div>
 			</div>
 		</cfif>
-	
+
 	</cfif>
 </cfif>
 
 
 <cfif itemTypeId IS NOT 20><!--- IS NOT DoPlanning Document --->
-	
+
 	<div class="row">
 
 		<div class="col-md-12">
@@ -887,11 +887,11 @@
 			<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
 
 		</div>
-		
+
 	</div>
 
 	<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7><!---IS NOT Messages, Tasks OR Consultations--->
-		
+
 	<div class="row">
 
 		<div class="col-md-6">
@@ -903,7 +903,7 @@
 			</select>
 
 		</div>
-		
+
 	</div>
 
 	</cfif>
@@ -929,7 +929,7 @@
 		<div class="col-md-12">
 
 			<label class="control-label" for="categories_ids" lang="es">Categorías</label>
-			
+
 		</div>
 
 	</div>
@@ -939,7 +939,7 @@
 		<div class="col-sm-11 col-sm-offset-1" style="margin-bottom:10px">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
-				<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">				
+				<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -953,7 +953,7 @@
 				<cfelse>
 					<cfset selectedAreasList = "">
 				</cfif>
-				
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
 					<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
 					<cfinvokeargument name="subAreas" value="#subAreas#">
@@ -977,7 +977,7 @@
 
 				<p class="help-block" lang="es">Este elemento tiene un área para categorías seleccionada pero esta área no tiene subareas para definir las categorías</p>
 
-			</cfif>	
+			</cfif>
 
 		</div>
 
@@ -994,17 +994,17 @@
 		<div class="col-md-12"></div>
 
 	</div>
-		
+
 	<div class="row">
 
 		<div class="col-md-12">
 
 			<label class="control-label" for="iframe_url"><span lang="es">#t_iframe_url#</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
-			
+
 			<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="#t_iframe_url# válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
-			
+
 		</div>
-		
+
 	</div>
 
 	<div class="row">
@@ -1012,10 +1012,10 @@
 		<div class="col-md-6">
 
 			<label class="control-label" for="iframe_display_type_id"><span lang="es">#t_iframe_display_type#</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
-		
+
 			<cfinvoke component="#APPLICATION.componentsPath#/IframeDisplayTypeManager" method="getDisplayTypes" returnvariable="iframeDisplayTypeQuery">
 			</cfinvoke>
-	
+
 			<select name="iframe_display_type_id" id="iframe_display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
 				<cfloop query="iframeDisplayTypeQuery">
 					<option value="#iframeDisplayTypeQuery.iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframeDisplayTypeQuery.iframe_display_type_id>selected="selected"</cfif>>#iframeDisplayTypeQuery.iframe_display_type_title_es#</option>
@@ -1032,13 +1032,13 @@
 
 	<div class="form-group">
 		<label class="control-label" for="iframe_width">#t_iframe_width#</label>
-		
+
 		<cfinput type="text" name="iframe_width" id="iframe_width" value="" required="true" message="#t_iframe_width# válido requerido" validate="integer" passthrough="#passthrough#" style="width:55px;"><!---#objectItem.iframe_width#--->
-		
+
 		&nbsp;<label class="control-label" for="iframe_height">#t_iframe_height#</label>
-		
+
 		<cfinput type="text" name="iframe_height" id="iframe_height" value="" required="true" message="#t_iframe_height# válido requerido" validate="integer" passthrough="#passthrough#" style="width:55px;">
-		
+
 	</div>
 	--->
 
@@ -1054,13 +1054,13 @@
 <cfif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News--->
 
 	<!---<cfif SESSION.client_abb EQ "hcs">
-		
+
 		<div class="row">
-		
+
 			<div class="col-md-6">
 
 				<label class="control-label" lang="es">#t_position#</label>
-					
+
 				<cfinput type="text" name="position" id="position" value="#objectItem.position#" required="true" validate="integer" message="#t_position# debe ser un número entero" style="width:50px;" passthrough="#passthrough#">
 
 			</div>
@@ -1071,14 +1071,14 @@
 
 	<cfif itemTypeId IS 2>
 	<div class="row">
-	
+
 		<div class="col-md-6">
 
 			<label class="control-label"><span lang="es">#t_display_type#</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/DisplayTypeManager" method="getDisplayTypes" returnvariable="displayTypeQuery">
 			</cfinvoke>
-			
+
 			<select name="display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
 				<cfloop query="displayTypeQuery">
 					<option value="#displayTypeQuery.display_type_id#" <cfif objectItem.display_type_id IS displayTypeQuery.display_type_id>selected="selected"</cfif>>#displayTypeQuery.display_type_title_es#</option>
@@ -1097,7 +1097,7 @@
 <cfif APPLICATION.identifier NEQ "dp"><!---SMS Deshabilitado para DoPlanning--->
 	<cfif objectUser.sms_allowed IS true>
 		<cfoutput>
-		
+
 		<div class="row">
 			<div class="col-md-12">
 
@@ -1107,23 +1107,32 @@
 
 			 </div>
 		</div>
-		
+
 		</cfoutput>
 	</cfif>
 </cfif>
 
 <cfif itemTypeId NEQ 1>
-	
-	<div class="row">
-		<div class="col-md-12">
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectItem.no_notify") AND objectItem.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
-				</label>
-				<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+
+	<!--- getClient --->
+	<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+		<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+	</cfinvoke>
+
+	<cfif clientQuery.force_notifications IS false>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectItem.no_notify") AND objectItem.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
+					</label>
+					<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+				</div>
 			</div>
 		</div>
-	</div>
+
+	</cfif>
 
 </cfif>
 
@@ -1142,14 +1151,14 @@
 
 		$('#summernote').summernote({
 			height: 300
-			
+
 			<!---
 			Esto da problemas en Internet Explorer
 			, onChange: function(contents, $editable) {
 			    preventClose = true;
 			}
 			--->
-			
+
 			, disableDragAndDrop: true,
 			maximumImageFileSize: 40960,
 			toolbar: [
@@ -1186,6 +1195,6 @@
 			<cfinvokeargument name="height" value="500"/>
 			<cfinvokeargument name="toolbar" value="DP_document"/>
 		</cfif>
-	</cfinvoke>	
+	</cfinvoke>
 
 </cfif>

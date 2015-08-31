@@ -1,10 +1,10 @@
-ALTER TABLE `dp_hcs`.`hcs_areas_users` 
+ALTER TABLE `dp_hcs`.`hcs_areas_users`
 ADD COLUMN `association_date` DATETIME NULL DEFAULT NULL AFTER `user_id`;
 
-ALTER TABLE `dp_hcs`.`hcs_users` 
+ALTER TABLE `dp_hcs`.`hcs_users`
 ADD COLUMN `no_notifications` TINYINT(1) NOT NULL DEFAULT 0 AFTER `notify_app_features`;
 
-ALTER TABLE `dp_hcs`.`hcs_users` 
+ALTER TABLE `dp_hcs`.`hcs_users`
 ADD COLUMN `notifications_digest_type_id` INT(11) NULL AFTER `no_notifications`,
 ADD COLUMN `notifications_last_digest_date` DATETIME NULL AFTER `notifications_digest_type_id`;
 
@@ -42,12 +42,15 @@ CREATE TABLE `hcs_users_notifications_categories_disabled` (
   CONSTRAINT `FK_hcs_users_notifications_categories_disabled_1` FOREIGN KEY (`user_id`) REFERENCES `hcs_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `hcs_users_notifications_webs` (
+/*CREATE TABLE `hcs_users_notifications_webs` (
   `user_id` int(11) NOT NULL,
   `web_id` int(11) NOT NULL,
   PRIMARY KEY (`user_id`,`web_id`),
   KEY `FK_hcs_users_notifications_webs_2_idx` (`web_id`),
   CONSTRAINT `FK_hcs_users_notifications_webs_1` FOREIGN KEY (`user_id`) REFERENCES `hcs_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK_hcs_users_notifications_webs_2` FOREIGN KEY (`web_id`) REFERENCES `hcs_webs` (`web_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;*/
 
+ALTER TABLE `dp_hcs`.`hcs_users`
+ADD COLUMN `notifications_web_digest_type_id` INT(11) NULL DEFAULT NULL AFTER `notifications_last_digest_date`,
+ADD COLUMN `notifications_web_last_digest_date` DATETIME NULL DEFAULT NULL AFTER `notifications_web_digest_type_id`;

@@ -23,7 +23,7 @@ Lang.prototype.pack.en = {
 		"Usuario o contraseña incorrecta.":"Incorrect user or password",
 		"Para una mejor experiencia con DoPlanning recomendamos el uso de un navegador moderno distinto a Internet Explorer":"For the best experience with DoPlanning we recommend using a different browser than Internet Explorer",
 		/*END login*/
-		
+
 		/*remember_password.cfm*/
 		"es" : "en",
 		"Obtener una nueva contraseña para DoPlanning":"Get a new password for DoPlanning",
@@ -53,7 +53,7 @@ Lang.prototype.pack.en = {
 		"Administración":"Administration",
 		"Datos personales":"Personal data",
 		"Notificaciones":"Notifications",
-		
+
 		"Lo último":"Last items",
 		"VER":"VIEW",
 		"Filtrar":"Filter",
@@ -115,7 +115,7 @@ Lang.prototype.pack.en = {
 		"URL relativa en la <b>web</b>:":"Relative URL on the <b>web</b>:",
 		"URL relativa en la <b>intranet</b>:":"Relative URL on the <b>intranet</b>:",
 		"Ruta:":"Path:",
-		
+
 		"Todos los elementos del área":"All area elements",
 		"Mensajes del área":"Area messages",
 		"Archivos del área":"Area files",
@@ -134,7 +134,7 @@ Lang.prototype.pack.en = {
 		"Messenger del área":"Area messenger",
 		"Acceder a Reunión virtual del área (SOLO para PCs)":"Virtual meeting (only for PCs)",
 		"Acceder a Presentación virtual del área (SOLO PCs)":"Virtual presentation (only for PCs)",
-		
+
 		"Nuevo elemento":"New element",
 		"Nuevo Mensaje":"New Message",
 		"Nuevo Archivo":"New File",
@@ -148,11 +148,11 @@ Lang.prototype.pack.en = {
 		"Nuevo Formulario":"New Form",
 		"Nueva Publicación":"New Publication",
 		"Nuevo Documento DoPlanning":"New DoPlanning Document",
-		
+
 		"Subir nuevo archivo":"Upload new file",
 		"Asociar Archivo":"Associate File",
 		"Asociar archivo existente":"Associate existing file",
-		
+
 		"Modo árbol":"Tree mode",
 		"Modo lista":"List mode",
 		"Modo completo":"Full mode",
@@ -213,7 +213,7 @@ Lang.prototype.pack.en = {
 		"Ver":"View",
 
 
-		
+
 		/*area_item_new_content*/
 		"Nuevo Mensaje":"New Message",
 		"Nuevo Evento":"New Event",
@@ -227,7 +227,7 @@ Lang.prototype.pack.en = {
 		"Nuevo Documento DoPlanning":"New DoPlanning Document",
 		"Nueva Tipología de archivo":"New File Typology",
 		/*END area_item_new_content*/
-		
+
 		/*area_item_modify_content*/
 		"Modificar Mensaje":"Modify Message",
 		"Modificar Evento":"Modify Event",
@@ -244,7 +244,7 @@ Lang.prototype.pack.en = {
 		"Archivo eliminado.":"File deleted.",
 		"Imagen eliminada.":"Image deleted.",
 		/*END area_item_modify_content*/
-		
+
 		"Asunto":"Subject",
 		"Título":"Title",
 		"Fecha de creación":"Creation date",
@@ -282,6 +282,7 @@ Lang.prototype.pack.en = {
 		"Obtener datos de PubMed":"Get data from PubMed",
 		"PubMed Id no válido":"Invalid PubMed Id",
 		"Precio":"Price",
+		"Valor":"Value",
 
 		"Registros":"Records",
 		"Campos":"Fields",
@@ -314,7 +315,7 @@ Lang.prototype.pack.en = {
 		"Selección de área":"Area selection",
 		"Nueva vista":"New view",
 		"Haga clic en Nueva vista para crear una nueva vista.":"Click in New view to create a new view.",
-		
+
 		"El archivo utilizado para realizar esta importación deberá tener las siguientes características:":"The import file must have the following features:",
 		"-Tipo de archivo:":"-File type:",
 		".csv o .txt":".csv or .txt",
@@ -334,7 +335,7 @@ Lang.prototype.pack.en = {
 		"Campos de listas con selección múltiple":"Multiple selection list fields",
 		"los valores seleccionados de estos campos deberán delimitarse por ; y delimitando a su vez el campo que contiene estos valores por \"":"the selected values for these fields must be delimited with ; and conversely delimiting the field containing these values with \"",
 		"Borrar registros existentes en el Formulario":"Delete existing fields in the Form",
-		
+
 		"aplicándole una máscara, y posteriormente seleccionar esta opción en la importación para que se tenga en cuenta la máscara al realizar la importación.":"by applying a mask and afterwards selecting this option in the import, in order to use the mask during the import process.",
 		"definición de los campos":"field definition",
 		"Si los decimales usan otro formato distinto, como por ejemplo separar la cifra decimal por coma en lugar de punto, debe especificarlo primero en la":"If decimals use a different format, such as comma separation of the decimal cypher, you must specify it first in the",
@@ -352,8 +353,8 @@ Lang.prototype.pack.en = {
 		"No se enviará notificación de los nuevos registros a los usuarios.":"No notification of the new records will be sent to users.",
 		"Una vez pulsado el botón \"Importar registros\" debe esperar hasta que se complete la operación.":"Once the \"Import records\"  button has been clicked, you must wait until the process is completed.",
 
-		
-		
+
+
 		"Archivo":"File",
 		"Archivo adjunto:":"Attached file:",
 		"Archivo adjunto":"Attached file",
@@ -363,13 +364,13 @@ Lang.prototype.pack.en = {
 		"Imagen adjunta":"Attached image",
 		"Eliminar archivo adjunto":"Delete attached file",
 		"Eliminar imagen adjunta":"Delete attached image",
-		
+
 		"* Campos obligatorios.":"* Required fields.",
-			
+
 		"Enviando...":"Sending...",
 		"Cargando...":"Loading...",
 		"Fechas incorrectas. Compruebe que la fecha de fin del evento es igual o posterior a la fecha de inicio y tiene el formato adecuado.":"Incorrect dates. Make sure the event ending date is on or after the start date and has the proper format.",
-		
+
 		"Tiene texto sin enviar, si abandona esta página lo perderá":"You have text without send, if you leave this page you will lose it",
 
 		"Documento editable por los usuarios del área":"The document can be edited by area users",
@@ -381,17 +382,17 @@ Lang.prototype.pack.en = {
 		"Nuevo propietario":"New owner",
 		"Se enviará notificación por email del cambio al nuevo propietario y al anterior.":"An email notification will be sent both to the new owner and to the preceding one",
 
-		
+
 		/*functions.js*/
 		"¿Seguro que desea ":"Are you sure you want ",
 		"?. Esta acción no es reversible.":"?. This action is not reversible.",
-		
+
 		"eliminar":"to delete",
 		"eliminar el archivo adjunto":"to delete the attached file",
 		"eliminar la imagen adjunta":"to delete the attached image",
 		"cerrar la Consulta":"to close the Consultation",
 		/*END functions.js*/
-		
+
 		/*area_item_content*/
 		"Modificar":"Modify",
 		"Responder":"Reply",
@@ -409,7 +410,7 @@ Lang.prototype.pack.en = {
 		"Desbloquear":"Unlock",
 		"Exportar para calendario externo":"Export to external calendar",
 		"Eportar en formato iCalendar (.ics)":"Export in iCalendar format (.ics)",
-		
+
 		"Asignada a:":"Asigned to:",
 		"Estado:":"State:",
 		"Enviada":"Sent",
@@ -439,11 +440,11 @@ Lang.prototype.pack.en = {
 		"Tipo:":"Type:",
 		"Enlace a PubMed:":"PubMed link:",
 		/*END area_item_content*/
-		
+
 		/*area_item_copy.cfm*/
 		"Copiar":"Copy",
 		"a áreas":"to areas",
-		
+
 		"Copiar Mensaje a áreas seleccionadas":"Copy Message to selected areas",
 		"Copiar Evento a áreas seleccionadas":"Copy Event to selected areas",
 		"Copiar Tarea a áreas seleccionadas":"Copy Task to selected areas",
@@ -452,17 +453,17 @@ Lang.prototype.pack.en = {
 		"Copiar Noticia a áreas seleccionadas":"Copy News item to selected areas",
 		"Copiar Publicación a áreas seleccionadas":"Copy Publication to selected areas",
 		"Copiar Documento DoPlanning a áreas seleccionadas":"Copy DoPlanning Document to selected areas",
-		
+
 		"Seleccione las áreas a las que desea copiar el":"Select the areas you want to copy the",
 		"Seleccione las áreas a las que desea copiar la":"Select the areas you want to copy the",
-		
+
 		"Editar contenido":"Edit content",
 		"Áreas a las que copiar":"Áreas to copy",
 		"Debe seleccionar al menos un área":"You must select at least one area",
 		/*END area_item_copy.cfm*/
-		
+
 		/*item_change_area.cfm*/
-		
+
 		"Mover Mensaje a otra área":"Move Message to other area",
 		"Mover Imagen a otra área":"Move Image to other area",
 		"Mover Evento a otra área":"Move Event to other area",
@@ -473,8 +474,8 @@ Lang.prototype.pack.en = {
 		"Mover Publicación a otra área":"Move Publication to other area",
 		"Mover Documento DoPlanning a otra área":"Move DoPlanning Document to other area",
 		"Mover Formulario a otra área":"Move Form to other area",
-		
-		
+
+
 		"Se enviará notificación por email del cambio de área del Mensaje.":"An email notification will be sent informing of the area change of the Message.",
 		"Se enviará notificación por email del cambio de área de la Imagen.":"An email notification will be sent informing of the area change of the Image.",
 		"Se enviará notificación por email del cambio de área del Evento.":"An email notification will be sent informing of the area change of the Event.",
@@ -492,7 +493,7 @@ Lang.prototype.pack.en = {
 		"No tiene acceso para ver los eventos de esta área":"You do not have access to view events from this area",
 		"No tiene acceso para ver las tareas de esta área":"You do not have access to view tasks from this area",
 		"No tiene acceso para ver los usuarios de esta área":"You do not have access to view users from this area",
-		
+
 		"De":"From",
 		"Para":"To",
 		"Fecha":"Date",
@@ -527,10 +528,10 @@ Lang.prototype.pack.en = {
 		/*"No hay elementos en esta área.":"There are no elements in this area.",*/
 		"Aún nadie ha puesto información aquí, ¿por qué no ser el primero?":"No one has posted information here yet, why not be the first?",
 		"Exportar contenido":"Export content",
-		
+
 		/*search*/
 		"Rellene el formulario y haga click en BUSCAR":"Enter search parameters and click Search",
-		"Todos":"All",		
+		"Todos":"All",
 		"Nº resultados":"Number of results",
 		"Estado actual":"Current state",
 		"Buscar":"Search",
@@ -540,8 +541,8 @@ Lang.prototype.pack.en = {
 		"Tipo de elemento a buscar":"Type of element to search",
 		"Estructura compartida":"Shared structure",
 		/*END search*/
-		
-		
+
+
 		/*AreaItem.cfc*/
 		"Mensaje enviado.":"Message sent.",
 		"Evento enviado.":"Event sent.",
@@ -550,12 +551,12 @@ Lang.prototype.pack.en = {
 		"Elemento web enviado.":"Generic content element sent.",
 		"Noticia enviada.":"News item sent",
 		"Respuesta a Consulta enviada.":"Consultation response sent.",
-		
+
 		"Evento modificado.":"Event modified.",
 		"Tarea modificada.":"Task modified.",
 		"Elemento web modificado.":"Generic content element modified.",
 		"Noticia modificada.":"News item modified",
-		
+
 		"Mensaje copiado a las áreas seleccionadas.":"Message copied to selected areas.",
 		"Evento copiado a las áreas seleccionadas.":"Event copied to selected areas.",
 		"Tarea copiada a las áreas seleccionadas.":"Task copied to selected areas.",
@@ -563,32 +564,32 @@ Lang.prototype.pack.en = {
 		"Elemento web copiado a las áreas seleccionadas.":"Generic content element copied to selected areas.",
 		"Noticia copiada a las áreas seleccionadas.":"News item copied to selected areas.",
 		"Consulta copiada a las áreas seleccionadas.":"Consultation copied to selected areas.",
-		
+
 		"Mensaje eliminado.":"Message deleted.",
 		"Evento eliminado.":"Event deleted.",
 		"Tarea eliminada.":"Task deleted.",
 		"Consulta eliminada.":"Consultation deleted.",
 		"Elemento web eliminado.":"Generic content element deleted.",
 		"Noticia eliminada.":"News item deleted",
-		
+
 		"Mensaje incorrecto.":"Incorrect message.",
 		"Evento incorrecto.":"Incorrect event.",
 		"Tarea incorrecta.":"Incorrect task.",
 		"Consulta incorrecta.":"Incorrect consultation.",
 		"Elemento web incorrecto.":"Incorrect web content element.",
 		"Noticia incorrecta.":"Incorrect news item.",
-		
+
 		"Archivo eliminado.":"Deleted file.",
 		"Imagen eliminada.":"Image deleted.",
-		
+
 		"Error al crear la imagen.":"Failed to create the image.",
 		"Ha ocurrido un error al subir el archivo adjunto.":"Failed to upload attachment.",
 		"Ha ocurrido un error al subir la imagen.":"Failed to upload image.",
-		
+
 		"Tarea marcada como realizada":"Task marked as done",
 	  	"Tarea no realizada": "Undone task",
 		/*END AreaItem.cfc*/
-		
+
 		"Cambiar propietario del Documento DoPlanning":"Change owner of the DoPlanning Document",
 		"Cambiar propietario del Elemento web":"Change owner of the Web Element",
 		"Cambiar propietario de la Noticia":"Change owner of the news",
@@ -611,7 +612,7 @@ Lang.prototype.pack.en = {
 		"Archivo modificado.":"File modified.",
 		"Archivo eliminado.":"File deleted.",
 		/*END File.cfc*/
-		
+
 		/*area_file_upload.cfm, area_file_replace_upload.cfm*/
 		"Ha ocurrido un error al subir el archivo.":"Failed to upload the file",
 		"Archivo reemplazado correctamente.":"File replaced",
@@ -619,7 +620,7 @@ Lang.prototype.pack.en = {
 
 
 		"Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?":"If you DELETE the file, it will be deleted from ALL areas to which it is associated. Are you sure you want to delete the file?",
-		
+
 		"Descargar":"Download",
 		"Abrir":"Open",
 		"Visualizar":"View",
@@ -634,8 +635,8 @@ Lang.prototype.pack.en = {
 		"Cancelar revisión":"Cancel revision",
 		"Bloquear":"Lock",
 		"Desbloquear":"Unlock",
-		
-		"Propiedad del área":"Property of area",	
+
+		"Propiedad del área":"Property of area",
 		"Creado por":"Created by",
 		"Último reemplazo por":"Last version by",
 		"Última version por":"Last version by",
@@ -675,8 +676,8 @@ Lang.prototype.pack.en = {
 		"El archivo pasará a ser propiedad del área seleccionada y podrá ser modificado por cualquier usuario de la misma.":"The file will become property of the selected area and will be modifiable by any user of that area.",
 		"El archivo seguirá estando accesible desde el área actual.":"The file will still be accesible from the current area.",
 		"Se enviará notificación por email del cambio a los usuarios del área propietaria.":"An email notification with this change will be sent to users of the owner area.",
-		
-		
+
+
 		"Subir varios archivos":"Upload multiple files",
 		"Añadir archivos":"Add files",
 		"Iniciar todos":"Start all",
@@ -688,9 +689,9 @@ Lang.prototype.pack.en = {
 		"Archivo de área con circuito de calidad":"Area file with quality circuit",
 		"Subido":"Uploaded",
 		"Quitar de la lista":"Remove from list",
-		
+
 		/*area_file_new.cfm*/
-		"Nuevo Archivo":"New File",	
+		"Nuevo Archivo":"New File",
 		"Nuevo Archivo de área":"New area File",
 		"Archivo":"File",
 		"Nombre":"Name",
@@ -703,7 +704,7 @@ Lang.prototype.pack.en = {
 		"Este archivo pertenecerá a esta":"This file will belong to this",
 		"área":"area",
 		"y podrá ser modificado por cualquier usuario con acceso a la misma.":"and anyone with access to this area will be able to modify it.",
-		
+
 		"Define las áreas del árbol donde se podrá asociar el documento.":"This defines the areas of the tree in which the document can be associated",
 		"Importante":"Important",
 		"los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.":" files with scope PUBLIC WEB or INTRANET may be accessed by their URL through web or intranet without having to associate them to areas or approving their publication.",
@@ -749,26 +750,26 @@ Lang.prototype.pack.en = {
 		"Mensaje":"Message",
 		"Decimal con máscara":"Masked decimal number",
 		"URL petición":"URL request",
-		
+
 		/*END area_file_new.cfm*/
-		
+
 		/*area_file_modify.cfm*/
 		"Modificar Archivo":"Modify File",
 		/*END area_file_modify.cfm*/
-		
+
 		/*area_file_replace.cfm*/
 		"Reemplazar Archivo":"Replace File",
 		/*END area_file_replace.cfm*/
-		
+
 		/*area_file_upload.cfm, area_file_replace_upload.cfm*/
 		"Ha ocurrido un error al subir el archivo.":"Failed to upload the file",
 		"Archivo reemplazado correctamente.":"File replaced.",
 		/*END area_file_upload.cfm, area_file_replace_upload.cfm*/
-		
+
 		/*file_associate.cfm*/
 		"Asociar archivo al área":"Associate file to area",
 		/*END file_associate.cfm*/
-		
+
 		/*file_view_content.cfm*/
 		"Visualizar archivo":"View file",
 		"Volver":"Back",
@@ -825,9 +826,9 @@ Lang.prototype.pack.en = {
 		"Modificar usuario":"Modify user",
 		"Asociar como administrador del área":"Associate as area administrator",
 		"Asociar al área":"Associate to area",
-		
+
 		/*END admin/main.cfm*/
-		
+
 		/*admin - new/modify user window form*/
 		"Activo":"Active",
 		"Si el usuario se marca como activo, se le enviará una":"If user is marked as active, he/she will receive a",
@@ -844,12 +845,12 @@ Lang.prototype.pack.en = {
 		"Fecha de creación:":"Creation date:",
 		"Fecha de última conexión:":"Last connection date:",
 		"Número de conexiones:":"Number of connections:",
-		
+
 		/*END admin - new user window form*/
-		
+
 		"Fecha de última modificación":"Last modification date",
-		
-		
+
+
 		/*Admin - organization options form*/
 		"Opciones de la organización":"Organization options",
 		"Título de la aplicación":"Application title",
@@ -871,7 +872,7 @@ Lang.prototype.pack.en = {
 		"Español":"Español",
 		"Número de días que se mantendrán los archivos en la papelera":"Number of days to maintain files in the bin",
 		/*END Admin - organization options form*/
-		
+
 		/*Admin - image modify form*/
 		"Modificar imagen de área":"Modify area image",
 		"Si no se asigna una imagen a esta área se mostrará la heredada de las áreas superiores.":"If no image is selected, the area will show the inherited image from upper areas.",
@@ -881,9 +882,9 @@ Lang.prototype.pack.en = {
 		"Ningún archivo seleccionado":"No file selected",
 		"Eliminar imagen actual":"Delete current image",
 		/*END Admin - image modify form*/
-		
-		
-		
+
+
+
 		/*user*/
 		"Usuario":"User",
 		"Nombre":"Name",
@@ -897,7 +898,7 @@ Lang.prototype.pack.en = {
 		"URL Perfil LinkedIn":"LinkedIn Profile URL",
 		"URL Perfil Twitter":"Twitter Profile URL",
 		"Activo":"Active",
-		
+
 		"Reunión virtual":"Virtual meeting",
 		"URL de acceso a reunión virtual con este usuario:":"URL to virtual meeting with this person:",
 		/*END user*/
@@ -906,16 +907,16 @@ Lang.prototype.pack.en = {
 		/*area_user_select*/
 		"Selección de usuario":"User selection",
 		"Asignar usuario seleccionado":"Assign selected user",
-		
+
 		"No hay usuarios":"No users",
 		"En esta lista solo se incluyen los usuarios con acceso al área actual.":"This list only includes users with access to the current area.",
-		
+
 		"No se ha seleccionado ningún usuario":"There is not a selected user",
 		" ya está en la lista":" is already in the list",
 		"Error: no se puede asignar el usuario seleccionado":"Error: can not assign the selected user",
 		/*END area_user_select*/
 
-		
+
 		/*preferences_user_data.cfm*/
 		"Idioma":"Language:",
 		"Imagen del usuario":"User image:",
@@ -979,7 +980,7 @@ Lang.prototype.pack.en = {
 		"Permitir copiar la estructura de campos de este formulario":"Allow to copy the field structure from this form",
 		"Permitir copiar la estructura de campos de esta tipología":"Allow to copy the field structure from this typology",
 		"Permitir copiar la estructura de campos de esta tipología de usuario":"Allow to copy the field structure from this user typology",
-		
+
 		"Valida el Formulario para que pueda ser publicado.":"Mark checkbox if you want the Form to be published",
 		"Si está definida, el Formulario se publicará en la fecha especificada.":"If defined, the Form will be published in the specified date.",
 		"Valida la Lista para que pueda ser publicada.":"Mark checkbox if you want the List to be published",
@@ -991,16 +992,16 @@ Lang.prototype.pack.en = {
 		"Indica si la definición de campos de este formulario está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this form is available to be used as a template by any user in the organization",
 		"Indica si la definición de campos de esta tipología está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this typology is available to be used as a template by any user in the organization",
 		"Indica si la definición de campos de esta tipología de usuario está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this user typology is available to be used as a template",
-		
+
 		"Habilitar como tipología general":"Enable as general typology",
 		"Se podrá utilizar esta tipología en cualquier área de la organización.":"This typology may be used in any area of the organization",
 		"Define dónde se podrán publicar vistas de la Lista":"Set the area type where views of this List can be published",
 		"Define dónde se podrán publicar vistas del Formulario":"Set the area type where views of this Form can be published",
-		
+
 		"Añadir campo":"Add field",
 		"Copiar de plantilla":"Copy from template",
 		"Haga clic en Añadir campo para crear un nuevo campo.":"Click in ADD FIELD to create a new field.",
-		
+
 		"Nuevo campo":"New field",
 		"Texto plano 1 línea (máx. 255 caracteres)":"Plain text, 1 line (255 characters max.)",
 		"Texto plano varias líneas (máx. 21000 caracteres)":"Plain text, several lines (21000 characters max.)",
@@ -1016,18 +1017,18 @@ Lang.prototype.pack.en = {
 		"Usuario de DoPlanning":"DoPlanning user",
 		"Elemento de DoPlanning":"DoPlanning element",
 		"No se puede modificar el tipo una vez creado el campo.":"Type cannot be modified once the field is created",
-		
+
 		"Obligatorio":"Obligatory",
 		"Indica si el campo deber rellenarse de forma obligatoria":"Mark checkbox if this field must be necessarily filled in",
-		
+
 		"Ordenar por defecto por este campo":"Order by default from this field",
-		
+
 		"Orden descendente":"Descending order",
 		"Orden ascendente":"Ascending order",
 		"Se mostrarán ordenados los registros en el orden especificado por el primer campo que tenga seleccionada esta opción":"Records will be ordered in the order specified by the first field having this option enabled",
-		
+
 		"Valor por defecto":"Default value",
-		
+
 		"Quitar usuario seleccionado":"Remove selected user",
 		"Introduce cada valor de la lista en una línea distinta":"Enter each value of the list in a different line",
 		"Valores de la lista":"Values of the list",
@@ -1045,7 +1046,7 @@ Lang.prototype.pack.en = {
 		"No se puede modificar el tipo de elemento DoPlanning una vez creado el campo.":"Element type cannot be modified once field is created",
 		"Tipo de elemento de DoPlanning":"Type of DoPlanning element",
 		"URL":"URL",
-		
+
 		"Selección de Mensaje":"Message selection",
 		"Selección de Elemento web":"Web element selection",
 		"Selección de Noticia":"News selection",
@@ -1057,21 +1058,21 @@ Lang.prototype.pack.en = {
 		"Selección de Formulario":"Form selection",
 		"Selección de Consulta":"Consultation selection",
 		"Selección de Publicación":"Publication selection",
-		
-		
+
+
 		"Texto a buscar":"Text to search",
 		"Nº resultados a mostrar":"No. of results to show",
-		
+
 		"Introduzca el nombre, apellidos o email del usuario y haga click en \"Buscar\".":"Enter the user's name, family name or email and click on \"Search\".",
 		"Campo creado":"Field created",
 		"Nombre del campo":"Field name",
 		"Tipo de campo":"Field type",
-		
+
 		"Lista de la que copiar los campos:":"List from which to copy fields",
 		"Copiar campos":"Copy fields",
-		
+
 		"Formulario creado, ahora debe definir los campos.":"Form created. Now you must define the fields.",
-		
+
 		"Desaprobar publicación":"Disapprove publication",
 		"Fecha de publicación:":"Publication date",
 		"Publicación aprobada:":"Approved publication",
@@ -1086,8 +1087,8 @@ Lang.prototype.pack.en = {
 		"Formulario modificado.":"Form modified.",
 		 "No hay datos introducidos.":"No data introduced.",
 		 "No hay campos definidos para rellenar.":"There are no defined fields to fill.",
-		 "Formulario del que copiar los campos:":"Form from which to copy the fields", 
-		 
+		 "Formulario del que copiar los campos:":"Form from which to copy the fields",
+
 
 		/*END area_table_form*/
 
@@ -1098,11 +1099,11 @@ Lang.prototype.pack.en = {
 		"¡Ha iniciado una reunión consigo mismo!":"You have started a meeting with yourself!",
 		"Esperando conexión del usuario solicitado...":"Waiting requested user\"s connection...",
 		"El usuario debe acceder a la siguiente dirección para entrar en esta reunión:":"The user must access the following URL to enter this meeting:",
-		
+
 		"Email:":"Email",
 		"Teléfono:":"Phone:",
 		"Teléfono móvil:":"Mobile phone:",
-		
+
 		"Detener retransmisión":"Stop broadcasting",
 		"Iniciar retransmisión":"Start broadcasting",
 		"Detener webcam":"Stop webcam",
@@ -1113,7 +1114,7 @@ Lang.prototype.pack.en = {
 		"Para retransmitir su webcam, haga clic en el botón Retransmitir webcam.":"To broadcast your webcam, click the Start webcam button.",
 		"El usuario está conectado a la reunión pero no está retransmitiendo su cámara ni su audio.":"The user is connected to the meeting but does not broadcast his camera and audio",
 		/*END user_meeting_opentok.cfm*/
-		
+
 		/*bin*/
 		"Eliminar definitivamente":"Remove permanently",
 		"Restaurar":"Restore",
@@ -1125,14 +1126,14 @@ Lang.prototype.pack.en = {
 		"elemento":"element",
 		"Elemento eliminado.":"Element removed.",
 		/*END bin*/
-		
+
 		"Error inesperado":"Unexpected error",
 		"Respondiendo a:":"Answering to",
-		
+
 		"Añadir editores":"Add editors",
 		"Haga clic en Añadir editores parar añadir un nuevo usuario.":"Click on Add editors to add a new editor.",
 		"Los usuarios responsables de este área tienen el permiso de editores por defecto.":"Users that are managers of this area have edition rights by default.",
-		
+
 		/*associate users*/
 		"Asociar usuarios a otra área":"Associate users to other area",
 		"Selecciona el área de destino:":"Select target area",
@@ -1157,7 +1158,7 @@ Lang.prototype.pack.en = {
 		"Confirma las áreas seleccionadas:":"Confirm the selected areas",
 		"Se enviará notificación al usuario y a los usuarios del área.":"Selected user and users of the area will be notified by email.",
 		/*END associate users to areas*/
-		
+
 		/*associate area administrator*/
 		"Asociar administrador de área":"Associate area administrator",
 		"¿Seguro que desea asociar este usuario como":"Are you sure you want to associate this user as",
@@ -1168,7 +1169,7 @@ Lang.prototype.pack.en = {
 		/*remove users form area*/
 		"Quitar usuario del área":"Remove user from area",
 		"¿Seguro que desea quitar este usuario de esta área?:":"Are you sure you want to remove this user form this area?",
-		
+
 		/*remove area administrator*/
 		"CUIDADO":"WARNING",
 		"Quitar administrador de área":"Remove area administrator",
@@ -1180,7 +1181,7 @@ Lang.prototype.pack.en = {
 		"Area superior":"Upper area",
 		"Quitar administrador del área superior":"Remove administrator from upper area",
 		"Debe quitar al usuario de administrador en el área anterior para que deje de tener acceso en la actual.":"You must remove user as administrator in the upper area so as to remove access from the current area.",
-		
+
 		/*area documetn approval*/
 		"Menú principal":"Main menu",
 		"Ruta del área:":"Area route:",
@@ -1196,7 +1197,7 @@ Lang.prototype.pack.en = {
 		"3º Si el usuario revisor valida el documento, se envía el documento al usuario aprobador.":"3rd If the reviewer user validates the document, it is sent to the approver user.",
 		"4º El usuario aprobador debe validar el documento.":"4th Tha approver user must validate the document.",
 		"Si el documento no es validado por el revisor o el aprobador, se debe iniciar de nuevo el proceso de aprobación con una nueva versión del archivo.":"If the document is not validated by the reviewer or the approver, the process must start again with a new version of the file.",
-		
+
 		/*actions*/
 		"Acciones":"Actions",
 		"Añadir acción":"Add action",
@@ -1241,18 +1242,18 @@ Lang.prototype.pack.en = {
 		"Tipologías":"Typologies",
 		"Tipología de usuario":"User typology",
 		"Nueva tipología de usuario":"New user typology",
-		"Si se crea sólo una tipología de usuario, se mostrará por defecto seleccionada para todos los usuarios y no será opcional":"If there is only one typology of user defined, it will be shown by default selected for all users and will not be optional",
+		"Si sólo se crea una tipología de usuario, ésta será la que quede seleccionada por defecto para todos los usuarios y la que se asignará de forma automática a los nuevos usuarios que se den de alta en la aplicación.":"If there is only one typology of user defined, it will be shown by default selected for all users and will not be optional.",
 		"Las tipologías de archivos se gestionan en las áreas a las que pertenecen por los usuarios con permiso.":"The typologies of files are managed in their areas by the users with permission",
 		"Eliminar Tipología":"Delete typology",
 
 		"Categorías":"Categories",
 		"Categorías de elementos de área":"Area elements categories",
 
-	}	
-	
-		
-		
-		
+	}
+
+
+
+
 	, "regex": [
 		[/^Email:?$/, "Email"],
 		[/^Contraseña:?$/, "Password"],
@@ -1264,7 +1265,6 @@ Lang.prototype.pack.en = {
 
 		[/^Hora:?$/, "Time:"],
 		[/^Lugar:?$/, "Place:"],
-		[/^Precio:?$/, "Price:"],
 
 		[/^Descripción:?$/, "Description"],
 		[/^Responsable:?$/, "Area manager:"],

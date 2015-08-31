@@ -1,5 +1,5 @@
 <cfoutput>
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
  --->
 
@@ -35,7 +35,7 @@
 <cfif tableTypeId IS 4>
 
 	<br/>
-	<p lang="es" style="padding-left:10px;">Si se crea sólo una tipología de usuario, se mostrará por defecto seleccionada para todos los usuarios y no será opcional</p>
+	<p lang="es" style="padding-left:10px;">Si sólo se crea una tipología de usuario, ésta será la que quede seleccionada por defecto para todos los usuarios y la que se asignará de forma automática a los nuevos usuarios que se den de alta en la aplicación.</p>
 
 	<cfoutput>
 		<div class="row">
@@ -45,7 +45,7 @@
 					<div class="btn-group">
 						<a class="btn btn-default" href="#tableTypeName#_new.cfm?area=#root_area_id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons/#tableTypeName#.png" alt="Nueva tipología de usuario" lang="es" style="height:20px"/> <span lang="es">Nueva tipología de usuario</span></a>
 					</div>
-					
+
 				</div>
 			</div>
 		</div>
@@ -64,11 +64,11 @@
 
 		<div class="div_items">
 		<cfif numItems GT 0>
-			
+
 			<!---<cfif isDefined("URL.mode") AND URL.mode EQ "list">--->
 
 				<cfset app_version = "standard">
-				
+
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="outputAllTypologiesList">
 					<cfinvokeargument name="itemsQuery" value="#typologies#">
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
@@ -77,7 +77,7 @@
 					<cfif tableTypeId IS 3>
 						<cfinvokeargument name="openItemOnSelect" value="false"/>
 					</cfif>
-				</cfinvoke>	
+				</cfinvoke>
 
 			<!---<cfelse>
 

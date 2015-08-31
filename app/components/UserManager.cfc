@@ -1226,6 +1226,7 @@
 		<cfargument name="no_notifications" type="boolean" required="false" default="false">
 
 		<cfargument name="notifications_digest_type_id" type="string" required="true">
+		<cfargument name="notifications_web_digest_type_id" type="string" required="true">
 
 		<cfset var method = "updateUserPreferences">
 
@@ -1292,6 +1293,11 @@
 						, notifications_digest_type_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
 					<cfelse>
 						, notifications_digest_type_id = <cfqueryparam value="#arguments.notifications_digest_type_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif NOT isNumeric(arguments.notifications_web_digest_type_id)>
+						, notifications_web_digest_type_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+					<cfelse>
+						, notifications_web_digest_type_id = <cfqueryparam value="#arguments.notifications_web_digest_type_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>

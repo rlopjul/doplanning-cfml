@@ -1,6 +1,6 @@
 <cfscript>
 curLangText["es"] = {
-		
+
 		"item": {
 
 			"1": {
@@ -75,16 +75,16 @@ curLangText["es"] = {
 				"name" : "Documento DoPlanning",
 				"name_plural" : "Documentos DoPlanning",
 			},
-			
+
 		},
-		
+
 		"common": {
-			
+
 			"foot_do_not_reply" : "No responda a este email",
 			"foot_content_default_1" : "Este es un email automático enviado por la aplicación",
 			//"foot_content_default_2" : 'No responda a este email.<br /> Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación.',
 			"foot_content_default_3" : "No responda a este email.<br />Este es un email automático enviado por la aplicación",
-			
+
 			"view_in_area" : "Ver en área",
 			"go_to_item" : "Ir al elemento",
 			"go_to_area" : "Ir al área",
@@ -95,7 +95,7 @@ curLangText["es"] = {
 			"access_to_application_links" : "Puede acceder a la aplicación a través de",
 			"access_to_area" : "Acceda directamente al área mediante el siguiente enlace",
 			"access_to_area_links" : "Acceda directamente al área mediante los siguientes enlaces",
-			
+
 			"area" : "Área",
 			"areas" : "Áreas",
 			"on_the_area" : "en el área",
@@ -104,22 +104,22 @@ curLangText["es"] = {
 			"area_description" : "Descripción del área",
 			"categories" : "Categorías",
 			"users" : "Usuarios",
-			
+
 			"user" : "Usuario",
 			"by_user" : "por el usuario",
 			"your_access_email" : "Su usuario de acceso es",
 			"you_must_change_password" : 'Debe cambiar la contraseña en el apartado "Preferencias" de la aplicación',
 
 			"no_title" : "sin título",
-			
+
 		},
-		
+
 		"new_item": {
-		
+
 			//"foot_content_1" : "Este es un email automático enviado por la aplicación",
 			"foot_content_2" : "que le avisa de nuevos contenidos creados por usuarios en",
 			"foot_content_3" : 'Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación',
-			
+
 			"access_to_reply" : "Para responder acceda a",
 			"access_to_item_male" : "Acceda directamente al",
 			"access_to_item_female": "Acceda directamente a la",
@@ -127,7 +127,7 @@ curLangText["es"] = {
 			"access_to_item_links" : "mediante los siguientes enlaces",
 			"reply_in" : "Responder en",
 			"reply" : "Responder",
-			
+
 			"new_male" : "Nuevo",
 			"new_female" : "Nueva",
 			"answer_to" : "Respuesta a",
@@ -141,7 +141,7 @@ curLangText["es"] = {
 			"attached_image_of" : "Imagen adjunta de",
 			"deleted_virus_male" : "eliminado por contener virus",
 			"deleted_virus_female" : "eliminada por contener virus",
-			
+
 			"subject" : "Asunto",
 			"title" : "Título",
 			"user" : "Usuario",
@@ -164,6 +164,7 @@ curLangText["es"] = {
 			"place" : "Lugar",
 			"identifier" : "Identificador",
 			"price" : "Precio",
+			"value" : "Valor",
 			"type" : "Tipo",
 			"link_to_pubmed" : "Enlace a PubMed",
 			"estimated_value" : "Valor estimado",
@@ -180,11 +181,11 @@ curLangText["es"] = {
 			"you_must_access" : "debe acceder a la aplicación",
 
 			"virus_description" : "ARCHIVO ADJUNTO ELIMINADO PORQUE HA SIDO IDENTIFICADO POR EL SISTEMA ANTIVIRUS COMO VIRUS O CON POSIBILIDAD DE SER DAÑINO",
-			
+
 		},
-		
+
 		"new_file": {
-			
+
 			"access_to_file" : "Acceda directamente al archivo",
 			"access_to_download_file" : "Descargue el archivo",
 			"access_to_file_links" : "Acceda directamente al archivo mediante los siguientes enlaces",
@@ -206,7 +207,7 @@ curLangText["es"] = {
 			"approved_version" : "Versión de archivo aprobada",
 			"canceled_revision" : "Revisión de archivo cancelada",
 			"changed_owner_to_area" : "Archivo de usuario convertido en archivo de área",
-			
+
 			"created" : "Creado",
 			"added" : "Añadido",
 			"replaced" : "Reemplazado",
@@ -217,10 +218,10 @@ curLangText["es"] = {
 			"validated" : "Validado",
 			"rejected" : "Rechazado",
 			"approved" : "Aprobado",
-			
+
 			"it_has" : "Se ha",
 			"a_file_on_the_area" : "un archivo en el área",
-			
+
 			"file_name" : "Nombre del archivo",
 			"user" : "Usuario",
 			"upload_date" : "Fecha de creación del archivo",
@@ -230,23 +231,23 @@ curLangText["es"] = {
 
 			"virus_description" : "ARCHIVO ELIMINADO PORQUE HA SIDO IDENTIFICADO POR EL SISTEMA ANTIVIRUS COMO VIRUS O CON POSIBILIDAD DE SER DAÑINO",
 			"virus_advice" : "Si tiene de este archivo en su ordenador, proceda a eliminarlo",
-		},	
+		},
 
 		"new_table_row": {
 
 			"access_to_row_male" : "Acceda directamente al registro del",
 			"access_to_row_female": "Acceda directamente al registro de la",
-			
+
 			"new_row" : "Nuevo registro en",
 			"modify_row" : "Registro modificado en",
-			"delete_row" : "Registro eliminado en",	
+			"delete_row" : "Registro eliminado en",
 
-			"register_number" : "Número de registro",					
+			"register_number" : "Número de registro",
 		},
 
 
 		"change_owner_item": {
-			
+
 			"owner_changed_male" : "cambiado de propietario",
 			"owner_changed_female" : "cambiada de propietario",
 			"old_user" : "Propietario anterior",
@@ -258,7 +259,7 @@ curLangText["es"] = {
 		},
 
 		"change_owner_file": {
-			
+
 			"file_owner_changed" : "Archivo cambiado de propietario",
 
 			"your_file_was_changed" : "Este archivo que era de su propiedad ha pasado a ser de otro usuario.",
@@ -267,7 +268,7 @@ curLangText["es"] = {
 		},
 
 		"file_revision": {
-			
+
 			"file_revision_request" : "Solicitud de revisión de documento",
 
 			"you_have_to_revise" : "Le han enviado el siguiente archivo para que lo revise.<br/><b>IMPORTANTE: Debe validar o rechazar la versión del archivo para poder continuar con el proceso de aprobación del documento.</b>",
@@ -277,7 +278,7 @@ curLangText["es"] = {
 		},
 
 		"file_approval": {
-			
+
 			"file_approval_request" : "Solicitud de aprobación de documento",
 
 			"you_have_to_approve" : "Le han enviado el siguiente archivo para que lo <b>apruebe</b>.<br/><b>IMPORTANTE: Debe aprobar o rechazar la versión del archivo.</b>",
@@ -285,56 +286,56 @@ curLangText["es"] = {
 			"reject_reason" : "Motivo de rechazo en aprobación",
 
 		},
-		
+
 		"new_area": {
-			
+
 			"new_area" : "Nueva Área",
-			
+
 			"area_created" : "Se ha creado el área",
 			"on_the_organization" : "en la organización",
 			"and_you_have_access" : "y usted tiene acceso a ella",
-						
+
 		},
-		
+
 		"assign_user": {
-		
+
 			"has_been_added_as_user" : "Ha sido asociado como usuario del área",
 			"has_been_added_as_responsible" : "Ha sido asociado como responsable del área",
 			"has_been_added_to_area" : "Ha sido asociado al área",
-			
+
 			"area_created" : "Se ha creado el área",
 			"you_are_responsible" : "y usted ha sido asociado como responsable de la misma",
 
 			"new_user_in_area" : "Nuevo usuario asociado al área",
-			
+
 		},
-		
+
 		"new_user": {
-		
+
 			"you_has_been_registered_in_organization" : "Usted ha sido dado de alta como usuario de la organización",
 			"you_has_been_registered_in_application" : "Ha sido dado de alta en la aplicación",
 			"if_you_use_the_application" : "IMPORTANTE: Si utiliza la aplicación acepta los términos de uso de la misma, que aparecen en la siguiente página",
-			
+
 			"password" : "Contraseña",
-			
+
 			"to_view_tutorials_access" : "Para ver los tutoriales de la aplicación acceda a",
-			
+
 			"user_access_identify_to" : "Su usuario de acceso es el usado para identificarse en",
 			"also_you_can_use" : "Para acceder también puede utilizar su usuario de",
-			
+
 		},
-		
+
 		"new_password": {
-		
+
 			"new_password_to_access" : "Nueva contraseña de acceso a",
 			"new_password_to_access_application" : "Ha solicitado una nueva contraseña para la aplicación",
-			
+
 			"new_password" : "Nueva contraseña",
-			
+
 		},
 
 		"add_user_to_table": {
-		
+
 			"has_been_added_as_editor_of" : "Ha sido añadido como editor de la",
 
 		},
@@ -356,12 +357,12 @@ curLangText["es"] = {
 
 		}
 	};
-	
-	
+
+
 <!--- ------------------------------------ ENGLISH -------------------------------------------- --->
 
 curLangText["en"] = {
-		
+
 		"item": {
 
 			"1": {
@@ -436,9 +437,9 @@ curLangText["en"] = {
 				"name" : "DoPlanning document",
 				"name_plural" : "DoPlanning documents",
 			},
-			
+
 		},
-		
+
 		"common": {
 
 			"foot_do_not_reply" : "Do not reply to this email",
@@ -449,14 +450,14 @@ curLangText["en"] = {
 			"view_in_area" : "View in area",
 			"go_to_item" : "Go to item",
 			"go_to_area" : "Go to area",
-			
+
 			"access_internal" : "Internal access",
 			"access_external" : "External access",
 			"access_to_application" : "You can access the application at the following address",
 			"access_to_application_links" : "You can access the application at",
 			"access_to_area" : "Go directly to the area through the following link",
 			"access_to_area_links" : "Go directly to the area through the following links",
-			
+
 			"area" : "Area",
 			"areas" : "Áreas",
 			"on_the_area" : "in the area",
@@ -465,22 +466,22 @@ curLangText["en"] = {
 			"area_description" : "Area description",
 			"categories" : "Categories",
 			"users" : "Usuarios",
-			
+
 			"user" : "User",
 			"by_user" : "by user",
 			"your_access_email" : "Your access email is",
 			"you_must_change_password" : 'You must change your password at the application preferences',
 
 			"no_title" : "without title",
-			
+
 		},
-		
+
 		"new_item": {
-		
+
 			//"foot_content_1" : "This is an automated email sent by the application",
 			"foot_content_2" : "that notifies you of new content created by users at",
 			"foot_content_3" : 'If you do not want to receive these emails, you can disable notifications at the application preferences',
-			
+
 			"access_to_reply" : "To reply go to",
 			"access_to_item_male" : "Go directly to the",
 			"access_to_item_female": "Go directly to the",
@@ -488,7 +489,7 @@ curLangText["en"] = {
 			"access_to_item_links" : "through the following links",
 			"reply_in" : "Reply in",
 			"reply" : "Reply",
-			
+
 			"new_male" : "New",
 			"new_female" : "New",
 			"answer_to" : "Reply to",
@@ -501,8 +502,8 @@ curLangText["en"] = {
 			"attached_file_of" : "Attached file of",
 			"attached_image_of" : "Attached image of",
 			"deleted_virus_male" : "deleted for virus detection",
-			"deleted_virus_female" : "deleted for virus detection",			
-			
+			"deleted_virus_female" : "deleted for virus detection",
+
 			"subject" : "Subject",
 			"title" : "Title",
 			"user" : "User",
@@ -541,11 +542,11 @@ curLangText["en"] = {
 			"you_must_access" : "you must access the application",
 
 			"virus_description" : "THE ATTACHED FILE HAS BEEN DELETED BECAUSE THE ANTIVIRUS SYSTEM IDENTIFIED IT AS A VIRUS OR WITH POSSIBILITY TO BE HARMFUL",
-			
+
 		},
-		
+
 		"new_file": {
-			
+
 			"access_to_file" : "Go directly to the file",
 			"access_to_download_file" : "Download the file",
 			"access_to_file_links" : "Go directly to the file through the following links",
@@ -567,7 +568,7 @@ curLangText["en"] = {
 			"approved_version" : "File version approved",
 			"canceled_revision" : "File revision canceled",
 			"changed_owner_to_area" : "User file converted to area file",
-			
+
 			"created" : "Created",
 			"added" : "Added",
 			"replaced" : "Replaced",
@@ -578,10 +579,10 @@ curLangText["en"] = {
 			"validated" : "Validated",
 			"rejected" : "Rejected",
 			"approved" : "Approved",
-			
+
 			"it_has" : "A user has",
 			"a_file_on_the_area" : "a file in the area",
-			
+
 			"file_name" : "File name",
 			"user" : "User",
 			"upload_date" : "Creation date",
@@ -594,7 +595,7 @@ curLangText["en"] = {
 		},
 
 		"new_table_row": {
-			
+
 			"access_to_row_male" : "Go directly to the record of the",
 			"access_to_row_female": "Go directly to the record of the",
 
@@ -602,11 +603,11 @@ curLangText["en"] = {
 			"modify_row" : "Entry modified in",
 			"delete_row" : "Entry deleted in",
 
-			"register_number" : "Entry number",						
+			"register_number" : "Entry number",
 		},
 
 		"change_owner_item": {
-			
+
 			"owner_changed_male" : "owner changed",
 			"owner_changed_female" : "owner changed",
 			"old_user" : "Old owner",
@@ -618,7 +619,7 @@ curLangText["en"] = {
 		},
 
 		"change_owner_file": {
-			
+
 			"file_owner_changed" : "File owner changed",
 
 			"your_file_was_changed" : "This file that was your property has changed to another user.",
@@ -626,7 +627,7 @@ curLangText["en"] = {
 		},
 
 		"file_revision": {
-			
+
 			"file_revision_request" : "Request for document review",
 
 			"you_have_to_revise" : "You have to review the following file.<br/><b>NOTE: You must accept or reject the file version to continue the process of approving the document.</b>",
@@ -636,7 +637,7 @@ curLangText["en"] = {
 		},
 
 		"file_approval": {
-			
+
 			"file_approval_request" : "Request for document approval",
 
 			"you_have_to_approve" : "You have a pending approval document.<br/><b>NOTE: You must approve o reject this file version.</b>",
@@ -644,56 +645,56 @@ curLangText["en"] = {
 			"reject_reason" : "Reason for rejection on approval",
 
 		},
-		
+
 		"new_area": {
-			
+
 			"new_area" : "New area",
-			
+
 			"area_created" : "A new area has been created",
 			"on_the_organization" : "on the organization",
 			"and_you_have_access" : "and you have access",
-						
+
 		},
-		
+
 		"assign_user": {
-		
+
 			"has_been_added_as_user" : "You have been added as a area user",
 			"has_been_added_as_responsible" : "You have been associated as responsible of the area",
 			"has_been_added_to_area" : "You have been added to the area",
-			
+
 			"area_created" : "A new area has been created",
 			"you_are_responsible" : "and you have been associated as responsible of this area",
 
 			"new_user_in_area" : "Nuevo usuario asociado al área",
-			
+
 		},
-		
+
 		"new_user": {
-		
+
 			"you_has_been_registered_in_organization" : "You have been registered as a user of the organization",
 			"you_has_been_registered_in_application" : "You have been registered in the application",
 			"if_you_use_the_application" : "ATTENTION: the use of the application means that you accept its terms of use. Please read terms of use at",
-			
+
 			"password" : "Password",
-			
+
 			"to_view_tutorials_access" : "For viewing the tutorials of the application go to",
-			
+
 			"user_access_identify_to" : "Your user to access is the used to identify you in",
 			"also_you_can_use" : "To access you can also use your user of",
-			
+
 		},
-		
+
 		"new_password": {
-		
+
 			"new_password_to_access" : "New password to access",
 			"new_password_to_access_application" : "You have requested a new password for the application",
-			
+
 			"new_password" : "New password",
-			
+
 		},
 
 		"add_user_to_table": {
-		
+
 			"has_been_added_as_editor_of" : "You have been added as editor of the",
 
 		},

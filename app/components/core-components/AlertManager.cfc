@@ -9,7 +9,7 @@
 
 
 	<!--- -------------------------------------- newAreaItem ----------------------------------- --->
-	
+
 	<cffunction name="newAreaItem" access="public" returntype="void">
 		<cfargument name="objectItem" type="query" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
@@ -21,20 +21,20 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-			
+
 		<cfset var method = "newAreaItem">
-		
+
 		<cfset var internalUsersEmails = "">
 		<cfset var externalUsersEmails = "">
         <cfset var listInternalUsers = "">
 		<cfset var listExternalUsers = "">
-		
+
 		<cfset var internalUsersPhones = "">
 		<cfset var externalUsersPhones = "">
 		<cfset var listInternalUsersPhones = "">
 		<cfset var listExternalUsersPhones = "">
-		
-		<cfset var subject = "">		
+
+		<cfset var subject = "">
 		<cfset var area_name = "">
 		<cfset var area_path = "">
         <cfset var root_area = structNew()>
@@ -45,19 +45,19 @@
 		<cfset var actionUser = "">
 		<cfset var actionUserName = "">
 		<cfset var icalendarContent = "">
-		
+
 		<cfset var includeItemContent = true>
-				
+
 		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 		<cfif objectItem.recordCount IS 0><!---Item not found--->
-			
+
 			<cfset error_code = 501>
-		
+
 			<cfthrow errorcode="#error_code#">
-				
-		</cfif>		
-		
+
+		</cfif>
+
 		<cfif arguments.itemTypeId IS 7><!---Consultations--->
 			<!---<cfset includeItemContent = false>--->
 			<cfif isDefined("APPLICATION.includeConsultationsInAlerts")>
@@ -66,34 +66,34 @@
 				<cfset includeItemContent = false>
 			</cfif>
 		</cfif>
-		
+
 		<cfif len(objectItem.description) GT 0>
 			<!---Para solucionar problema con Flex--->
 			<cfset objectItem.description = REReplace(objectItem.description,'[[:space:]]SIZE="',' style="font-size:',"ALL")>
 			<!---<cfset objectItem.description = Replace(objectItem.description,' SIZE="',' style="font-size:',"ALL")>--->
 		</cfif>
-		
-		
+
+
 		<!---Get area name--->
 		<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-			SELECT id, name 
+			SELECT id, name
 			FROM #client_abb#_areas
 			WHERE id = <cfqueryparam value="#objectItem.area_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
 		<cfif selectAreaQuery.recordCount GT 0>
-		
+
 			<cfset area_name = selectAreaQuery.name>
-			
+
 		<cfelse><!---The area does not exist--->
-			
+
 			<cfset error_code = 301>
-			
+
 			<cfthrow errorcode="#error_code#">
-		
+
 		</cfif>
-			
+
 		<cfif arguments.itemTypeId LT 10>
-			
+
 			<!---fileDownloadUrl--->
 			<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
@@ -115,14 +115,14 @@
 					<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-				</cfinvoke>			
+				</cfinvoke>
 			</cfif>
 
 		</cfif>
 
 		<!--- icalendarContent --->
 		<cfif ( arguments.itemTypeId IS 5 OR arguments.itemTypeId IS 6 ) AND includeItemContent IS true AND arguments.action NEQ "delete"><!--- Event OR Task --->
-						
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="exportICalendarItem" returnvariable="exportICalendarItemResponse">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
@@ -138,7 +138,7 @@
 
 		<!--- getItemCategories --->
 		<cfif NOT isDefined("arguments.itemCategories")>
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
 				<cfinvokeargument name="item_id" value="#objectItem.id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
@@ -160,15 +160,15 @@
 		<!---<cfsavecontent variable="getUsersParameters">
 			<cfoutput>
 				<user id="" email=""
-			telephone="" mobile_phone="" mobile_phone_ccode=""		
+			telephone="" mobile_phone="" mobile_phone_ccode=""
 			sms_allowed="" whole_tree_visible="">
 					<family_name><![CDATA[]]></family_name>
-					<name><![CDATA[]]></name>	
+					<name><![CDATA[]]></name>
 				</user>
-					<area id ="#objectItem.area_id#"/> 
+					<area id ="#objectItem.area_id#"/>
 				<order parameter="family_name" order_type="asc" />
 				<cfif arguments.action NEQ "attached_file_deleted_virus" AND arguments.action NEQ "attached_image_deleted_virus">
-					<preferences notify_new_#itemTypeName#="true">				
+					<preferences notify_new_#itemTypeName#="true">
 					</preferences>
 				</cfif>
 			</cfoutput>
@@ -177,7 +177,7 @@
 		<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="getUsersRequest">
 			<cfinvokeargument name="request_parameters" value="#getUsersParameters#">
 		</cfinvoke>--->
-        
+
         <!--- getUsersToNotifyLists --->
         <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
 			<!---<cfinvokeargument name="request" value="#getUsersRequest#"/>--->
@@ -185,7 +185,7 @@
 			<cfif arguments.action NEQ "attached_file_deleted_virus" AND arguments.action NEQ "attached_image_deleted_virus">
 				<cfinvokeargument name="notify_new_#itemTypeName#" value="true">
 			</cfif>
-			
+
 			<cfif itemCategories.recordCount GT 0>
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				<cfinvokeargument name="categories_ids" value="#valueList(itemCategories.category_id)#">
@@ -194,7 +194,7 @@
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 		</cfinvoke>
-        
+
 		<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
 		<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
 
@@ -202,15 +202,15 @@
 		<cfset externalUsersPhones = usersToNotifyLists.structExternalUsersPhones>
 
 		<cfloop list="#APPLICATION.languages#" index="curLang">
-		
+
 			<cfset listInternalUsers = internalUsersEmails[curLang]>
 			<cfset listExternalUsers = externalUsersEmails[curLang]>
-			
+
 			<cfset listInternalUsersPhones = internalUsersPhones[curLang]>
 			<cfset listExternalUsersPhones = externalUsersPhones[curLang]>
-			
+
 			<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
-						
+
 				<!--- getAreaItemUrl --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
 					<cfinvokeargument name="item_id" value="#objectItem.id#">
@@ -225,15 +225,15 @@
 					<cfinvokeargument name="language" value="#curLang#">
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
 				</cfinvoke>
-				
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemFootContent" returnvariable="foot_content">
 					<cfinvokeargument name="language" value="#curLang#">
 				</cfinvoke>
-				
+
 				<cfswitch expression="#arguments.action#">
-					
+
 					<cfcase value="new"><!---Nuevo--->
-					
+
 						<cfif arguments.itemTypeId IS NOT 7 OR objectItem.parent_kind EQ "area">
 							<cfif itemTypeGender EQ "male">
 								<cfset action_name = "#langText[curLang].new_item.new_male# #langText[curLang].item[itemTypeId].name#">
@@ -242,20 +242,20 @@
 							</cfif>
 							<cfset subject = "[#root_area.name#][#langText[curLang].item[itemTypeId].name#] #objectItem.title#">
 						<cfelse><!---Respuesta a consulta--->
-							
+
 							<cfset action_name = "#langText[curLang].new_item.answer_to# #langText[curLang].item[itemTypeId].name#">
 							<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
-							
+
 						</cfif>
 
 						<cfset actionBoxText = "">
 						<cfset actionDate = objectItem.creation_date>
 
-					
+
 					</cfcase>
-					
+
 					<cfcase value="delete"><!---Eliminado--->
-					
+
 						<cfif itemTypeGender EQ "male">
 							<cfset action_name = "#langText[curLang].item[itemTypeId].name# #langText[curLang].new_item.deleted_male#">
 						<cfelse>
@@ -268,13 +268,13 @@
 							<cfset actionBoxText = langText[curLang].new_item.deleted_female>
 						</cfif>
 						<cfset actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
-						
+
 						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
-	
+
 					</cfcase>
-					
+
 					<cfcase value="update"><!---Modificado--->
-					
+
 						<cfif itemTypeGender EQ "male">
 							<cfset action_name = "#langText[curLang].item[itemTypeId].name# #langText[curLang].new_item.modified_male#">
 						<cfelse>
@@ -287,59 +287,59 @@
 							<cfset actionBoxText = langText[curLang].new_item.modified_female>
 						</cfif>
 						<cfset actionDate = objectItem.last_update_date>
-						
+
 						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
-					
+
 					</cfcase>
-					
+
 					<cfcase value="done"><!---Realizada (tarea)--->
-						
+
 						<cfset action_name = "#langText[curLang].item[itemTypeId].name# #langText[curLang].new_item.done_female#">
 						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
 
 						<cfset actionBoxText = langText[curLang].new_item.done_female>
 						<cfset actionDate = objectItem.last_update_date>
-						
-					</cfcase>				
-					
+
+					</cfcase>
+
 					<cfcase value="close"><!---Cerrada (consulta)--->
-					
+
 						<cfset action_name = "#langText[curLang].item[itemTypeId].name# #langText[curLang].new_item.closed_female#">
-						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">	
+						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
 
 						<cfset actionBoxText = langText[curLang].new_item.closed_female>
-						<cfset actionDate = objectItem.last_update_date>				
-					
+						<cfset actionDate = objectItem.last_update_date>
+
 					</cfcase>
 
 					<cfcase value="attached_file_deleted_virus"><!---Imagen adjunta eliminada por virus--->
-						
+
 						<cfset action_name = "#langText[curLang].new_item.attached_file_of# #langText[curLang].item[itemTypeId].name# #langText[curLang].new_item.deleted_virus_male#">
-						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">	
+						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
 
 						<cfif itemTypeGender EQ "male">
 							<cfset actionBoxText = langText[curLang].new_item.modified_male>
 						<cfelse>
 							<cfset actionBoxText = langText[curLang].new_item.modified_female>
 						</cfif>
-						<cfset actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>		
-					
+						<cfset actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
+
 					</cfcase>
 
 					<cfcase value="attached_image_deleted_virus"><!---Imagen adjunta eliminada por virus--->
-					
+
 						<cfset action_name = "#langText[curLang].new_item.attached_image_of# #langText[curLang].item[itemTypeId].name# #langText[curLang].new_item.deleted_virus_female#">
-						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">	
+						<cfset subject = "[#root_area.name#][#action_name#] #objectItem.title#">
 
 						<cfif itemTypeGender EQ "male">
 							<cfset actionBoxText = langText[curLang].new_item.modified_male>
 						<cfelse>
 							<cfset actionBoxText = langText[curLang].new_item.modified_female>
 						</cfif>
-						<cfset actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>			
-					
+						<cfset actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
+
 					</cfcase>
-					
+
 				</cfswitch>
 
 				<cfinvoke component="UserQuery" method="getUser" returnvariable="actionUserQuery">
@@ -353,15 +353,15 @@
 				</cfinvoke>
 
 				<cfset actionUserName = actionUserQuery.user_full_name>
-				
-				
+
+
 				<cfset sms_message = "#uCase(action_name)#:#objectItem.title#. AREA:#area_name#">
-				
+
 				<cfif len(sms_message) GT 160>
 					<cfset sms_message = left(sms_message, 160)>
 				</cfif>
-							
-				
+
+
 				<!---CONTENIDO DEL EMAIL--->
 
 				<cfif includeItemContent IS true>
@@ -386,7 +386,7 @@
 							<b>#langText[curLang].new_item.virus_description#</b>:<br/>
 							<i style="color:##FF0000;">#arguments.anti_virus_check_result#</i><br/>
 							#langText[curLang].new_file.virus_advice#.<br/><br/>
-							
+
 						</cfif>
 
 						#itemHeadContent#
@@ -424,7 +424,7 @@
 						<cfoutput>
 
 						<cfif arguments.action NEQ "new">
-								
+
 							<cfif itemTypeGender EQ "male">
 								#langText[curLang].new_item.creation_user_male#:
 							<cfelse>
@@ -440,15 +440,15 @@
 							<strong>#objectItem.creation_date#</strong><br/>
 
 						</cfif>
-							
+
 						<cfif itemTypeId IS NOT 1 AND len(objectItem.last_update_date) GT 0>
 						#langText[curLang].new_item.last_update_date#: <strong>#objectItem.last_update_date#</strong><br/>
 						</cfif>
 
 						<cfif itemTypeId IS 6><!---Tasks--->
 						#langText[curLang].new_item.assigned_to#: <b>#objectItem.recipient_user_full_name#</b><br/>
-						</cfif>					
-						
+						</cfif>
+
 						<cfif itemTypeWeb IS true><!--- WEB --->
 
 							<cfif len(objectItem.publication_date) GT 0>
@@ -461,9 +461,9 @@
 						</cfif>
 
 						<cfif itemCategories.recordCount GT 0>
-							
-							#langText[curLang].common.categories#: 
-							
+
+							#langText[curLang].common.categories#:
+
 							<cfloop query="#itemCategories#">
 
 								<b style="color:##bbbbbb">#itemCategories.category_name#</b>&nbsp;&nbsp;&nbsp;
@@ -477,12 +477,12 @@
 
 							<cfif len(objectItem.link) GT 0 AND (itemTypeId NEQ 4 AND itemTypeId NEQ 5)>
 								<cfif itemTypeId IS 3><!---Links--->
-								#langText[curLang].new_item.link_url#: 
+								#langText[curLang].new_item.link_url#:
 								<cfelse>
 								#langText[curLang].new_item.link#: </cfif><a href="#objectItem.link#" target="_blank" style="font-weight:bold;">#objectItem.link#</a><br/>
 							</cfif>
 							<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
-							#langText[curLang].new_item.iframe_url#: 
+							#langText[curLang].new_item.iframe_url#:
 							<a href="#objectItem.iframe_url#" target="_blank" style="font-weight:bold;">#objectItem.iframe_url#</a><br/>
 							</cfif>
 							<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
@@ -495,10 +495,10 @@
 								#langText[curLang].new_item.real_value#: <b>#objectItem.real_value#</b><br/>
 								#langText[curLang].new_item.task_done#: <b><cfif objectItem.done IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
 								</cfif>
-							</cfif>	
+							</cfif>
 
 							<cfif itemTypeId IS 8><!--- Publications --->
-								
+
 								<cfif isNumeric(objectItem.sub_type_id)>
 									<cfinvoke component="#APPLICATION.coreComponentsPath#/ItemSubTypeQuery" method="getSubType" returnvariable="subTypeQuery">
 										<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
@@ -516,16 +516,17 @@
 									#langText[curLang].new_item.identifier#: <b>#objectItem.identifier#</b><br/>
 
 										<cfif isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
-											#langText[curLang].new_item.link_to_pubmed#: <a href="http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#" target="_blank">http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#</a><br/>
+											<cfset pubmedUrl = "http://www.ncbi.nlm.nih.gov/pubmed/"&objectItem.identifier>
+											#langText[curLang].new_item.link_to_pubmed#: <a href="#pubmedUrl#" target="_blank">#pubmedUrl#</a><br/>
 										</cfif>
 								</cfif>
 
 								<cfif subTypeQuery.recordCount IS 0 OR subTypeQuery.sub_type_id NEQ 1>
-									#langText[curLang].new_item.price#: <b>#objectItem.price#</b><br/>
+									#langText[curLang].new_item.value#: <b>#objectItem.price#</b><br/>
 								</cfif>
 
 							</cfif>
-							
+
 							<cfif itemTypeId IS 5><!---Events--->
 								#langText[curLang].new_item.price#: <b>#objectItem.price#</b><br/>
 							</cfif>
@@ -550,15 +551,15 @@
 						#langText[curLang].new_item.publication_scope#: <strong>#objectItem.publication_scope_name#</strong><br/>
 						</cfif>
 
-						
+
 						<div style="font-size:16px;color:##666666;font-family:'Roboto', sans-serif;padding-top:10px;">#objectItem.description#</div>
-						
+
 						<cfif (itemTypeId IS 4 OR itemTypeId IS 5) AND len(objectItem.link) GT 0><!---News, Events--->
 						<br/>#langText[curLang].new_item.more_information#: <a href="#objectItem.link#" target="_blank">#objectItem.link#</a><br/>
 						</cfif>
-						
+
 						<br/>
-						
+
 						<cfif arguments.action NEQ "delete"><!---Si el elemento no se elimina--->
 							<!---<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>--->
 
@@ -583,7 +584,7 @@
 						</cfoutput>
 					</cfsavecontent>
 
-				
+
 					<cfsavecontent variable="alertContent">
 						<cfoutput>
 
@@ -597,15 +598,15 @@
 								<td style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:14px;">
 
 									#alertItemContent#
-									
+
 								</td>
 							</tr>
 						</table><!--- END item container table --->
-						</cfoutput>					
+						</cfoutput>
 					</cfsavecontent>
-					
+
 				<cfelse><!---includeItemContent IS false--->
-					
+
 					<cfsavecontent variable="alertContent">
 						<cfoutput>
 						<!---<i>En este e-mail no se incluye el contenido <cfif itemTypeGender EQ "male">del<cfelse>de la</cfif> #lCase(itemTypeNameEs)#.</i><br/><br/>--->
@@ -628,28 +629,28 @@
 						</cfif>
 						</cfoutput>
 					</cfsavecontent>
-					
+
 				</cfif>
 
 
 				<!---INTERNAL USERS--->
 				<cfif len(listInternalUsers) GT 0>
-				
+
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaPathContent" returnvariable="area_path">
 						<cfinvokeargument name="area_id" value="#objectItem.area_id#">
 
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 					</cfinvoke>
-					
+
 					<cfset subjectInternal = subject>
-				
+
 					<cfsavecontent variable="contentInternal">
 					<cfoutput>
 			<!---<cfif arguments.action EQ "delete">
 				#action_name# #langText[curLang].common.by_user# #actionUserName# #langText[curLang].common.on_the_area#
 			<cfelse>
-				#langText[curLang].common.area#: 
+				#langText[curLang].common.area#:
 			</cfif>
 			<b>#area_name#</b>.<br/>
 			#langText[curLang].common.area_path#:--->
@@ -657,9 +658,9 @@
 			#alertItemHead#
 
 			#area_path#
-			
+
 			#alertContent#
-					</cfoutput>		
+					</cfoutput>
 					</cfsavecontent>
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/EmailManager" method="sendEmail">
@@ -678,34 +679,34 @@
 						<cfinvokeargument name="content" value="#contentInternal#">
 						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
-						
+
 						<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>
-							
+
 							<cfinvokeargument name="attachment_type" value="text/calendar">
 							<cfinvokeargument name="attachment_name" value="#itemTypeName#_#objectItem.id#.ics">
 							<cfinvokeargument name="attachment_content" value="#icalendarContent#">
 
 						</cfif>
-					</cfinvoke>	
-					
+					</cfinvoke>
+
 					<!---SMS--->
 					<cfif APPLICATION.identifier NEQ "dp" AND arguments.send_sms IS true>
-						
+
 						<!---El envío de SMS ya no está disponible en las nuevas versiones, se deja habilitado para versiones antiguas. En el caso de que se vuelva a habilitar para todas las versiones, es necesario pasar SMSManager a core-components y que no requiera SESSION--->
 						<cfinvoke component="#APPLICATION.componentsPath#/SMSManager" method="sendSMSNew">
 							<cfinvokeargument name="text" value="#sms_message#">
 							<cfinvokeargument name="recipients" value="#listInternalUsersPhones#">
 						</cfinvoke>
-										
+
 					</cfif>
-					
+
 				</cfif>
-				
+
 				<!---EXTERNAL USERS--->
 				<cfif len(listExternalUsers) GT 0>
-					
+
 					<cfset subjectExternal = subject>
-					
+
 					<cfsavecontent variable="contentExternal">
 					<cfoutput>
 			<!---#action_name# <cfif arguments.action EQ "delete">#langText[curLang].common.by_user# #actionUserName# </cfif>#langText[curLang].common.on_the_area# <b>#area_name#</b> #langText[curLang].common.of_the_organization# #root_area.name#.<br/><br/>--->
@@ -713,12 +714,12 @@
 			#alertItemHead#
 
 			<p><a href="#APPLICATION.mainUrl#/?abb=#arguments.client_abb#&area=#objectItem.area_id#" style="color:##009ed2;text-decoration:underline;font-size:15px;">#area_name#</a></p>
-			
+
 			#alertContent#
-					</cfoutput>		
+					</cfoutput>
 					</cfsavecontent>
-					
-					
+
+
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/EmailManager" method="sendEmail">
 						<!--- <cfinvokeargument name="from" value="#SESSION.client_email_from#"> --->
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
@@ -737,43 +738,43 @@
 						<cfinvokeargument name="foot_content" value="#foot_content#">
 
 						<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>
-							
+
 							<cfinvokeargument name="attachment_type" value="text/calendar">
 							<cfinvokeargument name="attachment_name" value="#itemTypeName#_#objectItem.id#.ics">
 							<cfinvokeargument name="attachment_content" value="#icalendarContent#">
 
 						</cfif>
-					</cfinvoke>	
-					
+					</cfinvoke>
+
 					<!---SMS--->
 					<cfif APPLICATION.identifier NEQ "dp" AND arguments.send_sms IS true>
-						
+
 						<!---El envío de SMS ya no está disponible en las nuevas versiones, se deja habilitado para versiones antiguas. En el caso de que se vuelva a habilitar para todas las versiones, es necesario pasar SMSManager a core-components y que no requiera SESSION--->
 						<cfinvoke component="#APPLICATION.componentsPath#/SMSManager" method="sendSMSNew">
 							<cfinvokeargument name="text" value="#sms_message#">
 							<cfinvokeargument name="recipients" value="#listExternalUsersPhones#">
 						</cfinvoke>
-										
+
 					</cfif>
-					
+
 				</cfif>
-			
+
 			</cfif><!---END len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0--->
-			
-	
+
+
 		</cfloop><!---END APPLICATION.languages loop--->
 
-		
+
 	</cffunction>
 
 
 	<!--- --------------------------- getAreaPathContent --------------------------- --->
-	
+
 	<cffunction name="getAreaPathContent" access="private" returntype="string">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="from_area_id" type="numeric" required="false"><!---Define el área a partir de la cual se muestra la ruta--->
 		<cfargument name="include_from_area" type="boolean" required="false" default="false">
-		
+
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
@@ -797,7 +798,7 @@
 
 
 	<!--- --------------------------- getItemAccessContent --------------------------- --->
-	
+
 	<cffunction name="getItemAccessContent" access="private" returntype="string">
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -806,7 +807,7 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<!---<cfargument name="client_dsn" type="string" required="true">--->
- 				
+
 		<cfset var method = "getItemAccessContent">
 
 		<cfset var accessContent = "">
@@ -824,14 +825,14 @@
 		</cfinvoke>
 
 		<cfif APPLICATION.twoUrlsToAccess IS false>
-					
+
 			<cfsavecontent variable="accessContent">
 			<cfoutput>
 			<cfif itemTypeId EQ 1 OR itemTypeId EQ 7><!--- Messages or Consultations --->
 				-&nbsp;<b>#langText[arguments.language].new_item.access_to_reply#</b> <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a>
 
 <!--- Google Go-To Action --->
-<!--- 
+<!---
 <script type="application/ld+json">
 {
 "@context": "http://schema.org",
@@ -847,7 +848,7 @@
 
 			<cfelse>
 				-&nbsp;<cfif itemTypeGender EQ "male">#langText[arguments.language].new_item.access_to_item_male#<cfelse>#langText[arguments.language].new_item.access_to_item_female#</cfif> #langText[arguments.language].item[itemTypeId].name# #langText[arguments.language].new_item.access_to_item_link#: <a target="_blank" href="#areaItemUrl#">#areaItemUrl#</a>
-			</cfif>					
+			</cfif>
 
 			<cfif arguments.client_abb EQ "hcs">
 				<cfset accessClient = "doplanning">
@@ -859,13 +860,13 @@
 				<br/>-&nbsp;#langText[arguments.language].common.access_to_application#:
 			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>
 			</cfif>
-			
+
 			</cfoutput>
 			</cfsavecontent>
-			
-			
+
+
 		<cfelse><!---VPNET/AGSNA--->
-		
+
 			<cfsavecontent variable="accessContent">
 			<cfoutput>
 				<cfif itemTypeId EQ 1 OR itemTypeId EQ 7><!--- Messages or Consultations --->
@@ -880,26 +881,26 @@
 			-&nbsp;#langText[arguments.language].common.access_external#  <a target="_blank" href="#APPLICATION.alternateUrl#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#">#APPLICATION.alternateUrl#/?abb=#SESSION.client_abb#&area=#arguments.area_id#&#itemTypeName#=#arguments.item_id#</a>
 			</cfoutput>
 			</cfsavecontent>
-			
-			
+
+
 			<!---<cfset access_default = '<br/><br/>Puede contestar al mensaje accediendo a la aplicación a través de: '>
-		
+
 			<cfsavecontent variable="access_content">
 			<cfoutput>
 			#access_default#<br/>
 			-&nbsp;Acceso interno <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/">#APPLICATION.mainUrl##APPLICATION.path#/</a><br/>
 			-&nbsp;Acceso externo <a target="_blank" href="#APPLICATION.alternateUrl#">#APPLICATION.alternateUrl#</a>
 			</cfoutput>
-			</cfsavecontent>--->	
+			</cfsavecontent>--->
 		</cfif>
-		
+
 		<cfreturn accessContent>
 
 	</cffunction>
 
 
 	<!--- --------------------------- getTableRowAccessContent --------------------------- --->
-	
+
 	<cffunction name="getTableRowAccessContent" access="private" returntype="string">
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -908,7 +909,7 @@
 		<cfargument name="language" type="string" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
- 				
+
 		<cfset var method = "getRowAccessContent">
 
 		<cfset var accessContent = "">
@@ -936,10 +937,10 @@
 		</cfinvoke>
 
 		<cfif APPLICATION.twoUrlsToAccess IS false>
-					
+
 			<cfsavecontent variable="accessContent">
 			<cfoutput>
-			
+
 			-&nbsp;<cfif itemTypeGender EQ "male">#langText[arguments.language].new_table_row.access_to_row_male#<cfelse>#langText[arguments.language].new_table_row.access_to_row_female#</cfif> #langText[arguments.language].item[itemTypeId].name# #langText[arguments.language].new_item.access_to_item_link#:<br/><a target="_blank" href="#tableRowUrl#">#tableRowUrl#</a>
 
 			<cfif arguments.client_abb EQ "hcs">
@@ -952,13 +953,13 @@
 				<br/>-&nbsp;#langText[arguments.language].common.access_to_application#:
 			<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>
 			</cfif>
-			
+
 			</cfoutput>
 			</cfsavecontent>
-			
-			
+
+
 		<cfelse><!---VPNET/AGSNA--->
-		
+
 			<cfsavecontent variable="accessContent">
 			<cfoutput>
 
@@ -970,25 +971,25 @@
 			</cfoutput>
 			</cfsavecontent>
 		</cfif>
-		
+
 		<cfreturn accessContent>
 
 	</cffunction>
 
 
 	<!--- --------------------------- getHeadContent --------------------------- --->
-	
+
 	<cffunction name="getHeadContent" access="private" returntype="string">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="client_abb" type="string" required="true">
- 				
+
 		<cfset var method = "getHeadContent">
 
 		<cfset var headContent = "">
 		<cfset var clientAppTitle = "">
 
 		<cfif NOT isDefined("SESSION.client_app_title")>
-			
+
 			<!--- getClient --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
@@ -1003,30 +1004,30 @@
 		</cfif>
 
 		<cfsavecontent variable="headContent"><cfoutput><table style="width:100%;height:32px;background-color:##019ED3;padding-left:15px;color:##FFFFFF;font-size:14px"><tr><td><span class="color:##FFFFFF;font-size:14px;font-family:'Roboto', sans-serif;">#clientAppTitle#</span></td></tr></table><div style="height:15px;line-height:15px;">&nbsp;</div></cfoutput></cfsavecontent>
-		
+
 		<cfreturn headContent>
 
 	</cffunction>
 
 
 	<!--- --------------------------- getItemFootContent --------------------------- --->
-	
+
 	<cffunction name="getItemFootContent" access="private" returntype="string">
 		<cfargument name="language" type="string" required="true">
- 				
+
 		<cfset var method = "getItemFootContent">
 
 		<cfset var footContent = "">
 
 		<cfsavecontent variable="footContent"><cfoutput><p style="font-family:'Roboto', sans-serif; font-size:10px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #APPLICATION.title# #langText[arguments.language].new_item.foot_content_2# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p></cfoutput></cfsavecontent>
-		
+
 		<cfreturn footContent>
 
 	</cffunction>
 
 
 	<!--- --------------------------- getItemHeadContent --------------------------- --->
-	
+
 	<cffunction name="getItemHeadContent" access="private" returntype="string">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="itemTypeName" type="string" required="true">
@@ -1046,7 +1047,7 @@
 
 			<table style="width:100%;margin-top:5px;">
 				<tr>
-					<td style="padding:0"><!--- Title --->								
+					<td style="padding:0"><!--- Title --->
 						<span style="font-size:22px;font-weight:100;color:##009ED2">#arguments.itemTitle#</span>
 					</td>
 				</tr>
@@ -1056,14 +1057,14 @@
 					</td>
 				</tr>
 			</table></cfoutput></cfsavecontent>
-		
+
 		<cfreturn headContent>
 
 	</cffunction>
 
 
 	<!--- --------------------------- getItemButtons --------------------------- --->
-	
+
 	<cffunction name="getItemButtons" access="private" returntype="string">
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -1072,7 +1073,7 @@
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="action" type="string" required="true">
 		<cfargument name="language" type="string" required="true">
-		
+
 		<cfargument name="client_abb" type="string" required="true">
 
 		<cfset var method = "getItemButtons">
@@ -1087,12 +1088,12 @@
 						<cfif arguments.action NEQ "delete" AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus">
 
 							<cfif arguments.itemTypeId IS 1>
-								
+
 								<!--- Reply --->
 								<a href="#arguments.itemUrl#&reply" target="_blank" title="#langText[arguments.language].new_item.reply#"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/btn_reply_#arguments.language#.png" alt="#uCase(langText[arguments.language].new_item.reply)#" title="#uCase(langText[arguments.language].new_item.reply)#"/></a><!--- <br/> --->
 
 							<cfelseif arguments.itemTypeId IS 10>
-								
+
 								<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="downloadFileUrl">
 									<cfinvokeargument name="file_id" value="#arguments.item_id#">
 									<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -1112,7 +1113,7 @@
 								<tr>
 									<td style="padding-left:10px;padding-right:10px;padding-top:4px;padding-bottom:4px;box-shadow:1px 1px 2px rgba(0,0,0,0.3)">
 										<a href="#itemUrl#&reply" class="color:##FFFFF6;text-decoration:none;font-size:12px;" target="_blank"><img src="#APPLICATION.mainUrl##APPLICATION.htmlPath#/assets/v3/emails/icon_reply.png" alt="#uCase(langText[arguments.language].new_item.reply)#"/> <span class="color:##FFFFF6;text-decoration:none;font-size:12px;">#uCase(langText[arguments.language].new_item.reply)#</span>
-										</a>	
+										</a>
 									</td>
 								</tr>
 							</table>
@@ -1131,7 +1132,7 @@
 				</tr>
 			</table></cfoutput>
 		</cfsavecontent>
-		
+
 		<cfreturn buttonsContent>
 
 	</cffunction>
@@ -1140,7 +1141,7 @@
 
 
 	<!--- --------------------------- getUserAndDateContent --------------------------- --->
-	
+
 	<cffunction name="getUserAndDateContent" access="private" returntype="string">
 		<cfargument name="user_id" type="numeric" required="true">
 		<cfargument name="actionUserFullName" type="string" required="true">
@@ -1157,10 +1158,10 @@
 		<cfset var actionBox = "">
 
 		<cfif len(arguments.actionBoxText) GT 0>
-			
+
 			<cfoutput>
 			<cfswitch expression="#arguments.action#">
-						
+
 				<cfcase value="new,create"><!---Nuevo--->
 
 					<cfset actionBox = "">
@@ -1168,21 +1169,21 @@
 				</cfcase>
 
 				<cfcase value="update"><!---Modificado--->
-				
+
 					<cfsavecontent variable="actionBox">
 						<table style="background-color:##019ed3;border-radius:4px;display:inline-block;">
 							<tr>
 								<td style="color:##FFFFFF;padding-left:2px;padding-right:2px;">
-									#actionBoxText#	
+									#actionBoxText#
 								</td>
 							</tr>
-						</table>														
+						</table>
 					</cfsavecontent>
-				
+
 				</cfcase>
 
 				<cfcase value="done"><!---Realizada--->
-				
+
 					<cfsavecontent variable="actionBox">
 						<table style="background-color:##82D0CA;border-radius:4px;display:inline-block;">
 							<tr>
@@ -1190,13 +1191,13 @@
 									#actionBoxText#
 								</td>
 							</tr>
-						</table>														
+						</table>
 					</cfsavecontent>
-				
+
 				</cfcase>
 
 				<cfcase value="close"><!---Cerrada--->
-				
+
 					<cfsavecontent variable="actionBox">
 						<table style="background-color:##EAD144;border-radius:4px;display:inline-block;">
 							<tr>
@@ -1204,13 +1205,13 @@
 									#actionBoxText#
 								</td>
 							</tr>
-						</table>														
+						</table>
 					</cfsavecontent>
-				
+
 				</cfcase>
 
 				<cfcase value="delete"><!---Eliminado--->
-					
+
 					<cfsavecontent variable="actionBox">
 						<table style="background-color:##e4514b;border-radius:4px;display:inline-block;">
 							<tr>
@@ -1218,13 +1219,13 @@
 									#actionBoxText#
 								</td>
 							</tr>
-						</table>														
+						</table>
 					</cfsavecontent>
 
 				</cfcase>
-				
+
 				<cfcase value="attached_file_deleted_virus,attached_image_deleted_virus">
-					
+
 					<cfsavecontent variable="actionBox">
 						<table style="background-color:##EAD144;border-radius:4px;display:inline-block;">
 							<tr>
@@ -1232,7 +1233,7 @@
 									#actionBoxText#
 								</td>
 							</tr>
-						</table>														
+						</table>
 					</cfsavecontent>
 
 				</cfcase>
@@ -1243,14 +1244,14 @@
 						<table style="background-color:##019ed3;border-radius:4px;display:inline-block;">
 							<tr>
 								<td style="color:##FFFFFF;padding-left:2px;padding-right:2px;">
-									#actionBoxText#	
+									#actionBoxText#
 								</td>
 							</tr>
-						</table>														
+						</table>
 					</cfsavecontent>
-					
+
 				</cfdefaultcase>
-				
+
 			</cfswitch>
 			</cfoutput>
 
@@ -1281,7 +1282,7 @@
 										</td>
 									</tr>
 								</table>
-								
+
 							</td>
 						</tr>
 
@@ -1295,15 +1296,15 @@
 				</td>
 			</tr></cfoutput>
 		</cfsavecontent>
-		
+
 		<cfreturn userAndDateContent>
 
 	</cffunction>
-	
+
 
 
 	<!--- -------------------------------------- newTableRow ------------------------------------ --->
-	
+
 	<cffunction name="newTableRow" access="public" returntype="void">
 		<cfargument name="row_id" type="numeric" required="true">
 		<cfargument name="rowQuery" type="query" required="true">
@@ -1314,10 +1315,10 @@
 		<cfargument name="fields" type="query" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">	
-			
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "newTableRow">
-		
+
 		<cfset var internalUsersEmails = "">
 		<cfset var externalUsersEmails = "">
         <cfset var listInternalUsers = "">
@@ -1333,7 +1334,7 @@
 		<cfset var actionUserName = "">
 		<cfset var userAndDateContent = "">
 		<cfset var rowStruct = structNew()>
-		
+
 		<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
 		<!--- getTable --->
@@ -1341,8 +1342,8 @@
 			<cfinvokeargument name="table_id" value="#arguments.table_id#">
 			<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			<cfinvokeargument name="parse_dates" value="true">
-			<cfinvokeargument name="published" value="false">			
-			
+			<cfinvokeargument name="published" value="false">
+
 			<cfinvokeargument name="client_abb" value="#client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>
@@ -1352,28 +1353,28 @@
 			<cfset area_id = getTableQuery.area_id>
 
 		<cfelse><!---Item does not exist--->
-		
+
 			<cfset error_code = 501>
-		
+
 			<cfthrow errorcode="#error_code#">
 
 		</cfif>
 
 		<cfif NOT isDefined("arguments.fields")>
-			
+
 			<!---Table fields--->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_types" value="true">
 				<cfinvokeargument name="with_table" value="false">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
 		</cfif>
-		
+
 		<!---generateRowStruct--->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="generateRowStruct" returnvariable="generateRowStructResponse">
 			<cfinvokeargument name="table_id" value="#arguments.table_id#">
@@ -1392,53 +1393,53 @@
 
 		<!---Get area name--->
 		<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-			SELECT id, name 
+			SELECT id, name
 			FROM #client_abb#_areas
 			WHERE id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
-		
+
 		<cfif selectAreaQuery.recordCount GT 0>
-		
+
 			<cfset area_name = selectAreaQuery.name>
-			
+
 		<cfelse><!---The area does not exist--->
-			
+
 			<cfset error_code = 301>
-			
+
 			<cfthrow errorcode="#error_code#">
-		
+
 		</cfif>
-		
+
 		<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
 			<cfinvokeargument name="onlyId" value="false">
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 		</cfinvoke>
 		<!---En el asunto se pone el nombre del área raiz--->
-		
+
 		<!---<cfsavecontent variable="getUsersParameters">
 			<cfoutput>
-				 <user id="" email=""	
-			telephone=""		
+				 <user id="" email=""
+			telephone=""
 			sms_allowed="" whole_tree_visible="">
 					<family_name><![CDATA[]]></family_name>
-					<name><![CDATA[]]></name>	
+					<name><![CDATA[]]></name>
 				</user>
-				<area id="#area_id#"/> 
+				<area id="#area_id#"/>
 				<order parameter="family_name" order_type="asc" />
-				<preferences 
-					notify_new_#tableTypeName#_row="true">				
+				<preferences
+					notify_new_#tableTypeName#_row="true">
 				</preferences>
 			</cfoutput>
 		</cfsavecontent>
-		
+
 		<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="getUsersRequest">
 			<cfinvokeargument name="request_parameters" value="#getUsersParameters#">
 		</cfinvoke>--->
 
 		<!--- getItemCategories --->
 		<cfif NOT isDefined("arguments.itemCategories")>
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
 				<cfinvokeargument name="item_id" value="#arguments.table_id#">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
@@ -1447,7 +1448,7 @@
 			</cfinvoke>
 
 		</cfif>
-        
+
         <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
 			<!---<cfinvokeargument name="request" value="#getUsersRequest#"/>--->
 			<cfinvokeargument name="area_id" value="#area_id#">
@@ -1459,7 +1460,7 @@
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 		</cfinvoke>
-		
+
 		<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
 		<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
 
@@ -1476,14 +1477,14 @@
 
 			<cfset actionUserName = actionUserQuery.user_full_name>
 		</cfif>
-		
+
 		<cfloop list="#APPLICATION.languages#" index="curLang">
-		
+
 			<cfset listInternalUsers = internalUsersEmails[curLang]>
 			<cfset listExternalUsers = externalUsersEmails[curLang]>
-		
+
 			<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
-				
+
 				<cfswitch expression="#arguments.action#">
 					<cfcase value="create">
 						<cfset subject_action = "#langText[curLang].new_table_row.new_row# #langText[curLang].item[itemTypeId].name#">
@@ -1521,7 +1522,7 @@
 					<cfinvokeargument name="area_id" value="#area_id#">
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-				</cfinvoke>	
+				</cfinvoke>
 
 				<!--- getItemHeadContent --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemHeadContent" returnvariable="itemHeadContent">
@@ -1533,7 +1534,7 @@
 					<cfinvokeargument name="action" value="#arguments.action#"/>
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
-				</cfinvoke>		
+				</cfinvoke>
 
 				<!--- getItemButtons --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getItemButtons" returnvariable="itemButtonsContent">
@@ -1549,7 +1550,7 @@
 				</cfinvoke>
 
 				<cfif isDefined("arguments.user_id")>
-					
+
 					<cfset actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
 
 					<!--- getUserAndDateContent --->
@@ -1562,14 +1563,14 @@
 						<cfinvokeargument name="language" value="#curLang#">
 
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
-					</cfinvoke>	
+					</cfinvoke>
 
 				</cfif>
 
 
 				<cfsavecontent variable="alertItemContent">
 					<cfoutput>
-					
+
 					<!---<cfif len(actionUserName) GT 0>
 						#langText[curLang].common.user#: <strong>#actionUserName#</strong><br/>
 					</cfif>--->
@@ -1609,7 +1610,7 @@
 							<br/>
 							<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>
 						</cfif>--->
-						
+
 						<!---tableRowUrl--->
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="tableRowUrl">
 							<cfinvokeargument name="table_id" value="#arguments.table_id#">
@@ -1654,17 +1655,17 @@
 							<td style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:14px;">
 
 								#alertItemContent#
-								
+
 							</td>
 						</tr>
 					</table><!--- END item container table --->
-					</cfoutput>					
+					</cfoutput>
 				</cfsavecontent>
-				
-				
+
+
 				<!---INTERNAL USERS--->
 				<cfif len(listInternalUsers) GT 0>
-					
+
 					<!---<cfinvoke component="AreaQuery" method="getAreaPath" returnvariable="area_path">
 						<cfinvokeargument name="area_id" value="#area_id#">
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
@@ -1673,11 +1674,11 @@
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaPathContent" returnvariable="area_path">
 						<cfinvokeargument name="area_id" value="#area_id#">
-						
+
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 					</cfinvoke>
-					
+
 					<cfprocessingdirective suppresswhitespace="true">
 					<cfsavecontent variable="contentInternal">
 					<cfoutput>
@@ -1687,12 +1688,12 @@
 			#langText[curLang].common.area_path#: #area_path#.<br/><br/>--->
 
 			#area_path#
-			
+
 			#alertContent#
 					</cfoutput>
 					</cfsavecontent>
-					</cfprocessingdirective>				
-				
+					</cfprocessingdirective>
+
 					<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfif len(actionUserName) GT 0>
@@ -1705,28 +1706,28 @@
 						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
 					</cfinvoke>
-					
+
 				</cfif>
-				
-		
+
+
 				<!---EXTERNAL USERS--->
 				<cfif len(listExternalUsers) GT 0>
-					
+
 					<cfprocessingdirective suppresswhitespace="true">
 					<cfsavecontent variable="contentExternal">
 					<cfoutput>
 			#itemHeadContent#
 
 			<!--- #langText[curLang].new_file.it_has# #action_value# #langText[curLang].new_file.a_file_on_the_area# ---><!---#langText[curLang].common.area#: <strong>#area_name#</strong> #langText[curLang].common.of_the_organization# #root_area.name#.<br/><br/>--->
-			
+
 			<p><a href="#APPLICATION.mainUrl#/?abb=#arguments.client_abb#&area=#area_id#" style="color:##009ed2;text-decoration:underline;font-size:15px;">#area_name#</a></p>
-			
+
 
 			#alertContent#
 					</cfoutput>
 					</cfsavecontent>
-					</cfprocessingdirective>				
-				
+					</cfprocessingdirective>
+
 					<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfif len(actionUserName) GT 0>
@@ -1738,21 +1739,21 @@
 						<cfinvokeargument name="content" value="#contentExternal#">
 						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
-					</cfinvoke>		
-						
+					</cfinvoke>
+
 				</cfif>
-				
+
 			</cfif><!---END len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0--->
-			
+
 		</cfloop><!---END APPLICATION.languages loop--->
-		
+
 	</cffunction>
 
 
 	<!--- -------------------------------------- sendDiaryAlerts ------------------------------------ --->
 
 	<!--- Task alerts --->
-	
+
 	<cffunction name="sendDiaryAlerts" output="false" access="public" returntype="void">
 
 		<cfset var client_abb = "">
@@ -1769,11 +1770,11 @@
 
 		<cftry>
 
-			<cfinvoke component="ClientQuery" method="getClients" returnvariable="getClientsQuery">					
+			<cfinvoke component="ClientQuery" method="getClients" returnvariable="getClientsQuery">
 			</cfinvoke>
 
 			<cfloop query="getClientsQuery">
-				
+
 				<cfif getClientsQuery.tasks_reminder_notifications IS true>
 
 					<cfset client_abb = getClientsQuery.abbreviation>
@@ -1800,7 +1801,7 @@
 						<cfloop query="getAllUsersQuery">
 
 							<cfif getAllUsersQuery.enabled IS true AND len(getAllUsersQuery.email) GT 0>
-								
+
 								<cfset var curUserId = getAllUsersQuery.user_id>
 								<cfset var curLang = getAllUsersQuery.language>
 								<cfset var curUserEmail = getAllUsersQuery.email>
@@ -1819,7 +1820,7 @@
 									</cfinvoke>
 
 									<cfif listLen(userAreasIds) GT 0>--->
-										
+
 										<cfinvoke component="AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
 											<!--- <cfinvokeargument name="areas_ids" value="#userAreasIds#"> --->
 											<cfinvokeargument name="all_areas" value="true">
@@ -1830,17 +1831,17 @@
 											<cfinvokeargument name="with_area" value="true">
 											<cfinvokeargument name="parse_dates" value="true"/>
 											<cfinvokeargument name="done" value="false">
-											
-											<!--- 
+
+											<!---
 											<cfif isDefined("arguments.from_date")>
 											<cfinvokeargument name="from_date" value="#arguments.from_date#">
 											</cfif>
 											<cfif isDefined("arguments.end_date")>
 											<cfinvokeargument name="end_date" value="#arguments.end_date#">
 											</cfif> --->
-											
+
 											<cfinvokeargument name="published" value="false">
-											
+
 											<cfinvokeargument name="client_abb" value="#client_abb#">
 											<cfinvokeargument name="client_dsn" value="#client_dsn#">
 										</cfinvoke>
@@ -1854,7 +1855,7 @@
 										</cfquery>
 
 										<cfif tasksReminderDays NEQ 0>
-											
+
 											<cfset futureDate = dateAdd("d", tasksReminderDays, todayDate)>
 											<cfset futureDateFormatted = dateFormat(futureDate, APPLICATION.dateFormat)>
 
@@ -1863,32 +1864,32 @@
 												FROM tasksQuery
 												WHERE end_date = <cfqueryparam value="#futureDateFormatted#" cfsqltype="cf_sql_varchar">;
 											</cfquery>
-											
+
 											<!---<cfdump var="#tasksQuery#">
 											<cfdump var="#futureTasksQuery#">
 											<cfoutput>
 												#futureDate#<br/>
 												#futureTasksQuery.recordCount#<br/>
-											</cfoutput>--->											
+											</cfoutput>--->
 
 										<cfelse>
 
 											<cfset futureTasksQuery = queryNew("item_id")>
 
 										</cfif>
-										
+
 
 										<cfif expiredTasksQuery.recordCount GT 0 OR futureTasksQuery.recordCount GT 0>
-											
+
 											<cfset var alertContent = "">
 											<cfset var taskAlertContent = "">
 
 											<cfif expiredTasksQuery.recordCount GT 0>
-												
+
 												<cfset var expiredTasksArray = arrayNew(1)>
 												<cfinvoke component="Utils" method="queryToArray" returnvariable="expiredTasksArray">
 													<cfinvokeargument name="data" value="#expiredTasksQuery#">
-												</cfinvoke>		
+												</cfinvoke>
 
 												<cfset todayDateFormatted = dateFormat(todayDate, APPLICATION.dateFormat)>
 
@@ -1905,7 +1906,7 @@
 													</cfinvoke>
 
 													<cfif userAreaAccessResult IS true>
-														
+
 														<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="taskAlertContent">
 															<cfinvokeargument name="item" value="#taskObject#">
 															<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
@@ -1914,25 +1915,25 @@
 															<cfinvokeargument name="language" value="#curLang#">
 
 															<cfinvokeargument name="client_abb" value="#client_abb#">
-														</cfinvoke>	
+														</cfinvoke>
 
 														<cfset alertContent = alertContent&taskAlertContent>
 
 													</cfif>
-													
-												</cfloop>								
-												
+
+												</cfloop>
+
 											</cfif>
 
 											<cfif futureTasksQuery.recordCount GT 0>
-												
+
 												<cfset var futureTasksArray = arrayNew(1)>
 												<cfinvoke component="Utils" method="queryToArray" returnvariable="futureTasksArray">
 													<cfinvokeargument name="data" value="#futureTasksQuery#">
-												</cfinvoke>		
+												</cfinvoke>
 
 												<cfif len(alertContent) GT 0>
-													
+
 													<cfset alertContent = alertContent&"<br>">
 
 												</cfif>
@@ -1944,7 +1945,7 @@
 													<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="userAreaAccessResult">
 														<cfinvokeargument name="area_id" value="#taskObject.area_id#">
 														<cfinvokeargument name="user_id" value="#curUserId#">
-														
+
 														<cfinvokeargument name="client_abb" value="#client_abb#">
 														<cfinvokeargument name="client_dsn" value="#client_dsn#">
 													</cfinvoke>
@@ -1959,7 +1960,7 @@
 															<cfinvokeargument name="language" value="#curLang#">
 
 															<cfinvokeargument name="client_abb" value="#client_abb#">
-														</cfinvoke>	
+														</cfinvoke>
 
 														<cfset alertContent = alertContent&taskAlertContent>
 
@@ -1980,14 +1981,14 @@
 											<cfinvoke component="AlertManager" method="getDiaryAlertFootContent" returnvariable="footContent">
 												<cfinvokeargument name="language" value="#curLang#">
 											</cfinvoke>
-											
+
 											<!---<cfoutput>
 												#todayDate#<br/>
 												#futureDate#<br/>
 												#curUserEmail#<br/>
 												#alertContent#
 											</cfoutput>--->
-											
+
 											<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 												<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 												<cfinvokeargument name="to" value="#curUserEmail#">
@@ -2008,7 +2009,7 @@
 						</cfloop>
 
 						<cfcatch>
-							<cfinclude template="includes/errorHandler.cfm">						
+							<cfinclude template="includes/errorHandler.cfm">
 						</cfcatch>
 
 					</cftry>
@@ -2016,7 +2017,7 @@
 				</cfif><!--- END getClientsQuery.tasks_reminder_notifications IS true --->
 
 			</cfloop><!--- END loop query="getClientsQuery" --->
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>
@@ -2028,7 +2029,7 @@
 
 
 	<!--- -------------------------------------- sendAllDiaryAlerts ------------------------------------ --->
-	
+
 	<cffunction name="sendAllDiaryAlerts" output="false" access="public" returntype="void">
 
 		<cfset var client_abb = "">
@@ -2046,7 +2047,7 @@
 		<cftry>
 
 			<!--- getClients --->
-			<cfinvoke component="ClientQuery" method="getClients" returnvariable="getClientsQuery">					
+			<cfinvoke component="ClientQuery" method="getClients" returnvariable="getClientsQuery">
 			</cfinvoke>
 
 			<!--- getAreaItemTypesStruct --->
@@ -2056,14 +2057,14 @@
 			<cfset var itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
 			<cfloop query="getClientsQuery">
-				
+
 				<cfset client_abb = getClientsQuery.abbreviation>
 				<cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
 
 				<cftry>
 
 					<cfif client_abb EQ "hcs">
-					
+
 					<!---<cfset forceNotifications = getClientsQuery.force_notifications>--->
 
 					<!--- getAllUsers --->
@@ -2100,7 +2101,7 @@
 							<cfelse>
 
 								<cfswitch expression="#getAllUsersQuery.notifications_digest_type_id#">
-								
+
 									<cfcase value="1"><!--- daily --->
 
 										<cfset lastDigestDate = dateAdd("d", -1, currentDigestDate)>
@@ -2110,13 +2111,13 @@
 									<cfcase value="2"><!--- weekly --->
 
 										<cfset lastDigestDate = dateAdd("d", -7, currentDigestDate)>
-										
+
 									</cfcase>
 
 									<cfcase value="3"><!--- monthly --->
 
 										<cfset lastDigestDate = dateAdd("d", -30, currentDigestDate)>
-										
+
 									</cfcase>
 
 								</cfswitch>
@@ -2124,11 +2125,11 @@
 							</cfif>
 
 							<cfset daysBetweenLastDigest = dateDiff("d", lastDigestDate, currentDigestDate)>
-							
+
 							<cfswitch expression="#getAllUsersQuery.notifications_digest_type_id#">
-								
+
 								<cfcase value="1"><!--- daily --->
-									
+
 									<cfif daysBetweenLastDigest GT 0>
 										<cfset sendNotifications = true>
 									</cfif>
@@ -2140,7 +2141,7 @@
 									<cfif daysBetweenLastDigest GT 6>
 										<cfset sendNotifications = true>
 									</cfif>
-									
+
 								</cfcase>
 
 								<cfcase value="3"><!--- monthly --->
@@ -2148,7 +2149,7 @@
 									<cfif daysBetweenLastDigest GT 29>
 										<cfset sendNotifications = true>
 									</cfif>
-									
+
 								</cfcase>
 
 							</cfswitch>
@@ -2160,7 +2161,7 @@
 							</cfoutput>--->
 
 							<cfif sendNotifications IS true>
-							
+
 								<cfset var curUserId = getAllUsersQuery.user_id>
 								<cfset var curLang = getAllUsersQuery.language>
 								<cfset var curUserEmail = getAllUsersQuery.email>
@@ -2180,7 +2181,7 @@
 
 									<!--- getUserNotificationsCategoriesDisabled --->
 									<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserNotificationsCategoriesDisabled" returnvariable="userNotificationsDisabledQuery">
-										<cfinvokeargument name="user_id" value="#curUserId#">				
+										<cfinvokeargument name="user_id" value="#curUserId#">
 										<cfinvokeargument name="client_abb" value="#client_abb#">
 										<cfinvokeargument name="client_dsn" value="#client_dsn#">
 									</cfinvoke>
@@ -2204,13 +2205,13 @@
 										<cfif itemTypeQuery.recordCount GT 0 AND isNumeric(itemTypeQuery.category_area_id)><!--- Area category defined for the item --->
 
 											<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
-												<cfinvokeargument name="area_id" value="#itemTypeQuery.category_area_id#">				
+												<cfinvokeargument name="area_id" value="#itemTypeQuery.category_area_id#">
 												<cfinvokeargument name="client_abb" value="#client_abb#">
 												<cfinvokeargument name="client_dsn" value="#client_dsn#">
 											</cfinvoke>
 
 											<cfif subAreasQuery.recordCount GT 0><!--- Categories defined for the item --->
-												
+
 												<cfquery name="userNotificationsDisabledItem" dbtype="query">
 													SELECT *
 													FROM userNotificationsDisabledQuery
@@ -2218,13 +2219,13 @@
 												</cfquery>
 
 												<cfif userNotificationsDisabledItem.recordCount GT 0>
-													
+
 													<cfset categoriesAreasArray = queryColumnData(subAreasQuery,"id")>
 
 													<cfloop query="userNotificationsDisabledItem">
 
 														<cfset areaInArrayPosition = ArrayFind(categoriesAreasArray,userNotificationsDisabledItem.area_id)>
-														
+
 														<cfif areaInArrayPosition GT 0>
 
 															<cfif arrayDeleteAt(categoriesAreasArray, areaInArrayPosition) IS false>
@@ -2232,11 +2233,11 @@
 															</cfif>
 
 														</cfif>
-														
+
 													</cfloop>
 
 													<cfif arrayLen(categoriesAreasArray) IS 0>
-													
+
 														<cfset noCategoriesSelected = true>
 
 													</cfif>
@@ -2246,7 +2247,7 @@
 											</cfif>
 
 										</cfif><!--- END Category defined for the item --->
-										
+
 
 										<cfif noCategoriesSelected IS false>
 
@@ -2263,17 +2264,17 @@
 													<cfinvokeargument name="with_area" value="false">
 													<cfinvokeargument name="parse_dates" value="true"/>
 													<!---<cfinvokeargument name="done" value="false">--->
-													
+
 													<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
 													<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
-													
+
 													<cfinvokeargument name="published" value="false">
 
 													<cfif arrayLen(categoriesAreasArray) GT 0>
 														<cfinvokeargument name="categories_ids" value="#categoriesAreasArray#">
 														<cfinvokeargument name="categories_condition" value="OR">
 													</cfif>
-													
+
 													<cfinvokeargument name="client_abb" value="#client_abb#">
 													<cfinvokeargument name="client_dsn" value="#client_dsn#">
 												</cfinvoke>
@@ -2290,7 +2291,7 @@
 													<cfinvokeargument name="with_user" value="true">
 													<cfinvokeargument name="with_area" value="false">
 													<cfinvokeargument name="with_typology" value="false">
-													
+
 													<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
 													<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
 
@@ -2298,7 +2299,7 @@
 														<cfinvokeargument name="categories_ids" value="#categoriesAreasArray#">
 														<cfinvokeargument name="categories_condition" value="OR">
 													</cfif>
-													
+
 													<cfinvokeargument name="client_abb" value="#client_abb#">
 													<cfinvokeargument name="client_dsn" value="#client_dsn#">
 												</cfinvoke>
@@ -2313,7 +2314,7 @@
 												<cfsavecontent variable="headItemsAlertContent">
 													<table style="width:100%;margin-top:15px;margin-bottom:20px;">
 														<tr>
-															<td style="padding:0"><!--- Title --->								
+															<td style="padding:0"><!--- Title --->
 																<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].item[itemTypeId].name_plural#</span>
 															</td>
 														</tr>
@@ -2330,8 +2331,8 @@
 												<cfset var itemsArray = arrayNew(1)>
 												<cfinvoke component="Utils" method="queryToArray" returnvariable="itemsArray">
 													<cfinvokeargument name="data" value="#itemsQuery#">
-												</cfinvoke>	
-												
+												</cfinvoke>
+
 												<cfloop array="#itemsArray#" index="itemObject">
 
 													<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="itemAlertContent">
@@ -2342,10 +2343,10 @@
 														<cfinvokeargument name="language" value="#curLang#">
 
 														<cfinvokeargument name="client_abb" value="#client_abb#">
-													</cfinvoke>	
+													</cfinvoke>
 
-													<cfset alertContent = alertContent&itemAlertContent>							
-													
+													<cfset alertContent = alertContent&itemAlertContent>
+
 												</cfloop>
 
 											<cfelse>
@@ -2361,7 +2362,7 @@
 										<!---<cfoutput>
 											Ninguna categoría seleccionada: #itemTypeId#
 										</cfoutput>--->
-											
+
 
 										</cfif><!--- END noCategoriesSelected IS false --->
 
@@ -2376,7 +2377,7 @@
 										<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
 										<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
 										<!---<cfif getAllUsersQuery.internal_user IS false>--->
-											<cfinvokeargument name="areas_ids" value="#userAreasIds#"/>					
+											<cfinvokeargument name="areas_ids" value="#userAreasIds#"/>
 										<!---</cfif>--->
 										<cfinvokeargument name="order_by" value="creation_date">
 										<cfinvokeargument name="order_type" value="DESC">
@@ -2393,7 +2394,7 @@
 										<cfsavecontent variable="headAreasAlertContent">
 											<table style="width:100%;margin-top:15px;margin-bottom:20px;">
 												<tr>
-													<td style="padding:0"><!--- Title --->								
+													<td style="padding:0"><!--- Title --->
 														<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].common.areas#</span>
 													</td>
 												</tr>
@@ -2427,20 +2428,20 @@
 												<br/><br/>
 											</cfsavecontent>
 											<cfset alertContent = alertContent&areaContent>
-											
+
 
 										</cfloop><!--- END loop areas --->
-										
+
 									</cfif><!--- END areasQuery.recordCount GT 0 --->
 
 
 									<!--- Users to areas --->
-									
+
 									<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaUsers" returnvariable="usersQuery">
 										<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
 										<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
 										<!---<cfif getAllUsersQuery.internal_user IS false>--->
-											<cfinvokeargument name="areas_ids" value="#userAreasIds#"/>					
+											<cfinvokeargument name="areas_ids" value="#userAreasIds#"/>
 										<!---</cfif>--->
 										<cfinvokeargument name="order_by" value="association_date">
 										<cfinvokeargument name="order_type" value="DESC">
@@ -2456,7 +2457,7 @@
 										<cfsavecontent variable="headAreasAlertContent">
 											<table style="width:100%;margin-top:15px;margin-bottom:20px;">
 												<tr>
-													<td style="padding:0"><!--- Title --->								
+													<td style="padding:0"><!--- Title --->
 														<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].common.users#</span>
 													</td>
 												</tr>
@@ -2490,15 +2491,15 @@
 												<br/><br/>
 											</cfsavecontent>
 											<cfset alertContent = alertContent&userContent>
-											
+
 
 										</cfloop><!--- END loop areas --->
-										
+
 									</cfif><!--- END usersQuery.recordCount GT 0 --->
 
 
 									<cfif len(alertContent) GT 0>
-										
+
 										<cfset var preAlertContent = "<p style='font-size:16px;'>#langText[curLang].notifications_digest.activity_summary_for_user# #getAllUsersQuery.family_name# #getAllUsersQuery.name# (<a href='mailto:#curUserEmail#' style='color:##35938c'>#curUserEmail#</a>) ">
 										<cfset preAlertContent = preAlertContent&lastDigestDateFormatted&" - "&currentDigestDateFormatted&"</p>">
 
@@ -2523,7 +2524,7 @@
 										<cfinvoke component="AlertManager" method="getDiaryAlertFootContent" returnvariable="footContent">
 											<cfinvokeargument name="language" value="#curLang#">
 										</cfinvoke>
-										
+
 										<!--- sendEmail --->
 										<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 											<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
@@ -2554,13 +2555,13 @@
 					</cfif><!--- END client_abb EQ "hcs" --->
 
 					<cfcatch>
-						<cfinclude template="includes/errorHandler.cfm">						
+						<cfinclude template="includes/errorHandler.cfm">
 					</cfcatch>
 
 				</cftry>
 
 			</cfloop><!--- END loop query="getClientsQuery" --->
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>
@@ -2572,7 +2573,7 @@
 
 
 	<!--- --------------------------- getItemDiaryAlertContent --------------------------- --->
-	
+
 	<cffunction name="getItemDiaryAlertContent" access="private" returntype="string">
 		<cfargument name="item" type="struct" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -2581,14 +2582,14 @@
 		<cfargument name="language" type="string" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
- 				
+
 		<cfset var method = "getItemFootContent">
 
 		<cfset var itemContent = "">
 		<cfset var actionDate = "">
 		<cfset var actionBoxText = "">
 		<cfset var actionBox = "">
-			
+
 
 			<!---itemUrl--->
 			<cfinvoke component="UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
@@ -2637,19 +2638,19 @@
 				</cfif>
 
 				<cfif len(actionBoxText) GT 0>
-					
+
 					<cfsavecontent variable="actionBox">
 						<table style="background-color:##019ed3;border-radius:4px;display:inline-block;">
 							<tr>
 								<td style="color:##FFFFFF;padding-left:2px;padding-right:2px;">
-									#actionBoxText#	
+									#actionBoxText#
 								</td>
 							</tr>
-						</table>														
+						</table>
 					</cfsavecontent>
 
 				</cfif>
-				
+
 				<cfset spacePos = findOneOf(" ", actionDate)>
 
 				<cfif itemTypeId NEQ 10>
@@ -2679,23 +2680,23 @@
 					<br/><br/>
 				</cfif>
 			</cfsavecontent>
-		
+
 		<cfreturn itemContent>
 
 	</cffunction>
 
 
 	<!--- --------------------------- getDiaryAlertFootContent --------------------------- --->
-	
+
 	<cffunction name="getDiaryAlertFootContent" access="private" returntype="string">
 		<cfargument name="language" type="string" required="true">
- 				
+
 		<cfset var method = "getDiaryAlertFootContent">
 
 		<cfset var footContent = "">
 
 		<cfset footContent = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p>'>
-		
+
 		<cfreturn footContent>
 
 	</cffunction>
@@ -2714,9 +2715,9 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-				
+
 		<cfset var method = "newFile">
-		
+
 		<cfset var fileItemTypeId = 10>
 
 		<cfset var internalUsersEmails = "">
@@ -2732,51 +2733,51 @@
 		<cfset var alertContent = "">
 		<cfset var actionUserName = "">
 		<cfset var userAndDateContent = "">
-				
+
 		<!---Get area name--->
 		<cfquery name="selectAreaQuery" datasource="#client_dsn#">
-			SELECT id, name 
+			SELECT id, name
 			FROM #client_abb#_areas
 			WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
-		
+
 		<cfif selectAreaQuery.recordCount GT 0>
-		
+
 			<cfset area_name = selectAreaQuery.name>
-			
+
 		<cfelse><!---The area does not exist--->
-			
+
 			<cfset error_code = 301>
-			
+
 			<cfthrow errorcode="#error_code#">
-		
+
 		</cfif>
-		
+
 		<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
 			<cfinvokeargument name="onlyId" value="false">
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 		</cfinvoke>
 		<!---En el asunto se pone el nombre del área raiz--->
-		
+
 		<!---<cfsavecontent variable="getUsersParameters">
 			<cfoutput>
-				 <user id="" email=""	
-			telephone=""		
+				 <user id="" email=""
+			telephone=""
 			sms_allowed="" whole_tree_visible="">
 					<family_name><![CDATA[]]></family_name>
-					<name><![CDATA[]]></name>	
+					<name><![CDATA[]]></name>
 				</user>
-				<area id="#area_id#"/> 
+				<area id="#area_id#"/>
 				<order parameter="family_name" order_type="asc" />
 				<cfif arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus"><!---delete_virus y delete_version_virus se envía a todos los usuarios --->
-					<preferences 
+					<preferences
 					<cfswitch expression="#arguments.action#">
 
 						<cfcase value="new,associate">
 							notify_new_file="true"
 						</cfcase>
-						
+
 						<cfcase value="replace,new_version,new_current_version,validate_version,reject_version,approve_version,cancel_revision,change_owner_to_area">
 							notify_replace_file="true"
 						</cfcase>
@@ -2786,19 +2787,19 @@
 						</cfcase>
 
 						<cfcase value="lock,unlock">
-							notify_lock_file="true"							
+							notify_lock_file="true"
 						</cfcase>
 
 					</cfswitch>
 					<!---<cfif arguments.action EQ "replace" OR arguments.action EQ "new_version">
-						
+
 					<cfelseif arguments.action EQ "dissociate" OR arguments.action EQ "delete">
-								
+
 					<cfelseif arguments.action EQ "lock" OR arguments.action EQ "unlock">
-						
+
 					<cfelse>
-						
-					</cfif>--->>				
+
+					</cfif>--->>
 					</preferences>
 				</cfif>
 			</cfoutput>
@@ -2810,7 +2811,7 @@
 
 		<!--- getItemCategories --->
 		<cfif NOT isDefined("arguments.itemCategories")>
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
 				<cfinvokeargument name="item_id" value="#objectFile.id#">
 				<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
@@ -2819,7 +2820,7 @@
 			</cfinvoke>
 
 		</cfif>
-        
+
         <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
 			<!---<cfinvokeargument name="request" value="#getUsersRequest#"/>--->
 			<cfinvokeargument name="area_id" value="#area_id#">
@@ -2832,7 +2833,7 @@
 				<cfcase value="new,associate">
 					<cfinvokeargument name="notify_new_file" value="true">
 				</cfcase>
-				
+
 				<cfcase value="replace,new_version,new_current_version,validate_version,reject_version,approve_version,cancel_revision,change_owner_to_area">
 					<cfinvokeargument name="notify_replace_file" value="true">
 				</cfcase>
@@ -2850,7 +2851,7 @@
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 		</cfinvoke>
-		
+
 		<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
 		<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
 
@@ -2872,29 +2873,29 @@
 
 
 		<cfloop list="#APPLICATION.languages#" index="curLang">
-		
+
 			<cfset listInternalUsers = internalUsersEmails[curLang]>
 			<cfset listExternalUsers = externalUsersEmails[curLang]>
-		
+
 			<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
-				
+
 				<cfswitch expression="#arguments.action#">
-					
+
 					<cfcase value="new"><!--- new (Only area file) --->
 						<cfset subject_action = langText[curLang].new_file.area_file>
-						<cfset action_value = langText[curLang].new_file.created>	
+						<cfset action_value = langText[curLang].new_file.created>
 					</cfcase>
 
 					<cfcase value="associate"><!--- associate --->
 						<cfset subject_action = langText[curLang].new_file.file>
-						<cfset action_value = langText[curLang].new_file.added>	
+						<cfset action_value = langText[curLang].new_file.added>
 					</cfcase>
 
 					<cfcase value="replace"><!--- replace --->
 						<cfset subject_action = langText[curLang].new_file.replaced_file>
 						<cfset action_value = langText[curLang].new_file.replaced>
 					</cfcase>
-					
+
 					<cfcase value="dissociate"><!--- dissociate --->
 						<cfset subject_action = langText[curLang].new_file.dissociated_file>
 						<cfset action_value = langText[curLang].new_file.dissociated>
@@ -2909,7 +2910,7 @@
 						<cfset subject_action = langText[curLang].new_file.deleted_file_virus>
 						<cfset action_value = langText[curLang].new_file.deleted>
 					</cfcase>
-					
+
 					<cfcase value="delete_version"><!--- delete_version --->
 						<cfset subject_action = langText[curLang].new_file.deleted_version>
 						<cfset action_value = langText[curLang].new_file.deleted>
@@ -2971,7 +2972,7 @@
 
 				<!---
 				<cfif arguments.action NEQ "dissociate" AND arguments.action NEQ "delete" AND arguments.action NEQ "delete_virus">
-					
+
 					<cfinvoke component="AlertManager" method="getFileAccessContent" returnvariable="access_content">
 						<cfinvokeargument name="file_id" value="#objectFile.id#"/>
 						<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
@@ -3016,7 +3017,7 @@
 						<b>#langText[curLang].new_item.virus_description#</b>:<br/>
 						<i style="color:##FF0000;">#arguments.anti_virus_check_result#</i><br/>
 						#langText[curLang].new_file.virus_advice#.<br/><br/>
-						
+
 					</cfif>
 
 					#itemHeadContent#
@@ -3036,7 +3037,7 @@
 				</cfinvoke>
 
 				<cfif isDefined("arguments.user_id")>
-					
+
 					<cfset actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
 
 					<cfif action_value EQ "new">
@@ -3068,7 +3069,7 @@
 					<cfinvokeargument name="objectFile" value="#objectFile#">
 					<cfinvokeargument name="language" value="#curLang#">
 				</cfinvoke>
-			
+
 				<cfsavecontent variable="alertContent">
 					<cfoutput>
 
@@ -3078,7 +3079,7 @@
 
 
 						<cfif arguments.action NEQ "delete_version" AND arguments.action NEQ "delete_version_virus">
-							
+
 							#userAndDateContent#
 
 						</cfif>
@@ -3104,15 +3105,15 @@
 								#langText[curLang].new_file.user#: <strong>#arguments.fileVersionQuery.user_full_name#</strong><br />
 								#langText[curLang].new_file.file#: <strong>#arguments.fileVersionQuery.file_name#</strong><br />
 								#langText[curLang].new_file.upload_date#: <strong>#arguments.fileVersionQuery.uploading_date#</strong><br/>
-								
+
 							<cfelseif arguments.action EQ "reject_version"><!--- REJECT VERSION --->
-								
+
 								<!--- getFileVersion --->
 								<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersions" returnvariable="getFileVersionsQuery">
 									<cfinvokeargument name="file_id" value="#objectFile.id#">
 									<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 									<cfinvokeargument name="limit" value="1">
-									
+
 									<cfinvokeargument name="client_abb" value="#client_abb#">
 									<cfinvokeargument name="client_dsn" value="#client_dsn#">
 								</cfinvoke>
@@ -3126,7 +3127,7 @@
 								 	#langText[curLang].file_revision.reject_reason#:<br/>
 									<i>#lastFileVersion.revision_result_reason#</i><br/>
 								</cfif>
-								
+
 							</cfif>
 
 							<cfif arguments.action EQ "delete_virus" OR arguments.action EQ "delete_version_virus"><!--- DELETE VIRUS --->
@@ -3136,7 +3137,7 @@
 								#langText[curLang].new_file.virus_advice#.<br/>
 
 							</cfif>
-							
+
 							<!---<cfif len(access_content) GT 0>
 								<br/>
 								<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>
@@ -3168,17 +3169,17 @@
 					</table><!--- END item container table --->
 					</cfoutput>
 				</cfsavecontent>
-				
-				
+
+
 				<!---INTERNAL USERS--->
 				<cfif len(listInternalUsers) GT 0>
-					
+
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getAreaPathContent" returnvariable="area_path">
 						<cfinvokeargument name="area_id" value="#area_id#">
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 					</cfinvoke>
-					
+
 					<cfprocessingdirective suppresswhitespace="true">
 					<cfsavecontent variable="contentInternal">
 					<cfoutput>
@@ -3187,15 +3188,15 @@
 			#itemHeadContent#
 
 			#area_path#
-			
+
 			#alertContent#
 					</cfoutput>
 					</cfsavecontent>
-					</cfprocessingdirective>				
-				
+					</cfprocessingdirective>
+
 					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-						<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus"> 
+						<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus">
 							<cfinvokeargument name="from_name" value="#actionUserName#">
 						</cfif>
 						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
@@ -3205,29 +3206,29 @@
 						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
 					</cfinvoke>
-					
+
 				</cfif>
-				
-		
+
+
 				<!---EXTERNAL USERS--->
 				<cfif len(listExternalUsers) GT 0>
-					
+
 					<cfprocessingdirective suppresswhitespace="true">
 					<cfsavecontent variable="contentExternal">
 					<cfoutput>
 			#itemHeadContent#
 
-			<!--- #langText[curLang].new_file.it_has# #action_value# #langText[curLang].new_file.a_file_on_the_area# 
-			#langText[curLang].common.area#: <strong>#area_name#</strong> 
+			<!--- #langText[curLang].new_file.it_has# #action_value# #langText[curLang].new_file.a_file_on_the_area#
+			#langText[curLang].common.area#: <strong>#area_name#</strong>
 			#langText[curLang].common.of_the_organization# #root_area.name#.<br/><br/>--->
 
 			<p><a href="#APPLICATION.mainUrl#/?abb=#arguments.client_abb#&area=#arguments.area_id#" style="color:##009ed2;text-decoration:underline;font-size:15px;">#area_name#</a></p>
-			
+
 			#alertContent#
 					</cfoutput>
 					</cfsavecontent>
-					</cfprocessingdirective>				
-				
+					</cfprocessingdirective>
+
 					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfinvokeargument name="from_name" value="#objectFile.user_full_name#">
@@ -3237,24 +3238,24 @@
 						<cfinvokeargument name="content" value="#contentExternal#">
 						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
-					</cfinvoke>		
-						
+					</cfinvoke>
+
 				</cfif>
-				
+
 			</cfif><!---END len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0--->
-			
+
 		</cfloop><!---END APPLICATION.languages loop--->
-		
+
 	</cffunction>
 
 
 
 	<!--- --------------------------- getFileAlertContent --------------------------- --->
-	
+
 	<cffunction name="getFileAlertContent" access="private" returntype="string">
 		<cfargument name="objectFile" type="query" required="true">
 		<cfargument name="language" type="string" required="true">
- 				
+
 		<cfset var method = "getFileAlertContent">
 
 		<cfset var alertContent = "">
@@ -3284,14 +3285,14 @@
 			<div style="padding-left:15px;">#objectFile.description#</div>
 			</cfoutput>
 		</cfsavecontent>
-		
+
 		<cfreturn alertContent>
 
 	</cffunction>
 
 
 	<!--- --------------------------- getFileAccessContent --------------------------- --->
-	
+
 	<cffunction name="getFileAccessContent" access="private" returntype="string">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
@@ -3299,7 +3300,7 @@
 		<cfargument name="language" type="string" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
- 				
+
 		<cfset var method = "getFileAccessContent">
 
 		<cfset var accessContent = "">
@@ -3319,18 +3320,18 @@
 			<cfinvokeargument name="download" value="true">
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 		</cfinvoke>
-	
-	
+
+
 		<cfif APPLICATION.twoUrlsToAccess IS false>
-		
+
 			<cfsavecontent variable="accessContent">
 			<cfoutput>
 			-&nbsp;<b>#langText[language].new_file.access_to_file#</b>:
 			<a target="_blank" href="#areaFileUrl#">#areaFileUrl#</a>
-			
+
 			<br/>-&nbsp;#langText[language].new_file.access_to_download_file#:
 			<a target="_blank" href="#downloadFileUrl#">#downloadFileUrl#</a>
-			
+
 			<cfif arguments.client_abb EQ "hcs">
 				<cfset accessClient = "doplanning">
 			<cfelseif isDefined("SESSION.client_id")>
@@ -3343,9 +3344,9 @@
 			</cfif>
 			</cfoutput>
 			</cfsavecontent>
-			
+
 		<cfelse>
-		
+
 			<cfsavecontent variable="accessContent">
 			<cfoutput>
 			#langText[language].new_file.access_to_file_links#: <br/>
@@ -3353,25 +3354,25 @@
 			-&nbsp;#langText[language].common.access_external# <a target="_blank" href="#APPLICATION.alternateUrl#/?area=#arguments.area_id#&file=#arguments.file_id#&abb=#arguments.client_abb#">#APPLICATION.alternateUrl#/?area=#arguments.area_id#&file=#arguments.file_id#&abb=#arguments.client_abb#</a>
 			</cfoutput>
 			</cfsavecontent>
-			
+
 		</cfif>
-		
+
 		<cfreturn accessContent>
 
 	</cffunction>
 
 
 	<!--- --------------------------- getFileFootContent --------------------------- --->
-	
+
 	<cffunction name="getFileFootContent" access="private" returntype="string">
 		<cfargument name="language" type="string" required="true">
- 				
+
 		<cfset var method = "getFileFootContent">
 
 		<cfset var footContent = "">
 
 		<cfset footContent = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #APPLICATION.title# #langText[arguments.language].new_item.foot_content_2# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p>'>
-		
+
 		<cfreturn footContent>
 
 	</cffunction>
@@ -3379,7 +3380,7 @@
 
 
 	<!--- -------------------------------------- assignUserToArea ------------------------------------ --->
-	
+
 	<cffunction name="assignUserToArea" access="public" returntype="void">
 		<cfargument name="objectUser" type="query" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">
@@ -3387,9 +3388,9 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-				
+
 		<cfset var method = "assignUserToArea">
-        
+
         <cfset var root_area = structNew()>
         <cfset var curLang = "">
 
@@ -3406,7 +3407,7 @@
             <cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
         </cfinvoke>
-        	
+
         <!---getRootArea--->
 		<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
 			<cfinvokeargument name="onlyId" value="false">
@@ -3444,7 +3445,7 @@
 			</cfinvoke>
 
 			<cfif userPreferences.notify_been_associated_to_area IS true>
-				
+
 				<cfset curLang = objectUser.language>
 
 		        <cfif arguments.new_area IS false>
@@ -3473,7 +3474,7 @@
 
 					<tr style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0">
 						<td style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:14px;">
-						
+
 							<p style="font-size:16px;padding-left:5px;"><cfif arguments.new_area IS false>
 							#langText[curLang].assign_user.has_been_added_to_area#
 							<cfelse>
@@ -3481,7 +3482,7 @@
 							</cfif></p>
 
 							<cfif len(objectArea.description) GT 0>
-							<p>#langText[curLang].common.area_description#:<br /> 
+							<p>#langText[curLang].common.area_description#:<br />
 							#objectArea.description#
 							</p>
 							</cfif>
@@ -3521,12 +3522,12 @@
 		</cfif>
 		<br />
 		<cfif len(objectArea.description) GT 0>
-		#langText[curLang].common.area_description#:<br /> 
+		#langText[curLang].common.area_description#:<br />
 		#objectArea.description#<br />
 		</cfif>
 		<br/>
 		<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content_user#</div>--->
-				</cfoutput>		
+				</cfoutput>
 				</cfsavecontent>
 
 				<!--- getHeadContent --->
@@ -3535,8 +3536,8 @@
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
 				</cfinvoke>
 
-				<cfset foot_content_user = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>		
-				
+				<cfset foot_content_user = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>
+
 				<cfinvoke component="EmailManager" method="sendEmail">
 					<!--- <cfinvokeargument name="from" value="#SESSION.client_email_from#"> --->
 					<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
@@ -3550,7 +3551,7 @@
 			</cfif><!---END notify_been_associated_to_area IS true--->
 
 
-		</cfif><!--- END user notifications enabled ---> 
+		</cfif><!--- END user notifications enabled --->
 
 
 
@@ -3560,20 +3561,20 @@
 				<cfoutput>
 					 <user id="" email="" whole_tree_visible="">
 						<family_name><![CDATA[]]></family_name>
-						<name><![CDATA[]]></name>	
+						<name><![CDATA[]]></name>
 					</user>
-					<area id="#arguments.area_id#"/> 
+					<area id="#arguments.area_id#"/>
 					<order parameter="family_name" order_type="asc" />
-					<preferences 
-						notify_new_user_in_area="true">				
+					<preferences
+						notify_new_user_in_area="true">
 					</preferences>
 				</cfoutput>
 			</cfsavecontent>
-			
+
 			<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="getUsersRequest">
 				<cfinvokeargument name="request_parameters" value="#getUsersParameters#">
 			</cfinvoke>--->
-	        
+
 	        <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
 				<!---<cfinvokeargument name="request" value="#getUsersRequest#"/>--->
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -3583,7 +3584,7 @@
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
-			
+
 			<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
 			<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
 
@@ -3600,7 +3601,7 @@
 
 				<cfset actionUserName = actionUserQuery.user_full_name>
 			</cfif>--->
-			
+
 			<cfloop list="#APPLICATION.languages#" index="curLang">
 
 				<!--- Delete user from lists --->
@@ -3611,7 +3612,7 @@
 				<cfset listInternalUserPos = listContains(listInternalUsers, objectUser.email, ";")>
 
 				<cfif listInternalUserPos GT 0>
-					
+
 					<cfset listInternalUsers = listDeleteAt(listInternalUsers, listInternalUserPos, ";")>
 
 				<cfelse>
@@ -3636,7 +3637,7 @@
 
 					<cfset subject = "[#root_area.name#] #langText[curLang].assign_user.new_user_in_area#: "&objectArea.name>
 					<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'>
-					
+
 					<!--- getHeadContent --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="head_content">
 						<cfinvokeargument name="language" value="#curLang#">
@@ -3657,11 +3658,11 @@
 			<br />
 			#langText[curLang].common.user#: <b>#objectUser.user_full_name#</b><br/>
 			<cfif len(objectArea.description) GT 0>
-			#langText[curLang].common.area_description#:<br /> 
+			#langText[curLang].common.area_description#:<br />
 			#objectArea.description#<br />
 			</cfif>
-				
-					</cfoutput>	
+
+					</cfoutput>
 					</cfsavecontent>--->
 
 					<cfset actionDate = dateFormat(now(), APPLICATION.dateFormat)&" "&timeFormat(now(), "HH:mm:ss")>
@@ -3696,7 +3697,7 @@
 														</td>
 													</tr>
 												</table>
-												
+
 											</td>
 										</tr>
 
@@ -3709,14 +3710,14 @@
 
 								</td>
 							</tr>
-						
+
 							<tr style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0">
 								<td style="padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:14px;">
 
 									<p style="font-size:16px;padding-left:5px;">
 										#langText[curLang].assign_user.new_user_in_area#
 									</p>
-			
+
 
 									<table style="width:100%;margin-top:20px;">
 										<tr>
@@ -3763,7 +3764,7 @@
 
 						<cfinvoke component="EmailManager" method="sendEmail">
 							<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-							<!---<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus"> 
+							<!---<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus">
 								<cfinvokeargument name="from_name" value="#actionUserName#">
 							</cfif>--->
 							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#"><!------>
@@ -3789,7 +3790,7 @@
 						</cfsavecontent>
 						<cfinvoke component="EmailManager" method="sendEmail">
 							<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-							<!---<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus"> 
+							<!---<cfif len(actionUserName) GT 0 AND arguments.action NEQ "delete_virus" AND arguments.action NEQ "delete_version_virus">
 								<cfinvokeargument name="from_name" value="#actionUserName#">
 							</cfif>--->
 							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
@@ -3808,13 +3809,13 @@
 
 
 		</cfif>
-		
+
 	</cffunction>
 
 
 
 	<!--- --------------------------- getAreaHeadContent --------------------------- --->
-	
+
 	<cffunction name="getAreaHeadContent" access="private" returntype="string">
 		<cfargument name="objectArea" type="query" required="true">
 		<cfargument name="areaUrl" type="string" required="true">
@@ -3860,7 +3861,7 @@
 											</td>
 										</tr>
 									</table>
-									
+
 								</td>
 							</tr>
 
@@ -3874,7 +3875,7 @@
 					</td>
 				</tr>
 		</cfoutput></cfsavecontent>
-		
+
 		<cfreturn headContent>
 
 	</cffunction>
@@ -3884,45 +3885,45 @@
 
 
 	<!--- -------------------------------------- newArea ------------------------------------ --->
-	
+
 	<cffunction name="newArea" access="public" returntype="void">
 		<cfargument name="objectArea" type="query" required="yes">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-				
+
 		<cfset var method = "newArea">
-		
+
 		<cfset var internalUsersEmails = "">
 		<cfset var externalUsersEmails = "">
 		<cfset var listInternalUsers = "">
 		<cfset var listExternalUsers = "">
-        
+
         <cfset var root_area = "">
         <cfset var head_content = "">
 		<cfset var foot_content = "">
 		<cfset var alertContent = "">
-		
+
 		<!---<cfinclude template="includes/functionStartOnlySession.cfm">--->
-		
+
         <!---<cfsavecontent variable="getUsersParameters">
 			<cfoutput>
-				 <user id="" email=""	
+				 <user id="" email=""
 			telephone="" sms_allowed="" whole_tree_visible="">
 					<family_name><![CDATA[]]></family_name>
-					<name><![CDATA[]]></name>	
+					<name><![CDATA[]]></name>
 				</user>
-				<area id="#objectArea.id#"/> 
+				<area id="#objectArea.id#"/>
 				<order parameter="family_name" order_type="asc" />
-				<preferences notify_new_area="true">				
+				<preferences notify_new_area="true">
 				</preferences>
 			</cfoutput>
 		</cfsavecontent>
-		
+
 		<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="getUsersRequest">
 			<cfinvokeargument name="request_parameters" value="#getUsersParameters#">
 		</cfinvoke>--->
-        
+
         <cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
 			<!---<cfinvokeargument name="request" value="#getUsersRequest#"/>--->
 			<cfinvokeargument name="area_id" value="#objectArea.id#"/>
@@ -3931,15 +3932,15 @@
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 		</cfinvoke>
-		
+
 		<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
 		<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
 
 		<cfloop list="#APPLICATION.languages#" index="curLang">
-		
+
 			<cfset listInternalUsers = internalUsersEmails[curLang]>
 			<cfset listExternalUsers = externalUsersEmails[curLang]>
-        
+
 			<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
 
 				<!---getRootArea--->
@@ -3956,7 +3957,7 @@
 
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 				</cfinvoke>--->
-				
+
 				<!--- getHeadContent --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="head_content">
 					<cfinvokeargument name="language" value="#curLang#">
@@ -3979,7 +3980,7 @@
 					<cfinvokeargument name="client_abb" value="#client_abb#"/>
 				</cfinvoke>
 
-				<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">'&langText[curLang].common.foot_content_default_3&' #APPLICATION.title#.</p>'>	
+				<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">'&langText[curLang].common.foot_content_default_3&' #APPLICATION.title#.</p>'>
 				<cfset subject = "[#root_area.name#][#langText[curLang].new_area.new_area#] #objectArea.name#">
 
 				<cfsavecontent variable="alertContent">
@@ -3993,7 +3994,7 @@
 								<p style="font-size:16px;padding-left:5px;">#langText[curLang].new_area.area_created#</p>
 
 								<cfif len(objectArea.description) GT 0>
-								<p style="font-size:16px;padding-left:5px;"><b>#langText[curLang].common.area_description#:</b><br /> 
+								<p style="font-size:16px;padding-left:5px;"><b>#langText[curLang].common.area_description#:</b><br />
 								#objectArea.description#
 								</p>
 								</cfif>
@@ -4024,7 +4025,7 @@
 
 				<!---INTERNAL USERS--->
 				<cfif len(listInternalUsers) GT 0>
-				
+
 					<!---<cfinvoke component="AreaManager" method="getAreaPath" returnvariable="area_path">
 						<cfinvokeargument name="area_id" value="#objectArea.id#">
 					</cfinvoke>--->
@@ -4034,9 +4035,9 @@
 						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 					</cfinvoke>
-					
+
 					<cfset subjectInternal = subject>
-				
+
 					<cfsavecontent variable="contentInternal">
 					<cfoutput>
 						#area_path#
@@ -4048,9 +4049,9 @@
 			#langText[curLang].common.area_path#:#area_path#<br /><br />
 			<br/>
 			<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>--->
-					</cfoutput>		
+					</cfoutput>
 					</cfsavecontent>
-					
+
 					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
 						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
@@ -4059,15 +4060,15 @@
 						<cfinvokeargument name="content" value="#contentInternal#">
 						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
-					</cfinvoke>	
-					
+					</cfinvoke>
+
 				</cfif>
-				
+
 				<!---EXTERNAL USERS--->
 				<cfif len(listExternalUsers) GT 0>
-					
+
 					<cfset subjectExternal = subject>
-					
+
 					<cfsavecontent variable="contentExternal">
 					<cfoutput>
 
@@ -4078,14 +4079,14 @@
 					<!---<br />
 			#langText[curLang].new_area.area_created#: <strong>#objectArea.name#</strong> #langText[curLang].new_area.on_the_organization# #root_area.name#, #langText[curLang].new_area.and_you_have_access#.<br /><br />
 			<cfif len(objectArea.description) GT 0>
-			#langText[curLang].common.area_description#:<br /> 
+			#langText[curLang].common.area_description#:<br />
 			#objectArea.description#<br />
 			</cfif>
 			<br/>
 			<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;">#access_content#</div>--->
-					</cfoutput>		
+					</cfoutput>
 					</cfsavecontent>
-					
+
 					<cfinvoke component="EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
 						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
@@ -4094,26 +4095,26 @@
 						<cfinvokeargument name="content" value="#contentExternal#">
 						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
-					</cfinvoke>	
-					
+					</cfinvoke>
+
 				</cfif>
-		
+
 			</cfif><!---END len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0--->
-			
+
 		</cfloop><!---END APPLICATION.languages loop--->
-		
+
 	</cffunction>
 
 
 
 	<!--- --------------------------- getAreaAccessContent --------------------------- --->
-	
+
 	<cffunction name="getAreaAccessContent" access="public" returntype="string">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="language" type="string" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
- 				
+
 		<cfset var method = "getAreaAccessContent">
 
 		<cfset var accessContent = "">
@@ -4125,9 +4126,9 @@
 
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 		</cfinvoke>
-		
+
 		<cfif APPLICATION.twoUrlsToAccess IS false>
-		
+
 			<cfsavecontent variable="accessContent">
 			<cfoutput>
 			-&nbsp;#langText[arguments.language].common.access_to_area#:
@@ -4144,12 +4145,12 @@
 				<br/>-&nbsp;#langText[arguments.language].common.access_to_application#:
 				<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>
 			</cfif>
-			
+
 			</cfoutput>
 			</cfsavecontent>
-			
+
 		<cfelse>
-		
+
 			<cfsavecontent variable="accessContent">
 			<cfoutput>
 			#langText[arguments.language].common.access_to_area_links#: <br/>
@@ -4157,9 +4158,9 @@
 			-&nbsp;#langText[arguments.language].common.access_external# <a target="_blank" href="#APPLICATION.alternateUrl#/?area=#area_id#&abb=#arguments.client_abb#">#APPLICATION.alternateUrl#/?area=#area_id#&abb=#arguments.client_abb#</a>
 			</cfoutput>
 			</cfsavecontent>
-			
+
 		</cfif>
-		
+
 		<cfreturn accessContent>
 
 	</cffunction>
