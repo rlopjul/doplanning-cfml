@@ -1,5 +1,5 @@
 <!---Copyright Era7 Information Technologies 2007-2014--->
-<cfcomponent output="true">
+<cfcomponent output="false">
 
 	<cfset component = "AlertManager">
 
@@ -2031,9 +2031,88 @@
 
 
 
+	<!--- -------------------------------------- checkIfSendNotificationsToUser ------------------------------------ --->
+
+	<cffunction name="checkIfSendNotificationsToUser" output="false" access="public" returntype="struct">
+		<cfargument name="notificationsDigestTypeId" type="numeric" required="false">
+		<cfargument name="userLastDigestDate" type="string" required="true">
+
+			<cfset var sendNotifications = false>
+			<cfset var currentDigestDate = createDate(year(now()), month(now()), day(now()))>
+			<cfset var lastDigestDate = "">
+
+			<cfif isDate(arguments.userLastDigestDate)>
+
+				<cfset lastDigestDate = getAllUsersQuery.notifications_last_digest_date>
+
+			<cfelse>
+
+				<cfswitch expression="#arguments.notificationsDigestTypeId#">
+
+					<cfcase value="1"><!--- daily --->
+
+						<cfset lastDigestDate = dateAdd("d", -1, currentDigestDate)>
+						<cfset sendNotifications = true>
+
+					</cfcase>
+
+					<cfcase value="2"><!--- weekly --->
+
+						<cfset lastDigestDate = dateAdd("d", -7, currentDigestDate)>
+
+					</cfcase>
+
+					<cfcase value="3"><!--- monthly --->
+
+						<cfset lastDigestDate = dateAdd("d", -30, currentDigestDate)>
+
+					</cfcase>
+
+				</cfswitch>
+
+			</cfif>
+
+			<cfset daysBetweenLastDigest = dateDiff("d", lastDigestDate, currentDigestDate)>
+
+			<cfswitch expression="#arguments.notificationsDigestTypeId#">
+
+				<cfcase value="1"><!--- daily --->
+
+					<cfif daysBetweenLastDigest GT 0>
+						<cfset sendNotifications = true>
+					</cfif>
+
+					<cfset currentDigestDate = lastDigestDate>
+
+				</cfcase>
+
+				<cfcase value="2"><!--- weekly --->
+
+					<cfif daysBetweenLastDigest GT 6>
+						<cfset sendNotifications = true>
+					</cfif>
+
+				</cfcase>
+
+				<cfcase value="3"><!--- monthly --->
+
+					<cfif daysBetweenLastDigest GT 29>
+						<cfset sendNotifications = true>
+					</cfif>
+
+				</cfcase>
+
+			</cfswitch>
+
+		<cfreturn {sendNotifications=sendNotifications, lastDigestDate=lastDigestDate, currentDigestDate=currentDigestDate}>
+
+	</cffunction>
+
+
+
 	<!--- -------------------------------------- sendAllDiaryAlerts ------------------------------------ --->
 
-	<cffunction name="sendAllDiaryAlerts" output="true" access="public" returntype="void">
+	<cffunction name="sendAllDiaryAlerts" output="false" access="public" returntype="void">
 
 		<cfset var client_abb = "">
 		<cfset var client_dsn = "">
@@ -2046,6 +2125,7 @@
 		<cfset var userAccessResult = "">
 		<cfset var subject = "">
 		<cfset var headContent = "">
+		<cfset var userAreasIds = "">
 
 		<cftry>
 
@@ -2066,6 +2146,7 @@
 
 				<cftry>
 
+					<!--- ------ PROVISIONAL ---- --->
 					<cfif client_abb EQ "hcs">
 
 					<!---<cfset forceNotifications = getClientsQuery.force_notifications>--->
@@ -2089,110 +2170,210 @@
 						<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
 					</cfinvoke>
 
-					<cfset var currentDigestDate = createDate(year(now()), month(now()), day(now()))>
 
 					<cfloop query="getAllUsersQuery">
 
-						<cfif getAllUsersQuery.enabled IS true AND len(getAllUsersQuery.email) GT 0 AND getAllUsersQuery.no_notifications IS false AND isNumeric(getAllUsersQuery.notifications_digest_type_id)>
+						<cfif getAllUsersQuery.enabled IS true AND len(getAllUsersQuery.email) GT 0 AND getAllUsersQuery.no_notifications IS false>
 
-							<cfset var sendNotifications = false>
-
-							<cfif isDate(getAllUsersQuery.notifications_last_digest_date)>
-
-								<cfset var lastDigestDate = getAllUsersQuery.notifications_last_digest_date>
-
-							<cfelse>
-
-								<cfswitch expression="#getAllUsersQuery.notifications_digest_type_id#">
-
-									<cfcase value="1"><!--- daily --->
-
-										<cfset lastDigestDate = dateAdd("d", -1, currentDigestDate)>
-
-									</cfcase>
-
-									<cfcase value="2"><!--- weekly --->
-
-										<cfset lastDigestDate = dateAdd("d", -7, currentDigestDate)>
-
-									</cfcase>
-
-									<cfcase value="3"><!--- monthly --->
-
-										<cfset lastDigestDate = dateAdd("d", -30, currentDigestDate)>
-
-									</cfcase>
-
-								</cfswitch>
-
-							</cfif>
-
-							<cfset daysBetweenLastDigest = dateDiff("d", lastDigestDate, currentDigestDate)>
-
-							<cfswitch expression="#getAllUsersQuery.notifications_digest_type_id#">
-
-								<cfcase value="1"><!--- daily --->
-
-									<cfif daysBetweenLastDigest GT 0>
-										<cfset sendNotifications = true>
-									</cfif>
-
-								</cfcase>
-
-								<cfcase value="2"><!--- weekly --->
-
-									<cfif daysBetweenLastDigest GT 6>
-										<cfset sendNotifications = true>
-									</cfif>
-
-								</cfcase>
-
-								<cfcase value="3"><!--- monthly --->
-
-									<cfif daysBetweenLastDigest GT 29>
-										<cfset sendNotifications = true>
-									</cfif>
-
-								</cfcase>
-
-							</cfswitch>
-
-							<!---<cfoutput>
-								#sendNotifications#<br/>
-								#currentDigestDate#<br/>
-								#lastDigestDate#<br/>
-							</cfoutput>--->
-
-							<cfif sendNotifications IS true>
-
-									<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="sendUserDiaryAlert">
-										<cfinvokeargument name="alertType" value="#ALERT_TYPE_DOPLANNING#">
-										<cfinvokeargument name="user_id" value="#getAllUsersQuery.user_id#">
-										<cfinvokeargument name="language" value="#getAllUsersQuery.language#">
-										<cfinvokeargument name="email" value="#getAllUsersQuery.email#">
-										<cfinvokeargument name="user_full_name" value="#getAllUsersQuery.family_name# #getAllUsersQuery.name#">
-										<cfinvokeargument name="currentDigestDate" value="#currentDigestDate#">
-										<cfinvokeargument name="lastDigestDate" value="#lastDigestDate#">
-										<cfinvokeargument name="itemTypesStruct" value="#itemTypesStruct#">
-										<cfinvokeargument name="itemTypesArray" value="#itemTypesArray#">
-										<cfinvokeargument name="itemsTypesOptionsQuery" value="#itemsTypesOptionsQuery#">
-										<cfinvokeargument name="rootAreaName" value="#rootArea.name#">
+							<cfset var curLang = getAllUsersQuery.language>
+							<cfset var curUserId = getAllUsersQuery.user_id>
+							<cfset var curUserEmail = getAllUsersQuery.email>
 
 
-										<cfinvokeargument name="client_abb" value="#client_abb#">
-										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							<!--- ------------------------------------------ DP NOTIFICATIONS ------------------------------------------------ --->
+
+							<cfif isNumeric(getAllUsersQuery.notifications_digest_type_id)>
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="checkIfSendNotificationsToUser" returnvariable="checkNotificationsToUserResult">
+									<cfinvokeargument name="notificationsDigestTypeId" value="#getAllUsersQuery.notifications_digest_type_id#">
+									<cfinvokeargument name="userLastDigestDate" value="#getAllUsersQuery.notifications_last_digest_date#">
+								</cfinvoke>
+
+								<cfset var sendDPNotifications = checkNotificationsToUserResult.sendNotifications>
+
+								<cfif sendDPNotifications IS true>
+
+										<cfset var lastDigestDateDP = checkNotificationsToUserResult.lastDigestDate>
+										<cfset var currentDigestDateDP = checkNotificationsToUserResult.currentDigestDate>
+										<cfset var currentDigestDateDPFormatted = DateFormat(currentDigestDateDP, APPLICATION.dateFormat)>
+										<cfset var lastDigestDateDPFormatted = DateFormat(lastDigestDateDP, APPLICATION.dateFormat)>
+
+										<!--- getHeadContent --->
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="headContent">
+											<cfinvokeargument name="language" value="#getAllUsersQuery.language#">
+											<cfinvokeargument name="client_abb" value="#client_abb#"/>
+										</cfinvoke>
+
+										<cfinvoke component="AlertManager" method="getDiaryAlertFootContent" returnvariable="footContent">
+											<cfinvokeargument name="language" value="#getAllUsersQuery.language#">
+										</cfinvoke>
+
+										<!--- Get DoPlanning Alerts --->
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getUserDiaryAlert" returnvariable="userDiaryAlertDP">
+											<cfinvokeargument name="alertType" value="#ALERT_TYPE_DOPLANNING#">
+											<cfinvokeargument name="user_id" value="#curUserId#">
+											<cfinvokeargument name="language" value="#curLang#">
+											<cfinvokeargument name="email" value="#curUserEmail#">
+											<cfinvokeargument name="user_full_name" value="#getAllUsersQuery.family_name# #getAllUsersQuery.name#">
+											<cfinvokeargument name="currentDigestDate" value="#currentDigestDateDP#">
+											<cfinvokeargument name="lastDigestDate" value="#lastDigestDateDP#">
+											<cfinvokeargument name="itemTypesStruct" value="#itemTypesStruct#">
+											<cfinvokeargument name="itemTypesArray" value="#itemTypesArray#">
+											<cfinvokeargument name="itemsTypesOptionsQuery" value="#itemsTypesOptionsQuery#">
+
+											<cfinvokeargument name="client_abb" value="#client_abb#">
+											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+										</cfinvoke>
+
+										<cfif len(userDiaryAlertDP.alertContent) GT 0>
+
+											<cfif lastDigestDateDPFormatted NEQ currentDigestDateDPFormatted>
+												<cfset subjectAlertDP = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary&" #lastDigestDateDPFormatted# - #currentDigestDateDPFormatted#">
+											<cfelse>
+												<cfset subjectAlertDP = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary&" #lastDigestDateDPFormatted#">
+											</cfif>
+
+											<!--- sendEmail --->
+											<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+												<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
+												<cfinvokeargument name="to" value="#getAllUsersQuery.email#">
+												<cfinvokeargument name="subject" value="#subjectAlertDP#">
+												<cfinvokeargument name="content" value="#userDiaryAlertDP.alertContent#">
+												<cfinvokeargument name="head_content" value="#headContent#">
+												<cfinvokeargument name="foot_content" value="#footContent#">
+											</cfinvoke>
+
+										</cfif>
+
+									</cfif><!--- END sendDPNotifications IS true --->
+
+
+								</cfif><!--- END isNumeric(getAllUsersQuery.notifications_digest_type_id) --->
+
+
+								<!--- ------------------------------------------ WEB NOTIFICATIONS ------------------------------------------------ --->
+
+								<cfif isNumeric(getAllUsersQuery.notifications_web_digest_type_id)>
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="checkIfSendNotificationsToUser" returnvariable="checkNotificationsToUserResult">
+										<cfinvokeargument name="notificationsDigestTypeId" value="#getAllUsersQuery.notifications_web_digest_type_id#">
+										<cfinvokeargument name="userLastDigestDate" value="#getAllUsersQuery.notifications_web_last_digest_date#">
 									</cfinvoke>
 
-							<cfelse>
+									<cfset var sendWebNotifications = checkNotificationsToUserResult.sendNotifications>
 
-									<!---<cfoutput>
-									No enviar notificación #curUserEmail#
-									</cfoutput>--->
+									<cfif sendWebNotifications IS true>
+
+										<cfset var lastDigestDateWeb = checkNotificationsToUserResult.lastDigestDate>
+										<cfset var currentDigestDateWeb= checkNotificationsToUserResult.currentDigestDate>
+										<cfset var currentDigestDateWebFormatted = DateFormat(currentDigestDateWeb, APPLICATION.dateFormat)>
+										<cfset var lastDigestDateWebFormatted = DateFormat(lastDigestDateWeb, APPLICATION.dateFormat)>
+
+										<!--- Send Web Alerts --->
+										<!---Get web areas--->
+
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWebs" returnvariable="getWebQuery">
+											<cfinvokeargument name="area_type" value="web">
+
+											<cfinvokeargument name="client_abb" value="#APPLICATION.dpWebClientAbb#">
+											<cfinvokeargument name="client_dsn" value="#APPLICATION.dpWebClientDsn#">
+										</cfinvoke>
+
+										<cfif getWebQuery.recordCount GT 0>
+
+											<!---<cfset userAreasIds = "">--->
+											<cfset alertContentWeb = "">
+
+											<cfloop query="getWebQuery">
+
+												<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
+													<cfinvokeargument name="area_id" value="#getWebQuery.area_id#">
+
+													<cfinvokeargument name="client_abb" value="#client_abb#">
+													<cfinvokeargument name="client_dsn" value="#client_dsn#">
+												</cfinvoke>
+
+												<!--- Get DoPlanning Alerts --->
+												<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getUserDiaryAlert" returnvariable="userDiaryAlertWeb">
+													<cfinvokeargument name="alertType" value="#ALERT_TYPE_WEB#">
+													<cfinvokeargument name="user_id" value="#curUserId#">
+													<cfinvokeargument name="language" value="#curLang#">
+													<cfinvokeargument name="email" value="#curUserEmail#">
+													<cfinvokeargument name="user_full_name" value="#getAllUsersQuery.family_name# #getAllUsersQuery.name#">
+													<cfinvokeargument name="currentDigestDate" value="#currentDigestDateWeb#">
+													<cfinvokeargument name="lastDigestDate" value="#lastDigestDateWeb#">
+													<cfinvokeargument name="itemTypesStruct" value="#itemTypesStruct#">
+													<cfinvokeargument name="itemTypesArray" value="#itemTypesArray#">
+													<cfinvokeargument name="itemsTypesOptionsQuery" value="#itemsTypesOptionsQuery#">
+
+													<cfinvokeargument name="userAreasIds" value="#subAreasIds#">
+													<cfinvokeargument name="webPath" value="#getWebQuery.path#">
+													<cfinvokeargument name="webPathUrl" value="#getWebQuery.path_url#">
+
+													<cfinvokeargument name="client_abb" value="#client_abb#">
+													<cfinvokeargument name="client_dsn" value="#client_dsn#">
+												</cfinvoke>
+
+												<!---<cfoutput>
+													Notificaciones web #getAllUsersQuery.email#:<br/>
+													#userDiaryAlertWeb.alertContent#
+												</cfoutput>--->
+
+												<cfif getWebQuery.recordCount GT 0>
+
+													<cfset webLanguage = "">
+													<cfif len(userDiaryAlertWeb.alertContent) GT 0>
+
+															<cfswitch expression="#getWebQuery.language#">
+																<cfcase value="es">
+																	<cfset webLanguage = "Español">
+																</cfcase>
+																<cfcase value="en">
+																	<cfset webLanguage = "English">
+																</cfcase>
+																<cfcase value="fr">
+																	<cfset webLanguage = "Français">
+																</cfcase>
+															</cfswitch>
+
+															<cfset alertContentWeb = alertContentWeb&'<p style="margin-top:20px;font-size:26px">#webLanguage#</p>'>
+															<cfset alertContentWeb = alertContentWeb&userDiaryAlertWeb.alertContent>
+
+													</cfif>
+
+												</cfif>
+
+											</cfloop>
+
+											<cfif len(alertContentWeb) GT 0>
+
+												<cfif lastDigestDateWebFormatted NEQ currentDigestDateWebFormatted>
+													<cfset subjectWeb = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary_web&" #lastDigestDateWebFormatted# - #currentDigestDateFormatted#">
+												<cfelse>
+													<cfset subjectWeb = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary&" #lastDigestDateWebFormatted#">
+												</cfif>
+
+												<!--- sendEmail --->
+												<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
+													<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
+													<cfinvokeargument name="to" value="#getAllUsersQuery.email#">
+													<cfinvokeargument name="subject" value="#subjectWeb#">
+													<cfinvokeargument name="content" value="#alertContentWeb#">
+													<cfinvokeargument name="head_content" value="#headContent#">
+													<cfinvokeargument name="foot_content" value="#footContent#">
+												</cfinvoke>
+
+											</cfif>
+
+										</cfif><!---END getWebQuery.recordCount GT 0--->
+
+									</cfif><!--- END sendWebNotifications --->
+
+							</cfif><!--- END isNumeric(getAllUsersQuery.notifications_web_digest_type_id)--->
 
 
-							</cfif><!--- END sendNotifications IS true --->
 
-						</cfif><!--- END getAllUsersQuery.enabled IS true AND len(getAllUsersQuery.email) GT 0 AND getAllUsersQuery.no_notifications IS false AND isNumeric(getAllUsersQuery.notifications_digest_type) --->
+						</cfif><!--- END getAllUsersQuery.enabled IS true AND len(getAllUsersQuery.email) GT 0 AND getAllUsersQuery.no_notifications IS false --->
 
 					</cfloop><!--- END loop query="getAllUsersQuery" --->
 
@@ -2216,9 +2397,9 @@
 	</cffunction>
 
 
-	<!--- sendUserDiaryAlert --->
+	<!--- getUserDiaryAlert --->
 
-	<cffunction name="sendUserDiaryAlert" returntype="void">
+	<cffunction name="getUserDiaryAlert" output="false" returntype="struct">
 		<cfargument name="alertType" type="string" required="true"><!---doplanning / web--->
 		<cfargument name="user_id" type="numeric" required="true">
 		<cfargument name="language" type="string" required="true">
@@ -2227,45 +2408,31 @@
 		<cfargument name="lastDigestDate" type="date" required="true">
 		<cfargument name="itemTypesArray" type="array" required="true">
 		<cfargument name="itemsTypesOptionsQuery" type="query" required="true">
-		<cfargument name="rootAreaName" type="string" required="true">
+
+		<cfargument name="userAreasIds" type="string" required="false">
+		<cfargument name="webPath" type="string" required="false">
+		<cfargument name="webPathUrl" type="string" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
-		<!---<cfset var curUserId = getAllUsersQuery.user_id>
-		<cfset var curLang = getAllUsersQuery.language>
-		<cfset var curUserEmail = getAllUsersQuery.email>--->
 		<cfset var curUserId = arguments.user_id>
 		<cfset var curLang = arguments.language>
 		<cfset var curUserEmail = arguments.email>
 		<cfset var alertContent = "">
-		<cfset var userAreasIds = "">
+
 
 		<cfif arguments.alertType EQ ALERT_TYPE_WEB>
 
-			<!---Get web areas--->
+			<cfif NOT isDefined("arguments.userAreasIds") OR listLen(arguments.userAreasIds) IS 0>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWeb" returnvariable="getWebQuery">
-				<cfinvokeargument name="area_type" value="web">
+				<cfthrow message="userAreasIds requerido para notificaciones web">
 
-				<cfinvokeargument name="client_abb" value="#APPLICATION.dpWebClientAbb#">
-				<cfinvokeargument name="client_dsn" value="#APPLICATION.dpWebClientDsn#">
-			</cfinvoke>
-
-			<cfloop query="getWebQuery">
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
-					<cfinvokeargument name="area_id" value="#getWebQuery.area_id#">
-
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
-
-				<cfset userAreasIds = listAppend(userAreasIds, subAreasIds)>
-
-			</cfloop>
+			</cfif>
 
 		<cfelse>
+
+			<cfset var userAreasIds = "">
 
 			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
 				<cfinvokeargument name="get_user_id" value="#curUserId#">
@@ -2291,199 +2458,231 @@
 			<!--- Loop items types --->
 			<cfloop array="#itemTypesArray#" index="itemTypeId">
 
-				<!---<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">--->
-				<cfset var itemTypeName = itemTypesStruct[itemTypeId].name>
-				<cfset var itemTypeGender = itemTypesStruct[itemTypeId].gender>
+				<cfset var notifyItemType = true>
 
-				<cfset var categoriesAreasArray = arrayNew(1)>
-				<cfset var noCategoriesSelected = false>
+				<cfif arguments.alertType EQ ALERT_TYPE_WEB>
 
-				<cfquery dbtype="query" name="itemTypeQuery">
-					SELECT *
-					FROM itemsTypesOptionsQuery
-					WHERE item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+					<cfif itemTypeId EQ 2 OR itemTypeId EQ 9><!---Entries, Images--->
+						<cfset notifyItemType = false>
+					<cfelseif itemTypesStruct[itemTypeId].web IS false>
+						<cfset notifyItemType = false>
+					</cfif>
 
-				<cfif itemTypeQuery.recordCount GT 0 AND isNumeric(itemTypeQuery.category_area_id)><!--- Area category defined for the item --->
+				<cfelse>
 
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
-						<cfinvokeargument name="area_id" value="#itemTypeQuery.category_area_id#">
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">
-					</cfinvoke>
+					<cfif itemTypesStruct[itemTypeId].noWeb IS false>
+						<cfset notifyItemType = false>
+					</cfif>
 
-					<cfif subAreasQuery.recordCount GT 0><!--- Categories defined for the item --->
+				</cfif>
 
-						<cfquery name="userNotificationsDisabledItem" dbtype="query">
-							SELECT *
-							FROM userNotificationsDisabledQuery
-							WHERE item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
-						</cfquery>
+				<cfif notifyItemType IS true>
 
-						<cfif userNotificationsDisabledItem.recordCount GT 0>
+					<cfset var itemTypeName = itemTypesStruct[itemTypeId].name>
+					<cfset var itemTypeGender = itemTypesStruct[itemTypeId].gender>
 
-							<cfset categoriesAreasArray = queryColumnData(subAreasQuery,"id")>
+					<cfset var categoriesAreasArray = arrayNew(1)>
+					<cfset var noCategoriesSelected = false>
 
-							<cfloop query="userNotificationsDisabledItem">
+					<cfquery dbtype="query" name="itemTypeQuery">
+						SELECT *
+						FROM itemsTypesOptionsQuery
+						WHERE item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
+					</cfquery>
 
-								<cfset areaInArrayPosition = ArrayFind(categoriesAreasArray,userNotificationsDisabledItem.area_id)>
+					<cfif itemTypeQuery.recordCount GT 0 AND isNumeric(itemTypeQuery.category_area_id)><!--- Area category defined for the item --->
 
-								<cfif areaInArrayPosition GT 0>
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
+							<cfinvokeargument name="area_id" value="#itemTypeQuery.category_area_id#">
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
 
-									<cfif arrayDeleteAt(categoriesAreasArray, areaInArrayPosition) IS false>
-										<cfthrow message="Error al eliminar la posición #areaInArrayPosition# del array de categorías">
+						<cfif subAreasQuery.recordCount GT 0><!--- Categories defined for the item --->
+
+							<cfquery name="userNotificationsDisabledItem" dbtype="query">
+								SELECT *
+								FROM userNotificationsDisabledQuery
+								WHERE item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
+							</cfquery>
+
+							<cfif userNotificationsDisabledItem.recordCount GT 0>
+
+								<cfset categoriesAreasArray = queryColumnData(subAreasQuery,"id")>
+
+								<cfloop query="userNotificationsDisabledItem">
+
+									<cfset areaInArrayPosition = ArrayFind(categoriesAreasArray,userNotificationsDisabledItem.area_id)>
+
+									<cfif areaInArrayPosition GT 0>
+
+										<cfif arrayDeleteAt(categoriesAreasArray, areaInArrayPosition) IS false>
+											<cfthrow message="Error al eliminar la posición #areaInArrayPosition# del array de categorías">
+										</cfif>
+
 									</cfif>
 
+								</cfloop>
+
+								<cfif arrayLen(categoriesAreasArray) IS 0>
+
+									<cfset noCategoriesSelected = true>
+
 								</cfif>
-
-							</cfloop>
-
-							<cfif arrayLen(categoriesAreasArray) IS 0>
-
-								<cfset noCategoriesSelected = true>
 
 							</cfif>
 
 						</cfif>
 
-					</cfif>
-
-				</cfif><!--- END Category defined for the item --->
+					</cfif><!--- END Category defined for the item --->
 
 
-				<cfif noCategoriesSelected IS false>
+					<cfif noCategoriesSelected IS false>
 
 
-					<cfif itemTypeId IS NOT 10>
+						<cfif itemTypeId IS NOT 10>
 
-						<cfinvoke component="AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
-							<cfinvokeargument name="areas_ids" value="#userAreasIds#">
-							<!---<cfinvokeargument name="all_areas" value="true">--->
-							<cfinvokeargument name="recipient_user" value="#curUserId#">
-							<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-							<cfinvokeargument name="listFormat" value="true">
-							<cfinvokeargument name="with_user" value="true">
-							<cfinvokeargument name="with_area" value="false">
-							<cfinvokeargument name="parse_dates" value="true"/>
-							<!---<cfinvokeargument name="done" value="false">--->
-
-							<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
-							<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
-
-							<cfinvokeargument name="published" value="false">
-
-							<cfif arrayLen(categoriesAreasArray) GT 0>
-								<cfinvokeargument name="categories_ids" value="#categoriesAreasArray#">
-								<cfinvokeargument name="categories_condition" value="OR">
-							</cfif>
-
-							<cfinvokeargument name="client_abb" value="#client_abb#">
-							<cfinvokeargument name="client_dsn" value="#client_dsn#">
-						</cfinvoke>
-
-						<cfset var itemsQuery = getAreaItemsResult.query>
-
-
-					<cfelse><!--- Files --->
-
-
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
-							<cfinvokeargument name="areas_ids" value="#userAreasIds#">
-							<cfinvokeargument name="parse_dates" value="true">
-							<cfinvokeargument name="with_user" value="true">
-							<cfinvokeargument name="with_area" value="false">
-							<cfinvokeargument name="with_typology" value="false">
-
-							<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
-							<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
-
-							<cfif arrayLen(categoriesAreasArray) GT 0>
-								<cfinvokeargument name="categories_ids" value="#categoriesAreasArray#">
-								<cfinvokeargument name="categories_condition" value="OR">
-							</cfif>
-
-							<cfinvokeargument name="client_abb" value="#client_abb#">
-							<cfinvokeargument name="client_dsn" value="#client_dsn#">
-						</cfinvoke>
-
-						<cfset var itemsQuery = getAreaFilesResult.query>
-
-
-					</cfif><!--- END itemTypeId IS NOT 10 --->
-
-					<cfif itemsQuery.recordCount GT 0>
-
-						<cfsavecontent variable="headItemsAlertContent">
-							<table style="width:100%;margin-top:15px;margin-bottom:20px;">
-								<tr>
-									<td style="padding:0"><!--- Title --->
-										<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].item[itemTypeId].name_plural#</span>
-									</td>
-								</tr>
-								<tr>
-									<td style="border-collapse: collapse; background:none; border-bottom: 1px solid ##019ED3; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-top:0;padding-bottom:0;">
-										&nbsp;
-									</td>
-								</tr>
-							</table>
-						</cfsavecontent>
-
-						<cfset alertContent = alertContent&headItemsAlertContent>
-
-						<cfset var itemsArray = arrayNew(1)>
-						<cfinvoke component="Utils" method="queryToArray" returnvariable="itemsArray">
-							<cfinvokeargument name="data" value="#itemsQuery#">
-						</cfinvoke>
-
-						<cfloop array="#itemsArray#" index="itemObject">
-
-							<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="itemAlertContent">
-								<cfinvokeargument name="item" value="#itemObject#">
+							<cfinvoke component="AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+								<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+								<cfinvokeargument name="recipient_user" value="#curUserId#">
 								<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-								<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-								<cfinvokeargument name="itemTypeGender" value="#itemTypeGender#">
-								<cfinvokeargument name="language" value="#curLang#">
+								<cfinvokeargument name="listFormat" value="true">
+								<cfinvokeargument name="with_user" value="true">
+								<cfinvokeargument name="with_area" value="true">
+								<cfinvokeargument name="parse_dates" value="true"/>
+
+								<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
+								<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
+
+								<cfif arguments.alertType EQ ALERT_TYPE_WEB AND APPLICATION.publicationValidation IS true>
+									<cfinvokeargument name="published" value="true">
+								<cfelse>
+									<cfinvokeargument name="published" value="false">
+								</cfif>
+
+								<cfif arrayLen(categoriesAreasArray) GT 0>
+									<cfinvokeargument name="categories_ids" value="#categoriesAreasArray#">
+									<cfinvokeargument name="categories_condition" value="OR">
+								</cfif>
 
 								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
 							</cfinvoke>
 
-							<cfset alertContent = alertContent&itemAlertContent>
+							<cfset var itemsQuery = getAreaItemsResult.query>
 
-						</cfloop>
+
+						<cfelse><!--- Files --->
+
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
+								<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+								<cfinvokeargument name="parse_dates" value="true">
+								<cfinvokeargument name="with_user" value="true">
+								<cfinvokeargument name="with_area" value="true">
+								<cfinvokeargument name="with_typology" value="false">
+
+								<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
+								<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
+
+								<cfif arguments.alertType EQ ALERT_TYPE_WEB AND APPLICATION.publicationValidation IS true>
+									<cfinvokeargument name="published" value="true">
+								<cfelse>
+									<cfinvokeargument name="published" value="false">
+								</cfif>
+
+								<cfif arrayLen(categoriesAreasArray) GT 0>
+									<cfinvokeargument name="categories_ids" value="#categoriesAreasArray#">
+									<cfinvokeargument name="categories_condition" value="OR">
+								</cfif>
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<cfset var itemsQuery = getAreaFilesResult.query>
+
+
+						</cfif><!--- END itemTypeId IS NOT 10 --->
+
+						<cfif itemsQuery.recordCount GT 0>
+
+							<cfsavecontent variable="headItemsAlertContent">
+								<table style="width:100%;margin-top:15px;margin-bottom:20px;">
+									<tr>
+										<td style="padding:0"><!--- Title --->
+											<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].item[itemTypeId].name_plural#</span>
+										</td>
+									</tr>
+									<tr>
+										<td style="border-collapse: collapse; background:none; border-bottom: 1px solid ##019ED3; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-top:0;padding-bottom:0;">
+											&nbsp;
+										</td>
+									</tr>
+								</table>
+							</cfsavecontent>
+
+							<cfset alertContent = alertContent&headItemsAlertContent>
+
+							<cfset var itemsArray = arrayNew(1)>
+							<cfinvoke component="Utils" method="queryToArray" returnvariable="itemsArray">
+								<cfinvokeargument name="data" value="#itemsQuery#">
+							</cfinvoke>
+
+							<cfloop array="#itemsArray#" index="itemObject">
+
+								<cfinvoke component="AlertManager" method="getItemDiaryAlertContent" returnvariable="itemAlertContent">
+									<cfinvokeargument name="item" value="#itemObject#">
+									<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+									<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+									<cfinvokeargument name="itemTypeGender" value="#itemTypeGender#">
+									<cfinvokeargument name="language" value="#curLang#">
+
+									<cfinvokeargument name="alertType" value="#arguments.alertType#">
+									<cfinvokeargument name="webPathUrl" value="#arguments.webPathUrl#">
+									<cfinvokeargument name="webPath" value="#arguments.webPath#">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+								</cfinvoke>
+
+								<cfset alertContent = alertContent&itemAlertContent>
+
+							</cfloop>
+
+						<cfelse>
+
+							<!---<cfoutput>
+							No hay elementos: #itemTypeId#
+							</cfoutput>--->
+
+						</cfif><!--- END itemsQuery.recordCount GT 0 --->
 
 					<cfelse>
 
-						<!---<cfoutput>
-						No hay elementos: #itemTypeId#
-						</cfoutput>--->
-
-					</cfif><!--- END itemsQuery.recordCount GT 0 --->
-
-				<cfelse>
-
-				<!---<cfoutput>
-					Ninguna categoría seleccionada: #itemTypeId#
-				</cfoutput>--->
+					<!---<cfoutput>
+						Ninguna categoría seleccionada: #itemTypeId#
+					</cfoutput>--->
 
 
-				</cfif><!--- END noCategoriesSelected IS false --->
+					</cfif><!--- END noCategoriesSelected IS false --->
 
+				</cfif><!--- END notifyItemType --->
 
 			</cfloop><!--- END array="#itemTypesArray#" --->
 
 
 
 			<!--- Areas --->
-
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreas" returnvariable="getAreasResponse">
 				<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
 				<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
-				<!---<cfif getAllUsersQuery.internal_user IS false>--->
-					<cfinvokeargument name="areas_ids" value="#userAreasIds#"/>
-				<!---</cfif>--->
+				<cfinvokeargument name="areas_ids" value="#userAreasIds#"/>
 				<cfinvokeargument name="order_by" value="creation_date">
 				<cfinvokeargument name="order_type" value="DESC">
 				<cfinvokeargument name="parse_dates" value="true">
+				<cfif arguments.alertType EQ ALERT_TYPE_WEB>
+					<cfinvokeargument name="remove_order" value="true">
+				</cfif>
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -2497,7 +2696,13 @@
 					<table style="width:100%;margin-top:15px;margin-bottom:20px;">
 						<tr>
 							<td style="padding:0"><!--- Title --->
-								<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].common.areas#</span>
+								<span style="font-size:24px;font-weight:100;color:##000">
+									<cfif arguments.alertType EQ ALERT_TYPE_WEB>
+										#langText[curLang].common.pages#
+									<cfelse>
+										#langText[curLang].common.areas#
+									</cfif>
+								</span>
 							</td>
 						</tr>
 						<tr>
@@ -2511,16 +2716,30 @@
 
 				<cfloop query="areasQuery">
 
-					<!---areaUrl--->
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
-						<cfinvokeargument name="area_id" value="#areasQuery.area_id#">
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-					</cfinvoke>
-
 					<cfset areaName = areasQuery.area_name>
 					<cfset areaCreationDate = areasQuery.creation_date>
-
 					<cfset spacePos = findOneOf(" ", areaCreationDate)>
+
+					<cfif arguments.alertType EQ ALERT_TYPE_WEB>
+
+						<!---areaWebUrl--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaWebPageFullUrl" returnvariable="areaUrl">
+							<cfinvokeargument name="area_id" value="#areasQuery.area_id#">
+							<cfinvokeargument name="name" value="#areasQuery.area_name#">
+							<cfinvokeargument name="remove_order" value="true">
+							<cfinvokeargument name="path_url" value="#arguments.webPathUrl#">
+							<cfinvokeargument name="path" value="#arguments.webPath#">
+						</cfinvoke>
+
+					<cfelse>
+
+						<!---areaUrl--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
+							<cfinvokeargument name="area_id" value="#areasQuery.area_id#">
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+						</cfinvoke>
+
+					</cfif>
 
 					<cfsavecontent variable="areaContent">
 						<a href="#areaUrl#" target="_blank" style="font-size:18px;font-weight:100;color:##009ed2">#areaName#</a><br/>
@@ -2537,113 +2756,96 @@
 			</cfif><!--- END areasQuery.recordCount GT 0 --->
 
 
-			<!--- Users to areas --->
+			<cfif arguments.alertType NEQ ALERT_TYPE_WEB>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaUsers" returnvariable="usersQuery">
-				<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
-				<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
-				<!---<cfif getAllUsersQuery.internal_user IS false>--->
+				<!--- Users to areas --->
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaUsers" returnvariable="usersQuery">
+					<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
+					<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
 					<cfinvokeargument name="areas_ids" value="#userAreasIds#"/>
-				<!---</cfif>--->
-				<cfinvokeargument name="order_by" value="association_date">
-				<cfinvokeargument name="order_type" value="DESC">
-				<cfinvokeargument name="parse_dates" value="true">
-				<cfinvokeargument name="with_area" value="true">
+					<cfinvokeargument name="order_by" value="association_date">
+					<cfinvokeargument name="order_type" value="DESC">
+					<cfinvokeargument name="parse_dates" value="true">
+					<cfinvokeargument name="with_area" value="true">
 
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
-			<cfif usersQuery.recordCount GT 0>
+				<cfif usersQuery.recordCount GT 0>
 
-				<cfsavecontent variable="headAreasAlertContent">
-					<table style="width:100%;margin-top:15px;margin-bottom:20px;">
-						<tr>
-							<td style="padding:0"><!--- Title --->
-								<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].common.users#</span>
-							</td>
-						</tr>
-						<tr>
-							<td style="border-collapse: collapse; background:none; border-bottom: 1px solid ##019ED3; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-top:0;padding-bottom:0;">
-								&nbsp;
-							</td>
-						</tr>
-					</table>
-				</cfsavecontent>
-				<cfset alertContent = alertContent&headAreasAlertContent>
-
-				<cfloop query="usersQuery">
-
-					<!---areaUrl--->
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
-						<cfinvokeargument name="area_id" value="#usersQuery.area_id#">
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-					</cfinvoke>
-
-					<cfset userFullName = usersQuery.user_full_name>
-					<cfset areaName = usersQuery.area_name>
-					<cfset associationDate = usersQuery.association_date>
-
-					<cfset spacePos = findOneOf(" ", associationDate)>
-
-					<cfsavecontent variable="userContent">
-						<span style="font-size:18px;color:##35938c;font-weight:100">#userFullName#</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(associationDate, spacePos)#</span>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(associationDate, len(associationDate)-spacePos)#</span><br/>
-						<span style="font-size:16px;margin-top:0">Área:</span> <a href="#areaUrl#" target="_blank" style="font-size:16px;font-weight:100;color:##009ed2">#areaName#</a><br/>
-
-						<br/><br/>
+					<cfsavecontent variable="headAreasAlertContent">
+						<table style="width:100%;margin-top:15px;margin-bottom:20px;">
+							<tr>
+								<td style="padding:0"><!--- Title --->
+									<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].common.users#</span>
+								</td>
+							</tr>
+							<tr>
+								<td style="border-collapse: collapse; background:none; border-bottom: 1px solid ##019ED3; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-top:0;padding-bottom:0;">
+									&nbsp;
+								</td>
+							</tr>
+						</table>
 					</cfsavecontent>
-					<cfset alertContent = alertContent&userContent>
+					<cfset alertContent = alertContent&headAreasAlertContent>
 
+					<cfloop query="usersQuery">
 
-				</cfloop><!--- END loop areas --->
+						<!---areaUrl--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
+							<cfinvokeargument name="area_id" value="#usersQuery.area_id#">
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+						</cfinvoke>
 
-			</cfif><!--- END usersQuery.recordCount GT 0 --->
+						<cfset userFullName = usersQuery.user_full_name>
+						<cfset areaName = usersQuery.area_name>
+						<cfset associationDate = usersQuery.association_date>
+
+						<cfset spacePos = findOneOf(" ", associationDate)>
+
+						<cfsavecontent variable="userContent">
+							<span style="font-size:18px;color:##35938c;font-weight:100">#userFullName#</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(associationDate, spacePos)#</span>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(associationDate, len(associationDate)-spacePos)#</span><br/>
+							<span style="font-size:16px;margin-top:0">Área:</span> <a href="#areaUrl#" target="_blank" style="font-size:16px;font-weight:100;color:##009ed2">#areaName#</a><br/>
+
+							<br/><br/>
+						</cfsavecontent>
+						<cfset alertContent = alertContent&userContent>
+
+					</cfloop><!--- END loop areas --->
+
+				</cfif><!--- END usersQuery.recordCount GT 0 --->
+
+			</cfif><!--- END arguments.alertType NEQ ALERT_TYPE_WEB --->
 
 
 			<cfif len(alertContent) GT 0>
 
 				<cfsavecontent variable="preAlertContent">
-					<p style="font-size:16px;">#langText[curLang].notifications_digest.activity_summary_for_user# #arguments.user_full_name#
-						(<a href="mailto:#curUserEmail#" style="color:##35938">#curUserEmail#</a>)
-					#lastDigestDateFormatted# - #currentDigestDateFormatted#</p>
+					<p style="font-size:16px;"><cfif arguments.alertType EQ ALERT_TYPE_WEB>#langText[curLang].notifications_digest.activity_summary_web#
+					<cfelse>#langText[curLang].notifications_digest.activity_summary_for_user# #arguments.user_full_name#	(<a href="mailto:#curUserEmail#" style="color:##35938">#curUserEmail#</a>)</cfif>
+					<cfif lastDigestDateFormatted EQ currentDigestDateFormatted>
+						#lastDigestDateFormatted#
+					<cfelse>
+						#lastDigestDateFormatted# - #currentDigestDateFormatted#
+					</cfif></p>
 				</cfsavecontent>
 
 				<cfset alertContent = preAlertContent&alertContent>
-
 				<cfset alertContent = alertContent&"<br/><p>"&langText[curLang].notifications_digest.summary_advice&"</p>">
 
-				<cfset subject = "[#arguments.rootAreaName#] "&langText[curLang].notifications_digest.activity_summary&" #lastDigestDateFormatted# - #currentDigestDateFormatted#">
-
-
-			<cfoutput>
+			<!---<cfoutput>
 					#curUserEmail#<br/>
 					#alertContent#<br/><br/>
-			</cfoutput>
-
-				<!--- getHeadContent --->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="headContent">
-					<cfinvokeargument name="language" value="#curLang#">
-					<cfinvokeargument name="client_abb" value="#client_abb#"/>
-				</cfinvoke>
-
-				<cfinvoke component="AlertManager" method="getDiaryAlertFootContent" returnvariable="footContent">
-					<cfinvokeargument name="language" value="#curLang#">
-				</cfinvoke>
-
-				<!--- sendEmail --->
-				<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
-					<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-					<cfinvokeargument name="to" value="#curUserEmail#">
-					<cfinvokeargument name="subject" value="#subject#">
-					<cfinvokeargument name="content" value="#alertContent#">
-					<cfinvokeargument name="head_content" value="#headContent#">
-					<cfinvokeargument name="foot_content" value="#footContent#">
-				</cfinvoke>
+			</cfoutput>--->
 
 			</cfif><!--- END len(alertContent) GT 0 --->
 
 		</cfif><!--- END listLen(userAreasIds) GT 0 --->
 
+
+		<cfreturn {alertContent=alertContent}>
 
 	</cffunction>
 
@@ -2658,6 +2860,10 @@
 		<cfargument name="itemTypeGender" type="string" required="true">
 		<cfargument name="language" type="string" required="true">
 
+		<cfargument name="alertType" type="string" required="false" default="#ALERT_TYPE_DOPLANNING#">
+		<cfargument name="webPath" type="string" required="false">
+		<cfargument name="webPathUrl" type="string" required="false">
+
 		<cfargument name="client_abb" type="string" required="true">
 
 		<cfset var method = "getItemFootContent">
@@ -2668,14 +2874,46 @@
 		<cfset var actionBox = "">
 
 
-			<!---itemUrl--->
-			<cfinvoke component="UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
-				<cfinvokeargument name="item_id" value="#item.id#">
-				<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-				<cfinvokeargument name="area_id" value="#item.area_id#">
+			<cfif arguments.alertType EQ ALERT_TYPE_WEB>
 
-				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-			</cfinvoke>
+				<cfif itemTypeId EQ 4 OR itemTypeId EQ 5 OR itemTypeId EQ 8><!--- News, event or publication --->
+
+					<!---itemWebUrl--->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getItemWebPageFullUrl" returnvariable="areaItemUrl">
+						<cfinvokeargument name="item_id" value="#item.id#">
+						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+
+						<cfinvokeargument name="title" value="#item.title#">
+						<cfinvokeargument name="path_url" value="#arguments.webPathUrl#">
+						<cfinvokeargument name="path" value="#arguments.webPath#">
+					</cfinvoke>
+
+				<cfelse>
+
+					<!---areaWebUrl--->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaWebPageFullUrl" returnvariable="areaItemUrl">
+						<cfinvokeargument name="area_id" value="#item.area_id#">
+						<cfinvokeargument name="name" value="#item.area_name#">
+						<cfinvokeargument name="remove_order" value="true">
+						<cfinvokeargument name="path_url" value="#arguments.webPathUrl#">
+						<cfinvokeargument name="path" value="#arguments.webPath#">
+					</cfinvoke>
+
+				</cfif>
+
+			<cfelse>
+
+				<!---itemUrl--->
+				<cfinvoke component="UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+					<cfinvokeargument name="item_id" value="#item.id#">
+					<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+					<cfinvokeargument name="area_id" value="#item.area_id#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				</cfinvoke>
+
+			</cfif>
+
 
 			<cfsavecontent variable="itemContent">
 
@@ -2743,7 +2981,7 @@
 				<a href="#areaItemUrl#" target="_blank" style="font-size:18px;font-weight:100;color:##009ed2">#itemTitle#</a>&nbsp;&nbsp;#actionBox#<br/>
 
 
-				<!---#langText[arguments.language].new_item.user#:---> <span style="font-size:16px;color:##35938c;font-weight:100">#item.user_full_name#</span><cfif itemTypeId NEQ 4>&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(actionDate, spacePos)#</span></cfif>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(actionDate, len(actionDate)-spacePos)#</span>
+				<span style="font-size:16px;color:##35938c;font-weight:100">#item.user_full_name#</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(actionDate, spacePos)#</span><cfif itemTypeId NEQ 4>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(actionDate, len(actionDate)-spacePos)#</span></cfif>
 
 				<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
 				<p style="font-size:16px;margin-top:0;">#langText[arguments.language].new_item.start_date#: #item.start_date# <cfif itemTypeId IS 5>#langText[arguments.language].new_item.hour#: #TimeFormat(item.start_time,"HH:mm")#</cfif><br/>

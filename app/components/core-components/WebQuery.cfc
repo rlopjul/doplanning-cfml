@@ -51,7 +51,7 @@
 				</cfif>;
 			</cfquery>
 
-		<cfreturn selectWebQuery>
+		<cfreturn selectWebsQuery>
 
 	</cffunction>
 
