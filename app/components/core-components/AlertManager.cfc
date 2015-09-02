@@ -2178,6 +2178,7 @@
 							<cfset var curLang = getAllUsersQuery.language>
 							<cfset var curUserId = getAllUsersQuery.user_id>
 							<cfset var curUserEmail = getAllUsersQuery.email>
+							<cfset var curUserFullName = "#getAllUsersQuery.family_name# #getAllUsersQuery.name#">
 
 
 							<!--- ------------------------------------------ DP NOTIFICATIONS ------------------------------------------------ --->
@@ -2197,6 +2198,7 @@
 										<cfset var currentDigestDateDP = checkNotificationsToUserResult.currentDigestDate>
 										<cfset var currentDigestDateDPFormatted = DateFormat(currentDigestDateDP, APPLICATION.dateFormat)>
 										<cfset var lastDigestDateDPFormatted = DateFormat(lastDigestDateDP, APPLICATION.dateFormat)>
+										<cfset var alertContentDP = "">
 
 										<!--- getHeadContent --->
 										<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="headContent">
@@ -2214,7 +2216,7 @@
 											<cfinvokeargument name="user_id" value="#curUserId#">
 											<cfinvokeargument name="language" value="#curLang#">
 											<cfinvokeargument name="email" value="#curUserEmail#">
-											<cfinvokeargument name="user_full_name" value="#getAllUsersQuery.family_name# #getAllUsersQuery.name#">
+											<cfinvokeargument name="user_full_name" value="#curUserFullName#">
 											<cfinvokeargument name="currentDigestDate" value="#currentDigestDateDP#">
 											<cfinvokeargument name="lastDigestDate" value="#lastDigestDateDP#">
 											<cfinvokeargument name="itemTypesStruct" value="#itemTypesStruct#">
@@ -2233,12 +2235,26 @@
 												<cfset subjectAlertDP = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary&" #lastDigestDateDPFormatted#">
 											</cfif>
 
+											<cfsavecontent variable="preAlertContentDP">
+												<cfoutput>
+												<p style="font-size:16px;">#langText[curLang].notifications_digest.activity_summary_for_user# #curUserFullName#	(<a href="mailto:#curUserEmail#" style="color:##35938">#curUserEmail#</a>)
+												<cfif lastDigestDateDPFormatted EQ currentDigestDateDPFormatted>
+													#lastDigestDateDPFormatted#
+												<cfelse>
+													#lastDigestDateDPFormatted# - #currentDigestDateDPFormatted#
+												</cfif></p>
+												</cfoutput>
+											</cfsavecontent>
+
+											<cfset alertContentDP = preAlertContentDP&userDiaryAlertDP.alertContent>
+											<cfset alertContentDP = alertContentDP&"<br/><p>"&langText[curLang].notifications_digest.summary_advice&"</p>">
+
 											<!--- sendEmail --->
 											<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 												<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-												<cfinvokeargument name="to" value="#getAllUsersQuery.email#">
+												<cfinvokeargument name="to" value="#curUserEmail#">
 												<cfinvokeargument name="subject" value="#subjectAlertDP#">
-												<cfinvokeargument name="content" value="#userDiaryAlertDP.alertContent#">
+												<cfinvokeargument name="content" value="#alertContentDP#">
 												<cfinvokeargument name="head_content" value="#headContent#">
 												<cfinvokeargument name="foot_content" value="#footContent#">
 											</cfinvoke>
@@ -2299,7 +2315,7 @@
 													<cfinvokeargument name="user_id" value="#curUserId#">
 													<cfinvokeargument name="language" value="#curLang#">
 													<cfinvokeargument name="email" value="#curUserEmail#">
-													<cfinvokeargument name="user_full_name" value="#getAllUsersQuery.family_name# #getAllUsersQuery.name#">
+													<cfinvokeargument name="user_full_name" value="#curUserFullName#">
 													<cfinvokeargument name="currentDigestDate" value="#currentDigestDateWeb#">
 													<cfinvokeargument name="lastDigestDate" value="#lastDigestDateWeb#">
 													<cfinvokeargument name="itemTypesStruct" value="#itemTypesStruct#">
@@ -2319,25 +2335,29 @@
 													#userDiaryAlertWeb.alertContent#
 												</cfoutput>--->
 
-												<cfif getWebQuery.recordCount GT 0>
+												<cfif len(userDiaryAlertWeb.alertContent) GT 0>
 
-													<cfset webLanguage = "">
-													<cfif len(userDiaryAlertWeb.alertContent) GT 0>
+													<cfif getWebQuery.recordCount GT 1>
 
-															<cfswitch expression="#getWebQuery.language#">
-																<cfcase value="es">
-																	<cfset webLanguage = "Español">
-																</cfcase>
-																<cfcase value="en">
-																	<cfset webLanguage = "English">
-																</cfcase>
-																<cfcase value="fr">
-																	<cfset webLanguage = "Français">
-																</cfcase>
-															</cfswitch>
+														<cfset webLanguage = "">
 
-															<cfset alertContentWeb = alertContentWeb&'<p style="margin-top:20px;font-size:26px">#webLanguage#</p>'>
-															<cfset alertContentWeb = alertContentWeb&userDiaryAlertWeb.alertContent>
+														<cfswitch expression="#getWebQuery.language#">
+															<cfcase value="es">
+																<cfset webLanguage = "Español">
+															</cfcase>
+															<cfcase value="en">
+																<cfset webLanguage = "English">
+															</cfcase>
+															<cfcase value="fr">
+																<cfset webLanguage = "Français">
+															</cfcase>
+														</cfswitch>
+
+														<cfset alertContentWeb = alertContentWeb&'<p style="margin-top:20px;font-size:26px">#webLanguage#</p>'&alertContentWeb&userDiaryAlertWeb.alertContent>
+
+													<cfelse>
+
+														<cfset alertContentWeb = alertContentWeb&userDiaryAlertWeb.alertContent>
 
 													</cfif>
 
@@ -2350,20 +2370,33 @@
 												<cfif lastDigestDateWebFormatted NEQ currentDigestDateWebFormatted>
 													<cfset subjectWeb = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary_web&" #lastDigestDateWebFormatted# - #currentDigestDateFormatted#">
 												<cfelse>
-													<cfset subjectWeb = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary&" #lastDigestDateWebFormatted#">
+													<cfset subjectWeb = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary_web&" #lastDigestDateWebFormatted#">
 												</cfif>
+
+												<cfsavecontent variable="preAlertContentWeb">
+													<cfoutput>
+													<p style="font-size:16px;">#langText[curLang].notifications_digest.activity_summary_web#
+													<cfif lastDigestDateWebFormatted EQ currentDigestDateWebFormatted>
+														#lastDigestDateWebFormatted#
+													<cfelse>
+														#lastDigestDateWebFormatted# - #currentDigestDateWebFormatted#
+													</cfif></p>
+													</cfoutput>
+												</cfsavecontent>
+
+												<cfset alertContentWeb = preAlertContentWeb&alertContentWeb>
 
 												<!--- sendEmail --->
 												<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 													<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-													<cfinvokeargument name="to" value="#getAllUsersQuery.email#">
+													<cfinvokeargument name="to" value="#curUserEmail#">
 													<cfinvokeargument name="subject" value="#subjectWeb#">
 													<cfinvokeargument name="content" value="#alertContentWeb#">
 													<cfinvokeargument name="head_content" value="#headContent#">
 													<cfinvokeargument name="foot_content" value="#footContent#">
 												</cfinvoke>
 
-											</cfif>
+											</cfif><!--- END len(alertContentWeb) GT 0 --->
 
 										</cfif><!---END getWebQuery.recordCount GT 0--->
 
@@ -2608,6 +2641,7 @@
 						<cfif itemsQuery.recordCount GT 0>
 
 							<cfsavecontent variable="headItemsAlertContent">
+								<cfoutput>
 								<table style="width:100%;margin-top:15px;margin-bottom:20px;">
 									<tr>
 										<td style="padding:0"><!--- Title --->
@@ -2620,6 +2654,7 @@
 										</td>
 									</tr>
 								</table>
+								</cfoutput>
 							</cfsavecontent>
 
 							<cfset alertContent = alertContent&headItemsAlertContent>
@@ -2693,6 +2728,7 @@
 			<cfif areasQuery.recordCount GT 0>
 
 				<cfsavecontent variable="headAreasAlertContent">
+					<cfoutput>
 					<table style="width:100%;margin-top:15px;margin-bottom:20px;">
 						<tr>
 							<td style="padding:0"><!--- Title --->
@@ -2711,6 +2747,7 @@
 							</td>
 						</tr>
 					</table>
+					</cfoutput>
 				</cfsavecontent>
 				<cfset alertContent = alertContent&headAreasAlertContent>
 
@@ -2742,11 +2779,13 @@
 					</cfif>
 
 					<cfsavecontent variable="areaContent">
+						<cfoutput>
 						<a href="#areaUrl#" target="_blank" style="font-size:18px;font-weight:100;color:##009ed2">#areaName#</a><br/>
 
 						<span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(areaCreationDate, spacePos)#</span>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(areaCreationDate, len(areaCreationDate)-spacePos)#</span>
 
 						<br/><br/>
+						</cfoutput>
 					</cfsavecontent>
 					<cfset alertContent = alertContent&areaContent>
 
@@ -2776,6 +2815,7 @@
 				<cfif usersQuery.recordCount GT 0>
 
 					<cfsavecontent variable="headAreasAlertContent">
+						<cfoutput>
 						<table style="width:100%;margin-top:15px;margin-bottom:20px;">
 							<tr>
 								<td style="padding:0"><!--- Title --->
@@ -2788,6 +2828,7 @@
 								</td>
 							</tr>
 						</table>
+						</cfoutput>
 					</cfsavecontent>
 					<cfset alertContent = alertContent&headAreasAlertContent>
 
@@ -2806,10 +2847,12 @@
 						<cfset spacePos = findOneOf(" ", associationDate)>
 
 						<cfsavecontent variable="userContent">
+							<cfoutput>
 							<span style="font-size:18px;color:##35938c;font-weight:100">#userFullName#</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(associationDate, spacePos)#</span>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(associationDate, len(associationDate)-spacePos)#</span><br/>
 							<span style="font-size:16px;margin-top:0">Área:</span> <a href="#areaUrl#" target="_blank" style="font-size:16px;font-weight:100;color:##009ed2">#areaName#</a><br/>
 
 							<br/><br/>
+							</cfoutput>
 						</cfsavecontent>
 						<cfset alertContent = alertContent&userContent>
 
@@ -2818,29 +2861,6 @@
 				</cfif><!--- END usersQuery.recordCount GT 0 --->
 
 			</cfif><!--- END arguments.alertType NEQ ALERT_TYPE_WEB --->
-
-
-			<cfif len(alertContent) GT 0>
-
-				<cfsavecontent variable="preAlertContent">
-					<p style="font-size:16px;"><cfif arguments.alertType EQ ALERT_TYPE_WEB>#langText[curLang].notifications_digest.activity_summary_web#
-					<cfelse>#langText[curLang].notifications_digest.activity_summary_for_user# #arguments.user_full_name#	(<a href="mailto:#curUserEmail#" style="color:##35938">#curUserEmail#</a>)</cfif>
-					<cfif lastDigestDateFormatted EQ currentDigestDateFormatted>
-						#lastDigestDateFormatted#
-					<cfelse>
-						#lastDigestDateFormatted# - #currentDigestDateFormatted#
-					</cfif></p>
-				</cfsavecontent>
-
-				<cfset alertContent = preAlertContent&alertContent>
-				<cfset alertContent = alertContent&"<br/><p>"&langText[curLang].notifications_digest.summary_advice&"</p>">
-
-			<!---<cfoutput>
-					#curUserEmail#<br/>
-					#alertContent#<br/><br/>
-			</cfoutput>--->
-
-			</cfif><!--- END len(alertContent) GT 0 --->
 
 		</cfif><!--- END listLen(userAreasIds) GT 0 --->
 
@@ -2853,7 +2873,7 @@
 
 	<!--- --------------------------- getItemDiaryAlertContent --------------------------- --->
 
-	<cffunction name="getItemDiaryAlertContent" access="private" returntype="string">
+	<cffunction name="getItemDiaryAlertContent" output="false" access="private" returntype="string">
 		<cfargument name="item" type="struct" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="itemTypeName" type="string" required="true">
@@ -2915,71 +2935,72 @@
 			</cfif>
 
 
-			<cfsavecontent variable="itemContent">
+			<cfif itemTypeId NEQ 10>
 
-				<cfif itemTypeId NEQ 10>
+				<cfif itemTypeId EQ 1 OR itemTypeId EQ 7 OR item.creation_date EQ item.last_update_date>
 
-					<cfif itemTypeId EQ 1 OR itemTypeId EQ 7 OR item.creation_date EQ item.last_update_date>
+					<cfset actionDate = item.creation_date>
 
-						<cfset actionDate = item.creation_date>
-
-					<cfelse>
-
-						<cfset actionDate = item.creation_date>
-
-						<cfif itemTypeGender EQ "male">
-							<cfset actionBoxText = langText[language].new_item.modified_male>
-						<cfelse>
-							<cfset actionBoxText = langText[language].new_item.modified_female>
-						</cfif>
-
-					</cfif>
-
-				<cfelse><!--- Files --->
-
-					<cfif isDate(item.replacement_date)>
-
-						<cfset actionDate = item.replacement_date>
-
-						<cfset actionBoxText = langText[language].new_file.replaced>
-
-					<cfelse>
-
-						<cfset actionDate = item.uploading_date>
-
-					</cfif>
-
-
-				</cfif>
-
-				<cfif len(actionBoxText) GT 0>
-
-					<cfsavecontent variable="actionBox">
-						<table style="background-color:##019ed3;border-radius:4px;display:inline-block;">
-							<tr>
-								<td style="color:##FFFFFF;padding-left:2px;padding-right:2px;">
-									#actionBoxText#
-								</td>
-							</tr>
-						</table>
-					</cfsavecontent>
-
-				</cfif>
-
-				<cfset spacePos = findOneOf(" ", actionDate)>
-
-				<cfif itemTypeId NEQ 10>
-					<cfset itemTitle = item.title>
 				<cfelse>
-					<cfset itemTitle = item.name>
+
+					<cfset actionDate = item.creation_date>
+
+					<cfif itemTypeGender EQ "male">
+						<cfset actionBoxText = langText[language].new_item.modified_male>
+					<cfelse>
+						<cfset actionBoxText = langText[language].new_item.modified_female>
+					</cfif>
+
 				</cfif>
 
-				<cfif len(itemTitle) IS 0>
-					<cfset itemTitle = "<i>"&langText[language].item[itemTypeId].name&" "&langText[language].common.no_title&"</i>">
+			<cfelse><!--- Files --->
+
+				<cfif isDate(item.replacement_date)>
+
+					<cfset actionDate = item.replacement_date>
+
+					<cfset actionBoxText = langText[language].new_file.replaced>
+
+				<cfelse>
+
+					<cfset actionDate = item.uploading_date>
+
 				</cfif>
 
+
+			</cfif>
+
+			<cfif len(actionBoxText) GT 0>
+
+				<cfsavecontent variable="actionBox">
+					<cfoutput>
+					<table style="background-color:##019ed3;border-radius:4px;display:inline-block;">
+						<tr>
+							<td style="color:##FFFFFF;padding-left:2px;padding-right:2px;">
+								#actionBoxText#
+							</td>
+						</tr>
+					</table>
+					</cfoutput>
+				</cfsavecontent>
+
+			</cfif>
+
+			<cfset spacePos = findOneOf(" ", actionDate)>
+
+			<cfif itemTypeId NEQ 10>
+				<cfset itemTitle = item.title>
+			<cfelse>
+				<cfset itemTitle = item.name>
+			</cfif>
+
+			<cfif len(itemTitle) IS 0>
+				<cfset itemTitle = "<i>"&langText[language].item[itemTypeId].name&" "&langText[language].common.no_title&"</i>">
+			</cfif>
+
+			<cfsavecontent variable="itemContent">
+				<cfoutput>
 				<a href="#areaItemUrl#" target="_blank" style="font-size:18px;font-weight:100;color:##009ed2">#itemTitle#</a>&nbsp;&nbsp;#actionBox#<br/>
-
 
 				<span style="font-size:16px;color:##35938c;font-weight:100">#item.user_full_name#</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(actionDate, spacePos)#</span><cfif itemTypeId NEQ 4>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(actionDate, len(actionDate)-spacePos)#</span></cfif>
 
@@ -2994,6 +3015,7 @@
 				<cfelse>
 					<br/><br/>
 				</cfif>
+				</cfoutput>
 			</cfsavecontent>
 
 		<cfreturn itemContent>
