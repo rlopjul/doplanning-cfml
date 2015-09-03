@@ -56,6 +56,10 @@
 <!--- <!-- The main application script -->
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/main.js"></script>
 --->
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+
 <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
 <!--[if (gte IE 8)&(lt IE 10)]>
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/cors/jquery.xdr-transport.js"></script>
@@ -68,6 +72,8 @@
 </script>
 
 </cfoutput>
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <script>
 
@@ -179,7 +185,7 @@ $(function () {
     });
 
 
-     $(window).on('beforeunload', function(event){
+    $(window).on('beforeunload', function(event){
 
         var activeUploads = $('#fileupload').fileupload('active');
 
@@ -194,10 +200,25 @@ $(function () {
 
     });
 
+
+		<cfif len(area_type) GT 0><!--- WEB --->
+
+		$( document ).on( "focus", "input.datepicker", function() {
+
+		    $(this).datepicker({
+					format: 'dd-mm-yyyy',
+					weekStart: 1,
+					language: 'es',
+					todayBtn: 'linked',
+					autoclose: true
+				});
+
+		});
+
+		</cfif>
+
 });
 </script>
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
     <cfinvokeargument name="user_id" value="#SESSION.user_id#">
@@ -329,6 +350,7 @@ $(function () {
 
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
+<cfoutput>
 {% for (var i=0, file; file=o.files[i]; i++) { %}
 
     {% curFile = curFile+1; %}
@@ -357,10 +379,14 @@ $(function () {
                     <label for="fileTypeId{%=curFile%}" class="col-sm-2 control-label" lang="es">Tipo</label>
 
                     <div class="col-sm-10">
-                        <select name="fileTypeId" id="fileTypeId{%=curFile%}" class="form-control" onchange="setFileTypeId($('#fileTypeId{%=curFile%}').val(),{%=curFile%});">
+                        <select name="fileTypeId" id="fileTypeId{%=curFile%}" class="form-control" onchange="setFileTypeId($('##fileTypeId{%=curFile%}').val(),{%=curFile%});">
                             <option value="1" selected="selected" lang="es">Archivo de usuario</option>
-                            <option value="2" lang="es">Archivo de área sin circuito de calidad</option>
-                            <option value="3" lang="es">Archivo de área con circuito de calidad</option>
+														<cfif APPLICATION.moduleAreaFilesLite IS true>
+															<option value="2" lang="es">Archivo de área sin circuito de calidad</option>
+															<cfif len(area_type) IS 0>
+	                            	<option value="3" lang="es">Archivo de área con circuito de calidad</option>
+															</cfif>
+														</cfif>
                         </select>
                     </div>
 
@@ -397,6 +423,7 @@ $(function () {
                 </div>
 
                 <cfif scopesQuery.recordCount GT 0>
+
                     <div class="form-group" style="margin-bottom:0">
 
                         <label for="publication_scope_id{%=curFile%}" class="col-sm-2 control-label" lang="es">Ámbito de publicación</label>
@@ -405,13 +432,14 @@ $(function () {
                             <select name="publication_scope_id" id="publication_scope_id{%=curFile%}" class="form-control">
                                 <cfoutput>
                                 <cfloop query="scopesQuery">
-                                    <option value="#scopesQuery.scope_id#" <cfif FindNoCase(area_type, scopesQuery.name) GT 0>selected="selected"</cfif>>#scopesQuery.name#</option>
+                                    <option value="#scopesQuery.scope_id#" <cfif findNoCase(area_type, scopesQuery.name) GT 0>selected="selected"</cfif>>#scopesQuery.name#</option>
                                 </cfloop>
                                 </cfoutput>
                             </select>
                         </div>
 
                     </div>
+
                 </cfif>
 
 								<cfif isNumeric(itemTypeOptions.category_area_id)>
@@ -448,6 +476,60 @@ $(function () {
 
 								</cfif>
 
+
+								<cfif len(area_type) GT 0 ><!--- WEB Publish file --->
+
+
+									<div class="form-group" style="margin-bottom:0">
+
+										<div class="col-sm-2">
+											<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span>:</label>
+										</div>
+
+										<cfset publication_date = DateFormat(now(), APPLICATION.dateFormat)>
+
+										<div class="col-sm-10">
+
+											<input type="text" name="publication_date" id="publication_date" class="form-control datepicker" value="#publication_date#" required>
+
+											<input type="hidden" name="publication_hour" value="00"/>
+											<input type="hidden" name="publication_minute" value="00"/>
+
+											<small class="help-block" lang="es">Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
+
+										</div>
+
+									</div>
+
+									<cfif APPLICATION.publicationValidation IS true>
+
+										<!--- isUserAreaResponsible --->
+										<cfif is_user_area_responsible IS true>
+
+											<div class="form-group" style="margin-bottom:0">
+
+												<div class="col-sm-11 col-sm-offset-1">
+
+													<div class="checkbox">
+														<label>
+															<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" /> Aprobar publicación
+														</label>
+														<!---<small class="help-block" lang="es">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>--->
+													</div>
+
+												</div>
+
+											</div>
+
+										</cfif>
+
+									</cfif>
+
+
+								</cfif>
+
+
+
 								<div class="form-group" style="margin-bottom:0" id="publicFile{%=curFile%}">
 
 									<div class="col-sm-11 col-sm-offset-1">
@@ -456,12 +538,12 @@ $(function () {
 										    <label>
 										    	<input type="checkbox" name="public" value="true"> <span lang="es">Habilitar URL pública para poder</span> <b lang="es">compartir el archivo con cualquier usuario</b>
 										    </label>
-										    <small class="help-block" lang="es">El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL</small>
 									  </div>
 
 									</div>
 
 								</div>
+
 
 
 								<!--- getClient --->
@@ -479,7 +561,6 @@ $(function () {
 												<label>
 													<input type="checkbox" name="no_notify" id="no_notify" value="true" /> NO enviar notificación por email
 												</label>
-												<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
 											</div>
 
 										</div>
@@ -517,6 +598,7 @@ $(function () {
     </tr>
 
 {% } %}
+</cfoutput>
 </script>
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">

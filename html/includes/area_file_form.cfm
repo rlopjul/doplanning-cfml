@@ -330,9 +330,17 @@
 					<label for="fileTypeId" class="control-label" lang="es">Tipo de documento de área <i id="file-type-help" class="icon-question-sign" data-toggle="tooltip" data-placement="bottom" data-html="true" title="-Sin circuito de calidad: cada vez que se suba una versión del archivo se sobreescribirá la anterior (no se guardan las versiones previas del archivo)<br><br>-Con circuito de calidad: se guardan las distintas versiones del archivo y es requerido un proceso de revisión y aprobación de las versiones." lang="es" style="cursor:pointer"></i></label>
 					<select name="fileTypeId" id="fileTypeId" class="form-control" onchange="setFileTypeId($('##fileTypeId').val());">
 						<option value="2" <cfif fileTypeId IS 2>selected="selected"</cfif> lang="es">Sin circuito de calidad</option>
-						<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif> lang="es">Con circuito de calidad</option>
+						<cfif len(area_type) IS 0>
+							<option value="3" <cfif fileTypeId IS 3>selected="selected"</cfif> lang="es">Con circuito de calidad</option>
+						</cfif>
 					</select>
-					<small class="help-block" lang="es">Esta opción no se puede cambiar una vez creado el documento</small>
+
+					<cfif len(area_type) GT 0>
+						<small class="help-block" lang="es">En las áreas web no se pueden crear archivos con circuito de calidad</small>
+					<cfelse>
+						<small class="help-block" lang="es">Esta opción no se puede cambiar una vez creado el documento</small>
+					</cfif>
+					
 				</div>
 			</div>
 
@@ -485,7 +493,7 @@
 					<label for="publication_scope_id" class="control-label"><span lang="es">Ámbito de publicación</span>:</label>
 					<select name="publication_scope_id" id="publication_scope_id" class="form-control">
 						<cfloop query="scopesQuery">
-							<option value="#scopesQuery.scope_id#" <cfif objectFile.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
+							<option value="#scopesQuery.scope_id#" <cfif objectFile.publication_scope_id IS scopesQuery.scope_id>selected="selected"<cfelseif NOT isNumeric(objectFile.publication_scope_id) AND findNoCase(area_type, scopesQuery.name) GT 0>selected="selected"</cfif>>#scopesQuery.name#</option>
 						</cfloop>
 					</select>
 					<small class="help-block"><span lang="es">Define las áreas del árbol donde se podrá asociar el documento.</span>

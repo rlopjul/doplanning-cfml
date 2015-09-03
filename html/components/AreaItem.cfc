@@ -198,8 +198,9 @@
 				<cfset with_image = true>
 			</cfif>
 
-         	<cfif with_attached IS true>
-            	<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
+      <cfif with_attached IS true>
+
+        <cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
 					<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
 					<cfinvokeargument name="file_name" value="(Pendiente de subir el archivo)">
 					<cfinvokeargument name="file_type" value="pending">
@@ -210,35 +211,41 @@
 					<cfinvokeargument name="return_type" value="object">
 				</cfinvoke>
 
-				<!---<cfset objectFile.file_size = "0">--->
-
-				<!---<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="xmlFile" returnvariable="xmlFileResult">
-						<cfinvokeargument name="objectFile" value="#objectFile#">
-				</cfinvoke>--->
-            </cfif>
+      </cfif>
 
 
-            <!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->
-            <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" returnvariable="createItemResponse">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-                <cfinvokeargument name="title" value="#arguments.title#">
-				<cfinvokeargument name="link" value="#arguments.link#">
-				<cfinvokeargument name="link_target" value="#arguments.link_target#">
-                <cfinvokeargument name="description" value="#arguments.description#">
-                <cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
-                <cfinvokeargument name="parent_id" value="#arguments.parent_id#">
-                <cfinvokeargument name="parent_kind" value="#arguments.parent_kind#">
-				<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
-				<cfinvokeargument name="post_to_twitter" value="#arguments.post_to_twitter#">
-				<cfinvokeargument name="creation_date" value="#arguments.creation_date#">
-				<cfinvokeargument name="start_date" value="#arguments.start_date#">
-				<cfinvokeargument name="end_date" value="#arguments.end_date#">
+      <!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->
+      <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" argumentcollection="#arguments#" returnvariable="createItemResponse">
+				<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
+
 				<cfif isDefined("arguments.start_hour") AND isDefined("arguments.start_minute")>
 					<cfinvokeargument name="start_time" value="#arguments.start_hour#:#arguments.start_minute#">
 				</cfif>
 				<cfif isDefined("arguments.end_hour") AND isDefined("arguments.end_minute")>
 					<cfinvokeargument name="end_time" value="#arguments.end_hour#:#arguments.end_minute#">
 				</cfif>
+				<cfif isDefined("arguments.publication_date")>
+					<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+				</cfif>
+
+				<cfif with_attached IS true OR with_image IS true><!---Hay archivo para subir--->
+					<cfinvokeargument name="status" value="pending"/>
+				</cfif>
+
+				<!---<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+        <cfinvokeargument name="title" value="#arguments.title#">
+				<cfinvokeargument name="link" value="#arguments.link#">
+				<cfinvokeargument name="link_target" value="#arguments.link_target#">
+        <cfinvokeargument name="description" value="#arguments.description#">
+
+        <cfinvokeargument name="parent_id" value="#arguments.parent_id#">
+        <cfinvokeargument name="parent_kind" value="#arguments.parent_kind#">
+				<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
+				<cfinvokeargument name="post_to_twitter" value="#arguments.post_to_twitter#">
+				<cfinvokeargument name="creation_date" value="#arguments.creation_date#">
+				<cfinvokeargument name="start_date" value="#arguments.start_date#">
+				<cfinvokeargument name="end_date" value="#arguments.end_date#">
+
 				<cfinvokeargument name="place" value="#arguments.place#">
 				<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
 				<cfinvokeargument name="estimated_value" value="#arguments.estimated_value#">
@@ -251,13 +258,7 @@
 				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
 				<cfinvokeargument name="general" value="#arguments.general#">
 				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
-				<cfif isDefined("arguments.publication_date")>
-					<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
-					<!---
-					<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
-						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
-					</cfif> --->
-				</cfif>
+
 				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 				<cfinvokeargument name="price" value="#arguments.price#">
 				<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
@@ -265,11 +266,7 @@
 				<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
 				<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
 
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfif with_attached IS true OR with_image IS true><!---Hay archivo para subir--->
-					<cfinvokeargument name="status" value="pending"/>
-				</cfif>
-
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">--->
 			</cfinvoke>
 
 			<cfif createItemResponse.result IS true>
@@ -360,6 +357,7 @@
 
 			<!---Subida de IMAGEN--->
 			<cfif with_image IS true>
+				
 				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFileImage">
 					<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
 					<cfinvokeargument name="file_name" value="(Pendiente de subir la imagen)">
@@ -498,8 +496,8 @@
 		<cfargument name="title" type="string" required="true">
 		<cfargument name="link" type="string" required="false" default="">
 		<cfargument name="link_target" type="string" required="false">
-        <cfargument name="description" type="string" required="true">
-        <cfargument name="Filedata" type="any" required="false" default="">
+    <cfargument name="description" type="string" required="true">
+    <cfargument name="Filedata" type="any" required="false" default="">
 		<cfargument name="imagedata" type="any" required="false" default="">
 		<cfargument name="notify_by_sms" type="string" required="no">
 		<cfargument name="post_to_twitter" type="boolean" required="no">
@@ -559,20 +557,19 @@
 				<cfset with_image = true>
 			</cfif>
 
-
 			<!---<cfset description_html = insertBR(arguments.description)>--->
 
-            <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="objectItem" returnvariable="objectItem">
+      <!---<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="objectItem" returnvariable="objectItem">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="id" value="#arguments.item_id#">
-                <cfinvokeargument name="title" value="#arguments.title#">
-                <cfinvokeargument name="link" value="#arguments.link#">
+        <cfinvokeargument name="title" value="#arguments.title#">
+        <cfinvokeargument name="link" value="#arguments.link#">
 				<cfif isDefined("arguments.link_target")>
 					<cfinvokeargument name="link_target" value="#arguments.link_target#">
 				</cfif>
-                <cfinvokeargument name="description" value="#arguments.description#">
-                <cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
-                <cfif isDefined("arguments.notify_by_sms")>
+        <cfinvokeargument name="description" value="#arguments.description#">
+        <cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
+        <cfif isDefined("arguments.notify_by_sms")>
 					<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
 				</cfif>
 				<cfif isDefined("arguments.post_to_twitter")>
@@ -635,89 +632,96 @@
 				<cfif isDefined("arguments.general")>
 					<cfinvokeargument name="general" value="#arguments.general#">
 				</cfif>
+          <cfinvokeargument name="return_type" value="object">
+      </cfinvoke>--->
 
-                <cfinvokeargument name="return_type" value="object">
-            </cfinvoke>
 
-
-         	<cfif with_attached IS true>
+        <cfif with_attached IS true>
 
             	<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
-					<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
-					<cfinvokeargument name="file_name" value="(Pendiente de subir el archivo)"><!---Este nombre sale en la notificación--->
-					<cfinvokeargument name="file_type" value="pending">
-					<cfinvokeargument name="name" value=" ">
-					<cfinvokeargument name="description" value=" ">
+								<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
+								<cfinvokeargument name="file_name" value="(Pendiente de subir el archivo)"><!---Este nombre sale en la notificación--->
+								<cfinvokeargument name="file_type" value="pending">
+								<cfinvokeargument name="name" value=" ">
+								<cfinvokeargument name="description" value=" ">
 
-					<cfinvokeargument name="return_type" value="object">
-				</cfinvoke>
+								<cfinvokeargument name="return_type" value="object">
+							</cfinvoke>
 
-				<cfset objectFile.file_size = "0">
+							<cfset objectFile.file_size = "0">
 
-            </cfif>
+        </cfif>
 
-            <cfif with_attached IS false>
+        <cfif with_attached IS false>
 
-				<!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->
+					<!---Aunque haya imagen el elemento se crea llamando a este método, porque en el contenido del elemento se incluye que hay una imagen, lo que hace que al crearse el elemento este se marque como pendiente de subir.--->
 
-                <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="updateItem" returnvariable="updateItemResponse">
-					<cfinvokeargument name="objectItem" value="#objectItem#"/>
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+	        <cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="updateItem" argumentcollection="#arguments#" returnvariable="updateItemResponse">
 
-					<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
-					<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
-						<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+						<cfif isDefined("arguments.start_hour") AND isDefined("arguments.start_minute")>
+							<cfinvokeargument name="start_time" value="#arguments.start_hour#:#arguments.start_minute#">
+						</cfif>
+						<cfif isDefined("arguments.end_hour") AND isDefined("arguments.end_minute")>
+							<cfinvokeargument name="end_time" value="#arguments.end_hour#:#arguments.end_minute#">
+						</cfif>
+						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
+							<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+						</cfif>
+
+						<!---<cfinvokeargument name="objectItem" value="#objectItem#"/>
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+						<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
+						<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+						<cfinvokeargument name="price" value="#arguments.price#">
+						<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
+						<cfinvokeargument name="area_editable" value="#arguments.area_editable#">
+						<cfinvokeargument name="unlock" value="#arguments.unlock#"/>
+						<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
+						<cfinvokeargument name="no_notify" value="#arguments.no_notify#">--->
+					</cfinvoke>
+
+					<cfif updateItemResponse.result IS NOT true>
+						<cfthrow message="#updateItemResponse.message#">
 					</cfif>
-					<!---
-					<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
-						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
-					</cfif> --->
-					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
-					<cfinvokeargument name="price" value="#arguments.price#">
-					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
-					<cfinvokeargument name="area_editable" value="#arguments.area_editable#">
-					<cfinvokeargument name="unlock" value="#arguments.unlock#"/>
-					<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
-					<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
-				</cfinvoke>
 
-				<cfif updateItemResponse.result IS NOT true>
-					<cfthrow message="#updateItemResponse.message#">
-				</cfif>
-
-				<cfif itemTypeGender EQ "male">
-					<cfset response_message = "#itemTypeNameEs# modificado.">
-				<cfelse>
-					<cfset response_message = "#itemTypeNameEs# modificada.">
-				</cfif>
+					<cfif itemTypeGender EQ "male">
+						<cfset response_message = "#itemTypeNameEs# modificado.">
+					<cfelse>
+						<cfset response_message = "#itemTypeNameEs# modificada.">
+					</cfif>
 
 			<cfelse><!---Hay archivo para subir--->
 
-				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="updateItemWithAttachedFile" returnvariable="updateItemWithAttachedResponse">
-					<cfinvokeargument name="objectItem" value="#objectItem#"/>
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
-					<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="updateItemWithAttachedFile" argumentcollection="#arguments#" returnvariable="updateItemWithAttachedResponse">
 					<cfinvokeargument name="file_name" value="#objectFile.name#">
 					<cfinvokeargument name="file_file_name" value="#objectFile.file_name#">
 					<cfinvokeargument name="file_type" value="#objectFile.file_type#">
 					<cfinvokeargument name="file_size" value="#objectFile.file_size#">
 					<cfinvokeargument name="file_description" value="#objectFile.description#">
 
+					<cfif isDefined("arguments.start_hour") AND isDefined("arguments.start_minute")>
+						<cfinvokeargument name="start_time" value="#arguments.start_hour#:#arguments.start_minute#">
+					</cfif>
+					<cfif isDefined("arguments.end_hour") AND isDefined("arguments.end_minute")>
+						<cfinvokeargument name="end_time" value="#arguments.end_hour#:#arguments.end_minute#">
+					</cfif>
 					<cfif isDefined("arguments.publication_date")>
 						<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
 					</cfif>
-					<!---<cfif isDefined("arguments.publication_hour") AND isDefined("arguments.publication_minute")>
-						<cfinvokeargument name="publication_time" value="#arguments.publication_hour#:#arguments.publication_minute#">
-					</cfif>--->
-					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+
+					<!---<cfinvokeargument name="objectItem" value="#objectItem#"/>
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+					<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">--->
+
+					<!---<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
 					<cfinvokeargument name="price" value="#arguments.price#">
 					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
 					<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
-					<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
+					<cfinvokeargument name="no_notify" value="#arguments.no_notify#">--->
 				</cfinvoke>
 
 				<cfif updateItemWithAttachedResponse.result IS true>
-					<cfset createdItemId = updateItemWithAttachedResponse.objectItem.id>
+					<cfset createdItemId = updateItemWithAttachedResponse.item_id>
 				<cfelse>
 					<cfthrow message="#updateItemWithAttachedResponse.message#">
 				</cfif>
@@ -727,14 +731,14 @@
 
 				<!---Aquí el archivo se sube, pero no se marca como que se ha completado (eso se hace después en la llamada a getItemFileStatus--->
 				<cfinvoke component="AreaItemFile" method="uploadItemFile">
-                    <cfinvokeargument name="item_id" value="#createdItemId#">
-                    <cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-                    <cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+          <cfinvokeargument name="item_id" value="#createdItemId#">
+          <cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+          <cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 					<cfinvokeargument name="file_type" value="item_file_html">
 					<cfinvokeargument name="file_id" value="#file_id#">
 					<cfinvokeargument name="file_physical_name" value="#file_physical_name#">
 					<cfinvokeargument name="Filedata" value="#arguments.Filedata#">
-                </cfinvoke>
+        </cfinvoke>
 
 			</cfif>
 
@@ -1002,8 +1006,8 @@
 		<cfargument name="title" type="string" required="true">
 		<cfargument name="link" type="string" required="false" default="">
 		<cfargument name="link_target" type="string" required="false">
-        <cfargument name="description" type="string" required="false" default="">
-        <cfargument name="Filedata" type="any" required="false" default="">
+    <cfargument name="description" type="string" required="false" default="">
+    <cfargument name="Filedata" type="any" required="false" default="">
 		<cfargument name="imagedata" type="any" required="false" default="">
 		<cfargument name="notify_by_sms" type="boolean" required="no">
 		<cfargument name="post_to_twitter" type="boolean" required="no">

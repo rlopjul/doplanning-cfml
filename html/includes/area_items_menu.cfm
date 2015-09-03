@@ -14,8 +14,8 @@
 		      	offset: {
 		       		top: $('##mainNavBarFixedTop').height()-$('##areaItemsMenu').height()+1
 		      	}
-			});	
-			
+			});
+
 			<!---$(window).bind('scroll', function() {
 			    ($(window).scrollTop() > 100) ? $('##areaItemsMenu').addClass('goToTop') : $('##areaItemsMenu').removeClass('goToTop');
 			 });--->
@@ -40,14 +40,14 @@
 			<cfif objectArea.read_only IS false>
 
 				<cfif app_version NEQ "mobile">
-					
+
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 					</cfinvoke>
 
 					<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
 				</cfif>
-				
+
 				<cfset previousLoopCurButton = 0>
 
 				<cfloop array="#itemTypesArray#" index="curItemTypeId">
@@ -76,7 +76,7 @@
 
 					  		<div class="row" style="width:450px;" role="menu">
 
-					        	<ul class="list-unstyled col-md-6"> 
+					        	<ul class="list-unstyled col-md-6">
 
 
 						    <cfset loopCurButton = 0>
@@ -94,15 +94,15 @@
 										<cfelse>
 											<cfset newItemTitle = "Nueva">
 										</cfif>
-										
+
 										<li>
-											
+
 											<cfif curItemTypeId IS 10><!---File--->
 												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" role="menuitem" class="btn-new-item-dp"><!--- href="area_file_new.cfm?area=#area_id#&fileTypeId=1" --->
 											<cfelse>
 												<a onclick="openUrlLite('#itemTypesStruct[curItemTypeId].name#_new.cfm?area=#area_id#', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" role="menuitem" class="btn-new-item-dp"><!--- href="#itemTypesStruct[curItemTypeId].name#_new.cfm?area=#area_id#" --->
 											</cfif>
-											
+
 											<!---
 											<cfif curItemTypeId IS 13><!---Typologies--->
 												<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
@@ -112,14 +112,14 @@
 
 												<span lang="es">#itemTypesStruct[curItemTypeId].label#</span>
 											</a>
-											
+
 										</li>
 
 										<cfif curItemTypeId IS 10>
-									
+
 											<li>
 
-												<cfif APPLICATION.moduleAreaFilesLite IS true AND len(area_type) IS 0>
+												<cfif APPLICATION.moduleAreaFilesLite IS true><!---AND len(area_type) IS 0--->
 												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe')" title="Nuevo Archivo de área" lang="es" class="btn-new-item-dp" role="menuitem"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_area.png" />
 													<span lang="es">Nuevo Archivo de área</span> <!---href="area_file_new.cfm?area=#area_id#&fileTypeId=2"--->
 												</a>
@@ -136,20 +136,20 @@
 										</cfif>
 
 										<cfif curItemTypeId EQ 5><!--- Cierra la primera columna --->
-												
+
 											</ul><!--- END list-unstyled col-md-6 --->
-											<ul class="list-unstyled col-md-6">   
+											<ul class="list-unstyled col-md-6">
 
 										</cfif>
 
 										<cfif loopCurButton EQ previousLoopCurButton>
 											<cfbreak>
 										</cfif>
-												
+
 									</cfif>
 								</cfif>
 
-							</cfloop>	
+							</cfloop>
 
 
 								</ul><!--- END list-unstyled col-md-6 --->
@@ -179,7 +179,7 @@
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-controls="filterAreaElementsMenu" title="Filtrar" lang="es">
 
 						<i class="icon-filter" style="color:##EAD142"></i>
-							
+
 						<span lang="es">VER</span> <span class="caret"></span>
 
 					</button>
@@ -190,7 +190,7 @@
 
 						<div class="row" style="width:450px;" role="menu">
 
-					         <ul class="list-unstyled col-md-6"> 
+					         <ul class="list-unstyled col-md-6">
 
 
 									<li>
@@ -217,7 +217,7 @@
 							    			<cfif areaTypeWeb AND itemTypesStruct[curItemTypeId].web OR areaTypeWeb IS false AND itemTypesStruct[curItemTypeId].noWeb>
 
 												<li>
-													
+
 													<!---<a href="#itemTypesStruct[curItemTypeId].namePlural#.cfm?area=#area_id#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">--->
 
 													<cfif find("user",CGI.SCRIPT_NAME) GT 0><!---Listado de usuarios--->
@@ -240,16 +240,16 @@
 														<cfelse><!--- Typologies --->
 															<a href="typologies.cfm?area=#area_id#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" role="menuitem">
 														</cfif>
-														
+
 
 							    					</cfif>
-														
+
 														<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" style="height:35px"/>
-														
+
 
 														<span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span>
 													</a>
-													
+
 												</li>
 
 											</cfif>
@@ -257,9 +257,9 @@
 										</cfif>
 
 										<cfif curItemTypeId EQ 11><!--- Cierra la primera columna --->
-												
+
 											</ul><!--- END list-unstyled col-md-6 --->
-											<ul class="list-unstyled col-md-6">   
+											<ul class="list-unstyled col-md-6">
 
 										</cfif>
 
@@ -276,7 +276,7 @@
 										</li>
 									</cfif>
 									--->
-										
+
 									<li><!---Users--->
 										<a href="users.cfm?area=#area_id#" lang="es" role="menuitem">
 											<!---<i class="icon-group" style="margin-left:2px;margin-right:2px;"></i>--->
@@ -284,7 +284,7 @@
 											<span lang="es">Usuarios</span>
 										</a>
 									</li>
-								
+
 
 								</ul><!--- END list-unstyled col-md-6 --->
 
@@ -346,7 +346,7 @@
 							<cfelse>
 								<span lang="es">Usuarios del área</span>
 							</cfif>
-							
+
 						</span>
 
 					</div>
@@ -375,7 +375,7 @@
 
 
 			<!---<cfif isDefined("itemTypeId") AND itemTypeId IS 10>
-				
+
 				<div class="btn-group">
 					<cfif APPLICATION.modulefilesWithTables AND is_user_area_responsible>
 						<a href="typologies.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Tipologías de documentos" lang="es"><i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i> <span lang="es">Tipologías de documentos</span></a>
@@ -432,10 +432,10 @@
 
 					</cfif>
 
-					
+
 				<cfelse><!--- itemTypeId --->
 
-			
+
 					<cfif itemTypeId IS 1 OR itemTypeId IS 7><!---Messages OR consultations--->
 
 						<cfif NOT isDefined("URL.mode") OR URL.mode EQ "list">
@@ -459,7 +459,7 @@
 					</cfif>
 
 					<cfif isDefined("URL.mode") AND URL.mode EQ "tree">
-						
+
 						<div class="btn-group pull-right">
 							<a href="#lCase(itemTypeNameP)#.cfm?area=#area_id#&mode=list" class="btn btn-default btn-sm"><i class="icon-th-list" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo lista</span></a>
 						</div>
@@ -484,7 +484,7 @@
 
 
 				<cfif app_version NEQ "mobile">
-				
+
 					<div class="btn-group pull-right">
 
 						<cfif NOT isDefined("itemTypeId")>
@@ -508,7 +508,7 @@
 					</div>
 
 					<cfif NOT isDefined("itemTypeId")>
-					
+
 						<div class="btn-group pull-right">
 							<a href="area_items.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>
 						</div>
@@ -547,7 +547,7 @@
 				</cfif>
 
 			</cfif>
-			
+
 
 
 			<cfif APPLICATION.moduleWeb EQ true AND ( area_type EQ "web" OR area_type EQ "intranet" ) AND isDefined("webPathUrl")>
@@ -568,7 +568,7 @@
 					<a href="#areaPageFullUrl#" class="btn btn-default btn-sm" title="Ver en #area_type#" lang="es" target="_blank"><i class="icon-globe" style="font-size:14px; line-height:23px;"></i></a>
 
 					<cfif SESSION.client_abb EQ "hcs"><!--- Sólo disponible para el HCS porque requiere login en la web --->
-						
+
 						<!---areaWebUrl preview--->
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaWebPageFullUrl" returnvariable="areaPageFullUrlPreview">
 							<cfinvokeargument name="area_id" value="#area_id#">
@@ -579,7 +579,7 @@
 							<cfinvokeargument name="preview" value="true">
 						</cfinvoke>
 
-						<a href="#areaPageFullUrlPreview#" class="btn btn-default btn-sm" title="Vista previa en #area_type# (incluye elementos no publicados)" lang="es" target="_blank"><i class="icon-eye-open" style="font-size:14px; line-height:23px;"></i></a>	
+						<a href="#areaPageFullUrlPreview#" class="btn btn-default btn-sm" title="Vista previa en #area_type# (incluye elementos no publicados)" lang="es" target="_blank"><i class="icon-eye-open" style="font-size:14px; line-height:23px;"></i></a>
 
 					</cfif>
 
