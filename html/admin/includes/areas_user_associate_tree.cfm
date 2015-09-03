@@ -1,5 +1,5 @@
 <cfif isDefined("URL.user") AND isNumeric(URL.user)>
-	
+
 	<cfset user_id = URL.user>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="objectUser">
@@ -39,24 +39,24 @@
 
 	 		<div class="well well-sm" style="margin-bottom:5px;">
 				<cfif len(objectUser.image_type) GT 0>
-					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img" style="margin-right:2px;"/>									
-				<cfelse>							
+					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img" style="margin-right:2px;"/>
+				<cfelse>
 					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="item_img_default" style="margin-right:2px;"/>
 				</cfif> <strong>#objectUser.family_name# #objectUser.name#</strong> (#objectUser.email#)<br/>
 			</div>
 
-	 		<p lang="es">Selecciona las áreas a las que quieres añadir el usuario. Ten en cuenta que un usuario asociado a un área tendrá acceso a todas las áreas que haya dentro de esta, sin necesidad de asociarlo también a esas áreas. Si no asocias el usuario a ningún área no podrá utilizar DoPlanning.</p>
-			
+	 		<p lang="es">Selecciona las áreas a las que quieres añadir el usuario. Ten en cuenta que un usuario asociado a un área tendrá acceso a todas las áreas que haya dentro de ésta, sin necesidad de asociarlo también a esas áreas. Si no asocias el usuario a ningún área no podrá utilizar DoPlanning.</p>
+
 			<cfinclude template="#APPLICATION.htmlPath#/admin/includes/areas_user_associate_tree_inline.cfm">
-			
+
 		</div>
 
 		<div class="modal-footer">
 
 		    <button class="btn btn-default" data-dismiss="modal" lang="es">Cancelar</button>
-		    
+
 		   	<button class="btn btn-primary" id="areaAssociateSelectButton" data-loading-text="Enviando..." onclick="submitAssociateAreasSelectModal(event)" lang="es">Asociar usuario a áreas seleccionadas</button>
-		   	
+
 		</div>
 
 		<script>
@@ -66,11 +66,11 @@
 			    if(e.preventDefault)
 					e.preventDefault();
 
-				var userId = #user_id#;			
+				var userId = #user_id#;
 				var areasIdsArray = [];
 
 				$('input:checkbox[name="areas_ids[]"]:checked').each(function() {
-			       
+
 					areasIdsArray.push($(this).val());
 
 			    });
@@ -88,7 +88,7 @@
 						loadModal('html_content/areas_user_associate.cfm?areas='+areasIds+'&user='+userId);
 					</cfif>
 
-					
+
 					$('body').modalmanager('removeLoading');
 
 				} else {

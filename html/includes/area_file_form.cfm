@@ -7,7 +7,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form_query.cfm">
 
 <cfoutput>
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
  --->
 
@@ -36,13 +36,13 @@
 		<cfinvokeargument name="area_id" value="#area_id#">
 		<cfinvokeargument name="tableTypeId" value="3">
 	</cfinvoke>
-	<cfset default_typology_id = getDefaultTableResponse.table_id> 
+	<cfset default_typology_id = getDefaultTableResponse.table_id>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
 		<cfinvokeargument name="area_id" value="#area_id#">
 		<cfinvokeargument name="tableTypeId" value="3">
 	</cfinvoke>
-	<cfset areaTables = getAreaTablesResponse.areaTables>	
+	<cfset areaTables = getAreaTablesResponse.areaTables>
 
 </cfif>
 
@@ -52,16 +52,16 @@
 
 		$('##formFile').change(function(e){
 			$inputFile=$(this);
-		  	  
+
 	     	var fileName = $inputFile.val();
-			
+
 		  	if(fileName.length > 0) {
 			  fileName = fileName.substr(fileName.lastIndexOf('\\') + 1);
-					  
+
 			  if($('##formFileName').val().length == 0)
 			  	$('##formFileName').val(fileName);
 			}
-			
+
 		});
 
 		<cfif len(area_type) GT 0><!--- WEB --->
@@ -70,7 +70,7 @@
 			  format: 'dd-mm-yyyy',
 			  weekStart: 1,
 			  language: 'es',
-			  todayBtn: 'linked', 
+			  todayBtn: 'linked',
 			  autoclose: true
 			});
 
@@ -95,8 +95,8 @@
 					loadTypology(#selected_typology_id#, '');
 				</cfif>
 			</cfif>
-				
-		</cfif>	
+
+		</cfif>
 
 		<cfif page_type IS NOT 3>
 			setFileTypeId("#fileTypeId#");
@@ -186,13 +186,13 @@
 				document.getElementById(fieldName+"_user_full_name").value = userName;
 			}
 
-			selectUserType = "";	
+			selectUserType = "";
 
 		} else {
 			alert("Error al asignar el usuario");
 		}
 
-					
+
 	}
 
 	function clearFieldSelectedUser(fieldName) {
@@ -209,17 +209,17 @@
 
 
 	function openAreaSelector(){
-		
+
 		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
-		
+
 	}
 
 	function setSelectedArea(areaId, areaName) {
 
 		<!---var curAreaId = "#file_area_id#";
-				
+
 				if(curAreaId != areaId) { --->
-		
+
 			$("##publication_area_id").val(areaId);
 			$("##publication_area_name").val(areaName);
 
@@ -257,7 +257,7 @@
 	<!---function enableDatePicker(selector){
 
 		$(selector).datepicker({
-		  format: 'dd-mm-yyyy', 
+		  format: 'dd-mm-yyyy',
 		  autoclose: true,
 		  weekStart: 1,
 		  language: 'es',
@@ -275,23 +275,23 @@
 <div class="contenedor_fondo_blanco">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
-	
+
 	<script>
 		var railo_custom_form;
 
-		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 			railo_custom_form = new LuceeForms('file_form');
 		else
 			railo_custom_form = new RailoForms('file_form');
 	</script>
-	
+
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
 	<cfif page_type IS 1>
 		<input type="hidden" name="area_id" value="#area_id#"/>
 	<cfelse>
 		<input type="hidden" name="file_id" value="#file_id#" />
 	</cfif>
-	
+
 	<cfif page_type IS 3>
 		<input type="hidden" name="version_id" value="#version_id#"/>
 	</cfif>
@@ -347,9 +347,9 @@
 			<cfelse>
 				<input type="hidden" name="fileTypeId" value="#fileTypeId#"/>
 			</cfif>
-			
-		</cfif>		
-			
+
+		</cfif>
+
 		<div id="documentUsersContainer">
 			<cfif page_type IS NOT 3 AND ( page_type IS NOT 2 OR ( (isDefined("objectFile.file_type_id") AND objectFile.file_type_id IS 3) OR (isDefined("fileTypeId") AND fileTypeId IS 3) ) )>
 				<div class="row">
@@ -360,7 +360,7 @@
 						<div class="row">
 							<div class="col-sm-5" style="padding-right:0;">
 								<input type="hidden" name="reviser_user" id="reviser_user" value="#objectFile.reviser_user#" />
-								<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#objectFile.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" /> 
+								<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#objectFile.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" />
 							</div>
 							<div class="col-sm-7">
 								<button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
@@ -374,7 +374,7 @@
 					<div class="col-sm-12">
 
 						<label class="control-label" for="approver_user" lang="es">Usuario aprobador</label>
-						
+
 						<div class="row">
 							<div class="col-sm-5" style="padding-right:0;">
 								<input type="hidden" name="approver_user" id="approver_user" value="#objectFile.approver_user#" />
@@ -421,7 +421,7 @@
 		</div>
 
 	</cfif>
-	
+
 	<cfif page_type IS 1>
 		<div class="row">
 			<div class="col-sm-12">
@@ -434,7 +434,7 @@
 			</div>
 		</div>
 	</cfif>
-	
+
 	<div class="row">
 		<div class="col-sm-12">
 			<label for="formFileName" class="control-label"><span lang="es">Nombre</span>: *</label>
@@ -447,14 +447,14 @@
 	</div>
 
 	<cfif page_type IS 1>
-			
+
 		<div id="documentVersionIndex">
 
 			<div class="row">
 				<div class="col-sm-12">
 					<label for="version_index"><span lang="es">Número de versión</span>:</label>
 				</div>
-		  	</div>		
+		  	</div>
 		  	<div class="row">
 				<div class="col-sm-1 col-xs-3">
 					<cfinput type="text" name="version_index" id="version_index" value="1" required="false" validate="integer" message="Debe introducir un valor numérico para el número de versión" class="form-control" />
@@ -467,7 +467,7 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-			<label for="description" class="control-label"><span lang="es">Descripción</span>:</label> 
+			<label for="description" class="control-label"><span lang="es">Descripción</span>:</label>
 			<textarea name="description" id="description" class="form-control">#objectFile.description#</textarea>
 		</div>
 	</div>
@@ -477,9 +477,9 @@
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopes" returnvariable="getScopesResult">
 		</cfinvoke>
 		<cfset scopesQuery = getScopesResult.scopes>
-		
+
 		<cfif scopesQuery.recordCount GT 0>
-			
+
 			<div class="row" id="publicationScopeContainer">
 				<div class="col-sm-12">
 					<label for="publication_scope_id" class="control-label"><span lang="es">Ámbito de publicación</span>:</label>
@@ -497,7 +497,7 @@
 			</div>
 
 		</cfif>
-		
+
 	</cfif>
 
 
@@ -529,7 +529,7 @@
 			<div class="col-sm-11 col-sm-offset-1" style="margin-bottom:10px">
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
-					<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">				
+					<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
@@ -537,7 +537,7 @@
 				<cfif subAreas.recordCount GT 0>
 
 					<cfif page_type IS NOT 1>
-		
+
 						<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItemCategories" returnvariable="getItemCategoriesResult">
 							<cfinvokeargument name="item_id" value="#file_id#">
 							<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
@@ -556,7 +556,7 @@
 						<cfset selectedAreasList = "">
 
 					</cfif>
-					
+
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
 						<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
 						<cfinvokeargument name="subAreas" value="#subAreas#">
@@ -580,7 +580,7 @@
 
 					<p class="help-block" lang="es">Este elemento tiene un área para categorías seleccionada pero esta área no tiene subareas para definir las categorías</p>
 
-				</cfif>	
+				</cfif>
 
 			</div>
 
@@ -590,7 +590,7 @@
 
 
 	<cfif fileTypeId IS 1 OR fileTypeId IS 2>
-		
+
 		<div class="row">
 
 			<div class="col-md-12">
@@ -618,7 +618,7 @@
 				<cfset publication_minute = objectFile.publication_minute>
 
 			<cfelse>
-				
+
 				<cfset publication_hour = timeFormat(objectFile.publication_date, "HH")>
 				<cfset publication_minute = timeFormat(objectFile.publication_date, "mm")>
 
@@ -632,10 +632,10 @@
 				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span>:</label>
 				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectFile.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
 			</div>
-						
+
 			<div class="col-xs-6">
-				 
-				<!--- 
+
+				<!---
 				<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
 				<div class="input-group" style="width:170px">
 					<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
@@ -662,12 +662,12 @@
 						</cfif>
 					</select>
 				</div> --->
-				
+
 			</div>
-			
+
 			<input type="hidden" name="publication_hour" value="00"/>
 			<input type="hidden" name="publication_minute" value="00"/>
-			
+
 		</div>
 
 		<div class="row">
@@ -680,7 +680,7 @@
 
 			<!--- isUserAreaResponsible --->
 			<cfif is_user_area_responsible IS true>
-				
+
 				<div class="row">
 					<div class="col-xs-12 col-sm-8">
 						<div class="checkbox">
@@ -704,7 +704,7 @@
 	<div id="typologyContainer"></div>
 
 	<cfif fileTypeId IS NOT 1 AND page_type IS 2>
-		
+
 		<div class="checkbox">
 		    <label>
 		    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras guardar modificación
@@ -714,22 +714,31 @@
 	</cfif>
 
 	<cfif page_type IS 1>
-		
-		<div class="row">
-			<div class="col-md-12">
 
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
-					</label>
-					<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+		<!--- getClient --->
+		<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+		</cfinvoke>
+
+		<cfif clientQuery.force_notifications IS false>
+
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
+						</label>
+						<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+					</div>
+
 				</div>
-
 			</div>
-		</div>
+
+		</cfif>
 
 	</cfif>
-	
+
 	<div style="height:10px;"><!--- ---></div>
 
 	<div id="submitDiv">

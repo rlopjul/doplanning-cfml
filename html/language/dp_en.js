@@ -813,6 +813,7 @@ Lang.prototype.pack.en = {
 		"Logs":"Logs",
 		"Usuarios de la organización":"Users of the organization",
 		"Asociar estos usuarios a otra área":"Associate these users to other area",
+		"Selecciona las áreas a las que quieres añadir el usuario. Ten en cuenta que un usuario asociado a un área tendrá acceso a todas las áreas que haya dentro de ésta, sin necesidad de asociarlo también a esas áreas. Si no asocias el usuario a ningún área no podrá utilizar DoPlanning.":"Select the areas you want to add the user. Keep in mind that a user associated with an area will have access to all areas within it without also associate with those areas. If you do not associate the user to any area he can not use DoPlanning.",
 		"Seleccione un área del árbol para ver sus usuarios.":"Select an area from the tree to view its users.",
 		"Se muestra en negrita el responsable del área":"Area manager is shown in bold",
 		"Usuario interno":"Internal user",
@@ -1248,6 +1249,7 @@ Lang.prototype.pack.en = {
 
 		"Categorías":"Categories",
 		"Categorías de elementos de área":"Area elements categories",
+		"Debe seleccionar al menos una categoría para poder subir el archivo":"You must select at least one category to upload the file",
 
 	}
 

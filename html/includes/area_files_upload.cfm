@@ -20,7 +20,7 @@
 <noscript><link rel="stylesheet" href="#APPLICATION.path#/jquery/jquery-file-upload/css/jquery.fileupload-noscript.css"></noscript>
 <noscript><link rel="stylesheet" href="#APPLICATION.path#/jquery/jquery-file-upload/css/jquery.fileupload-ui-noscript.css"></noscript>
 
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
  --->
 
@@ -77,12 +77,14 @@ function setFileTypeId(fileTypeId, fileUploadId) {
 
         //$("##documentUsersContainer").show();
         $("#documentVersionIndex"+fileUploadId).show();
+				$("#publicFile"+fileUploadId).hide();
 
 
     }else{
 
         //$("##documentUsersContainer").hide();
         $("#documentVersionIndex"+fileUploadId).hide();
+				$("#publicFile"+fileUploadId).show();
     }
 
 }
@@ -157,16 +159,28 @@ $(function () {
         if (inputs.filter(function () {
                 return !this.value && $(this).prop('required');
             }).first().focus().length) {
+
             data.context.find('button').prop('disabled', false);
             return false;
         }
+
+				var categoriesInput = data.context.find("input[name='categories_ids[]']");
+
+				if (categoriesInput.length > 0 && data.context.find("input[name='categories_ids[]']:checked").length == 0){
+					alert(window.lang.translate("Debe seleccionar al menos una categoría para poder subir el archivo"));
+
+					data.context.find('button').prop('disabled', false);
+					return false;
+				}
+
+
         data.formData = inputs.serializeArray();
 
     });
 
 
      $(window).on('beforeunload', function(event){
-    
+
         var activeUploads = $('#fileupload').fileupload('active');
 
         if(activeUploads > 0){
@@ -174,9 +188,9 @@ $(function () {
             showLoadingPage(false);
 
             var alertMessage = window.lang.translate('Está subiendo archivos, si cambia de página se cancelará la subida');
-    
+
             return alertMessage;
-        }  
+        }
 
     });
 
@@ -200,14 +214,6 @@ $(function () {
 
 <div><!---class="container-fluid"--->
 
-    <!---
-    <div class="row">
-        <div class="col-sm-12">
-            <span>Área: <strong>#area_name#</strong></span><br/><br/>
-        </div>        
-    </div>
-    --->
-
     <cfif FindNoCase('MSIE',CGI.HTTP_USER_AGENT) GT 0 AND ( FindNoCase('MSIE 6',CGI.HTTP_USER_AGENT) GT 0 OR FindNoCase('MSIE 7',CGI.HTTP_USER_AGENT) GT 0 OR FindNoCase('MSIE 8',CGI.HTTP_USER_AGENT) GT 0 )><!--- OLD IE --->
 
         <div class="row">
@@ -223,7 +229,7 @@ $(function () {
     <cfelse>
 
          <!-- The file upload form used as target for the file upload widget -->
-        <form id="fileupload" action="//jquery-file-upload.appspot.com/" method="POST" enctype="multipart/form-data">
+        <form id="fileupload" method="POST" enctype="multipart/form-data">
             <!-- Redirect browsers with JavaScript disabled to the origin page -->
             <noscript><input type="hidden" name="redirect" value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
             <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
@@ -235,7 +241,7 @@ $(function () {
                         <span lang="es">Añadir archivos</span>
                         <input type="file" name="files[]" multiple>
                     </span>
-                    
+
                     <button type="submit" class="btn btn-default start">
                         <i class="icon-upload"></i>
                         <span lang="es">Iniciar todos</span>
@@ -248,14 +254,14 @@ $(function () {
                         <i class="glyphicon glyphicon-trash"></i>
                         <span>Delete</span>
                     </button>
-                    
+
                     <input type="checkbox" class="toggle">--->
 
                     <cfif FindNoCase('MSIE 9',CGI.HTTP_USER_AGENT) IS 0>
-                        
+
                         <div class="well"><i class="icon-plus" style="color:#5BB75B;font-size:22px;"></i>&nbsp;<span lang="es" style="font-size:16px;">Puede arrastrar aquí los archivos que desea subir.</span></div>
 
-                    </cfif>                    
+                    </cfif>
 
                     <!-- The global file processing state -->
                     <span class="fileupload-process"></span>
@@ -274,8 +280,8 @@ $(function () {
             <!-- The table listing the files available for upload/download -->
             <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
         </form>
-        
-    </cfif> 
+
+    </cfif>
 
 </div>
 
@@ -295,9 +301,31 @@ $(function () {
     openUrlHtml2('empty.cfm','itemIframe');
 </script>
 
+<!--- getScopes --->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopes" returnvariable="getScopesResult">
 </cfinvoke>
 <cfset scopesQuery = getScopesResult.scopes>
+
+<!--- Categories --->
+<!--- getAreaItemTypesOptions --->
+<cfset fileItemTypeId = 10>
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItemType" method="getAreaItemTypesOptions" returnvariable="getItemTypesOptionsResponse">
+	<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#"/>
+</cfinvoke>
+
+<cfset itemTypeOptions = getItemTypesOptionsResponse.query>
+
+<cfif isNumeric(itemTypeOptions.category_area_id)>
+
+	<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
+		<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
+		<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+		<cfinvokeargument name="client_dsn" value="#client_dsn#">
+	</cfinvoke>
+
+</cfif>
 
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
@@ -324,7 +352,7 @@ $(function () {
             </cfoutput>
             <div class="form-horizontal">
 
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom:0">
 
                     <label for="fileTypeId{%=curFile%}" class="col-sm-2 control-label" lang="es">Tipo</label>
 
@@ -338,7 +366,7 @@ $(function () {
 
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom:0">
 
                     <label for="name{%=curFile%}" class="col-sm-2 control-label" lang="es">Nombre</label>
 
@@ -348,7 +376,7 @@ $(function () {
 
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom:0">
 
                     <label for="description{%=curFile%}" class="col-sm-2 control-label" lang="es">Descripción</label>
 
@@ -369,7 +397,7 @@ $(function () {
                 </div>
 
                 <cfif scopesQuery.recordCount GT 0>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-bottom:0">
 
                         <label for="publication_scope_id{%=curFile%}" class="col-sm-2 control-label" lang="es">Ámbito de publicación</label>
 
@@ -386,13 +414,87 @@ $(function () {
                     </div>
                 </cfif>
 
+								<cfif isNumeric(itemTypeOptions.category_area_id)>
+
+									<div class="form-group" style="margin-bottom:0">
+
+										<label for="categories_ids{%=curFile%}" lang="es" class="col-sm-2 control-label">Categorías</label>
+
+										<div class="col-sm-10">
+
+											<cfif subAreas.recordCount GT 0>
+
+												<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
+													<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
+													<cfinvokeargument name="subAreas" value="#subAreas#">
+													<cfinvokeargument name="recursive" value="false">
+													<cfinvokeargument name="field_name" value="categories_ids"/>
+													<cfinvokeargument name="field_input_type" value="checkbox">
+													<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+													<cfinvokeargument name="client_dsn" value="#client_dsn#">
+												</cfinvoke>
+
+												<p class="help-block" lang="es">Estas categorías permiten a los usuarios clasificar los elementos y filtrar las notificaciones por email que se reciben</p>
+
+											<cfelse>
+
+												<p class="help-block" lang="es">Este elemento tiene un área para categorías seleccionada pero esta área no tiene subareas para definir las categorías</p>
+
+											</cfif>
+
+										</div>
+
+									</div>
+
+								</cfif>
+
+								<div class="form-group" style="margin-bottom:0" id="publicFile{%=curFile%}">
+
+									<div class="col-sm-11 col-sm-offset-1">
+
+										<div class="checkbox">
+										    <label>
+										    	<input type="checkbox" name="public" value="true"> <span lang="es">Habilitar URL pública para poder</span> <b lang="es">compartir el archivo con cualquier usuario</b>
+										    </label>
+										    <small class="help-block" lang="es">El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL</small>
+									  </div>
+
+									</div>
+
+								</div>
+
+
+								<!--- getClient --->
+								<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+									<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+								</cfinvoke>
+
+								<cfif clientQuery.force_notifications IS false>
+
+									<div class="form-group" style="margin-bottom:0">
+
+										<div class="col-sm-11 col-sm-offset-1">
+
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" name="no_notify" id="no_notify" value="true" /> NO enviar notificación por email
+												</label>
+												<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+											</div>
+
+										</div>
+
+									</div>
+
+								</cfif>
+
 
             </div>
 
             <strong class="error text-danger"></strong>
 
             <div style="height:5px;"></div>
-            
+
             <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
 
 
