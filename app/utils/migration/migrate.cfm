@@ -7,9 +7,9 @@
 	</cfoutput>
 	<title>Migrar Clientes DoPlanning</title>
 	</head>
-	
+
 	<body>
-	
+
 	<div class="container">
 
 		<div class="row">
@@ -22,7 +22,7 @@
 
 		</div>
 
-	<cfif isDefined("FORM.client") AND isDefined("FORM.version")>	
+	<cfif isDefined("FORM.client") AND isDefined("FORM.version")>
 
 		<cfif FORM.client EQ "all">
 
@@ -30,37 +30,37 @@
 				SELECT *
 				FROM app_clients;
 			</cfquery>
-			
+
 			<cfset checkVersion = true>
 
 			<cfloop query="getClients">
-		
+
 				<cfset new_client_abb = getClients.abbreviation>
 				<cfset client_datasource = APPLICATION.identifier&"_"&getClients.abbreviation>
-				
+
 				<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_#FORM.version#.cfm">
 
-			</cfloop>	
-					
+			</cfloop>
+
 		<cfelse>
 
 			<cfset new_client_abb = FORM.abb>
 			<cfset client_datasource = APPLICATION.identifier&"_"&new_client_abb>
-			
+
 			<cfquery datasource="#APPLICATION.dsn#" name="getClient">
 				SELECT *
 				FROM app_clients
 				WHERE abbreviation = <cfqueryparam value="#new_client_abb#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
-		
+
 			<cfif getClient.recordCount IS 0>
 				<cfthrow message="Error al obtener el cliente: #new_client_abb#">
 			</cfif>
-			
+
 			<cfoutput>
 			CLIENTE: #getClient.name#<br/>
-			</cfoutput>		
-			
+			</cfoutput>
+
 
 			<div class="row">
 
@@ -70,7 +70,7 @@
 				</div>
 
 			</div>
-			
+
 		</cfif>
 
 	<cfelse>
@@ -99,6 +99,7 @@
 							<option value="3.0.2">3.0.2 (Acciones en modificaciones de registros de listas y formularios)</option>
 							<option value="3.0.3">3.0.3 Registro de descarga de archivos y pestaña estadísticas administración</option>
 							<option value="3.0.4">3.0.4 Tipologías de usuarios, nueva pestaña tipologías administración</option>
+							<option value="3.1">3.1 Categorías de elementos, notificaciones agrupadas, notificaciones web, deshabilitar notificaciones</option>
 						</select>
 					</div>
 
@@ -130,18 +131,18 @@
 			</div>
 
 		</div>
-		
+
 	</cfif>
 
 	</div>
 
-	
-	
-	
+
+
+
 	<!---<br/>
 	<cfform method="post" action="#CGI.SCRIPT_NAME#">
 		<cfinput type="submit" name="migrate" value="MIGRAR TODOS LOS CLIENTES">
 	</cfform>--->
-	
+
 	</body>
 	</html>

@@ -529,6 +529,7 @@ curLangText["en"] = {
 			"place" : "Place",
 			"identifier" : "Identifier",
 			"price" : "Price",
+			"value" : "Value",
 			"type" : "Type",
 			"link_to_pubmed" : "Link to PubMed",
 			"estimated_value" : "Estimated value",

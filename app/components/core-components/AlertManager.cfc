@@ -2147,7 +2147,7 @@
 				<cftry>
 
 					<!--- ------ PROVISIONAL ---- --->
-					<cfif client_abb EQ "hcs">
+					<cfif client_abb EQ "hcs" OR client_abb EQ "bioinformatics7">
 
 					<!---<cfset forceNotifications = getClientsQuery.force_notifications>--->
 

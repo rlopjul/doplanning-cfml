@@ -640,6 +640,8 @@ Preferencias de notificaciones
 
 					<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
+					<cfset categoriesDefined = false>
+
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserNotificationsCategoriesDisabled" returnvariable="
 userNotificationsDisabledQuery">
 						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
@@ -676,6 +678,8 @@ userNotificationsDisabledQuery">
 								</cfinvoke>
 
 								<cfif subAreas.recordCount GT 0>
+
+									<cfset categoriesDefined = true>
 
 									<div class="row" style="padding-bottom:20px;">
 
@@ -744,6 +748,12 @@ userNotificationsDisabledQuery">
 						</cfif>
 
 					</cfloop>
+
+					<cfif categoriesDefined IS false>
+
+						<div class="alert alert-info" role="alert" style="padding-top:10px;padding-bottom:10px;"><span lang="es">No hay categorías definidas en tu organización</span></div>
+
+					</cfif>
 
 				</div>
 

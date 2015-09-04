@@ -1250,6 +1250,7 @@ Lang.prototype.pack.en = {
 		"Categorías":"Categories",
 		"Categorías de elementos de área":"Area elements categories",
 		"Debe seleccionar al menos una categoría para poder subir el archivo":"You must select at least one category to upload the file",
+		"No hay categorías definidas en tu organización":"No defined categories in your organization",
 
 	}
 
