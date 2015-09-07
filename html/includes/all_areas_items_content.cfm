@@ -67,8 +67,6 @@
 
 	<cfset areaItemsQuery = getAllAreasItemsResponse.query>
 
-	<cfdump var="#areaItemsQuery#">
-
 	<cfset numItems = areaItemsQuery.recordCount>
 	<cfif numItems GT 0>
 		<cfoutput>
