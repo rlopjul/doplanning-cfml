@@ -16,39 +16,6 @@
 	<cfset request_component = "UserManager">
 
 
-	<cffunction name="selectUser" returntype="xml" output="false" access="public">
-		<cfargument name="user_id" type="string" required="true">
-
-		<cfset var method = "selectUser">
-
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-
-		<cftry>
-
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<user id="#arguments.user_id#"/>
-				</cfoutput>
-			</cfsavecontent>
-
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
-			</cfinvoke>
-
-			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-
-		</cftry>
-
-		<cfreturn xmlResponse>
-
-	</cffunction>
-
-
 	<!--- ----------------------------------- getUser ------------------------------------- --->
 
 	<cffunction name="getUser" output="false" returntype="any" access="public">

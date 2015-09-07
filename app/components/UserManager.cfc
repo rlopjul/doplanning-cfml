@@ -2269,84 +2269,6 @@
 	<!--- -----------------------------------------------------------------------  --->
 
 
-	<!--- --------------------------SELECT USER ------------------------------ --->
-
-	<cffunction name="selectUser" returntype="string" output="false" access="public">
-		<cfargument name="request" type="string" required="yes">
-		<!---<cfargument name="id" type="string" required="true">--->
-
-		<cfset var method = "selectUser">
-		<cfset var user_id = "">
-<cfset var client_abb = "">
-<cfset var user_language = "">
-
-<cfset var xmlRequest = "">
-<cfset var xmlResponseContent = "">
-
-
-		<cftry>
-
-			<cfinclude template="includes/functionStart.cfm">
-
-			<cfset select_user_id = xmlRequest.request.parameters.user.xmlAttributes.id>
-
-			<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="get_user_id" value="#select_user_id#">
-			</cfinvoke>
-
-			<cfinclude template="includes/functionEndNoLog.cfm">
-
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-
-		</cftry>
-
-		<cfreturn xmlResponse>
-
-	</cffunction>
-
-
-	<!--- --------------------------SELECT USER ADMIN------------------------------ --->
-
-	<cffunction name="selectUserAdmin" returntype="string" output="false" access="public">
-		<cfargument name="request" type="string" required="yes">
-		<!---<cfargument name="id" type="string" required="true">--->
-
-		<cfset var method = "selectUserAdmin">
-		<cfset var user_id = "">
-<cfset var client_abb = "">
-<cfset var user_language = "">
-
-<cfset var xmlRequest = "">
-<cfset var xmlResponseContent = "">
-
-
-		<cftry>
-
-			<cfinclude template="includes/functionStart.cfm">
-
-			<cfset select_user_id = xmlRequest.request.parameters.user.xmlAttributes.id>
-
-			<cfinvoke component="UserManager" method="getUser" returnvariable="xmlResponseContent">
-				<cfinvokeargument name="get_user_id" value="#select_user_id#">
-				<cfinvokeargument name="format_content" value="all">
-			</cfinvoke>
-
-			<cfinclude template="includes/functionEndNoLog.cfm">
-
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-
-		</cftry>
-
-		<cfreturn xmlResponse>
-
-	</cffunction>
-
 
 	<!--- --------------------------GET USER ------------------------------ --->
 
@@ -2407,7 +2329,7 @@
 
 				<cfif arguments.return_type EQ "query">
 
-                    <cfset response = selectUserQuery>
+            <cfset response = selectUserQuery>
 
 				<cfelse>
 
@@ -2472,31 +2394,32 @@
 
 
 						<cfinvokeargument name="return_type" value="object">
-					</cfinvoke>
+				</cfinvoke>
 
-					<cfif arguments.return_type EQ "object">
+				<cfif arguments.return_type EQ "object">
 
-	                    <cfset response = objectUser>
+            <cfset response = objectUser>
 
-	                <cfelse>
+        <cfelse>
 
-	                	<cfinvoke component="UserManager" method="xmlUser" returnvariable="xmlResponseContent">
-	                        <cfinvokeargument name="objectUser" value="#objectUser#">
-	                    </cfinvoke>
+          	<cfinvoke component="UserManager" method="xmlUser" returnvariable="xmlResponseContent">
+                  <cfinvokeargument name="objectUser" value="#objectUser#">
+              </cfinvoke>
 
-	                    <cfset response = xmlResponseContent>
+              <cfset response = xmlResponseContent>
 
-	                </cfif>
+        </cfif>
 
-	            </cfif>
+		  </cfif>
 
-			<cfelse><!---the user does not exist--->
 
-				<cfset error_code = 204>
+		<cfelse><!---the user does not exist--->
 
-				<cfthrow errorcode="#error_code#">
+			<cfset error_code = 204>
 
-			</cfif>
+			<cfthrow errorcode="#error_code#">
+
+		</cfif>
 
 		<cfreturn response>
 

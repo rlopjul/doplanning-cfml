@@ -1,7 +1,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
 <cfoutput>
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
  --->
 
@@ -27,7 +27,7 @@
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAllAreasItems" returnvariable="getAllAreasItemsResponse">
 		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 		<cfif len(search_text) GT 0>
-		<cfinvokeargument name="search_text" value="#search_text#">	
+		<cfinvokeargument name="search_text" value="#search_text#">
 		</cfif>
 		<cfif isNumeric(user_in_charge)>
 		<cfinvokeargument name="user_in_charge" value="#user_in_charge#">
@@ -48,11 +48,11 @@
 		<cfif isNumeric(limit_to)>
 		<cfinvokeargument name="limit" value="#limit_to#">
 		</cfif>
-		
+
 		<cfif len(from_date) GT 0>
 			<cfinvokeargument name="from_date" value="#from_date#">
-		</cfif>		
-		
+		</cfif>
+
 		<cfif len(end_date) GT 0>
 			<cfinvokeargument name="end_date" value="#end_date#">
 		</cfif>
@@ -63,11 +63,11 @@
 		<cfif isDefined("URL.categories_ids")>
 			<cfinvokeargument name="categories_ids" value="#URL.categories_ids#">
 		</cfif>
-
-		
 	</cfinvoke>
-	
+
 	<cfset areaItemsQuery = getAllAreasItemsResponse.query>
+
+	<cfdump var="#areaItemsQuery#">
 
 	<cfset numItems = areaItemsQuery.recordCount>
 	<cfif numItems GT 0>
@@ -75,13 +75,13 @@
 		<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numItems# <span lang="es"><cfif numItems GT 1>#itemTypeNameEsP#<cfelse>#itemTypeNameEs#</cfif></span></div>
 		</cfoutput>
 		<div class="div_items">
-		
+
 		<!---<cfif itemTypeId IS NOT 6>
 			<cfset current_url = "#lCase(itemTypeNameP)#_search.cfm?from_user=#user_in_charge#&limit=#limit_to#">
 		<cfelse>
 			<cfset current_url = "#lCase(itemTypeNameP)#_search.cfm?from_user=#user_in_charge#&to_user=#recipient_user#&limit=#limit_to#">
 		</cfif>--->
-		
+
 		<cfif itemTypeId IS 7><!---Consultations--->
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputConsultationsList">
@@ -99,25 +99,25 @@
 				<cfinvokeargument name="full_content" value="true">
 				<cfinvokeargument name="app_version" value="html2">
 			</cfinvoke>
-	
+
 		<cfelse>
-		
+
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItemsList">
 				<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				<cfinvokeargument name="full_content" value="true">
 				<cfinvokeargument name="app_version" value="html2">
 			</cfinvoke>
-		
+
 		</cfif>
-		
+
 		</div>
 	<cfelse>
-		
+
 		<script>
 			openUrlHtml2('empty.cfm','itemIframe');
-		</script>			
-	
+		</script>
+
 		<div class="div_items">
 		<cfoutput>
 		<div class="div_text_result"><span lang="es">No se han encontrado #lCase(itemTypeNameEsP)#.</span></div>
@@ -130,7 +130,7 @@
 	<script type="text/javascript">
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>
-	
+
 	<div class="alert" style="margin:10px;margin-top:30px;background-color:#65C5BD"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Rellene el formulario y haga click en BUSCAR</span></div>
 
 </cfif>

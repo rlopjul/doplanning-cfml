@@ -28,9 +28,13 @@
 </ul>
 --->
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
-  <cfinvokeargument name="user_id" value="#SESSION.user_id#">
-</cfinvoke>
+<cfif find("error.cfm", CGI.SCRIPT_NAME) IS 0><!---error.cfm no necesita esto y puede dar problemas en errores de consultad de usuarios--->
+
+  <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+    <cfinvokeargument name="user_id" value="#SESSION.user_id#">
+  </cfinvoke>
+  
+</cfif>
 
 <cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 </cfinvoke>
@@ -40,7 +44,7 @@
 <cfoutput>
 
 <div class="overlay"></div>
-    
+
 <!-- Sidebar -->
 <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
     <ul class="nav sidebar-nav">
@@ -71,7 +75,7 @@
                         <!---<cfelse>
                             <li><a href="#itemTypesStruct[curItemTypeId].namePlural#_search.cfm" lang="es">Elementos de contenido</a></li>
                         </cfif>--->
-                 				
+
               </cfif>
 
             </cfloop>
@@ -110,7 +114,7 @@ $(window).resize( function() {
     adjustMarginTop();
 
 });
-	
+
 $(document).ready(function () {
 
   // Menu
@@ -119,12 +123,12 @@ $(document).ready(function () {
      isClosed = false;
 
     trigger.click(function () {
-      hamburger_cross();      
+      hamburger_cross();
     });
 
     function hamburger_cross() {
 
-      if (isClosed == true) {          
+      if (isClosed == true) {
         overlay.hide();
         trigger.removeClass('is-open');
         trigger.addClass('is-closed');
@@ -132,7 +136,7 @@ $(document).ready(function () {
 
         $(".hamburger").attr("aria-expanded","false");
 
-      } else {   
+      } else {
         overlay.show();
         trigger.removeClass('is-closed');
         trigger.addClass('is-open');
@@ -141,7 +145,7 @@ $(document).ready(function () {
          $(".hamburger").attr("aria-expanded","true");
       }
   }
-  
+
   $('[data-toggle="offcanvas"]').click(function () {
         $('#wrapper').toggleClass('toggled');
   });
@@ -191,7 +195,7 @@ function showAlertMessage(msg, res){
     $("#alertContainer").attr("class", "alert alert-success");
   else
     $("#alertContainer").attr("class", "alert alert-danger");
-  
+
   $("#alertContainer button").after('<span>'+msg+'</span>');
 
   var maxZIndex = getMaxZIndex();
@@ -202,10 +206,10 @@ function showAlertMessage(msg, res){
 
 
   setTimeout(function(){
-        
+
       hideAlertMessage();
 
-      }, 9500); 
+      }, 9500);
 }
 
 function hideAlertMessage(){

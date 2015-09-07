@@ -1985,13 +1985,6 @@
 												<cfinvokeargument name="language" value="#curLang#">
 											</cfinvoke>
 
-											<!---<cfoutput>
-												#todayDate#<br/>
-												#futureDate#<br/>
-												#curUserEmail#<br/>
-												#alertContent#
-											</cfoutput>--->
-
 											<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 												<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 												<cfinvokeargument name="to" value="#curUserEmail#">
@@ -2259,6 +2252,10 @@
 												<cfinvokeargument name="foot_content" value="#footContent#">
 											</cfinvoke>
 
+											<!---<cfoutput>
+												#alertContentDP#
+											</cfoutput>--->
+
 										</cfif>
 
 									</cfif><!--- END sendDPNotifications IS true --->
@@ -2330,11 +2327,6 @@
 													<cfinvokeargument name="client_dsn" value="#client_dsn#">
 												</cfinvoke>
 
-												<!---<cfoutput>
-													Notificaciones web #getAllUsersQuery.email#:<br/>
-													#userDiaryAlertWeb.alertContent#
-												</cfoutput>--->
-
 												<cfif len(userDiaryAlertWeb.alertContent) GT 0>
 
 													<cfif getWebQuery.recordCount GT 1>
@@ -2395,6 +2387,10 @@
 													<cfinvokeargument name="head_content" value="#headContent#">
 													<cfinvokeargument name="foot_content" value="#footContent#">
 												</cfinvoke>
+
+												<!---<cfoutput>
+													#alertContentWeb#
+												</cfoutput>--->
 
 											</cfif><!--- END len(alertContentWeb) GT 0 --->
 
@@ -2577,7 +2573,6 @@
 
 							<cfinvoke component="AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
 								<cfinvokeargument name="areas_ids" value="#userAreasIds#">
-								<cfinvokeargument name="recipient_user" value="#curUserId#">
 								<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 								<cfinvokeargument name="listFormat" value="true">
 								<cfinvokeargument name="with_user" value="true">
