@@ -41,7 +41,7 @@
 		}
 
 		function setSelectedUser(userId, userName, fieldName) {
-				
+
 			document.getElementById(fieldName).value = userId;
 			document.getElementById(fieldName+"_user_full_name").value = userName;
 		}
@@ -57,6 +57,50 @@
 			return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
 
 		}
+
+		function deleteAttachedFile(fieldId) {
+
+
+			bootbox.confirm(window.lang.translate("¿Seguro que desea eliminar el archivo adjunto?. Esta acción no es reversible."), function(result) {
+
+				 if (result) {
+
+
+					 	var requestUrl = "#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowAttachedFile";
+						var requestData = { table_id : #table_id#, tableTypeId : #tableTypeId#, row_id : #row_id#, field_id : fieldId };
+
+						showLoadingPage(true);
+
+						$.ajax({
+							  type: "POST",
+							  url: requestUrl,
+							  data: requestData,
+							  success: function(data, status) {
+
+									showLoadingPage(false);
+
+							  	if(status == "success"){
+
+							  		var message = data.message;
+										showAlertMessage(message, data.result);
+
+										if(data.result == true)
+											$("##attachedFile"+fieldId).hide();
+
+							  	}else
+										showAlertMessage(status, 0);
+
+							  },
+							  dataType: "json"
+						});
+
+
+				 }
+
+			});
+
+		}
+
 
 		function onSubmitForm(){
 
@@ -80,16 +124,16 @@
 
 	</script>
 
-	
+
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-	<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="row_form" class="form-horizontal" onsubmit="return onSubmitForm();">
+	<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="row_form" class="form-horizontal" enctype="multipart/form-data" onsubmit="return onSubmitForm();">
 
 		<script>
 			var railo_custom_form;
 
-			if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+			if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 				railo_custom_form = new LuceeForms('row_form');
 			else
 				railo_custom_form = new RailoForms('row_form');
@@ -116,8 +160,8 @@
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 			<cfinvokeargument name="row" value="#row#">
 			<cfinvokeargument name="fields" value="#fields#">
-		</cfinvoke>	
-		
+		</cfinvoke>
+
 		<div id="submitDiv2" style="margin-top:20px;">
 			<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 			<cfif page_type IS 2>
@@ -127,7 +171,7 @@
 
 		<div style="height:10px;"><!--- ---></div>
 		<small lang="es">* Campos obligatorios.</small>
-		
+
 	</cfform>
 
 </cfif>

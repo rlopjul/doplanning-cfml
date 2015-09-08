@@ -1,12 +1,12 @@
 <!--- Copyright Era7 Information Technologies 2007-2014 --->
 
 <cfcomponent output="false">
-	
+
 	<cfset component = "FieldManager">
 
 
 	<!--- ------------------------------------- createField -------------------------------------  --->
-	
+
 	<cffunction name="createField" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -15,13 +15,13 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
 		<cfargument name="sort_by_this" type="string" required="true">
-        <cfargument name="default_value" type="string" required="true">
-        <cfargument name="position" type="numeric" required="false">
-        <cfargument name="list_area_id" type="string" required="false">
-        <cfargument name="field_input_type" type="string" required="false">
-        <cfargument name="item_type_id" type="numeric" required="false">
-        <cfargument name="mask_type_id" type="string" required="false">
-        <cfargument name="list_values" type="string" required="false">
+    <cfargument name="default_value" type="string" required="true">
+    <cfargument name="position" type="numeric" required="false">
+    <cfargument name="list_area_id" type="string" required="false">
+    <cfargument name="field_input_type" type="string" required="false">
+    <cfargument name="item_type_id" type="numeric" required="false">
+    <cfargument name="mask_type_id" type="string" required="false">
+    <cfargument name="list_values" type="string" required="false">
 
 		<cfset var method = "createField">
 
@@ -31,7 +31,7 @@
 		<cfset var field_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -40,7 +40,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			</cfinvoke>
-			
+
 			<cfif getTableResponse.result IS false>
 				<cfreturn getTableResponse>
 			</cfif>
@@ -58,7 +58,7 @@
 				<cfinvokeargument name="field_type_id" value="#arguments.field_type_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			</cfinvoke>
-			
+
 			<cfif getFieldResponse.result IS false>
 				<cfreturn getFieldResponse>
 			</cfif>
@@ -91,7 +91,7 @@
 
 
 			<cfinclude template="includes/logRecord.cfm">
-			
+
 			<cfset response = {result=true, field_id=#field_id#, table_id=#arguments.table_id#}>
 
 			<cfcatch>
@@ -102,14 +102,14 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- createFieldInDatabase -------------------------------------  --->
 
 	<!---IMPORTANTE: La llamada a esta función tiene que hacerse dentro de una transacción <cftransaction>--->
-	
+
 	<cffunction name="createFieldInDatabase" output="false" access="package" returntype="numeric">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -118,14 +118,14 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
 		<cfargument name="sort_by_this" type="string" required="true">
-        <cfargument name="default_value" type="string" required="true">
-        <cfargument name="position" type="numeric" required="false">
-        <cfargument name="list_area_id" type="string" required="false">
-        <cfargument name="mysql_type" type="string" required="true">
-        <cfargument name="field_input_type" type="string" required="false">
-        <cfargument name="item_type_id" type="numeric" required="false">
-        <cfargument name="mask_type_id" type="string" required="false">
-        <cfargument name="list_values" type="string" required="false">
+    <cfargument name="default_value" type="string" required="true">
+    <cfargument name="position" type="numeric" required="false">
+    <cfargument name="list_area_id" type="string" required="false">
+    <cfargument name="mysql_type" type="string" required="true">
+    <cfargument name="field_input_type" type="string" required="false">
+    <cfargument name="item_type_id" type="numeric" required="false">
+    <cfargument name="mask_type_id" type="string" required="false">
+    <cfargument name="list_values" type="string" required="false">
 
 		<cfset var method = "createFieldInDatabase">
 
@@ -140,7 +140,7 @@
 			<cfif arguments.field_type_id IS 9 OR arguments.field_type_id IS 10><!--- IS SELECT --->
 
 				<cfif NOT isDefined("arguments.list_area_id")>
-					
+
 					<cfthrow message="No hay área seleccionada para la lista">
 
 				</cfif>
@@ -148,15 +148,15 @@
 			</cfif>
 
 			<cfif NOT isDefined("arguments.position") OR NOT isNumeric(arguments.position)>
-				
+
 				<!---getFieldLastPosition--->
 				<cfinvoke component="FieldManager" method="getFieldLastPosition" returnvariable="fieldLastPosition">
 					<cfinvokeargument name="table_id" value="#table_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				</cfinvoke>
-				
+
 				<cfset arguments.position = fieldLastPosition+1>
-				
+
 			</cfif>
 
 			<cfquery name="createField" datasource="#client_dsn#">
@@ -200,8 +200,8 @@
 			<cfif arguments.field_type_id NEQ 9 AND arguments.field_type_id NEQ 10><!--- IS NOT SELECT --->
 
 				<cfquery name="insertFieldInTable" datasource="#client_dsn#">
-					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
-					ADD COLUMN `field_#field_id#` #arguments.mysql_type# 
+					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+					ADD COLUMN `field_#field_id#` #arguments.mysql_type#
 					<cfif arguments.required IS true AND arguments.mysql_type NEQ "DATE"><!---Campos DATE dan problemas cuando se ponen NOT NULL porque en los registros existentes rellenan fecha con 0--->
 						NOT NULL
 						<cfif len(arguments.default_value) GT 0 AND ( arguments.mysql_type NEQ "TEXT" AND arguments.mysql_type NEQ "LONGTEXT" )>
@@ -213,12 +213,12 @@
 			</cfif>
 
 			<cfreturn field_id>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- updateField -------------------------------------  --->
-	
+
 	<cffunction name="updateField" output="false" access="public" returntype="struct">
 		<cfargument name="field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -226,13 +226,13 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
 		<cfargument name="sort_by_this" type="string" required="true">
-        <cfargument name="default_value" type="string" required="true">
-        <cfargument name="position" type="numeric" required="false">
-        <cfargument name="list_area_id" type="string" required="false">
-        <cfargument name="field_input_type" type="string" required="false">
-        <cfargument name="item_type_id" type="numeric" required="false">
-        <cfargument name="mask_type_id" type="string" required="false">
-        <cfargument name="list_values" type="string" required="false">
+    <cfargument name="default_value" type="string" required="true">
+    <cfargument name="position" type="numeric" required="false">
+    <cfargument name="list_area_id" type="string" required="false">
+    <cfargument name="field_input_type" type="string" required="false">
+    <cfargument name="item_type_id" type="numeric" required="false">
+    <cfargument name="mask_type_id" type="string" required="false">
+    <cfargument name="list_values" type="string" required="false">
 
 		<cfset var method = "updateField">
 
@@ -241,7 +241,7 @@
 		<cfset var area_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -268,7 +268,7 @@
 			<cfif field.field_type_id IS 9 OR field.field_type_id IS 10><!--- IS SELECT --->
 
 				<cfif NOT isDefined("arguments.list_area_id")>
-					
+
 					<cfthrow message="No hay área seleccionada para la lista">
 
 				</cfif>
@@ -319,14 +319,14 @@
 				<cfif field.field_type_id NEQ 9 AND field.field_type_id NEQ 10><!--- IS NOT SELECT --->
 
 					<cfquery name="updateFieldInTable" datasource="#client_dsn#">
-						ALTER 
+						ALTER
 						<cfif arguments.required IS true AND field.required IS false AND field.mysql_type NEQ "DATE">
 							IGNORE <!--- Para evitar el error de Data truncated for column debido a valores NULL introducidos en registros existentes, y no tener que modificar esos valores --->
 						</cfif>
-						TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
-						MODIFY COLUMN `field_#field_id#` #field.mysql_type# 
+						TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+						MODIFY COLUMN `field_#field_id#` #field.mysql_type#
 						<cfif arguments.required IS true AND field.mysql_type NEQ "DATE">
-						NOT NULL	
+						NOT NULL
 							<!---Aquí no se define valor por defecto porque puede cambiar el valor almacenado en columnas vacias--->
 						</cfif>;
 					</cfquery>
@@ -336,7 +336,7 @@
 			</cftransaction>
 
 			<cfinclude template="includes/logRecord.cfm">
-		
+
 			<cfset response = {result=true, field_id=#arguments.field_id#, table_id=#field.table_id#}>
 
 			<cfcatch>
@@ -347,12 +347,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- copyTableFields -------------------------------------  --->
-	
+
 	<cffunction name="copyTableFields" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -367,7 +367,7 @@
 		<cfset var fields = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -377,7 +377,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			</cfinvoke>
-			
+
 			<cfif getTableResponse.result IS false>
 				<cfreturn getTableResponse>
 			</cfif>
@@ -407,7 +407,7 @@
 				<cfloop query="fields">
 
 					<cfif arrayFind(arguments.fields_ids, fields.field_id)>
-						
+
 						<cfinvoke component="FieldManager" method="createFieldInDatabase" returnvariable="field_id">
 							<cfinvokeargument name="table_id" value="#arguments.table_id#">
 							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
@@ -431,11 +431,11 @@
 						</cfinvoke>
 
 					</cfif>
-					
+
 				</cfloop>
 
 			</cftransaction>
-			
+
 			<cfinclude template="includes/logRecord.cfm">
 
 			<cfset response = {result=true, table_id=#arguments.table_id#}>
@@ -448,34 +448,34 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!---  ---------------------- getFieldLastPosition -------------------------------- --->
-	
+
 	<cffunction name="getFieldLastPosition" returntype="numeric" access="package">
 		<cfargument name="table_id" type="numeric" required="yes">
 		<cfargument name="tableTypeId" type="numeric" required="yes">
-		
+
 		<cfset var method = "getFieldLastPosition">
-		
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getFieldLastPosition" returnvariable="getLastPositionResult">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-		
+
 		<cfif isNumeric(getLastPositionResult.position)>
 			<cfreturn getLastPositionResult.position>
 		<cfelse>
 			<cfreturn 0>
 		</cfif>
-		
+
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
 
@@ -487,39 +487,39 @@
 		<cfargument name="b_field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="action" type="string" required="true"><!---increase/decrease--->
-		
+
 		<cfset var method = "changeFieldPosition">
 
 		<cfset var response = structNew()>
 
 		<cfset var table_id = "">
 		<cfset var area_id = "">
-		
+
 		<cfset var a_fieldNewPosition = "">
 		<cfset var b_fieldNewPosition = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-						
-			<cfquery name="getField" datasource="#client_dsn#">		
+
+			<cfquery name="getField" datasource="#client_dsn#">
 				SELECT fields.position, fields.table_id
 				FROM #client_abb#_#tableTypeTable#_fields AS fields
 				WHERE fields.field_id = <cfqueryparam value="#arguments.a_field_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 			<cfif getField.recordCount GT 0>
 
 				<cfset table_id = getField.table_id>
-				
+
 				<!---Table--->
 				<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
 					<cfinvokeargument name="table_id" value="#table_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				</cfinvoke>
-				
+
 				<cfif getTableResponse.result IS false>
 					<cfreturn getTableResponse>
 				</cfif>
@@ -533,50 +533,50 @@
 
 				<cfset b_fieldNewPosition = getField.position>
 
-				<cfquery name="getOtherField" datasource="#client_dsn#">		
+				<cfquery name="getOtherField" datasource="#client_dsn#">
 					SELECT fields.field_id, fields.position
 					FROM #client_abb#_#tableTypeTable#_fields AS fields
 					WHERE fields.field_id = <cfqueryparam value="#arguments.b_field_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
-					
+
 				<cfif getOtherField.recordCount GT 0>
 
 					<cfset a_fieldNewPosition = getOtherField.position>
-					
+
 					<cftransaction>
-						
-						<cfquery name="updateOtherFieldQuery" datasource="#client_dsn#">		
+
+						<cfquery name="updateOtherFieldQuery" datasource="#client_dsn#">
 							UPDATE #client_abb#_#tableTypeTable#_fields
 							SET position = <cfqueryparam value="#b_fieldNewPosition#" cfsqltype="cf_sql_integer">
 							WHERE field_id = <cfqueryparam value="#arguments.b_field_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
-						
-						<cfquery name="updateFieldQuery" datasource="#client_dsn#">		
+
+						<cfquery name="updateFieldQuery" datasource="#client_dsn#">
 							UPDATE #client_abb#_#tableTypeTable#_fields
 							SET position = <cfqueryparam value="#a_fieldNewPosition#" cfsqltype="cf_sql_integer">
 							WHERE field_id = <cfqueryparam value="#arguments.a_field_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
-					
+
 					</cftransaction>
-					
+
 				<cfelse>
-				
+
 					<cfset response = {result=false, message="Error, no se ha encontrado el campo por el que hay que cambiar el orden"}>
-					
+
 					<cfreturn response>
-					
+
 				</cfif>
-				
+
 				<cfinclude template="includes/logRecord.cfm">
-				
+
 				<cfset response = {result=true, table_id=table_id}>
-			
+
 			<cfelse>
-			
+
 				<cfset response = {result=false, message="Error, no se ha encontrado el elemento"}>
-			
+
 			</cfif>
-			
+
 		<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -585,12 +585,12 @@
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- deleteField -------------------------------------  --->
-	
+
 	<cffunction name="deleteField" output="false" access="public" returntype="struct">
 		<cfargument name="field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -602,7 +602,7 @@
 		<cfset var area_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -636,14 +636,14 @@
 				<cfif field.field_type_id NEQ 9 AND field.field_type_id NEQ 10><!--- IS NOT SELECT --->
 
 					<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
-						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#field.table_id#` 
+						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#field.table_id#`
 						DROP COLUMN `field_#arguments.field_id#`;
 					</cfquery>
 
 				</cfif>
 
 			</cftransaction>
-			
+
 			<cfinclude template="includes/logRecord.cfm">
 
 			<cfset response = {result=true, field_id=#arguments.field_id#}>
@@ -656,19 +656,19 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------ deleteTableFields -----------------------------------  --->
-		
+
 	<cffunction name="deleteTableFields" output="false" access="package" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
 		<cfset var method = "deleteTableFields">
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="deleteTableFields">
@@ -686,7 +686,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_types" value="false">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -701,7 +701,7 @@
 				<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT --->
 
 					<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
-						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
 						DROP COLUMN `field_#fields.field_id#`;
 					</cfquery>
 
@@ -709,13 +709,13 @@
 
 			</cfloop>
 			--->
-			
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------- getField -------------------------------------  --->
-	
+
 	<cffunction name="getField" output="false" access="public" returntype="struct">
 		<cfargument name="field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -728,23 +728,23 @@
 		<cfset var area_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getField" returnvariable="getFieldQuery">
 				<cfinvokeargument name="field_id" value="#arguments.field_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="with_table" value="true"/>
 				<cfif isDefined("arguments.with_type")>
-					<cfinvokeargument name="with_type" value="#arguments.with_type#"/>		
+					<cfinvokeargument name="with_type" value="#arguments.with_type#"/>
 				</cfif>
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfif getFieldQuery.recordCount GT 0>
 
 				<cfset area_id = getFieldQuery.area_id>
@@ -755,13 +755,13 @@
 				<cfset response = {result=true, field=#getFieldQuery#}>
 
 			<cfelse><!---Item does not exist--->
-			
+
 				<cfset error_code = 501>
-			
+
 				<cfthrow errorcode="#error_code#">
 
 			</cfif>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -770,12 +770,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- getEmptyField -------------------------------------  --->
-	
+
 	<cffunction name="getEmptyField" output="false" access="public" returntype="struct">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
@@ -784,11 +784,11 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfquery name="getFieldQuery" datasource="#client_dsn#">
 				SELECT *
 				FROM #client_abb#_#tableTypeTable#_fields
@@ -805,14 +805,14 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 
 
 	<!--- ------------------------------------- getFieldTypes -------------------------------------  --->
-	
+
 	<cffunction name="getFieldTypes" output="false" access="public" returntype="struct">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
@@ -821,18 +821,18 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getFieldTypes" returnvariable="getFieldTypesQuery">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
 			<cfset response = {result=true, fieldTypes=getFieldTypesQuery}>
-								
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -841,13 +841,13 @@
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------- getFieldMaskTypes -------------------------------------  --->
-	
+
 	<cffunction name="getFieldMaskTypes" output="false" access="public" returntype="struct">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
@@ -856,17 +856,17 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 			</cfinvoke>
 
 			<cfset response = {result=true, maskTypesStruct=maskTypesStruct}>
-								
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -875,13 +875,13 @@
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------- getFieldType -------------------------------------  --->
-	
+
 	<cffunction name="getFieldType" output="false" access="public" returntype="struct">
 		<cfargument name="field_type_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -891,31 +891,31 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getFieldType" returnvariable="getFieldTypeQuery">
 				<cfinvokeargument name="field_type_id" value="#arguments.field_type_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfif getFieldTypeQuery.recordCount GT 0>
 
 				<cfset response = {result=true, fieldType=#getFieldTypeQuery#}>
 
 			<cfelse><!---Item does not exist--->
-			
+
 				<cfset error_code = 501>
-			
+
 				<cfthrow errorcode="#error_code#">
 
 			</cfif>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -924,7 +924,7 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 

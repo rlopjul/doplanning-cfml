@@ -55,7 +55,7 @@
 
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modal.js"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
-<!---<script src="#APPLICATION.htmlPath#/bootstrap/bootbox/bootbox.js"></script>--->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
 <script>
 	<!---To enable the loading spinner in Bootstrap 3--->
@@ -462,7 +462,6 @@
 			hideAlertMessage();
 
 		});
-
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/jquery_validate_bootstrap_scripts.cfm">
 

@@ -1148,6 +1148,99 @@
 	</cffunction>
 
 
+
+	<!--- ------------------------------------- deleteRowAttachedFile -------------------------------------  --->
+
+	<cffunction name="deleteRowAttachedFile" output="false" access="public" returntype="struct">
+		<cfargument name="row_id" type="numeric" required="true">
+		<cfargument name="field_id" type="numeric" required="true">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "deleteRowAttachedFile">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var rowQuery = "">
+		<cfset var itemCategories = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif tableQuery.recordCount IS 0><!---Item does not exist--->
+
+				<cfset error_code = 501>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cfif arguments.tableTypeId IS 2><!--- Form --->
+
+				<cfset area_id = tableQuery.area_id>
+
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+			<cfelse>
+
+				<!---canUserModifyRow--->
+				<cfinvoke component="RowManager" method="canUserModifyRow" returnvariable="canUserModifyRow">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="table" value="#tableQuery#">
+				</cfinvoke>
+				<cfif canUserModifyRow IS false>
+					<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">
+				</cfif>
+
+			</cfif>
+
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="deleteRowAttachedFileF">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="row_id" value="#arguments.row_id#">
+				<cfinvokeargument name="field_id" value="#arguments.field_id#">
+				<cfinvokeargument name="tableTypeNameP" value="#tableTypeNameP#">
+				<cfinvokeargument name="tableTypeTable" value="#tableTypeTable#">
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+
+			<cfset response = {result=true, row_id=#arguments.row_id#, table_id=#arguments.table_id#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
 	<!---
 	<cffunction name="deleteTableRowsInDatabase" output="false" access="package" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
@@ -1248,7 +1341,7 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-			<cfelseif arguments.tableTypeId IS 4 AND isDefined("arguments.row_id")><!---Only one row user typology--->
+			<cfelseif arguments.tableTypeId IS 4 AND isDefined("arguments.row_id")><!---Only one row of user typology--->
 
 				<!--- getTable --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="table">

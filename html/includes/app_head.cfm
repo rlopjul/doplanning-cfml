@@ -33,7 +33,7 @@
   <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
     <cfinvokeargument name="user_id" value="#SESSION.user_id#">
   </cfinvoke>
-  
+
 </cfif>
 
 <cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
@@ -166,11 +166,11 @@ function adjustMarginTop() {
 
     if( $('#mainNavBarFixedTop').css('position') == "fixed" ) { <!--- si la cabecera está fija --->
 
-        var mainContainerMarginTopPx = parseInt( $('.app_main_container').css('margin-top'), 10);
+        var mainContainerMarginTopPx = parseInt( $('.app_main_container').css('padding-top'), 10);
 
         if( $('#mainNavBarFixedTop').height() > mainContainerMarginTopPx ) {
 
-             $('.app_main_container').css('margin-top', $('#mainNavBarFixedTop').height()+10);
+             $('.app_main_container').css('padding-top', $('#mainNavBarFixedTop').height()+10);
 
         }
 

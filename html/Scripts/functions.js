@@ -3,12 +3,12 @@ var showLoading = true;
 function windowHeight() {
 	var de = document.documentElement;
 	return de.clientHeight;
-}	
+}
 
 function onUnloadPage(){
 	if(showLoading)
-		showLoadingPage(true);	
-	
+		showLoadingPage(true);
+
 	showLoading = true;
 }
 
@@ -17,7 +17,7 @@ function onLoadPage(){
 }
 
 function showLoadingPage(value){
-	
+
 	if(value)
 		document.getElementById("pageLoadingContainer").style.display = "block";
 	else
@@ -31,9 +31,9 @@ function submitForm(formName){
 
 function showHideDiv(divName){
 	var element = document.getElementById(divName);
-	
+
 	if(element.style.display == "none" || element.style.display == "")
-		element.style.display = "block";	
+		element.style.display = "block";
 	else
 		element.style.display = "none";
 }
@@ -45,60 +45,60 @@ function goToUrl(url){
 /*function openAreaInfo(){
 	var openElement = document.getElementById('openAreaImg');
 	var closeElement = document.getElementById('closeAreaImg');
-	
+
 	if(closeElement.style.display == "none" || closeElement.style.display == ""){
 		openElement.style.display = "none";
-		closeElement.style.display = "block";	
+		closeElement.style.display = "block";
 	}else {
 		openElement.style.display = "block";
-		closeElement.style.display = "none";	
+		closeElement.style.display = "none";
 	}
-	
+
 	showHideDiv('areaInfo');
 }*/
 
 function confirmAction(actionText) {
-	
+
 	var message = window.lang.translate('¿Seguro que desea ')+window.lang.translate(actionText)+window.lang.translate('?. Esta acción no es reversible.');
-	
+
 	var resultado = confirm(message);
 	if(resultado)
 		return true;
 	else
 		return false;
-	
+
 }
 
 function confirmReversibleAction(actionText) {
-	
+
 	var message = window.lang.translate('¿Seguro que desea ')+window.lang.translate(actionText)+'?';
-	
+
 	var resultado = confirm(message);
 	if(resultado)
 		return true;
 	else
 		return false;
-	
+
 }
 
 function toggleCheckboxChecked(checkboxId) {
 	//$(checkboxId).attr('checked',!($(checkboxId).attr('checked')=="checked"));
 	$(checkboxId).prop("checked",!($(checkboxId).is(":checked")));
 }
-		
+
 function toggleCheckboxesChecked(checked) {
-	//$("input:checkbox").prop("checked",checked); 
+	//$("input:checkbox").prop("checked",checked);
 	$("input:checkbox").each( function() {
-		if($(this).hasClass("checkbox_locked") == false)	
-			$(this).prop("checked",checked); 
+		if($(this).hasClass("checkbox_locked") == false)
+			$(this).prop("checked",checked);
 	})
 }
 
 function toggleContainerCheckboxesChecked(containerId, checked) {
-	//$("input:checkbox").prop("checked",checked); 
+	//$("input:checkbox").prop("checked",checked);
 	$("#"+containerId+" input:checkbox").each( function() {
-		if($(this).hasClass("checkbox_locked") == false)	
-			$(this).prop("checked",checked); 
+		if($(this).hasClass("checkbox_locked") == false)
+			$(this).prop("checked",checked);
 	})
 }
 
@@ -110,11 +110,11 @@ function downloadFile(url,event){
 	if(event.preventDefault)
 		event.preventDefault();
 	//event.stopPropagation();
-	
+
 	showLoading = false;
-	
+
 	goToUrl(url);
-	
+
 	return false;
 }
 
@@ -132,7 +132,7 @@ function downloadFileLinked(anchor,event){
 
 	//goToUrl(event.target.href);
 	goToUrl(anchor.href);
-	
+
 	return false;
 
 }
@@ -141,11 +141,11 @@ function openPopUp(url) {
 	window.open(url, "popup_id", "scrollbars,resizable,width=580,height=500,location=no ");
 	return false;
 }
-	
+
 function enableDatePicker(selector){
 
 	$(selector).datepicker({
-	  format: 'dd-mm-yyyy', 
+	  format: 'dd-mm-yyyy',
 	  autoclose: true,
 	  weekStart: 1,
 	  language: 'es',
@@ -156,7 +156,7 @@ function enableDatePicker(selector){
 function stopEvent(event){
 
 	preventEventDefault(event);
-	
+
 	stopPropagation(event);
 
 	return false;
@@ -179,7 +179,7 @@ function stopPropagation(event) {
         // IE variant
         event.cancelBubble = true;
     }
-    return false;		
+    return false;
 }
 
 function hasLocalStorage() {
@@ -188,7 +188,7 @@ function hasLocalStorage() {
 
   	var uid = new Date,
           result;
-          
+
     try {
 
         localStorage.setItem(uid, uid);
@@ -226,7 +226,7 @@ function showAlertMessage(msg, res){
 		$("#alertContainer").attr("class", "alert alert-success");
 	else
 		$("#alertContainer").attr("class", "alert alert-danger");
-	
+
 	$("#alertContainer button").after('<span lang="es">'+msg+'</span>');
 
 	var maxZIndex = getMaxZIndex();
@@ -237,10 +237,10 @@ function showAlertMessage(msg, res){
 
 
 	setTimeout(function(){
-		    
+
 	    hideAlertMessage();
 
-	    }, 9500);	
+	    }, 9500);
 }
 
 function hideAlertMessage(){

@@ -26,7 +26,7 @@
     <script src="#APPLICATION.htmlPath#/scripts/respond/respond.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/respond-proxy.html" id="respond-proxy" rel="respond-proxy" />
     <link href="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.gif" id="respond-redirect" rel="respond-redirect" />
-    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>	
+    <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
 <![endif]-->
 <!--[if lt IE 8]>
   	<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-ie7/bootstrap-ie7.css" rel="stylesheet" rel="stylesheet">
@@ -36,17 +36,6 @@
 	<link href="#APPLICATION.htmlPath#/font-awesome/css/font-awesome-ie7.min.css" rel="stylesheet">
 <![endif]-->
 
-<!---<link href="../html/styles/styles.min.css?v=2.2" rel="stylesheet" type="text/css" media="all" />--->
-<!---
-<cfif APPLICATION.identifier EQ "vpnet">
-<link href="../html/styles/styles_vpnet.css" rel="stylesheet" type="text/css" media="all" />
-<cfelse>
-<link href="../html/styles/styles_dp.min.css" rel="stylesheet" type="text/css" media="all" />
-</cfif>
-<!---using caps S (Screen), Pocket IE ignores it. Windows Mobile 6.1 ignores media="handled"--->  
-<link href="../html/styles/styles_screen.css" rel="stylesheet" type="text/css" media="Screen" />
-<link href="../html/styles/styles_mobiles.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 800px)" />
---->
 </cfoutput>
 
 <cfif APPLICATION.identifier EQ "vpnet">
@@ -73,6 +62,7 @@
 <script src="#APPLICATION.bootstrapJSPath#"></script>
 <!---<script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang-dp.js" charset="utf-8" ></script>--->
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery.html5.history.min.js" charset="utf-8"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <!---<script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
@@ -83,18 +73,9 @@
 
 <script>
 	//Language
-	<!---
-	jquery_lang_js.prototype.defaultLang = 'es';
-	jquery_lang_js.prototype.currentLang = 'es';
-	window.lang = new jquery_lang_js();
-	
-	$().ready(function () {
-		window.lang.run();
-	});
-	--->
-	
 	window.lang = new Lang('es');
-	<!---window.lang.dynamic('en', '#APPLICATION.htmlPath#/language/dp_en.json');--->
+
+	bootbox.setDefaults({"locale" : "#SESSION.user_language#"});
 </script>
 </cfoutput>
 <script>
