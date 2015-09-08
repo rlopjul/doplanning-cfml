@@ -8,13 +8,14 @@
  * Boostrap 3 patch for for bootstrap-modal. Include BEFORE bootstrap-modal.css!
  */
 
-body.modal-open, 
-.modal-open .navbar-fixed-top, 
+body.modal-open,
+.modal-open .navbar-fixed-top,
 .modal-open .navbar-fixed-bottom {
   margin-right: 0;
 }
 
-.modal {
+.modal:not(.note-link-dialog):not(.note-image-dialog) {
+  /* not es para solucionar los problemas con summernote, esto no es compatible con IE 8 e inferiores */
   left: 50%;
   bottom: auto;
   right: auto;
