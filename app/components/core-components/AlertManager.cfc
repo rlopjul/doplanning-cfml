@@ -2288,8 +2288,8 @@
 										<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWebs" returnvariable="getWebQuery">
 											<cfinvokeargument name="area_type" value="web">
 
-											<cfinvokeargument name="client_abb" value="#APPLICATION.dpWebClientAbb#">
-											<cfinvokeargument name="client_dsn" value="#APPLICATION.dpWebClientDsn#">
+											<cfinvokeargument name="client_abb" value="#client_abb#">
+											<cfinvokeargument name="client_dsn" value="#client_dsn#">
 										</cfinvoke>
 
 										<cfif getWebQuery.recordCount GT 0>
