@@ -41,7 +41,7 @@
 			<cfset fileTypeTable = "files">
 
 			<cfquery name="selectFileQuery" datasource="#client_dsn#">
-				SELECT files.id, files.id AS file_id, physical_name, files.user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user, files.public, files.file_public_id
+				SELECT files.id, files.id AS file_id, physical_name, files.user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user, files.public, files.file_public_id, files.row_id, files.field_id
 					, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				<cfif isDefined("arguments.area_id")>
 					, areas_files.association_date
@@ -144,6 +144,98 @@
 		</cfif>
 
 		<cfreturn selectFileQuery>
+
+	</cffunction>
+
+
+	<!--- ------------------------------------- createFileInDatabase -------------------------------------  --->
+
+	<cffunction name="createFileInDatabase" output="false" access="public" returntype="numeric">
+		<cfargument name="fileTypeId" type="numeric" required="true"/>
+		<cfargument name="name" type="string" required="false"/>
+		<cfargument name="file_name" type="string" required="true"/>
+		<cfargument name="file_size" type="numeric" required="true"/>
+		<cfargument name="file_type" type="string" required="true"/>
+		<cfargument name="description" type="string" required="false"/>
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="reviser_user" type="numeric" required="false">
+		<cfargument name="approver_user" type="numeric" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="version_index" type="string" required="false">
+		<cfargument name="public" type="boolean" required="false">
+		<cfargument name="file_public_id" type="numeric" required="false">
+		<cfargument name="user_id" type="numeric" required="false">
+		<cfargument name="status" type="string" required="true">
+		<cfargument name="anti_virus_check" type="boolean" required="false">
+		<cfargument name="anti_virus_check_result" type="string" required="false">
+		<cfargument name="item_id" type="numeric" required="false">
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="row_id" type="numeric" required="false">
+		<cfargument name="field_id" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "createFileInDatabase">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
+			<cfquery name="createFileQuery" datasource="#client_dsn#" result="createFileResult">
+				INSERT INTO `#client_abb#_#fileTypeTable#`
+				SET
+				file_name = <cfqueryparam value="#arguments.file_name#" cfsqltype="cf_sql_varchar">,
+				file_size = <cfqueryparam value="#arguments.file_size#" cfsqltype="cf_sql_integer">,
+				file_type = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">,
+				uploading_date = NOW(),
+				status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				<cfif arguments.fileTypeId IS NOT 4><!---IS NOT area image--->
+					, file_type_id = <cfqueryparam value="#arguments.fileTypeId#" cfsqltype="cf_sql_integer">
+					<cfif isDefined("arguments.name")>
+						, name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">
+					</cfif>
+					<cfif isDefined("arguments.user_id")>
+						, user_in_charge = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif isDefined("arguments.description")>
+						, description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_varchar">
+					</cfif>
+				</cfif>
+				<cfif arguments.fileTypeId IS 2 OR arguments.fileTypeId IS 3 OR arguments.fileTypeId IS 4><!--- Area file --->
+					, area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif arguments.fileTypeId IS 3>
+					, reviser_user = <cfqueryparam value="#arguments.reviser_user#" cfsqltype="cf_sql_integer">
+					, approver_user = <cfqueryparam value="#arguments.approver_user#" cfsqltype="cf_sql_integer">
+				<cfelse>
+					<cfif isDefined("arguments.publication_scope_id")>
+					, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					<cfif ( arguments.fileTypeId IS 1 OR arguments.fileTypeId IS 2 ) AND arguments.public IS true>
+						, public = <cfqueryparam value="#arguments.public#" cfsqltype="cf_sql_bit">
+						, file_public_id = <cfqueryparam value="#arguments.file_public_id#" cfsqltype="cf_sql_varchar">
+					</cfif>
+				</cfif>
+				<cfif isDefined("arguments.anti_virus_check") AND isDefined("arguments.anti_virus_check_result")>
+				, anti_virus_check = <cfqueryparam value="#arguments.anti_virus_check#" cfsqltype="cf_sql_bit">
+				, anti_virus_check_result = <cfqueryparam value="#arguments.anti_virus_check_result#" cfsqltype="cf_sql_varchar">
+				</cfif>
+				<cfif isDefined("arguments.item_id") AND isDefined("arguments.itemTypeId")>
+					, item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+					, item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif isDefined("arguments.row_id") AND isDefined("arguments.field_id")>
+					, row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
+					, field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				;
+			</cfquery>
+
+			<cfquery name="getLastInsertId" datasource="#client_dsn#">
+				SELECT LAST_INSERT_ID() AS insert_file_id FROM #client_abb#_#fileTypeTable#;
+			</cfquery>
+			<cfset file_id = getLastInsertId.insert_file_id>
+
+			<cfreturn file_id>
 
 	</cffunction>
 
@@ -540,7 +632,7 @@
 		<cfset var method = "getFilesDownloads">
 
 		<cfquery name="getFilesDownloads" datasource="#client_dsn#">
-			SELECT files.file_name, files.name, files.file_type, files.item_id, files.item_type_id, files_downloads.area_id, files_downloads.file_id, count(*) AS downloads
+			SELECT files.file_name, files.name, files.file_type, files.item_id, files.item_type_id, files.row_id, files.field_id, files_downloads.area_id, files_downloads.file_id, count(*) AS downloads
 			<cfif arguments.parse_dates IS true>
 				, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date
 				, DATE_FORMAT(CONVERT_TZ(files.replacement_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS replacement_date

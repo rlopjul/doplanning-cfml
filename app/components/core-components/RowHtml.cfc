@@ -24,6 +24,8 @@
 		</cfif>--->
 		<cfset var text_input_class = "form-control">
 
+		<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 		<cfoutput>
 
 		<input type="hidden" name="tableTypeId" value="#tableTypeId#"/>
@@ -766,16 +768,41 @@
 				<cfelseif fields.field_type_group IS "file" AND arguments.search_inputs IS false><!--- Attached file --->
 
 
+
 					<cfif len(fields.list_values) GT 0>
 						<cfset acceptFileTypes = ListChangeDelims(fields.list_values, ",", "#chr(13)##chr(10)#")>
 					</cfif>
 
-					<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" #field_required_att# <cfif len(fields.list_values) GT 0>accept="#acceptFileTypes#"</cfif> class="#text_input_class#" />
+					<cfif len(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
+						<cfset field_required_att = "">
+					</cfif>
 
-					<cfif len(field_value) GT 0>
+					<input type="#fields.input_type#" name="#field_name#" id="#field_name#" #field_required_att# <cfif len(fields.list_values) GT 0>accept="#acceptFileTypes#"</cfif> class="#text_input_class#" />
+
+					<cfif len(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
 
 						<div id="attachedFile#field_id#">
-							<a href="">#field_value#</a>&nbsp;<button type="button" onclick="deleteAttachedFile(#field_id#)" class="btn btn-xs btn-default"><i class="icon-remove"></i> <span lang="es">Eliminar archivo</span></button>
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+								<cfinvokeargument name="file_id" value="#field_value#">
+								<cfinvokeargument name="parse_dates" value="false"/>
+								<cfinvokeargument name="published" value="false"/>
+
+								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+							</cfinvoke>
+
+							<cfif fileQuery.recordCount GT 0>
+								<cfset fileName = fileQuery.file_name>
+							<cfelse>
+								<cfset fileName = "<i>ARCHIVO NO DISPONIBLE</i>">
+							</cfif>
+
+							<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#field_value#&#tableTypeName#=#table_id#" onclick="return downloadFileLinked(this,event)">#fileName#</a>&nbsp;
+
+							<cfif fields.required IS false>
+								<button type="button" onclick="deleteAttachedFile(#field_id#)" class="btn btn-xs btn-default"><i class="icon-remove"></i> <span lang="es">Eliminar archivo</span></button>
+							</cfif>
 						</div>
 
 					</cfif>
@@ -785,6 +812,7 @@
 							addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
 						</script>
 					</cfif>
+
 
 
 				</cfif><!--- END fields.field_type_group --->

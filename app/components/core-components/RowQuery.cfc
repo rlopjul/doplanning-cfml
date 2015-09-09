@@ -156,19 +156,17 @@
 
 						<cfelseif fields.field_type_id IS 18><!---ATTACHED FILE--->
 
-							<cfif len(arguments[field_name]) GT 0>
+							<cfif isDefined("arguments[field_name]") AND len(arguments[field_name]) GT 0>
 
 								<cfset attachedFileFields = true>
-								<cfset field_value = GetPageContext().formScope().getUploadResource(field_name).getName()>
+								<cfset fileName = GetPageContext().formScope().getUploadResource(field_name).getName()>
 								<cfset acceptFileTypes = fields.list_values>
-								<cfset fileType = "."&ListLast(field_value, ".")>
+								<cfset fileType = "."&ListLast(fileName, ".")>
 								<cfif len(acceptFileTypes) GT 0>
 									<cfif ListFindNoCase(acceptFileTypes, fileType, LIST_TEXT_VALUES_DELIMITER) IS 0>
 										<cfthrow message="#fileType# no válido para #fields.name#">
 									</cfif>
 								</cfif>
-
-								, field_#fields.field_id# = <cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
 
 							</cfif>
 
@@ -243,22 +241,40 @@
 								<cfthrow message="Campo lista sin valor requerido seleccionado">
 							</cfif>
 
-
 						<cfelseif fields.field_type_id IS 18><!---Attached file--->
 
+							<cfif arguments.action NEQ CREATE_ROW>
 
-							<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="uploadRowAttachedFile">
-								<cfinvokeargument name="table_id" value="#table_id#">
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="deleteRowAttachedFileIfExist">
+									<cfinvokeargument name="table_id" value="#arguments.table_id#">
+									<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+									<cfinvokeargument name="row_id" value="#arguments.row_id#">
+									<cfinvokeargument name="field_id" value="#fields.field_id#">
+									<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+							</cfif>
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="uploadRowAttachedFile" returnvariable="file_id">
+								<cfinvokeargument name="table_id" value="#arguments.table_id#">
+								<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 								<cfinvokeargument name="row_id" value="#row_id#">
 								<cfinvokeargument name="field_id" value="#fields.field_id#">
 								<cfinvokeargument name="field_name" value="#field_name#">
 								<cfinvokeargument name="user_id" value="#arguments.user_id#">
-								<cfinvokeargument name="tableTypeNameP" value="#tableTypeNameP#">
 
 								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 							</cfinvoke>
 
+							<cfquery name="saveRow" datasource="#client_dsn#">
+								UPDATE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+								SET field_#fields.field_id# = <cfqueryparam value="#file_id#" cfsqltype="#fields.cf_sql_type#">
+								WHERE row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">;
+							</cfquery>
 
 						</cfif>
 
@@ -424,13 +440,13 @@
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
-		<cfset var method = "getTableRow">
+		<cfset var method = "getTableRows">
 
 		<cfset var orderBy = "">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<cfquery name="getTableRow" datasource="#client_dsn#">
+			<cfquery name="getTableRows" datasource="#client_dsn#">
 				SELECT table_row.*,
 				CONCAT_WS(' ', insert_users.family_name, insert_users.name) AS insert_user_full_name, insert_users.image_type AS insert_user_image_type,
 				CONCAT_WS(' ', update_users.family_name, update_users.name) AS update_user_full_name, update_users.image_type AS update_user_image_type
@@ -460,7 +476,7 @@
 				</cfif>;
 			</cfquery>
 
-		<cfreturn getTableRow>
+		<cfreturn getTableRows>
 
 	</cffunction>
 

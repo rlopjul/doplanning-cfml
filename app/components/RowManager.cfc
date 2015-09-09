@@ -1163,7 +1163,8 @@
 
 		<cfset var area_id = "">
 		<cfset var rowQuery = "">
-		<cfset var itemCategories = "">
+		<cfset var field_name = "">
+		<cfset var file_id = "">
 
 		<cftry>
 
@@ -1212,19 +1213,39 @@
 
 			</cfif>
 
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="deleteRowAttachedFileF">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="row_id" value="#arguments.row_id#">
-				<cfinvokeargument name="field_id" value="#arguments.field_id#">
-				<cfinvokeargument name="tableTypeNameP" value="#tableTypeNameP#">
-				<cfinvokeargument name="tableTypeTable" value="#tableTypeTable#">
-				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
+			<cfset field_name = 'field_#arguments.field_id#'>
+			<cfset file_id = rowQuery[field_name]>
+
+			<cfif rowQuery.recordCount GT 0 AND isNumeric(file_id)>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="deleteRowAttachedFile">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="row_id" value="#arguments.row_id#">
+					<cfinvokeargument name="field_id" value="#arguments.field_id#">
+					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			<cfelse><!--- Not found --->
+
+				<cfset error_code = 601>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
 
 			<cfset response = {result=true, row_id=#arguments.row_id#, table_id=#arguments.table_id#}>
 

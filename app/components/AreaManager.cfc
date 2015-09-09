@@ -2271,7 +2271,7 @@
 							<cfinvokeargument name="file_name" value=" ">
 							<cfinvokeargument name="file_type" value=" ">
 							<cfinvokeargument name="file_size" value="0">
-							<cfinvokeargument name="description" value="">
+							<!---<cfinvokeargument name="description" value="">--->
 							<cfinvokeargument name="fileTypeId" value="#fileTypeId#"><!---areas_images--->
 						</cfinvoke>
 
@@ -3810,7 +3810,8 @@
 
 			<cfquery name="selectAreaImageQuery" datasource="#client_dsn#">
 				SELECT image_id, file_name, link
-				FROM #client_abb#_areas AS areas INNER JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id
+				FROM #client_abb#_areas AS areas
+				INNER JOIN #client_abb#_areas_images AS images ON areas.image_id = images.id
 				WHERE areas.id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 

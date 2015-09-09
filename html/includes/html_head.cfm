@@ -75,7 +75,9 @@
 	//Language
 	window.lang = new Lang('es');
 
-	bootbox.setDefaults({"locale" : "#SESSION.user_language#"});
+	<cfif isDefined("SESSION.user_language")>
+		bootbox.setDefaults({"locale" : "#SESSION.user_language#"});
+	</cfif>
 </script>
 </cfoutput>
 <script>

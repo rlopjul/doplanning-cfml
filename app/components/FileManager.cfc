@@ -1659,9 +1659,9 @@
 		<cfargument name="item_id" type="numeric" required="no">
 		<cfargument name="itemTypeId" type="numeric" required="no">
 		<!---<cfargument name="format_content" type="string" required="no" default="default">--->
-        <cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
-        <cfargument name="with_owner_area" type="boolean" required="false">
-        <cfargument name="status" type="string" required="false" default="ok"><!--- ok/deleted --->
+    <cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
+    <cfargument name="with_owner_area" type="boolean" required="false">
+    <cfargument name="status" type="string" required="false" default="ok"><!--- ok/deleted --->
 
 		<cfset var method = "getFile">
 
@@ -1713,31 +1713,47 @@
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
-					<!---
-					ESTO NO DEBE SER NECESARIO PORQUE EL ÁREA DEL ARCHIVO DEBE APARECER EN getFileAreasQuery (debe estar añadido en la tabla area_files)
-					<cfif selectFileQuery.file_type_id IS NOT 1 AND isNumeric(selectFileQuery.area_id)><!--- Area file --->
-						<cfset queryCount = getFileAreasQuery.recordCount>
-
-						<cfset queryAddRow(getFileAreasQuery)>
-						<cfset querySetCell(getFileAreasQuery, "area_id", selectFileQuery.area_id, queryCount+1)>
-					</cfif>
-					--->
-
 					<cfif getFileAreasQuery.recordCount IS 0 AND isDefined("arguments.itemTypeId")><!---The file is not in area--->
 
 						<!---Aquí comprueba si el archivo está asociado a otro tipo de elemento (entradas, noticias, eventos, etc)--->
 						<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
-						<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
-							SELECT area_id
-							FROM #client_abb#_#itemTypeTable# AS items
-							WHERE (attached_file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">
-							<cfif itemTypeId IS NOT 1>OR attached_image_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer"></cfif>)
-							<cfif isDefined("arguments.item_id")>
-							AND items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
-							</cfif>;
-						</cfquery>
+						<cfif listFind("11,12,13,16", arguments.itemTypeId) GT 0><!--- Tables attached file --->
 
+							<cfif isNumeric(selectFileQuery.row_id)>
+
+								<cfif listFind("11,12", arguments.itemTypeId) GT 0>
+
+										<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
+											SELECT tables.areas_id
+											FROM #client_abb#_#itemTypeTable# AS tables
+											WHERE tables.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+										</cfquery>
+
+								</cfif>
+
+								<!---<cfinvoke component="RowManager" method="getTableRows" returnvariable="getTableRowsResponse">
+									<cfinvokeargument name="table_id" value="#arguments.item_id#">
+									<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+									<cfinvokeargument name="row_id" value="#selectFileQuery.row_id#">
+									<cfinvokeargument name="file_id" value="#arguments.file_id#">
+								</cfinvoke>--->
+
+							</cfif>
+
+						<cfelse>
+
+							<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
+								SELECT area_id
+								FROM #client_abb#_#itemTypeTable# AS items
+								WHERE (attached_file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">
+								<cfif itemTypeId IS NOT 1>OR attached_image_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer"></cfif>)
+								<cfif isDefined("arguments.item_id")>
+								AND items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+								</cfif>;
+							</cfquery>
+
+						</cfif>
 
 					</cfif>
 
@@ -2907,9 +2923,8 @@
 		<cfargument name="name" type="string" required="false"/>
 		<cfargument name="file_name" type="string" required="true"/>
 		<cfargument name="file_size" type="numeric" required="true"/>
-		<!---<cfargument name="file_size_full" type="numeric" required="true"/>--->
 		<cfargument name="file_type" type="string" required="true"/>
-		<cfargument name="description" type="string" required="true"/>
+		<cfargument name="description" type="string" required="false"/>
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
@@ -2918,7 +2933,6 @@
 		<cfargument name="public" type="boolean" required="false">
 		<cfargument name="categories_ids" type="array" required="false">
 
-		<!---<cfargument name="folder_id" type="numeric" required="false"/>--->
 
 		<!---Este parametro se le pasa cuando se adjunta un archivo a un mensaje, que primero se crea el mensaje y luego se sube--->
 		<cfargument name="status" type="string" required="no" default="">
@@ -2930,6 +2944,7 @@
 		<cfset var response = structNew()>
 
 		<cfset var file_id = "">
+		<cfset var file_public_id = "">
 
 		<cftry>
 
@@ -2943,26 +2958,6 @@
 				<cfinclude template="includes/checkAreaAccess.cfm">
 
 			</cfif>
-
-			<!--- <cfif APPLICATION.publicationValidation IS true AND arguments.publication_validated IS true>
-
-							<!--- isUserAreaResponsible --->
-							<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
-								<cfinvokeargument name="area_id" value="#arguments.area_id#">
-							</cfinvoke>
-
-						</cfif> --->
-
-
-			<!--- <cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
-			</cfinvoke> --->
-
-			<!---<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
-				<cfinvokeargument name="timestamp_date" value="#current_date#">
-			</cfinvoke>
-
-			<cfset objectFile.user_in_charge = user_id>
-			<cfset objectFile.uploading_date = stringCurrentDate>--->
 
 			<cfquery name="selectUserFileQuery" datasource="#client_dsn#">
 				SELECT family_name, name
@@ -3007,7 +3002,27 @@
 
 			<cftransaction>
 
-				<cfquery name="createFileQuery" datasource="#client_dsn#" result="createFileResult">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="createFileInDatabase" argumentcollection="#arguments#" returnvariable="file_id">
+					<!---<cfinvokeargument name="name" value="#arguments.name#">
+					<cfinvokeargument name="file_name" value="#arguments.file_name#">
+					<cfinvokeargument name="file_type" value="#arguments.file_type#">
+					<cfinvokeargument name="file_size" value="#arguments.file_size#">
+					<cfinvokeargument name="description" value="#arguments.file_description#">
+					<cfinvokeargument name="reviser_user" value="#arguments.reviser_user#">
+					<cfinvokeargument name="approver_user" value="#arguments.approver_user#">
+					<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
+					<cfinvokeargument name="fileTypeId" value="1">--->
+					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+					<cfinvokeargument name="status" value="pending">
+					<cfif len(file_public_id) GT 0>
+						<cfinvokeargument name="file_public_id" value="#file_public_id#">
+					</cfif>
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<!---<cfquery name="createFileQuery" datasource="#client_dsn#" result="createFileResult">
 					INSERT INTO `#client_abb#_#fileTypeTable#`
 					SET
 					file_name = <cfqueryparam value="#arguments.file_name#" cfsqltype="cf_sql_varchar">,
@@ -3036,12 +3051,7 @@
 							, file_public_id = <cfqueryparam value="#file_public_id#" cfsqltype="cf_sql_varchar">
 						</cfif>
 					</cfif>;
-				</cfquery>
-
-				<cfquery name="getLastInsertId" datasource="#client_dsn#">
-					SELECT LAST_INSERT_ID() AS insert_file_id FROM #client_abb#_#fileTypeTable#;
-				</cfquery>
-				<cfset file_id = getLastInsertId.insert_file_id>
+				</cfquery>--->
 
 				<cfquery name="updateFileQuery" datasource="#client_dsn#">
 					UPDATE #client_abb#_#fileTypeTable#

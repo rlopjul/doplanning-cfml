@@ -58,6 +58,8 @@
 
 		}
 
+
+		<cfif page_type IS 2>
 		function deleteAttachedFile(fieldId) {
 
 
@@ -100,7 +102,7 @@
 			});
 
 		}
-
+		</cfif>
 
 		function onSubmitForm(){
 

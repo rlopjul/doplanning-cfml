@@ -1,15 +1,17 @@
+<!---
+1 user files
+2 area files
+3 area files edited
+4 areas images
+5 list row files
+6 form row files
+7 file typology row files
+8 user typology row files
+--->
+
 <cfswitch expression="#fileTypeId#">
 
-	<cfcase value="1"><!---user files--->
-
-		<cfset fileTypeName  = "file">
-		<cfset fileTypeNameP = "files">
-		<cfset fileTypeTable = fileTypeNameP>
-		<cfset fileTypeDirectory = fileTypeNameP>
-
-  </cfcase>
-
-	<cfcase value="2"><!---area files--->
+	<cfcase value="1,2,5,6,7,8">
 
 		<cfset fileTypeName  = "file">
 		<cfset fileTypeNameP = "files">
@@ -35,23 +37,5 @@
 		<cfset fileTypeDirectory = "areas_images">
 
   </cfcase>
-
-	<cfcase value="5"><!---list row files--->
-
-   	<cfset fileTypeName  = "file">
-		<cfset fileTypeNameP = "files">
-		<cfset fileTypeTable = "">
-		<cfset fileTypeDirectory = "lists">
-
-  </cfcase>
-
-	<cfcase value="6"><!---form row files--->
-
-		<cfset fileTypeName  = "file">
-		<cfset fileTypeNameP = "files">
-		<cfset fileTypeTable = "">
-		<cfset fileTypeDirectory = "forms">
-
-	</cfcase>
 
 </cfswitch>
