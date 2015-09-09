@@ -2345,7 +2345,7 @@
 															</cfcase>
 														</cfswitch>
 
-														<cfset alertContentWeb = alertContentWeb&'<p style="margin-top:20px;font-size:26px">#webLanguage#</p>'&alertContentWeb&userDiaryAlertWeb.alertContent>
+														<cfset alertContentWeb = alertContentWeb&'<p style="margin-top:20px;font-size:26px">#webLanguage#</p>'&userDiaryAlertWeb.alertContent>
 
 													<cfelse>
 
@@ -2387,6 +2387,7 @@
 													<cfinvokeargument name="head_content" value="#headContent#">
 													<cfinvokeargument name="foot_content" value="#footContent#">
 												</cfinvoke>
+
 
 												<!---<cfoutput>
 													#alertContentWeb#
