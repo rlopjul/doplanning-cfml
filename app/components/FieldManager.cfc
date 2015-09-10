@@ -6,6 +6,7 @@
 
 	<cfset LAST_UPDATE_TYPE_FIELD = "field">
 
+	<cfset LIST_TEXT_VALUES_DELIMITER = "#chr(13)##chr(10)#">
 
 	<!--- ------------------------------------- createField -------------------------------------  --->
 
@@ -199,6 +200,17 @@
 					, mask_type_id = <cfqueryparam value="#arguments.mask_type_id#" cfsqltype="cf_sql_integer">
 				</cfif>
 				<cfif isDefined("arguments.list_values")>
+					<cfif arguments.field_type_id IS 18>
+						<cfset listWithDots = "">
+						<cfset listWithoutDots = replace(arguments.list_values, LIST_TEXT_VALUES_DELIMITER, ",", "ALL")>
+						<cfloop list="#listWithoutDots#" index="listValue" delimiters=",">
+							<cfif left(listValue,1) NEQ ".">
+								<cfset listValue = "."&listValue>
+							</cfif>
+							<cfset listWithDots = listAppend(listWithDots, lCase(listValue), ",")>
+						</cfloop>
+						<cfset arguments.list_values = replace(listWithDots, ",", LIST_TEXT_VALUES_DELIMITER, "ALL")>
+					</cfif>
 					, list_values = <cfqueryparam value="#arguments.list_values#" cfsqltype="cf_sql_varchar">
 				</cfif>
 				;
@@ -324,6 +336,17 @@
 						</cfif>
 					</cfif>
 					<cfif isDefined("arguments.list_values")>
+						<cfif arguments.field_type_id IS 18>
+							<cfset listWithDots = "">
+							<cfset listWithoutDots = replace(arguments.list_values, LIST_TEXT_VALUES_DELIMITER, ",", "ALL")>
+							<cfloop list="#listWithoutDots#" index="listValue" delimiters=",">
+								<cfif left(listValue,1) NEQ ".">
+									<cfset listValue = "."&listValue>
+								</cfif>
+								<cfset listWithDots = listAppend(listWithDots, lCase(listValue), ",")>
+							</cfloop>
+							<cfset arguments.list_values = replace(listWithDots, ",", LIST_TEXT_VALUES_DELIMITER, "ALL")>
+						</cfif>
 						, list_values = <cfqueryparam value="#arguments.list_values#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
