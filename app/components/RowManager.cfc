@@ -607,7 +607,7 @@
 
 		<cfset var rowsQuery = "">
 		<cfset var listFields = false>
-		<cfset var attachedFileFields = false>
+		<cfset var attachedItemFields = false>
 		<cfset var fieldsNames = "">
 		<cfset var fieldsLabels = "">
 
@@ -664,9 +664,9 @@
 						<cfset listFields = true>
 						<cfset queryAddColumn(rowsQuery, fieldName, "VarChar", arrayNew(1))>
 
-					<cfelseif fields.field_type_id EQ 18><!--- ATTACHED FILES --->
+					<cfelseif fields.field_type_group IS "doplanning_item" OR fields.field_type_id IS 18><!--- AREA ITEMS OR ATTACHED FILE --->
 
-						<cfset attachedFileFields = true>
+						<cfset attachedItemFields = true>
 
 					</cfif>
 
@@ -678,7 +678,7 @@
 
 				</cfloop>
 
-				<cfif arguments.decimals_with_mask IS true OR attachedFileFields IS true OR listFields IS true>
+				<cfif arguments.decimals_with_mask IS true OR attachedItemFields IS true OR listFields IS true>
 
 					<cfif arguments.decimals_with_mask IS true>
 
@@ -705,7 +705,7 @@
 					</cfif>
 
 
-					<cfif arguments.decimals_with_mask IS true OR attachedFileFields IS true OR selectedAreasQuery.recordCount GT 0>
+					<cfif arguments.decimals_with_mask IS true OR attachedItemFields IS true OR selectedAreasQuery.recordCount GT 0>
 
 						<cfloop query="rowsQuery">
 
@@ -756,30 +756,67 @@
 									<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
 
 
-								<cfelseif fields.field_type_id IS 18><!--- ATTACHED FILE --->
+								<cfelseif fields.field_type_group IS "doplanning_item" OR fields.field_type_id IS 18><!--- AREA ITEMS OR ATTACHED FILE --->
 
 									<cfset fieldValue = rowsQuery[fieldName]>
 
 									<cfif isNumeric(fieldValue)>
 
-										<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
-											<cfinvokeargument name="file_id" value="#fieldValue#">
-											<cfinvokeargument name="parse_dates" value="false"/>
-											<cfinvokeargument name="published" value="false"/>
+										<cfif fields.item_type_id IS 10 OR fields.field_type_id IS 18><!--- FILE --->
 
-											<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-											<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-										</cfinvoke>
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+												<cfinvokeargument name="file_id" value="#fieldValue#">
+												<cfinvokeargument name="parse_dates" value="false"/>
+												<cfinvokeargument name="published" value="false"/>
 
-										<cfif fileQuery.recordCount GT 0>
-											<cfset fieldValue = fileQuery.file_name>
-										<cfelse>
-											<cfset fieldValue = "ARCHIVO NO DISPONIBLE">
+												<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+												<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+											</cfinvoke>
+
+											<cfif fileQuery.recordCount GT 0>
+												<cfif fields.item_type_id IS 10>
+													<cfif len(fileQuery.name) GT 0>
+														<cfset fieldValue = fileQuery.name>
+													<cfelse>
+														<cfset fieldValue = "ARCHIVO SELECCIONADO SIN TÍTULO">
+													</cfif>
+												<cfelse>
+													<cfset fieldValue = fileQuery.file_name>
+												</cfif>
+											<cfelse>
+												<cfset fieldValue = "ARCHIVO NO DISPONIBLE">
+											</cfif>
+
+											<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
+
+
+										<cfelse><!--- ITEM --->
+
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+												<cfinvokeargument name="item_id" value="#fieldValue#">
+												<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
+												<cfinvokeargument name="parse_dates" value="false"/>
+												<cfinvokeargument name="published" value="false"/>
+
+												<cfinvokeargument name="client_abb" value="#client_abb#">
+												<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											</cfinvoke>
+
+											<cfif itemQuery.recordCount GT 0>
+												<cfif len(itemQuery.title) GT 0>
+													<cfset fieldValue = itemQuery.title>
+												<cfelse>
+													<cfset fieldValue = "ELEMENTO SELECCIONADO SIN TÍTULO">
+												</cfif>
+											<cfelse>
+												<cfset fieldValue = "ELEMENTO NO DISPONIBLE">
+											</cfif>
+
+											<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
+
 										</cfif>
 
-										<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
-
-									</cfif>
+									</cfif><!--- END isNumeric(fieldValue) --->
 
 
 								</cfif>
