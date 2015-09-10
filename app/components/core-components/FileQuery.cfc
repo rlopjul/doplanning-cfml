@@ -41,7 +41,7 @@
 			<cfset fileTypeTable = "files">
 
 			<cfquery name="selectFileQuery" datasource="#client_dsn#">
-				SELECT files.id, files.id AS file_id, physical_name, files.user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user, files.public, files.file_public_id, files.row_id, files.field_id
+				SELECT files.id, files.id AS file_id, physical_name, files.user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user, files.public, files.file_public_id, files.item_id, files.item_type_id, files.row_id, files.field_id
 					, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				<cfif isDefined("arguments.area_id")>
 					, areas_files.association_date

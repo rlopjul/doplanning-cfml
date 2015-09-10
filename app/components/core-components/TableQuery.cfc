@@ -302,4 +302,40 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------ getTablePublicationAreas -----------------------------------  --->
+
+	<cffunction name="getTablePublicationAreas" output="false" access="public" returntype="query">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeTable" type="string" required="true">
+		<cfargument name="field_id" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+
+			<cfquery name="getTablePublicationAreas" datasource="#client_dsn#">
+				(	SELECT tables.area_id
+					FROM `#client_abb#_#tableTypeTable#` AS tables
+					WHERE tables.id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+
+				) UNION ALL
+
+				( SELECT views.area_id
+					FROM `#client_abb#_#tableTypeTable#_views` AS views
+				  <cfif isDefined("arguments.field_id")>
+						INNER JOIN `#client_abb#_#tableTypeTable#_views_fields` AS views_fields
+						ON views_fields.view_id = views.id
+						AND views_fields.field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					WHERE views.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				);
+			</cfquery>
+
+		<cfreturn getTablePublicationAreas>
+
+	</cffunction>
+
+
+
+
 </cfcomponent>

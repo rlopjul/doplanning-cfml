@@ -1658,7 +1658,6 @@
 		<cfargument name="area_id" type="numeric" required="no">
 		<cfargument name="item_id" type="numeric" required="no">
 		<cfargument name="itemTypeId" type="numeric" required="no">
-		<!---<cfargument name="format_content" type="string" required="no" default="default">--->
     <cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
     <cfargument name="with_owner_area" type="boolean" required="false">
     <cfargument name="status" type="string" required="false" default="ok"><!--- ok/deleted --->
@@ -1703,43 +1702,77 @@
 
 			<cfif selectFileQuery.recordCount GT 0>
 
-				<!---The area is not checked before and the file is not property of the user--->
-				<cfif area_passed IS NOT true AND selectFileQuery.user_in_charge NEQ user_id>
 
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileAreas" returnvariable="getFileAreasQuery">
-						<cfinvokeargument name="file_id" value="#file_id#">
+				<cfif isDefined("arguments.itemTypeId") AND arguments.itemTypeId IS 16 AND selectFileQuery.item_type_id EQ arguments.itemTypeId AND isNumeric(selectFileQuery.row_id)><!--- Users typologies attached file--->
 
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">
-					</cfinvoke>
 
-					<cfif getFileAreasQuery.recordCount IS 0 AND isDefined("arguments.itemTypeId")><!---The file is not in area--->
+						<cfinvoke component="UserManager" method="isInternalUser" returnvariable="internal_user">
+							<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
+						</cfinvoke>
+
+						<cfif internal_user IS false>
+
+							<cfquery name="getRowTypologyUser" datasource="#client_dsn#">
+								SELECT id
+								FROM `#arguments.client_abb#_users`
+								WHERE typology_id = <cfqueryparam value="#selectFileQuery.table_id#" cfsqltype="cf_sql_integer">
+								AND typology_row_id = <cfqueryparam value="#selectFileQuery.row_id#" cfsqltype="cf_sql_integer">;
+							</cfquery>
+
+							<cfif getRowTypologyUser.recordCount GT 0>
+
+								<cfset typologyRowUserId = getRowTypologyUser.id>
+
+								<cfif typologyRowUserId NEQ SESSION.user_id>
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getUserVisibleUsers" returnvariable="getUserVisibleUsers">
+										<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+										<cfinvokeargument name="client_abb" value="#client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+									<cfset usersList = getUserVisibleUsers.usersList>
+
+									<cfif ListFind(list, typologyRowUserId) IS 0>
+
+										<cfset error_code = 103>
+
+										<cfthrow errorcode="#error_code#">
+
+									</cfif>
+
+								</cfif>
+
+							<cfelse>
+
+								<cfset error_code = 103>
+
+								<cfthrow errorcode="#error_code#">
+
+							</cfif>
+
+						</cfif><!--- END internal_user IS false --->
+
+
+				<cfelseif area_passed IS NOT true AND selectFileQuery.user_in_charge NEQ user_id><!---The area is not checked before and the file is not property of the user--->
+
+
+					<cfif isDefined("arguments.itemTypeId")>
 
 						<!---Aquí comprueba si el archivo está asociado a otro tipo de elemento (entradas, noticias, eventos, etc)--->
 						<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
-						<cfif listFind("11,12,13,16", arguments.itemTypeId) GT 0><!--- Tables attached file --->
+						<cfif listFind("11,12", arguments.itemTypeId) GT 0 AND arguments.itemTypeId EQ selectFileQuery.item_type_id AND isNumeric(selectFileQuery.row_id)><!--- Lists and Forms --->
 
-							<cfif isNumeric(selectFileQuery.row_id)>
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTablePublicationAreas" returnvariable="getFileAreasQuery">
+								<cfinvokeargument name="table_id" value="#selectFileQuery.item_id#">
+								<cfinvokeargument name="tableTypeTable" value="#itemTypeTable#">
+								<cfinvokeargument name="field_id" value="#selectFileQuery.field_id#">
 
-								<cfif listFind("11,12", arguments.itemTypeId) GT 0>
-
-										<cfquery name="getFileAreasQuery" datasource="#client_dsn#">
-											SELECT tables.areas_id
-											FROM #client_abb#_#itemTypeTable# AS tables
-											WHERE tables.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
-										</cfquery>
-
-								</cfif>
-
-								<!---<cfinvoke component="RowManager" method="getTableRows" returnvariable="getTableRowsResponse">
-									<cfinvokeargument name="table_id" value="#arguments.item_id#">
-									<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-									<cfinvokeargument name="row_id" value="#selectFileQuery.row_id#">
-									<cfinvokeargument name="file_id" value="#arguments.file_id#">
-								</cfinvoke>--->
-
-							</cfif>
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
 
 						<cfelse>
 
@@ -1755,7 +1788,19 @@
 
 						</cfif>
 
+
+					<cfelse>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileAreas" returnvariable="getFileAreasQuery">
+							<cfinvokeargument name="file_id" value="#file_id#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
 					</cfif>
+
+
 
 					<cfif getFileAreasQuery.recordCount GT 0>
 
@@ -1782,7 +1827,11 @@
 
 					</cfif>
 
-				</cfif>
+
+
+				</cfif><!--- END area_passed IS NOT true AND selectFileQuery.user_in_charge NEQ user_id --->
+
+
 
 				<cfif arguments.return_type EQ "query">
 

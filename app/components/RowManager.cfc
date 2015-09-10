@@ -1313,7 +1313,7 @@
 				</cfinvoke>
 
 			<cfelseif arguments.tableTypeId IS 4 AND isDefined("arguments.row_id")><!---Only one row of user typology--->
-
+				
 				<!--- getTable --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="table">
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">
