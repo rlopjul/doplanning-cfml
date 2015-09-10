@@ -202,6 +202,8 @@
 
 					<cfloop query="fields">
 
+						<cfset field_name = "field_#fields.field_id#">
+
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- SELECT --->
 
 							<cfif arguments.action NEQ CREATE_ROW>
@@ -215,8 +217,6 @@
 								</cfquery>
 
 							</cfif>
-
-							<cfset field_name = "field_#fields.field_id#">
 
 							<cfif isDefined("arguments.#field_name#")>
 
@@ -441,6 +441,34 @@
 		<cfreturn emptyRow>
 
 	</cffunction>
+
+
+	<!---getRowAttachedFiles--->
+
+	<cffunction name="getRowAttachedFiles" output="false" returntype="query" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="row_id" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getRowAttachedFiles">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfquery name="getRowAttachedFile" datasource="#client_dsn#">
+				SELECT files.*
+				FROM `#client_abb#_files` AS files
+				WHERE files.item_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				AND files.item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">
+				AND files.row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+		<cfreturn getRowAttachedFile>
+
+	</cffunction>
+
 
 
 	<!---getTableRows--->
@@ -846,7 +874,36 @@
 
 		<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
+		<!--- getRowAttachedFiles --->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getRowAttachedFiles" returnvariable="rowAttachedFilesQuery">
+			<cfinvokeargument name="table_id" value="#arguments.table_id#">
+			<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		</cfinvoke>
+
 		<cftransaction>
+
+			<cfif rowAttachedFilesQuery.recordCount GT 0>
+
+				<cfloop query="rowAttachedFilesQuery">
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="deleteRowAttachedFile">
+						<cfinvokeargument name="file_id" value="#rowAttachedFilesQuery.id#">
+						<cfinvokeargument name="table_id" value="#arguments.table_id#">
+						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+						<cfinvokeargument name="row_id" value="#arguments.row_id#">
+						<cfinvokeargument name="field_id" value="#rowAttachedFilesQuery.field_id#">
+						<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+
+				</cfloop>
+
+			</cfif>
 
 			<!---Delete selected areas--->
 			<cfquery name="deleteSelectedAreasQuery" datasource="#client_dsn#">

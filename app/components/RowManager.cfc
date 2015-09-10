@@ -1086,13 +1086,14 @@
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
 					<cfinvokeargument name="item_id" value="#arguments.table_id#">
 					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 			</cfif>
 
-			<!--- Delete Row In DataBase--->
+			<!--- Delete Row --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
 				<cfinvokeargument name="row_id" value="#arguments.row_id#">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
@@ -1261,53 +1262,6 @@
 
 	</cffunction>
 
-
-
-	<!---
-	<cffunction name="deleteTableRowsInDatabase" output="false" access="package" returntype="void">
-		<cfargument name="table_id" type="numeric" required="true">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-		<cfargument name="resetAutoIncrement" type="boolean" required="false" default="false">
-
-		<cfset var method = "deleteTableRowsInDatabase">
-
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="deleteTableRowsInDatabase">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="resetAutoIncrement" value="#arguments.resetAutoIncrement#">
-
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
-
-			<!---
-
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-
-			<!---Delete rows--->
-			<cfquery name="deleteRows" datasource="#client_dsn#">
-				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
-			</cfquery>
-
-			<!---Delete selected areas--->
-			<cfquery name="deleteSelectedAreasQuery" datasource="#client_dsn#">
-				DELETE FROM `#client_abb#_#tableTypeTable#_rows_areas`
-				WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-
-			<cfif arguments.resetAutoIncrement IS true>
-				<!--- Reset auto increment --->
-				<cfquery name="resetAutoIncrement" datasource="#client_dsn#">
-					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AUTO_INCREMENT = 1;
-				</cfquery>
-			</cfif>
-			--->
-
-	</cffunction>
-	--->
 
 
 	<!--- ------------------------------------- getTableRows -------------------------------------  --->
