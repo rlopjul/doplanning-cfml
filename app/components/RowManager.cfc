@@ -601,12 +601,13 @@
 		<cfargument name="client_abb" type="string" required="true"/>
 		<cfargument name="client_dsn" type="string" required="true"/>
 
-		<cfset var method = "exportRows">
+		<cfset var method = "generateRowsQuery">
 
 		<cfset var response = structNew()>
 
 		<cfset var rowsQuery = "">
 		<cfset var listFields = false>
+		<cfset var attachedFileFields = false>
 		<cfset var fieldsNames = "">
 		<cfset var fieldsLabels = "">
 
@@ -653,24 +654,6 @@
 					<cfset fieldsLabels = listAppend(fieldsLabels, "Modificado por",  ",")>
 				</cfif>
 
-				<!---<cfif arguments.include_creation_date IS true>
-					<cfset fieldsLabels = fieldsLabels&"Fecha de creación,">
-				</cfif>
-
-				<cfif arguments.include_last_update_date IS true>
-					<cfset fieldsLabels = fieldsLabels&"Última modificación,">
-				</cfif>
-
-				<cfif arguments.include_insert_user IS true>
-					<cfset fieldsLabels = fieldsLabels&"Creado por,">
-				</cfif>
-
-				<cfif arguments.include_update_user IS true>
-					<cfset fieldsLabels = fieldsLabels&"Modificado por,">
-				</cfif>
-
-				<cfset fieldsLabels = fieldsLabels&valueList(fields.label, ",")>--->
-
 				<cfloop query="fields">
 
 					<cfset fieldName = "field_#fields.field_id#">
@@ -680,6 +663,10 @@
 
 						<cfset listFields = true>
 						<cfset queryAddColumn(rowsQuery, fieldName, "VarChar", arrayNew(1))>
+
+					<cfelseif fields.field_type_id EQ 18><!--- ATTACHED FILES --->
+
+						<cfset attachedFileFields = true>
 
 					</cfif>
 
@@ -691,7 +678,7 @@
 
 				</cfloop>
 
-				<cfif arguments.decimals_with_mask IS true OR listFields IS true>
+				<cfif arguments.decimals_with_mask IS true OR attachedFileFields IS true OR listFields IS true>
 
 					<cfif arguments.decimals_with_mask IS true>
 
@@ -718,7 +705,7 @@
 					</cfif>
 
 
-					<cfif arguments.decimals_with_mask IS true OR selectedAreasQuery.recordCount GT 0>
+					<cfif arguments.decimals_with_mask IS true OR attachedFileFields IS true OR selectedAreasQuery.recordCount GT 0>
 
 						<cfloop query="rowsQuery">
 
@@ -750,6 +737,7 @@
 
 									</cfif>
 
+
 								<cfelseif listFields IS true AND ( fields.field_type_id EQ 9 OR fields.field_type_id IS 10 )><!--- LISTS --->
 
 									<cfset fieldValue = "">
@@ -765,8 +753,34 @@
 										<cfset fieldValue = valueList(rowSelectedAreas.name, ";")><!--- , --->
 									</cfif>
 
-									<!--- <cfset rowValues[fieldName] = fieldValue> --->
 									<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
+
+
+								<cfelseif fields.field_type_id IS 18><!--- ATTACHED FILE --->
+
+									<cfset fieldValue = rowsQuery[fieldName]>
+
+									<cfif isNumeric(fieldValue)>
+
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+											<cfinvokeargument name="file_id" value="#fieldValue#">
+											<cfinvokeargument name="parse_dates" value="false"/>
+											<cfinvokeargument name="published" value="false"/>
+
+											<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+											<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+										</cfinvoke>
+
+										<cfif fileQuery.recordCount GT 0>
+											<cfset fieldValue = fileQuery.file_name>
+										<cfelse>
+											<cfset fieldValue = "ARCHIVO NO DISPONIBLE">
+										</cfif>
+
+										<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
+
+									</cfif>
+
 
 								</cfif>
 
@@ -1313,7 +1327,7 @@
 				</cfinvoke>
 
 			<cfelseif arguments.tableTypeId IS 4 AND isDefined("arguments.row_id")><!---Only one row of user typology--->
-				
+
 				<!--- getTable --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="table">
 					<cfinvokeargument name="table_id" value="#arguments.table_id#">
