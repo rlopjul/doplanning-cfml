@@ -215,7 +215,7 @@
 				<cfquery name="insertFieldInTable" datasource="#client_dsn#">
 					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
 					ADD COLUMN `field_#field_id#` #arguments.mysql_type#
-					<cfif arguments.required IS true AND arguments.mysql_type NEQ "DATE"><!---Campos DATE dan problemas cuando se ponen NOT NULL porque en los registros existentes rellenan fecha con 0--->
+					<cfif arguments.required IS true AND arguments.mysql_type NEQ "DATE" AND arguments.field_type_id NEQ 18><!---Campos DATE dan problemas cuando se ponen NOT NULL porque en los registros existentes rellenan fecha con 0, los archivos adjuntos se definen después de insertar el registro en la tabla--->
 						NOT NULL
 						<cfif len(arguments.default_value) GT 0 AND ( arguments.mysql_type NEQ "TEXT" AND arguments.mysql_type NEQ "LONGTEXT" )>
 							DEFAULT '#arguments.default_value#'
@@ -338,7 +338,7 @@
 						</cfif>
 						TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
 						MODIFY COLUMN `field_#field_id#` #field.mysql_type#
-						<cfif arguments.required IS true AND field.mysql_type NEQ "DATE">
+						<cfif arguments.required IS true AND field.mysql_type NEQ "DATE" AND arguments.field_type_id NEQ 18>
 						NOT NULL
 							<!---Aquí no se define valor por defecto porque puede cambiar el valor almacenado en columnas vacias--->
 						</cfif>;
