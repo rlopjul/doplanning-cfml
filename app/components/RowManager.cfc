@@ -225,16 +225,11 @@
 				<!--- Delete Rows --->
 				<cfif arguments.delete_rows IS true>
 
-					<!---<cfinvoke component="RowManager" method="deleteTableRowsInDatabase">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRows">
 						<cfinvokeargument name="table_id" value="#arguments.table_id#">
 						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 						<cfinvokeargument name="resetAutoIncrement" value="true">
-					</cfinvoke>--->
-
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRowsInDatabase">
-						<cfinvokeargument name="table_id" value="#arguments.table_id#">
-						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-						<cfinvokeargument name="resetAutoIncrement" value="true">
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">

@@ -357,7 +357,7 @@
 
 			<!---Subida de IMAGEN--->
 			<cfif with_image IS true>
-				
+
 				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFileImage">
 					<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
 					<cfinvokeargument name="file_name" value="(Pendiente de subir la imagen)">
@@ -3366,7 +3366,7 @@
 
 											<cfif arguments.deletedItems IS true><!--- Bin items --->
 
-												&nbsp;&nbsp;<b>Fecha de eliminación</b>
+												<br/><b>Fecha de eliminación</b>
 
 												<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringDeleteDate">
 													<cfinvokeargument name="timestamp_date" value="#itemsQuery.delete_date#">

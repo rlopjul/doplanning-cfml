@@ -219,8 +219,7 @@
 	<cffunction name="deleteTableInDatabase" output="false" access="public" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
-
-		<cfargument name="user_id" type="numeric" required="false">
+		<cfargument name="user_id" type="numeric" required="true">
 
 		<cfargument name="send_alert" type="boolean" required="false" default="true">
 
@@ -231,9 +230,10 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRowsInDatabase">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRows">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="user_id" value="#arguments.user_id#">
 
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">

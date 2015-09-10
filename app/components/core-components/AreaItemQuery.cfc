@@ -5,26 +5,26 @@
 	ColdFusion version required: 8
 	Last file change by: alucena
 	Date of last file change: 26-12-2012
-	
+
 	27-09-2012 alucena: añadidos campos de iframe para entradas, noticias y eventos
 	02-10-2012 alucena: los enlaces y documentos solo se listan en vpnet
 	26-11-2012 alucena: añadido position a noticias
 	09-04-2013 alucena: getItem devuelve valores de iframes_display_types
 	21-06-2013 alucena: areaItemTypeSwitch.cfm cambiado de directorio
-	
+
 --->
 <cfcomponent output="false">
 
-	<cfset component = "AreaItemQuery">	
-	
+	<cfset component = "AreaItemQuery">
+
 	<cfset dateFormat = APPLICATION.dbDateFormat><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset dateTimeFormat = APPLICATION.dbDateTimeFormat>
 	<!---<cfset timeZoneTo = "+1:00">--->
 	<cfset timeZoneTo = APPLICATION.dbTimeZoneTo>
-	
+
 
 	<!---getItem--->
-	
+
 	<cffunction name="getItem" output="false" returntype="query" access="public">
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
@@ -33,25 +33,25 @@
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
 		<cfargument name="with_categories" type="boolean" required="false" default="false">
 		<cfargument name="status" type="string" required="false">
-		
+
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-		
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "getItem">
-					
+
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-			
+
 			<cfquery name="selectItemQuery" datasource="#client_dsn#">
 				SELECT items.id, items.id AS item_id, items.parent_id, items.parent_kind, items.user_in_charge,  items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link, items.status,
 				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(CONVERT_TZ(items.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date 
+					, DATE_FORMAT(CONVERT_TZ(items.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
 				<cfelse>
 					, items.creation_date
 				</cfif>
 				<cfif arguments.itemTypeId IS NOT 1><!---Is not Messages--->
 					<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(CONVERT_TZ(items.last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date 
+					, DATE_FORMAT(CONVERT_TZ(items.last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date
 					<cfelse>
 					, items.last_update_date
 					</cfif>
@@ -91,7 +91,7 @@
 					</cfif>
 					, items.publication_validated
 
-					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
+					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->
 						, items.iframe_url, items.iframe_display_type_id, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
 						<cfif itemTypeId IS 2><!---Entries--->
 							, items.display_type_id
@@ -146,7 +146,7 @@
 				<cfif arguments.itemTypeId IS 20 AND arguments.with_lock IS true>
 				LEFT JOIN (
 					SELECT items_locks.item_id, items_locks.lock_date, items_locks.lock, items_locks.user_id,
-					CONCAT_WS(' ', users_locks.family_name, users_locks.name) AS lock_user_full_name 
+					CONCAT_WS(' ', users_locks.family_name, users_locks.name) AS lock_user_full_name
 					FROM #client_abb#_#itemTypeTable#_locks AS items_locks
 					INNER JOIN #client_abb#_users AS users_locks ON items_locks.item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer"> AND items_locks.user_id = users_locks.id
 					ORDER BY lock_date DESC
@@ -169,17 +169,17 @@
 				</cfif>
 				<cfif isDefined("arguments.status")>
 					AND items.status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
-				</cfif>; 
+				</cfif>;
 			</cfquery>
 			<!---AND status='ok'???? Esto no se pone por si se necesitan obtener mensajes desde la aplicación con el status pending--->
-		
+
 		<cfreturn selectItemQuery>
-		
+
 	</cffunction>
-	
-	
+
+
 	<!---getAreaItems--->
-	
+
 	<cffunction name="getAreaItems" output="false" returntype="struct" access="public">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="format_content" type="string" required="false" default="default">
@@ -205,7 +205,7 @@
 		<cfargument name="identifier" type="string" required="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="categories_condition" type="string" required="false" default="AND">
- 		
+
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
 
@@ -216,27 +216,27 @@
 		<cfargument name="to_end_date" type="string" required="no">
 
 		<cfargument name="order_by" type="string" required="false">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">	
+		<cfargument name="client_dsn" type="string" required="yes">
 
 		<cfset var method = "getAreaItems">
 		<cfset var count = 0>
-		
+
 		<cfset var search_text_re = "">
-					
+
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-			
+
 			<cfif isDefined("arguments.search_text") AND len(arguments.search_text) GT 0>
-			
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
 					<cfinvokeargument name="text" value="#arguments.search_text#">
 				</cfinvoke>
-				
+
 			</cfif>
-			
+
 			<cftransaction>
-			
+
 				<cfquery name="areaItemsQuery" datasource="#client_dsn#">
 					SELECT <cfif isDefined("arguments.limit")>SQL_CALC_FOUND_ROWS</cfif>
 					items.id, items.title, items.user_in_charge
@@ -245,7 +245,7 @@
 					</cfif>
 					<cfif arguments.itemTypeId IS NOT 1 AND arguments.itemTypeId IS NOT 7>, items.last_update_user_id</cfif>
 					<cfif isDefined("arguments.area_id") AND arguments.with_position IS true>
-					, items_position.position 
+					, items_position.position
 					</cfif>
 					<cfif arguments.parse_dates IS true>
 						, DATE_FORMAT(items.creation_date, '#dateTimeFormat#') AS creation_date
@@ -260,13 +260,13 @@
 						<cfif arguments.itemTypeId IS 6><!---Tasks--->
 						, items.done, items.estimated_value, items.real_value
 						, items.recipient_user, recipient_users.family_name AS recipient_user_family_name, recipient_users.name AS recipient_user_name, CONCAT_WS(' ', recipient_users.family_name, recipient_users.name) AS recipient_user_full_name, recipient_users.image_type AS recipient_user_image_type
-						</cfif>					
+						</cfif>
 					</cfif>
 					<cfif arguments.itemTypeId NEQ 14 AND arguments.itemTypeId NEQ 15><!--- IS NOT Views --->
 						, items.attached_file_name, items.attached_file_id
 					</cfif>
 					<cfif arguments.itemTypeId IS NOT 1 AND arguments.itemTypeId NEQ 14 AND arguments.itemTypeId NEQ 15>
-					, items.attached_image_id, items.attached_image_name, items.link				
+					, items.attached_image_id, items.attached_image_name, items.link
 					</cfif>
 					<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7 AND arguments.itemTypeId NEQ 14 AND arguments.itemTypeId NEQ 15>
 					, items.link_target
@@ -291,9 +291,9 @@
 						, items.display_type_id
 						</cfif>
 					</cfif>
-					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->	
+					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->
 					, items.iframe_url, items.iframe_display_type_id, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
-					</cfif>	 
+					</cfif>
 					<cfif arguments.itemTypeId IS 7 OR arguments.itemTypeId IS 8><!---Consultations, Publications--->
 					, items.identifier
 						<cfif arguments.itemTypeId IS 7><!---Consultations--->
@@ -314,7 +314,7 @@
 					</cfif>
 					FROM #client_abb#_#itemTypeTable# AS items
 					<cfif arguments.with_user IS true>
-						INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id 
+						INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
 						<cfif arguments.itemTypeId IS 6><!---Tasks--->
 						INNER JOIN #client_abb#_users AS recipient_users ON items.recipient_user = recipient_users.id
 						</cfif>
@@ -402,14 +402,14 @@
 					AND status='ok'
 					</cfif>
 					<cfif arguments.listFormat NEQ "true">
-					AND parent_kind='area' 
+					AND parent_kind='area'
 					</cfif>
 					<cfif isDefined("arguments.done")>
 					AND items.done = <cfqueryparam value="#arguments.done#" cfsqltype="cf_sql_bit">
 					</cfif>
 					<cfif isDefined("arguments.state")>
 					AND items.state = <cfqueryparam value="#arguments.state#" cfsqltype="cf_sql_varchar">
-					</cfif>					
+					</cfif>
 
 					<!---<cfif isDefined("arguments.from_date")>
 					AND items.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
@@ -460,45 +460,45 @@
 					<cfelse>--->
 
 					<cfif NOT isDefined("arguments.order_by")>
-						
+
 						<cfif arguments.itemTypeId IS NOT 6>
 							<cfif isDefined("arguments.area_id") AND arguments.with_position IS true>
 								ORDER BY items_position.position DESC, items.creation_date DESC
 							<cfelse>
-								ORDER BY items.creation_date DESC		
-							</cfif>	
+								ORDER BY items.creation_date DESC
+							</cfif>
 						<cfelse><!--- Tasks --->
 							<cfif isDefined("arguments.area_id")>
 								ORDER BY items.end_date DESC
 							<cfelse>
 								ORDER BY items.end_date ASC
-							</cfif>		
-						</cfif>	
+							</cfif>
+						</cfif>
 
 					<cfelse>
 
 						ORDER BY #arguments.order_by#
 
-					</cfif>								
-					
+					</cfif>
+
 					<cfif isDefined("arguments.limit")>
 					LIMIT <cfif isDefined("arguments.offset")>#arguments.offset#, </cfif>#arguments.limit#
 					<!---<cfelseif isDefined("arguments.init_item") AND isDefined("arguments.items_page")>
-					LIMIT #init_item#, #items_page#--->			
+					LIMIT #init_item#, #items_page#--->
 					</cfif>;
 				</cfquery>
-				
+
 				<cfif isDefined("arguments.limit")>
 					<cfquery datasource="#client_dsn#" name="getCount">
 						SELECT FOUND_ROWS() AS count;
 					</cfquery>
 					<cfset count = getCount.count>
 				</cfif>
-			
+
 			</cftransaction>
-		
+
 		<cfreturn {query=areaItemsQuery, count=count}>
-		
+
 	</cffunction>
 
 
@@ -518,13 +518,13 @@
 
 		<cfargument name="done" type="boolean" required="no">
 
-		<cfargument name="published" type="boolean" required="false" default="true">		
-		
+		<cfargument name="published" type="boolean" required="false" default="true">
+
 		<cfargument name="year" type="string" required="true">
-		<cfargument name="month" type="string" required="true">	
-		
+		<cfargument name="month" type="string" required="true">
+
 		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">	
+		<cfargument name="client_dsn" type="string" required="yes">
 
 		<cfset var days = arrayNew(1)>
 
@@ -544,13 +544,13 @@
 			<cfinvokeargument name="parse_dates" value="false"/>
 
 			<cfinvokeargument name="done" value="#arguments.done#">
-			<cfinvokeargument name="published" value="#arguments.published#">				
-			
+			<cfinvokeargument name="published" value="#arguments.published#">
+
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 		</cfinvoke>
 		<cfset areaItemsQuery = getAreaItemsResult.query>
-		
+
 		<cfset month_date = CreateDate(arguments.year, arguments.month, 1)>
 		<cfset month_days = DaysInMonth(month_date)>
 
@@ -560,142 +560,142 @@
 			WHERE ( MONTH(start_date) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(start_date) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> )
 			OR ( MONTH(end_date) = <cfqueryparam value="#arguments.month#" cfsqltype="cf_sql_integer"> AND YEAR(end_date) = <cfqueryparam value="#arguments.year#" cfsqltype="cf_sql_integer"> );
 		</cfquery>
-		
-				
+
+
 		<cfloop index="d" from="1" to="#month_days#" step="1">
-			
+
 
 			<cfset select_date = CreateDate(arguments.year, arguments.month, #d#)>
 			<cfset day = arrayNew(1)>
 			<cfset day_with_event = false>
-			
-			
+
+
 			<cfloop query="itemsByMonth" startrow="1" endrow="#itemsByMonth.recordCount#">
 				<cfset title_event = itemsByMonth.title>
 				<cfset start_date_event = itemsByMonth.start_date>
-				<cfset end_date_event = itemsByMonth.end_date>				
-				
+				<cfset end_date_event = itemsByMonth.end_date>
+
 				<cfif ((DateCompare(start_date_event, select_date ) IS 0) OR (DateCompare(start_date_event, select_date ) IS -1))
 					AND ((DateCompare(end_date_event, select_date ) IS 0) OR (DateCompare(end_date_event, select_date ) IS 1))>
-										
+
 					<cfset event = structNew()>
 					<cfset event.title = title_event>
 					<cfset arrayAppend(day, event)>
 					<cfset day_with_event = true>
-					
+
 				</cfif>
 
 			</cfloop>
-			
+
 			<cfif day_with_event IS true>
 				<cfset days[d] = day>
 			</cfif>
-			
-		 
+
+
 		</cfloop>
 
 		<cfreturn {days=days}>
 
 	</cffunction>
-	
-	
-	
+
+
+
 	<!---  -------------------GET ITEM PARENT----------------------   --->
 	<cffunction name="getItemParent" returntype="struct" output="false" access="public">
 		<cfargument name="item_id" required="yes" type="numeric">
 		<cfargument name="itemTypeId" required="yes" type="numeric">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">
-		
+
 		<cfset var method = "getItemParent">
-		
+
 		<cfset var parent_area_id = "">
-		
+
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-			
+
 			<cfquery name="getParent" datasource="#client_dsn#">
-				SELECT parent_kind, area_id 
+				SELECT parent_kind, area_id
 				<cfif itemTypeId IS 7><!---Consultations--->
 				, state
 				</cfif>
 				FROM #client_abb#_#itemTypeTable#
-				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">; 
+				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 			<cfif getParent.recordCount GT 0>
-			
+
 				<cfset parent_area_id = getParent.area_id>
-				
+
 				<cfif itemTypeId IS NOT 7>
 					<cfreturn {parent_area_id=parent_area_id}>
 				<cfelse>
 					<cfreturn {parent_area_id=parent_area_id, state=getParent.state}>
 				</cfif>
-				
-			<cfelse><!---Item does not exist--->
-			
-				<cfset error_code = 501>
-			
-				<cfthrow errorcode="#error_code#" detail="item_id: #arguments.item_id#">
-					
-			</cfif>	
 
-		
+			<cfelse><!---Item does not exist--->
+
+				<cfset error_code = 501>
+
+				<cfthrow errorcode="#error_code#" detail="item_id: #arguments.item_id#">
+
+			</cfif>
+
+
 	</cffunction>
-	
-	
+
+
 	<!---  -------------------GET ITEM ROOT----------------------   --->
 	<cffunction name="getItemRoot" returntype="query" output="false" access="public">
 		<cfargument name="item_id" required="yes" type="numeric">
 		<cfargument name="itemTypeId" required="yes" type="numeric">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">
-		
+
 		<cfset var method = "getItemRoot">
-		
+
 		<cfset var parent_area_id = "">
-		
+
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-			
+
 			<cfquery name="getParentQuery" datasource="#client_dsn#">
-				SELECT id, parent_id, parent_kind, area_id, user_in_charge 
+				SELECT id, parent_id, parent_kind, area_id, user_in_charge
 				<cfif itemTypeId IS 7><!---Consultations--->
 				, state
 				</cfif>
 				FROM #client_abb#_#itemTypeTable#
-				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">; 
+				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 			<cfif getParentQuery.recordCount GT 0>
-			
+
 				<cfif getParentQuery.parent_kind EQ "area">
-					
+
 					<cfreturn getParentQuery>
-				
+
 				<cfelse>
-				
+
 					<cfinvoke component="AreaItemQuery" method="getItemRoot" returnvariable="getItemRootResult">
 						<cfinvokeargument name="item_id" value="#getParentQuery.parent_id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
-					
-					<cfreturn getItemRootResult>
-					
-				</cfif>
-				
-			<cfelse><!---Item does not exist--->
-			
-				<cfset error_code = 501>
-			
-				<cfthrow errorcode="#error_code#" detail="item_id: #arguments.item_id#">
-					
-			</cfif>	
 
-		
+					<cfreturn getItemRootResult>
+
+				</cfif>
+
+			<cfelse><!---Item does not exist--->
+
+				<cfset error_code = 501>
+
+				<cfthrow errorcode="#error_code#" detail="item_id: #arguments.item_id#">
+
+			</cfif>
+
+
 	</cffunction>
 
 
@@ -704,14 +704,14 @@
 	<cffunction name="getItemCategories" returntype="query" output="false" access="public">
 		<cfargument name="item_id" required="yes" type="numeric">
 		<cfargument name="itemTypeId" required="yes" type="numeric">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">
-		
+
 		<cfset var method = "getItemCategories">
-				
+
 			<!---<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">--->
-			
+
 			<cfquery name="getItemCategories" datasource="#client_dsn#">
 				SELECT items_categories.*, items_categories.area_id AS category_id, areas.name AS category_name
 				FROM #client_abb#_items_categories AS items_categories
@@ -719,14 +719,14 @@
 				ON items_categories.item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
 				AND items_categories.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
 				AND areas.id = items_categories.area_id
-				ORDER BY category_name ASC; 
+				ORDER BY category_name ASC;
 			</cfquery>
-			
+
 		<cfreturn getItemCategories>
-		
+
 	</cffunction>
 
-	
+
 	<!--- getColumsWithTable --->
 
 	<cffunction name="getColumsWithTable" output="false" returntype="string" access="package">
@@ -736,7 +736,7 @@
 		<cfset var = columsWithTable = "">
 
 		<cfloop list="#arguments.colums#" index="col" delimiters=",">
-			
+
 			<cfset column = trim(col)>
 
 			<!--- Como las columnas se delimitan por comas, hay que añadir lo siguiente para cuando no son columnas normales --->
@@ -759,9 +759,9 @@
 	</cffunction>
 
 
-	
+
 	<!---listAllAreaItems--->
-	
+
 	<cffunction name="listAllAreaItems" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="areas_ids" type="string" required="false">
@@ -785,16 +785,16 @@
 
 		<cfargument name="delete_user_id" type="numeric" required="false">
 		<cfargument name="status" type="string" required="false" default="ok"><!--- ok / deleted --->
-		
+
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-		
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "listAllAreaItems">
-			
+
 			<cfif NOT isDefined("arguments.area_id") AND NOT isDefined("arguments.areas_ids") AND NOT isDefined("arguments.delete_user_id")>
 
 				<cfif NOT isDefined("SESSION.client_administrator") OR NOT isDefined("SESSION.user_id") OR SESSION.client_administrator NEQ SESSION.user_id>
-					
+
 					<cfthrow message="Área o usuario requerido">
 
 				</cfif>
@@ -852,7 +852,7 @@
 
 				<cfset attachedFileColum = attachedFileColum&", attached_file_name, link">
 				<cfset attachedFileColumNull = attachedFileColumNull&", NULL AS attached_file_name, NULL AS link">
-				
+
 				<cfset webColums = webColums&", attached_image_name, link_target">
 				<cfset webColumsNull = webColumsNull&", NULL AS attached_image_name, NULL AS link_target">
 
@@ -907,17 +907,17 @@
 						</cfif>
 
 					</cfif>
-					
+
 				FROM (
 				<cfif NOT isDefined("arguments.area_type") OR len(arguments.area_type) IS 0><!--- IS NOT WEB --->
 
 
 					<!--- Messages --->
 					( SELECT #commonColumsWithoutLastUpdate#, #attachedFileColum#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 1 AS itemTypeId
-					FROM #client_abb#_messages AS messages 
+					FROM #client_abb#_messages AS messages
 					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.area_id")>
-					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					)
 					<cfif arguments.withConsultations IS true>
@@ -926,7 +926,7 @@
 					FROM #client_abb#_consultations AS consultations
 					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.area_id")>
-					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					)
 					</cfif>
@@ -936,7 +936,7 @@
 					FROM #client_abb#_tasks AS tasks
 					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.area_id")>
-					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					)
 
@@ -946,7 +946,7 @@
 					FROM #client_abb#_dp_documents AS dp_documents
 					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.area_id")>
-					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					)
 					</cfif>
@@ -962,16 +962,16 @@
 					FROM #client_abb#_entries AS entries
 					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.area_id")>
-					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					)
 					<cfif APPLICATION.identifier EQ "vpnet">
 					UNION ALL <!--- Links --->
 					( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 3 AS itemTypeId
 					FROM #client_abb#_links AS links
-					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar"> 
+					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.area_id")>
-					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					)
 					</cfif>
@@ -980,7 +980,7 @@
 					FROM #client_abb#_news AS news
 					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.area_id")>
-					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					)
 					UNION ALL <!--- Images --->
@@ -988,7 +988,7 @@
 					FROM #client_abb#_images AS images
 					WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.area_id")>
-					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					)
 				</cfif>
@@ -997,7 +997,7 @@
 				FROM #client_abb#_events AS events
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
-				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>
 				)
 				<!--- <cfif APPLICATION.modulePubMedComments IS true> --->
@@ -1007,7 +1007,7 @@
 				FROM #client_abb#_pubmeds AS pubmeds
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
-				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> 
+				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>
 				)
 				</cfif>
@@ -1016,7 +1016,7 @@
 				UNION ALL
 				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 11 AS itemTypeId
 				FROM #client_abb#_lists AS lists
-				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar"> 
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
 				AND lists.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>
@@ -1071,7 +1071,7 @@
 				UNION ALL
 				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 13 AS itemTypeId
 				FROM #client_abb#_typologies AS typologies
-				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar"> 
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
 				AND typologies.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>
@@ -1082,7 +1082,7 @@
 				UNION ALL
 				( SELECT #commonColums#, #attachedFileColumNull#, #webColumsNull#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 16 AS itemTypeId
 				FROM #client_abb#_users_typologies AS users_typologies
-				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar"> 
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
 				AND users_typologies.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>
@@ -1094,7 +1094,7 @@
 				( SELECT #fileCommonColums#, #attachedFileColumNull#, #webColumsNull#, #fileColumns#, #iframeColumsNull# #displayColumsNull# 10 AS itemTypeId
 				FROM #client_abb#_files AS files
 
-				INNER JOIN #client_abb#_areas_files AS area_files ON files.id = area_files.file_id 
+				INNER JOIN #client_abb#_areas_files AS area_files ON files.id = area_files.file_id
 					<cfif isDefined("arguments.area_id")>
 					AND area_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>
@@ -1106,7 +1106,7 @@
 					INNER JOIN #client_abb#_areas AS areas
 					ON items.area_id = areas.id
 					<cfif isDefined("arguments.areas_ids")>
-						AND items.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_integer" list="true">)	
+						AND items.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_integer" list="true">)
 					</cfif>
 
 				</cfif>
@@ -1117,18 +1117,19 @@
 					ON items.user_in_charge = users.id
 				</cfif>
 
-				
+
 				<cfif arguments.status EQ "deleted">
-					
+
 					INNER JOIN #client_abb#_items_deleted AS items_deleted
-					ON items.id = items_deleted.item_id
+					ON items_deleted.in_bin = <cfqueryparam value="true" cfsqltype="cf_sql_bit">
+					AND items.id = items_deleted.item_id
 					AND items.itemTypeId = items_deleted.item_type_id
 
 					<cfif isDefined("arguments.delete_user_id")>
-						
+
 						AND items_deleted.delete_user_id = <cfqueryparam value="#arguments.delete_user_id#" cfsqltype="cf_sql_integer">
 
-					</cfif> 
+					</cfif>
 
 				</cfif>
 
@@ -1161,26 +1162,26 @@
 				<cfif isDefined("arguments.limit")>
 				LIMIT #arguments.limit#
 				</cfif>;
-			</cfquery>	
+			</cfquery>
 
-		
+
 		<cfreturn {query=areaItemsQuery}>
-		
+
 	</cffunction>
-	
-	
-	
+
+
+
 	<!---listAllAreaWebItems--->
 	<!---Esta función DEBE DEJAR DE USARSE, sólo se mantiene por retrocompatibilidad--->
 	<cffunction name="listAllAreaWebItems" output="false" returntype="query" access="public">
 		<cfargument name="area_id" type="numeric" required="yes">
 		<cfargument name="limit" type="numeric" required="no">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">		
-		
+		<cfargument name="client_dsn" type="string" required="yes">
+
 		<cfset var method = "listAllAreaWebItems">
-								
+
 			<cfquery name="areaWebItemsQuery" datasource="#client_dsn#">
 				(SELECT id, title, creation_date, description, 2 AS type_id, #area_id# AS area_id
 				FROM #client_abb#_entries AS entries
@@ -1216,53 +1217,53 @@
 				<cfif isDefined("arguments.limit")>
 				LIMIT #arguments.limit#
 				</cfif>;
-			</cfquery>	
-		
+			</cfquery>
+
 		<cfreturn areaWebItemsQuery>
-		
+
 	</cffunction>
-	
-	
+
+
 	<!---  ---------------------- addReadToItem -------------------------------- --->
-	
+
 	<cffunction name="addReadToItem" returntype="void" access="public">
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="user_id" type="numeric" required="yes">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">		
-		
+		<cfargument name="client_dsn" type="string" required="yes">
+
 		<cfset var method = "addReadToItem">
-					
-			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">		
-					
-			<cfquery name="addReadToItem" datasource="#client_dsn#">		
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfquery name="addReadToItem" datasource="#client_dsn#">
 				INSERT INTO `#client_abb#_#itemTypeTable#_readings`
 				SET #itemTypeName#_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">,
 				user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">,
-				date = NOW();			
+				date = NOW();
 			</cfquery>
-		
+
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
-	
-	
+
+
 	<!---  ---------------------- updateItemState -------------------------------- --->
-	
+
 	<cffunction name="updateItemState" returntype="void" access="public">
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="state" type="string" required="yes">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">		
-		
+		<cfargument name="client_dsn" type="string" required="yes">
+
 		<cfset var method = "updateItemState">
-					
-			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">		
-			
-			<cfquery name="addReadToItem" datasource="#client_dsn#">		
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfquery name="addReadToItem" datasource="#client_dsn#">
 				UPDATE #client_abb#_#itemTypeTable#
 				SET	state = <cfqueryparam value="#arguments.state#" cfsqltype="cf_sql_varchar">,
 				last_update_date = NOW()
@@ -1278,83 +1279,83 @@
 					</cfcase>
 				</cfswitch>
 				WHERE
-				id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;			
+				id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
-						
+
+
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
-    
-	
-	
+
+
+
 	<!---  ---------------------- setItemReadDate -------------------------------- --->
-	
+
 	<cffunction name="setItemReadDate" returntype="void" access="public">
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">		
-		
+		<cfargument name="client_dsn" type="string" required="yes">
+
 		<cfset var method = "setItemReadDate">
-					
-			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">		
-			
-				<cfquery name="setReadDateQuery" datasource="#client_dsn#">		
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+				<cfquery name="setReadDateQuery" datasource="#client_dsn#">
 					UPDATE #client_abb#_#itemTypeTable#
-					SET read_date = NOW()					
+					SET read_date = NOW()
 					WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>	
-						
+				</cfquery>
+
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
-	
-	
-	
+
+
+
 	<!---  ---------------------- changeItemsState -------------------------------- --->
-	
+
 	<cffunction name="changeItemsState" returntype="void" access="public">
 		<cfargument name="item_id" type="numeric" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="state" type="string" required="yes">
-		
+
 		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">		
-		
+		<cfargument name="client_dsn" type="string" required="yes">
+
 		<cfset var method = "changeItemsState">
-					
-			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">		
-			
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
 			<cfinvoke component="AreaItemQuery" method="updateItemState">
 				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<cfinvokeargument name="state" value="#arguments.state#">
-				
+
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
-					
+
 			<!---Get sub item--->
-			<cfquery name="getSubItem" datasource="#client_dsn#">		
+			<cfquery name="getSubItem" datasource="#client_dsn#">
 				SELECT id, state
-				FROM #client_abb#_#itemTypeTable# 
+				FROM #client_abb#_#itemTypeTable#
 				WHERE parent_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
-				AND parent_kind = <cfqueryparam value="#itemTypeName#" cfsqltype="cf_sql_varchar">;			
+				AND parent_kind = <cfqueryparam value="#itemTypeName#" cfsqltype="cf_sql_varchar">;
 			</cfquery>
-			
+
 			<cfif getSubItem.recordCount GT 0>
-				
+
 				<cfinvoke component="AreaItemQuery" method="changeItemsState" returnvariable="changeItemStateResult">
 					<cfinvokeargument name="item_id" value="#getSubItem.id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="state" value="#arguments.state#">
-					
+
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 				</cfinvoke>
-										
-			</cfif>					
-			
+
+			</cfif>
+
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
 
@@ -1368,9 +1369,9 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-		
+
 		<cfset var method = "deleteItemPosition">
-						
+
 			<cfquery name="deleteItemPosition" datasource="#client_dsn#">
 				DELETE FROM #client_abb#_items_position
 				WHERE item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
@@ -1379,7 +1380,7 @@
 					AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 				</cfif>;
 			</cfquery>
-						
+
 	</cffunction>
-  
+
 </cfcomponent>
