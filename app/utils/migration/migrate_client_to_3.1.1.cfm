@@ -11,3 +11,32 @@ ALTER TABLE `dp_hcs`.`hcs_files`
 ADD CONSTRAINT `hcs_files_ibfk_1`
   FOREIGN KEY (`user_in_charge`)
   REFERENCES `dp_hcs`.`hcs_users` (`id`);
+
+
+
+ALTER TABLE `dp_hcs`.`hcs_lists`
+ADD COLUMN `last_update_type` VARCHAR(45) NULL AFTER `last_update_user_id`;
+
+ALTER TABLE `dp_hcs`.`hcs_forms`
+ADD COLUMN `last_update_type` VARCHAR(45) NULL AFTER `last_update_user_id`;
+
+ALTER TABLE `dp_hcs`.`hcs_typologies`
+ADD COLUMN `last_update_type` VARCHAR(45) NULL AFTER `last_update_user_id`;
+
+ALTER TABLE `dp_hcs`.`hcs_users_typologies`
+ADD COLUMN `last_update_type` VARCHAR(45) NULL AFTER `last_update_user_id`;
+
+ALTER TABLE `dp_hcs`.`hcs_users`
+ADD COLUMN `last_update_date` DATETIME NULL AFTER `typology_row_id`,
+ADD COLUMN `last_update_user_id` INT(11) NULL AFTER `last_update_date`,
+ADD COLUMN `last_update_type` VARCHAR(45) NULL AFTER `last_update_user_id`,
+ADD INDEX `hcs_users_ibfk_3_idx` (`last_update_user_id` ASC);
+ALTER TABLE `dp_hcs`.`hcs_users`
+ADD CONSTRAINT `hcs_users_ibfk_3`
+  FOREIGN KEY (`last_update_user_id`)
+  REFERENCES `dp_hcs`.`hcs_users` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `dp_hcs`.`hcs_users`
+ADD COLUMN `start_page_type_id` INT(11) NULL AFTER `information`;

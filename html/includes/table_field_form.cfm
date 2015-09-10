@@ -376,7 +376,7 @@
 		<div class="col-md-12">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeid#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>
 
@@ -386,7 +386,7 @@
 			<select name="mask_type_id" id="mask_type_id" class="form-control"><!---onchange="fieldItemTypeChange($('##item_type_id').val());"--->
 				<option value="" lang="es">Sin máscara</option>
 				<cfloop array="#maskTypesArray#" index="maskTypeId">
-					<option value="#maskTypeId#" lang="es" <cfif field.mask_type_id IS maskTypeId>selected="selected"</cfif>>#maskTypesStruct[maskTypeId].label# (#maskTypesStruct[maskTypeId].description#)</option>
+					<option value="#maskTypeId#" lang="es" <cfif isDefined("field.mask_type_id") AND field.mask_type_id IS maskTypeId>selected="selected"</cfif>>#maskTypesStruct[maskTypeId].label# (#maskTypesStruct[maskTypeId].description#)</option>
 				</cfloop>
 			</select>
 			<small class="help-block" lang="es">Permite definir como se mostrará el valor numérico introducido.</small>
@@ -397,8 +397,8 @@
 		<div class="col-md-12">
 			<label for="field_input_type_list" class="control-label" lang="es">Mostrar opciones en</label>
 			<select name="field_input_type" id="field_input_type_list" class="form-control">
-				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista desplegable</option>
-				<option value="radio" <cfif field.field_input_type EQ "radio">selected="selected"</cfif> lang="es">Radio (se muestran visibles todas las opciones)</option>
+				<option value="select" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista desplegable</option>
+				<option value="radio" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "radio">selected="selected"</cfif> lang="es">Radio (se muestran visibles todas las opciones)</option>
 			</select>
 		</div>
 	</div>
@@ -407,8 +407,8 @@
 		<div class="col-md-12">
 			<label for="field_input_type_list_multiple" class="control-label" lang="es">Mostrar opciones en</label>
 			<select name="field_input_type" id="field_input_type_list_multiple" class="form-control">
-				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista</option>
-				<option value="checkbox" <cfif field.field_input_type EQ "checkbox">selected="selected"</cfif> lang="es">Checkbox (se muestran visibles todas las opciones)</option>
+				<option value="select" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista</option>
+				<option value="checkbox" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "checkbox">selected="selected"</cfif> lang="es">Checkbox (se muestran visibles todas las opciones)</option>
 			</select>
 		</div>
 	</div>
@@ -428,7 +428,7 @@
 			<label for="list_area_id" id="listAreaText" class="control-label" lang="es">Área a para generar la lista</label>
 			<div class="row">
 				<div class="col-sm-4">
-					<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
+					<input type="hidden" name="list_area_id" id="list_area_id" <cfif isDefined("field.list_area_id")>value="#field.list_area_id#"</cfif> />
 					<cfinput type="text" name="list_area_name" id="list_area_name" class="form-control" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" />
 				</div>
 				<div class="col-sm-8">
@@ -442,7 +442,7 @@
 	<div class="row" id="listTextValues">
 		<div class="col-md-12">
 			<label for="list_values" id="listTextValuesLabel" lang="es">Valores de la lista</label>
-			<textarea name="list_values" id="list_values" class="form-control" maxlength="5000" rows="5" <cfif field.field_type_id NEQ 15>disabled="disabled"</cfif>>#field.list_values#<!--- <cfif isDefined("field.list_values")> ESTE IF SE QUITA CUANDO SE AÑADA ESTA FUNCIONALIDAD PARA TODOS LOS DP----></textarea>
+			<textarea name="list_values" id="list_values" class="form-control" maxlength="5000" rows="5" <cfif field.field_type_id NEQ 15>disabled="disabled"</cfif>><cfif isDefined("field.list_values")>#field.list_values#</cfif></textarea>
 			<small class="help-block" id="listTextValuesHelp" lang="es">Introduce cada valor de la lista en una línea distinta</small>
 		</div>
 	</div>

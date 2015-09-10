@@ -21,6 +21,8 @@
 
 	<cfset typologyTableTypeId = 4>
 
+	<cfset LAST_UPDATE_TYPE_ITEM = "item">
+
 	<cfinclude template="includes/functions.cfm">
 
 	<!--- ----------------------- XML USER -------------------------------- --->
@@ -1001,7 +1003,10 @@
 					dni = <cfqueryparam value="#arguments.dni#" cfsqltype="cf_sql_varchar">,
 					hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">,
 					linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
-					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">
+					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
+					last_update_date = NOW(),
+					last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">,
+					last_update_type = <cfqueryparam value="#LAST_UPDATE_TYPE_ITEM#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.password") AND len(arguments.password) GT 0>
 						, password = <cfqueryparam value = "#arguments.password#" cfsqltype="cf_sql_varchar">
 					</cfif>
@@ -1158,7 +1163,11 @@
 			<cfif listFind(APPLICATION.languages, arguments.language) GT 0>
 
 				<cfquery name="updateUserLanguage" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET language = <cfqueryparam value="#arguments.language#" cfsqltype="cf_sql_varchar">
+					UPDATE #client_abb#_users
+					SET language = <cfqueryparam value="#arguments.language#" cfsqltype="cf_sql_varchar">,
+					last_update_date = NOW(),
+					last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">,
+					last_update_type = <cfqueryparam value="#LAST_UPDATE_TYPE_ITEM#" cfsqltype="cf_sql_varchar">
 					WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
@@ -1299,6 +1308,9 @@
 					<cfelse>
 						, notifications_web_digest_type_id = <cfqueryparam value="#arguments.notifications_web_digest_type_id#" cfsqltype="cf_sql_integer">
 					</cfif>
+					, last_update_date = NOW(),
+					, last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">,
+					, last_update_type = <cfqueryparam value="#LAST_UPDATE_TYPE_ITEM#" cfsqltype="cf_sql_varchar">
 					WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 

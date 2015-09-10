@@ -1097,6 +1097,7 @@
 				<cfinvokeargument name="row_id" value="#arguments.row_id#">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

@@ -12,6 +12,8 @@
 
 	<cfset LIST_TEXT_VALUES_DELIMITER = "#chr(13)##chr(10)#">
 
+	<cfset LAST_UPDATE_TYPE_ROW = "row">
+
 	<!---saveRow--->
 
 	<cffunction name="saveRow" output="false" returntype="numeric" access="public">
@@ -281,6 +283,18 @@
 					</cfloop>
 
 				</cfif><!---END selectFields IS true--->
+
+
+				<!--- setTableLastUpdate --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="setTableLastUpdate">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeTable" value="#tableTypeTable#">
+					<cfinvokeargument name="last_update_type" value="#LAST_UPDATE_TYPE_ROW#">
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
 
 				<cfcatch>
 
@@ -823,6 +837,7 @@
 		<cfargument name="row_id" type="numeric" required="true">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -845,6 +860,17 @@
 				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
 				WHERE row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
+
+			<!--- setTableLastUpdate --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="setTableLastUpdate">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeTable" value="#tableTypeTable#">
+				<cfinvokeargument name="last_update_type" value="#LAST_UPDATE_TYPE_ROW#">
+				<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
 
 		</cftransaction>
 

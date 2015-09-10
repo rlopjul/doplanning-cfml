@@ -4,6 +4,8 @@
 
 	<cfset component = "FieldManager">
 
+	<cfset LAST_UPDATE_TYPE_FIELD = "field">
+
 
 	<!--- ------------------------------------- createField -------------------------------------  --->
 
@@ -85,6 +87,17 @@
 					<cfinvokeargument name="item_type_id" value="#arguments.item_type_id#">
 					<cfinvokeargument name="mask_type_id" value="#arguments.mask_type_id#">
 					<cfinvokeargument name="list_values" value="#arguments.list_values#">
+				</cfinvoke>
+
+				<!--- setTableLastUpdate --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="setTableLastUpdate">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeTable" value="#tableTypeTable#">
+					<cfinvokeargument name="last_update_type" value="#LAST_UPDATE_TYPE_FIELD#">
+					<cfinvokeargument name="user_id" value="#user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 			</cftransaction>
@@ -332,6 +345,17 @@
 					</cfquery>
 
 				</cfif>
+
+				<!--- setTableLastUpdate --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="setTableLastUpdate">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeTable" value="#tableTypeTable#">
+					<cfinvokeargument name="last_update_type" value="#LAST_UPDATE_TYPE_FIELD#">
+					<cfinvokeargument name="user_id" value="#user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
 			</cftransaction>
 
@@ -641,6 +665,17 @@
 					</cfquery>
 
 				</cfif>
+
+				<!--- setTableLastUpdate --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="setTableLastUpdate">
+					<cfinvokeargument name="table_id" value="#field.table_id#">
+					<cfinvokeargument name="tableTypeTable" value="#tableTypeTable#">
+					<cfinvokeargument name="last_update_type" value="#LAST_UPDATE_TYPE_FIELD#">
+					<cfinvokeargument name="user_id" value="#user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
 			</cftransaction>
 
