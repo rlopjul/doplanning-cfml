@@ -773,13 +773,13 @@
 						<cfset acceptFileTypes = ListChangeDelims(fields.list_values, ",", "#chr(13)##chr(10)#")>
 					</cfif>
 
-					<cfif len(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
+					<cfif isNumeric(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
 						<cfset field_required_att = "">
 					</cfif>
 
 					<input type="#fields.input_type#" name="#field_name#" id="#field_name#" #field_required_att# <cfif len(fields.list_values) GT 0>accept="#acceptFileTypes#"</cfif> class="#text_input_class#" />
 
-					<cfif len(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
+					<cfif isNumeric(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
 
 						<div id="attachedFile#field_id#">
 
@@ -805,6 +805,10 @@
 							</cfif>
 						</div>
 
+					</cfif>
+
+					<cfif len(fields.list_values) GT 0>
+						<div class="help-block"><span lang="es">Formatos aceptados:</span> <span lang="es">#acceptFileTypes#</span></div>
 					</cfif>
 
 					<cfif fields.required IS true AND arguments.search_inputs IS false>
@@ -1329,6 +1333,27 @@
 
 												</cfif>
 
+
+											<cfelseif fields.field_type_id IS 18><!--- ATTACHED FILE --->
+
+												<cfif isNumeric(field_value)>
+
+													<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+														<cfinvokeargument name="file_id" value="#field_value#">
+														<cfinvokeargument name="parse_dates" value="false"/>
+														<cfinvokeargument name="published" value="false"/>
+
+														<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+														<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+													</cfinvoke>
+
+													<cfif fileQuery.recordCount GT 0>
+														<cfset field_value = fileQuery.file_name>
+													<cfelse>
+														<cfset field_value = "<i>ARCHIVO NO DISPONIBLE</i>">
+													</cfif>
+
+												</cfif>
 
 											<cfelse>
 

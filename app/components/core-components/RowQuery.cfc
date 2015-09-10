@@ -206,6 +206,7 @@
 
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- SELECT --->
 
+
 							<cfif arguments.action NEQ CREATE_ROW>
 
 								<!--- Delete old selected values --->
@@ -243,40 +244,47 @@
 								<cfthrow message="Campo lista sin valor requerido seleccionado">
 							</cfif>
 
+
 						<cfelseif fields.field_type_id IS 18><!---Attached file--->
 
-							<cfif arguments.action NEQ CREATE_ROW>
 
-								<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="deleteRowAttachedFileIfExist">
+							<cfif isDefined("arguments[field_name]") AND len(arguments[field_name]) GT 0>
+
+								<cfif arguments.action NEQ CREATE_ROW>
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="deleteRowAttachedFileIfExist">
+										<cfinvokeargument name="table_id" value="#arguments.table_id#">
+										<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+										<cfinvokeargument name="row_id" value="#arguments.row_id#">
+										<cfinvokeargument name="field_id" value="#fields.field_id#">
+										<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+										<cfinvokeargument name="client_abb" value="#client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+								</cfif>
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="uploadRowAttachedFile" returnvariable="file_id">
 									<cfinvokeargument name="table_id" value="#arguments.table_id#">
 									<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-									<cfinvokeargument name="row_id" value="#arguments.row_id#">
+									<cfinvokeargument name="row_id" value="#row_id#">
 									<cfinvokeargument name="field_id" value="#fields.field_id#">
+									<cfinvokeargument name="field_name" value="#field_name#">
 									<cfinvokeargument name="user_id" value="#arguments.user_id#">
 
-									<cfinvokeargument name="client_abb" value="#client_abb#">
-									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+									<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 								</cfinvoke>
 
+								<cfquery name="saveRow" datasource="#client_dsn#">
+									UPDATE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+									SET field_#fields.field_id# = <cfqueryparam value="#file_id#" cfsqltype="#fields.cf_sql_type#">
+									WHERE row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">;
+								</cfquery>
+
 							</cfif>
-
-							<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="uploadRowAttachedFile" returnvariable="file_id">
-								<cfinvokeargument name="table_id" value="#arguments.table_id#">
-								<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-								<cfinvokeargument name="row_id" value="#row_id#">
-								<cfinvokeargument name="field_id" value="#fields.field_id#">
-								<cfinvokeargument name="field_name" value="#field_name#">
-								<cfinvokeargument name="user_id" value="#arguments.user_id#">
-
-								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-							</cfinvoke>
-
-							<cfquery name="saveRow" datasource="#client_dsn#">
-								UPDATE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
-								SET field_#fields.field_id# = <cfqueryparam value="#file_id#" cfsqltype="#fields.cf_sql_type#">
-								WHERE row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">;
-							</cfquery>
+							
 
 						</cfif>
 

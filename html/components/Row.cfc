@@ -468,9 +468,9 @@
 
 	<!--- -------------------------------outputRowContent-------------------------------------- --->
 
-    <cffunction name="outputRowContent" returntype="void" access="public" output="true">
-    	<cfargument name="table_id" type="numeric" required="true">
-    	<cfargument name="view_id" type="numeric" required="false">
+  <cffunction name="outputRowContent" returntype="void" access="public" output="true">
+    <cfargument name="table_id" type="numeric" required="true">
+    <cfargument name="view_id" type="numeric" required="false">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="row" type="query" required="true">
@@ -563,6 +563,10 @@
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableManager" method="getTableTypeStruct" returnvariable="tableTypeStruct">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 			</cfinvoke>
 
 			<cfoutput>
@@ -840,6 +844,34 @@
 
 							</div>
 
+
+						<cfelseif fields.field_type_id IS 18><!--- Attached file --->
+
+							<div class="div_message_page_label">#field_label#
+
+								<cfif isNumeric(field_value)>
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+										<cfinvokeargument name="file_id" value="#field_value#">
+										<cfinvokeargument name="parse_dates" value="false"/>
+										<cfinvokeargument name="published" value="false"/>
+
+										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+									<cfif fileQuery.recordCount GT 0>
+										<cfset field_value_item = fileQuery.file_name>
+
+										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#field_value#&#tableTypeStruct.name#=#table_id#" onclick="return downloadFileLinked(this,event)">#field_value_item#</a>&nbsp;
+
+									<cfelse>
+										<i lang="es">ARCHIVO NO DISPONIBLE</i>
+									</cfif>
+
+								</cfif>
+
+							</div>
 
 						<cfelse>
 
