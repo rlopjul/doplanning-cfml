@@ -1950,7 +1950,8 @@
 							</cfif>
 
 							<cfif itemTypeId IS 8 AND len(objectItem.identifier) GT 0 AND isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
-								<div> <span class="text_message_page"><a href="http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#</a></span></div>
+								<cfset pubMedUrl = "http://www.ncbi.nlm.nih.gov/pubmed/"&objectItem.identifier>
+								<div> <span class="text_message_page"><a href="#pubMedUrl#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> #pubMedUrl#</a></span></div>
 							</cfif>
 
 							<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
@@ -3573,7 +3574,8 @@
 										<!---<b lang="es">Identificador:</b> <span>#itemsQuery.identifier#</span>--->
 
 											<cfif isNumeric(itemsQuery.identifier) AND isNumeric(itemsQuery.sub_type_id) AND itemsQuery.sub_type_id IS 1>
-												<div><!---<span>PubMed URL:</span>---><a href="http://www.ncbi.nlm.nih.gov/pubmed/#itemsQuery.identifier#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> http://www.ncbi.nlm.nih.gov/pubmed/#itemsQuery.identifier#</a>
+												<cfset pubMedUrl = "http://www.ncbi.nlm.nih.gov/pubmed/"&itemsQuery.identifier>
+												<div><!---<span>PubMed URL:</span>---><a href="#pubMedUrl#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> #pubMedUrl#</a>
 												</div>
 											</cfif>
 										</cfif>

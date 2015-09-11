@@ -1176,6 +1176,7 @@
 		<cfargument name="itemsQuery" type="query" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="isUserAreaResponsible" type="boolean" required="false">
 		<cfargument name="return_path" type="string" required="true">
 		<cfargument name="return_page" type="string" required="false">
 		<cfargument name="showLastUpdate" type="boolean" required="false" default="false">
@@ -1348,7 +1349,9 @@
 											<cfif tableTypeId IS 3><!---Typologies--->
 												<b lang="es">General</b> <span lang="es"><cfif itemsQuery.general IS true>Sí<cfelse>No</cfif></span><br/>
 
+												<cfif isDefined("arguments.area_id")>
 												<b lang="es">De esta área</b> <cfif itemsQuery.area_id EQ arguments.area_id>Sí<cfelse>No</cfif></span><br/>
+												</cfif>
 											</cfif>
 
 										</div>
@@ -1409,7 +1412,7 @@
 									<div class="col-sm-12">
 
 
-										<cfif tableTypeId IS 3>
+										<cfif tableTypeId IS 3 AND isDefined("arguments.area_id") AND isDefined("arguments.isUserAreaResponsible") AND arguments.isUserAreaResponsible IS true>
 											<a href="#itemTypeName#_fields.cfm?#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-primary" title="Campos"><i class="icon-wrench" style="font-size:15px;"></i> <span lang="es">Campos</span></a>
 										</cfif>
 
