@@ -39,4 +39,8 @@ ADD CONSTRAINT `hcs_users_ibfk_3`
   ON UPDATE NO ACTION;
 
 ALTER TABLE `dp_hcs`.`hcs_users`
-ADD COLUMN `start_page_type_id` INT(11) NULL AFTER `information`;
+ADD COLUMN `start_page` VARCHAR(45) NULL AFTER `information`;
+
+
+ALTER TABLE `dp_hcs`.`hcs_users`
+ADD COLUMN `start_page_locked` TINYINT(1) NOT NULL DEFAULT 0 AFTER `start_page`;

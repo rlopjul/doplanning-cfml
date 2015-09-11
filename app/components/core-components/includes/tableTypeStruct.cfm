@@ -1,4 +1,4 @@
-<!---Este include NO se debe usar directamente, se debe usar sólo el método getAreaItemTypes del componente AreaItemManager--->
+<!---Este include NO se debe usar directamente, se debe usar sólo el método getAreaItemTypes del componente TableManager--->
 
 <!---lists--->
 <cfset structInsert(tableTypesStruct, 1, {id=1, position=1, name="list", namePlural="lists", table="lists", label="Lista", labelPlural="Listas", gender="female", itemTypeId=11, viewTypeId=14, attachedFileTypeId=5})>

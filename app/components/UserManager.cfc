@@ -612,8 +612,9 @@
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
-		<cfargument name="linkedin_url" type="string" required="false">
-		<cfargument name="twitter_url" type="string" required="false">
+		<cfargument name="linkedin_url" type="string" required="true">
+		<cfargument name="twitter_url" type="string" required="true">
+		<cfargument name="start_page" type="string" required="true">
 		<cfargument name="information" type="string" required="true">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
@@ -762,7 +763,8 @@
 					internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">,
 					enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">,
 					linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
-					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">
+					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
+					start_page = <cfqueryparam value="#arguments.start_page#" cfsqltype="cf_sql_varchar">
 					<cfif APPLICATION.moduleLdapUsers EQ true>
 						<cfif isDefined("arguments.login_ldap") AND len(arguments.login_ldap) GT 0>
 						, login_ldap = <cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
@@ -922,8 +924,9 @@
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
-		<cfargument name="linkedin_url" type="string" required="false">
-		<cfargument name="twitter_url" type="string" required="false">
+		<cfargument name="linkedin_url" type="string" required="true">
+		<cfargument name="twitter_url" type="string" required="true">
+		<cfargument name="start_page" type="string" required="true">
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
@@ -1004,6 +1007,7 @@
 					hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">,
 					linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
 					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
+					start_page = <cfqueryparam value="#arguments.start_page#" cfsqltype="cf_sql_varchar">,
 					last_update_date = NOW(),
 					last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">,
 					last_update_type = <cfqueryparam value="#LAST_UPDATE_TYPE_ITEM#" cfsqltype="cf_sql_varchar">
