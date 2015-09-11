@@ -1,5 +1,5 @@
 <div class="row">
-	
+
 	<div><!--- class="col-sm-12" aquí no se mete col-sm-12 aposta porque añade un padding en las pantallas muy pequeñas --->
 
 		<!---<nav class="navbar-default navbar-fixed-top" style="top:80px;padding-top:20px;">
@@ -43,7 +43,7 @@
 			<cfset bar_bg = "##DDDDDD">
 
 			<cfsavecontent variable="page_head_content">
-		  			
+
 				<cfif find("last_items.cfm", CGI.SCRIPT_NAME) GT 0>
 
 					<cfset bar_bg = "##E86C66">
@@ -59,12 +59,12 @@
 						</div>
 
 					</div>
-					
+
 
 				<cfelseif find("tree.cfm", CGI.SCRIPT_NAME) GT 0>
 
 					<cfset bar_bg = "##2F6380">
-					
+
 					<div class="#head_col_1_class#">
 						<img src="#APPLICATION.htmlPath#/assets/v3/icons/tree.png" alt="Árbol" lang="es" aria-hidden="true" />
 					</div>
@@ -147,7 +147,7 @@
 									<h1 style="color:##009ED2;">#objectFile.name#</h1>
 								</div>
 								<div class="col-sm-2">
-									<a href="area_items.cfm?area=#area_id####itemTypeName##objectFile.id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> <span lang="es">Ver en área</span></a></h1>
+									<a href="area_items.cfm?area=#area_id####itemTypeName##objectFile.id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> <span lang="es">Ver en área</span></a>
 								</div>
 							</div>
 
@@ -202,7 +202,7 @@
 						</cfif>--->
 
 
-						<img src="#APPLICATION.htmlPath#/assets/v3/#area_image#" alt="Area" aria-hidden="true" style="display:inline"> 
+						<img src="#APPLICATION.htmlPath#/assets/v3/#area_image#" alt="Area" aria-hidden="true" style="display:inline">
 
 
 					</div>
@@ -225,7 +225,7 @@
 								</cfif>
 
 							</h1>
-							
+
 						</div>
 
 					</div>
@@ -256,7 +256,7 @@
 
 					<div class="#head_col_1_class#">
 						<!---<div style="width:56px;height:54px;background:##82D0CA"></div>--->
-						<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_preferences.png" alt="Usuario" lang="es" aria-hidden="true" />	
+						<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_preferences.png" alt="Usuario" lang="es" aria-hidden="true" />
 					</div>
 
 					<div class="#head_col_2_class#">
@@ -268,7 +268,7 @@
 								<h1 style="color:##82D0CA" lang="es">Preferencias de notificaciones</h1>
 							<cfelse><!--- preferences.cfm --->
 								<h1 style="color:##82D0CA" lang="es">Preferencias </h1>
-							</cfif> 
+							</cfif>
 						</div>
 
 					</div>
@@ -284,7 +284,7 @@
 						<div class="page-header" style="border-bottom-color:##009ED2">
 
 							<h1 style="color:##009ED2" lang="es">Usuario</h1>
-							
+
 						</div>
 
 					</div>
@@ -299,7 +299,7 @@
 				<div class="row">
 
 					<div class="col-sm-12">
-						
+
 						 <div class="container">
 
 						 	<div class="row">
@@ -309,7 +309,7 @@
 						 			<span class="visible-xs" style="<cfif bar_bg EQ '##DDDDDD'>color:##777777<cfelse>color:##FFF</cfif>;">#SESSION.client_app_title#</span>
 
 						 			<span class="hidden-xs" style="<cfif bar_bg EQ '##DDDDDD'>color:##777777<cfelse>color:##FFF</cfif>;">#SESSION.client_app_title#</span>
-						 			
+
 						 		</div>
 
 						 	</div>

@@ -20,7 +20,7 @@
 <script>
 
 	function confirmDeleteView() {
-	
+
 		var message_delete = "Si ELIMINA la vista, dejará de estar disponible en el área correspondiente. ¿Seguro que desea eliminar DEFINITIVAMENTE la vista?";
 		return confirm(message_delete);
 	}
@@ -43,19 +43,19 @@
 	}
 
 	function openAreaSelector(){
-		
+
 		<cfif APPLICATION.publicationScope IS true AND isNumeric(table.publication_scope_id)>
 		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?scope=#table.publication_scope_id#');
 		<cfelse>
 		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
 		</cfif>
-		
+
 	}
 
 	function setSelectedArea(areaId, areaName) {
 
 		var curAreaId = "#area_id#";
-		
+
 		if(curAreaId != areaId) {
 			$("##area_id").val(areaId);
 			$("##area_name").val(areaName);
@@ -68,8 +68,10 @@
 
 	$(document).ready(function(){
 
-		$("##dataTable").tablesorter({ 
-			widgets: ['zebra'],
+		$("##dataTable").tablesorter({
+			widgets: ['zebra','uitheme'],
+			theme : "bootstrap",
+			headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
 			headers: {
 			      0: { sorter: false },
 			      1: { sorter: false },
@@ -82,7 +84,7 @@
 			  format: 'dd-mm-yyyy',
 			  weekStart: 1,
 			  language: 'es',
-			  todayBtn: 'linked', 
+			  todayBtn: 'linked',
 			  autoclose: true
 		});
 
@@ -163,7 +165,7 @@
 			<cfinput type="text" name="title" id="title" value="#view.title#" maxlength="100" required="true" message="Nombre requerido" class="form-control"/>
 		</div>
 	</div>
-	
+
 	<cfif isNumeric(view.area_id)>
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="viewArea">
 			<cfinvokeargument name="area_id" value="#view.area_id#">
@@ -192,7 +194,7 @@
 			<cfset publication_minute = view.publication_minute>
 
 		<cfelse>
-			
+
 			<cfset publication_hour = timeFormat(view.publication_date, "HH")>
 			<cfset publication_minute = timeFormat(view.publication_date, "mm")>
 
@@ -206,9 +208,9 @@
 			<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
 			<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#view.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
 		</div>
-					
+
 		<div class="col-xs-6">
-			<!--- 
+			<!---
 				<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
 							<div class="input-group" style="width:170px">
 								<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
@@ -235,12 +237,12 @@
 									</cfif>
 								</select>
 							</div> --->
-					
+
 		</div>
-		
+
 		<input type="hidden" name="publication_hour" value="00"/>
 		<input type="hidden" name="publication_minute" value="00"/>
-		
+
 	</div>
 
 	<div class="row">
@@ -252,12 +254,12 @@
 	<cfif APPLICATION.publicationValidation IS true>
 
 		<!--- isUserAreaResponsible --->
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="isUserTableAreaResponsible">				
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="isUserTableAreaResponsible">
 			<cfinvokeargument name="area_id" value="#table.area_id#">
 		</cfinvoke>
 
 		<cfif isUserTableAreaResponsible IS true>
-			
+
 			<div class="row">
 				<div class="col-xs-12 col-sm-8">
 					<div class="checkbox">
@@ -318,13 +320,13 @@
 
 					<cfset queryRecordCount = fields.recordCount>
 
-					<!--- 
+					<!---
 						creation_date
 						last_update_date
 						insert_user
-						update_user 
+						update_user
 						--->
-					
+
 					<cfif page_type IS 2>
 
 						<!--- <cfset maxPosition = 1> --->
@@ -332,11 +334,11 @@
 
 						<cfloop query="fields">
 							<cfset arrayAppend(arrayPositions, fields.view_position)>
-							<!--- 
+							<!---
 							<cfif fields.view_position GT maxPosition>
-								<cfset maxPosition = fields.view_position>							
+								<cfset maxPosition = fields.view_position>
 							</cfif> --->
-							
+
 						</cfloop>
 
 						<cfset queryAddColumn(fields, "new_position", "integer", arrayPositions)>
@@ -391,9 +393,9 @@
 						</cfif>
 
 						<cfquery dbtype="query" name="fieldsOrdered">
-							SELECT * 
+							SELECT *
 							FROM fields
-							ORDER BY view_id DESC, new_position ASC; 
+							ORDER BY view_id DESC, new_position ASC;
 						</cfquery>
 
 					<cfelse>
@@ -401,12 +403,9 @@
 						<cfset fieldsOrdered = fields>
 
 					</cfif>
-	
+
 
 					<cfloop query="fieldsOrdered">
-
-						<!---<cfset rpage = "#tableTypeName#_fieldsOrdered.cfm?#tableTypeName#=#table_id#">
-						<cfset field_page_url = "#tableTypeName#_field.cfm?field=#fieldsOrdered.field_id#&return_page=#URLEncodedFormat(rpage)#">--->
 
 						<cfset fieldSelected = false>
 						<cfif page_type IS 2 AND isNumeric(fieldsOrdered.view_id)>
@@ -421,7 +420,7 @@
 								<cfelse>
 									<input type="checkbox" name="include_#fieldsOrdered.field_id#" id="field_#fieldsOrdered.field_id#" value="true" <cfif fieldSelected IS true>checked="checked"</cfif> onClick="stopPropagation(event);" />
 								</cfif>
-								
+
 							</td>
 							<td>
 								<span class="field_label">#fieldsOrdered.label#</span>
@@ -429,7 +428,7 @@
 							<td>
 								#fieldsOrdered.name#
 							</td>
-							<td><!--- <cfif page_type IS 2>#fieldsOrdered.new_position#</cfif> --->
+							<td>
 
 								<cfif isNumeric(fieldsOrdered.field_id)>
 									<input type="hidden" name="field_#fieldsOrdered.field_id#_position" value="#fieldsOrdered.currentRow#" class="field_position"/>
@@ -464,7 +463,7 @@
 		<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 		<!---<a href="area_items.cfm?area=#area_id#" class="btn btn-default">Cancelar</a>--->
 	</div>
-	
+
 </cfform>
 </cfoutput>
 </div>

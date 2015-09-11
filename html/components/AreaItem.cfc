@@ -3932,10 +3932,10 @@
 
 			 	<div class="row row_page_head_title">
 					<div class="col-sm-10">
-						<h1 style="color:##009ED2;">#arguments.item.title#
+						<h1 style="color:##009ED2;">#arguments.item.title#</h1>
 					</div>
 					<div class="col-sm-2">
-						<a href="area_items.cfm?area=#area_id####itemTypeName##arguments.item_id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> <span lang="es">Ver en área</span></a></h1>
+						<a href="area_items.cfm?area=#area_id####itemTypeName##arguments.item_id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> <span lang="es">Ver en área</span></a>
 					</div>
 				</div>
 
