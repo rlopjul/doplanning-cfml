@@ -74,13 +74,13 @@
 			<cfset table_edit_permission = true>
 
 			<cfif is_user_area_responsible IS false>
-				
+
 				<cfif tableTypeId IS 1 AND APPLICATION.moduleListsWithPermissions IS true><!---IS List and list permissions is enabled--->
 
 					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="isUserInTable" returnvariable="isUserInTable">
 						<cfinvokeargument name="table_id" value="#table_id#">
 						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-					</cfinvoke>	
+					</cfinvoke>
 
 					<cfif isUserInTable IS false>
 						<cfset table_edit_permission = false>
@@ -89,8 +89,8 @@
 				</cfif>
 
 			</cfif>
-			
-			
+
+
 			<div class="btn-toolbar" style="padding-right:5px;">
 
 				<!---<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:20px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>--->
@@ -98,7 +98,7 @@
 				<!---<div class="btn-group">
 					<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Área" lang="es"> <img src="/html/assets/icons_dp/area_small.png" style="height:17px;" alt="Área">&nbsp;<span lang="es">Área</span></a>
 				</div>--->
-				
+
 
 				<cfif ( is_user_area_responsible OR table_edit_permission IS true ) AND objectArea.read_only IS false>
 					<div class="btn-group">
@@ -110,18 +110,18 @@
 
 				<cfelse>
 					<div class="btn-group">
-				</cfif>	
-				
+				</cfif>
+
 					<a href="#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down" style="font-size:15px;"></i> <span lang="es">Exportar</span></a>
 
 				</div>
 
 				<!---<span class="divider">&nbsp;</span>--->
-				
+
 
 
 				<cfif is_user_area_responsible AND objectArea.read_only IS false>
-					
+
 					<div class="btn-group">
 						<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos</span></a>
 					</div>
@@ -152,7 +152,7 @@
 
 				<!---<script>
 
-					$(document).ready(function() { 
+					$(document).ready(function() {
 
 						$('##dataTablePopover#tableTypeId#_#table_id#').popover({
 						      placement: 'bottom',
@@ -168,14 +168,14 @@
 					});
 
 				</script>--->
-				
+
 
 				<cfif is_user_area_responsible OR objectItem.user_in_charge EQ SESSION.user_id>
 
 					<cfif itemTypeId IS 11 OR itemTypeId IS 12>
 
 						<cfif is_user_area_responsible>
-							
+
 							<div class="btn-group">
 								<a href="#itemTypeName#_views.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-default btn-sm" title="Vistas" lang="es"><i class="icon-screenshot"></i> <span lang="es">Vistas</span></a>
 							</div>
@@ -183,7 +183,7 @@
 						</cfif>
 
 						<cfif objectArea.read_only IS false>
-							
+
 							<div class="btn-group">
 								<button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
 									<span lang="es">Más</span>
@@ -211,18 +211,18 @@
 
 										<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##itemTypeName#_rows.cfm?#itemTypeName#=#table_id#&area=#area_id#")>
 										<cfset url_return_path_delete = "&return_page="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#")>
-										
+
 										<li><a href="#tableTypeName#_modify.cfm?#tableTypeName#=#table_id#&area=#area_id##url_return_page#" onclick="openUrl('#tableTypeName#_modify.cfm?#tableTypeName#=#table_id#&area=#area_id##url_return_page#', 'itemIframe', event)"><i class="icon-edit icon-white"></i> <span lang="es">Modificar #itemTypeNameEs#</span></a></li>
 
 										<!--- publication --->
 										<cfif objectItem.publication_validated IS false>
 
 											<cfif SESSION.client_abb NEQ "hcs" OR objectItem.publication_scope_id NEQ 1><!---En el DP HCS el ámbito de publicación 1 es DoPlanning, que no requiere aprobación de publicación--->
-												 <li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación en web');" title="Permitir la publicación en web"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a></li>			
+												 <li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación en web');" title="Permitir la publicación en web"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a></li>
 											</cfif>
 
 										<cfelse>
-											<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Impedir la publicación en web"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a></li>					
+											<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Impedir la publicación en web"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a></li>
 										</cfif>
 
 										<!--- getClient --->
@@ -239,16 +239,16 @@
 											<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_path_delete#" onclick="return confirmAction('eliminar');" title="Eliminar"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a></li>
 
 										</cfif>
-										
+
 
 									</cfif>
 
 									<cfif objectItem.user_in_charge EQ SESSION.user_id OR is_user_area_responsible>
-										
+
 										<li><a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" onclick="openUrl('item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#', 'itemIframe', event)"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a></li>
 
 										<cfif tableTypeId IS NOT 3 AND APPLICATION.changeElementsArea IS true>
-											<li><a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" onclick="openUrl('item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#', 'itemIframe', event)"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a></li>					
+											<li><a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" onclick="openUrl('item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#', 'itemIframe', event)"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a></li>
 										</cfif>
 
 									</cfif>
@@ -287,7 +287,7 @@
 				<div class="well">
 					<p lang="es">Selecciona las columnas que quieres ver</p>
 				  	<ul class="list-inline" id="columnSelector#tableTypeId#_#table_id#">
-				    
+
 				  	</ul>
 				</div>
 			</div>
@@ -337,18 +337,15 @@
 		</div><!--- END container-fluid --->
 
 	<cfelse>
-	
+
 		<script type="text/javascript">
 			openUrlHtml2('empty.cfm','itemIframe');
-		</script>				
+		</script>
 
 		<div class="div_text_result"><span lang="es">No hay datos introducidos.</span></div>
 
 	</cfif>
-	
+
 <!---</div>--->
 
 </cfoutput>
-
-
-	

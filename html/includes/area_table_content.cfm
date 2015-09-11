@@ -1,4 +1,4 @@
-<!--- 
+<!---
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 </cfoutput> --->
@@ -53,18 +53,18 @@
 	$(document).ready( function(){
 		$('.dropdown-toggle').dropdown();
 		$(".div_message_page_description a").attr('target','_blank');
-	}); 
-	
+	});
+
 	<cfif tableTypeId IS 3><!--- Typology --->
 	<cfoutput>
 	function confirmSetDefaultTable() {
-	
+
 		var message_confirm = "¿Seguro que desea establecer esta #tableTypeNameEs# como #tableTypeNameEs# por defecto del área?";
 		return confirm(message_confirm);
 	}
 
 	function confirmRemoveDefaultTable() {
-	
+
 		var message_confirm = "¿Seguro que desea quitar esta #tableTypeNameEs# como #tableTypeNameEs# por defecto del área?";
 		return confirm(message_confirm);
 	}
@@ -89,7 +89,7 @@
 <div class="div_elements_menu"><!---div_elements_menu--->
 
 	<div class="btn-toolbar" role="toolbar">
-	
+
 	<cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
 		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##URL.return_page#")>
 	<cfelse>
@@ -97,15 +97,15 @@
 	</cfif>
 
 	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path#area_items.cfm?area=#area_id#&#itemTypeName#=#table_id#")>
-	
+
 	<!---is_user_table_area_responsible--->
 	<cfif area_id IS objectItem.area_id>
-		
+
 		<cfset is_user_table_area_responsible = is_user_area_responsible>
 
 	<cfelse>
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_table_area_responsible">				
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_table_area_responsible">
 			<cfinvokeargument name="area_id" value="#objectItem.area_id#">
 		</cfinvoke>
 
@@ -122,7 +122,7 @@
 
 	<cfif objectArea.read_only IS false>
 
-		
+
 		<cfif is_user_table_area_responsible><!--- Table Area Responsible --->
 
 			<div class="btn-group">
@@ -137,17 +137,17 @@
 					<cfif SESSION.client_abb NEQ "hcs" OR objectItem.publication_scope_id NEQ 1><!---En el DP HCS el ámbito de publicación 1 es DoPlanning, que no requiere aprobación de publicación--->
 						<div class="btn-group">
 							<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=true#url_return_path#" onclick="return confirmReversibleAction('Permitir la publicación en web');" title="Permitir la publicación en web" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar publicación</span></a>
-						<div>					
+						</div>					
 					</cfif>
 
 				<cfelse>
 					<div class="btn-group">
 						<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=changeItemPublicationValidation&item_id=#table_id#&itemTypeId=#itemTypeId#&validate=false#url_return_path#" onclick="return confirmReversibleAction('Impedir la publicación en web');" title="Impedir la publicación en web" class="btn btn-warning btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Desaprobar publicación</span></a>
-					</div>				
+					</div>
 				</cfif>
-				
+
 			</cfif>
-			
+
 
 			<!--- getClient --->
 			<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
@@ -161,13 +161,13 @@
 			<cfelse>
 				<div class="btn-group">
 					<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteItem&item_id=#table_id#&area_id=#area_id#&itemTypeId=#itemTypeId##url_return_page#" onclick="return confirmAction('eliminar');" title="Eliminar #tableTypeNameEs#" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
-				</div>				
+				</div>
 			</cfif>
-			
+
 		</cfif>
 
 		<cfif objectItem.user_in_charge EQ SESSION.user_id OR is_user_table_area_responsible>
-			
+
 			<div class="btn-group">
 				<a href="item_change_user.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-user"></i> <span lang="es">Cambiar propietario</span></a>
 			</div>
@@ -175,16 +175,16 @@
 			<cfif tableTypeId IS NOT 3 AND APPLICATION.changeElementsArea IS true>
 				<div class="btn-group">
 					<a href="item_change_area.cfm?item=#table_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>
-				</div>					
+				</div>
 			</cfif>
 
 		</cfif>
 
 		<cfif is_user_area_responsible><!--- Area Responsible --->
-			
+
 			<cfif tableTypeId IS 3><!--- Typology --->
 
-				<cfset default_table_id = objectArea.default_typology_id> 
+				<cfset default_table_id = objectArea.default_typology_id>
 				<cfif default_table_id IS table_id>
 					<div class="btn-group">
 						<a href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=removeAreaDefaultTable&table_id=#table_id#&area_id=#area_id#&tableTypeId=#tableTypeId##url_return_page#" onclick="return confirmRemoveDefaultTable();" title="Definir #tableTypeNameEs# por defecto para este área" class="btn btn-sm btn-warning"><i class="icon-pushpin icon-rotate-270"></i> <span lang="es">Quitar #tableTypeNameEs# por defecto</span></a>
@@ -214,14 +214,14 @@
 				</cfinvoke>
 				<cfif objectFile.file_types_conversion.recordCount GT 0>
 					<div class="div_element_menu" style="width:130px;">
-		
+
 						<cfset form_action = "#tableTypeName#_file_convert.cfm">
-					
+
 						<form name="convert_file" id="convert_file" method="get" action="#form_action#" onsubmit="showHideDiv('convert_file_loading');">
 							<input type="hidden" name="file" value="#objectFile.id#" />
-							
+
 							<input type="hidden" name="#tableTypeName#" value="#objectItem.id#" />
-							
+
 							<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/v3/icons/view_file.gif" title="Visualizar el archivo"/></div>
 							<!---<div class="div_text_menus"><a href="##" onclick="showHideDiv('convert_file_loading');submitForm('convert_file');" class="text_menus" lang="es">Ver adjunto en </a>
 							<select name="file_type" style="width:90px;" onchange="showHideDiv('convert_file_loading');submitForm('convert_file');">
@@ -232,7 +232,7 @@
 							</div>--->
 						</form>
 					</div>
-				</cfif> 
+				</cfif>
 			</cfif>
 		</div>
 	</cfif>
@@ -268,7 +268,7 @@
 			<a href="#APPLICATION.htmlPath#/#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i> <span lang="es">Ampliar</span></a>
 		</div>
 	</cfif>
-	
+
 	</div><!--- END btn-toolbar --->
 </div><!---END div_elements_menu--->
 </cfoutput>
