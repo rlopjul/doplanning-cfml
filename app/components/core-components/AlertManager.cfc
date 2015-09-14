@@ -1452,7 +1452,7 @@
 
 		</cfif>
 
-        <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
+    <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
 			<!---<cfinvokeargument name="request" value="#getUsersRequest#"/>--->
 			<cfinvokeargument name="area_id" value="#area_id#">
 			<cfinvokeargument name="notify_new_#tableTypeName#_row" value="true">

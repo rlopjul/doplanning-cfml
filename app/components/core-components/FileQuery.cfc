@@ -82,13 +82,8 @@
 				, IF(files.reviser_user IS NOT NULL, CONCAT_WS(' ', users_reviser.family_name, users_reviser.name), '' ) AS reviser_user_full_name
 				, IF(files.approver_user IS NOT NULL, CONCAT_WS(' ', users_approver.family_name, users_approver.name), '' ) AS approver_user_full_name
 				FROM #client_abb#_#fileTypeTable# AS files
-				INNER JOIN #client_abb#_users AS users
-				<cfif isDefined("arguments.file_public_id")>
-					ON files.file_public_id = <cfqueryparam value="#arguments.file_public_id#" cfsqltype="cf_sql_varchar">
-				<cfelse>
-					ON files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
-				</cfif>
-				AND files.user_in_charge = users.id
+				LEFT JOIN #client_abb#_users AS users
+				ON files.user_in_charge = users.id
 				<cfif arguments.ignore_status IS false>
 					AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				</cfif>
@@ -128,7 +123,14 @@
 
 				<cfif APPLICATION.publicationScope IS true>
 					LEFT JOIN #client_abb#_scopes AS scopes ON files.publication_scope_id = scopes.scope_id
-				</cfif>;
+				</cfif>
+				WHERE
+				<cfif isDefined("arguments.file_public_id")>
+					files.file_public_id = <cfqueryparam value="#arguments.file_public_id#" cfsqltype="cf_sql_varchar">
+				<cfelse>
+					files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				;
 			</cfquery>
 
 		<cfelse><!---AREA IMAGES--->
