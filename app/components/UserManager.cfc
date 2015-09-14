@@ -1053,7 +1053,7 @@
 				<!--- setUserTypology --->
 				<cfif isDefined("arguments.typology_id")>
 
-					<cfif userQuery.typology_id NEQ arguments.typology_id AND isNumeric(userQuery.typology_row_id)><!---File typology was changed--->
+					<cfif userQuery.typology_id NEQ arguments.typology_id AND isNumeric(userQuery.typology_row_id)><!---User typology was changed--->
 
 						<!--- Delete old row --->
 						<cfinvoke component="RowManager" method="deleteRow" returnvariable="deleteRowResponse">

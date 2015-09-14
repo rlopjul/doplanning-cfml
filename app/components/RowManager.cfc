@@ -963,12 +963,12 @@
 
 		<cfelseif arguments.tableTypeId IS 4><!---User typology--->
 
-			<cfif SESSION.client_administrator NEQ user_id>
+			<cfif SESSION.client_administrator NEQ SESSION.user_id>
 
 				<cfif isDefined("arguments.row_id")>
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
-						<cfinvokeargument name="user_id" value="#user_id#">
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 						<cfinvokeargument name="parse_dates" value="false">
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1106,6 +1106,7 @@
 					<cfinvokeargument name="table_id" value="#table_id#">
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 					<cfinvokeargument name="table" value="#tableQuery#">
+					<cfinvokeargument name="row_id" value="#arguments.row_id#">
 				</cfinvoke>
 				<cfif canUserModifyRow IS false>
 					<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">

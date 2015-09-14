@@ -265,7 +265,7 @@ page_types
 						<input type="text" name="start_page_label" class="form-control" readonly value="Página personalizada" />
 
 					<cfelse>
-						<select name="start_page" id="start_page" class="form-control" />
+						<select name="start_page" id="start_page" class="form-control">
 
 							<cfset startPageExists = false>
 							<cfset startPageSelected = false>
@@ -527,9 +527,13 @@ page_types
 
 				</script>
 
-				<cfif typologies.recordCount IS 1 OR page_type IS 2>
+				<cfif typologies.recordCount IS 1>
 
 					<input type="hidden" name="typology_id" id="typology_id" value="#typologies.id#">
+
+				<cfelseif page_type IS 2>
+
+					<input type="hidden" name="typology_id" id="typology_id" value="#selected_typology_id#">
 
 				<cfelse>
 
