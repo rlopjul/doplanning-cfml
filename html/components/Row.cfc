@@ -479,7 +479,7 @@
 
 		<cfset var method = "outputRowContent">
 
-		<!---<cftry>--->
+		<cftry>
 
 			<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
@@ -735,10 +735,6 @@
 
 									<cfset field_value = HTMLEditFormat(field_value)>
 
-									<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="insertBR" returnvariable="field_value">
-										<cfinvokeargument name="string" value="#field_value#">
-									</cfinvoke>--->
-
 									<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
 										<cfinvokeargument name="string" value="#field_value#">
 									</cfinvoke>
@@ -931,7 +927,7 @@
 
 
 
-			<!---<cfcatch>
+			<cfcatch>
 				<cfoutput>
 					<div class="alert alert-danger">
 						<i class="icon-warning-sign"></i> <span lang="es">#cfcatch.message#</span>
@@ -940,7 +936,7 @@
 				<cfinclude template="includes/errorHandlerNoRedirect.cfm">
 			</cfcatch>
 
-		</cftry>	--->
+		</cftry>
 
 	</cffunction>
 
