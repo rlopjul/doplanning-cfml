@@ -1146,8 +1146,10 @@ fieldset[disabled] .btn-warning.active {
 	background-color:#FFFFFF;
 }
 .more_info_img {
-	float:left; margin-right:3px; margin-top:12px; cursor:pointer;
-	font-size: 14px;
+	float:left; margin-right:3px; margin-top:6px; cursor:pointer;
+	/*font-size: 14px;*/
+	font-size:22px;
+	color:#009ed2;
 	/*color: #FFFFFF; Esto hay que añadirlo para el HCS*/
 }
 /*
