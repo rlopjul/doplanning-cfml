@@ -81,6 +81,7 @@
 		<cfargument name="title" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="link" type="string" required="false" default="">
+		<cfargument name="link_target" type="string" required="false" default="">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
@@ -105,6 +106,7 @@
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				<cfinvokeargument name="title" value="#arguments.title#">
 				<cfinvokeargument name="link" value="#arguments.link#">
+				<cfinvokeargument name="link_target" value="#arguments.link_target#">
 				<cfinvokeargument name="description" value="#arguments.description#">
 				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
 				<cfinvokeargument name="general" value="#arguments.general#">

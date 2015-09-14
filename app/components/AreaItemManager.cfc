@@ -534,8 +534,6 @@
     <cfargument name="parent_id" type="numeric" required="true">
   	<cfargument name="parent_kind" type="string" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
-    <cfargument name="Filedata" type="any" required="false" default="">
-		<cfargument name="imagedata" type="any" required="false" default="">
 		<cfargument name="notify_by_sms" type="boolean" required="false">
 		<cfargument name="post_to_twitter" type="boolean" required="false">
 		<cfargument name="creation_date" type="string" required="false">
@@ -983,6 +981,27 @@
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="status" type="string" required="false" default="ok"><!---pending/ok--->
 
+		<cfargument name="title" type="string" required="true">
+		<cfargument name="link" type="string" required="false">
+		<cfargument name="link_target" type="string" required="false">
+		<cfargument name="description" type="string" required="false" default="">
+		<cfargument name="notify_by_sms" type="boolean" required="false">
+		<cfargument name="creation_date" type="string" required="false">
+		<cfargument name="start_date" type="string" required="false">
+		<cfargument name="end_date" type="string" required="false">
+		<cfargument name="start_hour" type="numeric" required="false">
+		<cfargument name="end_hour" type="numeric" required="false">
+		<cfargument name="place" type="string" required="false">
+		<cfargument name="recipient_user" type="numeric" required="false">
+		<cfargument name="estimated_value" type="numeric" required="false">
+		<cfargument name="real_value" type="numeric" required="false">
+		<cfargument name="done" type="boolean" required="no" default="false">
+		<cfargument name="display_type_id" type="numeric" required="false">
+		<cfargument name="iframe_url" type="string" required="false">
+		<cfargument name="iframe_display_type_id" type="numeric" required="false">
+		<cfargument name="identifier" type="string" required="false">
+		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="general" type="boolean" required="false" default="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
@@ -993,6 +1012,7 @@
 		<cfargument name="unlock" type="boolean" required="false" default="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
+
 
 		<cfset var method = "updateItem">
 
@@ -2016,7 +2036,7 @@
 
 	</cffunction>
 	<!---  ------------------------------------------------------------------------ --->
-	
+
 
 
 	<!---  -------------------GET ITEM ROOT----------------------   --->
