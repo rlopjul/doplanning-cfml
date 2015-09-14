@@ -49,4 +49,4 @@
 
 <cfset structInsert(startPageTypesStruct, 22, {id=22, position=22, page="preferences_alerts.cfm", label="Preferencias de notificaciones"})>
 
-<cfset structInsert(startPageTypesStruct, 23, {id=23, position=23, page="admin/main.cfm", label="Administración"})>
+<cfset structInsert(startPageTypesStruct, 23, {id=23, position=23, page="admin/", label="Administración"})>

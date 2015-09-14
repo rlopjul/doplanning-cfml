@@ -532,7 +532,12 @@
 					<div class="btn-toolbar">
 
 						<div class="btn-group">
-							<a href="../main.cfm?abb=#SESSION.client_abb#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
+							<cfif len(objectUser.start_page) GT 0 AND objectUser.start_page NEQ "admin/">
+								<cfset start_page = "#APPLICATION.path#/html/#objectUser.start_page#">
+							<cfelse>
+								<cfset start_page = "#APPLICATION.path#/html/last_items.cfm?abb=#SESSION.client_abb#">
+							</cfif>
+							<a href="#start_page#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
 						</div>
 
 						<div class="btn-group">
