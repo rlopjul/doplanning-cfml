@@ -2025,7 +2025,7 @@
 
 			<cfif isDate(arguments.userLastDigestDate)>
 
-				<cfset lastDigestDate = getAllUsersQuery.notifications_last_digest_date>
+				<cfset lastDigestDate = arguments.userLastDigestDate>
 
 			<cfelse>
 
@@ -2074,6 +2074,8 @@
 						<cfset sendNotifications = true>
 					</cfif>
 
+					<cfset currentDigestDate = dateAdd("d", -1, currentDigestDate)>
+
 				</cfcase>
 
 				<cfcase value="3"><!--- monthly --->
@@ -2081,6 +2083,8 @@
 					<cfif daysBetweenLastDigest GT 29>
 						<cfset sendNotifications = true>
 					</cfif>
+
+					<cfset currentDigestDate = dateAdd("d", -1, currentDigestDate)>
 
 				</cfcase>
 
@@ -2107,6 +2111,7 @@
 		<cfset var userAccessResult = "">
 		<cfset var subject = "">
 		<cfset var headContent = "">
+		<cfset var footContent = "">
 		<cfset var userAreasIds = "">
 
 		<cftry>
@@ -2162,6 +2167,16 @@
 							<cfset var curUserEmail = getAllUsersQuery.email>
 							<cfset var curUserFullName = "#getAllUsersQuery.family_name# #getAllUsersQuery.name#">
 
+							<!--- getHeadContent --->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="headContent">
+								<cfinvokeargument name="language" value="#getAllUsersQuery.language#">
+								<cfinvokeargument name="client_abb" value="#client_abb#"/>
+							</cfinvoke>
+
+							<cfinvoke component="AlertManager" method="getDiaryAlertFootContent" returnvariable="footContent">
+								<cfinvokeargument name="language" value="#getAllUsersQuery.language#">
+							</cfinvoke>
+
 
 							<!--- ------------------------------------------ DP NOTIFICATIONS ------------------------------------------------ --->
 
@@ -2181,16 +2196,6 @@
 										<cfset var currentDigestDateDPFormatted = DateFormat(currentDigestDateDP, APPLICATION.dateFormat)>
 										<cfset var lastDigestDateDPFormatted = DateFormat(lastDigestDateDP, APPLICATION.dateFormat)>
 										<cfset var alertContentDP = "">
-
-										<!--- getHeadContent --->
-										<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="headContent">
-											<cfinvokeargument name="language" value="#getAllUsersQuery.language#">
-											<cfinvokeargument name="client_abb" value="#client_abb#"/>
-										</cfinvoke>
-
-										<cfinvoke component="AlertManager" method="getDiaryAlertFootContent" returnvariable="footContent">
-											<cfinvokeargument name="language" value="#getAllUsersQuery.language#">
-										</cfinvoke>
 
 										<!--- Get DoPlanning Alerts --->
 										<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getUserDiaryAlert" returnvariable="userDiaryAlertDP">
@@ -2246,6 +2251,14 @@
 											</cfoutput>--->
 
 										</cfif>
+
+
+										<cfquery name="updateUserLastDPNotificationsDate" datasource="#client_dsn#">
+											UPDATE `#client_abb#_users` AS users
+											SET notifications_last_digest_date = NOW()
+											WHERE users.id = <cfqueryparam value="#curUserId#" cfsqltype="cf_sql_integer">;
+										</cfquery>
+
 
 									</cfif><!--- END sendDPNotifications IS true --->
 
@@ -2349,7 +2362,7 @@
 											<cfif len(alertContentWeb) GT 0>
 
 												<cfif lastDigestDateWebFormatted NEQ currentDigestDateWebFormatted>
-													<cfset subjectWeb = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary_web&" #lastDigestDateWebFormatted# - #currentDigestDateFormatted#">
+													<cfset subjectWeb = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary_web&" #lastDigestDateWebFormatted# - #currentDigestDateWebFormatted#">
 												<cfelse>
 													<cfset subjectWeb = "[#rootArea.name#] "&langText[curLang].notifications_digest.activity_summary_web&" #lastDigestDateWebFormatted#">
 												</cfif>
@@ -2385,6 +2398,12 @@
 											</cfif><!--- END len(alertContentWeb) GT 0 --->
 
 										</cfif><!---END getWebQuery.recordCount GT 0--->
+
+										<cfquery name="updateUserLastWebNotificationsDate" datasource="#client_dsn#">
+											UPDATE `#client_abb#_users` AS users
+											SET notifications_web_last_digest_date = NOW()
+											WHERE users.id = <cfqueryparam value="#curUserId#" cfsqltype="cf_sql_integer">;
+										</cfquery>
 
 									</cfif><!--- END sendWebNotifications --->
 
