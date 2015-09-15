@@ -44,3 +44,7 @@ ADD COLUMN `start_page` VARCHAR(45) NULL AFTER `information`;
 
 ALTER TABLE `dp_hcs`.`hcs_users`
 ADD COLUMN `start_page_locked` TINYINT(1) NOT NULL DEFAULT 0 AFTER `start_page`;
+
+
+ALTER TABLE `dp_web4bio7`.`web4bio7_users`
+CHANGE COLUMN `space_used` `space_used` BIGINT(20) NULL DEFAULT '0' ;
