@@ -771,6 +771,7 @@
 
 		<cfargument name="withConsultations" type="boolean" required="false" default="false">
 		<cfargument name="withPubmedsComments" type="boolean" required="false" default="false">
+		<cfargument name="withMailings" type="boolean" required="false" default="false">
 		<cfargument name="withLists" type="boolean" required="false" default="false">
 		<cfargument name="withForms" type="boolean" required="false" default="false">
 		<cfargument name="withFilesTypologies" type="boolean" required="false" default="false">
@@ -1011,6 +1012,18 @@
 				</cfif>
 				)
 				</cfif>
+
+				<cfif arguments.withMailings IS true>
+				UNION ALL
+				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #pubmedColums#, #iframeColumsNull# #displayColumsNull# 17 AS itemTypeId
+				FROM #client_abb#_mailings AS mailings
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				<cfif isDefined("arguments.area_id")>
+				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				)
+				</cfif>
+
 				<!--- <cfif APPLICATION.moduleLists IS true> --->
 				<cfif arguments.withLists IS true><!--- Lists --->
 				UNION ALL
