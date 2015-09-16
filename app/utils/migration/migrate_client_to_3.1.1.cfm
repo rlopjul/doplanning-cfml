@@ -91,3 +91,7 @@ CREATE TABLE `hcs_mailings` (
   CONSTRAINT `FK_hcs_mailings_5` FOREIGN KEY (`publication_scope_id`) REFERENCES `hcs_scopes` (`scope_id`),
   CONSTRAINT `FK_hcs_mailings_6` FOREIGN KEY (`last_update_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+ALTER TABLE `dp_hcs`.`hcs_areas`
+ADD COLUMN `item_type_17_enabled` TINYINT(4) NOT NULL DEFAULT 0 AFTER `item_type_16_enabled`;

@@ -2029,6 +2029,7 @@
 		<cfargument name="item_type_14_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_15_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_16_enabled" type="boolean" required="false" default="false"/>
+		<cfargument name="item_type_17_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_20_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
@@ -2066,6 +2067,7 @@
 			item_type_14_enabled = <cfqueryparam value="#arguments.item_type_14_enabled#" cfsqltype="cf_sql_bit">,
 			item_type_15_enabled = <cfqueryparam value="#arguments.item_type_15_enabled#" cfsqltype="cf_sql_bit">,
 			item_type_16_enabled = <cfqueryparam value="#arguments.item_type_16_enabled#" cfsqltype="cf_sql_bit">,
+			item_type_17_enabled = <cfqueryparam value="#arguments.item_type_17_enabled#" cfsqltype="cf_sql_bit">,
 			item_type_20_enabled = <cfqueryparam value="#arguments.item_type_20_enabled#" cfsqltype="cf_sql_bit">,
 			users_visible = <cfqueryparam value="#arguments.users_visible#" cfsqltype="cf_sql_bit">,
 			read_only = <cfqueryparam value="#arguments.read_only#" cfsqltype="cf_sql_bit">
@@ -2111,6 +2113,7 @@
 		<cfargument name="item_type_14_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_15_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_16_enabled" type="boolean" required="false" default="false"/>
+		<cfargument name="item_type_17_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_20_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>

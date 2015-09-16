@@ -1013,9 +1013,9 @@
 				)
 				</cfif>
 
-				<cfif arguments.withMailings IS true>
+				<cfif arguments.withMailings IS true><!--- Mailing --->
 				UNION ALL
-				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #pubmedColums#, #iframeColumsNull# #displayColumsNull# 17 AS itemTypeId
+				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 17 AS itemTypeId
 				FROM #client_abb#_mailings AS mailings
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
