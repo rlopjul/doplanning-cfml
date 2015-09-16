@@ -48,3 +48,46 @@ ADD COLUMN `start_page_locked` TINYINT(1) NOT NULL DEFAULT 0 AFTER `start_page`;
 
 ALTER TABLE `dp_web4bio7`.`web4bio7_users`
 CHANGE COLUMN `space_used` `space_used` BIGINT(20) NULL DEFAULT '0' ;
+
+
+CREATE TABLE `hcs_mailings` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `user_in_charge` int(11) NOT NULL,
+  `area_id` int(11) NOT NULL,
+  `creation_date` datetime NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  `parent_kind` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `attached_file_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `attached_file_id` int(11) DEFAULT NULL,
+  `attached_image_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `attached_image_id` int(11) DEFAULT NULL,
+  `status` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `link` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `link_target` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `last_update_date` datetime DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT '0',
+  `structure_available` tinyint(1) NOT NULL DEFAULT '0',
+  `general` tinyint(1) NOT NULL DEFAULT '0',
+  `publication_scope_id` int(10) unsigned DEFAULT NULL,
+  `publication_date` datetime DEFAULT NULL,
+  `publication_validated` tinyint(1) DEFAULT NULL,
+  `publication_validated_user` int(11) DEFAULT NULL,
+  `publication_validated_date` datetime DEFAULT NULL,
+  `last_update_user_id` int(11) DEFAULT NULL,
+  `last_update_type` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `FK_hcs_mailings_1` (`user_in_charge`),
+  KEY `FK_hcs_mailings_2` (`area_id`),
+  KEY `FK_hcs_mailings_3` (`attached_file_id`),
+  KEY `FK_hcs_mailings_4` (`attached_image_id`),
+  KEY `FK_hcs_mailings_5` (`publication_scope_id`),
+  KEY `FK_hcs_mailings_7_idx` (`last_update_user_id`),
+  CONSTRAINT `FK_hcs_mailings_1` FOREIGN KEY (`user_in_charge`) REFERENCES `hcs_users` (`id`),
+  CONSTRAINT `FK_hcs_mailings_2` FOREIGN KEY (`area_id`) REFERENCES `hcs_areas` (`id`),
+  CONSTRAINT `FK_hcs_mailings_3` FOREIGN KEY (`attached_file_id`) REFERENCES `hcs_files` (`id`),
+  CONSTRAINT `FK_hcs_mailings_4` FOREIGN KEY (`attached_image_id`) REFERENCES `hcs_files` (`id`),
+  CONSTRAINT `FK_hcs_mailings_5` FOREIGN KEY (`publication_scope_id`) REFERENCES `hcs_scopes` (`scope_id`),
+  CONSTRAINT `FK_hcs_mailings_6` FOREIGN KEY (`last_update_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
