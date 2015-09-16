@@ -4,7 +4,7 @@
 <head>
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>#APPLICATION.title#-Documento DoPlanning</title>
+<title>#APPLICATION.title#-Editar Documento DoPlanning</title>
 <!-- InstanceEndEditable -->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/html_head.cfm">
@@ -67,10 +67,10 @@
 
 	<div class="container app_main_container">
 		<!-- InstanceBeginEditable name="contenido_app" -->
-<cfset itemTypeId = 20>
-<cfset return_path = "#APPLICATION.htmlPath#/">
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_content.cfm">
 
+<cfset return_path = "#APPLICATION.htmlPath#/">
+<cfset itemTypeId = 17>
+<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_modify_content.cfm">
 
 <!-- InstanceEndEditable -->
 	</div>

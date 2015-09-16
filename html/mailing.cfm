@@ -67,7 +67,7 @@
 
 	<div class="container app_main_container">
 		<!-- InstanceBeginEditable name="contenido_app" -->
-<cfset itemTypeId = 20>
+<cfset itemTypeId = 17>
 <cfset return_path = "#APPLICATION.htmlPath#/">
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_content.cfm">
 
