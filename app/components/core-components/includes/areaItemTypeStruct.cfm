@@ -52,8 +52,11 @@
 <!---typologies (users)--->
 <cfset structInsert(itemTypesStruct, 16, {id=16, position=17, name="user_typology", namePlural="users_typologies", table="users_typologies", label="Tipología de usuario", labelPlural="Tipologías de usuarios", gender="female", web=false, noWeb=false, showInSelect=false, tableTypeId=4})>
 
+<cfif APPLICATION.moduleMailing IS true>
+	<cfset structInsert(itemTypesStruct, 17, {id=17, position=18, name="mailing", namePlural="mailings", table="mailings", label="Boletín", labelPlural="Boletines", gender="male", web=true, noWeb=true, showInSelect=true})>
+</cfif>
+
 <!---DoPlanning Documents--->
 <cfif APPLICATION.moduleDPDocuments IS true>
 	<cfset structInsert(itemTypesStruct, 20, {id=20, position=7, name="dp_document", namePlural="dp_documents", table="dp_documents", label="Documento DoPlanning", labelPlural="Documentos DoPlanning", gender="male", web=false, noWeb=true, showInSelect=false})>
 </cfif>
-

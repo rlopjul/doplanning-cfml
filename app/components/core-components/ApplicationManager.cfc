@@ -50,6 +50,7 @@
 		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
 		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
 		<cfargument name="cacheTree" type="boolean" required="false" default="true">
+		<cfargument name="moduleMailing" type="boolean" required="false" default="true">
 		<!---<cfargument name="moduleBin" type="boolean" required="false" default="false">--->
 
 		<cfargument name="homeTab" type="boolean" required="false" default="true">
@@ -100,6 +101,7 @@
 			<cfset APPLICATION.moduleAntiVirus = arguments.moduleAntiVirus>
 			<cfset APPLICATION.cacheTree = arguments.cacheTree>
 			<cfset APPLICATION.homeTab = arguments.homeTab>
+			<cfset APPLICATION.moduleMailing = arguments.moduleMailing>
 			<!---<cfset APPLICATION.moduleBin = arguments.moduleBin>--->
 
 			<cfset APPLICATION.moduleDPDocuments = arguments.moduleDPDocuments>
