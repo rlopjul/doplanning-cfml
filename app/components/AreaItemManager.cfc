@@ -557,10 +557,12 @@
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
+		<cfargument name="email_addresses" type="string" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
+		<cfargument name="send_and_close" type="boolean" required="false" default="false">
 
 		<cfset var method = "createItem">
 
@@ -842,6 +844,15 @@
 						</cfif>
 					</cfif>
 
+					<cfif itemTypeId IS 17><!--- Mailing --->
+						, email_addresses = <cfqueryparam value="#arguments.email_addresses#" cfsqltype="cf_sql_varchar">
+						<cfif arguments.send_and_close IS true>
+							, state = <cfqueryparam value="sent" cfsqltype="cf_sql_varchar">
+						<cfelse>
+							, state = <cfqueryparam value="created" cfsqltype="cf_sql_varchar">
+						</cfif>
+					</cfif>
+
 					<cfif isDefined("arguments.sub_type_id")>
 						, sub_type_id = <cfqueryparam value="#arguments.sub_type_id#" cfsqltype="cf_sql_integer">
 					</cfif>
@@ -1007,6 +1018,7 @@
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
+		<cfargument name="email_addresses" type="string" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
 		<cfargument name="unlock" type="boolean" required="false" default="false">
@@ -1299,6 +1311,16 @@
 						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
 						</cfif>
 					</cfif>
+
+					<cfif itemTypeId IS 17><!--- Mailing --->
+						, email_addresses = <cfqueryparam value="#arguments.email_addresses#" cfsqltype="cf_sql_varchar">
+						<cfif arguments.send_and_close IS true>
+							, state = <cfqueryparam value="sent" cfsqltype="cf_sql_varchar">
+						<cfelse>
+							, state = <cfqueryparam value="modified" cfsqltype="cf_sql_varchar">
+						</cfif>
+					</cfif>
+
 					<cfif isDefined("arguments.sub_type_id")>
 						, sub_type_id = <cfqueryparam value="#arguments.sub_type_id#" cfsqltype="cf_sql_integer">
 					</cfif>
@@ -2348,6 +2370,10 @@
 			<cfif itemTypeId IS 20><!--- DoPlanning item --->
 				<cfset objectItem.locked = false>
 				<cfset objectItem.area_editable = false>
+			</cfif>
+
+			<cfif itemTypeId IS 17><!---Mailings--->
+				<cfset objectItem.email_addresses = "">
 			</cfif>
 
 			<cfset objectItem.sub_type_id = -1>

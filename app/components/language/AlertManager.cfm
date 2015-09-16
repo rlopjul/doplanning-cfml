@@ -71,6 +71,10 @@ curLangText["es"] = {
 				"name" : "Tipología de usuario",
 				"name_plural" : "Tipologías de usuarios",
 			},
+			"17": {
+				"name" : "Boletín",
+				"name_plural" : "Boletines",
+			},
 			"20": {
 				"name" : "Documento DoPlanning",
 				"name_plural" : "Documentos DoPlanning",
@@ -434,6 +438,10 @@ curLangText["en"] = {
 			"16": {
 				"name" : "User typology",
 				"name_plural" : "User typologies",
+			},
+			"17": {
+				"name" : "Newsletter",
+				"name_plural" : "Newsletters",
 			},
 			"20": {
 				"name" : "DoPlanning document",

@@ -285,7 +285,7 @@
 <script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 
-<cfif itemTypeId IS 1 OR itemTypeId IS 7>
+<cfif itemTypeId IS 1 OR itemTypeId IS 7 OR itemTypeId IS 17>
 	<cfset t_title = "Asunto">
 <cfelse>
 	<cfset t_title = "Título">
@@ -318,6 +318,8 @@
 		<cfset t_estimated_value = "Valor estimado">
 		<cfset t_real_value = "Valor real">
 	</cfif>
+<cfelse>
+	<cfset t_email_addresses = "Destinatarios para pruebas">
 </cfif>
 <cfif itemTypeId IS 5 OR itemTypeId IS 8>
 	<cfset t_price = "Valor">
@@ -627,6 +629,7 @@
 
 </cfif>
 
+
 <cfif itemTypeId IS 5><!---Events--->
 <div class="row">
 	<div class="col-md-3">
@@ -775,7 +778,7 @@
 
 <cfif read_only IS false>
 
-	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9 AND itemTypeId IS NOT 20>
+	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9 AND itemTypeId IS NOT 20 AND itemTypeId IS NOT 17>
 
 		<cfif isDefined("objectItem.attached_file_name") AND len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
 
@@ -826,7 +829,7 @@
 
 	</cfif>
 
-	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 20>
+	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 20 AND itemTypeId IS NOT 17>
 
 		<cfif isDefined("objectItem.attached_image_name") AND len(objectItem.attached_image_name) GT 0 AND objectItem.attached_image_name NEQ "-">
 
@@ -877,7 +880,7 @@
 </cfif>
 
 
-<cfif itemTypeId IS NOT 20><!--- IS NOT DoPlanning Document --->
+<cfif itemTypeId IS NOT 20 AND itemTypeId IS NOT 17><!--- IS NOT DoPlanning Document OR Mailings --->
 
 	<div class="row">
 
@@ -890,7 +893,7 @@
 
 	</div>
 
-	<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7><!---IS NOT Messages, Tasks OR Consultations--->
+	<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7 AND itemTypeId IS NOT 17><!---IS NOT Messages, Tasks, Consultations OR Mailings--->
 
 	<div class="row">
 
@@ -907,6 +910,20 @@
 	</div>
 
 	</cfif>
+
+</cfif>
+
+<cfif itemTypeId IS 17><!--- Mailings --->
+
+	<div class="row">
+		<div class="col-md-12">
+			<label class="control-label" for="email_addresses"><span lang="es">#t_email_addresses#</span>:</label>
+			<cfinput type="text" name="email_addresses" id="email_addresses" class="form-control" value="#objectItem.email_addresses#" passthrough="#passthrough#">
+			<cfif itemTypeId IS 17>
+				<small class="help-block" lang="es">Introduzca la lista de direcciones de email separadas por comas (hasta 5 direcciones).</small>
+			</cfif>
+		</div>
+	</div>
 
 </cfif>
 
@@ -1040,7 +1057,7 @@
 	</cfif>
 </cfif>
 
-<cfif itemTypeId NEQ 1>
+<cfif itemTypeId NEQ 1 AND itemTypeId NEQ 17>
 
 	<!--- getClient --->
 	<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
@@ -1061,6 +1078,21 @@
 		</div>
 
 	</cfif>
+
+</cfif>
+
+<cfif itemTypeId IS 17>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="send_and_close" id="send_and_close" value="true" <cfif isDefined("objectItem.send_and_close") AND objectItem.send_and_close IS true>checked="checked"</cfif> /> Enviar boletín
+				</label>
+				<small class="help-block" lang="es">Si selecciona esta opción se enviará de forma definitiva el boletín a todos los usuarios del área y ya no podrá modificarlo.</small>
+			</div>
+		</div>
+	</div>
 
 </cfif>
 
@@ -1119,7 +1151,7 @@
 			<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
 			<cfinvokeargument name="toolbarCanCollapse" value="true"/>
 		</cfif>--->
-		<cfif itemTypeId IS 20><!--- DoPlanning Document --->
+		<cfif itemTypeId IS 20 OR itemTypeId IS 17><!--- DoPlanning Document --->
 			<cfinvokeargument name="height" value="500"/>
 			<cfinvokeargument name="toolbar" value="DP_document"/>
 		</cfif>

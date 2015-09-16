@@ -82,6 +82,9 @@
 				<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
 					, items.price
 				</cfif>
+				<cfif itemTypeId IS 17><!--- Mailings --->
+					, items.email_addresses
+				</cfif>
 				<cfif itemTypeWeb IS true><!---WEB--->
 
 					<cfif arguments.parse_dates IS true>

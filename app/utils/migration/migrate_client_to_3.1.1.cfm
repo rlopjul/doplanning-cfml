@@ -50,6 +50,8 @@ ALTER TABLE `dp_web4bio7`.`web4bio7_users`
 CHANGE COLUMN `space_used` `space_used` BIGINT(20) NULL DEFAULT '0' ;
 
 
+
+
 CREATE TABLE `hcs_mailings` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -64,8 +66,8 @@ CREATE TABLE `hcs_mailings` (
   `attached_image_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `attached_image_id` int(11) DEFAULT NULL,
   `status` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
-  `link` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `link_target` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `link` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `link_target` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `last_update_date` datetime DEFAULT NULL,
   `enabled` tinyint(1) DEFAULT '0',
   `structure_available` tinyint(1) NOT NULL DEFAULT '0',
@@ -77,6 +79,8 @@ CREATE TABLE `hcs_mailings` (
   `publication_validated_date` datetime DEFAULT NULL,
   `last_update_user_id` int(11) DEFAULT NULL,
   `last_update_type` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `state` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `email_addresses` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_hcs_mailings_1` (`user_in_charge`),
   KEY `FK_hcs_mailings_2` (`area_id`),
