@@ -550,9 +550,9 @@ Preferencias de notificaciones
 
 							<select name="notifications_digest_type_id" id="notifications_digest_type_id" class="form-control">
 								<option value="" lang="es">Nunca</option>
-								<option value="1" <cfif preferences.notifications_digest_type_id IS 1>selected="selected"</cfif> lang="es">Diariamente</option>
-								<option value="2" <cfif preferences.notifications_digest_type_id IS 2>selected="selected"</cfif> lang="es">Semanalmente</option>
-								<option value="3" <cfif preferences.notifications_digest_type_id IS 3>selected="selected"</cfif> lang="es">Mensualmente</option>
+								<option value="1" <cfif preferences.notifications_digest_type_id IS 1>selected="selected"</cfif> lang="es">Todos los días</option>
+								<option value="2" <cfif preferences.notifications_digest_type_id IS 2>selected="selected"</cfif> lang="es">Cada 7 días</option>
+								<option value="3" <cfif preferences.notifications_digest_type_id IS 3>selected="selected"</cfif> lang="es">Cada 30 días</option>
 							</select>
 
 						</div>
@@ -597,9 +597,9 @@ Preferencias de notificaciones
 
 							<select name="notifications_web_digest_type_id" id="notifications_web_digest_type_id" class="form-control">
 								<option value="" lang="es">Nunca</option>
-								<option value="1" <cfif preferences.notifications_web_digest_type_id IS 1>selected="selected"</cfif> lang="es">Diariamente</option>
-								<option value="2" <cfif preferences.notifications_web_digest_type_id IS 2>selected="selected"</cfif> lang="es">Semanalmente</option>
-								<option value="3" <cfif preferences.notifications_web_digest_type_id IS 3>selected="selected"</cfif> lang="es">Mensualmente</option>
+								<option value="1" <cfif preferences.notifications_web_digest_type_id IS 1>selected="selected"</cfif> lang="es">Todos los días</option>
+								<option value="2" <cfif preferences.notifications_web_digest_type_id IS 2>selected="selected"</cfif> lang="es">Cada 7 días</option>
+								<option value="3" <cfif preferences.notifications_web_digest_type_id IS 3>selected="selected"</cfif> lang="es">Cada 30 días</option>
 							</select>
 
 						</div>
