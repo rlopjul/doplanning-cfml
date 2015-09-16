@@ -2,11 +2,11 @@
 
 <cfcomponent output="false">
 
-	<cfset component = "RowManager">	
+	<cfset component = "RowManager">
 
 
 	<!--- ------------------------------------- generateRowStruct -------------------------------------  --->
-	
+
 	<cffunction name="generateRowStruct" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -39,13 +39,13 @@
 				<cfif fields.field_id IS "creation_date"><!--- CREATION DATE --->
 
 					<cfif arguments.withDateFormatted IS true>
-						
+
 						<cfset rowStruct.creation_date = DateFormat(row.creation_date, APPLICATION.dateFormat)&" "&TimeFormat(row.creation_date, "HH:mm")>
 
 					</cfif>
 
 				<cfelseif fields.field_id IS "last_update_date"><!--- LAST UPDATE DATE --->
-					
+
 					<cfif arguments.withDateFormatted IS true>
 
 						<cfset rowStruct.last_update_date = DateFormat(row.last_update_date, APPLICATION.dateFormat)&" "&TimeFormat(row.last_update_date, "HH:mm")>
@@ -54,16 +54,16 @@
 
 				<cfelseif fields.field_id IS "insert_user"><!--- INSERT USER --->
 
-				
+
 				<cfelseif fields.field_id IS "update_user"><!--- UPDATE USER --->
 
 
 				<cfelse><!--- TABLE FIELDS --->
 
 					<cfset field_label = fields.label&":">
-					<cfset field_name = "field_#fields.field_id#">		
-				
-					<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10 OR fields.field_type_id IS 15 OR fields.field_type_id IS 16><!--- LISTS --->						
+					<cfset field_name = "field_#fields.field_id#">
+
+					<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10 OR fields.field_type_id IS 15 OR fields.field_type_id IS 16><!--- LISTS --->
 
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- Area lists --->
 
@@ -73,7 +73,7 @@
 								<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 								<cfinvokeargument name="field_id" value="#fields.field_id#">
 								<cfinvokeargument name="row_id" value="#rowStruct.row_id#">
-								
+
 								<cfinvokeargument name="client_abb" value="#client_abb#">
 								<cfinvokeargument name="client_dsn" value="#client_dsn#">
 							</cfinvoke>
@@ -99,14 +99,14 @@
 						<cfif fields.field_type_id IS 12><!--- USER --->
 
 							<cfif arguments.withDoPlanningElements IS true>
-								
+
 								<cfif isNumeric(field_value)>
 
 									<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
 										<cfinvokeargument name="user_id" value="#field_value#">
 
-										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+										<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+										<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 									</cfinvoke>
 
 									<cfif userQuery.recordCount GT 0>
@@ -125,29 +125,33 @@
 
 							</cfif>
 
-						<cfelseif fields.field_type_id IS 13><!--- ITEM --->
+						<cfelseif fields.field_type_id IS 13 OR fields.field_type_id IS 18><!--- ITEM OR ATTACHED FILE--->
 
 							<cfif arguments.withDoPlanningElements IS true>
 
 								<cfif isNumeric(field_value)>
 
-									<cfif fields.item_type_id IS 10><!--- FILE --->
+									<cfif fields.item_type_id IS 10 OR fields.field_type_id IS 18><!--- FILE --->
 
 										<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
 											<cfinvokeargument name="file_id" value="#field_value#">
 											<cfinvokeargument name="parse_dates" value="false"/>
 											<cfinvokeargument name="published" value="false"/>
 
-											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+											<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 										</cfinvoke>
 
 										<cfif fileQuery.recordCount GT 0>
-											<cfset field_value_item = fileQuery.name>
+											<cfif fields.item_type_id IS 10><!---File--->
+												<cfset field_value_item = fileQuery.name>
+											<cfelse>
+												<cfset field_value_item = fileQuery.file_name>
+											</cfif>
 										<cfelse>
 											<cfset field_value_item = "">
 										</cfif>
-									
+
 										<cfset rowStruct[field_name] = field_value_item>
 
 									<cfelse><!--- ITEM --->
@@ -158,8 +162,8 @@
 											<cfinvokeargument name="parse_dates" value="false"/>
 											<cfinvokeargument name="published" value="false"/>
 
-											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+											<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 										</cfinvoke>
 
 										<cfif itemQuery.recordCount GT 0>
@@ -191,7 +195,7 @@
 									<!--- getFieldMaskTypes --->
 									<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
 										<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-										
+
 										<cfinvokeargument name="client_abb" value="#client_abb#">
 									</cfinvoke>
 
@@ -210,7 +214,7 @@
 									</cfinvoke>
 
 									<cfset rowStruct[field_name] = field_value>
-									
+
 								</cfif>
 
 							<cfelseif fields.field_type_id IS 6><!--- DATE --->
@@ -221,15 +225,15 @@
 										<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
 
 										<cfset rowStruct[field_name] = field_value>
-									</cfif>	
+									</cfif>
 
-								</cfif>	
-							
+								</cfif>
+
 							<cfelseif fields.field_type_id IS 7><!--- BOOLEAN --->
-								
+
 							</cfif>
 
-						</cfif>		
+						</cfif>
 
 					</cfif>
 
@@ -246,7 +250,7 @@
 
 
 	<!--- ------------------------------------- getRowJSON -------------------------------------  --->
-	
+
 	<cffunction name="generateRowJSON" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -281,14 +285,14 @@
 			<cfset rowStruct = generateRowStructResponse.rowStruct>
 
     		<cfloop query="fields">
-				
+
 				<cfset field_name = "field_#fields.field_id#">
 				<cfset field_value = rowStruct[field_name]>
-				
+
 				<cfset rowJSON[fields.label] = field_value>
 
 				<cfif fields.field_type_id IS 13><!--- DoPlanning Item --->
-					
+
 					<cfset rowJSON[fields.label&"_id"] = rowQuery[field_name]>
 
 				</cfif>

@@ -753,7 +753,7 @@
 				</cfif>
 				FROM #client_abb#_areas AS areas
 				WHERE 1=1
-				<cfif isDefined("arguments.areas_id")>
+				<cfif isDefined("arguments.areas_ids")>
 					AND areas.id IN (<cfqueryparam value="#arguments.areas_ids#" list="true" cfsqltype="cf_sql_varchar"/>)
 				</cfif>
 				<cfif isDefined("arguments.from_date")>

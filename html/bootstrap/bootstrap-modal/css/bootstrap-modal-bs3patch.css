@@ -14,8 +14,8 @@ body.modal-open,
   margin-right: 0;
 }
 
-.modal:not(.note-link-dialog):not(.note-image-dialog) {
-  /* not es para solucionar los problemas con summernote, esto no es compatible con IE 8 e inferiores */
+.modal:not(.note-link-dialog):not(.note-image-dialog):not(.bootbox) {
+  /* not es para solucionar los problemas con summernote y bootbox, esto no es compatible con IE 8 e inferiores */
   left: 50%;
   bottom: auto;
   right: auto;

@@ -18,7 +18,7 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfset var client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
 
 			<!--- getFile --->
@@ -28,7 +28,7 @@
 				<cfif arguments.fileTypeId IS NOT 1>
 					<cfinvokeargument name="with_lock" value="true">
 				</cfif>
-				<cfinvokeargument name="parse_dates" value="false">		
+				<cfinvokeargument name="parse_dates" value="false">
 
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -59,7 +59,7 @@
 				</cfquery>
 
 				<cfif response.result IS false>
-					
+
 					<!--- saveVirusLog --->
 					<cfinvoke component="AntiVirusManager" method="saveVirusLog">
 						<cfinvokeargument name="user_id" value="#arguments.user_id#">
@@ -76,7 +76,7 @@
 
 				<cfset response.message = anti_virus_check_message>
 
-				
+
 			<cfelse>
 
 				<cfset response = {result=false, message="Archivo no encontrado al analizarlo en busca de virus"}>
@@ -84,7 +84,7 @@
 			</cfif>
 
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">						
+				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>
 
 		</cftry>
@@ -113,7 +113,7 @@
 		<cfset var fileCheck = '#clamavOptions# "#filePath#"'><!---Importante: que la ruta del archivo vaya entre comillas por si el nombre del archivo (que puede no ser el nombre definitivo) incluye espacios--->
 
 		<cfset var command = "clamdscan"><!--- clamscan / clamdscan --->
-		<!--- 
+		<!---
 		-clamscan: no requiere ningún proceso en ejecución para analizar un archivo, cada vez que se ejecuta este proceso se carga la base de datos del antivirus y se realiza el análisis. En analizar un archivo muy pequeño no tarda menos de 25 segundos.
 		-clamdscan: requiere cland iniciado para poder funcionar. Tarda mucho menos tiempo en realizar un análisis de archivo que clamscan: el tiempo que tarda en analizar varía dependiendo del archivo y la carga del servidor, no suele tardar más de 1 segundo pero puede llegar a tardar 10 segundos o más. Se está ejecutando siempre por lo que consume recursos de forma constante, unos 300 megas de RAM.
 		--->
@@ -136,7 +136,7 @@
 
 	<!--- saveVirusLog --->
 	<cffunction name="saveVirusLog" access="public" returntype="void">
-		<cfargument name="user_id" type="numeric" required="true"/>
+		<cfargument name="user_id" type="numeric" required="false"/>
 		<cfargument name="file_id" type="numeric" required="false"/>
 		<cfargument name="fileTypeId" type="numeric" required="false"/>
 		<cfargument name="file_name" type="string" required="false"/>
@@ -145,10 +145,13 @@
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
-			<cfquery name="saveVirusLog" datasource="#client_dsn#">	
-				INSERT INTO #client_abb#_virus_logs 
-				SET user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer"> ,
+			<cfquery name="saveVirusLog" datasource="#client_dsn#">
+				INSERT INTO #client_abb#_virus_logs
+				SET
 				anti_virus_result = <cfqueryparam value="#arguments.anti_virus_result#" cfsqltype="cf_sql_varchar">
+				<cfif isDefined("arguments.user_id")>
+					, user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
+				</cfif>
 				<cfif isDefined("arguments.file_id")>
 					, file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
 				</cfif>

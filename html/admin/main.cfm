@@ -55,7 +55,7 @@
 
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modal.js"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/js/bootstrap-modalmanager.js"></script>
-<!---<script src="#APPLICATION.htmlPath#/bootstrap/bootbox/bootbox.js"></script>--->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
 <script>
 	<!---To enable the loading spinner in Bootstrap 3--->
@@ -463,7 +463,6 @@
 
 		});
 
-
 		<cfinclude template="#APPLICATION.htmlPath#/includes/jquery_validate_bootstrap_scripts.cfm">
 
 	});
@@ -533,7 +532,12 @@
 					<div class="btn-toolbar">
 
 						<div class="btn-group">
-							<a href="../main.cfm?abb=#SESSION.client_abb#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
+							<cfif len(objectUser.start_page) GT 0 AND objectUser.start_page NEQ "admin/">
+								<cfset start_page = "#APPLICATION.path#/html/#objectUser.start_page#">
+							<cfelse>
+								<cfset start_page = "#APPLICATION.path#/html/last_items.cfm?abb=#SESSION.client_abb#">
+							</cfif>
+							<a href="#start_page#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
 						</div>
 
 						<div class="btn-group">

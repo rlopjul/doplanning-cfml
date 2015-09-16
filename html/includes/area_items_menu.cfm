@@ -374,33 +374,6 @@
 			<!--- ---------------------------------------------- FIN DESPLEGABLE FILTRADO DE ELEMENTOS ---------------------------------------------- --->
 
 
-			<!---<cfif isDefined("itemTypeId") AND itemTypeId IS 10>
-
-				<div class="btn-group">
-					<cfif APPLICATION.modulefilesWithTables AND is_user_area_responsible>
-						<a href="typologies.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Tipologías de documentos" lang="es"><i class="icon-file-text" style="font-size:19px; color:##7A7A7A"></i> <span lang="es">Tipologías de documentos</span></a>
-					</cfif>
-				</div>
-
-			</cfif>--->
-
-
-			<!---<div class="btn-group pull-right">
-
-				<a class="btn btn-default btn-sm" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Mostrar información del área" id="openAreaImg">
-					<i class="icon-info-sign" style="font-size:14px; line-height:23px;"></i>
-				</a>
-
-			</div>
-
-			<div class="btn-group pull-right">
-
-				<a class="btn btn-default btn-sm" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Ocultar información del área" id="closeAreaImg" style="display:none;">
-					<i class="icon-info-sign" style="font-size:14px; line-height:23px;"></i>
-				</a>
-
-			</div>--->
-
 			<cfif find("user",CGI.SCRIPT_NAME) IS 0 AND find("typologies",CGI.SCRIPT_NAME) IS 0><!--- No es el listado de usuarios ni el de tipologías --->
 
 				<cfif NOT isDefined("itemTypeId")>

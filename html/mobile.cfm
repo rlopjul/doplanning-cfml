@@ -1,1 +1,1 @@
-<cflocation url="last_items.cfm" addtoken="false">
+<cflocation url="index.cfm" addtoken="false">

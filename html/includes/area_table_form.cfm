@@ -235,7 +235,7 @@
 					<label for="publication_scope_id" class="control-label"><span lang="es">Ámbito de publicación</span>:</label>
 					<select name="publication_scope_id" id="publication_scope_id" class="form-control">
 						<cfloop query="scopesQuery">
-							<option value="#scopesQuery.scope_id#" <cfif table.publication_scope_id IS scopesQuery.scope_id>selected="selected"</cfif>>#scopesQuery.name#</option>
+							<option value="#scopesQuery.scope_id#" <cfif table.publication_scope_id IS scopesQuery.scope_id OR ( NOT isNumeric(table.publication_scope_id) AND findNoCase(area_type, scopesQuery.name) GT 0)>selected="selected"</cfif>>#scopesQuery.name#</option>
 						</cfloop>
 					</select>
 					<small class="help-block" lang="es">Define dónde se podrán publicar vistas <cfif tableTypeGender EQ "male">del<cfelse>de la</cfif> #tableTypeNameEs#</small>

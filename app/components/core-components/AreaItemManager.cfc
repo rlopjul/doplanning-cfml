@@ -1,8 +1,8 @@
 <!--- Copyright Era7 Information Technologies 2007-2013 --->
 <cfcomponent output="false">
 
-	<cfset component = "AreaItemManager">	
-	
+	<cfset component = "AreaItemManager">
+
 	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset dateTimeFormat = "%d-%m-%Y %H:%i:%s">
 	<!---<cfset timeZoneTo = "+1:00">--->
@@ -57,7 +57,7 @@
 
 
 	<!--- ----------------------- DELETE ITEM ATTACHED FILE -------------------------------- --->
-	
+
 	<cffunction name="deleteItemAttachedFile" returntype="void" access="public">
 		<cfargument name="item_id" type="string" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -71,13 +71,13 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-		
+
 		<cfset var method = "deleteItemAttachedFile">
-		
+
 		<!--- <cfset var area_id = ""> --->
-									
+
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-		
+
 			<!--- DELETE IN DB  --->
 			<cfquery name="deleteAttachedFile" datasource="#client_dsn#">
 				UPDATE #client_abb#_#itemTypeTable#
@@ -85,10 +85,10 @@
 				attached_#arguments.file_type#_id = <cfqueryparam cfsqltype="cf_sql_integer" null="yes">
 				WHERE id = <cfqueryparam value="#itemQuery.id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-				
+
 			<!---DELETE ATTACHED_IMAGE FILE--->
 			<cfif itemQuery["attached_#arguments.file_type#_id"] NEQ "NULL" AND itemQuery["attached_#arguments.file_type#_id"] NEQ "" AND itemQuery["attached_#arguments.file_type#_id"] NEQ "-1">
-			
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="deleteFileResult">
 					<cfinvokeargument name="file_id" value="#itemQuery['attached_#arguments.file_type#_id']#">
 					<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#">
@@ -99,7 +99,7 @@
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
-				
+
 				<cfif deleteFileResult.result IS false><!---File delete failed--->
 
 					<cfthrow message="#resultDeleteFile.message#">
@@ -117,19 +117,19 @@
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
-				
+
 				</cfif>
-				
+
 			<cfelse>
-			
+
 				<cfset error_code = 601>
 
 				<cfthrow errorcode="#error_code#">
-				
+
 			</cfif>
 
 			<cfinclude template="includes/logRecord.cfm">
-				
+
 	</cffunction>
 	<!--- ---------------------------------------------------------------------------------- --->
 
@@ -153,7 +153,7 @@
 				WHERE item_id =	<cfqueryparam value="#item_id#" cfsqltype="cf_sql_integer">
 				AND item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 	</cffunction>
 
 
@@ -174,7 +174,7 @@
 			<cfloop array="#categories_ids#" index="category_id">
 
 				<cfif isNumeric(category_id)>
-					
+
 					<cfquery name="addItemCategory" datasource="#client_dsn#">
 						INSERT INTO `#client_abb#_items_categories` (item_id, item_type_id, area_id)
 						VALUES (<cfqueryparam value="#item_id#" cfsqltype="cf_sql_integer">,
@@ -190,7 +190,7 @@
 
 
 	<!--- ----------------------- DELETE ITEM -------------------------------- --->
-	
+
 	<cffunction name="deleteItem" output="false" access="public" returntype="struct">
 		<cfargument name="item_id" type="string" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -201,34 +201,34 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-		
+
 		<cfset var method = "deleteItem">
-		
+
 		<cfset var response = structNew()>
 
 		<cfset var area_id = "">
 		<cfset var itemCategories = "">
 
-									
+
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-			
+
 			<cfif NOT isDefined("arguments.itemQuery")>
-				
+
 				<!--- getItem --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
 					<cfinvokeargument name="item_id" value="#arguments.item_id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="parse_dates" value="true">
 					<cfinvokeargument name="published" value="false">
-					
+
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 				<cfif itemQuery.recordCount IS 0><!---Item does not exist--->
-			
+
 					<cfset error_code = 501>
-			
+
 					<cfthrow errorcode="#error_code#">
 
 				</cfif>
@@ -242,14 +242,14 @@
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
-			
+
 			<!--- getClient --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			</cfinvoke>
 
 			<cfif clientQuery.bin_enabled IS true AND arguments.moveToBin IS true><!--- MOVE TO BIN --->
-				
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/BinQuery" method="moveItemToBin">
 					<cfinvokeargument name="item_id" value="#arguments.item_id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
@@ -295,11 +295,10 @@
 						<!---IMPORTANTE: esto se hacía fuera de <cftransaction> porque si se hacía dentro da error, ya que al enviar las notificaciones por email de la elminicación de registros se accedía a otro Datasource dentro de la misma transacción--->
 
 						<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16><!---List, Forms, Typologies, Users typologies--->
-						
+
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="deleteTableInDatabase">
 								<cfinvokeargument name="table_id" value="#arguments.item_id#">
 								<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-
 								<cfinvokeargument name="user_id" value="#arguments.delete_user_id#">
 
 								<cfif clientQuery.bin_enabled IS false OR itemQuery.status NEQ "deleted"><!---Bin enabled--->
@@ -313,14 +312,14 @@
 							</cfinvoke>
 
 						</cfif>
-						
+
 						<!--- CHANGE SUB ITEMS  --->
 						<!---Ya no se borran los submensajes de un mensaje, lo que se hace es que se ponen como hijos del nivel superior--->
 						<cfquery name="changeSubItemsQuery" datasource="#client_dsn#">
 							UPDATE #client_abb#_#itemTypeTable#
-							SET parent_id = #itemQuery.parent_id#, 
-							parent_kind = <cfqueryparam value="#itemQuery.parent_kind#" cfsqltype="cf_sql_varchar">			
-							WHERE parent_id = <cfqueryparam value="#itemQuery.id#" cfsqltype="cf_sql_integer"> 
+							SET parent_id = #itemQuery.parent_id#,
+							parent_kind = <cfqueryparam value="#itemQuery.parent_kind#" cfsqltype="cf_sql_varchar">
+							WHERE parent_id = <cfqueryparam value="#itemQuery.id#" cfsqltype="cf_sql_integer">
 							AND parent_kind = <cfqueryparam value="item" cfsqltype="cf_sql_varchar">;
 						</cfquery>
 
@@ -341,9 +340,9 @@
 							<cfinvokeargument name="client_abb" value="#client_abb#">
 							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
-						
+
 						<!---DELETE ITEM--->
-						<cfquery name="deleteItemQuery" datasource="#client_dsn#">	
+						<cfquery name="deleteItemQuery" datasource="#client_dsn#">
 							DELETE FROM #client_abb#_#itemTypeTable#
 							WHERE id = <cfqueryparam value="#itemQuery.id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
@@ -360,20 +359,20 @@
 								<cfinvokeargument name="client_abb" value="#client_abb#">
 								<cfinvokeargument name="client_dsn" value="#client_dsn#">
 							</cfinvoke>
-							
-							
+
+
 							<cfif resultDeleteFile.result IS false><!---File delete failed--->
-								
+
 								<cfset error_code = 605>
-			
+
 								<cfthrow errorcode="#error_code#">
-							
+
 							</cfif>
-							
+
 						</cfif>
-						
+
 						<cfif arguments.itemTypeId IS NOT 1>
-						
+
 							<!---DELETE ATTACHED_IMAGE FILE--->
 							<cfif isNumeric(itemQuery.attached_image_id) AND itemQuery.attached_image_id GT 0>
 
@@ -386,18 +385,18 @@
 									<cfinvokeargument name="client_abb" value="#client_abb#">
 									<cfinvokeargument name="client_dsn" value="#client_dsn#">
 								</cfinvoke>
-								
+
 								<cfif resultDeleteImage.result IS false><!---File delete failed--->
-									
+
 									<cfset error_code = 605>
-				
+
 									<cfthrow errorcode="#error_code#">
-								
+
 								</cfif>
-								
+
 							</cfif>
-							
-						</cfif>	
+
+						</cfif>
 
 						<cfif clientQuery.bin_enabled IS true><!---Bin enabled--->
 
@@ -409,8 +408,8 @@
 								<cfinvokeargument name="client_dsn" value="#client_dsn#">
 							</cfinvoke>
 
-						</cfif>									
-					
+						</cfif>
+
 					</cftransaction>
 
 
@@ -446,14 +445,14 @@
 							</cfinvoke>
 
 						</cfif>
-						
+
 						<cfrethrow/>
 
 					</cfcatch>
 
 				</cftry>
 
-				
+
 
 			</cfif><!--- END DELETE --->
 
@@ -464,13 +463,13 @@
 
 
 		<cfreturn response>
-				
+
 	</cffunction>
 	<!--- ----------------------------------------------------------------------- --->
 
 
 	<!--- ----------------------- EXPORT ICALENDAR ITEM -------------------------------- --->
-	
+
 	<cffunction name="exportICalendarItem" output="false" access="public" returntype="struct">
 		<cfargument name="item_id" type="string" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -480,29 +479,29 @@
 		<cfargument name="client_dsn" type="string" required="true">
 
 		<cfset var method = "exportICalendarItem">
-		
+
 		<cfset var response = structNew()>
 		<cfset var eventStruct = structNew()>
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-			
+
 			<cfif NOT isDefined("arguments.itemQuery")>
-				
+
 				<!--- getItem --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
 					<cfinvokeargument name="item_id" value="#arguments.item_id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="parse_dates" value="false">
 					<cfinvokeargument name="published" value="false">
-					
+
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 				</cfinvoke>
 
 				<cfif itemQuery.recordCount IS 0><!---Item does not exist--->
-			
+
 					<cfset error_code = 501>
-			
+
 					<cfthrow errorcode="#error_code#">
 
 				</cfif>
@@ -520,7 +519,7 @@
 
 			<cfset eventStruct.subject = itemQuery.title>
 			<cfset eventStruct.description = itemQuery.description&chr(13)&chr(10)&chr(13)&chr(10)&areaItemUrl>
-			
+
 			<cfif itemTypeId IS 5><!--- Event --->
 
 				<cfset eventStruct.location = itemQuery.place>
@@ -561,7 +560,7 @@
 			<cfset response = {result=true, item_id=#arguments.item_id#, icalendar=#icalendar#}>
 
 		<cfreturn response>
-				
+
 	</cffunction>
 
 

@@ -45,15 +45,24 @@
 <cfelseif isDefined("URL.image") AND isNumeric(URL.image)>
 	<cfset item_id = URL.image>
 	<cfset itemTypeId = 9>
+<cfelseif isDefined("URL.list") AND isNumeric(URL.list)>
+	<cfset item_id = URL.list>
+	<cfset itemTypeId = 11>
+<cfelseif isDefined("URL.form") AND isNumeric(URL.form)>
+	<cfset item_id = URL.form>
+	<cfset itemTypeId = 12>
+<cfelseif isDefined("URL.user_typology") AND isNumeric(URL.user_typology)>
+	<cfset item_id = URL.user_typology>
+	<cfset itemTypeId = 16>
 </cfif>
 
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>
-	<cfset area_id = URL.area>	
+	<cfset area_id = URL.area>
 </cfif>
-	
+
 
 <!---Al llamar a este método se comprueba si el usuario tiene acceso al documento--->
-<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFile" returnvariable="objectFile">				
+<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFile" returnvariable="objectFile">
 	<cfinvokeargument name="get_file_id" value="#file_id#">
 	<cfif isDefined("area_id")>
 		<cfinvokeargument name="area_id" value="#area_id#">
@@ -69,7 +78,7 @@
 		<cfinvokeargument name="status" value="deleted"/>
 	</cfif>
 	<cfinvokeargument name="return_type" value="query">
-</cfinvoke>		
+</cfinvoke>
 
 <cfif isDefined("APPLICATION.moduleAntiVirus") AND APPLICATION.moduleAntiVirus IS true AND objectFile.anti_virus_check IS 0>
 
@@ -88,6 +97,5 @@
 
 
 	<cfinclude template="get_file.cfm">
-	
-</cfif>
 
+</cfif>

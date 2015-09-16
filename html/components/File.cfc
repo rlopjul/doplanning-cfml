@@ -1014,7 +1014,8 @@
 			</cfif>
 
 			<cfset msg = URLEncodedFormat(msg)>
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+			<!---<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">--->
+			<cflocation url="#arguments.return_path##fileTypeName#.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1060,7 +1061,8 @@
 			</cfif>
 
 			<cfset msg = URLEncodedFormat(msg)>
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+			<!---<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">--->
+			<cflocation url="#arguments.return_path##fileTypeName#.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1106,7 +1108,8 @@
 			</cfif>
 
 			<cfset msg = URLEncodedFormat(msg)>
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+			<!---<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">--->
+			<cflocation url="#arguments.return_path##fileTypeName#.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1152,7 +1155,8 @@
 			</cfif>
 
 			<cfset msg = URLEncodedFormat(msg)>
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+			<!---<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">--->
+			<cflocation url="#arguments.return_path##fileTypeName#.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -1194,7 +1198,8 @@
 			</cfif>
 
 			<cfset msg = URLEncodedFormat(msg)>
-			<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
+			<!---<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">--->
+			<cflocation url="#arguments.return_path##fileTypeName#.cfm?area=#arguments.area_id#&#fileTypeName#=#arguments.file_id#&res=#response.result#&msg=#msg#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">

@@ -22,9 +22,10 @@
 <script>
 
 	function confirmDeleteField() {
-	
+
 		var message_delete = "Si ELIMINA el campo, se borrarán definitivamente todos los contenidos que almacena. ¿Seguro que desea eliminar el campo?";
 		return confirm(message_delete);
+
 	}
 
 	function onSubmitForm(){
@@ -48,18 +49,18 @@
 	}
 
 	function openAreaSelector(){
-		
+
 		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
-		
+
 	}
 
 	function setSelectedArea(areaId, areaName) {
-		
+
 		$("##list_area_id").val(areaId);
 		$("##list_area_name").val(areaName);
 
 		loadAreaList(areaId, 1)
-			
+
 	}
 
 	function openUserSelectorWithField(fieldName){
@@ -69,7 +70,7 @@
 	}
 
 	function setSelectedUser(userId, userName, fieldName) {
-			
+
 		document.getElementById(fieldName).value = userId;
 		document.getElementById(fieldName+"_full_name").value = userName;
 	}
@@ -150,7 +151,7 @@
 			$("##dateDefaultValue").show();
 
 			$("##default_value_date").prop('disabled', false);
-			
+
 
 		}else if(typeId == 7){ //Boolean
 
@@ -176,13 +177,15 @@
 
 				$("##textDefaultValue").show();
 				$("##listTextValues").show();
+				$("##listTextValuesLabel").text( window.lang.translate("Valores de la lista") );
+				$("##listTextValuesHelp").text( window.lang.translate("Introduce cada valor de la lista en una línea distinta") );
 
 				$("##default_value_text").prop('disabled', false);
 				$("##list_values").prop('disabled', false);
 
 			}
 
-			
+
 			if(typeId == 9 || typeId == 15){
 				$("##fieldInputTypeList").show();
 				$("##field_input_type_list").prop('disabled', false);
@@ -215,13 +218,23 @@
 			$("##default_value_item").prop('disabled', false);
 			$("##list_area_id").prop('disabled', false);
 
-			$("##listAreaText").text(window.lang.translate('Área desde la que habrá que seleccionar el elemento de DoPlanning'));
+			$("##listAreaText").text( window.lang.translate('Área desde la que habrá que seleccionar el elemento de DoPlanning') );
 			$("##listAreaHelpText").show();
+
+		}else if(typeId == 18){ //Attached file
+
+			$("##listTextValues").show();
+			$("##listTextValuesLabel").text( window.lang.translate("Lista de extensiones de archivo aceptadas (por defecto se aceptan todas)") );
+			$("##listTextValuesHelp").text( window.lang.translate("Introduce cada extensión en una línea distinta. Ejemplos de extensiones válidas: .pdf .doc .pages .jpg .png") );
+			$("##list_values").prop('disabled', false);
+
+			$("##default_value_text").prop('disabled', false);
+
 
 		}else {
 
 			$("##textDefaultValue").show();
-			
+
 			$("##default_value_text").prop('disabled', false);
 
 			if(typeId == 2 || typeId == 3){
@@ -238,7 +251,7 @@
 				$("##fieldInputMaskType").show();
 
 				$("##mask_type_id").prop('disabled', false);
-				
+
 			}
 
 
@@ -252,7 +265,7 @@
 
 	}
 
-	$(document).ready(function() { 
+	$(document).ready(function() {
 
 		fieldTypeChange(#field.field_type_id#);
 
@@ -322,23 +335,23 @@
 			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled=</cfif>>
 				<cfloop query="fieldTypes">
 
-					<cfif ( tableTypeId EQ 2 AND (fieldTypes.field_type_group EQ "user" OR fieldTypes.field_type_group EQ "doplanning_item") ) OR ( tableTypeId NEQ 3 AND fieldTypes.field_type_id EQ 14 )><!---Los campos "user" y "doplanning_item" no están disponibles en los formularios. El campo "Request URL" sólo está disponible en archivos--->
+					<cfif ( tableTypeId EQ 2 AND (fieldTypes.field_type_group EQ "user" OR fieldTypes.field_type_group EQ "doplanning_item") ) OR ( tableTypeId NEQ 3 AND fieldTypes.field_type_id EQ 14 ) OR ( tableTypeId EQ 3 AND fieldTypes.field_type_id EQ 18 )><!---Los campos "user" y "doplanning_item" no están disponibles en los formularios. El campo "Request URL" sólo está disponible en archivos. El campo archivo adjunto no está disponible en las tipologías--->
 						<cfcontinue>
 					<cfelse>
-						<option value="#fieldTypes.field_type_id#" lang="es" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>						
+						<option value="#fieldTypes.field_type_id#" lang="es" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
 					</cfif>
-					
+
 				</cfloop>
 			</select>
 			<small class="help-block" lang="es">No se puede modificar el tipo una vez creado el campo.</small>
 		</div>
 	</div>
-		
-	<div class="row" id="fieldInputItemType">	
+
+	<div class="row" id="fieldInputItemType">
 		<div class="col-md-10">
 			<cfif page_type IS 2 AND isNumeric(field.item_type_id)>
 				<input name="item_type_id" type="hidden" value="#field.item_type_id#"/>
-			</cfif>			
+			</cfif>
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 				<!---<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">--->
@@ -361,9 +374,9 @@
 
 	<div class="row" id="fieldInputMaskType">
 		<div class="col-md-12">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeid#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>
 
@@ -373,7 +386,7 @@
 			<select name="mask_type_id" id="mask_type_id" class="form-control"><!---onchange="fieldItemTypeChange($('##item_type_id').val());"--->
 				<option value="" lang="es">Sin máscara</option>
 				<cfloop array="#maskTypesArray#" index="maskTypeId">
-					<option value="#maskTypeId#" lang="es" <cfif field.mask_type_id IS maskTypeId>selected="selected"</cfif>>#maskTypesStruct[maskTypeId].label# (#maskTypesStruct[maskTypeId].description#)</option>
+					<option value="#maskTypeId#" lang="es" <cfif isDefined("field.mask_type_id") AND field.mask_type_id IS maskTypeId>selected="selected"</cfif>>#maskTypesStruct[maskTypeId].label# (#maskTypesStruct[maskTypeId].description#)</option>
 				</cfloop>
 			</select>
 			<small class="help-block" lang="es">Permite definir como se mostrará el valor numérico introducido.</small>
@@ -384,8 +397,8 @@
 		<div class="col-md-12">
 			<label for="field_input_type_list" class="control-label" lang="es">Mostrar opciones en</label>
 			<select name="field_input_type" id="field_input_type_list" class="form-control">
-				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista desplegable</option>
-				<option value="radio" <cfif field.field_input_type EQ "radio">selected="selected"</cfif> lang="es">Radio (se muestran visibles todas las opciones)</option>
+				<option value="select" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista desplegable</option>
+				<option value="radio" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "radio">selected="selected"</cfif> lang="es">Radio (se muestran visibles todas las opciones)</option>
 			</select>
 		</div>
 	</div>
@@ -394,8 +407,8 @@
 		<div class="col-md-12">
 			<label for="field_input_type_list_multiple" class="control-label" lang="es">Mostrar opciones en</label>
 			<select name="field_input_type" id="field_input_type_list_multiple" class="form-control">
-				<option value="select" <cfif field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista</option>
-				<option value="checkbox" <cfif field.field_input_type EQ "checkbox">selected="selected"</cfif> lang="es">Checkbox (se muestran visibles todas las opciones)</option>
+				<option value="select" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista</option>
+				<option value="checkbox" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "checkbox">selected="selected"</cfif> lang="es">Checkbox (se muestran visibles todas las opciones)</option>
 			</select>
 		</div>
 	</div>
@@ -415,8 +428,8 @@
 			<label for="list_area_id" id="listAreaText" class="control-label" lang="es">Área a para generar la lista</label>
 			<div class="row">
 				<div class="col-sm-4">
-					<input type="hidden" name="list_area_id" id="list_area_id" value="#field.list_area_id#" />
-					<cfinput type="text" name="list_area_name" id="list_area_name" class="form-control" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" /> 
+					<input type="hidden" name="list_area_id" id="list_area_id" <cfif isDefined("field.list_area_id")>value="#field.list_area_id#"</cfif> />
+					<cfinput type="text" name="list_area_name" id="list_area_name" class="form-control" value="#list_area_name#" readonly="true" onclick="openAreaSelector()" />
 				</div>
 				<div class="col-sm-8">
 					<button onclick="return openAreaSelector()" type="button" class="btn btn-default" lang="es">Seleccionar área</button>
@@ -428,9 +441,9 @@
 
 	<div class="row" id="listTextValues">
 		<div class="col-md-12">
-			<label for="list_values" lang="es">Valores de la lista</label>
-			<textarea name="list_values" id="list_values" class="form-control" maxlength="5000" rows="5" <cfif field.field_type_id NEQ 15>disabled="disabled"</cfif>>#field.list_values#<!--- <cfif isDefined("field.list_values")> ESTE IF SE QUITA CUANDO SE AÑADA ESTA FUNCIONALIDAD PARA TODOS LOS DP----></textarea>
-			<small class="help-block" lang="es">Introduce cada valor de la lista en una línea distinta<!---<br/>Ejemplo: Azul<br/>Verde<br/>Amarillo---></small>
+			<label for="list_values" id="listTextValuesLabel" lang="es">Valores de la lista</label>
+			<textarea name="list_values" id="list_values" class="form-control" maxlength="5000" rows="5" <cfif field.field_type_id NEQ 15>disabled="disabled"</cfif>><cfif isDefined("field.list_values")>#field.list_values#</cfif></textarea>
+			<small class="help-block" id="listTextValuesHelp" lang="es">Introduce cada valor de la lista en una línea distinta</small>
 		</div>
 	</div>
 
@@ -446,7 +459,7 @@
 	</div>
 
 	<cfif tableTypeId IS NOT 3>
-		
+
 	<div class="row">
 		<div class="col-md-12">
 			<label for="sort_by_this" class="control-label" lang="es">Ordenar por defecto por este campo</label>
@@ -505,7 +518,7 @@
 			<select name="default_value" id="default_value_list" class="selectpicker span5" <cfif field.field_type_id NEQ 9 OR field.field_type_id NEQ 10>disabled="disabled"</cfif>><!---multiple---></select>
 		</div>
 	</div>
-	
+
 	<div class="row" id="userDefaultValue">
 		<div class="col-md-12">
 
@@ -544,7 +557,7 @@
 					<input type="text" name="default_value_user_full_name" id="default_value_user_full_name" value="#field_value_user#" class="form-control" readonly onclick="openUserSelectorWithField('default_value_user')" />
 				</div>
 				<div class="col-xs-1 col-sm-6">
-					<button onclick="clearFieldSelectedUser('default_value_user')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button> 
+					<button onclick="clearFieldSelectedUser('default_value_user')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
 				</div>
 			</div>
 			<div class="row">
@@ -587,7 +600,7 @@
 						<cfset field_value_title = "ARCHIVO NO DISPONIBLE">
 						<cfset field_default_value = "">
 					</cfif>
-					
+
 				<cfelse><!--- ITEM --->
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
@@ -612,7 +625,7 @@
 					</cfif>
 
 				</cfif>
-				
+
 			<cfelse>
 				<cfset field_value_title = "">
 			</cfif>
@@ -629,7 +642,7 @@
 					<textarea name="default_value_title" id="default_value_item_title" class="form-control" readonly onclick="openItemSelectorWithField($('##item_type_id').val(),'default_value_item')">#field_value_title#</textarea>
 				</div>
 				<div class="col-xs-1 col-sm-6">
-					<button onclick="clearFieldSelectedItem('default_value_item')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button> 
+					<button onclick="clearFieldSelectedItem('default_value_item')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>
 				</div>
 			</div>
 			<div class="row">
@@ -652,7 +665,7 @@
 
 		<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 	</div>
-	
+
 </cfform>
 </cfoutput>
 </div>

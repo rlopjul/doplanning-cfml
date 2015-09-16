@@ -1,7 +1,7 @@
 <!--- Copyright Era7 Information Technologies 2007-2013 --->
 
 <cfcomponent output="false">
-	
+
 	<cfset component = "ViewManager">
 
 	<!--- <cfset timeZoneTo = "+1:00"> --->
@@ -9,7 +9,7 @@
 
 
 	<!--- ------------------------------------- createView -------------------------------------  --->
-	
+
 	<cffunction name="createView" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -35,7 +35,7 @@
 		<cfset var isUserPublicationAreaResponsible = false>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -45,7 +45,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 			</cfinvoke>
-			
+
 			<cfif getTableResponse.result IS false>
 				<cfreturn getTableResponse>
 			</cfif>
@@ -66,7 +66,7 @@
 
 			<!--- checkScope --->
 			<cfif APPLICATION.publicationScope IS true AND isNumeric(table.publication_scope_id)>
-				
+
 				<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
 					<cfinvokeargument name="scope_id" value="#table.publication_scope_id#">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -75,12 +75,12 @@
 				<cfif isInScopeResult.result IS false>
 
 					<cfset response = {result=false, view_id=#view_id#, table_id=#arguments.table_id#, message="El ámbito definido no permite publicar esta vista en esta área"}>
-					
+
 					<cfreturn response>
-					
+
 				</cfif>
 
-			</cfif>	
+			</cfif>
 
 			<cfif APPLICATION.publicationValidation IS true AND arguments.publication_validated IS true>
 
@@ -89,7 +89,7 @@
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfinvoke>
 
-			</cfif>	
+			</cfif>
 
 			<cfset arguments.title = trim(arguments.title)>
 
@@ -101,7 +101,7 @@
 					user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 					area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
 					title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
-					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">, 
+					description = <cfqueryparam value="#arguments.description#" cfsqltype="cf_sql_longvarchar">,
 					<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) GT 0>
 						 publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM'),
 					</cfif>
@@ -110,14 +110,14 @@
 						<cfif arguments.publication_validated IS true AND isUserPublicationAreaResponsible IS true>
 							publication_validated = <cfqueryparam value="true" cfsqltype="cf_sql_bit">,
 							publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-							publication_validated_date = NOW(), 						
+							publication_validated_date = NOW(),
 						<cfelse>
 							publication_validated = <cfqueryparam value="false" cfsqltype="cf_sql_bit">,
-						</cfif>												
+						</cfif>
 					</cfif>
 					<cfloop list="creation_date,last_update_date,insert_user,update_user" index="field_name">
 						include_#field_name# = <cfqueryparam value="#arguments["include_#field_name#"]#" cfsqltype="cf_sql_bit">,
-						#field_name#_position = <cfqueryparam value="#arguments["#field_name#_position"]#" cfsqltype="cf_sql_integer">, 
+						#field_name#_position = <cfqueryparam value="#arguments["#field_name#_position"]#" cfsqltype="cf_sql_integer">,
 						<!--- <cfif field_name NEQ "update_user">,</cfif> --->
 					</cfloop>
 					creation_date = NOW();
@@ -133,7 +133,7 @@
 				<cfinvoke component="AreaItemManager" method="getAreaItemsLastPosition" returnvariable="viewLastPosition">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfinvoke>
-				
+
 				<cfset viewPostion = viewLastPosition+1>
 
 				<cfinvoke component="AreaItemManager" method="insertAreaItemPosition">
@@ -159,7 +159,7 @@
 				<cfinvokeargument name="with_table" value="false"/>
 				<cfinvokeargument name="parse_dates" value="true"/>
 				<cfinvokeargument name="published" value="false">
-				
+
 				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -172,19 +172,20 @@
 					<cfinvokeargument name="objectItem" value="#getViewQuery#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="action" value="new">
+					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 			<cfelse><!---Item does not exist--->
-			
+
 				<cfset error_code = 501>
-			
+
 				<cfthrow errorcode="#error_code#">
 
 			</cfif>
-			
+
 			<cfset response = {result=true, view_id=#view_id#, table_id=#arguments.table_id#}>
 
 			<cfcatch>
@@ -195,14 +196,14 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- addFieldsToView -------------------------------------  --->
 
 	<!---IMPORTANTE: La llamada a esta función tiene que hacerse dentro de una transacción <cftransaction>--->
-	
+
 	<cffunction name="addFieldsToView" output="false" access="package" returntype="void">
 		<cfargument name="view_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -232,12 +233,12 @@
 
 			</cfloop>
 
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- updateView -------------------------------------  --->
-	
+
 	<cffunction name="updateView" output="false" access="public" returntype="struct">
 		<cfargument name="view_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -257,7 +258,7 @@
 		<cfset var table_area_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -290,7 +291,7 @@
 
 			<!--- checkScope --->
 			<cfif APPLICATION.publicationScope IS true AND isNumeric(view.table_publication_scope_id)>
-				
+
 				<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isInScopeResult">
 					<cfinvokeargument name="scope_id" value="#view.table_publication_scope_id#">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -299,12 +300,12 @@
 				<cfif isInScopeResult.result IS false>
 
 					<cfset response = {result=false, view_id=#arguments.view_id#, table_id=#view.table_id#, message="El ámbito definido no permite publicar esta vista en esta área"}>
-					
+
 					<cfreturn response>
-					
+
 				</cfif>
 
-			</cfif>	
+			</cfif>
 
 			<cfif APPLICATION.publicationValidation IS true>
 
@@ -313,7 +314,7 @@
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfinvoke>
 
-			</cfif>		
+			</cfif>
 
 			<cfset arguments.title = trim(arguments.title)>
 
@@ -333,7 +334,7 @@
 						, publication_validated = <cfqueryparam value="#arguments.publication_validated#" cfsqltype="cf_sql_bit">
 						<cfif arguments.publication_validated IS true AND view.publication_validated IS false>
 							, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
-							, publication_validated_date = NOW()						
+							, publication_validated_date = NOW()
 						</cfif>
 					</cfif>
 					<cfloop list="creation_date,last_update_date,insert_user,update_user" index="field_name">
@@ -366,7 +367,7 @@
 				<cfinvokeargument name="with_table" value="false"/>
 				<cfinvokeargument name="parse_dates" value="true"/>
 				<cfinvokeargument name="published" value="false">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -385,7 +386,7 @@
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
-					
+
 					<!--- Alert --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
 						<cfinvokeargument name="objectItem" value="#getViewQuery#">
@@ -413,13 +414,13 @@
 				</cfif>
 
 			<cfelse><!---Item does not exist--->
-			
+
 				<cfset error_code = 501>
-			
+
 				<cfthrow errorcode="#error_code#">
 
 			</cfif>
-		
+
 			<cfset response = {result=true, view_id=#arguments.view_id#, table_id=#view.table_id#}>
 
 			<cfcatch>
@@ -430,13 +431,13 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
-	
+
 	<!--- ------------------------------------- deleteView -------------------------------------  --->
-	
+
 	<cffunction name="deleteView" output="false" access="public" returntype="struct">
 		<cfargument name="view_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -449,7 +450,7 @@
 		<cfset var table_area_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -483,7 +484,7 @@
 
 				<cfinvokeargument name="viewQuery" value="#view#">
 				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -496,12 +497,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ----------------------- DELETE AREA VIEWS -------------------------------- --->
-	
+
 	<cffunction name="deleteAreaViews" returntype="struct" access="package">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
@@ -509,22 +510,22 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-		
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
-			
+
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-			
+
 			<!--- --------------DELETE AREA VIEWS------------------------- --->
 			<cfquery name="itemsQuery" datasource="#client_dsn#">
-				SELECT id 
-				FROM #client_abb#_#itemTypeTable# 
+				SELECT id
+				FROM #client_abb#_#itemTypeTable#
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			
+
 			<cfif itemsQuery.recordCount GT 0>
-			
+
 				<cfloop query="itemsQuery">
 
 					<!--- deleteView --->
@@ -533,7 +534,7 @@
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 
 						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-						
+
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
@@ -541,9 +542,9 @@
 					<cfif deleteViewResponse.result IS false>
 						<cfthrow message="#deleteViewResponse.message#">
 					</cfif>
-					
+
 				</cfloop>
-				
+
 			</cfif>
 
 			<cfset response = {result=true}>
@@ -556,11 +557,11 @@
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
-		
+
 	<!---
 
 	<cffunction name="deleteTableViews" output="false" access="package" returntype="void">
@@ -568,7 +569,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
 		<cfset var method = "deleteTableViews">
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -578,7 +579,7 @@
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_table" value="true">
 				<cfinvokeargument name="parse_dates" value="true">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -586,7 +587,7 @@
 			<cfif getTableViewsQuery.recordCount GT 0>
 
 				<cfloop query="getTableViewsQuery">
-					
+
 					<cfinvoke component="ViewManager" method="deleteView" returnvariable="deleteViewResponse">
 						<cfinvokeargument name="view_id" value="#getTableViewsQuery.view_id#">
 						<cfinvokeargument name="itemTypeId" value="#viewTypeId#">
@@ -594,7 +595,7 @@
 					</cfinvoke>
 
 					<cfif deleteViewResponse.result IS false>
-						
+
 						<cfthrow message="#deleteViewResponse.message#">
 
 					</cfif>
@@ -614,7 +615,7 @@
 
 
 	<!--- ------------------------------------- getView -------------------------------------  --->
-	
+
 	<cffunction name="getView" output="false" access="public" returntype="struct">
 		<cfargument name="view_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -628,22 +629,22 @@
 		<cfset var area_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ViewQuery" method="getView" returnvariable="getViewQuery">
 				<cfinvokeargument name="view_id" value="#arguments.view_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="with_table" value="#arguments.with_table#"/>
 				<cfinvokeargument name="parse_dates" value="#arguments.parse_dates#"/>
 				<cfinvokeargument name="published" value="false">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfif getViewQuery.recordCount GT 0>
 
 				<cfset area_id = getViewQuery.area_id>
@@ -654,13 +655,13 @@
 				<cfset response = {result=true, view=#getViewQuery#}>
 
 			<cfelse><!---Item does not exist--->
-			
+
 				<cfset error_code = 501>
-			
+
 				<cfthrow errorcode="#error_code#">
 
 			</cfif>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -669,12 +670,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- getEmptyView -------------------------------------  --->
-	
+
 	<cffunction name="getEmptyView" output="false" access="public" returntype="struct">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
@@ -683,11 +684,11 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfquery name="getViewQuery" datasource="#client_dsn#">
 				SELECT *
 				FROM #client_abb#_#tableTypeTable#_views
@@ -708,12 +709,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- getViewFields -------------------------------------  --->
-	
+
 	<cffunction name="getViewFields" output="false" access="public" returntype="struct">
 		<cfargument name="view_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -725,7 +726,7 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<!--- checkAreaAccess in getView --->
@@ -748,13 +749,13 @@
 				<cfinvokeargument name="with_table" value="true">
 				<cfinvokeargument name="view_id" value="#arguments.view_id#">
 				<cfinvokeargument name="with_view_extra_fields" value="#arguments.with_view_extra_fields#">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
 			<cfset response = {result=true, tableFields=getTableFieldsQuery}>
-								
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -763,8 +764,8 @@
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
-	
+
 
 </cfcomponent>

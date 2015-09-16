@@ -31,29 +31,29 @@
 </cfoutput>
 
 <script>
-	
+
 	$(function() {
 
 		$('#from_date').datepicker({
-		  format: 'dd-mm-yyyy', 
+		  format: 'dd-mm-yyyy',
 		  autoclose: true,
 		  weekStart: 1,
 		  language: 'es',
 		  todayBtn: 'linked',
-		  endDate: $('#end_date').val()  
+		  endDate: $('#end_date').val()
 		});
-	
+
 		$('#end_date').datepicker({
 		  format: 'dd-mm-yyyy',
 		  weekStart: 1,
 		  language: 'es',
-		  todayBtn: 'linked', 
+		  todayBtn: 'linked',
 		  autoclose: true
 		});
 
 	});
-	
-	
+
+
 	function setEndDate(){
 		$('#from_date').datepicker('setEndDate', $('#end_date').val());
 	}
@@ -82,7 +82,7 @@
 
 					<div class="row">
 
-						<label for="from_date" class="col-xs-5 col-sm-3 control-label" lang="es"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha desde</span></label> 
+						<label for="from_date" class="col-xs-5 col-sm-3 control-label" lang="es"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha desde</span></label>
 
 						<div class="col-xs-7 col-sm-9">
 							<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()">
@@ -92,7 +92,7 @@
 
 					<div class="row">
 
-						<label for="end_date" class="col-xs-5 col-sm-3 control-label"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha hasta</span></label> 
+						<label for="end_date" class="col-xs-5 col-sm-3 control-label"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha hasta</span></label>
 
 						<div class="col-xs-7 col-sm-9">
 							<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()"/>
@@ -102,7 +102,7 @@
 
 					<div class="row">
 
-						<div class="col-sm-offset-3 col-sm-10"> 
+						<div class="col-sm-offset-3 col-sm-10">
 							<input type="submit" name="search" class="btn btn-primary" style="margin-top:30px;" lang="es" value="Filtrar" />
 						</div>
 
@@ -123,15 +123,15 @@
 
 	<script>
 
-		$(document).ready(function() { 
-			
+		$(document).ready(function() {
 
-			$("##statisticsTable").tablesorter({ 
+
+			$("##statisticsTable").tablesorter({
 
 				widgets: ['zebra','uitheme','filter','stickyHeaders','math'],<!---'select',--->
 				theme : "bootstrap",
 				headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
-				headers: { 
+				headers: {
 					0: {
 						sorter: "text"
 					}
@@ -168,9 +168,9 @@
 			    }
 			});
 
-		}); 
+		});
 	</script>
-	
+
 
 	<div class="row">
 		<div class="col-sm-12">
@@ -201,7 +201,7 @@
 					</tr>
 				</tfoot>
 
-				
+
 				<tbody>
 
 					<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
@@ -217,40 +217,56 @@
 									<!---<a href="#APPLICATION.htmlPath#/file.cfm?file=#filesDownloadsQuery.file_id#" target="_blank">--->
 								</cfif>
 								#filesDownloadsQuery.file_name#</a>
-							</td>			
+							</td>
 							<td>#filesDownloadsQuery.name#</td>
 							<td>#filesDownloadsQuery.file_type#</td>
 							<td>#filesDownloadsQuery.uploading_date#</td>
 							<td>#filesDownloadsQuery.replacement_date#</td>
-							<td>#filesDownloadsQuery.downloads#</td>			
+							<td>#filesDownloadsQuery.downloads#</td>
 							<td>
 
 								<cfif isNumeric(filesDownloadsQuery.item_id)>
-									
+
 									<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
 										<cfinvokeargument name="item_id" value="#filesDownloadsQuery.item_id#">
 										<cfinvokeargument name="itemTypeId" value="#filesDownloadsQuery.item_type_id#">
 										<cfinvokeargument name="parse_dates" value="false">
 										<cfinvokeargument name="published" value="false">
-										
+
 										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 										<cfinvokeargument name="client_dsn" value="#client_dsn#">
 									</cfinvoke>
 
 									<cfif itemQuery.recordCount GT 0>
-										
-										<!---itemUrl--->
-										<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
-											<cfinvokeargument name="item_id" value="#filesDownloadsQuery.item_id#">
-											<cfinvokeargument name="itemTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
-											<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
 
-											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-										</cfinvoke>
+											<cfif listFind("11,12", filesDownloadsQuery.item_type_id) GT 0>
 
-										<a href="#areaItemUrl#" target="_blank">#itemTypesStruct[filesDownloadsQuery.item_type_id].label#</a>
+												<!---tableRowUrl--->
+												<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="areaItemUrl">
+													<cfinvokeargument name="table_id" value="#filesDownloadsQuery.item_id#">
+													<cfinvokeargument name="tableTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
+													<cfinvokeargument name="row_id" value="#filesDownloadsQuery.row_id#">
+													<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
 
-									</cfif>
+													<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+												</cfinvoke>
+
+											<cfelse>
+
+												<!---itemUrl--->
+												<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+													<cfinvokeargument name="item_id" value="#filesDownloadsQuery.item_id#">
+													<cfinvokeargument name="itemTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
+													<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
+
+													<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+												</cfinvoke>
+
+											</cfif>
+
+											<a href="#areaItemUrl#" target="_blank">#itemTypesStruct[filesDownloadsQuery.item_type_id].label#</a>
+
+										</cfif>
 
 								</cfif>
 

@@ -20,7 +20,7 @@
 <title>#APPLICATION.title#<cfif isDefined("SESSION.client_name")> - #SESSION.client_name#</cfif></title>
 
 <cfif APPLICATION.identifier EQ "dp">
-<link href="#APPLICATION.htmlPath#/assets/favicon.ico" rel="shortcut icon" type="image/x-icon"> 
+<link href="#APPLICATION.htmlPath#/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 </cfif>
 
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
@@ -78,7 +78,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 <script>
 	<!---To enable the loading spinner in Bootstrap 3--->
-	$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
+	$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner =
     '<div class="loading-spinner" style="width: 200px; margin-left: -100px;">' +
         '<div class="progress progress-striped active">' +
             '<div class="progress-bar" style="width: 100%;"></div>' +
@@ -86,7 +86,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
     '</div>';
     <!--- To set modal max height --->
 	$.fn.modal.defaults.maxHeight = function(){
-	    return $(window).height() - 170; 
+	    return $(window).height() - 170;
 	}
 </script>
 
@@ -108,9 +108,9 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>
 	<cfset area_id = URL.area>
-	
+
 	<cfinclude template="#APPLICATION.htmlPath#/includes/url_redirect.cfm">
-	
+
 	<cfif isDefined("redirect_page")>
 		<cfset iframe_page = redirect_area_page>
 	<cfelse>
@@ -118,7 +118,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 	</cfif>
 <cfelse>
 	<cfset area_id = "null">
-	
+
 	<cfset iframe_page = "">
 </cfif>
 
@@ -129,13 +129,13 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 	var iframePage = "#iframe_page#";
 	var userLanguage = "#objectUser.language#";
 	var clientAbb = "#SESSION.client_abb#";
-	
+
 	var areaImgHeight = 60;
-	
+
 	<!---Si se cambian estos valores, también hay que cambiarlos en los CSS--->
 	var treeDefaultWidth = "99%";
 	var areaDefaultWidth = "99%";
-	
+
 	//Language
 	var selectedLanguage = 'es';
 	<!---jquery_lang_js.prototype.defaultLang = 'es';
@@ -144,7 +144,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 	window.lang = new Lang('es');
 	<!---window.lang.dynamic('en', '#APPLICATION.htmlPath#/language/main_en.json');--->
 	</cfoutput>
-	
+
 </script>
 
 <cfoutput>
@@ -157,19 +157,19 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 	<cfset homeTabEnabled = true>
 <cfelse>
 	<cfset homeTabEnabled = false>
-</cfif> 
+</cfif>
 
 <script>
 
 	<cfif homeTabEnabled IS true>
 		currentTab = "#tab0";
 	</cfif>
-	
+
 	function resizeIframe() {
 		var newHeight = windowHeight()-66;
 
 		$(".iframes").height(newHeight);
-		
+
 		$("#itemIframe").height(newHeight-areaImgHeight);
 		$("#searchItemIframe").height(newHeight);
 		$("#treeContainer").height(newHeight-50);
@@ -179,18 +179,18 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 		//alert($("#lastItemsHead").height());
 	}
-	
+
 	function changeLanguage() {
-		
+
 		if(selectedLanguage == 'en')
 			newLanguage = 'es';
 		else
 			newLanguage = 'en';
-		
+
 		window.lang.change(newLanguage);
-		
+
 		location.href = "language_selection.cfm?lan="+newLanguage;
-	
+
 	}
 
 	function treeLoaded() {
@@ -198,7 +198,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 		if ( !isNaN(selectAreaId) ) { //Hay área para seleccionar
 
 			selectTreeNode(selectAreaId);
-			
+
 		}else if( isNaN(selectAreaId) ) { //No hay area para seleccionar
 
 			emptyIframes();
@@ -211,14 +211,14 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 		if($("#mainContainer").is(":hidden"))
 			$("#mainContainer").show();
 	}
-	
+
 	function searchIframeLoaded() {
 
 		if($("#searchIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
 			$("#loadingContainer").hide();
 			<!---$("#mainContainer").show();--->
 		}
-			
+
 	}
 
 	function loadAreaImage(areaId) {
@@ -230,11 +230,11 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 	}
 
 	function goToAreaLink() {
-		
+
 		if(areaWithLink == true) {
 			window.open("../app/goToAreaLink.cfm?id="+curAreaId, "_blank");
 		}
-		
+
 	}
 
 
@@ -242,7 +242,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 		$("#areaIframe").attr('src', 'iframes/area.cfm');
 		$("#itemIframe").attr('src', 'about:blank');
-		
+
 	}
 
 	function loadHome(){
@@ -279,12 +279,12 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 	})(window);
 
 	--->
-	
+
 	$(window).resize( function() {
 		resizeIframe();
 	});
-	
-	$(window).load( function() {	
+
+	$(window).load( function() {
 
 		resizeIframe();
 
@@ -293,44 +293,44 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 		</cfif>--->
 
 		<!---loadTree();--->
-		showTree(true);	
+		showTree(true);
 
-		<!---var jsTreeContent = $('#areasTreeContainer').jstree(true).get_json('#', {'no_state':true, 'no_id':true, 'no_data':true, 'flat':true});--->	
+		<!---var jsTreeContent = $('#areasTreeContainer').jstree(true).get_json('#', {'no_state':true, 'no_id':true, 'no_data':true, 'flat':true});--->
 		<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
 		Messenger.Private.initGetNewConversations();
 		</cfif>
-		
+
 		<!---/*$("#maximizeTree").click( function() {
 			maximizeTree();
 		} );
-		
+
 		$("#restoreTree").click( function() {
 			restoreTree();
 		} );
-		
+
 		$("#maximizeArea").click( function() {
 			maximizeArea();
 		} );
-		
+
 		$("#restoreArea").click( function() {
 			restoreArea();
 		} );*/--->
-				
+
 		$("#areaImage").load( function () {
-			areaImgHeight = $("#areaImage").height();			
-			resizeIframe();	
+			areaImgHeight = $("#areaImage").height();
+			resizeIframe();
 		});
 
 		$('#dpTab a').click( function (e) {
 			if(e.preventDefault)
 		  		e.preventDefault();
-			
+
 		  	$(this).tab('show');
-			
+
 		});
-		
+
 		$('a[data-toggle="tab"]').on('show.bs.tab', function (e) { //On show tab
-			
+
 			var pattern=/#.+/gi //use regex to get anchor(==selector)
 			currentTab = e.target.toString().match(pattern)[0];
 
@@ -341,21 +341,21 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 			}
 
 		})
-		
-		$("#searchText").on("keydown", function(e) { 
-		
+
+		$("#searchText").on("keydown", function(e) {
+
 			if(e.which == 13) //Enter key
 				searchTextInTree();
-			
+
 		});
 
-		
+
 	});
-	
+
 	$(document).ready(function () {
 
 		//Language
-   		<!---window.lang.run();--->		
+   		<!---window.lang.run();--->
 		<!---var savedLanguage = selectedLanguage;
 
    		if(hasLocalStorage())
@@ -367,7 +367,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 			window.lang.change(userLanguage);
 			selectedLanguage = userLanguage;
 		}
-		
+
 		if(selectedLanguage == 'en')
 			$('#languageSelector').text('Español');
 		else
@@ -380,13 +380,13 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 			hideAlertMessage();
 
 		});
-						
+
 	});
-	
+
 </script>
 </head>
 
-<body class="body_tree">			
+<body class="body_tree">
 
 <!--- Loading --->
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
@@ -395,14 +395,14 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 <cfinclude template="#APPLICATION.htmlPath#/includes/main_alert.cfm">
 
 <div class="div_contenedor_contenido">
-  	
+
 	<!---<cfset current_page = "main.cfm">--->
-	
+
 	<div id="mainContainer">
-	
-		
+
+
 		<div class="tabbable"><!---Tab Panel--->
-	
+
 		  <ul class="nav nav-pills" id="dpTab" style="clear:none;padding-bottom:5px;">
 		  	<cfif homeTabEnabled IS true>
 		  		<li class="active"><a href="#tab0" data-toggle="tab" lang="es"><i class="icon-home"></i></a></li>
@@ -411,26 +411,26 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Búsqueda</a></li>
 		  </ul>
-		  
+
 		  <cfoutput>
 		  <div style="clear:none; text-align:center"><!---float:right; --->
 
 		  	<span class="main_title" style="font-weight:bold">#SESSION.client_name#</span>
-		  
+
 		  	<div style="float:right">
 
 			  	<div style="float:right; text-align:right; clear:none;">
 					<a href="preferences.cfm" title="Preferencias del usuario" class="link_user_logged">#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</a><br/>
-					
+
 					<a href="logout.cfm" title="Cerrar sesión" class="link_user_logout" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
-		
+
 				</div>
-				
+
 				<cfif APPLICATION.identifier NEQ "vpnet">
 					<div style="float:right; padding-top:1px; padding-right:6px; text-align:right;"><!---width:80px; --->
-						
+
 						<div class="btn-toolbar">
-						
+
 							<cfif objectUser.general_administrator EQ true>
 
 								<div class="btn-group">
@@ -442,7 +442,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 										<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=generalAdmin"><img src="assets/icons_#APPLICATION.identifier#/administration.png" alt="Administración general versión Flash" title="Administración general versión Flash" style="margin-right:3px;" lang="es"/></a>
 									</div>
 								</cfif>--->
-								
+
 							<cfelse>
 								<cfxml variable="areasAdminXml">
 									#objectUser.areas_administration#
@@ -459,7 +459,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 									</div>
 								</cfif>
 							</cfif>
-						
+
 							<div class="btn-group">
 								<a href="preferences.cfm" title="Preferencias del usuario" lang="es">
 								<cfif len(objectUser.image_file) GT 0>
@@ -473,12 +473,12 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 						</div>
 					</div>
 				</cfif>
-			  
+
 			  </div>
 			  </cfoutput>
 
 		  </div>
-		  
+
 		  <div class="tab-content" style="clear:both;">
 
 		  	<cfif homeTabEnabled IS true>
@@ -494,12 +494,12 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 		  	</div>
 		  	</cfif>
-		  
+
 			<div class="tab-pane <cfif homeTabEnabled IS false>active</cfif>" id="tab1"><!---Tab Tree--->
-				
+
 				<div class="container" style="width:100%;">
 					<div class="row" style="padding-bottom:5px;">
-						
+
 						<div class="col-sm-12" style="padding:0;">
 							<div class="btn-toolbar">
 								<div class="btn-group">
@@ -516,20 +516,20 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 								</div>
 								<div class="btn-group">
 									<a onClick="updateTree();" class="btn btn-default" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
-								</div>									
+								</div>
 								<!---<a onclick="expandTree();" class="btn btn-xs" title="Abrir nodos del árbol"><i class="icon-plus"></i> Expandir</a>
 								<a onclick="collapseTree();" class="btn btn-xs" title="Abrir nodos del árbol"><i class="icon-minus"></i> Colapsar</a>--->
-								
+
 							</div>
 							<input type="hidden" id="changeTabDisabled" value="true"/><!---No cambiar de pestaña al seleccionar área--->
 						</div>
 
-						<!---<div class="col-sm-1" style="padding:0;">	
+						<!---<div class="col-sm-1" style="padding:0;">
 						</div>--->
 
 					</div>
 				</div>
-				
+
 				<!---treeContainer--->
 				<div id="treeWrapper">
 					<!---<cfoutput>
@@ -540,16 +540,16 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 					</cfoutput>--->
 					<div id="treeContainer" style="overflow:auto;clear:both;">
 						<cfinclude template="#APPLICATION.htmlPath#/html_content/tree.cfm">
-					</div>			
+					</div>
 				</div>
-				
+
 				<!---foot--->
-				<div>				
-					
+				<div>
+
 					<div style="float:right; padding:0; margin:0;">
-						
+
 						<a onClick="changeLanguage()" id="languageSelector" style="font-size:12px;cursor:pointer;">Inglés</a>
-						
+
 						<span style="font-size:12px;">&nbsp;|&nbsp;</span>
 						<cfoutput>
 						<a href="mobile.cfm?abb=#SESSION.client_abb#" style="font-size:12px" lang="es">Versión móvil</a>
@@ -559,32 +559,32 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 						<a href="#APPLICATION.path#/#SESSION.client_id#/index.cfm?app=flash" style="font-size:12px">Versión Flash</a>
 						</cfoutput>--->
 					</div>
-					
+
 				</div>
-				
+
 			</div><!---END Tab Tree--->
-			
-			
+
+
 			<div class="tab-pane" id="tab2"><!---Tab Area--->
-				
+
 				<!---areaContainer--->
 				<div id="areaContainer">
-									
+
 					<!---<cfoutput>
 					<div style="cursor:pointer;float:right;">
 					<img src="#APPLICATION.htmlPath#/assets/v3/icons/maximize.png" title="Maximizar" id="maximizeArea" />
 					<img src="#APPLICATION.htmlPath#/assets/v3/icons/restore.png" title="Restaurar" id="restoreArea" style="display:none;"/>
 					</div>
 					</cfoutput>--->
-					
+
 					<div id="itemsContainer"><!---Items--->
-					
+
 						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="areaIframe" onload="areaIframeLoaded()"></iframe><!---iframes/area.cfm--->
-					
+
 					</div>
-					
+
 					<div id="itemContainer"><!---Item--->
-					
+
 						<a id="areaImageAnchor" onClick="goToAreaLink()"><!---Banner--->
 						<cfoutput>
 							<cfif isNumeric(area_id)>
@@ -594,55 +594,55 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 							</cfif>
 						</cfoutput>
 						</a>
-						
+
 						<!---Item--->
 						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframeItem" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="itemIframe"></iframe>
 						<!---iframes2/empty.cfm--->
-						
+
 					</div>
-					
-					
+
+
 				</div>
-				
+
 			</div><!---END Tab Area--->
-			
-			
+
+
 			<div class="tab-pane" id="tab3"><!---Tab Search--->
-				
+
 				<!---searchContainer--->
 				<div id="searchContainer">
-					
-					
+
+
 					<div id="searchItemsContainer"><!---Items Search--->
-						
+
 						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="searchIframe" onload="searchIframeLoaded()"></iframe><!---iframes/messages_search.cfm--->
-					
+
 					</div>
-					
+
 					<div id="searchItemContainer"><!---Item Search--->
-					
+
 						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="searchItem" src="about:blank" style="height:100%;background-color:#FFFFFF;" id="searchItemIframe" ></iframe><!---iframes2/empty.cfm"--->
-						
+
 					</div>
-					
-				
+
+
 				</div>
-				
+
 			</div><!---END Tab Search--->
-						
-			
+
+
 		  </div>
-		  
+
 		</div><!---END TabPanel--->
-	
-		
+
+
 		<div style="clear:both"><!-- --></div>
-		
+
 	</div>
 
 	<!---Alert modal--->
 	<div id="alertModal" class="modal container fade" tabindex="-1"></div>
-	
+
 	<div style="clear:both"><!-- --></div>
 	<div class="msg_div_error" id="errorMessage"></div>
 
@@ -679,4 +679,3 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 </body>
 </html>
 </cfprocessingdirective>
-	

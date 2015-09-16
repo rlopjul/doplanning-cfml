@@ -2,8 +2,8 @@
 
 <cfcomponent output="false">
 
-	<cfset component = "TableQuery">	
-	
+	<cfset component = "TableQuery">
+
 	<cfset dateFormat = APPLICATION.dbDateFormat><!---Formato de fecha en la que se debe recibir los parámetros--->
 	<cfset dateTimeFormat = APPLICATION.dbDateTimeFormat>
 	<!--- <cfset timeZoneTo = "+1:00"> --->
@@ -11,7 +11,7 @@
 
 
 	<!---getTable--->
-		
+
 	<cffunction name="getTable" output="false" returntype="query" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -19,14 +19,14 @@
 		<cfargument name="published" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-				
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "getTable">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
 			<cfquery name="selectTableQuery" datasource="#client_dsn#">
-				SELECT tables.id, tables.id AS table_id, tables.user_in_charge, tables.title, tables.description, tables.attached_file_id, tables.attached_file_name, tables.area_id, tables.link, 
+				SELECT tables.id, tables.id AS table_id, tables.user_in_charge, tables.title, tables.description, tables.attached_file_id, tables.attached_file_name, tables.area_id, tables.link,
 				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				, tables.attached_image_id, tables.attached_image_name
 				, tables.link_target
@@ -35,8 +35,8 @@
 				</cfif>
 				, tables.structure_available <!---files.file_type, --->
 				<cfif arguments.parse_dates IS true>
-					, DATE_FORMAT(tables.creation_date, '#dateTimeFormat#') AS creation_date 
-					, DATE_FORMAT(tables.last_update_date, '#dateTimeFormat#') AS last_update_date 
+					, DATE_FORMAT(tables.creation_date, '#dateTimeFormat#') AS creation_date
+					, DATE_FORMAT(tables.last_update_date, '#dateTimeFormat#') AS last_update_date
 				<cfelse>
 					, tables.creation_date, tables.last_update_date
 				</cfif>
@@ -64,17 +64,17 @@
 					<cfif APPLICATION.publicationValidation IS true>
 					AND ( tables.publication_validated IS NULL OR tables.publication_validated = true )
 					</cfif>
-				</cfif>; 
+				</cfif>;
 			</cfquery>
-			
+
 		<cfreturn selectTableQuery>
-		
+
 	</cffunction>
 
 
 
 	<!---getAllTables--->
-	
+
 	<cffunction name="getAllTables" output="false" returntype="struct" access="public">
 		<cfargument name="tableTypeId" type="numeric" required="yes">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
@@ -82,30 +82,30 @@
 		<cfargument name="with_area" type="boolean" required="no" default="false">
 		<cfargument name="user_in_charge" type="numeric" required="no">
 		<cfargument name="structure_available" type="boolean" required="false">
-		<cfargument name="limit" type="numeric" required="no">		
-		
+		<cfargument name="limit" type="numeric" required="no">
+
 		<cfargument name="client_abb" type="string" required="yes">
-		<cfargument name="client_dsn" type="string" required="yes">	
-				
+		<cfargument name="client_dsn" type="string" required="yes">
+
 		<cfset var method = "getAllTables">
 
 		<cfset var count = 0>
-							
+
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cftransaction>
-			
+
 				<cfquery name="tablesQuery" datasource="#client_dsn#">
 					SELECT items.id, items.title, items.user_in_charge
 					<cfif arguments.parse_dates IS true>
-						, DATE_FORMAT(items.creation_date, '#datetime_format#') AS creation_date 
+						, DATE_FORMAT(items.creation_date, '#datetime_format#') AS creation_date
 					<cfelse>
 						, items.creation_date
 					</cfif>
 					, items.attached_file_name, items.attached_file_id, items.area_id
 					<cfif arguments.with_user IS true>
-					, users.family_name, users.name AS user_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type				
-					</cfif>		
+					, users.family_name, users.name AS user_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
+					</cfif>
 					, items.structure_available
 					<cfif arguments.tableTypeId IS 3><!---Typologies--->
 					, items.general
@@ -115,7 +115,7 @@
 					</cfif>
 					FROM #client_abb#_#tableTypeTable# AS items
 					<cfif arguments.with_user IS true>
-						INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id 
+						INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
 					</cfif>
 					<cfif arguments.with_area IS true>
 						INNER JOIN #client_abb#_areas AS areas ON items.area_id = areas.id
@@ -125,8 +125,8 @@
 					ON items.id = items_position.item_id AND items_position.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
 					AND items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 					</cfif>--->
-					WHERE 
-					status='ok' 
+					WHERE
+					status='ok'
 					<!---(<cfif isDefined("arguments.areas_ids")>
 					items.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
 					<cfelse>
@@ -150,7 +150,7 @@
 					</cfif>
 					)
 					</cfif>--->
-					
+
 					<cfif isDefined("arguments.structure_available")>
 					AND items.structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
 					</cfif>
@@ -158,42 +158,42 @@
 					<!---<cfif isDefined("arguments.area_id")>
 						ORDER BY items_position.position DESC, items.creation_date DESC
 					<cfelse>--->
-						ORDER BY items.creation_date DESC		
-					<!---</cfif>--->		
-					
+						ORDER BY items.creation_date DESC
+					<!---</cfif>--->
+
 					<cfif isDefined("arguments.limit")>
-					LIMIT <cfif isDefined("arguments.offset")>#arguments.offset#, </cfif>#arguments.limit#	
+					LIMIT <cfif isDefined("arguments.offset")>#arguments.offset#, </cfif>#arguments.limit#
 					</cfif>;
 				</cfquery>
-				
+
 				<cfif isDefined("arguments.limit")>
 					<cfquery datasource="#client_dsn#" name="getCount">
 						SELECT FOUND_ROWS() AS count;
 					</cfquery>
 					<cfset count = getCount.count>
 				</cfif>
-			
+
 			</cftransaction>
-		
+
 		<cfreturn {query=tablesQuery, count=count}>
-		
+
 	</cffunction>
 
 
 	<!---getTableUsers--->
-		
+
 	<cffunction name="getTableUsers" output="false" returntype="query" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="with_table" type="boolean" required="no" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-				
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "getTableUsers">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-							
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 			<cfquery name="getTableUsersQuery" datasource="#client_dsn#">
 				SELECT table_users.user_id, users.id, users.family_name, users.name, users.email, users.image_file, users.image_type,
 				CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
@@ -204,23 +204,22 @@
 				INNER JOIN `#client_abb#_users` AS users ON users.id = table_users.user_id
 				AND table_users.#tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
 				<cfif arguments.with_table IS true>
-					INNER JOIN `#client_abb#_#tableTypeTable#` AS tables ON tables.id = table_users.#tableTypeName#_id 
+					INNER JOIN `#client_abb#_#tableTypeTable#` AS tables ON tables.id = table_users.#tableTypeName#_id
 				</cfif>
 				ORDER BY users.name ASC;
 			</cfquery>
-				
+
 		<cfreturn getTableUsersQuery>
-				
+
 	</cffunction>
 
 
 	<!--- ------------------------------------ deleteTableInDatabase -----------------------------------  --->
-		
+
 	<cffunction name="deleteTableInDatabase" output="false" access="public" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
-
-		<cfargument name="user_id" type="numeric" required="false">
+		<cfargument name="user_id" type="numeric" required="true">
 
 		<cfargument name="send_alert" type="boolean" required="false" default="true">
 
@@ -228,12 +227,13 @@
 		<cfargument name="client_dsn" type="string" required="true">
 
 		<cfset var method = "deleteTableInDatabase">
-			
+
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRowsInDatabase">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRows">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="user_id" value="#arguments.user_id#">
 
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
@@ -264,14 +264,78 @@
 				</cfinvoke>
 
 			</cfif>
-			
+
 			<cfquery name="deleteTable" datasource="#client_dsn#">
 				DROP TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
-			</cfquery>	
+			</cfquery>
 
 			<cfinclude template="includes/logRecord.cfm">
 
 	</cffunction>
-	
 
-</cfcomponent>	
+
+	<!--- ------------------------------------ setTableLastUpdate -----------------------------------  --->
+
+	<cffunction name="setTableLastUpdate" output="false" access="public" returntype="void">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeTable" type="string" required="true">
+		<cfargument name="last_update_type" type="string" required="true"><!---item,row,field--->
+		<cfargument name="user_id" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+
+			<cfquery name="updateTableLastUpdate" datasource="#client_dsn#">
+				UPDATE `#client_abb#_#tableTypeTable#`
+				SET last_update_date = NOW(),
+				last_update_type = <cfqueryparam value="#arguments.last_update_type#" cfsqltype="cf_sql_varchar">,
+				<cfif isDefined("arguments.user_id")>
+				last_update_user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
+				<cfelse>
+				last_update_user_id = <cfqueryparam cfsqltype="cf_sql_integer" null="true">
+				</cfif>
+				WHERE id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+
+	</cffunction>
+
+
+	<!--- ------------------------------------ getTablePublicationAreas -----------------------------------  --->
+
+	<cffunction name="getTablePublicationAreas" output="false" access="public" returntype="query">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeTable" type="string" required="true">
+		<cfargument name="field_id" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+
+			<cfquery name="getTablePublicationAreas" datasource="#client_dsn#">
+				(	SELECT tables.area_id
+					FROM `#client_abb#_#tableTypeTable#` AS tables
+					WHERE tables.id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+
+				) UNION ALL
+
+				( SELECT views.area_id
+					FROM `#client_abb#_#tableTypeTable#_views` AS views
+				  <cfif isDefined("arguments.field_id")>
+						INNER JOIN `#client_abb#_#tableTypeTable#_views_fields` AS views_fields
+						ON views_fields.view_id = views.id
+						AND views_fields.field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+					WHERE views.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				);
+			</cfquery>
+
+		<cfreturn getTablePublicationAreas>
+
+	</cffunction>
+
+
+
+
+</cfcomponent>

@@ -9,18 +9,18 @@
 
 	<!--- -------------------------- isRootUser -------------------------------- --->
 	<!---Obtiene si el usuario está en la raiz de la organización o no--->
-	
+
 	<cffunction name="isRootUser" returntype="boolean" access="public">
  		<cfargument name="get_user_id" type="numeric" required="yes">
  		<cfargument name="root_area_id" type="numeric" required="false">
 
  		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-		
+
 		<cfset var method = "isInternalUser">
 
 		<cfset var root_area_id = "">
-				
+
 		<!--- <cfinvoke component="AreaManager" method="getRootAreaId" returnvariable="root_area_id">
 		</cfinvoke> --->
 
@@ -31,34 +31,34 @@
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
-			
+
 			<cfset root_area_id = rootAreaQuery.id>
 
 		<cfelse>
 
-			<cfset root_area_id = arguments.root_area_id>	
-			
+			<cfset root_area_id = arguments.root_area_id>
+
 		</cfif>
-		
+
 		<cfquery name="isRootUserQuery" datasource="#client_dsn#">
-			SELECT user_id 
+			SELECT user_id
 			FROM #client_abb#_areas_users
-			WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer"> 
+			WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">
 			AND area_id = <cfqueryparam value="#root_area_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
-		
+
 		<cfif isRootUserQuery.recordCount GT 0>
 			<cfreturn true>
 		<cfelse>
 			<cfreturn false>
-		</cfif>		
-	
+		</cfif>
+
 	</cffunction>
 
 
 	<!--- ---------------------------- GET USERS TO NOTIFY LISTS ------------------------------- --->
-	
-	<cffunction name="getUsersToNotifyLists" returntype="struct" output="false" access="public">	
+
+	<cffunction name="getUsersToNotifyLists" returntype="struct" output="false" access="public">
 		<!---<cfargument name="request" type="string" required="yes">--->
 		<cfargument name="area_id" type="numeric" required="true">
 
@@ -67,35 +67,35 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-	
+
 		<cfset var method = "getUsersToNotifyLists">
-		
+
 		<cfset var internalUsersEmails = structNew()>
 		<cfset var externalUsersEmails = structNew()>
-		
+
 		<cfset var internalUsersPhones = structNew()>
 		<cfset var externalUsersPhones = structNew()>
-		
+
         <cfset var structResponse = structNew()>
-		
+
         <cfinvoke component="UserManager" method="getUsersToNotify" argumentcollection="#arguments#" returnvariable="arrayUsersToNotify">
 			<!---<cfinvokeargument name="request" value="#arguments.request#"/>--->
 		</cfinvoke>
-		
+
 		<cfloop list="#APPLICATION.languages#" index="curLang">
-			
+
 			<cfset internalUsersEmails[curLang] = "">
 			<cfset externalUsersEmails[curLang] = "">
-			
+
 			<cfset internalUsersPhones[curLang] = "">
 			<cfset externalUsersPhones[curLang] = "">
-			
+
 		</cfloop>
-		
+
 		<cfloop index="curUser" array="#arrayUsersToNotify#">
-							
+
 			<cfset curr_val = curUser.email>
-			
+
 			<cfset curr_phone = curUser.mobile_phone>
 			<cfset curr_phone_ccode = curUser.mobile_phone_ccode>
 
@@ -107,7 +107,7 @@
 						<cfset internalUsersPhones[curUser.language] = ListAppend(internalUsersPhones[curUser.language],curr_phone_ccode&curr_phone,";")>
 					<cfelse><!---vpnet--->
 						<cfset internalUsersPhones[curUser.language]  = ListAppend(internalUsersPhones[curUser.language],curr_phone,";")>
-					</cfif>	
+					</cfif>
 				</cfif>
 			<cfelse>
 				<!---<cfset listExternalUsers = ListAppend(listExternalUsers,curr_val,";")>--->
@@ -119,26 +119,26 @@
 						<cfset externalUsersPhones[curUser.language] = ListAppend(externalUsersPhones[curUser.language],curr_phone,";")>
 					</cfif>
 				</cfif>
-			</cfif>	
-			
+			</cfif>
+
 		</cfloop>
-		
-				
+
+
         <cfset structResponse.structInternalUsersEmails = internalUsersEmails>
         <cfset structResponse.structExternalUsersEmails = externalUsersEmails>
-		
+
 		<cfset structResponse.structInternalUsersPhones = internalUsersPhones>
 		<cfset structResponse.structExternalUsersPhones = externalUsersPhones>
-		
+
 		<cfreturn structResponse>
-	
+
 	</cffunction>
 
 
 
 	<!--- ---------------------------- GET USERS TO NOTIFY  ------------------------------- --->
-	
-	<cffunction name="getUsersToNotify" returntype="array" output="false" access="public">	
+
+	<cffunction name="getUsersToNotify" returntype="array" output="false" access="public">
 		<!---<cfargument name="request" type="string" required="yes">--->
 		<cfargument name="area_id" type="numeric" required="true">
 
@@ -149,7 +149,7 @@
 		<cfargument name="notify_new_file" type="string" required="no" default="">
 		<cfargument name="notify_replace_file" type="string" required="no" default="">
 		<cfargument name="notify_new_area" type="string" required="no" default="">
-		
+
 		<cfargument name="notify_new_entry" type="string" required="no" default="">
 		<cfargument name="notify_new_link" type="string" required="no" default="">
 		<cfargument name="notify_new_news" type="string" required="no" default="">
@@ -176,21 +176,21 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-	
+
 		<cfset var method = "getUsersToNotify">
-		
+
 		<!---<cfset var xmlUser = "">
 		<cfset var init_area_id = "">--->
 
 		<cfset var usersArray = ArrayNew(1)>
 		<cfset var areasArray = ArrayNew(1)>
-		
+
 		<!---PREFERENCES--->
 		<!---<cfset var notify_new_message = "">
 		<cfset var notify_new_file = "">
 		<cfset var notify_replace_file = "">
 		<cfset var notify_new_area = "">
-		
+
 		<cfset var notify_new_entry = "">
 		<cfset var notify_new_link = "">
 		<cfset var notify_new_news = "">
@@ -212,51 +212,51 @@
 		<cfset var notify_lock_file = "">
 
 		<cfset var notify_new_user_in_area = "">--->
-			
-			
+
+
 			<!---<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="xmlRequest" returnvariable="xmlRequest">
 				<cfinvokeargument name="request" value="#arguments.request#">
 			</cfinvoke>
-			
+
 			<cfxml variable="xmlUser">
 				<cfoutput>
 					#xmlRequest.request.parameters.user#
 				</cfoutput>
 			</cfxml>
-			
+
 			<cfset init_area_id = xmlRequest.request.parameters.area.xmlAttributes.id>--->
-			
-			
+
+
 			<!--- ORDER --->
 			<cfinclude template="#APPLICATION.componentsPath#/includes/usersOrder.cfm">
-			
-			
+
+
 			<!--- getClient --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="selectClientQuery">
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			</cfinvoke>
-			
+
 			<cfif selectClientQuery.recordCount IS 0><!---The client does not exist--->
-				
+
 				<cfset error_code = 301>
-				
-				<cfthrow errorcode="#error_code#"> 
-				
+
+				<cfthrow errorcode="#error_code#">
+
 			</cfif>
 
-			<!---	
+			<!---
 			MUY IMPORTANTE: aquí no se puede usar la sesion
-			
-			<cfif ( (isDefined("SESSION.client_force_notifications") AND SESSION.client_force_notifications IS false) OR NOT isDefined("SESSION.client_force_notifications") ) AND isDefined("xmlRequest.request.parameters.preferences")>	
+
+			<cfif ( (isDefined("SESSION.client_force_notifications") AND SESSION.client_force_notifications IS false) OR NOT isDefined("SESSION.client_force_notifications") ) AND isDefined("xmlRequest.request.parameters.preferences")>
 
 		--->
 
 			<!---<cfif selectClientQuery.force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>
-				
+
 				<cfxml variable="xmlPreferences">
 					<cfoutput>#xmlRequest.request.parameters.preferences#</cfoutput>
 				</cfxml>
-				
+
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_message")>
 					<cfset notify_new_message = xmlPreferences.preferences.xmlAttributes.notify_new_message>
 				</cfif>
@@ -269,7 +269,7 @@
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_area")>
 					<cfset notify_new_area = xmlPreferences.preferences.xmlAttributes.notify_new_area>
 				</cfif>
-				
+
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_entry")>
 					<cfset notify_new_entry = xmlPreferences.preferences.xmlAttributes.notify_new_entry>
 				</cfif>
@@ -327,9 +327,9 @@
 				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_user_in_area")>
 					<cfset notify_new_user_in_area = xmlPreferences.preferences.xmlAttributes.notify_new_user_in_area>
 				</cfif>
-				
+
 			</cfif>--->
-			
+
 			<cfinvoke component="UserManager" method="getAreaUsers" returnvariable="returnArrays">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="areasArray" value="#areasArray#">
@@ -345,12 +345,12 @@
 					<cfinvokeargument name="notify_new_file" value="#arguments.notify_new_file#">
 					<cfinvokeargument name="notify_replace_file" value="#arguments.notify_replace_file#">
 					<cfinvokeargument name="notify_new_area" value="#arguments.notify_new_area#">
-					
+
 					<cfinvokeargument name="notify_new_entry" value="#arguments.notify_new_entry#">
-					<cfinvokeargument name="notify_new_link" value="#arguments.notify_new_link#">	
+					<cfinvokeargument name="notify_new_link" value="#arguments.notify_new_link#">
 					<cfinvokeargument name="notify_new_news" value="#arguments.notify_new_news#">
 					<cfinvokeargument name="notify_new_event" value="#arguments.notify_new_event#">
-					<cfinvokeargument name="notify_new_task" value="#arguments.notify_new_task#">	
+					<cfinvokeargument name="notify_new_task" value="#arguments.notify_new_task#">
 					<cfinvokeargument name="notify_new_consultation" value="#notify_new_consultation#">
 
 					<cfinvokeargument name="notify_new_image" value="#arguments.notify_new_image#">
@@ -369,7 +369,7 @@
 					<cfinvokeargument name="notify_new_user_in_area" value="#arguments.notify_new_user_in_area#">
 
 					<cfinvokeargument name="no_notifications" value="false">
-					
+
 				</cfif>
 
 				<cfinvokeargument name="enabled" value="true">
@@ -378,26 +378,26 @@
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
-			
+
 			<cfset usersArray = returnArrays.usersArray>
 
 			<cfif arrayLen(usersArray) GT 0>
-							
+
 				<cfset usersArray = arrayOfStructsSort(usersArray, "#order_by#", "#order_type#", "textnocase")>
-							
+
 			</cfif>
-			
+
 		<cfreturn usersArray>
-			
-	
+
+
 	</cffunction>
 
 
-	<!--- PROVISIONAL 
+	<!--- PROVISIONAL
 
 		Esto hay que quitarlo cuando se actualice a Lucee, ya que Lucee incluye una función para esto
 --->
-	
+
 	<cfscript>
 	    function GetQueryRow(query, rowNumber) {
 	        var i = 0;
@@ -410,7 +410,7 @@
 	    }
 	</cfscript>
 
-	<!---   
+	<!---
 	http://www.neiland.net/blog/article/converting-a-query-row-into-a-structure/
 
 	<cfloop list="#arguments.queryObj.columnList#" index="colname">
@@ -423,7 +423,7 @@
 	<!--- ---------------------------- getAreaUsers ------------------------------- --->
 
 	<!--- Hay un método en AreaQuery que se llama igual que este, pero este es más avanzado --->
-	
+
 	<cffunction name="getAreaUsers" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="string" required="yes">
 		<cfargument name="areasArray" type="array" required="yes">
@@ -432,12 +432,12 @@
 
 		<cfargument name="itemTypeId" type="numeric" required="false">
 		<cfargument name="categories_ids" type="string" required="false">
-		
+
 		<cfargument name="notify_new_message" type="string" required="no" default="">
 		<cfargument name="notify_new_file" type="string" required="no" default="">
 		<cfargument name="notify_replace_file" type="string" required="no" default="">
 		<cfargument name="notify_new_area" type="string" required="no" default="">
-		
+
 		<cfargument name="notify_new_entry" type="string" required="no" default="">
 		<cfargument name="notify_new_link" type="string" required="no" default="">
 		<cfargument name="notify_new_news" type="string" required="no" default="">
@@ -461,18 +461,18 @@
 		<cfargument name="notify_new_user_in_area" type="string" required="false" default="">
 
 		<cfargument name="no_notifications" type="string" required="false" default="">
-		
+
 		<cfargument name="with_external" type="string" required="false" default="true">
 		<cfargument name="enabled" type="boolean" required="false">
 		<cfargument name="emailDefined" type="boolean" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-        
-		<cfset var method = "getAreaUsers">	
 
-		<cfset var usersArray = arrayNew(1)>		
-						
+		<cfset var method = "getAreaUsers">
+
+		<cfset var usersArray = arrayNew(1)>
+
 			<cfinvoke component="UserManager" method="getAreaUsersIds" returnvariable="usersIdsResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="areasArray" value="#arguments.areasArray#">
@@ -482,13 +482,13 @@
 				<cfinvokeargument name="userType" value="users">
 
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">			
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
-			
+
 			<cfset usersList = usersIdsResult.usersList>
 			<cfset areasArray = usersIdsResult.areasArray>
 			<cfset areaMembersList = usersIdsResult.areaMembersList>
-			
+
 			<cfif listLen(usersList) GT 0>
 
 				<cfquery name="areaUsersQuery" datasource="#client_dsn#">
@@ -518,7 +518,7 @@
 					<cfif arguments.notify_new_area NEQ "">
 					AND u.notify_new_area = <cfqueryparam value="#arguments.notify_new_area#" cfsqltype="cf_sql_bit">
 					</cfif>
-					
+
 					<cfif arguments.notify_new_entry NEQ "">
 					AND u.notify_new_entry = <cfqueryparam value="#arguments.notify_new_entry#" cfsqltype="cf_sql_bit">
 					</cfif>
@@ -565,11 +565,11 @@
 					<cfif arguments.notify_new_pubmed NEQ "">
 					AND u.notify_new_pubmed = <cfqueryparam value="#arguments.notify_new_pubmed#" cfsqltype="cf_sql_bit">
 					</cfif>
-					
+
 					<cfif arguments.notify_new_user_in_area NEQ "">
 					AND u.notify_new_user_in_area = <cfqueryparam value="#arguments.notify_new_user_in_area#" cfsqltype="cf_sql_bit">
 					</cfif>
-					
+
 					<cfif arguments.no_notifications NEQ "">
 					AND u.no_notifications = <cfqueryparam value="#arguments.no_notifications#" cfsqltype="cf_sql_bit">
 					</cfif>
@@ -581,18 +581,18 @@
 					AND u.enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
 					</cfif>
 					<cfif isDefined("arguments.emailDefined") AND arguments.emailDefined IS true>
-					AND LENGTH(email) > 0	
+					AND LENGTH(email) > 0
 					</cfif>
 
 					<cfif isDefined("arguments.itemTypeId") AND listLen(arguments.categories_ids) GT 0>
 					AND u.id NOT IN (
 						<!---Obtiene los usuarios que tienen deshabilitadas TODAS las categorías pasadas en sus notificaciones--->
-						SELECT users_categories_disabled.user_id 
+						SELECT users_categories_disabled.user_id
 						FROM (
-								SELECT user_id, count(*) AS matches  
+								SELECT user_id, count(*) AS matches
 								FROM `#client_abb#_users_notifications_categories_disabled` AS categories_disabled
 								WHERE item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
-								AND	area_id IN (<cfqueryparam value="#arguments.categories_ids#" cfsqltype="cf_sql_varchar" list="true">) 
+								AND	area_id IN (<cfqueryparam value="#arguments.categories_ids#" cfsqltype="cf_sql_varchar" list="true">)
 								GROUP by user_id
 							) AS users_categories_disabled
 						WHERE users_categories_disabled.matches = <cfqueryparam value="#listLen(arguments.categories_ids)#" cfsqltype="cf_sql_integer">
@@ -600,14 +600,14 @@
 					</cfif>
 					;
 				</cfquery>
-				
+
 				<cfif areaUsersQuery.recordCount GT 0>
-						
+
 					<cfloop query="areaUsersQuery">
 						<!---
 						<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="user">
 							<cfinvokeargument name="id" value="#areaUsersQuery.id#">
-							<cfinvokeargument name="email" value="#areaUsersQuery.email#">	
+							<cfinvokeargument name="email" value="#areaUsersQuery.email#">
 							<cfinvokeargument name="telephone" value="#areaUsersQuery.telephone#">
 							<cfinvokeargument name="space_used" value="#areaUsersQuery.space_used#">
 							<cfinvokeargument name="number_of_connections" value="#areaUsersQuery.number_of_connections#">
@@ -626,13 +626,13 @@
 							<cfinvokeargument name="mobile_phone_ccode" value="#areaUsersQuery.mobile_phone_ccode#">
 							<cfinvokeargument name="image_type" value="#areaUsersQuery.image_type#">
 							<cfinvokeargument name="language" value="#areaUsersQuery.language#">
-							
+
 							<cfif listFind(areaMembersList, areaUsersQuery.id) GT 0>
 								<cfinvokeargument name="area_member" value="1">
 							<cfelse>
 								<cfinvokeargument name="area_member" value="0">
 							</cfif>
-							
+
 							<cfinvokeargument name="return_type" value="object">
 						</cfinvoke>
 						--->
@@ -649,44 +649,44 @@
 						<cfelse>
 							<cfset user.area_member = 0>
 						</cfif>
-						
+
 						<cfinvoke component="UserManager" method="appendUser" returnvariable="usersArrayUpdated">
 							<cfinvokeargument name="usersArray" value="#usersArray#">
 							<cfinvokeargument name="objectUser" value="#user#">
 						</cfinvoke>
-						
+
 						<cfset usersArray = usersArrayUpdated>
-					
+
 					</cfloop>
-									
-				</cfif>	
-			
+
+				</cfif>
+
 			</cfif>
-			
+
 			<cfset response = {usersArray=usersArray, areasArray=areasArray}>
 			<cfreturn response>
-	
+
 	</cffunction>
 
 
 
 	<!--- ---------------------------- getAreaAdministrators ------------------------------- --->
-	
+
 	<cffunction name="getAreaAdministrators" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="string" required="yes">
 		<cfargument name="areasArray" type="array" required="yes">
 		<cfargument name="include_user_log_in" type="boolean" required="no" default="false">
 		<cfargument name="get_orientation" type="string" required="no" default="desc">
-		
+
 		<cfargument name="with_external" type="string" required="false" default="true">
 		<cfargument name="enabled" type="boolean" required="false">
 		<cfargument name="emailDefined" type="boolean" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-        
-		<cfset var method = "getAreaAdministrators">			
-						
+
+		<cfset var method = "getAreaAdministrators">
+
 			<cfinvoke component="UserManager" method="getAreaUsersIds" returnvariable="usersIdsResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="areasArray" value="#arguments.areasArray#">
@@ -696,17 +696,17 @@
 				<cfinvokeargument name="userType" value="administrators">
 
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">			
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
-			
+
 			<cfset usersList = usersIdsResult.usersList>
 			<cfset areasArray = usersIdsResult.areasArray>
 			<cfset areaMembersList = usersIdsResult.areaMembersList>
-					
+
 			<cfset usersArray = arrayNew(1)>
-			
+
 			<cfif listLen(usersList) GT 0>
-			
+
 				<cfquery name="areaUsersQuery" datasource="#client_dsn#">
 					SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type, language
 					FROM #client_abb#_users AS u
@@ -714,7 +714,7 @@
 					<cfif isDefined("arguments.include_user_log_in") AND arguments.include_user_log_in NEQ true>
 					AND u.id != #user_id#
 					</cfif>
-					
+
 					<cfif arguments.with_external EQ "false">
 					AND u.internal_user = true
 					</cfif>
@@ -722,16 +722,16 @@
 					AND u.enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
 					</cfif>
 					<cfif isDefined("arguments.emailDefined") AND arguments.emailDefined IS true>
-					AND LENGTH(email) > 0	
+					AND LENGTH(email) > 0
 					</cfif>;
 				</cfquery>
-				
+
 				<cfif areaUsersQuery.recordCount GT 0>
-						
+
 					<cfloop query="areaUsersQuery">
 						<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="user">
 							<cfinvokeargument name="id" value="#areaUsersQuery.id#">
-							<cfinvokeargument name="email" value="#areaUsersQuery.email#">	
+							<cfinvokeargument name="email" value="#areaUsersQuery.email#">
 							<cfinvokeargument name="telephone" value="#areaUsersQuery.telephone#">
 							<cfinvokeargument name="space_used" value="#areaUsersQuery.space_used#">
 							<cfinvokeargument name="number_of_connections" value="#areaUsersQuery.number_of_connections#">
@@ -750,38 +750,38 @@
 							<cfinvokeargument name="mobile_phone_ccode" value="#areaUsersQuery.mobile_phone_ccode#">
 							<cfinvokeargument name="image_type" value="#areaUsersQuery.image_type#">
 							<cfinvokeargument name="language" value="#areaUsersQuery.language#">
-							
+
 							<cfif listFind(areaMembersList, areaUsersQuery.id) GT 0>
 								<cfinvokeargument name="area_member" value="1">
 							<cfelse>
 								<cfinvokeargument name="area_member" value="0">
 							</cfif>
-							
+
 							<cfinvokeargument name="return_type" value="object">
 						</cfinvoke>
-						
+
 						<cfinvoke component="UserManager" method="appendUser" returnvariable="usersArrayUpdated">
 							<cfinvokeargument name="usersArray" value="#usersArray#">
 							<cfinvokeargument name="objectUser" value="#user#">
 						</cfinvoke>
-						
+
 						<cfset usersArray = usersArrayUpdated>
-					
+
 					</cfloop>
-									
-				</cfif>	
-			
+
+				</cfif>
+
 			</cfif>
-			
+
 			<cfset response = {usersArray=usersArray, areasArray=areasArray}>
 			<cfreturn response>
-	
+
 	</cffunction>
 
 
 
 	<!--- ---------------------------- getAreaUsersIds ------------------------------- --->
-	
+
 	<cffunction name="getAreaUsersIds" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="string" required="yes">
 		<cfargument name="usersList" type="string" required="no" default="">
@@ -793,127 +793,171 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
-        
+
 		<cfset var method = "getAreaUsersIds">
 		<cfset var areaMembersList = "">
 
 			<cfif arrayFindCustom(areasArray, "#arguments.area_id#") IS 0><!---The area IS NOT searched before--->
-				
+
 				<cfquery name="membersQuery" datasource="#client_dsn#">
 					SELECT user_id
 					FROM #client_abb#_areas_#arguments.userType# AS a
 					WHERE a.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
-				
+
 				<cfif membersQuery.recordCount GT 0>
-					
+
 					<cfloop query="membersQuery">
-						
+
 						<cfif listFind(usersList, membersQuery.user_id) IS 0>
-						
+
 							<cfset usersList = listAppend(usersList, membersQuery.user_id)>
 							<cfset areaMembersList = listAppend(areaMembersList, membersQuery.user_id)>
-						
+
 						</cfif>
-					
+
 					</cfloop>
-					
+
 				</cfif>
-				
+
 				<cfset ArrayAppend(areasArray,"#arguments.area_id#")>
-				
+
 				<!--- Get Descendeant Areas --->
 				<cfif arguments.get_orientation EQ "desc" OR arguments.get_orientation EQ "both">
-				
+
 					<cfquery datasource="#client_dsn#" name="getDescendantAreas">
 						SELECT id AS area_id
 						FROM #client_abb#_areas
 						WHERE parent_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
-					
+
 					<cfif getDescendantAreas.recordCount GT 0>
-						
+
 						<cfloop query="getDescendantAreas">
-							
+
 							<cfinvoke component="UserManager" method="getAreaUsersIds" returnvariable="usersIdsResult">
 								<cfinvokeargument name="area_id" value="#getDescendantAreas.area_id#">
 								<cfinvokeargument name="usersList" value="#usersList#">
 								<cfinvokeargument name="areasArray" value="#areasArray#">
-							
+
 								<cfinvokeargument name="get_orientation" value="desc">
 
 								<cfinvokeargument name="userType" value="#arguments.userType#">
-								
+
 								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 							</cfinvoke>
 							<cfset usersList = usersIdsResult.usersList>
 							<cfset areasArray = usersIdsResult.areasArray>
-							
+
 						</cfloop>
-						
+
 					</cfif>
 				</cfif>
 
 				<!--- Get Ascendant Areas --->
 				<cfif arguments.get_orientation EQ "asc" OR arguments.get_orientation EQ "both">
-				
+
 					<cfquery datasource="#client_dsn#" name="getAscendantAreas">
 						SELECT parent_id
 						FROM #client_abb#_areas
 						WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
-					
+
 					<cfif getAscendantAreas.recordCount GT 0 AND isNumeric(getAscendantAreas.parent_id)>
-							
+
 						<cfinvoke component="UserManager" method="getAreaUsersIds" returnvariable="usersIdsResult">
 							<cfinvokeargument name="area_id" value="#getAscendantAreas.parent_id#">
 							<cfinvokeargument name="usersList" value="#usersList#">
 							<cfinvokeargument name="areasArray" value="#areasArray#">
-							
+
 							<cfinvokeargument name="get_orientation" value="asc">
 
 							<cfinvokeargument name="userType" value="#arguments.userType#">
-							
+
 							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 						</cfinvoke>
 						<cfset usersList = usersIdsResult.usersList>
 						<cfset areasArray = usersIdsResult.areasArray>
-						
+
 					</cfif>
-				
+
 				</cfif>
-			
+
 			</cfif>
-			
-			
+
+
 			<cfset response = {usersList=usersList, areasArray=areasArray, areaMembersList=areaMembersList}>
 			<cfreturn response>
-	
+
 	</cffunction>
 
 
 	<!--- ---------------------------- APPEND USERS ------------------------------- --->
-	
-	<cffunction name="appendUser" returntype="array" output="false" access="public">	
+
+	<cffunction name="appendUser" returntype="array" output="false" access="public">
 		<cfargument name="usersArray" type="array" required="yes">
 		<cfargument name="objectUser" type="struct" required="yes">
-		
+
 		<cfset var method = "appendUser">
-		
+
 			<cfloop index="arrUser" array="#usersArray#">
-		
+
 				<cfif arrUser.id EQ objectUser.id>
 					<cfreturn usersArray>
-				</cfif>	
-				
+				</cfif>
+
 			</cfloop>
-			
+
 			<cfset arrayAppend(usersArray,#objectUser#)>
-			
+
 			<cfreturn usersArray>
-		
+
+	</cffunction>
+
+
+
+	<!--- getUserVisibleUsers --->
+
+	<cffunction name="getUserVisibleUsers" output="false" returntype="struct" acces="public">
+		<cfargument name="user_id" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+			<cfset var usersList = "">
+			<cfset var areasArray = arrayNew(1)>
+
+			<cfquery name="getUserAreas" datasource="#client_dsn#">
+				SELECT area_id
+				FROM #client_abb#_areas_users
+				WHERE user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_varchar">;
+			</cfquery>
+
+			<cfloop query="getUserAreas">
+
+				<!---Obtiene los usuarios de las áreas hacia abajo y hacia arriba--->
+				<!---En versiones anteriores de la aplicación sólo se mostraban los usuarios de las áreas inferiores, ya que los usuarios externos sólo podían ver los usuarios que estaban directamente asociados a las áreas a las que tienen acceso y sus áreas inferiores.--->
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getAreaUsersIds" argumentcollection="#arguments#" returnvariable="usersIdsResult">
+					<cfinvokeargument name="area_id" value="#getUserAreas.area_id#">
+					<cfinvokeargument name="usersList" value="#usersList#">
+					<cfinvokeargument name="areasArray" value="#areasArray#">
+
+					<cfinvokeargument name="get_orientation" value="both">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset usersList = usersIdsResult.usersList>
+				<cfset areasArray = usersIdsResult.areasArray>
+
+			</cfloop>
+
+			<cfreturn {usersList=usersList, areasArray=areasArray}>
+
 	</cffunction>
 
 

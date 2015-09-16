@@ -267,6 +267,7 @@
 
 		<cfargument name="linkedin_url" type="string" required="false">
 		<cfargument name="twitter_url" type="string" required="false">
+		<cfargument name="start_page" type="string" required="true">
 		<cfargument name="information" type="string" required="true">
 		<cfargument name="internal_user" type="boolean" required="false">
 		<cfargument name="enabled" type="boolean" required="false">
@@ -372,6 +373,7 @@
 
 		<cfargument name="linkedin_url" type="string" required="false">
 		<cfargument name="twitter_url" type="string" required="false">
+		<cfargument name="start_page" type="string" required="true">
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">

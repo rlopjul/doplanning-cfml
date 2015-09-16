@@ -357,7 +357,7 @@
 
 			<!---Subida de IMAGEN--->
 			<cfif with_image IS true>
-				
+
 				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFileImage">
 					<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
 					<cfinvokeargument name="file_name" value="(Pendiente de subir la imagen)">
@@ -1950,7 +1950,8 @@
 							</cfif>
 
 							<cfif itemTypeId IS 8 AND len(objectItem.identifier) GT 0 AND isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
-								<div> <span class="text_message_page"><a href="http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> http://www.ncbi.nlm.nih.gov/pubmed/#objectItem.identifier#</a></span></div>
+								<cfset pubMedUrl = "http://www.ncbi.nlm.nih.gov/pubmed/"&objectItem.identifier>
+								<div> <span class="text_message_page"><a href="#pubMedUrl#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> #pubMedUrl#</a></span></div>
 							</cfif>
 
 							<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
@@ -3366,7 +3367,7 @@
 
 											<cfif arguments.deletedItems IS true><!--- Bin items --->
 
-												&nbsp;&nbsp;<b>Fecha de eliminación</b>
+												<br/><b>Fecha de eliminación</b>
 
 												<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringDeleteDate">
 													<cfinvokeargument name="timestamp_date" value="#itemsQuery.delete_date#">
@@ -3573,7 +3574,8 @@
 										<!---<b lang="es">Identificador:</b> <span>#itemsQuery.identifier#</span>--->
 
 											<cfif isNumeric(itemsQuery.identifier) AND isNumeric(itemsQuery.sub_type_id) AND itemsQuery.sub_type_id IS 1>
-												<div><!---<span>PubMed URL:</span>---><a href="http://www.ncbi.nlm.nih.gov/pubmed/#itemsQuery.identifier#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> http://www.ncbi.nlm.nih.gov/pubmed/#itemsQuery.identifier#</a>
+												<cfset pubMedUrl = "http://www.ncbi.nlm.nih.gov/pubmed/"&itemsQuery.identifier>
+												<div><!---<span>PubMed URL:</span>---><a href="#pubMedUrl#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> #pubMedUrl#</a>
 												</div>
 											</cfif>
 										</cfif>
@@ -3930,10 +3932,10 @@
 
 			 	<div class="row row_page_head_title">
 					<div class="col-sm-10">
-						<h1 style="color:##009ED2;">#arguments.item.title#
+						<h1 style="color:##009ED2;">#arguments.item.title#</h1>
 					</div>
 					<div class="col-sm-2">
-						<a href="area_items.cfm?area=#area_id####itemTypeName##arguments.item_id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> <span lang="es">Ver en área</span></a></h1>
+						<a href="area_items.cfm?area=#area_id####itemTypeName##arguments.item_id#" class="btn btn-sm btn-info pull-right"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Área" lang="es"/> <span lang="es">Ver en área</span></a>
 					</div>
 				</div>
 

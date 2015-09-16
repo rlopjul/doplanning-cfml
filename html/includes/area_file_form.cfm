@@ -135,6 +135,7 @@
 			$("##documentUsersContainer").show();
 			$("##documentVersionIndex").show();
 			$("##publicationScopeContainer").hide();
+			$("##publicFile").hide();
 
 
 		}else{
@@ -142,6 +143,7 @@
 			$("##documentUsersContainer").hide();
 			$("##documentVersionIndex").hide();
 			$("##publicationScopeContainer").show();
+			$("##publicFile").show();
 		}
 
 	}
@@ -340,7 +342,7 @@
 					<cfelse>
 						<small class="help-block" lang="es">Esta opción no se puede cambiar una vez creado el documento</small>
 					</cfif>
-					
+
 				</div>
 			</div>
 
@@ -599,7 +601,7 @@
 
 	<cfif fileTypeId IS 1 OR fileTypeId IS 2>
 
-		<div class="row">
+		<div class="row" id="publicFile">
 
 			<div class="col-md-12">
 

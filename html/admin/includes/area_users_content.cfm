@@ -25,7 +25,7 @@
 	<cfinvokeargument name="separator" value=" / ">
 </cfinvoke>
 <cfif SESSION.client_id NEQ "hcs">
-						
+
 	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isInternalUser" returnvariable="internal_user">
 		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 	</cfinvoke>
@@ -41,7 +41,7 @@
 			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Ocultar información del área" id="closeAreaImg" lang="es" style="display:none;">
 				<i class="icon-info-sign more_info_img"></i>
 			</a>
-			<span class="navbar_brand">#area_name#</span><br/>
+			<span class="navbar_brand">#area_name#</span>
 
 			<p style="padding-top:0px;clear:left;font-size:12px;"><!--- class="navbar_brand" color:##737373 --->
 				<cfif SESSION.client_id EQ "hcs" OR internal_user IS true><span lang="es">Ruta:</span> #area_path#<cfelse>&nbsp;</cfif>
@@ -62,7 +62,7 @@
 
 <cfoutput>
 <div class="div_head_subtitle_area">
-	
+
 	<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
 
 		<!---<div class="div_head_subtitle_area_text"><strong>USUARIOS</strong><br/> del área</div>--->
@@ -92,25 +92,25 @@
 		userId = #URL.user#;
 	</cfif>
 	</cfoutput>
-	
+
 	$(window).load( function() {
 
 		<!---$('#dpTab a').click( function (e) {
 			if(e.preventDefault)
 		  		e.preventDefault();
-			
+
 		  	$(this).tab('show');
-			
+
 		});--->
 
-		
+
 		$('a[data-toggle="tab"]').on('show.bs.tab', function (e) { //On show tab
 
-			
+
 			var pattern=/#.+/gi; //use regex to get anchor(==selector)
 			var currentTab = e.target.toString().match(pattern)[0];
 
-			if(currentTab == "#administrators" && $('#administrators').is(':empty') ) { 
+			if(currentTab == "#administrators" && $('#administrators').is(':empty') ) {
 
 				loadAdministrators();
 				showLoadingPage(true);
@@ -122,12 +122,12 @@
 		<!--- Select the active tab from URL --->
 		var activeTab = $('[href="' + location.hash + '"]');
 		activeTab && activeTab.tab('show');
-		
+
 	});
 
 
 	function loadAdministrators() {
-	
+
 		$("#loadingContainer").show();
 
 		var noCacheNumber = Math.floor(Math.random()*1001);
@@ -154,7 +154,7 @@
 	<div class="tab-content">
 	  <div class="tab-pane active" id="users">
 
-</cfif>	
+</cfif>
 
   	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
 		<cfinvokeargument name="area_id" value="#area_id#">
@@ -164,7 +164,7 @@
 	<cfset numUsers = ArrayLen(users)>
 
 	<div class="div_users">
-		
+
 		<cfif numUsers GT 0>
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
@@ -177,7 +177,7 @@
 			</cfinvoke>
 
 			<cfif objectArea.users_visible IS false>
-				<div><small class="help-block" lang="es">Estos usuarios no se muestran visibles en esta área</small></div>								
+				<div><small class="help-block" lang="es">Estos usuarios no se muestran visibles en esta área</small></div>
 			</cfif>
 
 			<div style="height:40px;"></div>
@@ -186,7 +186,7 @@
 
 				<nav class="navbar navbar-default navbar-fixed-bottom navbar_admin">
 				  	<div class="container-fluid">
-				  	
+
 						<!---<a class="btn btn-info btn-sm navbar-btn" onclick="openAreaAssociateUsers()"><i class="icon-plus icon-white"></i> Asociar usuarios seleccionados al área</a>--->
 
 						<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/area_users_associate_select.cfm?area=#area_id#');"><i class="icon-plus icon-white"></i> <span lang="es">Asociar estos usuarios a otra área</span></a>
@@ -194,12 +194,12 @@
 				  	</div>
 				</nav>
 
-			</cfoutput>	
+			</cfoutput>
 
 		<cfelse>
 			<span lang="es">No hay usuarios.</span>
 		</cfif>
-		
+
 	</div>
 
 <cfif SESSION.client_administrator IS SESSION.user_id>
@@ -209,5 +209,3 @@
 	</div>
 
 </cfif>
-
-

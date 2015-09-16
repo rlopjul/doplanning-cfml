@@ -1,7 +1,7 @@
-<!---Required var: 
+<!---Required var:
 	page_type
 	return_path (para eliminar o quitar un archivo de un área)
-	
+
 	page_types:
 		1 Mis documentos (NO SE USA)
 			folder_id required (NO SE USA)
@@ -15,13 +15,13 @@
 	<cfif isDefined("area_id")>
 	<cfinvokeargument name="area_id" value="#area_id#">
 	</cfif>
-	<cfinvokeargument name="with_owner_area" value="true"> 		
+	<cfinvokeargument name="with_owner_area" value="true">
 </cfinvoke>
 
 <cfset fileTypeId = objectFile.file_type_id>
 
 <cfif isDefined("area_id")>
-	
+
 	<cfset itemTypeId = 10>
 	<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
@@ -35,7 +35,7 @@
 </cfif>
 
 <cfif fileTypeId IS 3>
-	
+
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="version">
 		<cfinvokeargument name="file_id" value="#file_id#">
 		<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
@@ -57,7 +57,7 @@
 
 </cfif>
 
-<!--- 
+<!---
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput> --->
@@ -70,44 +70,44 @@
 <script>
 
 	function confirmDeleteFile() {
-		
+
 		var messageDelete = window.lang.translate("Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?");
 		return confirm(messageDelete);
 	}
 
 	function confirmLockFile(value) {
-		
+
 		var messageLock = "";
 
 		if(value)
 			messageLock = "¿Seguro que desea bloquear el archivo?. No podrá ser modificado por otros usuarios.";
 		else
 			messageLock = "¿Seguro que desea desbloquear el archivo?.";
-		
+
 		return confirm(window.lang.translate(messageLock));
 	}
 
 	function confirmValidateFile(value) {
-		
+
 		var messageLock = "";
 
 		if(value)
 			messageLock = "¿Seguro que desea validar esta versión del archivo?. Se enviará a aprobación.";
 		else
 			messageLock = "¿Seguro que desea rechazar esta versión del archivo?.";
-		
+
 		return confirm(window.lang.translate(messageLock));
 	}
 
 	function confirmApproveFile(value) {
-		
+
 		var messageLock = "";
 
 		if(value)
 			messageLock = "¿Seguro que desea aprobar esta versión del archivo?. El archivo se podrá publicar.";
 		else
 			messageLock = "¿Seguro que desea rechazar esta versión del archivo?.";
-		
+
 		return confirm(window.lang.translate(messageLock));
 	}
 
@@ -120,13 +120,13 @@
 <div class="div_elements_menu"><!---div_elements_menu--->
 
 	<!---<cfif APPLICATION.identifier NEQ "vpnet">---><!---DP--->
-	
+
 		<cfinclude template="#APPLICATION.htmlPath#/includes/file_content_menu.cfm">
-		
+
 	<!---<cfelse>
-		
+
 		<cfinclude template="#APPLICATION.htmlPath#/includes/file_content_menu_vpnet.cfm">
-	
+
 	</cfif>--->
 
 </div>
@@ -139,7 +139,7 @@
 	<!---<div class="div_file_page_file">--->
 
 	<div class="panel panel-default"><!---class="div_message_page_message"--->
-		
+
 		<div class="panel-body" style="word-wrap:break-word;overflow-x:auto">
 
 			<div class="row">
@@ -157,13 +157,13 @@
 									<cfif objectFile.file_type_id IS 1><!--- User file --->
 										<a href="area_user.cfm?area=#area_id#&user=#objectFile.user_in_charge#">
 										<cfif len(objectFile.user_image_type) GT 0>
-											<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectFile.user_in_charge#&type=#objectFile.user_image_type#&small=" alt="#objectFile.user_full_name#" class="item_img" style="margin-right:2px;"/>									
-										<cfelse>						
+											<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectFile.user_in_charge#&type=#objectFile.user_image_type#&small=" alt="#objectFile.user_full_name#" class="item_img" style="margin-right:2px;"/>
+										<cfelse>
 											<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectFile.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
 										</cfif></a>
-									<cfelse><!--- Area file --->	
+									<cfelse><!--- Area file --->
 										<span lang="es">Creado por</span>
-									</cfif>				
+									</cfif>
 									<a href="area_user.cfm?area=#area_id#&user=#objectFile.user_in_charge#">#objectFile.user_full_name#</a>
 								</div>
 								--->
@@ -189,7 +189,7 @@
 
 						</div>
 
-					
+
 					</div><!--- END media --->
 
 					<hr style="margin-top:3px;">
@@ -235,39 +235,39 @@
 									</p>
 
 									<cfif objectArea.read_only IS false>
-									
+
 										<cfif version.revised IS false AND SESSION.user_id IS objectFile.reviser_user>
 											<!--- validateFileVersion --->
-											
+
 												<span lang="es">Debe validar o rechazar la versión de este archivo</span><br/>
 												<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=true&return_path=#return_path#" onclick="return confirmValidateFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Validar versión</span></a>
 
 
 												<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=false&return_path=#return_path#" onclick="return confirmValidateFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
 												<a href="file_reject_revision.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
-											
+
 
 										<cfelseif version.revised IS true AND SESSION.user_id IS objectFile.approver_user>
 											<!--- approveFileVersion --->
-											
+
 												<span lang="es">Debe aprobar o rechazar la versión de este archivo</span><br/>
 												<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=true&return_path=#return_path#" onclick="return confirmApproveFile(true);" class="btn btn-default btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar versión</span></a>
 												<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=false&return_path=#return_path#" onclick="return confirmApproveFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
 												<a href="file_reject_approval.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
-											
+
 
 										</cfif>
 
 										<cfif version.revised IS false>
 											<!--- cancelRevisionRequest --->
-											
+
 												<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=cancelRevisionRequest&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&return_path=#return_path#" onclick="return confirmAction('cancelar el proceso de revisión');" class="btn btn-warning btn-sm"><i class="icon-undo"></i> <span lang="es">Cancelar revisión</span></a>
-																			
+
 										</cfif>
 
 									</cfif>
 								</div><!--- END panel-body --->
-								
+
 							</div><!--- END panel-warning --->
 
 							<div class="div_file_page_label">
@@ -285,7 +285,7 @@
 							</div>
 
 							<cfif fileTypeId IS 3>
-								
+
 								<!--- outputFileVersionStatus --->
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileVersionStatus">
 									<cfinvokeargument name="version" value="#version#">
@@ -293,21 +293,21 @@
 
 								<cfif version.approved NEQ true AND isFileApproved IS true>
 
-									<div class="label label-warning">La versión actual de este archivo no es la versión aprobada</div>
+										<div class="label label-warning">La versión actual de este archivo no es la versión aprobada</div><br/>
 
 								</cfif>
 
 							</cfif>
-							
+
 						</cfif>
-						
+
 					</cfif>
 
 				</cfif>
 
 
 				<cfif NOT isDefined("loggedUser")>
-						
+
 					<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
 						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 					</cfinvoke>
@@ -322,7 +322,7 @@
 					<cfset file_area_allowed = false>
 
 					<cfif loggedUser.internal_user IS false>
-						
+
 						<!---area_allowed--->
 						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="canUserAccessToArea" returnvariable="file_area_allowed">
 							<cfinvokeargument name="area_id" value="#objectFile.area_id#">
@@ -331,10 +331,10 @@
 					</cfif>
 
 					<cfif loggedUser.internal_user IS true OR file_area_allowed>
-						
+
 						<b><span lang="es">Propiedad del área</span></b>
-					
-						<a onclick="openUrl('area_items.cfm?area=#objectFile.area_id#&file=#objectFile.id#','areaIframe',event)" style="cursorpointer">#objectFile.area_name#</a>
+
+						<a onclick="openUrl('area_items.cfm?area=#objectFile.area_id#&file=#objectFile.id#','areaIframe',event)" style="cursor:pointer">#objectFile.area_name#</a>
 
 					</cfif>
 
@@ -345,7 +345,7 @@
 					<cfset file_publication_area_allowed = false>
 
 					<cfif loggedUser.internal_user IS false>
-						
+
 						<!---area_allowed--->
 						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="canUserAccessToArea" returnvariable="file_publication_area_allowed">
 							<cfinvokeargument name="area_id" value="#version.publication_area_id#">
@@ -366,17 +366,17 @@
 
 			</cfif><!--- END objectFile.file_type_id IS 2 OR objectFile.file_type_id IS 3 --->
 
-			
+
 			<!---<div class="div_file_page_user">#objectFile.user_full_name#</div>--->
 		</cfif>
-		<cfif objectFile.file_type_id IS NOT 1>
+		<cfif objectFile.file_type_id IS NOT 1 AND len(objectFile.replacement_user) GT 0>
 			<div class="div_file_page_label">
-				<span lang="es"><cfif objectFile.file_type_id IS 2>Último reemplazo por<cfelse>Última version por</cfif></span>			
+				<span lang="es"><cfif objectFile.file_type_id IS 2>Último reemplazo por<cfelse>Última version por</cfif></span>
 				<a href="area_user.cfm?area=#area_id#&user=#objectFile.replacement_user#">#objectFile.replacement_user_full_name#</a>
 			</div>
 		</cfif>
 		<cfif objectFile.file_type_id IS 3>
-			
+
 			<div class="div_file_page_label">
 				<span lang="es">Revisor</span> <a href="area_user.cfm?area=#area_id#&user=#objectFile.reviser_user#">#objectFile.reviser_user_full_name#</a>
 			</div>
@@ -389,9 +389,9 @@
 
 		<div class="div_file_page_label"><span lang="es">Nombre de archivo</span></div>
 		<div class="div_file_page_user">#objectFile.file_name#</div>
-		
+
 		<div class="div_file_page_label"><span lang="es">Fecha de creación</span> <span class="text_file_page">#objectFile.uploading_date#</span></div>
-		<cfif len(objectFile.replacement_date) GT 0 OR objectFile.file_type_id IS NOT 3>	
+		<cfif len(objectFile.replacement_date) GT 0 OR objectFile.file_type_id IS NOT 3>
 		<div class="div_file_page_label"><span lang="es"><cfif objectFile.file_type_id IS 3>Fecha de última versión<cfelse>Fecha de reemplazo</cfif></span> <span class="text_file_page"><cfif len(objectFile.replacement_date) GT 0>#objectFile.replacement_date#<cfelse>-</cfif></span></div>
 		</cfif>
 
@@ -407,10 +407,10 @@
 			</cfif>
 
 		</cfif>
-					
-		
+
+
 		<div class="div_file_page_label"><span lang="es">Tipo de archivo</span> <span class="text_file_page">#objectFile.file_type#</span></div>
-		
+
 
 		<cfif isNumeric(objectFile.file_size)>
 			<!---fileUrl--->
@@ -424,7 +424,7 @@
 		<!---<div class="div_file_page_size">--->
 			<div class="div_file_page_label"><span lang="es">Tamaño</span> <span class="text_file_page">#file_size#</span></div>
 		<!---</div>--->
-		
+
 		<div class="div_file_page_label"><span lang="es">Descripción</span></div>
 		<div class="div_file_page_description">#objectFile.description#</div>
 
@@ -448,9 +448,9 @@
 		</cfinvoke>
 
 		<cfset categories = getItemCategoriesResult.query>
-							
+
 		<cfif categories.recordCount GT 0>
-			
+
 			<div class="row">
 
 				<div class="col-xs-12">
@@ -563,7 +563,7 @@
 
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 				</cfinvoke>
-				
+
 				<div class="div_file_page_label"><span lang="es">URL pública para</span> <b lang="es">compartir el archivo con cualquier usuario</b>:</div>
 				<div class="div_file_page_user"><input type="text" value="#filePublicUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
 
@@ -572,7 +572,7 @@
 
 		</div><!--- END well well-sm --->
 
-		 
+
 		<!---
 		<div style="clear:both">
 
@@ -587,7 +587,7 @@
 			<div class="collapse" id="fileUrlsContainer">
 
 			</div>
-				
+
 		</div>
 
 		<script>
@@ -601,22 +601,22 @@
 			$('##fileUrlsContainer').on('shown.bs.collapse', function () {
 				$('##showFilesUrls').hide();
 				$('##hideFilesUrls').show();
-			});			
+			});
 
 		</script>
 
 		--->
-			
+
 		<!---Typology--->
 		<cfif APPLICATION.modulefilesWithTables IS true>
-			
+
 			<!---Typology fields--->
 			<!---<cfset table_id = objectFile.typology_id>
 			<cfset tableTypeId = 3>
 			<cfset row_id = objectFile.typology_row_id>--->
 
 			<cfif isNumeric(table_id) AND isNumeric(row_id)>
-				
+
 				<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
 					<cfinvokeargument name="table_id" value="#table_id#"/>
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
@@ -639,7 +639,7 @@
 					<cfinvokeargument name="fields" value="#fields#">
 					<cfinvokeargument name="file_id" value="#file_id#"/>
 				</cfinvoke>
-				
+
 			</cfif>
 
 		</cfif>
@@ -668,4 +668,3 @@
 	<iframe style="display:none" src="#APPLICATION.htmlPath#/file_download.cfm?id=#file_id#"></iframe>
 	</cfoutput>
 </cfif>
-

@@ -25,7 +25,7 @@
 </cfif>
 
 
- 
+
 <!---<cfoutput>
 <cfif APPLICATION.title EQ "DoPlanning">
 	<div style="float:left; padding-top:2px;">
@@ -45,20 +45,20 @@
 
 
 <div id="wrapper"><!--- wrapper --->
-        
+
 	<!---<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
 				<h1></h1>
 				<p></p>
-							
+
 			</div>
 		</div>
 	</div>--->
 
 	<!---<div class="div_contenedor_contenido">--->
-	
-	
+
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_client_head.cfm">
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_head.cfm">
@@ -70,16 +70,6 @@
 
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
-
-<!---<div class="div_head_title">
-<cfoutput>
-<div class="icon_title">
-<a href="search_areas.cfm"><img src="assets/icons/search.png" alt="Búsqueda"/></a></div>
-<div class="head_title" style="padding-top:8px;"><a href="search_areas.cfm">Buscar áreas</a></div>
-</cfoutput>
-</div>
-
-<cfset return_page = "mobile.cfm">--->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/search_head.cfm">
 
@@ -94,45 +84,45 @@
 		<cfinvokeargument name="text" value="#search_text#">
 		<cfinvokeargument name="page" value="#search_page#">
 	</cfinvoke>
-	
+
 	<cfxml variable="xmlAreas">
 		<cfoutput>
 		#xmlResponse.response.result.areas#
 		</cfoutput>
 	</cfxml>
-	
+
 	<cfset page = xmlAreas.areas.xmlAttributes.page>
 	<cfset pages = xmlAreas.areas.xmlAttributes.pages>
 	<cfset total = xmlAreas.areas.xmlAttributes.total>
-	
+
 	<cfinclude template="includes/search_result_text.cfm">
-	
+
 	<cfinclude template="includes/search_pages.cfm">
-	
+
 	<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getParentAreaId" returnvariable="parent_area_id">
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>--->
-	
+
 	<!---<cfset area_name = xmlAreas.area.xmlAttributes.name>
 	<cfset area_allowed = xmlAreas.area.xmlAttributes.allowed>--->
 	<cfset numAreas = ArrayLen(xmlAreas.areas.XmlChildren)>
-	
+
 	<cfif numAreas GT 0>
 
 			<cfoutput>
 			<cfloop index="xmlIndex" from="1" to="#numAreas#" step="1">
-			
+
 				<cfxml variable="xmlArea">
 				#xmlAreas.areas.area[xmlIndex]#
-				</cfxml>			
-				
+				</cfxml>
+
 				<!---<div class="div_area">
 
 					<div class="div_img_area_area"><a href="area_items.cfm?abb=#SESSION.client_abb#&area=#xmlArea.area.xmlAttributes.id#"><cfif xmlArea.area.xmlAttributes.allowed EQ true><img src="assets/icons_#APPLICATION.identifier#/area_small.png"/><cfelse><img src="assets/icons_#APPLICATION.identifier#/area_small_disabled.png"/></cfif></a></div>
 					<div class="div_text_area">
 						<a href="area.cfm?area=#xmlArea.area.xmlAttributes.id#" class="a_area_area">#xmlArea.area.xmlAttributes.name#</a><br/>--->
 
-					
+
 
 					<div class="row">
 						<div class="col-sm-12">
@@ -189,12 +179,12 @@
 
 					<!---</div>
 
-				</div>--->	
+				</div>--->
 			</cfloop>
 			</cfoutput>
-	
+
 	<cfinclude template="includes/search_pages.cfm">
-	
+
 	<cfelse>
 	<div class="div_text_result">No hay áreas con el texto buscado</div>
 	</cfif>
@@ -216,7 +206,7 @@
 
 
 	<!---</div>--->
-	
+
 </div>
 <!--- END wrapper --->
 

@@ -19,7 +19,7 @@
 			$("#alertContainer").attr("class", "alert alert-success");
 		else
 			$("#alertContainer").attr("class", "alert alert-danger");
-		
+
 		$("#alertContainer button").after('<span>'+msg+'</span>');
 
 		var maxZIndex = getMaxZIndex();
@@ -30,10 +30,10 @@
 
 
 		setTimeout(function(){
-			    
+
 		    hideAlertMessage();
 
-		    }, 9500);	
+		    }, 9500);
 	}
 
 	function hideAlertMessage(){
@@ -53,33 +53,33 @@
 		if($("#mainContainer").is(":hidden"))
 			$("#mainContainer").show();--->
 	}
-	
+
 	function areaSelected(areaId, areaUrl, withLink)  {
-	
+
 		<!---curAreaId = areaId;--->
 
 		$('#openNewTab').is(':checked')
 		goToUrl(areaUrl);
-		
+
 	}
 
 	function searchTextInTree(){
-		searchInTree(document.getElementById('searchText').value);	
+		searchInTree(document.getElementById('searchText').value);
 	}
 
-	$(window).load( function() {	
+	$(window).load( function() {
 
-		showTree(true);	
+		showTree(true);
 
-		$("#searchText").on("keydown", function(e) { 
-		
+		$("#searchText").on("keydown", function(e) {
+
 			if(e.which == 13) //Enter key
 				searchTextInTree();
-			
+
 		});
-		
+
 	});
-	
+
 	<!---$(document).ready(function () {
 
 		// Alert
@@ -88,9 +88,9 @@
 			hideAlertMessage();
 
 		});
-						
+
 	});--->
-	
+
 </script>
 
 <!--- Alert --->
@@ -99,7 +99,7 @@
 <!--- Tree --->
 
 	<div class="row">
-		
+
 		<div class="col-sm-offset-1 col-sm-7">
 
 			<div class="btn-toolbar">
@@ -125,12 +125,12 @@
 				</div>
 				<!---<div class="btn-group">
 					<a onClick="updateTree();" class="btn btn-default" title="Actualizar" lang="es"><i class="icon-refresh"></i> <span lang="es">Actualizar</span></a>
-				</div>---->									
+				</div>---->
 				<!---<a onclick="expandTree();" class="btn btn-xs" title="Abrir nodos del árbol"><i class="icon-plus"></i> Expandir</a>
 				<a onclick="collapseTree();" class="btn btn-xs" title="Abrir nodos del árbol"><i class="icon-minus"></i> Colapsar</a>--->
-				
+
 			</div>
-			
+
 		</div>
 
 		<input type="hidden" id="changeTabDisabled" value="true"/><!---No cambiar de pestaña al seleccionar área--->
@@ -157,9 +157,9 @@
 				<img src="#APPLICATION.htmlPath#/assets/v3/icons/restore.png" title="Restaurar Árbol" id="restoreTree" style="display:none;"/>
 				</div>
 				</cfoutput>--->
-				<div id="treeContainer" style="overflow:auto;clear:both;">
+				<div id="treeContainer" style="overflow:auto;overflow-y:hidden;clear:both;">
 					<cfinclude template="#APPLICATION.htmlPath#/html_content/tree.cfm">
-				</div>			
+				</div>
 			</div>
 
 		</div>

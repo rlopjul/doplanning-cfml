@@ -1,5 +1,5 @@
 <cfoutput>
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
  --->
 
@@ -18,16 +18,16 @@
 	<cfoutput>
 
 	<!---<cfif APPLICATION.identifier NEQ "vpnet">---><!---DP--->
-	
+
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
-		
+
 	<!---
 	<cfelse><!---VPNET--->
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu_vpnet.cfm">
-		
+
 	</cfif>--->
-	
+
 	</cfoutput>
 </div>
 
@@ -39,7 +39,7 @@
 		<cfinvokeargument name="area_id" value="#area_id#">
 		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 	</cfinvoke>
-	<cfset default_table_id = getDefaultTableResponse.table_id> 
+	<cfset default_table_id = getDefaultTableResponse.table_id>
 
 </cfif>
 
@@ -56,9 +56,9 @@
 
 <div class="div_items">
 <cfif numItems GT 0>
-	
+
 	<cfif isDefined("URL.mode") AND URL.mode EQ "list">
-		
+
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="outputTablesList">
 			<cfinvokeargument name="itemsQuery" value="#areaTables#">
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
@@ -70,7 +70,7 @@
 			<cfif tableTypeId IS 3><!--- Typology --->
 				<cfinvokeargument name="area_id" value="#area_id#"/>
 			</cfif>
-		</cfinvoke>	
+		</cfinvoke>
 
 	<cfelse>
 
@@ -79,16 +79,17 @@
 			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 			<cfinvokeargument name="return_path" value="#APPLICATION.htmlPath#/">
 			<cfinvokeargument name="area_id" value="#area_id#"/>
+			<cfinvokeargument name="isUserAreaResponsible" value="#is_user_area_responsible#">
 			<cfinvokeargument name="app_version" value="#app_version#">
 		</cfinvoke>
 
 	</cfif>
 
 <cfelse>
-	
+
 	<script type="text/javascript">
 		openUrlHtml2('empty.cfm','itemIframe');
-	</script>				
+	</script>
 
 	<cfoutput>
 		<!---<div class="div_text_result"><span lang="es">No hay #lCase(itemTypeNameEsP)# en esta área.</span></div>--->

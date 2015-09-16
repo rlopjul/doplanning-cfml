@@ -550,9 +550,9 @@ Preferencias de notificaciones
 
 							<select name="notifications_digest_type_id" id="notifications_digest_type_id" class="form-control">
 								<option value="" lang="es">Nunca</option>
-								<option value="1" <cfif preferences.notifications_digest_type_id IS 1>selected="selected"</cfif> lang="es">Diariamente</option>
-								<option value="2" <cfif preferences.notifications_digest_type_id IS 2>selected="selected"</cfif> lang="es">Semanalmente</option>
-								<option value="3" <cfif preferences.notifications_digest_type_id IS 3>selected="selected"</cfif> lang="es">Mensualmente</option>
+								<option value="1" <cfif preferences.notifications_digest_type_id IS 1>selected="selected"</cfif> lang="es">Todos los días</option>
+								<option value="2" <cfif preferences.notifications_digest_type_id IS 2>selected="selected"</cfif> lang="es">Cada 7 días</option>
+								<option value="3" <cfif preferences.notifications_digest_type_id IS 3>selected="selected"</cfif> lang="es">Cada 30 días</option>
 							</select>
 
 						</div>
@@ -561,7 +561,7 @@ Preferencias de notificaciones
 
 					<p class="help-block" lang="es">
 						<cfif len(preferences.notifications_last_digest_date) GT 0>
-							Fecha de envío de último resumen: #preferences.notifications_last_digest_date#.<br/>
+							Fecha de envío del último resumen: #DateFormat(preferences.notifications_last_digest_date, APPLICATION.dateFormat)#.<br/>
 						</cfif>
 						Este resumen incluye notificaciones relativas a la creación y modificación de elementos de áreas. No incluye notificaciones de acciones tales como el bloqueo o solicitud de aprobación de archivos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios.
 					</p>
@@ -597,9 +597,9 @@ Preferencias de notificaciones
 
 							<select name="notifications_web_digest_type_id" id="notifications_web_digest_type_id" class="form-control">
 								<option value="" lang="es">Nunca</option>
-								<option value="1" <cfif preferences.notifications_web_digest_type_id IS 1>selected="selected"</cfif> lang="es">Diariamente</option>
-								<option value="2" <cfif preferences.notifications_web_digest_type_id IS 2>selected="selected"</cfif> lang="es">Semanalmente</option>
-								<option value="3" <cfif preferences.notifications_web_digest_type_id IS 3>selected="selected"</cfif> lang="es">Mensualmente</option>
+								<option value="1" <cfif preferences.notifications_web_digest_type_id IS 1>selected="selected"</cfif> lang="es">Todos los días</option>
+								<option value="2" <cfif preferences.notifications_web_digest_type_id IS 2>selected="selected"</cfif> lang="es">Cada 7 días</option>
+								<option value="3" <cfif preferences.notifications_web_digest_type_id IS 3>selected="selected"</cfif> lang="es">Cada 30 días</option>
 							</select>
 
 						</div>
@@ -607,8 +607,8 @@ Preferencias de notificaciones
 					</div>
 
 					<p class="help-block" lang="es">
-						<cfif len(preferences.notifications_last_digest_date) GT 0>
-							Fecha de envío de último resumen: #preferences.notifications_web_last_digest_date#.<br/>
+						<cfif len(preferences.notifications_web_last_digest_date) GT 0>
+							Fecha de envío del último resumen: #DateFormat(preferences.notifications_web_last_digest_date, APPLICATION.dateFormat)#.<br/>
 						</cfif>
 						Este resumen incluye notificaciones relativas a la creación y modificación de los siguientes contenidos de la web: noticias, eventos, archivos, publicaciones, listas, formularios y áreas (páginas).
 					</p>

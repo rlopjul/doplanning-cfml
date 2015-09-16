@@ -225,16 +225,11 @@
 				<!--- Delete Rows --->
 				<cfif arguments.delete_rows IS true>
 
-					<!---<cfinvoke component="RowManager" method="deleteTableRowsInDatabase">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRows">
 						<cfinvokeargument name="table_id" value="#arguments.table_id#">
 						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 						<cfinvokeargument name="resetAutoIncrement" value="true">
-					</cfinvoke>--->
-
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRowsInDatabase">
-						<cfinvokeargument name="table_id" value="#arguments.table_id#">
-						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-						<cfinvokeargument name="resetAutoIncrement" value="true">
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -606,12 +601,13 @@
 		<cfargument name="client_abb" type="string" required="true"/>
 		<cfargument name="client_dsn" type="string" required="true"/>
 
-		<cfset var method = "exportRows">
+		<cfset var method = "generateRowsQuery">
 
 		<cfset var response = structNew()>
 
 		<cfset var rowsQuery = "">
 		<cfset var listFields = false>
+		<cfset var attachedItemFields = false>
 		<cfset var fieldsNames = "">
 		<cfset var fieldsLabels = "">
 
@@ -658,24 +654,6 @@
 					<cfset fieldsLabels = listAppend(fieldsLabels, "Modificado por",  ",")>
 				</cfif>
 
-				<!---<cfif arguments.include_creation_date IS true>
-					<cfset fieldsLabels = fieldsLabels&"Fecha de creación,">
-				</cfif>
-
-				<cfif arguments.include_last_update_date IS true>
-					<cfset fieldsLabels = fieldsLabels&"Última modificación,">
-				</cfif>
-
-				<cfif arguments.include_insert_user IS true>
-					<cfset fieldsLabels = fieldsLabels&"Creado por,">
-				</cfif>
-
-				<cfif arguments.include_update_user IS true>
-					<cfset fieldsLabels = fieldsLabels&"Modificado por,">
-				</cfif>
-
-				<cfset fieldsLabels = fieldsLabels&valueList(fields.label, ",")>--->
-
 				<cfloop query="fields">
 
 					<cfset fieldName = "field_#fields.field_id#">
@@ -685,6 +663,10 @@
 
 						<cfset listFields = true>
 						<cfset queryAddColumn(rowsQuery, fieldName, "VarChar", arrayNew(1))>
+
+					<cfelseif fields.field_type_group IS "doplanning_item" OR fields.field_type_id IS 18><!--- AREA ITEMS OR ATTACHED FILE --->
+
+						<cfset attachedItemFields = true>
 
 					</cfif>
 
@@ -696,7 +678,7 @@
 
 				</cfloop>
 
-				<cfif arguments.decimals_with_mask IS true OR listFields IS true>
+				<cfif arguments.decimals_with_mask IS true OR attachedItemFields IS true OR listFields IS true>
 
 					<cfif arguments.decimals_with_mask IS true>
 
@@ -723,7 +705,7 @@
 					</cfif>
 
 
-					<cfif arguments.decimals_with_mask IS true OR selectedAreasQuery.recordCount GT 0>
+					<cfif arguments.decimals_with_mask IS true OR attachedItemFields IS true OR selectedAreasQuery.recordCount GT 0>
 
 						<cfloop query="rowsQuery">
 
@@ -755,6 +737,7 @@
 
 									</cfif>
 
+
 								<cfelseif listFields IS true AND ( fields.field_type_id EQ 9 OR fields.field_type_id IS 10 )><!--- LISTS --->
 
 									<cfset fieldValue = "">
@@ -770,8 +753,71 @@
 										<cfset fieldValue = valueList(rowSelectedAreas.name, ";")><!--- , --->
 									</cfif>
 
-									<!--- <cfset rowValues[fieldName] = fieldValue> --->
 									<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
+
+
+								<cfelseif fields.field_type_group IS "doplanning_item" OR fields.field_type_id IS 18><!--- AREA ITEMS OR ATTACHED FILE --->
+
+									<cfset fieldValue = rowsQuery[fieldName]>
+
+									<cfif isNumeric(fieldValue)>
+
+										<cfif fields.item_type_id IS 10 OR fields.field_type_id IS 18><!--- FILE --->
+
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+												<cfinvokeargument name="file_id" value="#fieldValue#">
+												<cfinvokeargument name="parse_dates" value="false"/>
+												<cfinvokeargument name="published" value="false"/>
+
+												<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+												<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+											</cfinvoke>
+
+											<cfif fileQuery.recordCount GT 0>
+												<cfif fields.item_type_id IS 10>
+													<cfif len(fileQuery.name) GT 0>
+														<cfset fieldValue = fileQuery.name>
+													<cfelse>
+														<cfset fieldValue = "ARCHIVO SELECCIONADO SIN TÍTULO">
+													</cfif>
+												<cfelse>
+													<cfset fieldValue = fileQuery.file_name>
+												</cfif>
+											<cfelse>
+												<cfset fieldValue = "ARCHIVO NO DISPONIBLE">
+											</cfif>
+
+											<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
+
+
+										<cfelse><!--- ITEM --->
+
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+												<cfinvokeargument name="item_id" value="#fieldValue#">
+												<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
+												<cfinvokeargument name="parse_dates" value="false"/>
+												<cfinvokeargument name="published" value="false"/>
+
+												<cfinvokeargument name="client_abb" value="#client_abb#">
+												<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											</cfinvoke>
+
+											<cfif itemQuery.recordCount GT 0>
+												<cfif len(itemQuery.title) GT 0>
+													<cfset fieldValue = itemQuery.title>
+												<cfelse>
+													<cfset fieldValue = "ELEMENTO SELECCIONADO SIN TÍTULO">
+												</cfif>
+											<cfelse>
+												<cfset fieldValue = "ELEMENTO NO DISPONIBLE">
+											</cfif>
+
+											<cfset querySetCell(rowsQuery, fieldName, fieldValue, curRow)>
+
+										</cfif>
+
+									</cfif><!--- END isNumeric(fieldValue) --->
+
 
 								</cfif>
 
@@ -917,12 +963,12 @@
 
 		<cfelseif arguments.tableTypeId IS 4><!---User typology--->
 
-			<cfif SESSION.client_administrator NEQ user_id>
+			<cfif SESSION.client_administrator NEQ SESSION.user_id>
 
 				<cfif isDefined("arguments.row_id")>
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
-						<cfinvokeargument name="user_id" value="#user_id#">
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 						<cfinvokeargument name="parse_dates" value="false">
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1060,6 +1106,7 @@
 					<cfinvokeargument name="table_id" value="#table_id#">
 					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 					<cfinvokeargument name="table" value="#tableQuery#">
+					<cfinvokeargument name="row_id" value="#arguments.row_id#">
 				</cfinvoke>
 				<cfif canUserModifyRow IS false>
 					<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">
@@ -1086,17 +1133,19 @@
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
 					<cfinvokeargument name="item_id" value="#arguments.table_id#">
 					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 			</cfif>
 
-			<!--- Delete Row In DataBase--->
+			<!--- Delete Row --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
 				<cfinvokeargument name="row_id" value="#arguments.row_id#">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1148,51 +1197,118 @@
 	</cffunction>
 
 
-	<!---
-	<cffunction name="deleteTableRowsInDatabase" output="false" access="package" returntype="void">
+
+	<!--- ------------------------------------- deleteRowAttachedFile -------------------------------------  --->
+
+	<cffunction name="deleteRowAttachedFile" output="false" access="public" returntype="struct">
+		<cfargument name="row_id" type="numeric" required="true">
+		<cfargument name="field_id" type="numeric" required="true">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
-		<cfargument name="resetAutoIncrement" type="boolean" required="false" default="false">
 
-		<cfset var method = "deleteTableRowsInDatabase">
+		<cfset var method = "deleteRowAttachedFile">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var rowQuery = "">
+		<cfset var field_name = "">
+		<cfset var file_id = "">
+
+		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="deleteTableRowsInDatabase">
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="resetAutoIncrement" value="#arguments.resetAutoIncrement#">
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
+			<cfif tableQuery.recordCount IS 0><!---Item does not exist--->
 
-			<!---
+				<cfset error_code = 501>
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+				<cfthrow errorcode="#error_code#">
 
-			<!---Delete rows--->
-			<cfquery name="deleteRows" datasource="#client_dsn#">
-				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
-			</cfquery>
-
-			<!---Delete selected areas--->
-			<cfquery name="deleteSelectedAreasQuery" datasource="#client_dsn#">
-				DELETE FROM `#client_abb#_#tableTypeTable#_rows_areas`
-				WHERE #tableTypeName#_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-
-			<cfif arguments.resetAutoIncrement IS true>
-				<!--- Reset auto increment --->
-				<cfquery name="resetAutoIncrement" datasource="#client_dsn#">
-					ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AUTO_INCREMENT = 1;
-				</cfquery>
 			</cfif>
-			--->
+
+			<cfif arguments.tableTypeId IS 2><!--- Form --->
+
+				<cfset area_id = tableQuery.area_id>
+
+				<!---checkAreaResponsibleAccess--->
+				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+			<cfelse>
+
+				<!---canUserModifyRow--->
+				<cfinvoke component="RowManager" method="canUserModifyRow" returnvariable="canUserModifyRow">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="table" value="#tableQuery#">
+				</cfinvoke>
+				<cfif canUserModifyRow IS false>
+					<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">
+				</cfif>
+
+			</cfif>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="row_id" value="#arguments.row_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset field_name = 'field_#arguments.field_id#'>
+			<cfset file_id = rowQuery[field_name]>
+
+			<cfif rowQuery.recordCount GT 0 AND isNumeric(file_id)>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/RowAttachedFile" method="deleteRowAttachedFile">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="row_id" value="#arguments.row_id#">
+					<cfinvokeargument name="field_id" value="#arguments.field_id#">
+					<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			<cfelse><!--- Not found --->
+
+				<cfset error_code = 601>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cfset response = {result=true, row_id=#arguments.row_id#, table_id=#arguments.table_id#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
 
 	</cffunction>
-	--->
+
 
 
 	<!--- ------------------------------------- getTableRows -------------------------------------  --->
@@ -1248,7 +1364,7 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-			<cfelseif arguments.tableTypeId IS 4 AND isDefined("arguments.row_id")><!---Only one row user typology--->
+			<cfelseif arguments.tableTypeId IS 4 AND isDefined("arguments.row_id")><!---Only one row of user typology--->
 
 				<!--- getTable --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="table">

@@ -238,6 +238,68 @@ page_types
 
 			</div>
 
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/StartPageManager" method="getStartPageTypesStruct" returnvariable="startPagesTypesStruct">
+			</cfinvoke>
+
+			<cfset startPagesArray = structSort(startPagesTypesStruct, "numeric", "ASC", "position")>
+
+			<!---<label class="control-label" for="item_type_id" id="subTypeLabel"><span lang="es">Tipo de elemento de DoPlanning</span> *</label>
+			<select name="item_type_id" id="item_type_id" class="form-control" onchange="fieldItemTypeChange($('##item_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
+				<cfloop array="#itemTypesArray#" index="itemTypeId">
+					<cfif itemTypesStruct[itemTypeId].showInSelect IS true>
+						<option value="#itemTypeId#" lang="es" <cfif isDefined("field.item_type_id") AND field.item_type_id IS itemTypeId>selected="selected"</cfif>>#itemTypesStruct[itemTypeId].label#</option>
+					</cfif>
+				</cfloop>
+			</select>--->
+
+			<div class="row">
+
+				<label class="col-xs-5 col-sm-4 col-md-3 control-label" for="start_page" lang="es">Página de inicio</label>
+
+				<div class="col-xs-7 col-sm-8 col-md-9">
+
+					<cfif objectUser.start_page_locked IS true>
+
+						<input type="hidden" name="start_page" value="#objectUser.start_page#" />
+						<input type="text" name="start_page_label" class="form-control" readonly value="Página personalizada" />
+
+					<cfelse>
+						<select name="start_page" id="start_page" class="form-control">
+
+							<cfset startPageExists = false>
+							<cfset startPageSelected = false>
+
+							<cfif len(objectUser.start_page) IS 0>
+								<cfset startPageSelected = true>
+								<cfset startPageExists = true>
+							</cfif>
+							<option value="" lang="es" <cfif startPageSelected IS true>selected</cfif>>Página por defecto (Lo último)</option>
+
+
+							<cfloop array="#startPagesArray#" index="startPageId">
+								<cfset startPageSelected = false>
+
+								<cfif startPagesTypesStruct[startPageId].page EQ objectUser.start_page>
+									<cfset startPageSelected = true>
+									<cfset startPageExists = true>
+								</cfif>
+								<option value="#startPagesTypesStruct[startPageId].page#" lang="es" <cfif startPageSelected EQ true>selected="selected"</cfif>>#startPagesTypesStruct[startPageId].label#</option>
+
+							</cfloop>
+
+							<cfif startPageExists IS false>
+								<option value="#objectUser.start_page#" lang="es" selected="selected">Página personalizada</option>
+							</cfif>
+
+						</select>
+					</cfif>
+
+
+				</div>
+
+			</div>
+
 			<cfif page_type IS 1>
 
 				<div class="row">
@@ -465,9 +527,13 @@ page_types
 
 				</script>
 
-				<cfif typologies.recordCount IS 1 OR page_type IS 2>
+				<cfif typologies.recordCount IS 1>
 
 					<input type="hidden" name="typology_id" id="typology_id" value="#typologies.id#">
+
+				<cfelseif page_type IS 2>
+
+					<input type="hidden" name="typology_id" id="typology_id" value="#selected_typology_id#">
 
 				<cfelse>
 

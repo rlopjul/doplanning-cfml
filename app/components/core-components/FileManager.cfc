@@ -150,13 +150,14 @@
 
 				<cftry>
 
-					<!---Delete typology--->
+					<!---Delete typology row--->
 					<cfif isNumeric(fileQuery.typology_id) AND isNumeric(fileQuery.typology_row_id)>
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
 							<cfinvokeargument name="row_id" value="#fileQuery.typology_row_id#"/>
 							<cfinvokeargument name="table_id" value="#fileQuery.typology_id#"/>
 							<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
+							<cfinvokeargument name="user_id" value="#arguments.user_id#"/>
 
 							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">

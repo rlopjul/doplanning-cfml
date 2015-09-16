@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<meta charset="utf-8"> 
+<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- InstanceBeginEditable name="doctitle" -->
 <title></title>
@@ -63,14 +63,14 @@
 	jquery_lang_js.prototype.currentLang = 'es';
 	jquery_lang_js.prototype.lang.en = [{}];
 	window.lang = new jquery_lang_js();
-	
+
 	$().ready(function () {
    		window.lang.run();
 	});--->
-	
+
 	<!---Lang.prototype.pack.en = {};
 	Lang.prototype.pack.en.token = {};--->
-	
+
 	$().ready(function () {
 		window.lang = new Lang('es');
 	});
@@ -90,7 +90,7 @@
 <!---<cfinclude template="#APPLICATION.htmlPath#/includes/jstree_scripts.cfm">
 
 <script>
-	
+
 	<cfoutput>
 	var curAreaId = #area_id#;
 	</cfoutput>
@@ -100,7 +100,7 @@
 		if(areaId != curAreaId){
 			parent.setNewParentId(areaId);
 		} else {
-			$("#areasTreeContainer").jstree("deselect_all"); 
+			$("#areasTreeContainer").jstree("deselect_all");
 			parent.setNewParentId(undefined);
 			parent.showAlertModal("No puede seleccionar como área de destino el área a mover");
 		}
@@ -117,11 +117,11 @@
 	<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.2"></script>
 	<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
 	<!---<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>--->
-		
+
 	<script>
-		
-		var selectAreaId = #URL.area#; 
-		
+
+		var selectAreaId = #URL.area#;
+
 		var firstSelect = true;
 
 		function selectTreeNode(nodeId) {
@@ -131,7 +131,7 @@
 			$areasJsTree.jstree("deselect_all");
 			if($areasJsTree.jstree("select_node", nodeId) == false) { // Es false si el área no está en el árbol y no se puede seleccionar
 
-				alert("Área no accesible en su árbol"); 
+				alert("Área no accesible en su árbol");
 
 			}else {
 
@@ -160,27 +160,27 @@
 
 		}
 
-		function treeLoaded() { 
-			
+		function treeLoaded() {
+
 			$("##loadingContainer").hide();
 
 			selectTreeNode(selectAreaId);
-			
+
 		}
 
 		function searchTextInTree(){
-			searchInTree(document.getElementById('searchText').value);	
+			searchInTree(document.getElementById('searchText').value);
 		}
 
-		$(window).load( function() {		
+		$(window).load( function() {
 
 			showTree(true);
 
-			$("##searchText").on("keydown", function(e) { 
-				
+			$("##searchText").on("keydown", function(e) {
+
 				if(e.which == 13) //Enter key
 					searchTextInTree();
-				
+
 			});
 
 		});

@@ -21,6 +21,8 @@
 
 	<cfset typologyTableTypeId = 4>
 
+	<cfset LAST_UPDATE_TYPE_ITEM = "item">
+
 	<cfinclude template="includes/functions.cfm">
 
 	<!--- ----------------------- XML USER -------------------------------- --->
@@ -610,8 +612,9 @@
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
-		<cfargument name="linkedin_url" type="string" required="false">
-		<cfargument name="twitter_url" type="string" required="false">
+		<cfargument name="linkedin_url" type="string" required="true">
+		<cfargument name="twitter_url" type="string" required="true">
+		<cfargument name="start_page" type="string" required="true">
 		<cfargument name="information" type="string" required="true">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
@@ -760,7 +763,8 @@
 					internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">,
 					enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">,
 					linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
-					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">
+					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
+					start_page = <cfqueryparam value="#arguments.start_page#" cfsqltype="cf_sql_varchar">
 					<cfif APPLICATION.moduleLdapUsers EQ true>
 						<cfif isDefined("arguments.login_ldap") AND len(arguments.login_ldap) GT 0>
 						, login_ldap = <cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
@@ -920,8 +924,9 @@
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
-		<cfargument name="linkedin_url" type="string" required="false">
-		<cfargument name="twitter_url" type="string" required="false">
+		<cfargument name="linkedin_url" type="string" required="true">
+		<cfargument name="twitter_url" type="string" required="true">
+		<cfargument name="start_page" type="string" required="true">
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
@@ -1001,7 +1006,11 @@
 					dni = <cfqueryparam value="#arguments.dni#" cfsqltype="cf_sql_varchar">,
 					hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">,
 					linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
-					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">
+					twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
+					start_page = <cfqueryparam value="#arguments.start_page#" cfsqltype="cf_sql_varchar">,
+					last_update_date = NOW(),
+					last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">,
+					last_update_type = <cfqueryparam value="#LAST_UPDATE_TYPE_ITEM#" cfsqltype="cf_sql_varchar">
 					<cfif isDefined("arguments.password") AND len(arguments.password) GT 0>
 						, password = <cfqueryparam value = "#arguments.password#" cfsqltype="cf_sql_varchar">
 					</cfif>
@@ -1044,7 +1053,7 @@
 				<!--- setUserTypology --->
 				<cfif isDefined("arguments.typology_id")>
 
-					<cfif userQuery.typology_id NEQ arguments.typology_id AND isNumeric(userQuery.typology_row_id)><!---File typology was changed--->
+					<cfif userQuery.typology_id NEQ arguments.typology_id AND isNumeric(userQuery.typology_row_id)><!---User typology was changed--->
 
 						<!--- Delete old row --->
 						<cfinvoke component="RowManager" method="deleteRow" returnvariable="deleteRowResponse">
@@ -1158,7 +1167,11 @@
 			<cfif listFind(APPLICATION.languages, arguments.language) GT 0>
 
 				<cfquery name="updateUserLanguage" datasource="#client_dsn#">
-					UPDATE #client_abb#_users SET language = <cfqueryparam value="#arguments.language#" cfsqltype="cf_sql_varchar">
+					UPDATE #client_abb#_users
+					SET language = <cfqueryparam value="#arguments.language#" cfsqltype="cf_sql_varchar">,
+					last_update_date = NOW(),
+					last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">,
+					last_update_type = <cfqueryparam value="#LAST_UPDATE_TYPE_ITEM#" cfsqltype="cf_sql_varchar">
 					WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
@@ -1299,6 +1312,9 @@
 					<cfelse>
 						, notifications_web_digest_type_id = <cfqueryparam value="#arguments.notifications_web_digest_type_id#" cfsqltype="cf_sql_integer">
 					</cfif>
+					, last_update_date = NOW()
+					, last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">
+					, last_update_type = <cfqueryparam value="#LAST_UPDATE_TYPE_ITEM#" cfsqltype="cf_sql_varchar">
 					WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
@@ -2569,50 +2585,6 @@
 	</cffunction>
 
 
-	<!--- ---------------------------- getAreaAdministrators ------------------------------- --->
-
-	<!---<cffunction name="getAreaAdministrators" returntype="struct" output="false" access="public">
-
-		<cfset var method = "getAreaAdministrators">
-
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getAreaAdministrators" argumentcollection="#arguments#" returnvariable="response">
-
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
-			<cfreturn response>
-
-	</cffunction>--->
-
-
-	<!--- ---------------------------- getAreaUsersIds ------------------------------- --->
-
-	<cffunction name="getAreaUsersIds" returntype="struct" output="false" access="public">
-		<cfargument name="area_id" type="string" required="yes">
-		<cfargument name="usersList" type="string" required="no" default="">
-		<cfargument name="areasArray" type="array" required="yes">
-		<!---<cfargument name="include_user_log_in" type="boolean" required="no" default="false">--->
-		<cfargument name="get_orientation" type="string" required="no" default="desc"><!---desc/asc/both---><!---both: obtiene los usuarios de las áreas superiores e inferiores--->
-
-		<cfset var method = "getAreaUsersIds">
-		<cfset var areaMembersList = "">
-
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getAreaUsersIds" argumentcollection="#arguments#" returnvariable="response">
-
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
-			<cfreturn response>
-
-	</cffunction>
-
-
 	<!--- ---------------------------- GET USERS -------------------------------- --->
 	<!---Devuelve la lista de todos los usuarios según el usuario sea interno o externo--->
 
@@ -2689,7 +2661,6 @@
 
 		<!---<cfset var get_orientation = "desc">--->
 		<cfset var usersList = "">
-		<cfset var areasArray = arrayNew(1)>
 		<cfset var usersArray = arrayNew(1)>
 
 		<cfset var search_text_re = "">
@@ -2708,67 +2679,20 @@
 				</cfinvoke>
 			</cfif>--->
 
-			<!---Obtiene las áreas del usuario--->
-			<cfquery name="getUserAreas" datasource="#client_dsn#">
-				SELECT area_id
-				FROM #client_abb#_areas_users
-				WHERE user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_varchar">;
-			</cfquery>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getUserVisibleUsers" returnvariable="getUserVisibleUsers">
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 
-			<cfloop query="getUserAreas">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 
-				<!---Obtiene los usuarios de las áreas hacia abajo y hacia arriba--->
-				<!---En versiones anteriores de la aplicación sólo se mostraban los usuarios de las áreas inferiores, ya que los usuarios externos sólo podían ver los usuarios que estaban directamente asociados a las áreas a las que tienen acceso y sus áreas inferiores.--->
-				<cfinvoke component="UserManager" method="getAreaUsersIds" returnvariable="usersIdsResult">
-					<cfinvokeargument name="area_id" value="#getUserAreas.area_id#">
-					<cfinvokeargument name="usersList" value="#usersList#">
-					<cfinvokeargument name="areasArray" value="#areasArray#">
-
-					<cfinvokeargument name="get_orientation" value="both">
-				</cfinvoke>
-
-				<cfset usersList = usersIdsResult.usersList>
-				<cfset areasArray = usersIdsResult.areasArray>
-
-			</cfloop>
+			<cfset usersList = getUserVisibleUsers.usersList>
 
 			<cfif listLen(usersList) GT 0>
 
 				<cfinvoke component="UserManager" method="getAllUsers" argumentcollection="#arguments#" returnvariable="response">
 					<cfinvokeargument name="users_ids" value="#usersList#">
 				</cfinvoke>
-
-				<!---<cfquery name="membersQuery" datasource="#client_dsn#">
-					SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type,
-						CONCAT_WS(' ', family_name, name) AS user_full_name, enabled
-					<cfif SESSION.client_abb EQ "hcs">
-                		, perfil_cabecera
-                	</cfif>
-					FROM #client_abb#_users AS u
-					WHERE u.id IN (#usersList#)
-					<cfif len(search_text_re) GT 0>
-						AND	(u.name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						OR u.family_name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						OR u.email REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						OR u.address REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						OR u.dni REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						<cfif SESSION.client_abb EQ "hcs">
-							OR u.information REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-							OR u.perfil_cabecera REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						</cfif>)
-					</cfif>
-					<cfif isDefined("arguments.limit")>
-					LIMIT #arguments.limit#
-					</cfif>;
-				</cfquery>
-
-				<cfif membersQuery.recordCount GT 0>
-
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToArray" returnvariable="usersArray">
-						<cfinvokeargument name="data" value="#membersQuery#">
-					</cfinvoke>
-
-				</cfif>	--->
 
 			<cfelse>
 
