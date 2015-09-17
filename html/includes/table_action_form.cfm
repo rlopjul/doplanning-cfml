@@ -22,7 +22,7 @@
 <script>
 
 	function confirmDeleteAction() {
-	
+
 		var message_delete = "¿Seguro que desea eliminar la acción definitivamente?";
 		return confirm(window.lang.translate(message_delete));
 	}
@@ -41,7 +41,7 @@
 
 	}
 
-	$(document).ready(function() { 
+	$(document).ready(function() {
 
 		actionTypeChange(#action.action_type_id#);
 
@@ -51,7 +51,7 @@
 
 		$('##action_content').summernote({
 			height: "300px"
-			
+
 			, disableDragAndDrop: true,
 			maximumImageFileSize: 1,
 			toolbar: [
@@ -146,7 +146,7 @@
 			<small class="help-block" lang="es">Se realizará la acción cuando ocurra este evento</small>
 		</div>
 	</div>
-		
+
 
 	<!---Table fields--->
 	<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableFields" returnvariable="getTableFieldsResponse">
@@ -163,7 +163,7 @@
 
 
 	<cfif page_type IS 2>
-		
+
 		<!---Action fields--->
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Action" method="getActionFields" returnvariable="getActionFieldsResponse">
 			<cfinvokeargument name="action_id" value="#action.action_id#">
@@ -174,7 +174,7 @@
 
 	</cfif>
 
-	
+
 	<cfset fieldEmail = false>
 
 	<div class="row">
@@ -199,7 +199,7 @@
 			<cfelse>
 				<small class="help-block" lang="es">Sólo están disponibles para seleccionar los campos del tipo Email</small>
 			</cfif>
-			
+
 		</div>
 	</div>
 
@@ -214,7 +214,7 @@
 		<div class="col-md-12">
 			<label for="action_content" class="control-label"><span lang="es">Contenido del email</span> *</label>
 			<textarea name="action_content" id="action_content" class="form-control" style="height:200px;">#action.action_content#</textarea>
-			<small class="help-block" lang="es">Si aplicas formato al contenido del email, el aspecto que visualizará el usuario dependerá de su cliente de correo.</small>
+			<small class="help-block" lang="es">Si aplicas formato al contenido del email, el aspecto que visualizará el usuario podrá variar dependiendo de su cliente de correo.</small>
 		</div>
 	</div>
 
@@ -224,7 +224,7 @@
 
 		<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 	</div>
-	
+
 </cfform>
 </cfoutput>
 </div>

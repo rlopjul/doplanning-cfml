@@ -764,6 +764,10 @@
 	<div class="col-md-12">
 		<label class="sr-only" for="summernote" lang="es">Contenido</label>
 <!---style="margin-bottom:10px; margin-top:5px;"---><textarea name="description" class="form-control summernote" id="summernote" style="height:200px;" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea>
+
+		<cfif itemTypeId IS 17><!---Mailing--->
+			<small class="help-block" lang="es">Si aplicas formato al contenido del email, el aspecto que visualizará el usuario podrá variar dependiendo de su cliente de correo.</small>
+		</cfif>
 	</div>
 
 </div>

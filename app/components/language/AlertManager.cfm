@@ -361,7 +361,14 @@ curLangText["es"] = {
 			"activity_summary_for_user" : "Resumen de actividad para el usuario",
 			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
 
+		},
+
+		"mailing": {
+
+			"unsubscribe_mailing" : "Darse de baja de este boletín"
+
 		}
+
 	};
 
 
@@ -727,6 +734,14 @@ curLangText["en"] = {
 			"activity_summary_for_user" : "Summary of activity for the user",
 			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
 
+		},
+
+		"mailing": {
+
+			"unsubscribe_mailing" : "Unsubscribe from this newsletter"
+
 		}
+
+
 	};
 </cfscript>

@@ -982,7 +982,7 @@
 
 	<!--- --------------------------- getHeadContent --------------------------- --->
 
-	<cffunction name="getHeadContent" access="private" returntype="string">
+	<cffunction name="getHeadContent" access="public" returntype="string">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="client_abb" type="string" required="true">
 

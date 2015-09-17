@@ -44,7 +44,7 @@
 				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
-				<cfinvokeargument name="withMailings" value"#APPLICATION.moduleMailing#">
+				<cfinvokeargument name="withMailings" value="#APPLICATION.moduleMailing#">
 				<cfinvokeargument name="withFilesTypologies" value="true">
 				<cfinvokeargument name="withUsersTypologies" value="true">
 				<cfinvokeargument name="withArea" value="true">

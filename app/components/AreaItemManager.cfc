@@ -1024,6 +1024,7 @@
 		<cfargument name="unlock" type="boolean" required="false" default="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
+		<cfargument name="send_and_close" type="boolean" required="false" default="false">
 
 
 		<cfset var method = "updateItem">
@@ -1380,7 +1381,24 @@
 
 				</cfif>
 
-				<cfif arguments.no_notify IS false>
+				<cfif arguments.itemTypeId EQ 17>
+
+					<cfif arguments.send_and_close IS true>
+
+						<!---Mailing--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/MailingManager" method="sendMailing">
+							<cfinvokeargument name="objectItem" value="#itemQuery#">
+							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+							<cfinvokeargument name="action" value="update">
+
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif>
+
+				<cfelseif arguments.no_notify IS false>
 
 					<!--- Alert --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
@@ -3924,7 +3942,7 @@
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
 				<cfinvokeargument name="withArea" value="#arguments.withArea#">
-				<cfinvokeargument name="withMailings" value"#APPLICATION.moduleMailing#">
+				<cfinvokeargument name="withMailings" value="#APPLICATION.moduleMailing#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
