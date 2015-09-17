@@ -1209,6 +1209,9 @@
 		<cfinvokeargument name="readOnly" value="true"/>
 		<cfinvokeargument name="toolbarCanCollapse" value="true"/>
 		<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+		<cfinvokeargument name="removePlugins" value="elementspath,wordcount,toolbar"/>
+		<cfinvokeargument name="allowedContent" value="true">
+		<cfinvokeargument name="resize_enabled" value="false">
 	</cfinvoke>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
@@ -1219,6 +1222,9 @@
 		<cfinvokeargument name="readOnly" value="true"/>
 		<cfinvokeargument name="toolbarCanCollapse" value="true"/>
 		<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+		<cfinvokeargument name="removePlugins" value="elementspath,wordcount,toolbar"/>
+		<cfinvokeargument name="allowedContent" value="true">
+		<cfinvokeargument name="resize_enabled" value="false">
 	</cfinvoke>
 
 </cfif>
