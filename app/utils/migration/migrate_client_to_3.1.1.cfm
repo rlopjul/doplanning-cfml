@@ -79,7 +79,7 @@ CREATE TABLE `hcs_mailings` (
   `publication_validated_date` datetime DEFAULT NULL,
   `last_update_user_id` int(11) DEFAULT NULL,
   `last_update_type` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `state` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `email_addresses` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `template_id` int(11) DEFAULT NULL,
   `head_content` text COLLATE utf8_unicode_ci NOT NULL,
@@ -101,6 +101,7 @@ CREATE TABLE `hcs_mailings` (
   CONSTRAINT `FK_hcs_mailings_6` FOREIGN KEY (`last_update_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
   CONSTRAINT `FK_hcs_mailings_7` FOREIGN KEY (`template_id`) REFERENCES `hcs_mailings_templates` (`template_id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 
 

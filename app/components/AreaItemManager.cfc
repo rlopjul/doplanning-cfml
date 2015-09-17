@@ -562,11 +562,12 @@
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
-		<cfargument name="send_and_close" type="boolean" required="false" default="false">
 		<cfargument name="template_id" type="numeric" required="false">
 		<cfargument name="head_content" type="string" required="false">
 		<cfargument name="foot_content" type="string" required="false">
 		<cfargument name="content_styles" type="string" required="false">
+		<cfargument name="send_to_area_users" type="boolean" required="false" default="false">
+		<cfargument name="send_to_test_users" type="boolean" required="false" default="false">
 
 		<cfset var method = "createItem">
 
@@ -830,8 +831,10 @@
 						, head_content = <cfqueryparam value="#arguments.head_content#" cfsqltype="cf_sql_longvarchar">
 						, foot_content = <cfqueryparam value="#arguments.foot_content#" cfsqltype="cf_sql_longvarchar">
 						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
-						<cfif arguments.send_and_close IS true>
+						<cfif arguments.send_to_area_users IS true>
 							, state = <cfqueryparam value="sent" cfsqltype="cf_sql_varchar">
+						<cfelseif arguments.send_to_test_users IS true>
+							, state = <cfqueryparam value="sent_to_test" cfsqltype="cf_sql_varchar">
 						<cfelse>
 							, state = <cfqueryparam value="created" cfsqltype="cf_sql_varchar">
 						</cfif>
@@ -1004,11 +1007,12 @@
 		<cfargument name="unlock" type="boolean" required="false" default="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
-		<cfargument name="send_and_close" type="boolean" required="false" default="false">
 		<cfargument name="template_id" type="numeric" required="false">
 		<cfargument name="head_content" type="string" required="false">
 		<cfargument name="foot_content" type="string" required="false">
 		<cfargument name="content_styles" type="string" required="false">
+		<cfargument name="send_to_area_users" type="boolean" required="false" default="false">
+		<cfargument name="send_to_test_users" type="boolean" required="false" default="false">
 
 
 		<cfset var method = "updateItem">
@@ -1303,8 +1307,10 @@
 						, head_content = <cfqueryparam value="#arguments.head_content#" cfsqltype="cf_sql_longvarchar">
 						, foot_content = <cfqueryparam value="#arguments.foot_content#" cfsqltype="cf_sql_longvarchar">
 						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
-						<cfif arguments.send_and_close IS true>
+						<cfif arguments.send_to_area_users IS true>
 							, state = <cfqueryparam value="sent" cfsqltype="cf_sql_varchar">
+						<cfelseif arguments.send_to_test_users IS true>
+							, state = <cfqueryparam value="sent_to_test" cfsqltype="cf_sql_varchar">
 						<cfelse>
 							, state = <cfqueryparam value="modified" cfsqltype="cf_sql_varchar">
 						</cfif>
@@ -1371,15 +1377,17 @@
 
 				<cfif arguments.itemTypeId EQ 17>
 
-					<cfif arguments.send_and_close IS true>
+					<cfif arguments.send_to_area_users IS true OR arguments.send_to_test_users IS true>
 
 						<!---Mailing--->
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/MailingManager" method="sendMailing">
 							<cfinvokeargument name="objectItem" value="#itemQuery#">
 							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-							<cfinvokeargument name="action" value="update">
-
 							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+							<cfinvokeargument name="send_to_area_users" value="#arguments.send_to_area_users#">
+							<cfinvokeargument name="send_to_test_users" value="#arguments.send_to_test_users#">
+
 							<cfinvokeargument name="client_abb" value="#client_abb#">
 							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>

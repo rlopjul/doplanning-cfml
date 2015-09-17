@@ -18,16 +18,18 @@
 		<cfargument name="objectItem" type="query" required="yes">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="itemCategories" type="query" required="false">
-		<cfargument name="action" type="string" required="yes">
 		<cfargument name="user_id" type="numeric" required="true">
+
+		<cfargument name="send_to_area_users" type="boolean" required="false">
+		<cfargument name="send_to_test_users" type="boolean" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
 		<cfset var method = "sendMailing">
 
-		<cfset var internalUsersEmails = "">
-		<cfset var externalUsersEmails = "">
+		<cfset var internalUsersEmails = structNew()>
+		<cfset var externalUsersEmails = structNew()>
     <cfset var listInternalUsers = "">
 		<cfset var listExternalUsers = "">
 
@@ -37,18 +39,9 @@
 		<cfset var listExternalUsersPhones = "">
 
 		<cfset var subject = "">
-		<cfset var area_name = "">
-		<cfset var area_path = "">
-    <cfset var root_area = structNew()>
 		<cfset var access_content = "">
-		<cfset var sms_message = "">
 		<cfset var alertItemHead = "">
 		<cfset var alertContent = "">
-		<cfset var actionUser = "">
-		<cfset var actionUserName = "">
-		<cfset var icalendarContent = "">
-
-		<cfset var includeItemContent = true>
 
 		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
@@ -60,21 +53,12 @@
 
 		</cfif>
 
-		<cfif arguments.itemTypeId IS 7><!---Consultations--->
-			<!---<cfset includeItemContent = false>--->
-			<cfif isDefined("APPLICATION.includeConsultationsInAlerts")>
-				<cfset includeItemContent = APPLICATION.includeConsultationsInAlerts>
-			<cfelse>
-				<cfset includeItemContent = false>
-			</cfif>
-		</cfif>
+		<!--- getClient --->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+		</cfinvoke>
 
-		<cfif len(objectItem.description) GT 0>
-			<!---Para solucionar problema con Flex--->
-			<cfset objectItem.description = REReplace(objectItem.description,'[[:space:]]SIZE="',' style="font-size:',"ALL")>
-			<!---<cfset objectItem.description = Replace(objectItem.description,' SIZE="',' style="font-size:',"ALL")>--->
-		</cfif>
-
+		<cfset var clientAppTitle = clientQuery.app_title>
 
 		<!---Get area name--->
 		<cfquery name="selectAreaQuery" datasource="#client_dsn#">
@@ -82,11 +66,7 @@
 			FROM #client_abb#_areas
 			WHERE id = <cfqueryparam value="#objectItem.area_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
-		<cfif selectAreaQuery.recordCount GT 0>
-
-			<cfset area_name = selectAreaQuery.name>
-
-		<cfelse><!---The area does not exist--->
+		<cfif selectAreaQuery.recordCount IS 0>
 
 			<cfset error_code = 301>
 
@@ -94,113 +74,73 @@
 
 		</cfif>
 
-		<cfif arguments.itemTypeId LT 10>
 
-			<!---fileDownloadUrl--->
-			<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
-					<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
-					<cfinvokeargument name="fileTypeId" value="1">
+		<cfif arguments.send_to_area_users IS true>
+
+			<!--- getItemCategories --->
+			<cfif NOT isDefined("arguments.itemCategories")>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
 					<cfinvokeargument name="item_id" value="#objectItem.id#">
-					<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 				</cfinvoke>
+
 			</cfif>
 
-			<!---imageDownloadUrl--->
-			<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id) AND objectItem.attached_image_id GT 0>
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadImageUrl">
-					<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
-					<cfinvokeargument name="fileTypeId" value="1">
-					<cfinvokeargument name="item_id" value="#objectItem.id#">
-					<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-
-					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-				</cfinvoke>
-			</cfif>
-
-		</cfif>
-
-		<!--- icalendarContent --->
-		<cfif ( arguments.itemTypeId IS 5 OR arguments.itemTypeId IS 6 ) AND includeItemContent IS true AND arguments.action NEQ "delete"><!--- Event OR Task --->
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="exportICalendarItem" returnvariable="exportICalendarItemResponse">
-				<cfinvokeargument name="item_id" value="#objectItem.id#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				<!---<cfinvokeargument name="itemQuery" value="#objectItem#">--->
-
-				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-			</cfinvoke>
-
-			<cfset icalendarContent = exportICalendarItemResponse.icalendar>
-
-		</cfif>
-
-		<!--- getItemCategories --->
-		<cfif NOT isDefined("arguments.itemCategories")>
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
-				<cfinvokeargument name="item_id" value="#objectItem.id#">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-			</cfinvoke>
-
-		</cfif>
-
-
-		<!---getRootArea--->
-		<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
-			<cfinvokeargument name="onlyId" value="false">
-			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-		</cfinvoke>
-		<!---En el asunto se pone el nombre del área raiz--->
-
-    <!--- getUsersToNotifyLists --->
-    <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
-			<!---<cfinvokeargument name="request" value="#getUsersRequest#"/>--->
-			<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-			<cfif arguments.action NEQ "attached_file_deleted_virus" AND arguments.action NEQ "attached_image_deleted_virus">
+	    <!--- getUsersToNotifyLists --->
+	    <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
+				<cfinvokeargument name="area_id" value="#objectItem.area_id#">
 				<cfinvokeargument name="notify_new_#itemTypeName#" value="true">
-			</cfif>
 
-			<cfif itemCategories.recordCount GT 0>
-				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-				<cfinvokeargument name="categories_ids" value="#valueList(itemCategories.category_id)#">
-			</cfif>
+				<cfif itemCategories.recordCount GT 0>
+					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+					<cfinvokeargument name="categories_ids" value="#valueList(itemCategories.category_id)#">
+				</cfif>
 
-			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-		</cfinvoke>
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
 
-		<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
-		<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
+			<cfset internalUsersEmails = usersToNotifyLists.structInternalUsersEmails>
+			<cfset externalUsersEmails = usersToNotifyLists.structExternalUsersEmails>
 
-		<cfset internalUsersPhones = usersToNotifyLists.structInternalUsersPhones>
-		<cfset externalUsersPhones = usersToNotifyLists.structExternalUsersPhones>
+		<cfelse>
+
+			<cfloop list="#APPLICATION.languages#" index="curLang">
+
+				<cfset internalUsersEmails[curLang] = "">
+				<cfset externalUsersEmails[curLang] = "">
+
+			</cfloop>
+
+		</cfif>
+
+		<cfif arguments.send_to_test_users IS true AND listLen(objectItem.email_addresses) GT 0>
+
+			<cfset listInternalUsers = internalUsersEmails[clientQuery.default_language]>
+
+			<cfloop list="#objectItem.email_addresses#" index="curTestAddress" delimiters=";">
+
+				<cfif listFind(listInternalUsers, curTestAddress, ";") IS 0>
+						<cfset listInternalUsers = ListAppend(listInternalUsers, curTestAddress, ";")>
+				</cfif>
+
+			</cfloop>
+
+			<cfset internalUsersEmails[clientQuery.default_language] = listInternalUsers>
+
+		</cfif>
+
 
 		<cfloop list="#APPLICATION.languages#" index="curLang">
 
 			<cfset listInternalUsers = internalUsersEmails[curLang]>
 			<cfset listExternalUsers = externalUsersEmails[curLang]>
 
-			<cfset listInternalUsersPhones = internalUsersPhones[curLang]>
-			<cfset listExternalUsersPhones = externalUsersPhones[curLang]>
-
 			<cfif len(listInternalUsers) GT 0 OR len(listExternalUsers) GT 0><!---Si hay usuarios a los que notificar--->
 
-				<!--- getAreaItemUrl --->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
-					<cfinvokeargument name="item_id" value="#objectItem.id#">
-					<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-					<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-
-					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-				</cfinvoke>
-				
 				<cfset head_content = objectItem.head_content>
 
 				<cfsavecontent variable="foot_content">
@@ -237,11 +177,8 @@
 					</cfsavecontent>
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/EmailManager" method="sendEmail">
-						<!--- <cfinvokeargument name="from" value="#SESSION.client_email_from#"> --->
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-						<cfif arguments.action NEQ "attached_file_deleted_virus" AND arguments.action NEQ "attached_image_deleted_virus">
-							<cfinvokeargument name="from_name" value="#actionUserName#">
-						</cfif>
+						<cfinvokeargument name="from_name" value="#clientAppTitle#">
 						<cfif listLen(listInternalUsers,";") GT 1>
 							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
 							<cfinvokeargument name="bcc" value="#listInternalUsers#">
@@ -280,7 +217,6 @@
 
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/EmailManager" method="sendEmail">
-						<!--- <cfinvokeargument name="from" value="#SESSION.client_email_from#"> --->
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfif arguments.action NEQ "attached_file_deleted_virus" AND arguments.action NEQ "attached_image_deleted_virus">
 							<cfinvokeargument name="from_name" value="#actionUserName#">

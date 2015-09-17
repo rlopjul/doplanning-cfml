@@ -964,7 +964,7 @@
 			<label class="control-label" for="email_addresses"><span lang="es">#t_email_addresses#</span>:</label>
 			<cfinput type="text" name="email_addresses" id="email_addresses" class="form-control" value="#objectItem.email_addresses#" passthrough="#passthrough#">
 			<cfif itemTypeId IS 17>
-				<small class="help-block" lang="es">Introduzca la lista de direcciones de email separadas por comas (hasta 5 direcciones).</small>
+				<small class="help-block" lang="es">Introduzca la lista de direcciones de email separadas por ; (hasta 5 direcciones).</small>
 			</cfif>
 		</div>
 	</div>
@@ -1131,9 +1131,20 @@
 		<div class="col-md-12">
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="send_and_close" id="send_and_close" value="true" <cfif isDefined("objectItem.send_and_close") AND objectItem.send_and_close IS true>checked="checked"</cfif> /> Enviar boletín
+					<input type="checkbox" name="send_to_test_users" id="send_to_test_users" value="true" <cfif NOT isDefined("objectItem.send_to_test_users") OR objectItem.send_to_test_users IS true>checked="checked"</cfif> /> Enviar prueba a destinatarios para pruebas
 				</label>
-				<small class="help-block" lang="es">Si selecciona esta opción se enviará de forma definitiva el boletín a todos los usuarios del área y ya no podrá modificarlo.</small>
+				<small class="help-block" lang="es">Si selecciona esta opción se enviará el boletín a los destinatarios anteriores, podrá modificarlo y volver a enviarlo posteriormente.</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="send_to_area_users" id="send_to_area_users" value="true" <cfif isDefined("objectItem.send_to_area_users") AND objectItem.send_to_area_users IS true>checked="checked"</cfif> /> Enviar boletín
+				</label>
+				<small class="help-block" lang="es">CUIDADO: Si selecciona esta opción se enviará de forma definitiva el boletín a todos los usuarios del área y ya no podrá modificarlo.</small>
 			</div>
 		</div>
 	</div>
