@@ -2,7 +2,7 @@
 
 <cfcomponent output="true">
 
-	<cfset component = "Template">
+	<cfset component = "ItemTemplate">
 
 	<!--- ----------------------------------- getTemplates -------------------------------------- --->
 
@@ -14,7 +14,7 @@
 
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/MailingTemplateManager" method="getTemplates" returnvariable="response">
+			<cfinvoke component="#APPLICATION.componentsPath#/ItemTemplateManager" method="getTemplates" returnvariable="response">
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">

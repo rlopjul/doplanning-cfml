@@ -762,7 +762,7 @@
 
 <cfif itemTypeId IS 17><!--- Mailing --->
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/MailingTemplate" method="getTemplates" returnvariable="getTemplates">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/ItemTemplate" method="getTemplates" returnvariable="getTemplates">
 	</cfinvoke>
 
 	<cfset mailingTemplate = getTemplates.templates>

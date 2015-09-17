@@ -2,7 +2,7 @@
 
 <cfcomponent output="false">
 
-	<cfset component = "MailingTemplateManager">
+	<cfset component = "ItemTemplateManager">
 
 
 	<!--- ------------------------------------- getTemplates -------------------------------------  --->
@@ -17,7 +17,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/MailingTemplateQuery" method="getTemplates" returnvariable="getTemplatesQuery">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ItemTemplateQuery" method="getTemplates" returnvariable="getTemplatesQuery">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
