@@ -81,6 +81,9 @@ CREATE TABLE `hcs_mailings` (
   `last_update_type` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `state` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `email_addresses` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `template_id` int(11) DEFAULT NULL,
+  `head_content` text COLLATE utf8_unicode_ci NOT NULL,
+  `foot_content` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_hcs_mailings_1` (`user_in_charge`),
   KEY `FK_hcs_mailings_2` (`area_id`),
@@ -88,14 +91,35 @@ CREATE TABLE `hcs_mailings` (
   KEY `FK_hcs_mailings_4` (`attached_image_id`),
   KEY `FK_hcs_mailings_5` (`publication_scope_id`),
   KEY `FK_hcs_mailings_7_idx` (`last_update_user_id`),
+  KEY `FK_hcs_mailings_7_idx1` (`template_id`),
   CONSTRAINT `FK_hcs_mailings_1` FOREIGN KEY (`user_in_charge`) REFERENCES `hcs_users` (`id`),
   CONSTRAINT `FK_hcs_mailings_2` FOREIGN KEY (`area_id`) REFERENCES `hcs_areas` (`id`),
   CONSTRAINT `FK_hcs_mailings_3` FOREIGN KEY (`attached_file_id`) REFERENCES `hcs_files` (`id`),
   CONSTRAINT `FK_hcs_mailings_4` FOREIGN KEY (`attached_image_id`) REFERENCES `hcs_files` (`id`),
   CONSTRAINT `FK_hcs_mailings_5` FOREIGN KEY (`publication_scope_id`) REFERENCES `hcs_scopes` (`scope_id`),
-  CONSTRAINT `FK_hcs_mailings_6` FOREIGN KEY (`last_update_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION
+  CONSTRAINT `FK_hcs_mailings_6` FOREIGN KEY (`last_update_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
+  CONSTRAINT `FK_hcs_mailings_7` FOREIGN KEY (`template_id`) REFERENCES `hcs_mailings_templates` (`template_id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 
 ALTER TABLE `dp_hcs`.`hcs_areas`
 ADD COLUMN `item_type_17_enabled` TINYINT(4) NOT NULL DEFAULT 0 AFTER `item_type_16_enabled`;
+
+
+CREATE TABLE `hcs_mailings_templates` (
+  `template_id` int(11) NOT NULL,
+  `title` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `head_content` text CHARACTER SET latin1 NOT NULL,
+  `foot_content` text CHARACTER SET latin1 NOT NULL,
+  `creation_user_id` int(11) DEFAULT NULL,
+  `last_update_user_id` int(11) DEFAULT NULL,
+  `creation_date` datetime NOT NULL,
+  `last_update_date` datetime DEFAULT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`template_id`),
+  KEY `FK_hcs_mailings_1_idx` (`creation_user_id`),
+  KEY `FK_hcs_mailings_2_idx` (`last_update_user_id`),
+  CONSTRAINT `FK_hcs_mailings_templates_2` FOREIGN KEY (`last_update_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `FK_hcs_mailings_templates_1` FOREIGN KEY (`creation_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
