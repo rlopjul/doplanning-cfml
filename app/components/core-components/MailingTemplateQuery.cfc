@@ -3,6 +3,7 @@
 <cfcomponent output="false">
 
 	<cfset component = "MailingTemplateQuery">
+		
 
 	<!---getTemplate--->
 

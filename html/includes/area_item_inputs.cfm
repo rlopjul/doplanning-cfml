@@ -365,7 +365,7 @@
 <cfif itemTypeId IS NOT 7 OR NOT isDefined("parent_kind") OR parent_kind EQ "area">
 <div class="row">
 	<div class="col-xs-12 col-md-12"><!---<cfif APPLICATION.hideInputLabels IS false>control-label<cfelse>sr-only</cfif>--->
-		<label class="control-label" for="item_title" <cfif itemTypeId IS 1>style="font-size:18px;"</cfif>><span lang="es">#t_title#</span> <span lang="es">#itemTypeNameEs#</span>: <cfif title_required IS true>*</cfif></label>
+		<label class="control-label" for="item_title" <cfif itemTypeId IS 1>style="font-size:18px;"</cfif>><span lang="es">#t_title#</span> <cfif itemTypeId NEQ 17><span lang="es">#itemTypeNameEs#</span><cfelse><span lang="es">del email</span></cfif>: <cfif title_required IS true>*</cfif></label>
 		<div>
 			<cfinput type="text" name="title" id="item_title" value="#objectItem.title#" required="#title_required#" message="#t_title# requerido" passthrough="#passthrough# lang='es'" class="form-control">
 		</div>
@@ -759,18 +759,54 @@
 	</div>
 </div>
 
+
+<cfif itemTypeId IS 17><!--- Mailing --->
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/MailingTemplate" method="getTemplates" returnvariable="getTemplates">
+	</cfinvoke>
+
+	<cfset mailingTemplate = getTemplates.templates>
+
+	<div class="row">
+		<div class="col-md-12" style="margin-bottom:10px;">
+				<label for="head_content">Encabezado del email:</label>
+				<textarea name="head_content" id="head_content" class="form-control" style="height:200px;" readonly="readonly">#mailingTemplate.head_content#</textarea>
+		</div>
+	</div>
+
+</cfif>
+
 <div class="row">
 
 	<div class="col-md-12">
-		<label class="sr-only" for="summernote" lang="es">Contenido</label>
+
+		<cfif itemTypeId IS 17>
+			<label for="summernote">Contenido del email:</label>
+		<cfelse>
+			<label class="sr-only" for="summernote" lang="es">Contenido</label>
+		</cfif>
+
 <!---style="margin-bottom:10px; margin-top:5px;"---><textarea name="description" class="form-control summernote" id="summernote" style="height:200px;" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea>
 
-		<cfif itemTypeId IS 17><!---Mailing--->
-			<small class="help-block" lang="es">Si aplicas formato al contenido del email, el aspecto que visualizará el usuario podrá variar dependiendo de su cliente de correo.</small>
-		</cfif>
 	</div>
 
 </div>
+
+<cfif itemTypeId IS 17><!--- Mailing --->
+
+	<div class="row">
+		<div class="col-md-12" style="margin-top:10px;">
+			<cfif itemTypeId IS 17>
+				<label for="foot_content">Pie del email:</label>
+			</cfif>
+			<textarea name="foot_content" id="foot_content" class="form-control" style="height:200px;" readonly="readonly">#mailingTemplate.foot_content#</textarea>
+			<cfif itemTypeId IS 17><!---Mailing--->
+				<small class="help-block" lang="es">Si aplicas formato al contenido del email, el aspecto que visualizará el usuario podrá variar dependiendo de su cliente de correo.</small>
+			</cfif>
+		</div>
+	</div>
+
+</cfif>
 
 <div class="row">
 	<div class="col-xs-12">
@@ -1159,6 +1195,30 @@
 			<cfinvokeargument name="height" value="500"/>
 			<cfinvokeargument name="toolbar" value="DP_document"/>
 		</cfif>
+	</cfinvoke>
+
+</cfif>
+
+<cfif itemTypeId IS 17><!--- Mailing --->
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+		<cfinvokeargument name="name" value="head_content">
+		<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+		<cfinvokeargument name="height" value="100"/>
+		<cfinvokeargument name="toolbar" value="DP_document"/>
+		<cfinvokeargument name="readOnly" value="true"/>
+		<cfinvokeargument name="toolbarCanCollapse" value="true"/>
+		<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+	</cfinvoke>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+		<cfinvokeargument name="name" value="foot_content">
+		<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+		<cfinvokeargument name="height" value="100"/>
+		<cfinvokeargument name="toolbar" value="DP_document"/>
+		<cfinvokeargument name="readOnly" value="true"/>
+		<cfinvokeargument name="toolbarCanCollapse" value="true"/>
+		<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
 	</cfinvoke>
 
 </cfif>
