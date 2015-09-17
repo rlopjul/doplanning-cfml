@@ -3371,6 +3371,7 @@
 				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
+				<cfinvokeargument name="withMailings" value"#APPLICATION.moduleMailing#">
 
 				<cfinvokeargument name="onlyUsers" value="true">
 

@@ -3924,6 +3924,7 @@
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
 				<cfinvokeargument name="withArea" value="#arguments.withArea#">
+				<cfinvokeargument name="withMailings" value"#APPLICATION.moduleMailing#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
