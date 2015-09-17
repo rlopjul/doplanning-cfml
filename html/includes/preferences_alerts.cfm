@@ -88,7 +88,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" alt="Nuevo mensaje" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" alt="Mensaje" lang="es" />
 						</div>
 
 						<div class="col-sm-11">
@@ -105,7 +105,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/link_new.png" alt="Nuevo enlace" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/link_new.png" alt="Enlace" lang="es" />
 						</div>
 
 						<div class="col-sm-11">
@@ -120,7 +120,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/entry.png" alt="Nuevo elemento de contenido web" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/entry.png" alt="Elemento de contenido web" lang="es" />
 						</div>
 
 						<div class="col-sm-11">
@@ -134,7 +134,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/news.png" alt="Nueva noticia" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/news.png" alt="Noticia" lang="es" />
 						</div>
 
 						<div class="col-sm-11">
@@ -148,7 +148,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/image.png" alt="Nueva noticia" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/image.png" alt="Imagen" lang="es" />
 						</div>
 
 						<div class="col-sm-11">
@@ -164,7 +164,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/event.png" alt="Nuevo evento" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/event.png" alt="Evento" lang="es" />
 						</div>
 
 						<div class="col-sm-11">
@@ -180,7 +180,7 @@ Preferencias de notificaciones
 					<div class="row">
 
 						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/task.png" alt="Nueva tarea" />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/task.png" alt="Tarea" lang="es" />
 						</div>
 
 						<div class="col-sm-11">
@@ -193,10 +193,28 @@ Preferencias de notificaciones
 
 				</cfif>
 
+				<cfif APPLICATION.moduleDPDocuments IS true>
+
+					<div class="row">
+
+						<div class="col-sm-1" style="text-align:center;">
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/dp_document.png" alt="Documento DoPlanning" lang="es" />
+						</div>
+
+						<div class="col-sm-11">
+							<label style="margin-bottom:15px;">
+								<input type="checkbox" name="notify_new_dp_document" value="true" <cfif preferences.notify_new_dp_document IS true>checked="checked"</cfif> />
+								<span lang="es">Un documento DoPlanning ha sido creado, modificado o eliminado</span>
+							</label>
+						</div>
+					</div>
+
+				</cfif>
+
 				<cfif APPLICATION.modulefilesWithTables IS true>
 					<div class="row">
 						<div class="col-sm-1" style="text-align:center;">
-							<i class="icon-file-text" style="font-size:28px; color:##7A7A7A; margin-left:6px;"></i>
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/typology.png" alt="Tipología" lang="es" />
 						</div>
 
 						<div class="col-sm-11">
@@ -469,6 +487,27 @@ Preferencias de notificaciones
 						<img src="#APPLICATION.htmlPath#/assets/v3/icons/form.png" alt="Nuevo formulario" />
 						<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
 					</label>--->
+				</cfif>
+
+
+				<cfif APPLICATION.moduleMailing IS true>
+
+					<div class="form_separator"></div>
+
+					<div class="row">
+
+						<div class="col-sm-1" style="text-align:center;">
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/mailing.png" alt="Boletín" lang="es" />
+						</div>
+
+						<div class="col-sm-11">
+							<label style="margin-bottom:15px;">
+								<input type="checkbox" name="notify_new_mailing" value="true" <cfif preferences.notify_new_mailing IS true>checked="checked"</cfif> />
+								<span lang="es">Un boletín ha sido enviado</span>
+							</label>
+						</div>
+					</div>
+
 				</cfif>
 
 				<cfif SESSION.client_abb NEQ "hcs">

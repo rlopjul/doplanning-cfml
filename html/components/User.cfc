@@ -486,6 +486,8 @@
 		<cfargument name="notify_new_form_row" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_form_view" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_pubmed" type="string" required="false" default="false">
+		<cfargument name="notify_new_dp_document" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_mailing" type="boolean" required="false" default="false">
 
 		<!--- <cfargument name="notify_dissociate_file" type="boolean" required="false" default="false"> --->
 		<cfargument name="notify_delete_file" type="boolean" required="false" default="false">
@@ -519,9 +521,9 @@
 
 			<cfset msg = URLEncodedFormat(msg)>
 
-            <!---<cflocation url="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">--->
+      <!---<cflocation url="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">--->
 
-            <cflocation url="#APPLICATION.htmlPath#/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">
+      <cflocation url="#APPLICATION.htmlPath#/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">

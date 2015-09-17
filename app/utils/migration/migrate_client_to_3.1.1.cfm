@@ -127,3 +127,8 @@ CREATE TABLE `hcs_mailings_templates` (
   CONSTRAINT `FK_hcs_mailings_templates_1` FOREIGN KEY (`creation_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `FK_hcs_mailings_templates_2` FOREIGN KEY (`last_update_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+ALTER TABLE `dp_hcs`.`hcs_users`
+ADD COLUMN `notify_new_dp_document` TINYINT(1) NOT NULL DEFAULT 1 AFTER `notify_new_typology`,
+ADD COLUMN `notify_new_mailing` TINYINT(1) NOT NULL DEFAULT '1' AFTER `notify_new_dp_document`;

@@ -97,6 +97,12 @@
 				, notify_new_form_row
 				, notify_new_form_view
 				</cfif>
+				<cfif APPLICATION.moduleDPDocuments IS true>
+				, notify_new_dp_document
+				</cfif>
+				<cfif APPLICATION.moduleMailing IS true>
+				, notify_new_mailing
+				</cfif>
 				<cfif APPLICATION.moduleWeb IS true>
 					<cfif APPLICATION.identifier EQ "vpnet">
 					, notify_new_link

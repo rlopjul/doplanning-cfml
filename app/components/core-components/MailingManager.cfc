@@ -218,9 +218,7 @@
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/EmailManager" method="sendEmail">
 						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
-						<cfif arguments.action NEQ "attached_file_deleted_virus" AND arguments.action NEQ "attached_image_deleted_virus">
-							<cfinvokeargument name="from_name" value="#actionUserName#">
-						</cfif>
+						<cfinvokeargument name="from_name" value="#clientAppTitle#">
 						<cfif listLen(listExternalUsers,";") GT 1>
 							<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
 							<cfinvokeargument name="bcc" value="#listExternalUsers#">
