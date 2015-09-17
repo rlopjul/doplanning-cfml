@@ -563,14 +563,14 @@
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
 		<cfargument name="send_and_close" type="boolean" required="false" default="false">
+		<cfargument name="template_id" type="numeric" required="false">
+		<cfargument name="head_content" type="string" required="false">
+		<cfargument name="foot_content" type="string" required="false">
+		<cfargument name="content_styles" type="string" required="false">
 
 		<cfset var method = "createItem">
 
 		<cfset var response = structNew()>
-
-		<!--- <cfset var parent_kind = "">
-		<cfset var parent_id = "">
-		<cfset var area_id = "">--->
 
 		<cfset var item_id = "">
 		<cfset var area_type = "">
@@ -582,11 +582,6 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-
-			<!---checkAreaAccess--->
-			<!---<cfif arguments.parent_kind EQ "area">
-
-				<cfset area_id = arguments.parent_id>--->
 
 			<cfif arguments.parent_kind NEQ "area">
 
@@ -646,8 +641,6 @@
 				<cfinclude template="includes/checkAreaAccess.cfm">
 
 			</cfif>
-
-			<!---<cfset objectItem.area_id = area_id>---><!---Esta variable se utiliza despues para enviar las ALERTAS--->
 
 			<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -714,8 +707,6 @@
 
 			</cfif>
 
-			<!---<cfset objectItem.user_full_name = "#getUserData.family_name# #getUserData.name#">--->
-
 
 			<cfif itemTypeId IS 6><!---Tasks--->
 
@@ -733,18 +724,7 @@
 
 				</cfif>
 
-				<!---<cfset objectItem.recipient_user_full_name = "#getRecipientUserData.family_name# #getRecipientUserData.name#">--->
-
 			</cfif>
-
-			<!---Status of item--->
-			<!---<cfif NOT isDefined("xmlItem.item.attached_file_name.xmlText") OR len(xmlItem.item.attached_file_name.xmlText) IS 0 OR xmlItem.item.xmlAttributes.attached_file_id EQ "NULL">--->
-			<!---<cfif len(objectItem.attached_file_name) IS 0 OR objectItem.attached_file_id IS "NULL"
-				OR objectItem.attached_image_id IS "NULL">
-				<cfset status = "pending">
-			<cfelse>
-				<cfset status = "ok">
-			</cfif>--->
 
 			<cfset arguments.title = trim(arguments.title)>
 
@@ -846,6 +826,10 @@
 
 					<cfif itemTypeId IS 17><!--- Mailing --->
 						, email_addresses = <cfqueryparam value="#arguments.email_addresses#" cfsqltype="cf_sql_varchar">
+						, template_id = <cfqueryparam value="#arguments.template_id#" cfsqltype="cf_sql_longvarchar">
+						, head_content = <cfqueryparam value="#arguments.head_content#" cfsqltype="cf_sql_longvarchar">
+						, foot_content = <cfqueryparam value="#arguments.foot_content#" cfsqltype="cf_sql_longvarchar">
+						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
 						<cfif arguments.send_and_close IS true>
 							, state = <cfqueryparam value="sent" cfsqltype="cf_sql_varchar">
 						<cfelse>
@@ -908,10 +892,6 @@
 				</cfif>
 
 			</cftransaction>
-
-			<!---<cfif itemTypeId IS NOT 4>
-				<cfset objectItem.creation_date = stringCurrentDate>
-			</cfif>--->
 
 			<cfif arguments.itemTypeId IS 7 AND arguments.parent_kind NEQ "area" AND parent_state NEQ "answered"><!---Consultations--->
 
@@ -1025,6 +1005,10 @@
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
 		<cfargument name="send_and_close" type="boolean" required="false" default="false">
+		<cfargument name="template_id" type="numeric" required="false">
+		<cfargument name="head_content" type="string" required="false">
+		<cfargument name="foot_content" type="string" required="false">
+		<cfargument name="content_styles" type="string" required="false">
 
 
 		<cfset var method = "updateItem">
@@ -1315,6 +1299,10 @@
 
 					<cfif itemTypeId IS 17><!--- Mailing --->
 						, email_addresses = <cfqueryparam value="#arguments.email_addresses#" cfsqltype="cf_sql_varchar">
+						, template_id = <cfqueryparam value="#arguments.template_id#" cfsqltype="cf_sql_longvarchar">
+						, head_content = <cfqueryparam value="#arguments.head_content#" cfsqltype="cf_sql_longvarchar">
+						, foot_content = <cfqueryparam value="#arguments.foot_content#" cfsqltype="cf_sql_longvarchar">
+						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
 						<cfif arguments.send_and_close IS true>
 							, state = <cfqueryparam value="sent" cfsqltype="cf_sql_varchar">
 						<cfelse>

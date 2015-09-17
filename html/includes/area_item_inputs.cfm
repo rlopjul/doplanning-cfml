@@ -767,12 +767,16 @@
 
 	<cfset mailingTemplate = getTemplates.templates>
 
+	<input type="hidden" name="template_id" value="#mailingTemplate.template_id#" />
+	<input type="hidden" name="content_styles" value="#mailingTemplate.content_styles#" />
+
 	<div class="row">
 		<div class="col-md-12" style="margin-bottom:10px;">
 				<label for="head_content">Encabezado del email:</label>
 				<textarea name="head_content" id="head_content" class="form-control" style="height:200px;" readonly="readonly">#mailingTemplate.head_content#</textarea>
 		</div>
 	</div>
+
 
 </cfif>
 

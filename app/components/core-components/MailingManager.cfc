@@ -200,16 +200,12 @@
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				</cfinvoke>
-
-				<!--- getHeadContent --->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="head_content">
-					<cfinvokeargument name="language" value="#curLang#">
-					<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
-				</cfinvoke>
+				
+				<cfset head_content = objectItem.head_content>
 
 				<cfsavecontent variable="foot_content">
 				<cfoutput>
-					<p style="font-family:'Roboto', sans-serif; font-size:12px;">
+				 <p style="font-family:'Roboto', sans-serif; font-size:12px;">
 
 						<a href="#APPLICATION.mainUrl#/login/unsubscribe.cfm?user=#arguments.user_id#&mailing=#objectItem.id#">#langText[curLang].mailing.unsubscribe_mailing#</a>
 
@@ -219,7 +215,10 @@
 
 				<cfsavecontent variable="alertContent">
 					<cfoutput>
+					<div style="#objectItem.content_styles#">
 					#objectItem.description#
+					</div>
+					#objectItem.foot_content#
 					</cfoutput>
 				</cfsavecontent>
 

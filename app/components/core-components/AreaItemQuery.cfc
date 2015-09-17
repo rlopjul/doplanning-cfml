@@ -83,7 +83,7 @@
 					, items.price
 				</cfif>
 				<cfif itemTypeId IS 17><!--- Mailings --->
-					, items.email_addresses
+					, items.email_addresses, items.head_content, items.foot_content, items.content_styles
 				</cfif>
 				<cfif itemTypeWeb IS true><!---WEB--->
 
