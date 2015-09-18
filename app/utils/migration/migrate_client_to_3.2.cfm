@@ -50,6 +50,18 @@ ALTER TABLE `dp_web4bio7`.`web4bio7_users`
 CHANGE COLUMN `space_used` `space_used` BIGINT(20) NULL DEFAULT '0' ;
 
 
+ALTER TABLE `dp_hcs`.`hcs_areas`
+ADD COLUMN `item_type_17_enabled` TINYINT(1) NOT NULL DEFAULT 0 AFTER `item_type_16_enabled`;
+
+
+ALTER TABLE `dp_hcs`.`hcs_users`
+ADD COLUMN `notify_new_dp_document` TINYINT(1) NOT NULL DEFAULT 1 AFTER `notify_new_typology`,
+ADD COLUMN `notify_new_mailing` TINYINT(1) NOT NULL DEFAULT '1' AFTER `notify_new_dp_document`;
+
+
+ALTER TABLE `dp_hcs`.`hcs_files`
+ADD COLUMN `thumbnail` TINYINT(1) NOT NULL DEFAULT 0 AFTER `field_id`,
+ADD COLUMN `thumbnail_format` VARCHAR(45) NULL AFTER `thumbnail`;
 
 
 CREATE TABLE `hcs_mailings` (
@@ -104,12 +116,6 @@ CREATE TABLE `hcs_mailings` (
 
 
 
-
-
-ALTER TABLE `dp_hcs`.`hcs_areas`
-ADD COLUMN `item_type_17_enabled` TINYINT(1) NOT NULL DEFAULT 0 AFTER `item_type_16_enabled`;
-
-
 CREATE TABLE `hcs_mailings_templates` (
   `template_id` int(11) NOT NULL,
   `title` varchar(255) CHARACTER SET latin1 NOT NULL,
@@ -127,13 +133,3 @@ CREATE TABLE `hcs_mailings_templates` (
   CONSTRAINT `FK_hcs_mailings_templates_1` FOREIGN KEY (`creation_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `FK_hcs_mailings_templates_2` FOREIGN KEY (`last_update_user_id`) REFERENCES `hcs_users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-ALTER TABLE `dp_hcs`.`hcs_users`
-ADD COLUMN `notify_new_dp_document` TINYINT(1) NOT NULL DEFAULT 1 AFTER `notify_new_typology`,
-ADD COLUMN `notify_new_mailing` TINYINT(1) NOT NULL DEFAULT '1' AFTER `notify_new_dp_document`;
-
-
-ALTER TABLE `dp_hcs`.`hcs_files`
-ADD COLUMN `thumbnail` TINYINT(1) NOT NULL DEFAULT 0 AFTER `field_id`,
-ADD COLUMN `thumbnail_format` VARCHAR(45) NULL AFTER `thumbnail`;
