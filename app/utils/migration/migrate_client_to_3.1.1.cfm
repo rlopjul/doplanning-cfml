@@ -107,7 +107,7 @@ CREATE TABLE `hcs_mailings` (
 
 
 ALTER TABLE `dp_hcs`.`hcs_areas`
-ADD COLUMN `item_type_17_enabled` TINYINT(4) NOT NULL DEFAULT 0 AFTER `item_type_16_enabled`;
+ADD COLUMN `item_type_17_enabled` TINYINT(1) NOT NULL DEFAULT 0 AFTER `item_type_16_enabled`;
 
 
 CREATE TABLE `hcs_mailings_templates` (
@@ -132,3 +132,8 @@ CREATE TABLE `hcs_mailings_templates` (
 ALTER TABLE `dp_hcs`.`hcs_users`
 ADD COLUMN `notify_new_dp_document` TINYINT(1) NOT NULL DEFAULT 1 AFTER `notify_new_typology`,
 ADD COLUMN `notify_new_mailing` TINYINT(1) NOT NULL DEFAULT '1' AFTER `notify_new_dp_document`;
+
+
+ALTER TABLE `dp_hcs`.`hcs_files`
+ADD COLUMN `thumbnail` TINYINT(1) NOT NULL DEFAULT 0 AFTER `field_id`,
+ADD COLUMN `thumbnail_format` VARCHAR(45) NULL AFTER `thumbnail`;
