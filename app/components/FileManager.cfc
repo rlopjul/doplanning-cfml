@@ -3437,6 +3437,7 @@
 		<cfset var response = structNew()>
 
 		<cfset var destination = "">
+		<cfset var destinationFile = "">
 		<cfset var upload_file_id = "">
 
 		<cftry>
@@ -3555,7 +3556,9 @@
 
 				</cfif>
 
-				<cffile action="rename" source="#destination##temp_file#" destination="#destination##upload_file_id#">
+				<cfset destinationFile = "#destination##upload_file_id#">
+
+				<cffile action="rename" source="#destination##temp_file#" destination="#destinationFile#">
 
 				<!--- MODULE ANTI VIRUS --->
 				<cfif APPLICATION.moduleAntiVirus IS true>
@@ -3608,6 +3611,39 @@
 				</cfif>
 
 
+				<!--- PENDIENTE DE TERMINAR
+				<cfif uploadedFile.clientFileExt EQ "pdf">
+
+					<cfif FileExists(destinationFile)>
+
+						<cfset destinationThumbnail = "#APPLICATION.filesPath#/#client_abb#/#fileTypeDirectory#_thumbnails/">
+
+						<cfif NOT directoryExists(destinationThumbnail)>
+							<cfdirectory action="create" directory="#destinationThumbnail#">
+						</cfif>
+
+						<cfset thumbnailFormat = "jpg">
+
+						<cfpdf action="thumbnail" source="#destinationFile#" pages="1" destination="#destinationThumbnail#" format="#thumbnailFormat#">
+
+						<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
+							UPDATE #client_abb#_files
+							SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
+							thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
+							WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+					<cfelse><!---The physical file does not exist--->
+
+						<cfset error_code = 608>
+
+						<cfthrow errorcode="#error_code#" detail="#source#">
+
+					</cfif>
+
+				</cfif>
+				---->
+
 
 				<cfcatch><!---The upload fail--->
 
@@ -3619,7 +3655,9 @@
 						</cfquery>
 					</cfif>
 
-					<cffile action="delete" file="#destination##temp_file#">
+					<cfif FileExists("#destination##temp_file#")>
+						<cffile action="delete" file="#destination##temp_file#">
+					</cfif>
 
 					<!---<cfset error_code = 604>--->
 
