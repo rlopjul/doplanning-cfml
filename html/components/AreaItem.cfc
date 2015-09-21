@@ -1742,6 +1742,38 @@
 
 
 
+	<!--- sendAreaItem --->
+
+	<cffunction name="sendAreaItem" output="false" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="send_to_test_users" type="boolean" required="false">
+
+		<cfset var method = "sendAreaItem">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="sendAreaItem" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+
+			<cfif response.result IS true>
+				<cfset response.message = "Boletín enviado a usuarios del área.">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 
 	<cffunction name="outputItem" returntype="void" output="true" access="public">
 		<cfargument name="objectItem" type="object" required="true">
@@ -2024,6 +2056,23 @@
 										<cfcase value="closed">cierre</cfcase>
 									</cfswitch>:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
 								</cfif>
+							</cfif>
+
+							<cfif itemTypeId IS 17><!--- Mailing --->
+
+								<!---<div class="div_message_page_label"><span lang="es">Estado:</span> <span class="text_message_page" lang="es"><cfswitch expression="#objectItem.state#">
+									<cfcase value="created">Creado</cfcase>
+									<cfcase value="sent_to_test">Enviado a destinatarios para pruebas</cfcase>
+									<cfcase value="sent"><strong lang="es">Enviado</strong></cfcase>
+								</cfswitch></span></div>
+
+								<cfif objectItem.state NEQ "created">
+									<div class="div_message_page_label"><span lang="es">Fecha de <cfswitch expression="#objectItem.state#">
+										<cfcase value="sent_to_test">lectura</cfcase>
+										<cfcase value="sent">respuesta</cfcase>
+									</cfswitch>:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
+								</cfif>--->
+
 							</cfif>
 
 							<!---<div class="div_message_page_date"></div>--->

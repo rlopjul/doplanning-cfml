@@ -291,7 +291,7 @@
 
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/Rowmanager" method="deleteRowAttachedFile" argumentcollection="#arguments#" returnvariable="response">
+			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="deleteRowAttachedFile" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
 
 			<cfif response.result IS true>

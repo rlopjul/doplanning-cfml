@@ -30,6 +30,14 @@
 	<!--- <cfset timeZoneTo = "+1:00"> --->
 	<cfset timeZoneTo = "Europe/Madrid">
 
+	<cfset LAST_UPDATE_TYPE_ITEM = "item">
+
+	<cfset CREATED_STATE = "created">
+	<cfset MODIFIED_STATE = "modified">
+	<cfset SENT_TO_TEST = "sent_to_test">
+	<cfset SENT_STATE = "sent">
+
+
 	<!--- ----------------------- XML ITEM -------------------------------- --->
 
 	<cffunction name="xmlItem" returntype="string" access="public">
@@ -832,11 +840,11 @@
 						, foot_content = <cfqueryparam value="#arguments.foot_content#" cfsqltype="cf_sql_longvarchar">
 						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
 						<cfif arguments.send_to_area_users IS true>
-							, state = <cfqueryparam value="sent" cfsqltype="cf_sql_varchar">
+							, state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">
 						<cfelseif arguments.send_to_test_users IS true>
-							, state = <cfqueryparam value="sent_to_test" cfsqltype="cf_sql_varchar">
+							, state = <cfqueryparam value="#SENT_TO_TEST_STATE#" cfsqltype="cf_sql_varchar">
 						<cfelse>
-							, state = <cfqueryparam value="created" cfsqltype="cf_sql_varchar">
+							, state = <cfqueryparam value="#CREATED_STATE#" cfsqltype="cf_sql_varchar">
 						</cfif>
 					</cfif>
 
@@ -1308,11 +1316,11 @@
 						, foot_content = <cfqueryparam value="#arguments.foot_content#" cfsqltype="cf_sql_longvarchar">
 						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
 						<cfif arguments.send_to_area_users IS true>
-							, state = <cfqueryparam value="sent" cfsqltype="cf_sql_varchar">
+							, state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">
 						<cfelseif arguments.send_to_test_users IS true>
-							, state = <cfqueryparam value="sent_to_test" cfsqltype="cf_sql_varchar">
+							, state = <cfqueryparam value="#SENT_TO_TEST_STATE#" cfsqltype="cf_sql_varchar">
 						<cfelse>
-							, state = <cfqueryparam value="modified" cfsqltype="cf_sql_varchar">
+							, state = <cfqueryparam value="#MODIFIED_STATE#" cfsqltype="cf_sql_varchar">
 						</cfif>
 					</cfif>
 
@@ -2944,7 +2952,7 @@
 
 			<cfif itemQuery.recordCount IS 0><!---Item does not exist--->
 
-				<cfset error_code = 601>
+				<cfset error_code = 501>
 
 				<cfthrow errorcode="#error_code#">
 
@@ -3023,6 +3031,105 @@
 			</cfinvoke>--->
 
 			<cfset response = {result=true, item_id=#arguments.item_id#, lock=arguments.lock}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+	<!---  ------------------------------------------------------------------------ --->
+
+
+
+
+	<!---  ---------------------- sendAreaItem -------------------------------- --->
+
+	<cffunction name="sendAreaItem" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="send_to_test_users" type="boolean" required="false">
+
+		<cfset var method = "sendAreaItem">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var itemQuery = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif itemQuery.recordCount IS 0><!---Item does not exist--->
+
+				<cfset error_code = 501>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cfset area_id = itemQuery.area_id>
+
+			<cfif itemQuery.state EQ SENT_STATE>
+
+				<cfset response = {result=false, message="No se puede enviar de nuevo, el boletín ya ha sido enviado."}>
+				<cfreturn response>
+
+			<cfelse>
+
+				<cfif itemQuery.user_in_charge NEQ SESSION.user_id>
+
+					<cfset response = {result=false, message="No tiene permiso para enviar el boletín."}>
+					<cfreturn response>
+
+				</cfif>
+
+			</cfif>
+
+
+			<!---Mailing--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/MailingManager" method="sendMailing">
+				<cfinvokeargument name="objectItem" value="#itemQuery#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+				<cfinvokeargument name="send_to_area_users" value="true">
+				<cfinvokeargument name="send_to_test_users" value="#arguments.send_to_test_users#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<!---
+			<cfquery name="changeAreaState" datasource="#client_dsn#">
+				UPDATE `#client_abb#_#itemTypeTable#`
+				SET	state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">,
+				, last_update_date = NOW()
+				, last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+			--->
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, item_id=#arguments.item_id#}>
 
 			<cfcatch>
 

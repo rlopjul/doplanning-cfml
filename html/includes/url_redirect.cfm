@@ -8,13 +8,13 @@
 	<!---<cfset redirect_area_page = "files.cfm?file=#URL.file#&area=#URL.area#">--->
 	<cfset redirect_area_page = "area_items.cfm?file=#URL.file#&area=#URL.area#&download=#file_download#">
 <cfelseif isDefined("URL.message")>
-	
+
 	<cfif isDefined("URL.reply")>
 		<cfset redirect_page = "message_new.cfm?message=#URL.message#">
 	<cfelse>
 		<cfset redirect_page = "message.cfm?message=#URL.message#">
 	</cfif>
-	
+
 	<!---<cfset redirect_area_page = "messages.cfm?message=#URL.message#&area=#URL.area#">--->
 	<cfset redirect_area_page = "area_items.cfm?message=#URL.message#&area=#URL.area#">
 <cfelseif isDefined("URL.entry")>
@@ -88,6 +88,9 @@
 <cfelseif APPLICATION.modulefilesWithTables IS true AND isDefined("URL.typology")>
 	<cfset redirect_page = "typology.cfm?typology=#URL.typology#&area=#URL.area#">
 	<cfset redirect_area_page = "typologies.cfm?typology=#URL.typology#&area=#URL.area#">
+<cfelseif APPLICATION.moduleMailing IS true AND isDefined("URL.mailing")>
+	<cfset redirect_page = "mailing.cfm?mailing=#URL.mailing#&area=#URL.area#">
+	<cfset redirect_area_page = "mailings.cfm?mailing=#URL.mailing#&area=#URL.area#">
 <cfelseif isDefined("URL.area")>
 	<cfset redirect_page = "area_items.cfm?area=#URL.area#">
 </cfif>
