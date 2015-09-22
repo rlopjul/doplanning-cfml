@@ -2060,12 +2060,12 @@
 
 							<cfif itemTypeId IS 17><!--- Mailing --->
 
-								<div class="div_message_page_label"><span lang="es">Estado:</span> <span class="text_message_page" lang="es"><cfswitch expression="#objectItem.state#">
-									<cfcase value="created">Creado</cfcase>
-									<cfcase value="modified">Modificado</cfcase>
-									<cfcase value="sent_to_test">Enviado a destinatarios para pruebas</cfcase>
-									<cfcase value="sent"><strong lang="es">Enviado</strong></cfcase>
-								</cfswitch></span></div>
+								<div class="div_message_page_label"><span lang="es">Estado:</span> <cfswitch expression="#objectItem.state#">
+									<cfcase value="created"><span class="label label-default" lang="es">Creado</span></cfcase>
+									<cfcase value="modified"><span class="label label-default" lang="es">Modificado</span></cfcase>
+									<cfcase value="sent_to_test"><span class="label label-default" lang="es">Enviado a destinatarios para pruebas</span></cfcase>
+									<cfcase value="sent"><span class="label label-success" lang="es">Enviado</span></cfcase>
+								</cfswitch></div>
 
 								<cfif objectItem.state NEQ "created" AND objectItem.state NEQ "modified">
 									<div class="div_message_page_label"><span lang="es">Fecha de <cfswitch expression="#objectItem.state#">

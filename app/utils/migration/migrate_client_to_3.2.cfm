@@ -64,6 +64,17 @@ ADD COLUMN `thumbnail` TINYINT(1) NOT NULL DEFAULT 0 AFTER `field_id`,
 ADD COLUMN `thumbnail_format` VARCHAR(45) NULL AFTER `thumbnail`;
 
 
+ALTER TABLE `hcs_areas_images`
+ADD COLUMN `area_id` INT(11) NULL AFTER `status_replacement`,
+ADD INDEX `FK_areas_images_1_idx` (`area_id` ASC);
+ALTER TABLE `dp_hcs`.`hcs_areas_images`
+ADD CONSTRAINT `FK_areas_images_1`
+  FOREIGN KEY (`area_id`)
+  REFERENCES `dp_hcs`.`hcs_areas` (`id`)
+  ON DELETE RESTRICT
+  ON UPDATE NO ACTION;
+
+
 CREATE TABLE `hcs_mailings` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,

@@ -34,7 +34,7 @@
 
 	<cfset CREATED_STATE = "created">
 	<cfset MODIFIED_STATE = "modified">
-	<cfset SENT_TO_TEST = "sent_to_test">
+	<cfset SENT_TO_TEST_STATE = "sent_to_test">
 	<cfset SENT_STATE = "sent">
 
 

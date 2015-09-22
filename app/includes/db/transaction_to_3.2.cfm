@@ -130,6 +130,22 @@
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_areas_images`
+			ADD COLUMN `area_id` INT(11) NULL AFTER `status_replacement`,
+			ADD INDEX `FK_#new_client_abb#_areas_images_1_idx` (`area_id` ASC);
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_areas_images`
+			ADD CONSTRAINT `FK_#new_client_abb#_areas_images_1`
+		  FOREIGN KEY (`area_id`)
+		  REFERENCES `#new_client_abb#_areas` (`id`)
+		  ON DELETE RESTRICT
+		  ON UPDATE NO ACTION;
+		</cfquery>
+
+
+		<cfquery datasource="#client_datasource#">
 			CREATE TABLE `#new_client_abb#_mailings_templates` (
 			  `template_id` int(11) NOT NULL,
 			  `title` varchar(255) CHARACTER SET latin1 NOT NULL,

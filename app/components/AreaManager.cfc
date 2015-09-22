@@ -336,9 +336,6 @@
 
 
 
-
-
-
 	<!--- -------------------------- CHECK ADMIN ACCESS -------------------------------- --->
 	<!---Comprueba si el usuario es el administrador de la organización y si no lanza un error--->
 
@@ -3751,41 +3748,6 @@
 			<cfreturn area_image_id>
 
 	</cffunction>
-
-	<!--- ----------------------- createAreaImage -------------------------------- --->
-	<!---Este método no se usa pero más adelante debería usarse--->
-	<!---
-	<cffunction name="createAreaImage" returntype="string" output="false" access="public">
-			<cfargument name="request" type="string" required="yes">
-
-			<cfset var method = "createAreaImage">
-
-			<!---<cfinclude template="includes/initVars.cfm">--->
-
-			<cftry>
-
-				<cfinclude template="includes/functionStart.cfm">
-
-				<cfinvoke component="FileManager" method="createImageFile" returnvariable="xmlResponseContent">
-					<cfinvokeargument name="file" value="#xmlRequest.request.parameters.file#">
-					<cfinvokeargument name="type" value="area_image">
-					<cfinvokeargument name="status" value="pending">
-				</cfinvoke>
-
-				<cfinclude template="includes/functionEnd.cfm">
-
-				<cfcatch>
-					<cfset xmlResponseContent = arguments.request>
-					<cfinclude template="includes/errorHandler.cfm">
-				</cfcatch>
-
-			</cftry>
-
-			<cfreturn xmlResponse>
-
-		</cffunction>
-	--->
-
 
 
 	<!--- ----------------------- selectAreaImage -------------------------------- --->
