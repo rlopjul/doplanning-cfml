@@ -2042,9 +2042,8 @@
 									<a onclick="openUrl('typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#','areaIframe',event)" style="cursor:pointer">#typologyArea.name#</a>
 								</div>
 
-							</cfif>
+							<cfelseif itemTypeId IS 7><!---Consultation--->
 
-							<cfif itemTypeId IS 7><!---Consultation--->
 								<div class="div_message_page_label"><span lang="es">Estado:</span> <span class="text_message_page" lang="es"><cfswitch expression="#objectItem.state#">
 									<cfcase value="created">Enviada</cfcase>
 									<cfcase value="read">Leída</cfcase>
@@ -2059,9 +2058,8 @@
 										<cfcase value="closed">cierre</cfcase>
 									</cfswitch>:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
 								</cfif>
-							</cfif>
 
-							<cfif itemTypeId IS 17><!--- Mailing --->
+							<cfelseif itemTypeId IS 17><!--- Mailing --->
 
 								<div class="div_message_page_label"><span lang="es">Estado:</span> <cfswitch expression="#objectItem.state#">
 									<cfcase value="created"><span class="label label-default" lang="es">Creado</span></cfcase>
@@ -3385,12 +3383,6 @@
 
 											<cfif arguments.generatePdf IS false>
 
-												<!---<cfif len(userImageType) GT 0>
-													<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#userInCharge#&type=#userImageType#&small=" alt="#userFullName#" class="user_img" style="width:48px" />
-												<cfelse>
-													<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#userFullName#" class="user_img_default" style="width:48px" />
-												</cfif>--->
-
 												<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 													<cfinvokeargument name="user_id" value="#userInCharge#">
 													<cfinvokeargument name="user_full_name" value="#userFullName#">
@@ -3657,6 +3649,26 @@
 
 										</div>
 
+									<cfelseif itemTypeId IS 17><!--- Mailings --->
+
+										<div style="font-size: 16px">
+
+											<b lang="es">Estado</b> <cfswitch expression="#itemsQuery.state#">
+												<cfcase value="created"><span class="label label-default" lang="es">Creado</span></cfcase>
+												<cfcase value="modified"><span class="label label-default" lang="es">Modificado</span></cfcase>
+												<cfcase value="sent_to_test"><span class="label label-default" lang="es">Enviado a destinatarios para pruebas</span></cfcase>
+												<cfcase value="sent"><span class="label label-success" lang="es">Enviado</span></cfcase>
+											</cfswitch>
+
+											<!---<cfif itemsQuery.state NEQ "created" AND itemsQuery.state NEQ "modified"><br/>
+												<b lang="es">Fecha de <cfswitch expression="#itemsQuery.state#">
+													<cfcase value="sent_to_test">envío para pruebas</cfcase>
+													<cfcase value="sent">envío</cfcase>
+												</cfswitch>:</b> <span>#itemsQuery.last_update_date#</span>
+											</cfif>--->
+
+										</div>
+
 									<cfelseif itemTypeId IS 8><!--- Publications --->
 
 										<cfif len(itemsQuery.identifier) GT 0>
@@ -3673,7 +3685,7 @@
 
 									<cfif itemTypeId EQ 17><!--- Mailing --->
 
-										<div style="<cfif arguments.generatePdf IS false>margin-bottom:10px;</cfif>">
+										<div style="margin-top:10px;<cfif arguments.generatePdf IS false>margin-bottom:10px;</cfif>">
 											#itemsQuery.description#
 										</div>
 
@@ -3842,6 +3854,14 @@
 
 												</cfif>
 
+
+											<cfelseif itemTypeId IS 17><!--- Mailing --->
+
+													<cfif itemsQuery.state NEQ "sent" AND itemsQuery.user_in_charge EQ SESSION.user_id>
+
+														<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-primary" title="Modificar" lang="es"><i class="icon-pencil"></i> <span lang="es">Modificar</span></a>
+
+													</cfif>
 
 											<cfelse>
 

@@ -826,6 +826,7 @@
 			<cfset var taskColums = "end_date, done, NULL AS locked, NULL AS area_editable">
 			<cfset var pubmedColums = "NULL AS end_date, NULL AS done, NULL AS locked, NULL AS area_editable">
 			<cfset var consultationColums = "NULL AS end_date, NULL AS done, NULL AS locked, NULL AS area_editable">
+			<cfset var mailingColums = "NULL AS end_date, NULL AS done, NULL AS locked, NULL AS area_editable">
 			<cfset var dpDocumentColums = "NULL AS end_date, NULL AS done, locked, area_editable">
 			<cfset var fileColumns = "NULL AS end_date, NULL AS done, locked, NULL AS area_editable">
 
@@ -849,6 +850,7 @@
 				<cfset taskColums = taskColums&", NULL AS place, start_date, NULL AS identifier, NULL AS sub_type_id, NULL AS state, recipient_user">
 				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, identifier, sub_type_id, NULL AS state, NULL AS recipient_user">
 				<cfset consultationColums = consultationColums&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL sub_type_id, state, NULL AS recipient_user">
+				<cfset mailingColums = mailingColums&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL sub_type_id, state, NULL AS recipient_user">
 				<cfset dpDocumentColums = dpDocumentColums&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL sub_type_id, NULL AS state, NULL AS recipient_user">
 				<cfset fileColumns = fileColumns&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL sub_type_id, NULL AS state, NULL AS recipient_user">
 
@@ -1018,7 +1020,7 @@
 
 				<cfif arguments.withMailings IS true><!--- Mailing --->
 				UNION ALL
-				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #commonColumsNull#, #iframeColumsNull# #displayColumsNull# 17 AS itemTypeId
+				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #mailingColums#, #iframeColumsNull# #displayColumsNull# 17 AS itemTypeId
 				FROM #client_abb#_mailings AS mailings
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
