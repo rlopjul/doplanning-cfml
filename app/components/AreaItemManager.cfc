@@ -3117,15 +3117,15 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<!---
+
 			<cfquery name="changeAreaState" datasource="#client_dsn#">
 				UPDATE `#client_abb#_#itemTypeTable#`
-				SET	state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">,
+				SET	state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">
 				, last_update_date = NOW()
 				, last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">
 				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-			--->
+
 
 			<cfinclude template="includes/logRecord.cfm">
 

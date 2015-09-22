@@ -2060,18 +2060,19 @@
 
 							<cfif itemTypeId IS 17><!--- Mailing --->
 
-								<!---<div class="div_message_page_label"><span lang="es">Estado:</span> <span class="text_message_page" lang="es"><cfswitch expression="#objectItem.state#">
+								<div class="div_message_page_label"><span lang="es">Estado:</span> <span class="text_message_page" lang="es"><cfswitch expression="#objectItem.state#">
 									<cfcase value="created">Creado</cfcase>
+									<cfcase value="modified">Modificado</cfcase>
 									<cfcase value="sent_to_test">Enviado a destinatarios para pruebas</cfcase>
 									<cfcase value="sent"><strong lang="es">Enviado</strong></cfcase>
 								</cfswitch></span></div>
 
-								<cfif objectItem.state NEQ "created">
+								<cfif objectItem.state NEQ "created" AND objectItem.state NEQ "modified">
 									<div class="div_message_page_label"><span lang="es">Fecha de <cfswitch expression="#objectItem.state#">
-										<cfcase value="sent_to_test">lectura</cfcase>
-										<cfcase value="sent">respuesta</cfcase>
+										<cfcase value="sent_to_test">envío para pruebas</cfcase>
+										<cfcase value="sent">envío</cfcase>
 									</cfswitch>:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
-								</cfif>--->
+								</cfif>
 
 							</cfif>
 
@@ -2132,23 +2133,34 @@
 						</cfif>
 
 
-						<!---<div class="div_message_page_label"><span lang="es"><cfif itemTypeId IS 3>Descripción<cfelse>Contenido</cfif>:</span></div>--->
 
+						<cfif itemTypeId IS 17><!--- Mailing --->
 
-						<cfif itemTypeId IS 20>
-							<!---
-							<div><!--- style="clear:both"--->
-								<textarea name="description" class="form-control" style="height:500px;" readonly>#objectItem.description#</textarea>
+							<div style="padding-top:10px">
+
+								<textarea name="description" id="description" style="height:500px;" readonly="readonly">
+									#objectItem.head_content#
+
+									<div style="#objectItem.content_styles#">
+										#objectItem.description#
+									</div>
+
+									#objectItem.foot_content#
+								</textarea>
+
 							</div>
-							--->
-							<div class="div_message_page_description" style="margin-top:10px"><!---class="dp_document_container"--->
+
+						<cfelseif itemTypeId IS 20><!--- DP Document --->
+							<div class="div_message_page_description" style="margin-top:10px">
 								#objectItem.description#
 							</div>
 						<cfelse>
-							<div class="lead div_message_page_description"><!---class="div_message_page_description"--->
+							<div class="lead div_message_page_description">
 								#objectItem.description#
 							</div>
 						</cfif>
+
+
 
 						<!---itemUrl--->
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
@@ -2192,6 +2204,31 @@
 					</div><!--- END panel-body --->
 				</div><!--- END panel panel-default --->
 			</cfoutput>
+
+
+
+			<cfif itemTypeId IS 17><!--- Mailing --->
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+					<cfinvokeargument name="name" value="description">
+					<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+					<cfinvokeargument name="height" value="500"/>
+					<cfinvokeargument name="toolbar" value="DP_document"/>
+					<cfinvokeargument name="readOnly" value="true"/>
+					<cfinvokeargument name="toolbarCanCollapse" value="true"/>
+					<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+					<cfinvokeargument name="removePlugins" value="elementspath,wordcount,toolbar"/>
+					<cfinvokeargument name="allowedContent" value="true">
+					<cfinvokeargument name="resize_enabled" value="false">
+				</cfinvoke>
+
+				<cfoutput>
+				<script>
+					CKEDITOR.config.contentsCss = '#APPLICATION.htmlPath#/mailing_styles.cfm?mailing=#objectItem.id#';
+				</script>
+				</cfoutput>
+
+			</cfif>
 
 			<!---
 			<cfif itemTypeId IS 20><!--- DoPlanning Document --->
@@ -3631,8 +3668,13 @@
 
 									</cfif>
 
+									<cfif itemTypeId EQ 17><!--- Mailing --->
 
-									<cfif itemTypeId EQ 20><!--- DP Document --->
+										<div style="<cfif arguments.generatePdf IS false>margin-bottom:10px;</cfif>">
+											#itemsQuery.description#
+										</div>
+
+									<cfelseif itemTypeId EQ 20><!--- DP Document --->
 
 										<div class="dp_document_container" <cfif arguments.generatePdf IS false>style="height:500px; overflow:scroll;margin-bottom:10px;"</cfif>>
 											#itemsQuery.description#

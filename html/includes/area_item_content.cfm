@@ -2,7 +2,7 @@
 <!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
  --->
-<cfif itemTypeId IS 20>
+<cfif itemTypeId IS 17>
 	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.2"></script>
 </cfif>
 </cfoutput>
@@ -10,10 +10,11 @@
 <!--- https://github.com/twitter/twemoji --->
 <!---<script src="//cdnjs.cloudflare.com/ajax/libs/twemoji/1.3.2/twemoji.min.js"></script>--->
 
-<!--- http://emojione.com/ --->
-<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />
-
+<cfif itemTypeId EQ 1>
+	<!--- http://emojione.com/ --->
+	<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />
+</cfif>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
@@ -76,7 +77,9 @@
     	var output = emojione.shortnameToImage(input);
    		 document.getElementById('outputText').innerHTML = output;--->
 
+		<cfif itemTypeId EQ 1>
    		 $(".div_message_page_description").html(emojione.shortnameToImage($(".div_message_page_description").html()));
+		</cfif>
 
 	});
 

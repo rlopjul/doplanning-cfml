@@ -762,18 +762,38 @@
 
 <cfif itemTypeId IS 17><!--- Mailing --->
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/ItemTemplate" method="getTemplates" returnvariable="getTemplates">
-	</cfinvoke>
+	<cfif page_type IS 1>
 
-	<cfset mailingTemplate = getTemplates.templates>
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/ItemTemplate" method="getTemplates" returnvariable="getTemplates">
+		</cfinvoke>
 
-	<input type="hidden" name="template_id" value="#mailingTemplate.template_id#" />
-	<input type="hidden" name="content_styles" value="#mailingTemplate.content_styles#" />
+		<cfset mailingTemplate = getTemplates.templates>
+
+		<cfif mailingTemplate.recordCount GT 0>
+
+			<cfset querySetCell(objectItem, template_id, mailingTemplate.template_id )>
+			<cfset querySetCell(objectItem, content_styles, mailingTemplate.content_styles )>
+			<cfset querySetCell(objectItem, head_content, mailingTemplate.head_content )>
+			<cfset querySetCell(objectItem, foot_content, mailingTemplate.foot_content )>
+
+		<cfelse>
+
+			<cfset querySetCell(objectItem, template_id, "" )>
+			<cfset querySetCell(objectItem, content_styles, "" )>
+			<cfset querySetCell(objectItem, head_content, "" )>
+			<cfset querySetCell(objectItem, foot_content, "" )>
+
+		</cfif>
+
+	</cfif>
+
+	<input type="hidden" name="template_id" value="#objectItem.template_id#" />
+	<input type="hidden" name="content_styles" value="#objectItem.content_styles#" />
 
 	<div class="row">
 		<div class="col-md-12" style="margin-bottom:10px;">
 				<label for="head_content">Encabezado del email:</label>
-				<textarea name="head_content" id="head_content" class="form-control" style="height:200px;" readonly="readonly">#mailingTemplate.head_content#</textarea>
+				<textarea name="head_content" id="head_content" class="form-control" style="height:200px;" readonly="readonly">#objectItem.head_content#</textarea>
 		</div>
 	</div>
 
@@ -803,7 +823,7 @@
 			<cfif itemTypeId IS 17>
 				<label for="foot_content">Pie del email:</label>
 			</cfif>
-			<textarea name="foot_content" id="foot_content" class="form-control" style="height:200px;" readonly="readonly">#mailingTemplate.foot_content#</textarea>
+			<textarea name="foot_content" id="foot_content" class="form-control" style="height:200px;" readonly="readonly">#objectItem.foot_content#</textarea>
 			<cfif itemTypeId IS 17><!---Mailing--->
 				<small class="help-block" lang="es">Si aplicas formato al contenido del email, el aspecto que visualizará el usuario podrá variar dependiendo de su cliente de correo.</small>
 			</cfif>
@@ -1198,6 +1218,17 @@
 
 <cfelse>
 
+	<!---<cfif itemTypeId IS 17 AND len(objectItem.content_styles) GT 0>
+		<cfoutput>
+			<script>
+				CKEDITOR.on( 'instanceReady', function( event ){
+						event.editor.addCss("body{ #objectItem.content_styles# }");
+				});
+			</script>
+		</cfoutput>
+
+	</cfif>--->
+
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
 		<cfinvokeargument name="name" value="description">
 		<cfinvokeargument name="language" value="#SESSION.user_language#"/>
@@ -1215,6 +1246,24 @@
 </cfif>
 
 <cfif itemTypeId IS 17><!--- Mailing --->
+
+	<cfoutput>
+		<cfif page_type IS 1>
+
+			<cfif isDefined("mailingTemplate.template_id") AND isNumeric(mailingTemplate.template_id)>
+				<script>
+					CKEDITOR.config.contentsCss = '#APPLICATION.htmlPath#/mailing_styles.cfm?template=#mailingTemplate.template_id#';
+				</script>
+			</cfif>
+
+		<cfelse>
+
+			<script>
+				CKEDITOR.config.contentsCss = '#APPLICATION.htmlPath#/mailing_styles.cfm?mailing=#objectItem.id#';
+			</script>
+
+		</cfif>
+	</cfoutput>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
 		<cfinvokeargument name="name" value="head_content">

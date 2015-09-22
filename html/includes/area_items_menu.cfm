@@ -5,14 +5,14 @@
 		$(function() {
 
 			$('##areaItemsMenu').on('affix.bs.affix', function () {
-			     $('##areaItemsMenu').css("top", $('##mainNavBarFixedTop').height());
+			     $('##areaItemsMenu').css("top", $('##mainNavBarFixedTop').height()-2);
 			     <!---$("##areaItemsMenu").css("z-index", 1);--->
 			});
 
 
 			$('##areaItemsMenu').affix({
 		      	offset: {
-		       		top: $('##mainNavBarFixedTop').height()-$('##areaItemsMenu').height()+1
+		       		top: $('##mainNavBarFixedTop').height()-$('##areaItemsMenu').height()
 		      	}
 			});
 

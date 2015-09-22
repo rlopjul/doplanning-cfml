@@ -156,9 +156,10 @@
 				<cfsavecontent variable="alertContent">
 					<cfoutput>
 					<div style="#objectItem.content_styles#">
+					#objectItem.head_content#
 					#objectItem.description#
-					</div>
 					#objectItem.foot_content#
+					</div>
 					</cfoutput>
 				</cfsavecontent>
 
@@ -187,7 +188,6 @@
 						</cfif>
 						<cfinvokeargument name="subject" value="#subjectInternal#">
 						<cfinvokeargument name="content" value="#contentInternal#">
-						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
 
 						<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>
@@ -227,7 +227,6 @@
 						</cfif>
 						<cfinvokeargument name="subject" value="#subjectExternal#">
 						<cfinvokeargument name="content" value="#contentExternal#">
-						<cfinvokeargument name="head_content" value="#head_content#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
 
 						<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>

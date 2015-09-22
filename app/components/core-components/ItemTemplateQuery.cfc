@@ -8,7 +8,7 @@
 	<!---getTemplate--->
 
 	<cffunction name="getTemplate" output="false" returntype="query" access="public">
-		<cfargument name="template_id" type="numeric" required="false">
+		<cfargument name="template_id" type="numeric" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
