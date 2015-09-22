@@ -17,6 +17,7 @@
 			<cftry>
 
 				<cfinvoke component="#APPLICATION.componentsPath#/ItemTemplateManager" method="getTemplate" returnvariable="response">
+					<cfinvokeargument name="template_id" value="#arguments.template_id#">
 				</cfinvoke>
 
 				<cfinclude template="includes/responseHandlerStruct.cfm">

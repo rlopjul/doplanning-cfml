@@ -771,17 +771,27 @@
 
 		<cfif mailingTemplate.recordCount GT 0>
 
-			<cfset querySetCell(objectItem, template_id, mailingTemplate.template_id )>
+			<!---<cfset querySetCell(objectItem, template_id, mailingTemplate.template_id )>
 			<cfset querySetCell(objectItem, content_styles, mailingTemplate.content_styles )>
 			<cfset querySetCell(objectItem, head_content, mailingTemplate.head_content )>
-			<cfset querySetCell(objectItem, foot_content, mailingTemplate.foot_content )>
+			<cfset querySetCell(objectItem, foot_content, mailingTemplate.foot_content )>--->
+
+			<cfset objectItem.template_id = mailingTemplate.template_id>
+			<cfset objectItem.content_styles = mailingTemplate.content_styles>
+			<cfset objectItem.head_content = mailingTemplate.head_content>
+			<cfset objectItem.foot_content = mailingTemplate.foot_content>
 
 		<cfelse>
 
-			<cfset querySetCell(objectItem, template_id, "" )>
+			<!---<cfset querySetCell(objectItem, template_id, "" )>
 			<cfset querySetCell(objectItem, content_styles, "" )>
 			<cfset querySetCell(objectItem, head_content, "" )>
-			<cfset querySetCell(objectItem, foot_content, "" )>
+			<cfset querySetCell(objectItem, foot_content, "" )>--->
+
+			<cfset objectItem.template_id = "">
+			<cfset objectItem.content_styles = "">
+			<cfset objectItem.head_content = "">
+			<cfset objectItem.foot_content = "">
 
 		</cfif>
 
@@ -984,7 +994,7 @@
 			<label class="control-label" for="email_addresses"><span lang="es">#t_email_addresses#</span>:</label>
 			<cfinput type="text" name="email_addresses" id="email_addresses" class="form-control" value="#objectItem.email_addresses#" passthrough="#passthrough#">
 			<cfif itemTypeId IS 17>
-				<small class="help-block" lang="es">Introduzca la lista de direcciones de email separadas por ; (hasta 5 direcciones).</small>
+				<small class="help-block" lang="es">Introduce la lista de direcciones de email separadas por ; (hasta 5 direcciones).</small>
 			</cfif>
 		</div>
 	</div>
@@ -1136,7 +1146,7 @@
 					<label>
 						<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectItem.no_notify") AND objectItem.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
 					</label>
-					<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+					<small class="help-block" lang="es">Si seleccionas esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
 				</div>
 			</div>
 		</div>
@@ -1153,7 +1163,7 @@
 				<label>
 					<input type="checkbox" name="send_to_test_users" id="send_to_test_users" value="true" <cfif NOT isDefined("objectItem.send_to_test_users") OR objectItem.send_to_test_users IS true>checked="checked"</cfif> /> Enviar prueba a destinatarios para pruebas
 				</label>
-				<small class="help-block" lang="es">Si selecciona esta opción se enviará el boletín a los destinatarios anteriores, podrá modificarlo y volver a enviarlo posteriormente.</small>
+				<small class="help-block" lang="es">Si seleccionas esta opción se enviará el boletín a los destinatarios anteriores, podrá modificarlo y volver a enviarlo posteriormente.</small>
 			</div>
 		</div>
 	</div>
@@ -1164,7 +1174,7 @@
 				<label>
 					<input type="checkbox" name="send_to_area_users" id="send_to_area_users" value="true" <cfif isDefined("objectItem.send_to_area_users") AND objectItem.send_to_area_users IS true>checked="checked"</cfif> /> Enviar boletín
 				</label>
-				<small class="help-block" lang="es">CUIDADO: Si selecciona esta opción se enviará de forma definitiva el boletín a todos los usuarios del área y ya no podrá modificarlo.</small>
+				<small class="help-block" lang="es">CUIDADO: Si seleccionas esta opción se enviará de forma definitiva el boletín a todos los usuarios del área y ya no podrá modificarlo.</small>
 			</div>
 		</div>
 	</div>
