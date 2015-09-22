@@ -999,7 +999,30 @@
 		</div>
 	</div>
 
+	<div class="row">
+		<div class="col-md-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="send_to_test_users" id="send_to_test_users" value="true" <cfif NOT isDefined("objectItem.send_to_test_users") OR objectItem.send_to_test_users IS true>checked="checked"</cfif> /> Enviar prueba a destinatarios para pruebas
+				</label>
+				<small class="help-block" lang="es">Si seleccionas esta opción se enviará el boletín a los destinatarios anteriores, podrá modificarlo y volver a enviarlo posteriormente.</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="send_to_area_users" id="send_to_area_users" value="true" <cfif isDefined("objectItem.send_to_area_users") AND objectItem.send_to_area_users IS true>checked="checked"</cfif> /> Enviar boletín
+				</label>
+				<small class="help-block" lang="es">CUIDADO: Si seleccionas esta opción se enviará de forma definitiva el boletín a todos los usuarios del área y ya no podrá modificarlo.</small>
+			</div>
+		</div>
+	</div>
+
 </cfif>
+
 
 <!---Categories--->
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_categories_inputs.cfm">
@@ -1155,32 +1178,6 @@
 
 </cfif>
 
-<cfif itemTypeId IS 17>
-
-	<div class="row">
-		<div class="col-md-12">
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" name="send_to_test_users" id="send_to_test_users" value="true" <cfif NOT isDefined("objectItem.send_to_test_users") OR objectItem.send_to_test_users IS true>checked="checked"</cfif> /> Enviar prueba a destinatarios para pruebas
-				</label>
-				<small class="help-block" lang="es">Si seleccionas esta opción se enviará el boletín a los destinatarios anteriores, podrá modificarlo y volver a enviarlo posteriormente.</small>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-12">
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" name="send_to_area_users" id="send_to_area_users" value="true" <cfif isDefined("objectItem.send_to_area_users") AND objectItem.send_to_area_users IS true>checked="checked"</cfif> /> Enviar boletín
-				</label>
-				<small class="help-block" lang="es">CUIDADO: Si seleccionas esta opción se enviará de forma definitiva el boletín a todos los usuarios del área y ya no podrá modificarlo.</small>
-			</div>
-		</div>
-	</div>
-
-</cfif>
-
 
 
 <div style="clear:both"></div>
@@ -1236,7 +1233,6 @@
 				});
 			</script>
 		</cfoutput>
-
 	</cfif>--->
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">

@@ -219,7 +219,7 @@
 
 					</cfif>
 
-				<cfelseif itemTypeId IS 17 AND objectItem.user_in_charge EQ SESSION.user_id AND objectItem.state NEQ "sent">
+				<cfelseif itemTypeId IS 17 AND is_user_area_responsible AND objectItem.state NEQ "sent">
 
 					<div class="btn-group">
 						<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-default"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
@@ -357,7 +357,7 @@
 
 		</cfif>
 
-		<cfif itemTypeId IS 17 AND objectItem.user_in_charge EQ SESSION.user_id AND objectItem.state NEQ "sent"><!--- Mailing --->
+		<cfif itemTypeId IS 17 AND is_user_area_responsible AND objectItem.state NEQ "sent"><!--- Mailing --->
 
 			<div class="btn-group">
 				<button type="button" class="btn btn-primary btn-sm" onclick="confirmSendMailing(#item_id#, #itemTypeId#, #area_id#);"><i class="fa fa-paper-plane"></i> <span lang="es">Enviar boletín</span></a>

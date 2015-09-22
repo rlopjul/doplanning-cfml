@@ -611,7 +611,7 @@
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
 
-			<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
+			<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 17><!---Lists, Forms, Typologies, Mailings--->
 
 				<!---checkAreaResponsibleAccess--->
 				<cfif isUserAreaResponsible IS false>
@@ -623,7 +623,7 @@
 				</cfif>
 
 				<!--- Scope --->
-				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13>
+				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13 AND itemTypeId IS NOT 17>
 
 					<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isTableInScopeResult">
 						<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
@@ -1142,7 +1142,7 @@
 					<cfthrow errorcode="#error_code#">
 				</cfif>
 
-			<cfelseif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
+			<cfelseif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 17><!---Lists, Forms, Typologies, Mailings--->
 
 				<!---checkAreaResponsibleAccess--->
 				<cfif isUserAreaResponsible IS false>
@@ -1154,7 +1154,7 @@
 				</cfif>
 
 				<!--- Scope --->
-				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13>
+				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13 AND itemTypeId IS NOT 17>
 
 					<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isTableInScopeResult">
 						<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
@@ -3116,6 +3116,20 @@
 
 			<cfset area_id = itemQuery.area_id>
 
+			<!--- isUserAreaResponsible --->
+			<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+
+			<!---checkAreaResponsibleAccess--->
+			<cfif isUserAreaResponsible IS false>
+
+				<cfset error_code = 105>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
 			<cfif itemQuery.state EQ SENT_STATE>
 
 				<cfset response = {result=false, message="No se puede enviar de nuevo, el boletín ya ha sido enviado."}>
@@ -3314,7 +3328,7 @@
 
 				</cfif>
 
-				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16><!---List, Forms, Typologies, Users typologies--->
+				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16 OR itemTypeId IS 17><!---List, Forms, Typologies, Users typologies, Mailings--->
 
 					<!---checkAreaResponsibleAccess--->
 					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
