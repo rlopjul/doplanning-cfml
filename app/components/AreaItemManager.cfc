@@ -928,7 +928,26 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-				<cfif arguments.no_notify IS false>
+
+				<cfif arguments.itemTypeId EQ 17><!---Mailing--->
+
+					<cfif arguments.send_to_area_users IS true OR arguments.send_to_test_users IS true>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/MailingManager" method="sendMailing">
+							<cfinvokeargument name="objectItem" value="#itemQuery#">
+							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+							<cfinvokeargument name="send_to_area_users" value="#arguments.send_to_area_users#">
+							<cfinvokeargument name="send_to_test_users" value="#arguments.send_to_test_users#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif>
+
+				<cfelseif arguments.no_notify IS false>
 
 					<!--- Alert --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
@@ -978,7 +997,6 @@
 	<!--- ----------------------- UPDATE ITEM -------------------------------- --->
 
 	<cffunction name="updateItem" returntype="struct" output="false" access="public">
-		<!---<cfargument name="objectItem" type="struct" required="true">--->
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="status" type="string" required="false" default="ok"><!---pending/ok--->
@@ -1395,11 +1413,10 @@
 
 				</cfif>
 
-				<cfif arguments.itemTypeId EQ 17>
+				<cfif arguments.itemTypeId EQ 17><!---Mailing--->
 
 					<cfif arguments.send_to_area_users IS true OR arguments.send_to_test_users IS true>
 
-						<!---Mailing--->
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/MailingManager" method="sendMailing">
 							<cfinvokeargument name="objectItem" value="#itemQuery#">
 							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">

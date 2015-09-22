@@ -1032,6 +1032,9 @@
 		<cfargument name="identifier" type="string" required="no">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
+		<cfargument name="area_editable" type="boolean" required="false" default="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 
 		<cfset var method = "copyItemToAreas">
 
@@ -1937,7 +1940,7 @@
 
 									<div class="col-xs-12">
 
-										<div class="div_message_page_label"><span lang="es">Categorías</span>
+										<div class="div_message_page_label"><span lang="es">Categorías</span>:
 
 										<cfloop query="#categories#">
 
