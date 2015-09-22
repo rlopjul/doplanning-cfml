@@ -245,13 +245,13 @@
 	</cfif>
 
 
-	<cfif isDefined("objectItem.id") AND read_only IS false>
+	<cfif isDefined("item_id") AND read_only IS false>
 
 		function deleteAttachedFile() {
 
 			if(confirmAction('eliminar el archivo adjunto')) {
 
-				goToUrl("#delete_attached_file_action#&item_id=#objectItem.id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#objectItem.id#')#");
+				goToUrl("#delete_attached_file_action#&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#item_id#')#");
 
 			}
 			return false;
@@ -261,7 +261,7 @@
 
 			if(confirmAction('eliminar la imagen adjunta')) {
 
-				goToUrl("#delete_attached_image_action#&item_id=#objectItem.id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#objectItem.id#')#");
+				goToUrl("#delete_attached_image_action#&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#item_id#')#");
 
 			}
 			return false;
@@ -1259,7 +1259,7 @@
 		<cfelse>
 
 			<script>
-				CKEDITOR.config.contentsCss = '#APPLICATION.htmlPath#/mailing_styles.cfm?mailing=#objectItem.id#';
+				CKEDITOR.config.contentsCss = '#APPLICATION.htmlPath#/mailing_styles.cfm?mailing=#item_id#';
 			</script>
 
 		</cfif>

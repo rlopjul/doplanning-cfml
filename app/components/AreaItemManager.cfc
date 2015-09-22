@@ -1083,6 +1083,18 @@
 
 			</cfif>
 
+			<cfif itemTypeId IS 17><!--- Mailing --->
+
+				<cfif getItemObject.state EQ SENT_STATE>
+
+					<cfset response_message = "No se puede modificar un boletín enviado">
+					<cfset response = {result=false, message=response_message}>
+					<cfreturn response>
+
+				</cfif>
+
+			</cfif>
+
 			<!--- isUserAreaResponsible --->
 			<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
 				<cfinvokeargument name="area_id" value="#getItemObject.area_id#">

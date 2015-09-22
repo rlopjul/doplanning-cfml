@@ -206,24 +206,32 @@
 
 		<cfelse><!---Si no es mensaje o consulta--->
 
-			<cfif itemTypeId IS NOT 20>
+			<cfif objectArea.read_only IS false>
 
-				<!---En las áreas web o intranet se pueden modificar los elementos--->
-				<cfif len(area_type) GT 0 OR objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND objectItem.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma--->
+				<cfif itemTypeId IS NOT 17 AND itemTypeId IS NOT 20>
 
-					<cfif objectArea.read_only IS false>
+					<!---En las áreas web o intranet se pueden modificar los elementos--->
+					<cfif len(area_type) GT 0 OR objectItem.user_in_charge EQ SESSION.user_id OR (itemTypeId IS 6 AND objectItem.recipient_user EQ SESSION.user_id)><!---Si es el propietario o es tarea y es el destinatario de la misma--->
+
 						<div class="btn-group">
 							<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 						</div>
+
 					</cfif>
 
+				<cfelseif itemTypeId IS 17 AND objectItem.user_in_charge EQ SESSION.user_id AND objectItem.state NEQ "sent">
+
+					<div class="btn-group">
+						<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-default"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+					</div>
+
+				<cfelseif  itemTypeId IS 20 AND ( ( objectItem.area_editable IS false AND objectItem.user_in_charge EQ SESSION.user_id ) OR ( objectItem.area_editable IS true AND (objectItem.locked IS false OR objectItem.lock_user_id IS SESSION.user_id) ) )>
+
+					<div class="btn-group">
+						<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+					</div>
+
 				</cfif>
-
-			<cfelseif ( ( objectItem.area_editable IS false AND objectItem.user_in_charge EQ SESSION.user_id ) OR ( objectItem.area_editable IS true AND (objectItem.locked IS false OR objectItem.lock_user_id IS SESSION.user_id) ) ) AND objectArea.read_only IS false>
-
-				<div class="btn-group">
-					<a href="#itemTypeName#_modify.cfm?#itemTypeName#=#item_id#" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
-				</div>
 
 			</cfif>
 
@@ -352,7 +360,7 @@
 		<cfif itemTypeId IS 17 AND objectItem.user_in_charge EQ SESSION.user_id AND objectItem.state NEQ "sent"><!--- Mailing --->
 
 			<div class="btn-group">
-				<button type="button" class="btn btn-warning btn-sm" onclick="confirmSendMailing(#item_id#, #itemTypeId#, #area_id#);"><i class="fa fa-paper-plane"></i> <span lang="es">Enviar boletín</span></a>
+				<button type="button" class="btn btn-primary btn-sm" onclick="confirmSendMailing(#item_id#, #itemTypeId#, #area_id#);"><i class="fa fa-paper-plane"></i> <span lang="es">Enviar boletín</span></a>
 			</div>
 
 		</cfif>
