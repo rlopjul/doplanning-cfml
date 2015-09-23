@@ -147,7 +147,9 @@
 				<cfoutput>
 				 <p style="font-family:'Roboto', sans-serif; font-size:12px;">
 
-						<a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/unsubscribe.cfm?abb=#arguments.client_abb#&mailing=#objectItem.id#">#langText[curLang].mailing.unsubscribe_mailing#</a>
+						<a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/unsubscribe.cfm?abb=#arguments.client_abb#&mailing=#objectItem.id#">#langText[curLang].mailing.unsubscribe_mailing#</a><br/>
+
+						<span>#langText[curLang].mailing.unsubscribe_text#</span>
 
 				 </p>
 				</cfoutput>

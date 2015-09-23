@@ -56,6 +56,8 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 
 <cfif page_type IS 1 OR objectItem.user_in_charge EQ SESSION.user_id><!--- User item --->
 	<cfset read_only = false>
+<cfelseif itemTypeId IS 17 AND is_user_area_responsible IS true><!---Mailing--->
+	<cfset read_only = false>
 <cfelseif itemTypeId IS 20><!--- DoPlanning Document --->
 	<cfset read_only = false>
 <cfelseif itemTypeId IS NOT 1 AND (area_type EQ "web" OR area_type EQ "intranet")><!--- Web item --->
