@@ -802,7 +802,7 @@
 
 	<div class="row">
 		<div class="col-md-12" style="margin-bottom:10px;">
-				<label for="head_content">Encabezado del email:</label>
+				<label for="head_content" lang="es">Encabezado del email:</label>
 				<textarea name="head_content" id="head_content" class="form-control" style="height:200px;" readonly="readonly">#objectItem.head_content#</textarea>
 		</div>
 	</div>
@@ -815,7 +815,7 @@
 	<div class="col-md-12">
 
 		<cfif itemTypeId IS 17>
-			<label for="summernote">Contenido del email:</label>
+			<label for="summernote" lang="es">Contenido del email:</label>
 		<cfelse>
 			<label class="sr-only" for="summernote" lang="es">Contenido</label>
 		</cfif>
@@ -831,7 +831,7 @@
 	<div class="row">
 		<div class="col-md-12" style="margin-top:10px;">
 			<cfif itemTypeId IS 17>
-				<label for="foot_content">Pie del email:</label>
+				<label for="foot_content" lang="es">Pie del email:</label>
 			</cfif>
 			<textarea name="foot_content" id="foot_content" class="form-control" style="height:200px;" readonly="readonly">#objectItem.foot_content#</textarea>
 			<cfif itemTypeId IS 17><!---Mailing--->
@@ -1003,7 +1003,7 @@
 		<div class="col-md-12">
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="send_to_test_users" id="send_to_test_users" value="true" <cfif NOT isDefined("objectItem.send_to_test_users") OR objectItem.send_to_test_users IS true>checked="checked"</cfif> /> Enviar prueba a destinatarios para pruebas
+					<input type="checkbox" name="send_to_test_users" id="send_to_test_users" value="true" <cfif NOT isDefined("objectItem.send_to_test_users") OR objectItem.send_to_test_users IS true>checked="checked"</cfif> /> <span lang="es">Enviar prueba a destinatarios para pruebas</span>
 				</label>
 				<small class="help-block" lang="es">Si seleccionas esta opción se enviará el boletín a los destinatarios anteriores, podrá modificarlo y volver a enviarlo posteriormente.</small>
 			</div>
@@ -1014,7 +1014,7 @@
 		<div class="col-md-12">
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="send_to_area_users" id="send_to_area_users" value="true" <cfif isDefined("objectItem.send_to_area_users") AND objectItem.send_to_area_users IS true>checked="checked"</cfif> /> Enviar boletín
+					<input type="checkbox" name="send_to_area_users" id="send_to_area_users" value="true" <cfif isDefined("objectItem.send_to_area_users") AND objectItem.send_to_area_users IS true>checked="checked"</cfif> /> <span lang="es">Enviar boletín</span>
 				</label>
 				<small class="help-block" lang="es">CUIDADO: Si seleccionas esta opción se enviará de forma definitiva el boletín a todos los usuarios del área y ya no podrá modificarlo.</small>
 			</div>
