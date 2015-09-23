@@ -841,7 +841,7 @@
 						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
 						<cfif arguments.send_to_area_users IS true>
 							, state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">
-						<cfelseif arguments.send_to_test_users IS true>
+						<cfelseif arguments.send_to_test_users IS true AND listLen(arguments.email_addresses,";") GT 0>
 							, state = <cfqueryparam value="#SENT_TO_TEST_STATE#" cfsqltype="cf_sql_varchar">
 						<cfelse>
 							, state = <cfqueryparam value="#CREATED_STATE#" cfsqltype="cf_sql_varchar">
@@ -1347,7 +1347,7 @@
 						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
 						<cfif arguments.send_to_area_users IS true>
 							, state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">
-						<cfelseif arguments.send_to_test_users IS true>
+						<cfelseif arguments.send_to_test_users IS true AND listLen(arguments.email_addresses,";") GT 0>
 							, state = <cfqueryparam value="#SENT_TO_TEST_STATE#" cfsqltype="cf_sql_varchar">
 						<cfelse>
 							, state = <cfqueryparam value="#MODIFIED_STATE#" cfsqltype="cf_sql_varchar">
