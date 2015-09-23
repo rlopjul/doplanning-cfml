@@ -85,7 +85,7 @@
 
 								<cfif curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND curItemTypeId NEQ 16 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.modulefilesWithTables IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
 
-									<cfif objectArea["item_type_#curItemTypeId#_enabled"] IS true AND ( ( areaTypeWeb AND itemTypesStruct[curItemTypeId].web ) OR ( areaTypeWeb IS false AND itemTypesStruct[curItemTypeId].noWeb ) ) AND ( (curItemTypeId NEQ 11 AND curItemTypeId NEQ 12 AND curItemTypeId NEQ 13) OR is_user_area_responsible )>
+									<cfif objectArea["item_type_#curItemTypeId#_enabled"] IS true AND ( ( areaTypeWeb AND itemTypesStruct[curItemTypeId].web ) OR ( areaTypeWeb IS false AND itemTypesStruct[curItemTypeId].noWeb ) ) AND ( (curItemTypeId NEQ 11 AND curItemTypeId NEQ 12 AND curItemTypeId NEQ 13 AND curItemTypeId NEQ 17) OR is_user_area_responsible )>
 
 										<cfset loopCurButton = loopCurButton+1>
 
@@ -97,18 +97,13 @@
 
 										<li>
 
-											<cfif curItemTypeId IS 10><!---File--->
-												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" role="menuitem" class="btn-new-item-dp"><!--- href="area_file_new.cfm?area=#area_id#&fileTypeId=1" --->
-											<cfelse>
-												<a onclick="openUrlLite('#itemTypesStruct[curItemTypeId].name#_new.cfm?area=#area_id#', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" role="menuitem" class="btn-new-item-dp"><!--- href="#itemTypesStruct[curItemTypeId].name#_new.cfm?area=#area_id#" --->
-											</cfif>
+												<cfif curItemTypeId IS 10><!---File--->
+													<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=1', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" role="menuitem" class="btn-new-item-dp"><!--- href="area_file_new.cfm?area=#area_id#&fileTypeId=1" --->
+												<cfelse>
+													<a onclick="openUrlLite('#itemTypesStruct[curItemTypeId].name#_new.cfm?area=#area_id#', 'itemIframe')" title="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es" role="menuitem" class="btn-new-item-dp">
+												</cfif>
 
-											<!---
-											<cfif curItemTypeId IS 13><!---Typologies--->
-												<i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i>
-											<cfelse>--->
 												<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#newItemTitle# #itemTypesStruct[curItemTypeId].label#" lang="es"/>
-											<!---</cfif>--->
 
 												<span lang="es">#itemTypesStruct[curItemTypeId].label#</span>
 											</a>
@@ -121,7 +116,7 @@
 
 												<cfif APPLICATION.moduleAreaFilesLite IS true><!---AND len(area_type) IS 0--->
 												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe')" title="Nuevo Archivo de área" lang="es" class="btn-new-item-dp" role="menuitem"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_area.png" />
-													<span lang="es">Nuevo Archivo de área</span> <!---href="area_file_new.cfm?area=#area_id#&fileTypeId=2"--->
+													<span lang="es">Nuevo Archivo de área</span>
 												</a>
 												</cfif>
 
@@ -135,7 +130,7 @@
 
 										</cfif>
 
-										<cfif curItemTypeId EQ 5><!--- Cierra la primera columna --->
+										<cfif curItemTypeId EQ 6><!--- Cierra la primera columna --->
 
 											</ul><!--- END list-unstyled col-md-6 --->
 											<ul class="list-unstyled col-md-6">
@@ -256,7 +251,7 @@
 
 										</cfif>
 
-										<cfif curItemTypeId EQ 11><!--- Cierra la primera columna --->
+										<cfif curItemTypeId EQ 12><!--- Cierra la primera columna --->
 
 											</ul><!--- END list-unstyled col-md-6 --->
 											<ul class="list-unstyled col-md-6">

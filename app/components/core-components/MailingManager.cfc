@@ -147,7 +147,7 @@
 				<cfoutput>
 				 <p style="font-family:'Roboto', sans-serif; font-size:12px;">
 
-						<a href="#APPLICATION.mainUrl#/login/unsubscribe.cfm?user=#arguments.user_id#&mailing=#objectItem.id#">#langText[curLang].mailing.unsubscribe_mailing#</a>
+						<a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/unsubscribe.cfm?abb=#arguments.client_abb#&mailing=#objectItem.id#">#langText[curLang].mailing.unsubscribe_mailing#</a>
 
 				 </p>
 				</cfoutput>
@@ -190,13 +190,13 @@
 						<cfinvokeargument name="content" value="#contentInternal#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
 
-						<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>
+						<!---<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>
 
 							<cfinvokeargument name="attachment_type" value="text/calendar">
 							<cfinvokeargument name="attachment_name" value="#itemTypeName#_#objectItem.id#.ics">
 							<cfinvokeargument name="attachment_content" value="#icalendarContent#">
 
-						</cfif>
+						</cfif>--->
 					</cfinvoke>
 
 
@@ -229,13 +229,13 @@
 						<cfinvokeargument name="content" value="#contentExternal#">
 						<cfinvokeargument name="foot_content" value="#foot_content#">
 
-						<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>
+						<!---<cfif ( arguments.itemTypeId EQ 5 OR arguments.itemTypeId EQ 6 ) AND len(icalendarContent) GT 0>
 
 							<cfinvokeargument name="attachment_type" value="text/calendar">
 							<cfinvokeargument name="attachment_name" value="#itemTypeName#_#objectItem.id#.ics">
 							<cfinvokeargument name="attachment_content" value="#icalendarContent#">
 
-						</cfif>
+						</cfif>--->
 					</cfinvoke>
 
 
