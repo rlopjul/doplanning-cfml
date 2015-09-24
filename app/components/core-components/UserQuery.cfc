@@ -333,12 +333,22 @@
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+
 		<cfset var method = "getAllUsersWithPreferences">
 
 			<cfquery name="getAllUsersQuery" datasource="#arguments.client_dsn#">
-                SELECT *, id AS user_id
-                FROM #arguments.client_abb#_users AS u;
-            </cfquery>
+          SELECT *, id AS user_id
+
+					<cfif arguments.parse_dates IS true>
+						, DATE_FORMAT(CONVERT_TZ(creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
+						, DATE_FORMAT(CONVERT_TZ(last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date
+						, DATE_FORMAT(CONVERT_TZ(notifications_last_digest_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS notifications_last_digest_date
+						, DATE_FORMAT(CONVERT_TZ(notifications_web_last_digest_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS notifications_web_last_digest_date
+					</cfif>
+
+          FROM #arguments.client_abb#_users AS u;
+      </cfquery>
 
 		<cfreturn getAllUsersQuery>
 

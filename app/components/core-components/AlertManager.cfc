@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2014--->
+<!---Copyright Era7 Information Technologies 2007-2015--->
 <cfcomponent output="false">
 
 	<cfset component = "AlertManager">
@@ -2025,7 +2025,7 @@
 
 			<cfif isDate(arguments.userLastDigestDate)>
 
-				<cfset lastDigestDate = arguments.userLastDigestDate>
+				<cfset lastDigestDate = createDate(year(arguments.userLastDigestDate), month(arguments.userLastDigestDate), day(arguments.userLastDigestDate))>
 
 			<cfelse>
 
@@ -2055,6 +2055,12 @@
 			</cfif>
 
 			<cfset daysBetweenLastDigest = dateDiff("d", lastDigestDate, currentDigestDate)>
+
+			<!---<cfoutput>
+				lastDigestDate: #lastDigestDate#<br/>
+				currentDigestDate: #currentDigestDate#<br/>
+				daysBetweenLastDigest: #daysBetweenLastDigest#<br/>
+			</cfoutput>--->
 
 			<cfswitch expression="#arguments.notificationsDigestTypeId#">
 
@@ -2140,6 +2146,8 @@
 
 					<!--- getAllUsers --->
 					<cfinvoke component="UserQuery" method="getAllUsersWithPreferences" returnvariable="getAllUsersQuery">
+						<cfinvokeargument name="parse_dates" value="false">
+
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>

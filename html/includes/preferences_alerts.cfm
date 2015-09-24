@@ -598,11 +598,11 @@ Preferencias de notificaciones
 
 					</div>
 
-					<p class="help-block" lang="es">
+					<p class="help-block">
+						<span lang="es">Este resumen incluye notificaciones relativas a la creación y modificación de elementos de áreas. No incluye notificaciones de acciones tales como el bloqueo o solicitud de aprobación de archivos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios.</span><br/>
 						<cfif len(preferences.notifications_last_digest_date) GT 0>
-							Fecha de envío del último resumen: #DateFormat(preferences.notifications_last_digest_date, APPLICATION.dateFormat)#.<br/>
+							<span lang="es">Fecha último resumen:</span> #DateFormat(preferences.notifications_last_digest_date, APPLICATION.dateFormat)#. <span lang="es">Esta fecha indica la última fecha en la que se comprobó si había elementos para incluir en la notificación periódica.</span>
 						</cfif>
-						Este resumen incluye notificaciones relativas a la creación y modificación de elementos de áreas. No incluye notificaciones de acciones tales como el bloqueo o solicitud de aprobación de archivos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios.
 					</p>
 
 				</div>
@@ -645,11 +645,13 @@ Preferencias de notificaciones
 
 					</div>
 
-					<p class="help-block" lang="es">
+					<p class="help-block">
+
+						<span lang="es">Este resumen incluye notificaciones relativas a la creación y modificación de los siguientes contenidos de la web: noticias, eventos, archivos, publicaciones, listas, formularios y áreas (páginas).</span><br/>
 						<cfif len(preferences.notifications_web_last_digest_date) GT 0>
-							Fecha de envío del último resumen: #DateFormat(preferences.notifications_web_last_digest_date, APPLICATION.dateFormat)#.<br/>
+						 	<span lang="es">Fecha del último resumen web:</span> #DateFormat(preferences.notifications_web_last_digest_date, APPLICATION.dateFormat)#. <span lang="es">Esta fecha indica la última fecha en la que se comprobó si había elementos para incluir en la notificación periódica.</span>
 						</cfif>
-						Este resumen incluye notificaciones relativas a la creación y modificación de los siguientes contenidos de la web: noticias, eventos, archivos, publicaciones, listas, formularios y áreas (páginas).
+
 					</p>
 
 				</div>
