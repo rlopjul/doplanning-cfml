@@ -1,10 +1,9 @@
 <cfoutput>
-<!---<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>--->
-<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.4"></script>
+<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.5"></script>
 </cfoutput>
 
 <cfif isDefined("URL.user") AND isNumeric(URL.user)>
-	
+
 	<cfset user_id = URL.user>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="objectUser">
@@ -28,7 +27,7 @@
 					  url: requestUrl,
 					  success: function(data, status) {
 
-					  	if(status == "success"){		
+					  	if(status == "success"){
 					  		var message = data.message;
 
 					  		var userId = data.user_id;
@@ -42,13 +41,13 @@
 
 					  	}else
 							showAlertErrorModal(status);
-						
+
 					  },
 					  dataType: "json"
 					});
 
 				}
-			
+
 			});
 
 
@@ -57,7 +56,7 @@
 				submitHandler: function(form) {
 
 					postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser");
-			  
+
 				}
 
 			});
@@ -65,7 +64,7 @@
 
 		});
 
-		
+
 		<!---
 		function submitUserModifyModal(){
 

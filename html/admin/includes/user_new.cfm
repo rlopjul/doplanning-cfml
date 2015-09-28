@@ -1,6 +1,5 @@
 <cfoutput>
-<!---<script src="#APPLICATION.htmlPath#/language/user_content_en.js" charset="utf-8"></script>--->
-<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.4"></script>
+<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.5"></script>
 </cfoutput>
 
 
@@ -22,7 +21,7 @@
 				submitHandler: function(form) {
 
 					postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=createUser");
-			  
+
 				}
 
 			});
@@ -59,7 +58,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 	</div>
 
 	<div class="modal-footer">

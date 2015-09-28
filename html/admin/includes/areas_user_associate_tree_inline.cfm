@@ -3,30 +3,30 @@
 
 <script>
 
-	function associateUserTreeLoaded() { 
-	
+	function associateUserTreeLoaded() {
+
 		//$("#loadingContainer").hide();
-	
+
 	}
 
 	function searchTextInAssociateUserTree(){
-		searchInAssociateUserTree(document.getElementById('searchInAssociateUserText').value);	
+		searchInAssociateUserTree(document.getElementById('searchInAssociateUserText').value);
 	}
 
-	/*$(window).load( function() {		
+	/*$(window).load( function() {
 
 		showTree(true);
 
-		$("#searchText").on("keydown", function(e) { 
-			
+		$("#searchText").on("keydown", function(e) {
+
 			if(e.which == 13) //Enter key
 				searchTextInTree();
-			
+
 		});
 
 	});*/
 
-	function showAssociateUserTree(selectable) { 
+	function showAssociateUserTree(selectable) {
 
 		$("#associateUserTreeContainer").bind("ready.jstree", function (event, data) { /*loaded es el que hay que usar cuando NO se carga todo el árbol*/
 			associateUserJsTreeLoaded(event, data);
@@ -38,29 +38,29 @@
 		   		showAlertMessage(data.res.length+" "+window.lang.translate("resultados"),1);
 		   }
 		})
-		.jstree({ 
+		.jstree({
 			"core" : {
-				"themes" : { 
-					"name" : "dp", 
+				"themes" : {
+					"name" : "dp",
 					"dots" : false,
 					"responsive" : false
 				},
 				"multiple" : false
-				
+
 			},
-			"search" : { 
-				"fuzzy" : false 
+			"search" : {
+				"fuzzy" : false
 			},
 			"plugins" : [ "search" ] /*"types", "state" */
 
 
 	  	});
-		
+
 	}
 
-	var searchInAssociateUserTreeTimeOut = false; 
+	var searchInAssociateUserTreeTimeOut = false;
 
-	function searchInAssociateUserTree(text) {	
+	function searchInAssociateUserTree(text) {
 
 		if(searchInAssociateUserTreeTimeOut) { clearTimeout(searchInAssociateUserTreeTimeOut); }
 
@@ -70,27 +70,27 @@
 	}
 
 	function expandAssociateUserTree() {
-		
+
 		$('#associateUserTreeContainer').jstree('open_all');
-		
+
 	}
 
 	function collapseAssociateUserTree() {
-		
+
 		$('#associateUserTreeContainer').jstree('close_all');
-		
+
 	}
 
 	function expandAssociateUserTreeNode() {
-		
-		$("#associateUserTreeContainer").jstree("open_all", $("#associateUserTreeContainer").jstree('get_selected') );	
-		
+
+		$("#associateUserTreeContainer").jstree("open_all", $("#associateUserTreeContainer").jstree('get_selected') );
+
 	}
 
 	function collapseAssociateUserTreeNode() {
-		
-		$("#associateUserTreeContainer").jstree("close_all", $("#associateUserTreeContainer").jstree('get_selected') );	
-		
+
+		$("#associateUserTreeContainer").jstree("close_all", $("#associateUserTreeContainer").jstree('get_selected') );
+
 	}
 
 	function associateUserJsTreeLoaded(event, data) { //JStree loaded
@@ -100,7 +100,7 @@
 		   	associateUserSelected(node.id, node.a_attr.href, node.li_attr.link=="1");
 		});
 
-		
+
 		associateUserTreeLoaded();
 	}
 
@@ -109,7 +109,7 @@
 </script>
 
 <script>
-	
+
 
 	function associateUserSelected(areaId, areaUrl, withLink)  {
 
@@ -121,7 +121,7 @@
 		if(areaId != currentAreaId){
 			setNewParentId(areaId);
 		} else {
-			$("#associateUserTreeContainer").jstree("deselect_all"); 
+			$("#associateUserTreeContainer").jstree("deselect_all");
 			setNewParentId(undefined);
 			showAlertModal("No puede seleccionar como área de destino el área a mover");
 		}--->
@@ -136,7 +136,7 @@
 
 <!---<cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">--->
 
-<div class="form-inline" style="position:fixed;z-index:2;">
+<div class="form-inline"><!---position:fixed;z-index:2;--->
 
 	<!---<cfinclude template="#APPLICATION.htmlPath#/includes/tree_toolbar.cfm">--->
 
@@ -165,9 +165,9 @@
 	<input type="hidden" name="user_id" value="#objectUser.id#"/>
 	<!---<input type="hidden" name="area_id" value="#objectArea.id#"/>--->
 	</cfoutput>
-	
+
 	<cfprocessingdirective suppresswhitespace="true">
-	<div id="associateUserTreeContainer" style="clear:both; padding-top:35px; height:350px; overflow-y:auto">
+	<div id="associateUserTreeContainer" style="clear:both; height:350px; overflow-y:auto"><!---padding-top:35px; --->
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTreeAdmin">
 			<cfinvokeargument name="with_input_type" value="checkbox">
@@ -187,11 +187,11 @@
 <script>
 	showAssociateUserTree(true);
 
-	$("#searchInAssociateUserText").on("keydown", function(e) { 
-			
+	$("#searchInAssociateUserText").on("keydown", function(e) {
+
 		if(e.which == 13) //Enter key
 			searchTextInAssociateUserTree();
-		
+
 	});
 
 
@@ -200,8 +200,7 @@
 	$("#associateUserTreeContainer").on('click', 'input:checkbox', function(event) {
 		var inputId = "#"+this.id;
 		setTimeout(function(){
-	       $(inputId).prop("checked",!($(inputId).is(":checked"))); 
+	       $(inputId).prop("checked",!($(inputId).is(":checked")));
 	    }, 100);
 	});
 </script>
-

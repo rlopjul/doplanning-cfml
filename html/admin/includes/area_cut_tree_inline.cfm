@@ -3,30 +3,30 @@
 
 <script>
 
-	function cutAreaTreeLoaded() { 
-	
+	function cutAreaTreeLoaded() {
+
 		//$("#loadingContainer").hide();
-	
+
 	}
 
 	function searchTextInCutAreaTree(){
-		searchInCutAreaTree(document.getElementById('searchInCutAreaText').value);	
+		searchInCutAreaTree(document.getElementById('searchInCutAreaText').value);
 	}
 
-	/*$(window).load( function() {		
+	/*$(window).load( function() {
 
 		showTree(true);
 
-		$("#searchText").on("keydown", function(e) { 
-			
+		$("#searchText").on("keydown", function(e) {
+
 			if(e.which == 13) //Enter key
 				searchTextInTree();
-			
+
 		});
 
 	});*/
 
-	function showCutAreaTree(selectable) { 
+	function showCutAreaTree(selectable) {
 
 		$("#cutAreaTreeContainer").bind("ready.jstree", function (event, data) { /*loaded es el que hay que usar cuando NO se carga todo el árbol*/
 			cutAreaJsTreeLoaded(event, data);
@@ -38,30 +38,30 @@
 		   		showAlertMessage(data.res.length+" "+window.lang.translate("resultados"),1);
 		   }
 		})
-		.jstree({ 
+		.jstree({
 			"core" : {
-				"themes" : { 
-					"name" : "dp", 
+				"themes" : {
+					"name" : "dp",
 					"dots" : false,
 					"responsive" : false
 				},
 				"multiple" : false
-				
+
 			},
-			"search" : { 
-				"fuzzy" : false 
+			"search" : {
+				"fuzzy" : false
 			},
 			"plugins" : [ "search" ] /*"types", "state" */
 
 
 	  	});
-		
+
 	}
 
-	var searchInCutAreaTreeTimeOut = false; 
+	var searchInCutAreaTreeTimeOut = false;
 
-	function searchInCutAreaTree(text) {	
-		
+	function searchInCutAreaTree(text) {
+
 		if(searchInCutAreaTreeTimeOut) { clearTimeout(searchInCutAreaTreeTimeOut); }
 
 	    searchInCutAreaTreeTimeOut = setTimeout(function () {
@@ -70,27 +70,27 @@
 	}
 
 	function expandCutAreaTree() {
-		
+
 		$('#cutAreaTreeContainer').jstree('open_all');
-		
+
 	}
 
 	function collapseCutAreaTree() {
-		
+
 		$('#cutAreaTreeContainer').jstree('close_all');
-		
+
 	}
 
 	function expandCutAreaTreeNode() {
-		
-		$("#cutAreaTreeContainer").jstree("open_all", $("#cutAreaTreeContainer").jstree('get_selected') );	
-		
+
+		$("#cutAreaTreeContainer").jstree("open_all", $("#cutAreaTreeContainer").jstree('get_selected') );
+
 	}
 
 	function collapseCutAreaTreeNode() {
-		
-		$("#cutAreaTreeContainer").jstree("close_all", $("#cutAreaTreeContainer").jstree('get_selected') );	
-		
+
+		$("#cutAreaTreeContainer").jstree("close_all", $("#cutAreaTreeContainer").jstree('get_selected') );
+
 	}
 
 	function cutAreaJsTreeLoaded(event, data) { //JStree loaded
@@ -100,14 +100,14 @@
 		   	cutAreaSelected(node.id, node.a_attr.href, node.li_attr.link=="1");
 		});
 
-		
+
 		cutAreaTreeLoaded();
 	}
 
 </script>
 
 <script>
-	
+
 
 	function cutAreaSelected(areaId, areaUrl, withLink)  {
 
@@ -118,7 +118,7 @@
 		if(areaId != currentAreaId){
 			setNewParentId(areaId);
 		} else {
-			$("#cutAreaTreeContainer").jstree("deselect_all"); 
+			$("#cutAreaTreeContainer").jstree("deselect_all");
 			setNewParentId(undefined);
 			showAlertModal("No puede seleccionar como área de destino el área a mover");
 		}
@@ -129,7 +129,7 @@
 
 <!---<cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">--->
 
-<div class="form-inline" style="position:fixed;">
+<div class="form-inline">
 
 	<!---<cfinclude template="#APPLICATION.htmlPath#/includes/tree_toolbar.cfm">--->
 
@@ -154,7 +154,7 @@
 </div>
 
 <cfprocessingdirective suppresswhitespace="true">
-<div id="cutAreaTreeContainer" style="clear:both; padding-top:35px; height:350px; overflow-y:auto">
+<div id="cutAreaTreeContainer" style="clear:both; height:350px; overflow-y:auto">
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTreeAdmin">
 		<!---<cfinvokeargument name="with_input_type" value="checkbox">
@@ -172,11 +172,10 @@
 <script>
 	showCutAreaTree(true);
 
-	$("#searchInCutAreaText").on("keydown", function(e) { 
-			
+	$("#searchInCutAreaText").on("keydown", function(e) {
+
 		if(e.which == 13) //Enter key
 			searchTextInCutAreaTree();
-		
+
 	});
 </script>
-

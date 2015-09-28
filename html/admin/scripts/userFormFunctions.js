@@ -7,11 +7,15 @@ function postUserDataForm(requestUrl) {
 
 
 	var launchOpenAreasAssociateModal = function(event) { //Esto es necesario porque si no se hace así se cuelga la aplicación porque se accede a $modal para volver a mostrarlo cuando no está terminado de ocultar
-	  	
-		$($modal).unbind( "hidden.bs.modal", launchOpenAreasAssociateModal );
 
-		openAreasAssociateModal(event.data.userId);
-		
+		setTimeout(function(){
+
+			$($modal).unbind( "hidden.bs.modal", launchOpenAreasAssociateModal );
+
+			openAreasAssociateModal(event.data.userId);
+
+		}, 900);
+
 	};
 
 	if( $('#file').val().length == 0) { //Sin archivo
@@ -24,7 +28,7 @@ function postUserDataForm(requestUrl) {
 			  data: $(formId).serialize(),
 			  success: function(data, status) {
 
-			  	if(status == "success"){		
+			  	if(status == "success"){
 			  		var message = data.message;
 
 			  		$('body').modalmanager('removeLoading');
@@ -42,18 +46,18 @@ function postUserDataForm(requestUrl) {
 			  			}
 
 			  			hideDefaultModal();
-			  			showAlertMessage(message, data.result);	  	
+			  			showAlertMessage(message, data.result);
 
 			  		} else {
-			  			/*$("#errorMessageModal").modal();	
+			  			/*$("#errorMessageModal").modal();
 			  			$("#modalErrorMessage").text(message);*/
-			  			showAlertErrorModal(message);	
-			  			$("#userSubmitButton").button("reset");	  			
+			  			showAlertErrorModal(message);
+			  			$("#userSubmitButton").button("reset");
 			  		}
-			  			
+
 			  	}else
 					showAlertModal(status);
-				
+
 			  },
 			  dataType: "json"
 			});
@@ -82,13 +86,13 @@ function postUserDataForm(requestUrl) {
 
 			  			hideDefaultModal();
 			  			showAlertMessage(message, result.result);
-			  			
+
 			  		} else {
-						/*$("#errorMessageModal").modal();	
+						/*$("#errorMessageModal").modal();
 			  			$("#modalErrorMessage").text(message);*/
 			  			showAlertErrorModal(message);
-			  			$("#userSubmitButton").button("reset");					  			
-			  		}			  		
+			  			$("#userSubmitButton").button("reset");
+			  		}
 
 			  	}else
 			  		showAlertModal(status);
@@ -100,7 +104,7 @@ function postUserDataForm(requestUrl) {
 			}).complete(function ( data, status )  { });
 
 	}
-	
+
 	return false;
 
 }

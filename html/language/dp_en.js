@@ -852,7 +852,7 @@ Lang.prototype.pack.en = {
 		"Fecha de creación:":"Creation date:",
 		"Fecha de última conexión:":"Last connection date:",
 		"Número de conexiones:":"Number of connections:",
-
+		"Usuario creado. Seleccione a continuación las áreas a las que desea asociarlo.":"User created. Now select the areas to add the user.",
 		/*END admin - new user window form*/
 
 		"Fecha de última modificación":"Last modification date",
