@@ -165,7 +165,7 @@
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="public" type="boolean" required="false">
-		<cfargument name="file_public_id" type="numeric" required="false">
+		<cfargument name="file_public_id" type="string" required="false">
 		<cfargument name="user_id" type="numeric" required="false">
 		<cfargument name="status" type="string" required="true">
 		<cfargument name="anti_virus_check" type="boolean" required="false">
