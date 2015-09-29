@@ -68,7 +68,7 @@
 
 		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css">
 
-		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.17">
+		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.18">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">
 
 			<cfset APPLICATION.dsn = "doplanning_app">
@@ -303,6 +303,7 @@
 
 					<cfinvokeargument name="homeTab" value="true">
 					<cfinvokeargument name="moduleDPDocuments" value="true">
+					<cfinvokeargument name="moduleMailing" value="false">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 

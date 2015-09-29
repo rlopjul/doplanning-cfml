@@ -2139,8 +2139,8 @@
 
 				<cftry>
 
-					<!--- ------ PROVISIONAL ---- --->
-					<cfif client_abb EQ "hcs" OR client_abb EQ "bioinformatics7">
+					<!--- ------ PROVISIONAL ----
+					<cfif client_abb EQ "hcs" OR client_abb EQ "bioinformatics7">--->
 
 					<!---<cfset forceNotifications = getClientsQuery.force_notifications>--->
 
@@ -2424,7 +2424,7 @@
 					</cfloop><!--- END loop query="getAllUsersQuery" --->
 
 
-					</cfif><!--- END client_abb EQ "hcs" --->
+					<!---</cfif> END client_abb EQ "hcs" --->
 
 					<cfcatch>
 						<cfinclude template="includes/errorHandler.cfm">

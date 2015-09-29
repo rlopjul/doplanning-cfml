@@ -5,27 +5,27 @@
 	ColdFusion version required: 8
 	Last file change by: alucena
 	Date of last file change: 09-04-2013
-	
+
 	29-01-2013 alucena: modificado createClient para versión 2.0
 	15-03-2013 alucena: añadidas tablas consultations
 	18-03-2013 alucena: modificado createClientFolders
 	09-04-2013 alucena: añadidas modificaciones de tablas
 	27-06-2013 alucena: añadida tabla meetings_users_sessions
-	
+
 --->
 <cfcomponent output="false">
 
 	<cfset component = "ClientManager">
-	
+
 	<!--- ----------------------- XML CLIENT -------------------------------- --->
-	
-	<cffunction name="xmlClient" returntype="string" output="false" access="public">		
+
+	<cffunction name="xmlClient" returntype="string" output="false" access="public">
 		<cfargument name="objectClient" type="struct" required="yes">
-		
+
 		<cfset var method = "xmlClient">
-		
+
 		<cftry>
-		
+
 			<cfprocessingdirective suppresswhitespace="true">
 			<cfsavecontent variable="xmlResult">
 				<cfoutput>
@@ -53,98 +53,98 @@
 				</cfoutput>
 			</cfsavecontent>
 			</cfprocessingdirective>
-			
+
 			<cfreturn xmlResult>
-		
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 				<cfreturn null>
 			</cfcatch>
 		</cftry>
-		
+
 	</cffunction>
-	
-	
+
+
 	<!--- ----------------------- CLIENT OBJECT -------------------------------- --->
-	
-	<cffunction name="objectClient" returntype="any" output="false" access="public">	
-		
+
+	<cffunction name="objectClient" returntype="any" output="false" access="public">
+
 		<cfargument name="xml" type="string" required="no">
-		
+
 		<cfargument name="id" type="string" required="no" default="">
-		<cfargument name="name" type="string" required="no" default="">		
-		<cfargument name="administrator_id" type="string" required="no" default="">		
+		<cfargument name="name" type="string" required="no" default="">
+		<cfargument name="administrator_id" type="string" required="no" default="">
 		<cfargument name="root_area_id" type="string" required="no" default="">
 		<cfargument name="number_of_users" type="string" required="no" default="">
 		<cfargument name="space" type="string" required="no" default="">
 		<cfargument name="abbreviation" type="string" required="no" default="">
 		<cfargument name="creation_date" type="string" required="no" default="">
 		<cfargument name="number_of_sms_used" type="string" required="no" default="">
-		<cfargument name="number_of_sms_paid" type="string" required="no" default="">		
-		
+		<cfargument name="number_of_sms_paid" type="string" required="no" default="">
+
 		<cfargument name="return_type" type="string" required="no">
-		
+
 		<cfset var method = "objectClient">
-		
+
 		<cftry>
-			
+
 			<cfif isDefined("arguments.xml")>
-			
+
 				<cfxml variable="xmlClient">
 				<cfoutput>
 				#arguments.xml#
 				</cfoutput>
 				</cfxml>
-				
+
 				<cfif isDefined("xmlClient.client.XmlAttributes.id")>
 					<cfset id=xmlClient.client.XmlAttributes.id>
-				</cfif>		
-					
+				</cfif>
+
 				<cfif isDefined("xmlClient.client.name")>
 					<cfset name=xmlClient.client.name.xmlText>
 				</cfif>
-				
+
 				<cfif isDefined("xmlClient.client.XmlAttributes.administrator_id")>
 					<cfset administrator_id=xmlClient.client.XmlAttributes.administrator_id>
 				</cfif>
-				
+
 				<cfif isDefined("xmlClient.client.XmlAttributes.root_area_id")>
 					<cfset root_area_id=xmlClient.client.XmlAttributes.root_area_id>
 				</cfif>
-				
+
 				<cfif isDefined("xmlClient.client.XmlAttributes.number_of_users")>
 					<cfset number_of_users=xmlClient.client.XmlAttributes.number_of_users>
 				</cfif>
-				
+
 				<cfif isDefined("xmlClient.client.XmlAttributes.space")>
 					<cfset space=xmlClient.client.XmlAttributes.space>
 				</cfif>
-				
+
 				<cfif isDefined("xmlClient.client.XmlAttributes.abbreviation")>
 					<cfset abbreviation=xmlClient.client.XmlAttributes.abbreviation>
 				</cfif>
-				
+
 				<cfif isDefined("xmlClient.client.XmlAttributes.creation_date")>
 					<cfset creation_date=xmlClient.client.XmlAttributes.creation_date>
 				</cfif>
-				
+
 				<cfif isDefined("xmlClient.client.XmlAttributes.number_of_sms_used")>
 					<cfset number_of_sms_used=xmlClient.client.XmlAttributes.number_of_sms_used>
 				</cfif>
-				
+
 				<cfif isDefined("xmlClient.client.XmlAttributes.number_of_sms_paid")>
 					<cfset number_of_sms_paid=xmlClient.client.XmlAttributes.number_of_sms_paid>
 				</cfif>
-			
+
 			<cfelseif NOT isDefined("arguments.id")>
 				<cfreturn null>
 			</cfif>
-			
+
 			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringDate">
 				<cfinvokeargument name="timestamp_date" value="#creation_date#">
 			</cfinvoke>
 			<cfset creation_date = stringDate>
-					
+
 			<cfset object = {
 				id="#id#",
 				name="#name#",
@@ -157,59 +157,59 @@
 				number_of_sms_used="#number_of_sms_used#",
 				number_of_sms_paid="#number_of_sms_paid#"
 				}>
-				
-			
+
+
 			<cfif isDefined("arguments.return_type") AND arguments.return_type EQ "xml">
-				
+
 				<cfinvoke component="ClientManager" method="xmlClient" returnvariable="xmlResult">
 					<cfinvokeargument name="objectClient" value="#object#">
 				</cfinvoke>
 				<cfreturn xmlResult>
 
 			<cfelse>
-			
+
 				<cfreturn object>
-				
+
 			</cfif>
-		
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 				<cfreturn null>
 			</cfcatch>
 		</cftry>
-		
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------- getClient ------------------------------------ --->
-	
-	<cffunction name="getClient" returntype="struct" access="public">		
+
+	<cffunction name="getClient" returntype="struct" access="public">
 		<cfargument name="client_abb" type="string" required="true">
 
-		<cfset var method = "getClient">	
+		<cfset var method = "getClient">
 
 		<cfset var response = structNew()>
 
 		<cftry>
 
 			<!---<cfinclude template="includes/functionStartOnlySession.cfm">--->
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="selectClientQuery">
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			</cfinvoke>
-			
+
 			<cfif selectClientQuery.recordCount GT 0>
 
 				<cfset response = {result=true, client=#selectClientQuery#}>
 
 			<cfelse><!---The client does not exist--->
-				
+
 				<cfset error_code = 301>
-				
-				<cfthrow errorcode="#error_code#"> 
-				
-			</cfif>	
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
 
 			<cfcatch>
 
@@ -218,9 +218,9 @@
 			</cfcatch>
 
 		</cftry>
-			
+
 		<cfreturn response>
-					
+
 	</cffunction>
 
 
@@ -234,25 +234,25 @@
 		<cfargument name="tasks_reminder_days" type="numeric" required="true">
 		<cfargument name="bin_enabled" type="boolean" required="false" default="false">
 		<cfargument name="bin_days" type="numeric" required="true">
-		
+
 		<cfset var method = "updateClientAdminOptions">
-		
+
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<!--- checkAdminAccess --->
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAdminAccess">
 			</cfinvoke>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="getClientQuery">					
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="getClientQuery">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 			</cfinvoke>
 
 			<cfif getClientQuery.recordCount GT 0>
-	
+
 				<!---<cfquery name="updateClient" datasource="#APPLICATION.dsn#">--->
 				<cfquery name="updateClient" datasource="#client_dsn#">
 					UPDATE `doplanning_app`.`app_clients`
@@ -267,17 +267,17 @@
 				</cfquery>
 
 			<cfelse><!---The client does not exist--->
-				
+
 				<cfset error_code = 301>
-				
-				<cfthrow errorcode="#error_code#"> 
-				
-			</cfif>	
-		
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
 			<cfinclude template="includes/logRecord.cfm">
-			
+
 			<cfset response = {result=true}>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -285,75 +285,75 @@
 			</cfcatch>
 		</cftry>
 
-		<cfreturn response>		
-		
+		<cfreturn response>
+
 	</cffunction>
-	
-		
-	
-	
+
+
+
+
 	<!--- ------------------------------ createClient ----------------------------- --->
-	
+
 	<cffunction name="createClient" returntype="string" access="public">
 		<cfargument name="request" type="string" required="yes">
 		<!---<cfargument name="objectClient" type="string" required="yes">--->
-		
+
 		<cfset var method = "createClient">
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+
+		<!---<cfinclude template="includes/initVars.cfm">--->
+
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStart.cfm">
-			
+
 			<!---<cfinclude template="includes/checkApplicationAdminAccess.cfm">--->
-			
-			
+
+
 			<cfinvoke component="ClientManager" method="objectClient" returnvariable="objectClient">
 				<cfinvokeargument name="xml" value="#xmlRequest.request.parameters.client#">
-				
+
 				<cfinvokeargument name="return_type" value="object">
 			</cfinvoke>
-			
+
 			<cfinvoke component="DateManager" method="getCurrentDateTime" returnvariable="current_date">
 			</cfinvoke>
-			
+
 			<cfinvoke component="DateManager" method="timestampToString" returnvariable="stringCurrentDate">
 				<cfinvokeargument name="timestamp_date" value="#current_date#">
 			</cfinvoke>
-			
+
 			<cfset objectClient.administrator_id = 1>
 			<cfset objectClient.root_area_id = 1><!--- root area id which will always be 1 --->
 			<cfset objectClient.number_of_users = 1>
 			<cfset objectClient.space = 0>
 			<cfset objectClient.number_of_sms_used = 0>
 			<cfset objectClient.creation_date = stringCurrentDate>
-			
+
 			<cfset new_client_abb = objectClient.abbreviation>
-			
-			<cfquery name="insertClientQuery" datasource="#APPLICATION.dsn#">							
-				INSERT INTO `app_clients` (`id`, `name`, `administrator_id`, `root_area_id`, `number_of_users`, `space`, `abbreviation`, `creation_date`, `number_of_sms_used`, `number_of_sms_paid`, `email_support`) VALUES 
+
+			<cfquery name="insertClientQuery" datasource="#APPLICATION.dsn#">
+				INSERT INTO `app_clients` (`id`, `name`, `administrator_id`, `root_area_id`, `number_of_users`, `space`, `abbreviation`, `creation_date`, `number_of_sms_used`, `number_of_sms_paid`, `email_support`) VALUES
 					(<cfqueryPARAM value="#objectClient.id#" CFSQLType="CF_SQL_varchar">,
-					<cfqueryPARAM value="#objectClient.name#" CFSQLType="CF_SQL_varchar">,					
+					<cfqueryPARAM value="#objectClient.name#" CFSQLType="CF_SQL_varchar">,
 					<cfqueryPARAM value="#objectClient.administrator_id#" CFSQLType = "CF_SQL_varchar">,
-					<cfqueryparam value="#objectClient.root_area_id#" cfsqltype="cf_sql_integer">, 
+					<cfqueryparam value="#objectClient.root_area_id#" cfsqltype="cf_sql_integer">,
 					<cfqueryPARAM value="#objectClient.number_of_users#" CFSQLType = "CF_SQL_integer">,
-					<cfqueryPARAM value="#objectClient.space#" CFSQLType = "CF_SQL_integer">,						
+					<cfqueryPARAM value="#objectClient.space#" CFSQLType = "CF_SQL_integer">,
 					<cfqueryPARAM value="#objectClient.abbreviation#" CFSQLType = "CF_SQL_varchar">,
 					<cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,
 					<cfqueryPARAM value="#objectClient.number_of_sms_used#" cfsqltype="cf_sql_integer">,
 					<cfqueryPARAM value="#objectClient.number_of_sms_paid#" cfsqltype="cf_sql_integer">,
 					<cfqueryPARAM value="no-reply@doplanning.net" cfsqltype="cf_sql_varchar">
-					);			
+					);
 			</cfquery>
-			
+
 			<cfset client_datasource = APPLICATION.identifier&"_"&objectClient.abbreviation>
-			
-			
+
+
 			<!--- Now we have to create all the tables --->
-			
+
 			<cftransaction>
-			
+
 				<cfquery name="createTableAlertMessages" datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_alert_messages` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -363,13 +363,13 @@
 					  PRIMARY KEY  (`id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-				
+
 				<cfquery name="insertAlertMessage" datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_alert_messages` (`id`, `content`, `expiration_date`) VALUES
 	(1, '¡Bienvenido a #APPLICATION.title#!', ADDDATE(<cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">,3));
 				</cfquery>
-					
-				
+
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_areas` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -388,19 +388,19 @@
 					  KEY `parent_id` (`parent_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-				
+
 				<!---ROOT AREA--->
-				<cfquery datasource="#client_datasource#">	
+				<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_areas` (`id`, `name`, `parent_id`, `user_in_charge`, `creation_date`, `description`, `image_id`, `link`, `space_used`) VALUES
 					(1, '#objectClient.name#', NULL, 1, <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">, NULL, NULL, NULL, 0);
 				</cfquery>
-				
+
 				<!---DP AREA--->
-				<cfquery datasource="#client_datasource#">	
+				<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_areas` (`id`, `name`, `parent_id`, `user_in_charge`, `creation_date`, `description`, `image_id`, `link`, `space_used`) VALUES
 					(2, '#objectClient.name#', 1, 1, <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">, NULL, NULL, NULL, 0);
 				</cfquery>
-					
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_areas_administrators` (
 					  `user_id` int(11) NOT NULL,
@@ -409,7 +409,7 @@
 					  KEY `area_id` (`area_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-					
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_areas_files` (
 					  `area_id` int(11) NOT NULL,
@@ -419,7 +419,7 @@
 					  KEY `file_id` (`file_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-					
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_areas_images` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -434,24 +434,24 @@
 					  `status_replacement` varchar(100) collate utf8_unicode_ci default NULL,
 					  PRIMARY KEY  (`id`),
 					  UNIQUE KEY `image_src` (`physical_name`)
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;	
-				</cfquery>			
-				
-				<cfquery datasource="#client_datasource#">	
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+				</cfquery>
+
+				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_areas_users` (
 					  `area_id` int(11) NOT NULL,
 					  `user_id` int(11) NOT NULL,
 					  PRIMARY KEY  (`area_id`,`user_id`),
 					  KEY `user_id` (`user_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-				</cfquery>	
-					
+				</cfquery>
+
 				<!---<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_areas_users` (`area_id`, `user_id`) VALUES
 					(1, 1);
-				</cfquery>--->	
-					
-				<cfquery datasource="#client_datasource#">	
+				</cfquery>--->
+
+				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_contacts` (
 					  `user_id` int(11) NOT NULL,
 					  `id` int(11) NOT NULL auto_increment,
@@ -468,7 +468,7 @@
 					  KEY `user_id` (`user_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-				
+
 				<cfquery datasource="#client_datasource#">
 					 CREATE TABLE IF NOT EXISTS `#new_client_abb#_errors_log` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -482,8 +482,8 @@
 					  PRIMARY KEY  (`id`),
 					  KEY `user_id` (`user_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-				</cfquery>	
-				
+				</cfquery>
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_files` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -502,7 +502,7 @@
 					  KEY `user_in_charge` (`user_in_charge`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-					
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_folders` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -515,13 +515,13 @@
 					  KEY `parent_id` (`parent_id`),
 					  KEY `user_in_charge` (`user_in_charge`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-				</cfquery>	
-					
+				</cfquery>
+
 				<!---<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_folders` (`id`, `name`, `creation_date`, `user_in_charge`, `parent_id`, `description`) VALUES
 					(1, 'Mis documentos', <cfqueryparam value="#current_date#" cfsqltype="cf_sql_timestamp">, 1, NULL, NULL);
 				</cfquery>--->
-					
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_folders_files` (
 					  `folder_id` int(11) NOT NULL,
@@ -530,7 +530,7 @@
 					  KEY `file_id` (`file_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-					
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_logs` (
 					  `id` bigint(20) NOT NULL auto_increment,
@@ -544,10 +544,10 @@
 					  KEY `user_id` (`user_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-				
-				
-				
-				
+
+
+
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE `#new_client_abb#_display_types` (
 					  `display_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -557,7 +557,7 @@
 					  PRIMARY KEY (`display_type_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 				</cfquery>
-				
+
 				<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_display_types` (`display_type_id`,`enabled`,`display_type_title_es`,`display_type_title_en`) VALUES
 					 (1,1,'Por defecto','By default'),
@@ -566,8 +566,8 @@
 					 (4,1,'Imagen a la izquierda','Image to left'),
 					 (5,1,'Figura con pie','Image with footnote');
 				</cfquery>
-				
-				
+
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE `#new_client_abb#_iframes_display_types` (
 					  `iframe_display_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -579,22 +579,22 @@
 					  `iframe_display_type_title_es` varchar(100) NOT NULL,
 					  `iframe_display_type_title_en` varchar(100) NOT NULL,
 					  PRIMARY KEY (`iframe_display_type_id`)
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8;		
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 				</cfquery>
-				
+
 				<!---<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_iframes_display_types` (`iframe_display_type_id`,`width`,`width_unit`,`height`,`height_unit`,`enabled`,`iframe_display_type_title_es`,`iframe_display_type_title_en`) VALUES
 		 (1,100,'%',400,'px',1,'Ancho de página x 400','100% x 400px'),
 		 (2,560,'px',315,'px',1,'560 x 315','560 x 315');
 				</cfquery>--->
-				
+
 				<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_iframes_display_types` VALUES (1,100,'%',400,'px',1,'Ancho de página x 400','100% x 400px'),(2,560,'px',315,'px',1,'560 x 315','560 x 315'),(3,0,'',0,'',1,'Visor 16:9','16:9 viewer'),(4,0,'',0,'',1,'Visor 4:3','4:3 viewer');
 				</cfquery>
-				
-				
-					
-				<cfquery datasource="#client_datasource#">	
+
+
+
+				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_messages` (
 					  `id` int(11) NOT NULL auto_increment,
 					  `title` text collate utf8_unicode_ci,
@@ -615,8 +615,8 @@
 					  KEY `area_id` (`area_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-				
-					
+
+
 				<!---ESTA TABLA EN DP 2 NO ES NECESARIA
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_sms` (
@@ -630,8 +630,8 @@
 					  PRIMARY KEY  (`id`),
 					  KEY `user_id` (`user_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-				</cfquery>--->	
-					
+				</cfquery>--->
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_users` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -674,9 +674,9 @@
 					  <!---, KEY `image_id` (`image_id`)--->
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-				
-				
-				<cfquery datasource="#client_datasource#">	
+
+
+				<cfquery datasource="#client_datasource#">
 					CREATE TABLE  `#new_client_abb#_tasks` (
 					  `id` int(11) NOT NULL AUTO_INCREMENT,
 					  `title` text COLLATE utf8_unicode_ci,
@@ -711,10 +711,10 @@
 					  CONSTRAINT `#new_client_abb#_tasks_ibfk_2` FOREIGN KEY (`attached_file_id`) REFERENCES `#new_client_abb#_files` (`id`),
 					  CONSTRAINT `#new_client_abb#_tasks_ibfk_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-				</cfquery>			
-				
-				
-				<cfquery datasource="#client_datasource#">	
+				</cfquery>
+
+
+				<cfquery datasource="#client_datasource#">
 					CREATE TABLE  `#new_client_abb#_events` (
 					  `id` int(11) NOT NULL auto_increment,
 					  `title` text collate utf8_unicode_ci,
@@ -751,8 +751,8 @@
 					  CONSTRAINT `FK_#new_client_abb#_events_4` FOREIGN KEY (`attached_image_id`) REFERENCES `#new_client_abb#_files` (`id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-				
-				
+
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE  `#new_client_abb#_news` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -785,10 +785,10 @@
 					  CONSTRAINT `#new_client_abb#_news_ibfk_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`),
 					  CONSTRAINT `FK_#new_client_abb#_news_4` FOREIGN KEY (`attached_image_id`) REFERENCES `#new_client_abb#_files` (`id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-				</cfquery>	
-				
-				
-				
+				</cfquery>
+
+
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE  `#new_client_abb#_entries` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -825,9 +825,9 @@
 					  CONSTRAINT `FK_#new_client_abb#_entries_5` FOREIGN KEY (`iframe_display_type_id`) REFERENCES `#new_client_abb#_iframes_display_types` (`iframe_display_type_id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-				
-				
-				
+
+
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE `#new_client_abb#_consultations` (
 					  `id` int(10) unsigned NOT NULL auto_increment,
@@ -861,7 +861,7 @@
 					  CONSTRAINT `#new_client_abb#_consultations_ibfk_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-		
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE  `#new_client_abb#_consultations_readings` (
 					  `consultation_id` int(10) unsigned NOT NULL,
@@ -873,16 +873,16 @@
 					  CONSTRAINT `FK_#new_client_abb#_consultations_readings_users` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE CASCADE
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 				</cfquery>
-				
-				
+
+
 				<!---<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_users` (`id`, `name`, `telephone`, `address`, `password`, `space_used`, `number_of_connections`, `connected`, `session_id`, `creation_date`, `internal_user`, `root_folder_id`, `family_name`, `sms_allowed`, `mobile_phone`, `space_downloaded`, `validated`, `email`, `image_id`, `telephone_ccode`, `mobile_phone_ccode`) VALUES
 					(1, 'Support', NULL, NULL, '', 0, 3, 1, '1a3024245e9921e08a2e746c3a35221443c5', '#current_date#', NULL, 1, NULL, 0, NULL, 0, 0, 'support@era7.com', NULL, NULL, NULL);
-				</cfquery>--->	
-					
+				</cfquery>--->
+
 				<!---
 				ESTA TABLA EN DP 2.0 NO ES NECESARIA
-				<cfquery datasource="#client_datasource#">	
+				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_user_images` (
 					  `id` int(11) NOT NULL,
 					  `image_src` varchar(200) collate utf8_unicode_ci NOT NULL,
@@ -890,8 +890,8 @@
 					  PRIMARY KEY  (`id`),
 					  UNIQUE KEY `image_src` (`image_src`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-				</cfquery>--->	
-				
+				</cfquery>--->
+
 				<cfquery datasource="#client_datasource#">
 					CREATE TABLE IF NOT EXISTS `#new_client_abb#_incidences` (
 					  `id` int(11) NOT NULL auto_increment,
@@ -907,8 +907,8 @@
 					  PRIMARY KEY  (`id`)
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 				</cfquery>
-				
-				
+
+
 				<!---CREATE TABLE IF NOT EXISTS `#new_client_abb#_incidences` (
 				  `id` int(11) NOT NULL auto_increment,
 				  `title` varchar(255) collate utf8_unicode_ci NOT NULL,
@@ -922,7 +922,7 @@
 				  `resolution_description` text collate utf8_unicode_ci,
 				  PRIMARY KEY  (`id`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;--->
-				
+
 
 				<!---Aquí hay que llamar a un método que ponga como sesion actual la del cliente recien creado,
 				para que las siguientes peticiones afecten a ese cliente. Lo que habría que hacer en ese método sería:
@@ -930,8 +930,8 @@
 				Estaría bien que al logearse con un usuario para entrar en esta área de crear clientes,
 				no se definiera un #client_abb# o algo parecido, y que solo se definiera para hacer determinadas
 				cosas sobre un cliente.--->
-				
-				
+
+
 				<!---create AdministratorUser--->
 				<!---<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="createUserRequest">
 					<cfinvokeargument name="request_parameters" value="#xmlRequest.request.parameters.user#">
@@ -950,46 +950,46 @@
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 				</cfquery>
 
-			
+
 			</cftransaction>
-		
-		
-			
+
+
+
 			<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
 				<cfinvokeargument name="xml" value="#xmlRequest.request.parameters.user#">
-					
+
 				<cfinvokeargument name="return_type" value="object">
-			</cfinvoke>	
-			
+			</cfinvoke>
+
 			<cfif len(objectUser.whole_tree_visible) IS 0>
 				<cfset objectUser.whole_tree_visible = "false">
-			</cfif> 
-			
+			</cfif>
+
 			<cfif len(objectUser.sms_allowed) IS 0>
 				<cfset objectUser.sms_allowed = "false">
 			</cfif>
-			
+
 			<cfset objectUser.email = Trim(objectUser.email)>
 			<cfset objectUser.mobile_phone = Trim(objectUser.mobile_phone)>
-			
+
 			<cftransaction>
-				
+
 				<!---checkEmail--->
 				<!---<cfquery name="checkEmail" datasource="#client_dsn#">
 					SELECT id
 					FROM #client_abb#_users
 					WHERE email=<cfqueryparam value="#objectUser.email#" cfsqltype="cf_sql_varchar">;
 				</cfquery>
-				
+
 				<cfif checkEmail.recordCount GT 0><!---User email already used--->
 					<cfset error_code = 205>
-				
+
 					<cfthrow errorcode="#error_code#">
 				</cfif>--->
-				
+
 				<cfset objectUser.language = "es">
-				
-				<!---Insert User in DataBase--->			
+
+				<!---Insert User in DataBase--->
 				<cfquery name="insertUserQuery" datasource="#client_datasource#" result="insertUserResult">
 					INSERT INTO #new_client_abb#_users
 					(email,name,family_name,telephone,address,password, internal_user, sms_allowed, mobile_phone, creation_date, telephone_ccode, mobile_phone_ccode, language)
@@ -1017,160 +1017,160 @@
 						<cfqueryparam value="#objectUser.language#" cfsqltype="cf_sql_varchar">
 						);
 				</cfquery>
-				
+
 				<!---Aquí se obtiene el id del usuario insertado en base de datos--->
 				<cfquery name="getLastInsertId" datasource="#client_datasource#">
 					SELECT LAST_INSERT_ID() AS last_insert_id FROM #new_client_abb#_users;
 				</cfquery>
 				<cfset objectUser.id = getLastInsertId.last_insert_id>
-				
+
 				<!---Insert User Root Folder--->
 				<cfquery name="insertRootFolderQuery" datasource="#client_datasource#" result="insertRootFolderResult">
 					INSERT INTO #new_client_abb#_folders
 					(name, creation_date, user_in_charge, description)
 					VALUES(
-						'Mis documentos', 
+						'Mis documentos',
 						NOW(),
 						<cfqueryPARAM value="#objectUser.id#" CFSQLType="cf_sql_integer">,
 						'Directorio raiz'
 						);
-				</cfquery>	
-				
+				</cfquery>
+
 				<cfquery name="getLastInsertId" datasource="#client_datasource#">
 					SELECT LAST_INSERT_ID() AS last_insert_id FROM #new_client_abb#_folders;
 				</cfquery>
 				<cfset root_folder_id = getLastInsertId.last_insert_id>
-				
+
 				<cfquery name="insertRootFolderInUser" datasource="#client_datasource#">
 					UPDATE #new_client_abb#_users
 					SET root_folder_id = #root_folder_id#
 					WHERE id = <cfqueryPARAM value="#objectUser.id#" CFSQLType="cf_sql_integer">;
 				</cfquery>
-				
-				
+
+
 				<!---Add user to areas--->
-				
+
 				<cfquery name="assignUser" datasource="#client_datasource#">
 					INSERT INTO #new_client_abb#_areas_users (area_id, user_id)
 					VALUES(<cfqueryparam value="1" cfsqltype="cf_sql_integer">,
 						<cfqueryparam value="#objectUser.id#" cfsqltype="cf_sql_integer">);
 				</cfquery>
-				
+
 				<cfquery name="assignUser2" datasource="#client_datasource#">
 					INSERT INTO #new_client_abb#_areas_users (area_id, user_id)
 					VALUES(<cfqueryparam value="2" cfsqltype="cf_sql_integer">,
 						<cfqueryparam value="#objectUser.id#" cfsqltype="cf_sql_integer">);
 				</cfquery>
-				
-			</cftransaction>			
-				
-			
+
+			</cftransaction>
+
+
 			<!---Esto es provisional--->
 			<!---<cfset current_client_abb = SESSION.client_abb>
 			<cfset SESSION.client_abb = "#new_client_abb#">
-			
+
 			<cfinvoke component="UserManager" method="createUser">
 				<cfinvokeargument name="request" value="#xmlRequest#">
 			</cfinvoke>
-			
+
 			<!---assign User To Root Area--->
 			<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="assignUserToAreaRequest">
 				<cfinvokeargument name="request_parameters" value='<user id="1"/><area id="1"/>'>
 			</cfinvoke>
-		
+
 			<cfinvoke component="UserManager" method="assignUserToArea">
 				<cfinvokeargument name="request" value="#assignUserToAreaRequest#">
 			</cfinvoke>
-			
+
 			<!---Esto es provisional--->
 			<cfset SESSION.client_abb = current_client_abb>--->
-		
-		
-		
-		
+
+
+
+
 			<cftransaction>
-			
+
 				<!--- --------------------------------- FOREIGN KEYS -------------------------------- --->
-					
-				<cfquery datasource="#client_datasource#">	
+
+				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_areas`
 					  ADD CONSTRAINT `#new_client_abb#_areas_ibfk_11` FOREIGN KEY (`image_id`) REFERENCES `#new_client_abb#_areas_images` (`id`),
 					  ADD CONSTRAINT `#new_client_abb#_areas_ibfk_10` FOREIGN KEY (`user_in_charge`) REFERENCES `#new_client_abb#_users` (`id`),
 					  ADD CONSTRAINT `#new_client_abb#_areas_ibfk_9` FOREIGN KEY (`parent_id`) REFERENCES `#new_client_abb#_areas` (`id`);
 				</cfquery>
-				
-				<cfquery datasource="#client_datasource#">				
+
+				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_areas_administrators`
 					  ADD CONSTRAINT `#new_client_abb#_areas_administrators_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE CASCADE,
 					  ADD CONSTRAINT `#new_client_abb#_areas_administrators_ibfk_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`) ON DELETE CASCADE;
-				</cfquery>	
-					
+				</cfquery>
+
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_areas_files`
 					  ADD CONSTRAINT `#new_client_abb#_areas_files_ibfk_1` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`) ON DELETE CASCADE,
 					  ADD CONSTRAINT `#new_client_abb#_areas_files_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `#new_client_abb#_files` (`id`) ON DELETE CASCADE;
 				</cfquery>
-					
+
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_areas_users`
 					  ADD CONSTRAINT `#new_client_abb#_areas_users_ibfk_2` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`) ON DELETE CASCADE,
 					  ADD CONSTRAINT `#new_client_abb#_areas_users_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE CASCADE;
-				</cfquery>	
-					
+				</cfquery>
+
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_contacts`
 					  ADD CONSTRAINT `#new_client_abb#_contacts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE CASCADE;
 				</cfquery>
-				
-				
+
+
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_files`
 					  ADD CONSTRAINT `#new_client_abb#_files_ibfk_1` FOREIGN KEY (`user_in_charge`) REFERENCES `#new_client_abb#_users` (`id`);
 				</cfquery>
-				
-				
+
+
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_folders`
 					  ADD CONSTRAINT `#new_client_abb#_folders_ibfk_8` FOREIGN KEY (`parent_id`) REFERENCES `#new_client_abb#_folders` (`id`),
 					  ADD CONSTRAINT `#new_client_abb#_folders_ibfk_7` FOREIGN KEY (`user_in_charge`) REFERENCES `#new_client_abb#_users` (`id`);
 				</cfquery>
-					
+
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_folders_files`
 					  ADD CONSTRAINT `#new_client_abb#_folders_files_ibfk_1` FOREIGN KEY (`folder_id`) REFERENCES `#new_client_abb#_folders` (`id`),
 					  ADD CONSTRAINT `#new_client_abb#_folders_files_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `#new_client_abb#_files` (`id`) ON DELETE CASCADE;
 				</cfquery>
-					
+
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_messages`
 					  ADD CONSTRAINT `#new_client_abb#_messages_ibfk_1` FOREIGN KEY (`user_in_charge`) REFERENCES `#new_client_abb#_users` (`id`),
 					  ADD CONSTRAINT `#new_client_abb#_messages_ibfk_2` FOREIGN KEY (`attached_file_id`) REFERENCES `#new_client_abb#_files` (`id`),
 					  ADD CONSTRAINT `#new_client_abb#_messages_ibfk_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`);
 				</cfquery>
-					
+
 				<!---
 				ESTA TABLA EN DP 2.0 NO ES NECESARIA
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_sms`
 					  ADD CONSTRAINT `#new_client_abb#_sms_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE CASCADE;
 				</cfquery>--->
-					
+
 				<!---
 				ESTA TABLA EN DP 2.0 NO ES NECESARIA
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_users`
 					  ADD CONSTRAINT `#new_client_abb#_users_ibfk_1` FOREIGN KEY (`image_id`) REFERENCES `#new_client_abb#_user_images` (`id`);
 				</cfquery>--->
-					
+
 				<!---
 				ESTA TABLA EN DP 2.0 NO ES NECESARIA
 				<cfquery datasource="#client_datasource#">
 					ALTER TABLE `#new_client_abb#_user_preferences`
 					  ADD CONSTRAINT `#new_client_abb#_user_preferences_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE CASCADE;
 				</cfquery>--->
-			
+
 			</cftransaction>
-			
+
 			<cfset checkVersion = false>
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.5.cfm">
@@ -1179,16 +1179,16 @@
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.1.cfm">	
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.1.cfm">
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.2.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.3.cfm">	
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.3.cfm">
 
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.4.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.5.cfm">	
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.8.5.cfm">
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.9.cfm">
 
@@ -1196,86 +1196,90 @@
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.9.2.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.9.3.cfm">	
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.9.3.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.10.cfm">		
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_2.10.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.1.cfm">	
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.1.cfm">
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.2.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.3.cfm">	
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.3.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.4.cfm">						
-			
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.0.4.cfm">
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.1.cfm">
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.2.cfm">						
+
 			<!---createClientFolders--->
 			<cfinvoke component="ClientManager" method="createClientFolders">
 				<cfinvokeargument name="cur_client_abb" value="#new_client_abb#">
-			</cfinvoke>	
-			
-			
+			</cfinvoke>
+
+
 			<cfset xmlResponseContent = arguments.request>
-			
+
 			<cfinclude template="includes/functionEndNoLog.cfm">
-			
+
 			<cfcatch>
 				<cfset xmlResponseContent = arguments.request>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn xmlResponse>
-		
+
 	</cffunction>
-	
-	
+
+
 	<!--- ------------------------------ createClientFolders ----------------------------- --->
-	
+
 	<cffunction name="createClientFolders" returntype="void" access="public">
 		<cfargument name="cur_client_abb" type="string" required="yes">
-		
+
 		<cfset var method = "createClientFolders">
-		
+
 		<cfset var dirDelim = "/">
 		<cfset var modePer = 777>
-		
+
 		<cfset var arrayDir = arrayNew(1)>
-		
-		<!---<cfinclude template="includes/initVars.cfm">--->	
-			
+
+		<!---<cfinclude template="includes/initVars.cfm">--->
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<!---<cfset APPLICATION.filesPath = "/home/administrador/doplanning">--->
-		
+
 			<cfif server.OS.Name contains "Windows">
 				<cfset dirDelim = "\">
 			</cfif>
-			
+
 			<cfset arrayAppend(arrayDir,"#arguments.cur_client_abb#")>
 			<cfset arrayAppend(arrayDir,"#arguments.cur_client_abb##dirDelim#files")>
 			<cfset arrayAppend(arrayDir,"#arguments.cur_client_abb##dirDelim#areas_images")>
 			<cfset arrayAppend(arrayDir,"#arguments.cur_client_abb##dirDelim#users_images")>
-			
+
 
 			<cfloop index="current_directory" array="#arrayDir#">
-				
+
 				<cfset full_current_directory = "#APPLICATION.filesPath##dirDelim##current_directory#">
 				<cfif NOT directoryExists(full_current_directory)>
 					<cfdirectory action="create" directory="#full_current_directory#" mode="#modePer#">
 				<cfelse>
 					<cfset error_code = 305><!---Client directory already exists--->
-			
+
 					<cfthrow errorcode="#error_code#">
 				</cfif>
-				
+
 			</cfloop>
-	
+
 			<!---<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
 			</cfcatch>
 		</cftry>--->
-		
+
 	</cffunction>
-	
+
 </cfcomponent>
