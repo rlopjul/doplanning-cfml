@@ -166,6 +166,8 @@
 		<cfargument name="notify_new_form_row" type="string" required="false" default="">
 		<cfargument name="notify_new_form_view" type="string" required="false" default="">
 		<cfargument name="notify_new_pubmed" type="string" required="false" default="">
+		<cfargument name="notify_new_dp_document" type="string" required="false" default="">
+		<cfargument name="notify_new_mailing" type="string" required="false" default="">
 
 		<cfargument name="notify_delete_file" type="string" required="false" default="">
 		<cfargument name="notify_lock_file" type="string" required="false" default="">
@@ -362,6 +364,8 @@
 					<cfinvokeargument name="notify_new_form_row" value="#arguments.notify_new_form_row#">
 					<cfinvokeargument name="notify_new_form_view" value="#arguments.notify_new_form_view#">
 					<cfinvokeargument name="notify_new_pubmed" value="#arguments.notify_new_pubmed#">
+					<cfinvokeargument name="notify_new_dp_document" value="#arguments.notify_new_dp_document#">
+					<cfinvokeargument name="notify_new_mailing" value="#arguments.notify_new_mailing#">
 
 					<cfinvokeargument name="notify_delete_file" value="#arguments.notify_delete_file#">
 					<cfinvokeargument name="notify_lock_file" value="#arguments.notify_lock_file#">
@@ -454,6 +458,8 @@
 		<cfargument name="notify_new_form_row" type="string" required="false" default="">
 		<cfargument name="notify_new_form_view" type="string" required="false" default="">
 		<cfargument name="notify_new_pubmed" type="string" required="false" default="">
+		<cfargument name="notify_new_dp_document" type="string" required="false" default="">
+		<cfargument name="notify_new_mailing" type="string" required="false" default="">
 
 		<cfargument name="notify_delete_file" type="string" required="false" default="">
 		<cfargument name="notify_lock_file" type="string" required="false" default="">
@@ -564,6 +570,12 @@
 					</cfif>
 					<cfif arguments.notify_new_pubmed NEQ "">
 					AND u.notify_new_pubmed = <cfqueryparam value="#arguments.notify_new_pubmed#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif arguments.notify_new_dp_document NEQ "">
+					AND u.notify_new_dp_document = <cfqueryparam value="#arguments.notify_new_dp_document#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif arguments.notify_new_mailing NEQ "">
+					AND u.notify_new_mailing = <cfqueryparam value="#arguments.notify_new_mailing#" cfsqltype="cf_sql_bit">
 					</cfif>
 
 					<cfif arguments.notify_new_user_in_area NEQ "">

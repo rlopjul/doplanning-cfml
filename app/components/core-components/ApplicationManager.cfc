@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2014 --->
+<!--- Copyright Era7 Information Technologies 2007-2015 --->
 
 <cfcomponent output="false">
 
@@ -50,10 +50,10 @@
 		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
 		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
 		<cfargument name="cacheTree" type="boolean" required="false" default="true">
-		<!---<cfargument name="moduleBin" type="boolean" required="false" default="false">--->
 
 		<cfargument name="homeTab" type="boolean" required="false" default="true">
 		<cfargument name="moduleDPDocuments" type="boolean" required="false" default="true">
+		<cfargument name="moduleMailing" type="boolean" required="false" default="true">
 
 		<cfargument name="hideInputLabels" type="boolean" required="false" default="false">
 
@@ -68,7 +68,7 @@
 
 		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css">
 
-		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.17">
+		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.18">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">
 
 			<cfset APPLICATION.dsn = "doplanning_app">
@@ -100,7 +100,7 @@
 			<cfset APPLICATION.moduleAntiVirus = arguments.moduleAntiVirus>
 			<cfset APPLICATION.cacheTree = arguments.cacheTree>
 			<cfset APPLICATION.homeTab = arguments.homeTab>
-			<!---<cfset APPLICATION.moduleBin = arguments.moduleBin>--->
+			<cfset APPLICATION.moduleMailing = arguments.moduleMailing>
 
 			<cfset APPLICATION.moduleDPDocuments = arguments.moduleDPDocuments>
 
@@ -164,7 +164,6 @@
 			<cfset APPLICATION.htmlPath = APPLICATION.path&"/html">
 			<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
 
-			<!---<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">--->
 			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
 			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
@@ -173,16 +172,12 @@
 
 	    <cfset APPLICATION.ckeditorJSPath = "#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4">
 
-			<!---<cfset APPLICATION.baseCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">--->
-			<!---<cfset APPLICATION.baseCSSPath = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/cerulean/bootstrap.min.css">--->
 			<cfset APPLICATION.hideInputLabels = arguments.hideInputLabels>
 			<cfset APPLICATION.baseCSSPath = arguments.baseCSSPath>
 			<cfset APPLICATION.baseCSSIconsPath = "//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
 
-			<!---<cfset APPLICATION.themeCSSPath = "//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">--->
 			<cfset APPLICATION.themeCSSPath = arguments.themeCSSPath>
 
-			<!---<cfset APPLICATION.dpCSSPath = "#APPLICATION.htmlPath#/styles/styles.min.css?v=2.2">--->
 			<cfset APPLICATION.dpCSSPath = arguments.dpCSSPath>
 
 			<cfset APPLICATION.mainUrl = arguments.mainUrl>
@@ -302,11 +297,9 @@
 
 					<cfinvokeargument name="homeTab" value="true">
 					<cfinvokeargument name="moduleDPDocuments" value="true">
+					<cfinvokeargument name="moduleMailing" value="false">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
-
-					<!---<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">--->
-
 				</cfinvoke>
 
 			</cfcase>
@@ -344,7 +337,6 @@
 					<cfinvokeargument name="publicationValidation" value="true">
 					<cfinvokeargument name="userEmailRequired" value="false">
 					<cfinvokeargument name="moduleAntiVirus" value="true">
-					<!---<cfinvokeargument name="moduleBin" value="false">--->
 
 					<cfinvokeargument name="homeTab" value="true">
 					<cfinvokeargument name="moduleDPDocuments" value="true">
@@ -388,7 +380,6 @@
 					<cfinvokeargument name="moduleLdapUsers" value="true">
 					<cfinvokeargument name="moduleWeb" value="true">
 					<cfinvokeargument name="moduleWebRTC" value="true">
-					<!---<cfinvokeargument name="showDniTitle" value="true">--->
 					<cfinvokeargument name="showDniTitle" value="true">
 					<cfinvokeargument name="modulePubMedComments" value="true">
 					<cfinvokeargument name="moduleListsWithPermissions" value="true">

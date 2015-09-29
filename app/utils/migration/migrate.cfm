@@ -100,6 +100,7 @@
 							<option value="3.0.3">3.0.3 Registro de descarga de archivos y pestaña estadísticas administración</option>
 							<option value="3.0.4">3.0.4 Tipologías de usuarios, nueva pestaña tipologías administración</option>
 							<option value="3.1">3.1 Categorías de elementos, notificaciones agrupadas, notificaciones web, deshabilitar notificaciones</option>
+							<option value="3.2">3.2 Archivos adjuntos de listas y formularios, página de inicio personalizada y nuevo elemento boletín</option>
 						</select>
 					</div>
 

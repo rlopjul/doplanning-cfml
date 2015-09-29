@@ -62,11 +62,11 @@ CREATE TABLE `hcs_users_typologies_fields` (
 
 
 
-ALTER TABLE `dp_hcs`.`hcs_users` 
+ALTER TABLE `dp_hcs`.`hcs_users`
 ADD COLUMN `typology_id` INT(11) UNSIGNED NULL AFTER `information`,
 ADD COLUMN `typology_row_id` INT(11) UNSIGNED NULL AFTER `typology_id`,
 ADD INDEX `hcs_users_ibfk_2_idx` (`typology_id` ASC);
-ALTER TABLE `dp_hcs`.`hcs_users` 
+ALTER TABLE `dp_hcs`.`hcs_users`
 ADD CONSTRAINT `hcs_users_ibfk_2`
   FOREIGN KEY (`typology_id`)
   REFERENCES `dp_hcs`.`hcs_users_typologies` (`id`)
@@ -74,8 +74,8 @@ ADD CONSTRAINT `hcs_users_ibfk_2`
   ON UPDATE NO ACTION;
 
 
-ALTER TABLE `nextmicro_areas` 
-ADD COLUMN `item_type_16_enabled` TINYINT(4) NOT NULL DEFAULT '1' AFTER `item_type_15_enabled`;
+ALTER TABLE `nextmicro_areas`
+ADD COLUMN `item_type_16_enabled` TINYINT(1) NOT NULL DEFAULT '1' AFTER `item_type_15_enabled`;
 
 
 CREATE TABLE `hcs_users_typologies_rows_areas` (

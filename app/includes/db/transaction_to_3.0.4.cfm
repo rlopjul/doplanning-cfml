@@ -3,9 +3,9 @@
 <cfif checkVersion IS true>
 
 	<cfquery datasource="#client_datasource#" name="isDbDp304">
-		SELECT * 
-		FROM information_schema.COLUMNS 
-		WHERE TABLE_SCHEMA = 'dp_#new_client_abb#' 
+		SELECT *
+		FROM information_schema.COLUMNS
+		WHERE TABLE_SCHEMA = 'dp_#new_client_abb#'
 		AND TABLE_NAME = '#new_client_abb#_users_typologies_rows_areas';
 	</cfquery>
 
@@ -16,7 +16,7 @@
 	<cfoutput>
 		Cliente #new_client_abb# ya migrado anteriormente a versión #version_id#<br/><br/>
 	</cfoutput>
-	
+
 <cfelse>
 
 	<cfoutput>
@@ -104,19 +104,19 @@
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
-			ALTER TABLE `#new_client_abb#_users` 
+			ALTER TABLE `#new_client_abb#_users`
 			ADD COLUMN `typology_id` INT(11) UNSIGNED NULL AFTER `information`,
 			ADD COLUMN `typology_row_id` INT(11) UNSIGNED NULL AFTER `typology_id`,
 			ADD INDEX `#new_client_abb#_users_ibfk_2_idx` (`typology_id` ASC);
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
-			ALTER TABLE `#new_client_abb#_areas` 
-			ADD COLUMN `item_type_16_enabled` TINYINT(4) NOT NULL DEFAULT '1' AFTER `item_type_15_enabled`;
+			ALTER TABLE `#new_client_abb#_areas`
+			ADD COLUMN `item_type_16_enabled` TINYINT(1) NOT NULL DEFAULT '1' AFTER `item_type_15_enabled`;
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
-			ALTER TABLE `#new_client_abb#_users` 
+			ALTER TABLE `#new_client_abb#_users`
 			ADD CONSTRAINT `#new_client_abb#_users_ibfk_2`
 			  FOREIGN KEY (`typology_id`)
 			  REFERENCES `dp_#new_client_abb#`.`#new_client_abb#_users_typologies` (`id`)
@@ -128,7 +128,7 @@
 			<cfoutput>
 				<b>#new_client_abb# NO migrado a versión #version_id#</b><br/>
 				<cfdump var="#cfcatch#">
-			</cfoutput> 
+			</cfoutput>
 		</cfcatch>
 
 	</cftry>

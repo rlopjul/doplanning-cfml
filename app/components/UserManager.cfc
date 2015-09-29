@@ -1226,6 +1226,8 @@
 		<cfargument name="notify_new_form_row" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_form_view" type="boolean" required="false" default="false">
 		<cfargument name="notify_new_pubmed" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_dp_document" type="boolean" required="false" default="false">
+		<cfargument name="notify_new_mailing" type="boolean" required="false" default="false">
 
 		<cfargument name="notify_delete_file" type="boolean" required="false" default="false">
 		<cfargument name="notify_lock_file" type="boolean" required="false" default="false">
@@ -1296,6 +1298,12 @@
 					, notify_new_form = <cfqueryparam value="#arguments.notify_new_form#" cfsqltype="cf_sql_bit">
 					, notify_new_form_row = <cfqueryparam value="#arguments.notify_new_form_row#" cfsqltype="cf_sql_bit">
 					, notify_new_form_view = <cfqueryparam value="#arguments.notify_new_form_view#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif APPLICATION.moduleDPDocuments IS true>
+					, notify_new_dp_document = <cfqueryparam value="#arguments.notify_new_dp_document#" cfsqltype="cf_sql_bit">
+					</cfif>
+					<cfif APPLICATION.moduleMailing IS true>
+					, notify_new_mailing = <cfqueryparam value="#arguments.notify_new_mailing#" cfsqltype="cf_sql_bit">
 					</cfif>
 					, notify_new_user_in_area = <cfqueryparam value="#arguments.notify_new_user_in_area#" cfsqltype="cf_sql_bit">
 					, notify_been_associated_to_area = <cfqueryparam value="#arguments.notify_been_associated_to_area#" cfsqltype="cf_sql_bit">
@@ -3371,6 +3379,7 @@
 				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
+				<cfinvokeargument name="withMailings" value="#APPLICATION.moduleMailing#">
 
 				<cfinvokeargument name="onlyUsers" value="true">
 

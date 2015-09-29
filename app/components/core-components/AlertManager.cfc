@@ -1,4 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2014--->
+<!---Copyright Era7 Information Technologies 2007-2015--->
 <cfcomponent output="false">
 
 	<cfset component = "AlertManager">
@@ -982,7 +982,7 @@
 
 	<!--- --------------------------- getHeadContent --------------------------- --->
 
-	<cffunction name="getHeadContent" access="private" returntype="string">
+	<cffunction name="getHeadContent" access="public" returntype="string">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="client_abb" type="string" required="true">
 
@@ -2025,7 +2025,7 @@
 
 			<cfif isDate(arguments.userLastDigestDate)>
 
-				<cfset lastDigestDate = arguments.userLastDigestDate>
+				<cfset lastDigestDate = createDate(year(arguments.userLastDigestDate), month(arguments.userLastDigestDate), day(arguments.userLastDigestDate))>
 
 			<cfelse>
 
@@ -2055,6 +2055,12 @@
 			</cfif>
 
 			<cfset daysBetweenLastDigest = dateDiff("d", lastDigestDate, currentDigestDate)>
+
+			<!---<cfoutput>
+				lastDigestDate: #lastDigestDate#<br/>
+				currentDigestDate: #currentDigestDate#<br/>
+				daysBetweenLastDigest: #daysBetweenLastDigest#<br/>
+			</cfoutput>--->
 
 			<cfswitch expression="#arguments.notificationsDigestTypeId#">
 
@@ -2133,13 +2139,15 @@
 
 				<cftry>
 
-					<!--- ------ PROVISIONAL ---- --->
-					<cfif client_abb EQ "hcs" OR client_abb EQ "bioinformatics7">
+					<!--- ------ PROVISIONAL ----
+					<cfif client_abb EQ "hcs" OR client_abb EQ "bioinformatics7">--->
 
 					<!---<cfset forceNotifications = getClientsQuery.force_notifications>--->
 
 					<!--- getAllUsers --->
 					<cfinvoke component="UserQuery" method="getAllUsersWithPreferences" returnvariable="getAllUsersQuery">
+						<cfinvokeargument name="parse_dates" value="false">
+
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
@@ -2416,7 +2424,7 @@
 					</cfloop><!--- END loop query="getAllUsersQuery" --->
 
 
-					</cfif><!--- END client_abb EQ "hcs" --->
+					<!---</cfif> END client_abb EQ "hcs" --->
 
 					<cfcatch>
 						<cfinclude template="includes/errorHandler.cfm">

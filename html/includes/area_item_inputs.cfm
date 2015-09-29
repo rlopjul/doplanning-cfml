@@ -245,13 +245,13 @@
 	</cfif>
 
 
-	<cfif isDefined("objectItem.id") AND read_only IS false>
+	<cfif isDefined("item_id") AND read_only IS false>
 
 		function deleteAttachedFile() {
 
 			if(confirmAction('eliminar el archivo adjunto')) {
 
-				goToUrl("#delete_attached_file_action#&item_id=#objectItem.id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#objectItem.id#')#");
+				goToUrl("#delete_attached_file_action#&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#item_id#')#");
 
 			}
 			return false;
@@ -261,7 +261,7 @@
 
 			if(confirmAction('eliminar la imagen adjunta')) {
 
-				goToUrl("#delete_attached_image_action#&item_id=#objectItem.id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#objectItem.id#')#");
+				goToUrl("#delete_attached_image_action#&item_id=#item_id#&area_id=#area_id#&itemTypeId=#itemTypeId#&return_page=#URLEncodedFormat('#CGI.SCRIPT_NAME#?#itemTypeName#=#item_id#')#");
 
 			}
 			return false;
@@ -285,7 +285,7 @@
 <script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 
-<cfif itemTypeId IS 1 OR itemTypeId IS 7>
+<cfif itemTypeId IS 1 OR itemTypeId IS 7 OR itemTypeId IS 17>
 	<cfset t_title = "Asunto">
 <cfelse>
 	<cfset t_title = "Título">
@@ -318,6 +318,8 @@
 		<cfset t_estimated_value = "Valor estimado">
 		<cfset t_real_value = "Valor real">
 	</cfif>
+<cfelse>
+	<cfset t_email_addresses = "Destinatarios para pruebas">
 </cfif>
 <cfif itemTypeId IS 5 OR itemTypeId IS 8>
 	<cfset t_price = "Valor">
@@ -363,7 +365,7 @@
 <cfif itemTypeId IS NOT 7 OR NOT isDefined("parent_kind") OR parent_kind EQ "area">
 <div class="row">
 	<div class="col-xs-12 col-md-12"><!---<cfif APPLICATION.hideInputLabels IS false>control-label<cfelse>sr-only</cfif>--->
-		<label class="control-label" for="item_title" <cfif itemTypeId IS 1>style="font-size:18px;"</cfif>><span lang="es">#t_title#</span> <span lang="es">#itemTypeNameEs#</span>: <cfif title_required IS true>*</cfif></label>
+		<label class="control-label" for="item_title" <cfif itemTypeId IS 1>style="font-size:18px;"</cfif>><span lang="es">#t_title#</span> <cfif itemTypeId NEQ 17><span lang="es">#itemTypeNameEs#</span><cfelse><span lang="es">del email</span></cfif>: <cfif title_required IS true>*</cfif></label>
 		<div>
 			<cfinput type="text" name="title" id="item_title" value="#objectItem.title#" required="#title_required#" message="#t_title# requerido" passthrough="#passthrough# lang='es'" class="form-control">
 		</div>
@@ -627,6 +629,7 @@
 
 </cfif>
 
+
 <cfif itemTypeId IS 5><!---Events--->
 <div class="row">
 	<div class="col-md-3">
@@ -756,14 +759,88 @@
 	</div>
 </div>
 
+
+<cfif itemTypeId IS 17><!--- Mailing --->
+
+	<cfif page_type IS 1>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/ItemTemplate" method="getTemplates" returnvariable="getTemplates">
+		</cfinvoke>
+
+		<cfset mailingTemplate = getTemplates.templates>
+
+		<cfif mailingTemplate.recordCount GT 0>
+
+			<!---<cfset querySetCell(objectItem, template_id, mailingTemplate.template_id )>
+			<cfset querySetCell(objectItem, content_styles, mailingTemplate.content_styles )>
+			<cfset querySetCell(objectItem, head_content, mailingTemplate.head_content )>
+			<cfset querySetCell(objectItem, foot_content, mailingTemplate.foot_content )>--->
+
+			<cfset objectItem.template_id = mailingTemplate.template_id>
+			<cfset objectItem.content_styles = mailingTemplate.content_styles>
+			<cfset objectItem.head_content = mailingTemplate.head_content>
+			<cfset objectItem.foot_content = mailingTemplate.foot_content>
+
+		<cfelse>
+
+			<!---<cfset querySetCell(objectItem, template_id, "" )>
+			<cfset querySetCell(objectItem, content_styles, "" )>
+			<cfset querySetCell(objectItem, head_content, "" )>
+			<cfset querySetCell(objectItem, foot_content, "" )>--->
+
+			<cfset objectItem.template_id = "">
+			<cfset objectItem.content_styles = "">
+			<cfset objectItem.head_content = "">
+			<cfset objectItem.foot_content = "">
+
+		</cfif>
+
+	</cfif>
+
+	<input type="hidden" name="template_id" value="#objectItem.template_id#" />
+	<input type="hidden" name="content_styles" value="#objectItem.content_styles#" />
+
+	<div class="row">
+		<div class="col-md-12" style="margin-bottom:10px;">
+				<label for="head_content" lang="es">Encabezado del email:</label>
+				<textarea name="head_content" id="head_content" class="form-control" style="height:200px;" readonly="readonly">#objectItem.head_content#</textarea>
+		</div>
+	</div>
+
+
+</cfif>
+
 <div class="row">
 
 	<div class="col-md-12">
-		<label class="sr-only" for="summernote" lang="es">Contenido</label>
+
+		<cfif itemTypeId IS 17>
+			<label for="summernote" lang="es">Contenido del email:</label>
+		<cfelse>
+			<label class="sr-only" for="summernote" lang="es">Contenido</label>
+		</cfif>
+
 <!---style="margin-bottom:10px; margin-top:5px;"---><textarea name="description" class="form-control summernote" id="summernote" style="height:200px;" <cfif read_only IS true>readonly="readonly"</cfif>>#objectItem.description#</textarea>
+
 	</div>
 
 </div>
+
+<cfif itemTypeId IS 17><!--- Mailing --->
+
+	<div class="row">
+		<div class="col-md-12" style="margin-top:10px;">
+			<cfif itemTypeId IS 17>
+				<label for="foot_content" lang="es">Pie del email:</label>
+			</cfif>
+			<textarea name="foot_content" id="foot_content" class="form-control" style="height:200px;" readonly="readonly">#objectItem.foot_content#</textarea>
+			<cfif itemTypeId IS 17><!---Mailing--->
+				<small class="help-block" lang="es">Si aplicas formato al contenido del email, el aspecto que visualizará el usuario podrá variar dependiendo de su cliente de correo.</small>
+			</cfif>
+		</div>
+	</div>
+
+</cfif>
 
 <div class="row">
 	<div class="col-xs-12">
@@ -775,7 +852,7 @@
 
 <cfif read_only IS false>
 
-	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9 AND itemTypeId IS NOT 20>
+	<cfif itemTypeId IS NOT 3 AND itemTypeId IS NOT 9 AND itemTypeId IS NOT 20 AND itemTypeId IS NOT 17>
 
 		<cfif isDefined("objectItem.attached_file_name") AND len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">
 
@@ -826,7 +903,7 @@
 
 	</cfif>
 
-	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 20>
+	<cfif APPLICATION.moduleWeb IS true AND itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 20 AND itemTypeId IS NOT 17>
 
 		<cfif isDefined("objectItem.attached_image_name") AND len(objectItem.attached_image_name) GT 0 AND objectItem.attached_image_name NEQ "-">
 
@@ -877,7 +954,7 @@
 </cfif>
 
 
-<cfif itemTypeId IS NOT 20><!--- IS NOT DoPlanning Document --->
+<cfif itemTypeId IS NOT 20 AND itemTypeId IS NOT 17><!--- IS NOT DoPlanning Document OR Mailings --->
 
 	<div class="row">
 
@@ -890,7 +967,7 @@
 
 	</div>
 
-	<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7><!---IS NOT Messages, Tasks OR Consultations--->
+	<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7 AND itemTypeId IS NOT 17><!---IS NOT Messages, Tasks, Consultations OR Mailings--->
 
 	<div class="row">
 
@@ -909,6 +986,43 @@
 	</cfif>
 
 </cfif>
+
+<cfif itemTypeId IS 17><!--- Mailings --->
+
+	<div class="row">
+		<div class="col-md-12">
+			<label class="control-label" for="email_addresses"><span lang="es">#t_email_addresses#</span>:</label>
+			<cfinput type="text" name="email_addresses" id="email_addresses" class="form-control" value="#objectItem.email_addresses#" passthrough="#passthrough#">
+			<cfif itemTypeId IS 17>
+				<small class="help-block" lang="es">Introduce la lista de direcciones de email separadas por ; (hasta 5 direcciones).</small>
+			</cfif>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="send_to_test_users" id="send_to_test_users" value="true" <cfif NOT isDefined("objectItem.send_to_test_users") OR objectItem.send_to_test_users IS true>checked="checked"</cfif> /> <span lang="es">Enviar prueba a destinatarios para pruebas</span>
+				</label>
+				<small class="help-block" lang="es">Si seleccionas esta opción se enviará el boletín a los destinatarios anteriores, podrá modificarlo y volver a enviarlo posteriormente.</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="send_to_area_users" id="send_to_area_users" value="true" <cfif isDefined("objectItem.send_to_area_users") AND objectItem.send_to_area_users IS true>checked="checked"</cfif> /> <span lang="es">Enviar boletín</span>
+				</label>
+				<small class="help-block" lang="es">CUIDADO: Si seleccionas esta opción se enviará de forma definitiva el boletín a todos los usuarios del área y ya no podrá modificarlo.</small>
+			</div>
+		</div>
+	</div>
+
+</cfif>
+
 
 <!---Categories--->
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_categories_inputs.cfm">
@@ -1040,7 +1154,7 @@
 	</cfif>
 </cfif>
 
-<cfif itemTypeId NEQ 1>
+<cfif itemTypeId NEQ 1 AND itemTypeId NEQ 17>
 
 	<!--- getClient --->
 	<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
@@ -1055,7 +1169,7 @@
 					<label>
 						<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectItem.no_notify") AND objectItem.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
 					</label>
-					<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+					<small class="help-block" lang="es">Si seleccionas esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
 				</div>
 			</div>
 		</div>
@@ -1111,6 +1225,16 @@
 
 <cfelse>
 
+	<!---<cfif itemTypeId IS 17 AND len(objectItem.content_styles) GT 0>
+		<cfoutput>
+			<script>
+				CKEDITOR.on( 'instanceReady', function( event ){
+						event.editor.addCss("body{ #objectItem.content_styles# }");
+				});
+			</script>
+		</cfoutput>
+	</cfif>--->
+
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
 		<cfinvokeargument name="name" value="description">
 		<cfinvokeargument name="language" value="#SESSION.user_language#"/>
@@ -1119,10 +1243,58 @@
 			<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
 			<cfinvokeargument name="toolbarCanCollapse" value="true"/>
 		</cfif>--->
-		<cfif itemTypeId IS 20><!--- DoPlanning Document --->
+		<cfif itemTypeId IS 20 OR itemTypeId IS 17><!--- DoPlanning Document --->
 			<cfinvokeargument name="height" value="500"/>
 			<cfinvokeargument name="toolbar" value="DP_document"/>
 		</cfif>
+	</cfinvoke>
+
+</cfif>
+
+<cfif itemTypeId IS 17><!--- Mailing --->
+
+	<cfoutput>
+		<cfif page_type IS 1>
+
+			<cfif isDefined("mailingTemplate.template_id") AND isNumeric(mailingTemplate.template_id)>
+				<script>
+					CKEDITOR.config.contentsCss = '#APPLICATION.htmlPath#/mailing_styles.cfm?template=#mailingTemplate.template_id#';
+				</script>
+			</cfif>
+
+		<cfelse>
+
+			<script>
+				CKEDITOR.config.contentsCss = '#APPLICATION.htmlPath#/mailing_styles.cfm?mailing=#item_id#';
+			</script>
+
+		</cfif>
+	</cfoutput>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+		<cfinvokeargument name="name" value="head_content">
+		<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+		<cfinvokeargument name="height" value="100"/>
+		<cfinvokeargument name="toolbar" value="DP_document"/>
+		<cfinvokeargument name="readOnly" value="true"/>
+		<cfinvokeargument name="toolbarCanCollapse" value="true"/>
+		<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+		<cfinvokeargument name="removePlugins" value="elementspath,wordcount,toolbar"/>
+		<cfinvokeargument name="allowedContent" value="true">
+		<cfinvokeargument name="resize_enabled" value="false">
+	</cfinvoke>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+		<cfinvokeargument name="name" value="foot_content">
+		<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+		<cfinvokeargument name="height" value="100"/>
+		<cfinvokeargument name="toolbar" value="DP_document"/>
+		<cfinvokeargument name="readOnly" value="true"/>
+		<cfinvokeargument name="toolbarCanCollapse" value="true"/>
+		<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+		<cfinvokeargument name="removePlugins" value="elementspath,wordcount,toolbar"/>
+		<cfinvokeargument name="allowedContent" value="true">
+		<cfinvokeargument name="resize_enabled" value="false">
 	</cfinvoke>
 
 </cfif>

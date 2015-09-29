@@ -30,6 +30,14 @@
 	<!--- <cfset timeZoneTo = "+1:00"> --->
 	<cfset timeZoneTo = "Europe/Madrid">
 
+	<cfset LAST_UPDATE_TYPE_ITEM = "item">
+
+	<cfset CREATED_STATE = "created">
+	<cfset MODIFIED_STATE = "modified">
+	<cfset SENT_TO_TEST_STATE = "sent_to_test">
+	<cfset SENT_STATE = "sent">
+
+
 	<!--- ----------------------- XML ITEM -------------------------------- --->
 
 	<cffunction name="xmlItem" returntype="string" access="public">
@@ -557,18 +565,21 @@
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
+		<cfargument name="email_addresses" type="string" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
+		<cfargument name="template_id" type="numeric" required="false">
+		<cfargument name="head_content" type="string" required="false">
+		<cfargument name="foot_content" type="string" required="false">
+		<cfargument name="content_styles" type="string" required="false">
+		<cfargument name="send_to_area_users" type="boolean" required="false" default="false">
+		<cfargument name="send_to_test_users" type="boolean" required="false" default="false">
 
 		<cfset var method = "createItem">
 
 		<cfset var response = structNew()>
-
-		<!--- <cfset var parent_kind = "">
-		<cfset var parent_id = "">
-		<cfset var area_id = "">--->
 
 		<cfset var item_id = "">
 		<cfset var area_type = "">
@@ -580,11 +591,6 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-
-			<!---checkAreaAccess--->
-			<!---<cfif arguments.parent_kind EQ "area">
-
-				<cfset area_id = arguments.parent_id>--->
 
 			<cfif arguments.parent_kind NEQ "area">
 
@@ -605,7 +611,7 @@
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
 
-			<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
+			<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 17><!---Lists, Forms, Typologies, Mailings--->
 
 				<!---checkAreaResponsibleAccess--->
 				<cfif isUserAreaResponsible IS false>
@@ -617,7 +623,7 @@
 				</cfif>
 
 				<!--- Scope --->
-				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13>
+				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13 AND itemTypeId IS NOT 17>
 
 					<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isTableInScopeResult">
 						<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
@@ -644,8 +650,6 @@
 				<cfinclude template="includes/checkAreaAccess.cfm">
 
 			</cfif>
-
-			<!---<cfset objectItem.area_id = area_id>---><!---Esta variable se utiliza despues para enviar las ALERTAS--->
 
 			<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -712,8 +716,6 @@
 
 			</cfif>
 
-			<!---<cfset objectItem.user_full_name = "#getUserData.family_name# #getUserData.name#">--->
-
 
 			<cfif itemTypeId IS 6><!---Tasks--->
 
@@ -731,18 +733,7 @@
 
 				</cfif>
 
-				<!---<cfset objectItem.recipient_user_full_name = "#getRecipientUserData.family_name# #getRecipientUserData.name#">--->
-
 			</cfif>
-
-			<!---Status of item--->
-			<!---<cfif NOT isDefined("xmlItem.item.attached_file_name.xmlText") OR len(xmlItem.item.attached_file_name.xmlText) IS 0 OR xmlItem.item.xmlAttributes.attached_file_id EQ "NULL">--->
-			<!---<cfif len(objectItem.attached_file_name) IS 0 OR objectItem.attached_file_id IS "NULL"
-				OR objectItem.attached_image_id IS "NULL">
-				<cfset status = "pending">
-			<cfelse>
-				<cfset status = "ok">
-			</cfif>--->
 
 			<cfset arguments.title = trim(arguments.title)>
 
@@ -842,6 +833,21 @@
 						</cfif>
 					</cfif>
 
+					<cfif itemTypeId IS 17><!--- Mailing --->
+						, email_addresses = <cfqueryparam value="#arguments.email_addresses#" cfsqltype="cf_sql_varchar">
+						, template_id = <cfqueryparam value="#arguments.template_id#" cfsqltype="cf_sql_longvarchar">
+						, head_content = <cfqueryparam value="#arguments.head_content#" cfsqltype="cf_sql_longvarchar">
+						, foot_content = <cfqueryparam value="#arguments.foot_content#" cfsqltype="cf_sql_longvarchar">
+						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
+						<cfif arguments.send_to_area_users IS true>
+							, state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">
+						<cfelseif arguments.send_to_test_users IS true AND listLen(arguments.email_addresses,";") GT 0>
+							, state = <cfqueryparam value="#SENT_TO_TEST_STATE#" cfsqltype="cf_sql_varchar">
+						<cfelse>
+							, state = <cfqueryparam value="#CREATED_STATE#" cfsqltype="cf_sql_varchar">
+						</cfif>
+					</cfif>
+
 					<cfif isDefined("arguments.sub_type_id")>
 						, sub_type_id = <cfqueryparam value="#arguments.sub_type_id#" cfsqltype="cf_sql_integer">
 					</cfif>
@@ -898,10 +904,6 @@
 
 			</cftransaction>
 
-			<!---<cfif itemTypeId IS NOT 4>
-				<cfset objectItem.creation_date = stringCurrentDate>
-			</cfif>--->
-
 			<cfif arguments.itemTypeId IS 7 AND arguments.parent_kind NEQ "area" AND parent_state NEQ "answered"><!---Consultations--->
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="updateItemState">
@@ -926,7 +928,26 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-				<cfif arguments.no_notify IS false>
+
+				<cfif arguments.itemTypeId EQ 17><!---Mailing--->
+
+					<cfif arguments.send_to_area_users IS true OR arguments.send_to_test_users IS true>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/MailingManager" method="sendMailing">
+							<cfinvokeargument name="objectItem" value="#itemQuery#">
+							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+							<cfinvokeargument name="send_to_area_users" value="#arguments.send_to_area_users#">
+							<cfinvokeargument name="send_to_test_users" value="#arguments.send_to_test_users#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif>
+
+				<cfelseif arguments.no_notify IS false>
 
 					<!--- Alert --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
@@ -976,7 +997,6 @@
 	<!--- ----------------------- UPDATE ITEM -------------------------------- --->
 
 	<cffunction name="updateItem" returntype="struct" output="false" access="public">
-		<!---<cfargument name="objectItem" type="struct" required="true">--->
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="status" type="string" required="false" default="ok"><!---pending/ok--->
@@ -1007,11 +1027,18 @@
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
+		<cfargument name="email_addresses" type="string" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
 		<cfargument name="unlock" type="boolean" required="false" default="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
+		<cfargument name="template_id" type="numeric" required="false">
+		<cfargument name="head_content" type="string" required="false">
+		<cfargument name="foot_content" type="string" required="false">
+		<cfargument name="content_styles" type="string" required="false">
+		<cfargument name="send_to_area_users" type="boolean" required="false" default="false">
+		<cfargument name="send_to_test_users" type="boolean" required="false" default="false">
 
 
 		<cfset var method = "updateItem">
@@ -1074,6 +1101,18 @@
 
 			</cfif>
 
+			<cfif itemTypeId IS 17><!--- Mailing --->
+
+				<cfif getItemObject.state EQ SENT_STATE>
+
+					<cfset response_message = "No se puede modificar un boletín enviado">
+					<cfset response = {result=false, message=response_message}>
+					<cfreturn response>
+
+				</cfif>
+
+			</cfif>
+
 			<!--- isUserAreaResponsible --->
 			<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
 				<cfinvokeargument name="area_id" value="#getItemObject.area_id#">
@@ -1103,7 +1142,7 @@
 					<cfthrow errorcode="#error_code#">
 				</cfif>
 
-			<cfelseif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
+			<cfelseif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 17><!---Lists, Forms, Typologies, Mailings--->
 
 				<!---checkAreaResponsibleAccess--->
 				<cfif isUserAreaResponsible IS false>
@@ -1115,7 +1154,7 @@
 				</cfif>
 
 				<!--- Scope --->
-				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13>
+				<cfif APPLICATION.publicationScope IS true AND isDefined("arguments.publication_scope_id") AND itemTypeId IS NOT 13 AND itemTypeId IS NOT 17>
 
 					<cfinvoke component="ScopeManager" method="isAreaInScope" returnvariable="isTableInScopeResult">
 						<cfinvokeargument name="scope_id" value="#arguments.publication_scope_id#">
@@ -1299,6 +1338,22 @@
 						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
 						</cfif>
 					</cfif>
+
+					<cfif itemTypeId IS 17><!--- Mailing --->
+						, email_addresses = <cfqueryparam value="#arguments.email_addresses#" cfsqltype="cf_sql_varchar">
+						, template_id = <cfqueryparam value="#arguments.template_id#" cfsqltype="cf_sql_longvarchar">
+						, head_content = <cfqueryparam value="#arguments.head_content#" cfsqltype="cf_sql_longvarchar">
+						, foot_content = <cfqueryparam value="#arguments.foot_content#" cfsqltype="cf_sql_longvarchar">
+						, content_styles = <cfqueryparam value="#arguments.content_styles#" cfsqltype="cf_sql_varchar">
+						<cfif arguments.send_to_area_users IS true>
+							, state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">
+						<cfelseif arguments.send_to_test_users IS true AND listLen(arguments.email_addresses,";") GT 0>
+							, state = <cfqueryparam value="#SENT_TO_TEST_STATE#" cfsqltype="cf_sql_varchar">
+						<cfelse>
+							, state = <cfqueryparam value="#MODIFIED_STATE#" cfsqltype="cf_sql_varchar">
+						</cfif>
+					</cfif>
+
 					<cfif isDefined("arguments.sub_type_id")>
 						, sub_type_id = <cfqueryparam value="#arguments.sub_type_id#" cfsqltype="cf_sql_integer">
 					</cfif>
@@ -1358,7 +1413,25 @@
 
 				</cfif>
 
-				<cfif arguments.no_notify IS false>
+				<cfif arguments.itemTypeId EQ 17><!---Mailing--->
+
+					<cfif arguments.send_to_area_users IS true OR arguments.send_to_test_users IS true>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/MailingManager" method="sendMailing">
+							<cfinvokeargument name="objectItem" value="#itemQuery#">
+							<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+							<cfinvokeargument name="send_to_area_users" value="#arguments.send_to_area_users#">
+							<cfinvokeargument name="send_to_test_users" value="#arguments.send_to_test_users#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif>
+
+				<cfelseif arguments.no_notify IS false>
 
 					<!--- Alert --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
@@ -2350,6 +2423,10 @@
 				<cfset objectItem.area_editable = false>
 			</cfif>
 
+			<cfif itemTypeId IS 17><!---Mailings--->
+				<cfset objectItem.email_addresses = "">
+			</cfif>
+
 			<cfset objectItem.sub_type_id = -1>
 
 			<cfset response = {result=true, item=#objectItem#}>
@@ -2904,7 +2981,7 @@
 
 			<cfif itemQuery.recordCount IS 0><!---Item does not exist--->
 
-				<cfset error_code = 601>
+				<cfset error_code = 501>
 
 				<cfthrow errorcode="#error_code#">
 
@@ -2983,6 +3060,119 @@
 			</cfinvoke>--->
 
 			<cfset response = {result=true, item_id=#arguments.item_id#, lock=arguments.lock}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+	<!---  ------------------------------------------------------------------------ --->
+
+
+
+
+	<!---  ---------------------- sendAreaItem -------------------------------- --->
+
+	<cffunction name="sendAreaItem" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="send_to_test_users" type="boolean" required="false">
+
+		<cfset var method = "sendAreaItem">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+		<cfset var itemQuery = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif itemQuery.recordCount IS 0><!---Item does not exist--->
+
+				<cfset error_code = 501>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cfset area_id = itemQuery.area_id>
+
+			<!--- isUserAreaResponsible --->
+			<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
+				<cfinvokeargument name="area_id" value="#area_id#">
+			</cfinvoke>
+
+			<!---checkAreaResponsibleAccess--->
+			<cfif isUserAreaResponsible IS false>
+
+				<cfset error_code = 105>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cfif itemQuery.state EQ SENT_STATE>
+
+				<cfset response = {result=false, message="No se puede enviar de nuevo, el boletín ya ha sido enviado."}>
+				<cfreturn response>
+
+			<cfelse>
+
+				<cfif itemQuery.user_in_charge NEQ SESSION.user_id>
+
+					<cfset response = {result=false, message="No tiene permiso para enviar el boletín."}>
+					<cfreturn response>
+
+				</cfif>
+
+			</cfif>
+
+
+			<!---Mailing--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/MailingManager" method="sendMailing">
+				<cfinvokeargument name="objectItem" value="#itemQuery#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+				<cfinvokeargument name="send_to_area_users" value="true">
+				<cfinvokeargument name="send_to_test_users" value="#arguments.send_to_test_users#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+
+			<cfquery name="changeAreaState" datasource="#client_dsn#">
+				UPDATE `#client_abb#_#itemTypeTable#`
+				SET	state = <cfqueryparam value="#SENT_STATE#" cfsqltype="cf_sql_varchar">
+				, last_update_date = NOW()
+				, last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, item_id=#arguments.item_id#}>
 
 			<cfcatch>
 
@@ -3138,7 +3328,7 @@
 
 				</cfif>
 
-				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16><!---List, Forms, Typologies, Users typologies--->
+				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16 OR itemTypeId IS 17><!---List, Forms, Typologies, Users typologies, Mailings--->
 
 					<!---checkAreaResponsibleAccess--->
 					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
@@ -3840,6 +4030,7 @@
 				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
+				<cfinvokeargument name="withMailings" value="#APPLICATION.moduleMailing#">
 
 				<cfinvokeargument name="full_content" value="#arguments.full_content#">
 
@@ -3897,6 +4088,7 @@
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
 				<cfinvokeargument name="withArea" value="#arguments.withArea#">
+				<cfinvokeargument name="withMailings" value="#APPLICATION.moduleMailing#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

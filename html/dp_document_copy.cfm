@@ -25,7 +25,7 @@
 </cfif>
 
 
- 
+
 <!---<cfoutput>
 <cfif APPLICATION.title EQ "DoPlanning">
 	<div style="float:left; padding-top:2px;">
@@ -45,20 +45,20 @@
 
 
 <div id="wrapper"><!--- wrapper --->
-        
+
 	<!---<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
 				<h1></h1>
 				<p></p>
-							
+
 			</div>
 		</div>
 	</div>--->
 
 	<!---<div class="div_contenedor_contenido">--->
-	
-	
+
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_client_head.cfm">
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_head.cfm">
@@ -72,9 +72,6 @@
 <cfset itemTypeId = 20>
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_copy.cfm">
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
-	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>
 <!-- InstanceEndEditable -->
 	</div>
 
@@ -82,7 +79,7 @@
 
 
 	<!---</div>--->
-	
+
 </div>
 <!--- END wrapper --->
 

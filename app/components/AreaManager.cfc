@@ -336,9 +336,6 @@
 
 
 
-
-
-
 	<!--- -------------------------- CHECK ADMIN ACCESS -------------------------------- --->
 	<!---Comprueba si el usuario es el administrador de la organización y si no lanza un error--->
 
@@ -2029,6 +2026,7 @@
 		<cfargument name="item_type_14_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_15_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_16_enabled" type="boolean" required="false" default="false"/>
+		<cfargument name="item_type_17_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_20_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
@@ -2066,6 +2064,7 @@
 			item_type_14_enabled = <cfqueryparam value="#arguments.item_type_14_enabled#" cfsqltype="cf_sql_bit">,
 			item_type_15_enabled = <cfqueryparam value="#arguments.item_type_15_enabled#" cfsqltype="cf_sql_bit">,
 			item_type_16_enabled = <cfqueryparam value="#arguments.item_type_16_enabled#" cfsqltype="cf_sql_bit">,
+			item_type_17_enabled = <cfqueryparam value="#arguments.item_type_17_enabled#" cfsqltype="cf_sql_bit">,
 			item_type_20_enabled = <cfqueryparam value="#arguments.item_type_20_enabled#" cfsqltype="cf_sql_bit">,
 			users_visible = <cfqueryparam value="#arguments.users_visible#" cfsqltype="cf_sql_bit">,
 			read_only = <cfqueryparam value="#arguments.read_only#" cfsqltype="cf_sql_bit">
@@ -2111,6 +2110,7 @@
 		<cfargument name="item_type_14_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_15_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_16_enabled" type="boolean" required="false" default="false"/>
+		<cfargument name="item_type_17_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="item_type_20_enabled" type="boolean" required="false" default="false"/>
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
@@ -3749,41 +3749,6 @@
 
 	</cffunction>
 
-	<!--- ----------------------- createAreaImage -------------------------------- --->
-	<!---Este método no se usa pero más adelante debería usarse--->
-	<!---
-	<cffunction name="createAreaImage" returntype="string" output="false" access="public">
-			<cfargument name="request" type="string" required="yes">
-
-			<cfset var method = "createAreaImage">
-
-			<!---<cfinclude template="includes/initVars.cfm">--->
-
-			<cftry>
-
-				<cfinclude template="includes/functionStart.cfm">
-
-				<cfinvoke component="FileManager" method="createImageFile" returnvariable="xmlResponseContent">
-					<cfinvokeargument name="file" value="#xmlRequest.request.parameters.file#">
-					<cfinvokeargument name="type" value="area_image">
-					<cfinvokeargument name="status" value="pending">
-				</cfinvoke>
-
-				<cfinclude template="includes/functionEnd.cfm">
-
-				<cfcatch>
-					<cfset xmlResponseContent = arguments.request>
-					<cfinclude template="includes/errorHandler.cfm">
-				</cfcatch>
-
-			</cftry>
-
-			<cfreturn xmlResponse>
-
-		</cffunction>
-	--->
-
-
 
 	<!--- ----------------------- selectAreaImage -------------------------------- --->
 
@@ -4042,6 +4007,7 @@
 				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
 				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
 				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
+				<cfinvokeargument name="withMailings" value="#APPLICATION.moduleMailing#">
 
 				<cfinvokeargument name="onlyAreas" value="true">
 

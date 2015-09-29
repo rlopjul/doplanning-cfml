@@ -71,6 +71,10 @@ curLangText["es"] = {
 				"name" : "Tipología de usuario",
 				"name_plural" : "Tipologías de usuarios",
 			},
+			"17": {
+				"name" : "Boletín",
+				"name_plural" : "Boletines",
+			},
 			"20": {
 				"name" : "Documento DoPlanning",
 				"name_plural" : "Documentos DoPlanning",
@@ -357,7 +361,15 @@ curLangText["es"] = {
 			"activity_summary_for_user" : "Resumen de actividad para el usuario",
 			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
 
+		},
+
+		"mailing": {
+
+			"unsubscribe_mailing" : "Darse de baja de este boletín",
+			"unsubscribe_text" : "En las preferencias de notificaciones de #APPLICATION.title# puedes deshabilitar el envío de <b>Boletines</b> como este y de cualquier otra notificación que quieras dejar de recibir."
+
 		}
+
 	};
 
 
@@ -434,6 +446,10 @@ curLangText["en"] = {
 			"16": {
 				"name" : "User typology",
 				"name_plural" : "User typologies",
+			},
+			"17": {
+				"name" : "Newsletter",
+				"name_plural" : "Newsletters",
 			},
 			"20": {
 				"name" : "DoPlanning document",
@@ -719,6 +735,15 @@ curLangText["en"] = {
 			"activity_summary_for_user" : "Summary of activity for the user",
 			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
 
+		},
+
+		"mailing": {
+
+			"unsubscribe_mailing" : "Unsubscribe from this newsletter",
+			"unsubscribe_text" : "In the #APPLICATION.title# notification preferences you can disable the sending of <b>newsletters</b> like this and other emails that you want stop receiving."
+
 		}
+
+
 	};
 </cfscript>

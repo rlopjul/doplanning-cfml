@@ -82,6 +82,9 @@
 				<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
 					, items.price
 				</cfif>
+				<cfif itemTypeId IS 17><!--- Mailings --->
+					, items.email_addresses, items.template_id, items.head_content, items.foot_content, items.content_styles, items.state
+				</cfif>
 				<cfif itemTypeWeb IS true><!---WEB--->
 
 					<cfif arguments.parse_dates IS true>
@@ -771,6 +774,7 @@
 
 		<cfargument name="withConsultations" type="boolean" required="false" default="false">
 		<cfargument name="withPubmedsComments" type="boolean" required="false" default="false">
+		<cfargument name="withMailings" type="boolean" required="false" default="false">
 		<cfargument name="withLists" type="boolean" required="false" default="false">
 		<cfargument name="withForms" type="boolean" required="false" default="false">
 		<cfargument name="withFilesTypologies" type="boolean" required="false" default="false">
@@ -822,6 +826,7 @@
 			<cfset var taskColums = "end_date, done, NULL AS locked, NULL AS area_editable">
 			<cfset var pubmedColums = "NULL AS end_date, NULL AS done, NULL AS locked, NULL AS area_editable">
 			<cfset var consultationColums = "NULL AS end_date, NULL AS done, NULL AS locked, NULL AS area_editable">
+			<cfset var mailingColums = "NULL AS end_date, NULL AS done, NULL AS locked, NULL AS area_editable">
 			<cfset var dpDocumentColums = "NULL AS end_date, NULL AS done, locked, area_editable">
 			<cfset var fileColumns = "NULL AS end_date, NULL AS done, locked, NULL AS area_editable">
 
@@ -845,6 +850,7 @@
 				<cfset taskColums = taskColums&", NULL AS place, start_date, NULL AS identifier, NULL AS sub_type_id, NULL AS state, recipient_user">
 				<cfset pubmedColums = pubmedColums&", NULL AS place, NULL AS start_date, identifier, sub_type_id, NULL AS state, NULL AS recipient_user">
 				<cfset consultationColums = consultationColums&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL sub_type_id, state, NULL AS recipient_user">
+				<cfset mailingColums = mailingColums&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL sub_type_id, state, NULL AS recipient_user">
 				<cfset dpDocumentColums = dpDocumentColums&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL sub_type_id, NULL AS state, NULL AS recipient_user">
 				<cfset fileColumns = fileColumns&", NULL AS place, NULL AS start_date, NULL AS identifier, NULL sub_type_id, NULL AS state, NULL AS recipient_user">
 
@@ -1011,6 +1017,18 @@
 				</cfif>
 				)
 				</cfif>
+
+				<cfif arguments.withMailings IS true><!--- Mailing --->
+				UNION ALL
+				( SELECT #commonColums#, #attachedFileColum#, #webColums#, #mailingColums#, #iframeColumsNull# #displayColumsNull# 17 AS itemTypeId
+				FROM #client_abb#_mailings AS mailings
+				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
+				<cfif isDefined("arguments.area_id")>
+				AND area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				)
+				</cfif>
+
 				<!--- <cfif APPLICATION.moduleLists IS true> --->
 				<cfif arguments.withLists IS true><!--- Lists --->
 				UNION ALL

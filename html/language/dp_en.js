@@ -207,8 +207,12 @@ Lang.prototype.pack.en = {
 		"Publicaciones":"Publications",
 		"Documento DoPlanning":"DoPlanning Document",
 		"Documentos DoPlanning":"DoPlanning Documents",
-		"Tipología de archivo":"File Typology",
-		"Tipologías de archivos":"File Typologies",
+		"Tipología de archivo":"File typology",
+		"Tipologías de archivos":"File typologies",
+		"Tipología de usuario":"User typology",
+		"Tipologías de usuarios":"Users typologies",
+		"Boletín":"Newsletter",
+		"Boletines":"Newsletters",
 
 		"Ver":"View",
 
@@ -226,6 +230,7 @@ Lang.prototype.pack.en = {
 		"Nueva Publicación":"New Publication",
 		"Nuevo Documento DoPlanning":"New DoPlanning Document",
 		"Nueva Tipología de archivo":"New File Typology",
+		"Nuevo Boletín":"New Newsletter",
 		/*END area_item_new_content*/
 
 		/*area_item_modify_content*/
@@ -238,6 +243,7 @@ Lang.prototype.pack.en = {
 		"Modificar Lista":"New List",
 		"Modificar Formulario":"New Form",
 		"Modificar Publicación":"Modify Publication",
+		"Modificar Boletín":"Modify Newsletter",
 		"PubMed":"PubMed",
 
 		"Modificar Documento DoPlanning":"Modify DoPlanning Document",
@@ -846,7 +852,7 @@ Lang.prototype.pack.en = {
 		"Fecha de creación:":"Creation date:",
 		"Fecha de última conexión:":"Last connection date:",
 		"Número de conexiones:":"Number of connections:",
-
+		"Usuario creado. Seleccione a continuación las áreas a las que desea asociarlo.":"User created. Now select the areas to add the user.",
 		/*END admin - new user window form*/
 
 		"Fecha de última modificación":"Last modification date",
