@@ -464,6 +464,37 @@
 
 			</cfcase>
 
+
+			<cfcase value="hla.era7software.com">
+
+				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
+					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
+					<cfif isDefined("arguments.emailFrom")>
+						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
+					<cfelse>
+						<cfinvokeargument name="emailFrom" value="no-reply@doplanning.net">
+					</cfif>
+
+					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
+					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
+
+					<cfinvokeargument name="serverIp" value="52.18.214.172">
+
+					<cfinvokeargument name="mainUrl" value="http://hla.era7software.com">
+					<cfinvokeargument name="signOutUrl" value="http://hla.era7software.com">
+
+					<cfinvokeargument name="moduleWeb" value="false">
+
+					<cfinvokeargument name="homeTab" value="true">
+					<cfinvokeargument name="moduleDPDocuments" value="true">
+					<cfinvokeargument name="moduleMailing" value="false">
+
+					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+				</cfinvoke>
+
+			</cfcase>
+
 		</cfswitch>
 
 		<cfif NOT isDefined("APPLICATION.dsn")>

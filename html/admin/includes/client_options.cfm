@@ -8,7 +8,7 @@
 <cfif getClientResponse.result IS true>
 
 	<cfset clientQuery = getClientResponse.client>
-	
+
 	<cfoutput>
 
 		<div class="modal-header">
@@ -17,7 +17,7 @@
 		</div>
 
 	 	<div class="modal-body">
-	  		
+
 	  		<form id="notificationsForm" method="post" class="form-horizontal">
 
 	  			<div class="row">
@@ -33,7 +33,7 @@
 								</small>
 							</div>
 						</div>
-					</div>					
+					</div>
 				</div>
 
 	  			<div class="row">
@@ -52,7 +52,7 @@
 								</small>
 							</div>
 						</div>
-					</div>					
+					</div>
 				</div>
 
 				<div class="row">
@@ -153,9 +153,9 @@
 
 			    if(e.preventDefault)
 					e.preventDefault();
-			      
+
 				if( $.isNumeric($("##tasks_reminder_days").val()) ){
-				
+
 			    	<!---if( $("##name").val().length > 0 ){
 			    		postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea");
 			    	} else {
@@ -179,12 +179,12 @@
 						  		hideDefaultModal();
 
 						  		$('body').modalmanager('removeLoading');
-						  		
+
 						  		showAlertMessage(message, data.result);
 
 						  	}else
 								showAlertErrorModal(status);
-							
+
 						  },
 						  dataType: "json"
 					});
@@ -194,7 +194,7 @@
 
 					showAlertModal(window.lang.translate("Debe introducir un número válido de días"));
 				}
-				
+
 			}
 		</script>
 
