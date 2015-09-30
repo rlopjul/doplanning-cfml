@@ -2304,7 +2304,6 @@
 
 										<cfif getWebQuery.recordCount GT 0>
 
-											<!---<cfset userAreasIds = "">--->
 											<cfset alertContentWeb = "">
 
 											<cfloop query="getWebQuery">
@@ -2316,54 +2315,62 @@
 													<cfinvokeargument name="client_dsn" value="#client_dsn#">
 												</cfinvoke>
 
-												<!--- Get DoPlanning Alerts --->
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getUserDiaryAlert" returnvariable="userDiaryAlertWeb">
-													<cfinvokeargument name="alertType" value="#ALERT_TYPE_WEB#">
-													<cfinvokeargument name="user_id" value="#curUserId#">
-													<cfinvokeargument name="language" value="#curLang#">
-													<cfinvokeargument name="email" value="#curUserEmail#">
-													<cfinvokeargument name="user_full_name" value="#curUserFullName#">
-													<cfinvokeargument name="currentDigestDate" value="#currentDigestDateWeb#">
-													<cfinvokeargument name="lastDigestDate" value="#lastDigestDateWeb#">
-													<cfinvokeargument name="itemTypesStruct" value="#itemTypesStruct#">
-													<cfinvokeargument name="itemTypesArray" value="#itemTypesArray#">
-													<cfinvokeargument name="itemsTypesOptionsQuery" value="#itemsTypesOptionsQuery#">
 
-													<cfinvokeargument name="userAreasIds" value="#subAreasIds#">
-													<cfinvokeargument name="webPath" value="#getWebQuery.path#">
-													<cfinvokeargument name="webPathUrl" value="#getWebQuery.path_url#">
+												<cfif listLen(subAreasIds) GT 0>
 
-													<cfinvokeargument name="client_abb" value="#client_abb#">
-													<cfinvokeargument name="client_dsn" value="#client_dsn#">
-												</cfinvoke>
 
-												<cfif len(userDiaryAlertWeb.alertContent) GT 0>
+													<!--- Get DoPlanning Alerts --->
+													<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getUserDiaryAlert" returnvariable="userDiaryAlertWeb">
+														<cfinvokeargument name="alertType" value="#ALERT_TYPE_WEB#">
+														<cfinvokeargument name="user_id" value="#curUserId#">
+														<cfinvokeargument name="language" value="#curLang#">
+														<cfinvokeargument name="email" value="#curUserEmail#">
+														<cfinvokeargument name="user_full_name" value="#curUserFullName#">
+														<cfinvokeargument name="currentDigestDate" value="#currentDigestDateWeb#">
+														<cfinvokeargument name="lastDigestDate" value="#lastDigestDateWeb#">
+														<cfinvokeargument name="itemTypesStruct" value="#itemTypesStruct#">
+														<cfinvokeargument name="itemTypesArray" value="#itemTypesArray#">
+														<cfinvokeargument name="itemsTypesOptionsQuery" value="#itemsTypesOptionsQuery#">
 
-													<cfif getWebQuery.recordCount GT 1>
+														<cfinvokeargument name="userAreasIds" value="#subAreasIds#">
+														<cfinvokeargument name="webPath" value="#getWebQuery.path#">
+														<cfinvokeargument name="webPathUrl" value="#getWebQuery.path_url#">
 
-														<cfset webLanguage = "">
+														<cfinvokeargument name="client_abb" value="#client_abb#">
+														<cfinvokeargument name="client_dsn" value="#client_dsn#">
+													</cfinvoke>
 
-														<cfswitch expression="#getWebQuery.language#">
-															<cfcase value="es">
-																<cfset webLanguage = "Español">
-															</cfcase>
-															<cfcase value="en">
-																<cfset webLanguage = "English">
-															</cfcase>
-															<cfcase value="fr">
-																<cfset webLanguage = "Français">
-															</cfcase>
-														</cfswitch>
+													<cfif len(userDiaryAlertWeb.alertContent) GT 0>
 
-														<cfset alertContentWeb = alertContentWeb&'<p style="margin-top:20px;font-size:26px">#webLanguage#</p>'&userDiaryAlertWeb.alertContent>
+														<cfif getWebQuery.recordCount GT 1>
 
-													<cfelse>
+															<cfset webLanguage = "">
 
-														<cfset alertContentWeb = alertContentWeb&userDiaryAlertWeb.alertContent>
+															<cfswitch expression="#getWebQuery.language#">
+																<cfcase value="es">
+																	<cfset webLanguage = "Español">
+																</cfcase>
+																<cfcase value="en">
+																	<cfset webLanguage = "English">
+																</cfcase>
+																<cfcase value="fr">
+																	<cfset webLanguage = "Français">
+																</cfcase>
+															</cfswitch>
+
+															<cfset alertContentWeb = alertContentWeb&'<p style="margin-top:20px;font-size:26px">#webLanguage#</p>'&userDiaryAlertWeb.alertContent>
+
+														<cfelse>
+
+															<cfset alertContentWeb = alertContentWeb&userDiaryAlertWeb.alertContent>
+
+														</cfif>
 
 													</cfif>
 
-												</cfif>
+
+												</cfif><!--- END listLen(arguments.userAreasIds) GT 0 --->
+
 
 											</cfloop>
 
