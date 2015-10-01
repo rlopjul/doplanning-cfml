@@ -366,7 +366,7 @@ curLangText["es"] = {
 		"mailing": {
 
 			"unsubscribe_mailing" : "Darse de baja de este boletín",
-			"unsubscribe_text" : "En las preferencias de notificaciones de #APPLICATION.title# puedes deshabilitar el envío de <b>Boletines</b> como este y de cualquier otra notificación que quieras dejar de recibir."
+			"unsubscribe_text" : "En las preferencias de notificaciones de #APPLICATION.title# puedes deshabilitar el envío de <b>Boletines</b> como éste y de cualquier otra notificación que quieras dejar de recibir."
 
 		}
 
