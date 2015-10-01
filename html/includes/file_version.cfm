@@ -30,7 +30,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
 
-<!--- 
+<!---
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput>
@@ -41,14 +41,14 @@
 <script type="text/javascript">
 
 function confirmDuplicateVersion() {
-	
+
 	var messageDuplicate = "¿Seguro que desea duplicar y marcar esta versión como vigente?";
-	
+
 	return confirm(messageDuplicate);
 }
 
 function confirmDeleteFileVersion() {
-		
+
 	var messageDelete = window.lang.translate("Si ELIMINA la versión, se borrará definitivamente. ¿Seguro que desea borrar esta versión?");
 	return confirm(messageDelete);
 }
@@ -66,7 +66,7 @@ Versión de archivo
 <div class="div_separator"><!-- --></div>
 
 <div class="div_elements_menu"><!---div_elements_menu--->
-	
+
 	<a href="#APPLICATION.htmlPath#/file_version_download.cfm?id=#version.version_id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary"><i class="icon-download-alt"></i> <span lang="es">Descargar</span></a>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getLastFileVersion" returnvariable="lastVersion">
@@ -81,7 +81,7 @@ Versión de archivo
 			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=duplicateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&version_id=#version_id#&return_path=#return_path#" onclick="return confirmDuplicateVersion();" class="btn btn-warning btn-sm"><i class="icon-copy"></i> <span lang="es">Duplicar y definir como versión vigente</span></a>
 
 		</cfif>
-		
+
 	</cfif>
 
 	<cfif SESSION.client_abb NEQ "hcs">
@@ -89,7 +89,7 @@ Versión de archivo
 			<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=deleteFileVersionRemote&file_id=#objectFile.id#&version_id=#version_id#&return_path=#return_path#" onclick="return confirmDeleteFileVersion();" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar versión</span></a>
 		</cfif>
 	</cfif>
-	
+
 
 </div>
 </cfoutput>
@@ -99,20 +99,20 @@ Versión de archivo
 	<div class="div_file_page_file">
 
 		<cfif version.revised IS true>
-			
+
 			<!--- outputFileVersionStatus --->
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileVersionStatus">
 				<cfinvokeargument name="version" value="#version#">
 			</cfinvoke>
 
 			<!---<cfif version.revision_result IS false>
-				<div class="div_file_page_label"><span lang="es">Motivo de rechazo en revisión:</span><br> 
-				<span class="text_file_page">#version.revision_result_reason#</span></div>	
+				<div class="div_file_page_label"><span lang="es">Motivo de rechazo en revisión:</span><br>
+				<span class="text_file_page">#version.revision_result_reason#</span></div>
 			</cfif>
 
 			<cfif version.approved IS false>
 				<div class="div_file_page_label"><span lang="es">Motivo de rechazo en aprobación:</span><br>
-				<span class="text_file_page">#version.approval_result_reason#</span></div>	
+				<span class="text_file_page">#version.approval_result_reason#</span></div>
 			</cfif>--->
 
 		<cfelse>
@@ -134,42 +134,42 @@ Versión de archivo
 
 		</cfif>
 		<cfif len(version.revision_request_date) GT 0>
-			<div class="div_file_page_label"><span lang="es">Fecha de envío a revisión:</span> <span class="text_file_page">#version.revision_request_date#</span></div>	
+			<div class="div_file_page_label"><span lang="es">Fecha de envío a revisión:</span> <span class="text_file_page">#version.revision_request_date#</span></div>
 		</cfif>
 
 		<cfif len(version.revision_date) GT 0>
-			<div class="div_file_page_label"><span lang="es">Fecha de revision:</span> <span class="text_file_page">#version.revision_date#</span></div>	
+			<div class="div_file_page_label"><span lang="es">Fecha de revision:</span> <span class="text_file_page">#version.revision_date#</span></div>
 		</cfif>
 
 		<cfif len(version.approval_request_date) GT 0>
-			<div class="div_file_page_label"><span lang="es">Fecha de envío a aprobación:</span> <span class="text_file_page">#version.approval_request_date#</span></div>	
+			<div class="div_file_page_label"><span lang="es">Fecha de envío a aprobación:</span> <span class="text_file_page">#version.approval_request_date#</span></div>
 		</cfif>
 
 		<cfif len(version.approval_date) GT 0>
-			<div class="div_file_page_label"><span lang="es">Fecha de aprobación:</span> <span class="text_file_page">#version.approval_date#</span></div>	
+			<div class="div_file_page_label"><span lang="es">Fecha de aprobación:</span> <span class="text_file_page">#version.approval_date#</span></div>
 		</cfif>
 
 
 		<div class="div_file_page_label">
 			<a href="area_user.cfm?area=#area_id#&user=#version.user_in_charge#">
 			<cfif len(version.user_image_type) GT 0>
-				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#version.user_in_charge#&type=#version.user_image_type#&small=" alt="#version.user_full_name#" class="item_img" style="margin-right:2px;"/>									
-			<cfelse>						
+				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#version.user_in_charge#&type=#version.user_image_type#&small=" alt="#version.user_full_name#" class="item_img" style="margin-right:2px;"/>
+			<cfelse>
 				<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#version.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
-			</cfif></a> <a href="area_user.cfm?area=#area_id#&user=#objectFile.user_in_charge#">#objectFile.user_full_name#</a>
+			</cfif></a> <a href="area_user.cfm?area=#area_id#&user=#version.user_in_charge#">#version.user_full_name#</a>
 		</div>
 
-		<div class="div_file_page_label"><span lang="es">Fecha de subida:</span> <span class="text_file_page">#version.uploading_date#</span></div>	
-		
+		<div class="div_file_page_label"><span lang="es">Fecha de subida:</span> <span class="text_file_page">#version.uploading_date#</span></div>
+
 		<div class="div_file_page_label"><span lang="es">Tipo de archivo:</span> <span class="text_file_page">#version.file_type#</span></div>
-		
+
 		<!---fileUrl--->
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="trasnformFileSize" returnvariable="file_size">
 			<cfinvokeargument name="file_size_full" value="#version.file_size#">
 		</cfinvoke>
-		
+
 		<div class="div_file_page_size"><div class="div_file_page_label"><span lang="es">Tamaño:</span> <span class="text_file_page">#file_size#</span></div></div>
-		
+
 		<!---<div class="div_file_page_label"><span lang="es">Descripción:</span></div>
 		<div class="div_file_page_description">#version.description#</div>--->
 
