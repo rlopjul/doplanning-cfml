@@ -495,6 +495,36 @@
 
 			</cfcase>
 
+			<cfcase value="ceseand.net">
+
+				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
+					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
+					<cfif isDefined("arguments.emailFrom")>
+						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
+					<cfelse>
+						<cfinvokeargument name="emailFrom" value="no-reply@doplanning.net">
+					</cfif>
+
+					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
+					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
+
+					<cfinvokeargument name="serverIp" value="54.72.1.86">
+
+					<cfinvokeargument name="mainUrl" value="https://ceseand.net">
+					<cfinvokeargument name="signOutUrl" value="https://ceseand.net">
+
+					<cfinvokeargument name="moduleWeb" value="true">
+
+					<cfinvokeargument name="homeTab" value="true">
+					<cfinvokeargument name="moduleDPDocuments" value="true">
+					<cfinvokeargument name="moduleMailing" value="true">
+
+					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+				</cfinvoke>
+
+			</cfcase>
+
 		</cfswitch>
 
 		<cfif NOT isDefined("APPLICATION.dsn")>
