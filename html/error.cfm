@@ -25,7 +25,7 @@
 </cfif>
 
 
- 
+
 <!---<cfoutput>
 <cfif APPLICATION.title EQ "DoPlanning">
 	<div style="float:left; padding-top:2px;">
@@ -45,20 +45,20 @@
 
 
 <div id="wrapper"><!--- wrapper --->
-        
+
 	<!---<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
 				<h1></h1>
 				<p></p>
-							
+
 			</div>
 		</div>
 	</div>--->
 
 	<!---<div class="div_contenedor_contenido">--->
-	
-	
+
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_client_head.cfm">
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_head.cfm">
@@ -79,41 +79,93 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
 
-<div class="row">
 <cfif isDefined("URL.error_code")>
+
 	<cfinvoke component="#APPLICATION.componentsPath#/ErrorManager" method="getError" returnvariable="objectError">
-		<cfinvokeargument name="error_code" value="#URL.error_code#">	
+		<cfinvokeargument name="error_code" value="#URL.error_code#">
 	</cfinvoke>
-	
+
 	<cfif objectError.error_code IS 102>
-		
-		<cflocation url="logout.cfm" addtoken="no">		
+
+		<cflocation url="logout.cfm" addtoken="no">
 		<!---<cflocation url="#APPLICATION.htmlPath#/login?client_abb=#SESSION.client_abb#&message=#URLEncodedFormat('Su sesión ha caducado, por favor acceda de nuevo')#" addtoken="no">--->
-				
+
 	<cfelse>
-		
+
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="alert alert-warning" role="alert">
+
+					<i class="fa fa-exclamation-triangle"></i> <strong>#objectError.title#</strong><br />
+					<cfif objectError.error_code IS 10000>
+						<span>Ha ocurrido un error inesperado, disculpe las molestias. Haga click en Volver para ir a la página anterior.</span>
+					<cfelse>
+						<span>#objectError.description#</span>
+					</cfif>
+
+				</div>
+
+			</div>
+		</div>
+
+		<cfif objectError.error_code EQ 403>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Web" method="getWeb" returnvariable="getWebResult">
+				<cfinvokeargument name="path" value="intranet">
+			</cfinvoke>
+
+			<cfset intranetQuery = getWebResult.query>
+
+			<cfif intranetQuery.recordCount GT 0>
+
+				<div class="row">
+					<div class="col-sm-12">
+
+						<div class="alert alert-info" role="alert">
+
+							<i class="fa fa-info-circle"></i>
+
+							<span lang="es">No dispones de acceso a las áreas de #APPLICATION.title#, pero sí dispones de acceso a la intranet.</span>
+
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div class="col-sm-12">
+						<a href="#APPLICATION.path#/intranet/?abb=#SESSION.client_abb#" class="btn btn-sm btn-primary"><i class="fa fa-archive fa-inverse"></i> <span lang="es">Acceder a la intranet</span></a>
+					</div>
+
+				</div>
+
+			</cfif>
+
+		</cfif>
+
+	</cfif>
+
+</cfif>
+
+
+<cfif NOT isDefined("URL.error_code") OR URL.error_code NEQ 403>
+
+	<div class="row">
+
 		<div class="col-sm-12">
 
-			<div class="alert alert-warning" role="alert">
-				<strong>#objectError.title#</strong><br />
-				<cfif objectError.error_code IS 10000>
-					<span>Ha ocurrido un error inesperado, disculpe las molestias. Haga click en Volver para ir a la página anterior.</span>
-				<cfelse>
-					<span>#objectError.description#</span>
-				</cfif>
-				
+			<div class="div_return">
+				<a href="" onClick="history.go(-1); return false;" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
 			</div>
 
 		</div>
-	
-	</cfif>
-	
-</cfif>
-</div>
 
-<div class="div_return">
-	<a href="" onClick="history.go(-1); return false;" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
-</div>
+	</div>
+
+</cfif>
+
 </cfoutput>
 <!-- InstanceEndEditable -->
 	</div>
@@ -122,7 +174,7 @@
 
 
 	<!---</div>--->
-	
+
 </div>
 <!--- END wrapper --->
 
