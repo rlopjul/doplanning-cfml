@@ -95,9 +95,6 @@
         <li>
             <a href="bin.cfm?abb=#SESSION.client_abb#"><i class="icon-trash"></i> <span lang="es">Papelera</span></a>
         </li>
-        <li>
-            <a href="admin/main.cfm?abb=#SESSION.client_abb#"><i class="icon-wrench"></i> <span lang="es">Administración</span></a>
-        </li>
 
         <cfinvoke component="#APPLICATION.htmlComponentsPath#/Web" method="getWeb" returnvariable="getWebResult">
     			<cfinvokeargument name="path" value="intranet">
@@ -112,6 +109,10 @@
           </li>
 
         </cfif>
+
+        <li>
+            <a href="admin/main.cfm?abb=#SESSION.client_abb#"><i class="icon-wrench"></i> <span lang="es">Administración</span></a>
+        </li>
 
         <li>
             <a href="logout.cfm?abb=#SESSION.client_abb#"><i class="icon-signout"></i> <span lang="es">Cerrar sesión</span><br><!---<i>#getAuthUser()#</i>---></a>

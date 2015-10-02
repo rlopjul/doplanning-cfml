@@ -533,7 +533,8 @@
 
 						<div class="btn-group">
 							<cfif len(objectUser.start_page) GT 0 AND objectUser.start_page NEQ "admin/">
-								<cfset start_page = "#APPLICATION.path#/html/#objectUser.start_page#">
+								<!---<cfset start_page = "#APPLICATION.path#/html/#objectUser.start_page#">--->
+								<cfset start_page = "#APPLICATION.path#/html/index.cfm">
 							<cfelse>
 								<cfset start_page = "#APPLICATION.path#/html/last_items.cfm?abb=#SESSION.client_abb#">
 							</cfif>

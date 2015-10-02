@@ -240,6 +240,7 @@ page_types
 
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/StartPageManager" method="getStartPageTypesStruct" returnvariable="startPagesTypesStruct">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			</cfinvoke>
 
 			<cfset startPagesArray = structSort(startPagesTypesStruct, "numeric", "ASC", "position")>
@@ -277,14 +278,24 @@ page_types
 							<option value="" lang="es" <cfif startPageSelected IS true>selected</cfif>>Página por defecto (Lo último)</option>
 
 
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/Web" method="getWeb" returnvariable="getWebResult">
+			    			<cfinvokeargument name="path" value="intranet">
+			    		</cfinvoke>
+
+			        <cfset intranetQuery = getWebResult.query>
+
 							<cfloop array="#startPagesArray#" index="startPageId">
 								<cfset startPageSelected = false>
 
-								<cfif startPagesTypesStruct[startPageId].page EQ objectUser.start_page>
-									<cfset startPageSelected = true>
-									<cfset startPageExists = true>
+								<cfif startPageId NEQ 24 OR intranetQuery.recordCount GT 0><!--- Check intranet start page --->
+
+									<cfif startPagesTypesStruct[startPageId].page EQ objectUser.start_page>
+										<cfset startPageSelected = true>
+										<cfset startPageExists = true>
+									</cfif>
+									<option value="#startPagesTypesStruct[startPageId].page#" lang="es" <cfif startPageSelected EQ true>selected="selected"</cfif>>#startPagesTypesStruct[startPageId].label#</option>
+
 								</cfif>
-								<option value="#startPagesTypesStruct[startPageId].page#" lang="es" <cfif startPageSelected EQ true>selected="selected"</cfif>>#startPagesTypesStruct[startPageId].label#</option>
 
 							</cfloop>
 

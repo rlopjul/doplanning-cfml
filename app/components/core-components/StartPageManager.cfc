@@ -8,6 +8,7 @@
 	<!--- getStartPageTypesStruct --->
 
 	<cffunction name="getStartPageTypesStruct" returntype="struct" access="public">
+		<cfargument name="client_abb" type="string" required="true">
 
 		<cfset var startPageTypesStruct = structNew()>
 
@@ -17,19 +18,5 @@
 
 	</cffunction>
 
-
-	<!--- getTableTypeStruct --->
-
-	<cffunction name="getTableTypeStruct" returntype="struct" access="public">
-		<cfargument name="startPageTypeId" type="numeric" required="true">
-
-		<cfset var startPageTypesStruct = structNew()>
-
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/TableManager" method="getTableTypesStruct" returnvariable="startPageTypesStruct">
-		</cfinvoke>
-
-		<cfreturn startPageTypesStruct[arguments.startPageTypeId]>
-
-	</cffunction>
 
 </cfcomponent>
