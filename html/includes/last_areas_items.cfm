@@ -4,7 +4,7 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_version.cfm">
 
 
- 
+
 <script>
 
 	$(function() {
@@ -15,9 +15,9 @@
 
 		$('#lastItemsHead').affix({
 	      	offset: {
-	       		top: 1 <!--- top 1 para corregir un fallo de que al hacer clic sobre la barra se aplica affix ---> 
+	       		top: 1 <!--- top 1 para corregir un fallo de que al hacer clic sobre la barra se aplica affix --->
 	      	}
-		});	
+		});
 
 	});
 
@@ -56,18 +56,18 @@
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Filtrar" lang="es">
 
 						<i class="icon-filter" style="color:##EAD142"></i>
-							
+
 						<span lang="es">VER</span> <span class="caret"></span>
 
 					</button>
 
 					<ul class="dropdown-menu" role="menu"> <!---dropdown-menu-right--->
 
-						<li>	
+						<li>
 
 						 	<div class="row" style="width:450px;">
 
-				               	<ul class="list-unstyled col-md-6">   
+				               	<ul class="list-unstyled col-md-6">
 
 									<li>
 
@@ -82,7 +82,7 @@
 										<cfif isDefined("URL.filter") AND ( filter EQ "area" OR filter EQ "user" )><!---Listado de areas o usuarios--->
 											<a href="#CGI.SCRIPT_NAME#?limit=#limit_to#">
 										<cfelse>
-											<a onclick="setItemsFilter('*')">		
+											<a onclick="setItemsFilter('*')">
 										</cfif>
 												<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" title="Todos los elementos de área" alt="Todos los elementos de área" lang="es" style="height:35px;" />
 												<span lang="es">Elementos de áreas</span>
@@ -95,7 +95,7 @@
 											<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Áreas" lang="es" style="height:35px"/>
 											<span lang="es">Áreas</span>
 										</a>
-									 
+
 									</li>
 
 
@@ -105,7 +105,7 @@
 							    		<cfif curItemTypeId NEQ 13 AND curItemTypeId NEQ 16 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.moduleForms IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
 
 											<li>
-												
+
 												<!---<a href="#itemTypesStruct[curItemTypeId].namePlural#.cfm?area=#area_id#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">--->
 
 												<cfif isDefined("URL.filter") AND ( filter EQ "area" OR filter EQ "user" )><!---Listado de areas o usuarios--->
@@ -117,28 +117,28 @@
 													<a onclick="setItemsFilter('#itemTypesStruct[curItemTypeId].name#')" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
 
 						    					</cfif>
-													
+
 													<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" style="height:35px"/>
-													
+
 
 													<span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span>
 												</a>
-												
+
 											</li>
 
 										</cfif>
 
 										<cfif curItemTypeId EQ 5><!--- Cierra la primera columna --->
-											
+
 											</ul><!--- END list-unstyled col-md-6 --->
-											<ul class="list-unstyled col-md-6">   
+											<ul class="list-unstyled col-md-6">
 
 										</cfif>
 
 									</cfloop>
-								
-									<li> 
-									
+
+									<li>
+
 										<a href="#CGI.SCRIPT_NAME#?filter=user&limit=#limit_to#" title="Usuarios" lang="es">
 											<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/users.png" alt="Usuarios" lang="es" style="height:35px"/>
 											<span lang="es">Usuarios</span>
@@ -156,20 +156,10 @@
 										</li>
 									</cfif>
 									--->
-										
-									<!---<li>
-										<!---Users--->
-										<a href="users.cfm?area=#area_id#" lang="es">
-											<!---<i class="icon-group" style="margin-left:2px;margin-right:2px;"></i>--->
-											<img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/users.png" title="Usuarios del área" alt="Usuarios del área" lang="es" style="height:35px"/>
-											<span lang="es">Usuarios</span>
-										</a>
-									</li>---->
-									
 
 								</ul><!--- END list-unstyled col-md-6 --->
 
-			                </div><!--- END row --->
+			      </div><!--- END row --->
 
 						</li>
 
@@ -177,7 +167,7 @@
 
 				</div><!--- END btn-group --->
 
-				
+
 
 				<!---INDICADOR FILTRADO ACTUAL--->
 
@@ -214,7 +204,7 @@
 		<!--- ---------------------------------------------- DESPLEGABLE LÍMITE DE ELEMENTOS ---------------------------------------------------- --->
 
 		<div class="col-sm-2">
-			
+
 			<form class="form-horizontal">
 				<div class="form-group">
 					<label class="col-xs-2 col-sm-4 col-lg-offset-1 control-label" for="limit" lang="es">Mostrar</label>
@@ -227,7 +217,7 @@
 							<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>
 						</select>
 					</div>
-				</div>		
+				</div>
 			</form>
 
 		</div>
@@ -256,7 +246,7 @@
 						<cfif rightContent IS true>
 							<button type="button" class="btn btn-default btn-sm navbar-btn" onclick="loadHome();" title="Actualizar" lang="es" style="margin-bottom:0;margin-top:0"><i class="icon-refresh icon-white"></i></button>
 						</cfif>
-						
+
 					</form>
 
 				</div>
@@ -280,7 +270,7 @@
 
 
 <cfif isDefined("URL.filter") AND URL.filter EQ "area">
-	
+
 	<!--- getLastUsedAreas --->
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getLastUsedAreas" returnvariable="getAllItemsResult">
 		<cfif isDefined("limit_to") AND isNumeric(limit_to)>
@@ -351,7 +341,7 @@
 
 	</cfif>
 
-<cfelse>		
+<cfelse>
 
 	<cfoutput>
 	<span lang="es">No hay elementos</span>

@@ -9,22 +9,9 @@
 
 
 <script>
-	$(document).ready(function() { 
-		
-		$.tablesorter.addParser({
-			id: "datetime",
-			is: function(s) {
-				return false; 
-			},
-			format: function(s,table) {
-				s = s.replace(/\-/g,"/");
-				s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$2/$1");
-				return $.tablesorter.formatFloat(new Date(s).getTime());
-			},
-			type: "numeric"
-		});
-		
-		$("#listTable").tablesorter({ 
+	$(document).ready(function() {
+
+		$("#listTable").tablesorter({
 			<cfif full_content IS false>
 			widgets: ['zebra','uitheme','filter','select'],
 			<cfelse>
@@ -33,18 +20,18 @@
 			theme : "bootstrap",
 			headerTemplate : '{content} {icon}',
 			sortList: [[5,1]] ,
-			headers: { 
-				0: { 
-					sorter: false 
+			headers: {
+				0: {
+					sorter: false
 				},
 				1: {
 					sorter: "text"
 				},
-				4: { 
-					sorter: "datetime" 
+				4: {
+					sorter: "datetime"
 				},
-				5: { 
-					sorter: "datetime" 
+				5: {
+					sorter: "datetime"
 				}
 			},
 			<cfif full_content IS false>
@@ -66,19 +53,10 @@
 		    },
 			</cfif>
 		});
-		
-		<!---//  Adds "over" class to rows on mouseover
-		$("#listTable tr").mouseover(function(){
-		  $(this).addClass("over");
-		});
-	
-		//  Removes "over" class from rows on mouseout
-		$("#listTable tr").mouseout(function(){
-		  $(this).removeClass("over");
-		});--->
 
-    }); 
-	
+
+  });
+
 </script>
 
 <!---<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">--->
@@ -93,7 +71,7 @@
 <cfif numFiles GT 0>
 
 	<cfoutput>
-	
+
 	<table id="listTable" class="tablesorter">
 		<thead>
 			<tr>
@@ -117,19 +95,19 @@
 			</tr>
 		</thead>
 	<tbody>
-	
+
 	<cfset alreadySelected = false>
-	
-	<cfloop query="files">		
+
+	<cfloop query="files">
 
 		<!---File selection--->
 		<cfset itemSelected = false>
-		
+
 		<!---
 		<cfif alreadySelected IS false AND NOT isDefined("URL.field")><!---No es selección de archivo--->
-		
+
 			<cfif isDefined("URL.file")>
-			
+
 				<cfif URL.file IS files.id>
 					<!---Esta acción solo se completa si está en la versión HTML2--->
 					<script type="text/javascript">
@@ -137,21 +115,21 @@
 					</script>
 					<cfset itemSelected = true>
 				</cfif>
-				
+
 			<cfelseif files.currentRow IS 1>
-			
+
 				<!---Esta acción solo se completa si está en la versión HTML2--->
 				<script type="text/javascript">
 					openUrlHtml2('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe');
 				</script>
 				<cfset itemSelected = true>
-				
+
 			</cfif>
-			
+
 			<cfif itemSelected IS true>
 				<cfset alreadySelected = true>
 			</cfif>
-			
+
 		</cfif>
 		--->
 
@@ -181,8 +159,8 @@
 						<i class="#file_icon#" style="font-size:24px"></i>
 					</a>
 					</cfif>
-					
-					
+
+
 				</cfif><!---style="max-width:none;" Requerido para corregir un bug con Bootstrap en Chrome--->
 			</td>
 			<td><cfif isDefined("page_type")>
@@ -211,17 +189,17 @@
 			</td>
 			<!---<td><span>#files.file_size#</span></td>--->
 			<!---<cfif len(files.association_date) GT 0>
-				<cfset addedDate = files.association_date>				
+				<cfset addedDate = files.association_date>
 			<cfelse>
 				<cfset addedDate = files.uploading_date>
 			</cfif>--->
-			<cfset addedDate = files.association_date>	
+			<cfset addedDate = files.association_date>
 			<cfset spacePos = findOneOf(" ", addedDate)>
 			<td>
 				<span>#left(addedDate, spacePos)#</span>
 				<span class="hidden">#right(addedDate, len(addedDate)-spacePos)#</span>
 			</td>
-			<td><cfif len(files.replacement_date) GT 0>				
+			<td><cfif len(files.replacement_date) GT 0>
 				<cfset spacePos2 = findOneOf(" ", files.replacement_date)>
 				<span>#left(files.replacement_date, spacePos2)#</span>
 				<span class="hidden">#right(files.replacement_date, len(files.replacement_date)-spacePos2)#</span>
@@ -229,23 +207,23 @@
 				<span>#left(addedDate, spacePos)#</span>
 				<span class="hidden">#right(addedDate, len(addedDate)-spacePos)#</span>
 			</cfif></td>
-			
+
 			<cfif full_content IS true>
 				<td>
 				<a onclick="openUrl('area_items.cfm?area=#files.area_id#&file=#files.id#','areaIframe',event)" class="link_blue">#files.area_name#</a>
 				</td>
 			</cfif>
-		</tr>		
-		
+		</tr>
+
 	</cfloop>
 	</tbody>
-	
+
 	</table>
-	
+
 	</cfoutput>
-	
+
 <cfelse>
-	
+
 	<script type="text/javascript">
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>

@@ -245,7 +245,6 @@
 			<cfif NOT isDefined("file_size_full") AND len("#file_size#") GT 0>
 				<cfset file_size_full = file_size><!---file_size_full is the file_size from database without parse to kilobytes--->
 
-				<!---fileUrl--->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="trasnformFileSize" returnvariable="file_size">
 					<cfinvokeargument name="file_size_full" value="#file_size_full#">
 				</cfinvoke>
