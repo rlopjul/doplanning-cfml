@@ -112,10 +112,10 @@
 
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUsers" argumentcollection="#arguments#" returnvariable="response">
 				<cfinvokeargument name="xmlUser" value="#xmlUser#"/>
-				<!---<cfif len(arguments.search_text) GT 0>
+				<cfif len(arguments.search_text) GT 0>
 					<cfinvokeargument name="search_text" value="#arguments.search_text#"/>
 				</cfif>
-				<cfif len(arguments.order_by) GT 0>
+				<!---<cfif len(arguments.order_by) GT 0>
 					<cfinvokeargument name="order_by" value="#arguments.order_by#"/>
 					<cfinvokeargument name="order_type" value="#arguments.order_type#"/>
 				</cfif>

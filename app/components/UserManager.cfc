@@ -2719,7 +2719,7 @@
 	<!--- --------------------------- GET ALL USERS -------------------------------- --->
 
 	<cffunction name="getAllUsers" returntype="struct" output="false" access="public">
-		<cfargument name="xmlUser" type="xml" required="true"/>
+		<!---<cfargument name="xmlUser" type="xml" required="true"/>--->
 		<cfargument name="with_external" type="boolean" required="false" default="true"/>
 		<cfargument name="search_text" type="string" required="false"/>
 		<cfargument name="order_by" type="string" required="false"/>
