@@ -1791,7 +1791,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="getSubAreasIds" returnvariable="subAreasIds">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
