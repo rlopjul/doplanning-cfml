@@ -71,6 +71,12 @@
 		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=2.18">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">
 
+		<cfargument name="intranetLayout" type="string" required="false" default="/app/layouts/pages/layout_intranet.cfm">
+		<cfargument name="indexIntranetLayout" type="string" required="false" default="/app/layouts/pages/layout_index_intranet.cfm">
+		<cfargument name="colorIntranetLayout" type="string" required="false" default="/app/css/colors/palette.css">
+		<cfargument name="fontIntranetLayout" type="string" required="false" default="/app/css/fonts/type.css">
+
+
 			<cfset APPLICATION.dsn = "doplanning_app">
 			<cfset APPLICATION.dataBaseName = "doplanning_app">
 
@@ -191,6 +197,26 @@
 			<cfset APPLICATION.termsOfUseUrl = arguments.termsOfUseUrl>
 
 			<cfset APPLICATION.defaultLanguage = arguments.defaultLanguage>
+
+			<!--- Intranet --->
+			<cfset APPLICATION.webCSSPath = arguments.baseCSSPath>
+			<cfset APPLICATION.cssLayout = "#APPLICATION.path#/app/css/mockup.css">
+
+			<cfset APPLICATION.intranetLayout = arguments.intranetLayout>
+			<cfset APPLICATION.indexIntranetLayout = arguments.indexIntranetLayout>
+			<cfset APPLICATION.colorIntranetLayout = arguments.colorIntranetLayout>
+			<cfset APPLICATION.fontIntranetLayout = arguments.fontIntranetLayout>
+
+			<cfset APPLICATION.includeTableSorter = true>
+
+			<cfset APPLICATION.dpWebEnableTwitterWidgets = false>
+			<cfset APPLICATION.dpWebEnableGeneratePdf = false>
+			<!--- END Intranet --->
+
+			<!---Google analytics--->
+			<cfset APPLICATION.googleAnalyticsAccountId = "">
+
+
 
 			<cfif arguments.addSchedules IS true>
 
@@ -503,7 +529,7 @@
 					<cfif isDefined("arguments.emailFrom")>
 						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
 					<cfelse>
-						<cfinvokeargument name="emailFrom" value="no-reply@doplanning.net">
+						<cfinvokeargument name="emailFrom" value="info@ceseand.net">
 					</cfif>
 
 					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
@@ -663,19 +689,21 @@
 			<cfset APPLICATION.webCSSPath = arguments.webCSSPath>
 
 			<cfset APPLICATION.cssLayout = arguments.cssLayout>
-            <cfset APPLICATION.colorLayout = arguments.colorLayout>
-            <cfset APPLICATION.fontLayout = arguments.fontLayout>
-            <cfset APPLICATION.layout = arguments.layout>
-            <cfset APPLICATION.indexLayout = arguments.indexLayout>
+      <cfset APPLICATION.colorLayout = arguments.colorLayout>
+      <cfset APPLICATION.fontLayout = arguments.fontLayout>
+      <cfset APPLICATION.layout = arguments.layout>
+      <cfset APPLICATION.indexLayout = arguments.indexLayout>
 
-            <cfif isDefined("arguments.jsLayout")><!---Esta variable NO se debe usar, se mantiene para retrocompatibilidad---->
-            	<cfset APPLICATION.jsLayout = arguments.jsLayout>
-            </cfif>
+      <cfif isDefined("arguments.jsLayout")><!---Esta variable NO se debe usar, se mantiene para retrocompatibilidad---->
+      	<cfset APPLICATION.jsLayout = arguments.jsLayout>
+      </cfif>
 
-			<cfset APPLICATION.intranetLayout = arguments.intranetLayout>
-			<cfset APPLICATION.indexIntranetLayout = arguments.indexIntranetLayout>
-			<cfset APPLICATION.colorIntranetLayout = arguments.colorIntranetLayout>
-			<cfset APPLICATION.fontIntranetLayout = arguments.fontIntranetLayout>
+			<cfif ListFind(arguments.webDirectories, "intranet") GT 0>
+				<cfset APPLICATION.intranetLayout = arguments.intranetLayout>
+				<cfset APPLICATION.indexIntranetLayout = arguments.indexIntranetLayout>
+				<cfset APPLICATION.colorIntranetLayout = arguments.colorIntranetLayout>
+				<cfset APPLICATION.fontIntranetLayout = arguments.fontIntranetLayout>
+			</cfif>
 
 			<cfset APPLICATION.includeTableSorter = arguments.includeTableSorter>
 
