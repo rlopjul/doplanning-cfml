@@ -276,7 +276,7 @@ Preferencias de notificaciones
 
 						<div class="row">
 							<div class="col-sm-1" style="text-align:center;">
-								<img src="#APPLICATION.htmlPath#/assets/icons_dp/users.png" alt="Usuario" />
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/users.png" alt="Usuario" />
 							</div>
 
 							<div class="col-sm-11">
@@ -517,7 +517,7 @@ Preferencias de notificaciones
 					<div class="row">
 						<div class="col-sm-1" style="text-align:center;">
 							<cfif APPLICATION.title EQ "DoPlanning">
-								<img src="#APPLICATION.htmlPath#/assets/icons_dp/organization.png" alt="DoPlanning" />
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/organization.png" alt="DoPlanning" />
 							</cfif>
 						</div>
 						<div class="col-sm-11">

@@ -5,7 +5,7 @@
 <cfoutput>
 <div class="div_head_title">
 <div class="icon_title">
-<a href="area.cfm"><img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/organization.png" alt="Árbol de la organización" lang="es"/></a>
+<a href="area.cfm"><img src="#APPLICATION.htmlPath#/assets/v3/icons_#APPLICATION.identifier#/organization.png" alt="Árbol de la organización" lang="es"/></a>
 </div>
 <div class="head_title"><a href="area.cfm" lang="es">Árbol de la organización</a></div>
 </div>

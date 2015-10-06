@@ -275,7 +275,7 @@
 									<li><!---Users--->
 										<a href="users.cfm?area=#area_id#" lang="es" role="menuitem">
 											<!---<i class="icon-group" style="margin-left:2px;margin-right:2px;"></i>--->
-											<img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/users.png" title="Usuarios del área" alt="Usuarios del área" lang="es" style="height:35px"/>
+											<img src="#APPLICATION.htmlPath#/assets/v3/icons_#APPLICATION.identifier#/users.png" title="Usuarios del área" alt="Usuarios del área" lang="es" style="height:35px"/>
 											<span lang="es">Usuarios</span>
 										</a>
 									</li>
@@ -335,7 +335,7 @@
 
 						<span class="btn btn-link" style="cursor:default;color:##000000">
 
-							<img src="#APPLICATION.htmlPath#/assets/icons_#APPLICATION.identifier#/users.png" title="Usuarios del área" alt="Usuarios del área" lang="es" style="height:26px"/>
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons_#APPLICATION.identifier#/users.png" title="Usuarios del área" alt="Usuarios del área" lang="es" style="height:26px"/>
 							<cfif isDefined("URL.user")>
 								<span lang="es">Usuario del área</span>
 							<cfelse>
