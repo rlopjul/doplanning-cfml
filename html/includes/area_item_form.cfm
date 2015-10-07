@@ -9,9 +9,9 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
  --->
 
-<cfif (itemTypeId IS 1 OR itemTypeId IS 20) AND arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) IS 0><!---Messages o DP Documents--->
+<cfif (itemTypeId IS 1 OR itemTypeId IS 20) AND arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) IS 0 AND NOT (CGI.HTTP_USER_AGENT CONTAINS "MSIE")><!---Messages o DP Documents--->
 
-	<!--- arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) IS TO CHECK INTERNET EXPLORER 11
+	<!--- arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) IS TO CHECK INTERNET EXPLORER
 	summernote fails in IE--->
 
 	<cfset editorApp = "summernote">
