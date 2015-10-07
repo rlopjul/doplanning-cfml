@@ -253,85 +253,6 @@
 
 		--->
 
-			<!---<cfif selectClientQuery.force_notifications IS false AND isDefined("xmlRequest.request.parameters.preferences")>
-
-				<cfxml variable="xmlPreferences">
-					<cfoutput>#xmlRequest.request.parameters.preferences#</cfoutput>
-				</cfxml>
-
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_message")>
-					<cfset notify_new_message = xmlPreferences.preferences.xmlAttributes.notify_new_message>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_file")>
-					<cfset notify_new_file = xmlPreferences.preferences.xmlAttributes.notify_new_file>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_replace_file")>
-					<cfset notify_replace_file = xmlPreferences.preferences.xmlAttributes.notify_replace_file>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_area")>
-					<cfset notify_new_area = xmlPreferences.preferences.xmlAttributes.notify_new_area>
-				</cfif>
-
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_entry")>
-					<cfset notify_new_entry = xmlPreferences.preferences.xmlAttributes.notify_new_entry>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_link")>
-					<cfset notify_new_link = xmlPreferences.preferences.xmlAttributes.notify_new_link>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_news")>
-					<cfset notify_new_news = xmlPreferences.preferences.xmlAttributes.notify_new_news>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_event")>
-					<cfset notify_new_event = xmlPreferences.preferences.xmlAttributes.notify_new_event>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_task")>
-					<cfset notify_new_task = xmlPreferences.preferences.xmlAttributes.notify_new_task>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_consultation")>
-					<cfset notify_new_consultation = xmlPreferences.preferences.xmlAttributes.notify_new_consultation>
-				</cfif>
-
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_image")>
-					<cfset notify_new_image = xmlPreferences.preferences.xmlAttributes.notify_new_image>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_typology")>
-					<cfset notify_new_typology = xmlPreferences.preferences.xmlAttributes.notify_new_typology>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_list")>
-					<cfset notify_new_list = xmlPreferences.preferences.xmlAttributes.notify_new_list>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_list_row")>
-					<cfset notify_new_list_row = xmlPreferences.preferences.xmlAttributes.notify_new_list_row>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_list_view")>
-					<cfset notify_new_list_view = xmlPreferences.preferences.xmlAttributes.notify_new_list_view>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_form")>
-					<cfset notify_new_form = xmlPreferences.preferences.xmlAttributes.notify_new_form>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_form_row")>
-					<cfset notify_new_form_row = xmlPreferences.preferences.xmlAttributes.notify_new_form_row>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_form_view")>
-					<cfset notify_new_form_view = xmlPreferences.preferences.xmlAttributes.notify_new_form_view>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_pubmed")>
-					<cfset notify_new_pubmed = xmlPreferences.preferences.xmlAttributes.notify_new_pubmed>
-				</cfif>
-
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_delete_file")>
-					<cfset notify_delete_file = xmlPreferences.preferences.xmlAttributes.notify_delete_file>
-				</cfif>
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_lock_file")>
-					<cfset notify_lock_file = xmlPreferences.preferences.xmlAttributes.notify_lock_file>
-				</cfif>
-
-				<cfif isDefined("xmlPreferences.preferences.xmlAttributes.notify_new_user_in_area")>
-					<cfset notify_new_user_in_area = xmlPreferences.preferences.xmlAttributes.notify_new_user_in_area>
-				</cfif>
-
-			</cfif>--->
-
 			<cfinvoke component="UserManager" method="getAreaUsers" returnvariable="returnArrays">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="areasArray" value="#areasArray#">
@@ -971,6 +892,380 @@
 			<cfreturn {usersList=usersList, areasArray=areasArray}>
 
 	</cffunction>
+
+
+
+	<!---  ---------------------CREATE USER------------------------------------ --->
+
+	<cffunction name="createUser" returntype="struct" output="false" access="public">
+		<cfargument name="family_name" type="string" required="true">
+		<cfargument name="email" type="string" required="false" default="">
+		<cfargument name="dni" type="string" required="true">
+		<cfargument name="mobile_phone" type="string" required="true">
+		<cfargument name="mobile_phone_ccode" type="string" required="true">
+		<cfargument name="telephone" type="string" required="true">
+		<cfargument name="telephone_ccode" type="string" required="true">
+		<cfargument name="address" type="string" required="true">
+		<cfargument name="language" type="string" required="true">
+		<cfargument name="password" type="string" required="true">
+		<cfargument name="password_temp" type="string" required="true">
+		<cfargument name="files" type="array" required="false"/>
+		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
+
+		<cfargument name="linkedin_url" type="string" required="true">
+		<cfargument name="twitter_url" type="string" required="true">
+		<cfargument name="start_page" type="string" required="true">
+		<cfargument name="information" type="string" required="true">
+		<cfargument name="internal_user" type="boolean" required="false" default="false">
+		<cfargument name="enabled" type="boolean" required="false" default="false">
+
+		<cfargument name="login_ldap" type="string" required="false">
+		<cfargument name="login_diraya" type="string" required="false">
+		<cfargument name="perfil_cabecera" type="string" required="false">
+
+		<cfargument name="center_id" type="numeric" required="false">
+		<cfargument name="category_id" type="numeric" required="false">
+		<cfargument name="service_id" type="numeric" required="false">
+		<cfargument name="service" type="string" required="false">
+		<cfargument name="other_1" type="string" required="false">
+		<cfargument name="other_2" type="string" required="false">
+
+		<cfargument name="typology_id" type="string" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "createUser">
+
+		<cfset var response = structNew()>
+		<cfset var clientQuery = "">
+		<cfset var new_user_id = "">
+
+
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+			</cfinvoke>
+
+			<cfif clientQuery.recordCount GT 0>
+
+				<cfif listFind(APPLICATION.languages, arguments.language , ",") IS 0>
+					<cfset response = {result=false, message="Idioma no válido"}>
+					<cfreturn response>
+				</cfif>
+
+				<cfset arguments.email = Trim(arguments.email)>
+				<cfset arguments.mobile_phone = Trim(arguments.mobile_phone)>
+
+
+				<cftransaction>
+
+					<cfif APPLICATION.userEmailRequired IS true OR len(arguments.email) GT 0>
+
+						<!---checkEmail--->
+						<cfif len(arguments.email) IS 0 OR NOT isValid("email",arguments.email)>
+							<cfset response = {result=false, message="Email incorrecto"}>
+							<cfreturn response>
+						</cfif>
+
+						<cfquery name="checkEmail" datasource="#client_dsn#">
+							SELECT id
+							FROM #client_abb#_users
+							WHERE email=<cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">;
+						</cfquery>
+
+						<cfif checkEmail.recordCount GT 0><!---User email already used--->
+							<!---<cfset error_code = 205>>--->
+							<cfset response = {result=false, message="La dirección de email introducida ya está asociada a otro usuario de la aplicación"}>
+							<cfreturn response>
+						</cfif>
+
+					</cfif>
+
+					<cfif APPLICATION.moduleLdapUsers EQ true>
+
+						<!---if login_ldap is defined--->
+						<cfif len(arguments.login_ldap) GT 0>
+
+							<!---Check if login already used--->
+							<cfquery name="checkLoginLdap" datasource="#client_dsn#">
+								SELECT *
+								FROM #client_abb#_users
+								WHERE login_ldap=<cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">;
+							</cfquery>
+
+							<cfif checkLoginLdap.recordCount GT 0><!---User LDAP login already assigned to another user--->
+								<!---<cfset error_code = 211>--->
+								<cfset response = {result=false, message="El login introducido ya está asociado a otro usuario de la aplicación"}>
+								<cfreturn response>
+							</cfif>
+
+							<!---Check if exist in LDAP (ONLY VPNET)--->
+							<cfif APPLICATION.identifier EQ "vpnet">
+
+								<cfinvoke component="UserLDAPManager" method="getLDAPUser" returnvariable="xmlResponseUser">
+									<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
+									<cfinvokeargument name="return_type" value="xml">
+								</cfinvoke>
+
+							</cfif>
+
+						</cfif>
+
+						<cfif isDefined("arguments.login_diraya") AND len(arguments.login_diraya) GT 0>
+
+							<!---Check if login already used--->
+							<cfquery name="checkLoginDiraya" datasource="#client_dsn#">
+								SELECT *
+								FROM #client_abb#_users
+								WHERE login_diraya = <cfqueryparam value="#arguments.login_diraya#" cfsqltype="cf_sql_varchar">;
+							</cfquery>
+
+							<cfif checkLoginDiraya.recordCount GT 0><!---User LDAP login already assigned to another user--->
+								<!---<cfset error_code = 211>>--->
+								<cfset response = {result=false, message="El login de Diraya introducido ya está asociado a otro usuario de la aplicación"}>
+								<cfreturn response>
+							</cfif>
+
+						</cfif>
+
+					</cfif>
+
+					<!---Insert User in DataBase--->
+					<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
+						INSERT INTO #client_abb#_users
+						SET email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">,
+						name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
+						family_name = <cfqueryparam value="#arguments.family_name#" cfsqltype="cf_sql_varchar">,
+						telephone = <cfqueryparam value="#arguments.telephone#" cfsqltype="cf_sql_varchar">,
+						address = <cfqueryparam value="#arguments.address#" cfsqltype="cf_sql_varchar">,
+						password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">,
+						sms_allowed = <cfqueryparam value="false" cfsqltype="cf_sql_bit">,
+						mobile_phone = <cfqueryparam value="#arguments.mobile_phone#" cfsqltype="cf_sql_varchar">,
+						creation_date = NOW(),
+						<cfif len(arguments.telephone_ccode) GT 0>
+							telephone_ccode = <cfqueryparam value="#arguments.telephone_ccode#" cfsqltype="cf_sql_integer">,
+						<cfelse>
+							telephone_ccode = <cfqueryparam null="true" cfsqltype="cf_sql_numeric">,
+						</cfif>
+						<cfif len(arguments.mobile_phone_ccode) GT 0>
+							mobile_phone_ccode = <cfqueryparam value="#arguments.mobile_phone_ccode#" cfsqltype="cf_sql_integer">
+						<cfelse>
+							mobile_phone_ccode = <cfqueryparam null="true" cfsqltype="cf_sql_numeric">
+						</cfif>,
+						language = <cfqueryparam value="#arguments.language#" cfsqltype="cf_sql_varchar">,
+						dni = <cfqueryparam value="#arguments.dni#" cfsqltype="cf_sql_varchar">,
+						hide_not_allowed_areas = <cfqueryparam value="#arguments.hide_not_allowed_areas#" cfsqltype="cf_sql_bit">,
+						information = <cfqueryparam value="#arguments.information#" cfsqltype="cf_sql_longvarchar">,
+						internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">,
+						enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">,
+						linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
+						twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
+						start_page = <cfqueryparam value="#arguments.start_page#" cfsqltype="cf_sql_varchar">
+						<cfif APPLICATION.moduleLdapUsers EQ true>
+							<cfif isDefined("arguments.login_ldap") AND len(arguments.login_ldap) GT 0>
+							, login_ldap = <cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
+							</cfif>
+							<cfif isDefined("arguments.login_diraya") AND len(arguments.login_diraya) GT 0>
+							, login_diraya = <cfqueryparam value="#arguments.login_diraya#" cfsqltype="cf_sql_varchar">
+							</cfif>
+						</cfif>
+						<cfif isDefined("arguments.perfil_cabecera")>
+						, perfil_cabecera = <cfqueryparam value="#arguments.perfil_cabecera#" cfsqltype="cf_sql_varchar">
+						</cfif>
+
+						<cfif APPLICATION.identifier EQ "vpnet">
+							, center_id = <cfqueryparam value="#arguments.center_id#" cfsqltype="cf_sql_integer">
+							, category_id = <cfqueryparam value="#arguments.category_id#" cfsqltype="cf_sql_integer">
+							, service_id = <cfqueryparam value="#arguments.service_id#" cfsqltype="cf_sql_integer">
+							, service = <cfqueryparam value="#arguments.service#" cfsqltype="cf_sql_varchar">
+							, other_1 = <cfqueryparam value="#arguments.other_1#" cfsqltype="cf_sql_varchar">
+							, other_2 = <cfqueryparam value="#arguments.other_2#" cfsqltype="cf_sql_varchar">
+						</cfif>
+						;
+					</cfquery>
+
+					<!---Aquí se obtiene el id del usuario insertado en base de datos--->
+					<cfquery name="getLastInsertId" datasource="#client_dsn#">
+						SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_users;
+					</cfquery>
+					<cfset new_user_id = getLastInsertId.last_insert_id>
+
+					<!---Insert User Root Folder--->
+					<cfquery name="insertRootFolderQuery" datasource="#client_dsn#" result="insertRootFolderResult">
+						INSERT INTO #client_abb#_folders
+						(name, creation_date, user_in_charge, description)
+						VALUES(
+							'Mis documentos',
+							NOW(),
+							<cfqueryparam value="#new_user_id#" cfsqltype="cf_sql_integer">,
+							'Directorio raiz'
+							);
+					</cfquery>
+
+					<cfquery name="getLastInsertId" datasource="#client_dsn#">
+						SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_folders;
+					</cfquery>
+					<cfset root_folder_id = getLastInsertId.last_insert_id>
+
+					<cfquery name="insertRootFolderInUser" datasource="#client_dsn#">
+						UPDATE #client_abb#_users
+						SET root_folder_id = #root_folder_id#
+						WHERE id = <cfqueryparam value="#new_user_id#" CFSQLType="cf_sql_integer">;
+					</cfquery>
+
+
+					<!--- setUserTypology --->
+					<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="setUserTypology" argumentcollection="#arguments#">
+							<cfinvokeargument name="update_user_id" value="#new_user_id#"/>
+						</cfinvoke>
+
+					</cfif>
+
+				</cftransaction>
+
+
+				<cfif isDefined("arguments.files")>
+
+					<!---Subida de imagen--->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserImageFile" method="uploadUserImage">
+						<cfinvokeargument name="files" value="#arguments.files#">
+						<cfinvokeargument name="user_id" value="#new_user_id#">
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					</cfinvoke>
+
+					<!---FIN subida de imagen--->
+
+				</cfif>
+
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
+					<cfinvokeargument name="user_id" value="#new_user_id#">
+					<cfinvokeargument name="with_ldap" value="#APPLICATION.moduleLdapUsers#">
+					<cfif APPLICATION.identifier EQ "vpnet">
+						<cfinvokeargument name="with_vpnet" value="true">
+					</cfif>
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif selectUserQuery.recordCount IS 0><!---the user does not exist--->
+
+					<cfset error_code = 204>
+
+					<cfthrow errorcode="#error_code#">
+
+				</cfif>
+
+				<cfif arguments.enabled IS true AND len(arguments.email) GT 0>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newUser">
+						<cfinvokeargument name="objectUser" value="#selectUserQuery#">
+						<cfinvokeargument name="password_temp" value="#arguments.password_temp#">
+						<cfinvokeargument name="client_id" value="#clientQuery.id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+
+				<cfinclude template="includes/logRecord.cfm">
+
+				<cfset response = {result=true, user_id=new_user_id}>
+
+
+			<cfelse><!---The client does not exist--->
+
+				<cfset error_code = 301>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+	<!--- ----------------------------------- setUserTypology -------------------------------------- --->
+
+	<cffunction name="setUserTypology" output="false" returntype="numeric" access="public">
+		<cfargument name="update_user_id" type="numeric" required="true">
+		<cfargument name="table_id" type="numeric" required="true"><!---Este parámetro viene incluído junto con el resto de campos de la tabla en el método outputRowFormInputs en RowHtml--->
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="action" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "setUserTypology">
+
+		<cfset var row_id = "">
+
+			<!--- getTable --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif tableQuery.recordCount IS 0><!---Item does not exist--->
+
+				<cfset error_code = 501>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="saveRow" argumentcollection="#arguments#" returnvariable="row_id">
+				<cfinvokeargument name="with_transaction" value="false">
+			</cfinvoke>
+
+			<cfif arguments.action IS "create">
+
+				<cfquery datasource="#client_dsn#" name="setUserTypology">
+					UPDATE #client_abb#_users
+					SET typology_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">,
+					typology_row_id = <cfqueryparam value="#row_id#" cfsqltype="cf_sql_integer">
+					WHERE id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+			</cfif>
+
+		<cfreturn row_id>
+
+	</cffunction>
+
+
+
+	<!--- ----------------------------------- clearUserTypology -------------------------------------- --->
+
+	<cffunction name="clearUserTypology" output="false" returntype="void" access="public">
+		<cfargument name="user_id" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "clearUserTypology">
+
+			<cfquery datasource="#client_dsn#" name="clearUserTypology">
+				UPDATE #client_abb#_users
+				SET typology_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">,
+				typology_row_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
+				WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+	</cffunction>
+
 
 
 

@@ -4540,6 +4540,7 @@
 		<cfset var root_area = structNew()>
 		<cfset var login_ldap = "">
 		<cfset var curLang = "">
+		<cfset var head_content = "">
 
 
 		<cfif len(objectUser.email) GT 0>
@@ -4549,6 +4550,12 @@
 			<cfelse>
 				<cfset curLang = objectUser.language>
 			</cfif>
+
+			<!--- getHeadContent --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContent" returnvariable="head_content">
+				<cfinvokeargument name="language" value="#curLang#">
+				<cfinvokeargument name="client_abb" value="#client_abb#"/>
+			</cfinvoke>
 
 			<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
 				<cfinvokeargument name="onlyId" value="false">
@@ -4628,6 +4635,7 @@
 				<cfinvokeargument name="to" value="#objectUser.email#">
 				<cfinvokeargument name="subject" value="#subject#">
 				<cfinvokeargument name="content" value="#html_text#">
+				<cfinvokeargument name="head_content" value="#head_content#">
 				<cfinvokeargument name="foot_content" value="#foot_content#">
 			</cfinvoke>
 
