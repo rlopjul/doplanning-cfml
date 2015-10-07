@@ -19,7 +19,7 @@
 
 		<cfargument name="mainUrl" type="string" required="true">
 		<cfargument name="signOutUrl" type="string" required="true">
-		<cfargument name="helpUrl" type="string" required="false" default="https://doplanning.net/es/page.cfm?id=9&amp;title=tutoriales">
+		<cfargument name="helpUrl" type="string" required="false" default="https://doplanning.net/es/page.cfm?id=118&title=soporte"><!---https://doplanning.net/es/page.cfm?id=9&amp;title=tutoriales--->
 		<cfargument name="termsOfUseUrl" type="string" required="false" default="https://doplanning.net/es/terminos_de_uso.cfm">
 
 		<cfargument name="ldapName" type="string" required="false">

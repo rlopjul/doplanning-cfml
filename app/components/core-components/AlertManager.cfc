@@ -4409,7 +4409,8 @@
 					</cfsavecontent>
 
 					<cfinvoke component="EmailManager" method="sendEmail">
-						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+						<!---<cfinvokeargument name="from" value="#SESSION.client_email_from#">--->
+						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
 						<cfinvokeargument name="bcc" value="#listInternalUsers#">
 						<cfinvokeargument name="subject" value="#subjectInternal#">
@@ -4444,7 +4445,8 @@
 					</cfsavecontent>
 
 					<cfinvoke component="EmailManager" method="sendEmail">
-						<cfinvokeargument name="from" value="#SESSION.client_email_from#">
+						<!---<cfinvokeargument name="from" value="#SESSION.client_email_from#">--->
+						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 						<cfinvokeargument name="to" value="#APPLICATION.emailFalseTo#">
 						<cfinvokeargument name="bcc" value="#listExternalUsers#">
 						<cfinvokeargument name="subject" value="#subjectExternal#">
@@ -4518,6 +4520,161 @@
 		</cfif>
 
 		<cfreturn accessContent>
+
+	</cffunction>
+
+
+
+	<!--- -------------------------------------- newUser ------------------------------------ --->
+
+	<cffunction name="newUser" access="public" returntype="void">
+		<cfargument name="objectUser" type="query" required="yes">
+		<cfargument name="password_temp" type="string" required="no">
+		<cfargument name="client_id" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "newUser">
+
+		<cfset var root_area = structNew()>
+		<cfset var login_ldap = "">
+		<cfset var curLang = "">
+
+
+		<cfif len(objectUser.email) GT 0>
+
+			<cfif len(objectUser.language) IS 0>
+				<cfset curLang = APPLICATION.defaultLanguage>
+			<cfelse>
+				<cfset curLang = objectUser.language>
+			</cfif>
+
+			<cfinvoke component="AreaQuery" method="getRootArea" returnvariable="root_area">
+				<cfinvokeargument name="onlyId" value="false">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+			<!---En el asunto se pone el nombre del área raiz--->
+			<cfset subject = "[#root_area.name#] #langText[curLang].new_user.you_has_been_registered_in_organization#.">
+
+			<cfinvoke component="AlertManager" method="getApplicationAccess" returnvariable="access_content">
+				<cfinvokeargument name="client_id" value="#arguments.client_id#">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="curLang" value="#curLang#"/>
+			</cfinvoke>
+
+			<!---Esto tiene que completarse con la generación de un código de ticket--->
+			<!---IMPORTANTE: Para confirmar su alta debe acceder a la siguiente dirección: #APPLICATION.mainUrl#/#SESSION.client_id#--->
+			<cfsavecontent variable="html_text">
+			<cfoutput>
+	#langText[curLang].new_user.you_has_been_registered_in_application# #APPLICATION.title# #langText[curLang].common.of_the_organization# <b>#root_area.name#</b>.<br /><br />
+
+	<cfif APPLICATION.identifier NEQ "vpnet"><!---Default User--->
+	#langText[curLang].new_user.if_you_use_the_application#: <a href="#APPLICATION.termsOfUseUrl#">#APPLICATION.termsOfUseUrl#</a>.<br/><br/>
+
+	#langText[curLang].common.your_access_email#: <b>#objectUser.email#</b><br />
+	#langText[curLang].new_user.password#: <b>#arguments.password_temp#</b><br/>
+	#langText[curLang].common.you_must_change_password#.<br /><br/>
+
+	</cfif>
+	<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP User--->
+
+		<cfif APPLICATION.identifier NEQ "vpnet">
+
+			<cfif ( isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0 ) OR ( isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0 )>
+
+				#langText[curLang].new_user.also_you_can_use#: <br/>
+
+				<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
+					#APPLICATION.ldapName#: <b>#arguments.objectUser.login_ldap#</b><br/>
+				</cfif>
+				<cfif isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0>
+					Diraya: <b>#arguments.objectUser.login_diraya#</b><br/>
+				</cfif>
+
+			</cfif>
+
+		<cfelse><!---vpnet--->
+
+			<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
+				<cfset ldap_name = APPLICATION.ldapName>
+				<cfset login_ldap = arguments.objectUser.login_ldap>
+			<cfelseif isDefined("arguments.objectUser.login_diraya")>
+				<cfset ldap_name = "Diraya">
+				<cfset login_ldap = arguments.objectUser.login_diraya>
+			</cfif>
+			#langText[curLang].new_user.user_access_identify_to# #ldap_name#.<br/>
+			#langText[curLang].common.user#: <b>#login_ldap#</b><br/>
+
+		</cfif>
+
+	</cfif><br/>
+
+	<cfif APPLICATION.identifier NEQ "vpnet">
+		#langText[curLang].new_user.to_view_tutorials_access#: <a href="#APPLICATION.helpUrl#">#APPLICATION.helpUrl#</a><br/>
+	</cfif>
+	<br/>
+
+	<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;"><b>#access_content#</b></div>
+
+			</cfoutput>
+			</cfsavecontent>
+
+			<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[curLang].common.foot_do_not_reply#.</span><br/>#langText[curLang].common.foot_content_default_1# #APPLICATION.title#.</p>'>
+
+			<cfinvoke component="EmailManager" method="sendEmail">
+				<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
+				<cfinvokeargument name="to" value="#objectUser.email#">
+				<cfinvokeargument name="subject" value="#subject#">
+				<cfinvokeargument name="content" value="#html_text#">
+				<cfinvokeargument name="foot_content" value="#foot_content#">
+			</cfinvoke>
+
+		</cfif><!--- END len(objectUser.email) GT 0 --->
+
+	</cffunction>
+
+
+
+	<!--- -------------------------------------- getApplicationAccess ------------------------------------ --->
+
+	<cffunction name="getApplicationAccess" access="public" returntype="string">
+		<cfargument name="client_id" type="string" required="true">
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="curLang" type="string" required="true"/>
+
+		<cfset var method = "getApplicationAccess">
+
+		<cfset var access_default = "">
+		<cfset var access_content = "">
+		<cfset var accessClient = "">
+
+		<cfif APPLICATION.twoUrlsToAccess IS false>
+
+			<cfset access_default = '#langText[curLang].common.access_to_application#: '>
+
+			<cfif arguments.client_abb EQ "hcs">
+				<cfset accessClient = "doplanning">
+			<cfelse>
+				<cfset accessClient = arguments.client_id>
+			</cfif>
+
+			<cfset access_content = '#access_default#<a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#">#APPLICATION.mainUrl##APPLICATION.path#/#accessClient#</a>'>
+
+		<cfelse>
+
+			<cfsavecontent variable="access_content">
+			<cfoutput>
+			<!---<br/><br/>--->#langText[curLang].common.access_to_application_links#:<br/>
+			-&nbsp;#langText[curLang].common.access_internal# <a target="_blank" href="#APPLICATION.mainUrl##APPLICATION.path#/">#APPLICATION.mainUrl##APPLICATION.path#/</a><br/>
+			-&nbsp;#langText[curLang].common.access_external# <a target="_blank" href="#APPLICATION.alternateUrl#">#APPLICATION.alternateUrl#</a>
+			</cfoutput>
+			</cfsavecontent>
+
+		</cfif>
+
+		<cfreturn access_content>
 
 	</cffunction>
 
