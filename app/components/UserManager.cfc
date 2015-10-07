@@ -2189,41 +2189,18 @@
 	<cffunction name="getEmptyUser" output="false" access="public" returntype="struct">
 
 		<cfset var method = "getEmptyUser">
-
+			
 		<cfset var response = structNew()>
 
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfquery name="getEmptyUserQuery" datasource="#client_dsn#">
-				SELECT *, id AS user_id
-				FROM #client_abb#_users
-				WHERE id = -1;
-			</cfquery>
-
-			<!--- getClient --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
-				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-			</cfinvoke>
-
 			<!--- generatePassword --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="newPassword">
-				<cfinvokeargument name="numberofCharacters" value="6">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getEmptyUser" returnvariable="response">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-
-			<cfset queryAddRow(getEmptyUserQuery, 1)>
-
-			<cfset querySetCell(getEmptyUserQuery, "enabled", true)>
-			<!---<cfset querySetCell(getEmptyUserQuery, "mobile_phone_ccode", "34")>
-			<cfset querySetCell(getEmptyUserQuery, "telephone_ccode", "34")>--->
-			<cfset querySetCell(getEmptyUserQuery, "hide_not_allowed_areas", 1)>
-			<cfset querySetCell(getEmptyUserQuery, "language", clientQuery.default_language)>
-
-			<cfset queryAddColumn(getEmptyUserQuery, "new_password")>
-			<cfset querySetCell(getEmptyUserQuery, "new_password", newPassword)>
-
-			<cfset response = {result=true, user=#getEmptyUserQuery#}>
 
 			<cfcatch>
 

@@ -1267,6 +1267,50 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- getEmptyUser -------------------------------------  --->
+
+	<cffunction name="getEmptyUser" output="false" access="public" returntype="struct">
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getEmptyUser">
+
+		<cfset var response = structNew()>
+
+			<cfquery name="getEmptyUserQuery" datasource="#client_dsn#">
+				SELECT *, id AS user_id
+				FROM #client_abb#_users
+				WHERE id = -1;
+			</cfquery>
+
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			</cfinvoke>
+
+			<!--- generatePassword --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="newPassword">
+				<cfinvokeargument name="numberOfCharacters" value="6">
+			</cfinvoke>
+
+			<cfset queryAddRow(getEmptyUserQuery, 1)>
+
+			<cfset querySetCell(getEmptyUserQuery, "enabled", true)>
+			<!---<cfset querySetCell(getEmptyUserQuery, "mobile_phone_ccode", "34")>
+			<cfset querySetCell(getEmptyUserQuery, "telephone_ccode", "34")>--->
+			<cfset querySetCell(getEmptyUserQuery, "hide_not_allowed_areas", 1)>
+			<cfset querySetCell(getEmptyUserQuery, "language", clientQuery.default_language)>
+
+			<cfset queryAddColumn(getEmptyUserQuery, "new_password")>
+			<cfset querySetCell(getEmptyUserQuery, "new_password", newPassword)>
+
+			<cfset response = {result=true, user=#getEmptyUserQuery#}>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 
 
 </cfcomponent>
