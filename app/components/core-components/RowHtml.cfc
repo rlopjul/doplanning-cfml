@@ -186,11 +186,11 @@
 				<cfelseif fields.field_type_group IS "url"><!--- URL --->
 
 
-					<cfif arguments.client_abb EQ "hcs"><!--- Deshabilitado en el HCS la obligación de introducir URLs completas para que se puedan introducir URLs relativas --->
+					<!---<cfif arguments.client_abb EQ "hcs" OR ><!--- Deshabilitado en el HCS la obligación de introducir URLs completas para que se puedan introducir URLs relativas --->
 						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
-					<cfelse>
-						<input type="url" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
-					</cfif>
+					<cfelse>--->
+						<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
+					<!---</cfif>--->
 
 
 					<cfif fields.required IS true AND arguments.search_inputs IS false>
@@ -671,6 +671,9 @@
 											<cfinvokeargument name="parse_dates" value="true">
 
 											<cfinvokeargument name="with_user" value="true"/>
+
+											<cfinvokeargument name="order_by" value="name">
+											<cfinvokeargument name="order_type" value="ASC">
 
 											<cfinvokeargument name="client_abb" value="#client_abb#">
 											<cfinvokeargument name="client_dsn" value="#client_dsn#">

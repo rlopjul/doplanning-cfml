@@ -292,8 +292,11 @@
 		<cfargument name="categories_condition" type="string" required="false" default="AND">
 		<cfargument name="published" type="boolean" required="false">
 
-		<cfargument name="from_date" type="string" required="no">
-		<cfargument name="end_date" type="string" required="no">
+		<cfargument name="from_date" type="string" required="false">
+		<cfargument name="end_date" type="string" required="false">
+
+		<cfargument name="order_by" type="string" required="false">
+		<cfargument name="order_type" type="string" required="false">
 
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">
@@ -437,7 +440,12 @@
 					<!---OR files.replacement_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')--->
 					AND IF( files.replacement_date IS NULL, true, files.replacement_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') ) )
 				</cfif>
+
+				<cfif isDefined("arguments.order_by") AND isDefined("arguments.order_type")>
+				ORDER BY #arguments.order_by# #arguments.order_type#
+				<cfelse>
 				ORDER BY last_version_date DESC
+				</cfif>
 				<cfif isDefined("arguments.limit")>
 				LIMIT #arguments.limit#
 				</cfif>;
