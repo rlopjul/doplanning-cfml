@@ -284,34 +284,18 @@
 
 		<cftry>
 
-			<cfif arguments.password NEQ arguments.password_confirmation>
+			<!---<cfset password_encoded = hash(arguments.password)>--->
 
-				<cfset response = {result=false, message="La nueva contraseña y su confirmación deben ser iguales."}>
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
+				<!---<cfinvokeargument name="password" value="#password_encoded#">--->
+				<cfinvokeargument name="password_temp" value="#arguments.password#">
+			</cfinvoke>
 
-			<cfelse>
+			<cfif response.result IS true>
 
-				<cfif APPLICATION.userEmailRequired IS true AND len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
+				<cfset response.message = "Usuario creado. Seleccione a continuación las áreas a las que desea asociarlo.">
 
-					<cfset response = {result=false, message="Debe introducir un email correcto."}>
-
-				<cfelse>
-
-					<cfset password_encoded = hash(arguments.password)>
-
-					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
-						<cfinvokeargument name="password" value="#password_encoded#">
-						<cfinvokeargument name="password_temp" value="#arguments.password#">
-					</cfinvoke>
-
-					<cfif response.result IS true>
-
-						<cfset response.message = "Usuario creado. Seleccione a continuación las áreas a las que desea asociarlo.">
-
-					</cfif>
-
-				</cfif><!--- END email check --->
-
-			</cfif><!--- END password_confirmation check --->
+			</cfif>
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
@@ -376,7 +360,7 @@
 
 				<cfif APPLICATION.userEmailRequired IS true AND len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
 
-					<cfset response = {result=false, message="Debe introducir un email correcto."}>
+					<cfset response = {result=false, message="Debe introducir un email válido."}>
 
 				<cfelse>
 

@@ -644,6 +644,7 @@
 			<cfinclude template="includes/checkAdminAccess.cfm">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
+				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -2189,7 +2190,7 @@
 	<cffunction name="getEmptyUser" output="false" access="public" returntype="struct">
 
 		<cfset var method = "getEmptyUser">
-			
+
 		<cfset var response = structNew()>
 
 		<cftry>
@@ -2197,10 +2198,12 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<!--- generatePassword --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getEmptyUser" returnvariable="response">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="getEmptyUser" returnvariable="getEmptyUserQuery">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
+
+			<cfset response = {result=true, user=#getEmptyUserQuery#}>
 
 			<cfcatch>
 

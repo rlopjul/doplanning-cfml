@@ -463,7 +463,7 @@
 
 		});
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/jquery_validate_bootstrap_scripts.cfm">
+		<cfinclude template="#APPLICATION.corePath#/includes/jquery_validate_bootstrap_scripts.cfm">
 
 	});
 

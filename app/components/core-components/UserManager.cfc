@@ -914,8 +914,8 @@
 
 		<cfargument name="linkedin_url" type="string" required="true">
 		<cfargument name="twitter_url" type="string" required="true">
-		<cfargument name="start_page" type="string" required="true">
-		<cfargument name="information" type="string" required="true">
+		<cfargument name="start_page" type="string" required="false">
+		<cfargument name="information" type="string" required="false" default="">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
@@ -932,6 +932,8 @@
 
 		<cfargument name="typology_id" type="string" required="false">
 
+
+		<cfargument name="user_id" type="numeric" required="false">
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
@@ -940,7 +942,28 @@
 		<cfset var response = structNew()>
 		<cfset var clientQuery = "">
 		<cfset var new_user_id = "">
+		<cfset var password_encoded = "">
 
+
+			<cfif arguments.password NEQ arguments.password_confirmation>
+
+				<cfset response = {result=false, message="La nueva contraseña y su confirmación deben ser iguales."}>
+
+				<cfreturn response>
+
+			<cfelse>
+
+				<cfif APPLICATION.userEmailRequired IS true AND len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
+
+					<cfset response = {result=false, message="Debe introducir un email válido."}>
+
+					<cfreturn response>
+
+				</cfif>
+
+			</cfif>
+
+			<cfset password_encoded = hash(arguments.password)>
 
 			<!--- getClient --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
@@ -1039,7 +1062,7 @@
 						family_name = <cfqueryparam value="#arguments.family_name#" cfsqltype="cf_sql_varchar">,
 						telephone = <cfqueryparam value="#arguments.telephone#" cfsqltype="cf_sql_varchar">,
 						address = <cfqueryparam value="#arguments.address#" cfsqltype="cf_sql_varchar">,
-						password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">,
+						password = <cfqueryparam value="#password_encoded#" cfsqltype="cf_sql_varchar">,
 						sms_allowed = <cfqueryparam value="false" cfsqltype="cf_sql_bit">,
 						mobile_phone = <cfqueryparam value="#arguments.mobile_phone#" cfsqltype="cf_sql_varchar">,
 						creation_date = NOW(),
@@ -1060,8 +1083,10 @@
 						internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">,
 						enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">,
 						linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
-						twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
-						start_page = <cfqueryparam value="#arguments.start_page#" cfsqltype="cf_sql_varchar">
+						twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">
+						<cfif isDefined("arguments.start_page")>
+						, start_page = <cfqueryparam value="#arguments.start_page#" cfsqltype="cf_sql_varchar">
+						</cfif>
 						<cfif APPLICATION.moduleLdapUsers EQ true>
 							<cfif isDefined("arguments.login_ldap") AND len(arguments.login_ldap) GT 0>
 							, login_ldap = <cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
@@ -1119,6 +1144,11 @@
 					<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="setUserTypology" argumentcollection="#arguments#">
+							<cfif isDefined("arguments.user_id")>
+								<cfinvokeargument name="user_id" value="#arguments.user_id#">
+							<cfelse>
+								<cfinvokeargument name="user_id" value="#new_user_id#">
+							</cfif>
 							<cfinvokeargument name="update_user_id" value="#new_user_id#"/>
 						</cfinvoke>
 
@@ -1195,6 +1225,7 @@
 	<!--- ----------------------------------- setUserTypology -------------------------------------- --->
 
 	<cffunction name="setUserTypology" output="false" returntype="numeric" access="public">
+		<cfargument name="user_id" type="numeric" required="true">
 		<cfargument name="update_user_id" type="numeric" required="true">
 		<cfargument name="table_id" type="numeric" required="true"><!---Este parámetro viene incluído junto con el resto de campos de la tabla en el método outputRowFormInputs en RowHtml--->
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -1269,13 +1300,11 @@
 
 	<!--- ------------------------------------- getEmptyUser -------------------------------------  --->
 
-	<cffunction name="getEmptyUser" output="false" access="public" returntype="struct">
+	<cffunction name="getEmptyUser" output="false" access="public" returntype="query">
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
 		<cfset var method = "getEmptyUser">
-
-		<cfset var response = structNew()>
 
 			<cfquery name="getEmptyUserQuery" datasource="#client_dsn#">
 				SELECT *, id AS user_id
@@ -1304,9 +1333,7 @@
 			<cfset queryAddColumn(getEmptyUserQuery, "new_password")>
 			<cfset querySetCell(getEmptyUserQuery, "new_password", newPassword)>
 
-			<cfset response = {result=true, user=#getEmptyUserQuery#}>
-
-		<cfreturn response>
+		<cfreturn getEmptyUserQuery>
 
 	</cffunction>
 

@@ -84,7 +84,7 @@
 
  		<div class="container-fluid">
  			<cfset page_type = 1>
-			<cfinclude template="#APPLICATION.htmlPath#/includes/user_data_form.cfm"/>
+				<cfinclude template="#APPLICATION.corePath#/includes/user_data_form.cfm">
 		</div>
 
 	</div>
