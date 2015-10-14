@@ -405,31 +405,16 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getAllTypologies" returnvariable="typologiesQuery">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_area" value="#arguments.with_area#">
+				<cfinvokeargument name="parse_dates" value="#arguments.parse_dates#">
 
-				<cfquery name="typologiesQuery" datasource="#client_dsn#">
-					SELECT tables.id, tables.title, tables.user_in_charge
-					, tables.attached_file_name, tables.attached_file_id, tables.area_id
-					, tables.structure_available, tables.general
-					<cfif arguments.with_area IS true>
-					, areas.name AS area_name
-					</cfif>
-					<cfif arguments.parse_dates IS true>
-						, DATE_FORMAT(tables.creation_date, '#APPLICATION.dbDateTimeFormat#') AS creation_date
-						, DATE_FORMAT(tables.last_update_date, '#APPLICATION.dbDateTimeFormat#') AS last_update_date
-					<cfelse>
-						, tables.creation_date, tables.last_update_date
-					</cfif>
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 
-					FROM #client_abb#_#tableTypeTable# AS tables
-					<cfif arguments.with_area IS true>
-						INNER JOIN #client_abb#_areas AS areas ON tables.area_id = areas.id
-					</cfif>
-					WHERE tables.status = 'ok'
-					ORDER BY id ASC;
-				</cfquery>
-
-				<cfset response = {result=true, query=#typologiesQuery#}>
+			<cfset response = {result=true, query=#typologiesQuery#}>
 
 			<cfcatch>
 

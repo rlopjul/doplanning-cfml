@@ -180,6 +180,47 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- getAllTypologies -------------------------------------  --->
+
+	<cffunction name="getAllTypologies" output="false" access="public" returntype="query">
+		<cfargument name="tableTypeId" type="string" required="true">
+		<cfargument name="with_area" type="boolean" required="false" default="false">
+		<cfargument name="parse_dates" type="boolean" required="false" default="true">
+
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">
+
+		<cfset var method = "getAllTypologies">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfquery name="typologiesQuery" datasource="#client_dsn#">
+				SELECT tables.id, tables.title, tables.user_in_charge
+				, tables.attached_file_name, tables.attached_file_id, tables.area_id
+				, tables.structure_available, tables.general
+				<cfif arguments.with_area IS true>
+				, areas.name AS area_name
+				</cfif>
+				<cfif arguments.parse_dates IS true>
+					, DATE_FORMAT(tables.creation_date, '#APPLICATION.dbDateTimeFormat#') AS creation_date
+					, DATE_FORMAT(tables.last_update_date, '#APPLICATION.dbDateTimeFormat#') AS last_update_date
+				<cfelse>
+					, tables.creation_date, tables.last_update_date
+				</cfif>
+
+				FROM #client_abb#_#tableTypeTable# AS tables
+				<cfif arguments.with_area IS true>
+					INNER JOIN #client_abb#_areas AS areas ON tables.area_id = areas.id
+				</cfif>
+				WHERE tables.status = 'ok'
+				ORDER BY id ASC;
+			</cfquery>
+
+		<cfreturn typologiesQuery>
+
+	</cffunction>
+
+
 	<!---getTableUsers--->
 
 	<cffunction name="getTableUsers" output="false" returntype="query" access="public">
