@@ -12,6 +12,13 @@ page_types
 
 <cfoutput>
 
+<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+<!---<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>--->
+<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
+
 <script>
 
 	$(function () {
@@ -63,13 +70,25 @@ page_types
 	 	<cfif APPLICATION.showDniTitle IS true>
 	 	$("##dni").mask('00000000A');
 	 	</cfif>
+
 	});
 
 </script>
 
 <!--- Importante: este formulario no se envía como formulario HTML, se obtienen sus valores y se envian mediante JavaScript --->
 
-<form id="updateUserData" method="post" enctype="multipart/form-data" class="form-horizontal">
+<cfform id="updateUserData" name="user_form" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+	<script>
+
+		var railo_custom_form;
+
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
+			railo_custom_form = new LuceeForms('userForm');
+		else
+			railo_custom_form = new RailoForms('userForm');
+
+	</script>
 
 	<cfif page_type EQ 3>
 		<input type="hidden" name="client_abb" value="#client_abb#" />
@@ -126,8 +145,11 @@ page_types
 
 		</cfif><!--- END page_type NEQ 3 --->
 
-
-		<div class="col-sm-9">
+		<cfif page_type IS 3>
+			<div class="col-sm-10">
+		<cfelse>
+			<div class="col-sm-9">
+		</cfif>
 
 			<cfif page_type NEQ 3>
 				<div class="row">
@@ -234,19 +256,24 @@ page_types
 
 			</div>
 
+			<cfif page_type NEQ 3>
+				<div class="row">
 
-			<div class="row">
+					<label class="col-xs-5 col-sm-4 col-md-3 control-label" for="language" lang="es">Idioma</label>
 
-				<label class="col-xs-5 col-sm-4 col-md-3 control-label" for="language" lang="es">Idioma</label>
+					<div class="col-xs-7 col-sm-8 col-md-9">
+						<select name="language" id="language" class="form-control">
+							<option value="es" <cfif objectUser.language EQ "es">selected="selected"</cfif>>Español</option>
+							<option value="en" <cfif objectUser.language EQ "en">selected="selected"</cfif>>English</option>
+						</select>
+					</div>
 
-				<div class="col-xs-7 col-sm-8 col-md-9">
-					<select name="language" id="language" class="form-control">
-						<option value="es" <cfif objectUser.language EQ "es">selected="selected"</cfif>>Español</option>
-						<option value="en" <cfif objectUser.language EQ "en">selected="selected"</cfif>>English</option>
-					</select>
 				</div>
+			<cfelse>
 
-			</div>
+				<input type="hidden" name="language" value="#objectUser.language#"/>
+
+			</cfif>
 
 
 			<cfif page_type NEQ 3>
@@ -376,7 +403,8 @@ page_types
 				</div>
 
 			</cfif>
-			
+
+			<cfif APPLICATION.showDniTitle IS true OR page_type NEQ 3>
 			<div class="row">
 
 				<label for="dni" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif></label>
@@ -386,6 +414,7 @@ page_types
 				</div>
 
 			</div>
+			</cfif>
 
 			<div class="row">
 
@@ -496,7 +525,7 @@ page_types
 	<div class="row">
 
 		<cfif page_type IS 3>
-			<div class="col-sm-9">
+			<div class="col-sm-10">
 		<cfelse>
 			<div class="col-sm-12">
 		</cfif>
@@ -621,5 +650,5 @@ page_types
 	</cfif>---><!--- END APPLICATION.identifier EQ "vpnet" --->
 
 
-</form>
+</cfform>
 </cfoutput>

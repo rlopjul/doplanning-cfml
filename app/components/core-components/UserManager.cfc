@@ -900,7 +900,7 @@
 	<cffunction name="createUser" returntype="struct" output="false" access="public">
 		<cfargument name="family_name" type="string" required="true">
 		<cfargument name="email" type="string" required="false" default="">
-		<cfargument name="dni" type="string" required="true">
+		<cfargument name="dni" type="string" required="false" default="">
 		<cfargument name="mobile_phone" type="string" required="true">
 		<cfargument name="mobile_phone_ccode" type="string" required="true">
 		<cfargument name="telephone" type="string" required="true">
@@ -943,7 +943,7 @@
 		<cfset var clientQuery = "">
 		<cfset var new_user_id = "">
 		<cfset var password_encoded = "">
-
+			
 
 			<cfif arguments.password NEQ arguments.password_confirmation>
 

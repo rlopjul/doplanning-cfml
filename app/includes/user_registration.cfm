@@ -18,20 +18,20 @@
 
 <script>
 
-	function setLanguageBeforeSend() {
+	/*function setLanguageBeforeSend() {
 
 		var selectedLanguage = $("##language").val();
 
 		window.lang.change(selectedLanguage);
 
 		return true;
-	}
+	}*/
 
 	function postUserDataForm(requestUrl) {
 
 		showLoadingPage(true);
 
-		setLanguageBeforeSend();
+		//setLanguageBeforeSend();
 
 		var updateUserFormId = "##updateUserData";
 
