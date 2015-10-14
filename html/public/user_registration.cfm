@@ -60,6 +60,18 @@
 
 		<cfif isDefined("URL.res") AND URL.res IS true>
 
+			<script>
+
+				$(function () {
+
+					if (window.parent == window.top) {
+						window.parent.$("body").animate({scrollTop:0}, 'slow');
+					}
+
+				});
+
+			</script>
+
 			<div class="container">
 
 				<div class="row">
@@ -81,7 +93,7 @@
 
 						<div class="col-sm-12">
 							<cfoutput>
-							<a href="#APPLICATION.path#/intranet/?abb=#URL.abb#" class="btn btn-sm btn-primary"> <span lang="es">Login</span></a>
+							<a href="#APPLICATION.path#/intranet/?abb=#URL.abb#" class="btn btn-sm btn-primary" target="_parent"> <span lang="es">Login</span></a>
 							</cfoutput>
 						</div>
 
