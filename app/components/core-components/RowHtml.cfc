@@ -3,6 +3,9 @@
 
 	<cfset component = "RowHtml">
 
+	<cfset DISPLAY_TYPE_DEFAULT = "default">
+	<cfset DISPLAY_TYPE_HORIZONTAL = "horizontal">
+
 
 	<!--- ----------------------- outputRowFormInputs -------------------------------- --->
 
@@ -13,6 +16,7 @@
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="search_inputs" type="boolean" required="false" default="false">
+		<cfargument name="displayType" type="string" required="false" default="#DISPLAY_TYPE_DEFAULT#">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -65,14 +69,27 @@
 			<div class="col-md-12">
 
 				<cfif ( fields.field_input_type NEQ "checkbox" OR fields.field_type_group EQ "list" ) AND len(field_label) GT 0>
-					<label for="#field_name#" class="control-label">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
+
+					<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+						<cfset labelClass = "col-xs-5 col-sm-4 col-md-3 control-label">
+					<cfelse>
+						<cfset labelClass = "control-label">
+					</cfif>
+
+					<label for="#field_name#" class="#labelClass#">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
+
 				</cfif>
 
-				<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
+				<cfif arguments.displayType NEQ DISPLAY_TYPE_HORIZONTAL>
+					<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
+				</cfif>
 
 
 				<cfif fields.field_type_group IS "long_text" OR fields.field_type_group IS "very_long_text"><!--- TEXTAREA --->
 
+					<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-7 col-sm-8 col-md-9">
+					</cfif>
 
 					<cfif arguments.search_inputs IS false>
 
@@ -85,11 +102,6 @@
 						</cfif>
 
 						<cfif fields.field_type_id IS 3 OR fields.field_type_id IS 11>
-							<!--- CKEditor --->
-							<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
-								<cfinvokeargument name="name" value="#field_name#">
-								<cfinvokeargument name="language" value="#SESSION.user_language#"/>
-							</cfinvoke>--->
 							<!--- Enable CKEDITOR in mobile browsers --->
 							<script>
 								if ( window.CKEDITOR && ( !CKEDITOR.env.ie || CKEDITOR.env.version > 7 ) )
@@ -103,6 +115,10 @@
 
 						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" />
 
+					</cfif>
+
+					<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+						</div>
 					</cfif>
 
 
@@ -128,8 +144,13 @@
 
 				<cfelseif fields.field_type_group IS "decimal"><!--- DECIMAL --->
 
-					<div class="row">
-						<div class="col-xs-6 col-sm-3">
+					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+						<div class="col-xs-7 col-sm-8 col-md-9">
+					<cfelse>
+						<div class="row">
+							<div class="col-xs-6 col-sm-3">
+					</cfif>
+
 
 							<cfif isNumeric(fields.mask_type_id)>
 
@@ -163,17 +184,24 @@
 								</div>
 							</cfif>
 
-						</div>
-						<div class="col-xs-6 col-sm-9" style="padding-top:5px;">
 
-							<i id="decimal-help" class="icon-question-sign" data-toggle="tooltip" data-placement="bottom" data-html="true" title="Los decimales se deben introducir con un punto, ejemplo: 9999.99<cfif len(mask_label) GT 0><br>Al valor introducido se le aplicará posteriormente la siguiente máscara para mostrarlo: #mask_label#</cfif>" lang="es" style="cursor:pointer"></i>
+						<cfif displayType NEQ DISPLAY_TYPE_HORIZONTAL>
+							</div>
+							<div class="col-xs-6 col-sm-9" style="padding-top:5px;">
+						</cfif>
 
+							<i id="decimal-help#fields.field_id#" class="icon-question-sign" data-toggle="tooltip" data-placement="bottom" data-html="true" title="Los decimales se deben introducir con un punto, ejemplo: 9999.99<cfif len(mask_label) GT 0><br>Al valor introducido se le aplicará posteriormente la siguiente máscara para mostrarlo: #mask_label#</cfif>" lang="es" style="cursor:pointer"></i>
+
+					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
 						</div>
-					</div>
+					<cfelse>
+							</div>
+						</div>
+					</cfif>
 
 					<script>
 						$(document).ready(function() {
-							$("##decimal-help").tooltip();
+							$("##decimal-help#fields.field_id#").tooltip();
 						});
 						<cfif fields.required IS true AND arguments.search_inputs IS false>
 							addRailoRequiredFloat("#field_name#", "El campo '#field_label#' debe ser numérico y es obligatorio");
@@ -183,23 +211,6 @@
 					</script>
 
 
-				<cfelseif fields.field_type_group IS "url"><!--- URL --->
-
-
-					<!---<cfif arguments.client_abb EQ "hcs" OR ><!--- Deshabilitado en el HCS la obligación de introducir URLs completas para que se puedan introducir URLs relativas --->
-						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
-					<cfelse>--->
-						<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
-					<!---</cfif>--->
-
-
-					<cfif fields.required IS true AND arguments.search_inputs IS false>
-						<script>
-							addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
-						</script>
-					</cfif>
-
-
 				<cfelseif fields.field_type_group IS "date"><!--- DATE --->
 
 
@@ -207,18 +218,30 @@
 						<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
 					</cfif>
 
-					<div class="row">
-						<div class="col-xs-6 col-sm-3">
+					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+						<div class="col-xs-7 col-sm-8 col-md-9">
+					<cfelse>
+						<div class="row">
+							<div class="col-xs-6 col-sm-3">
+					</cfif>
 
 							<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="form-control input_datepicker"/>
 
+					<cfif displayType NEQ DISPLAY_TYPE_HORIZONTAL>
 						</div>
 						<div class="col-xs-6 col-sm-9" style="padding-top:5px;">
+					</cfif>
 
 							<small lang="es">Fecha formato DD-MM-AAAA</small>
 
+					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
 						</div>
-					</div>
+					<cfelse>
+							</div>
+						</div>
+					</cfif>
+
+
 					<script type="text/javascript">
 						<cfif fields.required IS true AND arguments.search_inputs IS false>
 							addRailoRequiredDate("#field_name#", "El campo '#field_label#' debe ser una fecha con formato DD-MM-AAAA y es obligatorio");
@@ -231,11 +254,42 @@
 						<!---});--->
 					</script>
 
+				<cfelseif fields.field_type_group IS "url"><!--- URL --->
+
+
+					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-7 col-sm-8 col-md-9">
+					</cfif>
+
+					<!---<cfif arguments.client_abb EQ "hcs" OR ><!--- Deshabilitado en el HCS la obligación de introducir URLs completas para que se puedan introducir URLs relativas --->
+						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
+					<cfelse>--->
+						<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
+					<!---</cfif>--->
+
+					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+						</div>
+					</cfif>
+
+					<cfif fields.required IS true AND arguments.search_inputs IS false>
+						<script>
+							addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
+						</script>
+					</cfif>
+
 
 				<cfelseif fields.field_type_group IS "short_text"><!--- TEXT --->
 
 
+					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-7 col-sm-8 col-md-9">
+					</cfif>
+
 					<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" <cfif len(field_label) IS 0><!---PARA DP ASEBIO (campo otros)--->style="margin-left:35px;width:80%;"</cfif> />
+
+					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+						</div>
+					</cfif>
 
 					<cfif fields.required IS true AND arguments.search_inputs IS false>
 						<script type="text/javascript">
@@ -384,6 +438,13 @@
 							<option value=""></option>
 						</cfif>--->
 
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-7 col-sm-8 col-md-9" style="margin-bottom:10px;">
+						<cfelse>
+							<div class="row">
+								<div class="col-sm-offset-1 col-sm-10" style="margin-bottom:10px;">
+						</cfif>
+
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
 
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
@@ -394,24 +455,18 @@
 
 							<cfif subAreas.recordCount GT 0>
 
-								<div class="row">
-									<div class="col-sm-offset-1 col-sm-10" style="margin-bottom:10px;">
-
-									<cfinvoke component="AreaHtml" method="outputSubAreasInput">
-										<cfinvokeargument name="area_id" value="#fields.list_area_id#">
-										<cfinvokeargument name="subAreas" value="#subAreas#">
-										<cfif len(selectedAreasList) GT 0>
-											<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
-										</cfif>
-										<cfinvokeargument name="recursive" value="false">
-										<cfinvokeargument name="field_name" value="#field_name#"/>
-										<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
-										<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-										<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-									</cfinvoke>
-
-									</div>
-								</div>
+								<cfinvoke component="AreaHtml" method="outputSubAreasInput">
+									<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+									<cfinvokeargument name="subAreas" value="#subAreas#">
+									<cfif len(selectedAreasList) GT 0>
+										<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+									</cfif>
+									<cfinvokeargument name="recursive" value="false">
+									<cfinvokeargument name="field_name" value="#field_name#"/>
+									<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
+									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+									<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+								</cfinvoke>
 
 							<cfelse>
 
@@ -422,31 +477,32 @@
 
 						<cfelse><!--- List text values --->
 
-							<div class="row">
-								<div class="col-sm-offset-1 col-sm-10" style="margin-bottom:10px;">
+							<cfloop list="#fields.list_values#" delimiters="#chr(13)##chr(10)#" index="list_value">
 
-								<cfloop list="#fields.list_values#" delimiters="#chr(13)##chr(10)#" index="list_value">
+								<cfset list_value = trim(list_value)>
 
-									<cfset list_value = trim(list_value)>
+								<cfif listFind(field_value, list_value, "#chr(13)##chr(10)#") GT 0>
+									<cfset value_selected = true>
+								<cfelse>
+									<cfset value_selected = false>
+								</cfif>
 
-									<cfif listFind(field_value, list_value, "#chr(13)##chr(10)#") GT 0>
-										<cfset value_selected = true>
-									<cfelse>
-										<cfset value_selected = false>
-									</cfif>
+								<div class="radio">
+								  <label>
+								    <input type="#fields.field_input_type#" name="#field_name#[]" value="#list_value#" <cfif value_selected>checked</cfif> />&nbsp;#list_value#
+								  </label>
+								</div>
+								<div class="clearfix"></div>
 
-									<div class="radio">
-									  <label>
-									    <input type="#fields.field_input_type#" name="#field_name#[]" value="#list_value#" <cfif value_selected>checked</cfif> />&nbsp;#list_value#
-									  </label>
-									</div>
-									<div class="clearfix"></div>
+							</cfloop>
 
-								</cfloop>
+						</cfif>
 
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							</div>
+						<cfelse>
 								</div>
 							</div>
-
 						</cfif>
 
 						<cfif fields.required IS true AND arguments.search_inputs IS false>
@@ -461,8 +517,12 @@
 							</cfif>
 						</cfif>
 
+
 					<cfelse><!---SELECT--->
 
+						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-7 col-sm-8 col-md-9">
+						</cfif>
 
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
 
@@ -523,12 +583,15 @@
 							<small class="help-block" lang="es">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
 						</cfif>
 
+						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+						</div>
+						</cfif>
+
 						<cfif fields.required IS true AND arguments.search_inputs IS false>
 							<script>
 								addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
 							</script>
 						</cfif>
-
 
 					</cfif>
 
@@ -741,8 +804,13 @@
 					<cfelse><!--- Select item of all areas --->
 
 
-						<div class="row">
-							<div class="col-xs-11 col-sm-6">
+						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-6 col-sm-7 col-md-8">
+						<cfelse>
+							<div class="row">
+								<div class="col-xs-11 col-sm-6">
+						</cfif>
+
 								<input type="hidden" name="#field_name#" id="#field_name#" value="#field_value#" />
 								<input type="text" name="#field_name#_title" id="#field_name#_title" value="#field_value_title#" #field_required_att# class="#text_input_class#" readonly onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" />
 								<cfif fields.required IS true AND arguments.search_inputs IS false>
@@ -750,18 +818,39 @@
 										addRailoRequiredInteger("#field_name#", "Campo '#field_label#' obligatorio");
 									</script>
 								</cfif>
+
+
 							</div>
+
 							<cfif fields.required IS false>
-								<div class="col-xs-1 col-sm-6">
+								<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+									<div class="col-xs-1 col-sm-1 col-md-1">
+								<cfelse>
+									<div class="col-xs-1 col-sm-6">
+								</cfif>
+
 									<button onclick="clearFieldSelectedItem('#field_name#')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>
+
 								</div>
 							</cfif>
-						</div>
+
+						<cfif arguments.displayType NEQ DISPLAY_TYPE_HORIZONTAL>
+						</div><!--- END row --->
+						</cfif>
+
 						<div class="row">
-							<div class="col-xs-12 col-sm-6">
+
+							<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								<div class="col-xs-5 col-sm-4 col-md-3"></div>
+								<div class="col-xs-7 col-sm-8 col-md-9">
+							<cfelse>
+								<div class="col-xs-12 col-sm-6">
+							</cfif>
 
 								<button onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
+
 							</div>
+
 						</div>
 
 
@@ -821,8 +910,16 @@
 					</cfif>
 
 
-
 				</cfif><!--- END fields.field_type_group --->
+
+				<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+					<div><!---class="row"--->
+						<div class="col-xs-5 col-sm-4 col-md-3"></div>
+						<div class="col-xs-7 col-sm-8 col-md-9">
+							<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
+						</div>
+					</div>
+				</cfif>
 
 			</div><!---END col-md-12--->
 			</div><!---END div class="row"--->

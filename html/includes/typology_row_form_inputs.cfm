@@ -1,7 +1,7 @@
 <cftry>
-	
+
 	<cfif isDefined("URL.typology") AND isNumeric(URL.typology)>
-		
+
 		<cfset table_id = URL.typology>
 
 		<!---Table fields--->
@@ -20,7 +20,7 @@
 		<cfset area_id = fields.area_id>
 
 		<cfif isDefined("URL.row") AND isNumeric(URL.row)>
-			
+
 			<cfset row_id = URL.row>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="getRow" returnvariable="getRowResponse">
@@ -72,6 +72,9 @@
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 			<cfinvokeargument name="row" value="#row#">
 			<cfinvokeargument name="fields" value="#fields#">
+			<cfif tableTypeId IS 4>
+				<cfinvokeargument name="displayType" value="horizontal">
+			</cfif>
 		</cfinvoke>
 
 	</cfif>

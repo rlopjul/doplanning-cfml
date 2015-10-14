@@ -54,6 +54,7 @@
       <cfinvokeargument name="row" value="#row#">
       <cfinvokeargument name="fields" value="#fields#">
       <cfinvokeargument name="language" value="#APPLICATION.defaultLanguage#">
+      <cfinvokeargument name="displayType" value="horizontal">
 
       <cfinvokeargument name="client_abb" value="#client_abb#">
       <cfinvokeargument name="client_dsn" value="#client_dsn#">

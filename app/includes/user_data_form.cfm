@@ -234,6 +234,7 @@ page_types
 
 			</div>
 
+
 			<div class="row">
 
 				<label class="col-xs-5 col-sm-4 col-md-3 control-label" for="language" lang="es">Idioma</label>
@@ -375,7 +376,7 @@ page_types
 				</div>
 
 			</cfif>
-
+			
 			<div class="row">
 
 				<label for="dni" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif></label>
@@ -486,21 +487,18 @@ page_types
 
 			</cfif>
 
-		</div><!--- END col-sm-9 --->
 
+		</div><!---END col-sm-9--->
 
-		<!---<div class="col-sm-5 col-md-5"><!--- col-md-offset-1--->
-		</div>--->
+	</div><!---END row--->
 
-
-	</div><!--- END row --->
 
 	<div class="row">
 
-		<cfif page_type NEQ 3>
-			<div class="col-sm-9 col-sm-offset-3">
-		<cfelse>
+		<cfif page_type IS 3>
 			<div class="col-sm-9">
+		<cfelse>
+			<div class="col-sm-12">
 		</cfif>
 
 		<!--- Users Typologies --->
@@ -541,7 +539,11 @@ page_types
 
 						$("##typologyContainer").html('<span lang="es">Cargando...</span>');
 
+						<cfif page_type IS 3>
 						var typologyPage = "#APPLICATION.htmlPath#/public/user_typology_row_form_inputs.cfm?typology="+typologyId+"&abb=#client_abb#";
+						<cfelse>
+						var typologyPage = "#APPLICATION.htmlPath#/html_content/user_typology_row_form_inputs.cfm?typology="+typologyId;
+						</cfif>
 
 						var noCacheNumber = generateRandom();
 						typologyPage = typologyPage+'&n='+noCacheNumber;
@@ -589,17 +591,18 @@ page_types
 			<cfelse>
 
 				<div class="row">
-					<div class="col-sm-12">
 
-						<label for="typology_id" class="control-label"><span lang="es">Tipología</span>: *</label>
-						<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val(),'');" class="form-control">
-							<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Básica</option>
-							<cfloop query="typologies">
-								<option value="#typologies.id#" <cfif typologies.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS typologies.id>style="font-weight:bold"</cfif>>#typologies.title#</option>
-							</cfloop>
-						</select>
+						<label for="typology_id" class="col-xs-5 col-sm-4 col-md-3 control-label"><span lang="es">Tipología</span>: *</label>
 
-					</div>
+						<div class="col-xs-7 col-sm-8 col-md-9">
+							<select name="typology_id" id="typology_id" onchange="loadTypology($('##typology_id').val(),'');" class="form-control">
+								<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Básica</option>
+								<cfloop query="typologies">
+									<option value="#typologies.id#" <cfif typologies.id IS selected_typology_id>selected="selected"</cfif> <cfif default_typology_id IS typologies.id>style="font-weight:bold"</cfif>>#typologies.title#</option>
+								</cfloop>
+							</select>
+						</div>
+
 				</div>
 
 			</cfif>
@@ -611,7 +614,7 @@ page_types
 
 		</div><!---END col-sm-9 col-sm-offset-3--->
 
-	</div>
+	</div><!---END row--->
 
 
 	<!---<cfif APPLICATION.identifier EQ "vpnet">
