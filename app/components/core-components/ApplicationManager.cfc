@@ -547,6 +547,10 @@
 					<cfinvokeargument name="moduleMailing" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+
+					<cfinvokeargument name="helpUrl" value="https://ceseand.net/es/page.cfm?id=76&title=manuales-de-la-web">
+					<cfinvokeargument name="termsOfUseUrl" value="https://ceseand.net/es/page.cfm?id=57&title=terminos-de-uso">
+
 				</cfinvoke>
 
 			</cfcase>
