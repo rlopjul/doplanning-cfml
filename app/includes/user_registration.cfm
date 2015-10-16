@@ -114,6 +114,8 @@
 
 </cfoutput>
 
+<legend lang="es">Datos del usuario registrante/persona de contacto</legend>
+
 <cfset page_type = 3>
 <cfinclude template="#APPLICATION.corePath#/includes/user_data_form.cfm"/>
 
