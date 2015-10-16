@@ -435,13 +435,17 @@
 
 			<cfloop query="fields">
 
-				<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS SELECT --->
-					<!---Se crean los campos para poder definir en ellos los valores por defecto--->
-					<cfset queryAddColumn(emptyRow, "field_#fields.field_id#")>
-				</cfif>
+				<cfif fields.field_type_id NEQ 20><!--- IS NOT SEPARATOR --->
 
-				<cfif arguments.withDefaultValues IS true>
-					<cfset querySetCell(emptyRow, "field_#fields.field_id#", fields.default_value, 1)>
+					<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS SELECT --->
+						<!---Se crean los campos para poder definir en ellos los valores por defecto--->
+						<cfset queryAddColumn(emptyRow, "field_#fields.field_id#")>
+					</cfif>
+
+					<cfif arguments.withDefaultValues IS true>
+						<cfset querySetCell(emptyRow, "field_#fields.field_id#", fields.default_value, 1)>
+					</cfif>
+
 				</cfif>
 
 			</cfloop>
@@ -482,11 +486,15 @@
 					<cfif isDefined("arguments.fields")>
 
 						<cfloop query="fields">
-							<cfif isNumeric(fields.field_id) AND len(fields.sort_by_this) GT 0 AND fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!---No se puede ordenar aquí por los campos tipo lista porque no se dispone de sus valores en esta consulta--->
-								<cfif len(orderBy) GT 0>
-									<cfset orderBy = orderBy&",">
+							<cfif fields.field_type_id NEQ 20><!--- IS NOT SEPARATOR --->
+
+								<cfif isNumeric(fields.field_id) AND len(fields.sort_by_this) GT 0 AND fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!---No se puede ordenar aquí por los campos tipo lista porque no se dispone de sus valores en esta consulta--->
+									<cfif len(orderBy) GT 0>
+										<cfset orderBy = orderBy&",">
+									</cfif>
+									<cfset orderBy = orderBy&"field_#fields.field_id# #fields.sort_by_this#">
 								</cfif>
-								<cfset orderBy = orderBy&"field_#fields.field_id# #fields.sort_by_this#">
+
 							</cfif>
 						</cfloop>
 

@@ -230,6 +230,12 @@
 
 			$("##default_value_text").prop('disabled', false);
 
+		}else if(typeId == 20){ //SEPARATOR
+
+			$("##fieldInputRequired").hide();
+			$("##fieldInputOrderBy").hide();
+
+			$("##default_value_text").prop('disabled', false);		
 
 		}else {
 
@@ -446,7 +452,7 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row" id="fieldInputRequired">
 		<div class="col-md-12">
 			<div class="checkbox">
 				<label for="required">
@@ -459,7 +465,7 @@
 
 	<cfif tableTypeId IS NOT 3>
 
-	<div class="row">
+	<div class="row" id="fieldInputOrderBy">
 		<div class="col-md-12">
 			<label for="sort_by_this" class="control-label" lang="es">Ordenar por defecto por este campo</label>
 			<select name="sort_by_this" id="sort_by_this" class="form-control">

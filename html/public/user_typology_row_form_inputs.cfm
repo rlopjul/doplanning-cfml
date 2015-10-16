@@ -21,6 +21,7 @@
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
 			<cfinvokeargument name="with_types" value="true"/>
       <cfinvokeargument name="with_table" value="true">
+      <cfinvokeargument name="with_separators" value="true">
 
       <cfinvokeargument name="client_abb" value="#client_abb#">
       <cfinvokeargument name="client_dsn" value="#client_dsn#">

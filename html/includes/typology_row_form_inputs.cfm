@@ -9,6 +9,7 @@
 			<cfinvokeargument name="table_id" value="#table_id#"/>
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
 			<cfinvokeargument name="with_types" value="true"/>
+			<cfinvokeargument name="with_separators" value="true"/>
 		</cfinvoke>
 
 		<cfif getFieldsResponse.result IS false>

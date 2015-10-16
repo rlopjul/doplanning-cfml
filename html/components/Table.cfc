@@ -338,6 +338,7 @@
 		<cfargument name="view_id" type="numeric" required="false">
 		<cfargument name="only_view_fields" type="boolean" required="false">
 		<cfargument name="file_id" type="boolean" required="false">
+		<cfargument name="with_separators" type="boolean" required="false">
 
 		<cfset var method = "getTableFields">
 
@@ -352,6 +353,7 @@
 				<cfinvokeargument name="view_id" value="#arguments.view_id#">
 				<cfinvokeargument name="only_view_fields" value="#arguments.only_view_fields#">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="with_separators" value="#arguments.with_separators#">
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">

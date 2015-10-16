@@ -19,6 +19,7 @@
 	<cfinvokeargument name="table_id" value="#table_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 	<cfinvokeargument name="with_types" value="true">
+	<cfinvokeargument name="with_separators" value="true">
 </cfinvoke>
 <cfset fields = fieldsResult.tableFields>
 
@@ -29,11 +30,11 @@
 	<cfinclude template="area_id.cfm">
 
 	<cfinclude template="area_checks.cfm">
-	
+
 <cfelse>
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-	
+
 </cfif>
 
 
@@ -56,7 +57,7 @@
 		<cfelse>
 
 			<cfif tableTypeId IS 4><!--- Users typologies --->
-				
+
 				<div class="btn-group">
 					<a href="#tableTypeName#_modify.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 				</div>
@@ -68,7 +69,7 @@
 				</div>
 
 			</cfif>
-			
+
 		</cfif>
 
 		<div class="btn-group">
@@ -80,7 +81,7 @@
 		</div>
 
 		<cfif tableTypeId IS 4>
-				
+
 			<span class="divider">&nbsp;</span>
 
 			<cfset url_return_path_delete = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/admin/iframes/users_typologies.cfm?area=#area_id#")>
@@ -111,7 +112,7 @@
 
 			<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
 		</cfif>--->
-		
+
 		<!---<a href="#tableTypeNameP#.cfm?area=#area_id#" class="btn btn-default btn-sm" title="#itemTypeNameEsP# del área" lang="es"> <span lang="es">#itemTypeNameEsP# del área</span></a>--->
 
 		<!---<span class="divider">&nbsp;</span>--->
@@ -138,10 +139,10 @@
 		<cfinclude template="#APPLICATION.htmlPath#/includes/table_fields_list.cfm">
 
 	<cfelse>
-	
+
 		<script type="text/javascript">
 			openUrlHtml2('empty.cfm','itemIframe');
-		</script>				
+		</script>
 
 		<div class="div_text_result"><span lang="es">Haga clic en Añadir campo para crear un nuevo campo.</span></div>
 

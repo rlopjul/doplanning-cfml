@@ -2,57 +2,57 @@
 
 <cfcomponent output="false">
 
-	<cfset component = "FieldQuery">	
+	<cfset component = "FieldQuery">
 
 	<cfset fieldsTypesTable = "tables_fields_types">
 
 
 	<!---getFieldTypes--->
-		
+
 	<cffunction name="getFieldTypes" output="false" returntype="query" access="public">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-				
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "getFieldTypes">
-			
+
 			<cfquery name="getFieldTypesQuery" datasource="#client_dsn#">
 				SELECT field_type_id, field_type_group, input_type, name, max_length, mysql_type, cf_sql_type
 				FROM `#client_abb#_#fieldsTypesTable#`
 				WHERE enabled = true
 				ORDER BY position ASC;
 			</cfquery>
-		
+
 		<cfreturn getFieldTypesQuery>
-		
+
 	</cffunction>
 
 
 	<!---getFieldType--->
-		
+
 	<cffunction name="getFieldType" output="false" returntype="query" access="public">
 		<cfargument name="field_type_id" type="numeric" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-				
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "getFieldType">
-			
+
 			<cfquery name="getFieldTypeQuery" datasource="#client_dsn#">
 				SELECT field_type_id, field_type_group, input_type, name, mysql_type
 				FROM `#client_abb#_#fieldsTypesTable#`
 				WHERE field_type_id = <cfqueryparam value="#arguments.field_type_id#" cfsqltype="cf_sql_integer">
 				AND enabled = true;
 			</cfquery>
-		
+
 		<cfreturn getFieldTypeQuery>
-		
+
 	</cffunction>
 
 
 	<!---getField--->
-		
+
 	<cffunction name="getField" output="false" returntype="query" access="public">
 		<cfargument name="field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -60,12 +60,12 @@
 		<cfargument name="with_table" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-				
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "getField">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfquery name="getField" datasource="#client_dsn#">
 				SELECT table_fields.*
 				<cfif arguments.with_type IS true>
@@ -83,14 +83,14 @@
 				</cfif>
 				WHERE field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-		
+
 		<cfreturn getField>
-		
+
 	</cffunction>
 
 
 	<!---getTableFields--->
-		
+
 	<cffunction name="getTableFields" output="false" returntype="query" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -98,14 +98,15 @@
 		<cfargument name="with_table" type="boolean" required="false" default="false">
 		<cfargument name="view_id" type="numeric" required="false">
 		<cfargument name="only_view_fields" type="boolean" required="false" default="true">
+		<cfargument name="with_separators" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
 		<cfset var method = "getTableFields">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-							
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 			<cfquery name="getTableFieldsQuery" datasource="#client_dsn#">
 				SELECT table_fields.*
 				<cfif arguments.with_types IS true>
@@ -125,24 +126,27 @@
 					INNER JOIN `#client_abb#_#tableTypeTable#` AS tables ON table_fields.table_id = tables.id
 				</cfif>
 				<cfif isDefined("arguments.view_id")>
-					<cfif arguments.only_view_fields IS true>INNER<cfelse>LEFT</cfif> 
+					<cfif arguments.only_view_fields IS true>INNER<cfelse>LEFT</cfif>
 					JOIN `#client_abb#_#tableTypeTable#_views_fields` AS view_fields ON table_fields.field_id = view_fields.field_id AND view_fields.view_id = <cfqueryparam value="#arguments.view_id#" cfsqltype="cf_sql_integer">
 				</cfif>
 				WHERE table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				<cfif arguments.with_separators IS false>
+					AND table_fields.field_type_id != 20
+				</cfif>
 				<cfif isDefined("arguments.view_id")>
-				ORDER BY ISNULL(view_fields.position) ASC, view_fields.position ASC, table_fields.position ASC 
+				ORDER BY ISNULL(view_fields.position) ASC, view_fields.position ASC, table_fields.position ASC
 				<cfelse>
-				ORDER BY table_fields.position ASC 
+				ORDER BY table_fields.position ASC
 				</cfif>;
 			</cfquery>
-				
+
 		<cfreturn getTableFieldsQuery>
-		
+
 	</cffunction>
 
 
 	<!---getViewFields--->
-		
+
 	<cffunction name="getViewFields" output="false" returntype="query" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -156,8 +160,8 @@
 
 		<cfset var method = "getTableFields">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-							
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="getTableFieldsQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
@@ -165,7 +169,7 @@
 				<cfinvokeargument name="with_table" value="#arguments.with_table#">
 				<cfinvokeargument name="view_id" value="#arguments.view_id#">
 				<cfinvokeargument name="only_view_fields" value="true">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
@@ -177,13 +181,13 @@
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					<cfinvokeargument name="with_table" value="false"/>
 					<cfinvokeargument name="parse_dates" value="false"/>
-					
+
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
-				
+
 				<cfif getViewQuery.recordCount GT 0>
-					
+
 					<!--- creation_date --->
 					<cfif getViewQuery.include_creation_date IS true>
 						<cfset queryAddRow(getTableFieldsQuery, 1)>
@@ -218,7 +222,7 @@
 
 					<!--- Order all fields by view_position --->
 					<cfquery dbtype="query" name="getTableFieldsQuery">
-						SELECT * 
+						SELECT *
 						FROM getTableFieldsQuery
 						ORDER BY view_position ASC;
 					</cfquery>
@@ -226,43 +230,43 @@
 				</cfif>
 
 			</cfif>
-				
+
 		<cfreturn getTableFieldsQuery>
-		
+
 	</cffunction>
 
 
 
 	<!---getFieldsLastPosition--->
-	
+
 	<cffunction name="getFieldLastPosition" output="false" returntype="struct" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
-		
+
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-		
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "getFielsLastPosition">
 		<cfset var position = 0>
-					
+
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-						
+
 				<cfquery name="fieldPositionQuery" datasource="#client_dsn#">
-					SELECT MAX(position) AS max_position					
+					SELECT MAX(position) AS max_position
 					FROM `#client_abb#_#tableTypeTable#_fields` AS tables_fields
 					WHERE tables_fields.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
-				
+
 				<cfset position = fieldPositionQuery.max_position>
-		
+
 		<cfreturn {position=position}>
-		
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------ deleteTableFields -----------------------------------  --->
-		
+
 	<cffunction name="deleteTableFields" output="false" access="package" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -271,14 +275,14 @@
 		<cfargument name="client_dsn" type="string" required="true">
 
 		<cfset var method = "deleteTableFields">
-			
+
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_types" value="false">
-				
+
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
@@ -293,15 +297,15 @@
 				<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT --->
 
 					<cfquery name="deleteFieldFromTable" datasource="#client_dsn#">
-						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` 
+						ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
 						DROP COLUMN `field_#fields.field_id#`;
 					</cfquery>
 
 				</cfif>
 
 			</cfloop>
-			
+
 	</cffunction>
-	
+
 
 </cfcomponent>

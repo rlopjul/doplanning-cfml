@@ -32,6 +32,10 @@
 			DROP PRIMARY KEY;
 		</cfquery>
 
+		<cfquery datasource="#client_datasource#">
+			INSERT INTO `#new_client_abb#_tables_fields_types` (`field_type_id`, `field_type_group`, `input_type`, `name`, `max_length`, `mysql_type`, `enabled`, `position`) VALUES ('20', 'separator', 'none', 'Separador de campos', NULL, NULL, '1', '19');
+		</cfquery>
+
 
 		<cfcatch>
 			<cfoutput>

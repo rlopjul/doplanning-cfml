@@ -21,12 +21,9 @@
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
-		<!---<cfif arguments.search_inputs IS true>
-			<cfset text_input_class = "span5">
-		<cfelse>
-			<cfset text_input_class = "form-control">
-		</cfif>--->
+
 		<cfset var text_input_class = "form-control">
+		<cfset var fieldSetOpen = false>
 
 		<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
@@ -48,516 +45,449 @@
 
 		<cfloop query="fields">
 
-			<cfset field_label = fields.label><!---&""--->
+			<cfset field_label = fields.label>
 			<cfset field_name = "field_#fields.field_id#">
-			<cfif fields.required IS true AND arguments.search_inputs IS false>
-				<cfset field_required_att = 'required="required"'>
+
+
+			<cfif fields.field_type_id EQ 20><!---SEPARATOR--->
+
+				<cfif fieldSetOpen IS true>
+					</fieldset>
+				</cfif>
+
+				<fieldset>
+
+				<legend>#field_label#</legend>
+
+				<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><p>#fields.description#</p></cfif>
+
+				<cfset fieldSetOpen = true>
+
 			<cfelse>
-				<cfset field_required_att = "">
-			</cfif>
 
-			<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT FROM AREA--->
-				<cfif isDefined("row[field_name]")>
-					<cfset field_value = row[field_name]>
+				<cfif fields.required IS true AND arguments.search_inputs IS false>
+					<cfset field_required_att = 'required="required"'>
 				<cfelse>
-					<cfset field_value = ""><!---Empty booleans and text lists--->
+					<cfset field_required_att = "">
 				</cfif>
-			</cfif>
 
-			<div class="row">
-
-			<div class="col-md-12">
-
-				<cfif ( fields.field_input_type NEQ "checkbox" OR fields.field_type_group EQ "list" ) AND len(field_label) GT 0>
-
-					<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
-						<cfset labelClass = "col-xs-5 col-sm-4 col-md-3 control-label">
+				<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10><!--- IS NOT SELECT FROM AREA--->
+					<cfif isDefined("row[field_name]")>
+						<cfset field_value = row[field_name]>
 					<cfelse>
-						<cfset labelClass = "control-label">
+						<cfset field_value = ""><!---Empty booleans and text lists--->
 					</cfif>
-
-					<label for="#field_name#" class="#labelClass#">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
-
 				</cfif>
 
-				<cfif arguments.displayType NEQ DISPLAY_TYPE_HORIZONTAL>
-					<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
-				</cfif>
+				<div class="row">
+				<div class="col-md-12">
 
+					<cfif ( fields.field_input_type NEQ "checkbox" OR fields.field_type_group EQ "list" ) AND len(field_label) GT 0>
 
-				<cfif fields.field_type_group IS "long_text" OR fields.field_type_group IS "very_long_text"><!--- TEXTAREA --->
-
-					<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
-							<div class="col-xs-7 col-sm-8 col-md-9">
-					</cfif>
-
-					<cfif arguments.search_inputs IS false>
-
-						<textarea name="#field_name#" id="#field_name#" class="form-control" #field_required_att# maxlength="#fields.max_length#" <cfif fields.field_type_id IS 2>rows="4"<cfelse>rows="10"</cfif>>#field_value#</textarea>
-
-						<cfif fields.required IS true>
-							<script type="text/javascript">
-								addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
-							</script>
-						</cfif>
-
-						<cfif fields.field_type_id IS 3 OR fields.field_type_id IS 11>
-							<!--- Enable CKEDITOR in mobile browsers --->
-							<script>
-								if ( window.CKEDITOR && ( !CKEDITOR.env.ie || CKEDITOR.env.version > 7 ) )
-   									CKEDITOR.env.isCompatible = true;
-
-								CKEDITOR.replace('#field_name#', {toolbar:'DP', toolbarStartupExpanded:true, language:'#arguments.language#'});
-							</script>
-						</cfif>
-
-					<cfelse><!--- Search --->
-
-						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" />
-
-					</cfif>
-
-					<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
-						</div>
-					</cfif>
-
-
-				<cfelseif fields.field_type_group IS "integer"><!--- INTEGER --->
-
-
-					<div class="row">
-						<div class="col-xs-6 col-sm-3">
-
-							<input type="number" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="form-control"/>
-
-						</div>
-					</div>
-
-					<script>
-						<cfif fields.required IS true AND arguments.search_inputs IS false>
-							addRailoRequiredInteger("#field_name#", "El campo '#field_label#' debe ser numérico y es obligatorio");
+						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<cfset labelClass = "col-xs-5 col-sm-4 col-md-3 control-label">
 						<cfelse>
-							addRailoValidateInteger("#field_name#", "El campo '#field_label#' debe ser numérico");
+							<cfset labelClass = "control-label">
 						</cfif>
-					</script>
+
+						<label for="#field_name#" class="#labelClass#">#field_label# <cfif fields.required IS true AND arguments.search_inputs IS false>*</cfif></label>
+
+					</cfif>
+
+					<cfif arguments.displayType NEQ DISPLAY_TYPE_HORIZONTAL>
+						<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
+					</cfif>
 
 
-				<cfelseif fields.field_type_group IS "decimal"><!--- DECIMAL --->
+					<cfif fields.field_type_group IS "long_text" OR fields.field_type_group IS "very_long_text"><!--- TEXTAREA --->
 
-					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-						<div class="col-xs-7 col-sm-8 col-md-9">
-					<cfelse>
+						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								<div class="col-xs-7 col-sm-8 col-md-9">
+						</cfif>
+
+						<cfif arguments.search_inputs IS false>
+
+							<textarea name="#field_name#" id="#field_name#" class="form-control" #field_required_att# maxlength="#fields.max_length#" <cfif fields.field_type_id IS 2>rows="4"<cfelse>rows="10"</cfif>>#field_value#</textarea>
+
+							<cfif fields.required IS true>
+								<script type="text/javascript">
+									addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							</cfif>
+
+							<cfif fields.field_type_id IS 3 OR fields.field_type_id IS 11>
+								<!--- Enable CKEDITOR in mobile browsers --->
+								<script>
+									if ( window.CKEDITOR && ( !CKEDITOR.env.ie || CKEDITOR.env.version > 7 ) )
+	   									CKEDITOR.env.isCompatible = true;
+
+									CKEDITOR.replace('#field_name#', {toolbar:'DP', toolbarStartupExpanded:true, language:'#arguments.language#'});
+								</script>
+							</cfif>
+
+						<cfelse><!--- Search --->
+
+							<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" />
+
+						</cfif>
+
+						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							</div>
+						</cfif>
+
+
+					<cfelseif fields.field_type_group IS "integer"><!--- INTEGER --->
+
+
 						<div class="row">
 							<div class="col-xs-6 col-sm-3">
-					</cfif>
 
+								<input type="number" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="form-control"/>
 
-							<cfif isNumeric(fields.mask_type_id)>
+							</div>
+						</div>
 
-								<!--- getFieldMaskTypes --->
-								<cfinvoke component="FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
-									<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-								</cfinvoke>
-
-								<cfset mask_label = maskTypesStruct[fields.mask_type_id].label>
-								<cfset cf_prefix = maskTypesStruct[fields.mask_type_id].cf_prefix>
-								<cfset cf_sufix = maskTypesStruct[fields.mask_type_id].cf_sufix>
-
+						<script>
+							<cfif fields.required IS true AND arguments.search_inputs IS false>
+								addRailoRequiredInteger("#field_name#", "El campo '#field_label#' debe ser numérico y es obligatorio");
 							<cfelse>
-								<cfset mask_label = "">
-								<cfset cf_prefix = "">
-								<cfset cf_sufix = "">
+								addRailoValidateInteger("#field_name#", "El campo '#field_label#' debe ser numérico");
 							</cfif>
+						</script>
 
-							<cfif len(cf_prefix) GT 0 OR len(cf_sufix) GT 0>
-								<div class="input-group">
-							</cfif>
-								<cfif len(cf_prefix) GT 0>
-									<span class="input-group-addon">#cf_prefix#</span>
+
+					<cfelseif fields.field_type_group IS "decimal"><!--- DECIMAL --->
+
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-7 col-sm-8 col-md-9">
+						<cfelse>
+							<div class="row">
+								<div class="col-xs-6 col-sm-3">
+						</cfif>
+
+
+								<cfif isNumeric(fields.mask_type_id)>
+
+									<!--- getFieldMaskTypes --->
+									<cfinvoke component="FieldManager" method="getFieldMaskTypesStruct" returnvariable="maskTypesStruct">
+										<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+										<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+									</cfinvoke>
+
+									<cfset mask_label = maskTypesStruct[fields.mask_type_id].label>
+									<cfset cf_prefix = maskTypesStruct[fields.mask_type_id].cf_prefix>
+									<cfset cf_sufix = maskTypesStruct[fields.mask_type_id].cf_sufix>
+
+								<cfelse>
+									<cfset mask_label = "">
+									<cfset cf_prefix = "">
+									<cfset cf_sufix = "">
 								</cfif>
-							 		<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="form-control"/>
-							 	<cfif len(cf_sufix) GT 0>
-							 		<span class="input-group-addon">#cf_sufix#</span>
-							 	</cfif>
-							<cfif len(cf_prefix) GT 0 OR len(cf_sufix) GT 0>
+
+								<cfif len(cf_prefix) GT 0 OR len(cf_sufix) GT 0>
+									<div class="input-group">
+								</cfif>
+									<cfif len(cf_prefix) GT 0>
+										<span class="input-group-addon">#cf_prefix#</span>
+									</cfif>
+								 		<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="form-control"/>
+								 	<cfif len(cf_sufix) GT 0>
+								 		<span class="input-group-addon">#cf_sufix#</span>
+								 	</cfif>
+								<cfif len(cf_prefix) GT 0 OR len(cf_sufix) GT 0>
+									</div>
+								</cfif>
+
+
+							<cfif displayType NEQ DISPLAY_TYPE_HORIZONTAL>
 								</div>
+								<div class="col-xs-6 col-sm-9" style="padding-top:5px;">
 							</cfif>
 
+								<i id="decimal-help#fields.field_id#" class="icon-question-sign" data-toggle="tooltip" data-placement="bottom" data-html="true" title="Los decimales se deben introducir con un punto, ejemplo: 9999.99<cfif len(mask_label) GT 0><br>Al valor introducido se le aplicará posteriormente la siguiente máscara para mostrarlo: #mask_label#</cfif>" lang="es" style="cursor:pointer"></i>
+
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							</div>
+						<cfelse>
+								</div>
+							</div>
+						</cfif>
+
+						<script>
+							$(document).ready(function() {
+								$("##decimal-help#fields.field_id#").tooltip();
+							});
+							<cfif fields.required IS true AND arguments.search_inputs IS false>
+								addRailoRequiredFloat("#field_name#", "El campo '#field_label#' debe ser numérico y es obligatorio");
+							<cfelse>
+								addRailoValidateFloat("#field_name#", "El campo '#field_label#' debe ser numérico");
+							</cfif>
+						</script>
+
+
+					<cfelseif fields.field_type_group IS "date"><!--- DATE --->
+
+
+						<cfif action NEQ "create" AND NOT isDefined("FORM.tableTypeId") AND isDate(field_value)>
+							<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
+						</cfif>
+
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-7 col-sm-8 col-md-9">
+						<cfelse>
+							<div class="row">
+								<div class="col-xs-6 col-sm-3">
+						</cfif>
+
+								<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="form-control input_datepicker"/>
 
 						<cfif displayType NEQ DISPLAY_TYPE_HORIZONTAL>
 							</div>
 							<div class="col-xs-6 col-sm-9" style="padding-top:5px;">
 						</cfif>
 
-							<i id="decimal-help#fields.field_id#" class="icon-question-sign" data-toggle="tooltip" data-placement="bottom" data-html="true" title="Los decimales se deben introducir con un punto, ejemplo: 9999.99<cfif len(mask_label) GT 0><br>Al valor introducido se le aplicará posteriormente la siguiente máscara para mostrarlo: #mask_label#</cfif>" lang="es" style="cursor:pointer"></i>
-
-					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-						</div>
-					<cfelse>
-							</div>
-						</div>
-					</cfif>
-
-					<script>
-						$(document).ready(function() {
-							$("##decimal-help#fields.field_id#").tooltip();
-						});
-						<cfif fields.required IS true AND arguments.search_inputs IS false>
-							addRailoRequiredFloat("#field_name#", "El campo '#field_label#' debe ser numérico y es obligatorio");
-						<cfelse>
-							addRailoValidateFloat("#field_name#", "El campo '#field_label#' debe ser numérico");
-						</cfif>
-					</script>
-
-
-				<cfelseif fields.field_type_group IS "date"><!--- DATE --->
-
-
-					<cfif action NEQ "create" AND NOT isDefined("FORM.tableTypeId") AND isDate(field_value)>
-						<cfset field_value = DateFormat(field_value, APPLICATION.dateFormat)>
-					</cfif>
-
-					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-						<div class="col-xs-7 col-sm-8 col-md-9">
-					<cfelse>
-						<div class="row">
-							<div class="col-xs-6 col-sm-3">
-					</cfif>
-
-							<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="form-control input_datepicker"/>
-
-					<cfif displayType NEQ DISPLAY_TYPE_HORIZONTAL>
-						</div>
-						<div class="col-xs-6 col-sm-9" style="padding-top:5px;">
-					</cfif>
-
-							<small lang="es">Fecha formato DD-MM-AAAA</small>
-
-					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-						</div>
-					<cfelse>
-							</div>
-						</div>
-					</cfif>
-
-
-					<script type="text/javascript">
-						<cfif fields.required IS true AND arguments.search_inputs IS false>
-							addRailoRequiredDate("#field_name#", "El campo '#field_label#' debe ser una fecha con formato DD-MM-AAAA y es obligatorio");
-						<cfelse>
-							addRailoValidateDate("#field_name#", "El campo '#field_label#' debe ser una fecha con formato DD-MM-AAAA");
-						</cfif>
-
-						<!---$(document).ready(function(){--->
-							enableDatePicker('###field_name#');
-						<!---});--->
-					</script>
-
-				<cfelseif fields.field_type_group IS "url"><!--- URL --->
-
-
-					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-							<div class="col-xs-7 col-sm-8 col-md-9">
-					</cfif>
-
-					<!---<cfif arguments.client_abb EQ "hcs" OR ><!--- Deshabilitado en el HCS la obligación de introducir URLs completas para que se puedan introducir URLs relativas --->
-						<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
-					<cfelse>--->
-						<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
-					<!---</cfif>--->
-
-					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-						</div>
-					</cfif>
-
-					<cfif fields.required IS true AND arguments.search_inputs IS false>
-						<script>
-							addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
-						</script>
-					</cfif>
-
-
-				<cfelseif fields.field_type_group IS "short_text"><!--- TEXT --->
-
-
-					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-							<div class="col-xs-7 col-sm-8 col-md-9">
-					</cfif>
-
-					<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" <cfif len(field_label) IS 0><!---PARA DP ASEBIO (campo otros)--->style="margin-left:35px;width:80%;"</cfif> />
-
-					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-						</div>
-					</cfif>
-
-					<cfif fields.required IS true AND arguments.search_inputs IS false>
-						<script type="text/javascript">
-							addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
-						</script>
-					</cfif>
-
-
-				<cfelseif fields.field_type_group IS "boolean"><!--- BOOLEAN --->
-
-
-					<div class="row">
-						<div class="col-xs-5 col-sm-2">
-
-							<cfif fields.field_input_type EQ "radio"><!---Radio--->
-
-								<div>
-								  <label>
-								  	<input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> />&nbsp;Sí
-								  </label>&nbsp;&nbsp;
-								  <label>
-								    <input type="#field_input_type#" name="#field_name#" value="0" <cfif field_value IS false>checked</cfif> />&nbsp;No
-
-								  </label>
-								</div>
-
-							<cfelseif fields.field_input_type EQ "checkbox"><!---Checkbox--->
-
-								<div class="checkbox">
-								  <label>
-								    <input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> /> #field_label#
-
-								  </label>
-								</div>
-
-							<cfelse>
-
-								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
-									<option value=""></option>
-									<option value="1" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
-									<option value="0" <cfif field_value IS false>selected="selected"</cfif>>No</option>
-								</select>
-
-							</cfif>
-
-						</div>
-					</div>
-
-					<cfif fields.required IS true AND arguments.search_inputs IS false>
-						<cfif fields.field_input_type EQ "radio">
-							<script>
-								addRailoRequiredRadio("#field_name#", "Campo '#field_label#' obligatorio");
-							</script>
-						<cfelseif fields.field_input_type EQ "checkbox">
-							<script>
-								addRailoRequiredCheckBox("#field_name#", "Campo '#field_label#' obligatorio");
-							</script>
-						<cfelse>
-							<script>
-								addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
-							</script>
-						</cfif>
-					</cfif>
-
-
-				<cfelseif fields.field_type_group IS "list"><!--- SELECT --->
-
-
-					<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
-
-
-						<cfif NOT isDefined("FORM.tableTypeId")>
-
-							<cfif action EQ "create">
-
-								<cfif isDefined("row[field_name]")>
-
-									<cfset selectedAreasList = row[field_name]>
-
-									<cfif isArray(selectedAreasList)>
-										<cfset selectedAreasList = arrayToList(selectedAreasList)>
-									</cfif>
-
-								<cfelse><!--- Empty field in searchs --->
-									<cfset selectedAreasList = "">
-								</cfif>
-
-							<cfelse>
-
-								<!--- Get selected areas --->
-								<cfinvoke component="RowQuery" method="getRowSelectedAreas" returnvariable="getRowAreasQuery">
-									<cfinvokeargument name="table_id" value="#arguments.table_id#">
-									<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-									<cfinvokeargument name="field_id" value="#fields.field_id#">
-									<cfinvokeargument name="row_id" value="#row.row_id#">
-
-									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-									<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-								</cfinvoke>
-
-								<cfset selectedAreas = getRowAreasQuery>
-								<cfset selectedAreasList = valueList(selectedAreas.area_id)>
-
-							</cfif>
-
-						<cfelse><!---FORM is Defined--->
-
-							<cfif isDefined("FORM.#field_name#")>
-								<cfset selectedAreasList = arrayToList(FORM[field_name])>
-							<cfelse>
-								<cfset selectedAreasList = "">
-							</cfif>
-
-						</cfif>
-
-
-					<cfelse><!--- List text values --->
-
-
-						<cfif NOT isDefined("FORM.tableTypeId")>
-
-							<cfif action EQ "create">
-
-								<cfif isArray(field_value)>
-									<cfset field_value = arrayToList(field_value,"#chr(13)##chr(10)#")>
-								</cfif>
-
-							</cfif>
-
-						<cfelse><!---FORM is Defined--->
-
-							<cfif isDefined("FORM.#field_name#")>
-								<cfset field_value = arrayToList(field_value,"#chr(13)##chr(10)#")>
-							<cfelse>
-								<cfset field_value = "">
-							</cfif>
-
-						</cfif>
-
-
-					</cfif>
-
-					<cfif fields.field_input_type EQ "radio" OR fields.field_input_type EQ "checkbox"><!---RADIO / CHECKBOX--->
-
-						<!---<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
-							<option value=""></option>
-						</cfif>--->
+								<small lang="es">Fecha formato DD-MM-AAAA</small>
 
 						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-							<div class="col-xs-7 col-sm-8 col-md-9" style="margin-bottom:10px;">
+							</div>
 						<cfelse>
-							<div class="row">
-								<div class="col-sm-offset-1 col-sm-10" style="margin-bottom:10px;">
+								</div>
+							</div>
 						</cfif>
+
+
+						<script type="text/javascript">
+							<cfif fields.required IS true AND arguments.search_inputs IS false>
+								addRailoRequiredDate("#field_name#", "El campo '#field_label#' debe ser una fecha con formato DD-MM-AAAA y es obligatorio");
+							<cfelse>
+								addRailoValidateDate("#field_name#", "El campo '#field_label#' debe ser una fecha con formato DD-MM-AAAA");
+							</cfif>
+
+							<!---$(document).ready(function(){--->
+								enableDatePicker('###field_name#');
+							<!---});--->
+						</script>
+
+					<cfelseif fields.field_type_group IS "url"><!--- URL --->
+
+
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								<div class="col-xs-7 col-sm-8 col-md-9">
+						</cfif>
+
+						<!---<cfif arguments.client_abb EQ "hcs" OR ><!--- Deshabilitado en el HCS la obligación de introducir URLs completas para que se puedan introducir URLs relativas --->
+							<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
+						<cfelse>--->
+							<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# placeholder="http://" class="#text_input_class#"/>
+						<!---</cfif>--->
+
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							</div>
+						</cfif>
+
+						<cfif fields.required IS true AND arguments.search_inputs IS false>
+							<script>
+								addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
+							</script>
+						</cfif>
+
+
+					<cfelseif fields.field_type_group IS "short_text"><!--- TEXT --->
+
+
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								<div class="col-xs-7 col-sm-8 col-md-9">
+						</cfif>
+
+						<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" <cfif len(field_label) IS 0><!---PARA DP ASEBIO (campo otros)--->style="margin-left:35px;width:80%;"</cfif> />
+
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							</div>
+						</cfif>
+
+						<cfif fields.required IS true AND arguments.search_inputs IS false>
+							<script type="text/javascript">
+								addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
+							</script>
+						</cfif>
+
+
+					<cfelseif fields.field_type_group IS "boolean"><!--- BOOLEAN --->
+
+
+						<div class="row">
+							<div class="col-xs-5 col-sm-2">
+
+								<cfif fields.field_input_type EQ "radio"><!---Radio--->
+
+									<div>
+									  <label>
+									  	<input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> />&nbsp;Sí
+									  </label>&nbsp;&nbsp;
+									  <label>
+									    <input type="#field_input_type#" name="#field_name#" value="0" <cfif field_value IS false>checked</cfif> />&nbsp;No
+
+									  </label>
+									</div>
+
+								<cfelseif fields.field_input_type EQ "checkbox"><!---Checkbox--->
+
+									<div class="checkbox">
+									  <label>
+									    <input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> /> #field_label#
+
+									  </label>
+									</div>
+
+								<cfelse>
+
+									<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
+										<option value=""></option>
+										<option value="1" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
+										<option value="0" <cfif field_value IS false>selected="selected"</cfif>>No</option>
+									</select>
+
+								</cfif>
+
+							</div>
+						</div>
+
+						<cfif fields.required IS true AND arguments.search_inputs IS false>
+							<cfif fields.field_input_type EQ "radio">
+								<script>
+									addRailoRequiredRadio("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							<cfelseif fields.field_input_type EQ "checkbox">
+								<script>
+									addRailoRequiredCheckBox("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							<cfelse>
+								<script>
+									addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							</cfif>
+						</cfif>
+
+
+					<cfelseif fields.field_type_group IS "list"><!--- SELECT --->
+
 
 						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
 
-							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
-								<cfinvokeargument name="area_id" value="#fields.list_area_id#">
-								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-							</cfinvoke>
 
-							<cfif subAreas.recordCount GT 0>
+							<cfif NOT isDefined("FORM.tableTypeId")>
 
-								<cfinvoke component="AreaHtml" method="outputSubAreasInput">
-									<cfinvokeargument name="area_id" value="#fields.list_area_id#">
-									<cfinvokeargument name="subAreas" value="#subAreas#">
-									<cfif len(selectedAreasList) GT 0>
-										<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+								<cfif action EQ "create">
+
+									<cfif isDefined("row[field_name]")>
+
+										<cfset selectedAreasList = row[field_name]>
+
+										<cfif isArray(selectedAreasList)>
+											<cfset selectedAreasList = arrayToList(selectedAreasList)>
+										</cfif>
+
+									<cfelse><!--- Empty field in searchs --->
+										<cfset selectedAreasList = "">
 									</cfif>
-									<cfinvokeargument name="recursive" value="false">
-									<cfinvokeargument name="field_name" value="#field_name#"/>
-									<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
-									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-									<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-								</cfinvoke>
 
-							<cfelse>
+								<cfelse>
 
-								<p class="help-block" lang="es">No hay opciones definidas para seleccionar</p>
+									<!--- Get selected areas --->
+									<cfinvoke component="RowQuery" method="getRowSelectedAreas" returnvariable="getRowAreasQuery">
+										<cfinvokeargument name="table_id" value="#arguments.table_id#">
+										<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+										<cfinvokeargument name="field_id" value="#fields.field_id#">
+										<cfinvokeargument name="row_id" value="#row.row_id#">
+
+										<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+										<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+									</cfinvoke>
+
+									<cfset selectedAreas = getRowAreasQuery>
+									<cfset selectedAreasList = valueList(selectedAreas.area_id)>
+
+								</cfif>
+
+							<cfelse><!---FORM is Defined--->
+
+								<cfif isDefined("FORM.#field_name#")>
+									<cfset selectedAreasList = arrayToList(FORM[field_name])>
+								<cfelse>
+									<cfset selectedAreasList = "">
+								</cfif>
 
 							</cfif>
 
 
 						<cfelse><!--- List text values --->
 
-							<cfloop list="#fields.list_values#" delimiters="#chr(13)##chr(10)#" index="list_value">
 
-								<cfset list_value = trim(list_value)>
+							<cfif NOT isDefined("FORM.tableTypeId")>
 
-								<cfif listFind(field_value, list_value, "#chr(13)##chr(10)#") GT 0>
-									<cfset value_selected = true>
-								<cfelse>
-									<cfset value_selected = false>
+								<cfif action EQ "create">
+
+									<cfif isArray(field_value)>
+										<cfset field_value = arrayToList(field_value,"#chr(13)##chr(10)#")>
+									</cfif>
+
 								</cfif>
 
-								<div class="radio">
-								  <label>
-								    <input type="#fields.field_input_type#" name="#field_name#[]" value="#list_value#" <cfif value_selected>checked</cfif> />&nbsp;#list_value#
-								  </label>
-								</div>
-								<div class="clearfix"></div>
+							<cfelse><!---FORM is Defined--->
 
-							</cfloop>
-
-						</cfif>
-
-						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-							</div>
-						<cfelse>
-								</div>
-							</div>
-						</cfif>
-
-						<cfif fields.required IS true AND arguments.search_inputs IS false>
-							<cfif fields.field_input_type EQ "radio">
-								<script>
-									addRailoRequiredRadio("#field_name#[]", "Campo '#field_label#' obligatorio");
-								</script>
-							<cfelseif fields.field_input_type EQ "checkbox">
-								<script>
-									addRailoRequiredCheckBox("#field_name#[]", "Campo '#field_label#' obligatorio");
-								</script>
-							</cfif>
-						</cfif>
-
-
-					<cfelse><!---SELECT--->
-
-						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
-							<div class="col-xs-7 col-sm-8 col-md-9">
-						</cfif>
-
-						<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
-
-							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
-								<cfinvokeargument name="area_id" value="#fields.list_area_id#">
-								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-							</cfinvoke>
-
-							<cfif subAreas.recordCount IS 0>
-
-								<p class="help-block" lang="es">No hay opciones definidas para seleccionar</p>
+								<cfif isDefined("FORM.#field_name#")>
+									<cfset field_value = arrayToList(field_value,"#chr(13)##chr(10)#")>
+								<cfelse>
+									<cfset field_value = "">
+								</cfif>
 
 							</cfif>
 
+
 						</cfif>
 
-						<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif (fields.field_type_id IS 10 OR fields.field_type_id IS 16)>multiple style="height:90px"</cfif>><!---AND arguments.search_inputs IS false--->
-							<cfif ( (fields.field_type_id IS 9 OR fields.field_type_id IS 15) AND fields.required IS false ) OR ( arguments.search_inputs IS true AND (fields.field_type_id NEQ 10 AND fields.field_type_id NEQ 16) )>
+						<cfif fields.field_input_type EQ "radio" OR fields.field_input_type EQ "checkbox"><!---RADIO / CHECKBOX--->
+
+							<!---<cfif (fields.field_type_id IS 9 AND fields.required IS false) OR arguments.search_inputs IS true>
 								<option value=""></option>
+							</cfif>--->
+
+							<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								<div class="col-xs-7 col-sm-8 col-md-9" style="margin-bottom:10px;">
+							<cfelse>
+								<div class="row">
+									<div class="col-sm-offset-1 col-sm-10" style="margin-bottom:10px;">
 							</cfif>
 
 							<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
 
-								<cfinvoke component="AreaHtml" method="outputSubAreasSelect">
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
 									<cfinvokeargument name="area_id" value="#fields.list_area_id#">
-									<cfinvokeargument name="subAreas" value="#subAreas#">
-									<cfif len(selectedAreasList) GT 0>
-										<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
-									</cfif>
-									<cfinvokeargument name="recursive" value="false">
-
 									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 									<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 								</cfinvoke>
+
+								<cfif subAreas.recordCount GT 0>
+
+									<cfinvoke component="AreaHtml" method="outputSubAreasInput">
+										<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+										<cfinvokeargument name="subAreas" value="#subAreas#">
+										<cfif len(selectedAreasList) GT 0>
+											<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+										</cfif>
+										<cfinvokeargument name="recursive" value="false">
+										<cfinvokeargument name="field_name" value="#field_name#"/>
+										<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
+										<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+										<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+									</cfinvoke>
+
+								<cfelse>
+
+									<p class="help-block" lang="es">No hay opciones definidas para seleccionar</p>
+
+								</cfif>
+
 
 							<cfelse><!--- List text values --->
 
@@ -571,360 +501,451 @@
 										<cfset value_selected = false>
 									</cfif>
 
-									<option value="#list_value#" <cfif value_selected>selected</cfif>>#list_value#</option>
+									<div class="radio">
+									  <label>
+									    <input type="#fields.field_input_type#" name="#field_name#[]" value="#list_value#" <cfif value_selected>checked</cfif> />&nbsp;#list_value#
+									  </label>
+									</div>
+									<div class="clearfix"></div>
+
 								</cfloop>
 
 							</cfif>
 
-						</select>
-
-
-						<cfif ( fields.field_type_id IS 10 OR fields.field_type_id IS 16) AND arguments.search_inputs IS false>
-							<small class="help-block" lang="es">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
-						</cfif>
-
-						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
-						</div>
-						</cfif>
-
-						<cfif fields.required IS true AND arguments.search_inputs IS false>
-							<script>
-								addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
-							</script>
-						</cfif>
-
-					</cfif>
-
-
-				<cfelseif fields.field_type_group IS "user"><!--- doplanning_user USER --->
-
-
-					<cfset field_value_user = "">
-
-					<cfif isNumeric(field_value)>
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
-							<cfinvokeargument name="user_id" value="#field_value#">
-
-							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-						</cfinvoke>
-						<cfif userQuery.recordCount GT 0>
-							<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
-								<cfset field_value_user = userQuery.user_full_name>
+							<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								</div>
 							<cfelse>
-								<cfset field_value_user = "USUARIO SELECCIONADO SIN NOMBRE">
+									</div>
+								</div>
 							</cfif>
-						<cfelse>
-							<cfset field_value_user = "USUARIO NO DISPONIBLE">
-							<cfset field_value = "">
-						</cfif>
-					</cfif>
 
-					<div class="row">
-						<div class="col-xs-11 col-sm-6">
-							<input type="hidden" name="#field_name#" id="#field_name#" value="#field_value#" />
-							<input type="text" name="#field_name#_user_full_name" id="#field_name#_user_full_name" value="#field_value_user#" #field_required_att# class="#text_input_class#" readonly onclick="openUserSelectorWithField('#field_name#')" />
 							<cfif fields.required IS true AND arguments.search_inputs IS false>
-								<script type="text/javascript">
-									addRailoRequiredInteger("#field_name#", "Campo '#field_label#' obligatorio");
+								<cfif fields.field_input_type EQ "radio">
+									<script>
+										addRailoRequiredRadio("#field_name#[]", "Campo '#field_label#' obligatorio");
+									</script>
+								<cfelseif fields.field_input_type EQ "checkbox">
+									<script>
+										addRailoRequiredCheckBox("#field_name#[]", "Campo '#field_label#' obligatorio");
+									</script>
+								</cfif>
+							</cfif>
+
+
+						<cfelse><!---SELECT--->
+
+							<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								<div class="col-xs-7 col-sm-8 col-md-9">
+							</cfif>
+
+							<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
+									<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+									<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+								</cfinvoke>
+
+								<cfif subAreas.recordCount IS 0>
+
+									<p class="help-block" lang="es">No hay opciones definidas para seleccionar</p>
+
+								</cfif>
+
+							</cfif>
+
+							<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif (fields.field_type_id IS 10 OR fields.field_type_id IS 16)>multiple style="height:90px"</cfif>><!---AND arguments.search_inputs IS false--->
+								<cfif ( (fields.field_type_id IS 9 OR fields.field_type_id IS 15) AND fields.required IS false ) OR ( arguments.search_inputs IS true AND (fields.field_type_id NEQ 10 AND fields.field_type_id NEQ 16) )>
+									<option value=""></option>
+								</cfif>
+
+								<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- List area values --->
+
+									<cfinvoke component="AreaHtml" method="outputSubAreasSelect">
+										<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+										<cfinvokeargument name="subAreas" value="#subAreas#">
+										<cfif len(selectedAreasList) GT 0>
+											<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+										</cfif>
+										<cfinvokeargument name="recursive" value="false">
+
+										<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+										<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+									</cfinvoke>
+
+								<cfelse><!--- List text values --->
+
+									<cfloop list="#fields.list_values#" delimiters="#chr(13)##chr(10)#" index="list_value">
+
+										<cfset list_value = trim(list_value)>
+
+										<cfif listFind(field_value, list_value, "#chr(13)##chr(10)#") GT 0>
+											<cfset value_selected = true>
+										<cfelse>
+											<cfset value_selected = false>
+										</cfif>
+
+										<option value="#list_value#" <cfif value_selected>selected</cfif>>#list_value#</option>
+									</cfloop>
+
+								</cfif>
+
+							</select>
+
+
+							<cfif ( fields.field_type_id IS 10 OR fields.field_type_id IS 16) AND arguments.search_inputs IS false>
+								<small class="help-block" lang="es">Utilice la tecla Ctrl para seleccionar varios elementos de la lista</small>
+							</cfif>
+
+							<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							</div>
+							</cfif>
+
+							<cfif fields.required IS true AND arguments.search_inputs IS false>
+								<script>
+									addRailoRequiredSelect("#field_name#", "Campo '#field_label#' obligatorio");
 								</script>
 							</cfif>
-						</div>
-						<cfif fields.required IS false>
-							<div class="col-xs-1 col-sm-6">
-								<button onclick="clearFieldSelectedUser('#field_name#')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
-							</div>
+
 						</cfif>
-					</div>
-					<div class="row">
-						<div class="col-xs-12 col-sm-6">
-							<button onclick="openUserSelectorWithField('#field_name#')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
-						</div>
-					</div>
 
 
-
-				<cfelseif fields.field_type_group IS "doplanning_item"><!--- AREA ITEMS --->
-
+					<cfelseif fields.field_type_group IS "user"><!--- doplanning_user USER --->
 
 
-					<cfif isNumeric(field_value)>
+						<cfset field_value_user = "">
 
-						<cfif fields.item_type_id IS 10><!--- FILE --->
+						<cfif isNumeric(field_value)>
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
+								<cfinvokeargument name="user_id" value="#field_value#">
 
-							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
-								<cfinvokeargument name="file_id" value="#field_value#">
-								<cfinvokeargument name="parse_dates" value="false"/>
-								<cfinvokeargument name="published" value="false"/>
-
-								<cfinvokeargument name="client_abb" value="#client_abb#">
-								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 							</cfinvoke>
-
-							<cfif fileQuery.recordCount GT 0>
-								<cfif len(fileQuery.name) GT 0>
-									<cfset field_value_title = fileQuery.name>
+							<cfif userQuery.recordCount GT 0>
+								<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+									<cfset field_value_user = userQuery.user_full_name>
 								<cfelse>
-									<cfset field_value_title = "ARCHIVO SELECCIONADO SIN TÍTULO">
+									<cfset field_value_user = "USUARIO SELECCIONADO SIN NOMBRE">
 								</cfif>
 							<cfelse>
-								<cfset field_value_title = "ARCHIVO NO DISPONIBLE">
+								<cfset field_value_user = "USUARIO NO DISPONIBLE">
 								<cfset field_value = "">
 							</cfif>
-
-						<cfelse><!--- ITEM --->
-
-							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
-								<cfinvokeargument name="item_id" value="#field_value#">
-								<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
-								<cfinvokeargument name="parse_dates" value="false"/>
-								<cfinvokeargument name="published" value="false"/>
-
-								<cfinvokeargument name="client_abb" value="#client_abb#">
-								<cfinvokeargument name="client_dsn" value="#client_dsn#">
-							</cfinvoke>
-
-							<cfif itemQuery.recordCount GT 0>
-								<cfif len(itemQuery.title) GT 0>
-									<cfset field_value_title = itemQuery.title>
-								<cfelse>
-									<cfset field_value_title = "ELEMENTO SELECCIONADO SIN TÍTULO">
-								</cfif>
-							<cfelse>
-								<cfset field_value_title = "ELEMENTO NO DISPONIBLE">
-								<cfset field_value = "">
-							</cfif>
-
 						</cfif>
 
-					<cfelse>
-
-						<cfset field_value_title = "">
-
-					</cfif>
-
-
-					<cfif isNumeric(fields.list_area_id)><!--- Select item of one area --->
-
-
-						<cfif isDefined("SESSION.user_id")>
-
-							<!--- checkAreaAccess --->
-							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="accessResult">
-								<cfinvokeargument name="area_id" value="#fields.list_area_id#">
-								<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-
-								<cfinvokeargument name="client_abb" value="#client_abb#">
-								<cfinvokeargument name="client_dsn" value="#client_dsn#">
-							</cfinvoke>
-
-							<cfif accessResult IS true>
-
-								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
-
-									<cfif fields.required IS false OR arguments.search_inputs IS true>
-										<option value=""></option>
-									</cfif>
-
-									<cfif fields.item_type_id IS 10><!--- Files --->
-
-										<!--- getAreaFiles --->
-										<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
-											<cfinvokeargument name="area_id" value="#fields.list_area_id#">
-											<cfinvokeargument name="parse_dates" value="true">
-
-											<cfinvokeargument name="with_user" value="true"/>
-
-											<cfinvokeargument name="order_by" value="name">
-											<cfinvokeargument name="order_type" value="ASC">
-
-											<cfinvokeargument name="client_abb" value="#client_abb#">
-											<cfinvokeargument name="client_dsn" value="#client_dsn#">
-										</cfinvoke>
-
-										<cfset files = getAreaFilesResult.query>
-
-										<cfloop query="files">
-											<cfif files.id IS field_value>
-												<cfset value_selected = true>
-											<cfelse>
-												<cfset value_selected = false>
-											</cfif>
-											<option value="#files.id#" <cfif value_selected>selected</cfif>>#files.name#</option>
-										</cfloop>
-
-
-									<cfelse><!--- Items --->
-
-
-										<!--- getAreaItems --->
-										<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
-											<cfinvokeargument name="area_id" value="#fields.list_area_id#">
-											<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
-											<cfinvokeargument name="listFormat" value="true">
-											<cfinvokeargument name="format_content" value="default">
-											<cfinvokeargument name="with_user" value="false">
-											<cfinvokeargument name="parse_dates" value="false"/>
-											<cfinvokeargument name="published" value="false">
-
-											<cfinvokeargument name="client_abb" value="#client_abb#">
-											<cfinvokeargument name="client_dsn" value="#client_dsn#">
-										</cfinvoke>
-
-										<cfset areaItemsQuery = getAreaItemsResult.query>
-
-										<cfloop query="areaItemsQuery">
-											<cfif areaItemsQuery.id IS field_value>
-												<cfset value_selected = true>
-											<cfelse>
-												<cfset value_selected = false>
-											</cfif>
-											<option value="#areaItemsQuery.id#" <cfif value_selected>selected</cfif>>#areaItemsQuery.title#</option>
-										</cfloop>
-
-
-									</cfif>
-
-								</select>
-
-							<cfelse>
-
-								<cfthrow message="No tiene permiso de acceso al área donde están los elementos a seleccionar">
-
-							</cfif>
-
-						<cfelse>
-
-							<cfthrow message="Este tipo de campo (Elemento de DoPlanning) sólo está disponible para ser rellenado desde DoPlanning">
-
-						</cfif>
-
-
-
-					<cfelse><!--- Select item of all areas --->
-
-
-						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
-							<div class="col-xs-6 col-sm-7 col-md-8">
-						<cfelse>
-							<div class="row">
-								<div class="col-xs-11 col-sm-6">
-						</cfif>
-
+						<div class="row">
+							<div class="col-xs-11 col-sm-6">
 								<input type="hidden" name="#field_name#" id="#field_name#" value="#field_value#" />
-								<input type="text" name="#field_name#_title" id="#field_name#_title" value="#field_value_title#" #field_required_att# class="#text_input_class#" readonly onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" />
+								<input type="text" name="#field_name#_user_full_name" id="#field_name#_user_full_name" value="#field_value_user#" #field_required_att# class="#text_input_class#" readonly onclick="openUserSelectorWithField('#field_name#')" />
 								<cfif fields.required IS true AND arguments.search_inputs IS false>
 									<script type="text/javascript">
 										addRailoRequiredInteger("#field_name#", "Campo '#field_label#' obligatorio");
 									</script>
 								</cfif>
-
-
 							</div>
-
 							<cfif fields.required IS false>
-								<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
-									<div class="col-xs-1 col-sm-1 col-md-1">
-								<cfelse>
-									<div class="col-xs-1 col-sm-6">
-								</cfif>
-
-									<button onclick="clearFieldSelectedItem('#field_name#')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>
-
+								<div class="col-xs-1 col-sm-6">
+									<button onclick="clearFieldSelectedUser('#field_name#')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
 								</div>
 							</cfif>
-
-						<cfif arguments.displayType NEQ DISPLAY_TYPE_HORIZONTAL>
-						</div><!--- END row --->
-						</cfif>
-
+						</div>
 						<div class="row">
+							<div class="col-xs-12 col-sm-6">
+								<button onclick="openUserSelectorWithField('#field_name#')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+							</div>
+						</div>
 
-							<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
-								<div class="col-xs-5 col-sm-4 col-md-3"></div>
-								<div class="col-xs-7 col-sm-8 col-md-9">
-							<cfelse>
-								<div class="col-xs-12 col-sm-6">
+
+
+					<cfelseif fields.field_type_group IS "doplanning_item"><!--- AREA ITEMS --->
+
+
+
+						<cfif isNumeric(field_value)>
+
+							<cfif fields.item_type_id IS 10><!--- FILE --->
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+									<cfinvokeargument name="file_id" value="#field_value#">
+									<cfinvokeargument name="parse_dates" value="false"/>
+									<cfinvokeargument name="published" value="false"/>
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<cfif fileQuery.recordCount GT 0>
+									<cfif len(fileQuery.name) GT 0>
+										<cfset field_value_title = fileQuery.name>
+									<cfelse>
+										<cfset field_value_title = "ARCHIVO SELECCIONADO SIN TÍTULO">
+									</cfif>
+								<cfelse>
+									<cfset field_value_title = "ARCHIVO NO DISPONIBLE">
+									<cfset field_value = "">
+								</cfif>
+
+							<cfelse><!--- ITEM --->
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+									<cfinvokeargument name="item_id" value="#field_value#">
+									<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
+									<cfinvokeargument name="parse_dates" value="false"/>
+									<cfinvokeargument name="published" value="false"/>
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<cfif itemQuery.recordCount GT 0>
+									<cfif len(itemQuery.title) GT 0>
+										<cfset field_value_title = itemQuery.title>
+									<cfelse>
+										<cfset field_value_title = "ELEMENTO SELECCIONADO SIN TÍTULO">
+									</cfif>
+								<cfelse>
+									<cfset field_value_title = "ELEMENTO NO DISPONIBLE">
+									<cfset field_value = "">
+								</cfif>
+
 							</cfif>
 
-								<button onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
+						<cfelse>
+
+							<cfset field_value_title = "">
+
+						</cfif>
+
+
+						<cfif isNumeric(fields.list_area_id)><!--- Select item of one area --->
+
+
+							<cfif isDefined("SESSION.user_id")>
+
+								<!--- checkAreaAccess --->
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="accessResult">
+									<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+									<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<cfif accessResult IS true>
+
+									<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
+
+										<cfif fields.required IS false OR arguments.search_inputs IS true>
+											<option value=""></option>
+										</cfif>
+
+										<cfif fields.item_type_id IS 10><!--- Files --->
+
+											<!--- getAreaFiles --->
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
+												<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+												<cfinvokeargument name="parse_dates" value="true">
+
+												<cfinvokeargument name="with_user" value="true"/>
+
+												<cfinvokeargument name="order_by" value="name">
+												<cfinvokeargument name="order_type" value="ASC">
+
+												<cfinvokeargument name="client_abb" value="#client_abb#">
+												<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											</cfinvoke>
+
+											<cfset files = getAreaFilesResult.query>
+
+											<cfloop query="files">
+												<cfif files.id IS field_value>
+													<cfset value_selected = true>
+												<cfelse>
+													<cfset value_selected = false>
+												</cfif>
+												<option value="#files.id#" <cfif value_selected>selected</cfif>>#files.name#</option>
+											</cfloop>
+
+
+										<cfelse><!--- Items --->
+
+
+											<!--- getAreaItems --->
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+												<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+												<cfinvokeargument name="itemTypeId" value="#fields.item_type_id#">
+												<cfinvokeargument name="listFormat" value="true">
+												<cfinvokeargument name="format_content" value="default">
+												<cfinvokeargument name="with_user" value="false">
+												<cfinvokeargument name="parse_dates" value="false"/>
+												<cfinvokeargument name="published" value="false">
+
+												<cfinvokeargument name="client_abb" value="#client_abb#">
+												<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											</cfinvoke>
+
+											<cfset areaItemsQuery = getAreaItemsResult.query>
+
+											<cfloop query="areaItemsQuery">
+												<cfif areaItemsQuery.id IS field_value>
+													<cfset value_selected = true>
+												<cfelse>
+													<cfset value_selected = false>
+												</cfif>
+												<option value="#areaItemsQuery.id#" <cfif value_selected>selected</cfif>>#areaItemsQuery.title#</option>
+											</cfloop>
+
+
+										</cfif>
+
+									</select>
+
+								<cfelse>
+
+									<cfthrow message="No tiene permiso de acceso al área donde están los elementos a seleccionar">
+
+								</cfif>
+
+							<cfelse>
+
+								<cfthrow message="Este tipo de campo (Elemento de DoPlanning) sólo está disponible para ser rellenado desde DoPlanning">
+
+							</cfif>
+
+
+
+						<cfelse><!--- Select item of all areas --->
+
+
+							<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								<div class="col-xs-6 col-sm-7 col-md-8">
+							<cfelse>
+								<div class="row">
+									<div class="col-xs-11 col-sm-6">
+							</cfif>
+
+									<input type="hidden" name="#field_name#" id="#field_name#" value="#field_value#" />
+									<input type="text" name="#field_name#_title" id="#field_name#_title" value="#field_value_title#" #field_required_att# class="#text_input_class#" readonly onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" />
+									<cfif fields.required IS true AND arguments.search_inputs IS false>
+										<script type="text/javascript">
+											addRailoRequiredInteger("#field_name#", "Campo '#field_label#' obligatorio");
+										</script>
+									</cfif>
+
+
+								</div>
+
+								<cfif fields.required IS false>
+									<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+										<div class="col-xs-1 col-sm-1 col-md-1">
+									<cfelse>
+										<div class="col-xs-1 col-sm-6">
+									</cfif>
+
+										<button onclick="clearFieldSelectedItem('#field_name#')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>
+
+									</div>
+								</cfif>
+
+							<cfif arguments.displayType NEQ DISPLAY_TYPE_HORIZONTAL>
+							</div><!--- END row --->
+							</cfif>
+
+							<div class="row">
+
+								<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+									<div class="col-xs-5 col-sm-4 col-md-3"></div>
+									<div class="col-xs-7 col-sm-8 col-md-9">
+								<cfelse>
+									<div class="col-xs-12 col-sm-6">
+								</cfif>
+
+									<button onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
+
+								</div>
 
 							</div>
 
+
+						</cfif>
+
+
+					<cfelseif fields.field_type_group IS "file" AND arguments.search_inputs IS false><!--- Attached file --->
+
+
+
+						<cfif len(fields.list_values) GT 0>
+							<cfset acceptFileTypes = ListChangeDelims(fields.list_values, ",", "#chr(13)##chr(10)#")>
+						</cfif>
+
+						<cfif isNumeric(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
+							<cfset field_required_att = "">
+						</cfif>
+
+						<input type="#fields.input_type#" name="#field_name#" id="#field_name#" #field_required_att# <cfif len(fields.list_values) GT 0>accept="#acceptFileTypes#"</cfif> class="#text_input_class#" />
+
+						<cfif isNumeric(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
+
+							<div id="attachedFile#field_id#">
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+									<cfinvokeargument name="file_id" value="#field_value#">
+									<cfinvokeargument name="parse_dates" value="false"/>
+									<cfinvokeargument name="published" value="false"/>
+
+									<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+									<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+								</cfinvoke>
+
+								<cfif fileQuery.recordCount GT 0>
+									<cfset fileName = fileQuery.file_name>
+								<cfelse>
+									<cfset fileName = "<i>ARCHIVO NO DISPONIBLE</i>">
+								</cfif>
+
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#field_value#&#tableTypeName#=#table_id#" onclick="return downloadFileLinked(this,event)">#fileName#</a>&nbsp;
+
+								<cfif fields.required IS false>
+									<button type="button" onclick="deleteAttachedFile(#field_id#)" class="btn btn-xs btn-default"><i class="icon-remove"></i> <span lang="es">Eliminar archivo</span></button>
+								</cfif>
+							</div>
+
+						</cfif>
+
+						<cfif len(fields.list_values) GT 0>
+							<div class="help-block"><span lang="es">Formatos aceptados:</span> <span lang="es">#acceptFileTypes#</span></div>
+						</cfif>
+
+						<cfif fields.required IS true AND arguments.search_inputs IS false>
+							<script>
+								addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
+							</script>
+						</cfif>
+
+
+					</cfif><!--- END fields.field_type_group --->
+
+					<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+						<div><!---class="row"--->
+							<div class="col-xs-5 col-sm-4 col-md-3"></div>
+							<div class="col-xs-7 col-sm-8 col-md-9">
+								<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
+							</div>
 						</div>
-
-
 					</cfif>
 
+				</div><!---END col-md-12--->
+				</div><!---END div class="row"--->
 
-				<cfelseif fields.field_type_group IS "file" AND arguments.search_inputs IS false><!--- Attached file --->
-
-
-
-					<cfif len(fields.list_values) GT 0>
-						<cfset acceptFileTypes = ListChangeDelims(fields.list_values, ",", "#chr(13)##chr(10)#")>
-					</cfif>
-
-					<cfif isNumeric(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
-						<cfset field_required_att = "">
-					</cfif>
-
-					<input type="#fields.input_type#" name="#field_name#" id="#field_name#" #field_required_att# <cfif len(fields.list_values) GT 0>accept="#acceptFileTypes#"</cfif> class="#text_input_class#" />
-
-					<cfif isNumeric(field_value) GT 0 AND NOT isDefined("FORM.tableTypeId")>
-
-						<div id="attachedFile#field_id#">
-
-							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
-								<cfinvokeargument name="file_id" value="#field_value#">
-								<cfinvokeargument name="parse_dates" value="false"/>
-								<cfinvokeargument name="published" value="false"/>
-
-								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-								<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-							</cfinvoke>
-
-							<cfif fileQuery.recordCount GT 0>
-								<cfset fileName = fileQuery.file_name>
-							<cfelse>
-								<cfset fileName = "<i>ARCHIVO NO DISPONIBLE</i>">
-							</cfif>
-
-							<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#field_value#&#tableTypeName#=#table_id#" onclick="return downloadFileLinked(this,event)">#fileName#</a>&nbsp;
-
-							<cfif fields.required IS false>
-								<button type="button" onclick="deleteAttachedFile(#field_id#)" class="btn btn-xs btn-default"><i class="icon-remove"></i> <span lang="es">Eliminar archivo</span></button>
-							</cfif>
-						</div>
-
-					</cfif>
-
-					<cfif len(fields.list_values) GT 0>
-						<div class="help-block"><span lang="es">Formatos aceptados:</span> <span lang="es">#acceptFileTypes#</span></div>
-					</cfif>
-
-					<cfif fields.required IS true AND arguments.search_inputs IS false>
-						<script>
-							addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
-						</script>
-					</cfif>
-
-
-				</cfif><!--- END fields.field_type_group --->
-
-				<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-					<div><!---class="row"--->
-						<div class="col-xs-5 col-sm-4 col-md-3"></div>
-						<div class="col-xs-7 col-sm-8 col-md-9">
-							<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
-						</div>
-					</div>
-				</cfif>
-
-			</div><!---END col-md-12--->
-			</div><!---END div class="row"--->
+			</cfif><!---END fields.field_type_id NEQ 20--->
 
 		</cfloop>
+
+		<cfif fieldSetOpen IS true>
+			</fieldset>
+		</cfif>
+
 		</cfoutput>
 
 

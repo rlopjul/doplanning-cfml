@@ -426,6 +426,10 @@ fieldset[disabled] .btn-warning.active {
 	background-image: none; /* Para corregir un fallo que con ckeditor y bootstrap los select se muestran al desplegarse con muchas flechas */
 }
 
+fieldset {
+		margin-top: 20px;
+}
+
 
 /******************************************** END NEW BOOTSTRAP CSS CHANGES ******************************************/
 
