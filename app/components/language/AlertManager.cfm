@@ -113,7 +113,7 @@ curLangText["es"] = {
 			"user" : "Usuario",
 			"by_user" : "por el usuario",
 			"your_access_email" : "Su usuario de acceso es",
-			"you_must_change_password" : 'Debe cambiar la contraseña en el apartado "Preferencias" de la aplicación',
+			"you_must_change_password" : 'Debe cambiar la contraseña en el apartado "Usuario > Datos personales" de la aplicación',
 
 			"no_title" : "sin título",
 
@@ -323,7 +323,7 @@ curLangText["es"] = {
 
 			"password" : "Contraseña",
 
-			"to_view_tutorials_access" : "Para ver los tutoriales de la aplicación acceda a",
+			"to_view_tutorials_access" : "Para ver los tutoriales de uso acceda a",
 
 			"user_access_identify_to" : "Su usuario de acceso es el usado para identificarse en",
 			"also_you_can_use" : "Para acceder también puede utilizar su usuario de",

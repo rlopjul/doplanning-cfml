@@ -4575,55 +4575,56 @@
 			<!---IMPORTANTE: Para confirmar su alta debe acceder a la siguiente dirección: #APPLICATION.mainUrl#/#SESSION.client_id#--->
 			<cfsavecontent variable="html_text">
 			<cfoutput>
-	#langText[curLang].new_user.you_has_been_registered_in_application# #APPLICATION.title# #langText[curLang].common.of_the_organization# <b>#root_area.name#</b>.<br /><br />
+	<p style="font-size:14px">
+		#langText[curLang].new_user.you_has_been_registered_in_application# #APPLICATION.title# #langText[curLang].common.of_the_organization# <b>#root_area.name#</b>.<br /><br />
 
-	<cfif APPLICATION.identifier NEQ "vpnet"><!---Default User--->
-	#langText[curLang].new_user.if_you_use_the_application#: <a href="#APPLICATION.termsOfUseUrl#">#APPLICATION.termsOfUseUrl#</a>.<br/><br/>
+		<cfif APPLICATION.identifier NEQ "vpnet"><!---Default User--->
+		#langText[curLang].new_user.if_you_use_the_application#: <a href="#APPLICATION.termsOfUseUrl#">#APPLICATION.termsOfUseUrl#</a>.<br/><br/>
 
-	#langText[curLang].common.your_access_email#: <b>#objectUser.email#</b><br />
-	#langText[curLang].new_user.password#: <b>#arguments.password_temp#</b><br/>
-	#langText[curLang].common.you_must_change_password#.<br /><br/>
-
-	</cfif>
-	<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP User--->
-
-		<cfif APPLICATION.identifier NEQ "vpnet">
-
-			<cfif ( isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0 ) OR ( isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0 )>
-
-				#langText[curLang].new_user.also_you_can_use#: <br/>
-
-				<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
-					#APPLICATION.ldapName#: <b>#arguments.objectUser.login_ldap#</b><br/>
-				</cfif>
-				<cfif isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0>
-					Diraya: <b>#arguments.objectUser.login_diraya#</b><br/>
-				</cfif>
-
-			</cfif>
-
-		<cfelse><!---vpnet--->
-
-			<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
-				<cfset ldap_name = APPLICATION.ldapName>
-				<cfset login_ldap = arguments.objectUser.login_ldap>
-			<cfelseif isDefined("arguments.objectUser.login_diraya")>
-				<cfset ldap_name = "Diraya">
-				<cfset login_ldap = arguments.objectUser.login_diraya>
-			</cfif>
-			#langText[curLang].new_user.user_access_identify_to# #ldap_name#.<br/>
-			#langText[curLang].common.user#: <b>#login_ldap#</b><br/>
+		#langText[curLang].common.your_access_email#: <b>#objectUser.email#</b><br />
+		#langText[curLang].new_user.password#: <b>#arguments.password_temp#</b><br/>
+		#langText[curLang].common.you_must_change_password#.<br /><br/>
 
 		</cfif>
+		<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP User--->
 
-	</cfif><br/>
+			<cfif APPLICATION.identifier NEQ "vpnet">
 
-	<cfif APPLICATION.identifier NEQ "vpnet">
-		#langText[curLang].new_user.to_view_tutorials_access#: <a href="#APPLICATION.helpUrl#">#APPLICATION.helpUrl#</a><br/>
-	</cfif>
-	<br/>
+				<cfif ( isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0 ) OR ( isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0 )>
 
-	<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px;"><b>#access_content#</b></div>
+					#langText[curLang].new_user.also_you_can_use#: <br/>
+
+					<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
+						#APPLICATION.ldapName#: <b>#arguments.objectUser.login_ldap#</b><br/>
+					</cfif>
+					<cfif isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0>
+						Diraya: <b>#arguments.objectUser.login_diraya#</b><br/>
+					</cfif>
+
+				</cfif>
+
+			<cfelse><!---vpnet--->
+
+				<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
+					<cfset ldap_name = APPLICATION.ldapName>
+					<cfset login_ldap = arguments.objectUser.login_ldap>
+				<cfelseif isDefined("arguments.objectUser.login_diraya")>
+					<cfset ldap_name = "Diraya">
+					<cfset login_ldap = arguments.objectUser.login_diraya>
+				</cfif>
+				#langText[curLang].new_user.user_access_identify_to# #ldap_name#.<br/>
+				#langText[curLang].common.user#: <b>#login_ldap#</b><br/>
+
+			</cfif>
+
+		</cfif><br/>
+
+		<cfif APPLICATION.identifier NEQ "vpnet">
+			#langText[curLang].new_user.to_view_tutorials_access#: <a href="#APPLICATION.helpUrl#">#APPLICATION.helpUrl#</a><br/>
+		</cfif>
+		<br/>
+	</p>
+	<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px; font-size:14px;"><b>#access_content#</b></div>
 
 			</cfoutput>
 			</cfsavecontent>
