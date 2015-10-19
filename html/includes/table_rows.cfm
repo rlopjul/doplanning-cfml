@@ -108,6 +108,7 @@
 					<div class="btn-group">
 						<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
 
+						<a href="#tableTypeName#_row_import_xml.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros a partir de XML" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar XML</span></a>
 				<cfelse>
 					<div class="btn-group">
 				</cfif>

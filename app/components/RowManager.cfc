@@ -587,6 +587,302 @@
 	</cffunction>
 
 
+
+	<!--- ------------------------------------- importRowsXml -------------------------------------  --->
+
+	<cffunction name="importRowsXml" output="true" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="file" type="string" required="true">
+		<cfargument name="delete_rows" type="boolean" required="false" default="false">
+		<cfargument name="cancel_on_error" type="boolean" required="false" default="true">
+		<cfargument name="decimals_with_mask" type="boolean" required="false" default="false">
+
+		<cfset var method = "importRowsXml">
+
+		<cfset var response = structNew()>
+
+		<cfset var destination = "">
+		<cfset var fileContent = "">
+		<cfset var fileArray = arrayNew(1)>
+		<cfset var rowLabelValues = structNew()>
+		<cfset var rowValues = structNew()>
+		<cfset var fieldValue = "">
+
+		<cfset var errorMessages = "">
+
+		<!---<cftry>--->
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif tableQuery.recordCount IS 0><!---Item does not exist--->
+
+				<cfset error_code = 501>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<!---canUserModifyRow--->
+			<cfinvoke component="RowManager" method="canUserModifyRow" returnvariable="canUserModifyRow">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="table" value="#tableQuery#">
+			</cfinvoke>
+			<cfif canUserModifyRow IS false>
+				<cfthrow message="No tiene permiso para acceder a editar esta #tableTypeNameEs#">
+			</cfif>
+
+			<!---Table fields--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_types" value="true">
+				<cfinvokeargument name="with_table" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset destination = "#APPLICATION.filesPath#/#client_abb#/">
+
+			<!--- Upload and read file --->
+			<cffile action="upload" filefield="file" destination="#destination#" nameconflict="makeunique" result="fileResult" charset="utf-8" accept="text/plain,text/xml,application/xml"><!--- application/vnd.ms-excel es necesario para IE --->
+
+			<cfset destinationFile = destination&fileResult.serverFile>
+
+			<cffile action="read" file="#destinationFile#" variable="fileContent" charset="utf-8">
+			<cffile action="delete" file="#destinationFile#">
+
+			<cfset importXml = xmlParse(fileContent)>
+
+			<cfset curRow = 1>
+
+			<!---<cfif isDefined("importXml.xmlRoot.xmlChildren[1].xmlChildren")>--->
+
+				<!---<cftransaction>--->
+
+				<!--- Delete Rows --->
+				<cfif arguments.delete_rows IS true>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRows">
+						<cfinvokeargument name="table_id" value="#arguments.table_id#">
+						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+						<cfinvokeargument name="resetAutoIncrement" value="true">
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+
+				<cfloop index="xmlParent" array="#importXml.xmlRoot.xmlChildren#">
+
+					<cfset error = false>
+					<cfset rowLabelValues = structNew()>
+					<cfset rowValues = structNew()>
+
+					<cfloop index="xmlNode" array="#xmlParent.xmlChildren#">
+
+						<!---<cfdump var="#xmlNode#">--->
+
+						<cfset tagName = xmlNode.xmlName>
+
+						<cfset textFieldLabel = tagName>
+
+						<cfset xmlNodeText = trim(xmlNode.xmlText)>
+
+						<cfif xmlNodeText NEQ "">
+
+							<cfset rowLabelValues[textFieldLabel] = xmlNodeText>
+
+						</cfif>
+
+						<cfif arrayLen(xmlNode.xmlChildren) GT 0>
+
+							<cfset elementFieldLabel = tagName&"_xml">
+
+							<cfset rowLabelValues[elementFieldLabel] = toString(trim(xmlNode))>
+
+						</cfif>
+
+						<cfif structCount(xmlNode.xmlAttributes) GT 0>
+
+							<cfloop collection="#xmlNode.xmlAttributes#" item="attribute">
+
+								<cfset attFieldLabel = tagName&"_att_"&attribute>
+
+								<cfset rowLabelValues[attFieldLabel] = trim(xmlNode.xmlAttributes[attribute])>
+
+							</cfloop>
+
+						</cfif>
+
+					</cfloop>
+
+					<!---<cfdump var="#rowLabelValues#">--->
+
+					<cfloop collection="#rowLabelValues#" item="fieldLabel">
+
+						<cfquery name="checkField" dbtype="query">
+							SELECT *
+							FROM fields
+							WHERE label = <cfqueryparam value="#fieldLabel#" cfsqltype="cf_sql_varchar">;
+						</cfquery>
+
+						<cfif checkField.recordCount IS 0>
+
+							<cfset fieldValue = rowLabelValues[fieldLabel]>
+
+							<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="createFieldInDatabase" returnvariable="field_id">
+								<cfinvokeargument name="table_id" value="#arguments.table_id#">
+								<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+								<cfinvokeargument name="field_type_id" value="1">
+								<cfinvokeargument name="label" value="#fieldLabel#">
+								<cfinvokeargument name="description" value="">
+								<cfinvokeargument name="required" value="false">
+								<cfinvokeargument name="sort_by_this" value="">
+								<cfinvokeargument name="default_value" value="">
+								<cfif find("_att_", fieldLabel) GT 0 OR isNumeric(fieldValue) OR isDate(fieldValue) OR isBoolean(fieldValue)>
+									<cfinvokeargument name="mysql_type" value="VARCHAR(255)">
+								<cfelse>
+									<cfinvokeargument name="mysql_type" value="TEXT">
+								</cfif>
+							</cfinvoke>
+
+							<cfset rowValues["field_"&field_id] = rowLabelValues[fieldLabel]>
+
+							<!---Table fields--->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
+								<cfinvokeargument name="table_id" value="#arguments.table_id#">
+								<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+								<cfinvokeargument name="with_types" value="true">
+								<cfinvokeargument name="with_table" value="false">
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+						<cfelse>
+
+							<cfset rowValues["field_"&checkField.field_id] = rowLabelValues[fieldLabel]>
+
+						</cfif>
+
+					</cfloop>
+
+
+					<cfloop query="#fields#">
+
+						<cfif NOT structKeyExists(rowValues, "field_"&fields.field_id)>
+
+								<cfset rowValues["field_"&fields.field_id] = "">
+
+						</cfif>
+
+					</cfloop>
+
+
+					<cfif error IS false><!--- No error --->
+
+						<!---<cftry>--->
+
+							<!--- saveRow --->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="saveRow" argumentcollection="#rowValues#" returnvariable="row_id">
+								<cfinvokeargument name="table_id" value="#arguments.table_id#">
+								<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+								<cfinvokeargument name="action" value="create">
+
+								<cfinvokeargument name="fields" value="#fields#">
+								<cfinvokeargument name="user_id" value="#user_id#">
+								<cfinvokeargument name="send_alert" value="false">
+								<cfif arguments.cancel_on_error IS true>
+									<cfinvokeargument name="with_transaction" value="false">
+								<cfelse>
+									<cfinvokeargument name="with_transaction" value="true">
+								</cfif>
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<!---<cfcatch>
+
+								<cfset errorMessagePrefix = "Error en fila #curRow#: ">
+								<cfset errorMessage = errorMessagePrefix&cfcatch.message>
+
+								<cfif arguments.cancel_on_error IS true>
+
+									<!--- Se lanza un error con cthrow para que se haga ROLLBACK --->
+									<cfthrow message="#errorMessage#">
+
+								<cfelse>
+
+									<cfif len(errorMessages) GT 0>
+										<cfset errorMessages = errorMessages&"<br>"&errorMessage>
+									<cfelse>
+										<cfset errorMessages = errorMessage>
+									</cfif>
+
+								</cfif>
+
+							</cfcatch>
+
+						</cftry>--->
+
+					</cfif>
+
+					<cfset curRow = curRow+1>
+
+
+				</cfloop><!--- END xmlParent loop --->
+
+
+				<!---</cftransaction>--->
+
+			<!---<cfelse>
+
+				<cfset response = {result=false, files=fileData, message="Archivo vacío o con formato incorrecto"}>
+				<cfreturn response>
+
+			</cfif>--->
+
+			<cfif len(errorMessages) GT 0>
+				<cfset response = {result=false, message=errorMessages, fileArray=fileArray}>
+			<cfelse>>
+				<cfset response = {result=true, table_id=arguments.table_id}>
+			</cfif>
+
+			<!---<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+				<cfset response = {result=false, message=cfcatch.message, fileArray=fileArray}>
+
+			</cfcatch>
+		</cftry>--->
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
+
 	<!--- ------------------------------------- generateRowsQuery -------------------------------------  --->
 
 	<cffunction name="generateRowsQuery" output="false" access="public" returntype="struct">

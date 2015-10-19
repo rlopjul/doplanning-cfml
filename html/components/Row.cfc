@@ -346,6 +346,40 @@
 	</cffunction>
 
 
+	<!--- -------------------------------importRowsXml-------------------------------------- --->
+
+	<cffunction name="importRowsXml" returntype="struct" access="public">
+			<cfargument name="table_id" type="numeric" required="true">
+			<cfargument name="tableTypeId" type="numeric" required="true">
+			<cfargument name="file" type="string" required="true">
+			<cfargument name="delete_rows" type="boolean" required="false">
+			<cfargument name="cancel_on_error" type="boolean" required="false">
+			<cfargument name="decimals_with_mask" type="boolean" required="false">
+
+			<cfset var method = "importRowsXml">
+
+			<cfset var response = structNew()>
+
+			<!---<cftry>--->
+
+				<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="importRowsXml" argumentcollection="#arguments#" returnvariable="response">
+				</cfinvoke>
+
+				<cfif response.result IS true>
+					<cfset response.message = "Registros importados">
+				</cfif>
+
+				<!---<cfcatch>
+					<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+				</cfcatch>
+
+			</cftry>--->
+
+			<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- -------------------------------exportRows-------------------------------------- --->
 
     <cffunction name="exportRows" returntype="struct" access="public">
