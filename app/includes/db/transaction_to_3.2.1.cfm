@@ -57,6 +57,21 @@
 			ADD COLUMN `import_name` VARCHAR(100) NULL AFTER `list_values`;
 		</cfquery>
 
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_users`
+			DROP FOREIGN KEY `#new_client_abb#_users_ibfk_3`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_users`
+			ADD CONSTRAINT `#new_client_abb#_users_ibfk_3`
+			  FOREIGN KEY (`last_update_user_id`)
+			  REFERENCES `#new_client_abb#_users` (`id`)
+			  ON DELETE SET NULL
+			  ON UPDATE SET NULL;
+		</cfquery>
+
+
 
 		<cfcatch>
 			<cfoutput>
