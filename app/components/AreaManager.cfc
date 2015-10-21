@@ -2084,7 +2084,6 @@
 		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="name" type="string" required="false"/>
 		<cfargument name="description" type="string" required="false"/>
-		<!---<cfargument name="parent_id" type="numeric" required="false"/>--->
 		<cfargument name="with_link" type="string" required="false"/>
 		<cfargument name="link" type="string" required="false"/>
 		<cfargument name="with_image" type="boolean" required="false"/>
@@ -2175,10 +2174,10 @@
 						</cfquery>
 					</cfif>
 
-					<cfif isDefined("arguments.hide_in_menu") AND arguments.hide_in_menu NEQ "">
+					<cfif isDefined("arguments.hide_in_menu") AND arguments.hide_in_menu NEQ "" AND NOT isDefined("arguments.link")><!--- Si arguments.link está definido es porque se accede desde la página de modificar la imagen del área que no pasa este parámetro --->
 						<cfquery name="hideMenuQuery" datasource="#client_dsn#">
-							UPDATE #client_abb#_areas SET hide_in_menu = <cfqueryPARAM value = "#arguments.hide_in_menu#" cfsqltype = "cf_sql_boolean">
-							WHERE id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+							UPDATE #client_abb#_areas SET hide_in_menu = <cfqueryparam value="#arguments.hide_in_menu#" cfsqltype="cf_sql_boolean">
+							WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
 					</cfif>
 
