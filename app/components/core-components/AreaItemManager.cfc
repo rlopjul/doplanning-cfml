@@ -260,17 +260,21 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-				<!---Alert--->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
-					<cfinvokeargument name="objectItem" value="#itemQuery#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="itemCategories" value="#itemCategories#">
-					<cfinvokeargument name="action" value="delete">
+				<cfif arguments.itemTypeId NEQ 17><!---IS NOT MAILING ITEM--->
 
-					<cfinvokeargument name="user_id" value="#arguments.delete_user_id#">
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
+					<!---Alert--->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
+						<cfinvokeargument name="objectItem" value="#itemQuery#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="itemCategories" value="#itemCategories#">
+						<cfinvokeargument name="action" value="delete">
+
+						<cfinvokeargument name="user_id" value="#arguments.delete_user_id#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
 
 				<cfif itemTypeId IS 11 OR itemTypeId IS 12><!--- List, Forms --->
 
