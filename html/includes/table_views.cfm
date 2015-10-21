@@ -37,7 +37,7 @@
 
 		<cfif tableTypeId NEQ 3>
 			<div class="btn-group">
-				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a><!---area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#--->
+				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/v3/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a><!---area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#--->
 			</div>
 		</cfif>
 
@@ -78,10 +78,10 @@
 		<cfinclude template="#APPLICATION.htmlPath#/includes/table_views_list.cfm">
 
 	<cfelse>
-	
+
 		<script type="text/javascript">
 			openUrlHtml2('empty.cfm','itemIframe');
-		</script>				
+		</script>
 
 		<cfoutput>
 		<div class="div_text_result"><span lang="es">Haga clic en Nueva vista para crear una nueva vista.</span></div>

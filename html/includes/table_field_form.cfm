@@ -235,7 +235,7 @@
 			$("##fieldInputRequired").hide();
 			$("##fieldInputOrderBy").hide();
 
-			$("##default_value_text").prop('disabled', false);		
+			$("##default_value_text").prop('disabled', false);
 
 		}else {
 
@@ -355,7 +355,7 @@
 
 	<div class="row" id="fieldInputItemType">
 		<div class="col-md-10">
-			<cfif page_type IS 2 AND isNumeric(field.item_type_id)>
+			<cfif page_type IS 2 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id)>
 				<input name="item_type_id" type="hidden" value="#field.item_type_id#"/>
 			</cfif>
 
