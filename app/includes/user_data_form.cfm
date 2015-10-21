@@ -2,7 +2,7 @@
 page_types
 1 create/update user from administration
 2 update user from preferences
-3 create user (public form)
+3 register user (public form)
 --->
 
 <cfif page_type NEQ 3>
@@ -552,7 +552,7 @@ page_types
 
 			<cfif isNumeric(objectUser.typology_id)>
 				<cfset selected_typology_id = objectUser.typology_id>
-			<cfelseif page_type IS NOT 2><!---IS NOT modify user page--->
+			<cfelseif page_type IS 3><!---IS register user page--->
 				<cfset selected_typology_id = default_typology_id>
 			<cfelse>
 				<cfset selected_typology_id = "">
@@ -609,11 +609,11 @@ page_types
 
 			</script>
 
-			<cfif typologies.recordCount IS 1>
+			<cfif typologies.recordCount IS 1 AND page_type NEQ 1>
 
-				<input type="hidden" name="typology_id" id="typology_id" value="#typologies.id#">
+				<!---<input type="hidden" name="typology_id" id="typology_id" value="#typologies.id#">
 
-			<cfelseif page_type IS 2>
+			<cfelseif page_type IS 2>--->
 
 				<input type="hidden" name="typology_id" id="typology_id" value="#selected_typology_id#">
 
