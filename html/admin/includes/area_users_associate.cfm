@@ -1,5 +1,5 @@
 <cfif isDefined("URL.area") AND isNumeric(URL.area) AND isDefined("URL.users")>
-	
+
 	<cfset area_id = URL.area>
 	<cfset users_ids = URL.users>
 
@@ -13,7 +13,7 @@
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
 
-	
+
 	<cfoutput>
 
 		<div class="modal-header">
@@ -23,14 +23,26 @@
 
 	 	<div class="modal-body">
 
-	 		<div><p lang="es">Comprueba los usuarios seleccionados:</p></div>
+			<div class="well well-sm"><span lang="es">Área</span>:
+				<strong>#objectArea.name#</strong><br/>
+				<span lang="es">Ruta del área</span>: #area_path#
+			</div>
 
 	 		<div>
 
+				<div><p lang="es">Comprueba los usuarios seleccionados:</p></div>
+
 		 		<cfset usersToAssociate = "">
 
+				<cfset numUsers = listLen(users_ids)>
+
+				<cfif numUsers GT 5>
+					<div class="well well-sm">
+					<ul class="list-inline">
+				</cfif>
+
 		 		<cfloop list="#users_ids#" index="user_id">
-		 			
+
 		 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="objectUser">
 						<cfinvokeargument name="user_id" value="#user_id#">
 					</cfinvoke>
@@ -38,39 +50,57 @@
 					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
 						<cfinvokeargument name="area_id" value="#area_id#">
 						<cfinvokeargument name="check_user_id" value="#user_id#">
-					</cfinvoke>	
+					</cfinvoke>
 
 					<cfif isUserInAreaResponse.isUserInArea IS false>
 
 						<cfset usersToAssociate = listAppend(usersToAssociate, user_id)>
 
-						<!--- <p>¿Seguro que desea asociar este usuario a esta área?</p> --->
+						<cfif numUsers GT 5>
 
-						<div class="well well-sm">
-							<cfif len(objectUser.image_type) GT 0>
-								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img" style="margin-right:2px;"/>									
-							<cfelse>							
-								<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="item_img_default" style="margin-right:2px;"/>
-							</cfif> <strong>#objectUser.family_name# #objectUser.name#</strong> (#objectUser.email#)<br/>
-						</div>
+							<li>
+								<cfif len(objectUser.image_type) GT 0>
+									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img" style="margin-right:2px;"/>
+								<cfelse>
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="item_img_default" style="margin-right:2px;"/>
+								</cfif> <strong>#objectUser.family_name# #objectUser.name#</strong> (#objectUser.email#)<br/>
+							</li>
+
+						<cfelse>
+
+							<div class="well well-sm">
+								<cfif len(objectUser.image_type) GT 0>
+									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img" style="margin-right:2px;"/>
+								<cfelse>
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="item_img_default" style="margin-right:2px;"/>
+								</cfif> <strong>#objectUser.family_name# #objectUser.name#</strong> (#objectUser.email#)<br/>
+							</div>
+
+						</cfif>
 
 					<cfelse>
 
-						<p><b>#objectUser.family_name# #objectUser.name#</b> <span lang="es">ya está asociado a esta área, no es necesario asociarlo</span>.</p>
+						<cfif numUsers GT 5>
+							<li><b>#objectUser.family_name# #objectUser.name#</b> <span lang="es">ya está asociado a esta área, no es necesario asociarlo</span>.</li>
+						<cfelse>
+							<p><b>#objectUser.family_name# #objectUser.name#</b> <span lang="es">ya está asociado a esta área, no es necesario asociarlo</span>.</p>
+						</cfif>
 
 					</cfif>
-						
+
 		 		</cfloop>
 
-		 		<div class="well well-sm"><span lang="es">Área</span>:
-					<strong>#objectArea.name#</strong><br/>
-					<span lang="es">Ruta del área</span>: #area_path#
-				</div>
+				<cfif numUsers GT 5>
+					</ul>
+					</div>
+				</cfif>
+
+
 
 	 		</div>
 
 	 		<cfif listLen(usersToAssociate) GT 0>
-	 			
+
 	 			<small class="help-block" lang="es">Se enviará notificación a los usuarios asociados y a los usuarios del área.</small>
 
 				<form id="associateUsersForm" method="post">
@@ -83,7 +113,7 @@
 				<p lang="es">No hay usuarios seleccionados no pertenecientes al área de destino</p>
 
 	 		</cfif>
-			
+
 		</div>
 
 		<div class="modal-footer">
