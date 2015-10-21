@@ -1283,7 +1283,7 @@
 			<cfinclude template="includes/checkAdminAccess.cfm">
 
 			<cfquery name="getUserQuery" datasource="#client_dsn#">
-				SELECT id, root_folder_id, image_file
+				SELECT id, root_folder_id, image_file, typology_id, typology_row_id
 				FROM #client_abb#_users
 				WHERE id=<cfqueryparam value="#arguments.delete_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
@@ -1397,6 +1397,22 @@
 						</cfinvoke>
 
 					</cfif>
+
+					<!---Delete typology row--->
+					<cfif isNumeric(getUserQuery.typology_id) AND isNumeric(getUserQuery.typology_row_id)>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
+							<cfinvokeargument name="row_id" value="#getUserQuery.typology_row_id#"/>
+							<cfinvokeargument name="table_id" value="#getUserQuery.typology_id#"/>
+							<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#"/>
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif>
+
 
 					<!---
 
@@ -1584,7 +1600,7 @@
 	<cffunction name="assignUserToArea" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="add_user_id" type="numeric" required="true">
-		<cfargument name="send_alert" type="boolean" required="false" default="true">
+		<cfargument name="send_alert" type="boolean" required="false" default="false">
 
 		<cfset var method = "assignUserToArea">
 

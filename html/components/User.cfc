@@ -593,6 +593,7 @@
 	<cffunction name="assignUserToArea" output="false" returntype="struct" returnformat="json" access="remote">
 		<cfargument name="area_id" type="numeric" required="true" />
 		<cfargument name="user_id" type="numeric" required="true" />
+		<cfargument name="send_alert" type="boolean" required="false" />
 
 		<cfset var method = "assignUserToArea">
 
@@ -603,6 +604,7 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="assignUserToArea" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 				<cfinvokeargument name="add_user_id" value="#arguments.user_id#"/>
+				<cfinvokeargument name="send_alert" value="#arguments.send_alert#"/>
 			</cfinvoke>
 
 			<cfif response.result IS true>

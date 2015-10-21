@@ -101,9 +101,17 @@
 
 	 		<cfif listLen(usersToAssociate) GT 0>
 
-	 			<small class="help-block" lang="es">Se enviará notificación a los usuarios asociados y a los usuarios del área.</small>
+	 			<!---<small class="help-block" lang="es">Se enviará notificación a los usuarios asociados y a los usuarios del área.</small>--->
 
 				<form id="associateUsersForm" method="post">
+
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="send_alert" value="true" <cfif numUsers LT 5>checked</cfif> /> Enviar notificación de asociación al área
+							<p class="help-block">Si se selecciona esta opción se enviará notificación a los usuarios asociados y a los usuarios del área.</p>
+						</label>
+					</div>
+
 					<input type="hidden" name="area_id" value="#objectArea.id#"/>
 					<input type="hidden" name="users_ids" value="#usersToAssociate#"/>
 				</form>
@@ -117,10 +125,11 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal" lang="es">Cancelar</button>
-		    <cfif listLen(usersToAssociate) GT 0>
-		   		<button class="btn btn-primary" id="areaAssociateUsersSubmitButton" data-loading-text="Asociando..." onclick="submitAssociateUsersModal(event)" lang="es">Asociar usuarios</button>
-		   	</cfif>
+
+	    <button class="btn btn-default" data-dismiss="modal" lang="es">Cancelar</button>
+	    <cfif listLen(usersToAssociate) GT 0>
+	   		<button class="btn btn-primary" id="areaAssociateUsersSubmitButton" data-loading-text="Asociando..." onclick="submitAssociateUsersModal(event)" lang="es">Asociar usuarios</button>
+	   	</cfif>
 		</div>
 
 		<script>
