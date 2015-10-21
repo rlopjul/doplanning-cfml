@@ -140,6 +140,7 @@
     <cfargument name="item_type_id" type="numeric" required="false">
     <cfargument name="mask_type_id" type="string" required="false">
     <cfargument name="list_values" type="string" required="false">
+		<cfargument name="import_name" type="string" required="false">
 
 		<cfset var method = "createFieldInDatabase">
 
@@ -198,6 +199,9 @@
 				</cfif>
 				<cfif isDefined("arguments.mask_type_id") AND isNumeric(arguments.mask_type_id)>
 					, mask_type_id = <cfqueryparam value="#arguments.mask_type_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif isDefined("arguments.import_name")>
+					, import_name = <cfqueryparam value="#arguments.import_name#" cfsqltype="cf_sql_varchar">
 				</cfif>
 				<cfif isDefined("arguments.list_values")>
 					<cfif arguments.field_type_id IS 18>

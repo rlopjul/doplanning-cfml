@@ -740,7 +740,7 @@
 						<cfquery name="checkField" dbtype="query">
 							SELECT *
 							FROM fields
-							WHERE label = <cfqueryparam value="#fieldLabel#" cfsqltype="cf_sql_varchar">;
+							WHERE import_name = <cfqueryparam value="#fieldLabel#" cfsqltype="cf_sql_varchar">;
 						</cfquery>
 
 						<cfif checkField.recordCount IS 0>
@@ -750,15 +750,17 @@
 							<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="createFieldInDatabase" returnvariable="field_id">
 								<cfinvokeargument name="table_id" value="#arguments.table_id#">
 								<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-								<cfinvokeargument name="field_type_id" value="1">
 								<cfinvokeargument name="label" value="#fieldLabel#">
+								<cfinvokeargument name="import_name" value="#fieldLabel#">
 								<cfinvokeargument name="description" value="">
 								<cfinvokeargument name="required" value="false">
 								<cfinvokeargument name="sort_by_this" value="">
 								<cfinvokeargument name="default_value" value="">
 								<cfif find("_att_", fieldLabel) GT 0 OR isNumeric(fieldValue) OR isDate(fieldValue) OR isBoolean(fieldValue)>
+									<cfinvokeargument name="field_type_id" value="1">
 									<cfinvokeargument name="mysql_type" value="VARCHAR(255)">
 								<cfelse>
+									<cfinvokeargument name="field_type_id" value="2">
 									<cfinvokeargument name="mysql_type" value="TEXT">
 								</cfif>
 							</cfinvoke>

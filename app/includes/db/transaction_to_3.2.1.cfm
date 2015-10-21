@@ -6,7 +6,8 @@
 		SELECT *
 		FROM information_schema.COLUMNS
 		WHERE TABLE_SCHEMA = 'dp_#new_client_abb#'
-		AND TABLE_NAME = '#new_client_abb#_mailings';
+		AND TABLE_NAME = '#new_client_abb#_users_typologies_fields'
+		AND COLUMN_NAME = 'import_name';
 	</cfquery>
 
 </cfif>
@@ -34,6 +35,26 @@
 
 		<cfquery datasource="#client_datasource#">
 			INSERT INTO `#new_client_abb#_tables_fields_types` (`field_type_id`, `field_type_group`, `input_type`, `name`, `max_length`, `mysql_type`, `enabled`, `position`) VALUES ('20', 'separator', 'none', 'Separador de campos', NULL, NULL, '1', '19');
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists_fields`
+			ADD COLUMN `import_name` VARCHAR(100) NULL AFTER `list_values`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_forms_fields`
+			ADD COLUMN `import_name` VARCHAR(100) NULL AFTER `list_values`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_typologies_fields`
+			ADD COLUMN `import_name` VARCHAR(100) NULL AFTER `list_values`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_users_typologies_fields`
+			ADD COLUMN `import_name` VARCHAR(100) NULL AFTER `list_values`;
 		</cfquery>
 
 
