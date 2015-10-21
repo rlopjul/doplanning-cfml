@@ -582,12 +582,6 @@
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 				</cfquery>
 
-				<!---<cfquery datasource="#client_datasource#">
-					INSERT INTO `#new_client_abb#_iframes_display_types` (`iframe_display_type_id`,`width`,`width_unit`,`height`,`height_unit`,`enabled`,`iframe_display_type_title_es`,`iframe_display_type_title_en`) VALUES
-		 (1,100,'%',400,'px',1,'Ancho de página x 400','100% x 400px'),
-		 (2,560,'px',315,'px',1,'560 x 315','560 x 315');
-				</cfquery>--->
-
 				<cfquery datasource="#client_datasource#">
 					INSERT INTO `#new_client_abb#_iframes_display_types` VALUES (1,100,'%',400,'px',1,'Ancho de página x 400','100% x 400px'),(2,560,'px',315,'px',1,'560 x 315','560 x 315'),(3,0,'',0,'',1,'Visor 16:9','16:9 viewer'),(4,0,'',0,'',1,'Visor 4:3','4:3 viewer');
 				</cfquery>
@@ -1065,29 +1059,6 @@
 			</cftransaction>
 
 
-			<!---Esto es provisional--->
-			<!---<cfset current_client_abb = SESSION.client_abb>
-			<cfset SESSION.client_abb = "#new_client_abb#">
-
-			<cfinvoke component="UserManager" method="createUser">
-				<cfinvokeargument name="request" value="#xmlRequest#">
-			</cfinvoke>
-
-			<!---assign User To Root Area--->
-			<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="assignUserToAreaRequest">
-				<cfinvokeargument name="request_parameters" value='<user id="1"/><area id="1"/>'>
-			</cfinvoke>
-
-			<cfinvoke component="UserManager" method="assignUserToArea">
-				<cfinvokeargument name="request" value="#assignUserToAreaRequest#">
-			</cfinvoke>
-
-			<!---Esto es provisional--->
-			<cfset SESSION.client_abb = current_client_abb>--->
-
-
-
-
 			<cftransaction>
 
 				<!--- --------------------------------- FOREIGN KEYS -------------------------------- --->
@@ -1210,7 +1181,9 @@
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.1.cfm">
 
-			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.2.cfm">						
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.2.cfm">
+
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.2.1.cfm">
 
 			<!---createClientFolders--->
 			<cfinvoke component="ClientManager" method="createClientFolders">
