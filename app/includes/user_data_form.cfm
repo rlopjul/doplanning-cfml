@@ -4,7 +4,6 @@ page_types
 2 update user from preferences
 3 register user (public form)
 --->
-
 <cfif page_type NEQ 3>
 	<cfset client_abb = SESSION.client_abb>
 	<cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
@@ -279,7 +278,7 @@ page_types
 			<cfif page_type NEQ 3>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/StartPageManager" method="getStartPageTypesStruct" returnvariable="startPagesTypesStruct">
-					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+					<cfinvokeargument name="client_abb" value="#client_abb#">
 				</cfinvoke>
 
 				<cfset startPagesArray = structSort(startPagesTypesStruct, "numeric", "ASC", "position")>
@@ -488,7 +487,7 @@ page_types
 
 			<cfif page_type IS 1>
 
-				<cfif SESSION.client_abb EQ "hcs">
+				<cfif client_abb EQ "hcs">
 
 					<div class="row">
 
