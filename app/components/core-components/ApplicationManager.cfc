@@ -540,6 +540,7 @@
 					<cfinvokeargument name="mainUrl" value="https://ceseand.net">
 					<cfinvokeargument name="signOutUrl" value="https://ceseand.net">
 
+					<cfinvokeargument name="title" value="CESEAND">
 					<cfinvokeargument name="moduleWeb" value="true">
 
 					<cfinvokeargument name="homeTab" value="true">
