@@ -911,16 +911,18 @@
 								</cfif>
 							</div>
 
+						<cfelse>
+
+							<cfif fields.required IS true AND arguments.search_inputs IS false>
+								<script>
+									addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
+								</script>
+							</cfif>
+
 						</cfif>
 
 						<cfif len(fields.list_values) GT 0>
 							<div class="help-block"><span lang="es">Formatos aceptados:</span> <span lang="es">#acceptFileTypes#</span></div>
-						</cfif>
-
-						<cfif fields.required IS true AND arguments.search_inputs IS false>
-							<script>
-								addRailoRequiredTextInput("#field_name#", "Campo '#field_label#' obligatorio");
-							</script>
 						</cfif>
 
 
