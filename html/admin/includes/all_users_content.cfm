@@ -7,12 +7,12 @@
 <!---<script type="text/javascript" src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>--->
 
 <div class="div_head_menu">
-	<div class="navbar navbar-default navbar-static-top navbar_admin">
+	<div class="navbar navbar-default navbar-static-top navbar_admin" style="margin-bottom:8px;">
 		<div class="container-fluid">
 			<span class="navbar-brand" lang="es">Usuarios de la organización</span>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 				<a class="btn btn-primary btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="font-size:14px"></i> <span lang="es">Nuevo usuario</span></a><!---color:##5BB75B;--->
-				
+
 
 				<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/all_administrators.cfm');"><i class="icon-group icon-white"></i> <span lang="es">Administradores</span></a>
 				<!---<cfif SESSION.client_abb NEQ "hcs">--->
@@ -43,13 +43,13 @@
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="usersResponse">
 		<cfif len(search_text) GT 0>
-		<cfinvokeargument name="search_text" value="#search_text#">	
+		<cfinvokeargument name="search_text" value="#search_text#">
 		</cfif>
 		<!---<cfif isNumeric(limit_to)>
 		<cfinvokeargument name="limit" value="#limit_to#">
 		</cfif>--->
 	</cfinvoke>
-	
+
 	<cfset users = usersResponse.users>
 	<cfset numUsers = ArrayLen(users)>
 
@@ -58,35 +58,35 @@
 	</cfoutput>
 
 	<div class="div_items">
-		
+
 		<cfif numUsers GT 0>
-	
+
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
 				<cfinvokeargument name="users" value="#users#">
 				<cfinvokeargument name="open_url_target" value="userAdminIframe">
 				<cfinvokeargument name="filter_enabled" value="true">
 				<cfinvokeargument name="select_enabled" value="true">
 				<cfinvokeargument name="showAdminFields" value="true">
-			</cfinvoke>	
-	
+			</cfinvoke>
+
 		<cfelse>
-			
+
 			<script type="text/javascript">
 				openUrlHtml2('empty.cfm','userAdminIframe');
 			</script>
-		
+
 			<span lang="es">No se han encontrado usuarios.</span>
-			
+
 		</cfif>
-		
-	</div>	
-	
+
+	</div>
+
 <cfelse>
-	
+
 	<script type="text/javascript">
 		openUrlHtml2('empty.cfm','userAdminIframe');
 	</script>
-	
+
 	<!---<p class="bg-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en Buscar para listar usuarios de la organización.</span></p>--->
 
 	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Seleccione un área del árbol para ver sus usuarios.</span></div>
@@ -94,7 +94,7 @@
 </cfif>
 
 <script>
-	
+
 	function openAreaAssociateUsers() {
 
 		var associateUsersIds = "";
@@ -115,10 +115,10 @@
 
 	}
 
-	$(document).ready(function() { 
+	$(document).ready(function() {
 
-		$('#addSelectedUsersNavBar').hide();	
-					    	
+		$('#addSelectedUsersNavBar').hide();
+
 	    $('#usersTable tbody input[type=checkbox]').on('click', function(e) {
 
 	    	stopPropagation(e);
@@ -126,7 +126,7 @@
 	    	if( $('#usersTable tbody tr:visible input[type=checkbox]:checked').length > 0 )
 				$('#addSelectedUsersNavBar').show();
 			else
-				$('#addSelectedUsersNavBar').hide();	
+				$('#addSelectedUsersNavBar').hide();
 
 	    });
 
@@ -135,7 +135,7 @@
 
 <nav class="navbar navbar-default navbar-fixed-bottom navbar_admin" id="addSelectedUsersNavBar">
   	<div class="container-fluid">
-  	
+
 		<a class="btn btn-info btn-sm navbar-btn" onclick="openAreaAssociateUsers()"><i class="icon-plus icon-white"></i> <span lang="es">Asociar usuarios seleccionados al área</span></a>
 
   	</div>

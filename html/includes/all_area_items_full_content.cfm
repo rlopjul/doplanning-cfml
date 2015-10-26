@@ -1,5 +1,5 @@
 <cfoutput>
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
  --->
 
@@ -30,7 +30,7 @@
 	</div>
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
-	
+
 	<!---
 	<div class="row">
 		<div class="col-sm-12">
@@ -38,7 +38,7 @@
 			<cfoutput>
 			<div class="btn-toolbar" style="margin-bottom:10px;">
 				<div class="btn-group pull-right">
-					
+
 					<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Exportar contenido" lang="es">
 						<i class="icon-circle-arrow-down" style="font-size:14px; line-height:23px;"></i> <span class="caret"></span>
 					</button>
@@ -75,7 +75,7 @@
 		<div class="col-sm-12">
 
 		<cfif numItems GT 0>
-			
+
 			<cfinclude template="#APPLICATION.htmlPath#/includes/isotope_scripts.cfm">
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputAllItemsFullList">
@@ -86,15 +86,15 @@
 				<cfinvokeargument name="area_type" value="#area_type#">
 				<cfinvokeargument name="app_version" value="#app_version#">
 			</cfinvoke>
-			
+
 			<!---</div>
 		</div>--->
 
-		<cfelse>
-			
+		<cfelseif objectArea.read_only IS false>
+
 			<!---<script type="text/javascript">
 				openUrlHtml2('empty.cfm','itemIframe');
-			</script>--->				
+			</script>--->
 
 			<cfoutput>
 			<!---<div class="div_text_result"><span lang="es">No hay elementos en esta área.</span></div>--->

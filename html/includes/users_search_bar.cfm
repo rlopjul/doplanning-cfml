@@ -4,8 +4,8 @@
 	<cfoutput>
 		<script type="text/javascript">
 			$(document).ready(function() {
-			  $(".text_item").highlight(["#search_text_highlight#"]);	
-			});			
+			  $(".text_item").highlight(["#search_text_highlight#"]);
+			});
 		</script>
 	</cfoutput>
 <cfelse>
@@ -46,7 +46,7 @@
 				</div>
 
 				<div class="col-xs-1">
-					<input type="submit" name="search" class="btn btn-primary" lang="es" value="Buscar" />
+					<input type="submit" name="search" class="btn btn-primary btn-sm" lang="es" value="Buscar" />
 				</div>
 
 			</div>
@@ -55,7 +55,7 @@
 
 				<label for="limit" class="col-xs-2 col-sm-2 control-label" lang="es">Nº resultados</label>
 
-				<div class="col-xs-3 col-sm-2"> 
+				<div class="col-xs-3 col-sm-2">
 					<select name="limit" id="limit" class="form-control">
 						<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
 						<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>
@@ -68,7 +68,7 @@
 
 			<!---<div class="row">
 
-				<div class="col-sm-offset-2 col-sm-10"> 
+				<div class="col-sm-offset-2 col-sm-10">
 					<input type="submit" name="search" class="btn btn-primary" lang="es" value="Buscar" />
 				</div>
 
