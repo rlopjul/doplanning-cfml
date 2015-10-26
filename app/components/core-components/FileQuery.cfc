@@ -16,6 +16,8 @@
 	<!--- <cfset timeZoneTo = "+1:00"> --->
 	<cfset timeZoneTo = "Europe/Madrid">
 
+	<cfset fileItemTypeId = 10>
+
 
 	<!---getFile--->
 
@@ -381,6 +383,16 @@
 					INNER JOIN #client_abb#_typologies AS typologies ON files.typology_id = typologies.id
 					<cfif isDefined("arguments.typology_id")>
 						AND files.typology_id = <cfqueryparam value="#arguments.typology_id#" cfsqltype="cf_sql_integer">
+					</cfif>
+				</cfif>
+
+				<cfif isDefined("arguments.order_by") AND arguments.order_by EQ "position">
+					LEFT JOIN #client_abb#_items_position AS items_position
+					ON files.id = items_position.item_id AND items_position.item_type_id = <cfqueryparam value="#fileItemTypeId#" cfsqltype="cf_sql_integer">
+					<cfif isDefined("arguments.area_id")>
+						AND items_position.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					<cfelse>
+						AND items_position.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
 					</cfif>
 				</cfif>
 
