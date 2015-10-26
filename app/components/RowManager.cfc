@@ -1249,7 +1249,7 @@
 
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 
-		<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
+		<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true AND arguments.table.general IS false><!--- Typologies with inheritante --->
 
 			<!--- checkTableWithInheritanceAccess --->
 			<cfinvoke component="TableManager" method="checkTableWithInheritanceAccess">
