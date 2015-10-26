@@ -72,6 +72,11 @@
 		</cfquery>
 
 
+		<!---
+		MODIFICACIÓN MANUAL DE ESTA VERSIÓN:
+		ALTER TABLE `doplanning_app`.`app_clients`
+		ADD COLUMN `public_user_registration` TINYINT(1) NOT NULL DEFAULT 0 AFTER `bin_days`;
+		--->
 
 		<cfcatch>
 			<cfoutput>

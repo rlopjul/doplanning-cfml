@@ -659,29 +659,42 @@
 
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
-				<cfinvokeargument name="hide_not_allowed_areas" value="true">
-				<cfinvokeargument name="internal_user" value="false">
-				<cfinvokeargument name="enabled" value="true">
-				<cfinvokeargument name="password_temp" value="#arguments.password#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
+			<!--- getClient --->
+		  <cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+		    <cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+		  </cfinvoke>
 
-			<cfif response.result IS true>
-				<cfset response.message = "Usuario registrado correctamente.">
-			</cfif>
+			<cfif clientQuery.public_user_registration IS 1>
 
-			<cfset response.client_abb = arguments.client_abb>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
+					<cfinvokeargument name="hide_not_allowed_areas" value="true">
+					<cfinvokeargument name="internal_user" value="false">
+					<cfinvokeargument name="enabled" value="true">
+					<cfinvokeargument name="password_temp" value="#arguments.password#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
-			<!---saveLog--->
-			<cfset log_content = SerializeJSON(arguments)>
+				<cfif response.result IS true>
+					<cfset response.message = "Usuario registrado correctamente.">
+				</cfif>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/LogManager" method="saveLog">
-				<cfinvokeargument name="log_component" value="#component#" >
-				<cfinvokeargument name="log_method" value="#method#">
-				<cfinvokeargument name="log_content" value="#log_content#">
-				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-			</cfinvoke>
+				<cfset response.client_abb = arguments.client_abb>
+
+				<!---saveLog--->
+				<cfset log_content = SerializeJSON(arguments)>
+
+				<cfinvoke component="#APPLICATION.componentsPath#/LogManager" method="saveLog">
+					<cfinvokeargument name="log_component" value="#component#" >
+					<cfinvokeargument name="log_method" value="#method#">
+					<cfinvokeargument name="log_content" value="#log_content#">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				</cfinvoke>
+
+			<cfelse>
+
+				<cfthrow message="Registro de usuarios deshabilitado para #arguments.client_abb#">
+
+			</cfif><!--- END clientQuery.public_user_registration IS 1 --->
 
 			<cfcatch>
 

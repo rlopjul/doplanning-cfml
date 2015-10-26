@@ -57,20 +57,61 @@
 
     <!---check if is enabled client public registration--->
 
+		<cfif clientQuery.public_user_registration IS 1>
 
-		<cfif isDefined("URL.res") AND URL.res IS true>
 
-			<script>
+			<cfif isDefined("URL.res") AND URL.res IS true>
 
-				$(function () {
+				<script>
 
-					if (window.parent == window.top) {
-						window.parent.$("body").animate({scrollTop:0}, 'slow');
-					}
+					$(function () {
 
-				});
+						if (window.parent == window.top) {
+							window.parent.$("body").animate({scrollTop:0}, 'slow');
+						}
 
-			</script>
+					});
+
+				</script>
+
+				<div class="container">
+
+					<div class="row">
+
+						<div class="col-sm-12">
+
+							<div class="alert alert-success" role="alert">
+
+								<span lang="es">Usuario registrado correctamente.</span>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<cfif isDefined("URL.abb")>
+						<div class="row">
+
+							<div class="col-sm-12">
+								<cfoutput>
+								<a href="#APPLICATION.path#/intranet/?abb=#URL.abb#" class="btn btn-sm btn-primary" target="_parent"> <span lang="es">Login</span></a>
+								</cfoutput>
+							</div>
+
+						</div>
+					</cfif>
+
+				</div>
+
+			<cfelse>
+
+	    	<cfinclude template="#APPLICATION.corePath#/includes/user_registration.cfm">
+
+			</cfif>
+
+
+		<cfelse>
 
 			<div class="container">
 
@@ -78,9 +119,9 @@
 
 					<div class="col-sm-12">
 
-						<div class="alert alert-success" role="alert">
+						<div class="alert alert-warning" role="alert">
 
-							<span lang="es">Usuario registrado correctamente.</span>
+							<span lang="es">Registro de usuarios deshabilitado.</span>
 
 						</div>
 
@@ -88,25 +129,11 @@
 
 				</div>
 
-				<cfif isDefined("URL.abb")>
-					<div class="row">
-
-						<div class="col-sm-12">
-							<cfoutput>
-							<a href="#APPLICATION.path#/intranet/?abb=#URL.abb#" class="btn btn-sm btn-primary" target="_parent"> <span lang="es">Login</span></a>
-							</cfoutput>
-						</div>
-
-					</div>
-				</cfif>
-
 			</div>
 
-		<cfelse>
 
-    	<cfinclude template="#APPLICATION.corePath#/includes/user_registration.cfm">
+		</cfif><!---END clientQuery.public_user_registration IS 1--->
 
-		</cfif>
 
   </cfif>
 
