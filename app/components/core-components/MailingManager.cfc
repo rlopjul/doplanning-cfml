@@ -147,9 +147,11 @@
 				<cfoutput>
 				 <p style="font-family:'Roboto', sans-serif; font-size:12px;">
 
-						<a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/unsubscribe.cfm?abb=#arguments.client_abb#&mailing=#objectItem.id#">#langText[curLang].mailing.unsubscribe_mailing#</a><br/>
+					 <a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/unsubscribe.cfm?abb=#arguments.client_abb#&mailing=#objectItem.id#">#langText[curLang].mailing.unsubscribe_mailing#</a><br/>
 
-						<span>#langText[curLang].mailing.unsubscribe_text#</span>
+					 <a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/edit_subscription.cfm?abb=#arguments.client_abb#&mailing=#objectItem.id#">#langText[curLang].mailing.edit_subscription#</a><br/>
+
+					 <span>#langText[curLang].mailing.unsubscribe_text#</span>
 
 				 </p>
 				</cfoutput>
@@ -157,11 +159,11 @@
 
 				<cfsavecontent variable="alertContent">
 					<cfoutput>
-					<div style="#objectItem.content_styles#">
 					#objectItem.head_content#
-					#objectItem.description#
-					#objectItem.foot_content#
+					<div style="#objectItem.content_styles#">
+						#objectItem.description#
 					</div>
+					#objectItem.foot_content#
 					</cfoutput>
 				</cfsavecontent>
 

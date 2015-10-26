@@ -4,6 +4,7 @@
   <cfset client_abb = URL.abb>
   <cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
 
+
   <!--- getUser --->
   <!---<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
     <cfinvokeargument name="user_id" value="#user_id#">
@@ -14,15 +15,7 @@
 
   <cfif selectUserQuery.recordCount GT 0>--->
 
-    <cfif URL.abb EQ "ceseand">
-
-      <cflocation url="/es/page.cfm?id=94&title=solicitud-de-baja" addtoken="no">
-
-    <cfelse>
-
-      <cflocation url="#APPLICATION.htmlPath#/preferences_alerts.cfm?abb=#client_abb#" addtoken="no">
-
-    </cfif>
+    <cflocation url="#APPLICATION.htmlPath#/preferences_alerts.cfm?abb=#client_abb#" addtoken="no">
 
   <!---<cfelse>
     <p>Usuario no encontrado.</p>

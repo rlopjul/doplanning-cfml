@@ -365,8 +365,9 @@ curLangText["es"] = {
 
 		"mailing": {
 
-			"unsubscribe_mailing" : "Darse de baja de este boletín",
-			"unsubscribe_text" : "En las preferencias de notificaciones de #APPLICATION.title# puedes deshabilitar el envío de <b>Boletines</b> como éste y de cualquier otra notificación que quieras dejar de recibir."
+			"unsubscribe_mailing" : "Solicitar baja de este boletín y todos los envíos",
+			"edit_subscription" : "Editar las preferencias de notificaciones",
+			"unsubscribe_text" : "Email enviado desde la aplicación #APPLICATION.title#. En las preferencias de notificaciones de #APPLICATION.title# puedes deshabilitar el envío de <b>Boletines</b> como éste y de cualquier otra notificación que quieras dejar de recibir."
 
 		}
 
@@ -739,8 +740,9 @@ curLangText["en"] = {
 
 		"mailing": {
 
-			"unsubscribe_mailing" : "Unsubscribe from this newsletter",
-			"unsubscribe_text" : "In the #APPLICATION.title# notification preferences you can disable the sending of <b>newsletters</b> like this and other emails that you want stop receiving."
+			"unsubscribe_mailing" : "Unsubscribe from this newsletter and all notifications",
+			"edit_subscription" : "Edit notification preferences",
+			"unsubscribe_text" : "Email sent from the application #APPLICATION.title#. In the #APPLICATION.title# notification preferences you can disable the sending of <b>newsletters</b> like this and other emails that you want stop receiving."
 
 		}
 
