@@ -475,15 +475,19 @@ page_types
 
 			</div>
 
-			<div class="row">
+			<cfif client_abb NEQ "ceseand" OR page_type IS 1>
+				<div class="row">
 
-				<label for="address" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Dirección</label>
+					<label for="address" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Dirección</label>
 
-				<div class="col-xs-7 col-sm-8 col-md-9">
-					<textarea name="address" id="address" class="form-control" rows="2">#objectUser.address#</textarea>
+					<div class="col-xs-7 col-sm-8 col-md-9">
+						<textarea name="address" id="address" class="form-control" rows="2">#objectUser.address#</textarea>
+					</div>
+
 				</div>
-
-			</div>
+			<cfelse>
+				<input type="hidden" name="address" value="#objectUser.address#">
+			</cfif>
 
 			<cfif page_type IS 1>
 
