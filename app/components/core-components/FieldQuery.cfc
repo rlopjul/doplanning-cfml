@@ -99,6 +99,11 @@
 		<cfargument name="view_id" type="numeric" required="false">
 		<cfargument name="only_view_fields" type="boolean" required="false" default="true">
 		<cfargument name="with_separators" type="boolean" required="false" default="false">
+		<cfargument name="include_in_list" type="boolean" required="false">
+		<cfargument name="include_in_row_content" type="boolean" required="false">
+		<cfargument name="include_in_new_row" type="boolean" required="false">
+		<cfargument name="include_in_update_row" type="boolean" required="false">
+		<cfargument name="include_in_all_users" type="boolean" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -130,6 +135,21 @@
 					JOIN `#client_abb#_#tableTypeTable#_views_fields` AS view_fields ON table_fields.field_id = view_fields.field_id AND view_fields.view_id = <cfqueryparam value="#arguments.view_id#" cfsqltype="cf_sql_integer">
 				</cfif>
 				WHERE table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				<cfif isDefined("arguments.include_in_list")>
+					AND table_fields.include_in_list = <cfqueryparam value="#arguments.include_in_list#" cfsqltype="cf_sql_bit">
+				</cfif>
+				<cfif isDefined("arguments.include_in_row_content")>
+					AND table_fields.include_in_row_content = <cfqueryparam value="#arguments.include_in_row_content#" cfsqltype="cf_sql_bit">
+				</cfif>
+				<cfif isDefined("arguments.include_in_new_row")>
+					AND table_fields.include_in_new_row = <cfqueryparam value="#arguments.include_in_new_row#" cfsqltype="cf_sql_bit">
+				</cfif>
+				<cfif isDefined("arguments.include_in_update_row")>
+					AND table_fields.include_in_update_row = <cfqueryparam value="#arguments.include_in_update_row#" cfsqltype="cf_sql_bit">
+				</cfif>
+				<cfif isDefined("arguments.include_in_all_users")>
+					AND table_fields.include_in_all_users = <cfqueryparam value="#arguments.include_in_all_users#" cfsqltype="cf_sql_bit">
+				</cfif>
 				<cfif arguments.with_separators IS false>
 					AND table_fields.field_type_id != 20
 				</cfif>

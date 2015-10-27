@@ -49,6 +49,11 @@
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					<cfinvokeargument name="with_types" value="true">
 					<cfinvokeargument name="with_table" value="false">
+					<cfif arguments.action IS CREATE_ROW>
+						<cfinvokeargument name="include_in_new_row" value="true">
+					<cfelse>
+						<cfinvokeargument name="include_in_update_row" value="true">
+					</cfif>
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">

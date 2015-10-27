@@ -477,6 +477,11 @@
 		<cfargument name="only_view_fields" type="boolean" required="false">
 		<cfargument name="file_id" type="numeric" required="false"><!--- Only for Typologies --->
 		<cfargument name="with_separators" type="boolean" required="false">
+		<cfargument name="include_in_list" type="boolean" required="false">
+		<cfargument name="include_in_row_content" type="boolean" required="false">
+		<cfargument name="include_in_new_row" type="boolean" required="false">
+		<cfargument name="include_in_update_row" type="boolean" required="false">
+		<cfargument name="include_in_all_users" type="boolean" required="false">
 
 		<cfset var method = "getTableFields">
 
@@ -496,6 +501,11 @@
 				<cfinvokeargument name="view_id" value="#arguments.view_id#">
 				<cfinvokeargument name="only_view_fields" value="#arguments.only_view_fields#">
 				<cfinvokeargument name="with_separators" value="#arguments.with_separators#">
+				<cfinvokeargument name="include_in_list" value="#arguments.include_in_list#">
+				<cfinvokeargument name="include_in_row_content" value="#arguments.include_in_row_content#">
+				<cfinvokeargument name="include_in_new_row" value="#arguments.include_in_new_row#">
+				<cfinvokeargument name="include_in_update_row" value="#arguments.include_in_update_row#">
+				<cfinvokeargument name="include_in_all_users" value="#arguments.include_in_all_users#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

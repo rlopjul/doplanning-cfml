@@ -10,6 +10,15 @@
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
 			<cfinvokeargument name="with_types" value="true"/>
 			<cfinvokeargument name="with_separators" value="true"/>
+
+			<cfif isDefined("URL.row") AND isNumeric(URL.row)><!---Update row--->
+				<cfinvokeargument name="include_in_update_row" value="true">
+			<cfelse>
+				<cfinvokeargument name="include_in_new_row" value="true"><!---New row--->
+			</cfif>
+			<cfif SESSION.client_administrator EQ SESSION.user_id>
+				<cfinvokeargument name="include_in_all_users" value="true">
+			</cfif>
 		</cfinvoke>
 
 		<cfif getFieldsResponse.result IS false>

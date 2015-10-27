@@ -17,6 +17,7 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
 	<cfinvokeargument name="table_id" value="#table_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+	<cfinvokeargument name="include_in_list" value="true">
 </cfinvoke>
 <cfset fields = fieldsResult.tableFields>
 

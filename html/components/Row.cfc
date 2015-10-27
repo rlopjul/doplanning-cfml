@@ -547,6 +547,7 @@
 						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 						<cfinvokeargument name="with_types" value="true"/>
 						<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+						<cfinvokeargument name="include_in_row_content" value="true">
 					</cfinvoke>
 
 					<cfset fields = fieldsResult.tableFields>

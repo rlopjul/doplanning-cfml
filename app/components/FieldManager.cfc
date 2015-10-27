@@ -25,6 +25,12 @@
     <cfargument name="item_type_id" type="numeric" required="false">
     <cfargument name="mask_type_id" type="string" required="false">
     <cfargument name="list_values" type="string" required="false">
+		<cfargument name="import_name" type="string" required="false">
+		<cfargument name="include_in_list" type="boolean" required="false" default="false">
+		<cfargument name="include_in_row_content" type="boolean" required="false" default="false">
+		<cfargument name="include_in_new_row" type="boolean" required="false" default="false">
+		<cfargument name="include_in_update_row" type="boolean" required="false" default="false">
+		<cfargument name="include_in_all_users" type="boolean" required="false" default="false">
 
 		<cfset var method = "createField">
 
@@ -88,6 +94,13 @@
 					<cfinvokeargument name="item_type_id" value="#arguments.item_type_id#">
 					<cfinvokeargument name="mask_type_id" value="#arguments.mask_type_id#">
 					<cfinvokeargument name="list_values" value="#arguments.list_values#">
+
+					<cfinvokeargument name="import_name" value="#arguments.import_name#">
+					<cfinvokeargument name="include_in_list" value="#arguments.include_in_list#">
+					<cfinvokeargument name="include_in_row_content" value="#arguments.include_in_row_content#">
+					<cfinvokeargument name="include_in_new_row" value="#arguments.include_in_new_row#">
+					<cfinvokeargument name="include_in_update_row" value="#arguments.include_in_update_row#">
+					<cfinvokeargument name="include_in_all_users" value="#arguments.include_in_all_users#">
 				</cfinvoke>
 
 				<!--- setTableLastUpdate --->
@@ -141,6 +154,11 @@
     <cfargument name="mask_type_id" type="string" required="false">
     <cfargument name="list_values" type="string" required="false">
 		<cfargument name="import_name" type="string" required="false">
+		<cfargument name="include_in_list" type="boolean" required="false" default="false">
+		<cfargument name="include_in_row_content" type="boolean" required="false" default="false">
+		<cfargument name="include_in_new_row" type="boolean" required="false" default="false">
+		<cfargument name="include_in_update_row" type="boolean" required="false" default="false">
+		<cfargument name="include_in_all_users" type="boolean" required="false" default="false">
 
 		<cfset var method = "createFieldInDatabase">
 
@@ -203,6 +221,11 @@
 				<cfif isDefined("arguments.import_name")>
 					, import_name = <cfqueryparam value="#arguments.import_name#" cfsqltype="cf_sql_varchar">
 				</cfif>
+				, include_in_list = <cfqueryparam value="#arguments.include_in_list#" cfsqltype="cf_sql_bit">
+				, include_in_row_content = <cfqueryparam value="#arguments.include_in_row_content#" cfsqltype="cf_sql_bit">
+				, include_in_new_row = <cfqueryparam value="#arguments.include_in_new_row#" cfsqltype="cf_sql_bit">
+				, include_in_update_row = <cfqueryparam value="#arguments.include_in_update_row#" cfsqltype="cf_sql_bit">
+				, include_in_all_users = <cfqueryparam value="#arguments.include_in_all_users#" cfsqltype="cf_sql_bit">
 				<cfif isDefined("arguments.list_values")>
 					<cfif arguments.field_type_id IS 18>
 						<cfset listWithDots = "">
@@ -262,6 +285,12 @@
     <cfargument name="item_type_id" type="numeric" required="false">
     <cfargument name="mask_type_id" type="string" required="false">
     <cfargument name="list_values" type="string" required="false">
+		<cfargument name="import_name" type="string" required="false">
+		<cfargument name="include_in_list" type="boolean" required="false" default="false">
+		<cfargument name="include_in_row_content" type="boolean" required="false" default="false">
+		<cfargument name="include_in_new_row" type="boolean" required="false" default="false">
+		<cfargument name="include_in_update_row" type="boolean" required="false" default="false">
+		<cfargument name="include_in_all_users" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateField">
 
@@ -339,6 +368,14 @@
 							, mask_type_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
 						</cfif>
 					</cfif>
+					<cfif isDefined("arguments.import_name")>
+						, import_name = <cfqueryparam value="#arguments.import_name#" cfsqltype="cf_sql_varchar">
+					</cfif>
+					, include_in_list = <cfqueryparam value="#arguments.include_in_list#" cfsqltype="cf_sql_bit">
+					, include_in_row_content = <cfqueryparam value="#arguments.include_in_list#" cfsqltype="cf_sql_bit">
+					, include_in_new_row = <cfqueryparam value="#arguments.include_in_new_row#" cfsqltype="cf_sql_bit">
+					, include_in_update_row = <cfqueryparam value="#arguments.include_in_update_row#" cfsqltype="cf_sql_bit">
+					, include_in_all_users = <cfqueryparam value="#arguments.include_in_all_users#" cfsqltype="cf_sql_bit">
 					<cfif isDefined("arguments.list_values")>
 						<cfif arguments.field_type_id IS 18>
 							<cfset listWithDots = "">
@@ -479,6 +516,14 @@
 							<cfif len(fields.list_values) GT 0>
 								<cfinvokeargument name="list_values" value="#fields.list_values#">
 							</cfif>
+							<cfif len(fields.import_name) GT 0>
+								<cfinvokeargument name="import_name" value="#fields.import_name#">
+							</cfif>
+							<cfinvokeargument name="include_in_list" value="#fields.include_in_list#">
+							<cfinvokeargument name="include_in_row_content" value="#fields.include_in_list#">
+							<cfinvokeargument name="include_in_new_row" value="#fields.include_in_new_row#">
+							<cfinvokeargument name="include_in_update_row" value="#fields.include_in_update_row#">
+							<cfinvokeargument name="include_in_all_users" value="#fields.include_in_all_users#">
 						</cfinvoke>
 
 					</cfif>
@@ -856,6 +901,14 @@
 				FROM #client_abb#_#tableTypeTable#_fields
 				WHERE field_id = -1;
 			</cfquery>
+
+			<cfset queryAddRow(getFieldQuery, 1)>
+
+			<cfset querySetCell(getFieldQuery, "include_in_list", 1, 1)>
+			<cfset querySetCell(getFieldQuery, "include_in_row_content", 1, 1)>
+			<cfset querySetCell(getFieldQuery, "include_in_new_row", 1, 1)>
+			<cfset querySetCell(getFieldQuery, "include_in_update_row", 1, 1)>
+			<cfset querySetCell(getFieldQuery, "include_in_all_users", 1, 1)>
 
 			<cfset response = {result=true, field=#getFieldQuery#}>
 

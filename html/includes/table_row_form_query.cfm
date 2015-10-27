@@ -34,12 +34,27 @@
 		<cfset area_id = FORM.area_id>
 		<cfset table_id = FORM.table_id>
 
+		<!--- isUserAreaResponsible --->
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_area_responsible">
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>
+
 		<!---Table fields--->
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
 			<cfinvokeargument name="table_id" value="#table_id#">
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 			<cfinvokeargument name="with_types" value="true"/>
 			<cfinvokeargument name="with_separators" value="true"/>
+			<cfif page_type IS 1>
+				<cfinvokeargument name="include_in_new_row" value="true">
+			<cfelse>
+				<cfinvokeargument name="include_in_update_row" value="true">
+			</cfif>
+			<cfif is_user_area_responsible IS true>
+				<cfinvokeargument name="include_in_all_users" value="true">
+			<cfelse>
+				<cfinvokeargument name="include_in_all_users" value="false">
+			</cfif>
 		</cfinvoke>
 		<cfset fields = fieldsResult.tableFields>
 
@@ -58,27 +73,7 @@
 		<cflocation url="empty.cfm" addtoken="no">
 	</cfif>
 
-	<!---Table fields--->
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
-		<cfinvokeargument name="table_id" value="#table_id#">
-		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-		<cfinvokeargument name="with_types" value="true"/>
-		<cfinvokeargument name="with_separators" value="true"/>
-	</cfinvoke>
-	<cfset fields = fieldsResult.tableFields>
-
 	<cfif page_type IS 1><!--- NEW --->
-
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
-			<cfinvokeargument name="table_id" value="#table_id#">
-			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-		</cfinvoke>
-
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="fillEmptyRow" returnvariable="row">
-			<cfinvokeargument name="emptyRow" value="#emptyRow#">
-			<cfinvokeargument name="fields" value="#fields#">
-			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-		</cfinvoke>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
 			<cfinvokeargument name="table_id" value="#table_id#">
@@ -106,6 +101,43 @@
 	</cfif>
 
 	<cfset area_id = table.area_id>
+
+	<!--- isUserAreaResponsible --->
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_area_responsible">
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfinvoke>
+
+	<!---Table fields--->
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
+		<cfinvokeargument name="table_id" value="#table_id#">
+		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		<cfinvokeargument name="with_types" value="true"/>
+		<cfinvokeargument name="with_separators" value="true"/>
+		<cfif page_type IS 1>
+			<cfinvokeargument name="include_in_new_row" value="true">
+		<cfelse>
+			<cfinvokeargument name="include_in_update_row" value="true">
+		</cfif>
+		<cfif is_user_area_responsible NEQ true>
+			<cfinvokeargument name="include_in_all_users" value="true">
+		</cfif>
+	</cfinvoke>
+	<cfset fields = fieldsResult.tableFields>
+
+	<cfif page_type IS 1><!--- NEW --->
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		</cfinvoke>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="fillEmptyRow" returnvariable="row">
+			<cfinvokeargument name="emptyRow" value="#emptyRow#">
+			<cfinvokeargument name="fields" value="#fields#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		</cfinvoke>
+
+	</cfif>
 
 
 </cfif>

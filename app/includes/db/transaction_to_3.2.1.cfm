@@ -71,6 +71,42 @@
 			  ON UPDATE SET NULL;
 		</cfquery>
 
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists_fields`
+			ADD COLUMN `include_in_list` TINYINT(1) NOT NULL DEFAULT 1 AFTER `import_name`,
+			ADD COLUMN `include_in_row_content` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_list`,
+			ADD COLUMN `include_in_new_row` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_row_content`,
+			ADD COLUMN `include_in_update_row` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_new_row`,
+			ADD COLUMN `include_in_all_users` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_update_row`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_forms_fields`
+			ADD COLUMN `include_in_list` TINYINT(1) NOT NULL DEFAULT 1 AFTER `import_name`,
+			ADD COLUMN `include_in_row_content` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_list`,
+			ADD COLUMN `include_in_new_row` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_row_content`,
+			ADD COLUMN `include_in_update_row` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_new_row`,
+			ADD COLUMN `include_in_all_users` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_update_row`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_typologies_fields`
+			ADD COLUMN `include_in_list` TINYINT(1) NOT NULL DEFAULT 1 AFTER `import_name`,
+			ADD COLUMN `include_in_row_content` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_list`,
+			ADD COLUMN `include_in_new_row` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_row_content`,
+			ADD COLUMN `include_in_update_row` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_new_row`,
+			ADD COLUMN `include_in_all_users` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_update_row`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_users_typologies_fields`
+			ADD COLUMN `include_in_list` TINYINT(1) NOT NULL DEFAULT 1 AFTER `import_name`,
+			ADD COLUMN `include_in_row_content` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_list`,
+			ADD COLUMN `include_in_new_row` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_row_content`,
+			ADD COLUMN `include_in_update_row` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_new_row`,
+			ADD COLUMN `include_in_all_users` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_update_row`;
+		</cfquery>
+
 
 		<!---
 		MODIFICACIÓN MANUAL DE ESTA VERSIÓN:

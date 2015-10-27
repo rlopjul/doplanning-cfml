@@ -6,6 +6,9 @@
 
 	<cfset dateFormat = "%d-%m-%Y">
 
+	<cfset CREATE_ROW = "create">
+	<cfset MODIFY_ROW = "modify">
+
 	<!--- ------------------------------------- saveRow -------------------------------------  --->
 
 	<cffunction name="saveRow" output="false" access="public" returntype="struct">
@@ -46,7 +49,7 @@
 
 			</cfif>
 
-			<cfif arguments.tableTypeId IS 2 AND arguments.action EQ "modify"><!--- Modify Form --->
+			<cfif arguments.tableTypeId IS 2 AND arguments.action EQ MODIFY_ROW><!--- Modify Form --->
 				<cfthrow message="No se puede modificar un registro de #tableTypeNameEs#">
 			</cfif>
 
@@ -68,6 +71,11 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_types" value="true"/>
+				<cfif arguments.action IS CREATE_ROW>
+					<cfinvokeargument name="include_in_new_row" value="true">
+				<cfelse>
+					<cfinvokeargument name="include_in_update_row" value="true">
+				</cfif>
 			</cfinvoke>
 			<cfset fields = fieldsResult.tableFields>
 

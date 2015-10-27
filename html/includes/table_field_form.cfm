@@ -130,6 +130,8 @@
 		$("##fieldInputMaskType").hide();
 		$("##listTextValues").hide();
 
+		<!---$("##fieldInputIncludeAllUsers").show();--->
+
 		$("##default_value_text").prop('disabled', true);
 		$("##default_value_date").prop('disabled', true);
 		$("##default_value_boolean").prop('disabled', true);
@@ -234,8 +236,10 @@
 
 			$("##fieldInputRequired").hide();
 			$("##fieldInputOrderBy").hide();
+			<!---$("##fieldInputIncludeAllUsers").hide();--->
 
 			$("##default_value_text").prop('disabled', false);
+			<!---$("##include_in_all_users").prop('checked', true);--->
 
 		}else {
 
@@ -574,7 +578,6 @@
 		</div>
 	</div>
 
-
 	<div class="row" id="itemDefaultValue">
 		<div class="col-md-12">
 
@@ -659,6 +662,94 @@
 
 		</div>
 	</div>
+
+	<div class="row">
+		<div class="col-md-12" style="height:20px;">
+		</div>
+	</div>
+
+	<div class="row" id="advancedOptionsContainer">
+		<div class="col-md-12">
+
+			<button class="btn btn-info btn-sm" type="button" data-toggle="collapse" data-target="##advancedOptions" aria-expanded="false" aria-controls="advancedOptions">
+			  Mostrar opciones avanzadas
+			</button>
+
+			<div class="collapse" id="advancedOptions">
+
+				<div class="row" id="fieldInputIncludeInList">
+					<div class="col-md-12">
+						<div class="checkbox">
+							<label for="include_in_list">
+								<input type="checkbox" name="include_in_list" id="include_in_list" value="true" <cfif isDefined("field.include_in_list") AND field.include_in_list IS true>checked="checked"</cfif> /> <span lang="es">Incluir visible este campo en el listado de registros</span>
+							</label>
+							<small class="help-block" lang="es">Incluye una columna con los valores de este campo en el listado de registros</small>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" id="fieldInputIncludeInContenido">
+					<div class="col-md-12">
+						<div class="checkbox">
+							<label for="include_in_row_content">
+								<input type="checkbox" name="include_in_row_content" id="include_in_row_content" value="true" <cfif isDefined("field.include_in_row_content") AND field.include_in_row_content IS true>checked="checked"</cfif> /> <span lang="es">Incluir visible este campo en la página de contenido del registro</span>
+							</label>
+							<small class="help-block" lang="es">Incluye el valor en la página de contenido del registro</small>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" id="fieldInputIncludeInNewRow">
+					<div class="col-md-12">
+						<div class="checkbox">
+							<label for="include_in_new_row">
+								<input type="checkbox" name="include_in_new_row" id="include_in_new_row" value="true" <cfif isDefined("field.include_in_new_row") AND field.include_in_new_row IS true>checked="checked"</cfif> /> <span lang="es">Incluir este campo en el formulario de nuevo registro</span>
+							</label>
+							<small class="help-block" lang="es">Permite rellenar este campo al crear un nuevo registro. Si esta opción no está marcada, este campo no podrá ser un campo obligatorio.</small>
+						</div>
+					</div>
+				</div>
+
+				<cfif tableTypeId NEQ 2><!--- IS NOT FORM --->
+					<div class="row" id="fieldInputIncludeInUpdateRow">
+						<div class="col-md-12">
+							<div class="checkbox">
+								<label for="include_in_update_row">
+									<input type="checkbox" name="include_in_update_row" id="include_in_update_row" value="true" <cfif isDefined("field.include_in_update_row") AND field.include_in_update_row IS true>checked="checked"</cfif> /> <span lang="es">Incluir este campo en el formulario de modificar registro existente</span>
+								</label>
+								<small class="help-block" lang="es">Permite rellenar este campo al modificar un registro existente.</small>
+							</div>
+						</div>
+					</div>
+				<cfelseif isDefined("field.include_in_update_row") AND field.include_in_update_row IS true>
+					<input type="hidden" name="include_in_update_row" value="#field.include_in_update_row#" />
+				</cfif>
+
+				<div class="row" id="fieldInputIncludeAllUsers">
+					<div class="col-md-12">
+						<div class="checkbox">
+							<label for="include_in_all_users">
+								<input type="checkbox" name="include_in_all_users" id="include_in_all_users" value="true" <cfif isDefined("field.include_in_all_users") AND field.include_in_all_users IS true>checked="checked"</cfif> /> <span lang="es">Editable por todos los usuarios con acceso a la edición.</span>
+							</label>
+							<small class="help-block" lang="es">Si no se marca este campo, el campo sólo es editable por los usuarios con permiso de responsable de área.</small>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<label for="import_name" class="control-label"><span lang="es">Nombre para importación</span></label>
+						<input type="text" name="import_name" id="import_name" value="#field.import_name#" maxlength="100" message="Nombre requerido" class="form-control"/>
+						<small class="help-block" lang="es">Nombre del elemento que contiene el valor de este campo (sólo para importaciones de datos).</small>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+
 
 
 	<!---<label for="position">Posición</label>
