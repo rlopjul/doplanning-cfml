@@ -1371,6 +1371,7 @@
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="with_types" value="true">
 				<cfinvokeargument name="with_table" value="false">
+				<cfinvokeargument name="include_in_row_content" value="true">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -4531,6 +4532,7 @@
 		<cfargument name="objectUser" type="query" required="yes">
 		<cfargument name="password_temp" type="string" required="no">
 		<cfargument name="client_id" type="string" required="true">
+		<cfargument name="notify_admin" type="boolean" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -4576,15 +4578,20 @@
 			<cfsavecontent variable="html_text">
 			<cfoutput>
 	<p style="font-size:14px">
-		#langText[curLang].new_user.you_has_been_registered_in_application# #APPLICATION.title# #langText[curLang].common.of_the_organization# <b>#root_area.name#</b>.<br /><br />
+
+		#langText[curLang].new_user.you_has_been_registered_in_application# #APPLICATION.title# <cfif APPLICATION.title NEQ root_area.name>#langText[curLang].common.of_the_organization# <b>#root_area.name#</b></cfif>.<br /><br />
+
+		<cfif objectUser.verified IS false>
+			#langText[curLang].new_user.to_verify_your_account#<br/>
+			<a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/user_verify.cfm?abb=#arguments.client_abb#&user=#objectUser.id#&verification_code=#objectUser.verification_code#" target="_blank">#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/user_verify.cfm?abb=#arguments.client_abb#&user=#objectUser.id#&verification_code=#objectUser.verification_code#</a><br/><br/>
+		</cfif>
 
 		<cfif APPLICATION.identifier NEQ "vpnet"><!---Default User--->
-		#langText[curLang].new_user.if_you_use_the_application#: <a href="#APPLICATION.termsOfUseUrl#">#APPLICATION.termsOfUseUrl#</a>.<br/><br/>
+			#langText[curLang].new_user.if_you_use_the_application#: <a href="#APPLICATION.termsOfUseUrl#">#APPLICATION.termsOfUseUrl#</a>.<br/><br/>
 
-		#langText[curLang].common.your_access_email#: <b>#objectUser.email#</b><br />
-		#langText[curLang].new_user.password#: <b>#arguments.password_temp#</b><br/>
-		#langText[curLang].common.you_must_change_password#.<br /><br/>
-
+			#langText[curLang].common.your_access_email#: <b>#objectUser.email#</b><br />
+			#langText[curLang].new_user.password#: <b>#arguments.password_temp#</b><br/>
+			#langText[curLang].common.you_must_change_password#.<br /><br/>
 		</cfif>
 		<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP User--->
 
@@ -4639,6 +4646,60 @@
 				<cfinvokeargument name="head_content" value="#head_content#">
 				<cfinvokeargument name="foot_content" value="#foot_content#">
 			</cfinvoke>
+
+			<cfif arguments.notify_admin IS true><!--- Notify administrator--->
+
+				<!--- getClient --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				</cfinvoke>
+
+				<cfinvoke component="UserQuery" method="getUser" returnvariable="generalAdministratorQuery">
+					<cfinvokeargument name="user_id" value="#clientQuery.administrator_id#">
+					<cfinvokeargument name="format_content" value="default">
+					<cfinvokeargument name="with_ldap" value="false">
+					<cfinvokeargument name="with_vpnet" value="false">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+				<cfif generalAdministratorQuery.recordCount GT 0>
+
+					<cfset curLang = generalAdministratorQuery.language>
+
+					<cfset subject_admin = "#langText[curLang].new_user.new_user_in_application#">
+
+					<cfsavecontent variable="html_text_admin">
+						<cfoutput>
+						<p style="font-size:14px">
+							#langText[curLang].new_user.new_user_in_application#:<br/>
+							<b>#objectUser.family_name# #objectUser.name# (#objectUser.email#)</b><br/><br/>
+
+							<cfif objectUser.verified IS false>
+							#langText[curLang].new_user.user_need_verification#
+							</cfif>
+						</p>
+						</cfoutput>
+					</cfsavecontent>
+
+					<cfinvoke component="EmailManager" method="sendEmail">
+						<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
+						<cfinvokeargument name="to" value="#generalAdministratorQuery.email#">
+						<cfinvokeargument name="subject" value="#subject_admin#">
+						<cfinvokeargument name="content" value="#html_text_admin#">
+						<cfinvokeargument name="head_content" value="#head_content#">
+						<cfinvokeargument name="foot_content" value="#foot_content#">
+					</cfinvoke>
+
+				<cfelse>
+
+					<cfthrow message="Error al enviar las notificaiones por email: usuario no encontrado">
+
+				</cfif>
+
+
+			</cfif>
 
 		</cfif><!--- END len(objectUser.email) GT 0 --->
 

@@ -632,6 +632,7 @@
 		<cfargument name="other_2" type="string" required="false">
 
 		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
 
 		<cfset var method = "createUser">
 
@@ -683,6 +684,8 @@
 		<cfargument name="start_page" type="string" required="true">
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
+		<cfargument name="user_administrator" type="boolean" required="false" default="false">
+		<cfargument name="verified" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
 		<cfargument name="login_ldap" type="string" required="false">
@@ -697,6 +700,7 @@
 		<cfargument name="other_2" type="string" required="false">
 
 		<cfargument name="adminFields" type="boolean" required="false" default="false">
+		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
 
 
 		<cfset var method = "updateUser">
@@ -780,6 +784,8 @@
 					<cfif arguments.adminFields IS true AND SESSION.client_administrator EQ SESSION.user_id>
 						, information = <cfqueryparam value="#arguments.information#" cfsqltype="cf_sql_longvarchar">
 						, internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">
+						, user_administrator = <cfqueryparam value="#arguments.user_administrator#" cfsqltype="cf_sql_bit">
+						, verified = <cfqueryparam value="#arguments.verified#" cfsqltype="cf_sql_bit">
 						, enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
 						<cfif isDefined("arguments.perfil_cabecera")>
 						, perfil_cabecera = <cfqueryparam value="#arguments.perfil_cabecera#" cfsqltype="cf_sql_varchar">

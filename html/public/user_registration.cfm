@@ -82,7 +82,7 @@
 
 							<div class="alert alert-success" role="alert">
 
-								<span lang="es">Usuario registrado correctamente.</span>
+								<span lang="es">Usuario registrado.<br/>Para completar el registro deberá acceder al enlace que recibirá en su cuenta de correo para la validación de la misma.</span>
 
 							</div>
 
@@ -90,7 +90,7 @@
 
 					</div>
 
-					<cfif isDefined("URL.abb")>
+					<!---<cfif isDefined("URL.abb")>
 						<div class="row">
 
 							<div class="col-sm-12">
@@ -100,7 +100,7 @@
 							</div>
 
 						</div>
-					</cfif>
+					</cfif>--->
 
 				</div>
 

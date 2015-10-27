@@ -917,6 +917,8 @@
 		<cfargument name="start_page" type="string" required="false">
 		<cfargument name="information" type="string" required="false" default="">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
+		<cfargument name="user_administrator" type="boolean" required="false" default="false">
+		<cfargument name="verified" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
 		<cfargument name="login_ldap" type="string" required="false">
@@ -931,9 +933,11 @@
 		<cfargument name="other_2" type="string" required="false">
 
 		<cfargument name="typology_id" type="string" required="false">
-
+		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
 
 		<cfargument name="user_id" type="numeric" required="false">
+		<cfargument name="notify_admin" type="boolean" required="true">
+
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
@@ -943,7 +947,7 @@
 		<cfset var clientQuery = "">
 		<cfset var new_user_id = "">
 		<cfset var password_encoded = "">
-			
+
 
 			<cfif arguments.password NEQ arguments.password_confirmation>
 
@@ -980,6 +984,12 @@
 				<cfset arguments.email = Trim(arguments.email)>
 				<cfset arguments.mobile_phone = Trim(arguments.mobile_phone)>
 
+				<!--- generatePassword --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="verification_code">
+					<cfinvokeargument name="numberOfCharacters" value="15">
+				</cfinvoke>
+
+				<cfset verification_code = hash(verification_code&arguments.email)>
 
 				<cftransaction>
 
@@ -1083,7 +1093,9 @@
 						internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">,
 						enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">,
 						linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
-						twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">
+						twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
+						verified = <cfqueryparam value="#arguments.verified#" cfsqltype="cf_sql_bit">,
+						verification_code = <cfqueryparam value="#verification_code#" cfsqltype="cf_sql_varchar">
 						<cfif isDefined("arguments.start_page")>
 						, start_page = <cfqueryparam value="#arguments.start_page#" cfsqltype="cf_sql_varchar">
 						</cfif>
@@ -1150,6 +1162,7 @@
 								<cfinvokeargument name="user_id" value="#new_user_id#">
 							</cfif>
 							<cfinvokeargument name="update_user_id" value="#new_user_id#"/>
+							<cfinvokeargument name="include_admin_fields" value="#arguments.include_admin_fields#"/>
 						</cfinvoke>
 
 					</cfif>
@@ -1197,6 +1210,7 @@
 						<cfinvokeargument name="objectUser" value="#selectUserQuery#">
 						<cfinvokeargument name="password_temp" value="#arguments.password_temp#">
 						<cfinvokeargument name="client_id" value="#clientQuery.id#">
+						<cfinvokeargument name="notify_admin" value="#arguments.notify_admin#">
 
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1230,6 +1244,7 @@
 		<cfargument name="table_id" type="numeric" required="true"><!---Este parámetro viene incluído junto con el resto de campos de la tabla en el método outputRowFormInputs en RowHtml--->
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="action" type="string" required="true">
+		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1324,7 +1339,9 @@
 
 			<cfset queryAddRow(getEmptyUserQuery, 1)>
 
-			<cfset querySetCell(getEmptyUserQuery, "enabled", true)>
+			<cfset querySetCell(getEmptyUserQuery, "user_administrator", 0)>
+			<cfset querySetCell(getEmptyUserQuery, "verified", 1)>
+			<cfset querySetCell(getEmptyUserQuery, "enabled", 1)>
 			<!---<cfset querySetCell(getEmptyUserQuery, "mobile_phone_ccode", "34")>
 			<cfset querySetCell(getEmptyUserQuery, "telephone_ccode", "34")>--->
 			<cfset querySetCell(getEmptyUserQuery, "hide_not_allowed_areas", 1)>
@@ -1337,6 +1354,56 @@
 
 	</cffunction>
 
+
+	<!---  ---------------------VERIFY USER------------------------------------ --->
+
+	<cffunction name="verifyUser" returntype="struct" output="false" access="public">
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="verification_code" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "verifyUser">
+
+			<cfquery name="checkConfirmQuery" datasource="#client_dsn#">
+				SELECT id, name, family_name, email, verified
+				FROM #client_abb#_users
+				WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
+				AND verification_code = <cfqueryparam value="#arguments.verification_code#" cfsqltype="cf_sql_varchar">;
+			</cfquery>
+
+			<cfif checkConfirmQuery.recordCount IS 1>
+
+				<cfif checkConfirmQuery.verified NEQ 1>
+
+					<cfquery name="insertVerifyQuery" datasource="#client_dsn#">
+						UPDATE #client_abb#_users
+						SET verified = <cfqueryparam value="1" cfsqltype="cf_sql_tinyint">,
+						verification_date = NOW()
+						WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
+						AND verification_code = <cfqueryparam value="#arguments.verification_code#" cfsqltype="cf_sql_varchar">;
+					</cfquery>
+
+					<cfinclude template="includes/logRecord.cfm">
+
+					<cfset response = {result="true"}>
+
+				<cfelse>
+
+					<cfset response = {result="false", message="Verificación de usuario ya realizada previamente."}>
+
+				</cfif>
+
+			<cfelse>
+
+				<cfset response = {result="false", message="Usuario no encontrado."}>
+
+			</cfif>
+
+		<cfreturn response>
+
+	</cffunction>
 
 
 

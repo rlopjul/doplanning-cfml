@@ -320,6 +320,7 @@ curLangText["es"] = {
 			"you_has_been_registered_in_organization" : "Usted ha sido dado de alta como usuario de la organización",
 			"you_has_been_registered_in_application" : "Ha sido dado de alta en la aplicación",
 			"if_you_use_the_application" : "IMPORTANTE: Si utiliza la aplicación acepta los términos de uso de la misma, que aparecen en la siguiente página",
+			"to_verify_your_account" : "<b>PARA COMPLETAR SU REGISTRO</b> debe acceder a la siguiente dirección para verificar su cuenta de correo y poder usar la aplicación:",
 
 			"password" : "Contraseña",
 
@@ -327,6 +328,9 @@ curLangText["es"] = {
 
 			"user_access_identify_to" : "Su usuario de acceso es el usado para identificarse en",
 			"also_you_can_use" : "Para acceder también puede utilizar su usuario de",
+
+			"new_user_in_application" : "Nuevo usuario dado de alta en #APPLICATION.title#",
+			"user_need_verification" : "El usuario debe verificar su cuenta de correo para poder usar la aplicación.",
 
 		},
 
@@ -695,6 +699,7 @@ curLangText["en"] = {
 			"you_has_been_registered_in_organization" : "You have been registered as a user of the organization",
 			"you_has_been_registered_in_application" : "You have been registered in the application",
 			"if_you_use_the_application" : "ATTENTION: the use of the application means that you accept its terms of use. Please read terms of use at",
+			"to_verify_your_account" : "<b>TO COMPLETE YOUR REGISTRATION</b> you must access to the following address to verify your email account and to use the application:",
 
 			"password" : "Password",
 
@@ -702,6 +707,9 @@ curLangText["en"] = {
 
 			"user_access_identify_to" : "Your user to access is the used to identify you in",
 			"also_you_can_use" : "To access you can also use your user of",
+
+			"new_user_in_application" : "New user in #APPLICATION.title#",
+			"user_need_verification" : "The user must verify his email account to use the application.",
 
 		},
 

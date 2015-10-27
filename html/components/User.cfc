@@ -288,6 +288,8 @@
 
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
 				<!---<cfinvokeargument name="password" value="#password_encoded#">--->
+				<cfinvokeargument name="notify_admin" value="false">
+				<cfinvokeargument name="include_admin_fields" value="true">
 				<cfinvokeargument name="password_temp" value="#arguments.password#">
 			</cfinvoke>
 
@@ -370,6 +372,7 @@
 
 					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUser" argumentcollection="#arguments#" returnvariable="response">
 						<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
+						<cfinvokeargument name="include_admin_fields" value="true">
 						<cfif isDefined("password_encoded")>
 							<cfinvokeargument name="password" value="#password_encoded#">
 						</cfif>

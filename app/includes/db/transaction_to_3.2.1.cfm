@@ -107,6 +107,13 @@
 			ADD COLUMN `include_in_all_users` TINYINT(1) NOT NULL DEFAULT 1 AFTER `include_in_update_row`;
 		</cfquery>
 
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_users`
+			ADD COLUMN `verified` TINYINT(1) NOT NULL DEFAULT 0 AFTER `enabled`,
+			ADD COLUMN `verification_code` VARCHAR(100) NOT NULL AFTER `verified`,
+			ADD COLUMN `verification_date` DATETIME NULL AFTER `verification_code`,
+			ADD COLUMN `user_administrator` TINYINT(1) NOT NULL DEFAULT 0 AFTER `internal_user`;
+		</cfquery>
 
 		<!---
 		MODIFICACIÓN MANUAL DE ESTA VERSIÓN:

@@ -669,8 +669,12 @@
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
 					<cfinvokeargument name="hide_not_allowed_areas" value="true">
 					<cfinvokeargument name="internal_user" value="false">
+					<cfinvokeargument name="user_administrator" value="false">
+					<cfinvokeargument name="verified" value="false">
 					<cfinvokeargument name="enabled" value="true">
 					<cfinvokeargument name="password_temp" value="#arguments.password#">
+					<cfinvokeargument name="notify_admin" value="true">
+					<cfinvokeargument name="include_admin_fields" value="false">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
@@ -709,6 +713,43 @@
 		</cftry>
 
 		<cfreturn serializeJSON(response)>
+
+	</cffunction>
+
+
+
+	<!--- verifyUser --->
+
+	<cffunction name="verifyUser" output="false" returntype="struct" access="public">
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="verification_code" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+
+		<cfset var method = "verifyUser">
+
+		<cfset var response = structNew()>
+		<cfset var client_dsn = APPLICATION.identifier&"_"&arguments.client_abb>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="verifyUser" argumentcollection="#arguments#" returnvariable="response">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfcatch>
+
+				<cfinclude template="#APPLICATION.componentsPath#/includes/errorHandlerStruct.cfm">
+
+				<cfset message = "Ha ocurrido un al verificar el usuario. Disculpe las molestias.">
+
+				<cfset response = {result=false, message=#message#, client_abb=#arguments.client_abb#}>
+
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
 
 	</cffunction>
 

@@ -28,6 +28,7 @@
 		<cfargument name="user_id" type="numeric" required="false">
 		<cfargument name="send_alert" type="boolean" required="false" default="true">
 		<cfargument name="with_transaction" type="boolean" required="false" default="true">
+		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -53,6 +54,9 @@
 						<cfinvokeargument name="include_in_new_row" value="true">
 					<cfelse>
 						<cfinvokeargument name="include_in_update_row" value="true">
+					</cfif>
+					<cfif arguments.include_admin_fields IS false>
+						<cfinvokeargument name="include_in_all_users" value="true">
 					</cfif>
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
