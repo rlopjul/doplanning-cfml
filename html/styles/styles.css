@@ -1488,6 +1488,9 @@ html { height: 100%;}
 .sidebar-nav .dropdown-menu li:nth-child(14):before {
     background-color: #019ED3;
 }
+.sidebar-nav .dropdown-menu li:nth-child(15):before {
+    background-color: #E4514B;
+}
 
 
 .sidebar-nav li a {
