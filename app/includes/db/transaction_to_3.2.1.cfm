@@ -6,8 +6,8 @@
 		SELECT *
 		FROM information_schema.COLUMNS
 		WHERE TABLE_SCHEMA = 'dp_#new_client_abb#'
-		AND TABLE_NAME = '#new_client_abb#_users_typologies_fields'
-		AND COLUMN_NAME = 'import_name';
+		AND TABLE_NAME = '#new_client_abb#_users'
+		AND COLUMN_NAME = 'user_administrator';
 	</cfquery>
 
 </cfif>
