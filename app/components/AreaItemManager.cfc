@@ -1603,7 +1603,7 @@
 		<cfargument name="publication_validated" type="boolean" required="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
-		<cfargument name="categories_ids" type="array" required="false" default="false">
+		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateItemWithAttachedFile">
