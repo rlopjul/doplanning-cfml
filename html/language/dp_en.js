@@ -362,8 +362,6 @@ Lang.prototype.pack.en = {
 		"Una vez pulsado el botón \"Importar registros\" debe esperar hasta que se complete la operación.":"Once the \"Import records\"  button has been clicked, you must wait until the process is completed.",
 
 
-
-		"Archivo":"File",
 		"Archivo adjunto:":"Attached file:",
 		"Archivo adjunto":"Attached file",
 		"Imagen":"Image",
@@ -699,9 +697,6 @@ Lang.prototype.pack.en = {
 		"Quitar de la lista":"Remove from list",
 
 		/*area_file_new.cfm*/
-		"Nuevo Archivo":"New File",
-		"Nuevo Archivo de área":"New area File",
-		"Archivo":"File",
 		"Nombre":"Name",
 		"Número de versión":"Version number",
 		"Una vez pulsado el botón, la solicitud tardará dependiendo del tamaño del archivo.":"After clicking the button, the request will take some time depending on the file size.",
