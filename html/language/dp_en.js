@@ -181,6 +181,8 @@ Lang.prototype.pack.en = {
 		"Mensajes":"Messages",
 		"Archivo":"File",
 		"Archivos":"Files",
+		"Archivo de área":"Area file",
+		"Archivos de area":"Area files",
 		"Evento":"Event",
 		"Eventos":"Events",
 		"Tarea":"Task",

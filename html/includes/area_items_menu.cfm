@@ -115,8 +115,8 @@
 											<li>
 
 												<cfif APPLICATION.moduleAreaFilesLite IS true><!---AND len(area_type) IS 0--->
-												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe')" title="Nuevo Archivo de área" lang="es" class="btn-new-item-dp" role="menuitem"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_area.png" />
-													<span lang="es">Nuevo Archivo de área</span>
+												<a onclick="openUrlLite('area_file_new.cfm?area=#area_id#&fileTypeId=2', 'itemIframe')" title="Archivo de área" lang="es" class="btn-new-item-dp" role="menuitem"><!---<i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px;line-height:20px;"></i>---> <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_area.png" />
+													<span lang="es">Archivo de área</span>
 												</a>
 												</cfif>
 
