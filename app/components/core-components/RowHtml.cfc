@@ -63,6 +63,10 @@
 
 				<cfset fieldSetOpen = true>
 
+			<cfelseif fields.field_type_id EQ 21><!---HIDDEN FIELD--->
+
+				<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" />
+
 			<cfelse>
 
 				<cfif fields.required IS true AND arguments.search_inputs IS false>

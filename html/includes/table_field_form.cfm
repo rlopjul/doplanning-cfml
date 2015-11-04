@@ -345,7 +345,7 @@
 			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled=</cfif>>
 				<cfloop query="fieldTypes">
 
-					<cfif ( ( tableTypeId EQ 2 OR tableTypeId EQ 4 ) AND (fieldTypes.field_type_group EQ "user" OR fieldTypes.field_type_group EQ "doplanning_item") ) OR ( tableTypeId NEQ 3 AND fieldTypes.field_type_id EQ 14 ) OR ( ( tableTypeId EQ 3 OR tableTypeId EQ 4 ) AND fieldTypes.field_type_id EQ 18 )><!---Los campos "user" y "doplanning_item" no están disponibles en los formularios y tiplogías de usuarios. El campo "Request URL" sólo está disponible en archivos. El campo archivo adjunto no está disponible en las tipologías--->
+					<cfif ( ( tableTypeId EQ 2 OR tableTypeId EQ 4 ) AND (fieldTypes.field_type_group EQ "user" OR fieldTypes.field_type_group EQ "doplanning_item") ) OR ( tableTypeId NEQ 3 AND fieldTypes.field_type_id EQ 14 ) OR ( ( tableTypeId EQ 3 OR tableTypeId EQ 4 ) AND fieldTypes.field_type_id EQ 18 ) OR ( tableTypeId NEQ 2 AND fieldTypes.field_type_id EQ 21 )><!---Los campos "user" y "doplanning_item" no están disponibles en los formularios y tiplogías de usuarios. El campo "Request URL" sólo está disponible en archivos. El campo archivo adjunto no está disponible en las tipologías. El campo oculto sólo es para formularios--->
 						<cfcontinue>
 					<cfelse>
 						<option value="#fieldTypes.field_type_id#" lang="es" <cfif field.field_type_id IS fieldTypes.field_type_id>selected="selected"</cfif>>#fieldTypes.name#</option>
