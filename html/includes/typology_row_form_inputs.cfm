@@ -16,7 +16,7 @@
 			<cfelse>
 				<cfinvokeargument name="include_in_new_row" value="true"><!---New row--->
 			</cfif>
-			<cfif SESSION.client_administrator EQ SESSION.user_id>
+			<cfif SESSION.client_administrator NEQ SESSION.user_id>
 				<cfinvokeargument name="include_in_all_users" value="true">
 			</cfif>
 		</cfinvoke>
