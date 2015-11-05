@@ -65,6 +65,12 @@
 
 			<cfelseif fields.field_type_id EQ 21><!---HIDDEN FIELD--->
 
+				<cfif isDefined("row[field_name]")>
+					<cfset field_value = row[field_name]>
+				<cfelse>
+					<cfset field_value = "">
+				</cfif>
+
 				<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" />
 
 			<cfelse>
