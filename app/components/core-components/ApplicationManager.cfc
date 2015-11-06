@@ -25,6 +25,7 @@
 		<cfargument name="ldapName" type="string" required="false">
 
 		<cfargument name="title" type="string" required="false" default="DoPlanning">
+		<cfargument name="titlePrefix" type="string" required="false" default="application"><!--- application/web --->
 		<cfargument name="moduleMessenger" type="boolean" required="false" default="false">
 		<cfargument name="moduleLdapUsers" type="boolean" required="false" default="false">
 		<cfargument name="moduleConvertFiles" type="boolean" required="false" default="false">
@@ -122,6 +123,7 @@
 			</cfif>
 
 			<cfset APPLICATION.title = arguments.title><!--- Default: DoPlanning --->
+			<cfset APPLICATION.titlePrefix = arguments.titlePrefix>
 			<cfset APPLICATION.identifier = "dp"><!---Por defecto aquí debe poner dp. dp para DoPlanning. vpnet para hospital--->
 
 			<cfset APPLICATION.version = "1.8">
@@ -541,6 +543,7 @@
 					<cfinvokeargument name="signOutUrl" value="https://ceseand.net">
 
 					<cfinvokeargument name="title" value="CESEAND">
+					<cfinvokeargument name="titlePrefix" value="web">
 					<cfinvokeargument name="moduleWeb" value="true">
 
 					<cfinvokeargument name="homeTab" value="true">
