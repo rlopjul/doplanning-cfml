@@ -6,21 +6,33 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
 <script>
-	$(document).ready(function() { 
-		
+	$(document).ready(function() {
+
 		<cfif fields_selectable IS false>
-			$("#dataTable").tablesorter({ 
+			$("#dataTable").tablesorter({
 				widgets: ['zebra','uitheme','select'],
 				theme : "bootstrap",
 				headerTemplate : '{content} {icon}',
-				sortList: [[4,0]]
+				<cfif tableTypeId EQ 4>
+				sortList: [[6,0]] ,
+				<cfelseif tableTypeId NEQ 3>
+				sortList: [[5,0]] ,
+				<cfelse>
+				sortList: [[4,0]] ,
+				</cfif>
 			});
 		<cfelse>
-			$("#dataTable").tablesorter({ 
+			$("#dataTable").tablesorter({
 				widgets: ['zebra','uitheme'],
 				theme : "bootstrap",
 				headerTemplate : '{content} {icon}',
+				<cfif tableTypeId EQ 4>
+				sortList: [[7,0]] ,
+				<cfelseif tableTypeId NEQ 3>
+				sortList: [[6,0]] ,
+				<cfelse>
 				sortList: [[5,0]] ,
+				</cfif>
 				headers: {
 			      0: { sorter: false }
 			    }
@@ -45,20 +57,17 @@
 
 	       	</cfif>
 
-	        
-		    
-
 	    });
 
 
-	}); 
+	});
 
 	<!---<cfif fields_selectable IS true>
 
 		function stopPropagation(e) {
 			if (!e) var e = window.event;
 			e.cancelBubble = true;
-			if (e.stopPropagation) e.stopPropagation();		
+			if (e.stopPropagation) e.stopPropagation();
 		}
 
 	</cfif>--->
@@ -81,14 +90,21 @@
 			<th style="width:35%"><span lang="es">Nombre del campo</span></th>
 			<th><span lang="es">Tipo de campo</span></th>
 			<th><span lang="es">Obligatorio</span></th>
-			<th style="width:25%"><span lang="es">Valor por defecto</span></th>
+			<cfif tableTypeId NEQ 3>
+			<th><span lang="es">En listado</span></th>
+			</cfif>
+			<cfif tableTypeId EQ 4>
+				<th><span lang="es">Editable por todos</span></th>
+			</cfif>
+			<th>
+				<span lang="es">Valor por defecto</span></th>
 			<th>##</th>
 		</tr>
 	</thead>
 	<tbody>
 
 	<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
-	
+
 	<cfset alreadySelected = false>
 
 	<cfloop query="fields">
@@ -102,9 +118,9 @@
 
 		<!---Row selection--->
 		<cfset fieldSelected = false>
-		
+
 		<cfif fields_selectable IS false>
-			
+
 			<cfif alreadySelected IS false>
 
 				<cfif ( isDefined("URL.field") AND URL.field IS fields.field_id ) OR ( selectFirst IS true AND fields.currentrow IS 1 AND app_version NEQ "mobile" ) >
@@ -116,9 +132,9 @@
 
 					<cfset fieldSelected = true>
 					<cfset alreadySelected = true>
-																	
+
 				</cfif>
-				
+
 			</cfif>
 
 		</cfif>
@@ -126,8 +142,8 @@
 		<tr <cfif fieldSelected IS true>class="selected"</cfif> data-item-url="#field_page_url#" data-field-id="#fields.field_id#"><!---onclick="<cfif fields_selectable IS false>openUrl('#field_page_url#','itemIframe',event)<cfelse>toggleCheckboxChecked('##field_#fields.field_id#')</cfif>"--->
 			<cfif fields_selectable IS true>
 				<td style="text-align:center;"><input type="checkbox" name="fields_ids[]" id="field_#fields.field_id#" value="#fields.field_id#" checked="checked" onClick="stopPropagation(event);" /></td>
-			</cfif>	
-			<!---<td>#fields.currentRow#</td>--->		
+			</cfif>
+			<!---<td>#fields.currentRow#</td>--->
 			<td>
 				<span class="field_label">#fields.label#</span>
 			</td>
@@ -135,14 +151,24 @@
 				<span lang="es">#fields.name#</span>
 			</td>
 			<td>
-				<span lang="es"><cfif fields.required IS true>Sí<cfelse>No</cfif></span>
+				<span lang="es"><cfif fields.field_type_id NEQ 20><cfif fields.required IS true>Sí<cfelse>No</cfif></cfif></span>
 			</td>
+			<cfif tableTypeId NEQ 3>
+			<td>
+				<span lang="es"><cfif fields.field_type_id NEQ 20><cfif fields.include_in_list IS true>Sí<cfelse></b>No</b></cfif></cfif></span>
+			</td>
+			</cfif>
+			<cfif tableTypeId EQ 4>
+			<td>
+				<span lang="es"><cfif fields.field_type_id NEQ 20><cfif fields.include_in_all_users IS true>Sí<cfelse><b>No</b></cfif></cfif></span>
+			</td>
+			</cfif>
 			<td>
 				<cfset field_default_value = "">
 				<cfif fields.field_type_id IS 9 OR fields.field_type_id IS 10><!--- IS LIST --->
 
 					<cfif isNumeric(fields.default_value)>
-						
+
 						<!--- getArea --->
 						<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="listArea">
 							<cfinvokeargument name="area_id" value="#fields.default_value#">
@@ -155,17 +181,17 @@
 							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
-						
+
 						<cfif selectDefaultAreaQuery.recordCount GT 0>
 							<cfset field_default_value = selectDefaultAreaQuery.name>
 						</cfif>
 
 					</cfif>
-				
+
 				<cfelseif fields.field_type_id IS 12><!--- USER --->
 
 					<cfif isNumeric(fields.default_value)>
-						
+
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="userQuery">
 							<cfinvokeargument name="user_id" value="#fields.default_value#">
 
@@ -181,9 +207,9 @@
 						<cfelse>
 							<cfset field_default_value = '<i lang="es">USUARIO NO ENCONTRADO</i>'>
 						</cfif>
-						
+
 					</cfif>
-					
+
 				<cfelseif fields.field_type_id IS 13><!--- ITEM --->
 
 					<cfif isNumeric(fields.default_value)>
@@ -208,7 +234,7 @@
 							<cfelse>
 								<cfset field_default_value = '<span lang="es"><i>ARCHIVO NO DISPONIBLE</i></span>'>
 							</cfif>
-							
+
 						<cfelse><!--- ITEM --->
 
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
@@ -251,7 +277,7 @@
 				</cfif>
 				#field_default_value#
 			</td>
-			
+
 			<td><div class="item_position">#fields.currentRow#</div><div class="change_position"><cfif fields.currentRow NEQ 1>
 				<cfset up_field_id = fields.field_id[fields.currentRow-1]>
 				<!---onclick="openUrl('table_field_position_up.cfm?field=#fields.field_id#&ofield=#up_field_id#&tableTypeId=#tableTypeId#&table=#fields.table_id#','areaIframe',event)"--->
