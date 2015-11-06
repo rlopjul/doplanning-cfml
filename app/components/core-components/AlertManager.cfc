@@ -1022,7 +1022,7 @@
 
 		<cfset var footContent = "">
 
-		<cfsavecontent variable="footContent"><cfoutput><p style="font-family:'Roboto', sans-serif; font-size:10px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #APPLICATION.title# #langText[arguments.language].new_item.foot_content_2# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p></cfoutput></cfsavecontent>
+		<cfsavecontent variable="footContent"><cfoutput><p style="font-family:'Roboto', sans-serif; font-size:10px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #langText[arguments.language][APPLICATION.titlePrefix].title_prefix# #APPLICATION.title# #langText[arguments.language].new_item.foot_content_2# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p></cfoutput></cfsavecontent>
 
 		<cfreturn footContent>
 
@@ -2906,7 +2906,7 @@
 
 		<cfargument name="client_abb" type="string" required="true">
 
-		<cfset var method = "getItemFootContent">
+		<cfset var method = "getItemDiaryAlertContent">
 
 		<cfset var itemContent = "">
 		<cfset var actionDate = "">
@@ -3052,7 +3052,7 @@
 
 		<cfset var footContent = "">
 
-		<cfset footContent = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p>'>
+		<cfset footContent = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #langText[arguments.language][APPLICATION.titlePrefix].title_prefix# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p>'>
 
 		<cfreturn footContent>
 
@@ -3728,7 +3728,7 @@
 
 		<cfset var footContent = "">
 
-		<cfset footContent = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #APPLICATION.title# #langText[arguments.language].new_item.foot_content_2# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p>'>
+		<cfset footContent = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[arguments.language].common.foot_do_not_reply#.</span><br/>#langText[arguments.language].common.foot_content_default_1# #langText[arguments.language][APPLICATION.titlePrefix].title_prefix# #APPLICATION.title# #langText[arguments.language].new_item.foot_content_2# #APPLICATION.title#.<br />#langText[arguments.language].new_item.foot_content_3#.</p>'>
 
 		<cfreturn footContent>
 
@@ -4636,7 +4636,7 @@
 			</cfoutput>
 			</cfsavecontent>
 
-			<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[curLang].common.foot_do_not_reply#.</span><br/>#langText[curLang].common.foot_content_default_1# #APPLICATION.title#.</p>'>
+			<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[curLang].common.foot_do_not_reply#.</span><br/>#langText[curLang].common.foot_content_default_1# #langText[curLang][APPLICATION.titlePrefix].title_prefix# #APPLICATION.title#.</p>'>
 
 			<cfinvoke component="EmailManager" method="sendEmail">
 				<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">

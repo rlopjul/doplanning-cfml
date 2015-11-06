@@ -82,10 +82,22 @@ curLangText["es"] = {
 
 		},
 
+		"application" : {
+
+			"title_prefix" : "aplicación",
+
+		},
+
+		"web" : {
+
+			"title_prefix" : "web",
+
+		},
+
 		"common": {
 
 			"foot_do_not_reply" : "No responda a este email",
-			"foot_content_default_1" : "Este es un email automático enviado por la aplicación",
+			"foot_content_default_1" : "Este es un email automático enviado por la",
 			//"foot_content_default_2" : 'No responda a este email.<br /> Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación.',
 			"foot_content_default_3" : "No responda a este email.<br />Este es un email automático enviado por la aplicación",
 
@@ -463,10 +475,22 @@ curLangText["en"] = {
 
 		},
 
+		"application" : {
+
+			"title_prefix" : "aplicación",
+
+		},
+
+		"web" : {
+
+			"title_prefix" : "web",
+
+		},
+
 		"common": {
 
 			"foot_do_not_reply" : "Do not reply to this email",
-			"foot_content_default_1" : "This is an automated email sent by the application",
+			"foot_content_default_1" : "This is an automated email sent by the",
 			//"foot_content_default_2" : 'Do not reply to this email.<br />If you do not want to receive these emails, you can disable these notifications the application preferences.',
 			"foot_content_default_3" : "Do not reply to this email.<br />This is an automated email sent by the application",
 
