@@ -660,6 +660,7 @@
 			<cfinvokeargument name="table_id" value="#selected_typology_id#"/>
 			<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#"/>
 			<cfinvokeargument name="with_types" value="true"/>
+			<cfinvokeargument name="with_separators" value="true">
 		</cfinvoke>
 
 		<cfset fields = getFieldsResponse.tableFields>
@@ -693,6 +694,7 @@
 			<cfinvokeargument name="row" value="#row#">
 			<cfinvokeargument name="fields" value="#fields#">
 			<cfinvokeargument name="search_inputs" value="true">
+			<cfinvokeargument name="displayType" value="horizontal">
 		</cfinvoke>
 
 
