@@ -7,9 +7,9 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
-	
+
 	config.skin = 'moonocolor';
-	
+
 	config.toolbar_Full =
 	[
 		['Source','-','Save','NewPage','Preview','-','Templates'],
@@ -26,24 +26,24 @@ CKEDITOR.editorConfig = function( config ) {
 		['TextColor','BGColor'],
 		['Maximize', 'ShowBlocks','-','About']
 	];
-	
+
 	config.toolbar_Basic =
 	[
 		['Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Link', 'Unlink','-','About']
 	];
-	
+
 	config.toolbar_DP =
-	[		
+	[
 		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],
 		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],
 		['Format','FontSize','TextColor','BGColor'],
 		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
 		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar','Smiley'],
-		['Image'],['InsertPre'],['TweetableText']
+		['Image'],['InsertPre']
 	];
 
 	config.toolbar_DP_hcs =
-	[		
+	[
 		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],
 		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],
 		['Format','FontSize','TextColor','BGColor'],
@@ -52,7 +52,7 @@ CKEDITOR.editorConfig = function( config ) {
 	];/*,['InsertPre']*/
 
 	config.toolbar_DP_document =
-	[		
+	[
 		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],
 		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],
 		['Format','FontSize','TextColor','BGColor'],
@@ -63,7 +63,7 @@ CKEDITOR.editorConfig = function( config ) {
 	];
 
 	config.toolbar_DPAdmin =
-	[		
+	[
 		['Undo','Redo','-','Bold','Italic','Underline','Strike','-','Subscript','Superscript','RemoveFormat'],['Source'],
 		['PasteText','PasteFromWord','-','Find','Replace','SelectAll','-','ShowBlocks','Maximize'],
 		['Format','FontSize','TextColor','BGColor'],
@@ -72,7 +72,7 @@ CKEDITOR.editorConfig = function( config ) {
 		['Link','Unlink','Anchor','-','Table','HorizontalRule','SpecialChar','Smiley'],
 		['Image','Flash','Iframe'],['InsertPre'],['TweetableText']
 	];
-	
+
 	//Insert pre tag plugin
 	//config.extraPlugins = 'insertpre';
 	//config.insertpre_class = '';
