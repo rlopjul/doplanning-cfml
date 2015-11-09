@@ -372,7 +372,7 @@
 						, import_name = <cfqueryparam value="#arguments.import_name#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					, include_in_list = <cfqueryparam value="#arguments.include_in_list#" cfsqltype="cf_sql_bit">
-					, include_in_row_content = <cfqueryparam value="#arguments.include_in_list#" cfsqltype="cf_sql_bit">
+					, include_in_row_content = <cfqueryparam value="#arguments.include_in_row_content#" cfsqltype="cf_sql_bit">
 					, include_in_new_row = <cfqueryparam value="#arguments.include_in_new_row#" cfsqltype="cf_sql_bit">
 					, include_in_update_row = <cfqueryparam value="#arguments.include_in_update_row#" cfsqltype="cf_sql_bit">
 					, include_in_all_users = <cfqueryparam value="#arguments.include_in_all_users#" cfsqltype="cf_sql_bit">

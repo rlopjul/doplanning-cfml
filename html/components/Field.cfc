@@ -7,59 +7,59 @@
 
 
 	<!--- ----------------------------------- getFieldTypes ------------------------------------- --->
-	
+
 	<cffunction name="getFieldTypes" returntype="struct" access="public">
 		<cfargument name="tableTypeId" type="numeric" required="true">
-		
+
 		<cfset var method = "getFieldTypes">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="getFieldTypes" returnvariable="response">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 			</cfinvoke>
-			
+
 			<cfinclude template="includes/responseHandlerStruct.cfm">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
 
 	<!--- ----------------------------------- getFieldMaskTypes ------------------------------------- --->
-	
+
 	<cffunction name="getFieldMaskTypes" returntype="struct" access="public">
 		<cfargument name="tableTypeId" type="numeric" required="true">
-		
+
 		<cfset var method = "getFieldMaskTypes">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="getFieldMaskTypes" returnvariable="response">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 			</cfinvoke>
-			
+
 			<cfinclude template="includes/responseHandlerStruct.cfm">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
@@ -75,25 +75,25 @@
 		<cfset var method = "getField">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="getField" returnvariable="response">
 				<cfinvokeargument name="field_id" value="#arguments.field_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 				<cfinvokeargument name="with_table" value="#arguments.with_table#"/>
 			</cfinvoke>
-			
+
 			<cfinclude template="includes/responseHandlerStruct.cfm">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>									
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response.field>
-			
+
 	</cffunction>
 
 
@@ -105,28 +105,28 @@
 		<cfset var method = "getEmptyField">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="getEmptyField" returnvariable="response">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 			</cfinvoke>
-			
+
 			<cfinclude template="includes/responseHandlerStruct.cfm">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>									
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response.field>
-			
+
 	</cffunction>
 
 
 	<!--- -------------------------------createField-------------------------------------- --->
-	
+
     <cffunction name="createField" returntype="struct" access="public">
     	<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -140,100 +140,100 @@
         <cfargument name="list_area_id" type="string" required="false">
         <cfargument name="field_input_type" type="string" required="false">
         <cfargument name="list_values" type="string" required="false">
-				
+
 		<cfset var method = "createField">
 
 		<cfset var response = structNew()>
-		
+
 		<cftry>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="createField" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message = "Campo creado">
 			</cfif>
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
 	<!--- -------------------------------updateField-------------------------------------- --->
-	
-    <cffunction name="updateField" returntype="struct" access="public">
-    	<cfargument name="field_id" type="numeric" required="true">
+
+  <cffunction name="updateField" returntype="struct" access="public">
+  	<cfargument name="field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="label" type="string" required="true">
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="required" type="boolean" required="false" default="false">
 		<cfargument name="sort_by_this" type="string" required="true">
-        <cfargument name="default_value" type="string" required="true">
-        <cfargument name="list_area_id" type="string" required="false">
-        <cfargument name="field_input_type" type="string" required="false">
-        <cfargument name="list_values" type="string" required="false">
-		
+    <cfargument name="default_value" type="string" required="true">
+    <cfargument name="list_area_id" type="string" required="false">
+    <cfargument name="field_input_type" type="string" required="false">
+    <cfargument name="list_values" type="string" required="false">
+
 		<cfset var method = "updateField">
 
 		<cfset var response = structNew()>
-		
+
 		<cftry>
-					
+
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="updateField" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message = "Campo modificado">
 			</cfif>
-            
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
 	<!--- -------------------------------copyTableFields-------------------------------------- --->
-	
+
     <cffunction name="copyTableFields" returntype="struct" access="public">
     	<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="copy_from_table_id" type="numeric" required="true">
 		<cfargument name="fields_ids" type="array" required="true">
-		
+
 		<cfset var method = "copyTableFields">
 
 		<cfset var response = structNew()>
-		
+
 		<cftry>
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-					
+
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="copyTableFields" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message="Campos de #tableTypeNameEs# copiados.">
 			</cfif>
-            
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
@@ -244,11 +244,11 @@
 		<cfargument name="other_field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="action" type="string" required="true"><!---increase/decrease--->
-		
+
 		<cfset var method = "changeFieldPosition">
 
 		<cfset var response = structNew()>
-		
+
 		<cftry>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="changeFieldPosition" returnvariable="response">
@@ -260,48 +260,48 @@
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
 	<!--- -------------------------------deleteFieldRemote-------------------------------------- --->
-	
+
     <cffunction name="deleteFieldRemote" returntype="void" access="remote">
     	<cfargument name="field_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
-		
+
 		<cfargument name="return_path" type="string" required="yes">
-		
+
 		<cfset var method = "deleteFieldRemote">
 
 		<cfset var response = structNew()>
-		
+
 		<cftry>
-					
+
 			<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="deleteField" returnvariable="response">
 				<cfinvokeargument name="field_id" value="#arguments.field_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message = "Campo eliminado">
 			</cfif>
-			
+
 			<cfset msg = URLEncodedFormat(response.message)>
-			
-			<cflocation url="#arguments.return_path#&res=#response.result#&msg=#msg#" addtoken="no">		
-            
+
+			<cflocation url="#arguments.return_path#&res=#response.result#&msg=#msg#" addtoken="no">
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 	</cffunction>
 
 
