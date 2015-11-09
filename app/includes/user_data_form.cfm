@@ -429,6 +429,18 @@ page_types
 
 			</cfif>
 
+			<cfif page_type IS 1>
+
+					</div><!---END col-sm-9--->
+
+				</div><!---END row--->
+
+				<div class="row">
+
+					<div class="col-sm-12">
+
+			</cfif>
+
 			<cfif APPLICATION.showDniTitle IS true OR page_type NEQ 3>
 			<div class="row">
 
