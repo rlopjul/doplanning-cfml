@@ -30,7 +30,11 @@
 
 	function loadTypology(typologyId) {
 
-		goToUrl("#CGI.SCRIPT_NAME#?typology_id="+typologyId);
+		<cfif isDefined("URL.field")>
+			goToUrl("#CGI.SCRIPT_NAME#?field=#URL.field#&typology_id="+typologyId);
+		<cfelse>
+			goToUrl("#CGI.SCRIPT_NAME#?typology_id="+typologyId);
+		</cfif>
 	}
 
 </script>
