@@ -25,11 +25,11 @@
 			$(document).ready(function() {
 			  <!---$(".text_item").highlight("#search_text#");--->
 			  <cfif NOT isDefined("curElement") OR curElement NEQ "areas">
-				$(".text_item").highlight(["#search_text_highlight#"]);	
+				$(".text_item").highlight(["#search_text_highlight#"]);
 			  <cfelse>
-			  	$("h5").highlight(["#search_text_highlight#"]);	
+			  	$("h5").highlight(["#search_text_highlight#"]);
 			  </cfif>
-			});			
+			});
 		</script>
 	</cfoutput>
 <cfelse>
@@ -98,9 +98,9 @@
 
 <cfif NOT isDefined("curElement") OR curElement NEQ "users">
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">	
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">
 	</cfinvoke>
-	
+
 	<cfset users = getUsersResponse.users>
 	<cfset numUsers = ArrayLen(users)>
 
@@ -111,31 +111,31 @@
 
 
 <script>
-	
+
 	$(function() {
 
 		$('#from_date').datepicker({
-		  format: 'dd-mm-yyyy', 
+		  format: 'dd-mm-yyyy',
 		  autoclose: true,
 		  weekStart: 1,
 		  language: 'es',
 		  todayBtn: 'linked',
-		  endDate: $('#end_date').val()  
+		  endDate: $('#end_date').val()
 		});
-	
+
 		$('#end_date').datepicker({
 		  format: 'dd-mm-yyyy',
 		  weekStart: 1,
 		  language: 'es',
-		  todayBtn: 'linked', 
+		  todayBtn: 'linked',
 		  autoclose: true
 		});
 
 		<!---$('.selectpicker').selectpicker();--->
 
 	});
-	
-	
+
+
 	function setEndDate(){
 		$('#from_date').datepicker('setEndDate', $('#end_date').val());
 	}
@@ -194,25 +194,25 @@
 		goToUrl("#CGI.SCRIPT_NAME#?typology_id="+typologyId);
 	}
 	</cfoutput>
-	
+
 </script>
 
 
 <cfoutput>
 <div class="div_search_bar">
 <cfform method="get" name="search_form" action="#CGI.SCRIPT_NAME#" class="form-horizontal" onsubmit="return onSubmitForm();">
-	
+
 	<script>
 		var railo_custom_form;
 
-		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 			railo_custom_form = new LuceeForms('search_form');
 		else
 			railo_custom_form = new RailoForms('search_form');
 	</script>
 
 	<cfif isDefined("URL.field") AND isDefined("URL.itemTypeId")><!---SELECT ITEM PAGE--->
-	
+
 		<input type="hidden" name="field" value="#URL.field#" />
 		<input type="hidden" name="itemTypeId" value="#URL.itemTypeId#" />
 
@@ -234,7 +234,7 @@
 					<button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="text-align:left;">
 
 						<cfif isNumeric(itemTypeId)>
-							
+
 							<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[itemTypeId].name#.png" alt="#itemTypesStruct[itemTypeId].labelPlural#" lang="es" style="width:35px"/>
 
 							<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span> <span class="caret"></span>
@@ -248,7 +248,7 @@
 							<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="áreas" lang="es" style="width:35px"/> <span lang="es">Áreas</span> <span class="caret"></span>
 
 						</cfif>
-						
+
 					</button>
 
 					<ul class="dropdown-menu" role="menu">
@@ -270,19 +270,19 @@
 							    		<cfif curItemTypeId NEQ 13 AND curItemTypeId NEQ 14 AND curItemTypeId NEQ 15 AND curItemTypeId NEQ 16 AND ( curItemTypeId NEQ 7 OR APPLICATION.moduleConsultations IS true ) AND ( curItemTypeId NEQ 13 OR APPLICATION.moduleForms IS true ) AND ( curItemTypeId NEQ 8 OR APPLICATION.modulePubMedComments IS true ) AND ( curItemTypeId NEQ 20 OR APPLICATION.moduleDPDocuments IS true ) AND ( (curItemTypeId NEQ 2 AND curItemTypeId NEQ 4 AND curItemTypeId NEQ 9) OR APPLICATION.moduleWeb EQ true )>
 
 											<li>
-												
+
 												<a href="#itemTypesStruct[curItemTypeId].namePlural#_search.cfm" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es">
-											
+
 													<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypesStruct[curItemTypeId].name#.png" alt="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" style="width:35px"/>
 
 													&nbsp;<span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span>
 												</a>
-												
+
 											</li>
 
 											<!---
 											<cfif curItemTypeId IS 10>
-												
+
 												<li>
 
 													<cfif APPLICATION.moduleAreaFilesLite IS true>
@@ -299,9 +299,9 @@
 										</cfif>
 
 										<cfif curItemTypeId EQ 20><!--- Cierra la primera columna --->
-												
+
 											</ul><!--- END list-unstyled col-md-6 --->
-											<ul class="list-unstyled col-md-6">   
+											<ul class="list-unstyled col-md-6">
 
 										</cfif>
 
@@ -336,7 +336,7 @@
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAllAreasTypologies" returnvariable="getAreaTypologiesResponse">
 		</cfinvoke>
-		<cfset areasTypologies = getAreaTypologiesResponse.query>	
+		<cfset areasTypologies = getAreaTypologiesResponse.query>
 
 		<div class="row">
 
@@ -344,7 +344,7 @@
 
 			<div class="col-xs-7 col-sm-9">
 
-				<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val(),'');">
+				<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val());">
 					<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Todas</option>
 					<option value="null" <cfif selected_typology_id EQ "null">selected="selected"</cfif> lang="es">Básica</option>
 					<cfif areasTypologies.recordCount GT 0>
@@ -404,7 +404,7 @@
 		<cfif curElement EQ "users">
 
 			<cfset typologyTableTypeId = 4>
-			
+
 			<!--- Users Typologies --->
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAllTypologies" returnvariable="getAllTypologiesResponse">
 				<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
@@ -419,7 +419,7 @@
 
 					<div class="col-xs-7 col-sm-9">
 
-						<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val(),'');">
+						<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val());">
 							<option value="" <cfif NOT isNumeric(selected_typology_id)>selected="selected"</cfif> lang="es">Todas</option>
 							<option value="null" <cfif selected_typology_id EQ "null">selected="selected"</cfif> lang="es">Básica</option>
 							<cfif typologies.recordCount GT 0>
@@ -443,7 +443,7 @@
 			<label for="text" class="col-xs-5 col-sm-3 control-label" lang="es">Texto a buscar</label>
 
 			<div class="col-xs-7 col-sm-9">
-				
+
 				<!---<div class="input-group">
 					<cfif APPLICATION.hideInputLabels IS true>
 						<span class="input-group-addon"><label for="text"><i class="icon-search"></i></label></span>
@@ -460,14 +460,14 @@
 
 
 	<cfif NOT isDefined("curElement") OR ( curElement NEQ "users" AND curElement NEQ "areas" ) >
-				
+
 		<div class="row">
 
-			<label for="from_date" class="col-xs-5 col-sm-3 control-label" lang="es"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha desde</span></label> 
+			<label for="from_date" class="col-xs-5 col-sm-3 control-label" lang="es"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha desde</span></label>
 
 			<div class="col-xs-7 col-sm-9">
 				<!---<cfif APPLICATION.hideInputLabels IS true>
-					<div class="input-group">	
+					<div class="input-group">
 						 <span class="input-group-addon"><label for="from_date"><i class="icon-calendar"></i></label></span>
 						<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()" placeholder="Fecha desde" lang="es">
 					</div>
@@ -479,14 +479,14 @@
 
 		<div class="row">
 
-			<label for="end_date" class="col-xs-5 col-sm-3 control-label"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha hasta</span></label> 
+			<label for="end_date" class="col-xs-5 col-sm-3 control-label"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha hasta</span></label>
 
 			<div class="col-xs-7 col-sm-9">
 				<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()"/>
 			</div>
 
 		</div>
-		
+
 		<!---<div class="row">
 
 			<div class="col-xs-7 col-xs-offset-5 col-sm-offset-3 col-sm-9">
@@ -499,7 +499,7 @@
 
 		<cfif itemTypeId IS 6><!---Tasks--->
 			<div class="row">
-				<label for="done" class="col-xs-5 col-sm-3 control-label" lang="es">Tarea realizada</label> 
+				<label for="done" class="col-xs-5 col-sm-3 control-label" lang="es">Tarea realizada</label>
 
 				<div class="col-xs-7 col-sm-9">
 					<select name="done" id="done" class="form-control">
@@ -510,29 +510,29 @@
 			</div>
 
 			<div class="row">
-				<label for="to_user" class="col-xs-5 col-sm-3 control-label" lang="es">Tarea para</label> 
+				<label for="to_user" class="col-xs-5 col-sm-3 control-label" lang="es">Tarea para</label>
 
 				<div class="col-xs-7 col-sm-9">
 					<select name="to_user" lang="to_user" class="form-control">
 						<option value="" lang="es">Todos</option>
-						<cfloop index="objectUser" array="#users#">	
+						<cfloop index="objectUser" array="#users#">
 							<option value="#objectUser.id#" <cfif objectUser.id EQ recipient_user>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
 						</cfloop>
 					</select>
 				</div>
 			</div>
 		</cfif>
-				
+
 		<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, Publications--->
 			<div class="row">
-				<label for="identifier" class="col-xs-5 col-sm-3 control-label" lang="es">Identificador</label> 
+				<label for="identifier" class="col-xs-5 col-sm-3 control-label" lang="es">Identificador</label>
 
 				<div class="col-xs-7 col-sm-9">
 					<input type="text" name="identifier" id="identifier" value="#identifier#" class="form-control"/>
 				</div>
 
-				<cfif itemTypeId IS 7><!--- Consultations --->		
-					<label for="done" class="col-xs-5 col-sm-3 control-label" lang="es">Estado actual</label> 
+				<cfif itemTypeId IS 7><!--- Consultations --->
+					<label for="done" class="col-xs-5 col-sm-3 control-label" lang="es">Estado actual</label>
 
 					<div class="col-xs-7 col-sm-9">
 						<select name="state" id="state" class="form-control">
@@ -542,25 +542,25 @@
 							<option value="answered" <cfif cur_state EQ "answered">selected="selected"</cfif> lang="es">Respondida</option>
 							<option value="closed" <cfif cur_state EQ "closed">selected="selected"</cfif> lang="es">Cerrada</option>
 						</select>
-					</div>	
+					</div>
 				</cfif>
 			</div>
 		</cfif>
-		
+
 
 	</cfif>
-	
+
 	<div class="row">
 
 		<cfif NOT isDefined("curElement") OR ( curElement NEQ "users" AND curElement NEQ "areas" )>
-			
-			<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es"><cfif itemTypeId IS 6>Tarea encargada por<cfelse>Usuario</cfif></label> 
+
+			<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es"><cfif itemTypeId IS 6>Tarea encargada por<cfelse>Usuario</cfif></label>
 
 			<div class="col-xs-7 col-sm-9">
 
 				<select name="from_user" id="from_user" class="form-control"><!---class="selectpicker" data-live-search="true"--->
 					<option value="" lang="es">Todos</option>
-					<cfloop index="objectUser" array="#users#">	
+					<cfloop index="objectUser" array="#users#">
 						<option value="#objectUser.id#" <cfif objectUser.id EQ user_in_charge>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
 					</cfloop>
 				</select>
@@ -594,19 +594,19 @@
 					<label class="control-label col-xs-5 col-sm-3" for="categories_ids" lang="es">Categorías</label>
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
-						<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">				
+						<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
 						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
 					<cfif subAreas.recordCount GT 0>
-			
+
 						<cfif isDefined("URL.categories_ids")>
 							<cfset selectedAreasList = arrayToList(URL.categories_ids)>
 						<cfelse>
 							<cfset selectedAreasList = "">
 						</cfif>
-						
+
 						<div class="col-xs-7 col-sm-9">
 
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
@@ -621,14 +621,14 @@
 								<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 								<cfinvokeargument name="client_dsn" value="#client_dsn#">
 							</cfinvoke>
-							
+
 						</div>
 
 					<cfelse>
 
 						<p class="help-block" lang="es">Este elemento tiene un área para categorías seleccionada pero esta área no tiene subareas para definir las categorías</p>
 
-					</cfif>	
+					</cfif>
 
 				</div>
 
@@ -643,7 +643,7 @@
 
 		<label for="limit" class="col-xs-5 col-sm-3 control-label" lang="es">Nº resultados a mostrar</label>
 
-		<div class="col-xs-7 col-sm-9"> 
+		<div class="col-xs-7 col-sm-9">
 			<select name="limit" id="limit" class="form-control">
 				<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
 				<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>
@@ -665,7 +665,7 @@
 		<cfset fields = getFieldsResponse.tableFields>
 
 		<cfif isDefined("URL.search") AND isDefined("URL.typology_id") AND URL.typology_id IS selected_typology_id><!---isDefined("URL.name") AND --->
-			
+
 			<cfset row = URL>
 
 		<cfelse>
@@ -684,8 +684,8 @@
 			</cfinvoke>
 
 		</cfif>
-		
-			
+
+
 		<!--- outputRowFormInputs --->
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowFormInputs">
 			<cfinvokeargument name="table_id" value="#selected_typology_id#">
@@ -739,7 +739,7 @@
 						<cfset fields = getFieldsResponse.tableFields>
 
 						<cfif isDefined("URL.name") AND isDefined("URL.typology_id") AND URL.typology_id IS selected_typology_id>
-							
+
 							<cfset row = URL>
 
 						<cfelse>
@@ -758,7 +758,7 @@
 							</cfinvoke>
 
 						</cfif>
-							
+
 						<!--- outputRowFormInputs --->
 						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowFormInputs">
 							<cfinvokeargument name="table_id" value="#selected_typology_id#">
@@ -776,18 +776,18 @@
 	</cfif>
 
 	<div class="row">
-		<div class="col-xs-offset-0 col-xs-12 col-sm-offset-3 col-sm-7 col-md-offset-3 col-md-4 col-lg-3"> 
+		<div class="col-xs-offset-0 col-xs-12 col-sm-offset-3 col-sm-7 col-md-offset-3 col-md-4 col-lg-3">
 			<!---<input type="submit" name="search" class="btn btn-success" lang="es" value="Buscar" />--->
 
 			<button type="submit" name="search" class="btn btn-success btn-lg btn-block" style="margin-top:30px;text-align:left;"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
 
 		</div>
 	</div>
-	
+
 	<!--- <cfif NOT isDefined("curElement") OR curElement NEQ "users">
 			<span class="help-block" style="font-size:10px" lang="es">Formato fecha DD-MM-AAAA. Ejemplo: #DateFormat(now(), "DD-MM-YYYY")#</span>
 	</cfif> --->
-	
+
 
 </cfform>
 </div><!--- END div_search_bar --->

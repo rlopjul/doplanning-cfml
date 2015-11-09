@@ -1,6 +1,21 @@
+<!---
+page_type
+1 area users
+2 admin users
+--->
+
+<cfif NOT isDefined("page_type")>
+	<cfset page_type = 1>
+</cfif>
+
+
 <cfoutput>
-<!--- <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script> --->
 <script src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
+
+<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
@@ -13,15 +28,19 @@
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 				<a class="btn btn-primary btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="font-size:14px"></i> <span lang="es">Nuevo usuario</span></a><!---color:##5BB75B;--->
 
+				<cfif page_type IS 2>
 
-				<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/all_administrators.cfm');"><i class="icon-group icon-white"></i> <span lang="es">Administradores</span></a>
-				<!---<cfif SESSION.client_abb NEQ "hcs">--->
-					<!---<div class="btn-group">--->
-						<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
-					<!---</div>--->
-				<!---</cfif>--->
+					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/all_administrators.cfm');"><i class="icon-group icon-white"></i> <span lang="es">Administradores</span></a>
+					<!---<cfif SESSION.client_abb NEQ "hcs">--->
+						<!---<div class="btn-group">--->
+							<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
+						<!---</div>--->
+					<!---</cfif>--->
 
-				<a class="btn btn-default btn-sm navbar-btn" href="#APPLICATION.htmlComponentsPath#/User.cfc?method=exportUsersDownload" onclick="return downloadFileLinked(this,event)" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> <span lang="es">Exportar usuarios</span></a>
+					<a class="btn btn-default btn-sm navbar-btn" href="#APPLICATION.htmlComponentsPath#/User.cfc?method=exportUsersDownload" onclick="return downloadFileLinked(this,event)" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> <span lang="es">Exportar usuarios</span></a>
+
+				</cfif>
+
 			</cfif>
 		</div>
 	</div>
@@ -41,7 +60,7 @@
 
 <cfif isDefined("URL.search")>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="usersResponse">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" argumentcollection="#URL#" returnvariable="usersResponse">
 		<cfif len(search_text) GT 0>
 		<cfinvokeargument name="search_text" value="#search_text#">
 		</cfif>
@@ -64,8 +83,12 @@
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
 				<cfinvokeargument name="users" value="#users#">
 				<cfinvokeargument name="open_url_target" value="userAdminIframe">
-				<cfinvokeargument name="filter_enabled" value="true">
-				<cfinvokeargument name="select_enabled" value="true">
+
+				<cfif page_type IS 1>
+					<cfinvokeargument name="filter_enabled" value="true">
+					<cfinvokeargument name="select_enabled" value="true">
+				</cfif>
+
 				<cfinvokeargument name="showAdminFields" value="true">
 			</cfinvoke>
 
@@ -89,7 +112,7 @@
 
 	<!---<p class="bg-info" style="margin:15px;padding:5px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en Buscar para listar usuarios de la organización.</span></p>--->
 
-	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Seleccione un área del árbol para ver sus usuarios.</span></div>
+	<div class="alert alert-info" style="margin:10px;"><i class="icon-info-sign"></i>&nbsp;<span lang="es">Introduzca un texto y haga click en Buscar para listar usuarios de la organización.</span></div>
 
 </cfif>
 

@@ -87,7 +87,7 @@
 
 <!-- InstanceBeginEditable name="content" -->
 
-<cfset page_type = 1>
+<cfset page_type = 2>
 <cfinclude template="#APPLICATION.htmlPath#/admin/includes/all_users_content.cfm"/>
 
 <!-- InstanceEndEditable -->

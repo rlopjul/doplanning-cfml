@@ -157,6 +157,8 @@
 		$("#logItemIframe").height(newHeight);
 		$("#treeContainer").height(newHeight-80);
 
+		$("#usersGeneralIframe").height(newHeight-36);
+
 		$("#typologiesUsersIframe").height(newHeight-36);
 		$("#typologiesFilesIframe").height(newHeight-36);
 
@@ -234,6 +236,14 @@
 	function logIframeLoaded() {
 
 		if($("#logIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
+			$("#loadingContainer").hide();
+		}
+
+	}
+
+	function usersGeneralIframeLoaded() {
+
+		if($("#usersGeneralIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
 			$("#loadingContainer").hide();
 		}
 
@@ -411,6 +421,11 @@
 				$("#loadingContainer").show();
 			}
 
+			if(currentTab == "#tab7" && $("#usersGeneralIframe").attr('src') == "about:blank") { //Load users page
+				$("#usersGeneralIframe").attr('src', 'iframes/users.cfm');
+				$("#loadingContainer").show();
+			}
+
 
 
 		})
@@ -491,6 +506,7 @@
 			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
+			<li><a href="#tab7" data-toggle="tab" lang="es">Usuarios</a></li>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Tipologías</a></li>
 			<li><a href="#tab4" data-toggle="tab" lang="es">Categorías</a></li>
 			<li><a href="#tab5" data-toggle="tab" lang="es">Estadísticas</a></li>
@@ -710,6 +726,17 @@
 
 
 			<cfif SESSION.client_administrator IS SESSION.user_id>
+
+			<div class="tab-pane" id="tab7"><!---Tab Users--->
+
+				<div class="tabbable"><!---Tab Panel--->
+
+					<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="usersGeneralIframe" onload="usersGeneralIframeLoaded()"></iframe>
+
+				</div><!---END TabPanel--->
+
+
+			</div><!---END Tab Users--->
 
 
 			<div class="tab-pane" id="tab3"><!---Tab Typologies--->
