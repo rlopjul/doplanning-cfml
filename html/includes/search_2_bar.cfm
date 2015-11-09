@@ -7,6 +7,8 @@
 
 	<script src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
 
+	<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
+
 	<!---bootstrap-select--->
 	<!---<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>--->
@@ -23,7 +25,6 @@
 	<cfoutput>
 		<script>
 			$(document).ready(function() {
-			  <!---$(".text_item").highlight("#search_text#");--->
 			  <cfif NOT isDefined("curElement") OR curElement NEQ "areas">
 				$(".text_item").highlight(["#search_text_highlight#"]);
 			  <cfelse>
@@ -107,9 +108,6 @@
 </cfif>
 
 
-
-
-
 <script>
 
 	$(function() {
@@ -166,33 +164,37 @@
 	}
 
 	<cfoutput>
-	<!---function loadTypology(typologyId,rowId) {
 
-		if(!isNaN(typologyId)){
-
-			showLoadingPage(true);
-
-			var typologyPage = "#APPLICATION.htmlPath#/html_content/typology_row_form_inputs.cfm?typology="+typologyId;
-
-			if(!isNaN(rowId)){
-				typologyPage = typologyPage+"&row="+rowId;
-			}
-
-			$("##typologyContainer").load(typologyPage, function() {
-
-				showLoadingPage(false);
-
-			});
-
-		} else {
-
-			$("##typologyContainer").empty();
-		}
-	}--->
 	function loadTypology(typologyId) {
 
 		goToUrl("#CGI.SCRIPT_NAME#?typology_id="+typologyId);
 	}
+
+	function openUserSelectorWithField(fieldName){
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+
+	}
+
+	function setSelectedUser(userId, userName, fieldName) {
+
+		document.getElementById(fieldName).value = userId;
+		document.getElementById(fieldName+"_user_full_name").value = userName;
+	}
+
+	function clearFieldSelectedUser(fieldName) {
+
+		document.getElementById(fieldName).value = "";
+		document.getElementById(fieldName+"_user_full_name").value = "";
+	}
+
+	function openItemSelectorWithField(itemTypeId,fieldName){
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
+
+	}
+
+
 	</cfoutput>
 
 </script>

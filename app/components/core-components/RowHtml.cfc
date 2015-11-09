@@ -644,24 +644,45 @@
 							</cfif>
 						</cfif>
 
-						<div class="row">
-							<div class="col-xs-11 col-sm-6">
-								<input type="hidden" name="#field_name#" id="#field_name#" value="#field_value#" />
-								<input type="text" name="#field_name#_user_full_name" id="#field_name#_user_full_name" value="#field_value_user#" #field_required_att# class="#text_input_class#" readonly onclick="openUserSelectorWithField('#field_name#')" />
-								<cfif fields.required IS true AND arguments.search_inputs IS false>
-									<script type="text/javascript">
-										addRailoRequiredInteger("#field_name#", "Campo '#field_label#' obligatorio");
-									</script>
+						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-6 col-sm-7 col-md-8">
+						<cfelse>
+							<div class="row">
+								<div class="col-xs-11 col-sm-6">
+						</cfif>
+
+									<input type="hidden" name="#field_name#" id="#field_name#" value="#field_value#" />
+									<input type="text" name="#field_name#_user_full_name" id="#field_name#_user_full_name" value="#field_value_user#" #field_required_att# class="#text_input_class#" readonly onclick="openUserSelectorWithField('#field_name#')" />
+									<cfif fields.required IS true AND arguments.search_inputs IS false>
+										<script type="text/javascript">
+											addRailoRequiredInteger("#field_name#", "Campo '#field_label#' obligatorio");
+										</script>
+									</cfif>
+								</div>
+
+							<cfif fields.required IS false OR arguments.search_inputs IS true>
+								<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+									<div class="col-xs-1 col-sm-1 col-md-1">
+								<cfelse>
+									<div class="col-xs-1 col-sm-6">
 								</cfif>
-							</div>
-							<cfif fields.required IS false>
-								<div class="col-xs-1 col-sm-6">
 									<button onclick="clearFieldSelectedUser('#field_name#')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
 								</div>
 							</cfif>
-						</div>
+
+						<cfif arguments.displayType NEQ DISPLAY_TYPE_HORIZONTAL>
+							</div><!--- END row --->
+						</cfif>
+
 						<div class="row">
-							<div class="col-xs-12 col-sm-6">
+
+							<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								<div class="col-xs-5 col-sm-4 col-md-3"></div>
+								<div class="col-xs-7 col-sm-8 col-md-9">
+							<cfelse>
+								<div class="col-xs-12 col-sm-6">
+							</cfif>
+
 								<button onclick="openUserSelectorWithField('#field_name#')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
 							</div>
 						</div>
@@ -730,6 +751,9 @@
 
 						<cfif isNumeric(fields.list_area_id)><!--- Select item of one area --->
 
+							<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								<div class="col-xs-7 col-sm-8 col-md-9">
+							</cfif>
 
 							<cfif isDefined("SESSION.user_id")>
 
@@ -823,6 +847,9 @@
 
 							</cfif>
 
+							<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							</div>
+							</cfif>
 
 
 						<cfelse><!--- Select item of all areas --->
@@ -846,7 +873,7 @@
 
 								</div>
 
-								<cfif fields.required IS false>
+								<cfif fields.required IS false OR arguments.search_inputs IS true>
 									<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
 										<div class="col-xs-1 col-sm-1 col-md-1">
 									<cfelse>
