@@ -483,7 +483,7 @@ page_types
 
 			<div class="row">
 
-				<label for="linkedin_url" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">URL Perfil LinkedIn</label>
+				<label for="linkedin_url" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">URL LinkedIn</label>
 
 				<div class="col-xs-7 col-sm-8 col-md-9">
 					<input type="url" name="linkedin_url" id="linkedin_url" value="#objectUser.linkedin_url#" class="form-control" title="Introduzca una URL válida" />
@@ -493,7 +493,7 @@ page_types
 
 			<div class="row">
 
-				<label for="twitter_url" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">URL Perfil Twitter</label>
+				<label for="twitter_url" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">URL Twitter</label>
 
 				<div class="col-xs-7 col-sm-8 col-md-9">
 					<input type="url" name="twitter_url" id="twitter_url" value="#objectUser.twitter_url#" class="form-control" title="Introduzca una URL válida" />

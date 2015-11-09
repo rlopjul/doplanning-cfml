@@ -899,8 +899,8 @@ Lang.prototype.pack.en = {
 		"Teléfono":"Phone",
 		"Teléfono móvil":"Mobile phone",
 		"Dirección":"Address",
-		"URL Perfil LinkedIn":"LinkedIn Profile URL",
-		"URL Perfil Twitter":"Twitter Profile URL",
+		"URL LinkedIn":"LinkedIn URL",
+		"URL Twitter":"Twitter URL",
 		"Activo":"Active",
 
 		"Reunión virtual":"Virtual meeting",
