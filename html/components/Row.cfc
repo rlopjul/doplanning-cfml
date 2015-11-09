@@ -547,6 +547,7 @@
 						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 						<cfinvokeargument name="with_types" value="true"/>
 						<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
+						<cfinvokeargument name="with_separators" value="true">
 						<cfinvokeargument name="include_in_row_content" value="true">
 					</cfinvoke>
 
@@ -723,6 +724,12 @@
 						</div>
 
 					</cfif>
+
+				<cfelseif fields.field_type_id IS 20><!---SEPARATOR--->
+
+						<cfset field_label = fields.label>
+
+						<div><h5 style="clear:both;margin-bottom:0;padding-top:10px;">#field_label#</h5></div>
 
 				<cfelse><!--- TABLE FIELDS --->
 
