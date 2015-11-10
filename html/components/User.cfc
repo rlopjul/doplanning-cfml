@@ -1520,7 +1520,9 @@
 								<th><span lang="es">Perfil cabecera</span></th>
 								</cfif>
 								<th style="width:38px;"><span lang="es">Activo</span></th>
+								<cfif SESSION.client_administrator EQ SESSION.user_id>
 								<th style="width:100px;"></th>
+								</cfif>
 							</cfif>
 							<!---<cfif APPLICATION.moduleWebRTC IS true>
 							<th style="width:40px;" lang="es"></th>
@@ -1613,9 +1615,12 @@
 									<td class="text_item">#objectUser.perfil_cabecera#</td>
 								</cfif>
 								<td lang="es"><cfif objectUser.enabled IS true>Sí<cfelse>No</cfif></td>
-								<td><a onclick="parent.loadModal('html_content/user_modify.cfm?user=#objectUser.id#')" class="btn btn-primary btn-sm"><i class="icon-edit icon-white"></i></a>
-									<a class="btn btn-danger btn-sm navbar-btn" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#objectUser.id#');" lang="es"><i class="icon-remove"></i></a>
-								</td>
+
+								<cfif SESSION.client_administrator EQ SESSION.user_id>
+									<td><a onclick="parent.loadModal('html_content/user_modify.cfm?user=#objectUser.id#')" class="btn btn-primary btn-sm"><i class="icon-edit icon-white"></i></a>
+										<a class="btn btn-danger btn-sm navbar-btn" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#objectUser.id#');" lang="es"><i class="icon-remove"></i></a>
+									</td>
+								</cfif>
 							</cfif>
 						</tr>
 					</cfloop>
