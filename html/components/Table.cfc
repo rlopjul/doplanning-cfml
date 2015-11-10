@@ -1444,12 +1444,12 @@
 
 												<cfif app_version EQ "mobile">
 
-													<a href="area_items.cfm?area=#itemsQuery.area_id####itemTypeName##itemsQuery.id#" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small_white.png" alt="Area" title="Ver en área"> <span lang="es">Ver en área</span></a>
+													<a href="area_items.cfm?area=#itemsQuery.area_id####itemTypeName##itemsQuery.id#" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver en área"> <span lang="es">Ver en área</span></a>
 
 												<cfelse>
 													<!---onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)"--->
 
-													<a href="area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small_white.png" alt="Area" title="Ver en área"> <span lang="es">Ver en área</span></a>
+													<a href="area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver en área"> <span lang="es">Ver en área</span></a>
 
 												</cfif>
 

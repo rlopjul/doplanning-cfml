@@ -2,39 +2,39 @@
 
 	Date of file creation: 30-09-2008
 	File created by: alucena
-		
+
 --->
 <cfcomponent output="false">
 
 	<cfset component = "Area">
 	<cfset request_component = "AreaManager">
 
-	
+
 	<!--- ----------------------------------- getMainTree -------------------------------------- --->
 
 	<cffunction name="getMainTree" output="false" returntype="struct" access="public">
 		<cfargument name="get_user_id" type="numeric" required="false">
-		
+
 		<cfset var method = "getMainTree">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getMainTree" returnvariable="response">
 				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 			</cfinvoke>
-			
+
 			<cfinclude template="includes/responseHandlerStruct.cfm">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
@@ -46,59 +46,59 @@
 		<cfset var method = "getMainTreeAdmin">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getMainTreeAdmin" returnvariable="response">
 				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 			</cfinvoke>
-			
+
 			<cfinclude template="includes/responseHandlerStruct.cfm">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-			
+
 	</cffunction>
-	
-	
-	
+
+
+
 	<!--- ----------------------------------- getAreaContent -------------------------------------- --->
-	
+
 	<cffunction name="getAreaContent" returntype="xml" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="yes">
-		<cfargument name="allowed" type="boolean" required="yes"> 
+		<cfargument name="allowed" type="boolean" required="yes">
 		<cfargument name="areaType" type="string" required="no" default="">
-	
+
 		<cfset var method = "getAreaContent">
-		
+
 		<cfset var xmlResponse = "">
 		<cfset var response = "">
-		
+
 		<cftry>
-			
+
 			<!---checkAreaAccess--->
 			<!---No se chequea porque se tiene que poder acceder a las areas que hay dentro por si tenemos acceso a alguna--->
-						
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaContent" returnvariable="response">				
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaContent" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="allowed" value="#arguments.allowed#">
 				<cfinvokeargument name="areaType" value="#arguments.areaType#">
-				
+
 				<cfinvokeargument name="withSubAreas" value="true">
 				<cfinvokeargument name="withSubSubAreas" value="false">
 			</cfinvoke>
-			
+
 			<cfxml variable="xmlResponse"><cfoutput>#response#</cfoutput></cfxml>
-			
-			
+
+
 			<cfcatch>
-			
-				<!---Esto está puesto aquí para intentar detectar un error que daba--->	
+
+				<!---Esto está puesto aquí para intentar detectar un error que daba--->
 				<!---<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 					<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 					<cfinvokeargument name="to" value="alucena@era7.com">
@@ -107,226 +107,226 @@
 					<cfinvokeargument name="content" value="#arguments.area_id# #response#">
 					<cfinvokeargument name="foot_content" value="">
 				</cfinvoke>--->
-			
+
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn xmlResponse>
-		
+
 	</cffunction>
-	
-	
+
+
 	<!--- ----------------------------------- getParentAreaId -------------------------------------- --->
-	
+
 	<!---<cffunction name="getParentAreaId" returntype="numeric" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-	
+
 		<cfset var method = "getParentAreaId">
-		
+
 		<cfset var request_parameters = "">
 		<cfset var xmlResponse = "">
-		
+
 		<cfset var parent_area_id = "">
-		
+
 		<cftry>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/#request_component#" method="#method#" returnvariable="parent_area_id">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">			
-			</cfinvoke>		
-			
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn parent_area_id>
-		
+
 	</cffunction>--->
-	
+
 	<!--- ----------------------------------- getArea ------------------------------------- --->
-	
+
 	<!---Este método NO hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Area directamente del AreaManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->
-	
+
 	<cffunction name="getArea" output="false" returntype="query" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-		
+
 		<cfset var method = "getArea">
-		
+
 		<cfset var objectArea = structNew()>
-		
+
 		<cftry>
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectArea">				
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectArea">
 				<cfinvokeargument name="get_area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="return_type" value="query">
 			</cfinvoke>
-			
+
 			<cfcatch>
 				<!--- En las páginas en las que se carga con JavaScript el contenido no debe haber redirecciones a otras páginas
 				EN EL CASO DE ESTAS PÁGINAS NO HAY QUE USAR ESTE MÉTODO, HAY QUE USAR DIRECTAMENTE getArea de AreaManager y comprobar en el resultado si es true o false para mostrar si hay error--->
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn objectArea>
-		
+
 	</cffunction>
-	
-	
+
+
 	<!--- ----------------------------------- canUserAccessToArea ------------------------------------- --->
-	
+
 	<cffunction name="canUserAccessToArea" output="false" returntype="boolean" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-		
+
 		<cfset var method = "canUserAccessToArea">
-		
+
 		<cfset var access_result = false>
-		
+
 		<cftry>
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="access_result">				
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="access_result">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn access_result>
-		
+
 	</cffunction>
 
 
 	<!--- ----------------------------------- checkAreaAdminAccess ------------------------------------- --->
-	
+
 	<cffunction name="checkAreaAdminAccess" output="false" returntype="void" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-		
+
 		<cfset var method = "checkAreaAdminAccess">
-				
+
 		<cftry>
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess" returnvariable="access_result">				
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess" returnvariable="access_result">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-				
+
 	</cffunction>
-	
+
 
 	<!--- ----------------------------------- isUserAreaResponsible ------------------------------------- --->
-	
+
 	<cffunction name="isUserAreaResponsible" output="false" returntype="boolean" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-		
+
 		<cfset var method = "isUserAreaResponsible">
-		
+
 		<cfset var access_result = false>
-		
+
 		<cftry>
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaResponsible" returnvariable="access_result">				
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn access_result>
-		
+
 	</cffunction>
-	
-	
+
+
 	<!--- ----------------------------------- getAreaType ------------------------------------- --->
-	
+
 	<cffunction name="getAreaType" output="false" returntype="string" access="public">
 		<cfargument name="area_id" type="numeric" required="yes">
-		
+
 		<cfset var method = "getAreaType">
-		
+
 		<cfset var areaType = "">
-		
+
 		<cftry>
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="#method#" returnvariable="areaTypeResult">				
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="#method#" returnvariable="areaTypeResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn areaTypeResult.areaType>
-		
+
 	</cffunction>
 
 
 	<!--- ----------------------------------- getAreaTypeWeb ------------------------------------- --->
-	
+
 	<cffunction name="getAreaTypeWeb" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-		
+
 		<cfset var method = "getAreaTypeWeb">
-		
+
 		<cfset var response = "">
-		
+
 		<cftry>
-			
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="#method#" returnvariable="response">				
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="#method#" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 			</cfinvoke>
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-		
+
 	</cffunction>
-	
-	
-	
+
+
+
 	<!--- ----------------------------------- getAreaFiles ------------------------------------- --->
-	
+
 	<cffunction name="getAreaFiles" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-		
+
 		<cfset var method = "getAreaFiles">
-		
+
 		<cfset var response = structNew()>
-		
+
 		<cftry>
-			
+
 			<!---<cfsavecontent variable="request_parameters">
 				<cfoutput>
 					<area id="#arguments.area_id#"/>
 				</cfoutput>
 			</cfsavecontent>
-			
+
 			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
 				<cfinvokeargument name="request_component" value="#request_component#">
 				<cfinvokeargument name="request_method" value="#method#">
 				<cfinvokeargument name="request_parameters" value="#request_parameters#">
 			</cfinvoke>--->
-			
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaFiles" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			</cfinvoke>
@@ -335,25 +335,25 @@
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>									
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-		
+
 	</cffunction>
-	
+
 	<!--- ----------------------------------- getAreaMembers ------------------------------------- --->
-	
+
 	<cffunction name="getAreaMembers" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="order_by" type="string" required="false" default="family_name">
 		<cfargument name="order_type" type="string" required="false" default="asc">
-		
+
 		<cfset var method = "getAreaMembers">
-		
+
 		<cfset var response = structNew()>
-		
+
 		<cftry>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaMembers" returnvariable="response">
@@ -366,41 +366,41 @@
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>				
-																							
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-			
-		
+
+
 	</cffunction>
 
 
 	<!--- ----------------------------------- createArea -------------------------------------- --->
 
 	<cffunction name="createArea" output="false" returntype="struct" returnformat="json" access="remote">
-		
+
 		<cfset var method = "createArea">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="createArea" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message = "Área creada">
 			</cfif>
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
@@ -410,30 +410,30 @@
 		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE
 		Es necesario usar returnformat="plain" para que devuelva texto plano y serializeJSON para generar el JSON de respuesta
 		https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation--->
-		
+
 		<cfset var method = "importAreas">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="importAreas" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message = "#response.areasCount# áreas importadas">
 			</cfif>
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<!---<cfoutput>#serializeJSON(response)#</cfoutput>--->
 
 		<cfreturn serializeJSON(response)>
-			
+
 	</cffunction>
 
 
@@ -446,28 +446,28 @@
 
 		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="files" type="array" required="false"/>
-		
+
 		<cfset var method = "updateAreaImage">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="updateArea" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message = "Imagen de área modificada">
 			</cfif>
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn serializeJSON(response)>
-			
+
 	</cffunction>
 
 
@@ -475,28 +475,28 @@
 
 	<cffunction name="updateArea" output="false" returntype="struct" returnformat="json" access="remote">
 		<cfargument name="area_id" type="numeric" required="true"/>
-		
+
 		<cfset var method = "updateArea">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="updateArea" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message = "Área modificada">
 			</cfif>
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
@@ -505,28 +505,28 @@
 	<cffunction name="moveArea" output="false" returntype="struct" returnformat="json" access="remote">
 		<cfargument name="area_id" type="numeric" required="true"/>
 		<cfargument name="parent_id" type="numeric" required="true"/>
-		
+
 		<cfset var method = "moveArea">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="moveArea" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message = "Área movida">
 			</cfif>
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
@@ -534,29 +534,29 @@
 
 	<cffunction name="deleteAreaImage" output="false" returntype="struct" returnformat="json" access="remote">
 		<cfargument name="area_id" type="numeric" required="true">
-		
+
 		<cfset var method = "deleteAreaImage">
 
 		<cfset var response = structNew()>
-		
+
 		<cftry>
-			
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="deleteAreaImage" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-			</cfinvoke>		
-			
+			</cfinvoke>
+
 			<cfif response.result IS true>
 				<cfset response.message = "Imagen eliminada.">
 			</cfif>
-			
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
@@ -566,43 +566,43 @@
 
 	<cffunction name="deleteArea" output="false" returntype="struct" returnformat="json" access="remote">
 		<cfargument name="area_id" type="numeric" required="true"/>
-		
+
 		<cfset var method = "deleteArea">
 
 		<cfset var response = structNew()>
-					
+
 		<cftry>
-	
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="deleteArea" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			</cfinvoke>
-			
+
 			<cfif response.result IS true>
 				<cfset response.message = "Área eliminada">
 			</cfif>
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 
 	<!--- ----------------------------------- outputSubAreasSelect ------------------------------------- --->
-	
+
 	<cffunction name="outputSubAreasSelect" output="true" access="public" returntype="void">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="selected_areas_ids" type="string" required="false">
 		<cfargument name="level" type="numeric" required="false" default="1">
 		<cfargument name="recursive" type="boolean" required="false" default="false">
-		
+
 		<cfset var method = "outputSubAreasSelect">
-				
+
 		<cftry>
 
 			<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
@@ -619,38 +619,38 @@
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerNoRedirect.cfm">
-			</cfcatch>				
-																							
-		</cftry>			
-		
+			</cfcatch>
+
+		</cftry>
+
 	</cffunction>
 
 
 	<!--- ----------------------- GET LAST USED AREAS -------------------------------- --->
-	
+
 	<cffunction name="getLastUsedAreas" returntype="struct" access="public">
 		<cfargument name="limit" type="numeric" required="false">
-				
+
 		<cfset var method = "getLastUsedAreas">
 
 		<cfset var response = structNew()>
-		
+
 		<cftry>
-			
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getLastUsedAreas" returnvariable="response">
 				<cfinvokeargument name="limit" value="#arguments.limit#">
-			</cfinvoke>	
+			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">
-            
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
@@ -660,16 +660,16 @@
 		<cfargument name="areasQuery" type="query" required="true">
 		<cfargument name="loggedUser" type="query" required="false">
 		<cfargument name="small" type="boolean" required="false" default="false">
-		
+
 		<cfset var method = "outputAreasFullList">
 
 		<cfset var area_path = "">
-		
+
 		<cftry>
 
 			<cfoutput>
-			
-			<cfloop query="areasQuery">			
+
+			<cfloop query="areasQuery">
 				<div class="row">
 					<div class="col-sm-12">
 
@@ -679,7 +679,7 @@
 							   	<div class="row">
 
 							   		<div class="col-xs-12">
-										
+
 										<cfif arguments.small EQ true>
 											<h5>
 										<cfelse>
@@ -689,12 +689,12 @@
 											#areasQuery.area_name#
 
 											<cfif isDefined("areasQuery.last_update_date")>
-												
+
 												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 												<cfinvoke component="#APPLICATION.componentsPath#/DateManager" method="timestampToString" returnvariable="stringLastDate">
 													<cfinvokeargument name="timestamp_date" value="#areasQuery.last_update_date#">
-												</cfinvoke>							
+												</cfinvoke>
 												<cfset spacePosLast = findOneOf(" ", stringLastDate)>
 												<small class="text_date">
 													#left(stringLastDate, spacePosLast)#
@@ -748,7 +748,7 @@
 
 									</div>
 
-									
+
 
 								</div><!--- END row --->
 
@@ -773,7 +773,7 @@
 										<div class="col-xs-2">
 
 											<div class="pull-right">
-												<a href="area_items.cfm?area=#areasQuery.area_id#" class="btn btn-sm btn-info" title="Ir al área"><span lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small_white.png" alt="Area" title="Ver área"> Ir al área</span></a>
+												<a href="area_items.cfm?area=#areasQuery.area_id#" class="btn btn-sm btn-info" title="Ir al área"><span lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver área"> Ir al área</span></a>
 											</div>
 
 										</div>
@@ -789,8 +789,8 @@
 
 											<div class="pull-right">
 
-												<a href="area_items.cfm?area=#areasQuery.area_id#" class="btn btn-sm btn-info" title="Ir al área"><span lang="es"><img src="#APPLICATION.htmlPath#/assets/icons_dp/area_small_white.png" alt="Area" title="Ver área"> Ir al área</span></a>
-													
+												<a href="area_items.cfm?area=#areasQuery.area_id#" class="btn btn-sm btn-info" title="Ir al área"><span lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver área"> Ir al área</span></a>
+
 											</div>
 
 										</div>
@@ -800,11 +800,11 @@
 
 							</div><!--- END panel-body --->
 						</div><!--- END panel panel-default --->
-					
+
 					</div><!--- END col --->
 				</div><!---END row item container--->
 			</cfloop>
-		
+
 
 			<!---
 			<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
@@ -815,7 +815,7 @@
 
 			<script>
 				<!---To enable the loading spinner in Bootstrap 3--->
-				$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
+				$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner =
 			    '<div class="loading-spinner" style="width: 200px; margin-left: -100px;">' +
 			        '<div class="progress progress-striped active">' +
 			            '<div class="progress-bar" style="width: 100%;"></div>' +
@@ -823,7 +823,7 @@
 			    '</div>';
 			    <!--- To set modal max height --->
 				$.fn.modal.defaults.maxHeight = function(){
-				    return $(window).height() - 170; 
+				    return $(window).height() - 170;
 				}
 			</script>
 
@@ -832,7 +832,7 @@
 				var $modal = null;
 
 				function loadAreaTree(areaId){
-		 
+
 					$('body').modalmanager('loading');
 
 					var noCacheNumber = generateRandom();
@@ -845,7 +845,7 @@
 				}
 
 				$(document).ready(function () {
-				
+
 					// Modal
 					$modal = $('#ajax-modal');
 
@@ -855,14 +855,14 @@
 			<!--- Modal Window --->
 			<div id="ajax-modal" class="modal container fade" tabindex="-1"></div><!---hide funcionaba en bs2--->--->
 
-			</cfoutput>			
-			
+			</cfoutput>
+
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 	</cffunction>
 
 
@@ -874,11 +874,11 @@
 		<!---<cfargument name="order_by" type="string" required="false" default="name">
 		<cfargument name="order_type" type="string" required="false" default="asc">--->
 		<cfargument name="limit" type="numeric" required="true">
-		
+
 		<cfset var method = "getAreas">
-				
+
 		<cftry>
-			
+
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreas" returnvariable="response">
 				<cfinvokeargument name="search_text" value="#arguments.search_text#"/>
 				<!---<cfif len(arguments.order_by) GT 0>
@@ -887,18 +887,18 @@
 				</cfif>--->
 				<cfinvokeargument name="limit" value="#arguments.limit#"/>
 			</cfinvoke>
-			
+
 			<cfinclude template="includes/responseHandlerStruct.cfm">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
-			</cfcatch>										
-			
+			</cfcatch>
+
 		</cftry>
-		
+
 		<cfreturn response>
-		
+
 	</cffunction>
 
-	
+
 </cfcomponent>
