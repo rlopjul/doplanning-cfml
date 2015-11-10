@@ -422,10 +422,7 @@
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
-					<cfinvokeargument name="hideInputLabels" value="false">
-					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/cerulean/bootstrap.min.css">
-
-					<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_celurean.css">
+					<cfinvokeargument name="hideInputLabels" value="true">
 				</cfinvoke>
 
 			</cfcase>
