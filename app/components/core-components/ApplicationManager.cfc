@@ -332,56 +332,6 @@
 
 			</cfcase>
 
-			<cfcase value="development">
-
-				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
-
-					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
-					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
-					<cfif isDefined("arguments.emailFrom")>
-						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
-					<cfelse>
-						<cfinvokeargument name="emailFrom" value="doplanning-curso-no-reply@hcs.es">
-					</cfif>
-
-					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
-					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
-
-					<cfinvokeargument name="serverIp" value="54.246.102.99">
-
-					<cfinvokeargument name="mainUrl" value="http://curso.doplanning.net">
-					<cfinvokeargument name="signOutUrl" value="http://curso.doplanning.net">
-
-					<cfinvokeargument name="ldapName" value="Portal del Empleado">
-
-					<cfinvokeargument name="moduleLdapUsers" value="true">
-					<cfinvokeargument name="moduleWeb" value="true">
-					<cfinvokeargument name="moduleWebRTC" value="true">
-					<cfinvokeargument name="showDniTitle" value="true">
-					<cfinvokeargument name="modulePubMedComments" value="true">
-					<cfinvokeargument name="moduleListsWithPermissions" value="true">
-					<cfinvokeargument name="changeElementsArea" value="true">
-					<cfinvokeargument name="publicationScope" value="true">
-					<cfinvokeargument name="publicationValidation" value="true">
-					<cfinvokeargument name="userEmailRequired" value="false">
-					<cfinvokeargument name="moduleAntiVirus" value="true">
-
-					<cfinvokeargument name="homeTab" value="true">
-					<cfinvokeargument name="moduleDPDocuments" value="true">
-
-					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
-
-					<cfinvokeargument name="hideInputLabels" value="true">
-					<cfinvokeargument name="baseCSSPath" value="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css">
-
-					<!---<cfinvokeargument name="themeCSSPath" value="/html/styles/styles_theme_paper.css">--->
-
-					<!---<cfinvokeargument name="hideInputLabels" value="false">
-					<cfinvokeargument name="themeCSSPath" value="//netdna.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">--->
-				</cfinvoke>
-
-			</cfcase>
-
 
 			<cfcase value="hcs.es">
 
