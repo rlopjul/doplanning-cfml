@@ -503,7 +503,7 @@
 			<cfelse>
 				<cfset msg = response.message>
 				<cfset msg = URLEncodedFormat(msg)>
-				<cflocation url="#arguments.return_path#area_items.cfm?area=#arguments.area_id#&file=#arguments.file_id#&msg=#msg#&res=0" addtoken="no">
+				<cflocation url="#arguments.return_path#file.cfm?area=#arguments.area_id#&file=#arguments.file_id#&msg=#msg#&res=0" addtoken="no">
 			</cfif>
 
 			<cfcatch>

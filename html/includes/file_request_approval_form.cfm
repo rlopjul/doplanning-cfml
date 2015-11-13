@@ -1,16 +1,16 @@
 <cfif isDefined("FORM.page")>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="requestRevision" argumentcollection="#FORM#" returnvariable="actionResponse">
-	</cfinvoke>	
+	</cfinvoke>
 
 	<cfif actionResponse.result IS true>
 
 		<cfset file_id = actionResponse.file_id>
-		
+
 		<cfset msg = URLEncodedFormat(actionResponse.message)>
-		
-		<cflocation url="area_items.cfm?area=#area_id#&file=#file_id#&res=1&msg=#msg#" addtoken="no">
-			
+
+		<cflocation url="file.cfm?area=#area_id#&file=#file_id#&res=1&msg=#msg#" addtoken="no">
+
 	<cfelse>
 		
 		<cfset URL.res = 0>
@@ -43,7 +43,7 @@
 
 <cfset versions = fileVersionsResult.fileVersions>
 
-<!--- 
+<!---
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput> --->
@@ -77,16 +77,16 @@
 <div class="contenedor_fondo_blanco">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
-	
+
 	<script>
 		var railo_custom_form;
 
-		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 			railo_custom_form = new LuceeForms('file_form');
 		else
 			railo_custom_form = new RailoForms('file_form');
 	</script>
-	
+
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
 	<input type="hidden" name="file_id" value="#file_id#" />
 	<input type="hidden" name="area_id" value="#area_id#"/>
@@ -119,7 +119,7 @@
 		<span lang="es">4º El usuario aprobador debe validar el documento.</span><br/>
 		<span lang="es">Si el documento no es validado por el revisor o el aprobador, se debe iniciar de nuevo el proceso de aprobación con una nueva versión del archivo.</span>
 	</p>
-	
+
 	<div style="height:10px;"><!--- ---></div>
 
 	<div id="submitDiv">
