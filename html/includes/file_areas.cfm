@@ -22,7 +22,7 @@
 			<cfinvokeargument name="error_code" value="103">
 		</cfinvoke>
 	<cfelseif fileTypeId IS NOT 1><!---Area file--->
-		
+
 		<!---area_allowed--->
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="canUserAccessToArea" returnvariable="file_area_allowed">
 			<cfinvokeargument name="area_id" value="#objectFile.area_id#">
@@ -60,7 +60,7 @@
 				<div class="btn-group pull-right">
 					<a href="#APPLICATION.htmlPath#/file_areas.cfm?file=#file_id#&area=#area_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px;"></i></a>
 				</div>
-				
+
 			</div>
 
 		</div>
@@ -95,20 +95,20 @@
 		</cfloop>
 		</ul>
 		</cfoutput>--->
-		
-		<script>
-			$(document).ready(function() { 
 
-				$("##listTable").tablesorter({ 
+		<script>
+			$(document).ready(function() {
+
+				$("##listTable").tablesorter({
 					widgets: ['zebra','uitheme'], <!---,'select'--->
 					theme : "bootstrap",
 					headerTemplate : '{content} {icon}',
 					sortList: [[1,1]] ,
 					<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 					dateFormat: "ddmmyyyy", // set the default date format
-					headers: { 
-						1: { 
-							sorter: "shortDate" 
+					headers: {
+						1: {
+							sorter: "shortDate"
 						}
 					}
 				});
@@ -129,7 +129,7 @@
 			    });
 
 
-			}); 
+			});
 		</script>
 
 		<table id="listTable" class="tablesorter" style="margin-top:5px;">
@@ -152,7 +152,7 @@
 
 				<!---Row selection--->
 				<cfset fieldSelected = false>
-				
+
 				<cfif alreadySelected IS false>
 
 					<cfif fileAreas.area_id EQ curFileAreaId AND app_version NEQ "mobile">
@@ -161,15 +161,15 @@
 
 						<cfset fieldSelected = true>
 						<cfset alreadySelected = true>
-																		
+
 					</cfif>
-					
+
 				</cfif>
 
 				<tr <cfif fieldSelected IS true>class="selected"</cfif> <cfif fileAreas.area_id EQ curFileAreaId>style="font-weight:bold"</cfif> data-item-url="#file_page_url#">
 					<!---<td>#fileAreas.currentRow#</td>--->
 					<td><a onclick="openUrl('area_items.cfm?area=#fileAreas.area_id#&file=#file_id#','areaIframe',event)">#fileAreas.name#</a></td>
-					<!---<cfset uploadDate = fileAreas.association_date>	
+					<!---<cfset uploadDate = fileAreas.association_date>
 					<cfset spacePos = findOneOf(" ", uploadDate)>--->
 					<td>
 						<!---<span>#left(uploadDate, spacePos)#</span>
@@ -193,21 +193,21 @@
 		<cfset versions = versionsResult.fileVersions>
 
 		<script>
-			$(document).ready(function() { 
+			$(document).ready(function() {
 
-				$("##listTable").tablesorter({ 
+				$("##listTable").tablesorter({
 					widgets: ['zebra','uitheme'], <!---,'select'--->
 					theme : "bootstrap",
 					headerTemplate : '{content} {icon}',
 					sortList: [[4,1]] ,
 					<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 					dateFormat: "ddmmyyyy", // set the default date format
-					headers: { 
-						0: { 
-							sorter: "shortDate" 
+					headers: {
+						0: {
+							sorter: "shortDate"
 						},
-						4: { 
-							sorter: "shortDate" 
+						4: {
+							sorter: "shortDate"
 						}
 					}
 				});
@@ -228,7 +228,7 @@
 			    });
 
 
-			}); 
+			});
 		</script>
 
 		<cfset curFileAreaId = area_id>
@@ -249,9 +249,9 @@
 			</thead>
 
 			<tbody>
-			
+
 			<cfloop query="versions">
-				
+
 				<cfif isNumeric(versions.publication_file_id)>
 
 					<cfset filePublished = true>
@@ -262,7 +262,7 @@
 						<cfinvokeargument name="accessCheck" value="false">
 					</cfinvoke>
 					<cfset fileAreas = areasResult.fileAreas>
-					
+
 					<cfloop query="fileAreas">
 
 						<!---<cfset rpage = "file_areas.cfm?file=#file_id#">--->
@@ -270,7 +270,7 @@
 
 						<!---Row selection--->
 						<cfset fieldSelected = false>
-						
+
 						<cfif alreadySelected IS false>
 
 							<cfif fileAreas.area_id EQ curFileAreaId AND app_version NEQ "mobile">
@@ -279,9 +279,9 @@
 
 								<cfset fieldSelected = true>
 								<cfset alreadySelected = true>
-																				
+
 							</cfif>
-							
+
 						</cfif>
 
 						<tr <cfif fieldSelected IS true>class="selected"</cfif> <cfif fileAreas.area_id EQ curFileAreaId>style="font-weight:bold"</cfif> data-item-url="#file_page_url#">
@@ -295,7 +295,7 @@
 								<span>#fileSize#</span>
 							</td>
 							<td><a onclick="openUrl('area_items.cfm?area=#fileAreas.area_id#&file=#versions.publication_file_id#','areaIframe',event)">#fileAreas.name#</a></td>
-							<!---<cfset uploadDate = fileAreas.association_date>	
+							<!---<cfset uploadDate = fileAreas.association_date>
 							<cfset spacePos = findOneOf(" ", uploadDate)>--->
 							<td>
 								<!---<span>#left(uploadDate, spacePos)#</span>
@@ -304,7 +304,7 @@
 							</td>
 						</tr>
 					</cfloop>
-						
+
 				</cfif>
 
 			</cfloop>
@@ -313,7 +313,7 @@
 
 		<cfif filePublished IS false>
 
-			<div class="div_text_result">Este archivo de área no se ha publicado en otras áreas</div>
+			<div class="alert alert-info"><span lang="es">Este archivo de área no se ha publicado en otras áreas</span></div>
 
 		</cfif>
 
@@ -323,7 +323,7 @@
 	</div>
 
 		<cfif isDefined("onpenUrlHtml2")>
-								
+
 			<!---Esta acción sólo se completa si está en la versión HTML2--->
 			<script>
 				openUrlHtml2('#onpenUrlHtml2#','itemIframe');
@@ -334,4 +334,3 @@
 	</cfoutput>
 
 </cfif>
-
