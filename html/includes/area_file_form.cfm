@@ -316,10 +316,8 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<label for="publication_area_name" class="control-label" lang="es">Área de publicación</label>
-					<div class="controls">
-						<input type="hidden" name="publication_area_id" id="publication_area_id" value="#publicationArea.publication_area_id#" validate="integer" required="true"/>
-						<cfinput type="text" name="publication_area_name" id="publication_area_name" value="#publicationArea.publication_area_name#" readonly="true" required="true" message="Debe seleccionar una área para publicar" onclick="openAreaSelector()"/> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
-					</div>
+					<input type="hidden" name="publication_area_id" id="publication_area_id" value="#publicationArea.publication_area_id#" validate="integer" required="true"/>
+					<cfinput type="text" name="publication_area_name" id="publication_area_name" value="#publicationArea.publication_area_name#" readonly="true" required="true" class="form-control" message="Debe seleccionar una área para publicar" onclick="openAreaSelector()"/> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
 				</div>
 			</div>
 
