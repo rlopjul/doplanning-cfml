@@ -8,7 +8,7 @@ page_type
 <cfif isDefined("FORM.page")>
 
 	<cfif page_type IS 1>
-		
+
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="rejectRevisionFileVersion" argumentcollection="#FORM#" returnvariable="actionResponse">
 		</cfinvoke>
 
@@ -45,7 +45,7 @@ page_type
 
 <cfset versions = fileVersionsResult.fileVersions>
 
-<!--- 
+<!---
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput> --->
@@ -79,16 +79,16 @@ page_type
 <div class="contenedor_fondo_blanco">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" onsubmit="return onSubmitForm();">
-	
+
 	<script>
 		var railo_custom_form;
 
-		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 			railo_custom_form = new LuceeForms('file_form');
 		else
 			railo_custom_form = new RailoForms('file_form');
 	</script>
-	
+
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
 	<input type="hidden" name="file_id" value="#file_id#" />
 	<input type="hidden" name="fileTypeId" value="#fileTypeId#" />
@@ -130,12 +130,12 @@ page_type
 		</script>
 	</div>
 
-	
+
 	<div style="height:10px;"><!--- ---></div>
 
 	<div id="submitDiv">
-		<button type="submit" class="btn btn-danger"><span lang="es">Rechazar versión</span></button>
-		
+		<button type="submit" class="btn btn-primary"><span lang="es">Rechazar versión</span></button>
+
 		<a href="file.cfm?file=#file_id#&area=#area_id#" class="btn btn-default" style="float:right">Cancelar</a>
 	</div>
 
