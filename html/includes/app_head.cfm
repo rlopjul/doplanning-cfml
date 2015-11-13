@@ -104,9 +104,15 @@
 
     		<cfif webQuery.recordCount GT 0>
 
-          <li>
-              <a href="#APPLICATION.path#/intranet/?abb=#SESSION.client_abb#" target="_blank"><i class="fa fa-archive"></i> <span lang="es">Intranet</span></a>
-          </li>
+          <cfif SESSION.client_abb NEQ "hcs">
+            <li>
+                <a href="#APPLICATION.path#/intranet/?abb=#SESSION.client_abb#" target="_blank"><i class="fa fa-archive"></i> <span lang="es">Intranet</span></a>
+            </li>
+          <cfelse>
+            <li>
+                <a href="http://intranet.hcs.es/" target="_blank"><i class="fa fa-archive"></i> <span lang="es">Intranet</span></a>
+            </li>
+          </cfif>
 
         </cfif>
 
