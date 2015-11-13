@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<meta charset="utf-8"> 
+<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- InstanceBeginEditable name="doctitle" -->
 <title></title>
@@ -63,14 +63,14 @@
 	jquery_lang_js.prototype.currentLang = 'es';
 	jquery_lang_js.prototype.lang.en = [{}];
 	window.lang = new jquery_lang_js();
-	
+
 	$().ready(function () {
    		window.lang.run();
 	});--->
-	
+
 	<!---Lang.prototype.pack.en = {};
 	Lang.prototype.pack.en.token = {};--->
-	
+
 	$().ready(function () {
 		window.lang = new Lang('es');
 	});
@@ -86,9 +86,6 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_page_div.cfm">
 
 <!-- InstanceBeginEditable name="content" -->
-
-<!---<cfset return_path = "#APPLICATION.htmlPath#/iframes2/">
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_file_modify.cfm">--->
 
 <cfset page_type = 3>
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_form.cfm">
