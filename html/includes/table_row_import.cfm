@@ -7,16 +7,16 @@
 </cfif>
 
 <cfif isDefined("FORM.file")>
-							
+
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="importRows" returnvariable="actionResponse" argumentcollection="#FORM#">
-	</cfinvoke>		
-	
+	</cfinvoke>
+
 	<cfif actionResponse.result IS true><!---The import is success--->
 
 		<cflocation url="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&res=1&msg=#actionResponse.message#" addtoken="false">
-		
+
 	<cfelse><!---There is an error in the import--->
-		
+
 		<cfset URL.res = 0>
 		<cfset URL.msg = actionResponse.message>
 
@@ -28,7 +28,7 @@
 
 	<script type="text/javascript">
 		openUrlHtml2('empty.cfm','itemIframe');
-	</script>		
+	</script>
 
 </cfif>
 
@@ -105,7 +105,7 @@
 
 	<p class="help-block" style="font-size:12px;">
 		<span lang="es">El archivo utilizado para realizar esta importación deberá tener las siguientes características:</span><br/>
-	
+
 			<span lang="es">-Tipo de archivo:</span> <strong lang="es">.csv o .txt</strong> <span lang="es">delimitado por ; o por tabulaciones.</span><br>
 			<span lang="es">Punto y coma es la delimitación por defecto en el SO Windows en España (esto varía en configuraciones por defecto de otros paises o idiomas).</span><br/>
 			-<span lang="es">Codificación</span>: <strong>Windows-1252</strong> <span lang="es">(codificación por defecto en Windows)</span>.<br /><!---iso-8859-1--->
@@ -150,7 +150,7 @@
 			<br/>
 			<!--- -<a href="usuarios_ejemplo.csv">Aquí</a> puede descargar un archivo de ejemplo.<br/>--->
 		<br/>
-		<span lang="es">No se enviará notificación de los nuevos registros a los usuarios.</span><br/>
+		<span lang="es">No se enviará notificación instantánea de los nuevos registros a los usuarios.</span><br/>
 		<span lang="es">Una vez pulsado el botón "Importar registros" debe esperar hasta que se complete la operación.</span>
 	</p>
 
@@ -200,7 +200,7 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="cancel_on_error" value="false" <cfif isDefined("FORM.cancel_on_error")>checked</cfif>> <span lang="es">No cancelar si hay errores en importación de registros</span> 
+		          <input type="checkbox" name="cancel_on_error" value="false" <cfif isDefined("FORM.cancel_on_error")>checked</cfif>> <span lang="es">No cancelar si hay errores en importación de registros</span>
 		        </label>
 		      </div>
 		    </div>
@@ -231,8 +231,8 @@
 		        </label>
 		        <small class="help-block"><span lang="es">Por defecto los campos decimales deben estar en el siguiente formato: 9999.99</span><br/>
 		        <span lang="es">Si los decimales usan otro formato distinto, como por ejemplo separar la cifra decimal por coma en lugar de punto, debe especificarlo primero en la </span><a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" lang="es">definición de los campos</a> <span lang="es">aplicándole una máscara, y posteriormente seleccionar esta opción en la importación para que se tenga en cuenta la máscara al realizar la importación.</span><br/>
-		    	
-		    	
+
+
 		      </div>
 		    </div>
 		</div>
@@ -245,11 +245,11 @@
 				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 			</div>
 		</div>
-				
+
 	</cfform>
 
 
 
 </cfoutput>
-	
+
 </div><!--- END contenedor_fondo_blanco --->

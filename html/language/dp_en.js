@@ -358,7 +358,7 @@ Lang.prototype.pack.en = {
 		"Archivo CSV con los registros a importar":"CSV file with records to import",
 		"-Si el orden de las columnas no corresponde con el anterior la importación no se realizará correctamente.":"-If column order does not correspond with that from the list, import will not be made properly",
 		"-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.":"If these conditions are not met, import will not perform correctly.",
-		"No se enviará notificación de los nuevos registros a los usuarios.":"No notification of the new records will be sent to users.",
+		"No se enviará notificación instantánea de los nuevos registros a los usuarios.":"No notification of the new records will be sent to users.",
 		"Una vez pulsado el botón \"Importar registros\" debe esperar hasta que se complete la operación.":"Once the \"Import records\"  button has been clicked, you must wait until the process is completed.",
 
 
