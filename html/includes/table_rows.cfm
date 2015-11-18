@@ -29,29 +29,37 @@
 </cfinvoke>
 <cfset tableRows = tableRowsResult.rows>
 
-<!--- creation_date --->
-<!---<cfset queryAddRow(fields, 1)>
-<cfset querySetCell(fields, "field_id", "creation_date")>
-<cfset querySetCell(fields, "label", "Fecha de creación")>
-<cfset querySetCell(fields, "position", 0)>--->
+<cfif objectItem.list_rows_by_default IS true>
 
-<!--- last_update_date --->
-<cfset queryAddRow(fields, 1)>
-<cfset querySetCell(fields, "field_id", "last_update_date")>
-<cfset querySetCell(fields, "label", "Fecha de última modificación")>
-<cfset querySetCell(fields, "position", 0)>
 
-<!--- insert_user --->
-<!---<cfset queryAddRow(fields, 1)>
-<cfset querySetCell(fields, "field_id", "insert_user")>
-<cfset querySetCell(fields, "label", "Usuario creación")>
-<cfset querySetCell(fields, "position", 0)>--->
 
-<!--- update_user --->
-<!---<cfset queryAddRow(fields, 1)>
-<cfset querySetCell(fields, "field_id", "update_user")>
-<cfset querySetCell(fields, "label", "Usuario última modificación")>
-<cfset querySetCell(fields, "position", 0)>--->
+	<!--- creation_date --->
+	<!---<cfset queryAddRow(fields, 1)>
+	<cfset querySetCell(fields, "field_id", "creation_date")>
+	<cfset querySetCell(fields, "label", "Fecha de creación")>
+	<cfset querySetCell(fields, "position", 0)>--->
+
+	<!--- last_update_date --->
+	<cfset queryAddRow(fields, 1)>
+	<cfset querySetCell(fields, "field_id", "last_update_date")>
+	<cfset querySetCell(fields, "label", "Fecha de última modificación")>
+	<cfset querySetCell(fields, "position", 0)>
+
+	<cfif tableTypeId IS 2><!--- Forms --->
+		<!--- insert_user --->
+		<cfset queryAddRow(fields, 1)>
+		<cfset querySetCell(fields, "field_id", "insert_user")>
+		<cfset querySetCell(fields, "label", "Usuario ")>
+		<cfset querySetCell(fields, "position", 0)>
+	</cfif>
+
+	<!--- update_user --->
+	<!---<cfset queryAddRow(fields, 1)>
+	<cfset querySetCell(fields, "field_id", "update_user")>
+	<cfset querySetCell(fields, "label", "Usuario última modificación")>
+	<cfset querySetCell(fields, "position", 0)>--->
+
+</cfif>
 
 <cfset area_id = objectItem.area_id>
 
@@ -145,14 +153,16 @@
 
 				</cfif>
 
-				<div class="btn-group">
-					<!---<button id="dataTablePopover#tableTypeId#_#table_id#" type="button" class="btn btn-default btn-sm" data-trigger="focus" title="Filtrado de columnas">--->
+				<cfif objectItem.list_rows_by_default IS true>
+					<div class="btn-group">
+						<!---<button id="dataTablePopover#tableTypeId#_#table_id#" type="button" class="btn btn-default btn-sm" data-trigger="focus" title="Filtrado de columnas">--->
 
-					<button id="dataTablePopover#tableTypeId#_#table_id#" type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="##columnSelectorCollapse" aria-expanded="false" aria-controls="columnSelectorCollapse">
-					  <i class="fa fa-eye-slash"></i> <span lang="es">Mostrar/ocultar columnas</span>
-					</button>
+						<button id="dataTablePopover#tableTypeId#_#table_id#" type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="##columnSelectorCollapse" aria-expanded="false" aria-controls="columnSelectorCollapse">
+						  <i class="fa fa-eye-slash"></i> <span lang="es">Mostrar/ocultar columnas</span>
+						</button>
 
-				</div>
+					</div>
+				</cfif>
 
 				<!---<script>
 
@@ -311,42 +321,50 @@
 
 <!---<div class="div_items">--->
 
-	<cfif tableRows.recordCount GT 0>
+	<cfif objectItem.list_rows_by_default IS true OR tableRows.recordCount GT 2000>
 
-		<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">--->
+		<cfif tableRows.recordCount GT 0>
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+			<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">--->
 
-		<div class="container-fluid" style="position:absolute;width:100%;left:0;">
+			<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
-			<div class="row">
+			<div class="container-fluid" style="position:absolute;width:100%;left:0;">
 
-				<div class="col-sm-12">
+				<div class="row">
 
-					<!--- outputRowList --->
-					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowList">
-						<cfinvokeargument name="table_id" value="#table_id#">
-						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-						<cfinvokeargument name="tableRows" value="#tableRows#">
-						<cfinvokeargument name="fields" value="#fields#">
-						<cfinvokeargument name="openRowOnSelect" value="true">
-						<cfinvokeargument name="app_version" value="#app_version#">
-						<cfinvokeargument name="columnSelectorContainer" value="columnSelector#tableTypeId#_#table_id#">
-					</cfinvoke>
+					<div class="col-sm-12">
 
-				</div><!--- END col-sm-12 --->
+						<!--- outputRowList --->
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowList">
+							<cfinvokeargument name="table_id" value="#table_id#">
+							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+							<cfinvokeargument name="tableRows" value="#tableRows#">
+							<cfinvokeargument name="fields" value="#fields#">
+							<cfinvokeargument name="openRowOnSelect" value="true">
+							<cfinvokeargument name="app_version" value="#app_version#">
+							<cfinvokeargument name="columnSelectorContainer" value="columnSelector#tableTypeId#_#table_id#">
+						</cfinvoke>
 
-			</div><!--- END row --->
+					</div><!--- END col-sm-12 --->
 
-		</div><!--- END container-fluid --->
+				</div><!--- END row --->
+
+			</div><!--- END container-fluid --->
+
+		<cfelse>
+
+			<script type="text/javascript">
+				openUrlHtml2('empty.cfm','itemIframe');
+			</script>
+
+			<div class="alert alert-info"><span lang="es">No hay datos introducidos.</span></div>
+
+		</cfif>
 
 	<cfelse>
 
-		<script type="text/javascript">
-			openUrlHtml2('empty.cfm','itemIframe');
-		</script>
-
-		<div class="div_text_result"><span lang="es">No hay datos introducidos.</span></div>
+		<div class="alert alert-info">#tableRows.recordCount# <span lang="es">registros</span></div>
 
 	</cfif>
 
