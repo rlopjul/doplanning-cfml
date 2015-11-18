@@ -313,7 +313,7 @@ page_types
 									<cfset startPageSelected = true>
 									<cfset startPageExists = true>
 								</cfif>
-								<option value="" lang="es" <cfif startPageSelected IS true>selected</cfif>>Página por defecto (Lo último)</option>
+								<option value="" lang="es" <cfif startPageSelected IS true>selected</cfif>>Página por defecto</option>
 
 
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/Web" method="getWeb" returnvariable="getWebResult">
