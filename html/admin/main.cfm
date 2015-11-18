@@ -557,14 +557,8 @@
 							<a href="#start_page#" class="btn btn-default btn-sm"><i class="icon-arrow-left"></i> <span lang="es">Volver</span></a>
 						</div>
 
-						<div class="btn-group">
+						<!---<div class="btn-group">
 							<a href="../preferences.cfm" title="Preferencias del usuario" lang="es">
-							<!---<cfif len(objectUser.image_file) GT 0>
-								<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.image_file#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" />
-							<cfelse>
-								<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" />
-							</cfif>--->
-
 							<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 								<cfinvokeargument name="user_id" value="#objectUser.id#">
 								<cfinvokeargument name="user_id" value="#objectUser.id#">
@@ -573,7 +567,7 @@
 								<cfinvokeargument name="width_px" value="30">
 							</cfinvoke>
 							</a>
-						</div>
+						</div>--->
 
 					</div>
 				</div>
