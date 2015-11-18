@@ -49,6 +49,28 @@
 		</cfquery>
 
 
+		<!--- unique field --->
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists_fields`
+			ADD COLUMN `unique` TINYINT(1) NOT NULL DEFAULT 0 AFTER `include_in_all_users`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_forms_fields`
+			ADD COLUMN `unique` TINYINT(1) NOT NULL DEFAULT 0 AFTER `include_in_all_users`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_typologies_fields`
+			ADD COLUMN `unique` TINYINT(1) NOT NULL DEFAULT 0 AFTER `include_in_all_users`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_users_typologies_fields`
+			ADD COLUMN `unique` TINYINT(1) NOT NULL DEFAULT 0 AFTER `include_in_all_users`;
+		</cfquery>
+		
 
 		<cfcatch>
 			<cfoutput>

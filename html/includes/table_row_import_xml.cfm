@@ -11,9 +11,9 @@
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="importRowsXml" returnvariable="actionResponse" argumentcollection="#FORM#">
 	</cfinvoke>
 
-	<cfdump var="#actionResponse#">
+	<!---<cfdump var="#actionResponse#">--->
 
-	<!---<cfif actionResponse.result IS true><!---The import is success--->
+	<cfif actionResponse.result IS true><!---The import is success--->
 
 		<cflocation url="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&res=1&msg=#actionResponse.message#" addtoken="false">
 
@@ -24,7 +24,7 @@
 
 		<cfset fileArray = actionResponse.fileArray>
 
-	</cfif>--->
+	</cfif>
 
 </cfif>
 
@@ -102,15 +102,15 @@
 	<p class="help-block" style="font-size:12px;">
 		<span lang="es">El archivo utilizado para realizar esta importación deberá tener las siguientes características:</span><br/>
 
-			<span lang="es">-Tipo de archivo:</span> <strong lang="es">.xml o .txt</strong> <br>
+			<span lang="es">-Tipo de archivo:</span> <strong lang="es">.xml</strong> <br>
 			-<span lang="es">Codificación</span>: <strong>UTF-8</strong>.<br />
 
 			<span lang="es">-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.</span>
 			<br/>
 			<!--- -<a href="usuarios_ejemplo.csv">Aquí</a> puede descargar un archivo de ejemplo.<br/>--->
 		<br/>
-		<span lang="es">No se enviará notificación de los nuevos registros a los usuarios.</span><br/>
-		<span lang="es">Una vez pulsado el botón "Importar registros" debe esperar hasta que se complete la operación.</span>
+		<span lang="es">No se enviará notificación instantánea de los nuevos registros a los usuarios.</span><br/>
+		<span lang="es">Una vez pulsado el botón "Importar registros" debe esperar hasta que se complete la operación, que puede llevar unos minutos.</span>
 	</p>
 
 	<script type="text/javascript">
@@ -139,13 +139,13 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="delete_rows" value="true" <cfif isDefined("FORM.delete_rows")>checked</cfif>> <span lang="es">Borrar registros existentes en <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs#</span>
+		          <input type="checkbox" name="delete_rows" value="true" <cfif isDefined("FORM.delete_rows")>checked</cfif>> <span lang="es">Borrar todos los registros existentes en <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs#</span>
 		        </label>
 		      </div>
 		    </div>
 		</div>
 
-		<div class="row">
+		<!---<div class="row">
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
@@ -153,7 +153,7 @@
 		        </label>
 		      </div>
 		    </div>
-		</div>
+		</div>--->
 
 		<div class="row" style="margin-top:20px">
 			<div class="col-sm-12" id="submitDiv1">

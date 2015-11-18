@@ -598,7 +598,7 @@
 
 	<!--- ------------------------------------- importRowsXml -------------------------------------  --->
 
-	<cffunction name="importRowsXml" output="true" access="public" returntype="struct">
+	<cffunction name="importRowsXml" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="file" type="string" required="true">
@@ -618,6 +618,7 @@
 		<cfset var fieldValue = "">
 
 		<cfset var errorMessages = "">
+		<cfset var uniqueFields = false>
 
 		<!---<cftry>--->
 
@@ -695,6 +696,30 @@
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
+				<cfelse>
+
+					<!--- Are unique fields --->
+					<cfquery name="checkUniqueFields" dbtype="query">
+						SELECT *
+						FROM fields
+						WHERE unique = 1;
+					</cfquery>
+
+					<cfif checkUniqueFields.recordCount GT 0>
+
+						<cfset uniqueFields = true>
+
+						<!--- Table rows --->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowsQuery">
+							<cfinvokeargument name="table_id" value="#arguments.table_id#">
+							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif>
+
 				</cfif>
 
 				<cfloop index="xmlParent" array="#importXml.xmlRoot.xmlChildren#">
@@ -751,9 +776,9 @@
 							WHERE import_name = <cfqueryparam value="#fieldLabel#" cfsqltype="cf_sql_varchar">;
 						</cfquery>
 
-						<cfif checkField.recordCount IS 0>
+						<cfset fieldValue = rowLabelValues[fieldLabel]>
 
-							<cfset fieldValue = rowLabelValues[fieldLabel]>
+						<cfif checkField.recordCount IS 0>
 
 							<cfinvoke component="#APPLICATION.componentsPath#/FieldManager" method="createFieldInDatabase" returnvariable="field_id">
 								<cfinvokeargument name="table_id" value="#arguments.table_id#">
@@ -773,7 +798,7 @@
 								</cfif>
 							</cfinvoke>
 
-							<cfset rowValues["field_"&field_id] = rowLabelValues[fieldLabel]>
+							<cfset rowValues["field_"&field_id] = fieldValue>
 
 							<!---Table fields--->
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
@@ -788,9 +813,51 @@
 
 						<cfelse>
 
-							<cfset rowValues["field_"&checkField.field_id] = rowLabelValues[fieldLabel]>
+							<cfset rowValues["field_"&checkField.field_id] = fieldValue>
 
-						</cfif>
+							<!--- DELETE EXISTING ROWS WITH REPEATED UNIQUE FIELD --->
+							<cfif uniqueFields IS true AND checkField.unique IS true>
+
+								<cfquery name="getRepeatedRows" dbtype="query">
+									SELECT *
+									FROM rowsQuery
+									WHERE field_#checkField.field_id# = <cfqueryparam value="#fieldValue#" cfsqltype="#checkField.cf_sql_type#">;
+								</cfquery>
+
+
+								<cfif getRepeatedRows.recordCount GT 0>
+
+									<cfloop query="#getRepeatedRows#">
+
+										<!--- Delete Row --->
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteRow">
+											<cfinvokeargument name="row_id" value="#getRepeatedRows.row_id#">
+											<cfinvokeargument name="table_id" value="#arguments.table_id#">
+											<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+											<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+
+											<cfinvokeargument name="client_abb" value="#client_abb#">
+											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+										</cfinvoke>
+
+									</cfloop>
+
+									<!--- Table rows --->
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowsQuery">
+										<cfinvokeargument name="table_id" value="#arguments.table_id#">
+										<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+										<cfinvokeargument name="client_abb" value="#client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+								</cfif>
+
+
+							</cfif><!---END uniqueFields IS true AND checkField.unique IS true--->
+
+
+						</cfif><!---END checkField.recordCount IS 0--->
 
 					</cfloop>
 
@@ -873,7 +940,7 @@
 
 			<cfif len(errorMessages) GT 0>
 				<cfset response = {result=false, message=errorMessages, fileArray=fileArray}>
-			<cfelse>>
+			<cfelse>
 				<cfset response = {result=true, table_id=arguments.table_id}>
 			</cfif>
 
