@@ -24,7 +24,7 @@ sftp-config.json
 /doplanning_FILES/
 /styles.css
 /styles_menu.css
-Application.cfc
+/Application.cfc
 Application_POZOBLANCO.cfc
 Application_POZOBLANCO_ANTERIOR.cfc
 index_POZOBLANCO.cfm
