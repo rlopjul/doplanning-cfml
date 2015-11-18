@@ -70,7 +70,60 @@
 			ALTER TABLE `#new_client_abb#_users_typologies_fields`
 			ADD COLUMN `unique` TINYINT(1) NOT NULL DEFAULT 0 AFTER `include_in_all_users`;
 		</cfquery>
+
+
+		<!--- publication_date field type DATETIME --->
 		
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_events`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_news`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_entries`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_images`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_pubmeds`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists_views`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_forms`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_forms_views`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_areas_files`
+			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;
+		</cfquery>
+
 
 		<cfcatch>
 			<cfoutput>
