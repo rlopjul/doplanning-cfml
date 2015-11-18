@@ -1593,7 +1593,7 @@
 									<cfinvokeargument name="user_id" value="#objectUser.id#">
 									<cfinvokeargument name="user_full_name" value="#objectUser.family_name# #objectUser.name#">
 									<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
-									<cfinvokeargument name="width_px" value="50">
+									<cfinvokeargument name="width_px" value="32">
 								</cfinvoke>
 
 								<!---
@@ -1618,7 +1618,7 @@
 
 								<cfif SESSION.client_administrator EQ SESSION.user_id>
 									<td><a onclick="parent.loadModal('html_content/user_modify.cfm?user=#objectUser.id#')" class="btn btn-primary btn-sm"><i class="icon-edit icon-white"></i></a>
-										<a class="btn btn-danger btn-sm navbar-btn" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#objectUser.id#');" lang="es"><i class="icon-remove"></i></a>
+										<a class="btn btn-danger btn-sm" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#objectUser.id#');" lang="es"><i class="icon-remove"></i></a>
 									</td>
 								</cfif>
 							</cfif>
@@ -1968,6 +1968,7 @@
 				<!---<img src="#APPLICATION.htmlPath#/assets/v3/icons/#default_image_file#" alt="#arguments.user_full_name#" class="#arguments.class#" <cfif isDefined("arguments.width_px")>style="width:#arguments.width_px#px"</cfif> />--->
 
 				<cfset firstLetter = uCase(left(arguments.user_full_name,1))>
+				<cfset firstLetter = replaceList(firstLetter,"Á,É,Í,Ó,Ú,Ä,Ë,Ï,Ö,Ü", "A,E,I,O,U,A,E,I,O,U")>
 				<cfset letterColor = "##CCCCCC">
 
 				<cfscript>
