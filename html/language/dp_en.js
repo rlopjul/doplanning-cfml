@@ -1160,7 +1160,7 @@ Lang.prototype.pack.en = {
 		"Al área seleccionada":"To selected area",
 		"A varias áreas":"To several areas",
 		"Confirma las áreas seleccionadas:":"Confirm the selected areas",
-		"Se enviará notificación al usuario y a los usuarios del área.":"Selected user and users of the area will be notified by email.",
+		"Si se selecciona esta opción se enviará notificación por email al usuario asociado y a los usuarios del área.":"If you select this option, selected user and users of the area will be notified by email.",
 		/*END associate users to areas*/
 
 		/*associate area administrator*/

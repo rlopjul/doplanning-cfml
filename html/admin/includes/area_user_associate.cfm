@@ -62,7 +62,7 @@
 					<div class="checkbox">
 						<label>
 							<input type="checkbox" name="send_alert" value="true" checked /> Enviar notificación de asociación al área
-							<p class="help-block">Si se selecciona esta opción se enviará notificación por email al usuario asociado y a los usuarios del área.</p>
+							<p class="help-block" lang="es">Si se selecciona esta opción se enviará notificación por email al usuario asociado y a los usuarios del área.</p>
 						</label>
 					</div>
 

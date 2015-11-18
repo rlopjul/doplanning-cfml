@@ -1749,6 +1749,7 @@
 	<cffunction name="assignUserToAreas" returntype="struct" output="false" access="public">
 		<cfargument name="areas_ids" type="string" required="true"/>
 		<cfargument name="add_user_id" type="numeric" required="true"/>
+		<cfargument name="send_alert" type="boolean" required="false">
 
 		<cfset var method = "assignUserToAreas">
 
@@ -1765,6 +1766,7 @@
 				<cfinvoke component="UserManager" method="assignUserToArea" returnvariable="responseAssignUser">
 					<cfinvokeargument name="area_id" value="#curAreaId#"/>
 					<cfinvokeargument name="add_user_id" value="#arguments.add_user_id#"/>
+					<cfinvokeargument name="send_alert" value="#arguments.send_alert#">
 				</cfinvoke>
 
 				<cfif responseAssignUser.result IS false><!---User assign failed--->

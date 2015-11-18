@@ -1,5 +1,5 @@
 <cfif isDefined("URL.user") AND isNumeric(URL.user) AND isDefined("URL.areas")>
-	
+
 	<cfset user_id = URL.user>
 	<cfset areas_ids = URL.areas>
 
@@ -8,11 +8,11 @@
 	</cfinvoke>
 
 	<cfif isDefined("URL.area") AND isNumeric(URL.area)>
-		
+
 		<cfset return_page = "area_users.cfm?area=#URL.area#">
 
 	</cfif>
-	
+
 	<cfoutput>
 
 		<div class="modal-header">
@@ -24,8 +24,8 @@
 
 	 		<div class="well well-sm">
 				<cfif len(objectUser.image_type) GT 0>
-					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img" style="margin-right:2px;"/>									
-				<cfelse>							
+					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img" style="margin-right:2px;"/>
+				<cfelse>
 					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="item_img_default" style="margin-right:2px;"/>
 				</cfif> <strong>#objectUser.family_name# #objectUser.name#</strong> (#objectUser.email#)<br/>
 			</div>
@@ -37,7 +37,7 @@
 		 		<cfset areasToAssociate = "">
 
 		 		<cfloop list="#areas_ids#" index="area_id">
-		 			
+
 		 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="objectArea">
 						<cfinvokeargument name="area_id" value="#area_id#"/>
 					</cfinvoke>
@@ -45,7 +45,7 @@
 					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
 						<cfinvokeargument name="area_id" value="#area_id#">
 						<cfinvokeargument name="check_user_id" value="#user_id#">
-					</cfinvoke>	
+					</cfinvoke>
 
 					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
 						<cfinvokeargument name="area_id" value="#area_id#">
@@ -69,16 +69,22 @@
 						</div>
 
 					</cfif>
-						
+
 		 		</cfloop>
 
 	 		</div>
 
 	 		<cfif listLen(areasToAssociate) GT 0>
-	 			
-	 			<small class="help-block" lang="es">Se enviará notificación al usuario y a los usuarios del área.</small>
 
 				<form id="associateAreasUserForm" method="post">
+
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="send_alert" value="true" checked /> Enviar notificación de asociación al área
+							<p class="help-block" lang="es">Si se selecciona esta opción se enviará notificación por email al usuario asociado y a los usuarios del área.</p>
+						</label>
+					</div>
+
 					<input type="hidden" name="user_id" value="#objectUser.id#"/>
 					<input type="hidden" name="areas_ids" value="#areasToAssociate#"/>
 				</form>
@@ -88,7 +94,7 @@
 				<p lang="es">No hay areas seleccionadas en las que no esté el usuario asociado</p>
 
 	 		</cfif>
-			
+
 		</div>
 
 		<div class="modal-footer">
@@ -136,8 +142,8 @@
 
 						  	}else
 								alert(status);
-							
-						  }		  
+
+						  }
 						});
 
 
