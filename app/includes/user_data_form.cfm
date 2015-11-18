@@ -414,6 +414,8 @@ page_types
 					</div>
 				</div>
 
+				<!---
+				DESHABILITADO TEMPORALMENTE HASTA TERMINARLO
 				<div class="row">
 					<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
 
@@ -426,6 +428,7 @@ page_types
 
 					</div>
 				</div>
+				--->
 
 			</cfif>
 
