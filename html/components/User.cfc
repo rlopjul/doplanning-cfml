@@ -1513,7 +1513,7 @@
 							<th><span lang="es">Apellidos</span></th>
 							<th><span lang="es">Email</span></th>
 							<cfif arguments.show_area_members IS true>
-							<th style="width:110px;"><span lang="es">De esta área</span></th>
+							<th style="width:110px;"><span lang="es">Asociado</span></th>
 							</cfif>
 							<cfif arguments.showAdminFields IS true>
 								<cfif SESSION.client_abb IS "hcs">

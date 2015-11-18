@@ -14,7 +14,7 @@
 <cfset numUsers = ArrayLen(users)>
 
 <div class="div_users">
-	
+
 	<cfif numUsers GT 0>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
@@ -23,14 +23,14 @@
 			<!---<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">--->
 			<cfinvokeargument name="show_area_members" value="true">
 			<cfinvokeargument name="open_url_target" value="userAreaIframe">
-			<cfinvokeargument name="filter_enabled" value="true">
+			<cfinvokeargument name="filter_enabled" value="false">
 			<cfinvokeargument name="adminUsers" value="true">
-		</cfinvoke>	
+		</cfinvoke>
 
 	<cfelse>
 		<span lang="es">No hay usuarios.</span>
 	</cfif>
-	
+
 </div>
-	
+
 </cfif>

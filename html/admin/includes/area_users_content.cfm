@@ -43,7 +43,7 @@
 			</a>
 			<span class="navbar_brand">#area_name#</span>
 
-			<p style="padding-top:0px;clear:left;font-size:12px;"><!--- class="navbar_brand" color:##737373 --->
+			<p style="padding-top:0;margin-bottom:0;clear:left;font-size:12px;"><!--- class="navbar_brand" color:##737373 --->
 				<cfif SESSION.client_id EQ "hcs" OR internal_user IS true><span lang="es">Ruta:</span> #area_path#<cfelse>&nbsp;</cfif>
 			</p>
 		</div>
@@ -53,9 +53,9 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_menu_info.cfm">
 
-<div>
+<!---<div>
 	<img alt="Imagen del área" src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#&no-cache=#RandRange(0,999)#" style="max-height:50px;">
-</div>
+</div>--->
 </cfoutput>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
@@ -70,8 +70,11 @@
 		<div class="btn-group">
 			<a class="btn btn-info btn-sm" onclick="parent.loadModal('html_content/area_modify.cfm?area=#area_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar área</span></a>
 		</div>
+
+
 		<div class="btn-group">
 			<a class="btn btn-default btn-sm" onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a>
+			<a class="btn btn-default btn-sm" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo"> <span lang="es">Ver imagen</span></a>
 		</div>
 		<div class="btn-group pull-right">
 			<a href="area_users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i></a>
@@ -173,7 +176,7 @@
 				<cfinvokeargument name="user_in_charge" value="#objectArea.user_in_charge#">
 				<cfinvokeargument name="show_area_members" value="true">
 				<cfinvokeargument name="open_url_target" value="userAreaIframe">
-				<cfinvokeargument name="filter_enabled" value="true">
+				<cfinvokeargument name="filter_enabled" value="false">
 			</cfinvoke>
 
 			<cfif objectArea.users_visible IS false>

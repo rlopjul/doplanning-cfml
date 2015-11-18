@@ -4,15 +4,15 @@
 
 		<div id="areaInfo" class="collapse more_info_content"><!---more_info_content--->
 
-			<cfif app_version EQ "mobile"><!--- MOBILE VERSION --->
+			<!---<cfif app_version EQ "mobile">---><!--- MOBILE VERSION --->
 				<div class="row">
 					<div class="col-sm-12">
 
 						<img src="#APPLICATION.resourcesPath#/downloadAreaImage.cfm?id=#area_id#" id="areaImage" alt="Imagen del área" style="max-width:100%;" /><!---max-height:110px--->
-					
+
 					</div>
 				</div>
-			</cfif>
+			<!---</cfif>--->
 
 			<cfif area_type NEQ "">
 				<cfif APPLICATION.identifier EQ "vpnet"><!---Por ahora, esto solo para Colabora--->
@@ -45,7 +45,7 @@
 					<div>
 						<span lang="es">Responsable</span> <a onclick="openUrl('area_user.cfm?area=#area_id#&user=#objectArea.user_in_charge#','itemIframe',event)" style="cursor:pointer">#objectArea.user_full_name#</a>
 					</div>
-					
+
 					<div>
 						<span lang="es">Fecha de creación</span> <span class="text_message_page">#objectArea.creation_date#</span>
 					</div>
@@ -58,10 +58,10 @@
 
 					<span lang="es">Descripción</span><br>
 					<p class="text_message_page" style="margin-bottom:0"><cfif len(objectArea.description) GT 0>#objectArea.description#<cfelse><i><span lang="es">No hay descripción del área</span></i></cfif></p>
-				
+
 				</div>
 			</div>
-			
+
 
 			<!---areaUrl--->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaUrl" returnvariable="areaUrl">
@@ -77,12 +77,12 @@
 					<div class="input-group">
 						<span class="input-group-addon" style="padding-left:0"><i class="fa fa-share-alt" style="font-size: 16px;"></i></span><input type="text" value="#areaUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/>
 					</div>
-				
+
 				</div>
 			</div>
 
 			<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
-				
+
 				<cfif area_type EQ "web" OR area_type EQ "intranet">
 
 					<!---areaWebUrl--->
@@ -94,10 +94,10 @@
 					<cfset areaWebUrl = "/#webPath#/#areaPage#">
 					<div class="row">
 						<div class="col-sm-12">
-							
+
 							<div class="div_message_page_label"><span lang="es">URL relativa en la <b>#area_type#</b>:</span></div>
 							<input type="text" value="#areaWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/>
-						
+
 						</div>
 					</div>
 
@@ -129,7 +129,7 @@
 	$('##areaInfo').on('shown.bs.collapse', function () {
 		$('##openAreaImg').hide();
 		$('##closeAreaImg').show();
-	});			
+	});
 
 </script>
 </cfoutput>
