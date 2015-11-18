@@ -39,10 +39,33 @@
 			<div class="col-sm-12">
 
 				<h3 class="sr-only" lang="es">Ruta del área:</h3>
-				<p style="font-size:15px;">#area_path#<a onclick="loadAreaTree(#area_id#)" class="btn btn-link" style="padding-top:0;padding-left:10px;" title="Abrir árbol con ruta expandida" lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons/plus.png" alt="Abrir árbol con ruta expandida" lang="es"/></a></p>
+				<p style="font-size:15px;margin-bottom:5px;">#area_path#<a onclick="loadAreaTree(#area_id#)" class="btn btn-link" style="padding-top:0;padding-left:10px;" title="Abrir árbol con ruta expandida" lang="es"><img src="#APPLICATION.htmlPath#/assets/v3/icons/plus.png" alt="Abrir árbol con ruta expandida" lang="es"/></a></p>
 
 			</div>
 		</div>
+
+		<!---subAreas--->
+		<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
+			<cfinvokeargument name="area_id" value="#area_id#">
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+		<cfif subAreasQuery.recordCount GT 0>
+			<div class="row">
+				<div class="col-sm-12">
+
+					<ul class="list-group list-inline" id="subareas_list">
+					<cfloop query="subAreasQuery">
+						<li class="list-group-item">
+						  	<a href="area_items.cfm?area=#subAreasQuery.id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Área" title="Área" lang="es"/>&nbsp;&nbsp;#subAreasQuery.name#</a>
+						</li>
+					</cfloop>
+					</ul>
+
+				</div>
+			</div>
+		</cfif>
 
 		<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css?v=1.2" rel="stylesheet">
 		<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
@@ -53,7 +76,7 @@
 
 	<script>
 		<!---To enable the loading spinner in Bootstrap 3--->
-		$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner = 
+		$.fn.modal.defaults.spinner = $.fn.modalmanager.defaults.spinner =
 	    '<div class="loading-spinner" style="width: 200px; margin-left: -100px;">' +
 	        '<div class="progress progress-striped active">' +
 	            '<div class="progress-bar" style="width: 100%;"></div>' +
@@ -61,7 +84,7 @@
 	    '</div>';
 	    <!--- To set modal max height --->
 		$.fn.modal.defaults.maxHeight = function(){
-		    return $(window).height() - 170; 
+		    return $(window).height() - 170;
 		}
 	</script>
 
@@ -70,7 +93,7 @@
 		var $modal = null;
 
 		function loadAreaTree(areaId){
- 
+
 			$('body').modalmanager('loading');
 
 			var noCacheNumber = generateRandom();
@@ -88,7 +111,7 @@
 		}
 
 		$(document).ready(function () {
-		
+
 			// Modal
 			$modal = $('#ajax-modal');
 
@@ -98,5 +121,5 @@
 	<!--- Modal Window --->
 	<div id="ajax-modal" class="modal container fade" role="dialog" style="width: 500px;" tabindex="-1"></div><!---hide funcionaba en bs2--->
 
-	
+
 </cfif>
