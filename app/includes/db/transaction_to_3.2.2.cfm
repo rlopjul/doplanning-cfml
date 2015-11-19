@@ -6,8 +6,8 @@
 		SELECT *
 		FROM information_schema.COLUMNS
 		WHERE TABLE_SCHEMA = 'dp_#new_client_abb#'
-		AND TABLE_NAME = '#new_client_abb#_users'
-		AND COLUMN_NAME = 'user_administrator';
+		AND TABLE_NAME = '#new_client_abb#_users_typologies_fields'
+		AND COLUMN_NAME = 'unique';
 	</cfquery>
 
 </cfif>
@@ -31,7 +31,7 @@
 		<cfquery datasource="#client_datasource#">
 			ALTER TABLE `#new_client_abb#_lists`
 			ADD COLUMN `list_rows_by_default` TINYINT(1) NOT NULL DEFAULT 1 AFTER `last_update_type`;
-		</cfif>
+		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
 			ALTER TABLE `#new_client_abb#_forms`
@@ -73,7 +73,7 @@
 
 
 		<!--- publication_date field type DATETIME --->
-		
+
 		<cfquery datasource="#client_datasource#">
 			ALTER TABLE `#new_client_abb#_events`
 			CHANGE COLUMN `publication_date` `publication_date` DATETIME NULL DEFAULT NULL;

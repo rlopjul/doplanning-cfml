@@ -102,6 +102,7 @@
 							<option value="3.1">3.1 Categorías de elementos, notificaciones agrupadas, notificaciones web, deshabilitar notificaciones</option>
 							<option value="3.2">3.2 Archivos adjuntos de listas y formularios, página de inicio personalizada y nuevo elemento boletín</option>
 							<option value="3.2.1">3.2.1 Separadores de campos, nuevas opciones para campos, verificación de usuarios</option>
+							<option value="3.2.2">3.2.2 Deshabilitar listado de registros por defecto en listas, error en fecha de publicación corregido</option>
 						</select>
 					</div>
 

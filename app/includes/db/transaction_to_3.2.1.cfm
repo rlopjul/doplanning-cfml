@@ -26,7 +26,7 @@
 
 	<cftry>
 
-
+		<!---Fix bug--->
 		<cfquery datasource="#client_datasource#">
 			ALTER TABLE `#new_client_abb#_files_downloads`
 			ADD INDEX `FK_#new_client_abb#_files_downloads_1_idx` (`file_id` ASC),
