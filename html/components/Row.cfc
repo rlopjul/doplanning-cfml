@@ -332,7 +332,7 @@
 				</cfinvoke>
 
 				<cfif response.result IS true>
-					<cfset response.message = "Registros importados">
+					<cfset response.message = "#response.importedRows# registros importados">
 				</cfif>
 
 				<cfcatch>

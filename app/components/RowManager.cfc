@@ -127,6 +127,7 @@
 		<cfset var fileArray = arrayNew(1)>
 		<cfset var rowValues = structNew()>
 		<cfset var fieldValue = "">
+		<cfset var importedRows = 0>
 
 		<cfset var errorMessages = "">
 
@@ -525,6 +526,8 @@
 								<cfinvokeargument name="client_dsn" value="#client_dsn#">
 							</cfinvoke>
 
+							<cfset importedRows = importedRows+1>
+
 							<cfcatch>
 
 								<cfset errorMessagePrefix = "Error en fila #curRow#: ">
@@ -576,9 +579,9 @@
 			<cfinclude template="includes/logRecord.cfm">
 
 			<cfif len(errorMessages) GT 0>
-				<cfset response = {result=false, message=errorMessages, fileArray=fileArray}>
+				<cfset response = {result=false, message=errorMessages, fileArray=fileArray, importedRows=importedRows}>
 			<cfelse>
-				<cfset response = {result=true, table_id=arguments.table_id}>
+				<cfset response = {result=true, table_id=arguments.table_id, importedRows=importedRows}>
 			</cfif>
 
 			<cfcatch>
