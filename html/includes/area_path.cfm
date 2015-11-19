@@ -44,29 +44,6 @@
 			</div>
 		</div>
 
-		<!---subAreas--->
-		<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreasQuery">
-			<cfinvokeargument name="area_id" value="#area_id#">
-			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-			<cfinvokeargument name="client_dsn" value="#client_dsn#">
-		</cfinvoke>
-		<cfif subAreasQuery.recordCount GT 0>
-			<div class="row">
-				<div class="col-sm-12">
-
-					<ul class="list-group list-inline" id="subareas_list">
-					<cfloop query="subAreasQuery">
-						<li class="list-group-item">
-						  	<a href="area_items.cfm?area=#subAreasQuery.id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Área" title="Área" lang="es"/>&nbsp;&nbsp;#subAreasQuery.name#</a>
-						</li>
-					</cfloop>
-					</ul>
-
-				</div>
-			</div>
-		</cfif>
-
 		<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css?v=1.2" rel="stylesheet">
 		<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
 

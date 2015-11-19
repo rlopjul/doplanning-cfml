@@ -1,33 +1,3 @@
-<!---
-<cfoutput>
-<cfif APPLICATION.title EQ "DoPlanning">
-	<div style="float:left; padding-top:2px;">
-		<a href="../html/index.cfm"><img src="../html/assets/logo_app.gif" alt="Inicio" title="Inicio"/></a>
-	</div>
-<cfelse>
-	<div style="float:left;">
-		<a href="../html/index.cfm" title="Inicio" class="btn"><i class="icon-home" style="font-size:16px"></i></a>
-	</div>
-</cfif>
-<div style="float:right">
-	<div style="float:right; margin-right:5px; padding-top:2px;" class="div_text_user_logged">
-		<a href="../html/preferences.cfm" class="link_user_logged" title="Preferencias del usuario" lang="es">#getAuthUser()#</a>&nbsp;&nbsp;&nbsp;<a href="../html/logout.cfm" class="text_user_logged" title="Cerrar sesión" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
-	</div>
-</div>
-</cfoutput>
---->
-
-<!---
-<ul class="nav nav-pills nav-stacked">
-	<li class="active"><a href="#">Lo último</a></li>
-	<li><a href="#">Árbol</a></li>
-	<li><a href="#">Búsqueda</a></li>
-	<li><a href="#">Usuario</a></li>
-	<li><a href="#">Papelera</a></li>
-	<li><a href="#">Administración</a></li>
-</ul>
---->
-
 <cfif find("error.cfm", CGI.SCRIPT_NAME) IS 0><!---error.cfm no necesita esto y puede dar problemas en errores de consultad de usuarios--->
 
   <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
@@ -205,43 +175,6 @@ function adjustMarginTop() {
     }
 
 }
-
-
-<!---
-function showAlertMessage(msg, res){
-
-  if($("#alertContainer span").length != 0)
-    $("#alertContainer span").remove();
-
-  if(res == true)
-    $("#alertContainer").attr("class", "alert alert-success");
-  else
-    $("#alertContainer").attr("class", "alert alert-danger");
-
-  $("#alertContainer button").after('<span>'+msg+'</span>');
-
-  var maxZIndex = getMaxZIndex();
-
-    $("#alertContainer").css('zIndex',maxZIndex+1);
-
-  $("#alertContainer").fadeIn('slow');
-
-
-  setTimeout(function(){
-
-      hideAlertMessage();
-
-      }, 9500);
-}
-
-function hideAlertMessage(){
-
-  $("#alertContainer").fadeOut('slow', function() {
-      $("#alertContainer span").remove();
-  });
-
-}
---->
 
 </script>
 

@@ -549,12 +549,9 @@ fieldset {
 .div_head_subtitle{
 	clear:both;
 	font-size:15px;
-	/*color:#333333;*/
-	/*background-color:#CCCCCC;*/
 	padding-left:8px;
-	/*padding-top:6px;*/
-	/*border-bottom:solid 1px #333333;*/
 	margin-bottom: 8px;
+	margin-top:15px;
 	background-color: #DDDDDD;
 	text-transform: uppercase;
 }

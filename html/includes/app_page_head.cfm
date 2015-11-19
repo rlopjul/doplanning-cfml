@@ -213,7 +213,8 @@
 
 							<h1 style="color:##009ED2">#area_name#
 
-							  	<cfif isDefined("objectArea")>
+							  <cfif isDefined("objectArea")>
+										<cfset areaInfoEnabled = true>
 								  	<small style="float:right">
 										<a class="navbar-link" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Mostrar información del área" id="openAreaImg">
 											<i class="icon-info-sign more_info_img" <!---onclick="openAreaInfo()"--->></i>
