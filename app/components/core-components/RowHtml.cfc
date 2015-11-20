@@ -17,6 +17,7 @@
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="search_inputs" type="boolean" required="false" default="false">
 		<cfargument name="displayType" type="string" required="false" default="#DISPLAY_TYPE_DEFAULT#">
+		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -31,6 +32,7 @@
 
 		<input type="hidden" name="tableTypeId" value="#tableTypeId#"/>
 		<input type="hidden" name="table_id" value="#table_id#"/>
+		<input type="hidden" name="include_admin_fields" value="#arguments.include_admin_fields#"/>
 
 		<cfif isDefined("row.row_id") AND isNumeric(row.row_id)>
 			<cfset action = "modify">

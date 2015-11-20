@@ -96,7 +96,7 @@ page_types
 	</cfif>
 
 	<cfif page_type IS 1>
-		<input type="hidden" name="adminFields" value="true" />
+		<input type="hidden" name="adminFields" value="true" /><!---User fields--->
 	</cfif>
 
 	<!---<cfif page_type EQ 3>

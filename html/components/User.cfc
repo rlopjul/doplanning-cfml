@@ -345,6 +345,7 @@
 		<cfargument name="perfil_cabecera" type="string" required="false">
 
 		<cfargument name="adminFields" type="boolean" required="false" default="false">
+		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
 
 		<cfargument name="typology_id" type="string" required="false">
 
@@ -372,7 +373,7 @@
 
 					<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUser" argumentcollection="#arguments#" returnvariable="response">
 						<cfinvokeargument name="update_user_id" value="#arguments.user_id#">
-						<cfinvokeargument name="include_admin_fields" value="true">
+						<!---<cfinvokeargument name="include_admin_fields" value="true">--->
 						<cfif isDefined("password_encoded")>
 							<cfinvokeargument name="password" value="#password_encoded#">
 						</cfif>

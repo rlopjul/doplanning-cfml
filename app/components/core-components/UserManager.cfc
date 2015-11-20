@@ -1162,7 +1162,7 @@
 								<cfinvokeargument name="user_id" value="#new_user_id#">
 							</cfif>
 							<cfinvokeargument name="update_user_id" value="#new_user_id#"/>
-							<cfinvokeargument name="include_admin_fields" value="#arguments.include_admin_fields#"/>
+							<!---<cfinvokeargument name="include_admin_fields" value="#arguments.include_admin_fields#"/>--->
 						</cfinvoke>
 
 					</cfif>
