@@ -77,7 +77,9 @@ CKEDITOR.editorConfig = function( config ) {
 	//config.extraPlugins = 'insertpre';
 	//config.insertpre_class = '';
 
-	config.extraPlugins = 'tweetabletext';
+	config.extraPlugins = 'tweetabletext,autogrow';
+	config.autoGrow_onStartup = true;
+	//config.autoGrow_bottomSpace = 80;
 
 	//Para que solo se pueda introducir texto plano
 	config.forcePasteAsPlainText = true;
