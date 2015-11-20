@@ -380,7 +380,8 @@
 						</button>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="#APPLICATION.htmlPath#/area_items_pdf.cfm?area=#area_id#" target="_blank" title="PDF" lang="es">PDF</a></li>
-							<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=exportAreaItemsDownload&area_id=#area_id#" onclick="return downloadFileLinked(this,event)" title="CSV" lang="es">CSV</a></li>
+							<li><a href="#APPLICATION.htmlPath#/area_items_doc.cfm?area=#area_id#" target="_blank" title="PDF" lang="es">DOC (Word)</a></li>
+							<li><a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=exportAreaItemsDownload&area_id=#area_id#" onclick="return downloadFileLinked(this,event)" title="CSV" lang="es">CSV (Excel)</a></li>
 						</ul>
 
 					</div>
