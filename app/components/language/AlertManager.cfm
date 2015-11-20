@@ -100,6 +100,7 @@ curLangText["es"] = {
 			"foot_content_default_1" : "Este es un email automático enviado por la",
 			//"foot_content_default_2" : 'No responda a este email.<br /> Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación.',
 			"foot_content_default_3" : "No responda a este email.<br />Este es un email automático enviado por la aplicación",
+			/*"foot_legal" : "Según lo previsto en la Ley 34/2002 de Servicios de la Sociedad de la Información y de Comercio Electrónico, así como en la Ley Orgánica 15/1999 del 13 de Diciembre, de Protección de Datos de Carácter Personal, le informamos que su dirección de correo electrónico figura en nuestros archivos automatizados, al objeto exclusivamente de remitirle información sobre servicios y actividades promovidas por #APPLICATION.title#. Usted puede en cualquier momento ejercitar su derecho de acceder, rectificar y en su caso, cancelar sus datos personales en el email #APPLICATION.emailReply# e indicándonos la operación a realizar.",*/
 
 			"view_in_area" : "Ver en área",
 			"go_to_item" : "Ir al elemento",
@@ -493,6 +494,7 @@ curLangText["en"] = {
 			"foot_content_default_1" : "This is an automated email sent by the",
 			//"foot_content_default_2" : 'Do not reply to this email.<br />If you do not want to receive these emails, you can disable these notifications the application preferences.',
 			"foot_content_default_3" : "Do not reply to this email.<br />This is an automated email sent by the application",
+			/*"foot_legal" : "Según lo previsto en la Ley 34/2002 de Servicios de la Sociedad de la Información y de Comercio Electrónico, así como en la Ley Orgánica 15/1999 del 13 de Diciembre, de Protección de Datos de Carácter Personal, le informamos que su dirección de correo electrónico figura en nuestros archivos automatizados, al objeto exclusivamente de remitirle información sobre servicios y actividades promovidas por #APPLICATION.title#. Usted puede en cualquier momento ejercitar su derecho de acceder, rectificar y en su caso, cancelar sus datos personales en el email #APPLICATION.emailReply# e indicándonos la operación a realizar.",*/
 
 			"view_in_area" : "View in area",
 			"go_to_item" : "Go to item",

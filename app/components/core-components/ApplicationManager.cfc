@@ -11,6 +11,7 @@
 		<cfargument name="emailServerUserName" type="string" required="true">
 		<cfargument name="emailServerPassword" type="string" required="true">
 		<cfargument name="emailFrom" type="string" required="true">
+		<cfargument name="emailReply" type="string" required="false" default="support@doplanninng.net">
 
 		<cfargument name="openTokApiKey" type="numeric" required="false">
 		<cfargument name="openTokApiSecret" type="string" required="false">
@@ -55,6 +56,7 @@
 		<cfargument name="homeTab" type="boolean" required="false" default="true">
 		<cfargument name="moduleDPDocuments" type="boolean" required="false" default="true">
 		<cfargument name="moduleMailing" type="boolean" required="false" default="true">
+		<cfargument name="includeLegalTextInAlerts" type="boolean" required="false" default="false">
 
 		<cfargument name="hideInputLabels" type="boolean" required="false" default="false">
 
@@ -108,6 +110,7 @@
 			<cfset APPLICATION.cacheTree = arguments.cacheTree>
 			<cfset APPLICATION.homeTab = arguments.homeTab>
 			<cfset APPLICATION.moduleMailing = arguments.moduleMailing>
+			<cfset APPLICATION.includeLegalTextInAlerts = arguments.includeLegalTextInAlerts>
 
 			<cfset APPLICATION.moduleDPDocuments = arguments.moduleDPDocuments>
 
@@ -149,7 +152,7 @@
 			<cfset APPLICATION.emailFrom = arguments.emailFrom>
 
 			<cfset APPLICATION.emailFalseTo = """Undisclosed-Recipients"" <dpera7@gmail.com>">
-			<cfset APPLICATION.emailReply = "support@doplanninng.net">
+			<cfset APPLICATION.emailReply = arguments.emailReply>
 			<cfset APPLICATION.emailFail = "support@doplanning.net">
 			<cfset APPLICATION.emailErrors = "bugs@doplanning.net">
 
@@ -496,6 +499,7 @@
 					<cfinvokeargument name="homeTab" value="true">
 					<cfinvokeargument name="moduleDPDocuments" value="true">
 					<cfinvokeargument name="moduleMailing" value="true">
+					<cfinvokeargument name="includeLegalTextInAlerts" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 

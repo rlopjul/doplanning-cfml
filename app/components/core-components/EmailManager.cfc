@@ -1,10 +1,10 @@
-<!--- Copyright Era7 Information Technologies 2007-2014 --->
+<!--- Copyright Era7 Information Technologies 2007-2015 --->
 <cfcomponent output="false">
 
 	<cfset component = "EmailManager">
 
 	<!--- ----------------------- SEND EMAIL -------------------------------- --->
-	
+
 	<cffunction name="sendEmail" access="public" returntype="void">
 		<cfargument name="from" type="string" required="yes">
 		<cfargument name="from_name" type="string" required="false">
@@ -24,7 +24,7 @@
 		<cfset var fromName = "">
 		<cfset var responseResult = "">
 		<cfset var attachmentbase64Value = "">
-				
+
 		<!--- <cfset head_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">No responda a este email.</span><br />Este email ha sido enviado mediante la aplicación #APPLICATION.title#.</p>'> --->
 
 <cfprocessingdirective suppresswhitespace="yes">
@@ -59,21 +59,24 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 <cfif isDefined("arguments.head_content")>#head_content#</cfif>
 #arguments.content#
 <cfif isDefined("arguments.foot_content")><br />#arguments.foot_content#</cfif>
+<cfif APPLICATION.includeLegalTextInAlerts IS true>
+	<p style="font-family:'Roboto',sans-serif;font-size:10px">Según lo previsto en la Ley 34/2002 de Servicios de la Sociedad de la Información y de Comercio Electrónico, así como en la Ley Orgánica 15/1999 del 13 de Diciembre, de Protección de Datos de Carácter Personal, le informamos que su dirección de correo electrónico figura en nuestros archivos automatizados, al objeto exclusivamente de remitirle información sobre servicios y actividades promovidas por #APPLICATION.title#. Usted puede en cualquier momento ejercitar su derecho de acceder, rectificar y en su caso, cancelar sus datos personales en el email #APPLICATION.emailReply# e indicándonos la operación a realizar.</p>
+</cfif>
 </cfoutput>
 </body>
 </html>
 	</cfsavecontent>
-	
+
 	<cfif APPLICATION.identifier EQ "dp">
-		
-		<cfif isDefined("arguments.from_name")>
+
+		<cfif isDefined("arguments.from_name") AND arguments.from_name NEQ APPLICATION.title>
 			<cfset fromName = "#APPLICATION.title#-#arguments.from_name#">
 		<cfelse>
-			<cfset fromName = APPLICATION.title>			
+			<cfset fromName = APPLICATION.title>
 		</cfif>
 
 		<cfif APPLICATION.emailSendMode EQ "SMTP">
-			
+
 			<!---<cfif isDefined("SESSION.client_email_support")>
 				<cfset email_failto = SESSION.client_email_support>
 			<cfelse>
@@ -81,9 +84,9 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 			</cfif>--->
 
 			<cfset fullFrom = '"#fromName#" <#APPLICATION.emailFrom#>'>
-		
+
 			<cfif len(APPLICATION.emailServerUserName) IS NOT 0><!---With authentication--->
-				
+
 				<cfmail server="#APPLICATION.emailServer#" username="#APPLICATION.emailServerUserName#" password="#APPLICATION.emailServerPassword#" type="html" from="#fullFrom#" to="#arguments.to#" bcc="#arguments.bcc#" subject="#arguments.subject#" charset="utf-8" port="#APPLICATION.emailServerPort#">#email_content#</cfmail><!---failto="#email_failto#"--->
 
 			<cfelse><!---Without authentication--->
@@ -96,31 +99,31 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 		<cfelse><!---Send emails by Mandrill API--->
 
 			<cfset toEmails = arrayNew()>
-		
+
 			<cfif len(arguments.to) GT 0 AND arguments.to NEQ APPLICATION.emailFalseTo>
-				
+
 				<cfloop list="#arguments.to#" index="toEmail" delimiters=";">
-				
+
 					<cfset arrayAppend(toEmails, {"email":"#toEmail#"})>
-				
+
 				</cfloop>
-				
+
 			</cfif>
-			
+
 			<cfif len(arguments.bcc) GT 0>
-				
+
 				<cfloop list="#arguments.bcc#" index="bccEmail" delimiters=";">
-				
+
 					<cfset arrayAppend(toEmails, {"email":"#bccEmail#"})>
-				
+
 				</cfloop>
-			
+
 			</cfif>
-			
+
 			<cfif arrayLen(toEmails) IS 0><!---Unexpected error--->
 				<cfthrow errorcode="10000">
 			</cfif>
-			
+
 			<cfset jsonFields = {
 
 				"key": "#APPLICATION.emailServerPassword#",
@@ -155,8 +158,8 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 	        	]>
 
 			</cfif>
-			
-			
+
+
 			<!---"to": [
 				{
 					"email": ""
@@ -165,20 +168,20 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 					"email": ""
 				}
 			],
-			
+
 			"headers": {
 				"Reply-To": "#APPLICATION.emailReply#"
 			},--->
-			
+
 			<cfloop from="1" to="3" index="curAttempt">
-			
+
 				<cftry>
-					
+
 					<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult" timeout="56">
 						<cfhttpparam type="header" name="Content-Type" value="application/json" />
 						<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
 					</cfhttp>
-							
+
 					<cfset mandrillResponse = deserializeJSON(responseResult.filecontent)>
 
 					<cfbreak>
@@ -196,26 +199,26 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 						<cfelse>
 							<cfset sleep(300)>
 						</cfif>
-						
+
 					</cfcatch>
 
 				</cftry>
 
 			</cfloop>
-			
+
 			<cfif isDefined("responseResult") AND isDefined("mandrillResponse") AND responseResult.status_code NEQ 200>
-				
+
 				<cfthrow errorcode="1302" message="#mandrillResponse.message#">
-				
+
 			</cfif>
 
 		</cfif>
-		
+
 
 	<cfelseif APPLICATION.identifier EQ "vpnet"><!--- VPNET --->
 
 
-		<cfhttp url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/sendMail.jsp" method="post" result="pageResponse">				        
+		<cfhttp url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/sendMail.jsp" method="post" result="pageResponse">
 			<cfhttpparam name="email_from" type="formfield" value="#arguments.from#">
 			<cfhttpparam name="email_to" type="formfield" value="#arguments.to#">
 			<cfhttpparam name="email_bcc" type="formfield" value="#arguments.bcc#">
@@ -226,27 +229,27 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 				<cfhttpparam name="email_failto" type="formfield" value="#APPLICATION.emailFail#">
 			</cfif>
 			<cfhttpparam name="email_subject" type="formfield" value="#arguments.subject#">
-			<cfhttpparam name="email_content" type="formfield" value="#email_content#">	
+			<cfhttpparam name="email_content" type="formfield" value="#email_content#">
 		</cfhttp>
-		
+
 		<cfset xmlResult = XmlParse(Trim(pageResponse.FileContent))>
-		
+
 		<cfif isDefined("xmlResult.response.xmlAttributes.status")>
 			<cfif xmlResult.response.xmlAttributes.status NEQ "ok">
 				<cfset error_code = 1302>
 				<cfset error_message = xmlResult.response.error.title.xmlText>
-				
+
 				<cfthrow errorcode="#error_code#" message="#error_message# #xmlResult#">
 			</cfif>
 		<cfelse>
-		
+
 			<cfset error_code = 1302>
-				
+
 			<cfthrow errorcode="#error_code#" message="#xmlResult#">
-		
+
 		</cfif>
 
-		
+
 	</cfif>
 
 </cfprocessingdirective>
