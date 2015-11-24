@@ -1,4 +1,4 @@
-<cfif page_directory EQ "intranet">
+<cfif page_directory EQ "intranet"><!---INTRANET--->
 
   <!--- Add client abb to all URLs --->
   <cfoutput>
