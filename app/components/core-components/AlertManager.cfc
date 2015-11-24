@@ -1013,6 +1013,39 @@
 	</cffunction>
 
 
+	<!--- --------------------------- getHeadContentWeb --------------------------- --->
+
+	<cffunction name="getHeadContentWeb" access="public" returntype="string">
+		<cfargument name="language" type="string" required="true">
+		<cfargument name="client_abb" type="string" required="true">
+
+		<cfset var method = "getHeadContentWeb">
+
+		<cfset var headContentWeb = "">
+		<cfset var clientAppTitle = "">
+
+		<cfif NOT isDefined("SESSION.client_app_title")>
+
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			</cfinvoke>
+
+			<cfset clientAppTitle = clientQuery.app_title>
+
+		<cfelse>
+
+			<cfset clientAppTitle = SESSION.client_app_title>
+
+		</cfif>
+
+		<cfsavecontent variable="headContentWeb"><cfoutput><div><img src="#APPLICATION.mainUrl#/#APPLICATION.logoWebNotifications#" alt="#clientAppTitle#"/></div></cfoutput></cfsavecontent>
+
+		<cfreturn headContentWeb>
+
+	</cffunction>
+
+
 	<!--- --------------------------- getItemFootContent --------------------------- --->
 
 	<cffunction name="getItemFootContent" access="private" returntype="string">
@@ -2118,6 +2151,7 @@
 		<cfset var userAccessResult = "">
 		<cfset var subject = "">
 		<cfset var headContent = "">
+		<cfset var headContentWeb = "">
 		<cfset var footContent = "">
 		<cfset var userAreasIds = "">
 
@@ -2396,13 +2430,19 @@
 
 												<cfset alertContentWeb = preAlertContentWeb&alertContentWeb>
 
+												<!--- getHeadContent --->
+												<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getHeadContentWeb" returnvariable="headContentWeb">
+													<cfinvokeargument name="language" value="#curLang#">
+													<cfinvokeargument name="client_abb" value="#client_abb#"/>
+												</cfinvoke>
+
 												<!--- sendEmail --->
 												<cfinvoke component="#APPLICATION.componentsPath#/EmailManager" method="sendEmail">
 													<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
 													<cfinvokeargument name="to" value="#curUserEmail#">
 													<cfinvokeargument name="subject" value="#subjectWeb#">
 													<cfinvokeargument name="content" value="#alertContentWeb#">
-													<cfinvokeargument name="head_content" value="#headContent#">
+													<cfinvokeargument name="head_content" value="#headContentWeb#">
 													<cfinvokeargument name="foot_content" value="#footContent#">
 												</cfinvoke>
 

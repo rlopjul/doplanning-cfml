@@ -79,6 +79,8 @@
 		<cfargument name="colorIntranetLayout" type="string" required="false" default="/app/css/colors/palette.css">
 		<cfargument name="fontIntranetLayout" type="string" required="false" default="/app/css/fonts/type.css">
 
+		<cfargument name="logoWebNotifications" type="string" required="true" default="/html/assets/v3/logo_doplanning.png">
+
 
 			<cfset APPLICATION.dsn = "doplanning_app">
 			<cfset APPLICATION.dataBaseName = "doplanning_app">
@@ -203,6 +205,8 @@
 
 			<cfset APPLICATION.defaultLanguage = arguments.defaultLanguage>
 
+			<cfset APPLICATION.logoWebNotifications = arguments.logoWebNotifications>
+
 			<!--- Intranet --->
 			<cfset APPLICATION.webCSSPath = arguments.baseCSSPath>
 			<cfset APPLICATION.cssLayout = "#APPLICATION.path#/app/css/mockup.css">
@@ -220,8 +224,6 @@
 
 			<!---Google analytics--->
 			<cfset APPLICATION.googleAnalyticsAccountId = "">
-
-
 
 			<cfif arguments.addSchedules IS true>
 
@@ -505,6 +507,8 @@
 
 					<cfinvokeargument name="helpUrl" value="https://ceseand.net/es/page.cfm?id=76&title=manuales-de-la-web">
 					<cfinvokeargument name="termsOfUseUrl" value="https://ceseand.net/es/page.cfm?id=57&title=terminos-de-uso">
+
+					<cfinvokeargument name="logoWebNotifications" value="/assets/logo-ceseand-emails.jpg">
 
 				</cfinvoke>
 
