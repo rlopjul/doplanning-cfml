@@ -136,7 +136,7 @@ curLangText["es"] = {
 
 			//"foot_content_1" : "Este es un email automático enviado por la aplicación",
 			"foot_content_2" : "que le avisa de nuevos contenidos creados por usuarios en",
-			"foot_content_3" : 'Si no desea recibir estos emails, puede desactivarlos accediendo al área "Preferencias" de la aplicación',
+			"foot_content_3" : 'Si no desea recibir estos emails, puede desactivarlos en las preferencias de notificaciones de su cuenta de usuario',
 
 			"access_to_reply" : "Para responder acceda a",
 			"access_to_item_male" : "Acceda directamente al",
@@ -530,7 +530,7 @@ curLangText["en"] = {
 
 			//"foot_content_1" : "This is an automated email sent by the application",
 			"foot_content_2" : "that notifies you of new content created by users at",
-			"foot_content_3" : 'If you do not want to receive these emails, you can disable notifications at the application preferences',
+			"foot_content_3" : 'If you do not want to receive these emails, you can disable notifications at preferences in your user account',
 
 			"access_to_reply" : "To reply go to",
 			"access_to_item_male" : "Go directly to the",
