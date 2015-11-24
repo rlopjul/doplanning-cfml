@@ -7,6 +7,10 @@
   <cfinvokeargument name="client_dsn" value="#client_dsn#">
 </cfinvoke>
 
+<cfif isDefined("pageLang")>
+  <cfset objectUser.language = pageLang>
+</cfif>
+
 <cfoutput>
 
 <script src="#APPLICATION.path#/jquery/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
@@ -50,7 +54,7 @@
 				  		    openUrl("#CGI.SCRIPT_NAME#?res="+data.result+"&msg="+encodeURIComponent(message)+"&abb="+data.client_abb);
               else {
 
-                bootbox.alert(message, function() { });
+                bootbox.alert(window.lang.translate(message), function() { });
 
                 showLoadingPage(false);
 
@@ -114,7 +118,7 @@
 
 </cfoutput>
 
-<legend lang="es">Datos del usuario registrante/persona de contacto</legend>
+<legend lang="es">Datos del usuario</legend>
 
 <cfset page_type = 3>
 <cfinclude template="#APPLICATION.corePath#/includes/user_data_form.cfm"/>

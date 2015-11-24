@@ -4,7 +4,7 @@
 <head>
 <cfoutput>
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>#APPLICATION.title# - Registro</title>
+<title>#APPLICATION.title#</title>
 <!-- InstanceEndEditable -->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/html_head.cfm">
@@ -59,6 +59,21 @@
 
 		<cfif clientQuery.public_user_registration IS 1>
 
+			<cfif isDefined("URL.lang") AND listFind(APPLICATION.languages, URL.lang) GT 0>
+				<cfset pageLang = URL.lang>
+			<cfelse>
+				<cfset pageLang = clientQuery.default_language>
+			</cfif>
+
+			<cfoutput>
+			<script>
+				$(function () {
+
+					window.lang.change('#pageLang#');
+
+				});
+			</script>
+			</cfoutput>
 
 			<cfif isDefined("URL.res") AND URL.res IS true>
 
@@ -82,7 +97,7 @@
 
 							<div class="alert alert-success" role="alert">
 
-								<span lang="es">Usuario registrado.<br/>Para completar el registro deberá acceder al enlace que recibirá en su cuenta de correo para la validación de la misma.</span>
+								<span lang="es">Usuario registrado.</span><br/><span lang="es">Para completar el registro deberá acceder al enlace que recibirá en su cuenta de correo para la validación de la misma.</span>
 
 							</div>
 

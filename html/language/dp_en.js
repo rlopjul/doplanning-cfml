@@ -1255,6 +1255,15 @@ Lang.prototype.pack.en = {
 		"Debe seleccionar al menos una categoría para poder subir el archivo":"You must select at least one category to upload the file",
 		"No hay categorías definidas en tu organización":"No defined categories in your organization",
 
+		"La dirección de email introducida ya está asociada a otro usuario de la aplicación":"The email address is already registered",
+		"Registro de usuarios deshabilitado.":"User registration disabled.",
+		"Datos del usuario":"User data",
+		"Registrarse":"Send",
+		"Usuario registrado.":"User successfully registered.",
+		"Para completar el registro deberá acceder al enlace que recibirá en su cuenta de correo para la validación de la misma.":"To complete the registration you must access the link you will receive in your email account",
+		"Usuario verificado correctamente. Puede acceder a la aplicación.":"User verified. You can now access the application.",
+		"Verificación de usuario ya realizada previamente.":"User verification already done previously.",
+
 	}
 
 
