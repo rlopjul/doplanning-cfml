@@ -331,7 +331,7 @@ curLangText["es"] = {
 		"new_user": {
 
 			"you_has_been_registered_in_organization" : "Usted ha sido dado de alta como usuario de la organización",
-			"you_has_been_registered_in_application" : "Ha sido dado de alta en la aplicación",
+			"you_has_been_registered_in_application" : "Ha sido dado de alta en",
 			"if_you_use_the_application" : "IMPORTANTE: Si utiliza la aplicación acepta los términos de uso de la misma, que aparecen en la siguiente página",
 			"to_verify_your_account" : "<b>PARA COMPLETAR SU REGISTRO</b> debe acceder a la siguiente dirección para verificar su cuenta de correo y poder usar la aplicación:",
 
@@ -350,7 +350,7 @@ curLangText["es"] = {
 		"new_password": {
 
 			"new_password_to_access" : "Nueva contraseña de acceso a",
-			"new_password_to_access_application" : "Ha solicitado una nueva contraseña para la aplicación",
+			"new_password_to_access_application" : "Ha solicitado una nueva contraseña para",
 
 			"new_password" : "Nueva contraseña",
 
@@ -742,7 +742,7 @@ curLangText["en"] = {
 		"new_password": {
 
 			"new_password_to_access" : "New password to access",
-			"new_password_to_access_application" : "You have requested a new password for the application",
+			"new_password_to_access_application" : "You have requested a new password for",
 
 			"new_password" : "New password",
 

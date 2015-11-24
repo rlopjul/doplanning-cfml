@@ -842,7 +842,11 @@
 
 		<cfsavecontent variable="html_text">
 		<cfoutput>
+<cfif APPLICATION.title NEQ rootAreaQuery.name>
 #langText[curLang].new_password.new_password_to_access_application# #APPLICATION.title# #langText[curLang].common.of_the_organization# <b>#rootAreaQuery.name#</b>.<br /><br />
+<cfelse>
+#langText[curLang].new_password.new_password_to_access_application# #APPLICATION.title#.<br /><br />
+</cfif>
 
 #langText[curLang].common.your_access_email#: #arguments.user_email#<br /><br/>
 <span style="font-size:15px">#langText[curLang].new_password.new_password#: <b>#arguments.user_password#</b></span><br/><br/>
@@ -855,7 +859,7 @@
 
 		<!--- <cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;">#langText[curLang].common.foot_content_default_3# #APPLICATION.title#.</p>'> --->
 
-		<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[curLang].common.foot_do_not_reply#.</span><br/>#langText[curLang].common.foot_content_default_1# #APPLICATION.title#.</p>'>
+		<cfset foot_content = '<p style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:9px;"><span style="color:##FF0000; font-size:12px;">#langText[curLang].common.foot_do_not_reply#.</span><br/>#langText[curLang].common.foot_content_default_1# #langText[curLang][APPLICATION.titlePrefix].title_prefix# #APPLICATION.title#.</p>'>
 
 		<cfinvoke component="EmailManager" method="sendEmail">
 			<cfinvokeargument name="from" value="#APPLICATION.emailFrom#">
