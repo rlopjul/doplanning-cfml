@@ -170,7 +170,7 @@
 			<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
 
 				<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
-					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="table_id" value="#arguments.typology_id#">
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					<cfinvokeargument name="with_types" value="true">
 					<cfinvokeargument name="with_table" value="false">
@@ -198,9 +198,12 @@
                 	<cfelse>
 
                 		INNER JOIN `#client_abb#_users_typologies_rows_#arguments.typology_id#` AS table_row
-		                ON u.typology_row_id = table_row.row_id
+										ON u.typology_id = <cfqueryparam value="#arguments.typology_id#" cfsqltype="cf_sql_integer">
+		                AND u.typology_row_id = table_row.row_id
 
-	                	<cfloop query="fields">
+										<cfinclude template="#APPLICATION.coreComponentsPath#/includes/tableRowsSearchFields.cfm">
+
+	                	<!---<cfloop query="fields">
 
 							<cfset field_name = "field_#fields.field_id#">
 
@@ -274,7 +277,7 @@
 
 							</cfif>
 
-						</cfloop>
+						</cfloop>--->
 
                 	</cfif>
 
