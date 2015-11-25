@@ -540,29 +540,60 @@
 
 	</cfif>
 
-	<div class="row">
 
-		<cfif NOT isDefined("curElement") OR ( curElement NEQ "users" AND curElement NEQ "areas" )>
+	<cfif NOT isDefined("curElement") OR ( curElement NEQ "users" AND curElement NEQ "areas" )>
+
+		<div class="row">
 
 			<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es"><cfif itemTypeId IS 6>Tarea encargada por<cfelse>Usuario</cfif></label>
 
-			<div class="col-xs-7 col-sm-9">
+			<div class="col-xs-6 col-sm-7 col-md-8">
 
-				<select name="from_user" id="from_user" class="form-control"><!---class="selectpicker" data-live-search="true"--->
-					<option value="" lang="es">Todos</option>
-					<cfloop index="objectUser" array="#users#">
-						<option value="#objectUser.id#" <cfif objectUser.id EQ user_in_charge>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
-					</cfloop>
-				</select>
+				<cfif isNumeric(user_in_charge)>
+
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
+						<cfinvokeargument name="user_id" value="#user_in_charge#">
+					</cfinvoke>
+
+					<cfif userQuery.recordCount GT 0>
+
+						<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+							<cfset from_user_full_name = userQuery.user_full_name>
+						<cfelse>
+							<cfset from_user_full_name = "USUARIO SELECCIONADO SIN NOMBRE">
+						</cfif>
+
+					<cfelse>
+
+						<cfset from_user_full_name = "USUARIO NO ENCONTRADO">
+						<cfset user_in_charge = "">
+
+					</cfif>
+
+				<cfelse>
+
+					<cfset from_user_full_name = "">
+
+				</cfif>
+
+				<input type="hidden" name="from_user" id="from_user" value="#user_in_charge#" />
+				<input type="text" name="from_user_user_full_name" id="from_user_user_full_name" value="#from_user_full_name#" class="form-control" readonly onclick="openUserSelectorWithField('from_user')" />
 
 			</div>
 
-		</cfif>
+			<div class="col-xs-1 col-sm-1 col-md-1">
+				<button onclick="clearFieldSelectedUser('from_user')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
+			</div>
 
-	</div>
+		</div>
 
+		<div class="row">
+			<div class="col-xs-5 col-sm-3"></div>
+			<div class="col-xs-7 col-sm-8 col-md-9">
+				<button onclick="openUserSelectorWithField('from_user')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+			</div>
+		</div>
 
-	<cfif NOT isDefined("curElement") OR ( curElement NEQ "users" AND curElement NEQ "areas" )>
 
 		<!--- Categories --->
 
@@ -626,7 +657,7 @@
 
 		</cfif><!--- END isNumeric(itemTypeOptions.category_area_id) --->
 
-	</cfif>
+	</cfif><!--- NOT isDefined("curElement") OR ( curElement NEQ "users" AND curElement NEQ "areas" ) --->
 
 
 	<div class="row">
