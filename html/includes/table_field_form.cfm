@@ -17,7 +17,7 @@
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.js"></script>
 <link rel="stylesheet" href="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.css">
 
-<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>
 
 <script>
 

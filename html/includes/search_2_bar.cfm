@@ -7,7 +7,7 @@
 
 	<script src="#APPLICATION.path#/jquery/jquery.highlight.js"></script>
 
-	<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
+	<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>
 
 	<!---bootstrap-select--->
 	<!---<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>

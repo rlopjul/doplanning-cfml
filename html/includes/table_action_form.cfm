@@ -17,7 +17,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/summernote_scripts.cfm">
 
-<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>
 
 <script>
 
