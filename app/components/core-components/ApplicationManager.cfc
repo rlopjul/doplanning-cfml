@@ -412,6 +412,8 @@
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
 
 					<cfinvokeargument name="hideInputLabels" value="true">
+
+					<cfinvokeargument name="logoWebNotifications" value="/assets/logo-era7-bioinformatics.png">
 				</cfinvoke>
 
 			</cfcase>
