@@ -138,7 +138,12 @@ function downloadFileLinked(anchor,event){
 }
 
 function openPopUp(url) {
-	window.open(url, "popup_id", "scrollbars,resizable,width=580,height=500,location=no ");
+	window.open(url, "main_popup", "scrollbars,resizable,width=580,height=500,location=no");
+	return false;
+}
+
+function openUserPopUp(url) {
+	window.open(url, "user_popup", "scrollbars,resizable,width=580,height=500,location=no");
 	return false;
 }
 
