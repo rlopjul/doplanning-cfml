@@ -359,6 +359,41 @@
 
 			</cfif>
 
+			<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
+			<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
+			<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+			<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
+
+			<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js"></script>
+
+			<script>
+
+				function openUserSelectorWithField(fieldName){
+
+					return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+
+				}
+
+				function setSelectedUser(userId, userName, fieldName) {
+
+					document.getElementById(fieldName).value = userId;
+					document.getElementById(fieldName+"_user_full_name").value = userName;
+				}
+
+				function clearFieldSelectedUser(fieldName) {
+
+					document.getElementById(fieldName).value = "";
+					document.getElementById(fieldName+"_user_full_name").value = "";
+				}
+
+				function openItemSelectorWithField(itemTypeId,fieldName){
+
+					return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
+
+				}
+
+			</script>
+
 			<cfform method="get" name="search_form" action="#CGI.SCRIPT_NAME#" class="form-horizontal" onsubmit="return onSubmitForm();">
 
 				<script>
@@ -393,11 +428,15 @@
 
 			</cfform>
 
-		</cfif>
+	</cfif>
 
-		<cfif ( objectItem.list_rows_by_default IS true AND tableRows.recordCount LT 2000 ) OR isDefined("URL.search")>
-
+	<div class="row">
+		<div class="col-sm-12">
 			<span class="label label-primary">#tableRows.recordCount# <span lang="es">registros</span></span>
+		</div>
+	</div>
+
+	<cfif ( objectItem.list_rows_by_default IS true AND tableRows.recordCount LT 2000 ) OR isDefined("URL.search")>
 
 			<cfif tableRows.recordCount GT 0>
 
