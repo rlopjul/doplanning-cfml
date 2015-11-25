@@ -181,7 +181,7 @@
 			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
 	    <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
-	    <cfset APPLICATION.functionsJSPath = APPLICATION.htmlPath&"/scripts/functions.min.js?v=2.8">
+	    <cfset APPLICATION.functionsJSPath = APPLICATION.htmlPath&"/scripts/functions.min.js?v=3">
 
 	    <cfset APPLICATION.ckeditorJSPath = "#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4">
 
