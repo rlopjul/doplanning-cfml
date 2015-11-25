@@ -173,7 +173,6 @@
 	</cffunction>
 
 
-
 	<!--- -------------------------------createRow-------------------------------------- --->
 
   <cffunction name="createRow" returntype="struct" access="public">

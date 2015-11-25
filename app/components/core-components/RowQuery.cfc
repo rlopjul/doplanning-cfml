@@ -471,7 +471,8 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="false">
-		<cfargument name="fields" type="query" required="false"><!--- Required to order by fields --->
+		<cfargument name="fields" type="query" required="false"><!--- Required to order by fields or search--->
+		<cfargument name="search" type="string" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -481,6 +482,20 @@
 		<cfset var orderBy = "">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfif isDefined("arguments.search") AND NOT isDefined("arguments.fields")>
+
+				<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="with_types" value="true">
+					<cfinvokeargument name="with_table" value="false">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfif>
 
 			<cfquery name="getTableRows" datasource="#client_dsn#">
 				SELECT table_row.*,
@@ -492,6 +507,15 @@
 				<cfif isDefined("arguments.row_id")>
 					WHERE table_row.row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
 				<cfelse>
+
+					<cfif isDefined("arguments.search")>
+
+						WHERE 1=1
+
+						<cfinclude template="#APPLICATION.coreComponentsPath#/includes/tableRowsSearchFields.cfm">
+
+					</cfif>
+
 					<cfif isDefined("arguments.fields")>
 
 						<cfloop query="fields">
@@ -508,6 +532,7 @@
 						</cfloop>
 
 					</cfif>
+
 					<cfif len(orderBy) GT 0>
 						ORDER BY #orderBy#
 					<cfelse>
@@ -522,33 +547,94 @@
 
 
 
-	<!---getTableRowAttachedFiles--->
+	<!---getTableRowsSearch--->
 
-	<cffunction name="getTableRowAttachedFiles" output="false" returntype="query" access="public">
+	<!---
+	<cffunction name="getTableRowsSearch" output="false" returntype="struct" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
-		<cfargument name="row_id" type="numeric" required="false">
+
+		<cfargument name="area_id" type="numeric" required="no">
+		<cfargument name="areas_ids" type="string" required="no">
+
+		<cfargument name="name" type="string" required="false">
+		<cfargument name="file_name" type="string" required="false">
+		<cfargument name="description" type="string" required="false">
+		<cfargument name="user_in_charge" type="numeric" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="limit" type="numeric" required="false">
+
+		<cfargument name="from_date" type="string" required="no">
+		<cfargument name="end_date" type="string" required="no">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
-		<cfset var method = "getTableRowAttachedFiles">
+		<cfset var method = "getTableRowsSearch">
+
+		<cfset var count = 0>
+		<cfset var name_re = "">
+		<cfset var file_name_re = "">
+		<cfset var description_re = "">
+
+		<cfset var selectFields = false>
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<cfquery name="getRowAttachedFile" datasource="#client_dsn#">
-				SELECT files.*
-				FROM `#client_abb#_files` AS files
-				WHERE files.item_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-				AND files.item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">
-				<cfif isDefined("arguments.row_id")>
-					AND files.row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
-				</cfif>;
+
+			<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="with_types" value="true">
+				<cfinvokeargument name="with_table" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<!---<cfquery dbtype="query" name="selectFieldsCount">
+				SELECT field_id
+				FROM fields
+				WHERE field_type_id = 9 OR field_type_id = 10;
 			</cfquery>
+			<cffif selectFieldsCount.recordCount GT 0>
+				<cfset selectFields = true>
+			</cffif>--->
 
-		<cfreturn getRowAttachedFile>
+			<cftransaction>
 
-	</cffunction>
+				<cfquery name="getTableRowsSearch" datasource="#client_dsn#">
+					SELECT table_row.*,
+					CONCAT_WS(' ', insert_users.family_name, insert_users.name) AS insert_user_full_name, insert_users.image_type AS insert_user_image_type,
+					CONCAT_WS(' ', update_users.family_name, update_users.name) AS update_user_full_name, update_users.image_type AS update_user_image_type
+					FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AS table_row
+					LEFT JOIN #client_abb#_users AS insert_users ON table_row.insert_user_id = insert_users.id
+					LEFT JOIN #client_abb#_users AS update_users ON table_row.last_update_user_id = update_users.id
+					FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AS table_row
+					<!---LEFT JOIN #client_abb#_users AS insert_users ON table_row.insert_user_id = insert_users.id
+					LEFT JOIN #client_abb#_users AS update_users ON table_row.last_update_user_id = update_users.id--->
+
+					<!---INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id--->
+
+					<cfinclude template="#APPLICATION.coreComponentsPath#/includes/tableRowsSearchFields.cfm">
+
+					<cfif isDefined("arguments.limit")>
+					LIMIT #arguments.limit#
+					</cfif>;
+				</cfquery>
+
+				<cfif isDefined("arguments.limit")>
+					<cfquery datasource="#client_dsn#" name="getCount">
+						SELECT FOUND_ROWS() AS count;
+					</cfquery>
+					<cfset count = getCount.count>
+				</cfif>
+
+			</cftransaction>
+
+		<cfreturn {query=getTableRowsSearch, count=count}>
+
+	</cffunction>--->
 
 
 
@@ -702,6 +788,37 @@
 			</cftransaction>
 
 		<cfreturn {query=getTableRows, count=count}>
+
+	</cffunction>
+
+
+
+
+	<!---getTableRowAttachedFiles--->
+
+	<cffunction name="getTableRowAttachedFiles" output="false" returntype="query" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="row_id" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getTableRowAttachedFiles">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfquery name="getRowAttachedFile" datasource="#client_dsn#">
+				SELECT files.*
+				FROM `#client_abb#_files` AS files
+				WHERE files.item_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				AND files.item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">
+				<cfif isDefined("arguments.row_id")>
+					AND files.row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
+				</cfif>;
+			</cfquery>
+
+		<cfreturn getRowAttachedFile>
 
 	</cffunction>
 

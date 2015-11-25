@@ -17,21 +17,39 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
 	<cfinvokeargument name="table_id" value="#table_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-	<cfinvokeargument name="include_in_list" value="true">
+	<cfinvokeargument name="with_types" value="true">
 </cfinvoke>
-<cfset fields = fieldsResult.tableFields>
+<cfset allFields = fieldsResult.tableFields>
+
+<cfquery dbtype="query" name="fields">
+	SELECT *
+	FROM allFields
+	WHERE include_in_list = <cfqueryparam value="true" cfsqltype="cf_sql_bit">;
+</cfquery>
 
 <!---Table rows--->
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRows" returnvariable="tableRowsResult">
-	<cfinvokeargument name="table_id" value="#table_id#">
-	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-	<cfinvokeargument name="fields" value="#fields#">
-</cfinvoke>
+
+<cfif isDefined("URL.search")>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRowsSearch" argumentCollection="#URL#" returnvariable="tableRowsResult">
+		<cfinvokeargument name="table_id" value="#table_id#">
+		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		<cfinvokeargument name="fields" value="#fields#">
+	</cfinvoke>
+
+<cfelse>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRows" returnvariable="tableRowsResult">
+		<cfinvokeargument name="table_id" value="#table_id#">
+		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		<cfinvokeargument name="fields" value="#fields#">
+	</cfinvoke>
+
+</cfif>
+
 <cfset tableRows = tableRowsResult.rows>
 
-<cfif objectItem.list_rows_by_default IS true>
-
-
+<cfif objectItem.list_rows_by_default IS true OR isDefined("URL.search")>
 
 	<!--- creation_date --->
 	<!---<cfset queryAddRow(fields, 1)>
@@ -129,7 +147,6 @@
 				</div>
 
 				<!---<span class="divider">&nbsp;</span>--->
-
 
 
 				<cfif is_user_area_responsible AND objectArea.read_only IS false>
@@ -317,56 +334,112 @@
 </div><!--- END row --->
 
 
-
-
 <!---<div class="div_items">--->
 
-	<cfif objectItem.list_rows_by_default IS true OR tableRows.recordCount GT 2000>
+		<cfif objectItem.list_rows_by_default IS false OR tableRows.recordCount GT 2000 OR isDefined("URL.search")>
 
-		<cfif tableRows.recordCount GT 0>
+			<cfif isDefined("URL.search")><!---isDefined("URL.name") AND --->
 
-			<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">--->
+				<cfset row = URL>
 
-			<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+			<cfelse>
 
-			<div class="container-fluid" style="position:absolute;width:100%;left:0;">
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="fields" value="#allFields#">
+				</cfinvoke>
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="fillEmptyRow" returnvariable="row">
+					<cfinvokeargument name="emptyRow" value="#emptyRow#">
+					<cfinvokeargument name="fields" value="#allFields#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="withDefaultValues" value="false">
+				</cfinvoke>
+
+			</cfif>
+
+			<cfform method="get" name="search_form" action="#CGI.SCRIPT_NAME#" class="form-horizontal" onsubmit="return onSubmitForm();">
+
+				<script>
+					var railo_custom_form;
+
+					if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
+						railo_custom_form = new LuceeForms('search_form');
+					else
+						railo_custom_form = new RailoForms('search_form');
+				</script>
+
+				<input type="hidden" name="#tableTypeName#" value="#table_id#"/>
+				<input type="hidden" name="area" value="#area_id#"/>
+
+				<!--- outputRowFormInputs --->
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowFormInputs">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="row" value="#row#">
+					<cfinvokeargument name="fields" value="#allFields#">
+					<cfinvokeargument name="search_inputs" value="true">
+					<cfinvokeargument name="displayType" value="horizontal">
+				</cfinvoke>
 
 				<div class="row">
+					<div class="col-xs-offset-0 col-xs-12 col-sm-offset-3 col-sm-7 col-md-offset-3 col-md-4 col-lg-3">
 
-					<div class="col-sm-12">
+						<button type="submit" name="search" class="btn btn-success btn-lg btn-block" style="margin-top:30px;text-align:left;"><i class="icon-search"></i> <span lang="es">Buscar</span></button>
 
-						<!--- outputRowList --->
-						<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowList">
-							<cfinvokeargument name="table_id" value="#table_id#">
-							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-							<cfinvokeargument name="tableRows" value="#tableRows#">
-							<cfinvokeargument name="fields" value="#fields#">
-							<cfinvokeargument name="openRowOnSelect" value="true">
-							<cfinvokeargument name="app_version" value="#app_version#">
-							<cfinvokeargument name="columnSelectorContainer" value="columnSelector#tableTypeId#_#table_id#">
-						</cfinvoke>
+					</div>
+				</div>
 
-					</div><!--- END col-sm-12 --->
-
-				</div><!--- END row --->
-
-			</div><!--- END container-fluid --->
-
-		<cfelse>
-
-			<script type="text/javascript">
-				openUrlHtml2('empty.cfm','itemIframe');
-			</script>
-
-			<div class="alert alert-info"><span lang="es">No hay datos introducidos.</span></div>
+			</cfform>
 
 		</cfif>
 
-	<cfelse>
+		<cfif ( objectItem.list_rows_by_default IS true AND tableRows.recordCount LT 2000 ) OR isDefined("URL.search")>
 
-		<div class="alert alert-info">#tableRows.recordCount# <span lang="es">registros</span></div>
+			<span class="label label-primary">#tableRows.recordCount# <span lang="es">registros</span></span>
+
+			<cfif tableRows.recordCount GT 0>
+
+				<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">--->
+
+				<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+
+				<div class="container-fluid" style="position:absolute;width:100%;left:0;">
+
+					<div class="row">
+
+						<div class="col-sm-12">
+
+							<!--- outputRowList --->
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowList">
+								<cfinvokeargument name="table_id" value="#table_id#">
+								<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+								<cfinvokeargument name="tableRows" value="#tableRows#">
+								<cfinvokeargument name="fields" value="#fields#">
+								<cfinvokeargument name="openRowOnSelect" value="true">
+								<cfinvokeargument name="app_version" value="#app_version#">
+								<cfinvokeargument name="columnSelectorContainer" value="columnSelector#tableTypeId#_#table_id#">
+							</cfinvoke>
+
+						</div><!--- END col-sm-12 --->
+
+					</div><!--- END row --->
+
+				</div><!--- END container-fluid --->
+
+			<cfelse>
+
+				<!---<script type="text/javascript">
+					openUrlHtml2('empty.cfm','itemIframe');
+				</script>
+
+				<div class="alert alert-info"><span lang="es">No hay datos introducidos.</span></div>--->
+
+			</cfif>
 
 	</cfif>
+
 
 <!---</div>--->
 

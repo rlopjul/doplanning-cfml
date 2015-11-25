@@ -1805,6 +1805,68 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- getTableRowsSearch -------------------------------------  --->
+
+	<cffunction name="getTableRowsSearch" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="fields" type="query" required="false">
+		<cfargument name="search" type="string" required="false" default="true">
+
+		<cfset var method = "getTableRowsSearch">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<!---checkAreaAccess in getTable--->
+			<cfinvoke component="TableManager" method="getTable" returnvariable="getTableResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			</cfinvoke>
+
+			<cfif getTableResponse.result IS false>
+				<cfreturn getTableResponse>
+			</cfif>
+
+			<cfset table = getTableResponse.table>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" argumentcollection="#arguments#" returnvariable="getRowsQuery">
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif getRowsQuery.recordCount GT 0 OR NOT isDefined("arguments.row_id")>
+
+				<cfset response = {result=true, rows=#getRowsQuery#, table=#table#}>
+
+			<cfelse><!---Item does not exist--->
+
+				<cfset error_code = 501>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
 	<!--- ------------------------------------- getViewRows -------------------------------------  --->
 
 	<cffunction name="getViewRows" output="false" access="public" returntype="struct">

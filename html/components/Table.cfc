@@ -411,6 +411,35 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- getTableRowsSearch ------------------------------------- --->
+
+	<cffunction name="getTableRowsSearch" returntype="struct" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="fields" type="query" required="false">
+
+		<cfset var method = "getTableRowsSearch">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="getTableRowsSearch" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- ----------------------------------- getTableUsers ------------------------------------- --->
 
 	<cffunction name="getTableUsers" returntype="struct" access="public">
