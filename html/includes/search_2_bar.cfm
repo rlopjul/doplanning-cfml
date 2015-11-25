@@ -96,18 +96,6 @@
 	<cfset selected_typology_id = "">
 </cfif>
 
-
-<cfif NOT isDefined("curElement") OR curElement NEQ "users">
-
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUsers" returnvariable="getUsersResponse">
-	</cfinvoke>
-
-	<cfset users = getUsersResponse.users>
-	<cfset numUsers = ArrayLen(users)>
-
-</cfif>
-
-
 <script>
 
 	$(function() {
@@ -499,18 +487,58 @@
 				</div>
 			</div>
 
-			<div class="row">
-				<label for="to_user" class="col-xs-5 col-sm-3 control-label" lang="es">Tarea para</label>
 
-				<div class="col-xs-7 col-sm-9">
-					<select name="to_user" lang="to_user" class="form-control">
-						<option value="" lang="es">Todos</option>
-						<cfloop index="objectUser" array="#users#">
-							<option value="#objectUser.id#" <cfif objectUser.id EQ recipient_user>selected="selected"</cfif>>#objectUser.family_name# #objectUser.name#</option>
-						</cfloop>
-					</select>
+			<div class="row">
+
+				<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es">Tarea para</label>
+
+				<div class="col-xs-6 col-sm-7 col-md-8">
+
+					<cfif isNumeric(recipient_user)>
+
+						<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
+							<cfinvokeargument name="user_id" value="#recipient_user#">
+						</cfinvoke>
+
+						<cfif userQuery.recordCount GT 0>
+
+							<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+								<cfset to_user_full_name = userQuery.user_full_name>
+							<cfelse>
+								<cfset to_user_full_name = "USUARIO SELECCIONADO SIN NOMBRE">
+							</cfif>
+
+						<cfelse>
+
+							<cfset to_user_full_name = "USUARIO NO ENCONTRADO">
+							<cfset recipient_user = "">
+
+						</cfif>
+
+					<cfelse>
+
+						<cfset to_user_full_name = "">
+
+					</cfif>
+
+					<input type="hidden" name="to_user" id="to_user" value="#recipient_user#" />
+					<input type="text" name="to_user_user_full_name" id="to_user_user_full_name" value="#to_user_full_name#" class="form-control" readonly onclick="openUserSelectorWithField('to_user')" />
+
+				</div>
+
+				<div class="col-xs-1 col-sm-1 col-md-1">
+					<button onclick="clearFieldSelectedUser('to_user')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-xs-5 col-sm-3"></div>
+				<div class="col-xs-7 col-sm-8 col-md-9">
+					<button onclick="openUserSelectorWithField('to_user')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
 				</div>
 			</div>
+
 		</cfif>
 
 		<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, Publications--->
