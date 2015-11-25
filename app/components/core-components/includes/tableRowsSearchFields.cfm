@@ -41,6 +41,15 @@
 
           </cfif>
 
+        <cfelseif fields.field_type_group IS "file">
+
+          <cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="field_value_re">
+            <cfinvokeargument name="text" value="#field_value#">
+          </cfinvoke>
+
+          AND field_#fields.field_id# IN (SELECT id FROM #client_abb#_files WHERE file_type_id = <cfqueryparam value="#attachedFileTypeId#" cfsqltype="cf_sql_integer"> AND file_name REGEXP <cfqueryparam value="#field_value_re#" cfsqltype="cf_sql_varchar">)
+
+
         <cfelse>
 
           AND field_#fields.field_id# =
@@ -51,7 +60,9 @@
           </cfif>
 
         </cfif>
-      </cfif>
+
+
+    </cfif>
 
     <cfelse><!--- SELECT FIELDS --->
 

@@ -401,8 +401,6 @@
 
 			<cfif tableRows.recordCount GT 0>
 
-				<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_rows_list.cfm">--->
-
 				<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
 				<div class="container-fluid" style="position:absolute;width:100%;left:0;">
@@ -427,14 +425,6 @@
 					</div><!--- END row --->
 
 				</div><!--- END container-fluid --->
-
-			<cfelse>
-
-				<!---<script type="text/javascript">
-					openUrlHtml2('empty.cfm','itemIframe');
-				</script>
-
-				<div class="alert alert-info"><span lang="es">No hay datos introducidos.</span></div>--->
 
 			</cfif>
 
