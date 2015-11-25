@@ -270,6 +270,7 @@ Lang.prototype.pack.en = {
 		"Valor estimado":"Estimated value",
 		"Valor real":"Real value",
 		"Tarea realizada":"Task done",
+		"Tarea encargada por":"From user",
 		"Lugar":"Place",
 		"URL más información:":"URL more information:",
 		"URL más información (enlace)":"URL more information (link)",
