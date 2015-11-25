@@ -14,6 +14,7 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
@@ -41,6 +42,7 @@
 				<cfinvokeargument name="parent_kind" value="area">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
+				<cfinvokeargument name="list_rows_by_default" value="#arguments.list_rows_by_default#">
 				<cfinvokeargument name="general" value="#arguments.general#">
 				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
 				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
@@ -84,6 +86,7 @@
 		<cfargument name="link_target" type="string" required="false" default="">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
@@ -109,6 +112,7 @@
 				<cfinvokeargument name="link_target" value="#arguments.link_target#">
 				<cfinvokeargument name="description" value="#arguments.description#">
 				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
+				<cfinvokeargument name="list_rows_by_default" value="#arguments.list_rows_by_default#">
 				<cfinvokeargument name="general" value="#arguments.general#">
 				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
 				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">

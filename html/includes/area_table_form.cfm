@@ -220,6 +220,19 @@
 
 	</cfif>
 
+	<cfif tableTypeId IS 1 OR 2>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="list_rows_by_default" id="list_rows_by_default" value="true" <cfif isDefined("table.list_rows_by_default") AND table.list_rows_by_default IS true>checked="checked"</cfif> /> <span lang="es">Listar todos los registros por defecto</span>
+				</label>
+				<small class="help-block" lang="es">Desmarcar esta opción si hay o habrá muchos registros. Si no se marca esta opción, se mostrará una búsqueda de registros, en lugar del listado de todos los registros.</small>
+			</div>
+		</div>
+	</div>
+	</cfif>
+
 	<!--- <cfdump var="#table#"> --->
 
 	<cfif APPLICATION.publicationScope IS true AND ( tableTypeId IS 1 OR tableTypeId IS 2 )>

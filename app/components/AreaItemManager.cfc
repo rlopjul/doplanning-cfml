@@ -559,6 +559,7 @@
 		<cfargument name="iframe_display_type_id" type="numeric" required="false">
 		<cfargument name="identifier" type="string" required="false">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
@@ -825,6 +826,9 @@
 
 					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16><!---Lists, Forms, Typologies, Users typologies--->
 					, structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
+						<cfif itemTypeId IS 11 OR itemTypeid IS 12>
+						, list_rows_by_default = <cfqueryparam value="#arguments.list_rows_by_default#" cfsqltype="cf_sql_bit">
+						</cfif>
 						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
 						, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
 						</cfif>
@@ -1021,6 +1025,7 @@
 		<cfargument name="iframe_display_type_id" type="numeric" required="false">
 		<cfargument name="identifier" type="string" required="false">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
@@ -1330,7 +1335,10 @@
 					, identifier = <cfqueryparam value="#arguments.identifier#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
-					, structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
+						, structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
+						<cfif itemTypeId IS 11 OR itemTypeid IS 12>
+						, list_rows_by_default = <cfqueryparam value="#arguments.list_rows_by_default#" cfsqltype="cf_sql_bit">
+						</cfif>
 						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
 						, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
 						</cfif>

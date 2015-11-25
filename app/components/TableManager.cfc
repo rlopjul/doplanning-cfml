@@ -192,6 +192,7 @@
 				<cfset querySetCell(getTableQuery, "publication_date", DateFormat(now(), "DD-MM-YYYY")&" "&TimeFormat(now(), "HH:mm:ss"))>
 
 				<cfset querySetCell(getTableQuery, "publication_validated", true)>
+				<cfset querySetCell(getTableQuery, "list_rows_by_default", true)>
 			</cfif>
 
 			<cfset response = {result=true, table=#getTableQuery#}>

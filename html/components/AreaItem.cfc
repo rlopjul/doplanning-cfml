@@ -158,6 +158,7 @@
 		<cfargument name="iframe_display_type_id" type="numeric" required="false">
 		<cfargument name="identifier" type="string" required="false">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
@@ -519,6 +520,7 @@
 		<cfargument name="iframe_display_type_id" type="numeric" required="no">
 		<cfargument name="identifier" type="string" required="false">
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
+		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
