@@ -334,7 +334,7 @@
 </div><!--- END row --->
 
 
-<!---<div class="div_items">--->
+<cfif allFields.recordCount GT 0>
 
 		<cfif objectItem.list_rows_by_default IS false OR tableRows.recordCount GT 2000 OR isDefined("URL.search")>
 
@@ -458,6 +458,10 @@
 	</cfif>
 
 
-<!---</div>--->
+<cfelse>
+
+	<div class="alert alert-warning" role="alert"><i class="fa fa-warning"></i> <span lang="es">No hay campos definidos para rellenar.</span></div>
+
+</cfif><!---allFields.recordCount GT 0--->
 
 </cfoutput>

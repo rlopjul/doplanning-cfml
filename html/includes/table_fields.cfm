@@ -140,11 +140,7 @@
 
 	<cfelse>
 
-		<script type="text/javascript">
-			openUrlHtml2('empty.cfm','itemIframe');
-		</script>
-
-		<div class="div_text_result"><span lang="es">Haga clic en Añadir campo para crear un nuevo campo.</span></div>
+		<div class="alert alert-info" role="alert"><i class="icon-info-sign"></i> <span lang="es">Haga clic en Añadir campo para crear un nuevo campo.</span></div>
 
 	</cfif>
 

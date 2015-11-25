@@ -21,7 +21,7 @@
 <div class="contenedor_fondo_blanco">
 <cfif fields.recordCount IS 0>
 
-	<span lang="es">No hay campos definidos para rellenar.</span>
+	<div class="alert alert-warning" role="alert"><i class="fa fa-warning"></i> <span lang="es">No hay campos definidos para rellenar.</span></div>
 
 <cfelse>
 	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
