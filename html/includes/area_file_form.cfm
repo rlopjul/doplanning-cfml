@@ -341,7 +341,7 @@
 						<div class="row">
 							<div class="col-sm-5" style="padding-right:0;">
 								<input type="hidden" name="reviser_user" id="reviser_user" value="#objectFile.reviser_user#" />
-								<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#objectFile.reviser_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" />
+								<cfinput type="text" name="reviser_user_full_name" id="reviser_user_full_name" value="#objectFile.reviser_user_full_name#" class="form-control" readonly="true" required="true" message="Debe seleccionar un usuario revisor" onclick="openReviserUserSelector()" />
 							</div>
 							<div class="col-sm-7">
 								<button onclick="openReviserUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
@@ -359,7 +359,7 @@
 						<div class="row">
 							<div class="col-sm-5" style="padding-right:0;">
 								<input type="hidden" name="approver_user" id="approver_user" value="#objectFile.approver_user#" />
-								<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#objectFile.approver_user_full_name#" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" />
+								<cfinput type="text" name="approver_user_full_name" id="approver_user_full_name" value="#objectFile.approver_user_full_name#" class="form-control" readonly="true" required="true" message="Debe seleccionar un usuario aprobador" onclick="openApproverUserSelector()" />
 							</div>
 							<div class="col-sm-7">
 								<button onclick="openApproverUserSelector()" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
