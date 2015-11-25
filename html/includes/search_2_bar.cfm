@@ -176,18 +176,6 @@
 
 	}
 
-	function setSelectedUser(userId, userName, fieldName) {
-
-		document.getElementById(fieldName).value = userId;
-		document.getElementById(fieldName+"_user_full_name").value = userName;
-	}
-
-	function clearFieldSelectedUser(fieldName) {
-
-		document.getElementById(fieldName).value = "";
-		document.getElementById(fieldName+"_user_full_name").value = "";
-	}
-
 	function openItemSelectorWithField(itemTypeId,fieldName){
 
 		return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);

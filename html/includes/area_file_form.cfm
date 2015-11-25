@@ -176,33 +176,6 @@
 
 	}
 
-	function setSelectedUser(userId, userName, fieldName) {
-
-		if(selectUserType.length != 0) {
-
-			if(selectUserType == "reviser" || selectUserType == "approver"){
-				document.getElementById(selectUserType+"_user").value = userId;
-				document.getElementById(selectUserType+"_user_full_name").value = userName;
-			}else{
-				document.getElementById(fieldName).value = userId;
-				document.getElementById(fieldName+"_user_full_name").value = userName;
-			}
-
-			selectUserType = "";
-
-		} else {
-			alert("Error al asignar el usuario");
-		}
-
-
-	}
-
-	function clearFieldSelectedUser(fieldName) {
-
-		document.getElementById(fieldName).value = "";
-		document.getElementById(fieldName+"_user_full_name").value = "";
-	}
-
 	function openItemSelectorWithField(itemTypeId,fieldName){
 
 		return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
