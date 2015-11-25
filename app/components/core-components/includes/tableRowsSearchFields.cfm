@@ -21,7 +21,7 @@
               <cfset field_values = arguments[field_name]>
 
               <cfloop array="#field_values#" index="select_value">
-                AND <cfqueryparam value="#select_value#" cfsqltype="cf_sql_varchar"> REGEXP REPLACE(field_#fields.field_id#, '#LIST_TEXT_VALUES_DELIMITER#', '|')
+                AND REPLACE(field_#fields.field_id#, '#LIST_TEXT_VALUES_DELIMITER#', '|') REGEXP <cfqueryparam value="#select_value#" cfsqltype="cf_sql_varchar"> 
               </cfloop>
 
             </cfif>
