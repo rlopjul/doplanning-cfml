@@ -1273,16 +1273,26 @@
 			<div id="tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#">
 		</cfif>
 
-				<table id="dataTable#arguments.tableTypeId#_#arguments.table_id#" class="data-table table-hover" style="margin-top:5px;">
+				<cfif arguments.tablesorterEnabled IS false>
+					<cfset tdStyle = 'style="padding:5px;border-width: 1px; border-style: solid; border-color: ##EEEEEE;"'>
+					<cfset thStyle = 'style="padding:5px;border-left-width: 1px;border-left-color: ##CCCCCC;border-left-style: solid;"'>
+					<cfset thTrStyle = 'style="background-color: ##EEEEEE;"'>
+				<cfelse>
+					<cfset tdStyle = ''>
+					<cfset thStyle = ''>
+					<cfset thTrStyle = ''>
+				</cfif>
+
+				<table id="dataTable#arguments.tableTypeId#_#arguments.table_id#" class="data-table table-hover" style="<cfif arguments.tablesorterEnabled IS false>font-size:12px;border-collapse:collapse;margin-bottom:15px;<cfelse>margin-top:5px;</cfif>">
 					<thead>
-						<tr>
+						<tr #thTrStyle#>
 							<th style="width:25px;">##</th>
 							<!---<th>Fecha última modificación</th>--->
 							<cfloop query="fields">
 								<cfif fields.field_id EQ "last_update_date">
-									<th><span lang="es">#fields.label#</span></th>
+									<th #thStyle#><span lang="es">#fields.label#</span></th>
 								<cfelse>
-									<th>#fields.label#</th>
+									<th #thStyle#>#fields.label#</th>
 								</cfif>
 								<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10><!--- LISTS --->
 									<cfset listFields = true>
@@ -1349,26 +1359,26 @@
 
 						<tr <cfif dataSelected IS true>class="selected"</cfif> <cfif arguments.openRowOnSelect IS true>data-item-url="#row_page_url#"</cfif>>
 
-							<td>#tableRows.row_id#</td>
+							<td #tdStyle#>#tableRows.row_id#</td>
 
 							<cfset row_id = tableRows.row_id>
 							<cfloop query="fields">
 
 								<cfif fields.field_id IS "creation_date"><!--- CREATION DATE --->
 
-									<td>#DateFormat(tableRows.creation_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>
+									<td #tdStyle#>#DateFormat(tableRows.creation_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.creation_date, "HH:mm")#</td>
 
 								<cfelseif fields.field_id IS "last_update_date"><!--- LAST UPDATE DATE --->
 
-									<td><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
+									<td #tdStyle#><cfif len(tableRows.last_update_date) GT 0>#DateFormat(tableRows.last_update_date, APPLICATION.dateFormat)# #TimeFormat(tableRows.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
 
 								<cfelseif fields.field_id IS "insert_user"><!--- INSERT USER --->
 
-									<td>#insert_user_full_name#</td>
+									<td #tdStyle#>#insert_user_full_name#</td>
 
 								<cfelseif fields.field_id IS "update_user"><!--- UPDATE USER --->
 
-									<td>#update_user_full_name#</td>
+									<td #tdStyle#>#update_user_full_name#</td>
 
 								<cfelse><!--- TABLE FIELDS --->
 
@@ -1594,23 +1604,23 @@
 									<cfif fields.field_type_id IS 5 AND isDefined("cf_locale") AND cf_locale EQ "es_ES"><!---Esto es neceario para que se sume correctamente, el valor que se suma es el de data-text--->
 
 										<cfif tableRows['field_#fields.field_id#'] GT 0>
-											<td data-text="#tableRows['field_#fields.field_id#']#">#field_value#</td>
+											<td #tdStyle# data-text="#tableRows['field_#fields.field_id#']#">#field_value#</td>
 										<cfelse>
-											<td data-text="0">#field_value#</td>
+											<td #tdStyle# data-text="0">#field_value#</td>
 										</cfif>
 
 									<cfelseif fields.field_type_id IS 4 OR fields.field_type_id IS 5>
 
 										<!--- Para que las sumas de los campos numéricos sean correctas deben introducirse 0 en los valores vacíos --->
 										<cfif tableRows['field_#fields.field_id#'] GT 0>
-											<td>#field_value#</td>
+											<td #tdStyle#>#field_value#</td>
 										<cfelse>
-											<td data-text="0">#field_value#</td>
+											<td #tdStyle# data-text="0">#field_value#</td>
 										</cfif>
 
 									<cfelse>
 
-										<td>#field_value#</td>
+										<td #tdStyle#>#field_value#</td>
 
 									</cfif>
 
@@ -1621,34 +1631,39 @@
 					</cfloop>
 					</tbody>
 
-					<tfoot>
-					   <tr>
-							<th></th>
-							<cfloop query="fields">
-								<cfif fields.field_type_id EQ 4><!--- INTEGER --->
-									<th data-math="col-sum" data-math-mask="##"></th><!---data-math-mask="##000"--->
-								<cfelseif fields.field_type_id IS 5><!--- DECIMAL --->
+					<cfif arguments.tablesorterEnabled IS true>
 
-									<cfif isNumeric(fields.mask_type_id)>
-										<cfset field_mask_type_id = fields.mask_type_id>
-										<th data-math="col-sum" data-math-mask="#maskTypesStruct[field_mask_type_id].tablesorterd_data_mask#"></th>
+						<tfoot>
+						   <tr>
+								<th></th>
+								<cfloop query="fields">
+									<cfif fields.field_type_id EQ 4><!--- INTEGER --->
+										<th data-math="col-sum" data-math-mask="##"></th><!---data-math-mask="##000"--->
+									<cfelseif fields.field_type_id IS 5><!--- DECIMAL --->
+
+										<cfif isNumeric(fields.mask_type_id)>
+											<cfset field_mask_type_id = fields.mask_type_id>
+											<th data-math="col-sum" data-math-mask="#maskTypesStruct[field_mask_type_id].tablesorterd_data_mask#"></th>
+										<cfelse>
+											<th data-math="col-sum" data-math-mask="####.00"></th>
+										</cfif>
+
+										<!---<th data-math="col-sum" data-math-mask="##.00"></th>--->
+
 									<cfelse>
-										<th data-math="col-sum" data-math-mask="####.00"></th>
+										<th></th>
 									</cfif>
+								</cfloop>
+							</tr>
+						</tfoot>
 
-									<!---<th data-math="col-sum" data-math-mask="##.00"></th>--->
-
-								<cfelse>
-									<th></th>
-								</cfif>
-							</cfloop>
-						</tr>
-					</tfoot>
+					</cfif>
 
 				</table>
 
 		<cfif arguments.tablesorterEnabled IS true>
-			</div>
+
+			</div><!---END div id="tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#"--->
 
 			<cfif isDefined("onpenUrlHtml2")>
 

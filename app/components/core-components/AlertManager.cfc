@@ -2561,7 +2561,7 @@
 		<cfset var curLang = arguments.language>
 		<cfset var curUserEmail = arguments.email>
 		<cfset var alertContent = "">
-
+		<cfset var tableRowsContent = "">
 
 		<cfif arguments.alertType EQ ALERT_TYPE_WEB>
 
@@ -2799,7 +2799,7 @@
 										<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 										<cfinvokeargument name="with_types" value="true">
 										<cfinvokeargument name="with_table" value="false">
-										<cfinvokeargument name="include_in_row_content" value="true">
+										<cfinvokeargument name="include_in_list" value="true">
 
 										<cfinvokeargument name="client_abb" value="#client_abb#">
 										<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -2815,6 +2815,7 @@
 										<cfinvokeargument name="client_dsn" value="#client_dsn#">
 									</cfinvoke>
 
+									<!--- Rows content --->
 									<cfif rowQuery.recordCount GT 0>
 
 										<cfsavecontent variable="tableRowsContent">
@@ -2833,46 +2834,13 @@
 												<cfinvokeargument name="client_dsn" value="#client_dsn#">
 											</cfinvoke>
 
-										<!---
-										<table>
-
-											<thead>
-												<tr>
-												<cfloop query="fields">
-													<th>#fields.label#</th>
-												</cfloop>
-												</tr>
-											</thead>
-
-											<cfloop query="rowQuery">
-
-												<!---
-												<!---generateRowStruct--->
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="generateRowStruct" returnvariable="generateRowStructResponse">
-													<cfinvokeargument name="table_id" value="#table_id#">
-													<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-													<cfinvokeargument name="rowQuery" value="#rowQuery#">
-													<cfinvokeargument name="fields" value="#fields#">
-
-													<cfinvokeargument name="withDateFormatted" value="true"/>
-													<cfinvokeargument name="withDoPlanningElements" value="true"/>
-
-													<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
-													<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#"/>
-												</cfinvoke>
-
-												<cfset rowStruct = generateRowStructResponse.rowStruct>
-
-												--->
-
-											</cfloop>
-										</table>--->
 										</cfoutput>
 										</cfsavecontent>
 
+										<cfset itemAlertContent = itemAlertContent&tableRowsContent>
+
 									</cfif>
 
-									<cfset itemAlertContent = itemAlertContent&tableRowsContent>
 
 								</cfif>
 
