@@ -1023,6 +1023,7 @@
 		<cfargument name="openRowOnSelect" type="boolean" required="false" default="false">
 		<cfargument name="app_version" type="string" required="false" default="mobile">
 		<cfargument name="columnSelectorContainer" type="string" required="false">
+		<cfargument name="tablesorterEnabled" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1038,214 +1039,216 @@
 
 		<cfoutput>
 
-		<script>
-			$(document).ready(function() {
+		<cfif arguments.tablesorterEnabled IS true>
+			<script>
+				$(document).ready(function() {
 
-				$("##dataTable#arguments.tableTypeId#_#arguments.table_id#").tablesorter({  <!--- Se le asigna un id único a la tabla por si hay más en la misma página --->
+					$("##dataTable#arguments.tableTypeId#_#arguments.table_id#").tablesorter({  <!--- Se le asigna un id único a la tabla por si hay más en la misma página --->
 
-					<!---widthFixed: true,--->
-					showProcessing: true,
-					delayInit: true,
-					widgets: ['zebra','uitheme','filter','stickyHeaders','math','saveSort'<cfif isDefined("arguments.columnSelectorContainer")>,'columnSelector'</cfif>],<!---'select',--->
+						<!---widthFixed: true,--->
+						showProcessing: true,
+						delayInit: true,
+						widgets: ['zebra','uitheme','filter','stickyHeaders','math','saveSort'<cfif isDefined("arguments.columnSelectorContainer")>,'columnSelector'</cfif>],<!---'select',--->
 
-					theme : "bootstrap",
-					headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
+						theme : "bootstrap",
+						headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
 
-					<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
-					dateFormat : "ddmmyyyy", // set the default date format
+						<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
+						dateFormat : "ddmmyyyy", // set the default date format
 
-					headers: {
+						headers: {
 
-						0: {
-							sorter: "digit"
-						}
+							0: {
+								sorter: "digit"
+							}
 
-						<cfset sortArray = arrayNew(1)>
-						<!---<cfset fieldsWithHeader = false>--->
+							<cfset sortArray = arrayNew(1)>
+							<!---<cfset fieldsWithHeader = false>--->
 
-						<cfloop query="fields">
+							<cfloop query="fields">
 
-							<cfif fields.field_id IS "creation_date" OR fields.field_id IS "last_update_date" OR fields.field_type_id IS 6><!--- DATE --->
+								<cfif fields.field_id IS "creation_date" OR fields.field_id IS "last_update_date" OR fields.field_type_id IS 6><!--- DATE --->
 
-								<!---<cfif fieldsWithHeader IS true>,</cfif>--->, #fields.currentRow#: {
-									<!---sorter: "datetime"--->
-									sorter: "shortDate"
-								}
-								<!---<cfset fieldsWithHeader = true>--->
+									<!---<cfif fieldsWithHeader IS true>,</cfif>--->, #fields.currentRow#: {
+										<!---sorter: "datetime"--->
+										sorter: "shortDate"
+									}
+									<!---<cfset fieldsWithHeader = true>--->
 
-							<cfelseif fields.field_id NEQ 4 AND fields.field_id NEQ 5><!--- IS NOT INTEGER OR DECIMAL --->
+								<cfelseif fields.field_id NEQ 4 AND fields.field_id NEQ 5><!--- IS NOT INTEGER OR DECIMAL --->
 
-								<!---<cfif fieldsWithHeader IS true>,</cfif>--->, #fields.currentRow#: {
-									sorter: "text"
-								}
-								<!---<cfset fieldsWithHeader = true>--->
+									<!---<cfif fieldsWithHeader IS true>,</cfif>--->, #fields.currentRow#: {
+										sorter: "text"
+									}
+									<!---<cfset fieldsWithHeader = true>--->
 
-							</cfif>
-
-							<cfif len(fields.sort_by_this) GT 0>
-								<cfif fields.sort_by_this IS "asc">
-									<cfset sortOrder = 0>
-								<cfelse>
-									<cfset sortOrder = 1>
 								</cfif>
-								<cfset arrayAppend(sortArray, {row=fields.currentRow, order=sortOrder})>
+
+								<cfif len(fields.sort_by_this) GT 0>
+									<cfif fields.sort_by_this IS "asc">
+										<cfset sortOrder = 0>
+									<cfelse>
+										<cfset sortOrder = 1>
+									</cfif>
+									<cfset arrayAppend(sortArray, {row=fields.currentRow, order=sortOrder})>
+								</cfif>
+
+							</cfloop>
+						},
+						// default "emptyTo"
+			   			emptyTo: 'zero',
+						<!---textExtraction: 'basic',--->
+						 // Enable use of the characterEquivalents reference
+	    				sortLocaleCompare : true,
+						textAttribute: "data-text",
+						textExtraction: "basic",
+						usNumberFormat: true, <!--- Requerido para que la suma de los valores de las comlumnas con decimales separados por . sea correcta (esto hace que los decimales separados por , no se sumen correctamente, pero para eso se usa la opción de definir el valor de la columena en data-text)  ---->
+						<cfset sortArrayLen = arrayLen(sortArray)>
+						<cfif sortArrayLen GT 0>
+
+							sortList: [
+							<cfloop from="1" to="#sortArrayLen#" index="curSort">
+								[#sortArray[curSort].row#, #sortArray[curSort].order#]
+								<cfif curSort NEQ sortArrayLen>
+									,
+								</cfif>
+							</cfloop> ],
+
+						<cfelse>
+							<cfif tableRows.recordCount LT 100><!---Ordenar de nuevo la tabla por el campo por defecto ralentiza las tablas con muchas filas--->
+								sortList: [[0,1]] ,
 							</cfif>
-
-						</cfloop>
-					},
-					// default "emptyTo"
-		   			emptyTo: 'zero',
-					<!---textExtraction: 'basic',--->
-					 // Enable use of the characterEquivalents reference
-    				sortLocaleCompare : true,
-					textAttribute: "data-text",
-					textExtraction: "basic",
-					usNumberFormat: true, <!--- Requerido para que la suma de los valores de las comlumnas con decimales separados por . sea correcta (esto hace que los decimales separados por , no se sumen correctamente, pero para eso se usa la opción de definir el valor de la columena en data-text)  ---->
-					<cfset sortArrayLen = arrayLen(sortArray)>
-					<cfif sortArrayLen GT 0>
-
-						sortList: [
-						<cfloop from="1" to="#sortArrayLen#" index="curSort">
-							[#sortArray[curSort].row#, #sortArray[curSort].order#]
-							<cfif curSort NEQ sortArrayLen>
-								,
-							</cfif>
-						</cfloop> ],
-
-					<cfelse>
-						<cfif tableRows.recordCount LT 100><!---Ordenar de nuevo la tabla por el campo por defecto ralentiza las tablas con muchas filas--->
-							sortList: [[0,1]] ,
 						</cfif>
+
+						widgetOptions : {
+
+							<!--- Filter options --->
+							filter_childRows : false,
+							filter_columnFilters : true,
+							filter_cssFilter : 'tablesorter-filter',
+							filter_filteredRow   : 'filtered',
+							filter_formatter : null,
+							filter_functions : null,
+							filter_hideFilters : false,
+							filter_ignoreCase : true,
+							filter_liveSearch : true,
+							//filter_reset : 'button.reset',
+							filter_searchDelay : 500,
+							filter_serversideFiltering: false,
+							filter_startsWith : false,
+							filter_useParsedRow : false
+							<!--- END Filter options --->
+
+							<!--- Suma de valores de las columnas --->
+								, math_data     : 'math' // data-math attribute
+							    , math_ignore   : [0
+							    <cfloop query="fields">
+							    	<cfif fields.field_type_id NEQ 4 AND fields.field_type_id NEQ 5>
+							    		, #fields.currentRow#
+							    	</cfif>
+							    </cfloop>]
+							    <!---, math_mask     : '##.000,00'--->
+							    <!---, math_complete : function($cell, wo, result, value, arry) {
+							        var txt = '<span class="align-decimal"> ' + result + '</span>';
+							        if ($cell.attr('data-math') === 'all-sum') {
+							          // when the "all-sum" is processed, add a count to the end
+							          return txt + ' (Sum of ' + arry.length + ' cells)';
+							        }
+							        return txt;
+							    }--->
+							<!--- Fin suma de los valores de las columnas --->
+
+
+							<!---,stickyHeaders_attachTo : '##pageHeaderContainer' Esto no funciona--->
+
+							<cfif isDefined("arguments.columnSelectorContainer")>
+
+								<!--- Column selector options --->
+
+								// target the column selector markup
+								, columnSelector_container : $('###arguments.columnSelectorContainer#')
+								// column status, true = display, false = hide
+								// disable = do not display on list
+								, columnSelector_columns : {
+									0: 'disable' /* set to disabled; not allowed to unselect it */
+								},
+								// remember selected columns (requires $.tablesorter.storage)
+								columnSelector_saveColumns: true,
+
+								// container layout
+								columnSelector_layout : '<li><label><input type="checkbox">{name}</label>&nbsp;&nbsp;&nbsp;&nbsp;</li>',
+								// data attribute containing column name to use in the selector container
+								columnSelector_name  : 'data-selector-name',
+
+								/* Responsive Media Query settings */
+								// enable/disable mediaquery breakpoints
+								columnSelector_mediaquery: false,
+								// toggle checkbox name
+								columnSelector_mediaqueryName: '<i>Selección de columnas automática</i>',
+								// breakpoints checkbox initial setting
+								columnSelector_mediaqueryState: true,
+								// responsive table hides columns with priority 1-6 at these breakpoints
+								// see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/##Applyingapresetbreakpoint
+								// *** set to false to disable ***
+								columnSelector_breakpoints : [ '20em', '30em', '40em', '50em', '60em', '70em' ],
+								// data attribute containing column priority
+								// duplicates how jQuery mobile uses priorities:
+								// http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
+								columnSelector_priority : 'data-priority',
+
+								// class name added to checked checkboxes - this fixes an issue with Chrome not updating FontAwesome
+								// applied icons; use this class name (input.checked) instead of input:checked
+								columnSelector_cssChecked : 'checked'
+
+							    <!--- END column selector options --->
+
+							</cfif>
+					    }
+					});
+
+
+					<cfif arguments.openRowOnSelect IS true>
+					<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
+					<!---$('##dataTable#arguments.tableTypeId#_#arguments.table_id#').bind('select.tablesorter.select', function(event, ts){
+					    var itemUrl= $(ts.elem).data("item-url");
+					    openUrlLite(itemUrl,'itemIframe');
+					});--->
+
+					$('##dataTable#arguments.tableTypeId#_#arguments.table_id# tbody tr').on('click', function(e) {
+
+				       	var row = $(this);
+
+				        if(!row.hasClass("selected")) {
+				        	$('##dataTable#arguments.tableTypeId#_#arguments.table_id# tbody tr').removeClass("selected");
+				        	row.addClass("selected");
+				        }
+
+				        var itemUrl= row.data("item-url");
+					    openUrlLite(itemUrl,'itemIframe');
+
+				    });
+
 					</cfif>
 
-					widgetOptions : {
+					$('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#').doubleScroll({
+					    onlyIfScroll: true, // top scrollbar is not shown if the bottom one is not present
+					    resetOnWindowResize: true
+					});
 
-						<!--- Filter options --->
-						filter_childRows : false,
-						filter_columnFilters : true,
-						filter_cssFilter : 'tablesorter-filter',
-						filter_filteredRow   : 'filtered',
-						filter_formatter : null,
-						filter_functions : null,
-						filter_hideFilters : false,
-						filter_ignoreCase : true,
-						filter_liveSearch : true,
-						//filter_reset : 'button.reset',
-						filter_searchDelay : 500,
-						filter_serversideFiltering: false,
-						filter_startsWith : false,
-						filter_useParsedRow : false
-						<!--- END Filter options --->
+					<!---$('##dataTablePopover#arguments.tableTypeId#_#arguments.table_id#').popover({
+					      placement: 'right',
+					      html: true, // required if content has HTML
+					      content: '<ul class="list-inline" id="popoverTarget#arguments.tableTypeId#_#arguments.table_id#"></ul>'
+					    })
+					    // bootstrap popover event triggered when the popover opens
+					    .on('shown.bs.popover', function () {
+					      // call this function to copy the column selection code into the popover
+					      $.tablesorter.columnSelector.attachTo( $("##dataTable#arguments.tableTypeId#_#arguments.table_id#"), '##popoverTarget#arguments.tableTypeId#_#arguments.table_id#');
+					});--->
 
-						<!--- Suma de valores de las columnas --->
-							, math_data     : 'math' // data-math attribute
-						    , math_ignore   : [0
-						    <cfloop query="fields">
-						    	<cfif fields.field_type_id NEQ 4 AND fields.field_type_id NEQ 5>
-						    		, #fields.currentRow#
-						    	</cfif>
-						    </cfloop>]
-						    <!---, math_mask     : '##.000,00'--->
-						    <!---, math_complete : function($cell, wo, result, value, arry) {
-						        var txt = '<span class="align-decimal"> ' + result + '</span>';
-						        if ($cell.attr('data-math') === 'all-sum') {
-						          // when the "all-sum" is processed, add a count to the end
-						          return txt + ' (Sum of ' + arry.length + ' cells)';
-						        }
-						        return txt;
-						    }--->
-						<!--- Fin suma de los valores de las columnas --->
-
-
-						<!---,stickyHeaders_attachTo : '##pageHeaderContainer' Esto no funciona--->
-
-						<cfif isDefined("arguments.columnSelectorContainer")>
-
-							<!--- Column selector options --->
-
-							// target the column selector markup
-							, columnSelector_container : $('###arguments.columnSelectorContainer#')
-							// column status, true = display, false = hide
-							// disable = do not display on list
-							, columnSelector_columns : {
-								0: 'disable' /* set to disabled; not allowed to unselect it */
-							},
-							// remember selected columns (requires $.tablesorter.storage)
-							columnSelector_saveColumns: true,
-
-							// container layout
-							columnSelector_layout : '<li><label><input type="checkbox">{name}</label>&nbsp;&nbsp;&nbsp;&nbsp;</li>',
-							// data attribute containing column name to use in the selector container
-							columnSelector_name  : 'data-selector-name',
-
-							/* Responsive Media Query settings */
-							// enable/disable mediaquery breakpoints
-							columnSelector_mediaquery: false,
-							// toggle checkbox name
-							columnSelector_mediaqueryName: '<i>Selección de columnas automática</i>',
-							// breakpoints checkbox initial setting
-							columnSelector_mediaqueryState: true,
-							// responsive table hides columns with priority 1-6 at these breakpoints
-							// see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/##Applyingapresetbreakpoint
-							// *** set to false to disable ***
-							columnSelector_breakpoints : [ '20em', '30em', '40em', '50em', '60em', '70em' ],
-							// data attribute containing column priority
-							// duplicates how jQuery mobile uses priorities:
-							// http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
-							columnSelector_priority : 'data-priority',
-
-							// class name added to checked checkboxes - this fixes an issue with Chrome not updating FontAwesome
-							// applied icons; use this class name (input.checked) instead of input:checked
-							columnSelector_cssChecked : 'checked'
-
-						    <!--- END column selector options --->
-
-						</cfif>
-				    }
 				});
-
-
-				<cfif arguments.openRowOnSelect IS true>
-				<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
-				<!---$('##dataTable#arguments.tableTypeId#_#arguments.table_id#').bind('select.tablesorter.select', function(event, ts){
-				    var itemUrl= $(ts.elem).data("item-url");
-				    openUrlLite(itemUrl,'itemIframe');
-				});--->
-
-				$('##dataTable#arguments.tableTypeId#_#arguments.table_id# tbody tr').on('click', function(e) {
-
-			       	var row = $(this);
-
-			        if(!row.hasClass("selected")) {
-			        	$('##dataTable#arguments.tableTypeId#_#arguments.table_id# tbody tr').removeClass("selected");
-			        	row.addClass("selected");
-			        }
-
-			        var itemUrl= row.data("item-url");
-				    openUrlLite(itemUrl,'itemIframe');
-
-			    });
-
-				</cfif>
-
-				$('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#').doubleScroll({
-				    onlyIfScroll: true, // top scrollbar is not shown if the bottom one is not present
-				    resetOnWindowResize: true
-				});
-
-				<!---$('##dataTablePopover#arguments.tableTypeId#_#arguments.table_id#').popover({
-				      placement: 'right',
-				      html: true, // required if content has HTML
-				      content: '<ul class="list-inline" id="popoverTarget#arguments.tableTypeId#_#arguments.table_id#"></ul>'
-				    })
-				    // bootstrap popover event triggered when the popover opens
-				    .on('shown.bs.popover', function () {
-				      // call this function to copy the column selection code into the popover
-				      $.tablesorter.columnSelector.attachTo( $("##dataTable#arguments.tableTypeId#_#arguments.table_id#"), '##popoverTarget#arguments.tableTypeId#_#arguments.table_id#');
-				});--->
-
-			});
-		</script>
+			</script>
+		</cfif>
 
 		<cfset selectFirst = true>
 		<cfset listFields = false>
@@ -1266,7 +1269,9 @@
 		  <i class="fa-eye-slash"></i> Mostrar/ocultar columnas
 		</button>--->
 
+		<cfif arguments.tablesorterEnabled IS true>
 			<div id="tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#">
+		</cfif>
 
 				<table id="dataTable#arguments.tableTypeId#_#arguments.table_id#" class="data-table table-hover" style="margin-top:5px;">
 					<thead>
@@ -1642,14 +1647,17 @@
 
 				</table>
 
+		<cfif arguments.tablesorterEnabled IS true>
 			</div>
 
-		<cfif isDefined("onpenUrlHtml2")>
+			<cfif isDefined("onpenUrlHtml2")>
 
-			<!---Esta acción sólo se completa si está en la versión HTML2--->
-			<script>
-				openUrlHtml2('#onpenUrlHtml2#','itemIframe');
-			</script>
+				<!---Esta acción sólo se completa si está en la versión HTML2--->
+				<script>
+					openUrlHtml2('#onpenUrlHtml2#','itemIframe');
+				</script>
+
+			</cfif>
 
 		</cfif>
 
