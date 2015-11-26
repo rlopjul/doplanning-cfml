@@ -682,7 +682,7 @@
 							<label for="include_in_row_content">
 								<input type="checkbox" name="include_in_row_content" id="include_in_row_content" value="true" <cfif isDefined("field.include_in_row_content") AND field.include_in_row_content IS true>checked="checked"</cfif> /> <span lang="es">Incluir visible este campo en la página de contenido del registro</span>
 							</label>
-							<small class="help-block" lang="es">Incluye el valor en la página de contenido del registro</small>
+							<small class="help-block" lang="es">Incluye el valor en la página de contenido del registro y en las notificaciones por email</small>
 						</div>
 					</div>
 				</div>

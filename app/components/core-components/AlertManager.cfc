@@ -5,6 +5,10 @@
 
 	<cfset dateFormat = "%d-%m-%Y">
 
+	<cfset ACTION_TYPE_NEW = "new">
+	<cfset ACTION_TYPE_UPDATE = "update">
+	<cfset ACTION_TYPE_DELETE = "delete">
+
 	<cfset ALERT_TYPE_DOPLANNING = "doplanning">
 	<cfset ALERT_TYPE_WEB = "web">
 
@@ -235,7 +239,7 @@
 
 				<cfswitch expression="#arguments.action#">
 
-					<cfcase value="new"><!---Nuevo--->
+					<cfcase value="#ACTION_TYPE_NEW#"><!---Nuevo--->
 
 						<cfif arguments.itemTypeId IS NOT 7 OR objectItem.parent_kind EQ "area">
 							<cfif itemTypeGender EQ "male">
@@ -257,7 +261,7 @@
 
 					</cfcase>
 
-					<cfcase value="delete"><!---Eliminado--->
+					<cfcase value="#ACTION_TYPE_DELETE#"><!---Eliminado--->
 
 						<cfif itemTypeGender EQ "male">
 							<cfset action_name = "#langText[curLang].item[itemTypeId].name# #langText[curLang].new_item.deleted_male#">
@@ -276,7 +280,7 @@
 
 					</cfcase>
 
-					<cfcase value="update"><!---Modificado--->
+					<cfcase value="#ACTION_TYPE_UPDATE#"><!---Modificado--->
 
 						<cfif itemTypeGender EQ "male">
 							<cfset action_name = "#langText[curLang].item[itemTypeId].name# #langText[curLang].new_item.modified_male#">
@@ -1396,38 +1400,6 @@
 
 		</cfif>
 
-		<cfif NOT isDefined("arguments.fields")>
-
-			<!---Table fields--->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="with_types" value="true">
-				<cfinvokeargument name="with_table" value="false">
-				<cfinvokeargument name="include_in_row_content" value="true">
-
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
-		</cfif>
-
-		<!---generateRowStruct--->
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="generateRowStruct" returnvariable="generateRowStructResponse">
-			<cfinvokeargument name="table_id" value="#arguments.table_id#">
-			<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-			<cfinvokeargument name="rowQuery" value="#rowQuery#">
-			<cfinvokeargument name="fields" value="#fields#">
-
-			<cfinvokeargument name="withDateFormatted" value="true"/>
-			<cfinvokeargument name="withDoPlanningElements" value="true"/>
-
-			<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
-			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#"/>
-		</cfinvoke>
-
-		<cfset rowStruct = generateRowStructResponse.rowStruct>
-
 		<!---Get area name--->
 		<cfquery name="selectAreaQuery" datasource="#client_dsn#">
 			SELECT id, name
@@ -1585,6 +1557,18 @@
 				</cfif>
 
 
+				<!--- getTableRowContent --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="getTableRowContent" returnvariable="tableRowContent">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="fields" value="#arguments.fields#">
+					<cfinvokeargument name="rowQuery" value="#rowQuery#">
+					<cfinvokeargument name="language" value="#curLang#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
 				<cfsavecontent variable="alertItemContent">
 					<cfoutput>
 
@@ -1601,38 +1585,8 @@
 						#subject_action#<br/>
 						<span style="color:##326686">#langText[curLang].new_table_row.register_number#</span>: #arguments.row_id#<br/><br/>
 
-						<cfloop query="fields">
+						#tableRowContent#
 
-							<cfset field_name = "field_#fields.field_id#">
-							<cfset field_value = rowStruct[field_name]>
-
-							<cfif len(field_value) GT 0>
-
-								<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
-
-									<cfif field_value IS true>
-										<cfset field_value = langText[curLang].new_item.yes>
-									<cfelseif field_Value IS false>
-										<cfset field_value = langText[curLang].new_item.no>
-									</cfif>
-
-								<cfelseif fields.field_type_id IS 2><!--- LONG TEXT --->
-
-									<cfset field_value = HTMLEditFormat(field_value)>
-
-									<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
-										<cfinvokeargument name="string" value="#field_value#">
-									</cfinvoke>
-
-									<cfset field_value = "<br/>"&field_value>
-
-								</cfif>
-
-							</cfif>
-
-							<span style="color:##326686">#fields.label#</span>: #field_value#<br/>
-
-						</cfloop>
 					</p>
 
 					<cfif arguments.action NEQ "delete">
@@ -1774,6 +1728,99 @@
 		</cfloop><!---END APPLICATION.languages loop--->
 
 	</cffunction>
+
+
+	<!--- -------------------------------------- getTableRowContent ------------------------------------ --->
+
+	<cffunction name="getTableRowContent" access="public" returntype="string">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="fields" type="query" required="false">
+		<cfargument name="rowQuery" type="query" required="true">
+		<cfargument name="language" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getTableRowContent">
+
+		<cfset var rowContent = "">
+		<cfset var fieldContent = "">
+
+			<cfif NOT isDefined("arguments.fields")>
+
+				<!---Table fields--->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="with_types" value="true">
+					<cfinvokeargument name="with_table" value="false">
+					<cfinvokeargument name="include_in_row_content" value="true">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+			</cfif>
+
+			<!---generateRowStruct--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="generateRowStruct" returnvariable="generateRowStructResponse">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="rowQuery" value="#rowQuery#">
+				<cfinvokeargument name="fields" value="#fields#">
+
+				<cfinvokeargument name="withDateFormatted" value="true"/>
+				<cfinvokeargument name="withDoPlanningElements" value="true"/>
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#"/>
+			</cfinvoke>
+
+			<cfset rowStruct = generateRowStructResponse.rowStruct>
+
+			<cfoutput>
+			<cfloop query="fields">
+
+				<cfset field_name = "field_#fields.field_id#">
+				<cfset field_value = rowStruct[field_name]>
+
+				<cfif len(field_value) GT 0>
+
+					<cfif fields.field_type_id IS 7><!--- BOOLEAN --->
+
+						<cfif field_value IS true>
+							<cfset field_value = langText[arguments.language].new_item.yes>
+						<cfelseif field_Value IS false>
+							<cfset field_value = langText[arguments.language].new_item.no>
+						</cfif>
+
+					<cfelseif fields.field_type_id IS 2><!--- LONG TEXT --->
+
+						<cfset field_value = HTMLEditFormat(field_value)>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="insertBR" returnvariable="field_value">
+							<cfinvokeargument name="string" value="#field_value#">
+						</cfinvoke>
+
+						<cfset field_value = "<br/>"&field_value>
+
+					</cfif>
+
+				</cfif>
+
+				<cfsavecontent variable="fieldContent">
+				<span style="color:##326686">#fields.label#</span>: #field_value#<br/>
+				</cfsavecontent>
+
+				<cfset rowContent = rowContent&fieldContent>
+			</cfloop>
+			</cfoutput>
+
+		<cfreturn rowContent>
+
+	</cffunction>
+
 
 
 	<!--- -------------------------------------- sendDiaryAlerts ------------------------------------ --->
@@ -2174,8 +2221,8 @@
 
 				<cftry>
 
-					<!--- ------ PROVISIONAL ----
-					<cfif client_abb EQ "hcs" OR client_abb EQ "bioinformatics7">--->
+					<!--- ------ PROVISIONAL ---->
+					<cfif client_abb EQ "hcs">
 
 					<!---<cfset forceNotifications = getClientsQuery.force_notifications>--->
 
@@ -2472,7 +2519,7 @@
 					</cfloop><!--- END loop query="getAllUsersQuery" --->
 
 
-					<!---</cfif> END client_abb EQ "hcs" --->
+				</cfif><!--- END client_abb EQ "hcs" --->
 
 					<cfcatch>
 						<cfinclude template="includes/errorHandler.cfm">
@@ -2740,6 +2787,95 @@
 									<cfinvokeargument name="client_abb" value="#client_abb#">
 								</cfinvoke>
 
+
+								<cfif itemTypeId IS 11 OR itemTypeId IS 12><!--- LISTS AND FORMS --->
+
+									<cfset table_id = itemObject.id>
+									<cfset tableTypeId = itemTypesStruct[itemTypeId].tableTypeId>
+
+									<!--- getTableFields --->
+									<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
+										<cfinvokeargument name="table_id" value="#table_id#">
+										<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+										<cfinvokeargument name="with_types" value="true">
+										<cfinvokeargument name="with_table" value="false">
+										<cfinvokeargument name="include_in_row_content" value="true">
+
+										<cfinvokeargument name="client_abb" value="#client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+									<!--- getTableRows --->
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
+										<cfinvokeargument name="table_id" value="#table_id#">
+										<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+										<cfinvokeargument name="fields" value="#fields#">
+
+										<cfinvokeargument name="client_abb" value="#client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+									<cfif rowQuery.recordCount GT 0>
+
+										<cfsavecontent variable="tableRowsContent">
+										<cfoutput>
+
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowList">
+												<cfinvokeargument name="table_id" value="#table_id#">
+												<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+												<!---<cfinvokeargument name="view_id" value="#arguments.view_id#">--->
+												<cfinvokeargument name="tableRows" value="#rowQuery#">
+												<cfinvokeargument name="fields" value="#fields#">
+												<cfinvokeargument name="openRowOnSelect" value="false">
+												<cfinvokeargument name="tablesorterEnabled" value="false">
+
+												<cfinvokeargument name="client_abb" value="#client_abb#">
+												<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											</cfinvoke>
+
+										<!---
+										<table>
+
+											<thead>
+												<tr>
+												<cfloop query="fields">
+													<th>#fields.label#</th>
+												</cfloop>
+												</tr>
+											</thead>
+
+											<cfloop query="rowQuery">
+
+												<!---
+												<!---generateRowStruct--->
+												<cfinvoke component="#APPLICATION.coreComponentsPath#/RowManager" method="generateRowStruct" returnvariable="generateRowStructResponse">
+													<cfinvokeargument name="table_id" value="#table_id#">
+													<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+													<cfinvokeargument name="rowQuery" value="#rowQuery#">
+													<cfinvokeargument name="fields" value="#fields#">
+
+													<cfinvokeargument name="withDateFormatted" value="true"/>
+													<cfinvokeargument name="withDoPlanningElements" value="true"/>
+
+													<cfinvokeargument name="client_abb" value="#arguments.client_abb#"/>
+													<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#"/>
+												</cfinvoke>
+
+												<cfset rowStruct = generateRowStructResponse.rowStruct>
+
+												--->
+
+											</cfloop>
+										</table>--->
+										</cfoutput>
+										</cfsavecontent>
+
+									</cfif>
+
+									<cfset itemAlertContent = itemAlertContent&tableRowsContent>
+
+								</cfif>
+
 								<cfset alertContent = alertContent&itemAlertContent>
 
 							</cfloop>
@@ -2952,6 +3088,7 @@
 		<cfset var actionDate = "">
 		<cfset var actionBoxText = "">
 		<cfset var actionBox = "">
+		<cfset var actionType = "">
 
 
 			<cfif arguments.alertType EQ ALERT_TYPE_WEB>
@@ -2999,16 +3136,25 @@
 
 				<cfif itemTypeId EQ 1 OR itemTypeId EQ 7 OR item.creation_date EQ item.last_update_date>
 
+					<cfset actionType = ACTION_TYPE_NEW>
 					<cfset actionDate = item.creation_date>
 
 				<cfelse>
 
-					<cfset actionDate = item.creation_date>
+					<cfif isDate(item.last_update_date) AND DateCompare(item.last_update_date, item.creation_date) IS 1>
 
-					<cfif itemTypeGender EQ "male">
-						<cfset actionBoxText = langText[language].new_item.modified_male>
+						<cfset actionType = ACTION_TYPE_UPDATE>
+						<cfset actionDate = item.last_update_date>
+
+						<cfif itemTypeGender EQ "male">
+							<cfset actionBoxText = langText[language].new_item.modified_male>
+						<cfelse>
+							<cfset actionBoxText = langText[language].new_item.modified_female>
+						</cfif>
+
 					<cfelse>
-						<cfset actionBoxText = langText[language].new_item.modified_female>
+						<cfset actionType = ACTION_TYPE_NEW>
+						<cfset actionDate = item.creation_date>
 					</cfif>
 
 				</cfif>
@@ -3017,12 +3163,14 @@
 
 				<cfif isDate(item.replacement_date)>
 
+					<cfset actionType = ACTION_TYPE_UPDATE>
 					<cfset actionDate = item.replacement_date>
 
 					<cfset actionBoxText = langText[language].new_file.replaced>
 
 				<cfelse>
 
+					<cfset actionType = ACTION_TYPE_NEW>
 					<cfset actionDate = item.uploading_date>
 
 				</cfif>
@@ -3062,7 +3210,8 @@
 				<cfoutput>
 				<a href="#areaItemUrl#" target="_blank" style="font-size:18px;font-weight:100;color:##009ed2">#itemTitle#</a>&nbsp;&nbsp;#actionBox#<br/>
 
-				<span style="font-size:16px;color:##35938c;font-weight:100">#item.user_full_name#</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(actionDate, spacePos)#</span><cfif itemTypeId NEQ 4>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(actionDate, len(actionDate)-spacePos)#</span></cfif>
+
+				<span style="font-size:16px;color:##35938c;font-weight:100"><cfif actionType EQ ACTION_TYPE_NEW>#item.user_full_name#<cfelse>#item.last_update_user_full_name#</cfif></span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(actionDate, spacePos)#</span><cfif itemTypeId NEQ 4>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(actionDate, len(actionDate)-spacePos)#</span></cfif>
 
 				<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
 				<p style="font-size:16px;margin-top:0;">#langText[arguments.language].new_item.start_date#: #item.start_date# <cfif itemTypeId IS 5>#langText[arguments.language].new_item.hour#: #TimeFormat(item.start_time,"HH:mm")#</cfif><br/>
