@@ -249,7 +249,12 @@
 					<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 OR arguments.itemTypeId IS 13><!--- Tables --->
 						, items.description
 					</cfif>
-					<cfif arguments.itemTypeId IS NOT 1 AND arguments.itemTypeId IS NOT 7>, items.last_update_user_id</cfif>
+					<cfif arguments.itemTypeId IS NOT 1 AND arguments.itemTypeId IS NOT 7>
+					, items.last_update_user_id
+						<cfif arguments.with_user IS true>
+							, CONCAT_WS(' ', last_update_users.family_name, last_update_users.name) AS last_update_user_full_name, last_update_users.image_type AS last_update_user_image_type
+						</cfif>
+					</cfif>
 					<cfif isDefined("arguments.area_id") AND arguments.with_position IS true>
 					, items_position.position
 					</cfif>
@@ -321,6 +326,9 @@
 					FROM #client_abb#_#itemTypeTable# AS items
 					<cfif arguments.with_user IS true>
 						INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
+						<cfif arguments.itemTypeId IS NOT 1 AND arguments.itemTypeId IS NOT 7>
+						LEFT JOIN #client_abb#_users AS last_update_users ON items.last_update_user_id = last_update_users.id
+						</cfif>
 						<cfif arguments.itemTypeId IS 6><!---Tasks--->
 						INNER JOIN #client_abb#_users AS recipient_users ON items.recipient_user = recipient_users.id
 						</cfif>

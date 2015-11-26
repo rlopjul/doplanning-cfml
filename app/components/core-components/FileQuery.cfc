@@ -354,8 +354,9 @@
 					, a.association_date
 				</cfif>
 				<cfif arguments.with_user IS true>
-					, users.family_name, users.name AS user_name, users.image_type AS user_image_type,
-					CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
+					, users.family_name, users.name AS user_name, users.image_type AS user_image_type
+					, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
+					, CONCAT_WS(' ', last_update_users.family_name, last_update_users.name) AS last_update_user_full_name, last_update_users.image_type AS last_update_user_image_type
 				</cfif>
 				<cfif arguments.with_area IS true>
 					, areas.name AS area_name
@@ -372,6 +373,7 @@
 				</cfif>
 				<cfif arguments.with_user IS true>
 					INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
+					LEFT JOIN #client_abb#_users AS last_update_users ON files.replacement_user = last_update_users.id
 				</cfif>
 				<cfif isDefined("arguments.user_in_charge")>
 					AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
