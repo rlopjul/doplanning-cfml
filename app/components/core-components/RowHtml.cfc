@@ -1383,7 +1383,9 @@
 
 						<tr <cfif dataSelected IS true>class="selected"</cfif> <cfif arguments.openRowOnSelect IS true>data-item-url="#row_page_url#"</cfif>>
 
+							<cfif arguments.includeLinkButton IS true>
 							<td #tdStyle#><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()"><i class="fa fa-external-link"></i></a></td>
+							</cfif>
 							<td #tdStyle#>#tableRows.row_id#</td>
 
 							<cfset row_id = tableRows.row_id>
