@@ -2816,6 +2816,9 @@
 									</cfinvoke>
 
 									<!--- Rows content --->
+
+									<cfset rowUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#itemObject.area_id#&#itemTypeName#=#table_id#&row=">
+
 									<cfif rowQuery.recordCount GT 0>
 
 										<cfsavecontent variable="tableRowsContent">
@@ -2829,6 +2832,9 @@
 												<cfinvokeargument name="fields" value="#fields#">
 												<cfinvokeargument name="openRowOnSelect" value="false">
 												<cfinvokeargument name="tablesorterEnabled" value="false">
+												<cfinvokeargument name="includeLinkButton" value="true">
+												<cfinvokeargument name="linkButtonText" value="#langText[curLang].common.view#">
+												<cfinvokeargument name="rowUrlPath" value="#rowUrl#">
 
 												<cfinvokeargument name="client_abb" value="#client_abb#">
 												<cfinvokeargument name="client_dsn" value="#client_dsn#">

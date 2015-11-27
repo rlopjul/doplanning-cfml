@@ -130,6 +130,8 @@ curLangText["es"] = {
 
 			"no_title" : "sin título",
 
+			"view" : "Ver",
+
 		},
 
 		"new_item": {
@@ -523,6 +525,8 @@ curLangText["en"] = {
 			"you_must_change_password" : 'You must change your password at the application preferences',
 
 			"no_title" : "without title",
+
+			"view" : "View",
 
 		},
 

@@ -1025,6 +1025,8 @@
 		<cfargument name="columnSelectorContainer" type="string" required="false">
 		<cfargument name="tablesorterEnabled" type="boolean" required="false" default="true">
 		<cfargument name="includeLinkButton" type="boolean" required="false" default="false">
+		<cfargument name="linkButtonText" type="string" required="false" default='<i class="fa fa-external-link"></i>'>
+		<cfargument name="rowUrlPath" type="string" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1352,12 +1354,20 @@
 
 					<cfloop query="tableRows">
 
-						<cfif isDefined("arguments.view_id")>
-							<cfset rpage = "#tableTypeName#_view_rows.cfm?#tableTypeName#_view=#arguments.view_id#">
-							<cfset row_page_url = "#tableTypeName#_view_row.cfm?#tableTypeName#_view=#arguments.view_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
+						<cfif NOT isDefined("arguments.rowUrlPath")>
+
+							<cfif isDefined("arguments.view_id")>
+								<cfset rpage = "#tableTypeName#_view_rows.cfm?#tableTypeName#_view=#arguments.view_id#">
+								<cfset row_page_url = "#tableTypeName#_view_row.cfm?#tableTypeName#_view=#arguments.view_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
+							<cfelse>
+								<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
+								<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
+							</cfif>
+
 						<cfelse>
-							<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
-							<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
+
+							<cfset row_page_url = "#arguments.rowUrlPath##tableRows.row_id#">
+
 						</cfif>
 
 
@@ -1384,7 +1394,7 @@
 						<tr <cfif dataSelected IS true>class="selected"</cfif> <cfif arguments.openRowOnSelect IS true>data-item-url="#row_page_url#"</cfif>>
 
 							<cfif arguments.includeLinkButton IS true>
-							<td #tdStyle#><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()"><i class="fa fa-external-link"></i></a></td>
+							<td #tdStyle#><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()">#arguments.linkButtonText#</a></td>
 							</cfif>
 							<td #tdStyle#>#tableRows.row_id#</td>
 
