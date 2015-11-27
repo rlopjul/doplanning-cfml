@@ -445,6 +445,8 @@
 								<cfinvokeargument name="openRowOnSelect" value="true">
 								<cfinvokeargument name="app_version" value="#app_version#">
 								<cfinvokeargument name="columnSelectorContainer" value="columnSelector#tableTypeId#_#table_id#">
+								<cfinvokeargument name="tablesorterEnabled" value="true">
+								<cfinvokeargument name="includeLinkButton" value="true">
 							</cfinvoke>
 
 						</div><!--- END col-sm-12 --->

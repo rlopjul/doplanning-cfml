@@ -458,44 +458,48 @@
 
     <cffunction name="outputRowList" returntype="void" access="public" output="true">
     	<cfargument name="table_id" type="numeric" required="true">
-		<cfargument name="tableTypeId" type="numeric" required="true">
-		<cfargument name="view_id" type="numeric" required="false">
-		<cfargument name="tableRows" type="query" required="true">
-		<cfargument name="fields" type="query" required="true">
-		<cfargument name="openRowOnSelect" type="boolean" required="true">
-		<cfargument name="app_version" type="string" required="true">
-		<cfargument name="columnSelectorContainer" type="string" required="false">
+			<cfargument name="tableTypeId" type="numeric" required="true">
+			<cfargument name="view_id" type="numeric" required="false">
+			<cfargument name="tableRows" type="query" required="true">
+			<cfargument name="fields" type="query" required="true">
+			<cfargument name="openRowOnSelect" type="boolean" required="true">
+			<cfargument name="app_version" type="string" required="true">
+			<cfargument name="columnSelectorContainer" type="string" required="false">
+			<cfargument name="tablesorterEnabled" type="boolean" required="false">
+			<cfargument name="includeLinkButton" type="boolean" required="false">
 
-		<cfset var method = "outputRowList">
+			<cfset var method = "outputRowList">
 
-		<cftry>
+			<cftry>
 
-			<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+				<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowList">
-				<cfinvokeargument name="table_id" value="#arguments.table_id#">
-				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				<cfinvokeargument name="view_id" value="#arguments.view_id#">
-				<cfinvokeargument name="tableRows" value="#arguments.tableRows#">
-				<cfinvokeargument name="fields" value="#arguments.fields#">
-				<cfinvokeargument name="openRowOnSelect" value="#arguments.openRowOnSelect#">
-				<cfinvokeargument name="app_version" value="#arguments.app_version#">
-				<cfinvokeargument name="columnSelectorContainer" value="#arguments.columnSelectorContainer#">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowList">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="view_id" value="#arguments.view_id#">
+					<cfinvokeargument name="tableRows" value="#arguments.tableRows#">
+					<cfinvokeargument name="fields" value="#arguments.fields#">
+					<cfinvokeargument name="openRowOnSelect" value="#arguments.openRowOnSelect#">
+					<cfinvokeargument name="app_version" value="#arguments.app_version#">
+					<cfinvokeargument name="columnSelectorContainer" value="#arguments.columnSelectorContainer#">
+					<cfinvokeargument name="tablesorterEnabled" value="#arguments.tablesorterEnabled#">
+					<cfinvokeargument name="includeLinkButton" value="#arguments.includeLinkButton#">
 
-				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
+					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
-			<cfcatch>
-				<cfoutput>
-					<div class="alert alert-danger">
-						<i class="icon-warning-sign"></i> <span lang="es">#cfcatch.message#</span>
-					</div>
-				</cfoutput>
-				<cfinclude template="includes/errorHandlerNoRedirect.cfm">
-			</cfcatch>
+				<cfcatch>
+					<cfoutput>
+						<div class="alert alert-danger">
+							<i class="icon-warning-sign"></i> <span lang="es">#cfcatch.message#</span>
+						</div>
+					</cfoutput>
+					<cfinclude template="includes/errorHandlerNoRedirect.cfm">
+				</cfcatch>
 
-		</cftry>
+			</cftry>
 
 	</cffunction>
 

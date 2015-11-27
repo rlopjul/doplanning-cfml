@@ -1024,6 +1024,7 @@
 		<cfargument name="app_version" type="string" required="false" default="mobile">
 		<cfargument name="columnSelectorContainer" type="string" required="false">
 		<cfargument name="tablesorterEnabled" type="boolean" required="false" default="true">
+		<cfargument name="includeLinkButton" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1058,9 +1059,18 @@
 
 						headers: {
 
+							<cfif arguments.includeLinkButton IS true>
+							0: {
+								sorter: false
+							},
+							1: {
+								sorter: "digit"
+							}
+							<cfelse>
 							0: {
 								sorter: "digit"
 							}
+							</cfif>
 
 							<cfset sortArray = arrayNew(1)>
 							<!---<cfset fieldsWithHeader = false>--->
@@ -1090,7 +1100,11 @@
 									<cfelse>
 										<cfset sortOrder = 1>
 									</cfif>
-									<cfset arrayAppend(sortArray, {row=fields.currentRow, order=sortOrder})>
+									<cfif includeLinkButton IS true>
+										<cfset arrayAppend(sortArray, {row=fields.currentRow+1, order=sortOrder})>
+									<cfelse>
+										<cfset arrayAppend(sortArray, {row=fields.currentRow, order=sortOrder})>
+									</cfif>
 								</cfif>
 
 							</cfloop>
@@ -1116,7 +1130,11 @@
 
 						<cfelse>
 							<cfif tableRows.recordCount LT 100><!---Ordenar de nuevo la tabla por el campo por defecto ralentiza las tablas con muchas filas--->
-								sortList: [[0,1]] ,
+								<cfif arguments.includeLinkButton IS true>
+									sortList: [[1,1]] ,
+								<cfelse>
+									sortList: [[0,1]] ,
+								</cfif>
 							</cfif>
 						</cfif>
 
@@ -1171,6 +1189,9 @@
 								// disable = do not display on list
 								, columnSelector_columns : {
 									0: 'disable' /* set to disabled; not allowed to unselect it */
+									<cfif arguments.includeLinkButton IS true>
+									, 1: 'disable'
+									</cfif>
 								},
 								// remember selected columns (requires $.tablesorter.storage)
 								columnSelector_saveColumns: true,
@@ -1216,14 +1237,14 @@
 
 					$('##dataTable#arguments.tableTypeId#_#arguments.table_id# tbody tr').on('click', function(e) {
 
-				       	var row = $(this);
+			       	var row = $(this);
 
-				        if(!row.hasClass("selected")) {
-				        	$('##dataTable#arguments.tableTypeId#_#arguments.table_id# tbody tr').removeClass("selected");
-				        	row.addClass("selected");
-				        }
+			        if(!row.hasClass("selected")) {
+			        	$('##dataTable#arguments.tableTypeId#_#arguments.table_id# tbody tr').removeClass("selected");
+			        	row.addClass("selected");
+			        }
 
-				        var itemUrl= row.data("item-url");
+				      var itemUrl= row.data("item-url");
 					    openUrlLite(itemUrl,'itemIframe');
 
 				    });
@@ -1286,6 +1307,9 @@
 				<table id="dataTable#arguments.tableTypeId#_#arguments.table_id#" class="data-table table-hover" style="<cfif arguments.tablesorterEnabled IS false>font-size:12px;border-collapse:collapse;margin-bottom:15px;<cfelse>margin-top:5px;</cfif>">
 					<thead>
 						<tr #thTrStyle#>
+							<cfif arguments.includeLinkButton IS true>
+							<th style="width:25px;" class="filter-false"></th>
+							</cfif>
 							<th style="width:25px;">##</th>
 							<!---<th>Fecha última modificación</th>--->
 							<cfloop query="fields">
@@ -1359,6 +1383,7 @@
 
 						<tr <cfif dataSelected IS true>class="selected"</cfif> <cfif arguments.openRowOnSelect IS true>data-item-url="#row_page_url#"</cfif>>
 
+							<td #tdStyle#><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()"><i class="fa fa-external-link"></i></a></td>
 							<td #tdStyle#>#tableRows.row_id#</td>
 
 							<cfset row_id = tableRows.row_id>
@@ -1635,6 +1660,9 @@
 
 						<tfoot>
 						   <tr>
+								<cfif arguments.includeLinkButton IS true>
+									<th></th>
+								</cfif>
 								<th></th>
 								<cfloop query="fields">
 									<cfif fields.field_type_id EQ 4><!--- INTEGER --->
