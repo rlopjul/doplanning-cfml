@@ -378,7 +378,7 @@ curLangText["es"] = {
 			"activity_summary" : "Resumen de actividad",
 			"activity_summary_web" : "Resumen de actividad de la WEB",
 			"activity_summary_for_user" : "Resumen de actividad para el usuario",
-			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
+			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos o el cambio de área de elementos. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
 
 		},
 
@@ -772,7 +772,7 @@ curLangText["en"] = {
 			"activity_summary" : "Activity summary",
 			"activity_summary_web" : "Web activity summary",
 			"activity_summary_for_user" : "Summary of activity for the user",
-			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
+			"summary_advice": "Este resumen no incluye acciones tales como la eliminación de elementos, el bloqueo de documentos o el cambio de área de elementos. Las notificaciones individuales de estas acciones pueden habilitarse en las preferencias."
 
 		},
 

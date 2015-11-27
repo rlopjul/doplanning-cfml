@@ -599,7 +599,7 @@ Preferencias de notificaciones
 					</div>
 
 					<p class="help-block">
-						<span lang="es">Este resumen incluye notificaciones relativas a la creación y modificación de elementos de áreas. No incluye notificaciones de acciones tales como el bloqueo o solicitud de aprobación de archivos, el cambio de área de elementos o la introducción/modificación de registros en las listas y formularios.</span><br/>
+						<span lang="es">Este resumen incluye notificaciones relativas a la creación y modificación de elementos de áreas. No incluye notificaciones de acciones tales como el bloqueo o solicitud de aprobación de archivos o el cambio de área de elementos.</span><br/>
 						<cfif len(preferences.notifications_last_digest_date) GT 0>
 							<span lang="es">Fecha último resumen:</span> #DateFormat(preferences.notifications_last_digest_date, APPLICATION.dateFormat)#. <span lang="es">Esta fecha indica la última fecha en la que se comprobó si había elementos para incluir en la notificación periódica.</span>
 						</cfif>
