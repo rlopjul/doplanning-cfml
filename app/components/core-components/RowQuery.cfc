@@ -4,8 +4,8 @@
 
 	<cfset component = "RowQuery">
 
-	<cfset dateFormat = "%d-%m-%Y"><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
-	<cfset datetimeFormat = "%d-%m-%Y %H:%i:%s">
+	<cfset dateFormat = APPLICATION.dbDateFormat><!---%H:%i:%s---><!---Formato de fecha en la que se debe recibir los parámetros--->
+	<cfset datetimeFormat = APPLICATION.dbDateTimeFormat>
 
 	<cfset CREATE_ROW = "create">
 	<cfset MODIFY_ROW = "modify">
@@ -474,6 +474,9 @@
 		<cfargument name="fields" type="query" required="false"><!--- Required to order by fields or search--->
 		<cfargument name="search" type="string" required="false">
 
+		<cfargument name="from_date" type="string" required="no">
+		<cfargument name="end_date" type="string" required="no">
+
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
@@ -508,12 +511,21 @@
 					WHERE table_row.row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
 				<cfelse>
 
+					WHERE 1=1
+
 					<cfif isDefined("arguments.search")>
-
-						WHERE 1=1
-
 						<cfinclude template="#APPLICATION.coreComponentsPath#/includes/tableRowsSearchFields.cfm">
+					</cfif>
 
+					<cfif isDefined("arguments.from_date")>
+						AND ( table_row.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+								OR table_row.last_update_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+							)
+					</cfif>
+					<cfif isDefined("arguments.end_date")>
+						AND ( table_row.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
+							AND IF( table_row.last_update_date IS NULL, true, table_row.last_update_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') )
+							)
 					</cfif>
 
 					<cfif isDefined("arguments.fields")>

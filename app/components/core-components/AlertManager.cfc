@@ -2790,65 +2790,92 @@
 
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12><!--- LISTS AND FORMS --->
 
-									<cfset table_id = itemObject.id>
-									<cfset tableTypeId = itemTypesStruct[itemTypeId].tableTypeId>
+									<cfif itemTypeId IS 11 OR arguments.alertType NEQ ALERT_TYPE_WEB>
 
-									<!--- getTableFields --->
-									<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
-										<cfinvokeargument name="table_id" value="#table_id#">
-										<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-										<cfinvokeargument name="with_types" value="true">
-										<cfinvokeargument name="with_table" value="false">
-										<cfinvokeargument name="include_in_list" value="true">
+										<cfset table_id = itemObject.id>
+										<cfset tableTypeId = itemTypesStruct[itemTypeId].tableTypeId>
 
-										<cfinvokeargument name="client_abb" value="#client_abb#">
-										<cfinvokeargument name="client_dsn" value="#client_dsn#">
-									</cfinvoke>
+										<!--- getTableFields --->
+										<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
+											<cfinvokeargument name="table_id" value="#table_id#">
+											<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+											<cfinvokeargument name="with_types" value="true">
+											<cfinvokeargument name="with_table" value="false">
+											<cfinvokeargument name="include_in_list" value="true">
 
-									<!--- getTableRows --->
-									<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
-										<cfinvokeargument name="table_id" value="#table_id#">
-										<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-										<cfinvokeargument name="fields" value="#fields#">
+											<cfinvokeargument name="client_abb" value="#client_abb#">
+											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+										</cfinvoke>
 
-										<cfinvokeargument name="client_abb" value="#client_abb#">
-										<cfinvokeargument name="client_dsn" value="#client_dsn#">
-									</cfinvoke>
+										<!--- getTableRows --->
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
+											<cfinvokeargument name="table_id" value="#table_id#">
+											<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+											<cfinvokeargument name="fields" value="#fields#">
 
-									<!--- Rows content --->
+											<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
+											<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
 
-									<cfset rowUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#itemObject.area_id#&#itemTypeName#=#table_id#&row=">
-
-									<cfif rowQuery.recordCount GT 0>
-
-										<cfsavecontent variable="tableRowsContent">
-										<cfoutput>
-
-											<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowList">
-												<cfinvokeargument name="table_id" value="#table_id#">
-												<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-												<!---<cfinvokeargument name="view_id" value="#arguments.view_id#">--->
-												<cfinvokeargument name="tableRows" value="#rowQuery#">
-												<cfinvokeargument name="fields" value="#fields#">
-												<cfinvokeargument name="openRowOnSelect" value="false">
-												<cfinvokeargument name="tablesorterEnabled" value="false">
-												<cfinvokeargument name="includeLinkButton" value="true">
-												<cfinvokeargument name="linkButtonText" value="#langText[curLang].common.view#">
-												<cfinvokeargument name="rowUrlPath" value="#rowUrl#">
-
-												<cfinvokeargument name="client_abb" value="#client_abb#">
-												<cfinvokeargument name="client_dsn" value="#client_dsn#">
-											</cfinvoke>
-
-										</cfoutput>
-										</cfsavecontent>
-
-										<cfset itemAlertContent = itemAlertContent&tableRowsContent>
-
-									</cfif>
+											<cfinvokeargument name="client_abb" value="#client_abb#">
+											<cfinvokeargument name="client_dsn" value="#client_dsn#">
+										</cfinvoke>
 
 
-								</cfif>
+										<!--- Rows content --->
+
+										<cfif rowQuery.recordCount GT 0>
+
+											<cfset rowUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#itemObject.area_id#&#itemTypeName#=#table_id#&row=">
+
+											<cfif tableTypeId IS 2><!--- Forms --->
+
+												<!--- creation_date column --->
+												<cfset queryAddRow(fields, 1)>
+												<cfset querySetCell(fields, "field_id", "creation_date")>
+												<cfset querySetCell(fields, "label", "Fecha de creación")>
+												<cfset querySetCell(fields, "position", 0)>
+
+											<cfelse>
+
+												<!--- last_update_date column --->
+												<cfset queryAddRow(fields, 1)>
+												<cfset querySetCell(fields, "field_id", "last_update_date")>
+												<cfset querySetCell(fields, "label", "Fecha de última modificación")>
+												<cfset querySetCell(fields, "position", 0)>
+
+											</cfif>
+
+											<cfsavecontent variable="tableRowsContent">
+											<cfoutput>
+
+												<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowList">
+													<cfinvokeargument name="table_id" value="#table_id#">
+													<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+													<!---<cfinvokeargument name="view_id" value="#arguments.view_id#">--->
+													<cfinvokeargument name="tableRows" value="#rowQuery#">
+													<cfinvokeargument name="fields" value="#fields#">
+													<cfinvokeargument name="openRowOnSelect" value="false">
+													<cfinvokeargument name="tablesorterEnabled" value="false">
+													<cfinvokeargument name="rowUrlPath" value="#rowUrl#">
+													<cfif arguments.alertType NEQ ALERT_TYPE_WEB>
+														<cfinvokeargument name="includeLinkButton" value="true">
+														<cfinvokeargument name="linkButtonText" value="#langText[curLang].common.view#">
+													</cfif>
+
+													<cfinvokeargument name="client_abb" value="#client_abb#">
+													<cfinvokeargument name="client_dsn" value="#client_dsn#">
+												</cfinvoke>
+
+											</cfoutput>
+											</cfsavecontent>
+
+											<cfset itemAlertContent = itemAlertContent&tableRowsContent>
+
+										</cfif>
+
+									</cfif><!--- END itemTypeId IS 11 OR arguments.alertType NEQ ALERT_TYPE_WEB --->
+
+								</cfif><!--- END itemTypeId IS 11 OR itemTypeId IS 12 --->
 
 								<cfset alertContent = alertContent&itemAlertContent>
 
