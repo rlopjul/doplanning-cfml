@@ -1297,7 +1297,7 @@
 		</cfif>
 
 				<cfif arguments.tablesorterEnabled IS false>
-					<cfset tdStyle = 'style="padding:5px;border-width: 1px; border-style: solid; border-color: ##EEEEEE;"'>
+					<cfset tdStyle = 'style="padding:5px;border-width: 1px; border-style: solid; border-color: ##CCCCCC;"'>
 					<cfset thStyle = 'style="padding:5px;border-left-width: 1px;border-left-color: ##CCCCCC;border-left-style: solid;"'>
 					<cfset thTrStyle = 'style="background-color: ##EEEEEE;"'>
 				<cfelse>
