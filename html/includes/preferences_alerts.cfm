@@ -29,13 +29,15 @@ Preferencias de notificaciones
 
 	<!---<div style="padding-left:15px;"></div>--->
 
+
+
 	<cfoutput>
 	<form action="#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUserPreferences" method="post" id="updateUserAlertPreferences"><!---class="form-horizontal"--->
 
 		<div class="form-horizontal"><!--- style="padding-left:10px"--->
 
 			<div class="row">
-				<div class="col-sm-offset-2 col-sm-3 col-md-2">
+				<div class="col-sm-offset-1 col-sm-3 col-md-2">
 
 					<input type="submit" class="btn btn-primary btn-block" name="modify" value="Guardar" lang="es"/>
 
@@ -47,520 +49,550 @@ Preferencias de notificaciones
 				<div class="col-sm-12">
 
 					<h4 lang="es">Notificaciones instantáneas</h4>
-					<h5 lang="es">Enviar un email cuando:</h5>
 
 				</div>
 
 			</div>
 
-			<div class="row">
+			<cfif SESSION.client_abb EQ "ceseand">
+				<script>
+						$(function() {
 
-				<div class="col-sm-2">
+							$("##collapseInstantNotifications").collapse('hide')
 
+						});
+				</script>
 
-				</div>
+				<a class="btn btn btn-info" role="button" data-toggle="collapse" href="##collapseInstantNotifications" aria-expanded="false" aria-controls="collapseInstantNotifications">
+				  Mostrar notificaciones instantáneas
+				</a>
+			</cfif>
 
-				<div class="col-sm-10">
+			<div <cfif SESSION.client_abb EQ "ceseand">class="collapse"</cfif> id="collapseInstantNotifications">
 
 					<div class="row">
 
-						<div class="col-sm-offset-1 col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="select_all" checked="checked" onclick="toggleContainerCheckboxesChecked('instantNotifications',this.checked);"/> <span lang="es">Seleccionar/quitar todas</span>
-							</label>
+						<div class="col-sm-12">
+
+							<h5 lang="es">Enviar un email cuando:</h5>
+
 						</div>
 
 					</div>
 
-				</div>
-
-			</div>
-
-			<div class="row" id="instantNotifications">
-
-				<div class="col-sm-2">
-
-
-				</div>
-
-				<div class="col-sm-10">
-
 					<div class="row">
 
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" alt="Mensaje" lang="es" />
-						</div>
+						<div class="col-sm-2">
 
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-							 	<input type="checkbox" name="notify_new_message" value="true" <cfif preferences.notify_new_message IS true>checked="checked"</cfif> />
-								<span lang="es">Un mensaje ha sido creado o eliminado</span>
-							</label>
-						</div>
-					</div>
-
-				<cfif APPLICATION.moduleWeb EQ true><!---Web--->
-
-				<cfif APPLICATION.identifier EQ "vpnet">
-					<div class="row">
-
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/link_new.png" alt="Enlace" lang="es" />
-						</div>
-
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_link" value="true" <cfif preferences.notify_new_link IS true>checked="checked"</cfif> />
-								<span lang="es">Un enlace ha sido creado, modificado o eliminado</span>
-							</label>
-						</div>
-					</div>
-				</cfif>
-
-					<div class="row">
-
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/entry.png" alt="Elemento de contenido web" lang="es" />
-						</div>
-
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_entry" value="true" <cfif preferences.notify_new_entry IS true>checked="checked"</cfif> />
-								<span lang="es">Un elemento de contenido web ha sido creado, modificado o eliminado</span>
-							</label>
-						</div>
-					</div>
-
-					<div class="row">
-
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/news.png" alt="Noticia" lang="es" />
-						</div>
-
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_news" value="true" <cfif preferences.notify_new_news IS true>checked="checked"</cfif> />
-								<span lang="es">Una noticia ha sido creada, modificada o eliminada</span>
-							</label>
-						</div>
-					</div>
-
-					<div class="row">
-
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/image.png" alt="Imagen" lang="es" />
-						</div>
-
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_image" value="true" <cfif preferences.notify_new_image IS true>checked="checked"</cfif> />
-								<span lang="es">Una imagen ha sido creada, modificada o eliminada</span>
-							</label>
-						</div>
-					</div>
-
-				</cfif>
-
-					<div class="row">
-
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/event.png" alt="Evento" lang="es" />
-						</div>
-
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_event" value="true" <cfif preferences.notify_new_event IS true>checked="checked"</cfif> />
-								<span lang="es">Un evento ha sido creado, modificado o eliminado</span>
-							</label>
-						</div>
-					</div>
-
-				<cfif APPLICATION.identifier EQ "dp">
-
-					<div class="row">
-
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/task.png" alt="Tarea" lang="es" />
-						</div>
-
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_task" value="true" <cfif preferences.notify_new_task IS true>checked="checked"</cfif> />
-								<span lang="es">Una tarea ha sido creada, modificada o eliminada</span>
-							</label>
-						</div>
-					</div>
-
-				</cfif>
-
-				<cfif APPLICATION.moduleDPDocuments IS true>
-
-					<div class="row">
-
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/dp_document.png" alt="Documento DoPlanning" lang="es" />
-						</div>
-
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_dp_document" value="true" <cfif preferences.notify_new_dp_document IS true>checked="checked"</cfif> />
-								<span lang="es">Un documento DoPlanning ha sido creado, modificado o eliminado</span>
-							</label>
-						</div>
-					</div>
-
-				</cfif>
-
-				<cfif APPLICATION.modulefilesWithTables IS true>
-					<div class="row">
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/typology.png" alt="Tipología" lang="es" />
-						</div>
-
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_typology" value="true" <cfif preferences.notify_new_typology IS true>checked="checked"</cfif> />
-								<span lang="es">Una tipología ha sido creada, modificada o eliminada</span>
-							</label>
-						</div>
-					</div>
-				</cfif>
-
-				<cfif APPLICATION.moduleConsultations IS true>
-					<div class="row">
-						<div class="col-sm-1" style="text-align:center;">
-							<i class="icon-exchange" style="font-size:28px; color:##0088CC"></i>
-						</div>
-
-						<div class="col-sm-11">
-
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_consultation" value="true" <cfif preferences.notify_new_consultation IS true>checked="checked"</cfif> />
-								<!---<img src="#APPLICATION.htmlPath#/assets/v3/icons/consultation.png" alt="Nueva consulta" />---><span lang="es">Una consulta ha sido creada, respondida, cerrada o eliminada</span>
-							</label>
 
 						</div>
 
-					</div>
-				</cfif>
+						<div class="col-sm-10">
 
-						<cfif APPLICATION.modulePubMedComments IS true>
-						<div class="row">
-							<div class="col-sm-1" style="text-align:center;">
-								<img src="#APPLICATION.htmlPath#/assets/v3/icons/pubmed.png" alt="Nueva publicación" />
+							<div class="row">
+
+								<div class="col-sm-offset-1 col-sm-11">
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="select_all" checked="checked" onclick="toggleContainerCheckboxesChecked('instantNotifications',this.checked);"/> <span lang="es">Seleccionar/quitar todas</span>
+									</label>
+								</div>
+
 							</div>
 
-							<div class="col-sm-11">
-								<label style="margin-bottom:15px;">
-									<input type="checkbox" name="notify_new_pubmed" value="true" <cfif preferences.notify_new_pubmed IS true>checked="checked"</cfif> />
-									<span lang="es">Una publicación ha sido creada, modificada o eliminada</span>
-								</label>
-							</div>
 						</div>
+
+					</div>
+
+					<div class="row" id="instantNotifications">
+
+						<div class="col-sm-2">
+
+
+						</div>
+
+						<div class="col-sm-10">
+
+							<div class="row">
+
+								<div class="col-sm-1" style="text-align:center;">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/message.png" alt="Mensaje" lang="es" />
+								</div>
+
+								<div class="col-sm-11">
+									<label style="margin-bottom:15px;">
+									 	<input type="checkbox" name="notify_new_message" value="true" <cfif preferences.notify_new_message IS true>checked="checked"</cfif> />
+										<span lang="es">Un mensaje ha sido creado o eliminado</span>
+									</label>
+								</div>
+							</div>
+
+						<cfif APPLICATION.moduleWeb EQ true><!---Web--->
+
+						<cfif APPLICATION.identifier EQ "vpnet">
+							<div class="row">
+
+								<div class="col-sm-1" style="text-align:center;">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/link_new.png" alt="Enlace" lang="es" />
+								</div>
+
+								<div class="col-sm-11">
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_link" value="true" <cfif preferences.notify_new_link IS true>checked="checked"</cfif> />
+										<span lang="es">Un enlace ha sido creado, modificado o eliminado</span>
+									</label>
+								</div>
+							</div>
 						</cfif>
 
-						<div class="row">
-							<div class="col-sm-1" style="text-align:center;">
-								<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" alt="Crear area" />
+							<div class="row">
+
+								<div class="col-sm-1" style="text-align:center;">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/entry.png" alt="Elemento de contenido web" lang="es" />
+								</div>
+
+								<div class="col-sm-11">
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_entry" value="true" <cfif preferences.notify_new_entry IS true>checked="checked"</cfif> />
+										<span lang="es">Un elemento de contenido web ha sido creado, modificado o eliminado</span>
+									</label>
+								</div>
 							</div>
 
-							<div class="col-sm-11">
+							<div class="row">
 
-								<label style="margin-bottom:15px;">
-									<input type="checkbox" name="notify_new_area" value="true" <cfif preferences.notify_new_area IS true>checked="checked"</cfif> />
-									<span lang="es">Un área nueva ha sido creada</span>
-								</label>
+								<div class="col-sm-1" style="text-align:center;">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/news.png" alt="Noticia" lang="es" />
+								</div>
 
+								<div class="col-sm-11">
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_news" value="true" <cfif preferences.notify_new_news IS true>checked="checked"</cfif> />
+										<span lang="es">Una noticia ha sido creada, modificada o eliminada</span>
+									</label>
+								</div>
 							</div>
-						</div>
 
-						<div class="row">
-							<div class="col-sm-1" style="text-align:center;">
-								<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/users.png" alt="Usuario" />
+							<div class="row">
+
+								<div class="col-sm-1" style="text-align:center;">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/image.png" alt="Imagen" lang="es" />
+								</div>
+
+								<div class="col-sm-11">
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_image" value="true" <cfif preferences.notify_new_image IS true>checked="checked"</cfif> />
+										<span lang="es">Una imagen ha sido creada, modificada o eliminada</span>
+									</label>
+								</div>
 							</div>
 
-							<div class="col-sm-11">
+						</cfif>
 
-								<div class="row">
-									<div class="col-sm-12">
+							<div class="row">
 
-										<label>
-											<input type="checkbox" name="notify_new_user_in_area" value="true" <cfif preferences.notify_new_user_in_area IS true>checked="checked"</cfif> />
-											<span lang="es">Un usuario ha sido asociado a un área</span>
-										</label>
+								<div class="col-sm-1" style="text-align:center;">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/event.png" alt="Evento" lang="es" />
+								</div>
 
-									</div>
+								<div class="col-sm-11">
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_event" value="true" <cfif preferences.notify_new_event IS true>checked="checked"</cfif> />
+										<span lang="es">Un evento ha sido creado, modificado o eliminado</span>
+									</label>
+								</div>
+							</div>
+
+						<cfif APPLICATION.identifier EQ "dp">
+
+							<div class="row">
+
+								<div class="col-sm-1" style="text-align:center;">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/task.png" alt="Tarea" lang="es" />
+								</div>
+
+								<div class="col-sm-11">
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_task" value="true" <cfif preferences.notify_new_task IS true>checked="checked"</cfif> />
+										<span lang="es">Una tarea ha sido creada, modificada o eliminada</span>
+									</label>
+								</div>
+							</div>
+
+						</cfif>
+
+						<cfif APPLICATION.moduleDPDocuments IS true>
+
+							<div class="row">
+
+								<div class="col-sm-1" style="text-align:center;">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/dp_document.png" alt="Documento DoPlanning" lang="es" />
+								</div>
+
+								<div class="col-sm-11">
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_dp_document" value="true" <cfif preferences.notify_new_dp_document IS true>checked="checked"</cfif> />
+										<span lang="es">Un documento DoPlanning ha sido creado, modificado o eliminado</span>
+									</label>
+								</div>
+							</div>
+
+						</cfif>
+
+						<cfif APPLICATION.modulefilesWithTables IS true>
+							<div class="row">
+								<div class="col-sm-1" style="text-align:center;">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons/typology.png" alt="Tipología" lang="es" />
+								</div>
+
+								<div class="col-sm-11">
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_typology" value="true" <cfif preferences.notify_new_typology IS true>checked="checked"</cfif> />
+										<span lang="es">Una tipología ha sido creada, modificada o eliminada</span>
+									</label>
+								</div>
+							</div>
+						</cfif>
+
+						<cfif APPLICATION.moduleConsultations IS true>
+							<div class="row">
+								<div class="col-sm-1" style="text-align:center;">
+									<i class="icon-exchange" style="font-size:28px; color:##0088CC"></i>
+								</div>
+
+								<div class="col-sm-11">
+
+									<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_consultation" value="true" <cfif preferences.notify_new_consultation IS true>checked="checked"</cfif> />
+										<!---<img src="#APPLICATION.htmlPath#/assets/v3/icons/consultation.png" alt="Nueva consulta" />---><span lang="es">Una consulta ha sido creada, respondida, cerrada o eliminada</span>
+									</label>
 
 								</div>
 
+							</div>
+						</cfif>
+
+								<cfif APPLICATION.modulePubMedComments IS true>
 								<div class="row">
-									<div class="col-sm-12">
+									<div class="col-sm-1" style="text-align:center;">
+										<img src="#APPLICATION.htmlPath#/assets/v3/icons/pubmed.png" alt="Nueva publicación" />
+									</div>
+
+									<div class="col-sm-11">
+										<label style="margin-bottom:15px;">
+											<input type="checkbox" name="notify_new_pubmed" value="true" <cfif preferences.notify_new_pubmed IS true>checked="checked"</cfif> />
+											<span lang="es">Una publicación ha sido creada, modificada o eliminada</span>
+										</label>
+									</div>
+								</div>
+								</cfif>
+
+								<div class="row">
+									<div class="col-sm-1" style="text-align:center;">
+										<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" alt="Crear area" />
+									</div>
+
+									<div class="col-sm-11">
 
 										<label style="margin-bottom:15px;">
-											<input type="checkbox" name="notify_been_associated_to_area" value="true" <cfif preferences.notify_been_associated_to_area IS true>checked="checked"</cfif> />
-											<span lang="es">He sido asociado como usuario a un área</span>
+											<input type="checkbox" name="notify_new_area" value="true" <cfif preferences.notify_new_area IS true>checked="checked"</cfif> />
+											<span lang="es">Un área nueva ha sido creada</span>
 										</label>
 
 									</div>
 								</div>
 
+								<div class="row">
+									<div class="col-sm-1" style="text-align:center;">
+										<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/users.png" alt="Usuario" />
+									</div>
+
+									<div class="col-sm-11">
+
+										<div class="row">
+											<div class="col-sm-12">
+
+												<label>
+													<input type="checkbox" name="notify_new_user_in_area" value="true" <cfif preferences.notify_new_user_in_area IS true>checked="checked"</cfif> />
+													<span lang="es">Un usuario ha sido asociado a un área</span>
+												</label>
+
+											</div>
+
+										</div>
+
+										<div class="row">
+											<div class="col-sm-12">
+
+												<label style="margin-bottom:15px;">
+													<input type="checkbox" name="notify_been_associated_to_area" value="true" <cfif preferences.notify_been_associated_to_area IS true>checked="checked"</cfif> />
+													<span lang="es">He sido asociado como usuario a un área</span>
+												</label>
+
+											</div>
+										</div>
+
+									</div>
+								</div>
+
+
+
+							<div class="form_separator"></div>
+
+							<!--- Files --->
+							<div class="row">
+							    <div class="col-sm-1" style="text-align:center;">
+							    	<img src="#APPLICATION.htmlPath#/assets/v3/icons/file.png" alt="Archivo" />
+							    </div>
+							    <div class="col-sm-11">
+
+							    	<div class="row">
+							          <div class="col-sm-12">
+								    	<label>
+											<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
+											<!--- <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_new.png" alt="Archivo asociado" /> --->
+											<span lang="es">Un archivo ha sido asociado a un área</span>
+										</label>
+							          </div>
+							        </div>
+
+							        <div class="row">
+							         <div class="col-sm-12">
+							          	<label>
+											<input type="checkbox" name="notify_replace_file" value="true" <cfif preferences.notify_replace_file IS true>checked="checked"</cfif> />
+											<!--- <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_replace.png" alt="Archivo reemplazado" /> --->
+											<!---<span lang="es"></span>--->
+											<span lang="es">Un archivo ha sido reemplazado o ha cambiado su estado (ha sido validado, rechazado, ...)</span>
+										</label>
+							          </div>
+						          	</div>
+
+					          	   <!---<cfif APPLICATION.moduleAreaFilesLite>--->
+						          	<div class="row">
+							          	<div class="col-sm-12">
+								          	<label style="margin-bottom:15px;">
+												<input type="checkbox" name="notify_lock_file" value="true" <cfif preferences.notify_lock_file IS true>checked="checked"</cfif> />
+												<span lang="es">Un archivo de área ha sido bloqueado/desbloqueado</span>
+											</label>
+										</div>
+									</div>
+						          <!---</cfif>---->
+
+						          	<div class="row">
+							          <!---<div class="col-sm-5">
+							          	<label>
+											<input type="checkbox" name="notify_dissociate_file" value="true" <cfif preferences.notify_dissociate_file IS true>checked="checked"</cfif> />
+											<span lang="es">Archivo ha sido quitado de un área</span>
+										</label>
+									  </div>--->
+							          <div class="col-sm-12">
+							          	<label>
+											<input type="checkbox" name="notify_delete_file" value="true" <cfif preferences.notify_delete_file IS true>checked="checked"</cfif> />
+											<span lang="es">Un archivo ha sido eliminado/quitado de un área</span>
+										</label>
+							          </div>
+							        </div>
+
+
+
+
+						      		<!---<div class="row">
+							          <div class="col-sm-5">
+							          	<label>
+											<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
+											<span lang="es">Archivo de área ha sido desbloqueado</span>
+										</label>
+							          </div>
+						          	</div>--->
+							    </div>
 							</div>
-						</div>
 
 
+					<cfif APPLICATION.moduleLists IS true>
 
-						<div class="form_separator"></div>
+						  <div class="form_separator"></div>
 
-						<!--- Files --->
-						<div class="row">
+						  <div class="row">
 						    <div class="col-sm-1" style="text-align:center;">
-						    	<img src="#APPLICATION.htmlPath#/assets/v3/icons/file.png" alt="Archivo" />
+						    	<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" alt="Lista" />
 						    </div>
 						    <div class="col-sm-11">
 
 						    	<div class="row">
+
 						          <div class="col-sm-12">
 							    	<label>
-										<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
-										<!--- <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_new.png" alt="Archivo asociado" /> --->
-										<span lang="es">Un archivo ha sido asociado a un área</span>
+										<input type="checkbox" name="notify_new_list" value="true" <cfif preferences.notify_new_list IS true>checked="checked"</cfif> />
+										<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
 									</label>
-						          </div>
-						        </div>
+								  </div>
 
-						        <div class="row">
-						         <div class="col-sm-12">
-						          	<label>
-										<input type="checkbox" name="notify_replace_file" value="true" <cfif preferences.notify_replace_file IS true>checked="checked"</cfif> />
-										<!--- <img src="#APPLICATION.htmlPath#/assets/v3/icons/file_replace.png" alt="Archivo reemplazado" /> --->
-										<!---<span lang="es"></span>--->
-										<span lang="es">Un archivo ha sido reemplazado o ha cambiado su estado (ha sido validado, rechazado, ...)</span>
-									</label>
-						          </div>
-					          	</div>
-
-				          	   <!---<cfif APPLICATION.moduleAreaFilesLite>--->
-					          	<div class="row">
-						          	<div class="col-sm-12">
-							          	<label style="margin-bottom:15px;">
-											<input type="checkbox" name="notify_lock_file" value="true" <cfif preferences.notify_lock_file IS true>checked="checked"</cfif> />
-											<span lang="es">Un archivo de área ha sido bloqueado/desbloqueado</span>
-										</label>
-									</div>
 								</div>
-					          <!---</cfif>---->
 
-					          	<div class="row">
-						          <!---<div class="col-sm-5">
-						          	<label>
-										<input type="checkbox" name="notify_dissociate_file" value="true" <cfif preferences.notify_dissociate_file IS true>checked="checked"</cfif> />
-										<span lang="es">Archivo ha sido quitado de un área</span>
+								<div class="row">
+
+								  <div class="col-sm-12">
+								  	<label>
+										<input type="checkbox" name="notify_new_list_row" value="true" <cfif preferences.notify_new_list_row IS true>checked="checked"</cfif> />
+										<span lang="es">Un registro de lista ha sido creado, modificado o eliminado</span>
 									</label>
-								  </div>--->
-						          <div class="col-sm-12">
-						          	<label>
-										<input type="checkbox" name="notify_delete_file" value="true" <cfif preferences.notify_delete_file IS true>checked="checked"</cfif> />
-										<span lang="es">Un archivo ha sido eliminado/quitado de un área</span>
+								  </div>
+
+								</div>
+
+								<div class="row">
+
+								  <div class="col-sm-12">
+								  	<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_list_view" value="true" <cfif preferences.notify_new_list_view IS true>checked="checked"</cfif> />
+										<span lang="es">Una vista de lista ha sido creada, modificada o eliminada</span>
 									</label>
-						          </div>
-						        </div>
+								  </div>
+
+								</div>
 
 
-
-
-					      		<!---<div class="row">
-						          <div class="col-sm-5">
-						          	<label>
-										<input type="checkbox" name="notify_new_file" value="true" <cfif preferences.notify_new_file IS true>checked="checked"</cfif> />
-										<span lang="es">Archivo de área ha sido desbloqueado</span>
-									</label>
-						          </div>
-					          	</div>--->
 						    </div>
-						</div>
+						  </div>
+
+						<!---<div class="form-group">
+						<label>
+							<input type="checkbox" name="notify_new_list" value="true" <cfif preferences.notify_new_list IS true>checked="checked"</cfif> />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" alt="Nueva lista" />
+							<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
+						</label>
+						</div>--->
+					</cfif>
 
 
-				<cfif APPLICATION.moduleLists IS true>
+					<cfif APPLICATION.moduleForms IS true>
 
-					  <div class="form_separator"></div>
+						<div class="form_separator"></div>
 
-					  <div class="row">
-					    <div class="col-sm-1" style="text-align:center;">
-					    	<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" alt="Lista" />
-					    </div>
-					    <div class="col-sm-11">
+						  <div class="row">
+						    <div class="col-sm-1" style="text-align:center;">
+						    	<img src="#APPLICATION.htmlPath#/assets/v3/icons/form.png" alt="Formulario" />
+						    </div>
+						    <div class="col-sm-11">
 
-					    	<div class="row">
+						    	<div class="row">
 
-					          <div class="col-sm-12">
-						    	<label>
-									<input type="checkbox" name="notify_new_list" value="true" <cfif preferences.notify_new_list IS true>checked="checked"</cfif> />
-									<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
-								</label>
-							  </div>
+						          <div class="col-sm-12">
+							    	<label>
+										<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
+										<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
+									</label>
+								  </div>
 
+								</div>
+
+								<div class="row">
+
+								  <div class="col-sm-12">
+								  	<label>
+										<input type="checkbox" name="notify_new_form_row" value="true" <cfif preferences.notify_new_form_row IS true>checked="checked"</cfif> />
+										<span lang="es">Un registro de formulario ha sido creado, modificado o eliminado</span>
+									</label>
+								  </div>
+
+								</div>
+
+								<div class="row">
+
+								  <div class="col-sm-12">
+								  	<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_new_form_view" value="true" <cfif preferences.notify_new_form_view IS true>checked="checked"</cfif> />
+										<span lang="es">Una vista de formulario ha sido creada, modificada o eliminada</span>
+									</label>
+								  </div>
+
+								</div>
+
+						    </div>
+						  </div>
+						<!---<label>
+							<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
+							<img src="#APPLICATION.htmlPath#/assets/v3/icons/form.png" alt="Nuevo formulario" />
+							<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
+						</label>--->
+					</cfif>
+
+
+					<cfif APPLICATION.moduleMailing IS true>
+
+						<div class="form_separator"></div>
+
+						<div class="row">
+
+							<div class="col-sm-1" style="text-align:center;">
+								<img src="#APPLICATION.htmlPath#/assets/v3/icons/mailing.png" alt="Boletín" lang="es" />
 							</div>
 
-							<div class="row">
-
-							  <div class="col-sm-12">
-							  	<label>
-									<input type="checkbox" name="notify_new_list_row" value="true" <cfif preferences.notify_new_list_row IS true>checked="checked"</cfif> />
-									<span lang="es">Un registro de lista ha sido creado, modificado o eliminado</span>
+							<div class="col-sm-11">
+								<label style="margin-bottom:15px;">
+									<input type="checkbox" name="notify_new_mailing" value="true" <cfif preferences.notify_new_mailing IS true>checked="checked"</cfif> />
+									<span lang="es">Un boletín ha sido enviado</span>
 								</label>
-							  </div>
-
-							</div>
-
-							<div class="row">
-
-							  <div class="col-sm-12">
-							  	<label style="margin-bottom:15px;">
-									<input type="checkbox" name="notify_new_list_view" value="true" <cfif preferences.notify_new_list_view IS true>checked="checked"</cfif> />
-									<span lang="es">Una vista de lista ha sido creada, modificada o eliminada</span>
-								</label>
-							  </div>
-
-							</div>
-
-
-					    </div>
-					  </div>
-
-					<!---<div class="form-group">
-					<label>
-						<input type="checkbox" name="notify_new_list" value="true" <cfif preferences.notify_new_list IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/v3/icons/list.png" alt="Nueva lista" />
-						<span lang="es">Una lista ha sido creada, modificada o eliminada</span>
-					</label>
-					</div>--->
-				</cfif>
-
-
-				<cfif APPLICATION.moduleForms IS true>
-
-					<div class="form_separator"></div>
-
-					  <div class="row">
-					    <div class="col-sm-1" style="text-align:center;">
-					    	<img src="#APPLICATION.htmlPath#/assets/v3/icons/form.png" alt="Formulario" />
-					    </div>
-					    <div class="col-sm-11">
-
-					    	<div class="row">
-
-					          <div class="col-sm-12">
-						    	<label>
-									<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
-									<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
-								</label>
-							  </div>
-
-							</div>
-
-							<div class="row">
-
-							  <div class="col-sm-12">
-							  	<label>
-									<input type="checkbox" name="notify_new_form_row" value="true" <cfif preferences.notify_new_form_row IS true>checked="checked"</cfif> />
-									<span lang="es">Un registro de formulario ha sido creado, modificado o eliminado</span>
-								</label>
-							  </div>
-
-							</div>
-
-							<div class="row">
-
-							  <div class="col-sm-12">
-							  	<label style="margin-bottom:15px;">
-									<input type="checkbox" name="notify_new_form_view" value="true" <cfif preferences.notify_new_form_view IS true>checked="checked"</cfif> />
-									<span lang="es">Una vista de formulario ha sido creada, modificada o eliminada</span>
-								</label>
-							  </div>
-
-							</div>
-
-					    </div>
-					  </div>
-					<!---<label>
-						<input type="checkbox" name="notify_new_form" value="true" <cfif preferences.notify_new_form IS true>checked="checked"</cfif> />
-						<img src="#APPLICATION.htmlPath#/assets/v3/icons/form.png" alt="Nuevo formulario" />
-						<span lang="es">Un formulario ha sido creado, modificado o eliminado</span>
-					</label>--->
-				</cfif>
-
-
-				<cfif APPLICATION.moduleMailing IS true>
-
-					<div class="form_separator"></div>
-
-					<div class="row">
-
-						<div class="col-sm-1" style="text-align:center;">
-							<img src="#APPLICATION.htmlPath#/assets/v3/icons/mailing.png" alt="Boletín" lang="es" />
-						</div>
-
-						<div class="col-sm-11">
-							<label style="margin-bottom:15px;">
-								<input type="checkbox" name="notify_new_mailing" value="true" <cfif preferences.notify_new_mailing IS true>checked="checked"</cfif> />
-								<span lang="es">Un boletín ha sido enviado</span>
-							</label>
-						</div>
-					</div>
-
-				</cfif>
-
-				<cfif SESSION.client_abb NEQ "hcs">
-
-					<div class="form_separator"></div>
-
-					<div class="row">
-						<div class="col-sm-1" style="text-align:center;">
-							<cfif APPLICATION.title EQ "DoPlanning">
-								<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/organization.png" alt="DoPlanning" />
-							</cfif>
-						</div>
-						<div class="col-sm-11">
-
-							<div class="row">
-
-						      <div class="col-sm-12">
-						    	<label>
-									<input type="checkbox" name="notify_app_features" value="true" <cfif preferences.notify_app_features IS true>checked="checked"</cfif> />
-									<span lang="es">Nuevas funcionalidades de #APPLICATION.title#</span>
-								</label>
-							  </div>
-
-							</div>
-
-							<div class="row">
-
-							  <div class="col-sm-12">
-							  	<label style="margin-bottom:15px;">
-									<input type="checkbox" name="notify_app_news" value="true" <cfif preferences.notify_app_news IS true>checked="checked"</cfif> />
-									<span lang="es">Noticias de #APPLICATION.title#</span>
-								</label>
-							  </div>
-
 							</div>
 						</div>
-					</div>
 
-				</cfif>
+					</cfif>
 
+					<cfif SESSION.client_abb NEQ "hcs">
 
-					<!---<div style="height:10px;"></div>--->
+						<div class="form_separator"></div>
 
-					<div class="row">
-						<div class="col-sm-12">
-							<div style="height:10px"></div>
+						<div class="row">
+							<div class="col-sm-1" style="text-align:center;">
+								<cfif APPLICATION.title EQ "DoPlanning">
+									<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/organization.png" alt="DoPlanning" />
+								</cfif>
+							</div>
+							<div class="col-sm-11">
+
+								<div class="row">
+
+							      <div class="col-sm-12">
+							    	<label>
+										<input type="checkbox" name="notify_app_features" value="true" <cfif preferences.notify_app_features IS true>checked="checked"</cfif> />
+										<span lang="es">Nuevas funcionalidades de #APPLICATION.title#</span>
+									</label>
+								  </div>
+
+								</div>
+
+								<div class="row">
+
+								  <div class="col-sm-12">
+								  	<label style="margin-bottom:15px;">
+										<input type="checkbox" name="notify_app_news" value="true" <cfif preferences.notify_app_news IS true>checked="checked"</cfif> />
+										<span lang="es">Noticias de #APPLICATION.title#</span>
+									</label>
+								  </div>
+
+								</div>
+							</div>
 						</div>
-					</div>
 
-				</div><!--- END col-sm-offset-2 col-sm-10 --->
+					</cfif>
 
 
-			</div><!--- END class="row" --->
+						<!---<div style="height:10px;"></div>--->
+
+						<div class="row">
+							<div class="col-sm-12">
+								<div style="height:10px"></div>
+							</div>
+						</div>
+
+					</div><!--- END col-sm-offset-2 col-sm-10 --->
+
+
+				</div><!--- END class="row" --->
+
+
+
+			</div><!---END div collapse--->
+
 
 			<div class="row">
 
@@ -677,7 +709,9 @@ Preferencias de notificaciones
 
 			<div class="row">
 
-				<div class="col-sm-12">
+				<!---<div class="col-sm-12">
+
+					<div class="row">--->
 
 					<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
@@ -698,6 +732,8 @@ userNotificationsDisabledQuery">
 						<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
 					</cfif>
+
+					<cfset counterCategories = 0>
 
 					<cfloop array="#itemTypesArray#" index="itemTypeId">
 
@@ -722,64 +758,82 @@ userNotificationsDisabledQuery">
 
 									<cfset categoriesDefined = true>
 
-									<div class="row" style="padding-bottom:20px;">
+									<cfset counterCategories = counterCategories+1>
 
-										<label class="col-sm-2 control-label" lang="es">#itemTypesStruct[itemTypeId].labelPlural#</label>
+									<!---<div class="row" style="padding-bottom:20px;">--->
 
-										<div class="col-sm-10">
+									<cfif counterCategories MOD 2 IS NOT 0>
+										<div class="row">
+									</cfif>
 
-											<cfset selectedAreasList = valueList(subAreas.id)>
+									<div class="col-sm-6" style="padding-bottom:20px;">
 
-											<cfquery name="userNotificationsDisabledItem" dbtype="query">
-												SELECT *
-												FROM userNotificationsDisabledQuery
-												WHERE item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
-											</cfquery>
+										<div class="row">
 
-											<cfif userNotificationsDisabledItem.recordCount GT 0>
+											<label class="col-sm-2 control-label" lang="es">#itemTypesStruct[itemTypeId].labelPlural#</label>
 
-												<cfloop query="userNotificationsDisabledItem">
+											<div class="col-sm-10">
 
-													<cfset areaInListPosition = ListFind(selectedAreasList,userNotificationsDisabledItem.area_id)>
+												<cfset selectedAreasList = valueList(subAreas.id)>
 
-													<cfif areaInListPosition GT 0>
+												<cfquery name="userNotificationsDisabledItem" dbtype="query">
+													SELECT *
+													FROM userNotificationsDisabledQuery
+													WHERE item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
+												</cfquery>
 
-														<cfset selectedAreasList = listDeleteAt(selectedAreasList, areaInListPosition)>
+												<cfif userNotificationsDisabledItem.recordCount GT 0>
 
-													</cfif>
+													<cfloop query="userNotificationsDisabledItem">
 
-												</cfloop>
+														<cfset areaInListPosition = ListFind(selectedAreasList,userNotificationsDisabledItem.area_id)>
 
-											</cfif>
+														<cfif areaInListPosition GT 0>
 
-											<div class="checkbox">
+															<cfset selectedAreasList = listDeleteAt(selectedAreasList, areaInListPosition)>
 
-												<label>
-													<input type="checkbox" name="select_all_#itemTypeId#" checked="checked" onclick="toggleContainerCheckboxesChecked('itemTypeCategories#itemTypeId#',this.checked);"/> <span lang="es">Seleccionar/quitar todas</span>
-												</label>
+														</cfif>
+
+													</cfloop>
+
+												</cfif>
+
+												<div class="checkbox">
+
+													<label>
+														<input type="checkbox" name="select_all_#itemTypeId#" checked="checked" onclick="toggleContainerCheckboxesChecked('itemTypeCategories#itemTypeId#',this.checked);"/> <span lang="es">Seleccionar/quitar todas</span>
+													</label>
+
+												</div>
+
+												<div id="itemTypeCategories#itemTypeId#">
+
+													<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
+														<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
+														<cfinvokeargument name="subAreas" value="#subAreas#">
+														<cfif len(selectedAreasList) GT 0>
+															<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+														</cfif>
+														<cfinvokeargument name="recursive" value="false">
+														<cfinvokeargument name="field_name" value="categories_#itemTypesStruct[itemTypeId].name#_ids"/>
+														<cfinvokeargument name="field_input_type" value="checkbox">
+														<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+														<cfinvokeargument name="client_dsn" value="#client_dsn#">
+													</cfinvoke>
+
+												</div>
 
 											</div>
 
-											<div id="itemTypeCategories#itemTypeId#">
+										</div><!--- END row --->
 
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
-													<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
-													<cfinvokeargument name="subAreas" value="#subAreas#">
-													<cfif len(selectedAreasList) GT 0>
-														<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
-													</cfif>
-													<cfinvokeargument name="recursive" value="false">
-													<cfinvokeargument name="field_name" value="categories_#itemTypesStruct[itemTypeId].name#_ids"/>
-													<cfinvokeargument name="field_input_type" value="checkbox">
-													<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-													<cfinvokeargument name="client_dsn" value="#client_dsn#">
-												</cfinvoke>
+									</div><!--- END col-sm-6 --->
 
-											</div>
-
+									<cfif counterCategories MOD 2 IS 0>
 										</div>
+									</cfif>
 
-									</div>
+									<!---</div>--->
 
 								</cfif>
 
@@ -790,15 +844,23 @@ userNotificationsDisabledQuery">
 
 					</cfloop>
 
+					<cfif counterCategories MOD 2 IS NOT 0>
+						</div>
+					</cfif>
+
 					<cfif categoriesDefined IS false>
 
 						<div class="alert alert-info" role="alert" style="padding-top:10px;padding-bottom:10px;"><span lang="es">No hay categorías definidas en tu organización</span></div>
 
 					</cfif>
 
-				</div>
+					<!---
+					</div><!---END row--->
 
-			</div>
+				</div><!---END col-sm-12--->
+				--->
+
+			</div><!--- END row --->
 
 			<div class="row">
 
@@ -837,7 +899,7 @@ userNotificationsDisabledQuery">
 
 
 			<div class="row">
-				<div class="col-sm-offset-2 col-sm-3 col-md-2">
+				<div class="col-sm-offset-1 col-sm-3 col-md-2">
 
 					<input type="submit" class="btn btn-primary btn-block" name="modify" value="Guardar" lang="es"/>
 
