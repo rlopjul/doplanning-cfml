@@ -212,6 +212,7 @@
 					<div class="col-xs-3 col-sm-8 col-lg-6">
 						<select name="limit" id="limit" class="form-control" onchange="loadHome();">
 							<option value="20" <cfif limit_to IS 20>selected="selected"</cfif>>20</option>
+							<option value="30" <cfif limit_to IS 30>selected="selected"</cfif>>30</option>
 							<option value="50" <cfif limit_to IS 50>selected="selected"</cfif>>50</option>
 							<option value="100" <cfif limit_to IS 100>selected="selected"</cfif>>100</option>
 							<option value="500" <cfif limit_to IS 500>selected="selected"</cfif>>500</option>
