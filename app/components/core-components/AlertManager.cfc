@@ -2603,7 +2603,7 @@
 
 				<cfif arguments.alertType EQ ALERT_TYPE_WEB>
 
-					<cfif itemTypeId EQ 2 OR itemTypeId EQ 9><!---Entries, Images--->
+					<cfif itemTypeId EQ 2 OR itemTypeId EQ 9 OR itemTypeId IS 12><!---Entries, Images, Forms--->
 						<cfset notifyItemType = false>
 					<cfelseif itemTypesStruct[itemTypeId].web IS false>
 						<cfset notifyItemType = false>
