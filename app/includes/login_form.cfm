@@ -1,21 +1,21 @@
 <cfoutput>
-  
+
   <cfinclude template="#APPLICATION.corePath#/includes/alert_message.cfm">
-  
+
   <form id="login_form" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" onsubmit="return codificarForm(this)" class="form-horizontal">
-    
+
     <cfif APPLICATION.moduleLdapUsers IS true><!--- LDAP --->
-      <input name="encoded" type="hidden" value="false" /> 
+      <input name="encoded" type="hidden" value="false" />
     <cfelse>
       <noscript>
-        <input name="encoded" type="hidden" value="false" />     
-      </noscript>    
-    </cfif>  
+        <input name="encoded" type="hidden" value="false" />
+      </noscript>
+    </cfif>
     <input name="client_abb" type="hidden" value="#client_abb#" />
     <cfif len(destination_page) GT 0>
       <input name="destination_page" type="hidden" value="#destination_page#" />
-    </cfif>	
-  
+    </cfif>
+
     <div class="form-group">
       <!---<cfif APPLICATION.hideInputLabels IS false>--->
         <label for="email" id="emailLabel" lang="es" class="col-sm-5 col-md-4 control-label" style="color:##458DB8;font-size:22px;font-weight:100;">Email</label>
@@ -33,7 +33,7 @@
         </cfif>
       </div>
     </div>
-    
+
     <div class="form-group">
 
       <!---<cfif APPLICATION.hideInputLabels IS false>--->
@@ -50,7 +50,7 @@
         <input name="password" type="password" id="password" required class="form-control" lang="es"/>
       </div>
     </div>
-    
+
     <cfif APPLICATION.moduleLdapUsers EQ true><!--- LDAP --->
     <div class="form-group">
 
@@ -58,19 +58,19 @@
 
       </div>
       <div class="col-sm-7 col-md-8">
-        
+
         <small lang="es">Identificar con usuario y contraseña de:</small>
-        
+
         <cfif APPLICATION.identifier EQ "vpnet">
           <div class="radio">
-            <label for="ldap_asnc"> 
+            <label for="ldap_asnc">
               <input type="radio" name="ldap_id" value="asnc" id="ldap_asnc" onclick="onLdapChange(this)" checked="checked"/> ASNC
             </label>
           </div>
           <!--- <input type="radio" name="ldap_id" value="diraya" />&nbsp;Diraya --->
         <cfelse>
           <div class="radio">
-            <label for="ldap_doplanning"> 
+            <label for="ldap_doplanning">
               <input type="radio" name="ldap_id" value="doplanning" id="ldap_doplanning" onclick="onLdapChange(this)" checked="checked" /> DoPlanning
             </label>
           </div>
@@ -78,7 +78,7 @@
 
         <cfif client_abb EQ "agsna">
           <div class="radio">
-            <label for="ldap_dmsas"> 
+            <label for="ldap_dmsas">
               <input type="radio" name="ldap_id" value="dmsas" id="ldap_dmsas" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
             </label>
           </div>
@@ -86,8 +86,21 @@
 
         <cfif client_abb EQ "hcs">
           <div class="radio">
-            <label for="ldap_portalep_hcs"> 
+            <label for="ldap_portalep_hcs">
               <input type="radio" name="ldap_id" value="portalep_hcs" id="ldap_portalep_hcs" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
+            </label>
+          </div>
+        </cfif>
+
+        <cfif client_abb EQ "omars">
+          <div class="radio">
+            <label for="ldap_hvn">
+              <input type="radio" name="ldap_id" value="dmsas" id="ldap_hvn" onclick="onLdapChange(this)" /> Hospital
+            </label>
+          </div>
+          <div class="radio">
+            <label for="ldap_dmsas">
+              <input type="radio" name="ldap_id" value="dmsas" id="ldap_dmsas" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
             </label>
           </div>
         </cfif>
@@ -104,7 +117,7 @@
       </div>
     </div>
     </cfif>
-    
+
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-9">
           <div class="pull-right">
@@ -118,20 +131,20 @@
         </div>
     </div>
 </form>
-  
+
 
 <!---<cfif find("intranet", CGI.SCRIPT_NAME) GT 0>
   <br/>
   IP: #CGI.REMOTE_ADDR#
-</cfif>---> 
+</cfif>--->
 </cfoutput>
 
 <cfinclude template="#APPLICATION.corePath#/includes/login_md5_js.cfm">
 
 <script>
 
-  function codificarForm(form) {  
-    
+  function codificarForm(form) {
+
     form.password.readonly = true;
     <cfif APPLICATION.moduleLdapUsers IS false>
       var password = form.password.value;
@@ -145,7 +158,7 @@
     return (true);
   }
 
-  <cfif APPLICATION.moduleLdapUsers EQ true> 
+  <cfif APPLICATION.moduleLdapUsers EQ true>
 
   function onLdapChange(radio){
     setSelectedLdap(radio.value);
@@ -169,10 +182,10 @@
       break;
     }
   }
-  
+
   </cfif>
 
-	<!--- 
+	<!---
 	Esto se ha implementado sin jQuery porque daba problemas en IE ya que en un iframe no se cargan los scripts por restricciones de IE con las cookies
 	$(document).ready(function () {
 
