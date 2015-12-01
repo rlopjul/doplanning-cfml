@@ -139,6 +139,8 @@
 
 						<cfelse><!--- Search --->
 
+							<cfset field_value = HTMLEditFormat(field_value)>
+
 							<input type="text" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" />
 
 						</cfif>
@@ -309,6 +311,10 @@
 
 						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
 								<div class="col-xs-7 col-sm-8 col-md-9">
+						</cfif>
+
+						<cfif arguments.search_inputs IS true>
+							<cfset field_value = HTMLEditFormat(field_value)>
 						</cfif>
 
 						<input type="#fields.input_type#" name="#field_name#" id="#field_name#" value="#field_value#" maxlength="#fields.max_length#" #field_required_att# class="#text_input_class#" <cfif len(field_label) IS 0><!---PARA DP ASEBIO (campo otros)--->style="margin-left:35px;width:80%;"</cfif> />
