@@ -854,6 +854,7 @@ userNotificationsDisabledQuery">
 
 					</cfif>
 
+
 					<!---
 					</div><!---END row--->
 
@@ -861,6 +862,134 @@ userNotificationsDisabledQuery">
 				--->
 
 			</div><!--- END row --->
+
+
+
+			<cfif SESSION.client_abb EQ "hcs"><!---CESEAND--->
+
+				<div class="row">
+
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserNotificationsTablesCategoriesDisabled" returnvariable="
+userTablesNotificationsTDisabledQuery">
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfset tableTypeId = 1>
+
+					<cfloop list="154" index="table_id">
+
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="getTableQuery">
+							<cfinvokeargument name="table_id" value="#table_id#">
+							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+							<cfinvokeargument name="parse_dates" value="false">
+							<cfinvokeargument name="published" value="false">
+
+							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfif getTableQuery.recordCount GT 0>
+
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTableSpecialCategories" returnvariable="tableSpecialCategories">
+								<cfinvokeargument name="table_id" value="#table_id#">
+								<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+
+								<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<cfif tableSpecialCategories.recordCount GT 0>
+
+
+								<div class="col-sm-6" style="padding-bottom:20px;">
+
+									<div class="row">
+
+										<label class="col-sm-2 control-label" lang="es">#getTableQuery.title#</label>
+
+										<div class="col-sm-10">
+
+											<cfset selectedCategoriesList = valueList(tableSpecialCategories.category_id)>
+
+											<cfquery name="userTableNotificationsDisabledItem" dbtype="query">
+												SELECT *
+												FROM userTablesNotificationsTDisabledQuery
+												WHERE table_id = <cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">
+												AND table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">;
+											</cfquery>
+
+											<cfif userTableNotificationsDisabledItem.recordCount GT 0>
+
+												<cfloop query="userTableNotificationsDisabledItem">
+
+													<cfset areaInListPosition = ListFind(selectedCategoriesList,userTableNotificationsDisabledItem.area_id)>
+
+													<cfif areaInListPosition GT 0>
+
+														<cfset selectedCategoriesList = listDeleteAt(selectedCategoriesList, areaInListPosition)>
+
+													</cfif>
+
+												</cfloop>
+
+											</cfif>
+
+											<div class="checkbox">
+
+												<label>
+													<input type="checkbox" name="select_all_table_categories_#table_id#" checked="checked" onclick="toggleContainerCheckboxesChecked('tableSpecialCategories#table_id#',this.checked);"/> <span lang="es">Seleccionar/quitar todas</span>
+												</label>
+
+											</div>
+
+											<div id="tableSpecialCategories#table_id#">
+
+												<cfloop query="tableSpecialCategories">
+
+													<cfif listFind(selectedCategoriesList, tableSpecialCategories.category_id) GT 0>
+														<cfset categorySelected = true>
+													<cfelse>
+														<cfset categorySelected = false>
+													</cfif>
+
+													<div class="checkbox">
+													  <label>
+													    <input type="checkbox" name="categories_table_#table_id#_ids[]" value="#tableSpecialCategories.category_id#" <cfif categorySelected>checked</cfif> />&nbsp;#tableSpecialCategories.title#
+													  </label>
+													</div>
+													<div class="clearfix"></div>
+
+												</cfloop>
+
+											</div>
+
+										</div>
+
+									</div><!--- END row --->
+
+								</div><!--- END col-sm-6 --->
+
+
+							</cfif><!---END tableSpecialCategories.recordCount GT 0--->
+
+
+						</cfif><!---END getTableQuery.recordCount GT 0--->
+
+
+					</cfloop>
+
+
+
+				</div>
+
+			</cfif>
+
+
 
 			<div class="row">
 

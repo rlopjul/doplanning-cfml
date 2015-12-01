@@ -151,6 +151,27 @@
 	</cffunction>
 
 
+	<!---  -------------------GET USER NOTIFICATIONS TABLES CATEGORIES DISABLED----------------------   --->
+
+	<cffunction name="getUserNotificationsTablesCategoriesDisabled" returntype="query" output="false" access="public">
+		<cfargument name="user_id" required="yes" type="numeric">
+
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">
+
+		<cfset var method = "getUserNotificationsTablesCategoriesDisabled">
+
+			<cfquery name="getUserNotificationsTablesCategoriesDisabled" datasource="#client_dsn#">
+				SELECT users_notifications.user_id, users_notifications.table_id, users_notifications.table_type_id, users_notifications.category_id
+				FROM `#client_abb#_users_notifications_tables_special_categories_disabled` AS users_notifications
+				WHERE users_notifications.user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+		<cfreturn getUserNotificationsTablesCategoriesDisabled>
+
+	</cffunction>
+
+
 	<!--- ------------------------------------- getAllUsers -------------------------------------  --->
 
 	<cffunction name="getAllUsers" output="false" access="public" returntype="query">

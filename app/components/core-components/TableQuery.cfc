@@ -401,6 +401,28 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------ getTableSpecialCategories -----------------------------------  --->
+
+	<cffunction name="getTableSpecialCategories" output="false" access="public" returntype="query">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+			<cfquery name="getTableSpecialCategories" datasource="#client_dsn#">
+				SELECT categories.*
+				FROM `#client_abb#_tables_special_categories` AS categories
+				WHERE categories.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				AND categories.table_type_id = <cfqueryparam value="#arguments.tableTypeId#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+		<cfreturn getTableSpecialCategories>
+
+	</cffunction>
+
+
+
 
 
 
