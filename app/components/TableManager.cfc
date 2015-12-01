@@ -483,6 +483,7 @@
 		<cfargument name="include_in_new_row" type="boolean" required="false">
 		<cfargument name="include_in_update_row" type="boolean" required="false">
 		<cfargument name="include_in_all_users" type="boolean" required="false">
+		<cfargument name="search_id" type="numeric" required="false">
 
 		<cfset var method = "getTableFields">
 
@@ -507,6 +508,7 @@
 				<cfinvokeargument name="include_in_new_row" value="#arguments.include_in_new_row#">
 				<cfinvokeargument name="include_in_update_row" value="#arguments.include_in_update_row#">
 				<cfinvokeargument name="include_in_all_users" value="#arguments.include_in_all_users#">
+				<cfinvokeargument name="search_id" value="#arguments.search_id#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -776,6 +778,45 @@
 			</cfif>
 
 			<cfset response = {result=true, tableFields=getTableViewsQuery}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
+	<!--- ------------------------------------- getTableSearchs -------------------------------------  --->
+
+	<cffunction name="getTableSearchs" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getTableSearchs">
+
+		<cfset var response = structNew()>
+
+		<cfset var area_id = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTableSearchs" returnvariable="getTableSearchsQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset response = {result=true, query=getTableSearchsQuery}>
 
 			<cfcatch>
 

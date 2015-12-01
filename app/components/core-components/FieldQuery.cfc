@@ -139,11 +139,11 @@
 					JOIN `#client_abb#_#tableTypeTable#_views_fields` AS view_fields ON table_fields.field_id = view_fields.field_id AND view_fields.view_id = <cfqueryparam value="#arguments.view_id#" cfsqltype="cf_sql_integer">
 				</cfif>
 				<cfif isDefined("arguments.search_id")>
-					LEFT JOIN `#client_abb#_#tableTypeTable#_searchs_fields` AS search_fields AS tables ON table_fields.table_id = search_fields.table_id
-					AND search_fields.search_id = <cfqueryparam value="#arguments.search_id#" cfsqltype="cf_sql_bit">
+					LEFT JOIN `#client_abb#_#tableTypeTable#_searchs_fields` AS search_fields ON table_fields.table_id = search_fields.table_id
+					AND search_fields.search_id = <cfqueryparam value="#arguments.search_id#" cfsqltype="cf_sql_integer">
 					AND table_fields.field_id = search_fields.field_id
 				</cfif>
-				WHERE table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
+				WHERE table_fields.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
 				<cfif isDefined("arguments.include_in_list")>
 					AND table_fields.include_in_list = <cfqueryparam value="#arguments.include_in_list#" cfsqltype="cf_sql_bit">
 				</cfif>

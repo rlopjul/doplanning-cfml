@@ -379,5 +379,29 @@
 
 
 
+	<!--- ------------------------------------ getTableSearchs -----------------------------------  --->
+
+	<cffunction name="getTableSearchs" output="false" access="public" returntype="query">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfquery name="getTableSearchs" datasource="#client_dsn#">
+				SELECT searchs.*
+				FROM `#client_abb#_#tableTypeTable#_searchs` AS searchs
+				WHERE searchs.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+		<cfreturn getTableSearchs>
+
+	</cffunction>
+
+
+
+
 
 </cfcomponent>

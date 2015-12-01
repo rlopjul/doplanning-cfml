@@ -19,7 +19,7 @@
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 	<cfinvokeargument name="with_types" value="true">
 	<cfif isDefined("URL.search_id") AND isNumeric(URL.search_id)>
-		<cfinvokeargument name="search_id" value="#search_id#">
+		<cfinvokeargument name="search_id" value="#URL.search_id#">
 	</cfif>
 </cfinvoke>
 <cfset allFields = fieldsResult.tableFields>
@@ -341,12 +341,31 @@
 
 		<cfif objectItem.list_rows_by_default IS false OR tableRows.recordCount GT 2000 OR isDefined("URL.search")>
 
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableSearchs" returnvariable="tableSearchsResponse">
+				<cfinvokeargument name="table_id" value="#table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			</cfinvoke>
+
+			<cfset tableSearchs = tableSearchsResponse.query>
+
+			<form action="#CGI.SCRIPT_NAME#" method="get" name="searchs_form">
+				<input type="hidden" name="#tableTypeName#" value="#table_id#"/>
+				<input type="hidden" name="area" value="#area_id#"/>
+
+				<label lang="es">Búsqueda predefinida</label>
+				<select name="search_id" class="form-control" onchange="submitForm('searchs_form')">
+					<option value=""></option>
+					<cfloop query="tableSearchs">
+						<option value="#tableSearchs.id#" <cfif isDefined("URL.search_id") AND URL.search_id EQ tableSearchs.id>selected</cfif>>#tableSearchs.title#</option>
+					</cfloop>
+				</select>
+			</form>
+
 			<cfif isDefined("URL.search")><!---isDefined("URL.name") AND --->
 
 				<cfset row = URL>
 
-
-			<cfelseif isDefined("URL.search_id")>
+			<cfelseif isDefined("URL.search_id") AND isNumeric(URL.search_id)>
 
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
 					<cfinvokeargument name="table_id" value="#table_id#">
