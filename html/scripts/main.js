@@ -55,7 +55,7 @@ function showAlertErrorModal(msg){
 }
 
 function loadModal(url){
- 
+
 	$('body').modalmanager('loading');
 
 	var noCacheNumber = generateRandom();
@@ -100,16 +100,16 @@ function postModalForm(formId, requestUrl, responseUrl, responseTarget){
 
 		  		hideDefaultModal();
 
-		  		openUrl(responseUrl, responseTarget);		  		
+		  		openUrl(responseUrl, responseTarget);
 
 		  		$('body').modalmanager('removeLoading');
-		  		
+
 		  		showAlertMessage(message, data.result);
 
 		  	}else
 				alert(status);
-			
-		  }		  
+
+		  }
 		});
 
 }
@@ -137,7 +137,7 @@ function postModalForm(formId, requestUrl, responseUrl, responseTarget){
 
 		  	}else
 				alert(status);
-			
+
 		  },
 		  dataType: "json"
 		});
@@ -170,7 +170,7 @@ function postModalFormTree(formId, requestUrl){
 
 		  			updateTree();
 		  		}
-		  		
+
 
 		  		$('body').modalmanager('removeLoading');
 
@@ -178,23 +178,23 @@ function postModalFormTree(formId, requestUrl){
 
 		  	}else
 				alert(status);
-			
-		  }		  
+
+		  }
 		});
 }
 
-function openUrl(url,target){ 
+function openUrl(url,target){
 
 	/*En iframesFunctions.js hay un método que se llama igual que este, pero que recibe 3 parámetros. Habría que modificar uno de los dos para que no tuviesen el mismo nombre y así evitar confusiones. main.js e iframesFunctions.js no se usan y no se deben usar en la misma página*/
 
 	if(target == "itemIframe"){
-		
+
 		if(currentTab == "#tab3")
 			loadIframeSearchItemPage(url);
 		else
 			loadIframeItemPage(url);
-	
-	}else if(target == "userAreaIframe" || target == "userAdminIframe" || target == "allUsersIframe" || target == "logItemIframe"){
+
+	}else if(target == "userAreaIframe" || target == "userAdminIframe" || target == "allUsersIframe" || target == "logItemIframe" || target == "usersGeneralIframe"){
 
 		$("#"+target).attr('src', "iframes/"+getFilename(url));
 
@@ -213,8 +213,8 @@ function openUrl(url,target){
 				selectTreeNode(urlAreaId);
 
 			}else
-				loadIframePage(url);				
-			
+				loadIframePage(url);
+
 		}else
 			loadIframePage(url);
 	}
@@ -229,13 +229,13 @@ function loadIframePage(page) {
 function loadIframeItemPage(page) {
 	page = addClientAbbToPage(page);
 
-	$("#itemIframe").attr('src', "iframes2/"+getFilename(page));		
+	$("#itemIframe").attr('src', "iframes2/"+getFilename(page));
 }
 
 function loadIframeSearchItemPage(page) {
 	page = addClientAbbToPage(page);
 
-	$("#searchItemIframe").attr('src', "iframes2/"+getFilename(page));		
+	$("#searchItemIframe").attr('src', "iframes2/"+getFilename(page));
 }
 
 
@@ -247,7 +247,7 @@ function addClientAbbToPage(page) {
 		hashContent = page.substring(hashIndex, page.length);
 		page = page.substring(0, hashIndex);
 	}
-		
+
 	if(page.indexOf("?") == -1)
 		page = page+"?abb="+clientAbb;
 	else
@@ -265,7 +265,7 @@ function areaIframeLoaded() {
 }
 
 function setWithLink(value) {
-	
+
 	areaWithLink = value;
 	if(value == true)
 		$("#areaImageAnchor").css("cursor","pointer");
@@ -274,7 +274,7 @@ function setWithLink(value) {
 }
 
 function loadTree() {
-	
+
 	curAreaId = "undefined";
 
 	$("#loadingContainer").show();
@@ -282,12 +282,12 @@ function loadTree() {
 
 	var noCacheNumber = generateRandom();
 	$("#treeContainer").load("html_content/tree.cfm?n="+noCacheNumber, function() {
-		showTree(true);	  
+		showTree(true);
 	});
 }
 
 function updateTree() {
-	loadTree();	
+	loadTree();
 }
 
 function updateTreeWithSelectedArea(areaId){
@@ -302,19 +302,19 @@ function selectTreeNode(nodeId) {
 	$("#areasTreeContainer").jstree("deselect_all");
 	if($("#areasTreeContainer").jstree("select_node", nodeId) == false) { // Es false si el área no está en el árbol y no se puede seleccionar
 
-		alert("Área no accesible en su árbol"); 
+		alert("Área no accesible en su árbol");
 		iframePage = "";
 
 	}
 }
 
 function areaSelected(areaId, areaUrl, withLink)  {
-	
+
 	curAreaId = areaId;
 
 	loadAreaImage(areaId);
 	setWithLink(withLink);
-	
+
 	if(iframePage.length > 0){ //Hay página para cargar
 		loadIframePage(iframePage);
 		iframePage = ""; //Se borra el contenido del iframePage para que no vuelva a cargarse al recargar el árbol.
@@ -326,29 +326,29 @@ function areaSelected(areaId, areaUrl, withLink)  {
 	if(disableNextTabChange){
 		disableNextTabChange = false;
 	} else if(!$('#changeTabDisabled').is(':checked'))
-		$('#dpTab a[href="#tab2"]').tab('show'); 
-	 
+		$('#dpTab a[href="#tab2"]').tab('show');
+
 	/*if($("#areaContainer").is(":hidden"))
 		restoreTree();*/
-	
+
 }
 
 function searchTextInTree(){
-	searchInTree(document.getElementById('searchText').value);	
+	searchInTree(document.getElementById('searchText').value);
 }
 
 /*function maximizeTree() {
 	$("#areaContainer").hide();
 	$("#treeWrapper").width("100%");
 	$("#maximizeTree").hide();
-	$("#restoreTree").show();	
+	$("#restoreTree").show();
 }
 
 function restoreTree() {
 	$("#treeWrapper").width(treeDefaultWidth);
 	$("#areaContainer").show();
 	$("#maximizeTree").show();
-	$("#restoreTree").hide();	
+	$("#restoreTree").hide();
 }
 
 function maximizeArea() {
@@ -366,5 +366,5 @@ function restoreArea() {
 }*/
 
 function showTreeTab(){
-	$('#dpTab a[href="#tab1"]').tab('show');			
+	$('#dpTab a[href="#tab1"]').tab('show');
 }
