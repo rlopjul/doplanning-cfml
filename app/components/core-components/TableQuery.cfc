@@ -422,6 +422,23 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------ getAllTableSpecialCategories -----------------------------------  --->
+
+	<cffunction name="getAllTableSpecialCategories" output="false" access="public" returntype="query">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+			<cfquery name="getAllTableSpecialCategories" datasource="#client_dsn#">
+				SELECT categories.*
+				FROM `#client_abb#_tables_special_categories` AS categories;
+			</cfquery>
+
+		<cfreturn getAllTableSpecialCategories>
+
+	</cffunction>
+
+
 
 
 

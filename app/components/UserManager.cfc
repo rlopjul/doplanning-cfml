@@ -1148,13 +1148,22 @@
 				</cfquery>
 
 
-				<!--- deleteUserNotificationsCategoriesDisable --->
+				<!--- deleteUserNotificationsCategoriesDisabled --->
 				<cfinvoke component="UserManager" method="deleteUserNotificationsCategoriesDisabled">
 					<cfinvokeargument name="update_user_id" value="#arguments.update_user_id#">
 				</cfinvoke>
 
 				<!--- setUserNotificationsCategoriesDisabled --->
 				<cfinvoke component="UserManager" method="setUserNotificationsCategoriesDisabled" argumentcollection="#arguments#">
+				</cfinvoke>
+
+				<!--- deleteUserNotificationsTablesCategoriesDisabled --->
+				<cfinvoke component="UserManager" method="deleteUserNotificationsTablesCategoriesDisabled">
+					<cfinvokeargument name="update_user_id" value="#arguments.update_user_id#">
+				</cfinvoke>
+
+				<!--- setUserNotificationsTablesCategoriesDisabled --->
+				<cfinvoke component="UserManager" method="setUserNotificationsTablesCategoriesDisabled" argumentcollection="#arguments#">
 				</cfinvoke>
 
 
@@ -1194,6 +1203,24 @@
 			<cfquery datasource="#client_dsn#" name="deleteUserNotificationsCategoriesDisabled">
 				DELETE
 				FROM `#client_abb#_users_notifications_categories_disabled`
+				WHERE user_id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+	</cffunction>
+
+
+	<!--- ----------------------------------- deleteUserNotificationsTablesCategoriesDisabled -------------------------------------- --->
+
+	<cffunction name="deleteUserNotificationsTablesCategoriesDisabled" output="false" returntype="void" access="public">
+		<cfargument name="update_user_id" type="numeric" required="true">
+
+		<cfset var method = "deleteUserNotificationsTablesCategoriesDisabled">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfquery datasource="#client_dsn#" name="deleteUserNotificationsTablesCategoriesDisabled">
+				DELETE
+				FROM `#client_abb#_users_notifications_tables_special_categories_disabled`
 				WHERE user_id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 
@@ -1263,6 +1290,58 @@
 					</cfif>
 
 				</cfif>
+
+			</cfloop>
+
+	</cffunction>
+
+
+	<!--- ----------------------------------- setUserNotificationsTablesCategoriesDisabled -------------------------------------- --->
+
+	<cffunction name="setUserNotificationsTablesCategoriesDisabled" output="false" returntype="void" access="public">
+		<cfargument name="update_user_id" type="numeric" required="true">
+
+		<cfset var method = "setUserNotificationsTablesCategoriesDisabled">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getAllTableSpecialCategories" returnvariable="allSpecialCategories">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfquery name="specialCategoriesTables" dbtype="query">
+				SELECT DISTINCT table_id, table_type_id
+				FROM allSpecialCategories;
+			</cfquery>
+
+			<cfloop query="#specialCategoriesTables#">
+
+				<cfset table_id = specialCategoriesTables.table_id>
+				<cfset tableTypeId = specialCategoriesTables.table_type_id>
+
+				<cfquery name="tableSpecialCategories" dbtype="query">
+					SELECT *
+					FROM allSpecialCategories
+					WHERE table_id = <cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">
+					AND table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">
+				</cfquery>
+
+				<cfloop query="tableSpecialCategories">
+
+					<cfif NOT isDefined("arguments.categories_table_#tableTypeId#_#tableSpecialCategories.table_id#_ids") OR ArrayFind(arguments['categories_table_#tableTypeId#_#tableSpecialCategories.table_id#_ids'], tableSpecialCategories.category_id) IS 0>
+
+						<cfquery name="addUserCategoryDisabled" datasource="#client_dsn#">
+							INSERT INTO `#client_abb#_users_notifications_tables_special_categories_disabled`
+							SET user_id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">,
+							table_id = <cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">,
+							table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">,
+							category_id = <cfqueryparam value="#tableSpecialCategories.category_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+					</cfif>
+
+				</cfloop>
 
 			</cfloop>
 

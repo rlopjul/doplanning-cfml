@@ -877,10 +877,20 @@ userTablesNotificationsTDisabledQuery">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
-					<cfset tableTypeId = 1>
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getAllTableSpecialCategories" returnvariable="allSpecialCategories">
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
 
-					<cfloop list="154" index="table_id">
+					<cfquery name="specialCategoriesTables" dbtype="query">
+						SELECT DISTINCT table_id, table_type_id
+						FROM allSpecialCategories;
+					</cfquery>
 
+					<cfloop query="#specialCategoriesTables#">
+
+						<cfset table_id = specialCategoriesTables.table_id>
+						<cfset tableTypeId = specialCategoriesTables.table_type_id>
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="getTableQuery">
 							<cfinvokeargument name="table_id" value="#table_id#">
@@ -894,14 +904,20 @@ userTablesNotificationsTDisabledQuery">
 
 						<cfif getTableQuery.recordCount GT 0>
 
-
-							<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTableSpecialCategories" returnvariable="tableSpecialCategories">
+							<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTableSpecialCategories" returnvariable="tableSpecialCategories">
 								<cfinvokeargument name="table_id" value="#table_id#">
 								<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 
 								<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 								<cfinvokeargument name="client_dsn" value="#client_dsn#">
-							</cfinvoke>
+							</cfinvoke>--->
+
+							<cfquery name="tableSpecialCategories" dbtype="query">
+								SELECT *
+								FROM allSpecialCategories
+								WHERE table_id = <cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">
+								AND table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">
+							</cfquery>
 
 							<cfif tableSpecialCategories.recordCount GT 0>
 
@@ -927,11 +943,11 @@ userTablesNotificationsTDisabledQuery">
 
 												<cfloop query="userTableNotificationsDisabledItem">
 
-													<cfset areaInListPosition = ListFind(selectedCategoriesList,userTableNotificationsDisabledItem.area_id)>
+													<cfset categoryInListPosition = ListFind(selectedCategoriesList,userTableNotificationsDisabledItem.category_id)>
 
-													<cfif areaInListPosition GT 0>
+													<cfif categoryInListPosition GT 0>
 
-														<cfset selectedCategoriesList = listDeleteAt(selectedCategoriesList, areaInListPosition)>
+														<cfset selectedCategoriesList = listDeleteAt(selectedCategoriesList, categoryInListPosition)>
 
 													</cfif>
 
@@ -959,7 +975,7 @@ userTablesNotificationsTDisabledQuery">
 
 													<div class="checkbox">
 													  <label>
-													    <input type="checkbox" name="categories_table_#table_id#_ids[]" value="#tableSpecialCategories.category_id#" <cfif categorySelected>checked</cfif> />&nbsp;#tableSpecialCategories.title#
+													    <input type="checkbox" name="categories_table_#tableTypeId#_#table_id#_ids[]" value="#tableSpecialCategories.category_id#" <cfif categorySelected>checked</cfif> />&nbsp;#tableSpecialCategories.title#
 													  </label>
 													</div>
 													<div class="clearfix"></div>
