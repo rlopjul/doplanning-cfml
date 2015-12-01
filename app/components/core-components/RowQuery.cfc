@@ -435,6 +435,7 @@
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="withDefaultValues" type="boolean" required="false" default="true">
+		<cfargument name="withSearchValues" type="boolean" required="false" default="false">
 
 		<cfset var method = "fillEmptyRow">
 
@@ -453,6 +454,8 @@
 
 					<cfif arguments.withDefaultValues IS true>
 						<cfset querySetCell(emptyRow, "field_#fields.field_id#", fields.default_value, 1)>
+					<cfelseif arguments.withSearchValues IS true>
+						<cfset querySetCell(emptyRow, "field_#fields.field_id#", fields.search_value, 1)>
 					</cfif>
 
 				</cfif>
@@ -462,7 +465,6 @@
 		<cfreturn emptyRow>
 
 	</cffunction>
-
 
 
 	<!---getTableRows--->

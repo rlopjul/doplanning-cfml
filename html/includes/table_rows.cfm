@@ -18,6 +18,9 @@
 	<cfinvokeargument name="table_id" value="#table_id#">
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 	<cfinvokeargument name="with_types" value="true">
+	<cfif isDefined("URL.search_id") AND isNumeric(URL.search_id)>
+		<cfinvokeargument name="search_id" value="#search_id#">
+	</cfif>
 </cfinvoke>
 <cfset allFields = fieldsResult.tableFields>
 
@@ -342,6 +345,23 @@
 
 				<cfset row = URL>
 
+
+			<cfelseif isDefined("URL.search_id")>
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="fields" value="#allFields#">
+				</cfinvoke>
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="fillEmptyRow" returnvariable="row">
+					<cfinvokeargument name="emptyRow" value="#emptyRow#">
+					<cfinvokeargument name="fields" value="#allFields#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="withDefaultValues" value="false">
+					<cfinvokeargument name="withSearchValues" value="true">
+				</cfinvoke>
+
 			<cfelse>
 
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getEmptyRow" returnvariable="emptyRow">
@@ -358,6 +378,9 @@
 				</cfinvoke>
 
 			</cfif>
+
+
+
 
 			<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 			<script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>

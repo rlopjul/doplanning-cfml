@@ -112,6 +112,7 @@
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="withDefaultValues" type="boolean" required="false">
+		<cfargument name="withSearchValues" type="boolean" required="false">
 
 		<cfset var method = "fillEmptyRow">
 
@@ -124,6 +125,7 @@
 				<cfinvokeargument name="fields" value="#arguments.fields#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 				<cfinvokeargument name="withDefaultValues" value="#arguments.withDefaultValues#">
+				<cfinvokeargument name="withSearchValues" value="#arguments.withSearchValues#">
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">

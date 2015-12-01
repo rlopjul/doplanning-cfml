@@ -104,6 +104,7 @@
 		<cfargument name="include_in_new_row" type="boolean" required="false">
 		<cfargument name="include_in_update_row" type="boolean" required="false">
 		<cfargument name="include_in_all_users" type="boolean" required="false">
+		<cfargument name="search_id" type="numeric" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -123,6 +124,9 @@
 				<cfif isDefined("arguments.view_id")>
 				, view_fields.view_id, view_fields.position AS view_position
 				</cfif>
+				<cfif isDefined("arguments.search_id")>
+				, search_fields.search_value
+				</cfif>
 				FROM `#client_abb#_#tableTypeTable#_fields` AS table_fields
 				<cfif arguments.with_types IS true>
 				INNER JOIN `#client_abb#_#fieldsTypesTable#` AS fields_types ON table_fields.field_type_id = fields_types.field_type_id
@@ -133,6 +137,11 @@
 				<cfif isDefined("arguments.view_id")>
 					<cfif arguments.only_view_fields IS true>INNER<cfelse>LEFT</cfif>
 					JOIN `#client_abb#_#tableTypeTable#_views_fields` AS view_fields ON table_fields.field_id = view_fields.field_id AND view_fields.view_id = <cfqueryparam value="#arguments.view_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif isDefined("arguments.search_id")>
+					LEFT JOIN `#client_abb#_#tableTypeTable#_searchs_fields` AS search_fields AS tables ON table_fields.table_id = search_fields.table_id
+					AND search_fields.search_id = <cfqueryparam value="#arguments.search_id#" cfsqltype="cf_sql_bit">
+					AND table_fields.field_id = search_fields.field_id
 				</cfif>
 				WHERE table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
 				<cfif isDefined("arguments.include_in_list")>

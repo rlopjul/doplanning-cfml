@@ -348,6 +348,7 @@
 		<cfargument name="include_in_new_row" type="boolean" required="false">
 		<cfargument name="include_in_update_row" type="boolean" required="false">
 		<cfargument name="include_in_all_users" type="boolean" required="false">
+		<cfargument name="search_id" type="numeric" required="false">
 
 		<cfset var method = "getTableFields">
 
@@ -368,6 +369,7 @@
 				<cfinvokeargument name="include_in_new_row" value="#arguments.include_in_new_row#">
 				<cfinvokeargument name="include_in_update_row" value="#arguments.include_in_update_row#">
 				<cfinvokeargument name="include_in_all_users" value="#arguments.include_in_all_users#">
+				<cfinvokeargument name="search_id" value="#arguments.search_id#">
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">
