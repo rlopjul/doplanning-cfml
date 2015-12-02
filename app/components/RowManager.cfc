@@ -341,9 +341,9 @@
 
 							<cfif len(fieldValue) GT 0>
 
-								<cfif fieldValue EQ "Sí" OR fieldValue EQ "Si" OR fieldValue EQ "Yes" OR fieldValue EQ true OR fieldValue EQ 1>
+								<cfif fieldValue EQ true OR fieldValue EQ 1 OR fieldValue EQ "Sí" OR fieldValue EQ "Si" OR fieldValue EQ "Yes" OR uCase(fieldValue) EQ "VERDADERO">
 									<cfset fieldValue = 1>
-								<cfelseif fieldValue EQ "No" OR fieldValue EQ false OR fieldValue EQ 0>
+								<cfelseif fieldValue EQ false OR fieldValue EQ 0 OR fieldValue EQ "No" OR uCase(fieldValue) EQ "FALSO">
 									<cfset fieldValue = 0>
 								<cfelse>
 									<!--- Error --->
