@@ -341,27 +341,32 @@
 
 		<cfif objectItem.list_rows_by_default IS false OR tableRows.recordCount GT 2000 OR isDefined("URL.search")>
 
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableSearchs" returnvariable="tableSearchsResponse">
-				<cfinvokeargument name="table_id" value="#table_id#">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-			</cfinvoke>
 
-			<cfset tableSearchs = tableSearchsResponse.query>
+			<cfif tableTypeId IS 1><!---Lists--->
 
-			<cfif tableSearchs.recordCount GT 0>
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableSearchs" returnvariable="tableSearchsResponse">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				</cfinvoke>
 
-				<form action="#CGI.SCRIPT_NAME#" method="get" name="searchs_form">
-					<input type="hidden" name="#tableTypeName#" value="#table_id#"/>
-					<input type="hidden" name="area" value="#area_id#"/>
+				<cfset tableSearchs = tableSearchsResponse.query>
 
-					<label class="control-label" for="search_id" lang="es">Búsqueda predefinida</label>
-					<select name="search_id" id="search_id" class="form-control" onchange="submitForm('searchs_form')">
-						<option value=""></option>
-						<cfloop query="tableSearchs">
-							<option value="#tableSearchs.id#" <cfif isDefined("URL.search_id") AND URL.search_id EQ tableSearchs.id>selected</cfif>>#tableSearchs.title#</option>
-						</cfloop>
-					</select>
-				</form>
+				<cfif tableSearchs.recordCount GT 0>
+
+					<form action="#CGI.SCRIPT_NAME#" method="get" name="searchs_form">
+						<input type="hidden" name="#tableTypeName#" value="#table_id#"/>
+						<input type="hidden" name="area" value="#area_id#"/>
+
+						<label class="control-label" for="search_id" lang="es">Búsqueda predefinida</label>
+						<select name="search_id" id="search_id" class="form-control" onchange="submitForm('searchs_form')">
+							<option value=""></option>
+							<cfloop query="tableSearchs">
+								<option value="#tableSearchs.id#" <cfif isDefined("URL.search_id") AND URL.search_id EQ tableSearchs.id>selected</cfif>>#tableSearchs.title#</option>
+							</cfloop>
+						</select>
+					</form>
+
+				</cfif>
 
 			</cfif>
 
