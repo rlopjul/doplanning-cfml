@@ -414,7 +414,8 @@
 				SELECT categories.*
 				FROM `#client_abb#_tables_special_categories` AS categories
 				WHERE categories.table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-				AND categories.table_type_id = <cfqueryparam value="#arguments.tableTypeId#" cfsqltype="cf_sql_integer">;
+				AND categories.table_type_id = <cfqueryparam value="#arguments.tableTypeId#" cfsqltype="cf_sql_integer">
+				ORDER BY categories.table_position ASC, categories.position ASC;
 			</cfquery>
 
 		<cfreturn getTableSpecialCategories>

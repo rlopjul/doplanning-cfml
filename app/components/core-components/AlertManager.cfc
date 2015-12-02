@@ -2221,8 +2221,8 @@
 
 				<cftry>
 
-					<!--- ------ PROVISIONAL ---->
-					<cfif client_abb EQ "hcs">
+					<!--- ------ PROVISIONAL
+					<cfif client_abb EQ "hcs">---->
 
 					<!---<cfset forceNotifications = getClientsQuery.force_notifications>--->
 
@@ -2519,7 +2519,7 @@
 					</cfloop><!--- END loop query="getAllUsersQuery" --->
 
 
-				</cfif><!--- END client_abb EQ "hcs" --->
+				<!---</cfif> END client_abb EQ "hcs" --->
 
 					<cfcatch>
 						<cfinclude template="includes/errorHandler.cfm">
@@ -2562,6 +2562,8 @@
 		<cfset var curUserEmail = arguments.email>
 		<cfset var alertContent = "">
 		<cfset var tableRowsContent = "">
+		<cfset var tableWithSpecialCategories = false>
+		<cfset var fieldsFilter = structNew()>
 
 		<cfif arguments.alertType EQ ALERT_TYPE_WEB>
 
@@ -2595,6 +2597,7 @@
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
+
 
 			<!--- Loop items types --->
 			<cfloop array="#itemTypesArray#" index="itemTypeId">
@@ -2747,29 +2750,34 @@
 
 						<cfif itemsQuery.recordCount GT 0>
 
-							<cfsavecontent variable="headItemsAlertContent">
-								<cfoutput>
-								<table style="width:100%;margin-top:15px;margin-bottom:20px;">
-									<tr>
-										<td style="padding:0"><!--- Title --->
-											<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].item[itemTypeId].name_plural#</span>
-										</td>
-									</tr>
-									<tr>
-										<td style="border-collapse: collapse; background:none; border-bottom: 1px solid ##019ED3; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-top:0;padding-bottom:0;">
-											&nbsp;
-										</td>
-									</tr>
-								</table>
-								</cfoutput>
-							</cfsavecontent>
-
-							<cfset alertContent = alertContent&headItemsAlertContent>
-
+							<cfset var itemsAlertContent = "">
 							<cfset var itemsArray = arrayNew(1)>
+
 							<cfinvoke component="Utils" method="queryToArray" returnvariable="itemsArray">
 								<cfinvokeargument name="data" value="#itemsQuery#">
 							</cfinvoke>
+
+							<cfif itemTypeId IS 11><!--- Lists --->
+
+								<!--- Tables special categories --->
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserNotificationsTablesCategoriesDisabled" returnvariable="
+			userTablesNotificationsDisabledQuery">
+									<cfinvokeargument name="user_id" value="#curUserId#">
+									<cfinvokeargument name="with_categories" value="true">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getAllTableSpecialCategories" returnvariable="allSpecialCategories">
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<cfdump var="#userTablesNotificationsDisabledQuery#">
+
+							</cfif>
 
 							<cfloop array="#itemsArray#" index="itemObject">
 
@@ -2787,105 +2795,243 @@
 									<cfinvokeargument name="client_abb" value="#client_abb#">
 								</cfinvoke>
 
-
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12><!--- LISTS AND FORMS --->
 
 									<cfif itemTypeId IS 11 OR arguments.alertType NEQ ALERT_TYPE_WEB>
 
 										<cfset table_id = itemObject.id>
 										<cfset tableTypeId = itemTypesStruct[itemTypeId].tableTypeId>
+										<cfset tableWithSpecialCategories = false>
+										<cfset fieldsFilter = structNew()>
+										<cfset disabledAllCategories = false>
 
-										<!--- getTableFields --->
-										<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="fields">
-											<cfinvokeargument name="table_id" value="#table_id#">
-											<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-											<cfinvokeargument name="with_types" value="true">
-											<cfinvokeargument name="with_table" value="false">
-											<cfinvokeargument name="include_in_list" value="true">
+										<cfif itemTypeId IS 11><!---List--->
 
-											<cfinvokeargument name="client_abb" value="#client_abb#">
-											<cfinvokeargument name="client_dsn" value="#client_dsn#">
-										</cfinvoke>
+											<cfif allSpecialCategories.recordCount GT 0>
 
-										<!--- getTableRows --->
-										<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
-											<cfinvokeargument name="table_id" value="#table_id#">
-											<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-											<cfinvokeargument name="fields" value="#fields#">
+												<cfquery name="tableSpecialCategories" dbtype="query">
+													SELECT *
+													FROM allSpecialCategories
+													WHERE table_id = <cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">
+													AND table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">;
+												</cfquery>
 
-											<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
-											<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
+												<cfif tableSpecialCategories.recordCount GT 0>
 
-											<cfinvokeargument name="client_abb" value="#client_abb#">
-											<cfinvokeargument name="client_dsn" value="#client_dsn#">
-										</cfinvoke>
+													<cfset tableWithSpecialCategories = true>
+
+													<!---<cfset selectedCategoriesList = valueList(tableSpecialCategories.category_id)>--->
+
+													<cfif userTablesNotificationsDisabledQuery.recordCount GT 0>
+
+														<cfquery dbtype="query" name="userTableNotificationDisabledQuery">
+															SELECT *
+															FROM userTablesNotificationsDisabledQuery
+															WHERE table_id = <cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">
+															AND table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">;
+														</cfquery>
+
+														<cfif userTableNotificationDisabledQuery.recordCount EQ tableSpecialCategories.recordCount>
+
+															<cfset disabledAllCategories = true>
+															<cfset itemAlertContent = ""><!---Si no hay seleccionada ninguna categoría, no se incluye notificación del elemento--->
+
+														<cfelse>
+
+															<cfset disabledCategoriesList = valueList(userTableNotificationDisabledQuery.category_id)>
+
+														</cfif>
+
+													<cfelse>
+
+														<cfset disabledCategoriesList = "">
+
+													</cfif><!--- END userTablesNotificationsDisabledQuery.recordCount GT 0 --->
 
 
-										<!--- Rows content --->
+													<cfif disabledAllCategories IS false>
 
-										<cfif rowQuery.recordCount GT 0>
+														<cfloop query="tableSpecialCategories">
 
-											<cfset rowUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#itemObject.area_id#&#itemTypeName#=#table_id#&row=">
+															<cfif listLen(disabledCategoriesList) GT 0>
+																<cfset categoryInListPosition = ListFind(disabledCategoriesList, tableSpecialCategories.category_id)>
+															<cfelse>
+																<cfset categoryInListPosition = 0>
+															</cfif>
 
-											<cfif tableTypeId IS 2><!--- Forms --->
+															<cfif categoryInListPosition IS 0><!--- Category is not disabled --->
 
-												<!--- creation_date column --->
-												<cfset queryAddRow(fields, 1)>
-												<cfset querySetCell(fields, "field_id", "creation_date")>
-												<cfset querySetCell(fields, "label", "Fecha de creación")>
-												<cfset querySetCell(fields, "position", 0)>
+																<cfif StructKeyExists(fieldsFilter, "field_#tableSpecialCategories.field_id#")>
+
+																	<cfset fieldFilter = fieldsFilter["field_#tableSpecialCategories.field_id#"]>
+
+																	<cfif len(fieldFilter) GT 0>
+																		<cfset fieldFilter = fieldFilter&" | "&tableSpecialCategories.value>
+																	<cfelse>
+																		<cfset fieldFilter = tableSpecialCategories.value>
+																	</cfif>
+
+																<cfelse>
+
+																	<cfset fieldFilter = tableSpecialCategories.value>
+
+																</cfif>
+
+																<cfset fieldsFilter["field_#tableSpecialCategories.field_id#"] = fieldFilter>
+
+															</cfif><!--- END categoryInListPosition IS 0 --->
+
+														</cfloop>
+
+													</cfif><!--- END disabledAllCategories IS false --->
+
+
+												</cfif><!--- END tableSpecialCategories.recordCount GT 0 --->
+
+											</cfif><!--- END allSpecialCategories.recordCount GT 0 --->
+
+											<cfdump var="#fieldsFilter#">
+
+										</cfif><!---END itemTypeId IS 11--->
+
+										<cfif disabledAllCategories IS false>
+
+											<!--- getTableFields --->
+											<cfinvoke component="FieldQuery" method="getTableFields" returnvariable="allFields">
+												<cfinvokeargument name="table_id" value="#table_id#">
+												<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+												<cfinvokeargument name="with_types" value="true">
+												<cfinvokeargument name="with_table" value="false">
+
+												<cfinvokeargument name="client_abb" value="#client_abb#">
+												<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											</cfinvoke>
+
+											<cfquery dbtype="query" name="fields">
+												SELECT *
+												FROM allFields
+												WHERE include_in_list = <cfqueryparam value="true" cfsqltype="cf_sql_bit">;
+											</cfquery>
+
+											<!--- getTableRows --->
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" argumentCollection="#fieldsFilter#" returnvariable="rowQuery">
+												<cfinvokeargument name="table_id" value="#table_id#">
+												<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+												<cfinvokeargument name="fields" value="#allFields#">
+
+												<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
+												<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
+
+												<cfif tableWithSpecialCategories IS true>
+													<cfinvokeargument name="categoriesFilter" value="true">
+												</cfif>
+
+												<cfinvokeargument name="client_abb" value="#client_abb#">
+												<cfinvokeargument name="client_dsn" value="#client_dsn#">
+											</cfinvoke>
+
+
+											<cfdump var="#rowQuery#">
+
+
+											<!--- Rows content --->
+
+											<cfif rowQuery.recordCount GT 0>
+
+												<cfif arguments.alertType EQ ALERT_TYPE_WEB AND client_abb EQ "ceseand">
+													<cfset rowUrl = "#APPLICATION.mainUrl#/es/page.cfm?id=88&title=historico-ofertas-y-demandas&#itemTypeName#=#table_id#&row=">
+												<cfelse>
+													<cfset rowUrl = "#APPLICATION.mainUrl##APPLICATION.path#/?abb=#arguments.client_abb#&area=#itemObject.area_id#&#itemTypeName#=#table_id#&row=">
+												</cfif>
+
+												<cfif tableTypeId IS 2><!--- Forms --->
+
+													<!--- creation_date column --->
+													<cfset queryAddRow(fields, 1)>
+													<cfset querySetCell(fields, "field_id", "creation_date")>
+													<cfset querySetCell(fields, "label", "Fecha de creación")>
+													<cfset querySetCell(fields, "position", 0)>
+
+												<cfelse>
+
+													<!--- last_update_date column --->
+													<cfset queryAddRow(fields, 1)>
+													<cfset querySetCell(fields, "field_id", "last_update_date")>
+													<cfset querySetCell(fields, "label", "Fecha de última modificación")>
+													<cfset querySetCell(fields, "position", 0)>
+
+												</cfif>
+
+												<cfsavecontent variable="tableRowsContent">
+												<cfoutput>
+
+													<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowList">
+														<cfinvokeargument name="table_id" value="#table_id#">
+														<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+														<!---<cfinvokeargument name="view_id" value="#arguments.view_id#">--->
+														<cfinvokeargument name="tableRows" value="#rowQuery#">
+														<cfinvokeargument name="fields" value="#fields#">
+														<cfinvokeargument name="openRowOnSelect" value="false">
+														<cfinvokeargument name="tablesorterEnabled" value="false">
+														<cfinvokeargument name="rowUrlPath" value="#rowUrl#">
+														<cfinvokeargument name="includeFullText" value="false">
+														<cfif arguments.alertType NEQ ALERT_TYPE_WEB OR arguments.client_abb EQ "ceseand">
+															<cfinvokeargument name="includeLinkButton" value="true">
+															<cfinvokeargument name="linkButtonText" value="#langText[curLang].common.view#">
+														</cfif>
+
+														<cfinvokeargument name="client_abb" value="#client_abb#">
+														<cfinvokeargument name="client_dsn" value="#client_dsn#">
+													</cfinvoke>
+
+												</cfoutput>
+												</cfsavecontent>
+
+												<cfset itemAlertContent = itemAlertContent&tableRowsContent>
 
 											<cfelse>
 
-												<!--- last_update_date column --->
-												<cfset queryAddRow(fields, 1)>
-												<cfset querySetCell(fields, "field_id", "last_update_date")>
-												<cfset querySetCell(fields, "label", "Fecha de última modificación")>
-												<cfset querySetCell(fields, "position", 0)>
+												<cfif structCount(fieldsFilter) GT 0>
+													<cfset itemAlertContent = ""><!---Si hay filstrado de registros y no hay registros que se deban notificar, no se incluye el elemento--->
+												</cfif>
 
-											</cfif>
+											</cfif><!--- END rowQuery.recordCount GT 0 --->
 
-											<cfsavecontent variable="tableRowsContent">
-											<cfoutput>
-
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/RowHtml" method="outputRowList">
-													<cfinvokeargument name="table_id" value="#table_id#">
-													<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-													<!---<cfinvokeargument name="view_id" value="#arguments.view_id#">--->
-													<cfinvokeargument name="tableRows" value="#rowQuery#">
-													<cfinvokeargument name="fields" value="#fields#">
-													<cfinvokeargument name="openRowOnSelect" value="false">
-													<cfinvokeargument name="tablesorterEnabled" value="false">
-													<cfinvokeargument name="rowUrlPath" value="#rowUrl#">
-													<cfif arguments.alertType NEQ ALERT_TYPE_WEB>
-														<cfinvokeargument name="includeLinkButton" value="true">
-														<cfinvokeargument name="linkButtonText" value="#langText[curLang].common.view#">
-													</cfif>
-
-													<cfinvokeargument name="client_abb" value="#client_abb#">
-													<cfinvokeargument name="client_dsn" value="#client_dsn#">
-												</cfinvoke>
-
-											</cfoutput>
-											</cfsavecontent>
-
-											<cfset itemAlertContent = itemAlertContent&tableRowsContent>
-
-										</cfif>
+										</cfif><!--- END disabledAllCategories IS false --->
 
 									</cfif><!--- END itemTypeId IS 11 OR arguments.alertType NEQ ALERT_TYPE_WEB --->
 
 								</cfif><!--- END itemTypeId IS 11 OR itemTypeId IS 12 --->
 
-								<cfset alertContent = alertContent&itemAlertContent>
+								<cfset itemsAlertContent = itemsAlertContent&itemAlertContent>
 
 							</cfloop>
 
-						<cfelse>
+							<cfif len(itemsAlertContent) GT 0>
 
-							<!---<cfoutput>
-							No hay elementos: #itemTypeId#
-							</cfoutput>--->
+								<cfsavecontent variable="headItemsAlertContent">
+									<cfoutput>
+									<table style="width:100%;margin-top:15px;margin-bottom:20px;">
+										<tr>
+											<td style="padding:0"><!--- Title --->
+												<span style="font-size:24px;font-weight:100;color:##000">#langText[curLang].item[itemTypeId].name_plural#</span>
+											</td>
+										</tr>
+										<tr>
+											<td style="border-collapse: collapse; background:none; border-bottom: 1px solid ##019ED3; height:1px; line-height:1px; width:100%; margin:0px 0px 0px 0px; padding-top:0;padding-bottom:0;">
+												&nbsp;
+											</td>
+										</tr>
+									</table>
+									</cfoutput>
+								</cfsavecontent>
+
+								<cfset itemsAlertContent = headItemsAlertContent&itemsAlertContent>
+
+							</cfif>
+
+							<cfset alertContent = alertContent&itemsAlertContent>
+
 
 						</cfif><!--- END itemsQuery.recordCount GT 0 --->
 
@@ -3209,7 +3355,11 @@
 
 			<cfsavecontent variable="itemContent">
 				<cfoutput>
-				<a href="#areaItemUrl#" target="_blank" style="font-size:18px;font-weight:100;color:##009ed2">#itemTitle#</a>&nbsp;&nbsp;#actionBox#<br/>
+				<cfif arguments.alertType EQ ALERT_TYPE_WEB AND arguments.itemTypeId EQ 11 AND arguments.client_abb NEQ "ceseand">
+					<span style="font-size:18px;font-weight:100;color:##009ed2">#itemTitle#</span>
+				<cfelse>
+					<a href="#areaItemUrl#" target="_blank" style="font-size:18px;font-weight:100;color:##009ed2">#itemTitle#</a>
+				</cfif>&nbsp;&nbsp;#actionBox#<br/>
 
 
 				<span style="font-size:16px;color:##35938c;font-weight:100"><cfif actionType EQ ACTION_TYPE_NEW>#item.user_full_name#<cfelse>#item.last_update_user_full_name#</cfif></span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size:16px;color:254c65;font-weight:100;white-space:nowrap">#left(actionDate, spacePos)#</span><cfif itemTypeId NEQ 4>&nbsp;&nbsp;<span style="font-size:16px;color:##888;font-weight:100;white-space:nowrap;">#right(actionDate, len(actionDate)-spacePos)#</span></cfif>
@@ -3368,7 +3518,7 @@
 
 		</cfif>
 
-        <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
+    <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
 			<!---<cfinvokeargument name="request" value="#getUsersRequest#"/>--->
 			<cfinvokeargument name="area_id" value="#area_id#">
 

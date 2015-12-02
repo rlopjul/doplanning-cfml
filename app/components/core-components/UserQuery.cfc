@@ -155,6 +155,7 @@
 
 	<cffunction name="getUserNotificationsTablesCategoriesDisabled" returntype="query" output="false" access="public">
 		<cfargument name="user_id" required="yes" type="numeric">
+		<cfargument name="with_categories" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">
@@ -163,7 +164,12 @@
 
 			<cfquery name="getUserNotificationsTablesCategoriesDisabled" datasource="#client_dsn#">
 				SELECT users_notifications.user_id, users_notifications.table_id, users_notifications.table_type_id, users_notifications.category_id
+				<cfif arguments.with_categories IS true>
+					, categories.*
+				</cfif>
 				FROM `#client_abb#_users_notifications_tables_special_categories_disabled` AS users_notifications
+				INNER JOIN `#client_abb#_tables_special_categories`AS categories
+				ON categories.category_id = users_notifications.category_id
 				WHERE users_notifications.user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 

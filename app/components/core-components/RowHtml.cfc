@@ -1033,6 +1033,7 @@
 		<cfargument name="includeLinkButton" type="boolean" required="false" default="false">
 		<cfargument name="linkButtonText" type="string" required="false" default='<i class="fa fa-external-link"></i>'>
 		<cfargument name="rowUrlPath" type="string" required="false">
+		<cfargument name="includeFullText" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1617,7 +1618,7 @@
 															<cfinvokeargument name="string" value="#summary_value#">
 														</cfinvoke>
 
-														<cfif fields.field_type_id IS NOT 11><!--- IS NOT Very long text --->
+														<cfif fields.field_type_id IS NOT 11 AND arguments.includeFullText IS true><!--- IS NOT Very long text --->
 															<cfset field_value = '#summary_value#<span class="hidden">#field_value#</span>'>
 														<cfelse>
 															<cfset field_value = summary_value>

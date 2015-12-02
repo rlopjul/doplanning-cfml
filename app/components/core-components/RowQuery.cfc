@@ -475,6 +475,7 @@
 		<cfargument name="row_id" type="numeric" required="false">
 		<cfargument name="fields" type="query" required="false"><!--- Required to order by fields or search--->
 		<cfargument name="search" type="string" required="false">
+		<cfargument name="categoriesFilter" type="boolean" required="false" default="false">
 
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
@@ -515,10 +516,6 @@
 
 					WHERE 1=1
 
-					<cfif isDefined("arguments.search")>
-						<cfinclude template="#APPLICATION.coreComponentsPath#/includes/tableRowsSearchFields.cfm">
-					</cfif>
-
 					<cfif isDefined("arguments.from_date")>
 						AND ( table_row.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
 								OR table_row.last_update_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
@@ -528,6 +525,10 @@
 						AND ( table_row.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
 							AND IF( table_row.last_update_date IS NULL, true, table_row.last_update_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') )
 							)
+					</cfif>
+
+					<cfif isDefined("arguments.search") OR arguments.categoriesFilter IS true>
+						<cfinclude template="#APPLICATION.coreComponentsPath#/includes/tableRowsSearchFields.cfm">
 					</cfif>
 
 					<cfif isDefined("arguments.fields")>

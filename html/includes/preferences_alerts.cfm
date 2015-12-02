@@ -679,7 +679,7 @@ Preferencias de notificaciones
 
 					<p class="help-block">
 
-						<span lang="es">Este resumen incluye notificaciones relativas a la creación y modificación de los siguientes contenidos de la web: noticias, eventos, archivos, publicaciones, listas, formularios y áreas (páginas).</span><br/>
+						<span lang="es">Este resumen incluye notificaciones relativas a la creación y modificación de los siguientes contenidos de la web: noticias, eventos, archivos, publicaciones, listas y áreas (páginas).</span><br/>
 						<cfif len(preferences.notifications_web_last_digest_date) GT 0>
 						 	<span lang="es">Fecha del último resumen web:</span> #DateFormat(preferences.notifications_web_last_digest_date, APPLICATION.dateFormat)#. <span lang="es">Esta fecha indica la última fecha en la que se comprobó si había elementos para incluir en la notificación periódica.</span>
 						</cfif>
@@ -699,9 +699,13 @@ Preferencias de notificaciones
 					<h4 lang="es">Categorías de notificaciones</h4>
 
 					<p class="help-block" lang="es">
+						Puedes filtrar el contenido de las notificaciones instantáneas y periódicas seleccionando a continuación las categorías sobre las que quieres recibir información.
+					</p>
+
+					<!---<p class="help-block" lang="es">
 						El administrador de la organización define las categorías disponibles para filtrar las notificaciones.<br/>
 						Cada vez que se añada una nueva categoría, estará seleccionada de forma automática para todos los usuarios de la organización.
-					</p>
+					</p>--->
 
 				</div>
 
@@ -770,7 +774,7 @@ userNotificationsDisabledQuery">
 
 										<div class="row">
 
-											<label class="col-sm-2 control-label" lang="es">#itemTypesStruct[itemTypeId].labelPlural#</label>
+											<label class="col-sm-2 control-label" lang="es"><b>#itemTypesStruct[itemTypeId].labelPlural#</b><cfif itemTypeId IS 17> (Envíos masivos)</cfif></label>
 
 											<div class="col-sm-10">
 
@@ -865,13 +869,13 @@ userNotificationsDisabledQuery">
 
 
 
-			<cfif SESSION.client_abb EQ "hcs"><!---CESEAND--->
+			<cfif SESSION.client_abb EQ "ceseand"><!---CESEAND--->
 
 				<div class="row">
 
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUserNotificationsTablesCategoriesDisabled" returnvariable="
-userTablesNotificationsTDisabledQuery">
+userTablesNotificationsDisabledQuery">
 						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -883,8 +887,9 @@ userTablesNotificationsTDisabledQuery">
 					</cfinvoke>
 
 					<cfquery name="specialCategoriesTables" dbtype="query">
-						SELECT DISTINCT table_id, table_type_id
-						FROM allSpecialCategories;
+						SELECT DISTINCT table_id, table_type_id, table_position
+						FROM allSpecialCategories
+						ORDER BY table_position ASC;
 					</cfquery>
 
 					<cfloop query="#specialCategoriesTables#">
@@ -916,7 +921,7 @@ userTablesNotificationsTDisabledQuery">
 								SELECT *
 								FROM allSpecialCategories
 								WHERE table_id = <cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">
-								AND table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">
+								AND table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">;
 							</cfquery>
 
 							<cfif tableSpecialCategories.recordCount GT 0>
@@ -926,15 +931,19 @@ userTablesNotificationsTDisabledQuery">
 
 									<div class="row">
 
-										<label class="col-sm-2 control-label" lang="es">#getTableQuery.title#</label>
+										<label class="col-sm-12" lang="es"><b>#getTableQuery.title#</b></label>
 
-										<div class="col-sm-10">
+									</div>
+
+									<div class="row">
+
+										<div class="col-sm-12">
 
 											<cfset selectedCategoriesList = valueList(tableSpecialCategories.category_id)>
 
 											<cfquery name="userTableNotificationsDisabledItem" dbtype="query">
 												SELECT *
-												FROM userTablesNotificationsTDisabledQuery
+												FROM userTablesNotificationsDisabledQuery
 												WHERE table_id = <cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">
 												AND table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">;
 											</cfquery>
