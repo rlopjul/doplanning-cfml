@@ -3355,7 +3355,7 @@
 
 			<cfsavecontent variable="itemContent">
 				<cfoutput>
-				<cfif arguments.alertType EQ ALERT_TYPE_WEB AND arguments.itemTypeId EQ 11 AND arguments.client_abb NEQ "ceseand">
+				<cfif arguments.alertType EQ ALERT_TYPE_WEB AND arguments.itemTypeId EQ 11 AND arguments.client_abb EQ "ceseand">
 					<span style="font-size:18px;font-weight:100;color:##009ed2">#itemTitle#</span>
 				<cfelse>
 					<a href="#areaItemUrl#" target="_blank" style="font-size:18px;font-weight:100;color:##009ed2">#itemTitle#</a>
