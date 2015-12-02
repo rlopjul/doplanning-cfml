@@ -112,6 +112,7 @@
 
 		$("##listAreaSelector").hide();
 		$("##listAreaHelpText").hide();
+		$("##fieldInputTypeBoolean").hide();
 		$("##fieldInputTypeList").hide();
 		$("##fieldInputTypeListMultiple").hide();
 		$("##fieldInputItemType").hide();
@@ -128,6 +129,7 @@
 		$("##default_value_item").prop('disabled', true);
 
 		$("##list_area_id").prop('disabled', true);
+		$("##field_input_type_boolean").prop('disabled', true);
 		$("##field_input_type_list").prop('disabled', true);
 		$("##field_input_type_list_multiple").prop('disabled', true);
 		$("##item_type_id").prop('disabled', true);
@@ -146,10 +148,10 @@
 		}else if(typeId == 7){ //Boolean
 
 			$("##booleanDefaultValue").show();
-			$("##fieldInputTypeList").show();
+			$("##fieldInputTypeBoolean").show();
 
 			$("##default_value_boolean").prop('disabled', false);
-			$("##field_input_type_list").prop('disabled', false);
+			$("##field_input_type_boolean").prop('disabled', false);
 
 		}else if(typeId == 9 || typeId == 10 || typeId == 15 || typeId == 16){ //List
 
@@ -387,6 +389,17 @@
 				</cfloop>
 			</select>
 			<small class="help-block" lang="es">Permite definir como se mostrará el valor numérico introducido.</small>
+		</div>
+	</div>
+
+	<div class="row" id="fieldInputTypeBoolean">
+		<div class="col-md-12">
+			<label for="field_input_type_boolean" class="control-label" lang="es">Mostrar opciones en</label>
+			<select name="field_input_type" id="field_input_type_boolean" class="form-control">
+				<option value="select" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "select">selected="selected"</cfif> lang="es">Lista desplegable</option>
+				<option value="checkbox" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "checkbox">selected="selected"</cfif> lang="es">Checkbox</option>
+				<option value="radio" <cfif isDefined("field.field_input_type") AND field.field_input_type EQ "radio">selected="selected"</cfif> lang="es">Radio</option>
+			</select>
 		</div>
 	</div>
 

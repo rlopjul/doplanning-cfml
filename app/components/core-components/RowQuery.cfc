@@ -135,7 +135,13 @@
 						<cfif fields.field_type_id NEQ 9 AND fields.field_type_id NEQ 10 AND fields.field_type_id NEQ 18><!--- IS NOT SELECT OR ATTACHED FILES--->
 
 							<cfif fields.field_type_id IS 7 AND fields.required IS false AND NOT isDefined("arguments[field_name]")><!--- EMPTY BOOLEAN --->
-								<cfset field_value = "">
+
+								<cfif fields.field_input_type EQ "checkbox">
+									<cfset field_value = 0>
+								<cfelse>
+									<cfset field_value = "">
+								</cfif>
+
 							<cfelseif fields.field_type_id IS 15 OR fields.field_type_id IS 16><!---List text values with multiple--->
 
 								<cfif fields.required IS false AND NOT isDefined("arguments[field_name]")><!--- EMPTY CHECKBOX SELECTION --->

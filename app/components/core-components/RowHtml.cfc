@@ -94,7 +94,7 @@
 				<div class="row">
 				<div class="col-md-12">
 
-					<cfif ( fields.field_input_type NEQ "checkbox" OR fields.field_type_group EQ "list" ) AND len(field_label) GT 0>
+					<cfif ( fields.field_input_type NEQ "checkbox" OR arguments.search_inputs IS true OR fields.field_type_group EQ "list" ) AND len(field_label) GT 0>
 
 						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
 							<cfset labelClass = "col-xs-5 col-sm-4 col-md-3 control-label">
@@ -332,9 +332,12 @@
 
 					<cfelseif fields.field_type_group IS "boolean"><!--- BOOLEAN --->
 
-
-						<div class="row">
-							<div class="col-xs-5 col-sm-2">
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="<cfif arguments.search_inputs IS false>col-xs-offset-5 col-sm-offset-4 col-md-offset-3</cfif> col-xs-7 col-sm-8 col-md-9">
+						<cfelse>
+							<div class="row">
+								<div class="col-xs-5 col-sm-2">
+						</cfif>
 
 								<cfif fields.field_input_type EQ "radio"><!---Radio--->
 
@@ -348,12 +351,11 @@
 									  </label>
 									</div>
 
-								<cfelseif fields.field_input_type EQ "checkbox"><!---Checkbox--->
+								<cfelseif fields.field_input_type EQ "checkbox" AND arguments.search_inputs IS false><!---Checkbox--->
 
 									<div class="checkbox">
 									  <label>
 									    <input type="#field_input_type#" name="#field_name#" value="1" <cfif field_value IS true>checked</cfif> /> #field_label#
-
 									  </label>
 									</div>
 
@@ -367,8 +369,12 @@
 
 								</cfif>
 
+						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
+								</div>
+						<cfelse>
+								</div>
 							</div>
-						</div>
+						</cfif>
 
 						<cfif fields.required IS true AND arguments.search_inputs IS false>
 							<cfif fields.field_input_type EQ "radio">
