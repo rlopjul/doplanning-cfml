@@ -16,7 +16,7 @@
 
 <!---<link href="#APPLICATION.mainUrl#/jquery/tablesorter/css/style.min.css" rel="stylesheet" media="all" />--->
 
-<link href="#APPLICATION.mainUrl#/jquery/tablesorter/css/theme.bootstrap.min.css" rel="stylesheet" media="all" />
+<link href="#APPLICATION.mainUrl#/jquery/tablesorter/css/theme.bootstrap.min.css?v=1.2" rel="stylesheet" media="all" />
 </cfoutput>
 
 <script>
