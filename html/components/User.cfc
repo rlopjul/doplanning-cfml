@@ -1429,12 +1429,8 @@
 
 						$("###usersTableId#").tablesorter({
 							<cfif arguments.filter_enabled IS true>
-							widgets: ['zebra','uitheme','filter','stickyHeaders'],<!---'select',--->
-							<cfelse>
-							widgets: ['zebra','uitheme',],<!---,'select'--->
+							widgets: ['filter','stickyHeaders'],<!---'select',--->
 							</cfif>
-							theme : "bootstrap",
-							headerTemplate : '{content} {icon}',
 							<cfif arrayLen(arguments.users) LT 500><!---El orden del tablesorter en listados con muchos registros es muy lento--->
 								<cfif arguments.select_enabled IS true>
 									sortList: [[2,0]] ,
@@ -1481,7 +1477,7 @@
 								filter_startsWith : false,
 								filter_useParsedData : false,
 						    },
-						    </cfif>
+						  </cfif>
 
 						});
 
@@ -1505,7 +1501,7 @@
 
 				<cfoutput>
 
-				<table id="#usersTableId#" class="users-table table-hover">
+				<table id="#usersTableId#" class="users-table table table-hover table-bordered table-striped tablesorter-bootstrap">
 					<thead>
 						<tr>
 							<cfif arguments.select_enabled IS true>
