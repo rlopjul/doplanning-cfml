@@ -232,7 +232,7 @@
 				<cfschedule action="update"	task="sendAllDiaryAlerts" operation="HTTPRequest"
 					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/sendAllDiaryAlerts.cfm"
 					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(0,5,0)#"
-					interval="daily" requestTimeOut="220" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/sendAllDiaryAlerts.txt')#">
+					interval="daily" requestTimeOut="300" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/sendAllDiaryAlerts.txt')#">
 
 				<!---sendDiaryAlerts schedule--->
 				<cfschedule action="update"	task="sendDiaryAlerts" operation="HTTPRequest"
