@@ -340,3 +340,30 @@
 	</div>
 
 </div>
+
+<script>
+
+	$(document).ready( function(){
+
+		<!--- Set browser new URL --->
+		<cfoutput>
+
+		<cfif isDefined("rewriteCurUrlPage")>
+			var curPageUrl = "#rewriteCurUrlPage#";
+			History.replaceState(History.getState().data, History.options.initialTitle, curPageUrl);
+		<cfelseif NOT isDefined("URL.abb")>
+
+			<cfif len(CGI.QUERY_STRING) GT 0>
+				<cfset newQueryString = "?#CGI.QUERY_STRING#&abb=#SESSION.client_abb#">
+			<cfelse>
+				<cfset newQueryString = "?abb=#SESSION.client_abb#">
+			</cfif>
+			History.replaceState(History.getState().data, History.options.initialTitle, "#newQueryString#");
+
+		</cfif>
+
+		</cfoutput>
+
+	});
+
+</script>

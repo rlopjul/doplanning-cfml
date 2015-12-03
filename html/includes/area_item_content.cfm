@@ -37,6 +37,8 @@
 <cfset itemCategories = getItemResponse.categories>
 <cfset area_id = objectItem.area_id>
 
+<cfset rewriteCurUrlPage = "#APPLICATION.htmlPath#/?abb=#SESSION.client_abb#&area=#area_id#&#itemTypeName#=#item_id#">
+
 <!---
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 --->
@@ -55,21 +57,11 @@
 
 <script>
 
-	<!---Esto es para evitar que se abran enlaces en el iframe--->
 	$(document).ready( function(){
 
 		$('.dropdown-toggle').dropdown();
+		<!---Esto es para evitar que se abran enlaces en el iframe--->
 		$(".div_message_page_description a").attr('target','_blank');
-
-		<!--- Set browser new URL --->
-		<!---
-		Lo ideal es que no requiera APPLICATION.htmlPath, pero por ahora es necesario
-		--->
-		<cfoutput>
-		var curPageUrl = "#APPLICATION.htmlPath#/?abb=#SESSION.client_abb#&area=#area_id#&#itemTypeName#=#item_id#";
-
-		History.replaceState(History.getState().data, History.options.initialTitle, curPageUrl);
-		</cfoutput>
 
 		<!---twemoji.parse(document.body);--->
 
