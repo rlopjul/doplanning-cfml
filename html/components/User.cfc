@@ -1454,6 +1454,29 @@
 										sorter: false
 									}
 								</cfif>
+								<cfif arguments.showAdminFields IS true AND SESSION.client_administrator EQ SESSION.user_id>
+									<cfif arguments.select_enabled IS true>
+										<cfif SESSION.client_abb IS "hcs">
+											, 7: {
+												sorter: false
+											}
+										<cfelse>
+											, 6: {
+												sorter: false
+											}
+										</cfif>
+									<cfelse>
+										<cfif SESSION.client_abb IS "hcs">
+											, 6: {
+												sorter: false
+											}
+										<cfelse>
+											, 5: {
+												sorter: false
+											}
+										</cfif>
+									</cfif>
+								</cfif>
 								<!---<cfif APPLICATION.moduleWebRTC IS true>
 								, 5: {
 									sorter: false
