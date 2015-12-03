@@ -1406,9 +1406,6 @@
 
 			</cfif>
 
-			<!---<cfinvoke component="AreaManager" method="getRootAreaId" returnvariable="rootAreaId">
-			</cfinvoke>--->
-
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
 				<cfinvokeargument name="onlyId" value="false">
 				<cfinvokeargument name="client_abb" value="#client_abb#">
