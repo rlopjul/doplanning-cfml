@@ -2288,33 +2288,14 @@
 
 					$(document).ready(function() {
 
-						<!---$.tablesorter.addParser({
-							id: "datetime",
-							is: function(s) {
-								return false;
-							},
-							format: function(s,table) {
-								s = s.replace(/\-/g,"/");
-								s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$2/$1");
-								return $.tablesorter.formatFloat(new Date(s).getTime());
-							},
-							type: "numeric"
-						});--->
-
 						$("##listTable").tablesorter({
 
 							<cfif arguments.full_content IS false>
 								<cfif itemTypeId IS 6><!---Tasks--->
-									widgets: ['zebra','uitheme','filter','stickyHeaders','math'],<!---'select',--->
-								<cfelse>
-									widgets: ['zebra','uitheme','filter','stickyHeaders'],
+									widgets: ['filter','stickyHeaders','math'],
+									widgets: ['filter','stickyHeaders'],
 								</cfif>
-							<cfelse>
-							widgets: ['zebra','uitheme'],
 							</cfif>
-
-							theme : "bootstrap",
-							headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
 
 							<cfif itemTypeId IS 6><!---Tasks--->
 								<cfif arguments.full_content IS false>
@@ -2402,7 +2383,7 @@
 						    openUrlLite(itemUrl,'itemIframe');
 						});--->
 
-						$('##listTable tbody tr').on('click', function(e) {
+							$('##listTable tbody tr').on('click', function(e) {
 
 					        var row = $(this);
 					        var itemUrl = row.data("item-url");
@@ -2413,11 +2394,10 @@
 						</cfif>
 
 
-
 					});
 				</script>
 
-				<table id="listTable" class="tablesorter">
+				<table id="listTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap">
 					<thead>
 						<tr>
 							<cfif itemTypeId IS NOT 6>
@@ -2935,9 +2915,7 @@
 					$(document).ready(function() {
 
 						$("##listTable").tablesorter({
-							widgets: ['zebra','uitheme','filter'],<!--- ,'select' --->
-							theme : "bootstrap",
-							headerTemplate : '{content} {icon}',
+							widgets: ['filter'],
 							<cfif len(area_type) GT 0><!--- WEB --->
 							sortList: [[5,1]] ,
 							<cfelseif numItems LT 500><!---Cuando hay muchos elementos el ordenar por fecha da error y aparecen errores en Firefox--->
@@ -3035,7 +3013,7 @@
 					});
 				</script>
 
-				<table id="listTable" class="tablesorter">
+				<table id="listTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap">
 					<thead>
 						<tr>
 							<th style="width:35px" class="filter-false"></th>
