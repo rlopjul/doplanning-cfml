@@ -1010,6 +1010,7 @@
 
 				<cfinvoke component="UserManager" method="isRootUser" returnvariable="root_user">
 					<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+					<cfinvokeargument name="root_area_id" value="#rootAreaId#">
 				</cfinvoke>
 
 
@@ -1208,6 +1209,7 @@
 		<cfset var user_language = "">
 
 		<cfset var visibleRootAreas = "">
+		<cfset var userRootAreas = "">
 		<cfset var areasContent = "">
 		<cfset var areasXml = "">
 
@@ -1253,49 +1255,88 @@
 
 			<cfif len(areasXml) IS 0>
 
-				<!---Se obtiene la lista de las áreas raices visibles (la raiz real no se muestra en el árbol de la aplicación)--->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getVisibleRootAreas" returnvariable="rootAreasQuery">
-					<cfinvokeargument name="root_area_id" value="#rootAreaid#">
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
-
-				<cfset visibleRootAreas = valueList(rootAreasQuery.id, ",")>
-
 				<cfinvoke component="AreaManager" method="userSeeTheWholeTree" returnvariable="whole_tree">
 					<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 				</cfinvoke>
 
 				<!---Se obtiene si el usuario está en el área raiz--->
-				<cfquery datasource="#client_dsn#" name="isUserInRootArea">
-					SELECT user_id
-					FROM #client_abb#_areas_users AS areas_users
-					WHERE area_id = <cfqueryparam value="#rootAreaid#" cfsqltype="cf_sql_integer">
-					AND user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="isRootUser" returnvariable="userInRootArea">
+					<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+					<cfinvokeargument name="root_area_id" value="#rootAreaId#">
 
-				<cfif isUserInRootArea.recordCount GT 0>
-					<cfset userInRootArea = true>
-				<cfelse>
-					<cfset userInRootArea = false>
-				</cfif>
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
+				<cfif whole_tree IS false AND userInRootArea IS false>
 
-				<!---Este loop se hace sobre la lista porque daba problemas hacerlo sobre la consulta (¿por los otros loops que ya existen sobre consultas?)--->
-				<cfloop list="#visibleRootAreas#" index="visibleRootAreaId">
-
-					<cfinvoke component="AreaManager" method="getAreaContent" returnvariable="areasResult">
-						<cfinvokeargument name="area_id" value="#visibleRootAreaId#">
-						<!---<cfinvokeargument name="withSubAreas" value="#with_sub_areas#">--->
-						<cfinvokeargument name="allowed" value="#userInRootArea#">
-						<cfinvokeargument name="whole_tree" value="#whole_tree#">
-						<cfinvokeargument name="list_type" value="default">
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllUserAreasList" returnvariable="allUserAreasList">
 						<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 					</cfinvoke>
 
-					<cfset areasContent = areasContent&areasResult>
+					<!---Se obtienen las áreas raices del usuario, debe hacerse así para obtenerlas ordenadas por nombre--->
+					<cfquery name="getUserRootAreas" datasource="#client_dsn#">
+						SELECT areas.id
+						FROM #client_abb#_areas AS areas
+						INNER JOIN #client_abb#_areas_users AS areas_users
+						ON areas_users.user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">
+						AND areas.id = areas_users.area_id
+						AND areas.parent_id NOT IN (<cfqueryparam value="#allUserAreasList#" list="true" cfsqltype="cf_sql_varchar">)
+						ORDER BY areas.name ASC;
+					</cfquery>
 
-				</cfloop>
+					<cfset userRootAreas = valueList(getUserRootAreas.id, ",")>
+
+					<!---Este loop se hace sobre la lista porque daba problemas hacerlo sobre la consulta (¿por los otros loops que ya existen sobre consultas?)--->
+					<cfloop list="#userRootAreas#" index="visibleRootAreaId">
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
+							<cfinvokeargument name="area_id" value="#visibleRootAreaId#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfinvoke component="AreaManager" method="getAreaContent" returnvariable="areasResult">
+							<cfinvokeargument name="area_id" value="#visibleRootAreaId#">
+							<cfinvokeargument name="allowed" value="#userInRootArea#">
+							<cfinvokeargument name="whole_tree" value="#whole_tree#">
+							<cfinvokeargument name="list_type" value="default">
+							<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+							<cfinvokeargument name="areaType" value="#getAreaTypeResult.areaType#">
+						</cfinvoke>
+
+						<cfset areasContent = areasContent&areasResult>
+
+					</cfloop>
+
+				<cfelse>
+
+					<!---Se obtiene la lista de las áreas raices visibles (la raiz real no se muestra en el árbol de la aplicación)--->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getVisibleRootAreas" returnvariable="rootAreasQuery">
+						<cfinvokeargument name="root_area_id" value="#rootAreaid#">
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfset visibleRootAreas = valueList(rootAreasQuery.id, ",")>
+
+					<!---Este loop se hace sobre la lista porque daba problemas hacerlo sobre la consulta (¿por los otros loops que ya existen sobre consultas?)--->
+					<cfloop list="#visibleRootAreas#" index="visibleRootAreaId">
+
+						<cfinvoke component="AreaManager" method="getAreaContent" returnvariable="areasResult">
+							<cfinvokeargument name="area_id" value="#visibleRootAreaId#">
+							<cfinvokeargument name="allowed" value="#userInRootArea#">
+							<cfinvokeargument name="whole_tree" value="#whole_tree#">
+							<cfinvokeargument name="list_type" value="default">
+							<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+						</cfinvoke>
+
+						<cfset areasContent = areasContent&areasResult>
+
+					</cfloop>
+
+				</cfif>
 
 				<cfif arguments.cached IS true>
 
@@ -1465,7 +1506,7 @@
 	<!--- ------------------------------------- getAreaContent ------------------------------------- --->
 	<!---A esta función siempre la llama otra funcion de ColdFusion, por lo que no tiene que tener try catch, ya que la otra fucion que llame a esta lo tendrá.--->
 
-	<cffunction name="getAreaContent" output="true" returntype="string" access="public">
+	<cffunction name="getAreaContent" output="false" returntype="string" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="allowed" type="Boolean" required="true">
 		<cfargument name="whole_tree" type="Boolean" required="false">
@@ -1546,7 +1587,7 @@
 	<!--- ------------------------------------- getAreaQueryContent ------------------------------------- --->
 	<!---A esta función siempre la llama otra funcion de ColdFusion, por lo que no tiene que tener try catch, ya que la otra fucion que llame a esta lo tendrá.--->
 
-	<cffunction name="getAreaQueryContent" output="true" returntype="string" access="public">
+	<cffunction name="getAreaQueryContent" output="false" returntype="string" access="public">
 		<cfargument name="areaQuery" type="query" required="yes">
 		<cfargument name="areaRow" type="numeric" required="yes">
 
@@ -1707,7 +1748,7 @@
 	<!--- ------------------------------------- getSubAreasContent ------------------------------------- --->
 	<!---A esta función siempre la llama otra funcion de ColdFusion, por lo que no tiene que tener try catch, ya que la otra fucion que llame a esta lo tendrá.--->
 
-	<cffunction name="getSubAreasContent" output="true" returntype="string" access="public">
+	<cffunction name="getSubAreasContent" output="false" returntype="string" access="public">
 		<cfargument name="parent_id" type="numeric" required="true">
 		<!---<cfargument name="areasArray" type="Array" required="false">--->
 		<cfargument name="allowed" type="Boolean" required="true">
