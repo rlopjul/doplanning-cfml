@@ -55,6 +55,33 @@
 		</cfquery>
 
 
+		<!--- table new fields --->
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists`
+			ADD COLUMN `math_enabled` TINYINT(1) NOT NULL DEFAULT 0 AFTER `list_rows_by_default`,
+			ADD COLUMN `form_display_type` VARCHAR(45) NULL AFTER `math_enabled`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_forms`
+			ADD COLUMN `math_enabled` TINYINT(1) NOT NULL DEFAULT 0 AFTER `list_rows_by_default`,
+			ADD COLUMN `form_display_type` VARCHAR(45) NULL AFTER `math_enabled`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_typologies`
+			ADD COLUMN `math_enabled` TINYINT(1) NOT NULL DEFAULT 0 AFTER `list_rows_by_default`,
+			ADD COLUMN `form_display_type` VARCHAR(45) NULL AFTER `math_enabled`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_users_typologies`
+			ADD COLUMN `math_enabled` TINYINT(1) NOT NULL DEFAULT 0 AFTER `list_rows_by_default`,
+			ADD COLUMN `form_display_type` VARCHAR(45) NULL AFTER `math_enabled`;
+		</cfquery>
+
+
 		<!--- list searchs --->
 
 		<cfquery datasource="#client_datasource#">
