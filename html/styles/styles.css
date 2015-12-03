@@ -1194,6 +1194,9 @@ fieldset {
 .tablesorter-filter::-ms-clear {
     display: none; /*Para deshabilitar la x que aparece en IE10 y que al hacer clic no restaura el listado de la tabla*/
 }
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #E0F3F2;
+}
 #listTable td {
 	font-size: 11px;
 	color:#666666;
