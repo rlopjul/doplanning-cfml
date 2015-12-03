@@ -336,7 +336,7 @@
 							<div class="<cfif arguments.search_inputs IS false>col-xs-offset-5 col-sm-offset-4 col-md-offset-3</cfif> col-xs-7 col-sm-8 col-md-9">
 						<cfelse>
 							<div class="row">
-								<div class="col-xs-5 col-sm-2">
+								<div class="col-sm-12"><!---col-xs-5 col-sm-2--->
 						</cfif>
 
 								<cfif fields.field_input_type EQ "radio"><!---Radio--->
@@ -1036,6 +1036,7 @@
 		<cfargument name="app_version" type="string" required="false" default="mobile">
 		<cfargument name="columnSelectorContainer" type="string" required="false">
 		<cfargument name="tablesorterEnabled" type="boolean" required="false" default="true">
+		<cfargument name="mathEnabled" type="boolean" required="false" default="false">
 		<cfargument name="includeLinkButton" type="boolean" required="false" default="false">
 		<cfargument name="linkButtonText" type="string" required="false" default='<i class="fa fa-external-link"></i>'>
 		<cfargument name="rowUrlPath" type="string" required="false">
@@ -1055,6 +1056,8 @@
 
 		<cfoutput>
 
+		<!---uitheme ralentiza las tablas grandes--->
+
 		<cfif arguments.tablesorterEnabled IS true>
 			<script>
 				$(document).ready(function() {
@@ -1064,10 +1067,10 @@
 						<!---widthFixed: true,--->
 						showProcessing: true,
 						delayInit: true,
-						widgets: ['zebra','uitheme','filter','stickyHeaders','math','saveSort'<cfif isDefined("arguments.columnSelectorContainer")>,'columnSelector'</cfif>],<!---'select',--->
-
-						theme : "bootstrap",
-						headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
+						widgets: ['filter','stickyHeaders','saveSort'
+							<cfif arguments.mathEnabled IS true>,'math'</cfif>
+							<cfif isDefined("arguments.columnSelectorContainer")>,'columnSelector'</cfif>
+						],<!---'zebra','uitheme',--->
 
 						<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 						dateFormat : "ddmmyyyy", // set the default date format
@@ -1135,13 +1138,15 @@
 						<cfset sortArrayLen = arrayLen(sortArray)>
 						<cfif sortArrayLen GT 0>
 
-							sortList: [
-							<cfloop from="1" to="#sortArrayLen#" index="curSort">
-								[#sortArray[curSort].row#, #sortArray[curSort].order#]
-								<cfif curSort NEQ sortArrayLen>
-									,
-								</cfif>
-							</cfloop> ],
+							<cfif tableRows.recordCount LT 1000>
+								sortList: [
+								<cfloop from="1" to="#sortArrayLen#" index="curSort">
+									[#sortArray[curSort].row#, #sortArray[curSort].order#]
+									<cfif curSort NEQ sortArrayLen>
+										,
+									</cfif>
+								</cfloop> ],
+							</cfif>
 
 						<cfelse>
 							<cfif tableRows.recordCount LT 100><!---Ordenar de nuevo la tabla por el campo por defecto ralentiza las tablas con muchas filas--->
@@ -1172,6 +1177,7 @@
 							filter_useParsedRow : false
 							<!--- END Filter options --->
 
+							<cfif arguments.mathEnabled IS true>
 							<!--- Suma de valores de las columnas --->
 								, math_data     : 'math' // data-math attribute
 							    , math_ignore   : [0
@@ -1190,6 +1196,7 @@
 							        return txt;
 							    }--->
 							<!--- Fin suma de los valores de las columnas --->
+							</cfif>
 
 
 							<!---,stickyHeaders_attachTo : '##pageHeaderContainer' Esto no funciona--->
@@ -1319,7 +1326,7 @@
 					<cfset thTrStyle = ''>
 				</cfif>
 
-				<table id="dataTable#arguments.tableTypeId#_#arguments.table_id#" class="data-table table-hover" style="<cfif arguments.tablesorterEnabled IS false>font-size:12px;border-collapse:collapse;margin-bottom:15px;<cfelse>margin-top:5px;</cfif>">
+				<table id="dataTable#arguments.tableTypeId#_#arguments.table_id#" class="data-table table table-hover table-bordered table-striped tablesorter-bootstrap" style="<cfif arguments.tablesorterEnabled IS false>font-size:12px;border-collapse:collapse;margin-bottom:15px;<cfelse>margin-top:5px;</cfif>">
 					<thead>
 						<tr #thTrStyle#>
 							<cfif arguments.includeLinkButton IS true>
@@ -1391,11 +1398,7 @@
 
 							<cfif ( isDefined("URL.row") AND URL.row IS tableRows.row_id ) OR ( selectFirst IS true AND tableRows.currentRow IS 1 AND app_version NEQ "mobile" ) ><!--- tableRows.recordCount --->
 
-								<!--- ESTO PUESTO AQUÍ HACE QUE FALLE EL TABLESORTER PARA LAS SUMAS --->
-								<!---<script>
-									openUrlHtml2('#row_page_url#','itemIframe');
-								</script>--->
-								<cfset onpenUrlHtml2 = row_page_url>
+								<!---<cfset onpenUrlHtml2 = row_page_url>--->
 
 								<cfset dataSelected = true>
 								<cfset alreadySelected = true>
@@ -1681,7 +1684,7 @@
 					</cfloop>
 					</tbody>
 
-					<cfif arguments.tablesorterEnabled IS true>
+					<cfif arguments.tablesorterEnabled IS true AND arguments.mathEnabled IS true>
 
 						<tfoot>
 						   <tr>
@@ -1718,6 +1721,7 @@
 
 			</div><!---END div id="tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#"--->
 
+			<!---
 			<cfif isDefined("onpenUrlHtml2")>
 
 				<!---Esta acción sólo se completa si está en la versión HTML2--->
@@ -1726,6 +1730,7 @@
 				</script>
 
 			</cfif>
+			--->
 
 		</cfif>
 
