@@ -17,7 +17,7 @@
  		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
-		<cfset var method = "isInternalUser">
+		<cfset var method = "isRootUser">
 
 		<cfset var root_area_id = "">
 
@@ -48,6 +48,51 @@
 		</cfquery>
 
 		<cfif isRootUserQuery.recordCount GT 0>
+			<cfreturn true>
+		<cfelse>
+			<cfreturn false>
+		</cfif>
+
+	</cffunction>
+
+
+	<!--- -------------------------- isRootUserAdmin -------------------------------- --->
+
+	<cffunction name="isRootUserAdmin" returntype="boolean" access="public">
+		<cfargument name="get_user_id" type="numeric" required="yes">
+		<cfargument name="root_area_id" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "isRootUserAdmin">
+
+		<cfset var root_area_id = "">
+
+		<cfif NOT isDefined("arguments.root_area_id")>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getRootArea" returnvariable="rootAreaQuery">
+				<cfinvokeargument name="onlyId" value="true">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+			<cfset root_area_id = rootAreaQuery.id>
+
+		<cfelse>
+
+			<cfset root_area_id = arguments.root_area_id>
+
+		</cfif>
+
+		<cfquery name="isRootUserAdminQuery" datasource="#client_dsn#">
+			SELECT user_id
+			FROM #client_abb#_areas_administrators
+			WHERE user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">
+			AND area_id = <cfqueryparam value="#root_area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+
+		<cfif isRootUserAdminQuery.recordCount GT 0>
 			<cfreturn true>
 		<cfelse>
 			<cfreturn false>

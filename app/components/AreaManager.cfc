@@ -1212,6 +1212,7 @@
 		<cfset var userRootAreas = "">
 		<cfset var areasContent = "">
 		<cfset var areasXml = "">
+		<cfset var allUserAreasList = "">
 
 		<cftry>
 
@@ -1299,8 +1300,8 @@
 
 						<cfinvoke component="AreaManager" method="getAreaContent" returnvariable="areasResult">
 							<cfinvokeargument name="area_id" value="#visibleRootAreaId#">
-							<cfinvokeargument name="allowed" value="#userInRootArea#">
-							<cfinvokeargument name="whole_tree" value="#whole_tree#">
+							<cfinvokeargument name="allowed" value="true">
+							<cfinvokeargument name="whole_tree" value="false">
 							<cfinvokeargument name="list_type" value="default">
 							<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 							<cfinvokeargument name="areaType" value="#getAreaTypeResult.areaType#">
@@ -1394,6 +1395,7 @@
 		<cfset var rootAreas = "">
 		<cfset var areasContent = "">
 		<cfset var areasXml = "">
+		<cfset var allUserAreasAdminList = "">
 
 		<cftry>
 
@@ -1457,13 +1459,68 @@
 					</cfif>
 				</cfif>
 
-				<cfinvoke component="AreaManager" method="getAreaContent" returnvariable="areasContent">
-					<cfinvokeargument name="area_id" value="#rootAreaId#">
-					<cfinvokeargument name="allowed" value="false">
-					<cfinvokeargument name="whole_tree" value="#whole_tree#">
-					<cfinvokeargument name="list_type" value="administrator">
+				<!---Se obtiene si el usuario está de administrador en el área raiz--->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="isRootUserAdmin" returnvariable="userInRootAreaAdmin">
 					<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+					<cfinvokeargument name="root_area_id" value="#rootAreaId#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
+
+				<cfif whole_tree IS false AND userInRootAreaAdmin IS false>
+
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllUserAreasAdminList" returnvariable="allUserAreasAdminList">
+						<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+					</cfinvoke>
+
+					<!---Se obtienen las áreas raices del usuario, debe hacerse así para obtenerlas ordenadas por nombre--->
+					<cfquery name="getUserRootAreasAdmin" datasource="#client_dsn#">
+						SELECT areas.id
+						FROM #client_abb#_areas AS areas
+						INNER JOIN #client_abb#_areas_administrators AS areas_administrators
+						ON areas_administrators.user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">
+						AND areas.id = areas_administrators.area_id
+						AND areas.parent_id NOT IN (<cfqueryparam value="#allUserAreasAdminList#" list="true" cfsqltype="cf_sql_varchar">)
+						ORDER BY areas.name ASC;
+					</cfquery>
+
+					<cfset userRootAreasAdmin = valueList(getUserRootAreasAdmin.id, ",")>
+
+					<!---Este loop se hace sobre la lista porque daba problemas hacerlo sobre la consulta--->
+					<cfloop list="#userRootAreasAdmin#" index="visibleRootAreaId">
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
+							<cfinvokeargument name="area_id" value="#visibleRootAreaId#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfinvoke component="AreaManager" method="getAreaContent" returnvariable="areasResult">
+							<cfinvokeargument name="area_id" value="#visibleRootAreaId#">
+							<cfinvokeargument name="allowed" value="true">
+							<cfinvokeargument name="whole_tree" value="false">
+							<cfinvokeargument name="list_type" value="administrator">
+							<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+							<cfinvokeargument name="areaType" value="#getAreaTypeResult.areaType#">
+						</cfinvoke>
+
+						<cfset areasContent = areasContent&areasResult>
+
+					</cfloop>
+
+				<cfelse>
+
+					<cfinvoke component="AreaManager" method="getAreaContent" returnvariable="areasContent">
+						<cfinvokeargument name="area_id" value="#rootAreaId#">
+						<cfinvokeargument name="allowed" value="#userInRootAreaAdmin#">
+						<cfinvokeargument name="whole_tree" value="#whole_tree#">
+						<cfinvokeargument name="list_type" value="administrator">
+						<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+					</cfinvoke>
+
+				</cfif><!--- whole_tree IS false AND userInRootArea IS false --->
 
 				<cfif arguments.cached IS true>
 
@@ -1482,7 +1539,7 @@
 
 				<cfset areasXml = '<areas cached="false">#areasContent#</areas>'>
 
-			</cfif>
+			</cfif><!--- END len(areasXml) IS 0 --->
 
 			<cfset response = {result=true, areasXml=#areasXml#}>
 
