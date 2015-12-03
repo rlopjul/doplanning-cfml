@@ -150,6 +150,7 @@
 			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 			<cfinvokeargument name="row" value="#row#">
 			<cfinvokeargument name="fields" value="#fields#">
+			<cfinvokeargument name="displayType" value="#table.form_display_type#">
 		</cfinvoke>
 
 		<div id="submitDiv2" style="margin-top:20px;">

@@ -33,7 +33,7 @@
 				<cfif tableTypeId IS 3><!---Typologies--->
 				, tables.general
 				</cfif>
-				, tables.structure_available <!---files.file_type, --->
+				, tables.structure_available, tables.math_enabled, tables.form_display_type <!---files.file_type, --->
 				<cfif arguments.parse_dates IS true>
 					, DATE_FORMAT(tables.creation_date, '#dateTimeFormat#') AS creation_date
 					, DATE_FORMAT(tables.last_update_date, '#dateTimeFormat#') AS last_update_date

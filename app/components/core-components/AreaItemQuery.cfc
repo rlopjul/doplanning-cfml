@@ -129,7 +129,7 @@
 					</cfif>
 				</cfif>
 				<cfif arguments.itemTypeId IS 11 OR arguments.itemTypeId IS 12 OR arguments.itemTypeId IS 13>
-					, list_rows_by_default
+					, list_rows_by_default, math_enabled, form_display_type
 				</cfif>
 				<!---<cfif isDefined("arguments.with_categories")>
 					, items_categories.area_id AS category_id

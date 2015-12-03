@@ -138,7 +138,7 @@
 					<div class="btn-group">
 						<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
 
-						<cfif tableTypeId IS 1><!--- Lists --->
+						<cfif tableTypeId IS 1 AND SESSION.client_abb EQ "ceseand" AND ListFind("1,2,3", table_id) GT 0><!--- Lists --->
 							<a href="#tableTypeName#_row_import_xml.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros a partir de XML" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar XML</span></a>
 						</cfif>
 				<cfelse>
@@ -431,6 +431,8 @@
 
 			</script>
 
+			<h4 lang="es">Búsqueda de registros</h4>
+
 			<cfform method="get" name="search_form" action="#CGI.SCRIPT_NAME#" class="form-horizontal" onsubmit="return onSubmitForm();">
 
 				<script>
@@ -496,6 +498,7 @@
 								<cfinvokeargument name="columnSelectorContainer" value="columnSelector#tableTypeId#_#table_id#">
 								<cfinvokeargument name="tablesorterEnabled" value="true">
 								<cfinvokeargument name="includeLinkButton" value="true">
+								<cfinvokeargument name="mathEnabled" value="#objectItem.math_enabled#">
 							</cfinvoke>
 
 						</div><!--- END col-sm-12 --->
