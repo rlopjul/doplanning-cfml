@@ -10,11 +10,13 @@
 <!--- https://github.com/twitter/twemoji --->
 <!---<script src="//cdnjs.cloudflare.com/ajax/libs/twemoji/1.3.2/twemoji.min.js"></script>--->
 
+<!---
 <cfif itemTypeId EQ 1>
 	<!--- http://emojione.com/ --->
 	<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />
 </cfif>
+--->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
@@ -63,15 +65,11 @@
 		<!---Esto es para evitar que se abran enlaces en el iframe--->
 		$(".div_message_page_description a").attr('target','_blank');
 
-		<!---twemoji.parse(document.body);--->
-
-		<!---var emojiInput = document.getElementsByClassName("div_message_page_description")[0].value;
-    	var output = emojione.shortnameToImage(input);
-   		 document.getElementById('outputText').innerHTML = output;--->
-
+		<!---
 		<cfif itemTypeId EQ 1>
    		 $(".div_message_page_description").html(emojione.shortnameToImage($(".div_message_page_description").html()));
 		</cfif>
+		--->
 
 	});
 
