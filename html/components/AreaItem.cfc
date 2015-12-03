@@ -3270,6 +3270,7 @@
 		<cfargument name="return_page" type="string" required="false">
 		<cfargument name="showLastUpdate" type="boolean" required="false" default="false">
 		<cfargument name="generatePdf" type="boolean" required="false" default="false"><!--- true = Generate PDF --->
+		<cfargument name="generateWord" type="boolean" required="false" default="false">
 		<cfargument name="deletedItems" type="boolean" required="false" default="false"><!--- true = Elementos de la papelera --->
 		<cfargument name="app_version" type="string" required="false" default="html2">
 
@@ -3372,11 +3373,19 @@
 
 											</cfif>
 
-
 									 	</a>
 									 	<div class="media-body">
 
-											<a href="area_user.cfm?area=#itemsQuery.area_id#&user=#itemsQuery.user_in_charge#" class="link_user">#userFullName#</a>
+											<cfif arguments.generatePdf IS true>
+												<i>#itemTypeNameEs#</i><br/><br/>
+
+												<span>#userFullName#</span>
+
+											<cfelse>
+
+												<a href="area_user.cfm?area=#itemsQuery.area_id#&user=#itemsQuery.user_in_charge#" class="link_user">#userFullName#</a>
+
+											</cfif>
 
 											<span class="hidden-xs">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
@@ -3443,10 +3452,17 @@
 
 											</cfif>
 
-										</div>
-									</div>
+										</div><!--- END div class="media-body" --->
 
-									<cfif arguments.generatePdf IS false>
+									</div><!--- END div class="media" --->
+
+									<cfif arguments.generatePdf IS true><!---PDF--->
+
+										<cfif arguments.generateWord IS false>
+										<br/><br/>
+										</cfif>
+
+									<cfelse>
 
 										<hr style="margin:0;margin-top:5px;"/>
 
@@ -3455,17 +3471,14 @@
 								</div>
 
 								<div class="col-xs-2 col-sm-1"><!--- item type icon --->
-									<div class="pull-right">
 
-										<cfif arguments.generatePdf IS true><!--- PDF --->
+										<cfif arguments.generatePdf IS false>
 
-											<i>#itemTypeNameEs#</i><br/><br/><br/>
+											<div class="pull-right">
 
-										<cfelse>
-
-											<cfif arguments.deletedItems IS false>
-												<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#">
-											</cfif>
+												<cfif arguments.deletedItems IS false>
+													<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#">
+												</cfif>
 
 
 												<cfif itemTypeId IS 6><!---Tasks--->
@@ -3508,13 +3521,14 @@
 												</cfif>
 
 
-											<cfif arguments.deletedItems IS false>
-												</a>
-											</cfif>
+												<cfif arguments.deletedItems IS false>
+													</a>
+												</cfif>
+
+											</div>
 
 										</cfif>
 
-									</div>
 								</div>
 							</div>
 
@@ -3524,8 +3538,12 @@
 
 									<cfset titleContent = itemsQuery.title>
 
-									<h4>#titleContent#</h4><!---<h5>--->
-
+									<cfif arguments.generatePdf IS true>
+										<h3>#titleContent#</h3>
+									<cfelse>
+										<h4>#titleContent#</h4>
+									</cfif>
+									
 
 									<cfif itemTypeId EQ 10><!--- Files --->
 
@@ -3737,7 +3755,7 @@
 											<a href="#areaItemUrl#" target="_blank">#areaItemUrl#</a>
 										</div>
 
-										<hr style="margin-bottom:35px;"/>
+										<hr style="margin-bottom:40px;margin-top:40px;"/>
 
 									</cfif>
 

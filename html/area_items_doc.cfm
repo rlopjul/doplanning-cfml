@@ -81,6 +81,7 @@
 				<cfinvokeargument name="return_path" value="#APPLICATION.htmlPath#/">
 				<cfinvokeargument name="area_id" value="#area_id#"/>
 				<cfinvokeargument name="generatePdf" value="true"/>
+				<cfinvokeargument name="generateWord" value="true"/>
 			</cfinvoke>
 
 		</cfif>
