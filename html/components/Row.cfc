@@ -468,7 +468,10 @@
 			<cfargument name="app_version" type="string" required="true">
 			<cfargument name="columnSelectorContainer" type="string" required="false">
 			<cfargument name="tablesorterEnabled" type="boolean" required="false">
+			<cfargument name="mathEnabled" type="boolean" required="false" default="false">
 			<cfargument name="includeLinkButton" type="boolean" required="false">
+			<cfargument name="rowUrlPath" type="string" required="false">
+			<cfargument name="includeFullText" type="boolean" required="false">
 
 			<cfset var method = "outputRowList">
 
@@ -486,7 +489,10 @@
 					<cfinvokeargument name="app_version" value="#arguments.app_version#">
 					<cfinvokeargument name="columnSelectorContainer" value="#arguments.columnSelectorContainer#">
 					<cfinvokeargument name="tablesorterEnabled" value="#arguments.tablesorterEnabled#">
+					<cfinvokeargument name="mathEnabled" value="#arguments.mathEnabled#">
 					<cfinvokeargument name="includeLinkButton" value="#arguments.includeLinkButton#">
+					<cfinvokeargument name="rowUrlPath" value="#arguments.rowUrlPath#">
+					<cfinvokeargument name="includeFullText" value="#arguments.includeFullText#">
 
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">

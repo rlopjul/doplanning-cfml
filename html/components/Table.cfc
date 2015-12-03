@@ -16,6 +16,8 @@
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
 		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
+		<cfargument name="math_enabled" type="boolean" required="false" default="false">
+		<cfargument name="form_display_type" type="string" required="false" default="">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
 		<cfargument name="publication_hour" type="numeric" required="false">
@@ -44,6 +46,8 @@
 				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
 				<cfinvokeargument name="list_rows_by_default" value="#arguments.list_rows_by_default#">
 				<cfinvokeargument name="general" value="#arguments.general#">
+				<cfinvokeargument name="math_enabled" value="#arguments.math_enabled#">
+				<cfinvokeargument name="form_display_type" value="#arguments.form_display_type#">
 				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
 				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
 				<cfinvokeargument name="publication_hour" value="#arguments.publication_hour#">
@@ -88,6 +92,8 @@
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
 		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
+		<cfargument name="math_enabled" type="boolean" required="false" default="false">
+		<cfargument name="form_display_type" type="string" required="false" default="">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
 		<cfargument name="publication_hour" type="numeric" required="false">
@@ -114,6 +120,8 @@
 				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
 				<cfinvokeargument name="list_rows_by_default" value="#arguments.list_rows_by_default#">
 				<cfinvokeargument name="general" value="#arguments.general#">
+				<cfinvokeargument name="math_enabled" value="#arguments.math_enabled#">
+				<cfinvokeargument name="form_display_type" value="#arguments.form_display_type#">
 				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
 				<cfinvokeargument name="publication_date" value="#arguments.publication_date#">
 				<cfinvokeargument name="publication_hour" value="#arguments.publication_hour#">

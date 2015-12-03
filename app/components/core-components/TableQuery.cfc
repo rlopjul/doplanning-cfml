@@ -45,7 +45,7 @@
 					, tables.publication_scope_id, scopes.name AS publication_scope_name
 				</cfif>
 				<cfif tableTypeId IS 1 OR tableTypeId IS 2>
-					, tables.list_rows_by_default
+					, tables.list_rows_by_default, math_enabled, form_display_type
 					<cfif arguments.parse_dates IS true>
 					, DATE_FORMAT(CONVERT_TZ(tables.publication_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS publication_date
 					<cfelse>

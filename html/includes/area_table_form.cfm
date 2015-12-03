@@ -231,6 +231,28 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="math_enabled" id="math_enabled" value="true" <cfif isDefined("table.math_enabled") AND table.math_enabled IS true>checked="checked"</cfif> /> <span lang="es">Habilitar suma total en valores numéricos</span>
+				</label>
+				<small class="help-block" lang="es">Desmarcar esta opción si hay o habrá muchos registros, ya que aumenta el tiempo de carga de la lista.</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12 col-sm-8">
+			<label for="form_display_type" class="control-label"><span lang="es">Modo del formulario de edición de registros</span>:</label>
+			<select name="form_display_type" id="form_display_type" class="form-control">
+					<option value="">Por defecto</option>
+					<option value="horizontal" <cfif table.form_display_type IS "horizontal">selected</cfif>>Horizontal: título y campo en una misma fila</option>
+			</select>
+			<small class="help-block" lang="es">Define la posición de los campos en el formulario de edición de registros</small>
+		</div>
+	</div>
 	</cfif>
 
 	<!--- <cfdump var="#table#"> --->

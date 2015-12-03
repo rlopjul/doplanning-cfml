@@ -561,6 +561,8 @@
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
 		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
+		<cfargument name="math_enabled" type="boolean" required="false" default="false">
+		<cfargument name="form_display_type" type="string" required="false" default="">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
@@ -828,6 +830,8 @@
 					, structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
 						<cfif itemTypeId IS 11 OR itemTypeid IS 12>
 						, list_rows_by_default = <cfqueryparam value="#arguments.list_rows_by_default#" cfsqltype="cf_sql_bit">
+						, math_enabled = <cfqueryparam value="#arguments.math_enabled#" cfsqltype="cf_sql_bit">
+						, form_display_type = <cfqueryparam value="#arguments.form_display_type#" cfsqltype="cf_sql_varchar">
 						</cfif>
 						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
 						, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
@@ -1027,6 +1031,8 @@
 		<cfargument name="structure_available" type="boolean" required="false" default="false">
 		<cfargument name="list_rows_by_default" type="boolean" required="false" default="false">
 		<cfargument name="general" type="boolean" required="false" default="false">
+		<cfargument name="math_enabled" type="boolean" required="false" default="false">
+		<cfargument name="form_display_type" type="string" required="false" default="">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="publication_date" type="string" required="false">
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
@@ -1338,6 +1344,8 @@
 						, structure_available = <cfqueryparam value="#arguments.structure_available#" cfsqltype="cf_sql_bit">
 						<cfif itemTypeId IS 11 OR itemTypeid IS 12>
 						, list_rows_by_default = <cfqueryparam value="#arguments.list_rows_by_default#" cfsqltype="cf_sql_bit">
+						, math_enabled = <cfqueryparam value="#arguments.math_enabled#" cfsqltype="cf_sql_bit">
+						, form_display_type = <cfqueryparam value="#arguments.form_display_type#" cfsqltype="cf_sql_varchar">
 						</cfif>
 						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
 						, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
