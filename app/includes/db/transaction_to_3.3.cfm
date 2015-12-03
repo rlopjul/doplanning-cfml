@@ -42,17 +42,22 @@
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
-			CREATE TABLE `#new_client_abb#_users_notifications_tables_special_categories_disabled` (
+			CREATE TABLE `#new_client_abb#_users_notifications_tables_categories_disabled` (
 			`user_id` int(11) NOT NULL,
 			`table_id` int(10) unsigned NOT NULL,
 			`table_type_id` int(10) unsigned NOT NULL,
 			`category_id` int(11) unsigned NOT NULL,
 			PRIMARY KEY (`user_id`,`table_id`,`table_type_id`,`category_id`),
-			KEY `FK_#new_client_abb#_users_notifications_special_categories_disabled_idx` (`category_id`),
-			CONSTRAINT `FK_#new_client_abb#_users_notifications_special_categories_disabled_2` FOREIGN KEY (`category_id`) REFERENCES `#new_client_abb#_tables_special_categories` (`category_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-			CONSTRAINT `FK_#new_client_abb#_users_notifications_special_categories_disabled_1` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+			KEY `FK_#new_client_abb#_notifications_tb_categories_disabled_idx` (`category_id`),
+			CONSTRAINT `FK_#new_client_abb#_notifications_tb_categories_disabled_2` FOREIGN KEY (`category_id`) REFERENCES `#new_client_abb#_tables_special_categories` (`category_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+			CONSTRAINT `FK_#new_client_abb#_notifications_tb_categories_disabled_1` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		</cfquery>
+
+		<!---
+		ALTER TABLE `dp_#new_client_abb#`.`#new_client_abb#_users_notifications_tables_special_categories_disabled`
+		RENAME TO  `dp_#new_client_abb#`.`#new_client_abb#_users_notifications_tables_categories_disabled`;
+		--->
 
 
 		<!--- table new fields --->

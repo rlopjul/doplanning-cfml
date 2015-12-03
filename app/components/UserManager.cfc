@@ -1206,7 +1206,7 @@
 
 			<cfquery datasource="#client_dsn#" name="deleteUserNotificationsTablesCategoriesDisabled">
 				DELETE
-				FROM `#client_abb#_users_notifications_tables_special_categories_disabled`
+				FROM `#client_abb#_users_notifications_tables_categories_disabled`
 				WHERE user_id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 
@@ -1318,7 +1318,7 @@
 					<cfif NOT isDefined("arguments.categories_table_#tableTypeId#_#tableSpecialCategories.table_id#_ids") OR ArrayFind(arguments['categories_table_#tableTypeId#_#tableSpecialCategories.table_id#_ids'], tableSpecialCategories.category_id) IS 0>
 
 						<cfquery name="addUserCategoryDisabled" datasource="#client_dsn#">
-							INSERT INTO `#client_abb#_users_notifications_tables_special_categories_disabled`
+							INSERT INTO `#client_abb#_users_notifications_tables_categories_disabled`
 							SET user_id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">,
 							table_id = <cfqueryparam value="#table_id#" cfsqltype="cf_sql_integer">,
 							table_type_id = <cfqueryparam value="#tableTypeId#" cfsqltype="cf_sql_integer">,

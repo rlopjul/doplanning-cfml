@@ -167,7 +167,7 @@
 				<cfif arguments.with_categories IS true>
 					, categories.*
 				</cfif>
-				FROM `#client_abb#_users_notifications_tables_special_categories_disabled` AS users_notifications
+				FROM `#client_abb#_users_notifications_tables_categories_disabled` AS users_notifications
 				INNER JOIN `#client_abb#_tables_special_categories`AS categories
 				ON categories.category_id = users_notifications.category_id
 				WHERE users_notifications.user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
