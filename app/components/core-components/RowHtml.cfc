@@ -1066,8 +1066,9 @@
 
 						<!---widthFixed: true,--->
 						showProcessing: true,
-						delayInit: true,
-						widgets: ['filter','stickyHeaders','saveSort'
+						delayInit: false, <!--- Tiene que estar a false para que funcione filter sin orden de columnas predefinido --->
+						widgets: ['filter','stickyHeaders'
+							<!---<cfif tableRows.recordCount LT 100>,'saveSort'</cfif>Este plugin no debe usarse con listas grandes--->
 							<cfif arguments.mathEnabled IS true>,'math'</cfif>
 							<cfif isDefined("arguments.columnSelectorContainer")>,'columnSelector'</cfif>
 						],<!---'zebra','uitheme',--->
@@ -1091,24 +1092,27 @@
 							</cfif>
 
 							<cfset sortArray = arrayNew(1)>
-							<!---<cfset fieldsWithHeader = false>--->
 
 							<cfloop query="fields">
 
+								<cfif arguments.includeLinkButton IS true>
+									<cfset curFieldIndex = fields.currentRow+1>
+								<cfelse>
+									<cfset curFieldIndex = fields.currentRow>
+								</cfif>
+
 								<cfif fields.field_id IS "creation_date" OR fields.field_id IS "last_update_date" OR fields.field_type_id IS 6><!--- DATE --->
 
-									<!---<cfif fieldsWithHeader IS true>,</cfif>--->, #fields.currentRow#: {
+									, #curFieldIndex#: {
 										<!---sorter: "datetime"--->
 										sorter: "shortDate"
 									}
-									<!---<cfset fieldsWithHeader = true>--->
 
 								<cfelseif fields.field_id NEQ 4 AND fields.field_id NEQ 5><!--- IS NOT INTEGER OR DECIMAL --->
 
-									<!---<cfif fieldsWithHeader IS true>,</cfif>--->, #fields.currentRow#: {
+									, #curFieldIndex#: {
 										sorter: "text"
 									}
-									<!---<cfset fieldsWithHeader = true>--->
 
 								</cfif>
 
@@ -1118,11 +1122,9 @@
 									<cfelse>
 										<cfset sortOrder = 1>
 									</cfif>
-									<cfif includeLinkButton IS true>
-										<cfset arrayAppend(sortArray, {row=fields.currentRow+1, order=sortOrder})>
-									<cfelse>
-										<cfset arrayAppend(sortArray, {row=fields.currentRow, order=sortOrder})>
-									</cfif>
+
+									<cfset arrayAppend(sortArray, {row=curFieldIndex, order=sortOrder})>
+
 								</cfif>
 
 							</cfloop>
