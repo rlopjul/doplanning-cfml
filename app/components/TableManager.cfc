@@ -20,11 +20,7 @@
 			<cfquery name="createTable" datasource="#client_dsn#">
 				CREATE TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` (
 				  `row_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-				  <cfif arguments.tableTypeId IS 2><!--- Forms --->
-				   `insert_user_id` int(11) DEFAULT NULL,
-				  <cfelse>
-				   `insert_user_id` int(11) NOT NULL,
-				  </cfif>
+				  `insert_user_id` int(11) DEFAULT NULL,
 				  `last_update_user_id` int(11) DEFAULT NULL,
 				  `creation_date` datetime NOT NULL,
 				  `last_update_date` datetime DEFAULT NULL,
@@ -32,8 +28,8 @@
 				  PRIMARY KEY (`row_id`) USING BTREE,
 				  KEY `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_1` (`insert_user_id`),
 				  KEY `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` (`last_update_user_id`),
-				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` FOREIGN KEY (`last_update_user_id`) REFERENCES `#client_abb#_users` (`id`),
-				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_1` FOREIGN KEY (`insert_user_id`) REFERENCES `#client_abb#_users` (`id`)
+				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` FOREIGN KEY (`last_update_user_id`) REFERENCES `#client_abb#_users` (`id`) ON DELETE SET NULL,
+				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_1` FOREIGN KEY (`insert_user_id`) REFERENCES `#client_abb#_users` (`id`) ON DELETE SET NULL
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 			</cfquery>
 
