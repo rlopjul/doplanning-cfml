@@ -55,13 +55,13 @@
 <!-- InstanceEndEditable -->
 
 <div id="wrapper"><!--- wrapper --->
-        
+
 	<!---<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
 				<h1></h1>
 				<p></p>
-							
+
 			</div>
 		</div>
 	</div>--->
@@ -72,7 +72,7 @@
 <div class="container"><!---login_container--->
 
 	<div class="row">
-	
+
 		<!---<cfif APPLICATION.identifier EQ "dp">
 			<div class="col-md-2">
 				<div class="row">
@@ -89,20 +89,20 @@
 				</div>
 			</div>
 		</cfif>--->
-		
-		
+
+
 		<cfif APPLICATION.identifier EQ "dp">
 		<div class="col-sm-offset-3 col-sm-5" style="text-align:right; padding-top:60px;">
 			<img src="download_login_image.cfm?abb=#client_abb#" alt="Login Banner" />
 		</div>
 		</cfif>
-		
+
 		<!---<cfif APPLICATION.title EQ "DoPlanning" AND APPLICATION.identifier EQ "dp">
 		<div class="col-md-2" style="text-align:right;">
 			<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" class="hidden-sm hidden-xs" lang="es"><i class="icon-question-sign"></i></a>
 		</div>
 		</cfif>--->
-		
+
 	</div>
 
 	<cfif APPLICATION.identifier EQ "dp">
@@ -116,12 +116,12 @@
 			</cfoutput>
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-sm-offset-2 col-md-offset-3 col-sm-7 col-md-5">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/remember_password_form.cfm">
-			
+
 		</div>
 	</div>
 
@@ -131,7 +131,7 @@
 </cfoutput>
 <!-- InstanceEndEditable -->
 	<!---</div>--->
-	
+
 </div>
 <!--- END wrapper --->
 
