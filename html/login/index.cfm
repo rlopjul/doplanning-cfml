@@ -56,13 +56,13 @@
 <!-- InstanceEndEditable -->
 
 <div id="wrapper"><!--- wrapper --->
-        
+
 	<!---<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
 				<h1></h1>
 				<p></p>
-							
+
 			</div>
 		</div>
 	</div>--->
@@ -96,12 +96,12 @@
 		<cfset show_title = true>
 	</cfif>
 
-	
+
 
 	<cfif show_logo OR show_banner OR show_help>
-		
+
 	<div class="row">
-		
+
 		<!---<cfif APPLICATION.identifier EQ "dp" AND show_logo>
 			<div class="col-md-2">
 				<div class="row">
@@ -119,20 +119,20 @@
 			</div>
 		</cfif>--->
 
-		
+
 		<cfif APPLICATION.identifier EQ "dp" AND show_banner>
 			<div class="col-sm-offset-3 col-sm-5" style="text-align:right; padding-top:60px;">
 				<img src="download_login_image.cfm?abb=#client_abb#&v=3" alt="Login Banner" />
 			</div>
 		</cfif>
 
-		
+
 		<!---<cfif APPLICATION.title EQ "DoPlanning" AND show_help>
 			<div class="col-md-2" style="text-align:right;">
 				<a href="#APPLICATION.helpUrl#" target="_blank" title="Ayuda DoPlanning" class="hidden-sm hidden-xs" lang="es"><i class="icon-question-sign"></i></a>
 			</div>
 		</cfif>--->
-		
+
 	</div>
 
 	</cfif>
@@ -143,7 +143,7 @@
 				<!---
 				<cfif APPLICATION.identifier EQ "dp" >
 					<cfif APPLICATION.title EQ "DoPlanning">
-						<span lang="es">Acceso a DoPlanning</span> 
+						<span lang="es">Acceso a DoPlanning</span>
 					</cfif><strong>#getClient.name#</strong>
 				<cfelseif APPLICATION.identifier EQ "vpnet">
 				Acceso a Colabora.
@@ -157,7 +157,7 @@
 		</div>
 	</cfif>
 
-	
+
 
 
   <cfif FindNoCase('MSIE',CGI.HTTP_USER_AGENT) GT 0 OR arrayLen(REMatch("Trident/7.*rv:11", CGI.HTTP_USER_AGENT)) GT 0>
@@ -173,8 +173,8 @@
 
 	</div>
   </cfif>
-	
-	
+
+
 	<cfif isDefined("URL.dpage")>
 		<cfset destination_page = URLDecode(URL.dpage)>
 	<cfelse>
@@ -182,38 +182,13 @@
 	</cfif>
 	<div class="row">
 		<div class="col-sm-offset-2 col-md-offset-3 col-sm-7 col-md-5">
-		
+
 		<!---<div class="div_login_form">--->
 			<cfinclude template="#APPLICATION.corePath#/includes/login_form.cfm">
 		<!---</div>--->
 
 		</div>
 	</div>
-
-
-	<!---
-	<cfif show_logo IS true AND APPLICATION.title EQ "DoPlanning" AND URL.client_abb NEQ "hcs">
-
-		<div class="row">
-
-			<div class="col-sm-offset-3 col-sm-6">
-
-				<div class="panel panel-default" style="margin-top:35px;">
-				  <div class="panel-body">
-				    <h5>�Gracias por usar DoPlanning!. Tenemos el placer de comunicarte que DoPlanning ha sido nominado para los premios UP-Start 2014 como mejor herramienta web de trabajo colaborativo. </h5>
-					<small><b>Puedes votar DoPlanning aqu� para que est� entre los 3 finalistas:</b><br/> 
-		 			<a href="http://awards.up-con.com/2014/vote?page=3" target="_blank">http://awards.up-con.com/2014/vote?page=3</a></small><br/><br/>
-
-		 			<small><a href="http://www.ideal.es/granada/201410/28/pyme-local-aspira-premio-20141027234437.html" target="_blank">Noticia en el peri�dico Ideal con la nominaci�n</a></small>
-				  </div>
-				</div>
-
-			</div>
-
-		</div>
-
-	</cfif>
-	--->
 
 	<!---<div class="row">
 
@@ -235,7 +210,7 @@
 </cfoutput>
 <!-- InstanceEndEditable -->
 	<!---</div>--->
-	
+
 </div>
 <!--- END wrapper --->
 
