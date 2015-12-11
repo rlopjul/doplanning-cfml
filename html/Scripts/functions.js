@@ -240,12 +240,15 @@ function showAlertMessage(msg, res){
 
 	$("#alertContainer").fadeIn('slow');
 
+	if(res == true) {
 
-	setTimeout(function(){
+		setTimeout(function(){
 
-	    hideAlertMessage();
+				hideAlertMessage();
 
-	    }, 9500);
+				}, 9500);
+	}
+
 }
 
 function hideAlertMessage(){
