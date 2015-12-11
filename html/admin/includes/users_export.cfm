@@ -19,40 +19,91 @@
 
 			<form name="export_users" method="post" action="#APPLICATION.htmlComponentsPath#/User.cfc?method=exportUsersDownload" class="form-horizontal">
 
-				<div class="row">
-					<div class="col-sm-12">
-				      <b lang="es">Incluir las siguientes columnas:</b>
-				    </div>
+				<!--- Users Typologies --->
+
+				<cfset typologyTableTypeId = 4>
+
+				<cfset selected_typology_id = "null">
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAllTypologies" returnvariable="getAllTypologiesResponse">
+					<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+				</cfinvoke>
+				<cfset typologies = getAllTypologiesResponse.query>
+
+				<cfif typologies.recordCount GT 0>
+
+					<div class="row">
+
+						<div class="col-sm-12">
+
+							<label for="typology_id" class="col-xs-5 col-sm-3 control-label" lang="es">Tipología</label>
+
+							<div class="col-xs-7 col-sm-9">
+
+								<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val());">
+									<option value="null" <cfif selected_typology_id EQ "null">selected="selected"</cfif> lang="es">Básica</option>
+									<cfif typologies.recordCount GT 0>
+										<cfloop query="typologies">
+											<option value="#typologies.id#" <cfif typologies.id IS selected_typology_id>selected="selected"</cfif>>#typologies.title#</option>
+										</cfloop>
+									</cfif>
+								</select>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</cfif>
+
+				<div class="row" style="padding-top:15px;">
+
+					<div class="col-xs-12">
+						<label lang="es">Incluir las siguientes columnas:</label>
+					</div>
+
 				</div>
 
 				<div class="row">
-					<div class="col-xs-offset-1 col-xs-11">
-				      <div class="checkbox">
-				        <label>
-				          <input type="checkbox" name="include_creation_date" value="true"><span lang="es">Fecha de creación</span>
-				      	</label>
-				      </div>
-				    </div>
-				</div>
 
-				<div class="row">
-					<div class="col-xs-offset-1 col-xs-11">
-				      <div class="checkbox">
-				        <label>
-				          <input type="checkbox" name="include_number_of_connections" value="true"><span lang="es">Número de conexiones</span>
-				      	</label>
-				      </div>
-				    </div>
-				</div>
+					<div class="col-xs-5 col-sm-3">
+					</div>
 
-				<div class="row">
-					<div class="col-xs-offset-1 col-xs-11">
-				      <div class="checkbox">
-				        <label>
-				          <input type="checkbox" name="include_last_connection" value="true"><span lang="es">Fecha última conexión</span>
-				      	</label>
-				      </div>
-				    </div>
+					<div class="col-xs-7 col-sm-9">
+
+						<div class="row">
+							<div class="col-xs-12">
+						      <div class="checkbox">
+						        <label>
+						          <input type="checkbox" name="include_creation_date" value="true"><span lang="es">Fecha de creación</span>
+						      	</label>
+						      </div>
+						  </div>
+						</div>
+
+						<div class="row">
+							<div class="col-xs-12">
+						      <div class="checkbox">
+						        <label>
+						          <input type="checkbox" name="include_number_of_connections" value="true"><span lang="es">Número de conexiones</span>
+						      	</label>
+						      </div>
+						  </div>
+						</div>
+
+						<div class="row">
+							<div class="col-xs-12">
+						      <div class="checkbox">
+						        <label>
+						          <input type="checkbox" name="include_last_connection" value="true"><span lang="es">Fecha última conexión</span>
+						      	</label>
+						      </div>
+						  </div>
+						</div>
+
+					</div>
+
 				</div>
 
 			</div>

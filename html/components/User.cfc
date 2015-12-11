@@ -1859,7 +1859,7 @@
 	<!--- -------------------------------exportUsersDownload-------------------------------------- --->
 
   <cffunction name="exportUsersDownload" returntype="void" access="remote">
-    <cfargument name="area_id" type="numeric" required="false">
+    <cfargument name="typology_id" type="string" required="false">
 		<cfargument name="delimiter" type="string" required="false" default=";">
 		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
 
@@ -1868,14 +1868,14 @@
 		<cfargument name="include_last_connection" type="boolean" required="false" default="false">
 
 
-		<cfset var method = "exportAreaItemsDownload">
+		<cfset var method = "exportUsersDownload">
 
 		<cfset var exportUsersResponse = structNew()>
 
 		<cftry>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="exportUsers" returnvariable="exportUsersResponse">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="typology_id" value="#arguments.typology_id#">
 				<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
 				<cfinvokeargument name="ms_excel_compatibility" value="#arguments.ms_excel_compatibility#">
 

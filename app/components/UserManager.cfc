@@ -3062,7 +3062,7 @@
 	<!--- ------------------------------------- exportUsers -------------------------------------  --->
 
 	<cffunction name="exportUsers" output="false" access="public" returntype="struct">
-		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="typology_id" type="string" required="false">
 		<cfargument name="delimiter" type="string" required="true">
 		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
 
@@ -3087,6 +3087,8 @@
 
 			<!--- getAllUsers --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getAllUsers" returnvariable="getAllUsersQuery">
+				<cfinvokeargument name="typology_id" value="#arguments.typology_id#">
+				<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
 				<cfinvokeargument name="with_external" value="true">
 				<cfinvokeargument name="order_by" value="creation_date">
 				<cfinvokeargument name="order_type" value="ASC">
@@ -3145,8 +3147,47 @@
 					</cfif>
 				</cfif>
 
+				<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+
+					<cfinvoke component="RowManager" method="generateRowsQuery" returnvariable="generateRowsQueryResponse">
+						<cfinvokeargument name="table_id" value="#arguments.typology_id#">
+						<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+
+						<!---<cfinvokeargument name="include_creation_date" value="#arguments.include_creation_date#">
+						<cfinvokeargument name="include_last_update_date" value="#arguments.include_last_update_date#">
+						<cfinvokeargument name="include_insert_user" value="#arguments.include_insert_user#">
+						<cfinvokeargument name="include_update_user" value="#arguments.include_update_user#">
+						<cfinvokeargument name="decimals_with_mask" value="#arguments.decimals_with_mask#">--->
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfset rowsQuery = generateRowsQueryResponse.rowsQuery>
+					<cfset rowsFieldsNames = generateRowsQueryResponse.fieldsNames>
+					<cfset fieldsNames = listAppend( fieldsNames, rowsFieldsNames )>
+					<cfset fieldsLabels = listAppend( fieldsLabels, generateRowsQueryResponse.fieldsLabels )>
+
+					<!---Query to fix bug with position field in qery of query--->
+					<cfquery dbtype="query" name="rowsQueryWithoutPosition">
+						SELECT #rowsFieldsNames#, row_id
+						FROM rowsQuery;
+					</cfquery>
+
+					<cfquery dbtype="query" name="usersToExportQuery">
+						SELECT #fieldsNames#
+						FROM getAllUsersQuery AS users, rowsQueryWithoutPosition AS rows
+						WHERE users.typology_row_id = rows.row_id;
+					</cfquery>
+
+				<cfelse>
+
+					<cfset usersToExportQuery = getAllUsersQuery>
+
+				</cfif>
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToCSV" returnvariable="exportContent">
-					<cfinvokeargument name="query" value="#getAllUsersQuery#">
+					<cfinvokeargument name="query" value="#usersToExportQuery#">
 					<cfinvokeargument name="fields" value="#fieldsNames#">
 					<cfinvokeargument name="fieldsLabels" value="#fieldsLabels#">
 					<cfinvokeargument name="createHeaderRow" value="true">
