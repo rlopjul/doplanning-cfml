@@ -790,6 +790,39 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- importUsers -------------------------------------- --->
+
+	<cffunction name="importUsers" output="false" returntype="string" returnformat="plain" access="remote">
+		<!---NO se puede usar returnformat="json" porque da problemas con la subida de archivos en IE
+		Es necesario usar returnformat="plain" para que devuelva texto plano y serializeJSON para generar el JSON de respuesta
+		https://github.com/blueimp/jQuery-File-Upload/wiki/Setup#content-type-negotiation--->
+
+		<cfset var method = "importUsers">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="string" argumentcollection="#arguments#" returnvariable="response">
+			</cfinvoke>
+
+			<cfif response.result IS true>
+				<cfset response.message = "#response.usersCount# usuarios importados">
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<!---<cfoutput>#serializeJSON(response)#</cfoutput>--->
+
+		<cfreturn serializeJSON(response)>
+
+	</cffunction>
+
+
 	<!--- outputUser --->
 
 	<cffunction name="outputUser" returntype="void" output="true" access="public">

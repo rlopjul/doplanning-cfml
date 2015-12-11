@@ -39,6 +39,8 @@ page_type
 
 					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/users_export.cfm');" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> <span lang="es">Exportar usuarios</span></a>
 
+					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/users_import.cfm');"><i class="icon-edit icon-circle-arrow-up"></i> <span lang="es">Importar usuarios</span></a>
+
 				</cfif>
 
 			</cfif>

@@ -3319,4 +3319,220 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- importUsers ------------------------------------- --->
+
+	<cffunction name="importUsers" output="false" access="public" returntype="struct">
+		<cfargument name="parent_id" type="numeric" required="true"/>
+		<cfargument name="user_in_charge" type="numeric" required="true"/>
+		<cfargument name="import_type" type="string" required="true"/>
+		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
+		<cfargument name="menu_type_id" type="numeric" required="false"/>
+		<cfargument name="files" type="array" required="true"/>
+		<cfargument name="delimiter" type="string" required="false">
+		<cfargument name="start_row" type="numeric" required="false" default="2">
+
+		<cfset var method = "importUsers">
+
+		<cfset var response = structNew()>
+
+		<cfset var filesData = arrayNew(1)>
+		<cfset var fileData = "">
+		<cfset var destination = "">
+		<cfset var fileContent = "">
+		<cfset var fileArray = arrayNew(1)>
+		<cfset var usersCount = 0>
+		<cfset var curArea = "">
+		<cfset var createdAreaId = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<!--- isUserUserAdministrator --->
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserUserAdministrator">
+				<cfinvokeargument name="check_user_id" value="#SESSION.user_id#">
+			</cfinvoke>
+
+			<cfif isUserUserAdministrator.result IS false OR isUserAdministrator.isUserAdministrator IS false>
+
+				<cfset response = {result=false, files=fileData, usersCount=usersCount, message="Sin permisos de acceso"}>
+
+			<cfelse>
+
+				<cfset destination = GetTempDirectory()>
+
+				<!---<cfif arguments.import_type EQ "xml"><!--- XML file --->
+
+					<cffile action="upload" fileField="files[]" destination="#destination#" nameConflict="makeunique"  result="fileResult" charset="utf-8" accept="text/plain,text/xml,application/xml">
+
+				<cfelse>--->
+
+						<cffile action="upload" fileField="files[]" destination="#destination#" nameConflict="makeunique"  result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE --->
+
+				<!---</cfif>--->
+
+				<cfset destinationFile = destination&fileResult.serverFile>
+
+				<!--- MODULE ANTI VIRUS --->
+				<cfif APPLICATION.moduleAntiVirus IS true>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AntiVirusManager" method="checkForVirus" returnvariable="checkForVirusResponse">
+						<cfinvokeargument name="path" value="#destination#">
+						<cfinvokeargument name="filename" value="#fileResult.serverFile#">
+					</cfinvoke>
+
+					<cfif checkForVirusResponse.result IS false><!--- Delete infected file --->
+
+						<!--- delete image --->
+						<cffile action="delete" file="#destinationFile#">
+
+						<!---saveVirusLog--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AntiVirusManager" method="saveVirusLog">
+							<cfinvokeargument name="user_id" value="#user_id#">
+							<cfinvokeargument name="file_name" value="#fileResult.clientFile#"/>
+							<cfinvokeargument name="anti_virus_result" value="#checkForVirusResponse.message#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#"/>
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfset anti_virus_check_message = trim(listlast(checkForVirusResponse.message, ":"))>
+
+						<cfthrow type="virus" message="Archivo #fileResult.clientFile# no válido por ser identificado como virus: #anti_virus_check_message#">
+
+					</cfif>
+
+				</cfif>
+
+				<cfset fileData = {
+							"name": fileResult.serverfile,
+							"size": fileResult.filesize,
+							"url": "",
+							"thumbnailUrl": "",
+							"deleteUrl": "",
+							"deleteType": "DELETE"
+						}>
+
+				<cfset arrayAppend(filesData, fileData)>
+
+				<!---<cfif arguments.import_type EQ "xml"><!--- XML file --->
+					<cffile action="read" file="#destinationFile#" variable="fileContent" charset="utf-8">
+				<cfelse>--->
+					<cffile action="read" file="#destinationFile#" variable="fileContent" charset="iso-8859-1">
+				<!---</cfif>--->
+
+				<cffile action="delete" file="#destinationFile#">
+
+				<cfif arguments.import_type EQ "csv"><!--- CSV --->
+
+					<!--- CSV to array --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="CSVToArray" returnvariable="fileArray">
+						<cfinvokeargument name="CSV" value="#trim(#fileContent#)#">
+						<cfif arguments.delimiter EQ "tab">
+							<cfinvokeargument name="delimiter" value="#chr(9)#">
+						<cfelse>
+							<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
+						</cfif>
+					</cfinvoke>
+
+					<cfset numFileColumns = arrayLen(fileArray[1])>
+					<cfset numFileRows = arrayLen(fileArray)>
+
+					<!---<cfif numFileColumns IS 0 OR numFileRows IS 0> Esto hace nada usar porque nunca es 0
+						<cfset response = {result=false, files=fileData, message="No hay contenidos en el archivo"}>
+						<cfreturn response>
+					</cfif>--->
+
+					<!--- Email	Nombre	Apellidos	Dirección	Código País Teléfono	Teléfono	Código País Móvil	Móvil	Usuario interno	Activo	ID	Fecha de alta	Nº de conexiones	Última conexión	Perfil de cabecera --->
+
+
+					<cftransaction>
+
+						<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
+
+							<cftry>
+
+								<cfset curRow = fileArray[curRowIndex]>
+
+								<cfset userEmail = curRow[1]>
+								<cfset userName = curRow[2]>
+								<cfset userFamilyName = curRow[3]>
+								<cfset address = curRow[4]>
+								<cfset phoneCCode = curRow[5]>
+								<cfset phone = curRow[6]>
+								<cfset mobileCCode = curRow[7]>
+								<cfset internal = curRow[8]>
+								<cfset enabled = curRow[8]>
+								<cfset verified = curRow[9]>
+								<cfset perfilCabecer = curRow[10]>
+
+								<cfif len(areaName) GT 0>
+
+									<cfif arrayLen(curRow) GT 1>
+										<cfset areaDescription = curRow[2]>
+									<cfelse>
+										<cfset areaDescription = "">
+									</cfif>
+
+									<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="area_id">
+										<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
+										<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
+										<cfinvokeargument name="name" value="#areaName#"/>
+										<cfinvokeargument name="description" value="#areaDescription#"/>
+										<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
+										<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
+									</cfinvoke>
+
+									<cfset usersCount = usersCount+1>
+
+								</cfif>
+
+								<cfcatch>
+
+									<cfset errorMessagePrefix = "Error en fila #curRowIndex#: ">
+									<cfset errorMessage = errorMessagePrefix&cfcatch.message>
+
+									<cfthrow message="#errorMessage#">
+
+								</cfcatch>
+
+							</cftry>
+
+						</cfloop>
+
+					</cftransaction>
+
+				</cfif><!--- END arguments.import_type EQ "xml" --->
+
+				<!--- updateRootAreaVersionTree --->
+				<cfinclude template="includes/updateRootAreaVersionTree.cfm">
+
+				<cfinclude template="includes/logRecord.cfm">
+
+				<cfif usersCount IS 0>
+					<cfset response = {result=false, files=fileData, usersCount=usersCount, message="No se ha importado ningún área"}>
+				<cfelse>
+					<cfset response = {result=true, files=fileData, usersCount=usersCount, message="",}>
+				</cfif>
+
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+				<cfset response = {result=false, files=fileData, usersCount=usersCount, message=cfcatch.message}>
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+	<!---  --->
+
+
+
+
 </cfcomponent>
