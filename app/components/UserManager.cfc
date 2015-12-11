@@ -3322,14 +3322,12 @@
 	<!--- ------------------------------------- importUsers ------------------------------------- --->
 
 	<cffunction name="importUsers" output="false" access="public" returntype="struct">
-		<cfargument name="parent_id" type="numeric" required="true"/>
-		<cfargument name="user_in_charge" type="numeric" required="true"/>
+		<cfargument name="typology_id" type="string" required="false"/>
 		<cfargument name="import_type" type="string" required="true"/>
-		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
-		<cfargument name="menu_type_id" type="numeric" required="false"/>
 		<cfargument name="files" type="array" required="true"/>
 		<cfargument name="delimiter" type="string" required="false">
 		<cfargument name="start_row" type="numeric" required="false" default="2">
+		<cfargument name="notify_user" type="boolean" required="false" default="false">
 
 		<cfset var method = "importUsers">
 
@@ -3341,19 +3339,19 @@
 		<cfset var fileContent = "">
 		<cfset var fileArray = arrayNew(1)>
 		<cfset var usersCount = 0>
-		<cfset var curArea = "">
-		<cfset var createdAreaId = "">
+		<cfset var rowValues = structNew()>
+		<cfset var areasQueries = structNew()>
 
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<!--- isUserUserAdministrator --->
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserUserAdministrator">
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isUserUserAdministrator" returnvariable="isUserUserAdministratorResponse">
 				<cfinvokeargument name="check_user_id" value="#SESSION.user_id#">
 			</cfinvoke>
 
-			<cfif isUserUserAdministrator.result IS false OR isUserAdministrator.isUserAdministrator IS false>
+			<cfif isUserUserAdministratorResponse.result IS false OR isUserUserAdministratorResponse.isUserAdministrator IS false>
 
 				<cfset response = {result=false, files=fileData, usersCount=usersCount, message="Sin permisos de acceso"}>
 
@@ -3367,7 +3365,7 @@
 
 				<cfelse>--->
 
-						<cffile action="upload" fileField="files[]" destination="#destination#" nameConflict="makeunique"  result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE --->
+						<cffile action="upload" fileField="files[]" destination="#destination#" nameConflict="makeunique" result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE --->
 
 				<!---</cfif>--->
 
@@ -3388,7 +3386,7 @@
 
 						<!---saveVirusLog--->
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AntiVirusManager" method="saveVirusLog">
-							<cfinvokeargument name="user_id" value="#user_id#">
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 							<cfinvokeargument name="file_name" value="#fileResult.clientFile#"/>
 							<cfinvokeargument name="anti_virus_result" value="#checkForVirusResponse.message#">
 
@@ -3443,18 +3441,72 @@
 						<cfreturn response>
 					</cfif>--->
 
-					<!--- Email	Nombre	Apellidos	Dirección	Código País Teléfono	Teléfono	Código País Móvil	Móvil	Usuario interno	Activo	ID	Fecha de alta	Nº de conexiones	Última conexión	Perfil de cabecera --->
+					<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+
+						<!---Table fields--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="fields">
+							<cfinvokeargument name="table_id" value="#arguments.typology_id#">
+							<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+							<cfinvokeargument name="with_types" value="true">
+							<cfinvokeargument name="with_table" value="false">
+							<cfinvokeargument name="include_admin_fields" value="true">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+		
+						<cfloop query="fields">
+
+							<cfif fields.field_type_id EQ 9 OR fields.field_type_id EQ 10><!--- LISTS --->
+
+								<!--- Load field areas --->
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="areasQuery">
+									<cfinvokeargument name="area_id" value="#fields.list_area_id#">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<cfset areasQueries[fields.field_id] = areasQuery>
+
+							</cfif>
+
+						</cfloop>
+
+					</cfif>
 
 
-					<cftransaction>
+
+
+					<!---<cftransaction>--->
 
 						<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
 
 							<cftry>
 
+								<!--- Email	Nombre	Apellidos	Dirección	Código País Teléfono	Teléfono	Código País Móvil	Móvil	Usuario interno	Activo	ID	Fecha de alta	Nº de conexiones	Última conexión	Perfil de cabecera --->
+
 								<cfset curRow = fileArray[curRowIndex]>
 
-								<cfset userEmail = curRow[1]>
+								<cfset rowValues = structNew()>
+
+								<cfset rowValues["email"] = curRow[1]>
+								<cfset rowValues["family_name"] = curRow[2]>
+								<cfset rowValues["name"] = curRow[3]>
+								<cfset rowValues["address"] = curRow[4]>
+								<cfset rowValues["telephone_ccode"] = curRow[5]>
+								<cfset rowValues["telephone"] = curRow[6]>
+								<cfset rowValues["mobile_phone_ccode"] = curRow[7]>
+								<cfset rowValues["mobile_phone"] = curRow[8]>
+								<cfset rowValues["internal_user"] = curRow[9]>
+								<cfset rowValues["enabled"] = curRow[10]>
+								<cfset rowValues["verified"] = curRow[11]>
+								<cfif SESSION.client_abb EQ "hcs">
+									<cfset rowValues["perfil_cabecera"] = curRow[12]>
+								</cfif>
+
+								<!---
 								<cfset userName = curRow[2]>
 								<cfset userFamilyName = curRow[3]>
 								<cfset address = curRow[4]>
@@ -3464,28 +3516,80 @@
 								<cfset internal = curRow[8]>
 								<cfset enabled = curRow[8]>
 								<cfset verified = curRow[9]>
-								<cfset perfilCabecer = curRow[10]>
+								<cfset perfilCabecera = curRow[10]>
+								--->
 
-								<cfif len(areaName) GT 0>
+								<!---
+								<cfargument name="dni" type="string" required="false" default="">
+								<cfargument name="language" type="string" required="true">
+								<cfargument name="password" type="string" required="true">
 
-									<cfif arrayLen(curRow) GT 1>
-										<cfset areaDescription = curRow[2]>
+								<cfargument name="linkedin_url" type="string" required="true">
+								<cfargument name="twitter_url" type="string" required="true">
+								<cfargument name="start_page" type="string" required="false">
+								<cfargument name="information" type="string" required="false" default="">
+								<cfargument name="user_administrator" type="boolean" required="false" default="false">
+
+								<cfargument name="login_ldap" type="string" required="false">
+								<cfargument name="login_diraya" type="string" required="false">
+
+								<cfargument name="center_id" type="numeric" required="false">
+								<cfargument name="category_id" type="numeric" required="false">
+								<cfargument name="service_id" type="numeric" required="false">
+								<cfargument name="service" type="string" required="false">
+								<cfargument name="other_1" type="string" required="false">
+								<cfargument name="other_2" type="string" required="false">
+
+								<cfargument name="typology_id" type="string" required="false">
+								<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
+
+								<cfargument name="user_id" type="numeric" required="false">
+								<cfargument name="notify_admin" type="boolean" required="true">--->
+
+								<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+
+									<cfset error = false>
+
+									<cfif SESSION.client_abb EQ "hcs">
+										<cfset curColumn = 13>
 									<cfelse>
-										<cfset areaDescription = "">
+										<cfset curColumn = 12>
 									</cfif>
 
-									<cfinvoke component="AreaManager" method="createAreaInDatabase" returnvariable="area_id">
-										<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
-										<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
-										<cfinvokeargument name="name" value="#areaName#"/>
-										<cfinvokeargument name="description" value="#areaDescription#"/>
-										<cfinvokeargument name="hide_in_menu" value="#arguments.hide_in_menu#"/>
-										<cfinvokeargument name="menu_type_id" value="#arguments.menu_type_id#"/>
-									</cfinvoke>
-
-									<cfset usersCount = usersCount+1>
+									<cfinclude template="#APPLICATION.componentsPath#/includes/tableRowImport.cfm">
 
 								</cfif>
+
+								<!--- generatePassword --->
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="password">
+									<cfinvokeargument name="numberOfCharacters" value="8">
+								</cfinvoke>
+
+								<!--- createUser --->
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" argumentcollection="#rowValues#" returnvariable="createUserResponse">
+									<cfinvokeargument name="linkedin_url" value="">
+									<cfinvokeargument name="twitter_url" value="">
+									<cfinvokeargument name="language" value="#APPLICATION.defaultLanguage#">
+									<cfinvokeargument name="hide_not_allowed_areas" value="true">
+									<cfinvokeargument name="user_administrator" value="false">
+									<cfinvokeargument name="password" value="#password#">
+									<cfinvokeargument name="password_confirmation" value="#password#">
+									<cfinvokeargument name="notify_admin" value="false">
+									<cfinvokeargument name="include_admin_fields" value="true">
+									<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+									<cfinvokeargument name="notify_user" value="#arguments.notify_user#">
+									<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+										<cfinvokeargument name="typology_id" value="#arguments.typology_id#">
+										<cfinvokeargument name="table_id" value="#arguments.typology_id#">
+										<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+										<cfinvokeargument name="action" value="create">
+									</cfif>
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<cfset usersCount = usersCount+1>
 
 								<cfcatch>
 
@@ -3500,12 +3604,10 @@
 
 						</cfloop>
 
-					</cftransaction>
+					<!---</cftransaction>--->
 
-				</cfif><!--- END arguments.import_type EQ "xml" --->
+				</cfif>
 
-				<!--- updateRootAreaVersionTree --->
-				<cfinclude template="includes/updateRootAreaVersionTree.cfm">
 
 				<cfinclude template="includes/logRecord.cfm">
 

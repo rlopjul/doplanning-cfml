@@ -290,7 +290,6 @@
 				<!---<cfinvokeargument name="password" value="#password_encoded#">--->
 				<cfinvokeargument name="notify_admin" value="false">
 				<cfinvokeargument name="include_admin_fields" value="true">
-				<cfinvokeargument name="password_temp" value="#arguments.password#">
 			</cfinvoke>
 
 			<cfif response.result IS true>
@@ -803,7 +802,7 @@
 
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="string" argumentcollection="#arguments#" returnvariable="response">
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="importUsers" argumentcollection="#arguments#" returnvariable="response">
 			</cfinvoke>
 
 			<cfif response.result IS true>

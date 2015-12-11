@@ -18,7 +18,7 @@
 	 	<div class="modal-body">
 
 			<script>
-			function postImportAreasForm() {
+			function postImportUsersForm() {
 
 				$('body').modalmanager('loading');
 
@@ -30,14 +30,15 @@
 				  		var result = $.parseJSON(data);
 				  		var message = result.message;
 
-				  		hideDefaultModal();
+							if(result == true)
+				  			hideDefaultModal();
 
 				  		$('body').modalmanager('removeLoading');
 
 				  		showAlertMessage(message, result.result);
 
 				  	}else
-						showAlertErrorModal(status);
+							showAlertErrorModal(status);
 
     			}).error(function ( data, status )  {
 
@@ -87,7 +88,7 @@
 			    <div class="bar" style="width: 0%;"></div>
 			</div>
 
-			<form id="fileupload" action="#APPLICATION.htmlComponentsPath#/Area.cfc?method=importAreas" method="post" enctype="multipart/form-data" class="form-horizontal">
+			<form id="fileupload" action="#APPLICATION.htmlComponentsPath#/User.cfc?method=importUsers" method="post" enctype="multipart/form-data" class="form-horizontal">
 
 				<!---
 				<div class="row">
@@ -110,6 +111,57 @@
 						<input type="file" name="files[]" id="file" multiple required="true" accept=".csv,.tsv,text/plain,.xml" message="Archivo de datos requerido para la importación" class="form-control">
 					</div>
 				</div>
+
+				<!--- Users Typologies --->
+
+				<cfset typologyTableTypeId = 4>
+
+				<cfset selected_typology_id = "null">
+
+				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAllTypologies" returnvariable="getAllTypologiesResponse">
+					<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+				</cfinvoke>
+				<cfset typologies = getAllTypologiesResponse.query>
+
+				<cfif typologies.recordCount GT 0>
+
+					<div class="row">
+
+						<div class="col-sm-12">
+
+							<label for="typology_id" class="col-xs-5 col-sm-3 control-label" lang="es">Tipología</label>
+
+							<div class="col-xs-7 col-sm-9">
+
+								<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val());">
+									<option value="null" <cfif selected_typology_id EQ "null">selected="selected"</cfif> lang="es">Básica</option>
+									<cfif typologies.recordCount GT 0>
+										<cfloop query="typologies">
+											<option value="#typologies.id#" <cfif typologies.id IS selected_typology_id>selected="selected"</cfif>>#typologies.title#</option>
+										</cfloop>
+									</cfif>
+								</select>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</cfif>
+
+
+				<div class="row">
+					<div class="col-sm-12">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="notify_user" value="1"<cfif isDefined("FORM.notify_user")>checked</cfif>> <span lang="es">Enviar email con usuario y contraseña</span>
+								</label>
+								<small class="help-block" lang="es">Envía a cada usuario un email con su cuenta de usuario y contraseña</small>
+							</div>
+						</div>
+				</div>
+
 
 				<div id="cssImportInputs">
 
@@ -201,7 +253,7 @@
 				e.preventDefault();
 
 	    	if( $("##file").val().length > 0 ){
-	    		postImportAreasForm();
+	    		postImportUsersForm();
 	    	} else {
 	    		showAlertModal("Debe seleccionar un archivo");
 	    	}

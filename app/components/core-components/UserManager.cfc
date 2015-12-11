@@ -953,7 +953,7 @@
 		<cfargument name="address" type="string" required="true">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
-		<cfargument name="password_temp" type="string" required="true">
+		<cfargument name="password_confirmation" type="string" required="true">
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
@@ -982,6 +982,7 @@
 
 		<cfargument name="user_id" type="numeric" required="false">
 		<cfargument name="notify_admin" type="boolean" required="true">
+		<cfargument name="notify_user" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1249,11 +1250,11 @@
 
 				</cfif>
 
-				<cfif arguments.enabled IS true AND len(arguments.email) GT 0>
+				<cfif arguments.enabled IS true AND len(arguments.email) GT 0 AND arguments.notify_user IS true>
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newUser">
 						<cfinvokeargument name="objectUser" value="#selectUserQuery#">
-						<cfinvokeargument name="password_temp" value="#arguments.password_temp#">
+						<cfinvokeargument name="password_temp" value="#arguments.password#">
 						<cfinvokeargument name="client_id" value="#clientQuery.id#">
 						<cfinvokeargument name="notify_admin" value="#arguments.notify_admin#">
 

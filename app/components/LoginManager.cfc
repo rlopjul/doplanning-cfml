@@ -672,7 +672,6 @@
 					<cfinvokeargument name="user_administrator" value="false">
 					<cfinvokeargument name="verified" value="false">
 					<cfinvokeargument name="enabled" value="true">
-					<cfinvokeargument name="password_temp" value="#arguments.password#">
 					<cfinvokeargument name="notify_admin" value="true">
 					<cfinvokeargument name="include_admin_fields" value="false">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
