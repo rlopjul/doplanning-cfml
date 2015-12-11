@@ -37,7 +37,7 @@ page_type
 						<!---</div>--->
 					<!---</cfif>--->
 
-					<a class="btn btn-default btn-sm navbar-btn" href="#APPLICATION.htmlComponentsPath#/User.cfc?method=exportUsersDownload" onclick="return downloadFileLinked(this,event)" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> <span lang="es">Exportar usuarios</span></a>
+					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/users_export.cfm');" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> <span lang="es">Exportar usuarios</span></a>
 
 				</cfif>
 

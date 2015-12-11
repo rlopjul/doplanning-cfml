@@ -3066,6 +3066,10 @@
 		<cfargument name="delimiter" type="string" required="true">
 		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
 
+		<cfargument name="include_creation_date" type="boolean" required="false" default="false">
+		<cfargument name="include_number_of_connections" type="boolean" required="false" default="false">
+		<cfargument name="include_last_connection" type="boolean" required="false" default="false">
+
 		<cfset var method = "exportUsers">
 
 		<cfset var response = structNew()>
@@ -3101,17 +3105,44 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled, id, creation_date, number_of_connections, last_connection">
+				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled, id">
 
 				<cfif selectUserQuery.language EQ "es">
-					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo, ID, Fecha de alta, Nº de conexiones, Última conexión">
+					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo, ID">
 				<cfelse>
-					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active, ID, Registration date, Number of connections, Last connection">
+					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active, ID">
 				</cfif>
 
 				<cfif client_abb EQ "hcs">
 					<cfset fieldsNames = listAppend(fieldsNames, "perfil_cabecera")>
 					<cfset fieldsLabels = listAppend(fieldsLabels, "Perfil de cabecera")>
+				</cfif>
+
+				<cfif arguments.include_creation_date IS true>
+					<cfset fieldsNames = listAppend(fieldsNames, "creation_date")>
+					<cfif selectUserQuery.language EQ "es">
+						<cfset fieldsLabels = listAppend(fieldsLabels, "Fecha de alta")>
+					<cfelse>
+						<cfset fieldsLabels = listAppend(fieldsLabels, "Registration date")>
+					</cfif>
+				</cfif>
+
+				<cfif arguments.include_number_of_connections IS true>
+					<cfset fieldsNames = listAppend(fieldsNames, "number_of_connections")>
+					<cfif selectUserQuery.language EQ "es">
+						<cfset fieldsLabels = listAppend(fieldsLabels, "Nº de conexiones")>
+					<cfelse>
+						<cfset fieldsLabels = listAppend(fieldsLabels, "Number of connections")>
+					</cfif>
+				</cfif>
+
+				<cfif arguments.include_last_connection IS true>
+					<cfset fieldsNames = listAppend(fieldsNames, "last_connection")>
+					<cfif selectUserQuery.language EQ "es">
+						<cfset fieldsLabels = listAppend(fieldsLabels, "Última conexión")>
+					<cfelse>
+						<cfset fieldsLabels = listAppend(fieldsLabels, "Last connection")>
+					</cfif>
 				</cfif>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToCSV" returnvariable="exportContent">

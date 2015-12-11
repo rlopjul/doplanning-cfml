@@ -1858,10 +1858,15 @@
 
 	<!--- -------------------------------exportUsersDownload-------------------------------------- --->
 
-    <cffunction name="exportUsersDownload" returntype="void" access="remote">
-    	<cfargument name="area_id" type="numeric" required="false">
+  <cffunction name="exportUsersDownload" returntype="void" access="remote">
+    <cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="delimiter" type="string" required="false" default=";">
 		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
+
+		<cfargument name="include_creation_date" type="boolean" required="false" default="false">
+		<cfargument name="include_number_of_connections" type="boolean" required="false" default="false">
+		<cfargument name="include_last_connection" type="boolean" required="false" default="false">
+
 
 		<cfset var method = "exportAreaItemsDownload">
 
@@ -1873,6 +1878,10 @@
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
 				<cfinvokeargument name="ms_excel_compatibility" value="#arguments.ms_excel_compatibility#">
+
+				<cfinvokeargument name="include_creation_date" value="#arguments.include_creation_date#">
+				<cfinvokeargument name="include_number_of_connections" value="#arguments.include_number_of_connections#">
+				<cfinvokeargument name="include_last_connection" value="#arguments.include_last_connection#">
 			</cfinvoke>
 
 			<cfif exportUsersResponse.result IS true><!---The export is success--->
