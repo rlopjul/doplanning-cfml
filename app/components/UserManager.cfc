@@ -3209,5 +3209,42 @@
 	</cffunction>
 
 
+	<!--- -------------------------- isUserUserAdministrator -------------------------------- --->
+	<!---Return if the user is user administrator--->
+
+	<cffunction name="isUserUserAdministrator" returntype="struct" access="public">
+		<cfargument name="check_user_id" type="numeric" required="true">
+
+		<cfset var method = "isUserUserAdministrator">
+
+		<cfset var response = structNew()>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfif SESSION.client_administrator NEQ arguments.check_user_id>
+
+				<!---isUserUserAdministrator--->
+				<cfquery name="isUserAdministratorQuery" datasource="#client_dsn#">
+					SELECT user_administrator
+					FROM #client_abb#_users
+					WHERE user_id = <cfqueryparam value="#arguments.check_user_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+				<cfif isUserAdministratorQuery.recordCount GT 0 AND isUserAdministratorQuery.user_administrator IS true>
+					<cfset response = {result=true, isUserAdministrator=true}>
+				<cfelse>
+					<cfset response = {result=true, isUserAdministrator=false}>
+				</cfif>
+
+			<cfelse>
+
+				<cfset response = {result=true, isUserAdministrator=true}>
+
+			</cfif>
+
+		<cfreturn response>
+
+	</cffunction>
+
 
 </cfcomponent>
