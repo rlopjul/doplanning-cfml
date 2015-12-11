@@ -104,13 +104,7 @@
 
 				<input type="hidden" name="import_type" value="csv" />
 
-				<div class="row">
-					<div class="col-sm-12">
-						<noscript><b>Debe habilitar JavaScript para la subida de archivos</b></noscript>
-						<label class="control-label" for="file">Archivo con las áreas a importar</label>
-						<input type="file" name="files[]" id="file" multiple required="true" accept=".csv,.tsv,text/plain,.xml" message="Archivo de datos requerido para la importación" class="form-control">
-					</div>
-				</div>
+
 
 				<!--- Users Typologies --->
 
@@ -149,6 +143,14 @@
 					</div>
 
 				</cfif>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<noscript><b>Debe habilitar JavaScript para la subida de archivos</b></noscript>
+						<label class="control-label" for="file">Archivo con las áreas a importar</label>
+						<input type="file" name="files[]" id="file" multiple required="true" accept=".csv,.tsv,text/plain,.xml" message="Archivo de datos requerido para la importación" class="form-control">
+					</div>
+				</div>
 
 
 				<div class="row">
@@ -192,17 +194,15 @@
 
 							-Tipo de archivo: <strong>.csv o .txt</strong> delimitado por ; o por tabulaciones.<br/>
 							-Codificación: <strong>iso-8859-1</strong> (codificación por defecto en Windows).<br />
-							-El archivo debe contener al menos 1 columna para el nombre del área.<br />
-							-Cada fila del archivo corresponderá a un área.<br/>
-							-<strong>Orden de las columnas</strong>:<br />
+							-Cada fila del archivo corresponderá a un usuario.<br/>
+							-<strong>Orden de las columnas que deberá tener el archivo</strong>:<br />
 							<em>Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Teléfono, Código País, Móvil, Móvil, Usuario interno, Activo<cfif SESSION.client_abb EQ "hcs">, Perfil de cabecera</cfif></em>
 							<br/>
 							-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.
 							<br/>
 							<!--- -<a href="usuarios_ejemplo.csv">Aquí</a> puede descargar un archivo de ejemplo.<br/>--->
 						<br/>
-						Si se produce un error durante la importación, no se importará ningún área.<br/>
-						No se enviará notificación de ninguna acción relacionada con esta importación a los usuarios.<br/>
+						<!---Si se produce un error durante la importación, no se importará ningún área.<br/>--->
 						Una vez pulsado el botón "Importar" debe esperar hasta que se complete la operación.
 					</p>
 
