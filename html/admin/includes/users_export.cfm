@@ -17,7 +17,7 @@
 
 	 	<div class="modal-body">
 
-			<form name="export_users" method="post" action="#APPLICATION.htmlComponentsPath#/User.cfc?method=exportUsersDownload" class="form-horizontal">
+			<form name="export_users" method="post" action="#APPLICATION.htmlComponentsPath#/User.cfc?method=exportUsersDownload" target="downloadFileIframe" class="form-horizontal">
 
 				<!--- Users Typologies --->
 
@@ -40,7 +40,7 @@
 
 							<div class="col-xs-7 col-sm-9">
 
-								<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val());">
+								<select name="typology_id" id="typology_id" class="form-control">
 									<option value="null" <cfif selected_typology_id EQ "null">selected="selected"</cfif> lang="es">Básica</option>
 									<cfif typologies.recordCount GT 0>
 										<cfloop query="typologies">
@@ -76,7 +76,7 @@
 							<div class="col-xs-12">
 						      <div class="checkbox">
 						        <label>
-						          <input type="checkbox" name="include_id" value="true"><span lang="es">ID interno del usuario</span>
+						          <input type="checkbox" name="include_id" value="true"> <span lang="es">ID interno del usuario</span>
 						      	</label>
 						      </div>
 						  </div>
@@ -86,7 +86,7 @@
 							<div class="col-xs-12">
 						      <div class="checkbox">
 						        <label>
-						          <input type="checkbox" name="include_creation_date" value="true"><span lang="es">Fecha de creación</span>
+						          <input type="checkbox" name="include_creation_date" value="true"> <span lang="es">Fecha de creación</span>
 						      	</label>
 						      </div>
 						  </div>
@@ -96,7 +96,7 @@
 							<div class="col-xs-12">
 						      <div class="checkbox">
 						        <label>
-						          <input type="checkbox" name="include_number_of_connections" value="true"><span lang="es">Número de conexiones</span>
+						          <input type="checkbox" name="include_number_of_connections" value="true"> <span lang="es">Número de conexiones</span>
 						      	</label>
 						      </div>
 						  </div>
@@ -106,7 +106,7 @@
 							<div class="col-xs-12">
 						      <div class="checkbox">
 						        <label>
-						          <input type="checkbox" name="include_last_connection" value="true"><span lang="es">Fecha última conexión</span>
+						          <input type="checkbox" name="include_last_connection" value="true"> <span lang="es">Fecha última conexión</span>
 						      	</label>
 						      </div>
 						  </div>
@@ -120,6 +120,8 @@
 
 		</form>
 
+		<iframe id="downloadFileIframe" name="downloadFileIframe" style="display:none"></iframe>
+
 		<div class="modal-footer">
 		  <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><span lang="es">Cancelar</span></button>
 		  <button class="btn btn-primary" onclick="submitUsersExportModal(event)"><span lang="es">Exportar</span></button>
@@ -131,13 +133,9 @@
 			  if(e.preventDefault)
 					e.preventDefault();
 
-				showLoading = false;
-
 				submitForm("export_users");
 
-				showLoadingPage(false);
-
-				hideDefaultModal();
+				//hideDefaultModal();
 
 			}
 		</script>

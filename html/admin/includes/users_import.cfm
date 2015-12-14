@@ -246,13 +246,15 @@
 
 			</form>
 
-			<form action="users_export_download.cfm" method="get" class="form-horizontal">
+			<form action="users_export_download.cfm" method="get" class="form-horizontal" target="downloadFileIframe">
 
 				<input type="hidden" name="typology_id" id="typology_export_id" value=""/>
 
 				<button class="btn btn-info btn-xs" type="submit"><span lang="es">Descargar archivo de ejemplo</span></button>
 
 			</form>
+
+			<iframe id="downloadFileIframe" name="downloadFileIframe" style="display:none"></iframe>
 
 		</div>
 
