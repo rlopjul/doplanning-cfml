@@ -116,6 +116,8 @@
 		$("##fieldInputTypeList").hide();
 		$("##fieldInputTypeListMultiple").hide();
 		$("##fieldInputItemType").hide();
+		$("##fieldInputTableType").hide();
+		$("##fieldInputTable").hide();
 		$("##fieldInputMaskType").hide();
 		$("##listTextValues").hide();
 
@@ -222,6 +224,16 @@
 
 			$("##default_value_text").prop('disabled', false);
 
+		}else if(typeId == 19){ //Table row
+
+			$("##fieldInputTableType").show();
+
+			<cfif page_type IS 1>
+				$("##table_type_id").prop('disabled', false);
+			</cfif>
+
+			$("##fieldInputTable").show();
+
 		}else if(typeId == 20){ //SEPARATOR
 
 			$("##fieldInputRequired").hide();
@@ -263,6 +275,12 @@
 
 		clearFieldSelectedItem('default_value_item');
 
+	}
+
+	function fieldItemTableTypeChange(itemTypeId){
+
+		clearFieldSelectedItem('referenced_table_id')
+		
 	}
 
 	$(document).ready(function() {
@@ -370,6 +388,78 @@
 
 		</div>
 	</div>
+
+	<div class="row" id="fieldInputTableType">
+		<div class="col-md-10">
+			<cfif page_type IS 2 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id)>
+				<input name="item_type_id" type="hidden" value="#field.item_type_id#"/>
+			</cfif>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+			</cfinvoke>
+
+			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
+			<label class="control-label" for="table_type_id" id="subTableLabel"><span lang="es">Tipo de tabla</span> *</label>
+			<select name="item_type_id" id="table_type_id" class="form-control" onchange="fieldItemTableTypeChange($('##table_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
+				<cfloop array="#itemTypesArray#" index="itemTypeId">
+					<cfset itemTypeStruct = itemTypesStruct[itemTypeId]>
+					<cfif isDefined("itemTypeStruct.tableTypeId") AND isNumeric(itemTypeStruct.tableTypeId) AND ( itemTypeId IS 11 OR itemTypeId IS 12 )>
+						<option value="#itemTypeId#" lang="es" <cfif isDefined("field.item_type_id") AND field.item_type_id IS itemTypeId>selected="selected"</cfif>>#itemTypeStruct.label#</option>
+					</cfif>
+				</cfloop>
+			</select>
+			<small class="help-block" lang="es">No se puede modificar el tipo de tabla una vez creado el campo.</small>
+
+		</div>
+	</div>
+
+	<cfif page_type IS 2 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id) AND isDefined("field.referenced_table_id") AND isNumeric("field.referenced_table_id")>
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+			<cfinvokeargument name="item_id" value="#field.referenced_table_id#">
+			<cfinvokeargument name="itemTypeId" value="#field.item_type_id#">
+			<cfinvokeargument name="parse_dates" value="false"/>
+			<cfinvokeargument name="published" value="false"/>
+
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+
+		<cfif itemQuery.recordCount GT 0>
+			<cfif len(itemQuery.title) GT 0>
+				<cfset referenced_table_title = itemQuery.title>
+			<cfelse>
+				<cfset referenced_table_title = "ELEMENTO SELECCIONADO SIN TÍTULO">
+			</cfif>
+		<cfelse>
+			<cfset referenced_table_title = "ELEMENTO NO DISPONIBLE">
+			<cfset referenced_table_value = "">
+		</cfif>
+
+	<cfelse>
+
+		<cfset referenced_table_title = "">
+		<cfset referenced_table_value = "">
+
+	</cfif>
+
+	<div class="row" id="fieldInputTable">
+		<div class="col-md-10">
+
+			<label class="control-label" for="referenced_table_id"><span lang="es">Tabla referenciada</span> *</label>
+
+			<input type="hidden" name="referenced_table_id" id="referenced_table_id" value="#field.referenced_table_id#" />
+			<input type="text" name="referenced_table_id_title" id="referenced_table_id_title" value="#referenced_table_title#" required class="form-control" readonly onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_table_id')" />
+
+			<button onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_table_id')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
+			<button onclick="clearFieldSelectedItem('referenced_table_id')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>
+
+			<small class="help-block" lang="es">Sólo tendrán acceso a la selección de registros los usuarios que tengan acceso a la tabla.</small>
+
+		</div>
+	</div>
+
 
 	<div class="row" id="fieldInputMaskType">
 		<div class="col-md-12">
