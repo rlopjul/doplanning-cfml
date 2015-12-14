@@ -210,7 +210,7 @@
 
 			<cfquery name="getAllUsersQuery" datasource="#arguments.client_dsn#">
                 SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, u.creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type,
-                	CONCAT_WS(' ', family_name, name) AS user_full_name, enabled, typology_row_id
+                	CONCAT_WS(' ', family_name, name) AS user_full_name, enabled, typology_row_id, verified
                 	<cfif arguments.client_abb EQ "hcs">
                 		, perfil_cabecera
                 	</cfif>
