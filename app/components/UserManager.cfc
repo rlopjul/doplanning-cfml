@@ -3063,12 +3063,13 @@
 
 	<cffunction name="exportUsers" output="false" access="public" returntype="struct">
 		<cfargument name="typology_id" type="string" required="false">
-		<cfargument name="delimiter" type="string" required="true">
+		<cfargument name="delimiter" type="string" required="false" default=";">
 		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
 
 		<cfargument name="include_creation_date" type="boolean" required="false" default="false">
 		<cfargument name="include_number_of_connections" type="boolean" required="false" default="false">
 		<cfargument name="include_last_connection" type="boolean" required="false" default="false">
+		<cfargument name="include_id" type="boolean" required="false" default="false">
 
 		<cfset var method = "exportUsers">
 
@@ -3107,12 +3108,21 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled, id">
+				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled">
 
 				<cfif selectUserQuery.language EQ "es">
-					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo, ID">
+					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo">
 				<cfelse>
-					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active, ID">
+					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active">
+				</cfif>
+
+				<cfif arguments.include_id IS true>
+					<cfset fieldsNames = listAppend(fieldsNames, "id")>
+					<cfif selectUserQuery.language EQ "es">
+						<cfset fieldsLabels = listAppend(fieldsLabels, "ID")>
+					<cfelse>
+						<cfset fieldsLabels = listAppend(fieldsLabels, "ID")>
+					</cfif>
 				</cfif>
 
 				<cfif client_abb EQ "hcs">
@@ -3325,7 +3335,7 @@
 		<cfargument name="typology_id" type="string" required="false"/>
 		<cfargument name="import_type" type="string" required="true"/>
 		<cfargument name="files" type="array" required="true"/>
-		<cfargument name="delimiter" type="string" required="false">
+		<cfargument name="delimiter" type="string" required="false" default=";">
 		<cfargument name="start_row" type="numeric" required="false" default="2">
 		<cfargument name="notify_user" type="boolean" required="false" default="false">
 
@@ -3454,7 +3464,7 @@
 							<cfinvokeargument name="client_abb" value="#client_abb#">
 							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
-		
+
 						<cfloop query="fields">
 
 							<cfif fields.field_type_id EQ 9 OR fields.field_type_id EQ 10><!--- LISTS --->

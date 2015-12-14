@@ -76,6 +76,16 @@
 							<div class="col-xs-12">
 						      <div class="checkbox">
 						        <label>
+						          <input type="checkbox" name="include_id" value="true"><span lang="es">ID interno del usuario</span>
+						      	</label>
+						      </div>
+						  </div>
+						</div>
+
+						<div class="row">
+							<div class="col-xs-12">
+						      <div class="checkbox">
+						        <label>
 						          <input type="checkbox" name="include_creation_date" value="true"><span lang="es">Fecha de creación</span>
 						      	</label>
 						      </div>

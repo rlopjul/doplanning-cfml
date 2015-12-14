@@ -1888,6 +1888,47 @@
 	</cffunction>
 
 
+	<!--- -------------------------------exportUsers-------------------------------------- --->
+
+  <cffunction name="exportUsers" returntype="struct" access="public">
+    <cfargument name="typology_id" type="string" required="false">
+		<cfargument name="delimiter" type="string" required="false" default=";">
+		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
+
+		<cfargument name="include_creation_date" type="boolean" required="false" default="false">
+		<cfargument name="include_number_of_connections" type="boolean" required="false" default="false">
+		<cfargument name="include_last_connection" type="boolean" required="false" default="false">
+		<cfargument name="include_id" type="boolean" required="false" default="false">
+
+
+		<cfset var method = "exportUsers">
+
+		<cfset var exportUsersResponse = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="exportUsers" returnvariable="response">
+				<cfinvokeargument name="typology_id" value="#arguments.typology_id#">
+				<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
+				<cfinvokeargument name="ms_excel_compatibility" value="#arguments.ms_excel_compatibility#">
+
+				<cfinvokeargument name="include_creation_date" value="#arguments.include_creation_date#">
+				<cfinvokeargument name="include_number_of_connections" value="#arguments.include_number_of_connections#">
+				<cfinvokeargument name="include_last_connection" value="#arguments.include_last_connection#">
+				<cfinvokeargument name="include_id" value="#arguments.include_id#">
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- -------------------------------exportUsersDownload-------------------------------------- --->
 
   <cffunction name="exportUsersDownload" returntype="void" access="remote">

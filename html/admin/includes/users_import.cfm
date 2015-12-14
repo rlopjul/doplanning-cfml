@@ -81,6 +81,12 @@
 
 			}
 
+			function changeTypology(typologyId) {
+
+				$("##typology_export_id").val(typologyId);
+
+			}
+
 
 			</script>
 
@@ -127,7 +133,7 @@
 
 							<div class="col-xs-7 col-sm-9">
 
-								<select name="typology_id" id="typology_id" class="form-control" onchange="loadTypology($('##typology_id').val());">
+								<select name="typology_id" id="typology_id" class="form-control" onchange="changeTypology($('##typology_id').val());">
 									<option value="null" <cfif selected_typology_id EQ "null">selected="selected"</cfif> lang="es">Básica</option>
 									<cfif typologies.recordCount GT 0>
 										<cfloop query="typologies">
@@ -147,7 +153,7 @@
 				<div class="row">
 					<div class="col-sm-12">
 						<noscript><b>Debe habilitar JavaScript para la subida de archivos</b></noscript>
-						<label class="control-label" for="file">Archivo con las áreas a importar</label>
+						<label class="control-label" for="file">Archivo CSV con los usuarios a importar</label>
 						<input type="file" name="files[]" id="file" multiple required="true" accept=".csv,.tsv,text/plain,.xml" message="Archivo de datos requerido para la importación" class="form-control">
 					</div>
 				</div>
@@ -167,7 +173,7 @@
 
 				<div id="cssImportInputs">
 
-					<div class="row">
+					<!---<div class="row">
 						<label for="delimiter" class="col-xs-6 col-sm-3 col-md-4 control-label" style="text-align:left" lang="es">Delimitador de campos</label>
 						<div class="col-xs-5 col-sm-3 col-md-4">
 							<select name="delimiter" id="delimiter" class="form-control">
@@ -175,7 +181,7 @@
 								<option value="tab" <cfif isDefined("FORM.delimiter") AND FORM.delimiter EQ "tab">selected="selected"</cfif> lang="es">Tabulación</option>
 							</select>
 						</div>
-					</div>
+					</div>--->
 
 					<div class="row">
 						<div class="col-sm-12">
@@ -192,7 +198,8 @@
 					<p class="help-block" style="font-size:12px;" lang="es">
 						El archivo utilizado para realizar esta importación deberá tener las siguientes características:<br/>
 
-							-Tipo de archivo: <strong>.csv o .txt</strong> delimitado por ; o por tabulaciones.<br/>
+							<!----Tipo de archivo: <strong>.csv o .txt</strong> delimitado por ; o por tabulaciones.<br/>--->
+							-Tipo de archivo: <strong>.csv</strong> delimitado por ;
 							-Codificación: <strong>iso-8859-1</strong> (codificación por defecto en Windows).<br />
 							-Cada fila del archivo corresponderá a un usuario.<br/>
 							-<strong>Orden de las columnas que deberá tener el archivo</strong>:<br />
@@ -236,6 +243,14 @@
 
 				</div>
 				--->
+
+			</form>
+
+			<form action="users_export_download.cfm" method="get" class="form-horizontal">
+
+				<input type="hidden" name="typology_id" id="typology_export_id" value=""/>
+
+				<button class="btn btn-info btn-xs" type="submit"><span lang="es">Descargar archivo de ejemplo</span></button>
 
 			</form>
 
