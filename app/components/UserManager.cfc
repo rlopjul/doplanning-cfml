@@ -3486,15 +3486,11 @@
 					</cfif>
 
 
-
-
 					<!---<cftransaction>--->
 
 						<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
 
 							<cftry>
-
-								<!--- Email	Nombre	Apellidos	Dirección	Código País Teléfono	Teléfono	Código País Móvil	Móvil	Usuario interno	Activo	ID	Fecha de alta	Nº de conexiones	Última conexión	Perfil de cabecera --->
 
 								<cfset curRow = fileArray[curRowIndex]>
 
@@ -3514,46 +3510,6 @@
 								<cfif SESSION.client_abb EQ "hcs">
 									<cfset rowValues["perfil_cabecera"] = curRow[12]>
 								</cfif>
-
-								<!---
-								<cfset userName = curRow[2]>
-								<cfset userFamilyName = curRow[3]>
-								<cfset address = curRow[4]>
-								<cfset phoneCCode = curRow[5]>
-								<cfset phone = curRow[6]>
-								<cfset mobileCCode = curRow[7]>
-								<cfset internal = curRow[8]>
-								<cfset enabled = curRow[8]>
-								<cfset verified = curRow[9]>
-								<cfset perfilCabecera = curRow[10]>
-								--->
-
-								<!---
-								<cfargument name="dni" type="string" required="false" default="">
-								<cfargument name="language" type="string" required="true">
-								<cfargument name="password" type="string" required="true">
-
-								<cfargument name="linkedin_url" type="string" required="true">
-								<cfargument name="twitter_url" type="string" required="true">
-								<cfargument name="start_page" type="string" required="false">
-								<cfargument name="information" type="string" required="false" default="">
-								<cfargument name="user_administrator" type="boolean" required="false" default="false">
-
-								<cfargument name="login_ldap" type="string" required="false">
-								<cfargument name="login_diraya" type="string" required="false">
-
-								<cfargument name="center_id" type="numeric" required="false">
-								<cfargument name="category_id" type="numeric" required="false">
-								<cfargument name="service_id" type="numeric" required="false">
-								<cfargument name="service" type="string" required="false">
-								<cfargument name="other_1" type="string" required="false">
-								<cfargument name="other_2" type="string" required="false">
-
-								<cfargument name="typology_id" type="string" required="false">
-								<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
-
-								<cfargument name="user_id" type="numeric" required="false">
-								<cfargument name="notify_admin" type="boolean" required="true">--->
 
 								<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
 
