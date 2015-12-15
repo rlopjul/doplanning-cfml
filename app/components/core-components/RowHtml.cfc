@@ -921,6 +921,43 @@
 
 						</cfif>
 
+					<cfelseif fields.field_type_group IS "table_row"><!--- Registro de tabla --->
+
+
+
+						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+							<div class="col-xs-7 col-sm-8 col-md-9">
+						</cfif>
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+								</cfinvoke>
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
+									<cfinvokeargument name="table_id" value="#fields.referenced_table_id#">
+									<cfinvokeargument name="tableTypeId" value="#itemTypesStruct[fields.item_type_id].tableTypeId#">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
+
+									<cfloop query="rowQuery">
+										<cfif rowQuery.row_id IS field_value>
+											<cfset value_selected = true>
+										<cfelse>
+											<cfset value_selected = false>
+										</cfif>
+										<option value="#rowQuery.row_id#" <cfif value_selected>selected</cfif>>#rowQuery['field_#fields.referenced_field_id#']#</option>
+									</cfloop>
+
+								</select>
+
+						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
+						</div>
+						</cfif>
+
+
 
 					<cfelseif fields.field_type_group IS "file"><!--- Attached file --->
 

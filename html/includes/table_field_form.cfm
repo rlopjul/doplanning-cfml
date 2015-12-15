@@ -465,8 +465,6 @@
 			<cfif page_type IS 1>
 				<button onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_table_id')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
 				<button onclick="clearFieldSelectedItem('referenced_table_id')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>
-
-				<small class="help-block" lang="es">Sólo tendrán acceso a la selección de registros los usuarios que tengan acceso a la tabla.</small>
 			</cfif>
 
 		</div>
@@ -502,6 +500,8 @@
 
 				</cfif>
 			</select>
+
+			<small class="help-block" lang="es">IMPORTANTE: todos los usuarios podrán ver los valores de este campo en la tabla referenciada para poder seleccionarlo, aunque no dispongan de permiso de acceso a la misma. No podrán ver el resto de campos de esa tabla.</small>
 
 		</div>
 	</div>
