@@ -595,7 +595,6 @@
 		<cfargument name="address" type="string" required="true">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
-		<cfargument name="password_temp" type="string" required="true">
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
