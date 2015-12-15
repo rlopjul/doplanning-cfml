@@ -23,6 +23,8 @@
     <cfargument name="list_area_id" type="string" required="false">
     <cfargument name="field_input_type" type="string" required="false">
     <cfargument name="item_type_id" type="numeric" required="false">
+		<cfargument name="referenced_table_id" type="numeric" required="false">
+		<cfargument name="referenced_field_id" type="numeric" required="false">
     <cfargument name="mask_type_id" type="string" required="false">
     <cfargument name="list_values" type="string" required="false">
 		<cfargument name="import_name" type="string" required="false">
@@ -92,6 +94,8 @@
 					<cfinvokeargument name="mysql_type" value="#fieldType.mysql_type#">
 					<cfinvokeargument name="field_input_type" value="#arguments.field_input_type#">
 					<cfinvokeargument name="item_type_id" value="#arguments.item_type_id#">
+					<cfinvokeargument name="referenced_table_id" value="#arguments.referenced_table_id#">
+					<cfinvokeargument name="referenced_field_id" value="#arguments.referenced_field_id#">
 					<cfinvokeargument name="mask_type_id" value="#arguments.mask_type_id#">
 					<cfinvokeargument name="list_values" value="#arguments.list_values#">
 
@@ -151,6 +155,8 @@
     <cfargument name="mysql_type" type="string" required="true">
     <cfargument name="field_input_type" type="string" required="false">
     <cfargument name="item_type_id" type="numeric" required="false">
+		<cfargument name="referenced_table_id" type="numeric" required="false">
+		<cfargument name="referenced_field_id" type="numeric" required="false">
     <cfargument name="mask_type_id" type="string" required="false">
     <cfargument name="list_values" type="string" required="false">
 		<cfargument name="import_name" type="string" required="false">
@@ -212,8 +218,12 @@
 				<cfelse>
 					, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
 				</cfif>
-				<cfif arguments.field_type_id IS 13><!---DoPlanning Item--->
+				<cfif arguments.field_type_id IS 13 OR arguments.field_type_id IS 19><!---DoPlanning Item OR Table--->
 					, item_type_id = <cfqueryparam value="#arguments.item_type_id#" cfsqltype="cf_sql_integer">
+					<cfif arguments.field_type_id IS 19><!--- Table --->
+						, referenced_table_id = <cfqueryparam value="#arguments.referenced_table_id#" cfsqltype="cf_sql_integer">
+						, referenced_field_id = <cfqueryparam value="#arguments.referenced_field_id#" cfsqltype="cf_sql_integer">
+					</cfif>
 				</cfif>
 				<cfif isDefined("arguments.mask_type_id") AND isNumeric(arguments.mask_type_id)>
 					, mask_type_id = <cfqueryparam value="#arguments.mask_type_id#" cfsqltype="cf_sql_integer">
@@ -283,6 +293,8 @@
     <cfargument name="list_area_id" type="string" required="false">
     <cfargument name="field_input_type" type="string" required="false">
     <cfargument name="item_type_id" type="numeric" required="false">
+		<cfargument name="referenced_table_id" type="numeric" required="false">
+		<cfargument name="referenced_field_id" type="numeric" required="false">
     <cfargument name="mask_type_id" type="string" required="false">
     <cfargument name="list_values" type="string" required="false">
 		<cfargument name="import_name" type="string" required="false">
@@ -358,8 +370,8 @@
 					<cfelse>
 						, list_area_id = <cfqueryparam null="true" cfsqltype="cf_sql_integer">
 					</cfif>
-					<cfif arguments.field_type_id IS 13><!---DoPlanning Item--->
-						, item_type_id = <cfqueryparam value="#arguments.item_type_id#" cfsqltype="cf_sql_integer">
+					<cfif arguments.field_type_id IS 19><!--- Table --->
+						, referenced_field_id = <cfqueryparam value="#arguments.referenced_field_id#" cfsqltype="cf_sql_integer">
 					</cfif>
 					<cfif isDefined("arguments.mask_type_id")>
 						<cfif isNumeric(arguments.mask_type_id)>
@@ -512,6 +524,12 @@
 							<cfinvokeargument name="field_input_type" value="#fields.field_input_type#">
 							<cfif isNumeric(fields.item_type_id)>
 								<cfinvokeargument name="item_type_id" value="#fields.item_type_id#">
+								<cfif isNumeric(fields.referenced_table_id)>
+									<cfinvokeargument name="referenced_table_id" value="#fields.referenced_table_id#">
+								</cfif>
+								<cfif isNumeric(fields.referenced_field_id)>
+									<cfinvokeargument name="referenced_field_id" value="#fields.referenced_field_id#">
+								</cfif>
 							</cfif>
 							<cfif len(fields.list_values) GT 0>
 								<cfinvokeargument name="list_values" value="#fields.list_values#">

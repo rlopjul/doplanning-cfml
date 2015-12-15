@@ -118,6 +118,7 @@
 		$("##fieldInputItemType").hide();
 		$("##fieldInputTableType").hide();
 		$("##fieldInputTable").hide();
+		$("##fieldInputTableField").hide();
 		$("##fieldInputMaskType").hide();
 		$("##listTextValues").hide();
 
@@ -135,6 +136,9 @@
 		$("##field_input_type_list").prop('disabled', true);
 		$("##field_input_type_list_multiple").prop('disabled', true);
 		$("##item_type_id").prop('disabled', true);
+		$("##table_type_id").prop('disabled', true);
+		$("##referenced_table_id").prop('disabled', true);
+		$("##referenced_field_id").prop('disabled', true);
 		$("##mask_type_id").prop('disabled', true);
 
 		$("##list_values").prop('disabled', true);
@@ -227,12 +231,17 @@
 		}else if(typeId == 19){ //Table row
 
 			$("##fieldInputTableType").show();
+			$("##fieldInputTable").show();
+			$("##fieldInputTableField").show();
 
 			<cfif page_type IS 1>
 				$("##table_type_id").prop('disabled', false);
+				$("##referenced_table_id").prop('disabled', false);
 			</cfif>
 
-			$("##fieldInputTable").show();
+			$("##referenced_field_id").prop('disabled', false);
+
+			$("##default_value_text").prop('disabled', false);
 
 		}else if(typeId == 20){ //SEPARATOR
 
@@ -280,6 +289,12 @@
 	function fieldItemTableTypeChange(itemTypeId){
 
 		clearFieldSelectedItem('referenced_table_id')
+
+	}
+
+	function loadTableFields(itemTypeId, tableId) {
+
+		$( 'select[name="referenced_field_id"]' ).load( '#APPLICATION.htmlPath#/html_content/table_fields_select_options.cfm?itemTypeId='+itemTypeId+'&table='+tableId  );
 
 	}
 
@@ -350,7 +365,7 @@
 				<input name="field_type_id" type="hidden" value="#field.field_type_id#"/>
 			</cfif>
 			<label for="field_type_id" class="control-label"><span lang="es">Tipo</span> *</label>
-			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled=</cfif>>
+			<select name="field_type_id" id="field_type_id" class="form-control" onchange="fieldTypeChange($('##field_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
 				<cfloop query="fieldTypes">
 
 					<cfif ( ( tableTypeId EQ 2 OR tableTypeId EQ 4 ) AND (fieldTypes.field_type_group EQ "user" OR fieldTypes.field_type_group EQ "doplanning_item") ) OR ( tableTypeId NEQ 3 AND fieldTypes.field_type_id EQ 14 ) OR ( ( tableTypeId EQ 3 OR tableTypeId EQ 4 ) AND fieldTypes.field_type_id EQ 18 ) OR ( tableTypeId NEQ 2 AND fieldTypes.field_type_id EQ 21 )><!---Los campos "user" y "doplanning_item" no están disponibles en los formularios y tiplogías de usuarios. El campo "Request URL" sólo está disponible en archivos. El campo archivo adjunto no está disponible en las tipologías. El campo oculto sólo es para formularios--->
@@ -372,10 +387,9 @@
 
 	<div class="row" id="fieldInputItemType">
 		<div class="col-md-10">
-			<cfif page_type IS 2 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id)>
+			<cfif page_type IS 2 AND field.field_type_id IS 13 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id)>
 				<input name="item_type_id" type="hidden" value="#field.item_type_id#"/>
 			</cfif>
-
 
 			<label class="control-label" for="item_type_id" id="subTypeLabel"><span lang="es">Tipo de elemento de DoPlanning</span> *</label>
 			<select name="item_type_id" id="item_type_id" class="form-control" onchange="fieldItemTypeChange($('##item_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
@@ -392,7 +406,7 @@
 
 	<div class="row" id="fieldInputTableType">
 		<div class="col-md-10">
-			<cfif page_type IS 2 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id)>
+			<cfif page_type IS 2 AND field.field_type_id IS 19 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id)>
 				<input name="item_type_id" type="hidden" value="#field.item_type_id#"/>
 			</cfif>
 
@@ -410,7 +424,7 @@
 		</div>
 	</div>
 
-	<cfif page_type IS 2 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id) AND isDefined("field.referenced_table_id") AND isNumeric("field.referenced_table_id")>
+	<cfif page_type IS 2 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id) AND isDefined("field.referenced_table_id") AND isNumeric(field.referenced_table_id)>
 
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
 			<cfinvokeargument name="item_id" value="#field.referenced_table_id#">
@@ -418,7 +432,7 @@
 			<cfinvokeargument name="parse_dates" value="false"/>
 			<cfinvokeargument name="published" value="false"/>
 
-			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>
 
@@ -445,52 +459,53 @@
 
 			<label class="control-label" for="referenced_table_id"><span lang="es">Tabla referenciada</span> *</label>
 
-			<input type="hidden" name="referenced_table_id" id="referenced_table_id" value="#field.referenced_table_id#" />
+			<input type="hidden" name="referenced_table_id" id="referenced_table_id" value="#field.referenced_table_id#" onchange="loadTableFields($('##table_type_id').val(),$('##referenced_table_id').val())"/>
 			<input type="text" name="referenced_table_id_title" id="referenced_table_id_title" value="#referenced_table_title#" required class="form-control" readonly onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_table_id')" />
 
-			<button onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_table_id')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
-			<button onclick="clearFieldSelectedItem('referenced_table_id')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>
+			<cfif page_type IS 1>
+				<button onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_table_id')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
+				<button onclick="clearFieldSelectedItem('referenced_table_id')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>
 
-			<small class="help-block" lang="es">Sólo tendrán acceso a la selección de registros los usuarios que tengan acceso a la tabla.</small>
+				<small class="help-block" lang="es">Sólo tendrán acceso a la selección de registros los usuarios que tengan acceso a la tabla.</small>
+			</cfif>
 
 		</div>
 	</div>
 
 
-	<cfif page_type IS 2 AND isDefined("field.referenced_table_id") AND isNumeric(field.referenced_table_id)>
+	<div class="row" id="fieldInputTableField">
+		<div class="col-md-10">
 
-		<!--- getTableFields --->
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="allFields">
-			<cfinvokeargument name="table_id" value="#field.referenced_table_id#">
-			<cfinvokeargument name="tableTypeId" value="#itemTypesStruct[field.item_type_id]#">
-			<cfinvokeargument name="with_types" value="false">
-			<cfinvokeargument name="with_table" value="false">
+			<label class="control-label" for="referenced_field_id"><span lang="es">Campo a mostrar</span> *</label>
 
-			<cfinvokeargument name="client_abb" value="#client_abb#">
-			<cfinvokeargument name="client_dsn" value="#client_dsn#">
-		</cfinvoke>
+			<select name="referenced_field_id" id="referenced_field_id" class="form-control" required>
+				<cfif page_type IS 2 AND isDefined("field.referenced_table_id") AND isNumeric(field.referenced_table_id)>
 
-		<div class="row" id="fieldInputTableField">
-			<div class="col-md-10">
+					<!--- getTableFields --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="allFields">
+						<cfinvokeargument name="table_id" value="#field.referenced_table_id#">
+						<cfinvokeargument name="tableTypeId" value="#itemTypesStruct[field.item_type_id].tableTypeId#">
+						<cfinvokeargument name="with_types" value="false">
+						<cfinvokeargument name="with_table" value="false">
 
-				<label class="control-label" for="referenced_field_id"><span lang="es">Campo a mostrar</span> *</label>
+						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
 
-				<!---<input type="hidden" name="referenced_field_id" id="referenced_field_id" value="#field.referenced_field_id#" />
-				<input type="text" name="referenced_field_id_title" id="referenced_field_id_title" value="#referenced_table_title#" required class="form-control" readonly onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_field_id')" />
-				--->
-				<select name="referenced_field_id" id="referenced_field_id">
 					<cfloop query="allFields">
 						<option value="#allFields.field_id#" <cfif isNumeric(field.referenced_field_id) AND field.referenced_field_id EQ allFields.field_id>selected</cfif>>#allFields.label#</option>
 					</cfloop>
-				</select>
 
-				<!---<button onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_field_id')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
-				<button onclick="clearFieldSelectedItem('referenced_field_id')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>--->
+				<cfelse>
 
-			</div>
+					<option value="">Seleccione una tabla para poder seleccionar uno de sus campos</option>
+
+				</cfif>
+			</select>
+
 		</div>
+	</div>
 
-	</cfif>
 
 
 	<div class="row" id="fieldInputMaskType">
