@@ -942,6 +942,10 @@
 
 								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
 
+									<cfif fields.required IS false OR arguments.search_inputs IS true>
+										<option value=""></option>
+									</cfif>
+
 									<cfloop query="rowQuery">
 										<cfif rowQuery.row_id IS field_value>
 											<cfset value_selected = true>
