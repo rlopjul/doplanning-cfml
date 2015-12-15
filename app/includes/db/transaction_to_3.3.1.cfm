@@ -34,6 +34,11 @@
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `hcs_lists_fields`
+			ADD COLUMN `referenced_field_id` INT(10) UNSIGNED NULL AFTER `referenced_table_id`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
 			INSERT INTO `hcs_tables_fields_types` (`field_type_id`, `field_type_group`, `input_type`, `name`, `max_length`, `mysql_type`, `cf_sql_type`, `enabled`, `position`) VALUES ('19', 'table_row', 'hidden', 'Registro de tabla', '11', 'INT(11)', 'cf_sql_integer', '1', '19');
 			UPDATE `dp_hcs`.`hcs_tables_fields_types` SET `position`='20' WHERE `field_type_id`='20';
 			UPDATE `dp_hcs`.`hcs_tables_fields_types` SET `position`='21' WHERE `field_type_id`='21';

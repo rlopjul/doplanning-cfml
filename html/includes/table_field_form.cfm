@@ -280,7 +280,7 @@
 	function fieldItemTableTypeChange(itemTypeId){
 
 		clearFieldSelectedItem('referenced_table_id')
-		
+
 	}
 
 	$(document).ready(function() {
@@ -365,16 +365,17 @@
 		</div>
 	</div>
 
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+	</cfinvoke>
+
+	<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
 	<div class="row" id="fieldInputItemType">
 		<div class="col-md-10">
 			<cfif page_type IS 2 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id)>
 				<input name="item_type_id" type="hidden" value="#field.item_type_id#"/>
 			</cfif>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-			</cfinvoke>
-
-			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
 			<label class="control-label" for="item_type_id" id="subTypeLabel"><span lang="es">Tipo de elemento de DoPlanning</span> *</label>
 			<select name="item_type_id" id="item_type_id" class="form-control" onchange="fieldItemTypeChange($('##item_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
@@ -394,11 +395,6 @@
 			<cfif page_type IS 2 AND isDefined("field.item_type_id") AND isNumeric(field.item_type_id)>
 				<input name="item_type_id" type="hidden" value="#field.item_type_id#"/>
 			</cfif>
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-			</cfinvoke>
-
-			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
 			<label class="control-label" for="table_type_id" id="subTableLabel"><span lang="es">Tipo de tabla</span> *</label>
 			<select name="item_type_id" id="table_type_id" class="form-control" onchange="fieldItemTableTypeChange($('##table_type_id').val());" <cfif page_type IS 2>disabled</cfif>>
@@ -459,6 +455,42 @@
 
 		</div>
 	</div>
+
+
+	<cfif page_type IS 2 AND isDefined("field.referenced_table_id") AND isNumeric(field.referenced_table_id)>
+
+		<!--- getTableFields --->
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="allFields">
+			<cfinvokeargument name="table_id" value="#field.referenced_table_id#">
+			<cfinvokeargument name="tableTypeId" value="#itemTypesStruct[field.item_type_id]#">
+			<cfinvokeargument name="with_types" value="false">
+			<cfinvokeargument name="with_table" value="false">
+
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+
+		<div class="row" id="fieldInputTableField">
+			<div class="col-md-10">
+
+				<label class="control-label" for="referenced_field_id"><span lang="es">Campo a mostrar</span> *</label>
+
+				<!---<input type="hidden" name="referenced_field_id" id="referenced_field_id" value="#field.referenced_field_id#" />
+				<input type="text" name="referenced_field_id_title" id="referenced_field_id_title" value="#referenced_table_title#" required class="form-control" readonly onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_field_id')" />
+				--->
+				<select name="referenced_field_id" id="referenced_field_id">
+					<cfloop query="allFields">
+						<option value="#allFields.field_id#" <cfif isNumeric(field.referenced_field_id) AND field.referenced_field_id EQ allFields.field_id>selected</cfif>>#allFields.label#</option>
+					</cfloop>
+				</select>
+
+				<!---<button onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_field_id')" type="button" class="btn btn-default" lang="es">Seleccionar elemento</button>
+				<button onclick="clearFieldSelectedItem('referenced_field_id')" type="button" class="btn btn-default" lang="es" title="Quitar elemento seleccionado"><i class="icon-remove"></i></button>--->
+
+			</div>
+		</div>
+
+	</cfif>
 
 
 	<div class="row" id="fieldInputMaskType">
