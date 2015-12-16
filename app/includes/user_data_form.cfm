@@ -18,6 +18,10 @@ page_types
 <!---<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>--->
 <script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
+<!---bootstrap-select--->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/css/bootstrap-select.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/js/bootstrap-select.min.js"></script>
+
 <script>
 
 	$(function () {

@@ -940,7 +940,7 @@
 									<cfinvokeargument name="client_dsn" value="#client_dsn#">
 								</cfinvoke>
 
-								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
+								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control selectpicker" data-live-search="true" data-width="100%" data-size="5" data-container="body">
 
 									<cfif fields.required IS false OR arguments.search_inputs IS true>
 										<option value=""></option>
@@ -956,6 +956,10 @@
 									</cfloop>
 
 								</select>
+
+								<script>
+								$('###field_name#').selectpicker();
+								</script>
 
 						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
 						</div>
