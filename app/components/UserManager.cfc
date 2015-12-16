@@ -618,6 +618,7 @@
 
 		<cfargument name="typology_id" type="string" required="false">
 		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
+		<cfargument name="include_categories" type="boolean" required="false" default="false">
 
 		<cfset var method = "createUser">
 
@@ -1134,12 +1135,17 @@
 
 
 				<!--- deleteUserNotificationsCategoriesDisabled --->
-				<cfinvoke component="UserManager" method="deleteUserNotificationsCategoriesDisabled">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="deleteUserNotificationsCategoriesDisabled">
 					<cfinvokeargument name="update_user_id" value="#arguments.update_user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 				<!--- setUserNotificationsCategoriesDisabled --->
-				<cfinvoke component="UserManager" method="setUserNotificationsCategoriesDisabled" argumentcollection="#arguments#">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="setUserNotificationsCategoriesDisabled" argumentcollection="#arguments#">
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 				<!--- deleteUserNotificationsTablesCategoriesDisabled --->
@@ -1176,24 +1182,6 @@
 	</cffunction>
 
 
-	<!--- ----------------------------------- deleteUserNotificationsCategoriesDisabled -------------------------------------- --->
-
-	<cffunction name="deleteUserNotificationsCategoriesDisabled" output="false" returntype="void" access="public">
-		<cfargument name="update_user_id" type="numeric" required="true">
-
-		<cfset var method = "deleteUserNotificationsCategoriesDisabled">
-
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<cfquery datasource="#client_dsn#" name="deleteUserNotificationsCategoriesDisabled">
-				DELETE
-				FROM `#client_abb#_users_notifications_categories_disabled`
-				WHERE user_id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-
-	</cffunction>
-
-
 	<!--- ----------------------------------- deleteUserNotificationsTablesCategoriesDisabled -------------------------------------- --->
 
 	<cffunction name="deleteUserNotificationsTablesCategoriesDisabled" output="false" returntype="void" access="public">
@@ -1208,75 +1196,6 @@
 				FROM `#client_abb#_users_notifications_tables_categories_disabled`
 				WHERE user_id = <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-
-	</cffunction>
-
-
-
-	<!--- ----------------------------------- setUserNotificationsCategoriesDisabled -------------------------------------- --->
-
-	<cffunction name="setUserNotificationsCategoriesDisabled" output="false" returntype="void" access="public">
-		<cfargument name="update_user_id" type="numeric" required="true">
-
-		<cfset var method = "setUserNotificationsCategoriesDisabled">
-
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-			</cfinvoke>
-
-			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
-
-			<!--- getAreaItemTypesOptions --->
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItemType" method="getAreaItemTypesOptions" returnvariable="getItemTypesOptionsResponse">
-			</cfinvoke>
-
-			<cfset itemsTypesQuery = getItemTypesOptionsResponse.query>
-
-			<cfloop array="#itemTypesArray#" index="itemTypeId">
-
-				<cfset itemTypeName = itemTypesStruct[itemTypeId].name>
-
-				<cfif itemTypeId NEQ 13 AND itemTypeId NEQ 14 AND itemTypeId NEQ 15 AND itemTypeId NEQ 16>
-
-					<cfquery dbtype="query" name="itemTypeQuery">
-						SELECT *
-						FROM itemsTypesQuery
-						WHERE item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
-					</cfquery>
-
-					<cfif itemTypeQuery.recordCount GT 0 AND isNumeric(itemTypeQuery.category_area_id)>
-
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
-							<cfinvokeargument name="area_id" value="#itemTypeQuery.category_area_id#">
-							<cfinvokeargument name="client_abb" value="#client_abb#">
-							<cfinvokeargument name="client_dsn" value="#client_dsn#">
-						</cfinvoke>
-
-						<cfif subAreas.recordCount GT 0>
-
-							<cfloop query="subAreas">
-
-								<cfif NOT isDefined("arguments.categories_#itemTypeName#_ids") OR ArrayFind(arguments['categories_#itemTypeName#_ids'], subAreas.id) IS 0>
-
-									<cfquery name="addUserCategoryDisabled" datasource="#client_dsn#">
-										INSERT INTO `#client_abb#_users_notifications_categories_disabled` (user_id, item_type_id, area_id)
-										VALUES ( <cfqueryparam value="#arguments.update_user_id#" cfsqltype="cf_sql_integer">,
-											<cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">,
-											<cfqueryparam value="#subAreas.id#" cfsqltype="cf_sql_integer">);
-									</cfquery>
-
-								</cfif>
-
-							</cfloop>
-
-						</cfif>
-
-					</cfif>
-
-				</cfif>
-
-			</cfloop>
 
 	</cffunction>
 
@@ -3529,7 +3448,11 @@
 
 								<cfif arguments.include_categories IS true>
 
-									<cfset categoriesValues = "1,2,3,4">
+									<cfif client_abb EQ "ceseand">
+										<cfset categoriesValues = "16,28,17,18,19,21,22,23,24,25,27,26,62,51">
+									<cfelse>
+										<cfthrow message="Categorías de importación no definidas para este cliente">
+									</cfif>
 
 									<cfset userCategoriesIds = "">
 
@@ -3569,6 +3492,7 @@
 									</cfif>
 
 									<cfif arguments.include_categories IS true>
+										<cfinvokeargument name="include_categories" value="true">
 										<cfinvokeargument name="categories_news_ids" value="#userCategoriesIds#">
 										<cfinvokeargument name="categories_file_ids" value="#userCategoriesIds#">
 										<cfinvokeargument name="categories_event_ids" value="#userCategoriesIds#">
