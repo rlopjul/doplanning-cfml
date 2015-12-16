@@ -6,8 +6,8 @@
 		SELECT *
 		FROM information_schema.COLUMNS
 		WHERE TABLE_SCHEMA = 'dp_#new_client_abb#'
-		AND TABLE_NAME = '#new_client_abb#_lists_fields'
-		AND COLUMN_NAME = 'referenced_table_id';
+		AND TABLE_NAME = '#new_client_abb#_users_typologies_fields'
+		AND COLUMN_NAME = 'referenced_field_id';
 	</cfquery>
 
 </cfif>
@@ -26,22 +26,60 @@
 
 	<cftry>
 
-		<!--- related rows --->
+		<!--- related table rows --->
 
 		<cfquery datasource="#client_datasource#">
-			ALTER TABLE `hcs_lists_fields`
+			INSERT INTO `#new_client_abb#_tables_fields_types` (`field_type_id`, `field_type_group`, `input_type`, `name`, `max_length`, `mysql_type`, `cf_sql_type`, `enabled`, `position`) VALUES ('19', 'table_row', 'hidden', 'Registro de tabla', '11', 'INT(11)', 'cf_sql_integer', '1', '19');
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			UPDATE `#new_client_abb#_tables_fields_types` SET `position`='20' WHERE `field_type_id`='20';
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			UPDATE `#new_client_abb#_tables_fields_types` SET `position`='21' WHERE `field_type_id`='21';
+		</cfquery>
+
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists_fields`
 			ADD COLUMN `referenced_table_id` INT(11) UNSIGNED NULL AFTER `item_type_id`;
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
-			ALTER TABLE `hcs_lists_fields`
+			ALTER TABLE `#new_client_abb#_forms_fields`
+			ADD COLUMN `referenced_table_id` INT(11) UNSIGNED NULL AFTER `item_type_id`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_typologies_fields`
+			ADD COLUMN `referenced_table_id` INT(11) UNSIGNED NULL AFTER `item_type_id`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_users_typologies_fields`
+			ADD COLUMN `referenced_table_id` INT(11) UNSIGNED NULL AFTER `item_type_id`;
+		</cfquery>
+
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists_fields`
 			ADD COLUMN `referenced_field_id` INT(10) UNSIGNED NULL AFTER `referenced_table_id`;
 		</cfquery>
 
 		<cfquery datasource="#client_datasource#">
-			INSERT INTO `hcs_tables_fields_types` (`field_type_id`, `field_type_group`, `input_type`, `name`, `max_length`, `mysql_type`, `cf_sql_type`, `enabled`, `position`) VALUES ('19', 'table_row', 'hidden', 'Registro de tabla', '11', 'INT(11)', 'cf_sql_integer', '1', '19');
-			UPDATE `dp_hcs`.`hcs_tables_fields_types` SET `position`='20' WHERE `field_type_id`='20';
-			UPDATE `dp_hcs`.`hcs_tables_fields_types` SET `position`='21' WHERE `field_type_id`='21';
+			ALTER TABLE `#new_client_abb#_forms_fields`
+			ADD COLUMN `referenced_field_id` INT(10) UNSIGNED NULL AFTER `referenced_table_id`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_typologies_fields`
+			ADD COLUMN `referenced_field_id` INT(10) UNSIGNED NULL AFTER `referenced_table_id`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_users_typologies_fields`
+			ADD COLUMN `referenced_field_id` INT(10) UNSIGNED NULL AFTER `referenced_table_id`;
 		</cfquery>
 
 		<cfcatch>
