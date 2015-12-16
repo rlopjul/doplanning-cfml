@@ -3337,6 +3337,7 @@
 		<cfargument name="delimiter" type="string" required="false" default=";">
 		<cfargument name="start_row" type="numeric" required="false" default="2">
 		<cfargument name="notify_user" type="boolean" required="false" default="false">
+		<cfargument name="include_categories" type="boolean" required="false" default="false">
 
 		<cfset var method = "importUsers">
 
@@ -3350,6 +3351,7 @@
 		<cfset var usersCount = 0>
 		<cfset var rowValues = structNew()>
 		<cfset var areasQueries = structNew()>
+		<cfset var userCategoriesIds = "">
 
 		<cftry>
 
@@ -3525,6 +3527,22 @@
 
 								</cfif>
 
+								<cfif arguments.include_categories IS true>
+
+									<cfset categoriesValues = "1,2,3,4">
+
+									<cfset userCategoriesIds = "">
+
+									<cfloop from="#curColumn#" to="#curColumn+12#" step="1" index="col">
+
+										<cfif trim(curRow[col]) EQ "VERDADERO">
+											<cfset userCategoriesIds = ListAppend( userCategoriesIds, listGetAt( categoriesValues, (col-curColumn)+1 ) )>
+										</cfif>
+
+									</cfloop>
+
+								</cfif>
+
 								<!--- generatePassword --->
 								<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="password">
 									<cfinvokeargument name="numberOfCharacters" value="8">
@@ -3548,6 +3566,13 @@
 										<cfinvokeargument name="table_id" value="#arguments.typology_id#">
 										<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
 										<cfinvokeargument name="action" value="create">
+									</cfif>
+
+									<cfif arguments.include_categories IS true>
+										<cfinvokeargument name="categories_news_ids" value="#userCategoriesIds#">
+										<cfinvokeargument name="categories_file_ids" value="#userCategoriesIds#">
+										<cfinvokeargument name="categories_event_ids" value="#userCategoriesIds#">
+										<cfinvokeargument name="categories_mailing_ids" value="#userCategoriesIds#">
 									</cfif>
 
 									<cfinvokeargument name="client_abb" value="#client_abb#">
