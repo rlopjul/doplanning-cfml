@@ -2988,6 +2988,7 @@
 		<cfargument name="include_number_of_connections" type="boolean" required="false" default="false">
 		<cfargument name="include_last_connection" type="boolean" required="false" default="false">
 		<cfargument name="include_id" type="boolean" required="false" default="false">
+		<cfargument name="include_categories" type="boolean" required="false" default="false">
 
 		<cfset var method = "exportUsers">
 
@@ -3111,6 +3112,23 @@
 				<cfelse>
 
 					<cfset usersToExportQuery = getAllUsersQuery>
+
+				</cfif>
+
+				<cfif arguments.include_categories IS true><!---AND client_abb EQ "ceseand"--->
+
+					<cfset categoriesColumns = "Salud, Medio_Ambiente, Biotecnologia, TICs, Transporte, Energia, Aeroespacial_Automocion, Seguridad_Usos_Duales, Metalmecanico_e_Industria, Construccion_e_Ingenieria, Agro_y_Rec_Endogenos, Turismo, Cultura_y_Ocio, Sectores_Emergentes, Multidisciplinar">
+
+					<cfloop list="#categoriesColumns#" item="curCatCol">
+
+						<cfset curCatCol = trim(curCatCol)>
+
+						<cfset queryAddColumn(usersToExportQuery, curCatCol)>
+
+						<cfset fieldsNames = listAppend(fieldsNames, curCatCol)>
+						<cfset fieldsLabels = listAppend(fieldsLabels, curCatCol)>
+
+					</cfloop>
 
 				</cfif>
 
@@ -3449,7 +3467,7 @@
 								<cfif arguments.include_categories IS true>
 
 									<cfif client_abb EQ "ceseand">
-										<cfset categoriesValues = "16,28,17,18,19,21,22,23,24,25,27,26,62,51">
+										<cfset categoriesValues = "16,28,17,18,19,21,22,23,24,25,27,26,62,51"><!--- Salud, Medio_Ambiente, Biotecnologia, TICs, Transporte, Energia, Aeroespacial_Automocion, Seguridad_Usos_Duales, Metalmecanico_e_Industria, Construccion_e_Ingenieria, Agro_y_Rec_Endogenos, Turismo, Cultura_y_Ocio, Sectores_Emergentes, Multidisciplinar" --->
 									<cfelse>
 										<cfthrow message="Categorías de importación no definidas para este cliente">
 									</cfif>
@@ -3458,7 +3476,9 @@
 
 									<cfloop from="#curColumn#" to="#curColumn+12#" step="1" index="col">
 
-										<cfif trim(curRow[col]) EQ "VERDADERO">
+										<cfset curRowColValue = trim(curRow[col])>
+
+										<cfif uCase(curRowColValue) EQ "VERDADERO" OR curRowColValue EQ true OR curRowColValue EQ 1>
 											<cfset userCategoriesIds = ListAppend( userCategoriesIds, listGetAt( categoriesValues, (col-curColumn)+1 ) )>
 										</cfif>
 
