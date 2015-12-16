@@ -104,6 +104,7 @@
 							<option value="3.2.1">3.2.1 Separadores de campos, nuevas opciones para campos, verificación de usuarios</option>
 							<option value="3.2.2">3.2.2 Deshabilitar listado de registros por defecto en listas, error en fecha de publicación corregido</option>
 							<option value="3.3">3.3 Categorías especiales para tablas y búsquedas predefinidas en listas</option>
+							<option value="3.3.1">3.3.1 Campo registro de tabla referenciado</option>
 						</select>
 					</div>
 
