@@ -4,6 +4,11 @@
 
 		<cfset table_id = URL.typology>
 
+		<!--- isUserUserAdministrator --->
+		<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isUserUserAdministrator" returnvariable="isUserUserAdministratorResponse">
+			<cfinvokeargument name="check_user_id" value="#SESSION.user_id#">
+		</cfinvoke>
+
 		<!---Table fields--->
 		<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableFields" returnvariable="getFieldsResponse">
 			<cfinvokeargument name="table_id" value="#table_id#"/>
@@ -16,7 +21,7 @@
 			<cfelse>
 				<cfinvokeargument name="include_in_new_row" value="true"><!---New row--->
 			</cfif>
-			<cfif SESSION.client_administrator NEQ SESSION.user_id>
+			<cfif isUserUserAdministratorResponse.result IS false OR isUserUserAdministratorResponse.isUserAdministrator IS false>
 				<cfinvokeargument name="include_in_all_users" value="true">
 			</cfif>
 		</cfinvoke>
@@ -84,6 +89,9 @@
 			<cfinvokeargument name="fields" value="#fields#">
 			<cfif tableTypeId IS 4>
 				<cfinvokeargument name="displayType" value="horizontal">
+			</cfif>
+			<cfif isUserUserAdministratorResponse.result IS true AND isUserUserAdministratorResponse.isUserAdministrator IS true>
+				<cfinvokeargument name="include_admin_fields" value="true">
 			</cfif>
 		</cfinvoke>
 

@@ -421,6 +421,7 @@
 		<cfargument name="fields" type="query" required="true">
 		<cfargument name="search_inputs" type="boolean" required="false">
 		<cfargument name="displayType" type="string" required="false">
+		<cfargument name="include_admin_fields" type="boolean" required="false">
 
 		<cfset var method = "outputRowFormInputs">
 
@@ -436,6 +437,7 @@
 				<cfinvokeargument name="language" value="#SESSION.user_language#">
 				<cfinvokeargument name="search_inputs" value="#arguments.search_inputs#">
 				<cfinvokeargument name="displayType" value="#arguments.displayType#">
+				<cfinvokeargument name="include_admin_fields" value="#arguments.include_admin_fields#">
 
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
