@@ -333,7 +333,7 @@
 					<cfelseif fields.field_type_group IS "boolean"><!--- BOOLEAN --->
 
 						<cfif displayType EQ DISPLAY_TYPE_HORIZONTAL>
-							<div class="<cfif arguments.search_inputs IS false>col-xs-offset-5 col-sm-offset-4 col-md-offset-3</cfif> col-xs-7 col-sm-8 col-md-9">
+							<div class="<cfif arguments.search_inputs IS false AND fields.field_input_type EQ 'checkbox'>col-xs-offset-5 col-sm-offset-4 col-md-offset-3</cfif> col-xs-7 col-sm-8 col-md-9">
 						<cfelse>
 							<div class="row">
 								<div class="col-sm-12"><!---col-xs-5 col-sm-2--->
@@ -932,15 +932,30 @@
 								<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 								</cfinvoke>
 
+								<cfset referencedTableId = fields.referenced_table_id>
+								<cfset referencedTableTypeName = itemTypesStruct[fields.item_type_id].name>
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="referencedTableQuery">
+									<cfinvokeargument name="table_id" value="#referencedTableId#">
+									<cfinvokeargument name="tableTypeId" value="#itemTypesStruct[fields.item_type_id].tableTypeId#">
+									<cfinvokeargument name="parse_dates" value="false">
+									<cfinvokeargument name="published" value="false">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
 								<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
-									<cfinvokeargument name="table_id" value="#fields.referenced_table_id#">
+									<cfinvokeargument name="table_id" value="#referencedTableId#">
 									<cfinvokeargument name="tableTypeId" value="#itemTypesStruct[fields.item_type_id].tableTypeId#">
 
 									<cfinvokeargument name="client_abb" value="#client_abb#">
 									<cfinvokeargument name="client_dsn" value="#client_dsn#">
 								</cfinvoke>
 
-								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control selectpicker" data-live-search="true" data-width="100%" data-size="5" data-container="body">
+								<cfset referencedRowUrl = "#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#&row=">
+
+								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control selectpicker" data-live-search="true" data-width="100%" data-size="5" data-container="body" onchange=" $('##referencedRowLink').attr('href', '#referencedRowUrl#'+$('###field_name#').val() )">
 
 									<cfif fields.required IS false OR arguments.search_inputs IS true>
 										<option value=""></option>
@@ -949,10 +964,14 @@
 									<cfloop query="rowQuery">
 										<cfif rowQuery.row_id IS field_value>
 											<cfset value_selected = true>
+											<cfset selected_row_id = rowQuery.row_id>
 										<cfelse>
 											<cfset value_selected = false>
 										</cfif>
-										<option value="#rowQuery.row_id#" <cfif value_selected>selected</cfif>>#rowQuery['field_#fields.referenced_field_id#']#</option>
+
+										<cfset referencedRowValue = rowQuery['field_#fields.referenced_field_id#']>
+
+										<option value="#rowQuery.row_id#" <cfif value_selected>selected</cfif>>#referencedRowValue#</option>
 									</cfloop>
 
 								</select>
@@ -960,6 +979,18 @@
 								<script>
 								$('###field_name#').selectpicker();
 								</script>
+
+								<cfif arguments.tableTypeId NEQ 2><!--- IS NOT FORM --->
+
+									<cfif isDefined("selected_row_id") AND isNumeric(selected_row_id)>
+										<a class="btn btn-default btn-xs" id="referencedRowLink" target="_blank" href="#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#&row=#selected_row_id#"><i class="fa fa-external-link"></i> Ver #field_label#</a>
+									<cfelse>
+										<a class="btn btn-default btn-xs" id="referencedRowLink" target="_blank" href="#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#"><i class="fa fa-external-link"></i> Ver #field_label#</a>
+									</cfif>
+
+									<!---<a class="btn btn-default btn-xs" target="_blank" href="#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#"><i class="fa fa-external-link"></i> Editar</a>--->
+
+								</cfif>
 
 						<cfif arguments.displayType EQ DISPLAY_TYPE_HORIZONTAL>
 						</div>
@@ -1044,6 +1075,9 @@
 							<div class="col-xs-5 col-sm-4 col-md-3"></div>
 							<div class="col-xs-7 col-sm-8 col-md-9">
 								<cfif len(fields.description) GT 0 AND arguments.search_inputs IS false><small class="help-block">#fields.description#</small></cfif>
+								<cfif fields.include_in_all_users IS false AND arguments.search_inputs IS false>
+									<small lang="es">Este campo solo pueden rellenarlo los usuarios administradores</small>
+								</cfif>
 							</div>
 						</div>
 					</cfif>
