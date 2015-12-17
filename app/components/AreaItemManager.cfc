@@ -4330,4 +4330,141 @@
 
 	</cffunction>
 
+
+	<!--- ------------------------------------- importItems ------------------------------------- --->
+
+	<cffunction name="importItems" output="false" access="public" returntype="struct">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="files" type="array" required="true"/>
+		<cfargument name="delimiter" type="string" required="false" default=";">
+		<cfargument name="start_row" type="numeric" required="false" default="2">
+		<!---<cfargument name="include_categories" type="boolean" required="false" default="false">--->
+		<cfargument name="cancel_on_error" type="boolean" required="false" default="true">
+
+		<cfset var method = "importAreaItems">
+
+		<cfset var response = structNew()>
+
+		<cfset var filesData = arrayNew(1)>
+		<cfset var fileData = "">
+		<cfset var destination = "">
+		<cfset var fileContent = "">
+		<cfset var fileArray = arrayNew(1)>
+		<cfset var itemsCount = 0>
+		<cfset var itemValues = structNew()>
+		<cfset var areasQueries = structNew()>
+		<cfset var userCategoriesIds = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfset destination = GetTempDirectory()>
+
+			<cffile action="upload" fileField="files[]" destination="#destination#" nameConflict="makeunique" result="fileResult" charset="iso-8859-1" accept="text/plain,text/csv,text/comma-separated-values,text/tab-separated-values,application/csv,application/vnd.ms-excel"><!--- application/vnd.ms-excel es necesario para IE --->
+
+			<cfset destinationFile = destination&fileResult.serverFile>
+
+			<cfset fileData = {
+					"name": fileResult.serverfile,
+					"size": fileResult.filesize,
+					"url": "",
+					"thumbnailUrl": "",
+					"deleteUrl": "",
+					"deleteType": "DELETE"
+				}>
+
+			<cfset arrayAppend(filesData, fileData)>
+
+			<cffile action="read" file="#destinationFile#" variable="fileContent" charset="iso-8859-1">
+
+			<cffile action="delete" file="#destinationFile#">
+
+			<!--- CSV to array --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="CSVToArray" returnvariable="fileArray">
+				<cfinvokeargument name="CSV" value="#trim(#fileContent#)#">
+				<cfif arguments.delimiter EQ "tab">
+					<cfinvokeargument name="delimiter" value="#chr(9)#">
+				<cfelse>
+					<cfinvokeargument name="delimiter" value="#arguments.delimiter#">
+				</cfif>
+			</cfinvoke>
+
+			<cfset numFileColumns = arrayLen(fileArray[1])>
+			<cfset numFileRows = arrayLen(fileArray)>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypeFields" returnvariable="itemTypeFields">
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+			</cfinvoke>
+
+			<cfset itemTypesFieldsSorted = structSort(itemTypeFields, "numeric", "asc", "position")>
+
+			<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
+
+				<cftry>
+
+					<cfset curRow = fileArray[curRowIndex]>
+
+					<cfset itemValues = structNew()>
+
+					<cfset curColumn = 1>
+
+					<cfloop array="#itemTypesFieldsSorted#" index="fieldName">
+
+						<cfset itemValues[fieldName] = trim(curRow[curColumn])>
+
+						<cfset curColumn = curColumn+1>
+
+					</cfloop>
+
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" argumentcollection="#arguments#" returnvariable="createItemResponse">
+						<cfinvokeargument name="area_id" value="#arguments.area_id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="parent_id" value="#arguments.area_id#">
+						<cfinvokeargument name="parent_kind" value="area">
+						<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
+						<cfinvokeargument name="no_notify" value="true">
+					</cfinvoke>
+
+					<cfif createItemResponse.result NEQ true>
+						<cfthrow message="#createItemResponse.message#">
+					</cfif>
+
+					<cfset itemsCount = itemsCount+1>
+
+					<cfcatch>
+
+						<cfset errorMessagePrefix = "Error en fila #curRowIndex#: ">
+						<cfset errorMessage = errorMessagePrefix&cfcatch.message>
+
+						<cfthrow message="#errorMessage#">
+
+					</cfcatch>
+
+				</cftry>
+
+			</cfloop>
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfif itemsCount IS 0>
+				<cfset response = {result=false, files=filesData, itemsCount=itemsCount, message="No se ha importado ningún elemento"}>
+			<cfelse>
+				<cfset response = {result=true, files=filesData, itemsCount=itemsCount, message="",}>
+			</cfif>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+				<cfset response = {result=false, files=filesData, itemsCount=itemsCount, fileArray=fileArray, message=cfcatch.message}>
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
 </cfcomponent>

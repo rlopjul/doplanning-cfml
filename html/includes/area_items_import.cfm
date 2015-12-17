@@ -6,7 +6,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<cfif isDefined("FORM.file")>
+<cfif isDefined("FORM.files")>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="importItems" returnvariable="actionResponse" argumentcollection="#FORM#">
 	</cfinvoke>
@@ -103,8 +103,8 @@
 			<br/>
 			<!--- -<a href="usuarios_ejemplo.csv">Aquí</a> puede descargar un archivo de ejemplo.<br/>--->
 		<br/>
-		<span lang="es">No se enviará notificación instantánea de los nuevos registros a los usuarios.</span><br/>
-		<span lang="es">Una vez pulsado el botón "Importar registros" debe esperar hasta que se complete la operación.</span>
+		<span lang="es">No se enviará notificación instantánea de los nuevos elementos a los usuarios.</span><br/>
+		<span lang="es">Una vez pulsado el botón "Importar elementos" debe esperar hasta que se complete la operación.</span>
 	</p>
 
 	<script type="text/javascript">
@@ -120,11 +120,12 @@
 	<cfform name="import_data" method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" enctype="multipart/form-data" onsubmit="onSubmitForm();" class="form-horizontal">
 
 		<input type="hidden" name="itemTypeId" value="#itemTypeId#" />
+		<input type="hidden" name="area_id" value="#area_id#" />
 
 		<div class="row">
 			<div class="col-sm-6">
 				<label class="control-label" for="file" lang="es">Archivo CSV con los registros a importar</label>
-				<cfinput name="file" id="file" type="file" required="yes" accept=".csv,.tsv,text/plain" message="Archivo de datos requerido para la importación" class="form-control">
+				<cfinput name="files[]" id="file" type="file" required="yes" accept=".csv,.tsv,text/plain" message="Archivo de datos requerido para la importación" class="form-control">
 			</div>
 		</div>
 

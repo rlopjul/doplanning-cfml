@@ -3543,7 +3543,7 @@
 									<cfelse>
 										<h4>#titleContent#</h4>
 									</cfif>
-									
+
 
 									<cfif itemTypeId EQ 10><!--- Files --->
 
@@ -3980,6 +3980,40 @@
 			</cfcatch>
 
 		</cftry>
+
+	</cffunction>
+
+
+	<!--- -------------------------------importItems-------------------------------------- --->
+
+	<cffunction name="importItems" returntype="struct" access="public">
+			<cfargument name="area_id" type="numeric" required="true">
+			<cfargument name="itemTypeId" type="numeric" required="true">
+			<cfargument name="delimiter" type="string" required="true">
+			<cfargument name="start_row" type="numeric" required="false">
+			<cfargument name="delete_rows" type="boolean" required="false">
+			<cfargument name="cancel_on_error" type="boolean" required="false">
+
+			<cfset var method = "importAreaItems">
+
+			<cfset var response = structNew()>
+
+			<!---<cftry>--->
+
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="importItems" argumentcollection="#arguments#" returnvariable="response">
+				</cfinvoke>
+
+				<cfif response.result IS true>
+					<cfset response.message = "#response.importedRows# elementos importados">
+				</cfif>
+
+				<!---<cfcatch>
+					<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+				</cfcatch>
+
+			</cftry>--->
+
+			<cfreturn response>
 
 	</cffunction>
 
