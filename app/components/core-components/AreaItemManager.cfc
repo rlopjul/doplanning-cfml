@@ -38,22 +38,32 @@
 	</cffunction>
 
 
-	<!--- getAreaItemTypesArray --->
+	<!--- getAreaItemTypesFields --->
 
-	<!---<cffunction name="getAreaItemTypesArray" returntype="array" access="public">
-		<cfargument name="client_abb" type="string" required="true">
+	<cffunction name="getAreaItemTypesFields" returntype="struct" access="public">
 
-		<cfset var itemTypesStruct = structNew()>
+		<cfset var itemTypesFields = structNew()>
 
-		<cfinvoke component="AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-		</cfinvoke>
+			<cfinclude template="includes/areaItemTypeFields.cfm">
 
-		<cfset var itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+		<cfreturn itemTypesFields>
 
-		<cfreturn itemTypesArray>
+	</cffunction>
 
-	</cffunction>--->
+
+	<!--- getAreaItemTypeFields --->
+
+	<cffunction name="getAreaItemTypeFields" returntype="struct" access="public">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+
+		<cfset var itemTypesFields = structNew()>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesFields" returnvariable="itemTypesFields">
+			</cfinvoke>
+
+		<cfreturn itemTypesFields>
+
+	</cffunction>
 
 
 	<!--- ----------------------- DELETE ITEM ATTACHED FILE -------------------------------- --->
