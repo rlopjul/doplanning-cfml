@@ -92,7 +92,18 @@
 
 </cfoutput>
 
-<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+<!--- isUserUserAdministrator --->
+<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isUserUserAdministrator" returnvariable="isUserUserAdministratorResponse">
+	<cfinvokeargument name="check_user_id" value="#SESSION.user_id#">
+</cfinvoke>
+
+<cfif isUserUserAdministratorResponse.result IS false>
+	<cfthrow message="#isUserUserAdministratorResponse.message#">
+<cfelse>
+	<cfset isUserAdministrator = isUserUserAdministratorResponse.isUserAdministrator>
+</cfif>
+
+<!---<cfif isDefined("URL.area") AND isNumeric(URL.area)>
 	<cfset area_id = URL.area>
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/url_redirect.cfm">
@@ -101,12 +112,10 @@
 		<cfset iframe_page = redirect_area_page>
 	<cfelse>
 		<cfset iframe_page = "">
-	</cfif>
-<cfelse>
-	<cfset area_id = "null">
+	</cfif>--->
 
-	<cfset iframe_page = "">
-</cfif>
+<cfset area_id = "null">
+<cfset iframe_page = "">
 
 <script>
 
@@ -375,13 +384,12 @@
 
 	$(window).load( function() {
 		resizeIframe();
-		<!---loadTree();--->
 
 		showTree(true);
 
-		<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
+		<!---<cfif APPLICATION.moduleMessenger EQ true AND isDefined("SESSION.user_id")>
 		Messenger.Private.initGetNewConversations();
-		</cfif>
+		</cfif>--->
 
 		<!---$("#areaImage").load( function () {
 			areaImgHeight = $("#areaImage").height();
@@ -438,6 +446,17 @@
 				searchTextInTree();
 
 		});
+
+
+		<cfif isUserAdministrator IS true AND isDefined("URL.user") AND isNumeric(URL.user)>
+
+			$('#dpTab a[href="#tab7"]').tab('show');
+
+			<cfoutput>
+			loadModal('html_content/user_modify.cfm?user='+#URL.user#);
+			</cfoutput>
+
+		</cfif>
 
 	});
 
@@ -720,20 +739,22 @@
 
 			</div><!---END Tab Area--->
 
+			<cfif isUserAdministrator IS true>
+
+				<div class="tab-pane" id="tab7"><!---Tab Users--->
+
+					<div class="tabbable"><!---Tab Panel--->
+
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="usersGeneralIframe" onload="usersGeneralIframeLoaded()"></iframe>
+
+					</div><!---END TabPanel--->
+
+
+				</div><!---END Tab Users--->
+
+			</cfif>
 
 			<cfif SESSION.client_administrator IS SESSION.user_id>
-
-			<div class="tab-pane" id="tab7"><!---Tab Users--->
-
-				<div class="tabbable"><!---Tab Panel--->
-
-					<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="usersGeneralIframe" onload="usersGeneralIframeLoaded()"></iframe>
-
-				</div><!---END TabPanel--->
-
-
-			</div><!---END Tab Users--->
-
 
 			<div class="tab-pane" id="tab3"><!---Tab Typologies--->
 

@@ -5010,6 +5010,8 @@
 
 					<cfset subject_admin = "#langText[curLang].new_user.new_user_in_application#">
 
+					<cfset userAdminUrl = "#APPLICATION.mainUrl##APPLICATION.htmlPath#/admin/?abb=#arguments.client_abb#&user=#objectUser.id#">
+
 					<cfsavecontent variable="html_text_admin">
 						<cfoutput>
 						<p style="font-size:14px">
@@ -5017,8 +5019,11 @@
 							<b>#objectUser.family_name# #objectUser.name# (#objectUser.email#)</b><br/><br/>
 
 							<cfif objectUser.verified IS false>
-							#langText[curLang].new_user.user_need_verification#
+							#langText[curLang].new_user.user_need_verification#<br/><br/>
 							</cfif>
+
+							#langText[curLang].new_user.access_user_modify#<br/>
+							<a href="#userAdminUrl#" target="_blank">#userAdminUrl#</a>
 						</p>
 						</cfoutput>
 					</cfsavecontent>
