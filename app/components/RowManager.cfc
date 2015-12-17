@@ -289,6 +289,7 @@
 								<cfinvokeargument name="fields" value="#fields#">
 								<cfinvokeargument name="user_id" value="#user_id#">
 								<cfinvokeargument name="send_alert" value="false">
+								<cfinvokeargument name="import" value="true">
 								<cfif arguments.cancel_on_error IS true>
 									<cfinvokeargument name="with_transaction" value="false">
 								<cfelse>

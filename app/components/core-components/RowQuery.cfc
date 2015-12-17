@@ -29,6 +29,7 @@
 		<cfargument name="send_alert" type="boolean" required="false" default="true">
 		<cfargument name="with_transaction" type="boolean" required="false" default="true">
 		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
+		<cfargument name="import" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -51,7 +52,9 @@
 					<cfinvokeargument name="with_types" value="true">
 					<cfinvokeargument name="with_table" value="false">
 					<cfif arguments.action IS CREATE_ROW>
-						<cfinvokeargument name="include_in_new_row" value="true">
+						<cfif arguments.import IS false>
+							<cfinvokeargument name="include_in_new_row" value="true">
+						</cfif>
 					<cfelse>
 						<cfinvokeargument name="include_in_update_row" value="true">
 					</cfif>

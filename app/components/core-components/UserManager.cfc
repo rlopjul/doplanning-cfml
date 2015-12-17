@@ -984,6 +984,7 @@
 		<cfargument name="user_id" type="numeric" required="false">
 		<cfargument name="notify_admin" type="boolean" required="true">
 		<cfargument name="notify_user" type="boolean" required="false" default="true">
+		<cfargument name="import" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1303,6 +1304,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="action" type="string" required="true">
 		<cfargument name="include_admin_fields" type="boolean" required="false" default="false">
+		<cfargument name="import" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
