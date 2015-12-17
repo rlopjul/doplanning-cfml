@@ -54,7 +54,7 @@
 	<cfset redirect_page = "pubmed.cfm?pubmed=#URL.pubmed#">
 	<cfset redirect_area_page = "area_items.cfm?pubmed=#URL.pubmed#&area=#URL.area#">
 <cfelseif APPLICATION.moduleLists IS true AND isDefined("URL.list")>
-	<cfif isDefined("URL.row")>
+	<cfif isDefined("URL.row") AND isNumeric(URL.row)>
 		<cfset redirect_page = "list_row.cfm?list=#URL.list#&row=#URL.row#">
 		<cfset redirect_area_page = "list_rows.cfm?list=#URL.list#&row=#URL.row#&area=#URL.area#">
 	<cfelse>
@@ -62,7 +62,7 @@
 		<cfset redirect_area_page = "area_items.cfm?list=#URL.list#&area=#URL.area#">
 	</cfif>
 <cfelseif APPLICATION.moduleLists IS true AND isDefined("URL.list_view")>
-	<cfif isDefined("URL.row")>
+	<cfif isDefined("URL.row") AND isNumeric(URL.row)>
 		<cfset redirect_page = "list_view_row.cfm?list_view=#URL.list_view#&row=#URL.row#">
 		<cfset redirect_area_page = "list_view_rows.cfm?list_view=#URL.list_view#&row=#URL.row#&area=#URL.area#">
 	<cfelse>
@@ -70,7 +70,7 @@
 		<cfset redirect_area_page = "area_items.cfm?list_view=#URL.list_view#&area=#URL.area#">
 	</cfif>
 <cfelseif APPLICATION.moduleForms IS true AND isDefined("URL.form")>
-	<cfif isDefined("URL.row")>
+	<cfif isDefined("URL.row") AND isNumeric(URL.row)>
 		<cfset redirect_page = "form_row.cfm?form=#URL.form#&row=#URL.row#">
 		<cfset redirect_area_page = "form_rows.cfm?form=#URL.form#&row=#URL.row#&area=#URL.area#">
 	<cfelse>
@@ -78,7 +78,7 @@
 		<cfset redirect_area_page = "area_items.cfm?form=#URL.form#&area=#URL.area#">
 	</cfif>
 <cfelseif APPLICATION.moduleForms IS true AND isDefined("URL.form_view")>
-	<cfif isDefined("URL.row")>
+	<cfif isDefined("URL.row") AND isNumeric(URL.row)>
 		<cfset redirect_page = "form_view_row.cfm?form_view=#URL.form_view#&row=#URL.row#">
 		<cfset redirect_area_page = "form_view_rows.cfm?form_view=#URL.form_view#&row=#URL.row#&area=#URL.area#">
 	<cfelse>
