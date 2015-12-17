@@ -983,9 +983,9 @@
 								<cfif arguments.tableTypeId NEQ 2><!--- IS NOT FORM --->
 
 									<cfif isDefined("selected_row_id") AND isNumeric(selected_row_id)>
-										<a class="btn btn-default btn-xs" id="referencedRowLink" target="_blank" href="#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#&row=#selected_row_id#"><i class="fa fa-external-link"></i> Ver #field_label#</a>
-									<cfelse>
-										<a class="btn btn-default btn-xs" id="referencedRowLink" target="_blank" href="#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#"><i class="fa fa-external-link"></i> Ver #field_label#</a>
+										<a class="btn btn-default btn-xs" id="referencedRowLink" target="_blank" href="#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#&row=#selected_row_id#"><i class="fa fa-external-link"></i> <span lang="es">Ver</span> #field_label#</a>
+									<cfelseif ( isDefined("row.row_id") AND isNumeric(row.row_id) ) OR arguments.tableTypeId NEQ 4><!---Is not user register public page--->
+										<a class="btn btn-default btn-xs" id="referencedRowLink" target="_blank" href="#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#"><i class="fa fa-external-link"></i> <span lang="es">Ver</span> #field_label#</a>
 									</cfif>
 
 									<!---<a class="btn btn-default btn-xs" target="_blank" href="#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#"><i class="fa fa-external-link"></i> Editar</a>--->
