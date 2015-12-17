@@ -180,7 +180,7 @@
 									<input type="checkbox" name="include_categories" value="1"<cfif isDefined("FORM.include_categories")>checked</cfif>> <span lang="es">Importar sectores de preferencias de notificaciones de los usuarios</span>
 								</label>
 								<small class="help-block" lang="es">Para importar los sectores de preferencias de los usuarios es necesario añadir las siguientes columnas al final del archivo exactamente en el orden especificado a continuación:<br/>
-									<i/>Salud, Medio Ambiente, Bio Tecnologia, TICs, Transporte, Energia, Aeroespacial Automocion, Seguridad Usos Duales, Metalmecanico e Industria, Construccion e Ingenieria, Agro y Rec Endogenos, Turismo, Cultura y Ocio, Sectores Emergentes, Multidisciplinar</i>
+									<i/>Salud, Medio Ambiente, Bio Tecnologia, TICs, Transporte, Energia, Aeroespacial Automocion, Seguridad Usos Duales, Metalmecanico e Industria, Construccion e Ingenieria, Agro y Rec Endogenos, Turismo Cultura y Ocio, Sectores Emergentes, Multidisciplinar</i>
 								</small>
 							</div>
 						</div>

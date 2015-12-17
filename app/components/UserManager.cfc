@@ -3117,7 +3117,7 @@
 
 				<cfif arguments.include_categories IS true><!---AND client_abb EQ "ceseand"--->
 
-					<cfset categoriesColumns = "Salud, Medio_Ambiente, Biotecnologia, TICs, Transporte, Energia, Aeroespacial_Automocion, Seguridad_Usos_Duales, Metalmecanico_e_Industria, Construccion_e_Ingenieria, Agro_y_Rec_Endogenos, Turismo, Cultura_y_Ocio, Sectores_Emergentes, Multidisciplinar">
+					<cfset categoriesColumns = "Salud, Medio_Ambiente, Biotecnologia, TICs, Transporte, Energia, Aeroespacial_Automocion, Seguridad_Usos_Duales, Metalmecanico_e_Industria, Construccion_e_Ingenieria, Agro_y_Rec_Endogenos, Turismo_Cultura_y_Ocio, Sectores_Emergentes, Multidisciplinar">
 
 					<cfloop list="#categoriesColumns#" item="curCatCol">
 
@@ -3275,6 +3275,7 @@
 		<cfargument name="start_row" type="numeric" required="false" default="2">
 		<cfargument name="notify_user" type="boolean" required="false" default="false">
 		<cfargument name="include_categories" type="boolean" required="false" default="false">
+		<cfargument name="cancel_on_error" type="boolean" required="false" default="true">
 
 		<cfset var method = "importUsers">
 
@@ -3427,116 +3428,125 @@
 
 					<!---<cftransaction>--->
 
-						<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
+					<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
 
-							<cftry>
+						<cftry>
 
-								<cfset curRow = fileArray[curRowIndex]>
+							<cfset curRow = fileArray[curRowIndex]>
 
-								<cfset rowValues = structNew()>
+							<cfset rowValues = structNew()>
 
-								<cfset rowValues["email"] = curRow[1]>
-								<cfset rowValues["family_name"] = curRow[2]>
-								<cfset rowValues["name"] = curRow[3]>
-								<cfset rowValues["address"] = curRow[4]>
-								<cfset rowValues["telephone_ccode"] = curRow[5]>
-								<cfset rowValues["telephone"] = curRow[6]>
-								<cfset rowValues["mobile_phone_ccode"] = curRow[7]>
-								<cfset rowValues["mobile_phone"] = curRow[8]>
-								<cfset rowValues["internal_user"] = curRow[9]>
-								<cfset rowValues["enabled"] = curRow[10]>
-								<cfset rowValues["verified"] = curRow[11]>
-								<cfif SESSION.client_abb EQ "hcs">
-									<cfset rowValues["perfil_cabecera"] = curRow[12]>
+							<cfset rowValues["email"] = trim(curRow[1])>
+							<cfset rowValues["family_name"] = trim(curRow[2])>
+							<cfset rowValues["name"] = trim(curRow[3])>
+							<cfset rowValues["address"] = trim(curRow[4])>
+							<cfset rowValues["telephone_ccode"] = trim(curRow[5])>
+							<cfset rowValues["telephone"] = trim(curRow[6])>
+							<cfset rowValues["mobile_phone_ccode"] = trim(curRow[7])>
+							<cfset rowValues["mobile_phone"] = trim(curRow[8])>
+							<cfset rowValues["internal_user"] = trim(curRow[9])>
+							<cfset rowValues["enabled"] = trim(curRow[10])>
+							<cfset rowValues["verified"] = trim(curRow[11])>
+							<cfif SESSION.client_abb EQ "hcs">
+								<cfset rowValues["perfil_cabecera"] = trim(curRow[12])>
+							</cfif>
+
+							<cfif SESSION.client_abb EQ "hcs">
+								<cfset curColumn = 13>
+							<cfelse>
+								<cfset curColumn = 12>
+							</cfif>
+
+							<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+
+								<cfset error = false>
+
+								<cfinclude template="#APPLICATION.componentsPath#/includes/tableRowImport.cfm">
+
+							</cfif>
+
+							<!---<cfif error IS true>
+								<cfthrow message="#errorMessage#">
+							</cfif>--->
+
+							<cfif arguments.include_categories IS true>
+
+								<cfif client_abb EQ "ceseand">
+									<cfset categoriesValues = "16,28,17,18,19,21,22,23,24,25,27,26,62,51"><!--- Salud, Medio_Ambiente, Biotecnologia, TICs, Transporte, Energia, Aeroespacial_Automocion, Seguridad_Usos_Duales, Metalmecanico_e_Industria, Construccion_e_Ingenieria, Agro_y_Rec_Endogenos, Turismo_Cultura_y_Ocio, Sectores_Emergentes, Multidisciplinar" --->
+								<cfelse>
+									<cfthrow message="Categorías de importación no definidas para este cliente">
 								</cfif>
 
-								<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+								<cfset userCategoriesIds = arrayNew(1)>
 
-									<cfset error = false>
+								<cfloop from="#curColumn#" to="#curColumn+13#" step="1" index="col">
 
-									<cfif SESSION.client_abb EQ "hcs">
-										<cfset curColumn = 13>
-									<cfelse>
-										<cfset curColumn = 12>
+									<cfset curRowColValue = trim(curRow[col])>
+
+									<cfif uCase(curRowColValue) EQ "VERDADERO" OR curRowColValue EQ true OR curRowColValue EQ 1>
+										<cfset ArrayAppend( userCategoriesIds, listGetAt( categoriesValues, (col-curColumn)+1 ) )>
 									</cfif>
 
-									<cfinclude template="#APPLICATION.componentsPath#/includes/tableRowImport.cfm">
+								</cfloop>
 
+							</cfif>
+
+							<!--- generatePassword --->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="password">
+								<cfinvokeargument name="numberOfCharacters" value="8">
+							</cfinvoke>
+
+							<!--- createUser --->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" argumentcollection="#rowValues#" returnvariable="createUserResponse">
+								<cfinvokeargument name="linkedin_url" value="">
+								<cfinvokeargument name="twitter_url" value="">
+								<cfinvokeargument name="language" value="#APPLICATION.defaultLanguage#">
+								<cfinvokeargument name="hide_not_allowed_areas" value="true">
+								<cfinvokeargument name="user_administrator" value="false">
+								<cfinvokeargument name="password" value="#password#">
+								<cfinvokeargument name="password_confirmation" value="#password#">
+								<cfinvokeargument name="notify_admin" value="false">
+								<cfinvokeargument name="include_admin_fields" value="true">
+								<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+								<cfinvokeargument name="notify_user" value="#arguments.notify_user#">
+								<cfinvokeargument name="import" value="true">
+								<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
+									<cfinvokeargument name="typology_id" value="#arguments.typology_id#">
+									<cfinvokeargument name="table_id" value="#arguments.typology_id#">
+									<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
+									<cfinvokeargument name="action" value="create">
 								</cfif>
 
 								<cfif arguments.include_categories IS true>
-
-									<cfif client_abb EQ "ceseand">
-										<cfset categoriesValues = "16,28,17,18,19,21,22,23,24,25,27,26,62,51"><!--- Salud, Medio_Ambiente, Biotecnologia, TICs, Transporte, Energia, Aeroespacial_Automocion, Seguridad_Usos_Duales, Metalmecanico_e_Industria, Construccion_e_Ingenieria, Agro_y_Rec_Endogenos, Turismo, Cultura_y_Ocio, Sectores_Emergentes, Multidisciplinar" --->
-									<cfelse>
-										<cfthrow message="Categorías de importación no definidas para este cliente">
-									</cfif>
-
-									<cfset userCategoriesIds = "">
-
-									<cfloop from="#curColumn#" to="#curColumn+12#" step="1" index="col">
-
-										<cfset curRowColValue = trim(curRow[col])>
-
-										<cfif uCase(curRowColValue) EQ "VERDADERO" OR curRowColValue EQ true OR curRowColValue EQ 1>
-											<cfset userCategoriesIds = ListAppend( userCategoriesIds, listGetAt( categoriesValues, (col-curColumn)+1 ) )>
-										</cfif>
-
-									</cfloop>
-
+									<cfinvokeargument name="include_categories" value="true">
+									<cfinvokeargument name="categories_news_ids" value="#userCategoriesIds#">
+									<cfinvokeargument name="categories_file_ids" value="#userCategoriesIds#">
+									<cfinvokeargument name="categories_event_ids" value="#userCategoriesIds#">
+									<cfinvokeargument name="categories_mailing_ids" value="#userCategoriesIds#">
 								</cfif>
 
-								<!--- generatePassword --->
-								<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="password">
-									<cfinvokeargument name="numberOfCharacters" value="8">
-								</cfinvoke>
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
 
-								<!--- createUser --->
-								<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" argumentcollection="#rowValues#" returnvariable="createUserResponse">
-									<cfinvokeargument name="linkedin_url" value="">
-									<cfinvokeargument name="twitter_url" value="">
-									<cfinvokeargument name="language" value="#APPLICATION.defaultLanguage#">
-									<cfinvokeargument name="hide_not_allowed_areas" value="true">
-									<cfinvokeargument name="user_administrator" value="false">
-									<cfinvokeargument name="password" value="#password#">
-									<cfinvokeargument name="password_confirmation" value="#password#">
-									<cfinvokeargument name="notify_admin" value="false">
-									<cfinvokeargument name="include_admin_fields" value="true">
-									<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-									<cfinvokeargument name="notify_user" value="#arguments.notify_user#">
-									<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
-										<cfinvokeargument name="typology_id" value="#arguments.typology_id#">
-										<cfinvokeargument name="table_id" value="#arguments.typology_id#">
-										<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
-										<cfinvokeargument name="action" value="create">
-									</cfif>
+							<cfif createUserResponse.result NEQ true>
+								<cfthrow message="#createUserResponse.message#">
+							</cfif>
 
-									<cfif arguments.include_categories IS true>
-										<cfinvokeargument name="include_categories" value="true">
-										<cfinvokeargument name="categories_news_ids" value="#userCategoriesIds#">
-										<cfinvokeargument name="categories_file_ids" value="#userCategoriesIds#">
-										<cfinvokeargument name="categories_event_ids" value="#userCategoriesIds#">
-										<cfinvokeargument name="categories_mailing_ids" value="#userCategoriesIds#">
-									</cfif>
+							<cfset usersCount = usersCount+1>
 
-									<cfinvokeargument name="client_abb" value="#client_abb#">
-									<cfinvokeargument name="client_dsn" value="#client_dsn#">
-								</cfinvoke>
+							<cfcatch>
 
-								<cfset usersCount = usersCount+1>
+								<cfset errorMessagePrefix = "Error en fila #curRowIndex#: ">
+								<cfset errorMessage = errorMessagePrefix&cfcatch.message>
 
-								<cfcatch>
+								<cfthrow message="#errorMessage#">
 
-									<cfset errorMessagePrefix = "Error en fila #curRowIndex#: ">
-									<cfset errorMessage = errorMessagePrefix&cfcatch.message>
+							</cfcatch>
 
-									<cfthrow message="#errorMessage#">
+						</cftry>
 
-								</cfcatch>
-
-							</cftry>
-
-						</cfloop>
+					</cfloop>
 
 					<!---</cftransaction>--->
 
@@ -3546,7 +3556,7 @@
 				<cfinclude template="includes/logRecord.cfm">
 
 				<cfif usersCount IS 0>
-					<cfset response = {result=false, files=fileData, usersCount=usersCount, message="No se ha importado ningún área"}>
+					<cfset response = {result=false, files=fileData, usersCount=usersCount, message="No se ha importado ningún usuario"}>
 				<cfelse>
 					<cfset response = {result=true, files=fileData, usersCount=usersCount, message="",}>
 				</cfif>
