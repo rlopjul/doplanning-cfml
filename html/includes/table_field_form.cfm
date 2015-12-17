@@ -454,6 +454,8 @@
 
 	</cfif>
 
+	<cfif isDefined("field.referenced_table_id")>
+
 	<div class="row" id="fieldInputTable">
 		<div class="col-md-10">
 
@@ -470,6 +472,7 @@
 		</div>
 	</div>
 
+	</cfif>
 
 	<div class="row" id="fieldInputTableField">
 		<div class="col-md-10">
