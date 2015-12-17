@@ -416,7 +416,10 @@
 						MODIFY COLUMN `field_#field_id#` #field.mysql_type#
 						<cfif arguments.required IS true AND field.mysql_type NEQ "DATE" AND arguments.field_type_id NEQ 18>
 						NOT NULL
-							<!---Aquí no se define valor por defecto porque puede cambiar el valor almacenado en columnas vacias--->
+							<!---Se define el valor por defecto porque si no se hace así pueden dar problemas las columnas vacías, aunque este comportamiento haga que se rellenen valores que antes estaban vacíos--->
+							<cfif len(arguments.default_value) GT 0 AND ( field.mysql_type NEQ "TEXT" AND field.mysql_type NEQ "LONGTEXT" )>
+								DEFAULT '#arguments.default_value#'
+							</cfif>
 						</cfif>;
 					</cfquery>
 
