@@ -61,6 +61,12 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesFields" returnvariable="itemTypesFields">
 			</cfinvoke>
 
+			<cfloop collection="#itemTypesFields#" item="fieldName">
+				<cfif listFind(itemTypesFields[fieldName].notIncludedIn, arguments.itemTypeId) GT 0>
+						<cfset structDelete(itemTypesFields, fieldName)>
+				</cfif>
+			</cfloop>
+
 		<cfreturn itemTypesFields>
 
 	</cffunction>
