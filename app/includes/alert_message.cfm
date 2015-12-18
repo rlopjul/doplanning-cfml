@@ -1,8 +1,8 @@
 <cfif isDefined("URL.msg")>
-	
+
 	<cfset msg = URLDecode(URL.msg)>
 	<!---<cfoutput>
-	
+
 		<cfif NOT isDefined("URL.res") OR URL.res IS 1>
 			<div class="alert alert-success">
 				<!---<button type="button" class="close" data-dismiss="alert">&times;</button>--->
@@ -14,7 +14,7 @@
 				<i class="icon-warning-sign"></i> <span lang="es">#msg#</span>
 			</div>
 		</cfif>
-		
+
 	</cfoutput>--->
 
 	<div id="pageAlertContainer" style="display:none;">
@@ -24,7 +24,7 @@
 	<cfif isDefined("URL.res")>
 
 		<cfset msg_res = URL.res>
-		
+
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryStringDeleteVar" returnvariable="newQueryString">
 			<cfinvokeargument name="variable" value="msg,res">
 		</cfinvoke>
@@ -45,7 +45,7 @@
 		<cfset newUrl = "#CGI.SCRIPT_NAME#">
 	</cfif>
 
-	
+
 	<script>
 
 		function showPageAlertMessage(msg, res){
@@ -57,16 +57,16 @@
 				$("#pageAlertContainer").attr("class", "alert alert-success");
 			else
 				$("#pageAlertContainer").attr("class", "alert alert-danger");
-			
+
 			$("#pageAlertContainer button").after('<span>'+window.lang.translate(msg)+'</span>');
 
 			$("#pageAlertContainer").fadeIn('slow');
 
 			<!---setTimeout(function(){
-				    
+
 			    hidePageAlertMessage();
 
-			    }, 9500);--->	
+			    }, 9500);--->
 		}
 
 		function hidePageAlertMessage(){
@@ -80,9 +80,9 @@
 		<cfoutput>
 		$(function () {
 
-			showPageAlertMessage('#msg#', #msg_res#);
+			showPageAlertMessage('#JSStringFormat(msg)#', #msg_res#);
 
-		    History.replaceState(History.getState().data, History.options.initialTitle, "#newUrl#");
+			History.replaceState(History.getState().data, History.options.initialTitle, "#newUrl#");
 
 		});
 		</cfoutput>
