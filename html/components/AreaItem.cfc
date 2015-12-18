@@ -3998,20 +3998,20 @@
 
 			<cfset var response = structNew()>
 
-			<!---<cftry>--->
+			<cftry>
 
 				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="importItems" argumentcollection="#arguments#" returnvariable="response">
 				</cfinvoke>
 
 				<cfif response.result IS true>
-					<cfset response.message = "#response.importedRows# elementos importados">
+					<cfset response.message = "#response.itemsCount# elementos importados">
 				</cfif>
 
-				<!---<cfcatch>
+				<cfcatch>
 					<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 				</cfcatch>
 
-			</cftry>--->
+			</cftry>
 
 			<cfreturn response>
 

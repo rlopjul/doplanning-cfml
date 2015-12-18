@@ -4342,7 +4342,7 @@
 		<!---<cfargument name="include_categories" type="boolean" required="false" default="false">--->
 		<cfargument name="cancel_on_error" type="boolean" required="false" default="true">
 
-		<cfset var method = "importAreaItems">
+		<cfset var method = "importItems">
 
 		<cfset var response = structNew()>
 
@@ -4412,13 +4412,39 @@
 
 					<cfloop array="#itemTypesFieldsSorted#" index="fieldName">
 
-						<cfset itemValues[fieldName] = trim(curRow[curColumn])>
+						<cfif itemTypeFields[fieldName].import IS true>
 
-						<cfset curColumn = curColumn+1>
+							<cfset fieldValue = trim(curRow[curColumn])>
+
+							<cfif fieldName EQ "creation_date">
+
+								<cfif find("/", fieldValue) GT 0>
+									<cfset fieldValue = replaceNoCase(fieldValue, "/", "-", "ALL")>
+								</cfif>
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/DateManager" method="validateDate" returnvariable="validateDateResult">
+									<cfinvokeargument name="strDate" value="#fieldValue#">
+								</cfinvoke>
+
+								<cfif validateDateResult IS false>
+									<cfthrow message="#validateDateResult.message#: #fieldValue#">
+								</cfif>
+
+							</cfif>
+
+							<cfset itemValues[fieldName] = fieldValue>
+
+							<cfset curColumn = curColumn+1>
+
+						<cfelse>
+
+							<cfset itemValues[fieldName] = itemTypeFields[fieldName].default>
+
+						</cfif>
 
 					</cfloop>
 
-					<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" argumentcollection="#arguments#" returnvariable="createItemResponse">
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItem" argumentcollection="#itemValues#" returnvariable="createItemResponse">
 						<cfinvokeargument name="area_id" value="#arguments.area_id#">
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="parent_id" value="#arguments.area_id#">

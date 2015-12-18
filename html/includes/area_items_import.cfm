@@ -13,7 +13,7 @@
 
 	<cfif actionResponse.result IS true><!---The import is success--->
 
-		<cflocation url="area_items.cfm?res=1&msg=#actionResponse.message#" addtoken="false">
+		<cflocation url="area_items.cfm?area=#area_id#&res=1&msg=#actionResponse.message#" addtoken="false">
 
 	<cfelse><!---There is an error in the import--->
 
@@ -34,7 +34,9 @@
 </cfif>
 
 <div class="div_head_subtitle">
-	<span lang="es">Importar elementos</span>
+	<cfoutput>
+	<span lang="es">Importar #uCase(itemTypeNameEsP)#</span>
+	</cfoutput>
 </div>
 
 <div class="div_separator"><!-- --></div>
@@ -77,6 +79,7 @@
 
 	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypeFields" returnvariable="itemTypeFields">
 		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+		<cfinvokeargument name="import" value="true">
 	</cfinvoke>
 
 	<cfset itemTypesFieldsSorted = structSort(itemTypeFields, "numeric", "asc", "position")>
@@ -143,16 +146,6 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="cancel_on_error" value="false" <cfif isDefined("FORM.cancel_on_error")>checked</cfif>> <span lang="es">No cancelar si hay errores en importación de registros</span>
-		        </label>
-		      </div>
-		    </div>
-		</div>
-
-		<div class="row">
-			<div class="col-sm-12">
-		      <div class="checkbox">
-		        <label>
 		          <input type="checkbox" name="start_row" value="1"<cfif isDefined("FORM.start_row")>checked</cfif>> <span lang="es">Importar primera fila del archivo</span>
 		        </label>
 		        <small class="help-block" style="margin-bottom:0" lang="es">Por defecto no se importa la primera fila del archivo (fila para los títulos de las columnas)</small>
@@ -164,7 +157,7 @@
 			<div class="col-sm-12" id="submitDiv1">
 				<input type="submit" value="Importar elementos" class="btn btn-primary" lang="es" />
 
-				<a href="area_items.cfm?area=#area_id#&itemTypeId=itemTypeId" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+				<a href="area_items.cfm?area=#area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 			</div>
 		</div>
 

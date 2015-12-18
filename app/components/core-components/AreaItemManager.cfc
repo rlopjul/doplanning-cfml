@@ -55,6 +55,7 @@
 
 	<cffunction name="getAreaItemTypeFields" returntype="struct" access="public">
 		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="import" type="boolean" required="false">
 
 		<cfset var itemTypesFields = structNew()>
 
@@ -63,7 +64,11 @@
 
 			<cfloop collection="#itemTypesFields#" item="fieldName">
 				<cfif listFind(itemTypesFields[fieldName].notIncludedIn, arguments.itemTypeId) GT 0>
+					<cfset structDelete(itemTypesFields, fieldName)>
+				<cfelseif isDefined("arguments.import")>
+					<cfif itemTypesFields[fieldName].import NEQ arguments.import>
 						<cfset structDelete(itemTypesFields, fieldName)>
+					</cfif>
 				</cfif>
 			</cfloop>
 
