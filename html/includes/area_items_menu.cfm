@@ -427,7 +427,7 @@
 
 					</cfif>
 
-					<cfif itemTypeId IS 4 OR itemTypeId IS 5><!--- News and events --->
+					<cfif itemTypeId IS 1 OR itemTypeId IS 2 OR itemTypeId IS 4 OR itemTypeId IS 5><!--- Messages, Entries, News and events --->
 
 						<div class="btn-group pull-right">
 							<a href="area_items_import.cfm?area=#area_id#&itemTypeId=#itemTypeId#" class="btn btn-default btn-sm"><i class="fa fa-arrow-up" style="font-size:14px; line-height:23px;"></i> <span lang="es">Importar #itemTypeNameEsP#</span></a>
