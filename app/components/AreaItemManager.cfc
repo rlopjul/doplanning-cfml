@@ -755,8 +755,8 @@
 					<cfif isNumeric(objectItem.attached_file_id)>
 						attached_file_id = <cfqueryparam value="#objectItem.attached_file_id#" cfsqltype="cf_sql_integer">
 					</cfif>,--->
-					<cfif itemTypeId IS 4><!---News--->
-						creation_date = STR_TO_DATE(<cfqueryparam value="#arguments.creation_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y'),
+					<cfif itemTypeId IS 4 OR ( itemTypeId IS 2 AND isDefined("arguments.creation_date") )><!---News OR Entries--->
+					  creation_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.creation_date# 00:00" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
 					<cfelse>
 						creation_date = NOW(),
 					</cfif>
@@ -1282,7 +1282,7 @@
 					, link_target = <cfqueryparam value="#arguments.link_target#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					<cfif itemTypeId IS 4><!---News--->
-					, creation_date = STR_TO_DATE(<cfqueryparam value="#arguments.creation_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y')
+						, creation_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.creation_date# 00:00" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
 					</cfif>
 					, last_update_date = NOW()
 					, last_update_user_id = <cfqueryparam value="#SESSION.user_id#" cfsqltype="cf_sql_integer">
