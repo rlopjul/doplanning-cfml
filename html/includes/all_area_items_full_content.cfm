@@ -21,6 +21,18 @@
 		</div>
 	</div>
 
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAllAreaItems" returnvariable="getAllAreaItemsResult">
+		<cfinvokeargument name="area_id" value="#area_id#">
+		<cfinvokeargument name="area_type" value="#area_type#">
+		<cfinvokeargument name="full_content" value="true">
+		<!---<cfif isDefined("limit_to") AND isNumeric(limit_to)>
+		<cfinvokeargument name="limit" value="#limit_to#">
+		</cfif>--->
+	</cfinvoke>
+
+	<cfset areaItemsQuery = getAllAreaItemsResult.query>
+	<cfset numItems = areaItemsQuery.recordCount>
+
 	<div class="row">
 		<div><!---col-sm-12--->
 
@@ -58,18 +70,6 @@
 		</div>
 	</div>
 	--->
-
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAllAreaItems" returnvariable="getAllAreaItemsResult">
-	<cfinvokeargument name="area_id" value="#area_id#">
-	<cfinvokeargument name="area_type" value="#area_type#">
-	<cfinvokeargument name="full_content" value="true">
-	<!---<cfif isDefined("limit_to") AND isNumeric(limit_to)>
-	<cfinvokeargument name="limit" value="#limit_to#">
-	</cfif>--->
-</cfinvoke>
-
-<cfset areaItemsQuery = getAllAreaItemsResult.query>
-<cfset numItems = areaItemsQuery.recordCount>
 
 	<div class="row">
 		<div class="col-sm-12">

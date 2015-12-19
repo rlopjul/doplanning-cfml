@@ -9,16 +9,6 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
-<div class="row">
-
-	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
-
-</div>
-
-
-<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
-
-
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAllAreaItems" returnvariable="getAllAreaItemsResult">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="area_type" value="#area_type#">
@@ -29,9 +19,18 @@
 
 <cfset areaItemsQuery = getAllAreaItemsResult.query>
 
-<!---<cfdump var="#areaItemsQuery#">--->
-
 <cfset numItems = areaItemsQuery.recordCount>
+
+<div class="row">
+
+	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
+
+</div>
+
+
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+
+
 <div class="row">
 	<div class="col-sm-12">
 

@@ -2,7 +2,7 @@
 
 <cfoutput>
 <script>
-<!---/** 
+<!---/**
  * Remove Accents to a string
  */
 String.prototype.removeAccents = function() {
@@ -27,7 +27,7 @@ function setItemsFilter(filterValue) {
 	if(filterValue == "*") {
 
 		$itemsContainer.isotope({ filter: filterValue });
-		
+
 		$("##curFilterImg").attr("src", "#APPLICATION.htmlPath#/assets/icons_dp/area.png");
 
 		<cfif isDefined("area_id")>
@@ -35,11 +35,14 @@ function setItemsFilter(filterValue) {
 			$("##curFilterLabel").text("Elementos del área");
 			$("##listModeLink").attr("href", "area_items.cfm?area=#area_id#&modeList");
 			$("##listModeLink").show();
+      $("##totalItemsLabel").show();
 		<cfelse>
 			$("##curFilterLabel").text("Elementos de área");
 		</cfif>
 
 	} else {
+
+    $("##totalItemsLabel").hide();
 
 		var filterBy = "."+filterValue;
 
@@ -48,7 +51,7 @@ function setItemsFilter(filterValue) {
 		jQuery.each(itemTypesStruct, function(index, itemType) {
 
 			if(itemType.name == filterValue) {
-				
+
 				<!---$("##curFilterLabel").text(window.lang.translate(itemType.labelPlural));--->
 				$("##curFilterLabel").text(itemType.labelPlural);
 				$("##curFilterImg").attr("src", "#APPLICATION.htmlPath#/assets/v3/icons/"+itemType.name+".png");
@@ -62,13 +65,13 @@ function setItemsFilter(filterValue) {
 						$("##listModeLink").show();
 
 				</cfif>
-				
+
 			}
 
 		});
 
 	}
-	
+
 }
 
 function setItemsSort(sortValue) {
@@ -80,7 +83,7 @@ function setItemsSort(sortValue) {
 $( document ).ready( function() {
 
   <!--- init Isotope --->
-  
+
   $itemsContainer = $('.elements_container').isotope({
     itemSelector: '.element_item',
     layoutMode: 'vertical',
@@ -93,7 +96,7 @@ $( document ).ready( function() {
     <!---, getSortData: {
     	user: '.link_user',
       	category: '[data-category]',
-      	// this function find h2 and remove accents 
+      	// this function find h2 and remove accents
 	    title: function(itemElem) { // function
 	      return String($(itemElem).find('h4').text()).removeAccents();
 	    }
@@ -101,9 +104,9 @@ $( document ).ready( function() {
   });
 
   <cfif isDefined("URL.filter")>
-	
+
 	setItemsFilter("#URL.filter#");
-	
+
   </cfif>
 
 });

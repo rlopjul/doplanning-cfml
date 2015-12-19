@@ -430,6 +430,10 @@ fieldset {
 		margin-top: 20px;
 }
 
+.label-as-badge {
+    border-radius: 1em;
+}
+
 
 /******************************************** END NEW BOOTSTRAP CSS CHANGES ******************************************/
 
