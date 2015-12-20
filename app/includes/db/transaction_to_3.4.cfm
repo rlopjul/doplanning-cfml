@@ -12,7 +12,7 @@
 
 </cfif>
 
-<cfif checkVersion IS true AND isDbDp331.recordCount GT 0>
+<cfif checkVersion IS true AND isDbDp34.recordCount GT 0>
 
 	<cfoutput>
 		Cliente #new_client_abb# ya migrado anteriormente a versión #version_id#<br/><br/>

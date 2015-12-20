@@ -567,6 +567,7 @@
 		<cfargument name="publication_date" type="string" required="false">
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
+		<cfargument name="publication_restricted" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="email_addresses" type="string" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
@@ -778,6 +779,7 @@
 
 						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) IS 16>
 							, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
+							, publication_restricted = <cfqueryparam value="#arguments.publication_restricted#" cfsqltype="cf_sql_bit">
 							<!---, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">--->
 						</cfif>
 						<!--- publicationValidation --->
@@ -1037,6 +1039,7 @@
 		<cfargument name="publication_date" type="string" required="false">
 		<!--- <cfargument name="publication_time" type="string" required="false"> --->
 		<cfargument name="publication_validated" type="boolean" required="false" default="false">
+		<cfargument name="publication_restricted" type="boolean" required="false" default="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="email_addresses" type="string" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
@@ -1295,6 +1298,7 @@
 
 						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) IS 16>
 							, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
+							, publication_restricted = <cfqueryparam value="#arguments.publication_restricted#" cfsqltype="cf_sql_bit">
 							<!---, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">--->
 						</cfif>
 						<!--- publicationValidation --->

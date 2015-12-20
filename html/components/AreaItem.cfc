@@ -165,6 +165,7 @@
 		<cfargument name="publication_hour" type="numeric" required="false">
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false">
+		<cfargument name="publication_restricted" type="boolean" required="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
@@ -527,6 +528,7 @@
 		<cfargument name="publication_hour" type="numeric" required="false">
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false">
+		<cfargument name="publication_restricted" type="boolean" required="false">
 		<cfargument name="price" type="numeric" required="false">
 		<cfargument name="sub_type_id" type="numeric" required="false">
 		<cfargument name="area_editable" type="boolean" required="false" default="false">
