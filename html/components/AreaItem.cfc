@@ -233,42 +233,6 @@
 				<cfif with_attached IS true OR with_image IS true><!---Hay archivo para subir--->
 					<cfinvokeargument name="status" value="pending"/>
 				</cfif>
-
-				<!---<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-        <cfinvokeargument name="title" value="#arguments.title#">
-				<cfinvokeargument name="link" value="#arguments.link#">
-				<cfinvokeargument name="link_target" value="#arguments.link_target#">
-        <cfinvokeargument name="description" value="#arguments.description#">
-
-        <cfinvokeargument name="parent_id" value="#arguments.parent_id#">
-        <cfinvokeargument name="parent_kind" value="#arguments.parent_kind#">
-				<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
-				<cfinvokeargument name="post_to_twitter" value="#arguments.post_to_twitter#">
-				<cfinvokeargument name="creation_date" value="#arguments.creation_date#">
-				<cfinvokeargument name="start_date" value="#arguments.start_date#">
-				<cfinvokeargument name="end_date" value="#arguments.end_date#">
-
-				<cfinvokeargument name="place" value="#arguments.place#">
-				<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
-				<cfinvokeargument name="estimated_value" value="#arguments.estimated_value#">
-				<cfinvokeargument name="real_value" value="#arguments.real_value#">
-				<cfinvokeargument name="done" value="#arguments.done#">
-				<cfinvokeargument name="display_type_id" value="#arguments.display_type_id#">
-				<cfinvokeargument name="iframe_url" value="#arguments.iframe_url#">
-				<cfinvokeargument name="iframe_display_type_id" value="#arguments.iframe_display_type_id#">
-				<cfinvokeargument name="identifier" value="#arguments.identifier#">
-				<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
-				<cfinvokeargument name="general" value="#arguments.general#">
-				<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
-
-				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
-				<cfinvokeargument name="price" value="#arguments.price#">
-				<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
-				<cfinvokeargument name="area_editable" value="#arguments.area_editable#">
-				<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
-				<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
-
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">--->
 			</cfinvoke>
 
 			<cfif createItemResponse.result IS true>
@@ -287,27 +251,7 @@
 				<cfset response_message = "Respuesta a #itemTypeNameEs# enviado.">
 			</cfif>
 
-            <cfif with_attached IS true><!---Hay archivo para subir--->
-
-				<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="createItemWithAttachedFile" returnvariable="createItemWithAttachedResponse">
-					<!---<cfinvokeargument name="xmlItem" value="#xmlResultItem#"/>--->
-					<cfinvokeargument name="objectItem" value="#objectItem#"/>
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
-					<cfinvokeargument name="file_name" value="#objectFile.name#">
-					<cfinvokeargument name="file_file_name" value="#objectFile.file_name#">
-					<cfinvokeargument name="file_type" value="#objectFile.file_type#">
-					<cfinvokeargument name="file_size" value="#objectFile.file_size#">
-					<cfinvokeargument name="file_description" value="#objectFile.description#">
-				</cfinvoke>
-
-				<cfif createItemWithAttachedResponse.result IS true>
-					<cfset createdItemId = createItemWithAttachedResponse.objectItem.id>
-				<cfelse>
-					<cfthrow message="#createItemWithAttachedResponse.message#">
-				</cfif>
-
-				<cfset file_id = createItemWithAttachedResponse.objectFile.id>
-				<cfset file_physical_name = createItemWithAttachedResponse.objectFile.physical_name>--->
+      <cfif with_attached IS true><!---Hay archivo para subir--->
 
 				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="createFile" returnvariable="createFileResponse">
 					<cfinvokeargument name="name" value="#objectFile.name#">
@@ -561,98 +505,19 @@
 				<cfset with_image = true>
 			</cfif>
 
-			<!---<cfset description_html = insertBR(arguments.description)>--->
+      <cfif with_attached IS true>
 
-      <!---<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="objectItem" returnvariable="objectItem">
-				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-				<cfinvokeargument name="id" value="#arguments.item_id#">
-        <cfinvokeargument name="title" value="#arguments.title#">
-        <cfinvokeargument name="link" value="#arguments.link#">
-				<cfif isDefined("arguments.link_target")>
-					<cfinvokeargument name="link_target" value="#arguments.link_target#">
-				</cfif>
-        <cfinvokeargument name="description" value="#arguments.description#">
-        <cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
-        <cfif isDefined("arguments.notify_by_sms")>
-					<cfinvokeargument name="notify_by_sms" value="#arguments.notify_by_sms#">
-				</cfif>
-				<cfif isDefined("arguments.post_to_twitter")>
-					<cfinvokeargument name="post_to_twitter" value="#arguments.post_to_twitter#">
-				</cfif>
-				<cfif isDefined("arguments.creation_date")>
-					<cfinvokeargument name="creation_date" value="#arguments.creation_date#">
-				</cfif>
-				<cfif isDefined("arguments.start_date")>
-					<cfinvokeargument name="start_date" value="#arguments.start_date#">
-				</cfif>
-				<cfif isDefined("arguments.end_date")>
-					<cfinvokeargument name="end_date" value="#arguments.end_date#">
-				</cfif>
-				<cfif isDefined("arguments.start_hour") AND isDefined("arguments.start_minute")>
-					<cfinvokeargument name="start_time" value="#arguments.start_hour#:#arguments.start_minute#">
-				</cfif>
-				<cfif isDefined("arguments.end_hour") AND isDefined("arguments.end_minute")>
-					<cfinvokeargument name="end_time" value="#arguments.end_hour#:#arguments.end_minute#">
-				</cfif>
-				<cfif isDefined("arguments.start_hour") AND isDefined("arguments.start_minute")>
-					<cfinvokeargument name="start_hour" value="#arguments.start_hour#">
-					<cfinvokeargument name="start_minute" value="#arguments.start_minute#">
-				</cfif>
-				<cfif isDefined("arguments.end_hour") AND isDefined("arguments.end_minute")>
-					<cfinvokeargument name="end_hour" value="#arguments.end_hour#">
-					<cfinvokeargument name="end_minute" value="#arguments.end_minute#">
-				</cfif>
-				<cfif isDefined("arguments.place")>
-					<cfinvokeargument name="place" value="#arguments.place#">
-				</cfif>
-				<cfif isDefined("arguments.recipient_user")>
-					<cfinvokeargument name="recipient_user" value="#arguments.recipient_user#">
-				</cfif>
-				<cfif isDefined("arguments.estimated_value")>
-					<cfinvokeargument name="estimated_value" value="#arguments.estimated_value#">
-				</cfif>
-				<cfif isDefined("arguments.real_value")>
-					<cfinvokeargument name="real_value" value="#arguments.real_value#">
-				</cfif>
-				<cfinvokeargument name="done" value="#arguments.done#">
-				<cfif isDefined("arguments.position")>
-					<cfinvokeargument name="position" value="#arguments.position#">
-				</cfif>
-				<cfif isDefined("arguments.display_type_id")>
-					<cfinvokeargument name="display_type_id" value="#arguments.display_type_id#">
-				</cfif>
-				<cfif isDefined("arguments.iframe_url")>
-					<cfinvokeargument name="iframe_url" value="#arguments.iframe_url#">
-				</cfif>
-				<cfif isDefined("arguments.iframe_display_type_id")>
-					<cfinvokeargument name="iframe_display_type_id" value="#arguments.iframe_display_type_id#">
-				</cfif>
-				<cfif isDefined("arguments.identifier")>
-					<cfinvokeargument name="identifier" value="#arguments.identifier#">
-				</cfif>
-				<cfif isDefined("arguments.structure_available")>
-					<cfinvokeargument name="structure_available" value="#arguments.structure_available#">
-				</cfif>
-				<cfif isDefined("arguments.general")>
-					<cfinvokeargument name="general" value="#arguments.general#">
-				</cfif>
-          <cfinvokeargument name="return_type" value="object">
-      </cfinvoke>--->
+        	<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
+						<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
+						<cfinvokeargument name="file_name" value="(Pendiente de subir el archivo)"><!---Este nombre sale en la notificación--->
+						<cfinvokeargument name="file_type" value="pending">
+						<cfinvokeargument name="name" value=" ">
+						<cfinvokeargument name="description" value=" ">
 
+						<cfinvokeargument name="return_type" value="object">
+					</cfinvoke>
 
-        <cfif with_attached IS true>
-
-            	<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="objectFile" returnvariable="objectFile">
-								<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
-								<cfinvokeargument name="file_name" value="(Pendiente de subir el archivo)"><!---Este nombre sale en la notificación--->
-								<cfinvokeargument name="file_type" value="pending">
-								<cfinvokeargument name="name" value=" ">
-								<cfinvokeargument name="description" value=" ">
-
-								<cfinvokeargument name="return_type" value="object">
-							</cfinvoke>
-
-							<cfset objectFile.file_size = "0">
+					<cfset objectFile.file_size = "0">
 
         </cfif>
 
@@ -672,16 +537,6 @@
 							<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
 						</cfif>
 
-						<!---<cfinvokeargument name="objectItem" value="#objectItem#"/>
-						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
-						<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">
-						<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
-						<cfinvokeargument name="price" value="#arguments.price#">
-						<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
-						<cfinvokeargument name="area_editable" value="#arguments.area_editable#">
-						<cfinvokeargument name="unlock" value="#arguments.unlock#"/>
-						<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
-						<cfinvokeargument name="no_notify" value="#arguments.no_notify#">--->
 					</cfinvoke>
 
 					<cfif updateItemResponse.result IS NOT true>
@@ -712,16 +567,6 @@
 					<cfif isDefined("arguments.publication_date")>
 						<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
 					</cfif>
-
-					<!---<cfinvokeargument name="objectItem" value="#objectItem#"/>
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#"/>
-					<cfinvokeargument name="publication_scope_id" value="#arguments.publication_scope_id#">--->
-
-					<!---<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
-					<cfinvokeargument name="price" value="#arguments.price#">
-					<cfinvokeargument name="sub_type_id" value="#arguments.sub_type_id#">
-					<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#">
-					<cfinvokeargument name="no_notify" value="#arguments.no_notify#">--->
 				</cfinvoke>
 
 				<cfif updateItemWithAttachedResponse.result IS true>
@@ -1323,7 +1168,7 @@
 
 			<cfset msg = URLEncodedFormat(msg)>
 
-           <cflocation url="#arguments.return_page#&res=#deleteAttachedFileResponse.result#&msg=#msg#" addtoken="no">
+      <cflocation url="#arguments.return_page#&res=#deleteAttachedFileResponse.result#&msg=#msg#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandler.cfm">
@@ -1825,13 +1670,6 @@
 						   			<div class="media-left">
 										<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.user_in_charge#">
 
-											<!---
-											<cfif len(objectItem.user_image_type) GT 0>
-												<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectItem.user_in_charge#&type=#objectItem.user_image_type#&small=" alt="#objectItem.user_full_name#" class="user_img" style="margin-right:2px;"/>
-											<cfelse>
-												<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectItem.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
-											</cfif>--->
-
 											<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 												<cfinvokeargument name="user_id" value="#objectItem.user_in_charge#">
 												<cfinvokeargument name="user_full_name" value="#objectItem.user_full_name#">
@@ -1868,22 +1706,6 @@
 
 							<hr style="margin-top:3px;margin-bottom:5px;">
 
-							<!---<div>
-
-								<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.last_update_user_id#"><cfif len(objectItem.last_update_user_image_type) GT 0>
-									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectItem.last_update_user_id#&type=#objectItem.last_update_user_image_type#&small=" alt="#objectItem.last_update_user_full_name#" class="item_img" style="margin-right:2px;"/>
-								<cfelse>
-									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectItem.last_update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
-								</cfif></a>
-
-								<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.last_update_user_id#" class="link_user">#objectItem.last_update_user_full_name#</a>
-
-								<span class="text_date">#objectItem.last_update_date#</span> <span lang="es">(Última modificación)</span>
-
-								<hr style="margin-top:1px;">
-
-							</div>--->
-
 							<div class="row">
 
 								<div class="col-xs-12">
@@ -1892,12 +1714,6 @@
 
 							   			<div class="media-left">
 											<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.last_update_user_id#">
-
-												<!---<cfif len(objectItem.last_update_user_image_type) GT 0>
-													<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectItem.last_update_user_id#&type=#objectItem.user_image_type#&small=" alt="#objectItem.last_update_user_full_name#" class="user_img" style="margin-right:2px;"/>
-												<cfelse>
-													<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectItem.last_update_user_full_name#" class="item_img_default" style="margin-right:2px;"/>
-												</cfif>--->
 
 												<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 													<cfinvokeargument name="user_id" value="#objectItem.last_update_user_id#">
@@ -2551,28 +2367,12 @@
 
 								<cfelseif itemTypeId IS NOT 3><!---No es link--->
 
-									<!---<cfif itemTypeId NEQ 1 AND APPLICATION.identifier NEQ "vpnet">---><!---Message AND DP--->
-
-										<!---
-										<cfif len(itemsQuery.user_image_type) GT 0>
-											<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemsQuery.user_in_charge#&type=#itemsQuery.user_image_type#&small=" alt="#itemsQuery.user_full_name#" class="item_img"/>
-										<cfelse>
-											<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#itemsQuery.user_full_name#" class="item_img_default" />
-										</cfif>
-										--->
-
 									<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 										<cfinvokeargument name="user_id" value="#itemsQuery.user_in_charge#">
 										<cfinvokeargument name="user_full_name" value="#itemsQuery.user_full_name#">
 										<cfinvokeargument name="user_image_type" value="#itemsQuery.user_image_type#">
 										<cfinvokeargument name="width_px" value="40">
 									</cfinvoke>
-
-									<!---<cfelse>
-
-										<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#.png" class="item_img" alt="#itemTypeNameEs#" style="width:30px"/>
-
-									</cfif>--->
 
 								<cfelse><!---style="max-width:none;" Requerido para corregir un bug con Bootstrap en Chrome--->
 									<a href="#APPLICATION.htmlPath#/go_to_link_link.cfm?#itemTypeName#=#itemsQuery.id#" style="float:left;" target="_blank" title="Visitar el enlace" onclick="event.stopPropagation()"><img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#.png" class="item_img" style="width:30px"/></a>
@@ -2600,13 +2400,6 @@
 							</td>
 							<td>
 								<cfif itemTypeId IS 6><!---Tasks--->
-									<!---
-									<cfif len(itemsQuery.user_image_type) GT 0>
-										<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemsQuery.user_in_charge#&type=#itemsQuery.user_image_type#&small=" alt="#itemsQuery.user_full_name#" class="user_img"/>
-									<cfelse>
-										<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#itemsQuery.user_full_name#" class="user_img_default" />
-									</cfif>
-									--->
 									<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 										<cfinvokeargument name="user_id" value="#itemsQuery.user_in_charge#">
 										<cfinvokeargument name="user_full_name" value="#itemsQuery.user_full_name#">
@@ -2617,11 +2410,6 @@
 								<span>#itemsQuery.user_full_name#</span></td>
 							<cfif arguments.itemTypeId IS 6><!---Tasks--->
 							<td>
-								<!---<cfif len(itemsQuery.recipient_user_image_type) GT 0>
-									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemsQuery.recipient_user#&type=#itemsQuery.recipient_user_image_type#&small=" alt="#itemsQuery.recipient_user_full_name#" class="user_img"/>
-								<cfelse>
-									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#itemsQuery.recipient_user_full_name#" class="user_img_default" />
-								</cfif>--->
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 									<cfinvokeargument name="user_id" value="#itemsQuery.recipient_user#">
 									<cfinvokeargument name="user_full_name" value="#itemsQuery.recipient_user_full_name#">
@@ -2798,49 +2586,11 @@
 						<!---Item selection--->
 						<cfset itemSelected = false>
 
-						<!---
-						<cfif arguments.openItemOnSelect IS true AND alreadySelected IS false>
-
-							<cfif isDefined("URL.#itemTypeName#")>
-
-								<cfif URL[itemTypeName] IS itemsQuery.id>
-
-									<!---Esta acción solo se completa si está en la versión HTML2--->
-									<script>
-										openUrlHtml2('#item_page_url#','itemIframe');
-									</script>
-									<cfset itemSelected = true>
-
-								</cfif>
-
-							<cfelseif itemsQuery.currentRow IS 1>
-
-								<cfif app_version NEQ "mobile">
-									<!---Esta acción solo se completa si está en la versión HTML2--->
-									<script>
-										openUrlHtml2('#item_page_url#','itemIframe');
-									</script>
-									<cfset itemSelected = true>
-								</cfif>
-
-							</cfif>
-
-							<cfif itemSelected IS true>
-								<cfset alreadySelected = true>
-							</cfif>
-
-						</cfif>
-						--->
-
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 
 						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#" onclick="stopEvent(event)"><!--- id: usado para cuando se tiene que obtener el id del elemento seleccionado (al seleccionar un listado de elementos)--->
 
-							<td><!---<cfif len(itemsQuery.user_image_type) GT 0>
-									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#itemsQuery.user_in_charge#&type=#itemsQuery.user_image_type#&small=" alt="#itemsQuery.user_full_name#" class="user_img"/>
-								<cfelse>
-									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#itemsQuery.user_full_name#" class="user_img_default" />
-								</cfif>--->
+							<td>
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 									<cfinvokeargument name="user_id" value="#itemsQuery.user_in_charge#">
 									<cfinvokeargument name="user_full_name" value="#itemsQuery.user_full_name#">
