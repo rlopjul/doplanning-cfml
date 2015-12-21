@@ -779,7 +779,6 @@
 
 						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) IS 16>
 							, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
-							, publication_restricted = <cfqueryparam value="#arguments.publication_restricted#" cfsqltype="cf_sql_bit">
 							<!---, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">--->
 						</cfif>
 						<!--- publicationValidation --->
@@ -791,6 +790,9 @@
 							<cfelse>
 								, publication_validated = <cfqueryparam value="false" cfsqltype="cf_sql_bit">
 							</cfif>
+						</cfif>
+						<cfif APPLICATION.publicationRestricted IS true>
+							, publication_restricted = <cfqueryparam value="#arguments.publication_restricted#" cfsqltype="cf_sql_bit">
 						</cfif>
 
 						<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!--- Entries, News, Events --->
@@ -1298,7 +1300,6 @@
 
 						<cfif isDefined("arguments.publication_date") AND len(arguments.publication_date) IS 16>
 							, publication_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.publication_date#" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM')
-							, publication_restricted = <cfqueryparam value="#arguments.publication_restricted#" cfsqltype="cf_sql_bit">
 							<!---, publication_time = <cfqueryparam value="#arguments.publication_time#" cfsqltype="cf_sql_time">--->
 						</cfif>
 						<!--- publicationValidation --->
@@ -1308,6 +1309,9 @@
 								, publication_validated_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">
 								, publication_validated_date = NOW()
 							</cfif>
+						</cfif>
+						<cfif APPLICATION.publicationRestricted IS true>
+						, publication_restricted = <cfqueryparam value="#arguments.publication_restricted#" cfsqltype="cf_sql_bit">
 						</cfif>
 
 						<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->

@@ -481,6 +481,19 @@
 
 	</cfif>
 
+	<cfif APPLICATION.publicationRestricted IS true AND isDefined("area_type") AND area_type EQ "web">
+		<div class="row">
+			<div class="col-xs-12 col-sm-8">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="publication_restricted" id="publication_restricted" value="true" <cfif isDefined("objectItem.publication_restricted") AND objectItem.publication_restricted IS true>checked="checked"</cfif> /> <span lang="es">Visible sólo para usuarios identificados</span>
+					</label>
+					<small class="help-block" lang="es"><cfif itemTypeGender EQ "male">El<cfelse>La</cfif> #itemTypeNameEs# sólo podrá ser visible en la web por usuarios logueados.</small>
+				</div>
+			</div>
+		</div>
+	</cfif>
+
 </cfif>
 
 <cfif itemTypeId IS 4><!---News--->

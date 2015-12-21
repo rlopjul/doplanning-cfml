@@ -92,7 +92,7 @@
 					<cfelse>
 					, items.publication_date
 					</cfif>
-					, items.publication_validated
+					, items.publication_validated, items.publication_restricted
 
 					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->
 						, items.iframe_url, items.iframe_display_type_id, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
