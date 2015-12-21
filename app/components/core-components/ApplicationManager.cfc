@@ -48,6 +48,7 @@
 		<cfargument name="changeElementsArea" type="boolean" required="false" default="true">
 		<cfargument name="publicationScope" type="boolean" required="false" default="true">
 		<cfargument name="publicationValidation" type="boolean" required="false" default="false">
+		<cfargument name="publicationRestricted" type="boolean" required="false" default="false">
 		<cfargument name="userEmailRequired" type="boolean" required="false" default="true">
 		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
 		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
@@ -106,6 +107,7 @@
 			<cfset APPLICATION.changeElementsArea = arguments.changeElementsArea>
 			<cfset APPLICATION.publicationScope = arguments.publicationScope>
 			<cfset APPLICATION.publicationValidation = arguments.publicationValidation>
+			<cfset APPLICATION.publicationRestricted = arguments.publicationRestricted>
 			<cfset APPLICATION.userEmailRequired = arguments.userEmailRequired>
 			<cfset APPLICATION.moduleLdapDiraya = arguments.moduleLdapDiraya><!--- asnc, agsna --->
 			<cfset APPLICATION.moduleAntiVirus = arguments.moduleAntiVirus>
