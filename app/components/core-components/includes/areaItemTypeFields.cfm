@@ -32,3 +32,10 @@
 
 <!---display_type_id--->
 <cfset itemTypesFields.display_type_id = {position=10, label="Tipo de visualización", import=false, default="1", notIncludedIn="1,3,4,5"}>
+
+<cfif APPLICATION.publicationRestricted IS true>
+
+  <!---publication_restricted--->
+  <cfset itemTypesFields.publication_restricted = {position=11, label="Visible sólo para usuarios registrados", import=true, notIncludedIn="1"}>
+
+</cfif>
