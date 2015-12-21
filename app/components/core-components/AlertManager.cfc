@@ -465,6 +465,10 @@
 								#langText[curLang].new_item.publication_validated#: <b><cfif objectItem.publication_validated IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
 							</cfif>
 
+							<cfif APPLICATION.publicationRestricted IS true AND len(objectItem.publication_restricted) GT 0>
+								#langText[curLang].new_item.publication_restricted#: <b><cfif objectItem.publication_restricted IS true>#langText[curLang].new_item.yes#<cfelse>#langText[curLang].new_item.no#</cfif></b><br/>
+							</cfif>
+
 						</cfif>
 
 						<cfif itemCategories.recordCount GT 0>

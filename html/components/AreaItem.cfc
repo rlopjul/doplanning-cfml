@@ -1848,6 +1848,10 @@
 									<div class="div_message_page_label"><span lang="es">Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
 									</div>
 								</cfif>
+								<cfif APPLICATION.publicationRestricted IS true AND len(objectItem.publication_restricted) GT 0>
+									<div class="div_message_page_label"><span lang="es">Publicación visible sólo para usuarios identificados:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_restricted IS true>Sí<cfelse><b>No</b></cfif></span>
+									</div>
+								</cfif>
 
 							</cfif>
 
