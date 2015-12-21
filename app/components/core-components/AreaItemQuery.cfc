@@ -30,6 +30,7 @@
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="published" type="boolean" required="false" default="true">
+		<cfargument name="restricted" type="boolean" required="false">
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
 		<cfargument name="with_categories" type="boolean" required="false" default="false">
 		<cfargument name="status" type="string" required="false">
@@ -171,6 +172,9 @@
 						<cfif APPLICATION.publicationValidation IS true>
 						AND ( items.publication_validated IS NULL OR items.publication_validated = true )
 						</cfif>
+					</cfif>
+					<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.restricted") AND arguments.restricted IS false>
+						AND items.publication_restricted = false
 					</cfif>
 				</cfif>
 				<cfif isDefined("arguments.status")>
@@ -463,6 +467,9 @@
 							<cfif APPLICATION.publicationValidation IS true>
 							AND ( items.publication_validated IS NULL OR items.publication_validated = true )
 							</cfif>
+						</cfif>
+						<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.restricted") AND arguments.restricted IS false>
+							AND items.publication_restricted = false
 						</cfif>
 					</cfif>
 
@@ -797,6 +804,7 @@
 		<cfargument name="onlyUsers" type="boolean" required="false" default="false">
 
 		<cfargument name="published" type="boolean" required="false" default="true">
+		<cfargument name="restricted" type="boolean" required="false">
 
 		<cfargument name="delete_user_id" type="numeric" required="false">
 		<cfargument name="status" type="string" required="false" default="ok"><!--- ok / deleted --->
@@ -822,10 +830,10 @@
 			<cfset var fileCommonColums = "id, name, uploading_date AS creation_date, IFNULL(replacement_date, uploading_date) AS last_update_date, description, user_in_charge, replacement_user, area_files.area_id, file_type_id"><!---IFNULL(replacement_date, uploading_date) AS creation_date--->
 
 			<cfif isDefined("arguments.area_type") AND len(arguments.area_type) GT 0><!--- WEB --->
-				<cfset commonColumsWebAdd = ", publication_date, publication_validated">
+				<cfset commonColumsWebAdd = ", publication_date, publication_validated, publication_restricted">
 				<cfset commonColums = commonColums&commonColumsWebAdd>
 				<cfset commonColumsWithoutLastUpdate = commonColumsWithoutLastUpdate&commonColumsWebAdd>
-				<cfset fileCommonColums = fileCommonColums&", publication_date, publication_validated">
+				<cfset fileCommonColums = fileCommonColums&", publication_date, publication_validated, false AS publication_restricted">
 			</cfif>
 
 			<cfset var commonColumsNull = "NULL AS end_date, NULL AS done, NULL AS locked, NULL AS area_editable">
@@ -1062,6 +1070,10 @@
 					AND ( lists_v.publication_validated IS NULL OR lists_v.publication_validated = true )
 					</cfif>
 				</cfif>
+				<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.publication_restricted") AND arguments.publication_restricted IS false>
+					AND forms_views.publication_restricted = false
+					AND forms_v.publication_restricted = false
+				</cfif>
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
 				AND lists_views.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
@@ -1089,6 +1101,10 @@
 					AND ( forms_views.publication_validated IS NULL OR forms_views.publication_validated = true )
 					AND ( forms_v.publication_validated IS NULL OR forms_v.publication_validated = true )
 					</cfif>
+				</cfif>
+				<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.publication_restricted") AND arguments.publication_restricted IS false>
+					AND forms_views.publication_restricted = false
+					AND forms_v.publication_restricted = false
 				</cfif>
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
@@ -1175,6 +1191,14 @@
 						WHERE ( items.publication_date IS NULL OR items.publication_date <= NOW() )
 						<cfif APPLICATION.publicationValidation IS true>
 						AND ( items.publication_validated IS NULL OR items.publication_validated = true )
+						</cfif>
+					</cfif>
+
+					<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.publication_restricted") AND arguments.publication_restricted IS false>
+						<cfif arguments.published IS true>
+							AND items.publication_restricted = false
+						<cfelse>
+							WHERE items.publication_restricted = false
 						</cfif>
 					</cfif>
 
