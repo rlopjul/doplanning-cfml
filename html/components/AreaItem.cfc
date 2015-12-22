@@ -2115,6 +2115,7 @@
 							<cfif arguments.full_content IS false>
 								<cfif itemTypeId IS 6><!---Tasks--->
 									widgets: ['filter','stickyHeaders','math'],
+								<cfelse>
 									widgets: ['filter','stickyHeaders'],
 								</cfif>
 							</cfif>
@@ -2127,9 +2128,7 @@
 								</cfif>
 							<cfelseif arguments.full_content IS true>
 								sortList: [[4,1]] ,
-							<cfelseif itemTypeId IS 2 OR itemTypeId IS 3><!---Entries, Links Order by position--->
-								sortList: [[5,0]] ,
-							<cfelseif itemTypeId IS 4><!---News Order by position--->
+							<cfelseif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News Order by position--->
 								sortList: [[5,1]] ,
 							<cfelse>
 								sortList: [[4,1]] ,
