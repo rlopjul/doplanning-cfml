@@ -6,7 +6,7 @@
 		SELECT *
 		FROM information_schema.COLUMNS
 		WHERE TABLE_SCHEMA = 'dp_#new_client_abb#'
-		AND TABLE_NAME = '#new_client_abb#_entries'
+		AND TABLE_NAME = '#new_client_abb#_mailings'
 		AND COLUMN_NAME = 'publication_restricted';
 	</cfquery>
 
@@ -29,10 +29,54 @@
 		<!--- publication_restricted_column --->
 
 		<cfquery datasource="#client_datasource#">
-			ALTER TABLE `dp_hcs`.`hcs_entries`
+			ALTER TABLE `#new_client_abb#_entries`
 			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
 		</cfquery>
 
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_news`
+			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_events`
+			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_pubmeds`
+			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_images`
+			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists`
+			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_lists_views`
+			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_forms`
+			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_forms_views`
+			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
+		</cfquery>
+
+		<cfquery datasource="#client_datasource#">
+			ALTER TABLE `#new_client_abb#_mailings`
+			ADD COLUMN `publication_restricted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '' AFTER `publication_validated_date`;
+		</cfquery>
 
 		<cfcatch>
 			<cfoutput>
