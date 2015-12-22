@@ -2616,12 +2616,6 @@
 						<cfset notifyItemType = false>
 					</cfif>
 
-				<cfelse>
-
-					<cfif itemTypesStruct[itemTypeId].noWeb IS false>
-						<cfset notifyItemType = false>
-					</cfif>
-
 				</cfif>
 
 				<cfif notifyItemType IS true>
@@ -2933,10 +2927,6 @@
 												<cfinvokeargument name="client_abb" value="#client_abb#">
 												<cfinvokeargument name="client_dsn" value="#client_dsn#">
 											</cfinvoke>
-
-
-											<cfdump var="#rowQuery#">
-
 
 											<!--- Rows content --->
 
