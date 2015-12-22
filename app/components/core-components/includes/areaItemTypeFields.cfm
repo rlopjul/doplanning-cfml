@@ -4,13 +4,13 @@
 <cfset itemTypesFields.title = {position=1, label="Título", import=true, notIncludedIn=""}>
 
 <!---description--->
-<cfset itemTypesFields.description = {position=2, label="Contenido", import=true, notIncludedIn=""}>
+<cfset itemTypesFields.description = {position=4, label="Contenido", import=true, notIncludedIn=""}>
 
 <!---creation_date--->
-<cfset itemTypesFields.creation_date = {position=3, label="Fecha de creación", import=true, notIncludedIn=""}>
+<cfset itemTypesFields.creation_date = {position=2, label="Fecha de creación", import=true, notIncludedIn=""}>
 
 <!---link--->
-<cfset itemTypesFields.link = {position=4, label="Enlace más información", import=true, notIncludedIn=""}>
+<cfset itemTypesFields.link = {position=5, label="Enlace más información", import=true, notIncludedIn=""}>
 
 <!---link_target--->
 <cfset itemTypesFields.link_target = {position=4, label="Abrir enlace en (target)", import=false, default="_blank", notIncludedIn=""}>
@@ -36,6 +36,6 @@
 <cfif APPLICATION.publicationRestricted IS true>
 
   <!---publication_restricted--->
-  <cfset itemTypesFields.publication_restricted = {position=11, label="Visible sólo para usuarios registrados", import=true, notIncludedIn="1"}>
+  <cfset itemTypesFields.publication_restricted = {position=3, label="Visible sólo para usuarios registrados", import=true, notIncludedIn="1"}>
 
 </cfif>
