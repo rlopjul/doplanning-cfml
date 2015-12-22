@@ -263,8 +263,9 @@
 					, items_position.position
 					</cfif>
 					<cfif arguments.parse_dates IS true>
-						, DATE_FORMAT(items.creation_date, '#dateTimeFormat#') AS creation_date
-						<cfif arguments.itemTypeId IS NOT 1>, DATE_FORMAT(items.last_update_date, '#dateTimeFormat#') AS last_update_date</cfif>
+						, DATE_FORMAT(CONVERT_TZ(items.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
+						<cfif arguments.itemTypeId IS NOT 1>, DATE_FORMAT(CONVERT_TZ(items.last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date
+						</cfif>
 					<cfelse>
 						, items.creation_date
 						<cfif arguments.itemTypeId IS NOT 1 AND itemTypeId IS NOT 7>, items.last_update_date</cfif>
@@ -1070,9 +1071,9 @@
 					AND ( lists_v.publication_validated IS NULL OR lists_v.publication_validated = true )
 					</cfif>
 				</cfif>
-				<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.publication_restricted") AND arguments.publication_restricted IS false>
-					AND forms_views.publication_restricted = false
-					AND forms_v.publication_restricted = false
+				<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.restricted") AND arguments.restricted IS false>
+					AND lists_views.publication_restricted = false
+					AND lists_v.publication_restricted = false
 				</cfif>
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
@@ -1102,7 +1103,7 @@
 					AND ( forms_v.publication_validated IS NULL OR forms_v.publication_validated = true )
 					</cfif>
 				</cfif>
-				<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.publication_restricted") AND arguments.publication_restricted IS false>
+				<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.restricted") AND arguments.restricted IS false>
 					AND forms_views.publication_restricted = false
 					AND forms_v.publication_restricted = false
 				</cfif>
@@ -1194,7 +1195,7 @@
 						</cfif>
 					</cfif>
 
-					<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.publication_restricted") AND arguments.publication_restricted IS false>
+					<cfif APPLICATION.publicationRestricted IS true AND isDefined("arguments.restricted") AND arguments.restricted IS false>
 						<cfif arguments.published IS true>
 							AND items.publication_restricted = false
 						<cfelse>
