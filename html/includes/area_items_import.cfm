@@ -63,7 +63,7 @@
 
 			<tr>
 				<td style="color:##CCCCCC">#curRow#</td>
-			<cfloop from="1" to="#ArrayLen(fileArray[1])#" step="1" index="curColumn">
+			<cfloop from="1" to="#ArrayLen(fileArray[curRow])#" step="1" index="curColumn">
 
 				<cfset fieldValue = fileArray[curRow][curColumn]>
 				<td>#fieldValue#</td>
@@ -146,9 +146,21 @@
 			<div class="col-sm-12">
 		      <div class="checkbox">
 		        <label>
-		          <input type="checkbox" name="start_row" value="1"<cfif isDefined("FORM.start_row")>checked</cfif>> <span lang="es">Importar primera fila del archivo</span>
+		          <input type="checkbox" name="start_row" value="1" <cfif isDefined("FORM.start_row")>checked</cfif>> <span lang="es">Importar primera fila del archivo</span>
 		        </label>
 		        <small class="help-block" style="margin-bottom:0" lang="es">Por defecto no se importa la primera fila del archivo (fila para los títulos de las columnas)</small>
+		      </div>
+		    </div>
+		</div>
+
+		<cfset FORM.reverse_order = true><!--- PROVISIONAL --->
+		<div class="row">
+			<div class="col-sm-12">
+		      <div class="checkbox">
+		        <label>
+		          <input type="checkbox" name="reverse_order" value="1" <cfif isDefined("FORM.reverse_order")>checked</cfif>> <span lang="es">Invertir order de introducción</span>
+		        </label>
+		        <small class="help-block" style="margin-bottom:0" lang="es">Se introducirá primero el último registro del archivo</small>
 		      </div>
 		    </div>
 		</div>

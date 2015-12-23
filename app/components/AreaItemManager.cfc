@@ -4347,7 +4347,7 @@
 		<cfargument name="files" type="array" required="true"/>
 		<cfargument name="delimiter" type="string" required="false" default=";">
 		<cfargument name="start_row" type="numeric" required="false" default="2">
-		<!---<cfargument name="include_categories" type="boolean" required="false" default="false">--->
+		<cfargument name="reverse_order" type="boolean" required="false" default="false">
 		<cfargument name="cancel_on_error" type="boolean" required="false" default="true">
 
 		<cfset var method = "importItems">
@@ -4408,7 +4408,20 @@
 
 			<cfset itemTypesFieldsSorted = structSort(itemTypeFields, "numeric", "asc", "position")>
 
-			<cfloop from="#arguments.start_row#" to="#numFileRows#" step="1" index="curRowIndex"><!--- loop Rows --->
+			<cfif arguments.reverse_order IS true><!--- Reverse order --->
+				<cfset startRow = numFileRows>
+
+				<cfset endRow = arguments.start_row>
+
+			<cfelse>
+
+				<cfset startRow = arguments.start_row>
+
+				<cfset endRow = numFileRows>
+
+			</cfif>
+
+			<cfloop from="#startRow#" to="#endRow#" step="-1" index="curRowIndex"><!--- loop Rows --->
 
 				<cftry>
 
