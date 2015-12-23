@@ -89,7 +89,7 @@
 
 			<span lang="es">-Tipo de archivo:</span> <strong lang="es">.csv o .txt</strong> <span lang="es">delimitado por ; o por tabulaciones.</span><br>
 			<span lang="es">Punto y coma es la delimitación por defecto en el SO Windows en España (esto varía en configuraciones por defecto de otros paises o idiomas).</span><br/>
-			-<span lang="es">Codificación</span>: <strong>Windows-1252</strong> <span lang="es">(codificación por defecto en Windows)</span>.<br /><!---iso-8859-1--->
+			-<span lang="es">Codificación</span>: <strong>Windows-1252</strong> <span lang="es">(codificación por defecto en Windows)</span>.<br />
 
 			-<span lang="es">Número de columnas</span>: <strong>#structCount(itemTypeFields)#</strong>.<br />
 
@@ -104,7 +104,7 @@
 
 			<span lang="es">-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.</span>
 			<br/>
-			<!--- -<a href="usuarios_ejemplo.csv">Aquí</a> puede descargar un archivo de ejemplo.<br/>--->
+
 		<br/>
 		<span lang="es">No se enviará notificación instantánea de los nuevos elementos a los usuarios.</span><br/>
 		<span lang="es">Una vez pulsado el botón "Importar elementos" debe esperar hasta que se complete la operación.</span>
@@ -153,7 +153,6 @@
 		    </div>
 		</div>
 
-		<cfset FORM.reverse_order = true><!--- PROVISIONAL --->
 		<div class="row">
 			<div class="col-sm-12">
 		      <div class="checkbox">
