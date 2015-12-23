@@ -388,7 +388,6 @@
 
 					</div>
 
-
 					<cfif NOT isDefined("URL.mode")>
 
 						<div class="btn-group pull-right">
@@ -430,6 +429,23 @@
 					</cfif>
 
 					<cfif itemTypeId IS 1 OR itemTypeId IS 2 OR itemTypeId IS 4 OR itemTypeId IS 5><!--- Messages, Entries, News and events --->
+
+						<cfif is_user_area_responsible IS true>
+
+							<!--- getClient --->
+							<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+								<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+							</cfinvoke>
+
+							<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/#itemTypeNameP#.cfm?area=#area_id#")>
+
+							<div class="btn-group pull-right">
+
+								<a href="#APPLICATION.htmlComponentsPath#/AreaItem.cfc?method=deleteAreaItems&area_id=#area_id#&itemTypeId=#itemTypeId#&moveToBin=#clientQuery.bin_enabled##url_return_page#" onclick="return confirmAction('eliminar');" class="btn btn-default btn-sm"><i class="icon-remove" style="font-size:14px; line-height:23px;"></i> <span lang="es">Eliminar todos <cfif itemTypeGender EQ "male">los<cfelse>las</cfif> #itemTypeNameEsP# del área</span></a>
+
+							</div>
+
+						</cfif>
 
 						<div class="btn-group pull-right">
 							<a href="area_items_import.cfm?area=#area_id#&itemTypeId=#itemTypeId#" class="btn btn-default btn-sm"><i class="fa fa-arrow-up" style="font-size:14px; line-height:23px;"></i> <span lang="es">Importar #itemTypeNameEsP#</span></a>

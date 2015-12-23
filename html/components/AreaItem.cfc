@@ -1179,6 +1179,38 @@
 	</cffunction>
 
 
+	<!--- deleteAreaItems --->
+	<cffunction name="deleteAreaItems" returntype="struct" access="remote">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="moveToBin" type="boolean" required="false" default="true">
+		<cfargument name="return_page" type="string" required="true">
+
+		<cfset var method = "deleteAreaItems">
+
+		<cftry>
+
+			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="deleteAreaItems">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
+			</cfinvoke>
+
+			<cfset msg = "Elementos eliminados">
+
+			<cflocation url="#arguments.return_page#&res=1&msg=#msg#" addtoken="no">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+	</cffunction>
+
+
 	<!--- ------------------------------ changeAreaItemDone ----------------------------------- --->
 
     <cffunction name="changeAreaItemDone" returntype="void" access="remote">

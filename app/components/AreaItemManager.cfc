@@ -3217,9 +3217,10 @@
 
 	<!--- ----------------------- DELETE AREA ITEMS -------------------------------- --->
 
-	<cffunction name="deleteAreaItems" returntype="void" access="package">
+	<cffunction name="deleteAreaItems" returntype="void" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="moveToBin" type="boolean" required="false" default="false">
 
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 
@@ -3231,7 +3232,8 @@
 		<cfquery name="itemsQuery" datasource="#client_dsn#">
 			SELECT id
 			FROM #client_abb#_#itemTypeTable#
-			WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+			AND status = 'ok';
 		</cfquery>
 
 		<cfif itemsQuery.recordCount GT 0>
@@ -3241,7 +3243,7 @@
 				<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="deleteItemResult">
 					<cfinvokeargument name="item_id" value="#itemsQuery.id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="moveToBin" value="false">
+					<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
 				</cfinvoke>
 
 				<cfif deleteItemResult.result IS false>
