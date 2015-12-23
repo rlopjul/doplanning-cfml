@@ -1,8 +1,8 @@
 <!---Modificaciones de la base de datos--->
 <cftransaction>
 
-	 
-	<cfquery datasource="#client_datasource#">	
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `dp_#new_client_abb#`.`#new_client_abb#_scopes` (
 		  `scope_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -11,8 +11,8 @@
 		  KEY `UNIQUE` (`name`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	</cfquery>
-	
-	<cfquery datasource="#client_datasource#">	
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `dp_#new_client_abb#`.`#new_client_abb#_scopes_areas` (
 		  `scope_id` int(10) unsigned NOT NULL,
 		  `area_id` int(11) NOT NULL,
@@ -21,12 +21,12 @@
 		  CONSTRAINT `FK_#new_client_abb#_scopes_areas_1` FOREIGN KEY (`scope_id`) REFERENCES `#new_client_abb#_scopes` (`scope_id`) ON DELETE CASCADE,
 		  CONSTRAINT `FK_#new_client_abb#_scopes_areas_2` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`) ON DELETE CASCADE
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>		
+	</cfquery>
 
 	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `dp_#new_client_abb#`.`#new_client_abb#_files` ADD COLUMN `publication_scope_id` INTEGER UNSIGNED DEFAULT NULL AFTER `in_approval`;
 	</cfquery>
-	
+
 	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `dp_#new_client_abb#`.`#new_client_abb#_lists` ADD COLUMN `publication_scope_id` INTEGER UNSIGNED DEFAULT NULL AFTER `general`;
 	</cfquery>
@@ -133,12 +133,12 @@
 	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `dp_#new_client_abb#`.`#new_client_abb#_users` ADD COLUMN `information` TEXT AFTER `image_type`;
 	</cfquery>
-	
+
 
 
 	<!--- Últimas modificaciones no ejecutada en todos los clientes --->
 
-	 
+
 	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `dp_#new_client_abb#`.`#new_client_abb#_files` ADD COLUMN `replacement_user` INTEGER AFTER `replacement_date`,
 	 ADD CONSTRAINT `FK_#new_client_abb#_files_6` FOREIGN KEY `FK_#new_client_abb#_files_6` (`replacement_user`)
@@ -150,7 +150,7 @@
 	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `dp_#new_client_abb#`.`#new_client_abb#_users` ADD COLUMN `hide_not_allowed_areas` BOOLEAN NOT NULL DEFAULT 0 AFTER `language`;
 	</cfquery>
-	
+
 	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `dp_#new_client_abb#`.`#new_client_abb#_lists_fields` ADD COLUMN `sort_by_this` VARCHAR(4) NOT NULL AFTER `required`;
 	</cfquery>
@@ -162,6 +162,6 @@
 	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `dp_#new_client_abb#`.`#new_client_abb#_forms_fields` ADD COLUMN `sort_by_this` VARCHAR(4) NOT NULL AFTER `required`;
 	</cfquery>
-	
-			
+
+
 </cftransaction>

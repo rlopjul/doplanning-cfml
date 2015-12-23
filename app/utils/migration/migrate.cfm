@@ -85,6 +85,9 @@
 					<div class="form-group">
 						<label>Versión</label>
 						<select name="version">
+							<option value="2.5">2.5</option>
+							<option value="2.6">2.6</option>
+							<option value="2.8">2.8</option>
 							<option value="2.8.1">2.8.1</option>
 							<option value="2.8.2">2.8.2</option>
 							<option value="2.8.3">2.8.3</option>

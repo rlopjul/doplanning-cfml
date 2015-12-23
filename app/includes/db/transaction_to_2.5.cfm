@@ -2,8 +2,9 @@
 <!---Modificaciones de la base de datos--->
 <cftransaction>
 
+
 	<!--- TABLA PARA ORDENAR ITEMS --->
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE `#new_client_abb#_items_position` (
 		  `item_id` int(11) NOT NULL,
 		  `item_type_id` int(10) unsigned NOT NULL,
@@ -14,9 +15,9 @@
 		  CONSTRAINT `FK_#new_client_abb#_items_position_1` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	</cfquery>
-	
+
 	<!--- TABLA DE TIPOS DE CAMPOS --->
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_tables_fields_types` (
 		  `field_type_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `field_type_group` varchar(45) NOT NULL,
@@ -29,10 +30,10 @@
 		  `position` int(10) unsigned NOT NULL,
 		  PRIMARY KEY (`field_type_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>		
+	</cfquery>
 
 	<!--- TABLAS DE LISTAS --->
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_lists` (
 		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		  `title` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -63,10 +64,10 @@
 		  CONSTRAINT `FK_#new_client_abb#_lists_3` FOREIGN KEY (`attached_file_id`) REFERENCES `#new_client_abb#_files` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_lists_4` FOREIGN KEY (`attached_image_id`) REFERENCES `#new_client_abb#_files` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>		
+	</cfquery>
 
 
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_lists_fields` (
 		  `field_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `field_type_id` int(10) unsigned NOT NULL,
@@ -82,12 +83,12 @@
 		  CONSTRAINT `FK_#new_client_abb#_lists_fields_2` FOREIGN KEY (`table_id`) REFERENCES `#new_client_abb#_lists` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_lists_fields_1` FOREIGN KEY (`field_type_id`) REFERENCES `#new_client_abb#_tables_fields_types` (`field_type_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>		
-	
-		
+	</cfquery>
+
+
 
 	<!--- TABLAS DE FORMULARIOS --->
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_forms` (
 		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		  `title` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -118,10 +119,10 @@
 		  CONSTRAINT `FK_#new_client_abb#_forms_3` FOREIGN KEY (`attached_file_id`) REFERENCES `#new_client_abb#_files` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_forms_4` FOREIGN KEY (`attached_image_id`) REFERENCES `#new_client_abb#_files` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>		
+	</cfquery>
 
 
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_forms_fields` (
 		  `field_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `field_type_id` int(10) unsigned NOT NULL,
@@ -137,11 +138,11 @@
 		  CONSTRAINT `FK_#new_client_abb#_forms_fields_2` FOREIGN KEY (`table_id`) REFERENCES `#new_client_abb#_forms` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_forms_fields_1` FOREIGN KEY (`field_type_id`) REFERENCES `#new_client_abb#_tables_fields_types` (`field_type_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>	
-	
-	<!--- TABLAS DE TIPOLOGÍAS --->	
-	
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+	<!--- TABLAS DE TIPOLOGÍAS --->
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_typologies` (
 		  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 		  `title` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -172,10 +173,10 @@
 		  CONSTRAINT `FK_#new_client_abb#_typologies_3` FOREIGN KEY (`attached_file_id`) REFERENCES `#new_client_abb#_files` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_typologies_4` FOREIGN KEY (`attached_image_id`) REFERENCES `#new_client_abb#_files` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>		
+	</cfquery>
 
 
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_typologies_fields` (
 		  `field_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `field_type_id` int(10) unsigned NOT NULL,
@@ -191,12 +192,12 @@
 		  CONSTRAINT `FK_#new_client_abb#_typologies_fields_2` FOREIGN KEY (`table_id`) REFERENCES `#new_client_abb#_typologies` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_typologies_fields_1` FOREIGN KEY (`field_type_id`) REFERENCES `#new_client_abb#_tables_fields_types` (`field_type_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>		
-	
-	
+	</cfquery>
+
+
 	<!--- TABLA DE IMÁGENES --->
 
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_images` (
 		  `id` int(11) NOT NULL AUTO_INCREMENT,
 		  `title` text COLLATE utf8_unicode_ci,
@@ -227,11 +228,11 @@
 		  CONSTRAINT `FK_#new_client_abb#_images_4` FOREIGN KEY (`attached_image_id`) REFERENCES `#new_client_abb#_files` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_images_5` FOREIGN KEY (`display_type_id`) REFERENCES `#new_client_abb#_display_types` (`display_type_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>	
-	
-	<!---TABLAS DE COMENTARIOS DE PUBMED--->		
+	</cfquery>
 
-	<cfquery datasource="#client_datasource#">	
+	<!---TABLAS DE COMENTARIOS DE PUBMED--->
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_pubmeds` (
 		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `title` text COLLATE utf8_unicode_ci,
@@ -263,47 +264,47 @@
 		  CONSTRAINT `FK_#new_client_abb#_pubmeds_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_pubmeds_4` FOREIGN KEY (`attached_image_id`) REFERENCES `#new_client_abb#_files` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>		
-	
-	
-	
+	</cfquery>
+
+
+
 	<!--- Añadir columna link target a las tablas: entries, events y news --->
-	
-	<cfquery datasource="#client_datasource#">	
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_entries` ADD COLUMN `link_target` VARCHAR(45) NOT NULL AFTER `link`;
-	</cfquery>			
-	
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_events` ADD COLUMN `link_target` VARCHAR(45) NOT NULL AFTER `link`;
-	</cfquery>	
-	
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_news` ADD COLUMN `link_target` VARCHAR(45) NOT NULL AFTER `link`;
-	</cfquery>					
-	
-	
+	</cfquery>
+
+
 	<!--- Añadir columna typology_id y row_id a los archivos --->
-	
-	<cfquery datasource="#client_datasource#">	
-		ALTER TABLE `#new_client_abb#_files` 
+
+	<cfquery datasource="#client_datasource#">
+		ALTER TABLE `#new_client_abb#_files`
 		ADD COLUMN `typology_id` INTEGER UNSIGNED AFTER `status_replacement`,
 			ADD COLUMN `typology_row_id` INTEGER UNSIGNED AFTER `typology_id`;
-	</cfquery>			
-	
-	<cfquery datasource="#client_datasource#">	
-		ALTER TABLE `#new_client_abb#_files` 
+	</cfquery>
+
+	<cfquery datasource="#client_datasource#">
+		ALTER TABLE `#new_client_abb#_files`
 		ADD CONSTRAINT `FK_#new_client_abb#_files_2` FOREIGN KEY `FK_#new_client_abb#_files_2` (`typology_id`)
 			REFERENCES `#new_client_abb#_typologies` (`id`)
 		ON DELETE RESTRICT
 		ON UPDATE RESTRICT;
-	</cfquery>			
-	
-	
-	
+	</cfquery>
+
+
+
 	<!--- INSERT --->
-	
-	<cfquery datasource="#client_datasource#">				 
-		INSERT INTO `#new_client_abb#_tables_fields_types` (`field_type_id`,`field_type_group`,`input_type`,`name`,`max_length`,`mysql_type`,`cf_sql_type`,`enabled`,`position`) VALUES 
+
+	<cfquery datasource="#client_datasource#">
+		INSERT INTO `#new_client_abb#_tables_fields_types` (`field_type_id`,`field_type_group`,`input_type`,`name`,`max_length`,`mysql_type`,`cf_sql_type`,`enabled`,`position`) VALUES
 		 (1,'short_text','text','Texto plano 1 línea (máx. 255 caracteres)',255,'VARCHAR(255)','cf_sql_varchar',1,1),
 		 (2,'long_text','textarea','Texto plano varias líneas (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1,2),
 		 (3,'long_text','textarea','Texto varias líneas con formato (máx. 21000 caracteres)',21000,'TEXT','cf_sql_longvarchar',1,3),
@@ -316,23 +317,23 @@
 		 (10,'list','select','Lista con selección múltiple',11,'INT(11)','cf_sql_integer',1,11),
 		 (11,'very_long_text','textarea','Texto muy grande con formato',1000000,'MEDIUMTEXT','cf_sql_longvarchar',1,4),
 		 (12,'doplanning_file','number','Archivo de DoPlanning',11,'INT(11)','cf_sql_integer',0,12);
-	</cfquery>			
-	
-	
+	</cfquery>
+
+
 	<!--- New column position --->
-	
-	<cfquery datasource="#client_datasource#">	
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_entries` MODIFY COLUMN `position` INTEGER UNSIGNED DEFAULT NULL;
-	</cfquery>			
-	
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_news` MODIFY COLUMN `position` INTEGER UNSIGNED DEFAULT NULL;
 	</cfquery>
-		
-	
+
+
 	<!--- New column users --->
-	
-	<cfquery datasource="#client_datasource#">	
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_users`
 		  ADD COLUMN `notify_new_pubmed` BOOLEAN default 1 NOT NULL AFTER `notify_new_consultation`,
 		  ADD COLUMN `notify_new_image` BOOLEAN default 1 NOT NULL AFTER `notify_new_pubmed`,
@@ -341,62 +342,62 @@
 		  ADD COLUMN `notify_new_form` BOOLEAN NOT NULL DEFAULT 1 AFTER `notify_new_list_row`,
 		  ADD COLUMN `notify_new_form_row` BOOLEAN default 1  NOT NULL AFTER `notify_new_form`,
 		  ADD COLUMN `notify_new_typology` BOOLEAN default 1  NOT NULL AFTER `notify_new_form_row`;
-	</cfquery>			
-	
-				
+	</cfquery>
+
+
 	<!--- Menu type --->
-	
-	
-	<cfquery datasource="#client_datasource#">	
+
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_areas` ADD COLUMN `menu_type_id` INTEGER UNSIGNED AFTER `type`;
 	</cfquery>
 
-	
-	<cfquery datasource="#client_datasource#">	
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_menu_types` (
 		  `menu_type_id` int(10) unsigned NOT NULL,
 		  `menu_type_title_es` varchar(255) NOT NULL,
 		  PRIMARY KEY (`menu_type_id`) USING BTREE
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	</cfquery>
-	
-	<cfquery datasource="#client_datasource#">	
-		INSERT INTO `#new_client_abb#_menu_types` VALUES 
+
+	<cfquery datasource="#client_datasource#">
+		INSERT INTO `#new_client_abb#_menu_types` VALUES
 		 (1,'Menú principal'),
 		 (2,'Pie'),
 		 (3,'Otros'),
 		 (4,'Centros'),
 		 (5,'Imágenes');
-	</cfquery>	
-	
-	
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_areas` ADD CONSTRAINT `FK_#new_client_abb#_areas_4` FOREIGN KEY `FK_#new_client_abb#_areas_4` (`menu_type_id`)
 			REFERENCES `#new_client_abb#_menu_types` (`menu_type_id`)
 			ON DELETE RESTRICT
 			ON UPDATE RESTRICT;
-	</cfquery>		
-	
-	
-	
+	</cfquery>
+
+
+
 	<!--- Tipologías --->
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 	ALTER TABLE `#new_client_abb#_areas` ADD COLUMN `default_typology_id` INTEGER UNSIGNED AFTER `menu_type_id`,
 		 ADD CONSTRAINT `FK_#new_client_abb#_areas_5` FOREIGN KEY `FK_#new_client_abb#_areas_5` (`default_typology_id`)
 			REFERENCES `#new_client_abb#_typologies` (`id`)
 			ON DELETE RESTRICT
 			ON UPDATE RESTRICT;
-	</cfquery>				
-	
-	
+	</cfquery>
+
+
 	<!--- Tipologías --->
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_areas` ADD COLUMN `hide_in_menu` BOOLEAN NOT NULL DEFAULT 0 AFTER `menu_type_id`;
-	</cfquery>	
-	
-	
+	</cfquery>
+
+
 	<!--- List --->
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_lists_users` (
 		  `list_id` int(10) unsigned NOT NULL,
 		  `user_id` int(11) NOT NULL,
@@ -405,18 +406,18 @@
 		  CONSTRAINT `FK_#new_client_abb#_lists_users_1` FOREIGN KEY (`list_id`) REFERENCES `#new_client_abb#_lists` (`id`) ON DELETE CASCADE,
 		  CONSTRAINT `FK_#new_client_abb#_lists_users_2` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE CASCADE
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>	
+	</cfquery>
 
 
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_lists_fields` ADD COLUMN `list_area_id` INTEGER AFTER `default_value`,
 		 	ADD CONSTRAINT `FK_#new_client_abb#_lists_fields_3` FOREIGN KEY `FK_#new_client_abb#_lists_fields_3` (`list_area_id`)
 			REFERENCES `#new_client_abb#_areas` (`id`)
 			ON DELETE SET NULL
 			ON UPDATE RESTRICT;
-	</cfquery>	
-			
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_lists_rows_areas` (
 		  `list_id` int(10) unsigned NOT NULL,
 		  `row_id` int(10) unsigned NOT NULL,
@@ -429,18 +430,18 @@
 		  CONSTRAINT `FK_#new_client_abb#_lists_rows_areas_2` FOREIGN KEY (`field_id`) REFERENCES `#new_client_abb#_lists_fields` (`field_id`) ON DELETE CASCADE,
 		  CONSTRAINT `FK_#new_client_abb#_lists_rows_areas_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`) ON DELETE CASCADE
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>					
-			
-			
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_typologies_fields` ADD COLUMN `list_area_id` INTEGER AFTER `default_value`,
 		 	ADD CONSTRAINT `FK_#new_client_abb#_typologies_fields_3` FOREIGN KEY `FK_#new_client_abb#_typologies_fields_3` (`list_area_id`)
 			REFERENCES `#new_client_abb#_areas` (`id`)
 			ON DELETE SET NULL
 			ON UPDATE RESTRICT;
-	</cfquery>					
-			
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_typologies_rows_areas` (
 		  `typology_id` int(10) unsigned NOT NULL,
 		  `row_id` int(10) unsigned NOT NULL,
@@ -453,20 +454,20 @@
 		  CONSTRAINT `FK_#new_client_abb#_typologies_rows_areas_2` FOREIGN KEY (`field_id`) REFERENCES `#new_client_abb#_typologies_fields` (`field_id`) ON DELETE CASCADE,
 		  CONSTRAINT `FK_#new_client_abb#_typologies_rows_areas_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`) ON DELETE CASCADE
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>						
-			
+	</cfquery>
+
 	<!--- Form fields --->
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_forms_fields` ADD COLUMN `list_area_id` INTEGER AFTER `default_value`,
-	 		ADD CONSTRAINT `FK_#new_client_abb#_forms_fields_3` FOREIGN KEY `FK_#new_client_abb#_forms_fields_3` (`list_area_id`)		
+	 		ADD CONSTRAINT `FK_#new_client_abb#_forms_fields_3` FOREIGN KEY `FK_#new_client_abb#_forms_fields_3` (`list_area_id`)
 			REFERENCES `#new_client_abb#_areas` (`id`)
 			ON DELETE SET NULL
 			ON UPDATE RESTRICT;
-	</cfquery>							
-			
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_forms_rows_areas` (
-		  `form_id` int(10) unsigned NOT NULL,			
+		  `form_id` int(10) unsigned NOT NULL,
 		  `row_id` int(10) unsigned NOT NULL,
 		  `field_id` int(10) unsigned NOT NULL,
 		  `area_id` int(11) NOT NULL,
@@ -477,22 +478,22 @@
 		  CONSTRAINT `FK_#new_client_abb#_forms_rows_areas_2` FOREIGN KEY (`field_id`) REFERENCES `#new_client_abb#_forms_fields` (`field_id`) ON DELETE CASCADE,
 		  CONSTRAINT `FK_#new_client_abb#_forms_rows_areas_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`) ON DELETE CASCADE
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>	
-	
-	<!--- 28/11/2013 --->	
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+	<!--- 28/11/2013 --->
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_files` ADD COLUMN `file_type_id` INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER `typology_row_id`;
-	</cfquery>	
-	
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_files`  ADD COLUMN `area_id` INTEGER UNSIGNED AFTER `file_type_id`;
 	</cfquery>
-	
-	<cfquery datasource="#client_datasource#">	
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_files`  ADD COLUMN `locked` BOOLEAN NOT NULL DEFAULT 0 AFTER `area_id`;
 	</cfquery>
-	
-	<cfquery datasource="#client_datasource#">	
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_files_locks` (
 		  `file_id` int(11) NOT NULL,
 		  `user_id` int(11) NOT NULL,
@@ -504,17 +505,19 @@
 		  CONSTRAINT `FK_#new_client_abb#_files_locks_2` FOREIGN KEY (`user_id`) REFERENCES `#new_client_abb#_users` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	</cfquery>
-	
-	<cfquery datasource="#client_datasource#">	
-		ALTER TABLE `#new_client_abb#_users` 
+
+	<cfquery datasource="#client_datasource#">
+		ALTER TABLE `#new_client_abb#_users`
 			 ADD COLUMN `notify_delete_file` BOOLEAN NOT NULL DEFAULT 1 AFTER `notify_new_typology`,
-			 ADD COLUMN `notify_lock_file` BOOLEAN NOT NULL DEFAULT 1 AFTER `notify_delete_file`;	
+			 ADD COLUMN `notify_lock_file` BOOLEAN NOT NULL DEFAULT 1 AFTER `notify_delete_file`;
 	</cfquery>
-	
-	
-	
-	<!--- 16/12/2013 --->	
-	<cfquery datasource="#client_datasource#">	
+
+
+
+
+
+	<!--- 16/12/2013 --->
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_files` ADD COLUMN `reviser_user` INTEGER AFTER `locked`,
 			 ADD COLUMN `approver_user` INTEGER AFTER `reviser_user`,
 			 ADD CONSTRAINT `FK_#new_client_abb#_files_3` FOREIGN KEY `FK_#new_client_abb#_files_3` (`reviser_user`)
@@ -525,14 +528,14 @@
 				REFERENCES `#new_client_abb#_users` (`id`)
 				ON DELETE RESTRICT
 				ON UPDATE RESTRICT;
-	</cfquery>	
-	
-	
-	
-	<cfquery datasource="#client_datasource#">	
+	</cfquery>
+
+
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_files_versions` (
 		  `version_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-		
+
 		  `file_id` int(11) NOT NULL,
 		  `physical_name` text COLLATE utf8_unicode_ci,
 		  `user_in_charge` int(11) NOT NULL,
@@ -556,7 +559,7 @@
 		  `publication_date` datetime DEFAULT NULL,
 		  `publication_file_id` int(11) DEFAULT NULL,
 		  `publication_area_id` int(11) DEFAULT NULL,
-		
+
 		  PRIMARY KEY (`version_id`) USING BTREE,
 		  KEY `user_in_charge` (`user_in_charge`),
 		  KEY `FK_#new_client_abb#_files_versions_2` (`file_id`),
@@ -567,7 +570,7 @@
 		  KEY `FK_#new_client_abb#_files_versions_7` (`publication_file_id`),
 		  KEY `FK_#new_client_abb#_files_versions_9` (`publication_area_id`),
 		  CONSTRAINT `FK_#new_client_abb#_files_versions_9` FOREIGN KEY (`publication_area_id`) REFERENCES `#new_client_abb#_areas` (`id`) ON DELETE SET NULL,
-		
+
 		  CONSTRAINT `FK_#new_client_abb#_files_versions_1` FOREIGN KEY (`user_in_charge`) REFERENCES `#new_client_abb#_users` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_files_versions_2` FOREIGN KEY (`file_id`) REFERENCES `#new_client_abb#_files` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_files_versions_3` FOREIGN KEY (`revision_request_user`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE SET NULL,
@@ -576,19 +579,19 @@
 		  CONSTRAINT `FK_#new_client_abb#_files_versions_6` FOREIGN KEY (`publication_user`) REFERENCES `#new_client_abb#_users` (`id`) ON DELETE SET NULL,
 		  CONSTRAINT `FK_#new_client_abb#_files_versions_7` FOREIGN KEY (`publication_file_id`) REFERENCES `#new_client_abb#_files` (`id`) ON DELETE SET NULL,
 		  CONSTRAINT `FK_#new_client_abb#_files_versions_8` FOREIGN KEY (`publication_area_id`) REFERENCES `#new_client_abb#_areas` (`id`) ON DELETE SET NULL
-		
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>			
-	
-	
 
-	<cfquery datasource="#client_datasource#">	
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	</cfquery>
+
+
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_files` ADD COLUMN `in_approval` BOOLEAN NOT NULL DEFAULT 0 AFTER `approver_user`;
 	</cfquery>
-	
-	<!--- 04/02/2014 --->	
 
-	<cfquery datasource="#client_datasource#">	
+	<!--- 04/02/2014 --->
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_lists_views` (
 		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `table_id` int(10) unsigned NOT NULL,
@@ -614,10 +617,10 @@
 		  CONSTRAINT `FK_#new_client_abb#_lists_views_2` FOREIGN KEY (`user_in_charge`) REFERENCES `#new_client_abb#_users` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_lists_views_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	</cfquery>	
+	</cfquery>
 
 
-	<cfquery datasource="#client_datasource#">	
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_lists_views_fields` (
 		  `view_id` int(10) unsigned NOT NULL,
 		  `field_id` int(10) unsigned NOT NULL,
@@ -626,11 +629,11 @@
 		  KEY `FK_#new_client_abb#_lists_views_fields_2` (`field_id`) USING BTREE,
 		  CONSTRAINT `FK_#new_client_abb#_lists_views_fields_1` FOREIGN KEY (`view_id`) REFERENCES `#new_client_abb#_lists_views` (`id`) ON DELETE CASCADE,
 		  CONSTRAINT `FK_#new_client_abb#_lists_views_fields_2` FOREIGN KEY (`field_id`) REFERENCES `#new_client_abb#_lists_fields` (`field_id`) ON DELETE CASCADE
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8;			
-	</cfquery>		
-	
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</cfquery>
 
-	<cfquery datasource="#client_datasource#">	
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_forms_views` (
 		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `table_id` int(10) unsigned NOT NULL,
@@ -655,10 +658,10 @@
 		  CONSTRAINT `FK_#new_client_abb#_forms_views_1` FOREIGN KEY (`table_id`) REFERENCES `#new_client_abb#_forms` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_forms_views_2` FOREIGN KEY (`user_in_charge`) REFERENCES `#new_client_abb#_users` (`id`),
 		  CONSTRAINT `FK_#new_client_abb#_forms_views_3` FOREIGN KEY (`area_id`) REFERENCES `#new_client_abb#_areas` (`id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;			
-	</cfquery>	
-	
-	<cfquery datasource="#client_datasource#">	
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	</cfquery>
+
+	<cfquery datasource="#client_datasource#">
 		CREATE TABLE  `#new_client_abb#_forms_views_fields` (
 		  `view_id` int(10) unsigned NOT NULL,
 		  `field_id` int(10) unsigned NOT NULL,
@@ -667,17 +670,14 @@
 		  KEY `FK_#new_client_abb#_forms_views_fields_2` (`field_id`) USING BTREE,
 		  CONSTRAINT `FK_#new_client_abb#_forms_views_fields_1` FOREIGN KEY (`view_id`) REFERENCES `#new_client_abb#_forms_views` (`id`) ON DELETE CASCADE,
 		  CONSTRAINT `FK_#new_client_abb#_forms_views_fields_2` FOREIGN KEY (`field_id`) REFERENCES `#new_client_abb#_forms_fields` (`field_id`) ON DELETE CASCADE
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8;			
-	</cfquery>	
-	
-			
-	<cfquery datasource="#client_datasource#">	
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</cfquery>
+
+
+	<cfquery datasource="#client_datasource#">
 		ALTER TABLE `#new_client_abb#_users` ADD COLUMN `notify_new_list_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_list_row`,
-		 ADD COLUMN `notify_new_form_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_form_row`;			
-	</cfquery>			
-	
-			
+		 ADD COLUMN `notify_new_form_view` BOOLEAN NOT NULL DEFAULT '1' AFTER `notify_new_form_row`;
+	</cfquery>
+
+
 </cftransaction>
-
-	
-
