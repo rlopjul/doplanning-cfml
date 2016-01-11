@@ -177,10 +177,21 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 
 				<cftry>
 
-					<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult" timeout="56">
-						<cfhttpparam type="header" name="Content-Type" value="application/json" />
-						<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
-					</cfhttp>
+					<cfif APPLICATION.proxy IS true><!---With proxy--->
+
+						<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" proxyServer="10.104.1.7" proxyPort="8080" result="responseResult" timeout="56">
+							<cfhttpparam type="header" name="Content-Type" value="application/json" />
+							<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
+						</cfhttp>
+
+					<cfelse>
+
+						<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult" timeout="56">
+							<cfhttpparam type="header" name="Content-Type" value="application/json" />
+							<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
+						</cfhttp>
+
+					</cfif>
 
 					<cfset mandrillResponse = deserializeJSON(responseResult.filecontent)>
 

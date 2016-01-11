@@ -18,6 +18,10 @@
 
 		<cfargument name="serverIp" type="string" required="true">
 
+		<cfargument name="proxy" type="boolean" required="false" default="false">
+		<cfargument name="proxyServer" type="string" required="false">
+		<cfargument name="proxyPort" type="numeric" required="false">
+
 		<cfargument name="mainUrl" type="string" required="true">
 		<cfargument name="signOutUrl" type="string" required="true">
 		<cfargument name="helpUrl" type="string" required="false" default="https://doplanning.net/es/page.cfm?id=118&title=soporte"><!---https://doplanning.net/es/page.cfm?id=9&amp;title=tutoriales--->
@@ -159,6 +163,12 @@
 			<cfset APPLICATION.emailReply = arguments.emailReply>
 			<cfset APPLICATION.emailFail = "support@doplanning.net">
 			<cfset APPLICATION.emailErrors = "bugs@doplanning.net">
+
+			<cfset APPLICATION.proxy = arguments.proxy>
+			<cfif APPLICATION.proxy IS true>
+				<cfset APPLICATION.proxyServer = arguments.proxyServer>
+				<cfset APPLICATION.proxyPort = arguments.proxyPort>
+			</cfif>
 
 			<cfset APPLICATION.smsFrom = APPLICATION.title>
 			<cfset APPLICATION.smsUserName = "">
