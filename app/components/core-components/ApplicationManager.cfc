@@ -66,6 +66,8 @@
 		<cfargument name="hideInputLabels" type="boolean" required="false" default="false">
 
 		<cfargument name="addSchedules" type="boolean" required="false" default="false">
+		<cfargument name="schedulesExcludeClients" type="string" required="false" default="">
+		<cfargument name="schedulesOnlyClient" type="string" required="false" default="">
 
 		<cfargument name="defaultLanguage" type="string" required="false" default="es">
 
@@ -239,6 +241,8 @@
 
 			<cfif arguments.addSchedules IS true>
 
+				<cfset APPLICATION.schedulesExcludeClients = arguments.schedulesExcludeClients>
+				<cfset APPLICATION.schedulesOnlyClient = arguments.schedulesOnlyClient>
 
 				<!---sendAllDiaryAlerts schedule--->
 				<cfschedule action="update"	task="sendAllDiaryAlerts" operation="HTTPRequest"

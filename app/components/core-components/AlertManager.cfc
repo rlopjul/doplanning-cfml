@@ -1848,6 +1848,12 @@
 		<cftry>
 
 			<cfinvoke component="ClientQuery" method="getClients" returnvariable="getClientsQuery">
+				<cfif isDefined("APPLICATION.schedulesExcludeClients") AND len(APPLICATION.schedulesExcludeClients) GT 0>
+					<cfinvokeargument name="excludeClients" value="#APPLICATION.schedulesExcludeClients#">
+				</cfif>
+				<cfif isDefined("APPLICATION.schedulesOnlyClient") AND len(APPLICATION.schedulesOnlyClient) GT 0>
+					<cfinvokeargument name="client_abb" value="#APPLICATION.schedulesOnlyClient#">
+				</cfif>
 			</cfinvoke>
 
 			<cfloop query="getClientsQuery">
@@ -2210,6 +2216,12 @@
 
 			<!--- getClients --->
 			<cfinvoke component="ClientQuery" method="getClients" returnvariable="getClientsQuery">
+				<cfif isDefined("APPLICATION.schedulesExcludeClients") AND len(APPLICATION.schedulesExcludeClients) GT 0>
+					<cfinvokeargument name="excludeClients" value="#APPLICATION.schedulesExcludeClients#">
+				</cfif>
+				<cfif isDefined("APPLICATION.schedulesOnlyClient") AND len(APPLICATION.schedulesOnlyClient) GT 0>
+					<cfinvokeargument name="client_abb" value="#APPLICATION.schedulesOnlyClient#">
+				</cfif>
 			</cfinvoke>
 
 			<!--- getAreaItemTypesStruct --->
