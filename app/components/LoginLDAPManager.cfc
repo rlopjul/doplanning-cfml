@@ -1,11 +1,11 @@
 <!--- Copyright Era7 Information Technologies 2007-2014 --->
 
-<cfcomponent output="true">
+<cfcomponent output="false">
 
 	<cfset component = "LoginLDAPManager">
 
 
-	<cffunction name="loginLDAPUser" returntype="struct" output="true" access="package">
+	<cffunction name="loginLDAPUser" returntype="struct" output="false" access="package">
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="objectClient" type="any" required="true">
 		<cfargument name="objectUser" type="struct" required="true">

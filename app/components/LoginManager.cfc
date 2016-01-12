@@ -9,13 +9,13 @@
 	21-05-2013 alucena: no se añade el nombre de la dirección de correo en SESSION.client_email_from porque Mandrill no lo permite
 
 --->
-<cfcomponent output="true">
+<cfcomponent output="false">
 
 	<cfset component = "LoginManager">
 
 	<!--- LOGIN USER --->
 
-	<cffunction name="loginUser" returntype="struct" output="true" access="public">
+	<cffunction name="loginUser" returntype="struct" output="false" access="public">
 		<cfargument name="login" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
 		<cfargument name="password_encoded" type="boolean" required="false" default="true">
