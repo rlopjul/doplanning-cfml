@@ -75,6 +75,21 @@
 					</cfcatch>
 				</cftry>
 
+			<cfelseif arguments.ldap_id EQ "ldap_dmsas_hvn">
+
+				<cftry>
+
+					<cfldap	server="#APPLICATION.ldapServer#" port="#APPLICATION.ldapServerPort#" username="DMSAS\#user_login#" password="#password_ldap#" action="query" scope="#APPLICATION.ldapScope#" name="getUser" start="#APPLICATION.ldapUsersPath#" attributes="#APPLICATION.ldapUsersLoginAtt#" filter="(1=1)">
+
+					<cfset login_ldap_column = "login_ldap">
+
+					<cfset loginValid = true>
+
+					<cfcatch>
+						<cfset loginValid = false>
+					</cfcatch>
+				</cftry>
+
 			<cfelseif arguments.ldap_id EQ "diraya">
 
 				<!---<cfldap server="#APPLICATION.ldapServer#" port="#APPLICATION.ldapServerPort#" username="#APPLICATION.ldapServerUserName#" password="#APPLICATION.ldapServerPassword#" action="query" name="getUser" start="#APPLICATION.ldapUsersPath#" scope="#APPLICATION.ldapScope#" attributes="#APPLICATION.ldapUsersLoginAtt#,#APPLICATION.ldapUsersPasswordAtt#" filter="(&(#APPLICATION.ldapUsersLoginAtt#=#user_login#)(#APPLICATION.ldapUsersPasswordAtt#=#password_ldap#))">--->

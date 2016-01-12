@@ -95,12 +95,12 @@
         <cfif client_abb EQ "omars">
           <div class="radio">
             <label for="ldap_hvn">
-              <input type="radio" name="ldap_id" value="dmsas" id="ldap_hvn" onclick="onLdapChange(this)" /> Hospital
+              <input type="radio" name="ldap_id" value="hvn" id="ldap_hvn" onclick="onLdapChange(this)" /> Hospital
             </label>
           </div>
           <div class="radio">
-            <label for="ldap_dmsas">
-              <input type="radio" name="ldap_id" value="dmsas" id="ldap_dmsas" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
+            <label for="ldap_dmsas_hvn">
+              <input type="radio" name="ldap_id" value="dmsas" id="ldap_dmsas_hvn" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
             </label>
           </div>
         </cfif>

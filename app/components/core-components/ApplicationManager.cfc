@@ -28,6 +28,14 @@
 		<cfargument name="termsOfUseUrl" type="string" required="false" default="https://doplanning.net/es/terminos_de_uso.cfm">
 
 		<cfargument name="ldapName" type="string" required="false">
+		<cfargument name="ldapServer" type="string" required="false" default="">
+		<cfargument name="ldapServerPort" type="numeric" required="false" default="">
+		<cfargument name="ldapServerUserName" type="string" required="false" default="">
+		<cfargument name="ldapServerPassword" type="string" required="false" default="">
+		<cfargument name="ldapUsersPath" type="string" required="false" default="">
+		<cfargument name="ldapScope" type="string" required="false" default="">
+		<cfargument name="ldapUsersLoginAtt" type="string" required="false" default="">
+		<cfargument name="ldapUsersPasswordAtt" type="string" required="false" default="">
 
 		<cfargument name="title" type="string" required="false" default="DoPlanning">
 		<cfargument name="titlePrefix" type="string" required="false" default="application"><!--- application/web --->
@@ -282,14 +290,14 @@
 
 			<cfif APPLICATION.moduleLdapUsers EQ true>
 				<cfset APPLICATION.ldapName = arguments.ldapName>
-				<cfset APPLICATION.ldapServer = "">
-				<cfset APPLICATION.ldapServerPort = "">
-				<cfset APPLICATION.ldapServerUserName = "">
-				<cfset APPLICATION.ldapServerPassword = "">
-				<cfset APPLICATION.ldapUsersPath = "">
-				<cfset APPLICATION.ldapScope = "">
-				<cfset APPLICATION.ldapUsersLoginAtt = ""><!---Att=Attribute--->
-				<cfset APPLICATION.ldapUsersPasswordAtt = "">
+				<cfset APPLICATION.ldapServer = arguments.ldapServer>
+				<cfset APPLICATION.ldapServerPort = arguments.ldapServerPort>
+				<cfset APPLICATION.ldapServerUserName = arguments.ldapServerUserName>
+				<cfset APPLICATION.ldapServerPassword = arguments.ldapServerPassword>
+				<cfset APPLICATION.ldapUsersPath = arguments.ldapUsersPath>
+				<cfset APPLICATION.ldapScope = arguments.ldapScope>
+				<cfset APPLICATION.ldapUsersLoginAtt = arguments.ldapUsersLoginAtt><!---Att=Attribute--->
+				<cfset APPLICATION.ldapUsersPasswordAtt = arguments.ldapUsersPasswordAtt>
 			</cfif>
 
 			<cfif APPLICATION.moduleTwitter IS true>
