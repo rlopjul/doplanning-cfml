@@ -75,11 +75,11 @@
 					</cfcatch>
 				</cftry>
 
-			<cfelseif arguments.ldap_id EQ "ldap_dmsas_hvn">
+			<cfelseif arguments.ldap_id EQ "dmsas_hvn">
 
 				<cftry>
 
-					<cfldap	server="#APPLICATION.ldapServer#" port="#APPLICATION.ldapServerPort#" username="DMSAS\#user_login#" password="#password_ldap#" action="query" scope="#APPLICATION.ldapScope#" name="getUser" start="#APPLICATION.ldapUsersPath#" attributes="#APPLICATION.ldapUsersLoginAtt#" filter="(1=1)">
+					<cfldap	server="#APPLICATION.ldapServer#" port="#APPLICATION.ldapServerPort#" username="DMSAS\#user_login#" password="#password_ldap#" action="query" scope="#APPLICATION.ldapScope#" name="getUser" start="DC=DMSAS" attributes="#APPLICATION.ldapUsersLoginAtt#" filter="(1=1)">
 
 					<cfset login_ldap_column = "login_ldap">
 
@@ -89,6 +89,38 @@
 						<cfset loginValid = false>
 					</cfcatch>
 				</cftry>
+
+			<cfelseif arguments.ldap_id EQ "hvn">
+
+				<cfhttp method="post" url="http://www.hvn.es/servicios/login.php" resolveurl="no" result="wsResponse" charset="utf-8">
+					<cfhttpparam type="formfield" name="login" value="#user_login#">
+					<cfhttpparam type="formfield" name="pass" value="#password_ldap#">
+				</cfhttp>
+
+				<cfset responseContent = xmlParse(wsResponse.filecontent)>
+
+				<cfif isDefined("responseContent.usuario[1]")>
+
+					<cfset usuarioXml = responseContent.usuario[1]>
+
+					<cfif isDefined("usuarioXml.id") AND usuarioXml.id.xmlText NEQ "-1">
+
+						<cfset login_ldap_column = "login_ldap">
+
+						<cfset loginValid = true>
+
+						<cfif isDefined("usuarioXml.email")>
+							<cfset email_hvn = usuarioXml.email.xmlText>
+						</cfif>
+						<!---<cfset response = {result="true", message="", usuario_id=usuarioXml.id.xmlText, nombre=usuarioXml.nombre.xmlText, apellido1=usuarioXml.apellido1.xmlText, apellido2=usuarioXml.apellido2.xmlText}>--->
+
+					</cfif>
+
+				<cfelse>
+
+					<cfthrow message="Ha ocurrido un error al realizar el login: respuesta de servicio de login incorrecta. #wsResponse.filecontent#">
+
+				</cfif>
 
 			<cfelseif arguments.ldap_id EQ "diraya">
 
@@ -142,7 +174,10 @@
 				<cfquery name="loginQuery" datasource="#client_dsn#">
 					SELECT users.id, users.number_of_connections, users.language, users.enabled
 					FROM #table# AS users
-					WHERE users.#login_ldap_column# = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar">;
+					WHERE users.#login_ldap_column# = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar">
+					<cfif arguments.ldap_id EQ "hvn" AND isDefined("email_hvn") AND len(email_hvn) GT 0>
+						OR users.email = <cfqueryparam value="#email_hvn#" cfsqltype="cf_sql_varchar">
+					</cfif>;
 				</cfquery>
 
 				<!--- If at least one record is found, it means that the login is valid --->

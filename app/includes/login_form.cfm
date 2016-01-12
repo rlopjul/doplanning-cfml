@@ -92,17 +92,17 @@
           </div>
         </cfif>
 
-        <cfif client_abb EQ "omars">
+        <cfif client_abb EQ "omars" OR client_abb EQ "era7_fibao">
           <div class="radio">
             <label for="ldap_hvn">
-              <input type="radio" name="ldap_id" value="hvn" id="ldap_hvn" onclick="onLdapChange(this)" /> Hospital
+              <input type="radio" name="ldap_id" value="hvn" id="ldap_hvn" onclick="onLdapChange(this)" /> Hospital / DMSAS
             </label>
           </div>
-          <div class="radio">
+          <!---<div class="radio">
             <label for="ldap_dmsas_hvn">
-              <input type="radio" name="ldap_id" value="dmsas" id="ldap_dmsas_hvn" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
+              <input type="radio" name="ldap_id" value="dmsas_hvn" id="ldap_dmsas_hvn" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
             </label>
-          </div>
+          </div>--->
         </cfif>
 
         <!---<cfif APPLICATION.identifier EQ "vpnet" OR client_abb EQ "agsna">--->
