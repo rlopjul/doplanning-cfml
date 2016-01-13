@@ -51,7 +51,7 @@
 					<cfelse>
 					, tables.publication_date
 					</cfif>
-					, tables.publication_validated
+					, tables.publication_validated, tables.publication_restricted					
 				</cfif>
 				FROM #client_abb#_#tableTypeTable# AS tables
 				INNER JOIN #client_abb#_users AS users ON tables.user_in_charge = users.id
