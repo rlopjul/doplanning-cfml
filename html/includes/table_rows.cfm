@@ -511,6 +511,9 @@
 								<cfinvokeargument name="columnSelectorContainer" value="columnSelector#tableTypeId#_#table_id#">
 								<cfinvokeargument name="tablesorterEnabled" value="true">
 								<cfinvokeargument name="includeLinkButton" value="true">
+								<cfif ( is_user_area_responsible OR table_edit_permission IS true ) AND objectArea.read_only IS false>
+									<cfinvokeargument name="includeEditButton" value="true">
+								</cfif>
 								<cfinvokeargument name="mathEnabled" value="#objectItem.math_enabled#">
 								<cfinvokeargument name="table_general" value="#objectItem.general#">
 								<cfinvokeargument name="area_id" value="#area_id#">

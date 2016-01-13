@@ -1118,6 +1118,7 @@
 		<cfargument name="mathEnabled" type="boolean" required="false" default="false">
 		<cfargument name="includeLinkButton" type="boolean" required="false" default="false">
 		<cfargument name="linkButtonText" type="string" required="false" default='<i class="fa fa-external-link"></i>'>
+		<cfargument name="includeEditButton" type="boolean" required="false" default="false">
 		<cfargument name="rowUrlPath" type="string" required="false">
 		<cfargument name="includeFullText" type="boolean" required="false" default="true">
 		<cfargument name="table_general" type="boolean" required="false" default="false">
@@ -1159,7 +1160,7 @@
 
 						headers: {
 
-							<cfif arguments.includeLinkButton IS true>
+							<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
 							0: {
 								sorter: false
 							},
@@ -1176,7 +1177,7 @@
 
 							<cfloop query="fields">
 
-								<cfif arguments.includeLinkButton IS true>
+								<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
 									<cfset curFieldIndex = fields.currentRow+1>
 								<cfelse>
 									<cfset curFieldIndex = fields.currentRow>
@@ -1233,7 +1234,7 @@
 
 						<cfelse>
 							<cfif tableRows.recordCount LT 100><!---Ordenar de nuevo la tabla por el campo por defecto ralentiza las tablas con muchas filas--->
-								<cfif arguments.includeLinkButton IS true>
+								<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
 									sortList: [[1,1]] ,
 								<cfelse>
 									sortList: [[0,1]] ,
@@ -1294,7 +1295,7 @@
 								// disable = do not display on list
 								, columnSelector_columns : {
 									0: 'disable' /* set to disabled; not allowed to unselect it */
-									<cfif arguments.includeLinkButton IS true>
+									<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
 									, 1: 'disable'
 									</cfif>
 								},
@@ -1412,8 +1413,12 @@
 				<table id="dataTable#arguments.tableTypeId#_#arguments.table_id#" class="data-table table table-hover table-bordered table-striped tablesorter-bootstrap" style="<cfif arguments.tablesorterEnabled IS false>font-size:12px;border-collapse:collapse;margin-bottom:15px;<cfelse>margin-top:5px;</cfif>">
 					<thead>
 						<tr #thTrStyle#>
-							<cfif arguments.includeLinkButton IS true>
-							<th style="width:25px;" class="filter-false"></th>
+							<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
+								<cfif arguments.includeLinkButton IS true AND arguments.includeEditButton IS true>
+									<th style="width:65px;" class="filter-false"></th>
+								<cfelse>
+									<th style="width:25px;" class="filter-false"></th>
+								</cfif>
 							</cfif>
 							<th style="width:25px;">##</th>
 							<!---<th>Fecha última modificación</th>--->
@@ -1467,15 +1472,18 @@
 								<cfif table_general IS true>
 									<cfset row_area_id = tableRows.area_id>
 									<cfif isDefined("arguments.area_id")>
-										<cfset from_area = "&from_area=#arguments.area_id#">
+										<cfset from_area_param = "&from_area=#arguments.area_id#">
 									<cfelse>
-										<cfset from_area = "">
+										<cfset from_area_param = "">
 									</cfif>
-									<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#row_area_id##from_area#">
-									<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&area=#row_area_id##from_area#&return_page=#URLEncodedFormat(rpage)#">
+									<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#row_area_id##from_area_param#">
+									<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&area=#row_area_id##from_area_param#&return_page=#URLEncodedFormat(rpage)#">
+									<cfset row_edit_page_url = "#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&area=#row_area_id##from_area_param#">
+
 								<cfelse>
 									<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
 									<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
+									<cfset row_edit_page_url = "#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&area=#area_id#">
 								</cfif>
 
 							</cfif>
@@ -1485,6 +1493,7 @@
 							<cfset row_page_url = "#arguments.rowUrlPath##tableRows.row_id#">
 
 						</cfif>
+
 
 
 						<!---Row selection--->
@@ -1505,8 +1514,10 @@
 
 						<tr <cfif dataSelected IS true>class="selected"</cfif> <cfif arguments.openRowOnSelect IS true>data-item-url="#row_page_url#"</cfif>>
 
-							<cfif arguments.includeLinkButton IS true>
-							<td #tdStyle#><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()">#arguments.linkButtonText#</a></td>
+							<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
+							<td #tdStyle#><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()">#arguments.linkButtonText#</a>
+								<a class="btn btn-primary btn-xs" href="#row_edit_page_url#" onclick="event.stopPropagation()"><i class="fa fa-pencil"></i></a>
+							</td>
 							</cfif>
 							<td #tdStyle#>#tableRows.row_id#</td>
 
