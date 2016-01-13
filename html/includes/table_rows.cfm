@@ -8,14 +8,16 @@
 	<cflocation url="area.cfm" addtoken="no">
 </cfif>
 
-<cfif isDefined("URL.area") AND isNumeric(URL.area)>
-	<cfset area_id = URL.area>
-</cfif>
-
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
 	<cfinvokeargument name="item_id" value="#table_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
+
+<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+	<cfset area_id = URL.area>
+<cfelse>
+	<cfset area_id = objectItem.area_id>
+</cfif>
 
 <!---Table fields--->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
@@ -48,7 +50,7 @@
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRows" returnvariable="tableRowsResult">
 		<cfinvokeargument name="table_id" value="#table_id#">
-		<cfif isDefined("area_id")>
+		<cfif objectItem.general IS true>
 			<cfinvokeargument name="area_id" value="#area_id#">
 		</cfif>
 		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
@@ -87,10 +89,6 @@
 	<cfset querySetCell(fields, "label", "Usuario última modificación")>
 	<cfset querySetCell(fields, "position", 0)>--->
 
-</cfif>
-
-<cfif NOT isDefined("area_id")>
-	<cfset area_id = objectItem.area_id>
 </cfif>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">

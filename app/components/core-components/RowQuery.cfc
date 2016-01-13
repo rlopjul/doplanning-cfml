@@ -532,7 +532,7 @@
 
 			</cfif>
 
-			<cfif isDefined("arguments_area_id")>
+			<cfif isDefined("arguments.area_id")>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -540,6 +540,8 @@
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
+
+				<cfset subAreasIds = listAppend(subAreasIds, arguments.area_id)>
 
 			</cfif>
 
@@ -558,7 +560,7 @@
 
 					<cfif len(subAreasIds) GT 0>
 
-						AND area_id IN (<cfqueryparam value="#subAreasIds#" cfsqltype="cf_sql_varchar" list="true"> )
+						AND area_id IN (<cfqueryparam value="#subAreasIds#" cfsqltype="cf_sql_varchar" list="true">)
 
 					</cfif>
 

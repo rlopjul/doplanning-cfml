@@ -399,6 +399,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="fields" type="query" required="false">
+		<cfargument name="area_id" type="numeric" required="false">
 
 		<cfset var method = "getTableRows">
 
@@ -410,6 +411,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 				<cfinvokeargument name="fields" value="#arguments.fields#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">
