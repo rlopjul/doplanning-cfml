@@ -474,6 +474,7 @@
 			<cfargument name="includeLinkButton" type="boolean" required="false">
 			<cfargument name="rowUrlPath" type="string" required="false">
 			<cfargument name="includeFullText" type="boolean" required="false">
+			<cfargument name="area_id" type="numeric" required="false">
 
 			<cfset var method = "outputRowList">
 
@@ -495,7 +496,8 @@
 					<cfinvokeargument name="includeLinkButton" value="#arguments.includeLinkButton#">
 					<cfinvokeargument name="rowUrlPath" value="#arguments.rowUrlPath#">
 					<cfinvokeargument name="includeFullText" value="#arguments.includeFullText#">
-
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+ 
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>

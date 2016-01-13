@@ -512,6 +512,7 @@
 								<cfinvokeargument name="tablesorterEnabled" value="true">
 								<cfinvokeargument name="includeLinkButton" value="true">
 								<cfinvokeargument name="mathEnabled" value="#objectItem.math_enabled#">
+								<cfinvokeargument name="area_id" value="#area_id#">
 							</cfinvoke>
 
 						</div><!--- END col-sm-12 --->

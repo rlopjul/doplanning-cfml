@@ -22,7 +22,11 @@
 
 <cfset row = getRowResponse.row>
 <cfset table = getRowResponse.table>
-<cfset area_id = table.area_id>
+<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+	<cfset area_id = URL.area>
+<cfelse>
+	<cfset area_id = table.area_id>
+</cfif>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
@@ -97,12 +101,12 @@
 
 			<cfif tableTypeId IS NOT 2><!--- IS NOT Form --->
 				<div class="btn-group">
-					<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+					<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#row_id#&area=#area_id#" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 				</div>
 			</cfif>
 
 			<div class="btn-group">
-				<a href="#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowRemote&table_id=#table_id#&row_id=#row_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteRow();" title="Eliminar registro" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+				<a href="#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowRemote&table_id=#table_id#&row_id=#row_id#&tableTypeId=#tableTypeId#&area=#url_return_path#" onclick="return confirmDeleteRow();" title="Eliminar registro" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 			</div>
 
 		</cfif>
