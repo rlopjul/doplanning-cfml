@@ -1120,6 +1120,7 @@
 		<cfargument name="linkButtonText" type="string" required="false" default='<i class="fa fa-external-link"></i>'>
 		<cfargument name="rowUrlPath" type="string" required="false">
 		<cfargument name="includeFullText" type="boolean" required="false" default="true">
+		<cfargument name="table_general" type="boolean" required="false" default="false">
 		<cfargument name="area_id" type="numeric" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
@@ -1456,25 +1457,32 @@
 
 					<cfloop query="tableRows">
 
-						<cfif isDefined("arguments.area_id")>
-							<cfset row_area_id = arguments.area_id>
-						<cfelse>
-							<cfset row_area_id = tableRows.area_id>
-						</cfif>
-
 						<cfif NOT isDefined("arguments.rowUrlPath")>
 
 							<cfif isDefined("arguments.view_id")>
 								<cfset rpage = "#tableTypeName#_view_rows.cfm?#tableTypeName#_view=#arguments.view_id#">
-								<cfset row_page_url = "#tableTypeName#_view_row.cfm?#tableTypeName#_view=#arguments.view_id#&row=#tableRows.row_id#&area=#row_area_id#&return_page=#URLEncodedFormat(rpage)#">
+								<cfset row_page_url = "#tableTypeName#_view_row.cfm?#tableTypeName#_view=#arguments.view_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
 							<cfelse>
-								<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#row_area_id#">
-								<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&area=#row_area_id#&return_page=#URLEncodedFormat(rpage)#">
+
+								<cfif table_general IS true>
+									<cfset row_area_id = tableRows.area_id>
+									<cfif isDefined("arguments.area_id")>
+										<cfset from_area = "&from_area=#arguments.area_id#">
+									<cfelse>
+										<cfset from_area = "">
+									</cfif>
+									<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#row_area_id##from_area#">
+									<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&area=#row_area_id##from_area#&return_page=#URLEncodedFormat(rpage)#">
+								<cfelse>
+									<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
+									<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&return_page=#URLEncodedFormat(rpage)#">
+								</cfif>
+
 							</cfif>
 
 						<cfelse>
 
-							<cfset row_page_url = "#arguments.rowUrlPath##tableRows.row_id#&area=#row_area_id#">
+							<cfset row_page_url = "#arguments.rowUrlPath##tableRows.row_id#">
 
 						</cfif>
 

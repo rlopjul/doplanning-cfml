@@ -9,6 +9,12 @@
 
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
 
+<cfif isDefined("URL.from_area") AND isNumeric(URL.from_area)>
+	<cfset from_area_id = URL.from_area>
+<cfelse>
+	<cfset from_area_id = area_id>
+</cfif>
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <cfoutput>
@@ -133,7 +139,7 @@
 			<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 
 			<cfif page_type IS 2>
-				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#&area=#from_area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 			</cfif>
 		</div>
 
@@ -143,6 +149,9 @@
 
 		<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#"/>
 		<input type="hidden" name="area_id" value="#area_id#"/>
+		<cfif isDefined("URL.from_area")>
+			<input type="hidden" name="from_area_id" value="#URL.from_area#">
+		</cfif>
 
 		<!--- outputRowFormInputs --->
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowFormInputs">
@@ -156,7 +165,7 @@
 		<div id="submitDiv2" style="margin-top:20px;">
 			<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 			<cfif page_type IS 2>
-				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#&area=#from_area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 			</cfif>
 		</div>
 

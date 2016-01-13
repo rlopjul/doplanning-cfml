@@ -1392,17 +1392,17 @@
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>
 
-		<cfif getTableQuery.recordCount GT 0>
-
-			<cfset area_id = getTableQuery.area_id>
-
-		<cfelse><!---Item does not exist--->
+		<cfif getTableQuery.recordCount IS 0><!---Item does not exist--->
 
 			<cfset error_code = 501>
 
 			<cfthrow errorcode="#error_code#">
 
 		</cfif>
+
+		<!---<cfset area_id = getTableQuery.area_id>--->
+
+		<cfset area_id = rowQuery.area_id>
 
 		<!---Get area name--->
 		<cfquery name="selectAreaQuery" datasource="#client_dsn#">

@@ -107,6 +107,7 @@
 		<cfargument name="table_id" type="numeric" required="yes">
 		<cfargument name="tableTypeName" type="string" required="yes">
 		<cfargument name="row_id" type="numeric" required="yes">
+		<cfargument name="area_id" type="numeric" required="yes">
 
 		<cfargument name="client_abb" type="string" required="true">
 

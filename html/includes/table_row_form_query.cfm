@@ -18,7 +18,12 @@
 
 	<cfif actionResponse.result IS true>
 
-		<cfset return_page = "#tableTypeName#_rows.cfm?#tableTypeName#=#actionResponse.table_id#&area=#FORM.area_id#">
+		<cfif isDefined("FORM.from_area_id")>
+			<cfset return_area_id = FORM.from_area_id>
+		<cfelse>
+			<cfset return_area_id = FORM.area_id>
+		</cfif>
+		<cfset return_page = "#tableTypeName#_rows.cfm?#tableTypeName#=#actionResponse.table_id#&area=#return_area_id#">
 
 		<cfset msg = urlEncodedFormat(actionResponse.message)>
 

@@ -83,6 +83,9 @@
 				<cfif itemTypeId IS 5 OR itemTypeId IS 8><!---Events, Publications--->
 					, items.price
 				</cfif>
+				<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---List, Forms--->
+					, items.general
+				</cfif>
 				<cfif itemTypeId IS 17><!--- Mailings --->
 					, items.email_addresses, items.template_id, items.head_content, items.foot_content, items.content_styles, items.state
 				</cfif>

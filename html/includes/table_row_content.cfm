@@ -28,6 +28,12 @@
 	<cfset area_id = table.area_id>
 </cfif>
 
+<cfif isDefined("URL.from_area") AND isNumeric(URL.from_area)>
+	<cfset from_area_param = "&from_area=#URL.from_area#">
+<cfelse>
+	<cfset from_area_param = "">
+</cfif>
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
 <!---<cfif app_version NEQ "html2">
@@ -101,7 +107,7 @@
 
 			<cfif tableTypeId IS NOT 2><!--- IS NOT Form --->
 				<div class="btn-group">
-					<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#row_id#&area=#area_id#" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+					<a href="#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#row_id#&area=#area_id##from_area_param#" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 				</div>
 			</cfif>
 
