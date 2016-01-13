@@ -205,15 +205,15 @@
 		</div>
 	</div>
 
-	<cfif tableTypeId IS 3 AND SESSION.client_administrator EQ SESSION.user_id>
+	<cfif SESSION.client_administrator EQ SESSION.user_id AND tableTypeId NEQ 4>
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-12">
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> <span lang="es">Habilitar como #lCase(tableTypeNameEs)# general</span>
+					<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> <span lang="es">Habilitar como #lCase(tableTypeNameEs)# global</span>
 				</label>
-				<small class="help-block" lang="es">Se podrá utilizar esta tipología en cualquier área de la organización.</small>
+				<small class="help-block" lang="es">Se podrá utilizar <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# en cualquier área de la organización.</small>
 			</div>
 		</div>
 	</div>

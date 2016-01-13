@@ -998,7 +998,7 @@ Lang.prototype.pack.en = {
 		"Indica si la definición de campos de esta tipología está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this typology is available to be used as a template by any user in the organization",
 		"Indica si la definición de campos de esta tipología de usuario está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this user typology is available to be used as a template",
 
-		"Habilitar como tipología general":"Enable as general typology",
+		"Habilitar como tipología global":"Enable as global typology",
 		"Se podrá utilizar esta tipología en cualquier área de la organización.":"This typology may be used in any area of the organization",
 		"Define dónde se podrán publicar vistas de la Lista":"Set the area type where views of this List can be published",
 		"Define dónde se podrán publicar vistas del Formulario":"Set the area type where views of this Form can be published",

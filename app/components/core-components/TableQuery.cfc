@@ -30,9 +30,7 @@
 				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				, tables.attached_image_id, tables.attached_image_name
 				, tables.link_target
-				<cfif tableTypeId IS 3><!---Typologies--->
 				, tables.general
-				</cfif>
 				, tables.structure_available, tables.math_enabled, tables.form_display_type <!---files.file_type, --->
 				<cfif arguments.parse_dates IS true>
 					, DATE_FORMAT(tables.creation_date, '#dateTimeFormat#') AS creation_date

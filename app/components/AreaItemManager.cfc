@@ -837,7 +837,7 @@
 						, math_enabled = <cfqueryparam value="#arguments.math_enabled#" cfsqltype="cf_sql_bit">
 						, form_display_type = <cfqueryparam value="#arguments.form_display_type#" cfsqltype="cf_sql_varchar">
 						</cfif>
-						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
+						<cfif SESSION.client_administrator EQ SESSION.user_id>
 						, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
 						</cfif>
 						<cfif isDefined("arguments.publication_scope_id")>
@@ -1355,7 +1355,7 @@
 						, math_enabled = <cfqueryparam value="#arguments.math_enabled#" cfsqltype="cf_sql_bit">
 						, form_display_type = <cfqueryparam value="#arguments.form_display_type#" cfsqltype="cf_sql_varchar">
 						</cfif>
-						<cfif itemTypeId IS 13 AND SESSION.client_administrator EQ SESSION.user_id>
+						<cfif SESSION.client_administrator EQ SESSION.user_id>
 						, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
 						</cfif>
 						<cfif isDefined("arguments.publication_scope_id")>
