@@ -5,7 +5,7 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/table_row_form_query.cfm">
 
-<cfset return_page = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#">
+<cfset return_page = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#">
 
 <cfset url_return_path = "&return_path="&URLEncodedFormat(return_path&return_page)>
 

@@ -8,6 +8,10 @@
 	<cflocation url="area.cfm" addtoken="no">
 </cfif>
 
+<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+	<cfset area_id = URL.area>
+</cfif>
+
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
 	<cfinvokeargument name="item_id" value="#table_id#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
@@ -44,6 +48,9 @@
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRows" returnvariable="tableRowsResult">
 		<cfinvokeargument name="table_id" value="#table_id#">
+		<cfif isDefined("area_id")>
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfif>
 		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 		<cfinvokeargument name="fields" value="#fields#">
 	</cfinvoke>
@@ -82,7 +89,9 @@
 
 </cfif>
 
-<cfset area_id = objectItem.area_id>
+<cfif NOT isDefined("area_id")>
+	<cfset area_id = objectItem.area_id>
+</cfif>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
@@ -132,27 +141,31 @@
 
 				<cfif ( is_user_area_responsible OR table_edit_permission IS true ) AND objectArea.read_only IS false>
 					<div class="btn-group">
-						<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm" title="Nuevo registro" lang="es"><i class="icon-plus" style="font-size:14px;"></i> <span lang="es">Nuevo registro</span></a><!---color:##5BB75B;--->
+						<a href="#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#&area=#area_id#" onclick="openUrl('#tableTypeName#_row_new.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm" title="Nuevo registro" lang="es"><i class="icon-plus" style="font-size:14px;"></i> <span lang="es">Nuevo registro</span></a><!---color:##5BB75B;--->
 					</div>
 
 					<div class="btn-group">
-						<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
+						<cfif objectItem.area_id EQ area_id>
+							<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
 
-						<cfif tableTypeId IS 1 AND SESSION.client_abb EQ "ceseand" AND ListFind("1,2,3", table_id) GT 0><!--- Lists --->
-							<a href="#tableTypeName#_row_import_xml.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros a partir de XML" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar XML</span></a>
+							<cfif tableTypeId IS 1 AND SESSION.client_abb EQ "ceseand" AND ListFind("1,2,3", table_id) GT 0><!--- Lists --->
+								<a href="#tableTypeName#_row_import_xml.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros a partir de XML" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar XML</span></a>
+							</cfif>
 						</cfif>
 				<cfelse>
 					<div class="btn-group">
 				</cfif>
 
-					<a href="#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down" style="font-size:15px;"></i> <span lang="es">Exportar</span></a>
+					<cfif objectItem.area_id EQ area_id>
+						<a href="#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down" style="font-size:15px;"></i> <span lang="es">Exportar</span></a>
+					</cfif>
 
 				</div>
 
 				<!---<span class="divider">&nbsp;</span>--->
 
 
-				<cfif is_user_area_responsible AND objectArea.read_only IS false>
+				<cfif objectItem.area_id EQ area_id AND is_user_area_responsible AND objectArea.read_only IS false>
 
 					<div class="btn-group">
 						<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Campos" lang="es"><i class="icon-wrench"></i> <span lang="es">Campos</span></a>
@@ -204,7 +217,7 @@
 				</script>--->
 
 
-				<cfif is_user_area_responsible OR objectItem.user_in_charge EQ SESSION.user_id>
+				<cfif objectItem.area_id EQ area_id AND ( is_user_area_responsible OR objectItem.user_in_charge EQ SESSION.user_id )>
 
 					<cfif itemTypeId IS 11 OR itemTypeId IS 12>
 

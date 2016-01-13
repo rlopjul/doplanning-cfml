@@ -20,6 +20,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="false">
+		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="position" type="numeric" required="false">
 
 		<cfargument name="action" type="string" required="true"><!---create/modify--->
@@ -43,6 +44,22 @@
 		<cfset var attachedFileFields = false>
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfif NOT isDefined("arguments.area_id")>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
+					<cfinvokeargument name="table_id" value="#arguments.table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="parse_dates" value="false">
+					<cfinvokeargument name="published" value="false">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset area_id = tableQuery.area_id>
+
+			</cfif>
 
 			<cfif NOT isDefined("arguments.fields")>
 
@@ -125,6 +142,7 @@
 							<cfqueryparam null="true" cfsqltype="cf_sql_integer">
 						</cfif>,
 						position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">,
+						area_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">,
 						creation_date = NOW(),
 					<cfelse>
 						last_update_user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">,
@@ -483,6 +501,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="false">
 		<cfargument name="fields" type="query" required="false"><!--- Required to order by fields or search--->
+		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="search" type="string" required="false">
 		<cfargument name="categoriesFilter" type="boolean" required="false" default="false">
 
@@ -494,6 +513,7 @@
 
 		<cfset var method = "getTableRows">
 
+		<cfset var subAreasIds = "">
 		<cfset var orderBy = "">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -505,6 +525,17 @@
 					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 					<cfinvokeargument name="with_types" value="true">
 					<cfinvokeargument name="with_table" value="false">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfif>
+
+			<cfif isDefined("arguments_area_id")>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -524,6 +555,12 @@
 				<cfelse>
 
 					WHERE 1=1
+
+					<cfif len(subAreasIds) GT 0>
+
+						AND area_id IN (<cfqueryparam value="#subAreasIds#" cfsqltype="cf_sql_varchar" list="true"> )
+
+					</cfif>
 
 					<cfif isDefined("arguments.from_date")>
 						AND ( table_row.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')

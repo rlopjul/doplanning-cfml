@@ -25,11 +25,18 @@
 				  `creation_date` datetime NOT NULL,
 				  `last_update_date` datetime DEFAULT NULL,
 				  `position` int(10) unsigned NOT NULL,
+					<cfif tableTypeId IS 1 OR tableTypeId IS 2>
+						`area_id` INT(11) NOT NULL,
+					</cfif>
 				  PRIMARY KEY (`row_id`) USING BTREE,
 				  KEY `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_1` (`insert_user_id`),
 				  KEY `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` (`last_update_user_id`),
 				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` FOREIGN KEY (`last_update_user_id`) REFERENCES `#client_abb#_users` (`id`) ON DELETE SET NULL,
 				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_1` FOREIGN KEY (`insert_user_id`) REFERENCES `#client_abb#_users` (`id`) ON DELETE SET NULL
+					<cfif tableTypeId IS 1 OR tableTypeId IS 2>
+						, CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_3` FOREIGN KEY (`area_id`) REFERENCES `#client_abb#_areas` (`id`) ON DELETE RESTRICT ON UPDATE NO ACTION
+					</cfif>
+
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 			</cfquery>
 
@@ -575,6 +582,7 @@
 
 	<cffunction name="getTableRows" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="fields" type="query" required="false">
 

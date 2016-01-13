@@ -1469,6 +1469,7 @@
 		<cfargument name="row_id" type="numeric" required="false">
 		<cfargument name="fields" type="query" required="false">
 		<cfargument name="file_id" type="numeric" required="false"><!--- Only for typology row --->
+		<cfargument name="area_id" type="numeric" required="false">
 
 		<cfset var method = "getTableRows">
 
@@ -1550,6 +1551,7 @@
 				<cfinvokeargument name="row_id" value="#arguments.row_id#">
 				</cfif>
 				<cfinvokeargument name="fields" value="#arguments.fields#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">

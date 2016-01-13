@@ -18,7 +18,7 @@
 
 	<cfif actionResponse.result IS true>
 
-		<cfset return_page = "#tableTypeName#_rows.cfm?#tableTypeName#=#actionResponse.table_id#">
+		<cfset return_page = "#tableTypeName#_rows.cfm?#tableTypeName#=#actionResponse.table_id#&area=#FORM.area_id#">
 
 		<cfset msg = urlEncodedFormat(actionResponse.message)>
 
@@ -100,7 +100,11 @@
 
 	</cfif>
 
-	<cfset area_id = table.area_id>
+	<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+		<cfset area_id = URL.area>
+	<cfelse>
+		<cfset area_id = table.area_id>
+	</cfif>
 
 	<!--- isUserAreaResponsible --->
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_area_responsible">
