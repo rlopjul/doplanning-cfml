@@ -95,7 +95,12 @@
 
 		<cfif tableTypeId IS NOT 3>
 			<div class="btn-group">
-				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/v3/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
+				<cfif isDefined("URL.from_area") AND isNumeric(URL.from_area)>
+					<cfset tableRowsUrl = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#URL.from_area#">
+				<cfelse>
+					<cfset tableRowsUrl = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#">
+				</cfif>
+				<a href="#tableRowsUrl#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/v3/icons/#tableTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
 			</div>
 		<cfelse>
 			<div class="btn-group">
