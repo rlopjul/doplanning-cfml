@@ -1797,15 +1797,19 @@
 								<div class="col-xs-12">
 									<h6><span class="label label-info" lang="es">#itemTypeStruct.label# global</span></h6>
 
-									<cfif itemTypeId IS 13 OR ( (itemTypeId IS 11 OR itemTypeId IS 12) AND objectItem.general IS true)><!--- Lists, Forms AND Typologies --->
+									<cfif itemTypeId IS 13 OR ( (itemTypeId IS 11 OR itemTypeId IS 12) AND objectItem.general IS true )><!--- Lists, Forms AND Typologies --->
 
 										<div class="div_message_page_label">
-											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="typologyArea">
+											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="tableArea">
 												<cfinvokeargument name="area_id" value="#objectItem.area_id#">
 											</cfinvoke>
 
 											<span lang="es">Propiedad del área:</span>
-											<a onclick="openUrl('typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#','areaIframe',event)" style="cursor:pointer">#typologyArea.name#</a>
+											<cfif itemTypeId IS 13>
+												<a href="typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#">#tableArea.name#</a>
+											<cfelse>
+												<a href="area_items.cfm?area=#objectItem.area_id####itemTypeName##objectItem.id#">#tableArea.name#</a>
+											</cfif>
 										</div>
 
 									</cfif>
