@@ -3245,7 +3245,7 @@
 				<cfquery name="isUserAdministratorQuery" datasource="#client_dsn#">
 					SELECT user_administrator
 					FROM #client_abb#_users
-					WHERE user_id = <cfqueryparam value="#arguments.check_user_id#" cfsqltype="cf_sql_integer">;
+					WHERE id = <cfqueryparam value="#arguments.check_user_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
 
 				<cfif isUserAdministratorQuery.recordCount GT 0 AND isUserAdministratorQuery.user_administrator IS true>
