@@ -1059,8 +1059,8 @@
 				FROM #client_abb#_lists AS lists
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
-				AND lists.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				OR lists.general = 1
+				AND ( lists.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				OR lists.general = 1 )
 				</cfif>
 				)
 				UNION ALL <!--- List Views --->
@@ -1092,8 +1092,8 @@
 				FROM #client_abb#_forms AS forms
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
-				AND forms.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				OR forms.general = 1
+				AND ( forms.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				OR forms.general = 1 )
 				</cfif>
 				)
 				UNION ALL <!--- Form Views --->
