@@ -816,6 +816,35 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- hasTableRowsOfOtherAreas ------------------------------------- --->
+
+	<cffunction name="hasTableRowsOfOtherAreas" returntype="boolean" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "isUserInTable">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="hasTableRowsOfOtherAreas" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+			</cfinvoke>
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response.rowsOfOtherAreas>
+
+	</cffunction>
+
 
 	<!--- ----------------------------------- outputTablesList ------------------------------------- --->
 

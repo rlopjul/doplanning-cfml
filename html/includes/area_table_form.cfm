@@ -207,20 +207,40 @@
 
 	<cfif SESSION.client_administrator EQ SESSION.user_id AND tableTypeId NEQ 4>
 
-	<div class="row">
-		<div class="col-xs-12 col-sm-12">
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> <span lang="es">Habilitar como #lCase(tableTypeNameEs)# global</span>
-				</label>
-				<small class="help-block" lang="es">Se podrá utilizar <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# en cualquier área de la organización.</small>
+		<cfset changeGeneralEnabled = true>
 
-				<cfif APPLICATION.moduleListsWithPermissions IS true AND tableTypeId EQ 1>
-					<small class="help-block" lang="es">IMPORTANTE: los registros de <cfif tableTypeGender EQ "male">los<cfelse>las</cfif> #lCase(tableTypeNameEs)# globales pueden ser editados por cualquier usuario con acceso al área donde han sido introducidos, no requieren permiso de edición.</small>
-				</cfif>
+		<cfif page_type IS 2>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="hasTableRowsOfOtherAreas" returnvariable="hasTableRowsOfOtherAreas">
+				<cfinvokeargument name="table_id" value="#table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+			</cfinvoke>
+
+			<cfif hasTableRowsOfOtherAreas IS true>
+				<cfset changeGeneralEnabled = false>
+			</cfif>
+
+		</cfif>
+
+		<div class="row">
+			<div class="col-xs-12 col-sm-12">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> <cfif changeGeneralEnabled IS false>disabled="disable"</cfif> /> <span lang="es">Habilitar como #lCase(tableTypeNameEs)# global</span>
+					</label>
+
+					<cfif changeGeneralEnabled IS true>
+						<small class="help-block" lang="es">Se podrá utilizar <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# en cualquier área de la organización.</small>
+					<cfelse>
+						<small class="help-block"><b lang="es">No se puede convertir <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# en normal porque tiene registros introducidos en otras áreas, antes debe borrarlos.</b></small>
+					</cfif>
+
+					<cfif APPLICATION.moduleListsWithPermissions IS true AND tableTypeId EQ 1>
+						<small class="help-block" lang="es">IMPORTANTE: los registros de <cfif tableTypeGender EQ "male">los<cfelse>las</cfif> #lCase(tableTypeNameEs)# globales pueden ser editados por cualquier usuario con acceso al área donde han sido introducidos, no requieren permiso de edición.</small>
+					</cfif>
+				</div>
 			</div>
 		</div>
-	</div>
 
 	</cfif>
 

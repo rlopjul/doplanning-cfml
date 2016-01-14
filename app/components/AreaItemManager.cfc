@@ -1356,7 +1356,16 @@
 						, form_display_type = <cfqueryparam value="#arguments.form_display_type#" cfsqltype="cf_sql_varchar">
 						</cfif>
 						<cfif SESSION.client_administrator EQ SESSION.user_id>
-						, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
+
+							<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="hasTableRowsOfOtherAreas" returnvariable="hasTableRowsOfOtherAreas">
+								<cfinvokeargument name="table_id" value="#table_id#">
+								<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+							</cfinvoke>
+
+							<cfif hasTableRowsOfOtherAreas IS false>
+								, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
+							</cfif>
+
 						</cfif>
 						<cfif isDefined("arguments.publication_scope_id")>
 						, publication_scope_id = <cfqueryparam value="#arguments.publication_scope_id#" cfsqltype="cf_sql_integer">
