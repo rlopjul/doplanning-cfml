@@ -29,7 +29,7 @@
 
 		<cfargument name="ldapName" type="string" required="false">
 		<cfargument name="ldapServer" type="string" required="false" default="">
-		<cfargument name="ldapServerPort" type="numeric" required="false" default="">
+		<cfargument name="ldapServerPort" type="string" required="false" default="">
 		<cfargument name="ldapServerUserName" type="string" required="false" default="">
 		<cfargument name="ldapServerPassword" type="string" required="false" default="">
 		<cfargument name="ldapUsersPath" type="string" required="false" default="">
