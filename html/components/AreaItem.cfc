@@ -1795,6 +1795,20 @@
 							<div class="row">
 								<div class="col-xs-12">
 									<h6><span class="label label-info" lang="es">#itemTypeStruct.label# global</span></h6>
+
+									<cfif itemTypeId IS 13 OR ( (itemTypeId IS 11 OR itemTypeId IS 12) AND objectItem.general IS true)><!--- Lists, Forms AND Typologies --->
+
+										<div class="div_message_page_label">
+											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="typologyArea">
+												<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+											</cfinvoke>
+
+											<span lang="es">Propiedad del área:</span>
+											<a onclick="openUrl('typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#','areaIframe',event)" style="cursor:pointer">#typologyArea.name#</a>
+										</div>
+
+									</cfif>
+
 								</div>
 							</div>
 						</cfif>
@@ -1902,18 +1916,7 @@
 
 							</cfif>
 
-							<cfif itemTypeId IS 13><!--- Typologies --->
-
-								<div class="div_message_page_label">
-									<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="typologyArea">
-										<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-									</cfinvoke>
-
-									<span lang="es">Propiedad del área:</span>
-									<a onclick="openUrl('typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#','areaIframe',event)" style="cursor:pointer">#typologyArea.name#</a>
-								</div>
-
-							<cfelseif itemTypeId IS 7><!---Consultation--->
+							<cfif itemTypeId IS 7><!---Consultation--->
 
 								<div class="div_message_page_label"><span lang="es">Estado:</span> <span class="text_message_page" lang="es"><cfswitch expression="#objectItem.state#">
 									<cfcase value="created">Enviada</cfcase>
