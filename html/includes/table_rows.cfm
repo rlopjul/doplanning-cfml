@@ -112,7 +112,7 @@
 
 			<cfif is_user_area_responsible IS false>
 
-				<cfif tableTypeId IS 1 AND APPLICATION.moduleListsWithPermissions IS true><!---IS List and list permissions is enabled--->
+				<cfif tableTypeId IS 1 AND objectItem.general IS false AND APPLICATION.moduleListsWithPermissions IS true><!---IS List and list permissions is enabled--->
 
 					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="isUserInTable" returnvariable="isUserInTable">
 						<cfinvokeargument name="table_id" value="#table_id#">
