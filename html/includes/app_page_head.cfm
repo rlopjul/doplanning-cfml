@@ -358,7 +358,13 @@
 			<cfelse>
 				<cfset newQueryString = "?abb=#SESSION.client_abb#">
 			</cfif>
-			History.replaceState(History.getState().data, History.options.initialTitle, "#newQueryString#");
+
+			var urlHash = "";
+			if(window.location.hash) {
+				urlHash = window.location.hash;
+			}
+
+			History.replaceState(History.getState().data, History.options.initialTitle, "#newQueryString#"+urlHash);
 
 		</cfif>
 
