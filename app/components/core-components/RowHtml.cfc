@@ -1477,10 +1477,11 @@
 									<cfset row_area_id = tableRows.area_id>
 									<cfif isDefined("arguments.area_id")>
 										<cfset from_area_param = "&from_area=#arguments.area_id#">
+										<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#arguments.area_id#">
 									<cfelse>
 										<cfset from_area_param = "">
+										<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#row_area_id#">
 									</cfif>
-									<cfset rpage = "#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#row_area_id##from_area_param#">
 									<cfset row_page_url = "#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&area=#row_area_id##from_area_param#&return_page=#URLEncodedFormat(rpage)#">
 									<cfset row_edit_page_url = "#tableTypeName#_row_modify.cfm?#tableTypeName#=#table_id#&row=#tableRows.row_id#&area=#row_area_id##from_area_param#">
 
@@ -1519,8 +1520,10 @@
 						<tr <cfif dataSelected IS true>class="selected"</cfif> <cfif arguments.openRowOnSelect IS true>data-item-url="#row_page_url#"</cfif>>
 
 							<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
-							<td #tdStyle#><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()">#arguments.linkButtonText#</a>
+							<td #tdStyle#><cfif arguments.includeLinkButton IS true><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()">#arguments.linkButtonText#</a></cfif>
+								<cfif arguments.includeEditButton IS true>
 								<a class="btn btn-primary btn-xs" href="#row_edit_page_url#" onclick="event.stopPropagation()"><i class="fa fa-pencil"></i></a>
+								</cfif>
 							</td>
 							</cfif>
 							<td #tdStyle#>#tableRows.row_id#</td>

@@ -45,17 +45,17 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+				<cfinvokeargument name="parse_dates" value="false">
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
 			<cfif NOT isDefined("arguments.area_id")>
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="tableQuery">
-					<cfinvokeargument name="table_id" value="#arguments.table_id#">
-					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-					<cfinvokeargument name="parse_dates" value="false">
-					<cfinvokeargument name="published" value="false">
-
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
 
 				<cfset area_id = tableQuery.area_id>
 
@@ -142,7 +142,9 @@
 							<cfqueryparam null="true" cfsqltype="cf_sql_integer">
 						</cfif>,
 						position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">,
-						area_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">,
+						<cfif tableQuery.general IS true>
+							area_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">,
+						</cfif>
 						creation_date = NOW(),
 					<cfelse>
 						last_update_user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">,
