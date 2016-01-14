@@ -1663,13 +1663,21 @@
 		<cfargument name="objectItem" type="object" required="true">
 		<cfargument name="categories" type="query" required="false">
 		<cfargument name="itemTypeId" type="numeric" required="true">
-		<cfargument name="itemTypeName" type="string" required="true">
+		<cfargument name="itemTypeName" type="string" required="false">
 		<cfargument name="area_type" type="string" required="true">
 		<cfargument name="webPath" type="string" required="false">
 
 		<cfset var method = "outputItem">
 
 		<cftry>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypeStruct" returnvariable="itemTypeStruct">
+				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+			</cfinvoke>
+
+			<cfif NOT isDefined("arguments.itemTypeName")>
+				<cfset itemTypeName = itemTypeStruct.name>
+			</cfif>
 
 			<cfif len(objectItem.description) GT 0>
 
@@ -1700,7 +1708,7 @@
 						   		<div class="media"><!--- item user name and date --->
 
 						   			<div class="media-left">
-										<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.user_in_charge#">
+											<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.user_in_charge#">
 
 											<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 												<cfinvokeargument name="user_id" value="#objectItem.user_in_charge#">
@@ -1708,21 +1716,20 @@
 												<cfinvokeargument name="user_image_type" value="#objectItem.user_image_type#">
 											</cfinvoke>
 
-										</a>
-									</div>
+											</a>
+										</div>
 
-									<div class="media-body">
+										<div class="media-body">
 
-										<!---<span class="text_message_page">#objectItem.user_full_name#</span>--->
-										<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.user_in_charge#" class="link_user">#objectItem.user_full_name#</a>
-										&nbsp;&nbsp;&nbsp;&nbsp;
-										<cfset spacePos = findOneOf(" ", objectItem.creation_date)>
-										<span class="text_date">#left(objectItem.creation_date, spacePos)#</span>
-										&nbsp;&nbsp;&nbsp;
-										<span class="text_hour">#right(objectItem.creation_date, len(objectItem.creation_date)-spacePos)#</span>
+											<!---<span class="text_message_page">#objectItem.user_full_name#</span>--->
+											<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.user_in_charge#" class="link_user">#objectItem.user_full_name#</a>
+											&nbsp;&nbsp;&nbsp;&nbsp;
+											<cfset spacePos = findOneOf(" ", objectItem.creation_date)>
+											<span class="text_date">#left(objectItem.creation_date, spacePos)#</span>
+											&nbsp;&nbsp;&nbsp;
+											<span class="text_hour">#right(objectItem.creation_date, len(objectItem.creation_date)-spacePos)#</span>
 
-									</div>
-
+										</div>
 
 								</div><!--- END media --->
 
@@ -1782,6 +1789,14 @@
 
 							<hr style="margin-top:3px;">
 
+						</cfif>
+
+						<cfif ( itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 ) AND objectItem.general IS true>
+							<div class="row">
+								<div class="col-xs-12">
+									<h6><span class="label label-info" lang="es">#itemTypeStruct.label# global</span></h6>
+								</div>
+							</div>
 						</cfif>
 
 						<cfif isDefined("arguments.categories")>

@@ -275,6 +275,5 @@
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItem">
 	<cfinvokeargument name="objectItem" value="#objectItem#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-	<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
 	<cfinvokeargument name="area_type" value="#area_type#">
 </cfinvoke>
