@@ -1136,7 +1136,7 @@
 
 			</cfif>
 
-		<cfelseif arguments.tableTypeId IS NOT 3 OR arguments.table.general IS NOT true><!---IS NOT typology OR IS NOT general typology--->
+		<cfelseif arguments.table.general IS NOT true><!---IS NOT typology OR IS NOT general typology--->
 
 			<!---checkAreaAccess--->
 			<cfinclude template="includes/checkAreaAccess.cfm">
@@ -1144,7 +1144,7 @@
 		</cfif>
 
 		<!---checkListPermissions--->
-		<cfif tableTypeId IS 1 AND APPLICATION.moduleListsWithPermissions IS true><!---IS List and list permissions is enabled--->
+		<cfif tableTypeId IS 1 AND APPLICATION.moduleListsWithPermissions IS true AND arguments.table.general IS false><!---IS List and list permissions is enabled--->
 
 			<cfinvoke component="TableManager" method="isUserInTable" returnvariable="isUserInTableResponse">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
