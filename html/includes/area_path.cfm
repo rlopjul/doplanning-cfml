@@ -30,6 +30,10 @@
 				<cfinvokeargument name="with_base_link" value="area_items.cfm?area="/>
 			</cfinvoke>
 
+		<cfelse>
+
+			<cfset area_path = "">
+
 		</cfif>
 
 	</cfif>
