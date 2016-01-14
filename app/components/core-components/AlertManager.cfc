@@ -1400,9 +1400,11 @@
 
 		</cfif>
 
-		<!---<cfset area_id = getTableQuery.area_id>--->
-
-		<cfset area_id = rowQuery.area_id>
+		<cfif isDefined("rowQuery.area_id")>
+			<cfset area_id = rowQuery.area_id>
+		<cfelse>
+			<cfset area_id = getTableQuery.area_id>
+		</cfif>
 
 		<!---Get area name--->
 		<cfquery name="selectAreaQuery" datasource="#client_dsn#">
