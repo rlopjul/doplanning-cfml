@@ -1483,6 +1483,15 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
+			<cfif isDefined("arguments.area_id")>
+
+				<cfset area_id = arguments.area_id>
+
+				<!---checkAreaAccess--->
+				<cfinclude template="includes/checkAreaAccess.cfm">
+
+			</cfif>
+
 			<cfif arguments.tableTypeId IS 3 AND isDefined("arguments.row_id") AND isDefined("arguments.file_id")><!---Only one row of Typology (file)--->
 
 				<!---checkAreaFileAccess--->

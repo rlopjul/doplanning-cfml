@@ -77,7 +77,7 @@
 
 				<cfset area_id = getTableQuery.area_id>
 
-				<cfif arguments.tableTypeId IS NOT 3 OR getTableQuery.general IS false><!---No es tipología general--->
+				<cfif getTableQuery.general IS false><!---No es tabla general--->
 
 					<cfif arguments.tableTypeId IS 3 AND APPLICATION.filesTablesInheritance IS true><!--- Typologies with inheritante --->
 
@@ -521,7 +521,7 @@
 
 				<cfset area_id = getTableFieldsQuery.area_id>
 
-				<cfif arguments.tableTypeId IS NOT 3 OR getTableFieldsQuery.general IS false><!---No es tipología general--->
+				<cfif getTableFieldsQuery.general IS false><!---No es tabla general--->
 
 					<cfif arguments.tableTypeId IS 3 AND isDefined("arguments.file_id")><!---Typology (file)--->
 

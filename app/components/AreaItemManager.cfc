@@ -2200,7 +2200,7 @@
 
 				<cfset area_id = selectItemQuery.area_id>
 
-				<cfif arguments.itemTypeId IS NOT 13 OR selectItemQuery.general IS NOT true><!---No es tipología general--->
+				<cfif (arguments.itemTypeId IS NOT 11 AND arguments.itemTypeId IS NOT 12 AND arguments.itemTypeId IS NOT 13) OR selectItemQuery.general IS NOT true><!---No es tabla--->
 
 					<!---checkAreaAccess--->
 					<cfinclude template="includes/checkAreaAccess.cfm">
