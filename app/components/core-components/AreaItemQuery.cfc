@@ -1060,7 +1060,9 @@
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
 				AND ( lists.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				OR lists.general = 1 )
+				<cfif NOT isDefined("arguments.area_type") OR len(arguments.area_type) IS 0><!--- IS NOT WEB --->
+				OR lists.general = 1
+				</cfif> )
 				</cfif>
 				)
 				UNION ALL <!--- List Views --->
@@ -1093,7 +1095,9 @@
 				WHERE status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				<cfif isDefined("arguments.area_id")>
 				AND ( forms.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				OR forms.general = 1 )
+				<cfif NOT isDefined("arguments.area_type") OR len(arguments.area_type) IS 0><!--- IS NOT WEB --->
+				OR forms.general = 1
+			 	</cfif> )
 				</cfif>
 				)
 				UNION ALL <!--- Form Views --->
