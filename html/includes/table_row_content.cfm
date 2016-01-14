@@ -47,7 +47,11 @@
 <cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
 	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##URL.return_page#")>
 <cfelse>
-	<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##tableTypeNameP#.cfm?area=#area_id#")>
+	<cfif isDefined("URL.from_area")>
+		<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#URL.from_area#")>
+	<cfelse>
+		<cfset url_return_path = "&return_path="&URLEncodedFormat("#return_path##tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#")>
+	</cfif>
 </cfif>
 
 <script type="text/javascript">
@@ -117,7 +121,7 @@
 			</cfif>
 
 			<div class="btn-group">
-				<a href="#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowRemote&table_id=#table_id#&row_id=#row_id#&tableTypeId=#tableTypeId#&area=#url_return_path#" onclick="return confirmDeleteRow();" title="Eliminar registro" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+				<a href="#APPLICATION.htmlComponentsPath#/Row.cfc?method=deleteRowRemote&table_id=#table_id#&row_id=#row_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteRow();" title="Eliminar registro" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 			</div>
 
 		</cfif>
