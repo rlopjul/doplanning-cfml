@@ -477,6 +477,7 @@
 			<cfargument name="includeFullText" type="boolean" required="false">
 			<cfargument name="table_general" type="boolean" required="false">
 			<cfargument name="area_id" type="numeric" required="false">
+			<cfargument name="includeFromAreaColumn" type="boolean" required="false">
 
 			<cfset var method = "outputRowList">
 
@@ -501,6 +502,7 @@
 					<cfinvokeargument name="includeFullText" value="#arguments.includeFullText#">
 					<cfinvokeargument name="table_general" value="#arguments.table_general#">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="includeFromAreaColumn" value="#arguments.includeFromAreaColumn#">
 
 					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">

@@ -1123,6 +1123,7 @@
 		<cfargument name="includeFullText" type="boolean" required="false" default="true">
 		<cfargument name="table_general" type="boolean" required="false" default="false">
 		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="includeFromAreaColumn" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1432,6 +1433,9 @@
 									<cfset listFields = true>
 								</cfif>
 							</cfloop>
+							<cfif arguments.includeFromAreaColumn IS true>
+								<th class="filter-select"><span lang="es">De esta área</span></th>
+							</cfif>
 						</tr>
 					</thead>
 
@@ -1787,6 +1791,10 @@
 								</cfif>
 
 							</cfloop>
+
+							<cfif arguments.includeFromAreaColumn IS true>
+								<td><span lang="es"><cfif arguments.area_id EQ tableRows.area_id>Sí<cfelse>No</cfif></span></td>
+							</cfif>
 						</tr>
 					</cfloop>
 					</tbody>
@@ -1817,6 +1825,9 @@
 										<th></th>
 									</cfif>
 								</cfloop>
+								<cfif arguments.includeFromAreaColumn IS true>
+									<th></th>
+								</cfif>
 							</tr>
 						</tfoot>
 

@@ -515,11 +515,22 @@
 								<cfinvokeargument name="mathEnabled" value="#objectItem.math_enabled#">
 								<cfinvokeargument name="table_general" value="#objectItem.general#">
 								<cfinvokeargument name="area_id" value="#area_id#">
+								<cfif objectItem.general IS true>
+									<cfinvokeargument name="includeFromAreaColumn" value="true">
+								</cfif>
 							</cfinvoke>
 
 						</div><!--- END col-sm-12 --->
 
 					</div><!--- END row --->
+
+					<cfif objectItem.general IS true>
+						<div class="row">
+							<div class="col-sm-12">
+								<small class="help-block">#itemTypeNameEs# global, se incluyen los registros de esta área y las inferiores</small>
+							</div>
+						</div>
+					</cfif>
 
 				</div><!--- END container-fluid --->
 
