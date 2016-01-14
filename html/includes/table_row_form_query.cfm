@@ -55,10 +55,8 @@
 			<cfelse>
 				<cfinvokeargument name="include_in_update_row" value="true">
 			</cfif>
-			<cfif is_user_area_responsible IS true>
+			<cfif is_user_area_responsible NEQ true>
 				<cfinvokeargument name="include_in_all_users" value="true">
-			<cfelse>
-				<cfinvokeargument name="include_in_all_users" value="false">
 			</cfif>
 		</cfinvoke>
 		<cfset fields = fieldsResult.tableFields>
