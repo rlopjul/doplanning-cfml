@@ -214,6 +214,10 @@
 					<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> /> <span lang="es">Habilitar como #lCase(tableTypeNameEs)# global</span>
 				</label>
 				<small class="help-block" lang="es">Se podrá utilizar <cfif tableTypeGender EQ "male">este<cfelse>esta</cfif> #lCase(tableTypeNameEs)# en cualquier área de la organización.</small>
+
+				<cfif APPLICATION.moduleListsWithPermissions IS true AND tableTypeId EQ 1>
+					<small class="help-block" lang="es">IMPORTANTE: los registros de <cfif tableTypeGender EQ "male">los<cfelse>las</cfif> #lCase(tableTypeNameEs)# globales pueden ser editados por cualquier usuario con acceso al área donde han sido introducidos, no requieren permiso de edición.</small>
+				</cfif>
 			</div>
 		</div>
 	</div>
