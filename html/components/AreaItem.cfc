@@ -1666,6 +1666,7 @@
 		<cfargument name="itemTypeName" type="string" required="false">
 		<cfargument name="area_type" type="string" required="true">
 		<cfargument name="webPath" type="string" required="false">
+		<cfargument name="area_id" type="numeric" required="false">
 
 		<cfset var method = "outputItem">
 
@@ -2041,7 +2042,11 @@
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
 							<cfinvokeargument name="item_id" value="#objectItem.id#">
 							<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-							<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+							<cfif isDefined("arguments.area_id")>
+								<cfinvokeargument name="area_id" value="#arguments.area_id#">
+							<cfelse>
+								<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+							</cfif>
 
 							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 						</cfinvoke>

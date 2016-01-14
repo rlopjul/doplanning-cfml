@@ -58,7 +58,7 @@
 		<cfset redirect_page = "list_row.cfm?list=#URL.list#&row=#URL.row#&area=#URL.area#">
 		<cfset redirect_area_page = "list_rows.cfm?list=#URL.list#&row=#URL.row#&area=#URL.area#">
 	<cfelse>
-		<cfset redirect_page = "list.cfm?list=#URL.list#">
+		<cfset redirect_page = "list.cfm?list=#URL.list#&area=#URL.area#">
 		<cfset redirect_area_page = "area_items.cfm?list=#URL.list#&area=#URL.area#">
 	</cfif>
 <cfelseif APPLICATION.moduleLists IS true AND isDefined("URL.list_view")>
@@ -74,7 +74,7 @@
 		<cfset redirect_page = "form_row.cfm?form=#URL.form#&row=#URL.row#&area=#URL.area#">
 		<cfset redirect_area_page = "form_rows.cfm?form=#URL.form#&row=#URL.row#&area=#URL.area#">
 	<cfelse>
-		<cfset redirect_page = "form.cfm?form=#URL.form#">
+		<cfset redirect_page = "form.cfm?form=#URL.form#&area=#URL.area#">
 		<cfset redirect_area_page = "area_items.cfm?form=#URL.form#&area=#URL.area#">
 	</cfif>
 <cfelseif APPLICATION.moduleForms IS true AND isDefined("URL.form_view")>

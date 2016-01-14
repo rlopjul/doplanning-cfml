@@ -276,4 +276,5 @@
 	<cfinvokeargument name="objectItem" value="#objectItem#">
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 	<cfinvokeargument name="area_type" value="#area_type#">
+	<cfinvokeargument name="area_id" value="#area_id#">
 </cfinvoke>
