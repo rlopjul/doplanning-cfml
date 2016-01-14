@@ -18,7 +18,7 @@
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
 
-<cfif tableTypeId IS 3><!--- Typology --->
+<cfif tableTypeId IS 3 OR objectItem.general IS true><!--- Typology --->
 
 	<cfif isDefined("URL.area") AND isNumeric(URL.area)>
 		<cfset area_id = URL.area>
@@ -115,7 +115,7 @@
 	<!---En estos enlaces, el valor de area es necesario para seleccionarla cuando el elemento es el resultado de una búsqueda--->
 	<cfif itemTypeId IS 11 OR itemTypeId IS 12>
 		<div class="btn-group">
-			<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#table_id#&area=#objectItem.area_id#" class="btn btn-primary btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
+			<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#table_id#&area=#area_id#" class="btn btn-primary btn-sm" title="Registros" lang="es"><i class="icon-list"></i> <span lang="es">Registros</span></a>
 		</div>
 	</cfif>
 

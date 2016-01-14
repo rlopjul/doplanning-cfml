@@ -3105,6 +3105,12 @@
 					<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#&return_page=#URLEncodedFormat(rpage)#">
 				</cfif>
 
+				<cfif isDefined("arguments.area_id")>
+					<cfset area_param = "&area=#arguments.area_id#">
+				<cfelse>
+					<cfset area_param = "&area=#itemsQuery.area_id#">
+				</cfif>
+
 				<div class="row element_item #itemTypeName#"><!--- row item container --->
 					<div class="col-sm-12">
 
@@ -3282,7 +3288,7 @@
 											<div class="pull-right">
 
 												<cfif arguments.deletedItems IS false>
-													<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#">
+													<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id##area_param#">
 												</cfif>
 
 
@@ -3604,7 +3610,7 @@
 
 										<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 14 OR itemTypeId IS 15 OR itemTypeId IS 16><!---Lists, Forms And Views--->
 
-											<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#&area=#arguments.area_id#" class="btn btn-sm btn-primary" title="Registros"><i class="icon-list" style="font-size:15px;"></i> <span lang="es">Registros</span></a>
+											<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id##area_param#" class="btn btn-sm btn-primary" title="Registros"><i class="icon-list" style="font-size:15px;"></i> <span lang="es">Registros</span></a>
 
 										<!---<cfelseif itemTypeId IS 13>
 
@@ -3708,7 +3714,7 @@
 												</cfif>
 											<cfelse>
 												<!---onclick="openUrl('#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#','itemIframe',event)"--->
-												<a href="#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#" class="btn btn-sm btn-info" title="Ver #itemTypeNameEs#"><span lang="es">Ver</span> <span lang="es">#itemTypeNameEs#</span></a>
+												<a href="#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id##area_param#" class="btn btn-sm btn-info" title="Ver #itemTypeNameEs#"><span lang="es">Ver</span> <span lang="es">#itemTypeNameEs#</span></a>
 											</cfif>
 
 										<cfelse><!--- Deleted item --->
