@@ -1427,7 +1427,7 @@
 								<cfif fields.field_id EQ "last_update_date">
 									<th #thStyle#><span lang="es">#fields.label#</span></th>
 								<cfelse>
-									<th #thStyle#>#fields.label#</th>
+									<th #thStyle# <cfif fields.field_type_id IS 7><!---Boolean--->class="filter-select"</cfif>>#fields.label#</th>
 								</cfif>
 								<cfif fields.field_type_id EQ 9 OR fields.field_type_id IS 10><!--- LISTS --->
 									<cfset listFields = true>
