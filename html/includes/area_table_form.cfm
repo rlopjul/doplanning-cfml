@@ -226,7 +226,7 @@
 			<div class="col-xs-12 col-sm-12">
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true>checked="checked"</cfif> <cfif changeGeneralEnabled IS false>disabled="disable"</cfif> /> <span lang="es">Habilitar como #lCase(tableTypeNameEs)# global</span>
+						<input type="checkbox" name="general" id="general" value="true" <cfif isDefined("table.general") AND table.general IS true OR changeGeneralEnabled IS false>checked="checked"</cfif> <cfif changeGeneralEnabled IS false>disabled="disable"</cfif> /> <span lang="es">Habilitar como #lCase(tableTypeNameEs)# global</span>
 					</label>
 
 					<cfif changeGeneralEnabled IS true>

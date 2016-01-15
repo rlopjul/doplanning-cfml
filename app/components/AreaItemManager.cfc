@@ -1357,12 +1357,16 @@
 						</cfif>
 						<cfif SESSION.client_administrator EQ SESSION.user_id>
 
-							<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="hasTableRowsOfOtherAreas" returnvariable="hasTableRowsOfOtherAreas">
-								<cfinvokeargument name="table_id" value="#table_id#">
-								<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-							</cfinvoke>
+							<cfif itemTypeId NEQ 13>
 
-							<cfif hasTableRowsOfOtherAreas IS false>
+								<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="hasTableRowsOfOtherAreas" returnvariable="hasTableRowsOfOtherAreas">
+									<cfinvokeargument name="table_id" value="#table_id#">
+									<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+								</cfinvoke>
+
+							</cfif>
+
+							<cfif itemTypeId EQ 13 OR hasTableRowsOfOtherAreas.rowsOfOtherAreas IS false>
 								, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
 							</cfif>
 
