@@ -39,10 +39,10 @@
 				SELECT *
 				FROM `doplanning_app`.`app_clients`
 				<cfif isDefined("arguments.excludeClients")>
-					AND abbreviation NOT IN <cfqueryparam value="#arguments.excludeClients#" cfsqltype="cf_sql_varchar">
+					WHERE abbreviation NOT IN <cfqueryparam value="#arguments.excludeClients#" cfsqltype="cf_sql_varchar">
 				</cfif>
 				<cfif isDefined("arguments.client_abb")>
-					AND abbreviation LIKE <cfqueryparam value="#arguments.client_abb#" cfsqltype="cf_sql_varchar"> COLLATE utf8_bin
+					WHERE abbreviation LIKE <cfqueryparam value="#arguments.client_abb#" cfsqltype="cf_sql_varchar"> COLLATE utf8_bin
 				</cfif>
 				;
 			</cfquery>
