@@ -1357,7 +1357,7 @@
 						</cfif>
 						<cfif SESSION.client_administrator EQ SESSION.user_id>
 
-							<cfif itemTypeId NEQ 13>
+							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!--- Lists AND Forms --->
 
 								<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="hasTableRowsOfOtherAreas" returnvariable="hasTableRowsOfOtherAreas">
 									<cfinvokeargument name="table_id" value="#table_id#">
@@ -1366,7 +1366,7 @@
 
 							</cfif>
 
-							<cfif itemTypeId EQ 13 OR hasTableRowsOfOtherAreas.rowsOfOtherAreas IS false>
+							<cfif ( itemTypeId NEQ 11 AND itemTypeId NEQ 12 ) OR hasTableRowsOfOtherAreas.rowsOfOtherAreas IS false>
 								, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
 							</cfif>
 

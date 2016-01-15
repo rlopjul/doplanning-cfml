@@ -142,7 +142,7 @@
 							<cfqueryparam null="true" cfsqltype="cf_sql_integer">
 						</cfif>,
 						position = <cfqueryparam value="#arguments.position#" cfsqltype="cf_sql_integer">,
-						<cfif tableQuery.general IS true>
+						<cfif tableQuery.general IS true AND (tableTypeId IS 1 OR tableTypeId IS 2)><!--- Global Lists AND Forms --->
 							area_id = <cfqueryparam value="#area_id#" cfsqltype="cf_sql_integer">,
 						</cfif>
 						creation_date = NOW(),
