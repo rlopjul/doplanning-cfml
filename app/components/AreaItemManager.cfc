@@ -1062,6 +1062,8 @@
 		<cfset var response = structNew()>
 		<cfset var itemQuery = "">
 
+		<cfset var generalTableChanged = false>
+
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
@@ -1368,6 +1370,10 @@
 
 							<cfif ( itemTypeId NEQ 11 AND itemTypeId NEQ 12 ) OR hasTableRowsOfOtherAreas.rowsOfOtherAreas IS false>
 								, general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_bit">
+
+								<cfif getItemObject.general NEQ arguments.general>
+									<cfset generalTableChanged = true>
+								</cfif>
 							</cfif>
 
 						</cfif>
@@ -1417,6 +1423,25 @@
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
+
+				</cfif>
+
+				<cfif generalTableChanged IS true>
+
+					<cfif arguments.general IS true>
+
+						<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="addAreaColumnToTable">
+							<cfinvokeargument name="table_id" value="#table_id#">
+							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+							<cfinvokeargument name="default_area_id" value="#getItemObject.area_id#">
+						</cfinvoke>
+
+					<cfelse>
+
+
+
+					</cfif>
+
 
 				</cfif>
 

@@ -10,6 +10,7 @@
 	<cffunction name="createTableInDatabase" output="false" access="package" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="table_general" type="boolean" required="false" default="false">
 
 		<cfset var method = "createTableInDatabase">
 
@@ -25,7 +26,7 @@
 				  `creation_date` datetime NOT NULL,
 				  `last_update_date` datetime DEFAULT NULL,
 				  `position` int(10) unsigned NOT NULL,
-					<cfif tableTypeId IS 1 OR tableTypeId IS 2>
+					<cfif arguments.table_general IS true AND ( tableTypeId IS 1 OR tableTypeId IS 2 )>
 						`area_id` INT(11) NOT NULL,
 					</cfif>
 				  PRIMARY KEY (`row_id`) USING BTREE,
@@ -33,11 +34,47 @@
 				  KEY `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` (`last_update_user_id`),
 				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_2` FOREIGN KEY (`last_update_user_id`) REFERENCES `#client_abb#_users` (`id`) ON DELETE SET NULL,
 				  CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_1` FOREIGN KEY (`insert_user_id`) REFERENCES `#client_abb#_users` (`id`) ON DELETE SET NULL
-					<cfif tableTypeId IS 1 OR tableTypeId IS 2>
+					<cfif arguments.table_general IS true AND ( tableTypeId IS 1 OR tableTypeId IS 2 )>
 						, CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_3` FOREIGN KEY (`area_id`) REFERENCES `#client_abb#_areas` (`id`) ON DELETE RESTRICT ON UPDATE NO ACTION
 					</cfif>
 
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+			</cfquery>
+
+	</cffunction>
+
+
+	<!--- ------------------------------------- addAreaColumnToTable -------------------------------------  --->
+
+	<cffunction name="addAreaColumnToTable" output="false" access="package" returntype="void">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="default_area_id" type="numeric" required="true">
+
+		<cfset var method = "addAreaColumnToTable">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfquery name="addAreaColumn" datasource="#client_dsn#">
+				ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+					ADD COLUMN `area_id` INT(11) NOT NULL,
+					ADD INDEX `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_area_idx` (`area_id` ASC);
+			</cfquery>
+
+			<cfquery name="setDefaultArea" datasource="#client_dsn#">
+				UPDATE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+				SET area_id = <cfqueryparam value="#arguments.default_area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfquery name="addAreaColumnRestriction" datasource="#client_dsn#">
+				ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+					ADD CONSTRAINT `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_area_idx`
+					FOREIGN KEY (`area_id`)
+					REFERENCES `#client_abb#_areas` (`id`)
+					ON DELETE RESTRICT
+					ON UPDATE NO ACTION;
 			</cfquery>
 
 	</cffunction>
