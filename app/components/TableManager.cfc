@@ -92,7 +92,12 @@
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
-			<cfquery name="addAreaColumn" datasource="#client_dsn#">
+			<cfquery name="deleteAreaFK" datasource="#client_dsn#">
+				ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+					DROP FOREIGN KEY `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_area_idx`;
+			</cfquery>
+
+			<cfquery name="deleteAreaColumn" datasource="#client_dsn#">
 				ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
 					DROP COLUMN `area_id`,
 					DROP INDEX `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_area_idx`;
