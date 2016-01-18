@@ -1335,7 +1335,7 @@
 
 
 	<!------------------------ HAS TABLE ROWS OF OTHER AREAS-------------------------------------->
-	
+
 	<cffunction name="hasTableRowsOfOtherAreas" returntype="struct" output="false" access="public">
 		<cfargument name="table_id" type="numeric" required="true"/>
 		<cfargument name="tableTypeId" type="numeric" required="true"/>
@@ -1401,79 +1401,6 @@
 		<cfreturn response>
 
 	</cffunction>
-
-
-	<!------------------------ HAS TABLE ROWS IN THIS AREA-------------------------------------->
-
-	<cffunction name="hasTableRowsInThisArea" returntype="struct" output="false" access="public">
-		<cfargument name="table_id" type="numeric" required="true"/>
-		<cfargument name="tableTypeId" type="numeric" required="true"/>
-		<cfargument name="area_id" type="numeric" required="true"/>
-
-		<cfset var method = "hasTableRowsInThisArea">
-
-		<cfset var response = structNew()>
-
-		<cfset var rowsInThisArea = false>
-
-		<cftry>
-
-			<cfinclude template="includes/functionStartOnlySession.cfm">
-
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-
-			<!---Table fields--->
-			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableFields" returnvariable="fieldsResult">
-				<cfinvokeargument name="table_id" value="#table_id#">
-				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-				<cfinvokeargument name="with_types" value="true">
-				<cfif isDefined("URL.search_id") AND isNumeric(URL.search_id)>
-					<cfinvokeargument name="search_id" value="#URL.search_id#">
-				</cfif>
-			</cfinvoke>
-			<cfset allFields = fieldsResult.tableFields>
-
-			<cfif allFields.general IS true><!--- General table --->
-
-				<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableRows" returnvariable="tableRowsResult">
-					<cfinvokeargument name="table_id" value="#table_id#">
-					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-					<cfinvokeargument name="fields" value="#allFields#">
-				</cfinvoke>
-
-				<cfset tableRows = tableRowsResult.rows>
-
-				<cfif tableRows.recordCount GT 0>
-
-					<cfquery dbtype="query" name="rowsInThisAreaQuery">
-						SELECT *
-						FROM tableRows
-						WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-					</cfquery>
-
-					<cfif rowsInThisAreaQuery.recordCount GT 0>
-						<cfset rowsInThisArea = true>
-					</cfif>
-
-				</cfif>
-
-			</cfif>
-
-			<cfset response = {result=true, rowsInThisArea=rowsInThisArea}>
-
-			<cfcatch>
-
-				<cfinclude template="includes/errorHandlerStruct.cfm">
-
-			</cfcatch>
-		</cftry>
-
-		<cfreturn response>
-
-	</cffunction>
-
-
-
 
 
 </cfcomponent>

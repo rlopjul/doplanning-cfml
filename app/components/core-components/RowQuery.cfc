@@ -1109,4 +1109,61 @@
 	</cffunction>
 
 
+
+	<!--- ------------------------------------ deleteAreaGeneralTablesRows -----------------------------------  --->
+
+	<cffunction name="deleteAreaGeneralTablesRows" output="false" access="public" returntype="void">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "deleteAreaGeneralTablesRows">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getAllTables" returnvariable="getGeneralTablesResult">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+
+				<cfinvokeargument name="general" value="true"/>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset generalTables = getGeneralTablesResult.query>
+
+			<cfloop query="generalTables">
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableManager" method="hasTableRowsInThisArea" returnvariable="hasTableRowsInThisArea">
+					<cfinvokeargument name="table_id" value="#generalTables.id#">
+					<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif hasTableRowsInThisArea.rowsInThisArea IS true>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRows">
+						<cfinvokeargument name="table_id" value="#generalTables.id#">
+						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+						<cfinvokeargument name="resetAutoIncrement" value="false">
+						<cfinvokeargument name="user_id" value="#arguments.user_id#">
+						<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+
+			</cfloop>
+
+	</cffunction>
+
+
 </cfcomponent>
