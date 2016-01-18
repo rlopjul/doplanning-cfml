@@ -12,7 +12,11 @@
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
 
-<cfset area_id = table.area_id>
+<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+	<cfset area_id = URL.area>
+<cfelse>
+	<cfset area_id = table.area_id>
+</cfif>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
@@ -54,6 +58,7 @@
 
 		<input type="hidden" name="table_id" value="#table_id#" />
 		<input type="hidden" name="tableTypeId" value="#tableTypeId#" />
+		<input type="hidden" name="area_id" value="#area_id#" />
 
 		<div class="row">
 			<label for="delimiter" class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:left" lang="es">Delimitador de campos</label>
@@ -137,7 +142,7 @@
 		    </div>
 		</div>
 
-		
+
 
 		<div class="row" style="margin-top:20px">
 			<div class="col-sm-12" id="submitDiv1">
@@ -145,11 +150,11 @@
 				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 			</div>
 		</div>
-				
+
 	</cfform>
 
 
 
 </cfoutput>
-	
+
 </div><!--- END contenedor_fondo_blanco --->

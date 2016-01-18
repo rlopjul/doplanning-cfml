@@ -384,10 +384,11 @@
 
 	<!--- -------------------------------exportRows-------------------------------------- --->
 
-    <cffunction name="exportRows" returntype="struct" access="public">
-    	<cfargument name="table_id" type="numeric" required="true">
+  <cffunction name="exportRows" returntype="struct" access="public">
+    <cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="delimiter" type="string" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
 
 		<cfset var method = "exportRows">
 

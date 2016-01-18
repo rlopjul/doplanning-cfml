@@ -752,6 +752,7 @@
 		<cfargument name="include_insert_user" type="boolean" required="false" default="false">
 		<cfargument name="include_update_user" type="boolean" required="false" default="false">
 		<cfargument name="decimals_with_mask" type="boolean" required="false" default="false">
+		<cfargument name="area_id" type="numeric" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true"/>
 		<cfargument name="client_dsn" type="string" required="true"/>
@@ -782,6 +783,9 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowsQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfif isDefined("arguments.area_id")>
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfif>
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -1006,6 +1010,7 @@
 		<cfargument name="include_update_user" type="boolean" required="false" default="false">
 		<cfargument name="decimals_with_mask" type="boolean" required="false" default="false">
 		<cfargument name="ms_excel_compatibility" type="boolean" required="false" default="false">
+		<cfargument name="area_id" type="numeric" required="true">
 
 		<cfset var method = "exportRows">
 
@@ -1032,7 +1037,7 @@
 				<cfreturn getTableResponse>
 			</cfif>
 
-			<!---<cfset tableQuery = getTableResponse.table>--->
+			<cfset tableQuery = getTableResponse.table>
 
 			<cfinvoke component="RowManager" method="generateRowsQuery" returnvariable="generateRowsQueryResponse">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
@@ -1042,6 +1047,9 @@
 				<cfinvokeargument name="include_insert_user" value="#arguments.include_insert_user#">
 				<cfinvokeargument name="include_update_user" value="#arguments.include_update_user#">
 				<cfinvokeargument name="decimals_with_mask" value="#arguments.decimals_with_mask#">
+				<cfif tableQuery.general IS true>
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfif>
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
