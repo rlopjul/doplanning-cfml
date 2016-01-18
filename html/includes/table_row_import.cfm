@@ -197,6 +197,9 @@
 		        <label>
 		          <input type="checkbox" name="delete_rows" value="true" <cfif isDefined("FORM.delete_rows")>checked</cfif>> <span lang="es">Borrar todos los registros existentes en <cfif tableTypeGender EQ "male">el<cfelse>la</cfif> #tableTypeNameEs#</span>
 		        </label>
+						<cfif table.general IS true>
+							<small class="help-block" style="margin-bottom:0" lang="es">Sólo se eliminarán los registros de esta área.</small>
+						</cfif>
 		      </div>
 		    </div>
 		</div>
