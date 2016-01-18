@@ -822,7 +822,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
-		<cfset var method = "isUserInTable">
+		<cfset var method = "hasTableRowsOfOtherAreas">
 
 		<cfset var response = structNew()>
 

@@ -1369,13 +1369,13 @@
 
 				<cfif tableRows.recordCount GT 0>
 
-					<cfquery dbtype="query" name="rowsOfOtherAreas">
+					<cfquery dbtype="query" name="rowsOfOtherAreasQuery">
 						SELECT *
 						FROM tableRows
 						WHERE area_id != <cfqueryparam value="#allFields.area_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 
-					<cfif rowsOfOtherAreas.recordCount GT 0>
+					<cfif rowsOfOtherAreasQuery.recordCount GT 0>
 						<cfset rowsOfOtherAreas = true>
 					</cfif>
 
