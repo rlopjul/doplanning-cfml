@@ -238,10 +238,12 @@
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="deleteTableRows">
 						<cfinvokeargument name="table_id" value="#arguments.table_id#">
 						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-						<cfinvokeargument name="resetAutoIncrement" value="true">
 						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 						<cfif tableQuery.general IS true>
 							<cfinvokeargument name="area_id" value="#arguments.area_id#">
+							<cfinvokeargument name="resetAutoIncrement" value="false">
+						<cfelse>
+							<cfinvokeargument name="resetAutoIncrement" value="true">
 						</cfif>
 
 						<cfinvokeargument name="client_abb" value="#client_abb#">
