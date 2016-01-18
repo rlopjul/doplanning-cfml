@@ -912,6 +912,16 @@
 						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 					</cfinvoke>
 
+					<cfif arguments.general IS true><!--- Add area column --->
+
+						<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="addAreaColumnToTable">
+							<cfinvokeargument name="table_id" value="#item_id#">
+							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+							<cfinvokeargument name="default_area_id" value="#arguments.area_id#">
+						</cfinvoke>
+
+					</cfif>
+
 				</cfif>
 
 			</cftransaction>
@@ -1444,7 +1454,6 @@
 						</cfinvoke>
 
 					</cfif>
-
 
 				</cfif>
 
