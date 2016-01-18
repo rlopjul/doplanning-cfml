@@ -1428,7 +1428,7 @@
 
 				<cfif generalTableChanged IS true>
 
-					<cfif arguments.general IS true>
+					<cfif arguments.general IS true><!--- Add area column --->
 
 						<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="addAreaColumnToTable">
 							<cfinvokeargument name="table_id" value="#table_id#">
@@ -1436,9 +1436,12 @@
 							<cfinvokeargument name="default_area_id" value="#getItemObject.area_id#">
 						</cfinvoke>
 
-					<cfelse>
+					<cfelse><!--- Remove area column --->
 
-
+						<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="deleteAreaColumnInTable">
+							<cfinvokeargument name="table_id" value="#table_id#">
+							<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+						</cfinvoke>
 
 					</cfif>
 

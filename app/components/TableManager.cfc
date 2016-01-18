@@ -80,6 +80,27 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- deleteAreaColumnInTable -------------------------------------  --->
+
+	<cffunction name="deleteAreaColumnInTable" output="false" access="package" returntype="void">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "deleteAreaColumnInTable">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfquery name="addAreaColumn" datasource="#client_dsn#">
+				ALTER TABLE `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+					DROP COLUMN `area_id`,
+					DROP INDEX `FK_#client_abb#_#tableTypeTable#_rows_#arguments.table_id#_area_idx`;
+			</cfquery>
+
+	</cffunction>
+
+
 
 	<!--- ------------------------------------- getTable -------------------------------------  --->
 
