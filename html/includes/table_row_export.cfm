@@ -39,6 +39,10 @@
 
 <cfoutput>
 
+	<cfif table.general IS true>
+		<div class="alert alert-info" role="alert"><span lang="es">Se incluirán en la exportación los registros de esta área y las inferiores.</span></div>
+	</cfif>
+
 	<p class="help-block" style="font-size:12px;">
 		<span lang="es">Se generará un archivo con codificación iso-8859-1 con el contenido de los registros.</span>
 	</p>
