@@ -362,7 +362,7 @@
 
 			<cfset var response = structNew()>
 
-			<!---<cftry>--->
+			<cftry>
 
 				<cfinvoke component="#APPLICATION.componentsPath#/RowManager" method="importRowsXml" argumentcollection="#arguments#" returnvariable="response">
 				</cfinvoke>
@@ -371,11 +371,11 @@
 					<cfset response.message = "Registros importados">
 				</cfif>
 
-				<!---<cfcatch>
+				<cfcatch>
 					<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 				</cfcatch>
 
-			</cftry>--->
+			</cftry>
 
 			<cfreturn response>
 
