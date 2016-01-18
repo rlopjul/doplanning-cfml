@@ -876,6 +876,10 @@
 			<cfquery name="getRowAttachedFile" datasource="#client_dsn#">
 				SELECT files.*
 				FROM `#client_abb#_files` AS files
+				<cfif isDefined("arguments.area_id")>
+					INNER JOIN `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AS table_rows ON table_rows.row_id = files.row_id
+					AND table_rows.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>
 				WHERE files.item_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
 				AND files.item_type_id = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">
 				<cfif isDefined("arguments.row_id")>
@@ -1041,6 +1045,7 @@
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="resetAutoIncrement" type="boolean" required="false" default="false">
 		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">

@@ -6,14 +6,14 @@
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
 
-<cfif isDefined("FORM.file")>
+<cfif isDefined("FORM.file") AND isDefined("FORM.area_id")>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="importRows" returnvariable="actionResponse" argumentcollection="#FORM#">
 	</cfinvoke>
 
 	<cfif actionResponse.result IS true><!---The import is success--->
 
-		<cflocation url="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&res=1&msg=#actionResponse.message#" addtoken="false">
+		<cflocation url="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#FORM.area_id#&res=1&msg=#actionResponse.message#" addtoken="false">
 
 	<cfelse><!---There is an error in the import--->
 
