@@ -1,6 +1,6 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/item_change_area_query.cfm">
 
-<!--- 
+<!---
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 </cfoutput> --->
@@ -30,7 +30,7 @@
 	}
 
 	function openAreaSelector(){
-		
+
 		<cfif itemTypeWeb IS true>
 			<cfset webEnabled = 1>
 		<cfelse>
@@ -44,13 +44,13 @@
 		</cfif>
 
 		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=#webEnabled#&no_web_enabled=#noWebEnabled#');
-		
+
 	}
 
 	function setSelectedArea(areaId, areaName) {
 
 		var curAreaId = "#item_area_id#";
-		
+
 		if(curAreaId != areaId) {
 			$("##new_area_id").val(areaId);
 			$("##new_area_name").val(areaName);
@@ -67,20 +67,26 @@
 <div class="contenedor_fondo_blanco">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-horizontal" onsubmit="return onSubmitForm();">
-	
+
 	<script>
 		var railo_custom_form;
 
-		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 			railo_custom_form = new LuceeForms('item_form');
 		else
 			railo_custom_form = new RailoForms('item_form');
 	</script>
-	
+
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
 	<input type="hidden" name="item_id" value="#item_id#"/>
 	<input type="hidden" name="itemTypeId" value="#itemTypeId#"/>
 	<input type="hidden" name="area_id" value="#area_id#"/>
+
+	<cfif itemTypeId IS 11 OR itemTypeId IS 12><!--- Lists AND Forms --->
+		<cfif item.general IS true>
+			<div class="alert alert-info" role="alert"><i class="icon-info-sign"></i><span lang="es">#itemTypeNameEs# global: Se moverá <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs#, pero no los registros que seguirán perteneciendo al área.</span></div>
+		</cfif>
+	</cfif>
 
 	<div class="row">
 		<div class="col-sm-12">
@@ -92,14 +98,14 @@
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="itemArea">
 		<cfinvokeargument name="area_id" value="#item_area_id#">
 	</cfinvoke>
-	
+
 	<div class="row">
 		<div class="col-sm-12">
 			<span lang="es">Área actual</span>:
 			<strong>#itemArea.name#</strong>
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
 			<label class="control-label" for="new_area_name" lang="es">Nueva área</label>
@@ -107,7 +113,7 @@
 			<cfinput type="text" name="new_area_name" id="new_area_name" value="#newArea.new_area_name#" readonly="true" required="true" message="Debe seleccionar una nueva área" onclick="openAreaSelector()" class="form-control" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
 		</div>
 	</div>
-	
+
 	<div style="height:10px;"><!--- ---></div>
 
 	<div id="submitDiv">
