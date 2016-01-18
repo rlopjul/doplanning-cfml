@@ -865,6 +865,7 @@
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="false">
+		<cfargument name="area_id" type="numeric" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1058,6 +1059,7 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRowAttachedFiles" returnvariable="rowAttachedFilesQuery">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
@@ -1085,7 +1087,10 @@
 
 			<!---Delete rows--->
 			<cfquery name="deleteRows" datasource="#client_dsn#">
-				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`;
+				DELETE FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#`
+				<cfif isDefined("arguments.area_id")>
+					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>;
 			</cfquery>
 
 			<!---Delete selected areas--->
