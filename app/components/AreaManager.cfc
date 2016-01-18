@@ -3251,6 +3251,36 @@
 					<cfinvokeargument name="itemTypeId" value="14">
 				</cfinvoke>
 
+				<!--- GENERAL LISTS ROWS ---->
+				<cfif len(area.type) IS 0>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getAllTables" returnvariable="getGeneralListsResult">
+						<cfinvokeargument name="tableTypeId" value="1">
+
+						<cfinvokeargument name="general" value="true"/>
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfset generalLists = getGeneralListsResult.query>
+
+					<cfloop query="generalLists">
+
+						<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="hasTableRowsInThisArea" returnvariable="hasListRowsInThisArea">
+							<cfinvokeargument name="table_id" value="#generalLists.id#">
+							<cfinvokeargument name="tableTypeId" value="1">
+							<cfinvokeargument name="area_id" value="#arguments.area_id#">
+						</cfinvoke>
+
+						<cfif hasListRowsInThisArea.rowsInThisArea IS true>
+								<cfthrow message="En esta área hay registros de la lista global '#generalLists.title#', debe borrarlos para eliminar el área">
+						</cfif>
+
+					</cfloop>
+
+				</cfif>
+
 			</cfif>
 
 			<cfif APPLICATION.moduleForms IS true>

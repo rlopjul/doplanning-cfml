@@ -49,7 +49,7 @@
 					<cfelse>
 					, tables.publication_date
 					</cfif>
-					, tables.publication_validated, tables.publication_restricted					
+					, tables.publication_validated, tables.publication_restricted
 				</cfif>
 				FROM #client_abb#_#tableTypeTable# AS tables
 				INNER JOIN #client_abb#_users AS users ON tables.user_in_charge = users.id
@@ -108,6 +108,8 @@
 					, items.structure_available
 					<cfif arguments.tableTypeId IS 3><!---Typologies--->
 					, items.general
+					<cfelseif isDefined("arguments.general")>
+						, items.general = <cfqueryparam value="#arguments.general#" cfsqltype="cf_sql_integer">
 					</cfif>
 					<cfif arguments.with_area IS true>
 					, areas.name AS area_name
