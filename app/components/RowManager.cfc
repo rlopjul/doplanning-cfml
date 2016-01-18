@@ -117,6 +117,7 @@
 		<cfargument name="delete_rows" type="boolean" required="false" default="false">
 		<cfargument name="cancel_on_error" type="boolean" required="false" default="true">
 		<cfargument name="decimals_with_mask" type="boolean" required="false" default="false">
+		<cfargument name="area_id" type="numeric" required="false" default="false">
 
 		<cfset var method = "importRows">
 
@@ -239,6 +240,9 @@
 						<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 						<cfinvokeargument name="resetAutoIncrement" value="true">
 						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+						<cfif tableQuery.general IS true>
+							<cfinvokeargument name="area_id" value="#arguments.area_id#">
+						</cfif>
 
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
@@ -283,6 +287,7 @@
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="saveRow" argumentcollection="#rowValues#" returnvariable="row_id">
 								<cfinvokeargument name="table_id" value="#arguments.table_id#">
 								<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+								<cfinvokeargument name="area_id" value="#arguments.area_id#">
 
 								<cfinvokeargument name="action" value="create">
 

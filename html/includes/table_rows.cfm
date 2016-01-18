@@ -144,7 +144,7 @@
 
 					<div class="btn-group">
 						<cfif objectItem.area_id EQ area_id>
-							<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
+							<a href="#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-default btn-sm" title="Importar registros" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar</span></a><!--- onclick="openUrl('#tableTypeName#_row_import.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)"--->
 
 							<cfif tableTypeId IS 1 AND SESSION.client_abb EQ "ceseand" AND ListFind("1,2,3", table_id) GT 0><!--- Lists --->
 								<a href="#tableTypeName#_row_import_xml.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Importar registros a partir de XML" lang="es"><i class="icon-arrow-up" style="color:##5BB75B;font-size:15px;"></i> <span lang="es">Importar XML</span></a>
@@ -155,7 +155,7 @@
 				</cfif>
 
 					<cfif objectItem.area_id EQ area_id>
-						<a href="#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down" style="font-size:15px;"></i> <span lang="es">Exportar</span></a>
+						<a href="#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_row_export.cfm?#tableTypeName#=#table_id#&area=#area_id#', 'itemIframe', event)" class="btn btn-default btn-sm" title="Exportar registros" lang="es"><i class="icon-arrow-down" style="font-size:15px;"></i> <span lang="es">Exportar</span></a>
 					</cfif>
 
 				</div>

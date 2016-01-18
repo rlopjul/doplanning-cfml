@@ -322,6 +322,7 @@
 			<cfargument name="delete_rows" type="boolean" required="false">
 			<cfargument name="cancel_on_error" type="boolean" required="false">
 			<cfargument name="decimals_with_mask" type="boolean" required="false">
+			<cfargument name="area_id" type="numeric" required="false">
 
 			<cfset var method = "importRows">
 

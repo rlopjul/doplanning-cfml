@@ -38,7 +38,11 @@
 	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 </cfinvoke>
 
-<cfset area_id = table.area_id>
+<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+	<cfset area_id = URL.area>
+<cfelse>
+	<cfset area_id = table.area_id>
+</cfif>
 
 <!---Table fields--->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableFields" returnvariable="fieldsResult">
@@ -168,6 +172,7 @@
 
 		<input type="hidden" name="table_id" value="#table_id#" />
 		<input type="hidden" name="tableTypeId" value="#tableTypeId#" />
+		<input type="hidden" name="area_id" value="#area_id#" />
 
 		<div class="row">
 			<div class="col-sm-6">
