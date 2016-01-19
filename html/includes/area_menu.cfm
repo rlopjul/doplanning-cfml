@@ -23,16 +23,28 @@
 			<cfinvokeargument name="client_dsn" value="#client_dsn#">
 		</cfinvoke>
 		<cfif subAreasQuery.recordCount GT 0>
+
+			<cfif subAreasQuery.recordCount GT 20>
+				<div class="row">
+					<div class="col-sm-12">
+						<a class="btn btn-default btn-sm" role="button" data-toggle="collapse" href="~##collapseSubAreas" aria-expanded="false" aria-controls="collapseSubAreas" style="margin-bottom:8px;"><i class="fa fa-plus-square-o"></i> <span lang="es">Mostrar subareas</span> <span class="label label-primary label-as-badge">#subAreasQuery.recordCount#</span></a>
+					</div>
+				</div>
+			</cfif>
+
 			<div class="row">
 				<div class="col-sm-12">
 
-					<ul class="list-group list-inline" id="subareas_list">
-					<cfloop query="subAreasQuery">
-						<li class="list-group-item">
-						  	<a href="area_items.cfm?area=#subAreasQuery.id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Área" title="Área" lang="es"/>&nbsp;&nbsp;#subAreasQuery.name#</a>
-						</li>
-					</cfloop>
-					</ul>
+					<div <cfif subAreasQuery.recordCount GT 20>class="collapse"</cfif> id="collapseSubAreas">
+						<ul class="list-group list-inline" id="subareas_list">
+						<cfloop query="subAreasQuery">
+							<li class="list-group-item">
+							  	<a href="area_items.cfm?area=#subAreasQuery.id#"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Área" title="Área" lang="es"/>&nbsp;&nbsp;#subAreasQuery.name#</a>
+							</li>
+						</cfloop>
+						</ul>
+					</div>
+
 
 				</div>
 			</div>

@@ -115,6 +115,7 @@ Lang.prototype.pack.en = {
 		"URL relativa en la <b>web</b>:":"Relative URL on the <b>web</b>:",
 		"URL relativa en la <b>intranet</b>:":"Relative URL on the <b>intranet</b>:",
 		"Ruta:":"Path:",
+		"Mostrar subareas":"Show subareas",
 
 		"Todos los elementos del área":"All area elements",
 		"Mensajes del área":"Area messages",
