@@ -52,3 +52,5 @@
 <cfset structInsert(startPageTypesStruct, 23, {id=23, position=23, page="admin/", label="Administración"})>
 
 <cfset structInsert(startPageTypesStruct, 24, {id=24, position=24, page="intranet/", label="Intranet"})>
+
+<cfset structInsert(startPageTypesStruct, 25, {id=25, position=25, page="redirect_to_first_area.cfm", label="Primera área con permiso de acceso"})>

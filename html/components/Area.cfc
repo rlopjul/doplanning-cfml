@@ -901,4 +901,60 @@
 	</cffunction>
 
 
+	<!--- redirectToFirstAreaWithAccess --->
+
+	<cffunction name="redirectToFirstAreaWithAccess" returntype="void" output="false" access="public">
+		<cfargument name="get_user_id" type="numeric" required="true">
+
+		<cfset var method = "redirectToFirstAreaWithAccess">
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getRootAreaId" returnvariable="rootAreaid">
+			</cfinvoke>
+
+			<!---Se obtiene si el usuario está en el área raiz--->
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isRootUser" returnvariable="userInRootArea">
+			  <cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+			  <cfinvokeargument name="root_area_id" value="#rootAreaId#">
+			</cfinvoke>
+
+			<cfif userInRootArea IS true>
+
+				<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+
+			  <!---Se obtiene la lista de las áreas raices visibles (la raiz real no se muestra en el árbol de la aplicación)--->
+			  <cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getVisibleRootAreas" returnvariable="userRootAreasQuery">
+			    <cfinvokeargument name="root_area_id" value="#rootAreaid#">
+			    <cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			    <cfinvokeargument name="client_dsn" value="#client_dsn#">
+			  </cfinvoke>
+
+			<cfelse>
+
+			  <cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getUserRootAreas" returnvariable="userRootAreasQuery">
+			    <cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+			  </cfinvoke>
+
+			</cfif>
+
+			<cfif userRootAreasQuery.recordCount GT 0>
+
+			  <cflocation url="#APPLICATION.htmlPath#/area_items.cfm?area=#userRootAreasQuery.id#" addtoken="false">
+
+			<cfelse>
+
+			  <cflocation url="#APPLICATION.htmlPath#/tree.cfm" addtoken="false">
+
+			</cfif>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+	</cffunction>
+
+
 </cfcomponent>

@@ -1188,6 +1188,38 @@
 	</cffunction>
 
 
+	<!--- ---------------------------- getUserRootAreas ---------------------------------- --->
+
+	<cffunction name="getUserRootAreas" returntype="query" access="public">
+		<cfargument name="get_user_id" type="numeric" required="true">
+
+		<cfset var method = "getUserRootAreas">
+
+		<cfset var allUserAreasList = "">
+		<cfset var userRootAreasQuery = "">
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllUserAreasList" returnvariable="allUserAreasList">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+			</cfinvoke>
+
+			<!---Se obtienen las áreas raices del usuario, debe hacerse así para obtenerlas ordenadas por nombre--->
+			<cfquery name="userRootAreasQuery" datasource="#client_dsn#">
+				SELECT areas.id
+				FROM #client_abb#_areas AS areas
+				INNER JOIN #client_abb#_areas_users AS areas_users
+				ON areas_users.user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">
+				AND areas.id = areas_users.area_id
+				AND areas.parent_id NOT IN (<cfqueryparam value="#allUserAreasList#" list="true" cfsqltype="cf_sql_varchar">)
+				ORDER BY areas.name ASC;
+			</cfquery>
+
+		<cfreturn userRootAreasQuery>
+
+	</cffunction>
+
+
 	<!--- ------------------------------------- getMainTree -------------------------------------  --->
 
 	<cffunction name="getMainTree" output="false" access="public" returntype="struct">
@@ -1271,22 +1303,11 @@
 
 				<cfif whole_tree IS false AND userInRootArea IS false>
 
-					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllUserAreasList" returnvariable="allUserAreasList">
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getUserRootAreas" returnvariable="userRootAreasQuery">
 						<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 					</cfinvoke>
 
-					<!---Se obtienen las áreas raices del usuario, debe hacerse así para obtenerlas ordenadas por nombre--->
-					<cfquery name="getUserRootAreas" datasource="#client_dsn#">
-						SELECT areas.id
-						FROM #client_abb#_areas AS areas
-						INNER JOIN #client_abb#_areas_users AS areas_users
-						ON areas_users.user_id = <cfqueryparam value="#arguments.get_user_id#" cfsqltype="cf_sql_integer">
-						AND areas.id = areas_users.area_id
-						AND areas.parent_id NOT IN (<cfqueryparam value="#allUserAreasList#" list="true" cfsqltype="cf_sql_varchar">)
-						ORDER BY areas.name ASC;
-					</cfquery>
-
-					<cfset userRootAreas = valueList(getUserRootAreas.id, ",")>
+					<cfset userRootAreas = valueList(userRootAreasQuery.id, ",")>
 
 					<!---Este loop se hace sobre la lista porque daba problemas hacerlo sobre la consulta (¿por los otros loops que ya existen sobre consultas?)--->
 					<cfloop list="#userRootAreas#" index="visibleRootAreaId">
