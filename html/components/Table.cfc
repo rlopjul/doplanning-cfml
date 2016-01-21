@@ -225,6 +225,7 @@
 
 	<cffunction name="getAreaTables" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="area_type" type="string" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="with_user" type="boolean" required="false">
 
@@ -236,6 +237,7 @@
 
 			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getAreaTables" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="area_type" value="#arguments.area_type#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
 				<cfinvokeargument name="with_user" value="#arguments.with_user#"/>
 			</cfinvoke>

@@ -3778,6 +3778,7 @@
 	<cffunction name="getAreaItems" output="false" returntype="struct" access="public">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="area_id" type="numeric" required="yes">
+		<cfargument name="area_type" type="string" required="false">
 		<cfargument name="user_in_charge" type="numeric" required="no">
 		<cfargument name="recipient_user" type="numeric" required="no">
 		<cfargument name="format_content" type="string" required="no" default="default"><!---default/all--->
@@ -3799,6 +3800,7 @@
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="area_type" value="#arguments.area_type#">
 				<cfif isDefined("arguments.user_in_charge")>
 					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
 				</cfif>

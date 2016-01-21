@@ -199,6 +199,7 @@
 		<cfargument name="listFormat" type="string" required="yes">
 		<cfargument name="area_id" type="string" required="no">
 		<cfargument name="areas_ids" type="string" required="no">
+		<cfargument name="area_type" type="string" required="false">
 		<cfargument name="all_areas" type="boolean" required="false" default="false">
 		<cfargument name="search_text" type="string" required="no">
 		<cfargument name="user_in_charge" type="numeric" required="no">
@@ -221,9 +222,6 @@
 
 		<cfargument name="from_date" type="string" required="no">
 		<cfargument name="end_date" type="string" required="no">
-
-		<!---<cfargument name="from_last_update_date" type="string" required="false">
-		<cfargument name="to_last_update_date" type="string" required="false">--->
 
 		<cfargument name="from_start_date" type="string" required="no">
 		<cfargument name="to_end_date" type="string" required="no">
@@ -320,10 +318,7 @@
 						</cfif>
 					</cfif>
 					<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13><!---Lists, Forms, Typologies--->
-					, items.structure_available
-						<cfif itemTypeId IS 13><!---Typologies--->
-						, items.general
-						</cfif>
+					, items.structure_available, items.general
 					</cfif>
 					<cfif format_content EQ "all"><!---format_content EQ all--->
 					, items.parent_id, items.parent_kind, items.description
@@ -381,7 +376,7 @@
 						<cfelse>
 						items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 						</cfif>
-						<cfif itemTypeId IS 13><!---Typologies--->
+						<cfif itemTypeId IS 13 OR ( isDefined("arguments.area_type") AND len(arguments.area_type) IS 0 AND ( itemTypeId IS 11 OR itemTypeId IS 12 ) )><!---Lists, Forms, Typologies--->
 							OR items.general = 1
 						</cfif>
 						)

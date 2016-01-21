@@ -1329,6 +1329,7 @@
 
 	<cffunction name="getAreaItemsList" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="area_type" type="string" required="false">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 
 		<cfset var method = "getAreaItemsList">
@@ -1341,6 +1342,7 @@
 
 			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="getAreaItems" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="area_type" value="#arguments.area_type#">
 				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 				<!---<cfinvokeargument name="listFormat" value="true">--->
 				<cfinvokeargument name="format_content" value="default">

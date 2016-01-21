@@ -281,6 +281,7 @@
 	<cffunction name="getAreaTables" output="false" access="public" returntype="struct">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="area_type" type="string" required="true">
 		<cfargument name="user_in_charge" type="numeric" required="false">
 		<cfargument name="limit" type="numeric" required="false">
 		<cfargument name="structure_available" type="boolean" required="false">
@@ -318,6 +319,7 @@
 					<cfinvokeargument name="areas_ids" value="#parentAreasIds#">
 				<cfelse>
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="area_type" value="#arguments.area_type#">
 				</cfif>
 				<cfif isDefined("arguments.user_in_charge")>
 					<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#">
