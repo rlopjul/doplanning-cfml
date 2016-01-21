@@ -40,6 +40,7 @@
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
 		<cfinvokeargument name="area_id" value="#area_id#">
+		<cfinvokeargument name="area_type" value="#area_type#">
 		<cfinvokeargument name="tableTypeId" value="3">
 	</cfinvoke>
 	<cfset areaTables = getAreaTablesResponse.areaTables>
