@@ -33,7 +33,7 @@ function setItemsFilter(filterValue) {
 		<cfif isDefined("area_id")>
 			<!---$("##curFilterLabel").text(window.lang.translate("Elementos del área"));--->
 			$("##curFilterLabel").text("Elementos del área");
-			$("##listModeLink").attr("href", "area_items.cfm?area=#area_id#&modeList");
+			$("##listModeLink").attr("href", "area_items.cfm?area=#area_id#&mode=list");
 			$("##listModeLink").show();
       $("##totalItemsLabel").show();
 		<cfelse>
