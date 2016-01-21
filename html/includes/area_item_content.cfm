@@ -552,6 +552,7 @@
 		<cfinvokeargument name="webPath" value="#webPath#">
 	</cfif>
 	<cfinvokeargument name="categories" value="#itemCategories#"/>
+	<cfinvokeargument name="internal_user" value="#loggedUser.internal_user#">
 </cfinvoke>
 
 

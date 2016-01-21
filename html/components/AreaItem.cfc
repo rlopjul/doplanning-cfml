@@ -1667,6 +1667,7 @@
 		<cfargument name="area_type" type="string" required="true">
 		<cfargument name="webPath" type="string" required="false">
 		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="internal_user" type="boolean" required="false">
 
 		<cfset var method = "outputItem">
 
@@ -1799,18 +1800,39 @@
 
 									<cfif itemTypeId IS 13 OR ( (itemTypeId IS 11 OR itemTypeId IS 12) AND objectItem.general IS true )><!--- Lists, Forms AND Typologies --->
 
-										<div class="div_message_page_label">
-											<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="tableArea">
-												<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-											</cfinvoke>
+										<cfif isDefined("arguments.internal_user")>
 
-											<span lang="es">Propiedad del área:</span>
-											<cfif itemTypeId IS 13>
-												<a href="typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#">#tableArea.name#</a>
-											<cfelse>
-												<a href="area_items.cfm?area=#objectItem.area_id####itemTypeName##objectItem.id#">#tableArea.name#</a>
+											<div class="div_message_page_label">
+
+											<cfset table_area_allowed = false>
+
+											<cfif arguments.internal_user IS false>
+
+												<!---area_allowed--->
+												<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="canUserAccessToArea" returnvariable="table_area_allowed">
+													<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+												</cfinvoke>
+
 											</cfif>
-										</div>
+
+											<cfif arguments.internal_user IS true OR table_area_allowed>
+
+												<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="tableArea">
+													<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+												</cfinvoke>
+
+												<span lang="es">Propiedad del área:</span>
+												<cfif itemTypeId IS 13>
+													<a href="typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#">#tableArea.name#</a>
+												<cfelse>
+													<a href="area_items.cfm?area=#objectItem.area_id####itemTypeName##objectItem.id#">#tableArea.name#</a>
+												</cfif>
+
+											</cfif>
+
+											</div>
+
+										</cfif>
 
 									</cfif>
 

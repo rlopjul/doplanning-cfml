@@ -277,4 +277,5 @@
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 	<cfinvokeargument name="area_type" value="#area_type#">
 	<cfinvokeargument name="area_id" value="#area_id#">
+	<cfinvokeargument name="internal_user" value="#loggedUser.internal_user#">
 </cfinvoke>
