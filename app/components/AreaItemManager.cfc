@@ -4017,6 +4017,7 @@
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
 				<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+				<cfinvokeargument name="area_type" value="">
 				<cfif isDefined("arguments.search_text")>
 					<cfinvokeargument name="search_text" value="#arguments.search_text#">
 				</cfif>

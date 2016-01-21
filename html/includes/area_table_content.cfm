@@ -10,7 +10,7 @@
 <cfif isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
 	<cfset table_id = URL[#tableTypeName#]>
 <cfelse>
-	<cflocation url="empty.cfm" addtoken="false">
+	<cflocation url="#APPLICATION.htmlPath#/error.cfm?error_code=610" addtoken="false">
 </cfif>
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="objectItem">
@@ -23,7 +23,7 @@
 	<cfif isDefined("URL.area") AND isNumeric(URL.area)>
 		<cfset area_id = URL.area>
 	<cfelse>
-		<cflocation url="empty.cfm" addtoken="false">
+		<cflocation url="#APPLICATION.htmlPath#/error.cfm?error_code=610" addtoken="false">
 	</cfif>
 
 <cfelse>
