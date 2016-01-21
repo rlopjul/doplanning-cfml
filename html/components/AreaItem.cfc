@@ -2729,6 +2729,7 @@
 	<cffunction name="outputAllItemsList" returntype="void" output="true" access="public">
 		<cfargument name="itemsQuery" type="query" required="true">
 		<cfargument name="area_type" type="string" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="return_page" type="string" required="false">
 		<cfargument name="app_version" type="string" required="true">
 
@@ -2747,6 +2748,12 @@
 			<cfset numItems = itemsQuery.recordCount>
 
 			<cfif numItems GT 0>
+
+				<cfif isDefined("arguments.area_id")>
+					<cfset area_param = "area=#arguments.area_id#">
+				<cfelse>
+					<cfset area_param = "area=#itemsQuery.area_id#">
+				</cfif>
 
 				<script>
 
@@ -2887,9 +2894,9 @@
 						</cfif>
 
 						<cfif itemTypeId EQ 10><!---Files--->
-							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#area_id#&return_page=#URLEncodedFormat(rpage)#">
+							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&#area_param#&return_page=#URLEncodedFormat(rpage)#">
 						<cfelseif itemTypeId EQ 11 OR itemTypeId EQ 12 OR itemTypeId EQ 14 OR itemTypeId EQ 15><!--- List AND Forms --->
-							<cfset item_page_url = "#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#&area=#area_id#">
+							<cfset item_page_url = "#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#&#area_param#">
 						<cfelse>
 							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
 						</cfif>

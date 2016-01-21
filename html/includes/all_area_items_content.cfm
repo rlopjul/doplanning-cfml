@@ -38,6 +38,7 @@
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputAllItemsList">
 		<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
+		<cfinvokeargument name="area_id" value="#area_id#">
 		<cfinvokeargument name="area_type" value="#area_type#">
 		<cfinvokeargument name="return_page" value="area_items.cfm?area=#area_id#">
 		<cfinvokeargument name="app_version" value="#app_version#">
