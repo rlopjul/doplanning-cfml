@@ -1311,6 +1311,12 @@
 
 			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
 
+			<cfif isDefined("arguments.area_id")>
+				<cfset area_param = "area=#arguments.area_id#">
+			<cfelse>
+				<cfset area_param = "area=#itemsQuery.area_id#">
+			</cfif>
+
 			<div class="elements_container">
 				<cfloop query="itemsQuery">
 
@@ -1320,11 +1326,7 @@
 						<cfset rpage = "#lCase(itemTypeNameP)#.cfm?area=#itemsQuery.area_id#">
 					</cfif>
 
-					<cfif itemTypeId NEQ 10>
-						<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
-					<cfelse><!---Files--->
-						<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#&return_page=#URLEncodedFormat(rpage)#">
-					</cfif>
+					<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&#area_param#&return_page=#URLEncodedFormat(rpage)#">
 
 					<div class="row element_item #itemTypeName#"><!--- row item container --->
 						<div class="col-sm-12">
@@ -1442,7 +1444,7 @@
 
 											<cfelse>
 
-													<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#">
+													<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&#area_param#">
 
 														<img src="#APPLICATION.htmlPath#/assets/v3/icons/#itemTypeName#.png" alt="#itemTypeNameEs#" title="#itemTypeNameEs#" style="width:60px;"/>
 
@@ -1493,7 +1495,11 @@
 										<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
 											<cfinvokeargument name="item_id" value="#itemsQuery.id#">
 											<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
-											<cfinvokeargument name="area_id" value="#itemsQuery.area_id#">
+											<cfif isDefined("arguments.area_id")>
+												<cfinvokeargument name="area_id" value="#arguments.area_id#">
+											<cfelse>
+												<cfinvokeargument name="area_id" value="#itemsQuery.area_id#">
+											</cfif>
 
 											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 										</cfinvoke>
@@ -1541,7 +1547,7 @@
 
 
 											<cfif arguments.app_version NEQ "mobile">
-												<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#&area=#itemsQuery.area_id#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i></a>
+												<a href="#APPLICATION.htmlPath#/#itemTypeName#.cfm?#itemTypeName#=#item_id#&#area_param#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm" lang="es"><i class="icon-external-link"></i></a>
 											</cfif>
 
 											<span class="divider">&nbsp;</span>
@@ -1550,18 +1556,18 @@
 
 												<cfif app_version EQ "mobile">
 
-													<a href="area_items.cfm?area=#itemsQuery.area_id####itemTypeName##itemsQuery.id#" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver en área"> <span lang="es">Ver en área</span></a>
+													<a href="area_items.cfm?#area_param####itemTypeName##itemsQuery.id#" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver en área"> <span lang="es">Ver en área</span></a>
 
 												<cfelse>
 													<!---onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)"--->
 
-													<a href="area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver en área"> <span lang="es">Ver en área</span></a>
+													<a href="area_items.cfm?#area_param####itemTypeName##itemsQuery.id#" class="btn btn-sm btn-info" title="Ir al área"><img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small_white.png" alt="Area" title="Ver en área"> <span lang="es">Ver en área</span></a>
 
 												</cfif>
 
 											<cfelse>
 												<!---onclick="openUrl('#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#','itemIframe',event)"--->
-												<a href="#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#itemsQuery.area_id#" class="btn btn-sm btn-info" title="Ver #itemTypeNameEs#"><span lang="es">Ver #itemTypeNameEs#</span></a>
+												<a href="#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&#area_param#" class="btn btn-sm btn-info" title="Ver #itemTypeNameEs#"><span lang="es">Ver #itemTypeNameEs#</span></a>
 											</cfif>
 
 										</div>
