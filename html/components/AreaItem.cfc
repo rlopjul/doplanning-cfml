@@ -3010,7 +3010,7 @@
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 14 OR itemTypeId IS 15 OR itemTypeId IS 16><!---Lists, Forms And Views--->
 									<!---<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="openUrl('#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#','_self',event)" title="Registros"><i class="icon-list" style="font-size:15px;"></i></a>--->
 									<!--- onclick="openUrl('#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#','itemIframe',event)"--->
-									<a href="#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#" title="Más información de #itemTypeNameEs#"><i class="icon-info-sign" style="font-size:15px;"></i></a>
+									<a href="#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&#area_param#" title="Más información de #itemTypeNameEs#"><i class="icon-info-sign" style="font-size:15px;"></i></a>
 								</cfif>
 
 								<!---Attached files--->
