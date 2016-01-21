@@ -869,7 +869,7 @@
 			<cfinclude template="includes/responseHandlerStruct.cfm">
 
 			<cfcatch>
-				<cfinclude template="includes/errorHandlerStruct.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>
 
 		</cftry>

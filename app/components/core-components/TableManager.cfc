@@ -108,7 +108,7 @@
 
 		<cfset var method = "getTableRowsInAreas">
 
-		<cfset var response = structNew()>
+		<cfset var response = {result=false, message=""}>
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
@@ -144,22 +144,13 @@
 							WHERE area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_integer" list="true">);
 						</cfquery>
 
+						<cfset response = {result=true, query=rowsInAreasQuery}>
+
 					</cfif>
-
-					<cfset response = {result=true, query=rowsInAreasQuery}>
-
-				<cfelse>
-
-					<cfset response = {result=false }>
 
 				</cfif>
 
-			<cfelse>
-
-				<cfset response = {result=false }>
-
 			</cfif>
-
 
 		<cfreturn response>
 
