@@ -1404,5 +1404,48 @@
 
 	</cffunction>
 
+	<!------------------------ GET TABLE ROWS IN USER AREAS-------------------------------------->
+
+	<cffunction name="getTableRowsInUserAreas" returntype="struct" output="false" access="public">
+		<cfargument name="table_id" type="numeric" required="true"/>
+		<cfargument name="tableTypeId" type="numeric" required="true"/>
+		<cfargument name="get_user_id" type="numeric" required="true"/>
+
+		<cfset var method = "getTableRowsInUserAreas">
+
+		<cfset var response = structNew()>
+
+		<cfset var userAreasIds = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfinvoke component="AreaManager" method="getAllUserAreasList" returnvariable="userAreasIds">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/TableManager" method="getTableRowsInAreas" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
 
 </cfcomponent>

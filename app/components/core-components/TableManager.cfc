@@ -95,4 +95,75 @@
 
 	</cffunction>
 
+
+	<!------------------------ GET TABLE ROWS IN AREAS-------------------------------------->
+
+	<cffunction name="getTableRowsInAreas" returntype="struct" output="false" access="public">
+		<cfargument name="table_id" type="numeric" required="true"/>
+		<cfargument name="tableTypeId" type="numeric" required="true"/>
+		<cfargument name="areas_ids" type="string" required="true"/>
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getTableRowsInAreas">
+
+		<cfset var response = structNew()>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfif len(arguments.areas_ids) GT 0>
+
+				<!---Table fields--->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FieldQuery" method="getTableFields" returnvariable="allFields">
+					<cfinvokeargument name="table_id" value="#table_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="with_types" value="true">
+					<cfinvokeargument name="with_table" value="true">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif allFields.general IS true><!--- General table --->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="tableRows">
+						<cfinvokeargument name="table_id" value="#table_id#">
+						<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+						<cfinvokeargument name="fields" value="#allFields#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfif tableRows.recordCount GT 0>
+
+						<cfquery dbtype="query" name="rowsInAreasQuery">
+							SELECT *
+							FROM tableRows
+							WHERE area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_integer" list="true">);
+						</cfquery>
+
+					</cfif>
+
+					<cfset response = {result=true, query=rowsInAreasQuery}>
+
+				<cfelse>
+
+					<cfset response = {result=false }>
+
+				</cfif>
+
+			<cfelse>
+
+				<cfset response = {result=false }>
+
+			</cfif>
+
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 </cfcomponent>

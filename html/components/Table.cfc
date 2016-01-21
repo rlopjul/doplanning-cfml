@@ -848,6 +848,37 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- getTableRowsInUserAreas ------------------------------------- --->
+
+	<cffunction name="getTableRowsInUserAreas" returntype="struct" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "getTableRowsInUserAreas">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableRowsInUserAreas" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#"/>
+			</cfinvoke>
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- ----------------------------------- outputTablesList ------------------------------------- --->
 
 	<cffunction name="outputTablesList" returntype="void" output="true" access="public">

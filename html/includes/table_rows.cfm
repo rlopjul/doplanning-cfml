@@ -13,8 +13,29 @@
 	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 </cfinvoke>
 
-<cfif isDefined("URL.area") AND isNumeric(URL.area)>
-	<cfset area_id = URL.area>
+<cfif objectItem.general IS true><!---General List OR Form --->
+
+	<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+		<cfset area_id = URL.area>
+	<cfelse>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRowsInUserAreas" returnvariable="getTableRowsInUserAreasResponse">
+			<cfinvokeargument name="table_id" value="#table_id#">
+			<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+		</cfinvoke>
+
+		<cfif getTableRowsInUserAreasResponse.result IS true AND getTableRowsInUserAreasResponse.query.recordCount GT 0>
+
+			<cfset area_id = getTableRowsInUserAreasResponse.query.area_id>
+
+		<cfelse>
+
+			<cflocation url="#APPLICATION.htmlPath#/error.cfm?error_code=104" addtoken="false">
+
+		</cfif>
+
+	</cfif>
+
 <cfelse>
 	<cfset area_id = objectItem.area_id>
 </cfif>
