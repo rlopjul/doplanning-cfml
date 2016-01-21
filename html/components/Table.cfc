@@ -1022,10 +1022,12 @@
 						<cfelse>
 
 							<cfif isDefined("arguments.area_id")>
-								<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&area=#arguments.area_id#&return_page=#URLEncodedFormat(rpage)#">
+								<cfset area_param = "&area=#arguments.area_id#">
 							<cfelse>
-								<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id#&return_page=#URLEncodedFormat(rpage)#">
+								<cfset area_param = "">
 							</cfif>
+
+							<cfset item_page_url = "#itemTypeName#.cfm?#itemTypeName#=#itemsQuery.id##area_param#&return_page=#URLEncodedFormat(rpage)#">
 
 						</cfif>
 
@@ -1079,7 +1081,7 @@
 								</cfif>
 								onclick="#rowsOnClick#"
 								--->
-								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id#" onclick="stopPropagation(event)" title="Registros" lang="es"><i class="icon-list" style="font-size:15px;"></i></a>
+								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id##area_param#" onclick="stopPropagation(event)" title="Registros" lang="es"><i class="icon-list" style="font-size:15px;"></i></a>
 							</td>
 							</cfif>
 							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>

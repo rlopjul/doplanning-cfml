@@ -58,7 +58,7 @@
 <div class="div_items">
 <cfif numItems GT 0>
 
-	<cfif isDefined("URL.mode") AND URL.mode EQ "list">
+	<!---<cfif isDefined("URL.mode") AND URL.mode EQ "list">--->
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="outputTablesList">
 			<cfinvokeargument name="itemsQuery" value="#areaTables#">
@@ -68,12 +68,10 @@
 			<cfif isDefined("default_table_id") AND isNumeric(default_table_id)>
 				<cfinvokeargument name="default_table_id" value="#default_table_id#"/>
 			</cfif>
-			<cfif tableTypeId IS 3><!--- Typology --->
-				<cfinvokeargument name="area_id" value="#area_id#"/>
-			</cfif>
+			<cfinvokeargument name="area_id" value="#area_id#"/>
 		</cfinvoke>
 
-	<cfelse>
+	<!---<cfelse>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="outputTablesFullList">
 			<cfinvokeargument name="itemsQuery" value="#areaTables#">
@@ -84,7 +82,7 @@
 			<cfinvokeargument name="app_version" value="#app_version#">
 		</cfinvoke>
 
-	</cfif>
+	</cfif>--->
 
 <cfelse>
 
