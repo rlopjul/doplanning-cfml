@@ -890,6 +890,7 @@
 		<cfargument name="default_table_id" type="numeric" required="false" default="0">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
+		<cfargument name="internal_user" type="boolean" required="false">
 
 		<cfset var method = "outputTablesList">
 
@@ -1092,7 +1093,13 @@
 							</cfif>
 
 							<cfif arguments.full_content IS true><!--- Search page --->
-								<td><a onclick="openUrl('area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#','areaIframe',event)" class="link_blue">#itemsQuery.area_name#</a></td>
+								<td>
+									<cfif itemsQuery.general IS false OR ( isDefined("arguments.internal_user") AND arguments.internal_user IS true )>
+										<a href="area_items.cfm?area=#itemsQuery.area_id#&#itemTypeName#=#itemsQuery.id#" class="link_blue">#itemsQuery.area_name#</a>
+									<cfelseif itemsQuery.general IS true>
+										<span lang="es">#itemTypeNameEs# global</span>
+									</cfif>
+								</td>
 							</cfif>
 						</tr>
 					</cfloop>

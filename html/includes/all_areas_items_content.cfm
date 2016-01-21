@@ -96,6 +96,7 @@
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="full_content" value="true">
 				<cfinvokeargument name="app_version" value="html2">
+				<cfinvokeargument name="internal_user" value="#loggedUser.internal_user#">
 			</cfinvoke>
 
 		<cfelse>
