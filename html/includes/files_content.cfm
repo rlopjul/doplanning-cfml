@@ -1,5 +1,5 @@
 <cfoutput>
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
  --->
 
@@ -17,15 +17,17 @@
 
 <cfset files = getAreaFilesResponse.files>
 
+<cfset numItems = files.recordCount>
+
 <cfoutput>
 <div class="row"><!---div_head_subtitle_area--->
-	
+
 	<!---
 
 	<cfif APPLICATION.identifier NEQ "vpnet"><!---DP--->
 
 		<div class="btn-toolbar" style="padding-right:5px;" role="toolbar">
-							
+
 			<cfif objectArea.item_type_10_enabled IS true AND objectArea.read_only IS false>
 
 				<div class="btn-group">
@@ -42,8 +44,8 @@
 					<a href="area_files_upload.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Subir varios archivos" lang="es"><i class="icon-upload" style="color:##5BB75B;font-size:19px;line-height:23px;"></i> <span lang="es">Subir varios archivos</span></a>
 				</div>
 
-			</cfif>		
-			
+			</cfif>
+
 			<div class="btn-group">
 				<cfif APPLICATION.modulefilesWithTables AND is_user_area_responsible>
 					<a href="typologies.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Tipologías de documentos" lang="es"><i class="icon-file-text" style="font-size:19px; line-height:23px; color:##7A7A7A"></i> <span lang="es">Tipologías de documentos</span></a>
@@ -71,17 +73,17 @@
 			</div>
 
 		</div>
-	
+
 	<cfelse>
-	
+
 		<cfinclude template="#APPLICATION.htmlPath#/includes/area_files_menu_vpnet.cfm">
-	
+
 	</cfif>
 
 	--->
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_items_menu.cfm">
-	
+
 </div>
 </cfoutput>
 
@@ -89,8 +91,8 @@
 
 
 <script>
-	
-	$(document).ready(function() { 
+
+	$(document).ready(function() {
 
 		<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
 		<!---$('#listTable').bind('select.tablesorter.select', function(event, ts){

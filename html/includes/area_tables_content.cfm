@@ -11,6 +11,17 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
+	<cfinvokeargument name="area_id" value="#area_id#">
+	<cfinvokeargument name="area_type" value="#area_type#">
+	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+	<cfinvokeargument name="with_user" value="true">
+</cfinvoke>
+
+<cfset areaTables = getAreaTablesResponse.areaTables>
+
+<cfset numItems = areaTables.recordCount>
+
 <div class="row">
 	<cfoutput>
 
@@ -39,18 +50,6 @@
 	<cfset default_table_id = getDefaultTableResponse.table_id>
 
 </cfif>
-
-
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaTables" returnvariable="getAreaTablesResponse">
-	<cfinvokeargument name="area_id" value="#area_id#">
-	<cfinvokeargument name="area_type" value="#area_type#">
-	<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-	<cfinvokeargument name="with_user" value="true">
-</cfinvoke>
-
-<cfset areaTables = getAreaTablesResponse.areaTables>
-
-<cfset numItems = areaTables.recordCount>
 
 <div class="div_items">
 <cfif numItems GT 0>

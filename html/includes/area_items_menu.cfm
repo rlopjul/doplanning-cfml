@@ -307,10 +307,13 @@
 							</cfif>
 
 							<cfif isDefined("URL.#itemTypesStruct[itemTypeId].name#")>
-								<span lang="es">#itemTypesStruct[itemTypeId].label#</span></span>
+								<span lang="es">#itemTypesStruct[itemTypeId].label#</span>
 							<cfelse>
-								<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span></span>
+								<span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span>
 							</cfif>
+
+							<span id="totalItemsLabel"><cfif isDefined("numItems")>&nbsp;<span class="label label-primary label-as-badge" id="totalItemsValue">#numItems#</span></cfif></span>
+
 						</span>
 
 					</div>
@@ -324,6 +327,8 @@
 
 							<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" title="Todos los elementos del área" alt="Todos los elementos del área" lang="es" style="height:26px;" />
 							<span lang="es">Elementos del área</span>
+
+							<span id="totalItemsLabel"><cfif isDefined("numItems")>&nbsp;<span class="label label-primary label-as-badge" id="totalItemsValue">#numItems#</span></cfif></span>
 
 						</span>
 
@@ -341,6 +346,8 @@
 							<cfelse>
 								<span lang="es">Usuarios del área</span>
 							</cfif>
+
+							<span id="totalItemsLabel"><cfif isDefined("numItems")>&nbsp;<span class="label label-primary label-as-badge" id="totalItemsValue">#numItems#</span></cfif></span>
 
 						</span>
 

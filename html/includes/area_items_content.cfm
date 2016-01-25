@@ -12,6 +12,16 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsList" returnvariable="getAreaItemsListResponse">
+	<cfinvokeargument name="area_id" value="#area_id#">
+	<cfinvokeargument name="area_type" value="#area_type#">
+	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+</cfinvoke>
+
+<cfset areaItems = getAreaItemsListResponse.areaItems>
+
+<cfset numItems = areaItems.recordCount>
+
 <div class="row">
 
 	<!---<cfif APPLICATION.identifier NEQ "vpnet">---><!---DP--->
@@ -36,18 +46,6 @@
 	<!---
 	</div>
 </div> --->
-
-
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAreaItemsList" returnvariable="getAreaItemsListResponse">
-	<cfinvokeargument name="area_id" value="#area_id#">
-	<cfinvokeargument name="area_type" value="#area_type#">
-	<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-</cfinvoke>
-
-<cfset areaItems = getAreaItemsListResponse.areaItems>
-
-
-<cfset numItems = areaItems.recordCount>
 
 <div class="row">
 	<div class="col-sm-12">
