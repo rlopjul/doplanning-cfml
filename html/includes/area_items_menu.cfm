@@ -388,7 +388,7 @@
 
 					</div>
 
-					<cfif NOT isDefined("URL.mode")>
+					<cfif NOT isDefined("URL.mode") OR URL.mode NEQ "list">
 
 						<div class="btn-group pull-right">
 							<a href="area_items.cfm?area=#area_id#&mode=list" class="btn btn-default btn-sm" id="listModeLink"><i class="icon-th-list" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo lista</span></a>
@@ -397,7 +397,7 @@
 					<cfelseif URL.mode EQ "list">
 
 						<div class="btn-group pull-right">
-							<a href="area_items.cfm?area=#area_id#" class="btn btn-default btn-sm"><i class="icon-th-large" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo completo</span></a>
+							<a href="area_items.cfm?area=#area_id#&mode=" class="btn btn-default btn-sm"><i class="icon-th-large" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo completo</span></a>
 						</div>
 
 					</cfif>
@@ -464,7 +464,7 @@
 					<cfif NOT isDefined("URL.mode") OR URL.mode EQ "list" OR URL.mode EQ "tree">
 
 						<div class="btn-group pull-right">
-							<a href="area_items.cfm?area=#area_id#&filter=#itemTypeName#" class="btn btn-default btn-sm"><i class="icon-th-large" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo completo</span></a>
+							<a href="area_items.cfm?area=#area_id#&filter=#itemTypeName#&mode=" class="btn btn-default btn-sm"><i class="icon-th-large" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo completo</span></a>
 						</div>
 
 					</cfif>
@@ -524,7 +524,7 @@
 				<cfif isDefined("URL.mode") AND URL.mode EQ "list">
 
 					<div class="btn-group pull-right">
-						<a href="#CGI.SCRIPT_NAME#?area=#area_id#" class="btn btn-default btn-sm"><i class="icon-th-large" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo completo</span></a>
+						<a href="#CGI.SCRIPT_NAME#?area=#area_id#&mode=" class="btn btn-default btn-sm"><i class="icon-th-large" style="font-size:14px; line-height:23px;"></i> <span lang="es">Modo completo</span></a>
 					</div>
 
 				<cfelse>

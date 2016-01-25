@@ -80,7 +80,13 @@
 	</div>
 </div>
 
-<cfif ( isDefined("URL.mode") AND URL.mode EQ "list" )>
+<cfif NOT isDefined("URL.mode") AND objectArea.list_mode EQ "list">
+
+	<cfset URL.mode = "list">
+
+</cfif>
+
+<cfif isDefined("URL.mode") AND URL.mode EQ "list">
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/all_area_items_content.cfm">
 
