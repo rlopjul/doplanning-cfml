@@ -84,7 +84,7 @@
 		<cfargument name="twitterAccessToken" type="string" required="false">
 		<cfargument name="twitterAccessTokenSecret" type="string" required="false">
 
-		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/paper/bootstrap.min.css">
+		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/paper/bootstrap.min.css">
 
 		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=3.2">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">
@@ -200,7 +200,7 @@
 			<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
 
 			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
-			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
 	    <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
 	    <cfset APPLICATION.functionsJSPath = APPLICATION.htmlPath&"/scripts/functions.min.js?v=3">
