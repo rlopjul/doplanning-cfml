@@ -25,7 +25,7 @@
 </cfif>
 
 
- 
+
 <!---<cfoutput>
 <cfif APPLICATION.title EQ "DoPlanning">
 	<div style="float:left; padding-top:2px;">
@@ -45,20 +45,20 @@
 
 
 <div id="wrapper"><!--- wrapper --->
-        
+
 	<!---<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
 				<h1></h1>
 				<p></p>
-							
+
 			</div>
 		</div>
 	</div>--->
 
 	<!---<div class="div_contenedor_contenido">--->
-	
-	
+
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_client_head.cfm">
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_head.cfm">
@@ -72,7 +72,15 @@
 <!--- Alert --->
 <cfinclude template="#APPLICATION.htmlPath#/includes/main_alert.cfm">
 
-<cfif isDefined("URL.mode") AND URL.mode EQ "list">
+<div class="row">
+	<div class="col-sm-12">
+
+		<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+
+	</div>
+</div>
+
+<cfif ( isDefined("URL.mode") AND URL.mode EQ "list" )>
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/all_area_items_content.cfm">
 
@@ -100,7 +108,7 @@
 			$("#alertContainer").attr("class", "alert alert-success");
 		else
 			$("#alertContainer").attr("class", "alert alert-danger");
-		
+
 		$("#alertContainer button").after('<span>'+msg+'</span>');
 
 		var maxZIndex = getMaxZIndex();
@@ -111,10 +119,10 @@
 
 
 		setTimeout(function(){
-			    
+
 		    hideAlertMessage();
 
-		    }, 9500);	
+		    }, 9500);
 	}
 
 	function hideAlertMessage(){
@@ -124,7 +132,7 @@
 		});
 
 	}
-	
+
 	$(document).ready(function () {
 
 		// Alert
@@ -133,9 +141,9 @@
 			hideAlertMessage();
 
 		});
-						
+
 	});
-	
+
 </script>
 --->
 
@@ -148,7 +156,7 @@
 
 
 	<!---</div>--->
-	
+
 </div>
 <!--- END wrapper --->
 

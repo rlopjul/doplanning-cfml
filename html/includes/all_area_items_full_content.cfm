@@ -13,14 +13,6 @@
 
 <!---<div class="container-fluid">--->
 
-	<div class="row">
-		<div class="col-sm-12">
-
-			<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-
-		</div>
-	</div>
-
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAllAreaItems" returnvariable="getAllAreaItemsResult">
 		<cfinvokeargument name="area_id" value="#area_id#">
 		<cfinvokeargument name="area_type" value="#area_type#">

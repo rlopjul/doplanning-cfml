@@ -7,8 +7,6 @@
 
 </cfoutput>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
-
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAllAreaItems" returnvariable="getAllAreaItemsResult">
 	<cfinvokeargument name="area_id" value="#area_id#">
 	<cfinvokeargument name="area_type" value="#area_type#">
