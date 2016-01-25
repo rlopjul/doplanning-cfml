@@ -1,8 +1,4 @@
 <cfoutput>
-<!---
-<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
- --->
-
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
 </cfoutput>
@@ -37,15 +33,9 @@
 
 </div>
 
-<!---
-<div class="row">
-	<div class="col-sm-12"> --->
 
-		<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
+<cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-	<!---
-	</div>
-</div> --->
 
 <div class="row">
 	<div class="col-sm-12">
@@ -103,8 +93,6 @@
 		</script>
 
 		<cfoutput>
-		<!---<div class="div_text_result"><span lang="es">No hay #lCase(itemTypeNameEsP)# en esta área.</span></div>--->
-
 		<div class="alert alert-info" role="alert" style="margin:10px;"><i class="icon-info-sign"></i> <span lang="es">No hay #lCase(itemTypeNameEsP)# en esta área.</span></div>
 		</cfoutput>
 
