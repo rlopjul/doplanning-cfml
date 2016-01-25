@@ -1,7 +1,4 @@
 <cfoutput>
-<!---
-<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
- --->
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
@@ -44,12 +41,7 @@
 
 <cfelseif objectArea.read_only IS false>
 
-	<script type="text/javascript">
-		openUrlHtml2('empty.cfm','itemIframe');
-	</script>
-
 	<cfoutput>
-	<!---<div class="div_text_result"><span lang="es">No hay elementos en esta área.</span></div>--->
 	<div class="alert alert-info" role="alert" style="margin:10px;"><i class="icon-info-sign"></i> <span lang="es">Aún nadie ha puesto información aquí, ¿por qué no ser el primero?</span></div>
 	</cfoutput>
 
