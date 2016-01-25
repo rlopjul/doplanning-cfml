@@ -1,9 +1,9 @@
 <cfif isDefined("URL.parent")>
-	
+
 	<cfset parent_area_id = URL.parent>
 
 	<!--- Get parent area --->
-	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectParentArea">	
+	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectParentArea">
 		<cfinvokeargument name="get_area_id" value="#parent_area_id#">
 		<cfinvokeargument name="return_type" value="query">
 	</cfinvoke>
@@ -13,7 +13,7 @@
 	</cfinvoke>
 
 	<!--- Set default responsible --->
-	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUser" returnvariable="userQuery">				
+	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUser" returnvariable="userQuery">
 		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 		<cfinvokeargument name="format_content" value="default">
 		<cfinvokeargument name="return_type" value="query">
@@ -21,6 +21,10 @@
 
 	<cfset objectArea.user_in_charge = userQuery.id>
 	<cfset objectArea.user_full_name = userQuery.user_full_name>
+
+	<cfset objectArea.list_mode = objectParentArea.list_mode>
+	<cfset objectArea.users_visible = objectParentArea.users_visible>
+	<cfset objectArea.read_only = objectParentArea.read_only>
 
 	<cfoutput>
 
@@ -30,7 +34,7 @@
 		</div>
 
 	 	<div class="modal-body">
-	  
+
 			<cfinclude template="#APPLICATION.htmlPath#/admin/includes/area_form.cfm"/>
 
 		</div>
@@ -45,7 +49,7 @@
 
 			    if(e.preventDefault)
 					e.preventDefault();
-			    
+
 			    if( $.isNumeric($("##user_in_charge").val()) ){
 
 			    	if( $("##name").val().length > 0 ){
@@ -63,5 +67,5 @@
 		</script>
 
 	</cfoutput>
-	
+
 </cfif>

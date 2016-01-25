@@ -96,6 +96,7 @@
 		<cfargument name="default_typology_id" type="string" required="false" default="">
 		<cfargument name="hide_in_menu" type="string" required="no" default="">
 		<cfargument name="menu_type_id" type="string" required="no" default="">
+		<cfargument name="list_mode" type="string" required="no" default="">
 
 
 		<cfargument name="return_type" type="string" required="no">
@@ -196,7 +197,8 @@
 				description="#description#",
 				user_full_name="#user_full_name#",
 				hide_in_menu="#hide_in_menu#",
-				menu_type_id ="#menu_type_id#"
+				menu_type_id ="#menu_type_id#",
+				list_mode="#list_mode#"
 				}>
 
 
