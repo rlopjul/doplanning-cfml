@@ -444,7 +444,11 @@
 					<cfif isDefined("arguments.end_date")>
 						AND ( items.creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#')
 							<cfif arguments.itemTypeId IS NOT 1 AND itemTypeId IS NOT 7>
-							AND IF( items.last_update_date IS NULL, true, items.last_update_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') )
+							AND ( IF( items.last_update_date IS NULL, true, items.last_update_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#dateTimeFormat#') )
+									<cfif isDefined("arguments.from_date")><!---El elemento ha sido modificado posteriormente pero se creó dentro de esta fecha--->
+										OR items.creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#dateFormat#')
+									</cfif>
+									)
 							</cfif>
 							)
 					</cfif>
