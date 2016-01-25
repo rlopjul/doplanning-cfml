@@ -224,7 +224,7 @@
 														<cfif curItemTypeId NEQ 14 AND curItemTypeId NEQ 15><!--- Si no es vista de lista o vista de formulario --->
 															<a href="#itemTypesStruct[curItemTypeId].namePlural#.cfm?area=#area_id#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" role="menuitem">
 														<cfelse>
-															<a href="area_items.cfm?area=#area_id#&filter=#itemTypesStruct[curItemTypeId].name#" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" role="menuitem">
+															<a href="area_items.cfm?area=#area_id#&filter=#itemTypesStruct[curItemTypeId].name#&mode=" title="#itemTypesStruct[curItemTypeId].labelPlural#" lang="es" role="menuitem">
 														</cfif>
 
 													<cfelse><!--- Está en el listado desarrollado de todos los elementos --->
