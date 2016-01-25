@@ -57,10 +57,14 @@
 
 	function onSubmitForm(){
 
-		<!---document.getElementById("submitDiv1").innerHTML = 'Enviando...';--->
-		document.getElementById("submitDiv2").innerHTML = 'Enviando...';
+		if(check_custom_form())	{
+			<!---document.getElementById("submitDiv1").innerHTML = 'Enviando...';--->
+			document.getElementById("submitDiv2").innerHTML = 'Enviando...';
+			return true;
+		} else {
+			return false;
+		}
 
-		return true;
 	}
 </script>
 
@@ -79,7 +83,17 @@
 
 <div class="contenedor_fondo_blanco">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" name="item_form" onsubmit="return onSubmitForm();">
+
+	<script>
+		var railo_custom_form;
+
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
+			railo_custom_form = new LuceeForms('item_form');
+		else
+			railo_custom_form = new RailoForms('item_form');
+	</script>
+	<script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 	<!---<div id="submitDiv1" style="margin-bottom:10px;">
 		<input type="submit" value="Guardar" class="btn btn-primary"/>
