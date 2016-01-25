@@ -802,7 +802,7 @@ Lang.prototype.pack.en = {
 		"En esta área se pueden crear los siguientes elementos:":"In this area you can create the following elements:",
 		"Archivos y archivos de área":"Files and area files",
 		"Esta definición se puede modificar posteriormente de forma individual para cada área.":"This definition can be modified later individually for each area",
-		"Aplicar selección anterior de elementos, usuarios disponibles y sólo lectura a todas las áreas inferiores":"Apply element selection, available users and read only to all lower areas",
+		"Aplicar selección anterior de opciones a todas las áreas inferiores":"Apply area options to all lower areas",
 		"Área de sólo lectura":"Read only area",
 		"Esta opción no afecta a los elementos en los que es necesario acceder a la lista de usuarios del área para su creación y edición como: tareas, archivos de área, listas y formularios.":"This option does not affect those elements in which it is necessary to access the user list for their creation and edition, such as: tasks, area files, lists and forms.",
 		"Esta opción no afecta a los elementos en los que es necesario acceder a la lista de usuarios del área para su creación y edición como: tareas y archivos de área.":"This option does not affect those elements in which it is necessary to access the user list for their creation and edition, such as: tasks and area files.",

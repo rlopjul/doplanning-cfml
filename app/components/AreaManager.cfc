@@ -1958,6 +1958,7 @@
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
 		<cfargument name="read_only" type="boolean" required="false" default="false"/>
+		<cfargument name="list_mode" type="string" required="true"/>
 
 
 		<cfset var method = "createArea">
@@ -2147,6 +2148,7 @@
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
 		<cfargument name="read_only" type="boolean" required="false" default="false"/>
+		<cfargument name="list_mode" type="string" required="true"/>
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -2183,7 +2185,8 @@
 			item_type_17_enabled = <cfqueryparam value="#arguments.item_type_17_enabled#" cfsqltype="cf_sql_bit">,
 			item_type_20_enabled = <cfqueryparam value="#arguments.item_type_20_enabled#" cfsqltype="cf_sql_bit">,
 			users_visible = <cfqueryparam value="#arguments.users_visible#" cfsqltype="cf_sql_bit">,
-			read_only = <cfqueryparam value="#arguments.read_only#" cfsqltype="cf_sql_bit">
+			read_only = <cfqueryparam value="#arguments.read_only#" cfsqltype="cf_sql_bit">,
+			list_mode = <cfqueryparam value="#arguments.list_mode#" cfsqltype="cf_sql_varchar">
 			WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 			<cfif arguments.items_enabled_subareas IS true AND len(subAreasIds) GT 0>
 				OR id IN (<cfqueryparam value="#subAreasIds#" cfsqltype="cf_sql_longvarchar" list="true">)
@@ -2230,6 +2233,7 @@
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
 		<cfargument name="read_only" type="boolean" required="false" default="false"/>
+		<cfargument name="list_mode" type="string" required="true"/>
 
 
 		<cfset var method = "updateArea">

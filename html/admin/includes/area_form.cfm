@@ -38,6 +38,25 @@
 
 	<cfinclude template="area_menu_inputs.cfm" />
 
+	<div class="row">
+		<div class="col-sm-12">
+
+			<h5 lang="es" style="margin-top:30px">Opciones de personalización del área</h5>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+
+			<label for="list_mode" class="control-label"><span lang="es">Modo de listado de elementos del área</span>:</label>
+			<select name="list_mode" id="list_mode" class="form-control">
+					<option value="">Completo (Por defecto)</option>
+					<option value="list" <cfif objectArea.list_mode IS "list">selected</cfif>>Lista</option>
+			</select>
+
+		</div>
+	</div>
 
 	<div class="row">
 		<div class="col-sm-12">
@@ -133,7 +152,7 @@
 			<div class="checkbox">
 				<label class="control-label" for="items_enabled_subareas">
 					<input id="items_enabled_subareas" name="items_enabled_subareas" type="checkbox" value="true" class="checkbox_locked" />
-					<span lang="es">Aplicar selección anterior de elementos, usuarios disponibles y sólo lectura a todas las áreas inferiores</span>
+					<span lang="es">Aplicar selección anterior de opciones a todas las áreas inferiores</span>
 				</label>
 				<small class="help-block" lang="es">Esta definición se puede modificar posteriormente de forma individual para cada área.</small>
 			</div>
