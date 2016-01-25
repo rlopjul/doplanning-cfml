@@ -355,7 +355,7 @@
 							<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png" title="Todos los elementos del área" alt="Todos los elementos del área" lang="es" id="curFilterImg" style="height:26px;" />
 							<span lang="es" id="curFilterLabel">Elementos del área</span>
 
-							<span id="totalItemsLabel"><cfif isDefined("numItems")>&nbsp;<span class="label label-primary label-as-badge">#numItems#</span></cfif></span>
+							<span id="totalItemsLabel"><cfif isDefined("numItems")>&nbsp;<span class="label label-primary label-as-badge" id="totalItemsValue">#numItems#</span></cfif></span>
 
 						</span>
 

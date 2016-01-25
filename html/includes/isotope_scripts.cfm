@@ -35,14 +35,14 @@ function setItemsFilter(filterValue) {
 			$("##curFilterLabel").text("Elementos del área");
 			$("##listModeLink").attr("href", "area_items.cfm?area=#area_id#&mode=list");
 			$("##listModeLink").show();
-      $("##totalItemsLabel").show();
+      //$("##totalItemsLabel").show();
 		<cfelse>
 			$("##curFilterLabel").text("Elementos de área");
 		</cfif>
 
 	} else {
 
-    $("##totalItemsLabel").hide();
+    //$("##totalItemsLabel").hide();
 
 		var filterBy = "."+filterValue;
 
@@ -51,6 +51,9 @@ function setItemsFilter(filterValue) {
 		jQuery.each(itemTypesStruct, function(index, itemType) {
 
 			if(itemType.name == filterValue) {
+
+        var itemsCounter = $itemsContainer.data('isotope').filteredItems.length;
+        $("##totalItemsValue").text(itemsCounter);
 
 				<!---$("##curFilterLabel").text(window.lang.translate(itemType.labelPlural));--->
 				$("##curFilterLabel").text(itemType.labelPlural);
@@ -63,6 +66,7 @@ function setItemsFilter(filterValue) {
 						$("##listModeLink").hide();
 					else
 						$("##listModeLink").show();
+
 
 				</cfif>
 
