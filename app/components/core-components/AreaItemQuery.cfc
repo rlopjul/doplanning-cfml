@@ -372,7 +372,7 @@
 					WHERE
 					<cfif arguments.all_areas IS false>
 						(<cfif isDefined("arguments.areas_ids")>
-						items.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_varchar" list="yes">)
+						items.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_integer" list="yes">)
 						<cfelse>
 						items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
 						</cfif>

@@ -504,6 +504,7 @@
 		<cfargument name="row_id" type="numeric" required="false">
 		<cfargument name="fields" type="query" required="false"><!--- Required to order by fields or search--->
 		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="areas_ids" type="string" required="false">
 		<cfargument name="search" type="string" required="false">
 		<cfargument name="categoriesFilter" type="boolean" required="false" default="false">
 
@@ -562,7 +563,13 @@
 
 					<cfif len(subAreasIds) GT 0>
 
-						AND area_id IN (<cfqueryparam value="#subAreasIds#" cfsqltype="cf_sql_varchar" list="true">)
+						AND area_id IN (<cfqueryparam value="#subAreasIds#" cfsqltype="cf_sql_integer" list="true">)
+
+					</cfif>
+
+					<cfif isDefined("arguments.areas_ids")>
+
+						AND area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_integer" list="true">)
 
 					</cfif>
 

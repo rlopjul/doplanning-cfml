@@ -2709,6 +2709,12 @@
 								<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
 								<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
 
+								<cfif arguments.alertType EQ ALERT_TYPE_WEB>
+									<cfinvokeargument name="area_type" value="web">
+								<cfelse>
+									<cfinvokeargument name="area_type" value="">
+								</cfif>
+
 								<cfif arguments.alertType EQ ALERT_TYPE_WEB AND APPLICATION.publicationValidation IS true>
 									<cfinvokeargument name="published" value="true">
 								<cfelse>
@@ -2786,8 +2792,6 @@
 									<cfinvokeargument name="client_abb" value="#client_abb#">
 									<cfinvokeargument name="client_dsn" value="#client_dsn#">
 								</cfinvoke>
-
-								<cfdump var="#userTablesNotificationsDisabledQuery#">
 
 							</cfif>
 
@@ -2930,6 +2934,9 @@
 												<cfinvokeargument name="table_id" value="#table_id#">
 												<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 												<cfinvokeargument name="fields" value="#allFields#">
+												<cfif itemObject.general IS true>
+													<cfinvokeargument name="areas_ids" value="#userAreasIds#">
+												</cfif>
 
 												<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
 												<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
