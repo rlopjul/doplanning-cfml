@@ -19,13 +19,17 @@
 </cfif>
 
 <cfif isDefined("URL.itemTypeId") AND isNumeric(URL.itemTypeId)>
-	<cfset itemTypeId = URL.itemTypeId>	
+	<cfset itemTypeId = URL.itemTypeId>
+</cfif>
+
+<cfif isDefined("URL.disable_area") AND isNumeric(URL.disable_area)>
+	<cfset disable_area_id = URL.disable_area>
 </cfif>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/jstree_scripts.cfm">
 
 <script>
-	
+
 	<cfoutput>
 		var allEnabled = #allEnabled#;
 		var webEnabled = #webEnabled#;
@@ -33,40 +37,117 @@
 		<cfif isDefined("itemTypeId")>
 		var itemTypeId = #itemTypeId#;
 		</cfif>
+		<cfif isDefined("disable_area_id")>
+		var disableAreaId = #disable_area_id#;
+		</cfif>
+
 	</cfoutput>
-	
 
-	function areaSelected(areaId, areaUrl, withLink)  {
+	<cfif isDefined("URL.multiple")>
 
-		var areaNode = $("#"+areaId);
+		$(window).load( function() {
 
-		var relAtt = (areaNode).attr("rel");
 
-		if( allEnabled == false) {
+			$("#addToSelectedAreas, #addToSelectedAreas2").click(function() {
 
-			if( relAtt == "not-allowed" || relAtt == "not-allowed-web" ){
+				var selectedAreasIds = [];
+				var selectedAreasNames = [];
 
-				alert("No tiene permiso de acceso en esta área");
-				return;
+				$('input[name="areas_ids[]"]:checked').each(function() {
+					var checkedAreaId = $(this).val();
+					var areaNode = $("#"+checkedAreaId);
+					var areaName = $.trim( $(areaNode).find("a:first").text() );
+					selectedAreasIds.push(checkedAreaId);
+					selectedAreasNames.push(areaName);
+				});
 
-			} else if( (webEnabled == false && relAtt == "allowed-web") || (noWebEnabled == false && relAtt == "allowed") ) {
+				window.opener.setSelectedAreas(selectedAreasIds, selectedAreasNames);
+				window.close();
 
-				alert("No puede seleccionar este tipo de área");
-				return;
+			});
+
+			<!--- Hack para posibilitar la selección de los checkboxs en el árbol al hacer click sobre ellos --->
+			<!---
+			De esta forma no funcionaba bien cuando se navegaba por el árbol
+			$("#areasTreeContainer input:checkbox").click(function(event) {
+				var inputId = "#"+this.id;
+				setTimeout(function(){
+						 $(inputId).prop("checked",!($(inputId).is(":checked")));
+					}, 100);
+
+			});--->
+
+			$("#areasTreeContainer").on('click', 'input:checkbox', function(event) {
+				var inputId = "#"+this.id;
+				setTimeout(function(){
+						 $(inputId).prop("checked",!($(inputId).is(":checked")));
+					}, 100);
+			});
+
+		});
+	</cfif>
+
+	<cfif isDefined("URL.multiple")>
+
+		function areaSelected(areaId)  {
+
+			var checkBoxId = "#area"+areaId;
+
+			if (disableAreaId == areaId) {
+
+				alert("El área seleccionada es la misma donde se va a crear el archivo");
+				setTimeout(function(){
+				    $(checkBoxId).prop("checked",false);
+				}, 500);
+
+
+			} else {
+
+				if($(checkBoxId).attr('disabled')!='disabled'){
+					toggleCheckboxChecked(checkBoxId);
+				}
+
 			}
 
 		}
 
-		var areaName = $.trim( $(areaNode).find("a:first").text() );
+	<cfelse>
 
-		<cfif isDefined("itemTypeId")><!--- select area to items categories --->
-			window.opener.setSelectedArea(areaId, areaName, itemTypeId);
-		<cfelse>
-			window.opener.setSelectedArea(areaId, areaName);
-		</cfif>
-		
-		window.close();			
-	}
+		function areaSelected(areaId, areaUrl, withLink)  {
+
+				var areaNode = $("#"+areaId);
+
+				var relAtt = (areaNode).attr("rel");
+
+				if( allEnabled == false) {
+
+					if( relAtt == "not-allowed" || relAtt == "not-allowed-web" ){
+
+						alert("No tiene permiso de acceso en esta área");
+						return;
+
+					} else if( (webEnabled == false && relAtt == "allowed-web") || (noWebEnabled == false && relAtt == "allowed") ) {
+
+						alert("No puede seleccionar este tipo de área");
+						return;
+					}
+
+				}
+
+				var areaName = $.trim( $(areaNode).find("a:first").text() );
+
+				<cfif isDefined("itemTypeId")><!--- select area to items categories --->
+					window.opener.setSelectedArea(areaId, areaName, itemTypeId);
+				<cfelse>
+					window.opener.setSelectedArea(areaId, areaName);
+				</cfif>
+
+				window.close();
+
+		}
+
+	</cfif>
+
 
 </script>
 
@@ -86,10 +167,15 @@
 </div>
 </cfoutput>
 
+
 <div class="form-inline" style="margin-top:2px;">
 
+	<cfif isDefined("URL.multiple")>
+		<a class="btn btn-primary" lang="es" id="addToSelectedAreas">Añadir archivo a áreas seleccionadas</a>
+	</cfif>
+
 	<div class="btn-toolbar">
-								
+
 		<div class="btn-group">
 			<div class="input-group input-group-sm" style="width:260px;" >
 				<input type="text" name="text" id="searchText" value="" class="form-control" placeholder="Búsqueda de área" lang="es"/>
@@ -128,9 +214,9 @@
 			<cfinvokeargument name="scope_id" value="#scope_id#">
 		</cfinvoke>
 		<cfset scopeAreasList = getScopesResult.areasIds>
-		
+
 	</cfif>
-	
+
 </cfif>
 
 <cfprocessingdirective suppresswhitespace="true">
@@ -140,9 +226,16 @@
 		<cfif APPLICATION.publicationScope IS true AND isDefined("scope_id") AND listLen(scopeAreasList) GT 0>
 			<cfinvokeargument name="enable_only_areas_ids" value="#scopeAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
 		</cfif>
+		<cfif isDefined("URL.multiple")>
+			<cfinvokeargument name="with_input_type" value="checkbox">
+		</cfif>
 		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 	</cfinvoke>
 
 </div>
 </cfprocessingdirective>
 <div style="height:2px; clear:both;"><!-- --></div>
+
+<cfif isDefined("URL.multiple")>
+	<a class="btn btn-primary" lang="es" id="addToSelectedAreas2">Añadir archivo a áreas seleccionadas</a>
+</cfif>

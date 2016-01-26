@@ -483,6 +483,39 @@
 	</cfif>
 
 
+	<cfif page_type IS 1>
+		<cfif fileTypeId IS 1 OR fileTypeId IS 2>
+
+			<script>
+
+				function openAreasSelector(){
+
+					return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?multiple=1&disable_area=#area_id#');
+
+				}
+
+				function setSelectedAreas(areasIds, areasNames) {
+
+					$("##areas_ids").val(areasIds.join(","));
+					$("##areas_ids_names").val(areasNames.join(", "));
+
+				}
+
+			</script>
+
+			<div class="row">
+				<div class="col-xs-12">
+					<label class="control-label" for="new_area_name" lang="es">Añadir el archivo a más áreas</label>
+					<input type="hidden" name="areas_ids" id="areas_ids" value=""/>
+					<cfinput type="text" name="areas_ids_names" id="areas_ids_names" value="" readonly="true" onclick="openAreasSelector()" class="form-control" /> <button onclick="return openAreasSelector()" class="btn btn-default" lang="es">Seleccionar más áreas</button>
+					<small class="help-block" lang="es">Además del área actual, el archivo estará acesible en las áreas seleccionadas</small>
+				</div>
+			</div>
+
+		</cfif>
+	</cfif>
+
+
 	<!--- Categories --->
 
 	<!--- getAreaItemTypesOptions --->
