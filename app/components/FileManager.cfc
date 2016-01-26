@@ -3416,6 +3416,7 @@
 		<cfargument name="name" type="string" required="true"/>
 		<cfargument name="description" type="string" required="true"/>
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="areas_ids" type="string" required="false">
 		<cfargument name="Filedata" type="string" required="false"/>
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="typology_id" type="string" required="false">
@@ -3552,6 +3553,27 @@
 				<cfif associateFileResult.result IS false>
 
 					<cfthrow message="#associateFileResult.message#">
+
+				</cfif>
+
+				<!--- associateFileToAreas --->
+				<cfif isDefined("arguments.areas_ids") AND (arguments.fileTypeId IS 1 OR arguments.fileTypeId IS 2)>
+
+					<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="associateFileToAreas" returnvariable="associateToAreasResult">
+						<cfinvokeargument name="file_id" value="#upload_file_id#"/>
+						<cfinvokeargument name="areas_ids" value="#arguments.areas_ids#"/>
+
+						<cfif isDefined("arguments.publication_date")>
+							<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+						</cfif>
+						<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+					</cfinvoke>
+
+					<cfif associateToAreasResult.result IS false>
+
+						<cfthrow message="#associateToAreasResult.message#">
+
+					</cfif>
 
 				</cfif>
 

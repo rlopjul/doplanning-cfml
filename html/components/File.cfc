@@ -604,6 +604,7 @@
 		<cfargument name="description" type="string" required="true">
 		<cfargument name="Filedata" type="string" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="areas_ids" type="string" required="false">
 		<cfargument name="typology_id" type="string" required="false">
 		<cfargument name="reviser_user" type="numeric" required="false">
 		<cfargument name="approver_user" type="numeric" required="false">
