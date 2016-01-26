@@ -28,7 +28,10 @@ function setItemsFilter(filterValue) {
 
 		$itemsContainer.isotope({ filter: filterValue });
 
-		$("##curFilterImg").attr("src", "#APPLICATION.htmlPath#/assets/icons_dp/area.png");
+    var itemsCounter = $itemsContainer.data('isotope').filteredItems.length;
+    $("##totalItemsValue").text(itemsCounter);
+
+		$("##curFilterImg").attr("src", "#APPLICATION.htmlPath#/assets/v3/icons_dp/area.png");
 
 		<cfif isDefined("area_id")>
 			<!---$("##curFilterLabel").text(window.lang.translate("Elementos del área"));--->
