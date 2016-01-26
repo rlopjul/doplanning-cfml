@@ -3557,7 +3557,7 @@
 				</cfif>
 
 				<!--- associateFileToAreas --->
-				<cfif isDefined("arguments.areas_ids") AND (arguments.fileTypeId IS 1 OR arguments.fileTypeId IS 2)>
+				<cfif isDefined("arguments.areas_ids") AND len(arguments.areas_ids) GT 0 AND (arguments.fileTypeId IS 1 OR arguments.fileTypeId IS 2)>
 
 					<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="associateFileToAreas" returnvariable="associateToAreasResult">
 						<cfinvokeargument name="file_id" value="#upload_file_id#"/>

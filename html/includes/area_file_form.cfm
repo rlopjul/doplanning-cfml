@@ -137,7 +137,7 @@
 			$("##documentVersionIndex").show();
 			$("##publicationScopeContainer").hide();
 			$("##publicFile").hide();
-
+			$("##areasSelectorContainer").hide();
 
 		}else{
 
@@ -145,6 +145,7 @@
 			$("##documentVersionIndex").hide();
 			$("##publicationScopeContainer").show();
 			$("##publicFile").show();
+			$("##areasSelectorContainer").show();
 		}
 
 	}
@@ -503,7 +504,7 @@
 
 			</script>
 
-			<div class="row">
+			<div class="row" id="areasSelectorContainer">
 				<div class="col-xs-12">
 					<label class="control-label" for="new_area_name" lang="es">Añadir el archivo a más áreas</label>
 					<input type="hidden" name="areas_ids" id="areas_ids" value=""/>
