@@ -1214,7 +1214,7 @@ fieldset {
 	color:#000000;
 }
 .data-table td {
-	font-size: 11px;
+	font-size: 12px; /*cambiado de 11 a 12 porque hay usuarios que no pueden leerlo*/
 }
 .data-table tr {
 	height: 28px;

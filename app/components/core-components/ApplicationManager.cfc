@@ -86,7 +86,7 @@
 
 		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/paper/bootstrap.min.css">
 
-		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=3.2">
+		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=3.3">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">
 
 		<cfargument name="intranetLayout" type="string" required="false" default="/app/layouts/pages/layout_intranet.cfm">
