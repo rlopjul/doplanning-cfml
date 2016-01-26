@@ -109,6 +109,7 @@
 							<option value="3.3">3.3 Categorías especiales para tablas y búsquedas predefinidas en listas</option>
 							<option value="3.3.1">3.3.1 Campo registro de tabla referenciado</option>
 							<option value="3.4">3.4 Publicación restringida en web a usuarios identificados</option>
+							<option value="3.5">3.5 Opción en áreas para modo listado por defecto</option>
 						</select>
 					</div>
 
