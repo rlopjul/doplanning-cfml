@@ -87,7 +87,15 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 
 			<cfif len(APPLICATION.emailServerUserName) IS NOT 0><!---With authentication--->
 
-				<cfmail server="#APPLICATION.emailServer#" username="#APPLICATION.emailServerUserName#" password="#APPLICATION.emailServerPassword#" type="html" from="#fullFrom#" to="#arguments.to#" bcc="#arguments.bcc#" subject="#arguments.subject#" charset="utf-8" port="#APPLICATION.emailServerPort#">#email_content#</cfmail><!---failto="#email_failto#"--->
+				<cfif APPLICATION.emailServerPort EQ 465><!--- SSL --->
+
+					<cfmail server="#APPLICATION.emailServer#" username="#APPLICATION.emailServerUserName#" password="#APPLICATION.emailServerPassword#" type="html" from="#fullFrom#" to="#arguments.to#" bcc="#arguments.bcc#" subject="#arguments.subject#" charset="utf-8" port="#APPLICATION.emailServerPort#" useSSL="true">#email_content#</cfmail>
+
+				<cfelse>
+
+					<cfmail server="#APPLICATION.emailServer#" username="#APPLICATION.emailServerUserName#" password="#APPLICATION.emailServerPassword#" type="html" from="#fullFrom#" to="#arguments.to#" bcc="#arguments.bcc#" subject="#arguments.subject#" charset="utf-8" port="#APPLICATION.emailServerPort#">#email_content#</cfmail><!---failto="#email_failto#"--->
+
+				</cfif>
 
 			<cfelse><!---Without authentication--->
 

@@ -8,6 +8,9 @@
 	<!--- -------------------------------------- setApplicationVars ----------------------------------- --->
 
 	<cffunction name="setApplicationVars" access="public" returntype="void">
+		<cfargument name="emailSendMode" type="string" required="false" default="MandrillAPI"><!---SMTP/MandrillAPI--->
+		<cfargument name="emailServer" type="string" required="false" default="smtp.mandrillapp.com">
+		<cfargument name="emailServerPort" type="numeric" required="false" default="587"><!---Default 587, SSL 465 (SSL da problemas con algunas versiones de JDK/JRE y Railo)--->
 		<cfargument name="emailServerUserName" type="string" required="true">
 		<cfargument name="emailServerPassword" type="string" required="true">
 		<cfargument name="emailFrom" type="string" required="true">
@@ -162,9 +165,9 @@
 
 			<cfset APPLICATION.errorReport = "email"><!---email/file--->
 
-			<cfset APPLICATION.emailSendMode = "MandrillAPI"><!---SMTP/MandrillAPI--->
-			<cfset APPLICATION.emailServerPort = "587"><!---Default 587, SSL 465 (SSL da problemas con algunas versiones de JDK/JRE y Railo)--->
-			<cfset APPLICATION.emailServer = "smtp.mandrillapp.com">
+			<cfset APPLICATION.emailSendMode = arguments.emailSendMode>
+			<cfset APPLICATION.emailServer = arguments.emailServer>
+			<cfset APPLICATION.emailServerPort = arguments.emailServerPort>
 			<cfset APPLICATION.emailServerUserName = arguments.emailServerUserName>
 			<cfset APPLICATION.emailServerPassword = arguments.emailServerPassword>
 			<cfset APPLICATION.emailFrom = arguments.emailFrom>
