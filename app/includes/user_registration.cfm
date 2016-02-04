@@ -118,7 +118,9 @@
 
 </cfoutput>
 
+<cfif NOT isDefined("URL.basic") OR URL.basic IS false>
 <legend lang="es">Datos del usuario</legend>
+</cfif>
 
 <cfset page_type = 3>
 <cfinclude template="#APPLICATION.corePath#/includes/user_data_form.cfm"/>
