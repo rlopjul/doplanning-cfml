@@ -334,6 +334,7 @@ curLangText["es"] = {
 		"new_user": {
 
 			"you_has_been_registered_in_organization" : "Usted ha sido dado de alta como usuario de la organización",
+			"registered_in" : "Usted se ha registrado en",
 			"you_has_been_registered_in_application" : "Ha sido dado de alta en",
 			"if_you_use_the_application" : "IMPORTANTE: Si utiliza la aplicación acepta los términos de uso de la misma, que aparecen en la siguiente página",
 			"to_verify_your_account" : "<b>PARA COMPLETAR SU REGISTRO</b> debe acceder a la siguiente dirección para verificar su cuenta de correo y poder usar la aplicación:",
@@ -732,6 +733,7 @@ curLangText["en"] = {
 		"new_user": {
 
 			"you_has_been_registered_in_organization" : "You have been registered as a user of the organization",
+			"registered_in" : "You have been registered in",
 			"you_has_been_registered_in_application" : "You have been registered in the application",
 			"if_you_use_the_application" : "ATTENTION: the use of the application means that you accept its terms of use. Please read terms of use at",
 			"to_verify_your_account" : "<b>TO COMPLETE YOUR REGISTRATION</b> you must access to the following address to verify your email account and to use the application:",

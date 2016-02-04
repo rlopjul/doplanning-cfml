@@ -51,6 +51,9 @@
 					</cfif>
 					, tables.publication_validated, tables.publication_restricted
 				</cfif>
+				<cfif tableTypeId IS 4>
+					, tables.basic_email_notification
+				</cfif>
 				FROM #client_abb#_#tableTypeTable# AS tables
 				INNER JOIN #client_abb#_users AS users ON tables.user_in_charge = users.id
 				<!--- LEFT JOIN #client_abb#_files AS files ON files.id = tables.attached_file_id --->

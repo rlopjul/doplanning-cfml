@@ -4898,6 +4898,7 @@
 		<cfset var login_ldap = "">
 		<cfset var curLang = "">
 		<cfset var head_content = "">
+		<cfset var basicEmail = false>
 		<cfset var typologyTitle = "">
 
 
@@ -4907,6 +4908,30 @@
 				<cfset curLang = APPLICATION.defaultLanguage>
 			<cfelse>
 				<cfset curLang = objectUser.language>
+			</cfif>
+
+			<cfif isNumeric(objectUser.typology_id)>
+
+				<!--- Get Typology --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="userTypologyQuery">
+					<cfinvokeargument name="table_id" value="#objectUser.typology_id#">
+					<cfinvokeargument name="tableTypeId" value="4">
+					<cfinvokeargument name="parse_dates" value="false">
+					<cfinvokeargument name="published" value="false">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif userTypologyQuery.recordCount GT 0>
+
+					<cfset typologyTitle = userTypologyQuery.title>
+					<cfif isDefined("userTypologyQuery.basic_email_notification") AND userTypologyQuery.basic_email_notification IS true>
+						<cfset basicEmail = userTypologyQuery.basic_email_notification>
+					</cfif>
+
+				</cfif>
+
 			</cfif>
 
 			<!--- getHeadContent --->
@@ -4921,7 +4946,11 @@
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
 			<!---En el asunto se pone el nombre del área raiz--->
-			<cfset subject = "[#root_area.name#] #langText[curLang].new_user.you_has_been_registered_in_organization#.">
+			<cfif basicEmail IS false>
+				<cfset subject = "[#root_area.name#] #langText[curLang].new_user.you_has_been_registered_in_organization#.">
+			<cfelse>
+				<cfset subject = "#langText[curLang].new_user.registered_in# #root_area.name#">
+			</cfif>
 
 			<cfinvoke component="AlertManager" method="getApplicationAccess" returnvariable="access_content">
 				<cfinvokeargument name="client_id" value="#arguments.client_id#">
@@ -4935,59 +4964,72 @@
 			<cfoutput>
 	<p style="font-size:14px">
 
-		#langText[curLang].new_user.you_has_been_registered_in_application# #APPLICATION.title# <cfif APPLICATION.title NEQ root_area.name>#langText[curLang].common.of_the_organization# <b>#root_area.name#</b></cfif>.<br /><br />
+		<cfif basicEmail IS false>
+			#langText[curLang].new_user.you_has_been_registered_in_application# #APPLICATION.title# <cfif APPLICATION.title NEQ root_area.name>#langText[curLang].common.of_the_organization# <b>#root_area.name#</b></cfif>.<br /><br />
+		</cfif>
 
 		<cfif objectUser.verified IS false>
 			#langText[curLang].new_user.to_verify_your_account#<br/>
 			<a href="#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/user_verify.cfm?abb=#arguments.client_abb#&user=#objectUser.id#&verification_code=#objectUser.verification_code#" target="_blank">#APPLICATION.mainUrl##APPLICATION.htmlPath#/public/user_verify.cfm?abb=#arguments.client_abb#&user=#objectUser.id#&verification_code=#objectUser.verification_code#</a><br/><br/>
 		</cfif>
 
-		<cfif APPLICATION.identifier NEQ "vpnet"><!---Default User--->
-			#langText[curLang].new_user.if_you_use_the_application#: <a href="#APPLICATION.termsOfUseUrl#">#APPLICATION.termsOfUseUrl#</a>.<br/><br/>
+		<cfif basicEmail IS false>
 
-			#langText[curLang].common.your_access_email#: <b>#objectUser.email#</b><br />
-			#langText[curLang].new_user.password#: <b>#arguments.password_temp#</b><br/>
-			#langText[curLang].common.you_must_change_password#.<br /><br/>
-		</cfif>
-		<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP User--->
+			<cfif APPLICATION.identifier NEQ "vpnet"><!---Default User--->
+				#langText[curLang].new_user.if_you_use_the_application#: <a href="#APPLICATION.termsOfUseUrl#">#APPLICATION.termsOfUseUrl#</a>.<br/><br/>
 
-			<cfif APPLICATION.identifier NEQ "vpnet">
-
-				<cfif ( isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0 ) OR ( isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0 )>
-
-					#langText[curLang].new_user.also_you_can_use#: <br/>
-
-					<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
-						#APPLICATION.ldapName#: <b>#arguments.objectUser.login_ldap#</b><br/>
-					</cfif>
-					<cfif isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0>
-						Diraya: <b>#arguments.objectUser.login_diraya#</b><br/>
-					</cfif>
-
-				</cfif>
-
-			<cfelse><!---vpnet--->
-
-				<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
-					<cfset ldap_name = APPLICATION.ldapName>
-					<cfset login_ldap = arguments.objectUser.login_ldap>
-				<cfelseif isDefined("arguments.objectUser.login_diraya")>
-					<cfset ldap_name = "Diraya">
-					<cfset login_ldap = arguments.objectUser.login_diraya>
-				</cfif>
-				#langText[curLang].new_user.user_access_identify_to# #ldap_name#.<br/>
-				#langText[curLang].common.user#: <b>#login_ldap#</b><br/>
-
+				#langText[curLang].common.your_access_email#: <b>#objectUser.email#</b><br />
+				#langText[curLang].new_user.password#: <b>#arguments.password_temp#</b><br/>
+				#langText[curLang].common.you_must_change_password#.<br /><br/>
 			</cfif>
 
-		</cfif><br/>
+			<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP User--->
 
-		<cfif APPLICATION.identifier NEQ "vpnet">
-			#langText[curLang].new_user.to_view_tutorials_access#: <a href="#APPLICATION.helpUrl#">#APPLICATION.helpUrl#</a><br/>
+				<cfif APPLICATION.identifier NEQ "vpnet">
+
+					<cfif ( isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0 ) OR ( isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0 )>
+
+						#langText[curLang].new_user.also_you_can_use#: <br/>
+
+						<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
+							#APPLICATION.ldapName#: <b>#arguments.objectUser.login_ldap#</b><br/>
+						</cfif>
+						<cfif isDefined("arguments.objectUser.login_diraya") AND len(arguments.objectUser.login_diraya) GT 0>
+							Diraya: <b>#arguments.objectUser.login_diraya#</b><br/>
+						</cfif>
+
+					</cfif>
+
+				<cfelse><!---vpnet--->
+
+					<cfif isDefined("arguments.objectUser.login_ldap") AND len(arguments.objectUser.login_ldap) GT 0>
+						<cfset ldap_name = APPLICATION.ldapName>
+						<cfset login_ldap = arguments.objectUser.login_ldap>
+					<cfelseif isDefined("arguments.objectUser.login_diraya")>
+						<cfset ldap_name = "Diraya">
+						<cfset login_ldap = arguments.objectUser.login_diraya>
+					</cfif>
+					#langText[curLang].new_user.user_access_identify_to# #ldap_name#.<br/>
+					#langText[curLang].common.user#: <b>#login_ldap#</b><br/>
+
+				</cfif>
+
+			</cfif><br/>
+
 		</cfif>
-		<br/>
+
+		<cfif basicEmail IS false>
+			<cfif APPLICATION.identifier NEQ "vpnet">
+				#langText[curLang].new_user.to_view_tutorials_access#: <a href="#APPLICATION.helpUrl#">#APPLICATION.helpUrl#</a><br/>
+			</cfif>
+			<br/>
+		</cfif>
+		
 	</p>
-	<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px; font-size:14px;"><b>#access_content#</b></div>
+
+	<cfif basicEmail IS false>
+		<div style="border-color:##CCCCCC; color:##666666; border-style:solid; border-width:1px; padding:8px; font-size:14px;"><b>#access_content#</b></div>
+	</cfif>
 
 			</cfoutput>
 			</cfsavecontent>
@@ -5027,27 +5069,6 @@
 					<cfset subject_admin = "#langText[curLang].new_user.new_user_in_application#">
 
 					<cfset userAdminUrl = "#APPLICATION.mainUrl##APPLICATION.htmlPath#/admin/?abb=#arguments.client_abb#&user=#objectUser.id#">
-
-					<cfif isNumeric(objectUser.typology_id)>
-
-						<!--- Get Typology --->
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="userTypologyQuery">
-							<cfinvokeargument name="table_id" value="#objectUser.typology_id#">
-							<cfinvokeargument name="tableTypeId" value="4">
-							<cfinvokeargument name="parse_dates" value="false">
-							<cfinvokeargument name="published" value="false">
-
-							<cfinvokeargument name="client_abb" value="#client_abb#">
-							<cfinvokeargument name="client_dsn" value="#client_dsn#">
-						</cfinvoke>
-
-						<cfif userTypologyQuery.recordCount GT 0>
-
-							<cfset typologyTitle = userTypologyQuery.title>
-
-						</cfif>
-
-					</cfif>
 
 					<cfsavecontent variable="html_text_admin">
 						<cfoutput>
