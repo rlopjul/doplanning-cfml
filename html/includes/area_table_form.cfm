@@ -346,7 +346,11 @@
 	<div id="submitDiv2" style="margin-top:20px;">
 		<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 		<cfif page_type IS 2 AND isDefined("URL.area") AND isNumeric(URL.area)>
-			<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#URL.area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+			<cfif tableTypeId IS 4>
+				<a href="#tableTypeName#_fields.cfm?#tableTypeName#=#table_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+			<cfelse>
+				<a href="#tableTypeName#.cfm?#tableTypeName#=#table_id#&area=#URL.area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+			</cfif>
 		</cfif>
 	</div>
 
