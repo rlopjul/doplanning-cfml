@@ -452,91 +452,96 @@ page_types
 
 			</cfif>
 
-			<cfif APPLICATION.showDniTitle IS true OR page_type NEQ 3>
-			<div class="row">
+			<cfif NOT isDefined("URL.basic") OR URL.basic IS false>
 
-				<label for="dni" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif></label>
-
-				<div class="col-xs-7 col-sm-8 col-md-9">
-					<input type="text" name="dni" id="dni" value="#objectUser.dni#" class="form-control" />
-				</div>
-
-			</div>
-			</cfif>
-
-			<div class="row">
-
-				<label for="mobile_phone" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Teléfono móvil</label>
-
-				<div class="col-xs-7 col-sm-8 col-md-9">
-					<div class="row">
-						<div class="col-xs-5 col-sm-3 col-md-3">
-							<div class="input-group">
-								<span class="input-group-addon">+</span>
-								<input type="text" name="mobile_phone_ccode" id="mobile_phone_ccode" value="#objectUser.mobile_phone_ccode#" class="form-control" placeholder="34" />
-							</div>
-						</div>
-						<div class="col-xs-7 col-sm-9 col-md-9">
-							<input type="text" name="mobile_phone" id="mobile_phone" value="#objectUser.mobile_phone#" class="form-control" placeholder="999999999" />
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="row">
-
-				<label for="telephone" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Teléfono</label>
-
-				<div class="col-xs-7 col-sm-8 col-md-9">
-					<div class="row">
-						<div class="col-xs-5 col-sm-3 col-md-3">
-							<div class="input-group">
-  								<span class="input-group-addon">+</span>
-								<input type="text" name="telephone_ccode" id="telephone_ccode" value="#objectUser.telephone_ccode#" class="form-control" placeholder="34" />
-							</div>
-						</div>
-						<div class="col-xs-7 col-sm-9 col-md-9">
-							<input type="text" name="telephone" id="telephone" value="#objectUser.telephone#" class="form-control" placeholder="999999999" />
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="row">
-
-				<label for="linkedin_url" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">URL LinkedIn</label>
-
-				<div class="col-xs-7 col-sm-8 col-md-9">
-					<input type="url" name="linkedin_url" id="linkedin_url" value="#objectUser.linkedin_url#" class="form-control" title="Introduzca una URL válida" />
-				</div>
-
-			</div>
-
-			<div class="row">
-
-				<label for="twitter_url" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">URL Twitter</label>
-
-				<div class="col-xs-7 col-sm-8 col-md-9">
-					<input type="url" name="twitter_url" id="twitter_url" value="#objectUser.twitter_url#" class="form-control" title="Introduzca una URL válida" />
-				</div>
-
-			</div>
-
-			<cfif client_abb NEQ "ceseand" OR page_type IS 1>
+				<cfif APPLICATION.showDniTitle IS true OR page_type NEQ 3>
 				<div class="row">
 
-					<label for="address" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Dirección</label>
+					<label for="dni" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif></label>
 
 					<div class="col-xs-7 col-sm-8 col-md-9">
-						<textarea name="address" id="address" class="form-control" rows="2">#objectUser.address#</textarea>
+						<input type="text" name="dni" id="dni" value="#objectUser.dni#" class="form-control" />
 					</div>
 
 				</div>
-			<cfelse>
-				<input type="hidden" name="address" value="#objectUser.address#">
+				</cfif>
+
+				<div class="row">
+
+					<label for="mobile_phone" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Teléfono móvil</label>
+
+					<div class="col-xs-7 col-sm-8 col-md-9">
+						<div class="row">
+							<div class="col-xs-5 col-sm-3 col-md-3">
+								<div class="input-group">
+									<span class="input-group-addon">+</span>
+									<input type="text" name="mobile_phone_ccode" id="mobile_phone_ccode" value="#objectUser.mobile_phone_ccode#" class="form-control" placeholder="34" />
+								</div>
+							</div>
+							<div class="col-xs-7 col-sm-9 col-md-9">
+								<input type="text" name="mobile_phone" id="mobile_phone" value="#objectUser.mobile_phone#" class="form-control" placeholder="999999999" />
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					<label for="telephone" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Teléfono</label>
+
+					<div class="col-xs-7 col-sm-8 col-md-9">
+						<div class="row">
+							<div class="col-xs-5 col-sm-3 col-md-3">
+								<div class="input-group">
+	  								<span class="input-group-addon">+</span>
+									<input type="text" name="telephone_ccode" id="telephone_ccode" value="#objectUser.telephone_ccode#" class="form-control" placeholder="34" />
+								</div>
+							</div>
+							<div class="col-xs-7 col-sm-9 col-md-9">
+								<input type="text" name="telephone" id="telephone" value="#objectUser.telephone#" class="form-control" placeholder="999999999" />
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					<label for="linkedin_url" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">URL LinkedIn</label>
+
+					<div class="col-xs-7 col-sm-8 col-md-9">
+						<input type="url" name="linkedin_url" id="linkedin_url" value="#objectUser.linkedin_url#" class="form-control" title="Introduzca una URL válida" />
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					<label for="twitter_url" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">URL Twitter</label>
+
+					<div class="col-xs-7 col-sm-8 col-md-9">
+						<input type="url" name="twitter_url" id="twitter_url" value="#objectUser.twitter_url#" class="form-control" title="Introduzca una URL válida" />
+					</div>
+
+				</div>
+
+				<cfif client_abb NEQ "ceseand" OR page_type IS 1>
+					<div class="row">
+
+						<label for="address" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Dirección</label>
+
+						<div class="col-xs-7 col-sm-8 col-md-9">
+							<textarea name="address" id="address" class="form-control" rows="2">#objectUser.address#</textarea>
+						</div>
+
+					</div>
+				<cfelse>
+					<input type="hidden" name="address" value="#objectUser.address#">
+				</cfif>
+
 			</cfif>
+
 
 			<cfif page_type IS 1>
 

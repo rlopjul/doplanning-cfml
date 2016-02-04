@@ -946,19 +946,19 @@
 		<cfargument name="family_name" type="string" required="true">
 		<cfargument name="email" type="string" required="false" default="">
 		<cfargument name="dni" type="string" required="false" default="">
-		<cfargument name="mobile_phone" type="string" required="true">
-		<cfargument name="mobile_phone_ccode" type="string" required="true">
-		<cfargument name="telephone" type="string" required="true">
-		<cfargument name="telephone_ccode" type="string" required="true">
-		<cfargument name="address" type="string" required="true">
+		<cfargument name="mobile_phone" type="string" required="false" default="">
+		<cfargument name="mobile_phone_ccode" type="string" required="false" default="">
+		<cfargument name="telephone" type="string" required="false" default="">
+		<cfargument name="telephone_ccode" type="string" required="false" default="">
+		<cfargument name="address" type="string" required="false" default="">
 		<cfargument name="language" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
 		<cfargument name="password_confirmation" type="string" required="true">
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
-		<cfargument name="linkedin_url" type="string" required="true">
-		<cfargument name="twitter_url" type="string" required="true">
+		<cfargument name="linkedin_url" type="string" required="false" default="">
+		<cfargument name="twitter_url" type="string" required="false" default="">
 		<cfargument name="start_page" type="string" required="false">
 		<cfargument name="information" type="string" required="false" default="">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
