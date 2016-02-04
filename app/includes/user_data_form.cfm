@@ -205,19 +205,23 @@ page_types
 
 			<cfif APPLICATION.moduleLdapUsers EQ true><!--- LDAP --->
 
-				<div class="row">
+				<cfif client_abb NEQ "omars" OR page_type IS 1><!---Field enabled only in administration for OMARS--->
 
-					<label for="login_ldap" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Login #APPLICATION.ldapName#</label>
-					<!--- <cfif SESSION.client_abb EQ "hcs">Login #APPLICATION.ldapName#
-					<cfelseif SESSION.client_abb EQ "asnc">Login ASNC
-					<cfelseif SESSION.client_abb EQ "agsna">Login DMSAS
-					<cfelse>Login LDAP
-					</cfif> --->
-					<div class="col-xs-7 col-sm-8 col-md-9">
-						<input type="text" name="login_ldap" id="login_ldap" value="#objectUser.login_ldap#" class="form-control" autocomplete="off" />
+					<div class="row">
+
+						<label for="login_ldap" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Login #APPLICATION.ldapName#</label>
+						<!--- <cfif SESSION.client_abb EQ "hcs">Login #APPLICATION.ldapName#
+						<cfelseif SESSION.client_abb EQ "asnc">Login ASNC
+						<cfelseif SESSION.client_abb EQ "agsna">Login DMSAS
+						<cfelse>Login LDAP
+						</cfif> --->
+						<div class="col-xs-7 col-sm-8 col-md-9">
+							<input type="text" name="login_ldap" id="login_ldap" value="#objectUser.login_ldap#" class="form-control" autocomplete="off" />
+						</div>
+
 					</div>
 
-				</div>
+				</cfif>
 
 				<cfif APPLICATION.moduleLdapDiraya EQ true >
 					<div class="row">
