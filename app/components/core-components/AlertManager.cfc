@@ -4898,6 +4898,7 @@
 		<cfset var login_ldap = "">
 		<cfset var curLang = "">
 		<cfset var head_content = "">
+		<cfset var typologyTitle = "">
 
 
 		<cfif len(objectUser.email) GT 0>
@@ -5027,11 +5028,37 @@
 
 					<cfset userAdminUrl = "#APPLICATION.mainUrl##APPLICATION.htmlPath#/admin/?abb=#arguments.client_abb#&user=#objectUser.id#">
 
+					<cfif isNumeric(objectUser.typology_id)>
+
+						<!--- Get Typology --->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/TableQuery" method="getTable" returnvariable="userTypologyQuery">
+							<cfinvokeargument name="table_id" value="#objectUser.typology_id#">
+							<cfinvokeargument name="tableTypeId" value="4">
+							<cfinvokeargument name="parse_dates" value="false">
+							<cfinvokeargument name="published" value="false">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfif userTypologyQuery.recordCount GT 0>
+
+							<cfset typologyTitle = userTypologyQuery.title>
+
+						</cfif>
+
+					</cfif>
+
 					<cfsavecontent variable="html_text_admin">
 						<cfoutput>
 						<p style="font-size:14px">
 							#langText[curLang].new_user.new_user_in_application#:<br/>
-							<b>#objectUser.family_name# #objectUser.name# (#objectUser.email#)</b><br/><br/>
+							<b>#objectUser.family_name# #objectUser.name# (#objectUser.email#)</b><br/>
+
+							<cfif len(typologyTitle) GT 0>
+								#langText[curLang].new_user.user_typology#: <b>#typologyTitle#</b><br/>
+							</cfif>
+							<br/>
 
 							<cfif objectUser.verified IS false>
 							#langText[curLang].new_user.user_need_verification#<br/><br/>

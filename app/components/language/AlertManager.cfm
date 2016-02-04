@@ -349,6 +349,8 @@ curLangText["es"] = {
 			"user_need_verification" : "El usuario debe verificar su cuenta de correo para poder usar la aplicación.",
 			"access_user_modify" : "Acceda a ver sus datos y editarlo en la siguiente URL (requiere permisos de administración):",
 
+			"user_typology" : "Tipología de usuario",
+
 		},
 
 		"new_password": {
@@ -744,6 +746,8 @@ curLangText["en"] = {
 			"new_user_in_application" : "New user in #APPLICATION.title#",
 			"user_need_verification" : "The user must verify his email account to use the application.",
 			"access_user_modify" : "Access to view and modify user data (it requires administration privileges):",
+
+			"user_typology" : "Tipología de usuario",
 
 		},
 
