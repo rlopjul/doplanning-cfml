@@ -67,15 +67,19 @@
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8" ></script>
 <!---<script src="#APPLICATION.htmlPath#/language/base_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.htmlPath#/language/regex_en.js" charset="utf-8"></script>--->
-<script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>
+<!---<script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>--->
 <script src="#APPLICATION.functionsJSPath#"></script>
 
 
 <script>
 	//Language
 	window.lang = new Lang('es');
+	window.lang.dynamic('en', '#APPLICATION.mainUrl#/html/language/main_en.cfm');
 
 	<cfif isDefined("SESSION.user_language")>
+		<cfif SESSION.user_language NEQ "es">
+			window.lang.change('#SESSION.user_language#');
+		</cfif>
 		bootbox.setDefaults({"locale" : "#SESSION.user_language#"});
 	</cfif>
 </script>
