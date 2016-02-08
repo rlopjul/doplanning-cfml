@@ -209,7 +209,7 @@ page_types
 
 					<div class="row">
 
-						<label for="login_ldap" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Login #APPLICATION.ldapName#</label>
+						<label for="login_ldap" class="col-xs-5 col-sm-4 col-md-3 control-label">Login #APPLICATION.ldapName#</label>
 						<!--- <cfif SESSION.client_abb EQ "hcs">Login #APPLICATION.ldapName#
 						<cfelseif SESSION.client_abb EQ "asnc">Login ASNC
 						<cfelseif SESSION.client_abb EQ "agsna">Login DMSAS
