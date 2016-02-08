@@ -3015,12 +3015,12 @@
 
 								<!---Attached files--->
 								<cfif itemTypeId IS 10><!--- File --->
-								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&area=#itemsQuery.area_id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i><span class="hidden">3</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&area=#itemsQuery.area_id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo"><i class="icon-download-alt" style="font-size:16px;"></i><span class="hidden">3</span></a>
 								<cfelseif isNumeric(itemsQuery.attached_file_id)>
-								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip" style="font-size:14px;"></i><span class="hidden">1</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar archivo adjunto"><i class="icon-paper-clip" style="font-size:16px;"></i><span class="hidden">1</span></a>
 								</cfif>
 								<cfif isNumeric(itemsQuery.attached_image_id)>
-								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar imagen adjunta"><i class="icon-camera" style="font-size:13px;"></i><span class="hidden">2</span></a>
+								<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" title="Descargar imagen adjunta"><i class="icon-camera" style="font-size:14px;"></i><span class="hidden">2</span></a>
 
 								</cfif>
 							</td>
@@ -3622,7 +3622,7 @@
 
 									<!---Attached files--->
 									<cfif itemTypeId IS 10><!--- File --->
-										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&area=#arguments.area_id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary" title="Descargar archivo"><i class="icon-download-alt" style="font-size:13px;"></i> <span lang="es">Descargar</span></a>
+										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&area=#arguments.area_id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-primary" title="Descargar archivo"><i class="icon-download-alt" style="font-size:16px;"></i> <span lang="es">Descargar</span></a>
 										<span class="divider">&nbsp;</span>
 									</cfif>
 
