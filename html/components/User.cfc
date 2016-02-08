@@ -1026,7 +1026,7 @@
 
 					<cfif SESSION.client_abb EQ "hcs">
 						<cfif SESSION.client_administrator EQ SESSION.user_id>
-							<div class="div_user_page_label"><span lang="es">Login #APPLICATION.ldapName#</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
+							<div class="div_user_page_label"><span>Login #APPLICATION.ldapName#</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
 						</cfif>
 						<div class="div_user_page_label"><span lang="es">Perfil de cabecera</span> <span class="div_user_page_text">#objectUser.perfil_cabecera#</span></div>
 					</cfif>
