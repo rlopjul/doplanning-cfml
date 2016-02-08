@@ -88,7 +88,7 @@
 <script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
 
 <!---<script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>--->
-<script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>
+<!---<script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>--->
 
 </cfoutput>
 
@@ -139,7 +139,7 @@
 	jquery_lang_js.prototype.currentLang = 'es';
 	window.lang = new jquery_lang_js();--->
 	window.lang = new Lang('es');
-	<!---window.lang.dynamic('en', '#APPLICATION.htmlPath#/language/main_en.json');--->
+	window.lang.dynamic('en', '#APPLICATION.htmlPath#/language/main_en.cfm');
 	</cfoutput>
 
 	// Modal
