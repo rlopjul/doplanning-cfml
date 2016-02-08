@@ -12,6 +12,8 @@ curLangTextEn = {
 		"Sí":"Yes",
 		"No":"No",
 		"Aceptar":"Accept",
+    "Email":"Email",
+    "Contraseña" : "Password",
 		/*END common*/
 
 
@@ -511,9 +513,9 @@ curLangTextEn = {
 		"Archivo sin nombre":"Unnamed file",
 		"Nombre":"Name",
 		"Apellidos":"Last name",
-		"Email":"Email",
 		"De esta área":"From this area",
 		"Responsable del área":"Area manager",
+    "Responsable":"Responsible",
 		"Reunión virtual":"Virtual meeting",
 		"Fecha desde":"Date from",
 		"Fecha hasta":"Date to",
@@ -1095,7 +1097,6 @@ curLangTextEn = {
 		"Esperando conexión del usuario solicitado...":"Waiting requested user's connection...",
 		"El usuario debe acceder a la siguiente dirección para entrar en esta reunión:":"The user must access the following URL to enter this meeting:",
 
-		"Email:":"Email",
 		"Teléfono:":"Phone:",
 		"Teléfono móvil:":"Mobile phone:",
 
