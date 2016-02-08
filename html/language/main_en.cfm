@@ -807,6 +807,7 @@ curLangTextEn = {
 		"La imagen que se muestra es la heredada de las áreas superiores. Puede asignar una imagen a esta área y pasará a ser la que se muestre en esta y en las áreas inferiores, siempre que las inferiores no tengan una imagen definida.":"The image shown is the one inherited from upper areas. You can assing an image to this area; it will become the one shown in this and the lower areas, provided that lower areas do not already have an assigned image.",
 		"Quitar de administrador del área":"Remove as area administrator",
 		"Exportar usuarios":"Export users",
+    "Importar usuarios":"Import users",
 		"Buscar usuario":"Search user",
 		"Introduzca un texto y haga click en Buscar para listar usuarios de la organización.":"Enter a text and click on Search to list organization users",
 		"Logs":"Logs",
@@ -846,6 +847,7 @@ curLangTextEn = {
 		"Fecha de última conexión:":"Last connection date:",
 		"Número de conexiones:":"Number of connections:",
 		"Usuario creado. Seleccione a continuación las áreas a las que desea asociarlo.":"User created. Now select the areas to add the user.",
+    "Eliminar Usuario":"Delete User",
 		/*END admin - new user window form*/
 
 		"Fecha de última modificación":"Last modification date",
