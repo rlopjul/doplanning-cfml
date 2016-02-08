@@ -65,7 +65,6 @@ curLangTextEn = {
 		"Mostrar":"Show",
 		"Elementos de áreas":"Areas items",
 		"Áreas con actividad reciente":"Areas with recent activity",
-		"Messages":"Messages",
 
 		/*Este grupo se tiene que borrar al incluir area_item_en.js*/
 		"Tareas pendientes":"Pending tasks",
@@ -80,14 +79,6 @@ curLangTextEn = {
 		"Modificación":"Edited",
 
 		"No hay elementos":"No items",
-
-		/*Este grupo se tiene que borrar al incluir area_item_en.js*/
-		"Abrir en nueva ventana":"Open in new window",
-		"Responder":"Reply",
-
-		"Fecha de inicio":"Start date",
-		"Fecha de fin":"End date",
-		"Realizada":"Done",
 
 		"Nueva área":"New area",
 		"Mover":"Move",
