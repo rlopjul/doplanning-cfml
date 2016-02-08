@@ -214,7 +214,6 @@ curLangTextEn = {
 		"Ver":"View",
 
 
-
 		/*area_item_new_content*/
 		"Nuevo Mensaje":"New Message",
 		"Nuevo Evento":"New Event",
@@ -527,7 +526,6 @@ curLangTextEn = {
 		"No hay elementos de contenido web en esta área.":"There are no web content elements in this area.",
 		"No hay archivos en esta área.":"There area no files in this area.",
 		"No hay usuarios.":"There are no users.",
-		/*"No hay elementos en esta área.":"There are no elements in this area.",*/
 		"Aún nadie ha puesto información aquí, ¿por qué no ser el primero?":"No one has posted information here yet, why not be the first?",
 		"Exportar contenido":"Export content",
 
@@ -884,7 +882,6 @@ curLangTextEn = {
 		/*END Admin - image modify form*/
 
 
-
 		/*user*/
 		"Usuario":"User",
 		"Nombre":"Name",
@@ -1089,9 +1086,7 @@ curLangTextEn = {
 		 "No hay campos definidos para rellenar.":"There are no defined fields to fill.",
 		 "Formulario del que copiar los campos:":"Form from which to copy the fields",
 
-
 		/*END area_table_form*/
-
 
 
 		/*user_meeting_opentok.cfm*/
@@ -1226,6 +1221,7 @@ curLangTextEn = {
 		"Fecha:":"Date:",
 		"Petición:":"Request:",
 		"No se ha seleccionado ningún log":"There is no log selected",
+    /*END logs*/
 
 		/*statistics*/
 		"Estadísticas":"Statistics",
@@ -1238,19 +1234,25 @@ curLangTextEn = {
 		"Adjunto de":"Attached of",
 		"Accesos a la aplicación":"Access to the application",
 		"Login fallidos":"Failed login",
+    /*END statistics*/
 
+    /*typologies*/
 		"Tipologías":"Typologies",
 		"Tipología de usuario":"User typology",
 		"Nueva tipología de usuario":"New user typology",
 		"Si sólo se crea una tipología de usuario, ésta será la que quede seleccionada por defecto para todos los usuarios y la que se asignará de forma automática a los nuevos usuarios que se den de alta en la aplicación.":"If there is only one typology of user defined, it will be shown by default selected for all users and will not be optional.",
 		"Las tipologías de archivos se gestionan en las áreas a las que pertenecen por los usuarios con permiso.":"The typologies of files are managed in their areas by the users with permission",
 		"Eliminar Tipología":"Delete typology",
+    /*END typologies*/
 
+    /*categories*/
 		"Categorías":"Categories",
 		"Categorías de elementos de área":"Area elements categories",
 		"Debe seleccionar al menos una categoría para poder subir el archivo":"You must select at least one category to upload the file",
 		"No hay categorías definidas en tu organización":"No defined categories in your organization",
+    /*END categories*/
 
+    /*user registration*/
 		"La dirección de email introducida ya está asociada a otro usuario de la aplicación":"The email address is already registered",
 		"Registro de usuarios deshabilitado.":"User registration disabled.",
 		"Datos del usuario":"User data",
@@ -1259,6 +1261,7 @@ curLangTextEn = {
 		"Para completar el registro deberá acceder al enlace que recibirá en su cuenta de correo para la validación de la misma.":"To complete the registration you must access the link you will receive in your email account",
 		"Usuario verificado correctamente. Puede acceder a la aplicación.":"User verified. You can now access the application.",
 		"Verificación de usuario ya realizada previamente.":"User verification already done previously.",
+    /*END user registration*/
 
 	}
 
