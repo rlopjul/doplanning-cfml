@@ -699,7 +699,7 @@ curLangTextEn = {
 		"Este archivo te pertenecerá a ti y sólo tú podrás modificarlo. Cada vez que subas una versión del archivo se sobreescribirá la anterior.":"This file will belong to you and only you can change it. Each time you upload a file version the previous version will be overwritten.",
 
 		"Este archivo pertenecerá a esta":"This file will belong to this",
-		"área":"area",
+		/*"área":"area",*//* Provisionally removed */
 		"y podrá ser modificado por cualquier usuario con acceso a la misma.":"and anyone with access to this area will be able to modify it.",
 
 		"Define las áreas del árbol donde se podrá asociar el documento.":"This defines the areas of the tree in which the document can be associated",
