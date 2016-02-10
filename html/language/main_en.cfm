@@ -64,6 +64,7 @@ curLangTextEn = {
 		"Lo último":"Last items",
 		"VER":"VIEW",
     "Ver":"VIEW",
+    "Área modificada":"Area Modified",
 		"Filtrar":"Filter",
 		"Ver en área":"View in area",
 		"Ir al área":"Go to area",
@@ -71,6 +72,10 @@ curLangTextEn = {
 		"Elementos de áreas":"Areas items",
 		"Áreas con actividad reciente":"Areas with recent activity",
     "Usuarios con actividad reciente":"Users with recent activity",
+    "¿Seguro que deseas eliminar definitivamente esta área?":"Are you sure you want to permanently delete this area?",
+    "Ten en cuenta que se eliminarán DEFINITIVAMENTE todos los elementos del área: mensajes, archivos, tareas, eventos...":"Note that will be permanently deleted all elements of the area : messages, files , tasks, events ...",
+    "Quitar usuario de área":"Remove User Area",
+    "Este usuario es el responsable del área, debe asignar a otro usuario como responsable para poder quitar a este del área.":"This user is responsible for the area , you should be assigned to another user as accountable to steal this area .",
 
 		/*Este grupo se tiene que borrar al incluir area_item_en.js*/
 		"Tareas pendientes":"Pending tasks",
