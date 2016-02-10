@@ -929,6 +929,8 @@ curLangTextEn = {
 
 		/*preferences_user_data.cfm*/
 		"Idioma":"Language:",
+    "Datos personales":"Personal Information",
+    "Página de inicio":"Homepage",
 		"Imagen del usuario":"User image:",
 		"Eliminar":"Delete",
 		"Eliminar imagen":"Delete image",
@@ -943,8 +945,18 @@ curLangTextEn = {
 
 		/*preferences_alerts.cfm*/
 		"Preferencias de notificaciones":"Notifications preferences",
+    "Notificaciones instantáneas":"Notification Instance",
+    "Notificaciones periódicas":"Notification Period",
+    "Categorías de notificaciones":"Notification category",
+    "Enviar un resumen de la actividad:":"Send a summary of activity:",
+    "Notificaciones web":"Web notification",
+    "Enviar un resumen de la actividad web:":"Send a summary of web activity:",
+    "Deshabilitar todas las notificaciones":"Disable all notification",
+    "Deshabilitar todas las notificaciones automáticas":"Disable all automatic notifications",
 		"Enviar un email cuando:":"Send an email when:",
 		"Seleccionar/quitar todas":"Select / remove all",
+    "Un boletín ha sido enviado":"A newsletter has been sent",
+    "Un documento DoPlanning ha sido creado, modificado o eliminado":"A DoPlanning document has been created, modified or deleted",
 		"Un mensaje ha sido creado o eliminado":"A message has been created or deleted",
 		"Un enlace ha sido creado, modificado o eliminado":"A link has been created, modified or deleted",
 		"Un elemento de contenido web ha sido creado, modificado o eliminado":"A web content item has been created, modified or deleted",
