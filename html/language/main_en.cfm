@@ -1175,6 +1175,7 @@ IMPORTANT : Any notification of the application will be received , except for th
 
 		"Error inesperado":"Unexpected error",
 		"Respondiendo a:":"Answering to",
+    "Ha ocurrido un error inesperado, disculpe las molestias. Haga click en Volver para ir a la página anterior.":"An unexpected error has occurred, sorry for the inconvenience . Click Back to go to the previous page.",
 
 		"Añadir editores":"Add editors",
 		"Haga clic en Añadir editores parar añadir un nuevo usuario.":"Click on Add editors to add a new editor.",
