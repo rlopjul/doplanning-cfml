@@ -543,7 +543,7 @@
 		  	<div style="float:right; text-align:right; clear:none;">
 				<a href="../preferences_user_data.cfm" title="Datos personales" class="link_user_logged" lang="es"><span>#objectUser.family_name# #objectUser.name# (#getAuthUser()#)</span></a><br/>
 
-				<a href="../logout.cfm" title="Cerrar sesión" class="link_user_logout"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
+				<a href="../logout.cfm" title="Cerrar sesión" class="link_user_logout" lang="es"><i class="icon-signout"></i> <span lang="es">Salir</span></a>
 
 			</div>
 
