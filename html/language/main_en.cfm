@@ -63,6 +63,7 @@ curLangTextEn = {
 
 		"Lo último":"Last items",
 		"VER":"VIEW",
+    "Ver":"VIEW",
 		"Filtrar":"Filter",
 		"Ver en área":"View in area",
 		"Ir al área":"Go to area",
@@ -274,6 +275,7 @@ curLangTextEn = {
 		"Valor estimado":"Estimated value",
 		"Valor real":"Real value",
 		"Tarea realizada":"Task done",
+    "Tarea para":"Task for",
 		"Tarea encargada por":"From user",
 		"Lugar":"Place",
 		"URL más información:":"URL more information:",
@@ -908,7 +910,7 @@ curLangTextEn = {
 		"URL LinkedIn":"LinkedIn URL",
 		"URL Twitter":"Twitter URL",
 		"Activo":"Active",
-
+    "Asociado":"Associated",
 		"Reunión virtual":"Virtual meeting",
 		"URL de acceso a reunión virtual con este usuario:":"URL to virtual meeting with this person:",
 		/*END user*/
@@ -944,7 +946,7 @@ curLangTextEn = {
 		/*END preferences_user_data.cfm*/
 
 		/*preferences_alerts.cfm*/
-		"Preferencias de notificaciones":"Notifications preferences",
+		"Preferencias de notificaciones":"Notification preferences",
     "Notificaciones instantáneas":"Notification Instance",
     "Notificaciones periódicas":"Notification Period",
     "Nunca":"Never",
@@ -952,14 +954,18 @@ curLangTextEn = {
     "Cada 7 días":"Every 7 days",
     "Cada 30 días":"Every 30 days",
     "Categorías de notificaciones":"Notification category",
+    "Puedes filtrar el contenido de las notificaciones instantáneas y periódicas seleccionando a continuación las categorías sobre las que quieres recibir información.":"You can filter the content of periodic notifications snapshots and then clicking on the categories for which you want to receive information.",
     "Enviar un resumen de la actividad:":"Send a summary of activity:",
+    "Este resumen incluye notificaciones relativas a la creación y modificación de elementos de áreas. No incluye notificaciones de acciones tales como el bloqueo o solicitud de aprobación de archivos o el cambio de área de elementos." :"This summary includes notifications concerning the creation and modification of elements areas. It excludes notification actions such as blocking or request for approval of files or changing items area.",
     "Notificaciones web":"Web notification",
+    "Este resumen incluye notificaciones relativas a la creación y modificación de los siguientes contenidos de la web: noticias, eventos, archivos, publicaciones, listas y áreas (páginas).":"This summary includes notifications concerning the creation and modification of the following contents of the web : news , events, archives, publications , lists and areas (pages).",
     "Enviar un resumen de la actividad web:":"Send a summary of web activity:",
     "Deshabilitar todas las notificaciones":"Disable all notification",
     "Deshabilitar todas las notificaciones automáticas":"Disable all automatic notifications",
 		"Enviar un email cuando:":"Send an email when:",
 		"Seleccionar/quitar todas":"Select / remove all",
-    "":"",
+    "IMPORTANTE: no se recibirá ningún tipo de notificación de la aplicación, exceptuando la de recuperación de contraseña. Tampoco serán enviadas acciones que requieran la atención del usuario tales como la aprobación o revisión de archivos de área.":"
+IMPORTANT : Any notification of the application will be received , except for the password recovery. They will not be sent actions requiring user attention such as the approval or review of files area.",
     "Un boletín ha sido enviado":"A newsletter has been sent",
     "Un documento DoPlanning ha sido creado, modificado o eliminado":"A DoPlanning document has been created, modified or deleted",
 		"Un mensaje ha sido creado o eliminado":"A message has been created or deleted",
