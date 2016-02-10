@@ -301,12 +301,14 @@ curLangTextEn = {
 		"Valor":"Value",
 
 		"Registros":"Records",
+    "registros":"records",
 		"Campos":"Fields",
 		"Campo":"Field",
 		"Vistas":"Views",
 		"Editores":"Editors",
 		"Nuevo registro":"New record",
 		"Nuevo Registro":"New Record",
+    "Nuevo Registro":"New Record",
 		"Mostrar/ocultar columnas":"Show/hide columns",
 		"Exportar registros":"Export records",
 		"Importar registros":"Import records",
@@ -407,7 +409,18 @@ curLangTextEn = {
 		"cerrar la Consulta":"to close the Consultation",
 		/*END functions.js*/
 
-		/*area_item_content*/
+    /* list_row_new.cfm*/
+    "Guardar":"Save",
+    "Nombre *":"Name *",
+    "Modificar Registro":"Modify record",
+    "Registro eliminado":"Record Deleted",
+    "Se incluirán en la exportación los registros de esta área y las inferiores.":"logs for this area and the lower will be included in the export.",
+    "Exportación solicitada...":"Export requested ...",
+    "Sólo se eliminarán los registros de esta área.":"Only records from this area will be deleted.",
+    "Borrar todos los registros existentes en la Lista":"Delete all existing records in the list",
+    "Archivo de datos requerido para la importación":"Data file required for import",
+    
+    /*area_item_content*/
 		"Modificar":"Modify",
 		"Responder":"Reply",
 		"Cerrar":"Close",
