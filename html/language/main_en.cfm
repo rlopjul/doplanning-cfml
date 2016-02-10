@@ -70,6 +70,7 @@ curLangTextEn = {
 		"Mostrar":"Show",
 		"Elementos de áreas":"Areas items",
 		"Áreas con actividad reciente":"Areas with recent activity",
+    "Usuarios con actividad reciente":"Users with recent activity",
 
 		/*Este grupo se tiene que borrar al incluir area_item_en.js*/
 		"Tareas pendientes":"Pending tasks",
