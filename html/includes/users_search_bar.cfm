@@ -99,7 +99,7 @@
 
 					<div class="col-sm-12">
 
-						<label for="text" class="col-xs-5 col-sm-4 col-md-3 control-label">Usuario</label>
+						<label for="text" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Usuario</label>
 
 						<div class="col-xs-7 col-sm-8 col-md-9">
 							<input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control" placeholder="Texto usuario" lang="es"/>

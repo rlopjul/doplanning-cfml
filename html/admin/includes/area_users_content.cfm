@@ -74,7 +74,7 @@
 
 		<div class="btn-group">
 			<a class="btn btn-default btn-sm" onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a>
-			<a class="btn btn-default btn-sm" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo"> <span lang="es">Ver imagen</span></a>
+			<a class="btn btn-default btn-sm" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo"> <span lang="es">Ver Imagen</span></a>
 		</div>
 		<div class="btn-group pull-right">
 			<a href="area_users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i></a>
