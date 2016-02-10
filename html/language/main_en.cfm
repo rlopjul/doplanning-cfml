@@ -279,6 +279,7 @@ curLangTextEn = {
     "Tarea para":"Task for",
 		"Tarea encargada por":"From user",
 		"Lugar":"Place",
+    "asunto requerido":"Subject required",
 		"URL más información:":"URL more information:",
 		"URL más información (enlace)":"URL more information (link)",
 		"Abrir URL en":"Open URL in",
@@ -419,7 +420,7 @@ curLangTextEn = {
     "Sólo se eliminarán los registros de esta área.":"Only records from this area will be deleted.",
     "Borrar todos los registros existentes en la Lista":"Delete all existing records in the list",
     "Archivo de datos requerido para la importación":"Data file required for import",
-    
+
     /*area_item_content*/
 		"Modificar":"Modify",
 		"Responder":"Reply",
@@ -736,7 +737,14 @@ curLangTextEn = {
 
 		"-Sin circuito de calidad: cada vez que se suba una versión del archivo se sobreescribirá la anterior (no se guardan las versiones previas del archivo)<br><br>-Con circuito de calidad: se guardan las distintas versiones del archivo y es requerido un proceso de revisión y aprobación de las versiones.":
 		"-Without quality circuit: each time a file is uploaded, the previous version will be overwritten(previous versions of the file are not saved)<br><br>-With quality circuit: different versions of the file are saved and it is required a process of review and approval of the versions",
-
+    "Añadir el archivo a más áreas":"Add the file to more areas",
+    "Seleccionar más áreas":"Select more areas",
+    "Además del área actual, el archivo estará acesible en las áreas seleccionadas":"In addition to the current area , the file will Reachable in selected areas",
+    "Ámbito de publicación:":"Scope of publication:",
+    "los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.":"PUBLIC files to WEB environment or intranet can be accessed through its URL through the web or intranet without that are associated with areas or approved web publication.",
+    "Añadir archivo a áreas seleccionadas":"Add file to selected areas",
+    "Si seleccionas esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.":"Selecting this option will not send an e-mail notification to the users.",
+    "Titulo requerido":"Title required",
 		"Área de publicación":"Publication area",
 		"Seleccionar área":"Select area",
 		"Tipo de documento de área":"Area document type",

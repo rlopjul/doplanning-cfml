@@ -1,7 +1,7 @@
-<!---Required var: 
+<!---Required var:
 	page_type
 	return_path
-	
+
 	page_type 1:
 		folder_id
 	page_type 2:
@@ -10,7 +10,7 @@
 <cfif isDefined("FORM.areas_ids") AND isDefined("FORM.file_id")>
 
 	<cfset file_id = FORM.file_id>
-	
+
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="associateFileToAreas" returnvariable="resultAddFiles">
 		<cfinvokeargument name="file_id" value="#file_id#">
 		<cfinvokeargument name="areas_ids" value="#FORM.areas_ids#">
@@ -30,12 +30,12 @@
 	</cfinvoke>
 	<cfset msg = resultAddFiles.message>
 	<cfset res = resultAddFiles.result>
-	
+
 	<cfif isDefined("FORM.area_id")>
 		<cflocation url="#return_path#file.cfm?file=#file_id#&area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 	<cfelseif isDefined("FORM.folder_id")>
 		<cflocation url="#return_path#my_files_file.cfm?file=#file_id#&folder=#FORM.folder_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
-	</cfif>	
+	</cfif>
 
 </cfif>
 
@@ -55,9 +55,9 @@
 </cfoutput>
 
 <script type="text/javascript">
-	
-	function treeLoaded() { 
-		
+
+	function treeLoaded() {
+
 		$("#loadingContainer").hide();
 		$("#mainContainer").show();
 	}
@@ -67,11 +67,11 @@
 		if($(checkBoxId).attr('disabled')!='disabled'){
 			toggleCheckboxChecked(checkBoxId);
 		}
-			
+
 	}
-	
+
 	function searchTextInTree(){
-		searchInTree(document.getElementById('searchText').value);	
+		searchInTree(document.getElementById('searchText').value);
 	}
 
 	function onSubmitForm()
@@ -85,12 +85,12 @@
 		else
 			return false;
 	}
-	
+
 	$(window).load( function() {
 		showTree(true);
 
-		$("#searchText").on("keydown", function(e) { 
-			
+		$("#searchText").on("keydown", function(e) {
+
 			if(e.which == 13) { //Enter key
 
 				if(e.preventDefault)
@@ -98,7 +98,7 @@
 
 				searchTextInTree();
 			}
-			
+
 		});
 
 		<cfif APPLICATION.moduleWeb IS true>
@@ -106,7 +106,7 @@
 			format: 'dd-mm-yyyy',
 			weekStart: 1,
 			language: 'es',
-			todayBtn: 'linked', 
+			todayBtn: 'linked',
 			autoclose: true
 		});
 		</cfif>
@@ -117,7 +117,7 @@
 		$("#areasTreeContainer input:checkbox").click(function(event) {
 			var inputId = "#"+this.id;
 			setTimeout(function(){
-		       $(inputId).prop("checked",!($(inputId).is(":checked"))); 
+		       $(inputId).prop("checked",!($(inputId).is(":checked")));
 		    }, 100);
 
 		});--->
@@ -125,7 +125,7 @@
 		$("#areasTreeContainer").on('click', 'input:checkbox', function(event) {
 			var inputId = "#"+this.id;
 			setTimeout(function(){
-		       $(inputId).prop("checked",!($(inputId).is(":checked"))); 
+		       $(inputId).prop("checked",!($(inputId).is(":checked")));
 		    }, 100);
 		});
 
@@ -154,7 +154,7 @@
 
 	<cfset itemTypeId = 10>
 	<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
-	
+
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_id.cfm">
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
 
@@ -178,21 +178,21 @@
 <div class="alert alert-info" style="margin:5px;"><span lang="es">Seleccione las áreas a las que desea asociar el archivo</span></div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
-			
+
 <div id="mainContainer" style="clear:both;display:none;padding-left:5px;">
 <cfform name="add_file_to_areas" method="post" action="#CGI.SCRIPT_NAME#" class="form-horizontal" style="clear:both;" onsubmit="return onSubmitForm();">
 	<cfoutput>
-	
+
 	<script>
 		var railo_custom_form;
 
-		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 			railo_custom_form = new LuceeForms('add_file_to_areas');
 		else
 			railo_custom_form = new RailoForms('add_file_to_areas');
 	</script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
-	
+
 	<input type="hidden" name="file_id" value="#file_id#">
 	<cfif isDefined("area_id")>
 	<input type="hidden" name="area_id" value="#area_id#">
@@ -200,15 +200,15 @@
 	<cfif isDefined("folder_id")>
 	<input type="hidden" name="folder_id" value="#folder_id#">
 	</cfif>
-	
+
 	</cfoutput>
-	
+
 	<cfif isDefined("area_id")>
 		<cfset return_page = "#return_path#file.cfm?file=#file_id#&area=#area_id#">
 	<cfelseif isDefined("folder_id")>
 		<cfset return_page = "#return_path#my_files_file.cfm?file=#file_id#&folder=#folder_id#">
 	</cfif>
-	
+
 	<cfoutput>
 
 	<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
@@ -216,11 +216,11 @@
 			<span class="help-block"><span lang="es">Ámbito de publicación definido para el archivo:</span> #objectFile.publication_scope_name#</span>
 		</div>
 	</cfif>
-	
-	<input type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas" lang="es" />
-	
+
+	<input type="submit" class="btn btn-primary" lang="es" value="Añadir archivo a áreas seleccionadas"  />
+
 	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
-	
+
 	<div style="margin-top:2px;">
 
 		<div class="btn-group">
@@ -257,7 +257,7 @@
 				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
 			</cfinvoke>
 			<cfset scopeAreasList = getScopesResult.areasIds>
-			
+
 		</cfif>
 
 	</cfif>
@@ -266,7 +266,7 @@
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
 		<!--- Ahora sí se pueden asociar archivos internos a las áreas web
 		<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan asociar archivos a las áreas WEB---> --->
-		
+
 		<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id) AND listLen(scopeAreasList) GT 0>
 			<cfinvokeargument name="enable_only_areas_ids" value="#scopeAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
 		</cfif>
@@ -274,14 +274,14 @@
 		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 	</cfinvoke>
 	</div>
-	
+
 	<script>
-		addRailoRequiredCheckBox("areas_ids[]","Debe seleccionar al menos un área");			
+		addRailoRequiredCheckBox("areas_ids[]","Debe seleccionar al menos un área");
 	</script>
 
 
 	<cfif APPLICATION.moduleWeb IS true>
-	
+
 		<div class="row">
 
 			<cfif isDefined("FORM.publication_hour")><!--- After send FORM --->
@@ -292,7 +292,7 @@
 				<cfset publication_date = FORM.publication_date>
 
 			<cfelse>
-				
+
 				<cfset publication_hour = timeFormat(now(), "HH")>
 				<cfset publication_minute = timeFormat(now(), "mm")>
 
@@ -304,9 +304,9 @@
 				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span></label>
 				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
 			</div>
-						
+
 			<div class="col-xs-6">
-				 
+
 				<!---<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
 				<div class="input-group" style="width:170px">
 					<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
@@ -333,12 +333,12 @@
 						</cfif>
 					</select>
 				</div>--->
-						
+
 			</div>
-			
+
 			<input type="hidden" name="publication_hour" value="00"/>
 			<input type="hidden" name="publication_minute" value="00"/>
-			
+
 		</div>
 
 		<div class="row">
@@ -351,7 +351,7 @@
 
 			<!--- isUserAreaResponsible --->
 			<cfif is_user_area_responsible IS true>
-				
+
 				<div class="row">
 					<div class="col-xs-12 col-sm-8">
 						<div class="checkbox">
@@ -369,14 +369,14 @@
 
 	</cfif>
 
-	
-	<input name="submit" type="submit" class="btn btn-primary" value="Añadir archivo a áreas seleccionadas" lang="es"/>
+
+	<input name="submit" type="submit" class="btn btn-primary" lang="es" value="Añadir archivo a áreas seleccionadas" />
 	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 	</cfoutput>
 </cfform>
-	
+
 	<div style="height:5px;"><!-- --></div>
-	
+
 	<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
 		<cfinvokeargument name="return_page" value="#return_page#">
 	</cfinvoke>--->
