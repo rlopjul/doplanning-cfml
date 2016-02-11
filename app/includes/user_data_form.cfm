@@ -169,7 +169,7 @@ page_types
 
 			<div class="row">
 
-				<label for="family_name" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Nombre</label>
+				<label for="family_name" class="col-xs-5 col-sm-4 col-md-3 control-label" ><span lang="es">Nombre</span></label>
 
 				<div class="col-xs-7 col-sm-8 col-md-9">
 					<input type="text" name="family_name" id="family_name" value="#objectUser.family_name#" class="form-control"/>
@@ -179,7 +179,7 @@ page_types
 
 			<div class="row">
 
-				<label for="name" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es"z>Apellidos</label>
+				<label for="name" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es"><span lang="es">Apellidos</span></label>
 
 				<div class="col-xs-7 col-sm-8 col-md-9">
 					<input type="text" name="name" id="name" value="#objectUser.name#" class="form-control"/>

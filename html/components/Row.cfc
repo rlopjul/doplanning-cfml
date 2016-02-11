@@ -193,7 +193,7 @@
 			</cfinvoke>
 
 			<cfif response.result IS true>
-				<cfset response.message = '<i lang="es">Registro guardado</i>'>
+				<cfset response.message = "Registro guardado">
 			</cfif>
 
 			<cfcatch>
@@ -224,7 +224,7 @@
 			</cfinvoke>
 
 			<cfif response.result IS true>
-				<cfset response.message = '<i lang="es">Registro modificado</i>'>
+				<cfset response.message = "Registro modificado">
 			</cfif>
 
 			<cfcatch>
@@ -261,7 +261,7 @@
 			</cfinvoke>
 
 			<cfif response.result IS true>
-				<cfset response.message = '<i lang="es">Registro eliminado</i>'>
+				<cfset response.message = "Registro eliminado">
 			</cfif>
 
 			<cfset msg = URLEncodedFormat(response.message)>
@@ -296,7 +296,7 @@
 			</cfinvoke>
 
 			<cfif response.result IS true>
-				<cfset response.message = '<i lang="es">Archivo eliminado.</i>'>
+				<cfset response.message = "Archivo eliminado.">
 			</cfif>
 
 			<cfcatch>
