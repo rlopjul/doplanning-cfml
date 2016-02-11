@@ -108,6 +108,7 @@ curLangTextEn = {
 		"Eliminar":"Delete",
 		"Eliminar área":"Delete area",
     "Debe seleccionar un área para eliminar":"Select an area to remove",
+    "Debe seleccionar una nueva área":"You must select a new area",
 		"Volver":"Return",
 
 		"Accede a las áreas de la organización a través de la pestaña":"You can access the areas of the organization through the tab",
