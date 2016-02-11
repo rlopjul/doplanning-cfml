@@ -796,6 +796,7 @@ curLangTextEn = {
 
 		/*area_file_modify.cfm*/
 		"Modificar Archivo":"Modify File",
+
 		/*END area_file_modify.cfm*/
 
     /*form_view_new*/
@@ -1081,8 +1082,14 @@ IMPORTANT : Any notification of the application will be received , except for th
 		"Añadir campo":"Add field",
 		"Copiar de plantilla":"Copy from template",
 		"Haga clic en Añadir campo para crear un nuevo campo.":"Click in ADD FIELD to create a new field.",
+    "Campos de Formulario copiados.":"Form fields copied.",
+    "Eliminar campo":"Delete field",
+    "Campo eliminado":"Field deleted",
+    "Campo":"Delete",
+    "Formulario eliminado.":"Form deleted.",
 
 		"Nuevo campo":"New field",
+    "Campo modificado":"Field modified",
 		"Texto plano 1 línea (máx. 255 caracteres)":"Plain text, 1 line (255 characters max.)",
 		"Texto plano varias líneas (máx. 21000 caracteres)":"Plain text, several lines (21000 characters max.)",
 		"Texto varias líneas con formato (máx. 21000 caracteres)":"Formatted text, several lines (21000 characters max.)",
