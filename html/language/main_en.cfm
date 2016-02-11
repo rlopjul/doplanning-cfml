@@ -798,6 +798,13 @@ curLangTextEn = {
 		"Modificar Archivo":"Modify File",
 		/*END area_file_modify.cfm*/
 
+    /*form_view_new*/
+    "Nueva Vista de Formulario":"New Form View",
+    "Ámbito de publicación definido:":"Defined area of ​​publication :",
+    "Si está definida, la Vista de Formulario se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set , the form view will be published on the specified date ( for web publishing and intranet only).",
+    "Valida la Vista de Formulario para que pueda ser publicada (sólo para publicación en web e intranet).":"Validates Form View that can be published ( for web publishing and intranet only).",
+    "No hay campos para seleccionar":"There are no fields to select",
+
 		/*area_file_replace.cfm*/
 		"Reemplazar Archivo":"Replace File",
 		/*END area_file_replace.cfm*/
@@ -1301,6 +1308,8 @@ IMPORTANT : Any notification of the application will be received , except for th
 		"Nuevo registro rellenado en Formulario":"New record added in form",
 		"Registro eliminado en Formulario":"Record deleted from form",
 		"Nueva acción":"New action",
+    "Necesita definir un campo del tipo Email para poder crear esta acción":"You need to define a field of type Email to create this action",
+    "Si aplicas formato al contenido del email, el aspecto que visualizará el usuario podrá variar dependiendo de su cliente de correo.":"If you apply formatting to the contents of the email , the aspect that displayed the user can vary depending on your mail client.",
 		"No se puede modificar el tipo una vez creada la acción":"Type cannot be modified once the action has been created",
 		"Evento que lanza la acción":"Event that triggers the action",
 		"Se realizará la acción cuando ocurra este evento":"Action will be performed when the event occurs",
