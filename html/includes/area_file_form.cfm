@@ -743,7 +743,7 @@
 
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
+							<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /><span lang="es"> NO enviar notificación por email</span>
 						</label>
 						<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
 					</div>

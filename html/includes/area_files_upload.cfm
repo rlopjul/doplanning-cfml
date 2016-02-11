@@ -559,7 +559,7 @@ $(function () {
 
 											<div class="checkbox">
 												<label  lang="es">
-													<input type="checkbox" name="no_notify" id="no_notify" value="true" /> NO enviar notificación por email
+													<input type="checkbox" name="no_notify" id="no_notify" value="true" ><span lang="es"> NO enviar notificación por email</span>
 												</label>
 											</div>
 
