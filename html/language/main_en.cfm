@@ -160,6 +160,7 @@ curLangTextEn = {
 		"Nuevo Formulario":"New Form",
 		"Nueva Publicación":"New Publication",
 		"Nuevo Documento DoPlanning":"New DoPlanning Document",
+    "Debe seleccionar al menos una categoría":"You must select at least one category",
 
 		"Subir nuevo archivo":"Upload new file",
 		"Asociar Archivo":"Associate File",
