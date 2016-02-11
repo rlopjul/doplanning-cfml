@@ -1,9 +1,9 @@
 <cfif isDefined("URL.parent")>
-	
+
 	<cfset parent_area_id = URL.parent>
 
 	<!--- Get parent area --->
-	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectParentArea">	
+	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectParentArea">
 		<cfinvokeargument name="get_area_id" value="#parent_area_id#">
 		<cfinvokeargument name="return_type" value="query">
 	</cfinvoke>
@@ -13,7 +13,7 @@
 	</cfinvoke>
 
 	<!--- Set default responsible --->
-	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUser" returnvariable="userQuery">				
+	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUser" returnvariable="userQuery">
 		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 		<cfinvokeargument name="format_content" value="default">
 		<cfinvokeargument name="return_type" value="query">
@@ -53,7 +53,7 @@
 
 			  		disableNextTabChange = true;
 			  		updateTreeWithSelectedArea(#parent_area_id#);
-			  		
+
 			  		$('body').modalmanager('removeLoading');
 
 			  		showAlertMessage(message, result.result);
@@ -92,7 +92,7 @@
 
 			}
 
-			 
+
 			$(function () {
 			    $('##fileupload').fileupload({
 			        dataType: 'text',
@@ -124,18 +124,18 @@
 
 			}
 
-			
+
 			</script>
 
 			<div id="progress">
 			    <div class="bar" style="width: 0%;"></div>
 			</div>
-	  
+
 			<form id="fileupload" action="#APPLICATION.htmlComponentsPath#/Area.cfc?method=importAreas" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<cfif isDefined("area_id")>
 					<input type="hidden" name="area_id" id="area_id" value="#area_id#" />
 				<cfelseif isDefined("parent_area_id")>
-					<input type="hidden" name="parent_id" id="parent_id" value="#parent_area_id#" />		
+					<input type="hidden" name="parent_id" id="parent_id" value="#parent_area_id#" />
 				</cfif>
 
 				<cfif isDefined("objectParentArea")>
@@ -201,7 +201,7 @@
 
 					<p class="help-block" style="font-size:12px;" lang="es">
 						El archivo utilizado para realizar esta importación deberá tener las siguientes características:<br/>
-					
+
 							-Tipo de archivo: <strong>.csv o .txt</strong> delimitado por ; o por tabulaciones.<br/>
 							-Codificación: <strong>iso-8859-1</strong> (codificación por defecto en Windows).<br />
 							-El archivo debe contener al menos 1 columna para el nombre del área.<br />
@@ -224,7 +224,7 @@
 
 					<p class="help-block" style="font-size:12px;" lang="es">
 						El archivo utilizado para realizar esta importación deberá tener las siguientes características:<br/>
-					
+
 							-Tipo de archivo: <strong>.xml</strong><br/>
 							-Codificación: <strong>utf-8</strong><br />
 							-Formato:<br/>
@@ -246,7 +246,7 @@
 					</p>
 
 				</div>
-				
+
 			</form>
 
 			<cfinclude template="user_select_modal.cfm" />
@@ -263,9 +263,9 @@
 
 			    if(e.preventDefault)
 					e.preventDefault();
-			    
+
 			    if( $.isNumeric($("##user_in_charge").val()) ){
-			    	
+
 			    	if( $("##file").val().length > 0 ){
 			    		postImportAreasForm();
 			    	} else {
@@ -281,5 +281,5 @@
 		</script>
 
 	</cfoutput>
-	
+
 </cfif>

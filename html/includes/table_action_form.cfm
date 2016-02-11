@@ -206,7 +206,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<label for="action_subject" class="control-label"><span lang="es">Asunto del email</span> *</label>
-			<cfinput type="text" name="action_subject" id="action_subject" value="#action.action_subject#" maxlength="255" required="true" lang="es" message="Asunto requerido" class="form-control"/>
+			<cfinput type="text" name="action_subject" id="action_subject" value="#action.action_subject#" maxlength="255" required="true" message="Asunto requerido" class="form-control"/>
 		</div>
 	</div>
 
