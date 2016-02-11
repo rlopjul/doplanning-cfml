@@ -159,7 +159,7 @@
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScope" returnvariable="scope">
 		<cfinvokeargument name="scope_id" value="#scope_id#">
 	</cfinvoke>
-	<span class="help-block">Ámbito de publicación definido: #scope.name#</span>
+	<span class="help-block" lang="es">Ámbito de publicación definido: #scope.name#</span>
 </cfif>
 <cfif noWebEnabled IS false AND webEnabled IS true>
 	<span class="help-block">Sólo puede seleccionar áreas web</span>

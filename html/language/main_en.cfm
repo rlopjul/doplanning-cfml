@@ -804,6 +804,7 @@ curLangTextEn = {
     "Si está definida, la Vista de Formulario se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set , the form view will be published on the specified date ( for web publishing and intranet only).",
     "Valida la Vista de Formulario para que pueda ser publicada (sólo para publicación en web e intranet).":"Validates Form View that can be published ( for web publishing and intranet only).",
     "No hay campos para seleccionar":"There are no fields to select",
+    "Ámbito de publicación definido: DoPlanning":"Defined area of ​​publication : DoPlanning",
 
 		/*area_file_replace.cfm*/
 		"Reemplazar Archivo":"Replace File",
