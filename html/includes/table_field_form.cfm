@@ -813,7 +813,7 @@
 		<div class="col-md-12">
 
 			<button class="btn btn-info btn-sm" type="button" data-toggle="collapse" data-target="##advancedOptions" aria-expanded="false" aria-controls="advancedOptions">
-			  Mostrar opciones avanzadas
+			  <span lang="es">Mostrar opciones avanzadas</span>
 			</button>
 
 			<div class="collapse" id="advancedOptions">

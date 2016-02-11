@@ -1040,10 +1040,13 @@ IMPORTANT : Any notification of the application will be received , except for th
 		"Modificar Lista":"Modify List",
 		"Modificar Formulario":"Modify Form",
 		"Modificar Típología":"Modify Tipology",
-
 		"Nombre":"Name",
 		"Descripción":"Description",
 		"Ámbito de publicación":"Publication scope",
+
+    /*topology*/
+    "Tipología creada, ahora debe definir los campos.":"Typology created, you must now define the fields.",
+    "Tipología definida por defecto en esta área":"Default type defined in this area",
 
 		"Permitir copiar la estructura de campos de esta lista":"Allow to copy the field structure from this list",
 		"Permitir copiar la estructura de campos de este formulario":"Allow to copy the field structure from this form",
@@ -1108,6 +1111,18 @@ IMPORTANT : Any notification of the application will be received , except for th
 		"Se mostrarán ordenados los registros en el orden especificado por el primer campo que tenga seleccionada esta opción":"Records will be ordered in the order specified by the first field having this option enabled",
 
 		"Valor por defecto":"Default value",
+    "Mostrar opciones avanzadas":"Show Advanced Options",
+
+    "Incluir visible este campo en el listado de registros":"Include this field visible in the list of records",
+    "Incluye una columna con los valores de este campo en el listado de registros y en los resúmenes de notificaciones por email":"It includes a column with the values ​​of this field in the list of records and summaries of notifications by email",
+    "Incluir visible este campo en la página de contenido del registro":"Include this field visible page content of the register",
+    "Incluye el valor en la página de contenido del registro y en las notificaciones individuales por email":"It includes the value in the page register contents and individual notifications by email",
+    "Incluir este campo en el formulario de nuevo registro":"Include this field in the form of new record",
+    "Permite rellenar este campo al crear un nuevo registro. Si esta opción no está marcada, este campo no podrá ser un campo obligatorio.":"It allows complete this field when creating a new record. If this option is not checked , this field may not be a required field .",
+    "Editable por todos los usuarios con acceso a la edición.":"Editable by anyone with access to edit.",
+    "Si no se marca este campo, el campo sólo es editable por los usuarios con permiso de responsable de área.":"If this field is not checked, the field is only editable by users with permission area manager .",
+    "Nombre para importación":"Name Import",
+    "Nombre del elemento que contiene el valor de este campo (sólo para importaciones de datos).":"Name element containing the value of this field ( for data import only).",
 
 		"Quitar usuario seleccionado":"Remove selected user",
 		"Introduce cada valor de la lista en una línea distinta":"Enter each value of the list in a different line",
@@ -1279,6 +1294,7 @@ IMPORTANT : Any notification of the application will be received , except for th
 		/*actions*/
 		"Acciones":"Actions",
 		"Añadir acción":"Add action",
+    "Haga clic en Añadir acción para crear una nueva acción.":"Click Add action to create a new action.",
 		"Nombre de la acción":"Name of the action",
 		"Tipo de acción":"Type of action",
 		"Enviar email":"Send email",
