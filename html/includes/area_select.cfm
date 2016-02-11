@@ -171,7 +171,7 @@
 <div class="form-inline" style="margin-top:2px;">
 
 	<cfif isDefined("URL.multiple")>
-		<a class="btn btn-primary" lang="es" id="addToSelectedAreas">Añadir archivo a áreas seleccionadas</a>
+		<a class="btn btn-primary" id="addToSelectedAreas"><span lang="es">Añadir archivo a áreas seleccionadas</span></a>
 	</cfif>
 
 	<div class="btn-toolbar">
@@ -237,5 +237,5 @@
 <div style="height:2px; clear:both;"><!-- --></div>
 
 <cfif isDefined("URL.multiple")>
-	<a class="btn btn-primary" lang="es" id="addToSelectedAreas2">Añadir archivo a áreas seleccionadas</a>
+	<a class="btn btn-primary" id="addToSelectedAreas2"><span lang="es">Añadir archivo a áreas seleccionadas</span></a>
 </cfif>

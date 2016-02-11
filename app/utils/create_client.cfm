@@ -8,8 +8,8 @@
 <body>
 
 <!---<cfargument name="id" type="string" required="no" default="">
-<cfargument name="name" type="string" required="no" default="">		
-<cfargument name="administrator_id" type="string" required="no" default="">		
+<cfargument name="name" type="string" required="no" default="">
+<cfargument name="administrator_id" type="string" required="no" default="">
 <cfargument name="root_area_id" type="string" required="no" default="">
 <cfargument name="number_of_users" type="string" required="no" default="">
 <cfargument name="space" type="string" required="no" default="">
@@ -35,17 +35,17 @@
 	<fieldset>
 		<legend>Datos del usuario administrador</legend>
 		<div><label for="user_family_name">Nombre</label>&nbsp;<cfinput type="text" name="user_family_name" value="" /></div>
-		<div><label for="user_name">Apellidos</label>&nbsp;<cfinput type="text" name="user_name" value="" /></div>
-		<div><label for="user_email">Email</label>*&nbsp;<cfinput type="text" name="user_email" value="" required="yes"/></div>		
+		<div><label for="user_name">zzApellidos</label>&nbsp;<cfinput type="text" name="user_name" value="" /></div>
+		<div><label for="user_email">Email</label>*&nbsp;<cfinput type="text" name="user_email" value="" required="yes"/></div>
 		<div><label for="user_telephone">Teléfono</label><label for="user_telephone_ccode"></label>&nbsp;<cfinput type="text" name="user_telephone_ccode" value="34" size="5" /><cfinput type="text" name="user_telephone" value="" /></div>
 		<div><label for="user_mobile_phone">Teléfono móvil</label><label for="user_mobile_phone_ccode"></label>&nbsp;<cfinput type="text" name="user_mobile_phone_ccode" value="34" size="5"><cfinput type="text" name="user_mobile_phone" value=""></div>
 		<div><label for="user_password">Contraseña</label>*&nbsp;<cfinput type="text" name="user_password" value="" required="yes"></div>
 		<!---<div><label for="user_sms_allowed">Puede enviar SMS</label>&nbsp;<cfinput type="checkbox" name="user_sms_allowed" value="true"></div>--->
 		<input type="hidden" name="user_sms_allowed" value="false" />
 		<div><label for="user_password">Usuario interno</label>&nbsp;<cfinput type="checkbox" name="whole_tree_visible" value="true" checked="yes" disabled="disabled"></div>
-		<cfinput type="hidden" name="user_whole_tree_visible" value="true" /> 
+		<cfinput type="hidden" name="user_whole_tree_visible" value="true" />
 	</fieldset>
-	
+
 	<cfinput type="submit" name="create_client" value="Crear" />
 </cfform>
 
@@ -54,16 +54,16 @@
 	<!---<cfinvoke component="#APPLICATION.componentsPath#/ClientManager" method="xmlClient" returnvariable="xmlResult">
 		<cfinvokeargument name="objectClient" value="#FORM#">
 	</cfinvoke>--->
-	
+
 	<cfinvoke component="#APPLICATION.componentsPath#/ClientManager" method="objectClient" returnvariable="xmlClient">
 		<cfinvokeargument name="id" value="#FORM.id#">
 		<cfinvokeargument name="name" value="#FORM.name#">
 		<cfinvokeargument name="abbreviation" value="#FORM.abbreviation#">
 		<cfinvokeargument name="number_of_sms_paid" value="#FORM.number_of_sms_paid#">
-		
+
 		<cfinvokeargument name="return_type" value="xml">
 	</cfinvoke>
-	
+
 	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="objectUser" returnvariable="xmlUser">
 		<cfinvokeargument name="family_name" value="#FORM.user_family_name#">
 		<cfinvokeargument name="name" value="#FORM.user_name#">
@@ -83,10 +83,10 @@
 		<cfelse>
 			<cfinvokeargument name="whole_tree_visible" value="false">
 		</cfif>
-		
+
 		<cfinvokeargument name="return_type" value="xml">
 	</cfinvoke>
-	
+
 	<cfinvoke component="#APPLICATION.componentsPath#/RequestManager" method="createRequest" returnvariable="createClientRequest">
 		<cfinvokeargument name="request_parameters" value="#xmlClient##xmlUser#">
 	</cfinvoke>
@@ -94,13 +94,13 @@
 	<cfinvoke component="#APPLICATION.componentsPath#/ClientManager" method="createClient" returnvariable="createClientResult">
 		<cfinvokeargument name="request" value="#createClientRequest#">
 	</cfinvoke>
-	
+
 	<cfxml variable="xmlResult">
 		<cfoutput>
 		#createClientResult#
 		</cfoutput>
 	</cfxml>
-	
+
 	<cfif xmlResult.response.xmlAttributes.status EQ "ok">
 		<cfoutput>
 		Organización #FORM.name# creada correctamente
@@ -110,7 +110,7 @@
 		Ha ocurrido un error al crear la organización<cfif isDefined("xmlResult.response.error.title")>: #xmlResult.response.error.title.xmlText#</cfif>
 		</cfoutput>
 	</cfif>
-	
+
 	<!---<cfinvoke component="#APPLICATION.componentsPath#/ClientManager" method="createClientFolders">
 		<cfinvokeargument name="client_id" value="#FORM.client_id#">
 	</cfinvoke>--->

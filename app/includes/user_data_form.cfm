@@ -179,7 +179,7 @@ page_types
 
 			<div class="row">
 
-				<label for="name" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es">Apellidos</label>
+				<label for="name" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es"z>Apellidos</label>
 
 				<div class="col-xs-7 col-sm-8 col-md-9">
 					<input type="text" name="name" id="name" value="#objectUser.name#" class="form-control"/>

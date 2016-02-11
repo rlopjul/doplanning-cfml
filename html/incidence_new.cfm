@@ -99,7 +99,7 @@ Nueva incidencia
 		<option value="Otro">Otro</option>
 	</cfselect>
 
-	<label lang="es">Asunto:</label><cfinput type="text" name="title" class="input-xxlarge" value="" required="true" message="Asunto requerido">
+	<label lang="es">Asunto:</label><cfinput type="text" name="title" class="input-xxlarge" value="" required="true" lang="es" message="Asunto requerido">
 
     <label>Descripción detallada:</label>
 	<textarea name="description" class="input-xxlarge" rows="10"></textarea>

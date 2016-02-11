@@ -508,7 +508,7 @@
 				<div class="col-xs-12">
 					<label class="control-label" for="new_area_name" lang="es">Añadir el archivo a más áreas</label>
 					<input type="hidden" name="areas_ids" id="areas_ids" value=""/>
-					<cfinput type="text" name="areas_ids_names" id="areas_ids_names" value="" readonly="true" onclick="openAreasSelector()" class="form-control" /> <button onclick="return openAreasSelector()" class="btn btn-default" lang="es">Seleccionar más áreas</button>
+					<cfinput type="text" name="areas_ids_names" id="areas_ids_names" value="" readonly="true" onclick="openAreasSelector()" class="form-control" /> <button onclick="return openAreasSelector()" class="btn btn-default"><span lang="es">Seleccionar más áreas</span></button>
 					<small class="help-block" lang="es">Además del área actual, el archivo estará acesible en las áreas seleccionadas</small>
 				</div>
 			</div>

@@ -34,11 +34,11 @@
 <cfoutput>
 <div class="div_head_menu"><!---container--->
 	<div class="navbar navbar-default navbar-static-top" style="margin-bottom:0">
-		<div class="container-fluid">
-			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Mostrar información del área" id="openAreaImg" lang="es">
+		<div class="container-fluid" lang="es">
+			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" lang="es" title="Mostrar información del área" id="openAreaImg">
 				<i class="icon-info-sign more_info_img"></i>
 			</a>
-			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Ocultar información del área" id="closeAreaImg" lang="es" style="display:none;">
+			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" lang="es" title="Ocultar información del área" id="closeAreaImg" lang="es" style="display:none;">
 				<i class="icon-info-sign more_info_img"></i>
 			</a>
 			<span class="navbar_brand">#area_name#</span>
