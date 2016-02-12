@@ -433,6 +433,14 @@ curLangTextEn = {
     "Borrar todos los registros existentes en la Lista":"Delete all existing records in the list",
     "Archivo de datos requerido para la importación":"Data file required for import",
 
+    /*list_view_new*/
+    "Nueva Vista de Lista":"New View List",
+    "Si está definida, la Vista de Lista se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set, the List view will be published on the specified date (only for Web publishing and intranet )",
+    "Valida la Vista de Lista para que pueda ser publicada (sólo para publicación en web e intranet).":"Validates the List view so it can be published ( for web publishing and intranet only).",
+    "Lista eliminada.":"List Deleted.",
+    "Lista creada, ahora debe definir los campos.":"List created, you must now define the fields.",
+    "Publicación visible sólo para usuarios identificados:":"Publication visible to identified user",
+
     /*area_item_content*/
 		"Modificar":"Modify",
 		"Responder":"Reply",
@@ -498,7 +506,7 @@ curLangTextEn = {
 		"Seleccione las áreas a las que desea copiar la":"Select the areas you want to copy the",
 
 		"Editar contenido":"Edit content",
-		"Áreas a las que copiar":"Áreas to copy",
+		"Áreas a las que copiar":"Areas to copy",
 		"Debe seleccionar al menos un área":"You must select at least one area",
 		/*END area_item_copy.cfm*/
 
