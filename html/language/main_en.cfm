@@ -430,6 +430,10 @@ curLangTextEn = {
     "Importar Eventos":"Import Events",
     "Eliminar todos los Eventos del área":"Remove All Events area",
     "No hay formularios en esta área.":" There are no forms in this area.",
+    "No hay boletines en esta área.":"There are no newsletters in this area.",
+    "No hay publicaciones en esta área.":"There are no publications in this area",
+    "No se puede borrar una tipología que está usada en archivos. Debe eliminar los archivos o cambiar su tipología para poder eliminarla.":"You can not delete a typology that is used in files. You must delete files or change their type to remove it.",
+    "Tabla no disponible en esta área":"Table is not available in this area",
 
     /* list_row_new.cfm*/
     "Guardar":"Save",
