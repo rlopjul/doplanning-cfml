@@ -1100,8 +1100,8 @@ IMPORTANT : Any notification of the application will be received , except for th
     "Campos de Formulario copiados.":"Form fields copied.",
     "Eliminar campo":"Delete field",
     "Campo eliminado":"Field deleted",
-    "Campo":"Delete",
     "Formulario eliminado.":"Form deleted.",
+    "En listado":"In list",
 
 		"Nuevo campo":"New field",
     "Campo modificado":"Field modified",
@@ -1148,6 +1148,8 @@ IMPORTANT : Any notification of the application will be received , except for th
     "Incluir visible este campo en la página de contenido del registro":"Include this field visible page content of the register",
     "Incluye el valor en la página de contenido del registro y en las notificaciones individuales por email":"It includes the value in the page register contents and individual notifications by email",
     "Incluir este campo en el formulario de nuevo registro":"Include this field in the form of new record",
+    "Incluir este campo en el formulario de modificar registro existente":"Include this field in the form to modify existing record",
+    "Permite rellenar este campo al modificar un registro existente.":"It lets you fill this field by modifying an existing record.",
     "Permite rellenar este campo al crear un nuevo registro. Si esta opción no está marcada, este campo no podrá ser un campo obligatorio.":"It allows complete this field when creating a new record. If this option is not checked , this field may not be a required field .",
     "Editable por todos los usuarios con acceso a la edición.":"Editable by anyone with access to edit.",
     "Si no se marca este campo, el campo sólo es editable por los usuarios con permiso de responsable de área.":"If this field is not checked, the field is only editable by users with permission area manager .",
@@ -1194,7 +1196,10 @@ IMPORTANT : Any notification of the application will be received , except for th
 		"Tipo de campo":"Field type",
 
 		"Lista de la que copiar los campos:":"List from which to copy fields",
+    "No tiene campos para copiar.":"No fields to copy.",
 		"Copiar campos":"Copy fields",
+    "Copiando...":"Copying...",
+    "Campos de Lista copiados.":"List fields copied.",
 
 		"Formulario creado, ahora debe definir los campos.":"Form created. Now you must define the fields.",
 
