@@ -339,6 +339,8 @@ curLangTextEn = {
 		"Selección de área":"Area selection",
 		"Nueva vista":"New view",
 		"Haga clic en Nueva vista para crear una nueva vista.":"Click in New view to create a new view.",
+    "Lista de extensiones de archivo aceptadas (por defecto se aceptan todas)":"List of file extensions accepted ( by default all accepted)",
+    "Introduce cada extensión en una línea distinta. Ejemplos de extensiones válidas: .pdf .doc .pages .jpg .png":"Enter each extension on a separate line . Examples of valid extensions: .png .jpg .pdf .doc .pages",
 
 		"El archivo utilizado para realizar esta importación deberá tener las siguientes características:":"The import file must have the following features:",
 		"-Tipo de archivo:":"-File type:",
@@ -458,6 +460,7 @@ curLangTextEn = {
 		"Desbloquear":"Unlock",
 		"Exportar para calendario externo":"Export to external calendar",
 		"Eportar en formato iCalendar (.ics)":"Export in iCalendar format (.ics)",
+    "Tipología de archivo eliminada.":"Typology file deleted",
 
 		"Asignada a:":"Asigned to:",
 		"Estado:":"State:",
@@ -812,7 +815,7 @@ curLangTextEn = {
     "Modificar Archivo de área":"Change File area",
     "Desbloquear archivo tras guardar modificación":"Unlock file after saving modification",
     "Datos modificados":"Data modified",
-  
+
 		/*END area_file_modify.cfm*/
 
     /*form_view_new*/
@@ -1041,6 +1044,7 @@ curLangTextEn = {
 IMPORTANT : Any notification of the application will be received , except for the password recovery. They will not be sent actions requiring user attention such as the approval or review of files area.",
     "Un boletín ha sido enviado":"A newsletter has been sent",
     "Un documento DoPlanning ha sido creado, modificado o eliminado":"A DoPlanning document has been created, modified or deleted",
+
 		"Un mensaje ha sido creado o eliminado":"A message has been created or deleted",
 		"Un enlace ha sido creado, modificado o eliminado":"A link has been created, modified or deleted",
 		"Un elemento de contenido web ha sido creado, modificado o eliminado":"A web content item has been created, modified or deleted",
@@ -1086,6 +1090,7 @@ IMPORTANT : Any notification of the application will be received , except for th
     "Tipología definida por defecto en esta área":"Default typology defined in this area",
     "Definir Tipología por defecto":"Define default typology",
     "Definir Tipología por defecto para este área":"Define default typology in this area",
+    "Si ELIMINA el campo, se borrarán definitivamente todos los contenidos que almacena. ¿Seguro que desea eliminar el campo?":"If you delete the field , all the contents will be removed permanently stored . Are you sure you want to delete the field?",
 
 		"Permitir copiar la estructura de campos de esta lista":"Allow to copy the field structure from this list",
 		"Permitir copiar la estructura de campos de este formulario":"Allow to copy the field structure from this form",
@@ -1362,6 +1367,7 @@ IMPORTANT : Any notification of the application will be received , except for th
 		"Evento que lanza la acción":"Event that triggers the action",
 		"Se realizará la acción cuando ocurra este evento":"Action will be performed when the event occurs",
 		"Campo del Formulario con la dirección de email":"Field from the Form with the email address",
+    "Campo de la Lista con la dirección de email":"List field with the email address",
 		"Sólo están disponibles para seleccionar los campos del tipo Email":"Only fields with type Email are available to select",
 		"Asunto del email":"Email subject",
 		"Contenido del email":"Email content",
@@ -1399,6 +1405,8 @@ IMPORTANT : Any notification of the application will be received , except for th
 		"Si sólo se crea una tipología de usuario, ésta será la que quede seleccionada por defecto para todos los usuarios y la que se asignará de forma automática a los nuevos usuarios que se den de alta en la aplicación.":"If there is only one typology of user defined, it will be shown by default selected for all users and will not be optional.",
 		"Las tipologías de archivos se gestionan en las áreas a las que pertenecen por los usuarios con permiso.":"The typologies of files are managed in their areas by the users with permission",
 		"Eliminar Tipología":"Delete typology",
+    "Tipología de la que copiar los campos:":"Copy typology fields:",
+    "Tipología CESEAND":"Typology CESEAND",
     /*END typologies*/
 
     /*categories*/
