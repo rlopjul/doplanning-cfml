@@ -85,7 +85,7 @@ function onSubmitForm()
 			<div class="col-sm-12">
 				<div class="checkbox">
 				    <label>
-				    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras subir nueva versión
+				    	<input type="checkbox" name="unlock" value="true" checked><span lang="es"> Desbloquear archivo tras subir nueva versión</span>
 				    </label>
 			  	</div>
 			</div>

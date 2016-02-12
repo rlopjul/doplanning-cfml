@@ -809,7 +809,10 @@ curLangTextEn = {
 
 		/*area_file_modify.cfm*/
 		"Modificar Archivo":"Modify File",
-
+    "Modificar Archivo de área":"Change File area",
+    "Desbloquear archivo tras guardar modificación":"Unlock file after saving modification",
+    "Datos modificados":"Data modified",
+  
 		/*END area_file_modify.cfm*/
 
     /*form_view_new*/
@@ -822,7 +825,19 @@ curLangTextEn = {
 
 		/*area_file_replace.cfm*/
 		"Reemplazar Archivo":"Replace File",
+    "Desbloquear archivo tras subir nueva versión":"Unlock file after uploading new version",
+    "Archivo a reemplazar:":"File to replace:",
+    "Nuevo Archivo:":"New File:",
+    "Archivo reemplazado.":"File replaced.",
+
 		/*END area_file_replace.cfm*/
+
+    /*area_file_associate_areas*/
+    "Asociar archivo a áreas":"Associate file areas",
+    "Seleccione las áreas a las que desea asociar el archivo":"Select the areas you want to associate the file",
+    "Ámbito de publicación definido para el archivo:":"Publication scope defined for the file:",
+    "Archivo desbloqueado.":"File is unlocked.",
+    "Archivo bloqueado.":"File is locked.",
 
 		/*area_file_upload.cfm, area_file_replace_upload.cfm*/
 		"Ha ocurrido un error al subir el archivo.":"Failed to upload the file",

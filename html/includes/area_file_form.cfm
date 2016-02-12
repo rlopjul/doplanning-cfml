@@ -725,7 +725,7 @@
 
 		<div class="checkbox">
 		    <label>
-		    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras guardar modificación
+		    	<input type="checkbox" name="unlock" value="true" checked><span lang="es">Desbloquear archivo tras guardar modificación</span>
 		    </label>
 	  	</div>
 
