@@ -400,8 +400,13 @@ curLangTextEn = {
 		"Si el archivo está bloqueado no puede ser editado por otros usuarios":"If the file is locked it can not be edited by other users",
 		"Mover Documento DoPlanning a otra área":"Move DoPlanning Document to other area",
 		"Se enviará notificación por email del del cambio de área del Documento DoPlanning.":"An email notification will be sent informing about the area change",
-		"Propietario actual":"Current owner",
+    "Cambiar propietario de la Tipología de archivo":"Change owner of typology file",
+    "Propietario actual":"Current owner",
 		"Nuevo propietario":"New owner",
+    "Debe seleccionar un nuevo propietario":"Select a user as a new owner",
+    "ebe seleccionar un propietario distinto al actual":"Select a different owner other than current",
+    "Propietario modificado":"Owner Changed",
+    "Lista modificada.":"List Modified.",
 		"Se enviará notificación por email del cambio al nuevo propietario y al anterior.":"An email notification will be sent both to the new owner and to the preceding one",
 
 
@@ -1055,7 +1060,9 @@ IMPORTANT : Any notification of the application will be received , except for th
 
     /*topology*/
     "Tipología creada, ahora debe definir los campos.":"Typology created, you must now define the fields.",
-    "Tipología definida por defecto en esta área":"Default type defined in this area",
+    "Tipología definida por defecto en esta área":"Default typology defined in this area",
+    "Definir Tipología por defecto":"Define default typology",
+    "Definir Tipología por defecto para este área":"Define default typology in this area",
 
 		"Permitir copiar la estructura de campos de esta lista":"Allow to copy the field structure from this list",
 		"Permitir copiar la estructura de campos de este formulario":"Allow to copy the field structure from this form",
@@ -1239,6 +1246,11 @@ IMPORTANT : Any notification of the application will be received , except for th
     "Ha ocurrido un error inesperado, disculpe las molestias. Haga click en Volver para ir a la página anterior.":"An unexpected error has occurred, sorry for the inconvenience . Click Back to go to the previous page.",
 
 		"Añadir editores":"Add editors",
+    "Añadir usuarios seleccionados":"Add selected users",
+    "Los usuarios que se añadan como editores recibirán un email notificándoselo.":"Users added as editors will receive a notification email.",
+    "Usuario/s añadido/s":"User/s Added",
+    "Quitar de esta Lista":"Remove from this list",
+    "Usuario quitado":"User removed",
 		"Haga clic en Añadir editores parar añadir un nuevo usuario.":"Click on Add editors to add a new editor.",
 		"Los usuarios responsables de este área tienen el permiso de editores por defecto.":"Users that are managers of this area have edition rights by default.",
 
