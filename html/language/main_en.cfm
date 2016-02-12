@@ -422,6 +422,15 @@ curLangTextEn = {
 		"cerrar la Consulta":"to close the Consultation",
 		/*END functions.js*/
 
+    /*view_messages_events_*/
+    "No hay mensajes en esta área.":"No messages in this area.",
+    "Importar Mensajes":"Import Messages",
+    "Eliminar todos los Mensajes del área":"Delete all messages area",
+    "No hay documentos doplanning en esta área.":"No documents DoPlanning in this area.",
+    "Importar Eventos":"Import Events",
+    "Eliminar todos los Eventos del área":"Remove All Events area",
+    "No hay formularios en esta área.":"No forms in this area.",
+
     /* list_row_new.cfm*/
     "Guardar":"Save",
     "Nombre *":"Name *",
