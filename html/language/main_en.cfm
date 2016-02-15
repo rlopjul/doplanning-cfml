@@ -1035,8 +1035,8 @@ curLangTextEn = {
 
 		/*preferences_alerts.cfm*/
 		"Preferencias de notificaciones":"Notification preferences",
-    "Notificaciones instantáneas":"Notification Instance",
-    "Notificaciones periódicas":"Notification Period",
+    "Notificaciones instantáneas":"Instant notifications",
+    "Notificaciones periódicas":"Periodic notifications",
     "Nunca":"Never",
     "Todos los días":"Every day",
     "Cada 7 días":"Every 7 days",
@@ -1045,7 +1045,7 @@ curLangTextEn = {
     "Puedes filtrar el contenido de las notificaciones instantáneas y periódicas seleccionando a continuación las categorías sobre las que quieres recibir información.":"You can filter the content of periodic notifications snapshots and then clicking on the categories for which you want to receive information.",
     "Enviar un resumen de la actividad:":"Send a summary of activity:",
     "Este resumen incluye notificaciones relativas a la creación y modificación de elementos de áreas. No incluye notificaciones de acciones tales como el bloqueo o solicitud de aprobación de archivos o el cambio de área de elementos." :"This summary includes notifications concerning the creation and modification of elements areas. It excludes notification actions such as blocking or request for approval of files or changing items area.",
-    "Notificaciones web":"Web notification",
+    "Notificaciones web":"Web notifications",
     "Este resumen incluye notificaciones relativas a la creación y modificación de los siguientes contenidos de la web: noticias, eventos, archivos, publicaciones, listas y áreas (páginas).":"This summary includes notifications concerning the creation and modification of the following contents of the web : news , events, archives, publications , lists and areas (pages).",
     "Enviar un resumen de la actividad web:":"Send a summary of web activity:",
     "Deshabilitar todas las notificaciones":"Disable all notification",
