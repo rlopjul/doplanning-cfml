@@ -72,6 +72,11 @@
 	
 	$().ready(function () {
 		window.lang = new Lang('es');
+		
+		window.lang.dynamic('en', '#APPLICATION.mainUrl#/html/language/main_en.cfm');
+		<cfif SESSION.user_language NEQ "es">
+			window.lang.change('#SESSION.user_language#');
+		</cfif>
 	});
 </script>
 

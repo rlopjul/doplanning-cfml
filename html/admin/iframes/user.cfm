@@ -72,6 +72,11 @@
 	
 	$().ready(function () {
 		window.lang = new Lang('es');
+		
+		window.lang.dynamic('en', '#APPLICATION.mainUrl#/html/language/main_en.cfm');
+		<cfif SESSION.user_language NEQ "es">
+			window.lang.change('#SESSION.user_language#');
+		</cfif>
 	});
 </script>
 
@@ -112,7 +117,7 @@
 			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreasAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar a varias áreas</span></a>--->
 
 			<cfif SESSION.client_administrator IS SESSION.user_id>
-			
+
 				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateAdministratorModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar como administrador del área</span></a>
 
 				<!--- <a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a> --->
@@ -133,7 +138,7 @@
 
 	 			<!---<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');"><i class="icon-sitemap icon-white"></i> <span lang="es">Árbol de áreas</span></a>--->
 
-	 			<a class="btn btn-danger btn-sm navbar-btn" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#user_id#');" title="Eliminar usuario" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+	 			<a class="btn btn-danger btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_delete.cfm?user=#user_id#');" title="Eliminar usuario" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 
 			</cfif>
 
