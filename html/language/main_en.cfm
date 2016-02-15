@@ -207,7 +207,6 @@ curLangTextEn = {
 		"Elementos web":"Web elements",
 		"Noticia":"News",
 		"Noticias":"News",
-		"Usuario":"User",
 		"Usuarios":"Users",
 		"Imagen":"Image",
 		"Imágenes":"Images",
@@ -714,7 +713,6 @@ curLangTextEn = {
 		"Tamaño":"Size",
 		"Generando archivo...":"Generating file...",
 		"Tipología":"Typology",
-    "Usuario":"User",
     "Texto usuario":"User Name",
 		"Ámbito de publicación":"Publication scope",
 		"Nombre físico":"Physical name",
@@ -989,7 +987,6 @@ curLangTextEn = {
 
 
 		/*user*/
-		"Usuario":"User",
 		"Nombre":"Name",
 		"Apellidos":"Last name",
 		"Email":"Email",
