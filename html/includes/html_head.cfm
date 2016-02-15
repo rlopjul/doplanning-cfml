@@ -77,9 +77,9 @@
 	window.lang.dynamic('en', '#APPLICATION.mainUrl#/html/language/main_en.cfm');
 
 	<cfif isDefined("SESSION.user_language")>
-		<!---<cfif SESSION.user_language NEQ "es">
+		<cfif SESSION.user_language NEQ "es">
 			window.lang.change('#SESSION.user_language#');
-		</cfif>--->
+		</cfif>
 		bootbox.setDefaults({"locale" : "#SESSION.user_language#"});
 	</cfif>
 </script>
