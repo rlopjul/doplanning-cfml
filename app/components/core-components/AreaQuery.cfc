@@ -111,7 +111,7 @@
 		<cfset var method = "getSubAreas">
 
 			<cfquery name="subAreasQuery" datasource="#client_dsn#">
-				SELECT id, <cfif arguments.remove_order IS true>SUBSTRING_INDEX(name, '.-', -1) AS name<cfelse>name</cfif>, parent_id, creation_date, user_in_charge, image_id, link, type, menu_type_id, hide_in_menu
+				SELECT id, <cfif arguments.remove_order IS true>SUBSTRING_INDEX(name, '.-', -1) AS name<cfelse>name</cfif>, parent_id, creation_date, user_in_charge, image_id, link, type, menu_type_id, hide_in_menu, url_id
 				<cfif arguments.with_description IS true>
 					, description
 				</cfif>
@@ -479,7 +479,8 @@
 	<!---Además del tipo de área, devuelve otros valores que son necesarios para la web--->
 
 	<cffunction name="getAreaTypeWeb" returntype="struct" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="url_id" type="string" required="false">
 
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">
@@ -491,9 +492,13 @@
 		<cfset var link = "">
 
 		<cfquery datasource="#client_dsn#" name="getAreaType">
-			SELECT areas.type, areas.parent_id, areas.id, areas.name, areas.description, areas.menu_type_id, image_id, link
+			SELECT areas.type, areas.parent_id, areas.id, areas.name, areas.description, areas.menu_type_id, image_id, link, url_id
 			FROM #client_abb#_areas AS areas
-			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			<cfif isDefined("arguments.url_id")>
+				WHERE areas.url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
+			<cfelse>
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+			</cfif>;
 		</cfquery>
 
 		<cfif getAreaType.recordCount GT 0>
@@ -549,7 +554,7 @@
 			<cfset link = getAreaType.link>
 		</cfif>
 
-		<cfset response = {result="true", areaType=#areaType#, id=#getAreaType.id#, name=#getAreaType.name#, parent_id=#getAreaType.parent_id#, description=#getAreaType.description#, menu_type_id=#menuType#, link=#link#}>
+		<cfset response = {result="true", areaType=#areaType#, id=#getAreaType.id#, name=#getAreaType.name#, parent_id=#getAreaType.parent_id#, description=#getAreaType.description#, menu_type_id=#menuType#, link=#link#, url_id=#getAreaType.url_id#}>
 		<cfreturn response>
 
 	</cffunction>
