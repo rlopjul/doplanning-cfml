@@ -1,6 +1,6 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_file_replace_query.cfm">
 
-<!--- 
+<!---
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput> --->
@@ -73,19 +73,19 @@ function onSubmitForm()
 				<div class="col-sm-12" style="padding-top:8px;">
 					<label lang="es" for="version_index">Número de versión</label>
 				</div>
-		  	</div>		
+		  	</div>
 		  	<div class="row">
 				<div class="col-sm-1 col-xs-3">
 					<cfinput type="text" name="version_index" id="version_index" value="#version_index_value#" required="false" validate="integer" message="Debe introducir un valor numérico para el número de versión" class="form-control" />
 				</div>
-			</div>			
+			</div>
 		</cfif>
-		
+
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="checkbox">
 				    <label>
-				    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras subir nueva versión
+				    	<input type="checkbox" name="unlock" value="true" checked><span lang="es"> Desbloquear archivo tras subir nueva versión</span>
 				    </label>
 			  	</div>
 			</div>
@@ -98,14 +98,14 @@ function onSubmitForm()
 
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
+					<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /><span lang="es"> NO enviar notificación por email</span>
 				</label>
 				<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
 			</div>
 
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-sm-12">
 			<div style="height:12px;"></div>
@@ -116,8 +116,8 @@ function onSubmitForm()
 		<div class="col-sm-12">
 
 			<div id="submitDiv"><input type="submit" class="btn btn-primary" name="modify" value="Guardar" lang="es"/>
-			
-				<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>	
+
+				<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 			</div>
 
 		</div>

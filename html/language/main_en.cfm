@@ -50,6 +50,8 @@ curLangTextEn = {
 		"Búsqueda de área":"Area search",
 		"Actualizar":"Refresh",
 		"Expandir":"Expand",
+    "Exportar estructura de áreas" : "Export area structure",
+    "Área a exportar":"Area to export",
 		"Colapsar":"Collapse",
 		"Buscar área en el árbol":"Search area in the tree",
 		"Expandir todo el árbol":"Expand whole tree",
@@ -61,12 +63,19 @@ curLangTextEn = {
 
 		"Lo último":"Last items",
 		"VER":"VIEW",
+    "Ver":"VIEW",
+    "Área modificada":"Area Modified",
 		"Filtrar":"Filter",
 		"Ver en área":"View in area",
 		"Ir al área":"Go to area",
 		"Mostrar":"Show",
 		"Elementos de áreas":"Areas items",
 		"Áreas con actividad reciente":"Areas with recent activity",
+    "Usuarios con actividad reciente":"Users with recent activity",
+    "¿Seguro que deseas eliminar definitivamente esta área?":"Are you sure you want to permanently delete this area?",
+    "Ten en cuenta que se eliminarán DEFINITIVAMENTE todos los elementos del área: mensajes, archivos, tareas, eventos...":"Note that will be permanently deleted all elements of the area : messages, files , tasks, events ...",
+    "Quitar usuario de área":"Remove User Area",
+    "Este usuario es el responsable del área, debe asignar a otro usuario como responsable para poder quitar a este del área.":"This user is responsible for the area , you should be assigned to another user as accountable to steal this area .",
 
 		/*Este grupo se tiene que borrar al incluir area_item_en.js*/
 		"Tareas pendientes":"Pending tasks",
@@ -83,16 +92,23 @@ curLangTextEn = {
 		"No hay elementos":"No items",
 
 		"Nueva área":"New area",
+    "Debe seleccionar un área en la que crear la nueva":"Select an area to create new",
 		"Mover":"Move",
-		"Mover área":"Area move",
+		"Mover área":"Move Area",
+    "Debe seleccionar un área para mover":"Select an area to move",
 		"Modificar":"Modify",
-		"Modificar área":"Area modify",
+    "Debe seleccionar un área para modificar":"Select an area to modify",
+		"Modificar área":"Modify area",
 		"Exportar":"Export",
 		"Exportar áreas":"Export areas",
+    "Debe seleccionar un área para exportar":"Select an area to export",
 		"Importar":"Import",
 		"Importar áreas":"Import areas",
+    "Debe seleccionar un área en la que crear las nuevas áreas":"Select an area to import new area",
 		"Eliminar":"Delete",
 		"Eliminar área":"Delete area",
+    "Debe seleccionar un área para eliminar":"Select an area to remove",
+    "Debe seleccionar una nueva área":"You must select a new area",
 		"Volver":"Return",
 
 		"Accede a las áreas de la organización a través de la pestaña":"You can access the areas of the organization through the tab",
@@ -145,6 +161,7 @@ curLangTextEn = {
 		"Nuevo Formulario":"New Form",
 		"Nueva Publicación":"New Publication",
 		"Nuevo Documento DoPlanning":"New DoPlanning Document",
+    "Debe seleccionar al menos una categoría":"You must select at least one category",
 
 		"Subir nuevo archivo":"Upload new file",
 		"Asociar Archivo":"Associate File",
@@ -266,8 +283,10 @@ curLangTextEn = {
 		"Valor estimado":"Estimated value",
 		"Valor real":"Real value",
 		"Tarea realizada":"Task done",
+    "Tarea para":"Task for",
 		"Tarea encargada por":"From user",
 		"Lugar":"Place",
+    "Asunto requerido":"Subject required",
 		"URL más información:":"URL more information:",
 		"URL más información (enlace)":"URL more information (link)",
 		"Abrir URL en":"Open URL in",
@@ -290,6 +309,7 @@ curLangTextEn = {
 		"Valor":"Value",
 
 		"Registros":"Records",
+    "registros":"records",
 		"Campos":"Fields",
 		"Campo":"Field",
 		"Vistas":"Views",
@@ -301,7 +321,6 @@ curLangTextEn = {
 		"Importar registros":"Import records",
 		"Selecciona las columnas que quieres ver":"Select the columns you want to show",
 		"Más":"More",
-		"Registro guardado":"Record saved",
 		"Se generará un archivo con codificación iso-8859-1 con el contenido de los registros.":"A file with iso-8859-1 codification will be generated with the content of the records",
 		"Delimitador de campos":"Field delimiter",
 		"Punto y coma ;":"Semicolon ;",
@@ -320,6 +339,8 @@ curLangTextEn = {
 		"Selección de área":"Area selection",
 		"Nueva vista":"New view",
 		"Haga clic en Nueva vista para crear una nueva vista.":"Click in New view to create a new view.",
+    "Lista de extensiones de archivo aceptadas (por defecto se aceptan todas)":"List of file extensions accepted ( by default all accepted)",
+    "Introduce cada extensión en una línea distinta. Ejemplos de extensiones válidas: .pdf .doc .pages .jpg .png":"Enter each extension on a separate line . Examples of valid extensions: .png .jpg .pdf .doc .pages",
 
 		"El archivo utilizado para realizar esta importación deberá tener las siguientes características:":"The import file must have the following features:",
 		"-Tipo de archivo:":"-File type:",
@@ -381,8 +402,13 @@ curLangTextEn = {
 		"Si el archivo está bloqueado no puede ser editado por otros usuarios":"If the file is locked it can not be edited by other users",
 		"Mover Documento DoPlanning a otra área":"Move DoPlanning Document to other area",
 		"Se enviará notificación por email del del cambio de área del Documento DoPlanning.":"An email notification will be sent informing about the area change",
-		"Propietario actual":"Current owner",
+    "Cambiar propietario de la Tipología de archivo":"Change owner of typology file",
+    "Propietario actual":"Current owner",
 		"Nuevo propietario":"New owner",
+    "Debe seleccionar un nuevo propietario":"Select a user as a new owner",
+    "ebe seleccionar un propietario distinto al actual":"Select a different owner other than current",
+    "Propietario modificado":"Owner Changed",
+    "Lista modificada.":"List Modified.",
 		"Se enviará notificación por email del cambio al nuevo propietario y al anterior.":"An email notification will be sent both to the new owner and to the preceding one",
 
 
@@ -396,7 +422,41 @@ curLangTextEn = {
 		"cerrar la Consulta":"to close the Consultation",
 		/*END functions.js*/
 
-		/*area_item_content*/
+    /*view_messages_events_*/
+    "No hay mensajes en esta área.":" There are no messages in this area.",
+    "Importar Mensajes":"Import Messages",
+    "Eliminar todos los Mensajes del área":"Delete all messages area",
+    "No hay documentos doplanning en esta área.":" There are no documents DoPlanning in this area.",
+    "Importar Eventos":"Import Events",
+    "Eliminar todos los Eventos del área":"Remove All Events area",
+    "No hay formularios en esta área.":" There are no forms in this area.",
+    "No hay boletines en esta área.":"There are no newsletters in this area.",
+    "No hay publicaciones en esta área.":"There are no publications in this area",
+    "No se puede borrar una tipología que está usada en archivos. Debe eliminar los archivos o cambiar su tipología para poder eliminarla.":"You can not delete a typology that is used in files. You must delete files or change their type to remove it.",
+    "Tabla no disponible en esta área":"Table is not available in this area",
+
+    /* list_row_new.cfm*/
+    "Guardar":"Save",
+    "Nombre *":"Name *",
+    "Modificar Registro":"Modify record",
+    "Registro eliminado":"Record Deleted",
+    "Registro guardado":"Record saved",
+    "Registro modificado":"Record modified",
+    "Se incluirán en la exportación los registros de esta área y las inferiores.":"logs for this area and the lower will be included in the export.",
+    "Exportación solicitada...":"Export requested ...",
+    "Sólo se eliminarán los registros de esta área.":"Only records from this area will be deleted.",
+    "Borrar todos los registros existentes en la Lista":"Delete all existing records in the list",
+    "Archivo de datos requerido para la importación":"Data file required for import",
+
+    /*list_view_new*/
+    "Nueva Vista de Lista":"New View List",
+    "Si está definida, la Vista de Lista se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set, the List view will be published on the specified date (only for Web publishing and intranet )",
+    "Valida la Vista de Lista para que pueda ser publicada (sólo para publicación en web e intranet).":"Validates the List view so it can be published ( for web publishing and intranet only).",
+    "Lista eliminada.":"List Deleted.",
+    "Lista creada, ahora debe definir los campos.":"List created, you must now define the fields.",
+    "Publicación visible sólo para usuarios identificados:":"Publication visible to identified user",
+
+    /*area_item_content*/
 		"Modificar":"Modify",
 		"Responder":"Reply",
 		"Cerrar":"Close",
@@ -413,6 +473,7 @@ curLangTextEn = {
 		"Desbloquear":"Unlock",
 		"Exportar para calendario externo":"Export to external calendar",
 		"Eportar en formato iCalendar (.ics)":"Export in iCalendar format (.ics)",
+    "Tipología de archivo eliminada.":"Typology file deleted",
 
 		"Asignada a:":"Asigned to:",
 		"Estado:":"State:",
@@ -438,7 +499,7 @@ curLangTextEn = {
 		"Más información:":"More information:",
 		"Identificador:":"Identifier:",
 		"Descripción:":"Description:",
-		"Contenido:":"Content:",
+		"Contenido":"Content",
 		"URL en DoPlanning:":"DoPlanning URL:",
 		"Tipo:":"Type:",
 		"Enlace a PubMed:":"PubMed link:",
@@ -461,7 +522,7 @@ curLangTextEn = {
 		"Seleccione las áreas a las que desea copiar la":"Select the areas you want to copy the",
 
 		"Editar contenido":"Edit content",
-		"Áreas a las que copiar":"Áreas to copy",
+		"Áreas a las que copiar":"Areas to copy",
 		"Debe seleccionar al menos un área":"You must select at least one area",
 		/*END area_item_copy.cfm*/
 
@@ -653,6 +714,8 @@ curLangTextEn = {
 		"Tamaño":"Size",
 		"Generando archivo...":"Generating file...",
 		"Tipología":"Typology",
+    "Usuario":"User",
+    "Texto usuario":"User Name",
 		"Ámbito de publicación":"Publication scope",
 		"Nombre físico":"Physical name",
 		"Motivo de rechazo en aprobación":"Reason for rejection on approval",
@@ -710,7 +773,15 @@ curLangTextEn = {
 
 		"-Sin circuito de calidad: cada vez que se suba una versión del archivo se sobreescribirá la anterior (no se guardan las versiones previas del archivo)<br><br>-Con circuito de calidad: se guardan las distintas versiones del archivo y es requerido un proceso de revisión y aprobación de las versiones.":
 		"-Without quality circuit: each time a file is uploaded, the previous version will be overwritten(previous versions of the file are not saved)<br><br>-With quality circuit: different versions of the file are saved and it is required a process of review and approval of the versions",
-
+    "Añadir el archivo a más áreas":"Add the file to more areas",
+    "Seleccionar más áreas":"Select more areas",
+    "Además del área actual, el archivo estará acesible en las áreas seleccionadas":"In addition to the current area , the file will Reachable in selected areas",
+    "Ámbito de publicación:":"Scope of publication:",
+    "los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.":"PUBLIC files to WEB environment or intranet can be accessed through its URL through the web or intranet without that are associated with areas or approved web publication.",
+    "Añadir archivo a áreas seleccionadas":"Add file to selected areas",
+    "Añadir archivo a áreas seleccionadas":"Add file to selected area",
+    "Si seleccionas esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.":"Selecting this option will not send an e-mail notification to the users.",
+    "Título requerido":"Title required",
 		"Área de publicación":"Publication area",
 		"Seleccionar área":"Select area",
 		"Tipo de documento de área":"Area document type",
@@ -754,11 +825,35 @@ curLangTextEn = {
 
 		/*area_file_modify.cfm*/
 		"Modificar Archivo":"Modify File",
+    "Modificar Archivo de área":"Change File area",
+    "Desbloquear archivo tras guardar modificación":"Unlock file after saving modification",
+    "Datos modificados":"Data modified",
+
 		/*END area_file_modify.cfm*/
+
+    /*form_view_new*/
+    "Nueva Vista de Formulario":"New Form View",
+    "Ámbito de publicación definido:":"Defined area of ​​publication :",
+    "Si está definida, la Vista de Formulario se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set , the form view will be published on the specified date ( for web publishing and intranet only).",
+    "Valida la Vista de Formulario para que pueda ser publicada (sólo para publicación en web e intranet).":"Validates Form View that can be published ( for web publishing and intranet only).",
+    "No hay campos para seleccionar":"There are no fields to select",
+    "Ámbito de publicación definido: DoPlanning":"Defined area of ​​publication : DoPlanning",
 
 		/*area_file_replace.cfm*/
 		"Reemplazar Archivo":"Replace File",
+    "Desbloquear archivo tras subir nueva versión":"Unlock file after uploading new version",
+    "Archivo a reemplazar:":"File to replace:",
+    "Nuevo Archivo:":"New File:",
+    "Archivo reemplazado.":"File replaced.",
+
 		/*END area_file_replace.cfm*/
+
+    /*area_file_associate_areas*/
+    "Asociar archivo a áreas":"Associate file areas",
+    "Seleccione las áreas a las que desea asociar el archivo":"Select the areas you want to associate the file",
+    "Ámbito de publicación definido para el archivo:":"Publication scope defined for the file:",
+    "Archivo desbloqueado.":"File is unlocked.",
+    "Archivo bloqueado.":"File is locked.",
 
 		/*area_file_upload.cfm, area_file_replace_upload.cfm*/
 		"Ha ocurrido un error al subir el archivo.":"Failed to upload the file",
@@ -783,6 +878,8 @@ curLangTextEn = {
 		/*search_2_bar.cfm*/
 		"Todas":"All",
 		"Se muestran las tipologías usadas en al menos un archivo":"The typologies listed are used at least in one file",
+    "El número de columnas del archivo":"in this archive",
+    "no corresponde con las necesarias para la importación ":"nothing is imopirtta",
 		/*END search_2_bar.cfm*/
 
 		/*admin/main.cfm*/
@@ -794,6 +891,10 @@ curLangTextEn = {
 		"Nuevo usuario":"New user",
 		"Opciones de la organización":"Organization options",
 		"En esta área se pueden crear los siguientes elementos:":"In this area you can create the following elements:",
+    "Opciones de personalización del área":"Options for area customization",
+    "Modo de listado de elementos del área":"List area elements",
+    "Completo (Por defecto)":"Full (Default)",
+    "Lista":"List",
 		"Archivos y archivos de área":"Files and area files",
 		"Esta definición se puede modificar posteriormente de forma individual para cada área.":"This definition can be modified later individually for each area",
 		"Aplicar selección anterior de opciones a todas las áreas inferiores":"Apply area options to all lower areas",
@@ -804,6 +905,7 @@ curLangTextEn = {
 		"Esta selección no afecta a los elementos ya existentes en el área":"This selection does not affect those elements already existing in the area",
 		"Seleccionar/quitar todos":"Select/unselect all",
 		"Cambiar imagen":"Change image",
+    "Ver Imagen": "View Image",
 		"La imagen que se muestra es la heredada de las áreas superiores. Puede asignar una imagen a esta área y pasará a ser la que se muestre en esta y en las áreas inferiores, siempre que las inferiores no tengan una imagen definida.":"The image shown is the one inherited from upper areas. You can assing an image to this area; it will become the one shown in this and the lower areas, provided that lower areas do not already have an assigned image.",
 		"Quitar de administrador del área":"Remove as area administrator",
 		"Exportar usuarios":"Export users",
@@ -899,7 +1001,7 @@ curLangTextEn = {
 		"URL LinkedIn":"LinkedIn URL",
 		"URL Twitter":"Twitter URL",
 		"Activo":"Active",
-
+    "Asociado":"Associated",
 		"Reunión virtual":"Virtual meeting",
 		"URL de acceso a reunión virtual con este usuario:":"URL to virtual meeting with this person:",
 		/*END user*/
@@ -920,6 +1022,8 @@ curLangTextEn = {
 
 		/*preferences_user_data.cfm*/
 		"Idioma":"Language:",
+    "Datos personales":"Personal Information",
+    "Página de inicio":"Homepage",
 		"Imagen del usuario":"User image:",
 		"Eliminar":"Delete",
 		"Eliminar imagen":"Delete image",
@@ -933,9 +1037,29 @@ curLangTextEn = {
 		/*END preferences_user_data.cfm*/
 
 		/*preferences_alerts.cfm*/
-		"Preferencias de notificaciones":"Notifications preferences",
+		"Preferencias de notificaciones":"Notification preferences",
+    "Notificaciones instantáneas":"Notification Instance",
+    "Notificaciones periódicas":"Notification Period",
+    "Nunca":"Never",
+    "Todos los días":"Every day",
+    "Cada 7 días":"Every 7 days",
+    "Cada 30 días":"Every 30 days",
+    "Categorías de notificaciones":"Notification category",
+    "Puedes filtrar el contenido de las notificaciones instantáneas y periódicas seleccionando a continuación las categorías sobre las que quieres recibir información.":"You can filter the content of periodic notifications snapshots and then clicking on the categories for which you want to receive information.",
+    "Enviar un resumen de la actividad:":"Send a summary of activity:",
+    "Este resumen incluye notificaciones relativas a la creación y modificación de elementos de áreas. No incluye notificaciones de acciones tales como el bloqueo o solicitud de aprobación de archivos o el cambio de área de elementos." :"This summary includes notifications concerning the creation and modification of elements areas. It excludes notification actions such as blocking or request for approval of files or changing items area.",
+    "Notificaciones web":"Web notification",
+    "Este resumen incluye notificaciones relativas a la creación y modificación de los siguientes contenidos de la web: noticias, eventos, archivos, publicaciones, listas y áreas (páginas).":"This summary includes notifications concerning the creation and modification of the following contents of the web : news , events, archives, publications , lists and areas (pages).",
+    "Enviar un resumen de la actividad web:":"Send a summary of web activity:",
+    "Deshabilitar todas las notificaciones":"Disable all notification",
+    "Deshabilitar todas las notificaciones automáticas":"Disable all automatic notifications",
 		"Enviar un email cuando:":"Send an email when:",
 		"Seleccionar/quitar todas":"Select / remove all",
+    "IMPORTANTE: no se recibirá ningún tipo de notificación de la aplicación, exceptuando la de recuperación de contraseña. Tampoco serán enviadas acciones que requieran la atención del usuario tales como la aprobación o revisión de archivos de área.":"
+IMPORTANT : Any notification of the application will be received , except for the password recovery. They will not be sent actions requiring user attention such as the approval or review of files area.",
+    "Un boletín ha sido enviado":"A newsletter has been sent",
+    "Un documento DoPlanning ha sido creado, modificado o eliminado":"A DoPlanning document has been created, modified or deleted",
+
 		"Un mensaje ha sido creado o eliminado":"A message has been created or deleted",
 		"Un enlace ha sido creado, modificado o eliminado":"A link has been created, modified or deleted",
 		"Un elemento de contenido web ha sido creado, modificado o eliminado":"A web content item has been created, modified or deleted",
@@ -972,10 +1096,16 @@ curLangTextEn = {
 		"Modificar Lista":"Modify List",
 		"Modificar Formulario":"Modify Form",
 		"Modificar Típología":"Modify Tipology",
-
 		"Nombre":"Name",
 		"Descripción":"Description",
 		"Ámbito de publicación":"Publication scope",
+
+    /*topology*/
+    "Tipología creada, ahora debe definir los campos.":"Typology created, you must now define the fields.",
+    "Tipología definida por defecto en esta área":"Default typology defined in this area",
+    "Definir Tipología por defecto":"Define default typology",
+    "Definir Tipología por defecto para este área":"Define default typology in this area",
+    "Si ELIMINA el campo, se borrarán definitivamente todos los contenidos que almacena. ¿Seguro que desea eliminar el campo?":"If you delete the field , all the contents will be removed permanently stored . Are you sure you want to delete the field?",
 
 		"Permitir copiar la estructura de campos de esta lista":"Allow to copy the field structure from this list",
 		"Permitir copiar la estructura de campos de este formulario":"Allow to copy the field structure from this form",
@@ -1002,8 +1132,14 @@ curLangTextEn = {
 		"Añadir campo":"Add field",
 		"Copiar de plantilla":"Copy from template",
 		"Haga clic en Añadir campo para crear un nuevo campo.":"Click in ADD FIELD to create a new field.",
+    "Campos de Formulario copiados.":"Form fields copied.",
+    "Eliminar campo":"Delete field",
+    "Campo eliminado":"Field deleted",
+    "Formulario eliminado.":"Form deleted.",
+    "En listado":"In list",
 
 		"Nuevo campo":"New field",
+    "Campo modificado":"Field modified",
 		"Texto plano 1 línea (máx. 255 caracteres)":"Plain text, 1 line (255 characters max.)",
 		"Texto plano varias líneas (máx. 21000 caracteres)":"Plain text, several lines (21000 characters max.)",
 		"Texto varias líneas con formato (máx. 21000 caracteres)":"Formatted text, several lines (21000 characters max.)",
@@ -1015,6 +1151,17 @@ curLangTextEn = {
 		"Lista de opciones con selección múltiple":"List of options, multiple selection",
 		"Lista de opciones con selección simple a partir de área":"List of options, single selection from an area",
 		"Lista de opciones con selección múltiple a partir de área":"List of options, multiple selection from an area",
+    "Listar todos los registros por defecto":"List all default records",
+    "Desmarcar esta opción si hay o habrá muchos registros. Si no se marca esta opción, se mostrará una búsqueda de registros, en lugar del listado de todos los registros.":"Uncheck this option if there are or there will be many records. If this option is not selected, a search for records will be displayed , instead of listing all records.",
+    "Desmarcar esta opción si hay o habrá muchos registros, ya que aumenta el tiempo de carga de la lista.":"Uncheck this option if there will be many records or because it increases list load time.",
+    "Habilitar suma total en valores numéricos":"Enable total numeric values",
+    "Define la posición de los campos en el formulario de edición de registros":"Defines the position of the fields on the form editing records",
+    "Modo del formulario de edición de registros":"Edit records form",
+    "NO enviar notificación por email":"Do not send email notification",
+    "Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.":"Selecting this option will not send an email notification for this active user",
+    "Por defecto":"Default",
+    "Estas categorías permiten a los usuarios clasificar los elementos y filtrar las notificaciones por email que se reciben":"These categories allow users to classify items and receive filtered email notifications",
+    "Horizontal: título y campo en una misma fila":"Horizontal: title and scope in a row",
 		"Usuario de DoPlanning":"DoPlanning user",
 		"Elemento de DoPlanning":"DoPlanning element",
 		"No se puede modificar el tipo una vez creado el campo.":"Type cannot be modified once the field is created",
@@ -1029,6 +1176,20 @@ curLangTextEn = {
 		"Se mostrarán ordenados los registros en el orden especificado por el primer campo que tenga seleccionada esta opción":"Records will be ordered in the order specified by the first field having this option enabled",
 
 		"Valor por defecto":"Default value",
+    "Mostrar opciones avanzadas":"Show Advanced Options",
+
+    "Incluir visible este campo en el listado de registros":"Include this field visible in the list of records",
+    "Incluye una columna con los valores de este campo en el listado de registros y en los resúmenes de notificaciones por email":"It includes a column with the values ​​of this field in the list of records and summaries of notifications by email",
+    "Incluir visible este campo en la página de contenido del registro":"Include this field visible page content of the register",
+    "Incluye el valor en la página de contenido del registro y en las notificaciones individuales por email":"It includes the value in the page register contents and individual notifications by email",
+    "Incluir este campo en el formulario de nuevo registro":"Include this field in the form of new record",
+    "Incluir este campo en el formulario de modificar registro existente":"Include this field in the form to modify existing record",
+    "Permite rellenar este campo al modificar un registro existente.":"It lets you fill this field by modifying an existing record.",
+    "Permite rellenar este campo al crear un nuevo registro. Si esta opción no está marcada, este campo no podrá ser un campo obligatorio.":"It allows complete this field when creating a new record. If this option is not checked , this field may not be a required field .",
+    "Editable por todos los usuarios con acceso a la edición.":"Editable by anyone with access to edit.",
+    "Si no se marca este campo, el campo sólo es editable por los usuarios con permiso de responsable de área.":"If this field is not checked, the field is only editable by users with permission area manager .",
+    "Nombre para importación":"Name Import",
+    "Nombre del elemento que contiene el valor de este campo (sólo para importaciones de datos).":"Name element containing the value of this field ( for data import only).",
 
 		"Quitar usuario seleccionado":"Remove selected user",
 		"Introduce cada valor de la lista en una línea distinta":"Enter each value of the list in a different line",
@@ -1070,7 +1231,10 @@ curLangTextEn = {
 		"Tipo de campo":"Field type",
 
 		"Lista de la que copiar los campos:":"List from which to copy fields",
+    "No tiene campos para copiar.":"No fields to copy.",
 		"Copiar campos":"Copy fields",
+    "Copiando...":"Copying...",
+    "Campos de Lista copiados.":"List fields copied.",
 
 		"Formulario creado, ahora debe definir los campos.":"Form created. Now you must define the fields.",
 
@@ -1127,8 +1291,14 @@ curLangTextEn = {
 
 		"Error inesperado":"Unexpected error",
 		"Respondiendo a:":"Answering to",
+    "Ha ocurrido un error inesperado, disculpe las molestias. Haga click en Volver para ir a la página anterior.":"An unexpected error has occurred, sorry for the inconvenience . Click Back to go to the previous page.",
 
 		"Añadir editores":"Add editors",
+    "Añadir usuarios seleccionados":"Add selected users",
+    "Los usuarios que se añadan como editores recibirán un email notificándoselo.":"Users added as editors will receive a notification email.",
+    "Usuario/s añadido/s":"User/s Added",
+    "Quitar de esta Lista":"Remove from this list",
+    "Usuario quitado":"User removed",
 		"Haga clic en Añadir editores parar añadir un nuevo usuario.":"Click on Add editors to add a new editor.",
 		"Los usuarios responsables de este área tienen el permiso de editores por defecto.":"Users that are managers of this area have edition rights by default.",
 
@@ -1199,16 +1369,20 @@ curLangTextEn = {
 		/*actions*/
 		"Acciones":"Actions",
 		"Añadir acción":"Add action",
+    "Haga clic en Añadir acción para crear una nueva acción.":"Click Add action to create a new action.",
 		"Nombre de la acción":"Name of the action",
 		"Tipo de acción":"Type of action",
 		"Enviar email":"Send email",
 		"Nuevo registro rellenado en Formulario":"New record added in form",
 		"Registro eliminado en Formulario":"Record deleted from form",
 		"Nueva acción":"New action",
+    "Necesita definir un campo del tipo Email para poder crear esta acción":"You need to define a field of type Email to create this action",
+    "Si aplicas formato al contenido del email, el aspecto que visualizará el usuario podrá variar dependiendo de su cliente de correo.":"If you apply formatting to the contents of the email , the aspect that displayed the user can vary depending on your mail client.",
 		"No se puede modificar el tipo una vez creada la acción":"Type cannot be modified once the action has been created",
 		"Evento que lanza la acción":"Event that triggers the action",
 		"Se realizará la acción cuando ocurra este evento":"Action will be performed when the event occurs",
 		"Campo del Formulario con la dirección de email":"Field from the Form with the email address",
+    "Campo de la Lista con la dirección de email":"List field with the email address",
 		"Sólo están disponibles para seleccionar los campos del tipo Email":"Only fields with type Email are available to select",
 		"Asunto del email":"Email subject",
 		"Contenido del email":"Email content",
@@ -1246,6 +1420,8 @@ curLangTextEn = {
 		"Si sólo se crea una tipología de usuario, ésta será la que quede seleccionada por defecto para todos los usuarios y la que se asignará de forma automática a los nuevos usuarios que se den de alta en la aplicación.":"If there is only one typology of user defined, it will be shown by default selected for all users and will not be optional.",
 		"Las tipologías de archivos se gestionan en las áreas a las que pertenecen por los usuarios con permiso.":"The typologies of files are managed in their areas by the users with permission",
 		"Eliminar Tipología":"Delete typology",
+    "Tipología de la que copiar los campos:":"Copy typology fields:",
+    "Tipología CESEAND":"Typology CESEAND",
     /*END typologies*/
 
     /*categories*/

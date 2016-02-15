@@ -51,8 +51,8 @@
 
 			<label for="list_mode" class="control-label"><span lang="es">Modo de listado de elementos del área</span>:</label>
 			<select name="list_mode" id="list_mode" class="form-control">
-					<option value="">Completo (Por defecto)</option>
-					<option value="list" <cfif objectArea.list_mode IS "list">selected</cfif>>Lista</option>
+					<option value="" lang="es">Completo (Por defecto)</option>
+					<option value="list" lang="es" <cfif objectArea.list_mode IS "list">selected</cfif>>Lista</option>
 			</select>
 
 		</div>

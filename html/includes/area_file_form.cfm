@@ -508,7 +508,7 @@
 				<div class="col-xs-12">
 					<label class="control-label" for="new_area_name" lang="es">Añadir el archivo a más áreas</label>
 					<input type="hidden" name="areas_ids" id="areas_ids" value=""/>
-					<cfinput type="text" name="areas_ids_names" id="areas_ids_names" value="" readonly="true" onclick="openAreasSelector()" class="form-control" /> <button onclick="return openAreasSelector()" class="btn btn-default" lang="es">Seleccionar más áreas</button>
+					<cfinput type="text" name="areas_ids_names" id="areas_ids_names" value="" readonly="true" onclick="openAreasSelector()" class="form-control" /> <button onclick="return openAreasSelector()" class="btn btn-default"><span lang="es">Seleccionar más áreas</span></button>
 					<small class="help-block" lang="es">Además del área actual, el archivo estará acesible en las áreas seleccionadas</small>
 				</div>
 			</div>
@@ -587,7 +587,9 @@
 					</cfinvoke>
 
 					<script>
-					addRailoRequiredCheckBox("categories_ids[]", "Debe seleccionar al menos una categoría");
+
+						addRailoRequiredCheckBox("categories_ids[]", window.lang.translate("Debe seleccionar al menos una categoría"));
+
 					</script>
 
 					<p class="help-block" lang="es">Estas categorías permiten a los usuarios clasificar los elementos y filtrar las notificaciones por email que se reciben</p>
@@ -723,7 +725,7 @@
 
 		<div class="checkbox">
 		    <label>
-		    	<input type="checkbox" name="unlock" value="true" checked> Desbloquear archivo tras guardar modificación
+		    	<input type="checkbox" name="unlock" value="true" checked><span lang="es">Desbloquear archivo tras guardar modificación</span>
 		    </label>
 	  	</div>
 
@@ -743,7 +745,7 @@
 
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /> NO enviar notificación por email
+							<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /><span lang="es"> NO enviar notificación por email</span>
 						</label>
 						<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
 					</div>

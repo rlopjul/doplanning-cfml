@@ -558,8 +558,8 @@ $(function () {
 										<div class="col-sm-11 col-sm-offset-1">
 
 											<div class="checkbox">
-												<label>
-													<input type="checkbox" name="no_notify" id="no_notify" value="true" /> NO enviar notificación por email
+												<label  lang="es">
+													<input type="checkbox" name="no_notify" id="no_notify" value="true" ><span lang="es"> NO enviar notificación por email</span>
 												</label>
 											</div>
 

@@ -34,11 +34,11 @@
 <cfoutput>
 <div class="div_head_menu"><!---container--->
 	<div class="navbar navbar-default navbar-static-top" style="margin-bottom:0">
-		<div class="container-fluid">
-			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Mostrar información del área" id="openAreaImg" lang="es">
+		<div class="container-fluid" lang="es">
+			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" lang="es" title="Mostrar información del área" id="openAreaImg">
 				<i class="icon-info-sign more_info_img"></i>
 			</a>
-			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Ocultar información del área" id="closeAreaImg" lang="es" style="display:none;">
+			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" lang="es" title="Ocultar información del área" id="closeAreaImg" lang="es" style="display:none;">
 				<i class="icon-info-sign more_info_img"></i>
 			</a>
 			<span class="navbar_brand">#area_name#</span>
@@ -74,7 +74,7 @@
 
 		<div class="btn-group">
 			<a class="btn btn-default btn-sm" onclick="parent.loadModal('html_content/area_image_modify.cfm?area=#area_id#');"><i class="icon-picture icon-white"></i> <span lang="es">Cambiar imagen</span></a>
-			<a class="btn btn-default btn-sm" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo"> <span lang="es">Ver imagen</span></a>
+			<a class="btn btn-default btn-sm" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo"> <span lang="es">Ver Imagen</span></a>
 		</div>
 		<div class="btn-group pull-right">
 			<a href="area_users.cfm?area=#area_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh"></i></a>

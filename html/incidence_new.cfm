@@ -25,7 +25,7 @@
 </cfif>
 
 
- 
+
 <!---<cfoutput>
 <cfif APPLICATION.title EQ "DoPlanning">
 	<div style="float:left; padding-top:2px;">
@@ -45,20 +45,20 @@
 
 
 <div id="wrapper"><!--- wrapper --->
-        
+
 	<!---<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
 				<h1></h1>
 				<p></p>
-							
+
 			</div>
 		</div>
 	</div>--->
 
 	<!---<div class="div_contenedor_contenido">--->
-	
-	
+
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_client_head.cfm">
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_head.cfm">
@@ -77,15 +77,15 @@ Nueva incidencia
 <div class="contenedor_fondo_blanco">
 <!---<div class="div_send_message">--->
 <cfform action="#APPLICATION.htmlComponentsPath#/Incidence.cfc?method=createIncidence" method="post" enctype="multipart/form-data">
-	
+
 	<cfquery datasource="#APPLICATION.dsn#" name="incidences_types">
 		SELECT *
 		FROM app_incidences_types;
 	</cfquery>
-	
+
 	<label>Tipo:</label><cfselect name="type_id" query="incidences_types" value="id" display="title_es" multiple="no">
 	</cfselect>
-	
+
 	<label>Referente a:</label><cfselect name="related_to" multiple="no">
 		<option value="Login">Login</option>
 		<option value="Conectividad">Conectividad</option>
@@ -98,12 +98,12 @@ Nueva incidencia
 		</cfif>
 		<option value="Otro">Otro</option>
 	</cfselect>
-	
-	<label>Asunto:</label><cfinput type="text" name="title" class="input-xxlarge" value="" required="true" message="Asunto requerido">
-	
+
+	<label lang="es">Asunto:</label><cfinput type="text" name="title" class="input-xxlarge" value="" required="true" message="Asunto requerido">
+
     <label>Descripción detallada:</label>
 	<textarea name="description" class="input-xxlarge" rows="10"></textarea>
-    
+
     <div><cfinput type="submit" class="btn btn-primary" name="submit" value="Enviar"></div>
 </cfform>
 <!---</div>END div_send_message--->
@@ -119,7 +119,7 @@ Nueva incidencia
 
 
 	<!---</div>--->
-	
+
 </div>
 <!--- END wrapper --->
 

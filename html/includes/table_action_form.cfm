@@ -97,7 +97,7 @@
 		<cfif page_type IS 2>
 			<span class="divider">&nbsp;&nbsp;</span>
 
-			<a href="#APPLICATION.htmlComponentsPath#/Action.cfc?method=deleteActionRemote&action_id=#action_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteAction();" title="Eliminar campo" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+			<a href="#APPLICATION.htmlComponentsPath#/Action.cfc?method=deleteActionRemote&action_id=#action_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteAction();" title="Eliminar campo" class="btn btn-danger btn-sm" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 		</cfif>
 
 		<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
@@ -114,7 +114,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<label for="title" class="control-label"><span lang="es">Título</span> *</label>
-			<cfinput type="text" name="title" id="title" value="#action.title#" maxlength="255" required="true" message="Título requerido" class="form-control"/>
+			<cfinput type="text" name="title" id="title" value="#action.title#" maxlength="255" lang="es" required="true" message="Título requerido" class="form-control"/>
 		</div>
 	</div>
 

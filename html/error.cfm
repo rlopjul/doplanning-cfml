@@ -97,11 +97,11 @@
 
 				<div class="alert alert-warning" role="alert">
 
-					<i class="fa fa-exclamation-triangle"></i> <strong>#objectError.title#</strong><br />
+					<i class="fa fa-exclamation-triangle"></i> <strong lang="es">#objectError.title#</strong><br />
 					<cfif objectError.error_code IS 10000>
-						<span>Ha ocurrido un error inesperado, disculpe las molestias. Haga click en Volver para ir a la página anterior.</span>
+						<span lang="es">Ha ocurrido un error inesperado, disculpe las molestias. Haga click en Volver para ir a la página anterior.</span>
 					<cfelse>
-						<span>#objectError.description#</span>
+						<span lang="es">#objectError.description#</span>
 					</cfif>
 
 				</div>

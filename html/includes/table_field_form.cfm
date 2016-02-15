@@ -333,7 +333,7 @@
 		<cfif page_type IS 2>
 			<span class="divider">&nbsp;&nbsp;</span>
 
-			<a href="#APPLICATION.htmlComponentsPath#/Field.cfc?method=deleteFieldRemote&field_id=#field_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteField();" title="Eliminar campo" class="btn btn-danger btn-sm"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+			<a href="#APPLICATION.htmlComponentsPath#/Field.cfc?method=deleteFieldRemote&field_id=#field_id#&tableTypeId=#tableTypeId##url_return_path#" onclick="return confirmDeleteField();" title="Eliminar campo" class="btn btn-danger btn-sm" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
 		</cfif>
 
 		<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
@@ -813,7 +813,7 @@
 		<div class="col-md-12">
 
 			<button class="btn btn-info btn-sm" type="button" data-toggle="collapse" data-target="##advancedOptions" aria-expanded="false" aria-controls="advancedOptions">
-			  Mostrar opciones avanzadas
+			  <span lang="es">Mostrar opciones avanzadas</span>
 			</button>
 
 			<div class="collapse" id="advancedOptions">

@@ -59,7 +59,7 @@
 				</cfinvoke>
 
 				<script>
-				addRailoRequiredCheckBox("categories_ids[]", "Debe seleccionar al menos una categoría");
+				addRailoRequiredCheckBox("categories_ids[]", window.lang.translate("Debe seleccionar al menos una categoría"));
 				</script>
 
 				<p class="help-block" lang="es">Estas categorías permiten a los usuarios clasificar los elementos y filtrar las notificaciones por email que se reciben</p>

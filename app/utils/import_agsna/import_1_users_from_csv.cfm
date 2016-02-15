@@ -29,13 +29,13 @@
 <!-- InstanceEndEditable -->
 
 <div id="wrapper"><!--- wrapper --->
-        
+
 	<!---<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
 				<h1></h1>
 				<p></p>
-							
+
 			</div>
 		</div>
 	</div>--->
@@ -47,41 +47,41 @@
 
 <cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
-		
+
 <cfif isDefined("FORM.file") AND isDefined("FORM.table_to")>
-							
+
 		<cfinvoke component="ImportData" method="importTable" returnvariable="result" argumentcollection="#FORM#">
-		</cfinvoke>		
-		
+		</cfinvoke>
+
 		<cfif result.result IS true><!---The insert or modify is success--->
 
 			<cfset message = #result.message#>
 			<cfset alert_class = "alert-success">
-			
+
 		<cfelse><!---There is an error in the insert--->
-		
+
 			<cfset message = #result.message#>
 			<cfset alert_class = "alert-error">
-			
+
 		</cfif>
-		
+
 		<cfoutput>
 		<div class="alert #alert_class#">#message#</div>
-		
+
 
 		<strong>Datos importados:</strong>
 		<cfquery datasource="#client_dsn#" name="getImportedUsersQuery">
 			SELECT *
 			FROM #SESSION.client_abb#_users_to_import;
-		</cfquery>						
-		
+		</cfquery>
+
 		<cfdump var="#getImportedUsersQuery#" label="#SESSION.client_abb#_users_to_import" metainfo="no">
 
 		<div style="margin-top:10px"><a href="#CGI.SCRIPT_NAME#" class="btn">Volver</a></div>
 
 		</cfoutput>
 <cfelse>
-	
+
 		<cfset numColumns = 9>
 		<cfset arrayColumnsTo = arrayNew(1)>
 		<cfset arrayColumnsTo[1] = "email_login">
@@ -102,7 +102,7 @@
 		<cfset arrayColumnsTo[14] = "contact_name_es">
 		<cfset arrayColumnsTo[15] = "charge_es">
 		<cfset arrayColumnsTo[16] = "email_login">--->
-		
+
 		<cfset arrayColumnsFrom = arrayNew(1)>
 		<cfset arrayColumnsFrom[1] = "email_login">
 		<cfset arrayColumnsFrom[2] = "name">
@@ -122,14 +122,14 @@
 		<cfset arrayColumnsFrom[14] = "CONTACTO">
 		<cfset arrayColumnsFrom[15] = "CARGO">
 		<cfset arrayColumnsFrom[16] = "CORREO ELECTRONICO">--->
-		
+
 
 		<cfoutput>
 
 		<br/>
-		
+
 		El archivo utilizado para realizar esta importación deberá tener las siguientes características:<br/>
-		
+
 		<p style="padding-left:12px;">
 			-Debe ser un <strong>archivo .csv delimitado por ; codificado en iso-8859-1</strong> (codificación por defecto en Windows).<br />
 			-El <strong>orden de las columnas</strong> requerido es:<br />
@@ -157,8 +157,8 @@
 			-Una vez pulsado el botón "Cargar usuarios" <strong>debe esperar unos minutos hasta que se complete la operación</strong>.
 		</p>
 		<br/>
-		
-		
+
+
 
 		<!---<cfloop from="1" to="#arrayLen(#arrayColumnsTo#)#" index="curIndex" step="1">
 		#arrayColumnsTo[curIndex]#
@@ -176,16 +176,16 @@
 		</script>
 
 		<cfform name="import_data" method="post" action="#CGI.SCRIPT_NAME#" enctype="multipart/form-data" onsubmit="onSubmitForm();">
-			
+
 			<input name="num_colums" value="#numColumns#" type="hidden" />
-				
+
 			<cfloop from="1" to="#numColumns#" index="curColum">
 			<input type="hidden" name="col_to_#curColum#" value="#arrayColumnsTo[#curColum#]#"/>
 			</cfloop>
-			
+
 			<label for="client_dsn">Identificador de aplicación DoPlanning para la que se cargarán los usuarios:</label>
-			<input name="client_dsn" id="client_dsn" type="text" value="#client_dsn#" readonly="true" />	
-			
+			<input name="client_dsn" id="client_dsn" type="text" value="#client_dsn#" readonly="true" />
+
 			<label for="table_to">Tabla donde se cargarán los usarios</label>
 			<input type="text" name="table_to" id="table_to" value="#SESSION.client_abb#_users_to_import" readonly="true"/>
 
@@ -194,16 +194,16 @@
 			<div style="margin-top:5px" id="submitDiv1">
 				<input type="submit" value="Cargar usuarios" class="btn btn-primary" />
 			</div>
-					
+
 		</cfform>
 		</cfoutput>
-	
-	
+
+
 </cfif>
 
 <!-- InstanceEndEditable -->
 	<!---</div>--->
-	
+
 </div>
 <!--- END wrapper --->
 

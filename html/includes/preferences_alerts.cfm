@@ -613,7 +613,7 @@ Preferencias de notificaciones
 
 						<div class="col-sm-3">
 
-					 		<label for="notifications_digest_type_id">Enviar un resumen de la actividad:</label>
+					 		<label for="notifications_digest_type_id" lang="es">Enviar un resumen de la actividad:</label>
 
 					 	</div>
 
@@ -660,7 +660,7 @@ Preferencias de notificaciones
 
 						<div class="col-sm-3">
 
-							<label for="notifications_web_digest_type_id">Enviar un resumen de la actividad web:</label>
+							<label for="notifications_web_digest_type_id" lang="es">Enviar un resumen de la actividad web:</label>
 
 						</div>
 
