@@ -1961,6 +1961,7 @@
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
 		<cfargument name="read_only" type="boolean" required="false" default="false"/>
 		<cfargument name="list_mode" type="string" required="true"/>
+		<cfargument name="url_id" type="string" required="false">
 
 
 		<cfset var method = "createArea">
@@ -2062,6 +2063,7 @@
 		<cfargument name="description" type="string" required="true"/>
 		<cfargument name="hide_in_menu" type="boolean" required="false" default="false"/>
 		<cfargument name="menu_type_id" type="numeric" required="false"/>
+		<cfargument name="url_id" type="string" required="false"/>
 
 		<cfset var method = "createAreaInDatabase">
 
@@ -2096,7 +2098,11 @@
 				item_type_20_enabled = <cfqueryparam value="#arguments.item_type_20_enabled#" cfsqltype="cf_sql_bit">--->
 				<cfif isDefined("arguments.menu_type_id") AND arguments.menu_type_id NEQ "">
 					,menu_type_id = <cfqueryparam value = "#arguments.menu_type_id#" cfsqltype = "CF_SQL_integer">
-				</cfif>;
+				</cfif>
+				<cfif isDefined("arguments.url_id")>
+					,url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="CF_SQL_varchar">
+				</cfif>
+				;
 			</cfquery>
 			<cfquery name="getLastInsertId" datasource="#client_dsn#">
 				SELECT LAST_INSERT_ID() AS last_insert_id FROM #client_abb#_areas;
@@ -2236,6 +2242,7 @@
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
 		<cfargument name="read_only" type="boolean" required="false" default="false"/>
 		<cfargument name="list_mode" type="string" required="true"/>
+		<cfargument name="url_id" type="string" required="false">
 
 
 		<cfset var method = "updateArea">
@@ -2307,6 +2314,14 @@
 						<cfquery name="menuTypeIdQuery" datasource="#client_dsn#">
 							UPDATE #client_abb#_areas SET menu_type_id = <cfqueryPARAM value = "#arguments.menu_type_id#" cfsqltype = "CF_SQL_integer">
 							WHERE id = <cfqueryPARAM value = "#arguments.area_id#" CFSQLType = "CF_SQL_integer">;
+						</cfquery>
+					</cfif>
+
+
+					<cfif isDefined("arguments.url_id")>
+						<cfquery name="urlIdQuery" datasource="#client_dsn#">
+							UPDATE #client_abb#_areas SET url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
+							WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype = "cf_sql_integer">;
 						</cfquery>
 					</cfif>
 
