@@ -422,16 +422,16 @@ curLangTextEn = {
 		/*END functions.js*/
 
     /*view_messages_events_*/
-    "No hay mensajes en esta área.":" There are no messages in this area.",
+    "No hay mensajes en esta área.":"There are no messages in this area.",
     "Importar Mensajes":"Import Messages",
     "Eliminar todos los Mensajes del área":"Delete all messages area",
-    "No hay documentos doplanning en esta área.":" There are no documents DoPlanning in this area.",
+    "No hay documentos DoPlanning en esta área.":"There are no documents DoPlanning in this area.",
     "Importar Eventos":"Import Events",
     "Eliminar todos los Eventos del área":"Remove All Events area",
-    "No hay formularios en esta área.":" There are no forms in this area.",
+    "No hay formularios en esta área.":"There are no forms in this area.",
     "No hay boletines en esta área.":"There are no newsletters in this area.",
     "No hay publicaciones en esta área.":"There are no publications in this area",
-    "No se puede borrar una tipología que está usada en archivos. Debe eliminar los archivos o cambiar su tipología para poder eliminarla.":"You can not delete a typology that is used in files. You must delete files or change their type to remove it.",
+    "No se puede borrar una tipología que está usada en archivos. Debe eliminar los archivos o cambiar su tipología para poder eliminarla.":"You can not delete a typology that is used in files. You must delete files or change their typology to remove it.",
     "Tabla no disponible en esta área":"Table is not available in this area",
 
     /* list_row_new.cfm*/
