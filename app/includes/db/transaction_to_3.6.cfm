@@ -6,7 +6,7 @@
 		SELECT *
 		FROM information_schema.COLUMNS
 		WHERE TABLE_SCHEMA = 'dp_#new_client_abb#'
-		AND TABLE_NAME = '#new_client_abb#_areas'
+		AND TABLE_NAME = '#new_client_abb#_files'
 		AND COLUMN_NAME = 'url_id';
 	</cfquery>
 
@@ -39,6 +39,82 @@
       ALTER TABLE `#new_client_abb#_areas`
       ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `read_only`;
     </cfquery>
+
+    <!--- url_id unique column --->
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_areas`
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <!--- url_id colum in web elements --->
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_entries`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_news`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_events`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_pubmeds`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_images`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_lists`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_forms`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_lists_views`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_forms_views`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_mailings`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `publication_restricted`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
+    <cfquery datasource="#client_datasource#">
+      ALTER TABLE `#new_client_abb#_files`
+      ADD COLUMN `url_id` VARCHAR(75) NULL AFTER `thumbnail_format`,
+      ADD UNIQUE INDEX `url_id_UNIQUE` (`url_id` ASC);
+    </cfquery>
+
 
 		<cfcatch>
 			<cfoutput>
