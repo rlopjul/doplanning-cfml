@@ -1124,6 +1124,7 @@
 		<cfargument name="table_general" type="boolean" required="false" default="false">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="includeFromAreaColumn" type="boolean" required="false" default="false">
+		<cfargument name="includePositionColumn" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1164,11 +1165,13 @@
 							<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
 							0: {
 								sorter: false
-							},
-							1: {
-								sorter: "digit"
 							}
-							<cfelse>
+								<cfif arguments.includePositionColumn IS true>
+								, 1: {
+									sorter: "digit"
+								}
+								</cfif>
+							<cfelseif arguments.includePositionColumn IS true>
 							0: {
 								sorter: "digit"
 							}
@@ -1179,9 +1182,15 @@
 							<cfloop query="fields">
 
 								<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
-									<cfset curFieldIndex = fields.currentRow+1>
-								<cfelse>
+									<cfif arguments.includePositionColumn IS true>
+										<cfset curFieldIndex = fields.currentRow+1>
+									<cfelse>
+										<cfset curFieldIndex = fields.currentRow>
+									</cfif>
+								<cfelseif arguments.includePositionColumn IS true>
 									<cfset curFieldIndex = fields.currentRow>
+								<cfelse>
+									<cfset curFieldIndex = fields.currentRow-1>
 								</cfif>
 
 								<cfif fields.field_id IS "creation_date" OR fields.field_id IS "last_update_date" OR fields.field_type_id IS 6><!--- DATE --->
@@ -1233,7 +1242,7 @@
 								</cfloop> ],
 							</cfif>
 
-						<cfelse>
+						<cfelseif arguments.includePositionColumn IS true>
 							<cfif tableRows.recordCount LT 100><!---Ordenar de nuevo la tabla por el campo por defecto ralentiza las tablas con muchas filas--->
 								<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
 									sortList: [[1,1]] ,
@@ -1421,7 +1430,9 @@
 									<th style="width:25px;" class="filter-false"></th>
 								</cfif>
 							</cfif>
-							<th style="width:25px;">##</th>
+							<cfif arguments.includePositionColumn IS true>
+								<th style="width:25px;">##</th>
+							</cfif>
 							<!---<th>Fecha última modificación</th>--->
 							<cfloop query="fields">
 								<cfif fields.field_id EQ "last_update_date">
@@ -1520,13 +1531,15 @@
 						<tr <cfif dataSelected IS true>class="selected"</cfif> <cfif arguments.openRowOnSelect IS true>data-item-url="#row_page_url#"</cfif>>
 
 							<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
-							<td #tdStyle#><cfif arguments.includeLinkButton IS true><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()">#arguments.linkButtonText#</a></cfif>
-								<cfif arguments.includeEditButton IS true>
-								<a class="btn btn-primary btn-xs" href="#row_edit_page_url#" onclick="event.stopPropagation()"><i class="fa fa-pencil"></i></a>
-								</cfif>
-							</td>
+								<td #tdStyle#><cfif arguments.includeLinkButton IS true><a class="btn btn-default btn-xs" href="#row_page_url#" target="_blank" onclick="event.stopPropagation()">#arguments.linkButtonText#</a></cfif>
+									<cfif arguments.includeEditButton IS true>
+									<a class="btn btn-primary btn-xs" href="#row_edit_page_url#" onclick="event.stopPropagation()"><i class="fa fa-pencil"></i></a>
+									</cfif>
+								</td>
 							</cfif>
-							<td #tdStyle#>#tableRows.row_id#</td>
+							<cfif arguments.includePositionColumn IS true>
+								<td #tdStyle#>#tableRows.row_id#</td>
+							</cfif>
 
 							<cfset row_id = tableRows.row_id>
 							<cfloop query="fields">
