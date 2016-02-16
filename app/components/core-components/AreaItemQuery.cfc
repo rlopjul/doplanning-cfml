@@ -26,7 +26,8 @@
 	<!---getItem--->
 
 	<cffunction name="getItem" output="false" returntype="query" access="public">
-		<cfargument name="item_id" type="numeric" required="yes">
+		<cfargument name="item_id" type="numeric" required="false">
+		<cfargument name="url_id" type="string" required="false">
 		<cfargument name="itemTypeId" type="numeric" required="yes">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="published" type="boolean" required="false" default="true">
@@ -96,7 +97,7 @@
 					<cfelse>
 					, items.publication_date
 					</cfif>
-					, items.publication_validated, items.publication_restricted
+					, items.publication_validated, items.publication_restricted, items.url_id
 
 					<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5><!---Entries, News, Events--->
 						, items.iframe_url, items.iframe_display_type_id, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
@@ -168,7 +169,12 @@
 					ON items.id = items_categories.item_id
 					AND items.item_type_id = items_categories.item_type_id
 				</cfif>--->
-				WHERE items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+				WHERE
+				<cfif isDefined("arguments.url_id")>
+					items.url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
+				<cfelse>
+					items.id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
+				</cfif>
 				<cfif itemTypeWeb IS true><!--- WEB --->
 					<cfif arguments.published IS true>
 						AND ( items.publication_date IS NULL OR items.publication_date <= NOW() )
@@ -852,8 +858,8 @@
 			<cfset var dpDocumentColums = "NULL AS end_date, NULL AS done, locked, area_editable">
 			<cfset var fileColumns = "NULL AS end_date, NULL AS done, locked, NULL AS area_editable">
 
-			<cfset var webColums = "attached_image_id">
-			<cfset var webColumsNull = "NULL AS attached_image_id">
+			<cfset var webColums = "attached_image_id, url_id">
+			<cfset var webColumsNull = "NULL AS attached_image_id, NULL AS url_id">
 
 			<cfset var iframeColums = "">
 			<cfset var iframeColumsNull = "">
