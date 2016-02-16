@@ -73,9 +73,9 @@ curLangTextEn = {
 		"Áreas con actividad reciente":"Areas with recent activity",
     "Usuarios con actividad reciente":"Users with recent activity",
     "¿Seguro que deseas eliminar definitivamente esta área?":"Are you sure you want to permanently delete this area?",
-    "Ten en cuenta que se eliminarán DEFINITIVAMENTE todos los elementos del área: mensajes, archivos, tareas, eventos...":"Note that will be permanently deleted all elements of the area : messages, files , tasks, events ...",
-    "Quitar usuario de área":"Remove User Area",
-    "Este usuario es el responsable del área, debe asignar a otro usuario como responsable para poder quitar a este del área.":"This user is responsible for the area , you should be assigned to another user as accountable to steal this area .",
+    "Ten en cuenta que se eliminarán DEFINITIVAMENTE todos los elementos del área: mensajes, archivos, tareas, eventos...":"Note that will be permanently deleted all elements of the area: messages, files, tasks, events...",
+    "Quitar usuario de área":"Remove user from area",
+    "Este usuario es el responsable del área, debe asignar a otro usuario como responsable para poder quitar a este del área.":"This user is responsible for the area, you must assign another user as responsible to remove this one.",
 
 		/*Este grupo se tiene que borrar al incluir area_item_en.js*/
 		"Tareas pendientes":"Pending tasks",
@@ -767,15 +767,14 @@ curLangTextEn = {
 
 		"Define las áreas del árbol donde se podrá asociar el documento.":"This defines the areas of the tree in which the document can be associated",
 		"Importante":"Important",
-		"los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.":" files with scope PUBLIC WEB or INTRANET may be accessed by their URL through web or intranet without having to associate them to areas or approving their publication.",
+		"los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.":" files with scope PUBLIC WEB or INTRANET can be accessed by their URL through web or intranet without having to associate them to areas or approving their publication.",
 
 		"-Sin circuito de calidad: cada vez que se suba una versión del archivo se sobreescribirá la anterior (no se guardan las versiones previas del archivo)<br><br>-Con circuito de calidad: se guardan las distintas versiones del archivo y es requerido un proceso de revisión y aprobación de las versiones.":
 		"-Without quality circuit: each time a file is uploaded, the previous version will be overwritten(previous versions of the file are not saved)<br><br>-With quality circuit: different versions of the file are saved and it is required a process of review and approval of the versions",
     "Añadir el archivo a más áreas":"Add the file to more areas",
     "Seleccionar más áreas":"Select more areas",
-    "Además del área actual, el archivo estará acesible en las áreas seleccionadas":"In addition to the current area , the file will Reachable in selected areas",
+    "Además del área actual, el archivo estará acesible en las áreas seleccionadas":"In addition to the current area, the file will reachable in selected areas",
     "Ámbito de publicación:":"Scope of publication:",
-    "los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.":"PUBLIC files to WEB environment or intranet can be accessed through its URL through the web or intranet without that are associated with areas or approved web publication.",
     "Añadir archivo a áreas seleccionadas":"Add file to selected areas",
     "Añadir archivo a áreas seleccionadas":"Add file to selected area",
     "Si seleccionas esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.":"Selecting this option will not send an e-mail notification to the users.",
