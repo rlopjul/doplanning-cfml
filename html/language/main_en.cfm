@@ -1446,11 +1446,11 @@ IMPORTANT: Any notification of the application will be received, except for the 
 </cfscript>
 </cfsilent>
 
-<cfset dtExpires = (Now() + 1) />
+<cfset dtExpires = ( Now() + 1 ) />
 <cfset strExpires = GetHTTPTimeString( dtExpires ) />
 
 <!--- Set the expires header. --->
-<!---<cfheader name="expires" value="#strExpires#"/>--->
+<cfheader name="expires" value="#strExpires#"/>
 
 <cfcontent type="application/json">
 <cfoutput>#SerializeJSON(curLangTextEn)#</cfoutput>
