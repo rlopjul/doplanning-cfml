@@ -34,8 +34,8 @@
 	</fieldset>
 	<fieldset>
 		<legend>Datos del usuario administrador</legend>
-		<div><label for="user_family_name">Nombre</label>&nbsp;<cfinput type="text" name="user_family_name" value="" /></div>
-		<div><label for="user_name">zzApellidos</label>&nbsp;<cfinput type="text" name="user_name" value="" /></div>
+		<div><label for="user_family_name" lang="es">Nombre</label>&nbsp;<cfinput type="text" name="user_family_name" value="" /></div>
+		<div><label for="user_name" lang="es">Apellidos</label>&nbsp;<cfinput type="text" name="user_name" value="" /></div>
 		<div><label for="user_email">Email</label>*&nbsp;<cfinput type="text" name="user_email" value="" required="yes"/></div>
 		<div><label for="user_telephone">Teléfono</label><label for="user_telephone_ccode"></label>&nbsp;<cfinput type="text" name="user_telephone_ccode" value="34" size="5" /><cfinput type="text" name="user_telephone" value="" /></div>
 		<div><label for="user_mobile_phone">Teléfono móvil</label><label for="user_mobile_phone_ccode"></label>&nbsp;<cfinput type="text" name="user_mobile_phone_ccode" value="34" size="5"><cfinput type="text" name="user_mobile_phone" value=""></div>
