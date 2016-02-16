@@ -332,6 +332,9 @@
 					<cfif arguments.with_area IS true>
 					, areas.name AS area_name
 					</cfif>
+					<cfif itemTypeWeb IS true><!--- WEB --->
+					, items.url_id
+					</cfif>
 					FROM #client_abb#_#itemTypeTable# AS items
 					<cfif arguments.with_user IS true>
 						INNER JOIN #client_abb#_users AS users ON items.user_in_charge = users.id
