@@ -831,11 +831,11 @@ curLangTextEn = {
 
     /*form_view_new*/
     "Nueva Vista de Formulario":"New Form View",
-    "Ámbito de publicación definido:":"Defined area of ​​publication :",
+    "Ámbito de publicación definido:":"Defined area of ​​publication:",
+    "Sólo puede seleccionar áreas web":"You can select only web areas",
     "Si está definida, la Vista de Formulario se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set , the form view will be published on the specified date ( for web publishing and intranet only).",
     "Valida la Vista de Formulario para que pueda ser publicada (sólo para publicación en web e intranet).":"Validates Form View that can be published ( for web publishing and intranet only).",
     "No hay campos para seleccionar":"There are no fields to select",
-    "Ámbito de publicación definido: DoPlanning":"Defined area of ​​publication : DoPlanning",
 
 		/*area_file_replace.cfm*/
 		"Reemplazar Archivo":"Replace File",
