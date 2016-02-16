@@ -62,7 +62,6 @@ curLangTextEn = {
 		"Notificaciones":"Notifications",
 
 		"Lo último":"Last items",
-		"VER":"VIEW",
     "Ver":"View",
     "Área modificada":"Area Modified",
 		"Filtrar":"Filter",

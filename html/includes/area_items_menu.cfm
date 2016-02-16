@@ -175,7 +175,7 @@
 
 						<i class="icon-filter" style="color:##EAD142"></i>
 
-						<span lang="es">VER</span> <span class="caret"></span>
+						<span lang="es" style="text-transform:uppercase">Ver</span> <span class="caret"></span>
 
 					</button>
 
