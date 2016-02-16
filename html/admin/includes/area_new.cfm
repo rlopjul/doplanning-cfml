@@ -31,7 +31,7 @@
 
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h4 id="areaModalLabel">Crear área</h4>
+		    <h4 id="areaModalLabel" lang="es">Crear área</h4>
 		</div>
 
 	 	<div class="modal-body">
@@ -41,8 +41,8 @@
 		</div>
 
 		<div class="modal-footer">
-		    <button class="btn btn-default" data-dismiss="modal">Cancelar</button>
-		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)">Guardar</button>
+		    <button class="btn btn-default" data-dismiss="modal" lang="es">Cancelar</button>
+		    <button class="btn btn-primary" id="areaModifySubmit" onclick="submitAreaModal(event)" lang="es">Guardar</button>
 		</div>
 
 		<script>
@@ -81,7 +81,7 @@
 				e.preventDefault();
 
 				$("##areaForm").submit();
-				
+
 
 			}
 		</script>

@@ -7,7 +7,7 @@
 					<input id="hide_in_menu" name="hide_in_menu" type="checkbox" value="true" class="checkbox_locked" <cfif objectArea.hide_in_menu IS true>checked="checked"</cfif> />
 					Ocultar del menú web
 				</label>
-				<small class="help-block">
+				<small class="help-block" lang="es">
 					Si se selecciona esta opción no se mostrará el área ni sus áreas inferiores en el menú web
 				</small>
 			</div>
