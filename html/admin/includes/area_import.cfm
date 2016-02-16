@@ -22,6 +22,25 @@
 	<cfset objectArea.user_in_charge = userQuery.id>
 	<cfset objectArea.user_full_name = userQuery.user_full_name>
 
+	<!---get area_type--->
+	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaType" returnvariable="areaTypeResult">
+		<cfif isDefined("parent_area_id")>
+			<cfinvokeargument name="area_id" value="#parent_area_id#">
+		<cfelse>
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfif>
+	</cfinvoke>
+
+	<cfif areaTypeResult.result EQ true>
+
+		<cfset area_type = areaTypeResult.areaType>
+
+	<cfelse>
+		<div class="alert alert-danger">
+			<i class="icon-warning-sign"></i> <span>Error al obtener el tipo de área</span>
+		</div>
+	</cfif>
+
 	<cfoutput>
 
 		<div class="modal-header">

@@ -1,3 +1,59 @@
+<!---get area_type--->
+<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaType" returnvariable="areaTypeResult">
+	<cfif isDefined("parent_area_id")>
+		<cfinvokeargument name="area_id" value="#parent_area_id#">
+	<cfelse>
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfif>
+</cfinvoke>
+
+<cfif areaTypeResult.result EQ true>
+
+	<cfset area_type = areaTypeResult.areaType>
+
+<cfelse>
+	<div class="alert alert-danger">
+		<i class="icon-warning-sign"></i> <span>Error al obtener el tipo de área</span>
+	</div>
+</cfif>
+
+<cfif len(area_type) GT 0>
+	<cfset areaTypeWeb = true>
+<cfelse>
+	<cfset areaTypeWeb = false>
+</cfif>
+
+<cfif areaTypeWeb IS true>
+<script>
+
+	$(function () {
+
+		$('#url_id').focus( function() {
+
+			if(	$('#url_id').val().length == 0 ) {
+
+				var pageUrl = $('#name').val()
+		    pageUrl = pageUrl.toLowerCase();
+				pageUrl = removeDiacritics(pageUrl);
+		    pageUrl = pageUrl.replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g,"");
+		    pageUrl = pageUrl.replace(/\s+/g, "-");
+
+		    $('#url_id').val(pageUrl);
+			}
+
+		});
+
+		$('#url_id').mask("A", {
+			translation: {
+				"A": { pattern: /[\w@\-.+]/, recursive: true }
+			}
+		});
+
+	});
+
+</script>
+</cfif>
+
 <cfoutput>
 <form id="areaForm" method="post" enctype="multipart/form-data" class="form-horizontal"><!---class="form-inline"--->
 	<cfif isDefined("area_id")>
@@ -8,9 +64,21 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<label class="control-label" for="name" lang="es">Nombre</label>
-			<input type="text" name="name" id="name" value="#HTMLEditFormat(objectArea.name)#" required="true" message="Nombre de área requerida" class="form-control" />
+			<input type="text" name="name" id="name" value="#HTMLEditFormat(objectArea.name)#" required="true" title="Nombre de área requerida" class="form-control" />
 		</div>
 	</div>
+
+	<cfif areaTypeWeb IS true>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<label class="control-label" for="url_id" lang="es">Nombre de la página (URL)</label>
+				<input type="text" name="url_id" id="url_id" value="#HTMLEditFormat(objectArea.url_id)#" required="true" maxlength="75" title="Nombre de la página (URL) requerido" class="form-control" />
+				<small class="help-block" style="margin-bottom:0" lang="es">Valor que aparecerá en la URL de la página, ejemplo: nombre-de-la-pagina</small>
+			</div>
+		</div>
+
+	</cfif>
 
 	<cfif isDefined("objectParentArea")>
 	<div class="row">
@@ -83,12 +151,6 @@
 				</cfinvoke>
 
 				<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
-
-				<cfif len(area_type) GT 0>
-					<cfset areaTypeWeb = true>
-				<cfelse>
-					<cfset areaTypeWeb = false>
-				</cfif>
 
 				<cfloop array="#itemTypesArray#" index="itemTypeId">
 					<cfif itemTypeId NEQ 14 AND itemTypeId NEQ 15>

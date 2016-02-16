@@ -1,11 +1,11 @@
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>
-	
+
 	<cfset area_id = URL.area>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="objectArea">
 		<cfinvokeargument name="area_id" value="#area_id#"/>
 	</cfinvoke>
-	
+
 	<cfoutput>
 
 		<div class="modal-header">
@@ -14,7 +14,7 @@
 		</div>
 
 	 	<div class="modal-body">
-	  
+
 			<cfinclude template="#APPLICATION.htmlPath#/admin/includes/area_form.cfm"/>
 
 		</div>
@@ -25,27 +25,40 @@
 		</div>
 
 		<script>
+
+			$(function () {
+
+				$("##areaForm").validate({
+
+					submitHandler: function(form) {
+
+						if( $.isNumeric($("##user_in_charge").val()) ){
+
+							if( $("##name").val().length > 0 ){
+
+								postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea");
+
+							} else {
+								showAlertModal("Debe introducir un nombre de área");
+							}
+
+						} else {
+
+							showAlertModal("Debe seleccionar un usuario responsable");
+						}
+
+					}
+
+				});
+
+			});
+
 			function submitAreaModal(e){
 
-			    if(e.preventDefault)
-					e.preventDefault();
-			      
-				<!--- postModalForm("##areaForm", "##areaModal", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea", "#return_page#", "areaIframe"); --->
+			  if(e.preventDefault)
+				e.preventDefault();
 
-				<!---postModalForm("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea", "#return_page#", "areaIframe"); --->
-
-				if( $.isNumeric($("##user_in_charge").val()) ){
-
-			    	if( $("##name").val().length > 0 ){
-			    		postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=updateArea");
-			    	} else {
-			    		showAlertModal(window.lang.translate("Debe introducir un nombre de área"));
-			    	}
-
-				} else {
-
-					showAlertModal(window.lang.translate("Debe seleccionar un usuario responsable"));
-				}
+				$("##areaForm").submit();
 
 			}
 		</script>

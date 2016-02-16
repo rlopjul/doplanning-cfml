@@ -25,6 +25,7 @@
 	<cfset objectArea.list_mode = objectParentArea.list_mode>
 	<cfset objectArea.users_visible = objectParentArea.users_visible>
 	<cfset objectArea.read_only = objectParentArea.read_only>
+	<cfset objectArea.url_id = "">
 
 	<cfoutput>
 
@@ -45,23 +46,42 @@
 		</div>
 
 		<script>
+
+			$(function () {
+
+				$("##areaForm").validate({
+
+					submitHandler: function(form) {
+
+						if( $.isNumeric($("##user_in_charge").val()) ){
+
+							if( $("##name").val().length > 0 ){
+
+								postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=createArea");
+
+							} else {
+				    		showAlertModal("Debe introducir un nombre de área");
+				    	}
+
+						} else {
+
+							showAlertModal("Debe seleccionar un usuario responsable");
+						}
+
+					}
+
+				});
+
+			});
+
+
 			function submitAreaModal(e){
 
-			    if(e.preventDefault)
-					e.preventDefault();
+			  if(e.preventDefault)
+				e.preventDefault();
 
-			    if( $.isNumeric($("##user_in_charge").val()) ){
-
-			    	if( $("##name").val().length > 0 ){
-			    		postModalFormTree("##areaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=createArea");
-			    	} else {
-			    		showAlertModal("Debe introducir un nombre de área");
-			    	}
-
-				} else {
-
-					showAlertModal("Debe seleccionar un usuario responsable");
-				}
+				$("##areaForm").submit();
+				
 
 			}
 		</script>
