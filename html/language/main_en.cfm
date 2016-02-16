@@ -338,8 +338,8 @@ curLangTextEn = {
 		"Selección de área":"Area selection",
 		"Nueva vista":"New view",
 		"Haga clic en Nueva vista para crear una nueva vista.":"Click in New view to create a new view.",
-    "Lista de extensiones de archivo aceptadas (por defecto se aceptan todas)":"List of file extensions accepted ( by default all accepted)",
-    "Introduce cada extensión en una línea distinta. Ejemplos de extensiones válidas: .pdf .doc .pages .jpg .png":"Enter each extension on a separate line . Examples of valid extensions: .png .jpg .pdf .doc .pages",
+    "Lista de extensiones de archivo aceptadas (por defecto se aceptan todas)":"List of file extensions accepted (by default all accepted)",
+    "Introduce cada extensión en una línea distinta. Ejemplos de extensiones válidas: .pdf .doc .pages .jpg .png":"Enter each extension on a separate line. Examples of valid extensions: .pdf .doc .pages .jpg .png",
 
 		"El archivo utilizado para realizar esta importación deberá tener las siguientes características:":"The import file must have the following features:",
 		"-Tipo de archivo:":"-File type:",
@@ -1102,7 +1102,7 @@ IMPORTANT: Any notification of the application will be received, except for the 
     "Tipología definida por defecto en esta área":"Default typology defined in this area",
     "Definir Tipología por defecto":"Define default typology",
     "Definir Tipología por defecto para este área":"Define default typology in this area",
-    "Si ELIMINA el campo, se borrarán definitivamente todos los contenidos que almacena. ¿Seguro que desea eliminar el campo?":"If you delete the field , all the contents will be removed permanently stored . Are you sure you want to delete the field?",
+    "Si ELIMINA el campo, se borrarán definitivamente todos los contenidos que almacena. ¿Seguro que desea eliminar el campo?":"If you delete the field, all the contents will be removed permanently stored. Are you sure you want to delete the field?",
 
 		"Permitir copiar la estructura de campos de esta lista":"Allow to copy the field structure from this list",
 		"Permitir copiar la estructura de campos de este formulario":"Allow to copy the field structure from this form",
@@ -1418,7 +1418,6 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Las tipologías de archivos se gestionan en las áreas a las que pertenecen por los usuarios con permiso.":"The typologies of files are managed in their areas by the users with permission",
 		"Eliminar Tipología":"Delete typology",
     "Tipología de la que copiar los campos:":"Copy typology fields:",
-    "Tipología CESEAND":"Typology CESEAND",
     /*END typologies*/
 
     /*categories*/
