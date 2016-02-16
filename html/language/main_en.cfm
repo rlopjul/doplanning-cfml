@@ -448,12 +448,12 @@ curLangTextEn = {
     "Archivo de datos requerido para la importación":"Data file required for import",
 
     /*list_view_new*/
-    "Nueva Vista de Lista":"New View List",
-    "Si está definida, la Vista de Lista se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set, the List view will be published on the specified date (only for Web publishing and intranet )",
-    "Valida la Vista de Lista para que pueda ser publicada (sólo para publicación en web e intranet).":"Validates the List view so it can be published ( for web publishing and intranet only).",
+    "Nueva Vista de Lista":"New List wiew",
+    "Si está definida, la Vista de Lista se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set, the List view will be published on the specified date (only for web publishing and intranet)",
+    "Valida la Vista de Lista para que pueda ser publicada (sólo para publicación en web e intranet).":"Validates the List view so it can be published (for web publishing and intranet only).",
     "Lista eliminada.":"List Deleted.",
     "Lista creada, ahora debe definir los campos.":"List created, you must now define the fields.",
-    "Publicación visible sólo para usuarios identificados:":"Publication visible to identified user",
+    "Publicación visible sólo para usuarios identificados:":"Publication visible only to identified user",
 
     /*area_item_content*/
 		"Modificar":"Modify",
@@ -823,7 +823,7 @@ curLangTextEn = {
 
 		/*area_file_modify.cfm*/
 		"Modificar Archivo":"Modify File",
-    "Modificar Archivo de área":"Change File area",
+    "Modificar Archivo de área":"Change File",
     "Desbloquear archivo tras guardar modificación":"Unlock file after saving modification",
     "Datos modificados":"Data modified",
 
@@ -847,7 +847,7 @@ curLangTextEn = {
 		/*END area_file_replace.cfm*/
 
     /*area_file_associate_areas*/
-    "Asociar archivo a áreas":"Associate file areas",
+    "Asociar archivo a áreas":"Associate file to areas",
     "Seleccione las áreas a las que desea asociar el archivo":"Select the areas you want to associate the file",
     "Ámbito de publicación definido para el archivo:":"Publication scope defined for the file:",
     "Archivo desbloqueado.":"File is unlocked.",
