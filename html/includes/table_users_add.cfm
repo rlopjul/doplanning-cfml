@@ -36,17 +36,17 @@
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_users_select.cfm">
 </div>
 
-<div style="margin-left:5px;"><small>Los usuarios que se añadan como editores recibirán un email notificándoselo.</small></div>
+<div style="margin-left:5px;"><small lang="es">Los usuarios que se añadan como editores recibirán un email notificándoselo.</small></div>
 
 <cfoutput>
 <script type="text/javascript">
-	
+
 	var tableId = #table_id#;
 	var tableTypeId = #tableTypeId#;
 	var tableUsers = #serializeJSON(tableUsersArray)#;
 
 	var newUsers = [];
-	
+
 	function addUser(userId, userName){
 
 		if(tableUsers.indexOf(userId) == -1) {
@@ -56,7 +56,7 @@
 			alert(userName+" ya es editor de la #tableTypeNameEs#");
 			return false;
 		}
-			
+
 	}
 
 	function sendUsersForm(){
@@ -90,8 +90,8 @@
 		  		alert(status);
 		  		newUsers = [];
 		  	}
-			
-		  }		  
+
+		  }
 		});
 
 	}

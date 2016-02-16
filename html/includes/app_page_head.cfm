@@ -216,10 +216,10 @@
 							  <cfif isDefined("objectArea")>
 										<cfset areaInfoEnabled = true>
 								  	<small style="float:right">
-										<a class="navbar-link" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Mostrar información del área" id="openAreaImg">
+										<a class="navbar-link" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" lang="es" title="Mostrar información del área" id="openAreaImg">
 											<i class="icon-info-sign more_info_img" <!---onclick="openAreaInfo()"--->></i>
 										</a>
-										<a class="navbar-link" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" title="Ocultar información del área" id="closeAreaImg" style="display:none;">
+										<a class="navbar-link" data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" lang="es" title="Ocultar información del área" id="closeAreaImg" style="display:none;">
 											<i class="icon-info-sign more_info_img" <!---onclick="openAreaInfo()"--->></i>
 										</a>
 									</small>
