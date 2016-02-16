@@ -876,8 +876,6 @@ curLangTextEn = {
 		/*search_2_bar.cfm*/
 		"Todas":"All",
 		"Se muestran las tipologías usadas en al menos un archivo":"The typologies listed are used at least in one file",
-    "El número de columnas del archivo":"in this archive",
-    "no corresponde con las necesarias para la importación ":"nothing is imopirtta",
 		/*END search_2_bar.cfm*/
 
 		/*admin/main.cfm*/
