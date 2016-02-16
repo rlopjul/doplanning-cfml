@@ -370,7 +370,7 @@
 	</cfif>
 
 
-	<input name="submit" type="submit" class="btn btn-primary"lang="es" value="Añadir archivo a áreas seleccionadas" />
+	<input name="submit" type="submit" class="btn btn-primary" lang="es" value="Añadir archivo a áreas seleccionadas" />
 	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 	</cfoutput>
 </cfform>
