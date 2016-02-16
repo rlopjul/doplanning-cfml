@@ -405,7 +405,7 @@ curLangTextEn = {
     "Propietario actual":"Current owner",
 		"Nuevo propietario":"New owner",
     "Debe seleccionar un nuevo propietario":"Select a user as a new owner",
-    "ebe seleccionar un propietario distinto al actual":"Select a different owner other than current",
+    "Debe seleccionar un propietario distinto al actual":"Select a different owner other than current",
     "Propietario modificado":"Owner Changed",
     "Lista modificada.":"List Modified.",
 		"Se enviará notificación por email del cambio al nuevo propietario y al anterior.":"An email notification will be sent both to the new owner and to the preceding one",
