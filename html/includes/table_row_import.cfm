@@ -177,7 +177,7 @@
 		<div class="row">
 			<div class="col-sm-6">
 				<label class="control-label" for="file" lang="es">Archivo CSV con los registros a importar</label>
-				<cfinput name="file" id="file" type="file" required="yes" accept=".csv,.tsv,text/plain" lang="es" message="Archivo de datos requerido para la importación" class="form-control">
+				<cfinput name="file" id="file" type="file" required="yes" accept=".csv,.tsv,text/plain" message="Archivo de datos requerido para la importación" class="form-control">
 			</div>
 		</div>
 

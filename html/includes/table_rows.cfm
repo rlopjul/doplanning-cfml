@@ -501,7 +501,7 @@
 
 	<div class="row">
 		<div class="col-sm-12">
-			<span class="label label-primary" lang="es">#tableRows.recordCount# <span lang="es">registros</span></span>
+			<span class="label label-primary">#tableRows.recordCount# <span lang="es">registros</span></span>
 		</div>
 	</div>
 

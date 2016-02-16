@@ -34,7 +34,7 @@
 <cfoutput>
 <div class="div_head_menu"><!---container--->
 	<div class="navbar navbar-default navbar-static-top" style="margin-bottom:0">
-		<div class="container-fluid" lang="es">
+		<div class="container-fluid">
 			<a data-toggle="collapse" href="##areaInfo" aria-expanded="false" aria-controls="areaInfo" lang="es" title="Mostrar información del área" id="openAreaImg">
 				<i class="icon-info-sign more_info_img"></i>
 			</a>

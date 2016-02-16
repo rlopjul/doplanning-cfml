@@ -114,7 +114,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<label for="title" class="control-label"><span lang="es">Título</span> *</label>
-			<cfinput type="text" name="title" id="title" value="#action.title#" maxlength="255" lang="es" required="true" message="Título requerido" class="form-control"/>
+			<cfinput type="text" name="title" id="title" value="#action.title#" maxlength="255" required="true" message="Título requerido" class="form-control"/>
 		</div>
 	</div>
 
