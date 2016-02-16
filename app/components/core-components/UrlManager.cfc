@@ -306,4 +306,23 @@
 	</cffunction>
 
 
+	<!--- ----------------------- getAttachedFileWebPage -------------------------------- --->
+
+	<cffunction name="getAttachedFileWebPage" access="public" returntype="string">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeName" type="string" required="true">
+
+		<cfset var fileWebUrl = "">
+
+		<cfset fileWebUrl = "download_file.cfm?file=#arguments.file_id#">
+
+		<cfset fileWebUrl = fileWebUrl&"&#arguments.itemTypeName#=#arguments.item_id#">
+
+		<cfset fileWebUrl = fileWebUrl&"&open">
+
+		<cfreturn fileWebUrl>
+	</cffunction>
+
+
 </cfcomponent>

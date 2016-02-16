@@ -2089,9 +2089,9 @@
 
 							</div>
 
-							<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
+							<cfif (area_type EQ "web" OR area_type EQ "intranet") AND isDefined("arguments.webPath")>
 
-								<cfif (area_type EQ "web" OR area_type EQ "intranet") AND (itemTypeId IS 4 OR itemTypeId IS 5) AND isDefined("arguments.webPath")>
+								<cfif itemTypeId IS 4 OR itemTypeId IS 5><!--- News AND Events --->
 
 									<!---itemWebUrl--->
 									<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getItemWebPage" returnvariable="itemPage">
@@ -2103,9 +2103,23 @@
 
 									<div class="div_message_page_label"><span lang="es">URL relativa en la <b>#area_type#</b>:</span></div>
 									<input type="text" value="#itemWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/>
+
+								<cfelseif itemTypeId IS 9 AND isNumeric(objectItem.attached_image_id)><!--- Images --->
+
+									<!---fileWebUrl--->
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAttachedFileWebPage" returnvariable="filePage">
+										<cfinvokeargument name="file_id" value="#objectItem.attached_image_id#">
+										<cfinvokeargument name="item_id" value="#objectItem.item_id#">
+										<cfinvokeargument name="itemTypeName" value="#itemTypeName#">
+									</cfinvoke>
+									<cfset fileWebUrl = "/#arguments.webPath#/#filePage#">
+
+									<div class="div_file_page_label"><span lang="es">URL</span> <b lang="es">relativa para enlazar el archivo en la #area_type#</b><cfif APPLICATION.publicationValidation IS true AND objectItem.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif></span>:</div>
+									<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
+
 								</cfif>
 
-							<!---</cfif>--->
+							</cfif>
 
 						</div>
 
