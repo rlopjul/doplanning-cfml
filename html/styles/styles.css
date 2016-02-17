@@ -1216,7 +1216,7 @@ fieldset {
 .data-table td {
 	font-size: 12px; /*cambiado de 11 a 12 porque hay usuarios que no pueden leerlo*/
 }
-.data-table tr {
+.data-table tr:not(.tablesorter-scroller-spacer) {
 	height: 28px;
 	cursor: pointer;
 }
