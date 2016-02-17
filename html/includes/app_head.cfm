@@ -101,9 +101,38 @@
 
 <script>
 
+<!---function updateTableSorterScroller() {
+
+  var windowHeight = $(window).height();
+  var topHeight = $('.tablesorter').offset().top+$('.tablesorter-scroller-header').height();
+  var scrollerHeight = 300;
+
+  if( windowHeight > 768) {
+
+    scrollerHeight = windowHeight-topHeight;
+
+
+  } else {
+
+    scrollerHeight = windowHeight-$('.tablesorter').offset();
+
+  }
+
+  $('.tablesorter-scroller-table').css({
+      height: '',
+      'max-height': scrollerHeight + 'px'
+  });
+
+  console.log($('.tablesorter').offset().top);
+  //console.log(height);
+
+}--->
+
 $(window).resize( function() {
 
     adjustMarginTop();
+
+    <!---updateTableSorterScroller();--->
 
 });
 
@@ -163,8 +192,10 @@ function adjustMarginTop() {
         if( $('#mainNavBarFixedTop').height() > mainContainerMarginTopPx ) {
 
              $('.app_main_container').css('padding-top', $('#mainNavBarFixedTop').height()+10);
-
         }
+
+        <!---$('.tablesorter-sticky-wrapper').css('padding-top', $('#mainNavBarFixedTop').height()); DESHABILITADO PROVISIONALMENTE --->
+
 
         <!---alert("mainNavBarFixedTop height "+$('#mainNavBarFixedTop').height())
         alert("app_main_container height "+$('.app_main_container').css('margin-top'));--->

@@ -1125,6 +1125,8 @@
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="includeFromAreaColumn" type="boolean" required="false" default="false">
 		<cfargument name="includePositionColumn" type="boolean" required="false" default="true">
+		<cfargument name="doubleScrollEnabled" type="boolean" required="false" default="true">
+		<cfargument name="scrollerEnabled" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1151,10 +1153,15 @@
 						<!---widthFixed: true,--->
 						showProcessing: true,
 						delayInit: false, <!--- Tiene que estar a false para que funcione filter sin orden de columnas predefinido --->
-						widgets: ['filter','stickyHeaders'
+						widgets: ['filter'
 							<!---<cfif tableRows.recordCount LT 100>,'saveSort'</cfif>Este plugin no debe usarse con listas grandes--->
 							<cfif arguments.mathEnabled IS true>,'math'</cfif>
 							<cfif isDefined("arguments.columnSelectorContainer")>,'columnSelector'</cfif>
+							<cfif arguments.scrollerEnabled IS true>
+								,'scroller'
+							<cfelse>
+								<!---,'stickyHeaders'--->
+							</cfif>
 						],<!---'zebra','uitheme',--->
 
 						<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
@@ -1367,10 +1374,14 @@
 
 					</cfif>
 
-					$('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#').doubleScroll({
-					    onlyIfScroll: true, // top scrollbar is not shown if the bottom one is not present
-					    resetOnWindowResize: true
-					});
+					<cfif arguments.doubleScrollEnabled IS true>
+
+						$('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#').doubleScroll({
+						    onlyIfScroll: true, // top scrollbar is not shown if the bottom one is not present
+						    resetOnWindowResize: true
+						});
+
+					</cfif>
 
 					<!---$('##dataTablePopover#arguments.tableTypeId#_#arguments.table_id#').popover({
 					      placement: 'right',
