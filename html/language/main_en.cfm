@@ -308,7 +308,6 @@ curLangTextEn = {
 		"Valor":"Value",
 
 		"Registros":"Records",
-    "registros":"records",
 		"Campos":"Fields",
 		"Campo":"Field",
 		"Vistas":"Views",
