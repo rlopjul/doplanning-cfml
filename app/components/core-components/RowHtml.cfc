@@ -1161,7 +1161,7 @@
 							<cfif arguments.scrollerEnabled IS true>
 								,'scroller'
 							<cfelse>
-								<!---,'stickyHeaders'--->
+								,'stickyHeaders'
 							</cfif>
 						],<!---'zebra','uitheme',--->
 
