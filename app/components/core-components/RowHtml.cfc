@@ -1120,6 +1120,7 @@
 		<cfargument name="linkButtonText" type="string" required="false" default='<i class="fa fa-external-link"></i>'>
 		<cfargument name="includeEditButton" type="boolean" required="false" default="false">
 		<cfargument name="rowUrlPath" type="string" required="false">
+		<cfargument name="fileUrlPath" type="string" required="false">
 		<cfargument name="includeFullText" type="boolean" required="false" default="true">
 		<cfargument name="table_general" type="boolean" required="false" default="false">
 		<cfargument name="area_id" type="numeric" required="false">
@@ -1731,7 +1732,19 @@
 													</cfinvoke>
 
 													<cfif fileQuery.recordCount GT 0>
-														<cfset field_value = fileQuery.file_name>
+														<cfif isDefined("arguments.fileUrlPath")>
+
+															<cfset downloadFileUrl = "#arguments.fileUrlPath#?file=#fileQuery.id#&#tableTypeName#=#arguments.table_id#">
+
+															<cfif arguments.openRowOnSelect IS true>
+																<cfset field_value = '<a href="#downloadFileUrl#" onclick="return downloadFileLinked(this,event)">#fileQuery.file_name#</a>'>
+															<cfelse>
+																<cfset field_value = '<a href="#downloadFileUrl#">#fileQuery.file_name#</a>'>
+															</cfif>
+
+														<cfelse>
+															<cfset field_value = fileQuery.file_name>
+														</cfif>
 													<cfelse>
 														<cfset field_value = "<i>ARCHIVO NO DISPONIBLE</i>">
 													</cfif>

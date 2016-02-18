@@ -537,6 +537,7 @@
 								<cfif objectItem.general IS true>
 									<cfinvokeargument name="includeFromAreaColumn" value="true">
 								</cfif>
+								<cfinvokeargument name="fileUrlPath" value="file_download.cfm">
 							</cfinvoke>
 
 						</div><!--- END col-sm-12 --->
