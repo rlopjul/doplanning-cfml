@@ -472,6 +472,7 @@
 			<cfargument name="app_version" type="string" required="true">
 			<cfargument name="columnSelectorContainer" type="string" required="false">
 			<cfargument name="tablesorterEnabled" type="boolean" required="false">
+			<cfargument name="scrollerEnabled" type="boolean" required="false">
 			<cfargument name="mathEnabled" type="boolean" required="false" default="false">
 			<cfargument name="includeLinkButton" type="boolean" required="false">
 			<cfargument name="includeEditButton" type="boolean" required="false">
@@ -498,6 +499,7 @@
 					<cfinvokeargument name="app_version" value="#arguments.app_version#">
 					<cfinvokeargument name="columnSelectorContainer" value="#arguments.columnSelectorContainer#">
 					<cfinvokeargument name="tablesorterEnabled" value="#arguments.tablesorterEnabled#">
+					<cfinvokeargument name="scrollerEnabled" value="#arguments.scrollerEnabled#">
 					<cfinvokeargument name="mathEnabled" value="#arguments.mathEnabled#">
 					<cfinvokeargument name="includeLinkButton" value="#arguments.includeLinkButton#">
 					<cfinvokeargument name="includeEditButton" value="#arguments.includeEditButton#">

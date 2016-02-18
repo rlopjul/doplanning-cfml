@@ -527,6 +527,7 @@
 								<cfinvokeargument name="app_version" value="#app_version#">
 								<cfinvokeargument name="columnSelectorContainer" value="columnSelector#tableTypeId#_#table_id#">
 								<cfinvokeargument name="tablesorterEnabled" value="true">
+								<cfinvokeargument name="scrollerEnabled" value="true">
 								<cfinvokeargument name="includeLinkButton" value="true">
 								<cfif tableTypeId IS 1 AND ( is_user_area_responsible OR table_edit_permission IS true ) AND objectArea.read_only IS false>
 									<cfinvokeargument name="includeEditButton" value="true">

@@ -1147,6 +1147,41 @@
 
 		<cfif arguments.tablesorterEnabled IS true>
 			<script>
+
+				function updateTableSorterScroller() {
+
+					var windowHeight = $(window).height();
+
+					var topHeight = $('.tablesorter').offset().top+$('.tablesorter-scroller-header').height();
+					var scrollerHeight = 0;
+
+					if( $('##mainNavBarFixedTop').css('position') == "fixed" ) {
+
+						if(windowHeight > 768)
+							scrollerHeight = windowHeight-topHeight;
+						else {
+							scrollerHeight = windowHeight-$('.tablesorter').offset().top;
+						}
+
+					} else {
+
+						scrollerHeight = windowHeight-$('.tablesorter-scroller-header').height();
+
+					}
+
+					$('.tablesorter-scroller-table').css({
+							height: '',
+							'max-height': scrollerHeight + 'px'
+					});
+
+				}
+
+				$(window).resize( function() {
+
+				    updateTableSorterScroller();
+
+				});
+
 				$(document).ready(function() {
 
 					$("##dataTable#arguments.tableTypeId#_#arguments.table_id#").tablesorter({  <!--- Se le asigna un id único a la tabla por si hay más en la misma página --->
@@ -1349,6 +1384,11 @@
 
 							</cfif>
 					    }
+
+					}).bind('tablesorter-ready', function(e, table) {
+
+						updateTableSorterScroller();
+
 					});
 
 
@@ -1394,6 +1434,7 @@
 					      // call this function to copy the column selection code into the popover
 					      $.tablesorter.columnSelector.attachTo( $("##dataTable#arguments.tableTypeId#_#arguments.table_id#"), '##popoverTarget#arguments.tableTypeId#_#arguments.table_id#');
 					});--->
+
 
 				});
 			</script>

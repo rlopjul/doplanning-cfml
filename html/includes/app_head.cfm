@@ -101,38 +101,9 @@
 
 <script>
 
-<!---function updateTableSorterScroller() {
-
-  var windowHeight = $(window).height();
-  var topHeight = $('.tablesorter').offset().top+$('.tablesorter-scroller-header').height();
-  var scrollerHeight = 300;
-
-  if( windowHeight > 768) {
-
-    scrollerHeight = windowHeight-topHeight;
-
-
-  } else {
-
-    scrollerHeight = windowHeight-$('.tablesorter').offset();
-
-  }
-
-  $('.tablesorter-scroller-table').css({
-      height: '',
-      'max-height': scrollerHeight + 'px'
-  });
-
-  console.log($('.tablesorter').offset().top);
-  //console.log(height);
-
-}--->
-
 $(window).resize( function() {
 
     adjustMarginTop();
-
-    <!---updateTableSorterScroller();--->
 
 });
 
