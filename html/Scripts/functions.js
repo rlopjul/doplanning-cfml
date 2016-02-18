@@ -259,7 +259,7 @@ function hideAlertMessage(){
 
 }
 
-function updateTableSorterScroller() {
+function getTableSorterScrollerHeight() {
 
 	var windowHeight = $(window).height();
 
@@ -279,6 +279,12 @@ function updateTableSorterScroller() {
 		scrollerHeight = windowHeight-$('.tablesorter-scroller-header').height();
 
 	}
+
+	return scrollerHeight;
+
+}
+
+function updateTableSorterScroller(scrollerHeight) {
 
 	$('.tablesorter-scroller-table').css({
 			height: '',

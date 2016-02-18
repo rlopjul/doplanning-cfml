@@ -165,9 +165,6 @@ function adjustMarginTop() {
              $('.app_main_container').css('padding-top', $('#mainNavBarFixedTop').height()+10);
         }
 
-        <!---$('.tablesorter-sticky-wrapper').css('padding-top', $('#mainNavBarFixedTop').height());Fix to tablesorter sticky headers--->
-
-
         <!---alert("mainNavBarFixedTop height "+$('#mainNavBarFixedTop').height())
         alert("app_main_container height "+$('.app_main_container').css('margin-top'));--->
 

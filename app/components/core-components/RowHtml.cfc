@@ -1147,10 +1147,20 @@
 
 		<cfif arguments.tablesorterEnabled IS true>
 			<script>
-			
+
+				function adjustTableSorterStickyHeader(){
+
+					if( $('##mainNavBarFixedTop').css('position') == "fixed" ) {
+
+						$('.tablesorter-sticky-wrapper').css('margin-top', $('##mainNavBarFixedTop').height()+20);
+
+					}
+
+				}
+
 				$(window).resize( function() {
 
-				    updateTableSorterScroller();
+				    updateTableSorterScroller(getTableSorterScrollerHeight());
 
 				});
 
@@ -1165,11 +1175,11 @@
 							<!---<cfif tableRows.recordCount LT 100>,'saveSort'</cfif>Este plugin no debe usarse con listas grandes--->
 							<cfif arguments.mathEnabled IS true>,'math'</cfif>
 							<cfif isDefined("arguments.columnSelectorContainer")>,'columnSelector'</cfif>
-							<cfif arguments.scrollerEnabled IS true>
+							<!---<cfif arguments.scrollerEnabled IS true AND tableRows.recordCount LT 200>
 								,'scroller'
-							<cfelse>
+							<cfelse>--->
 								,'stickyHeaders'
-							</cfif>
+							<!---</cfif>--->
 						],<!---'zebra','uitheme',--->
 
 						<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
@@ -1310,6 +1320,10 @@
 
 							<!---,stickyHeaders_attachTo : '##pageHeaderContainer' Esto no funciona--->
 
+							<!---<cfif arguments.doubleScrollEnabled IS true>
+							, stickyHeaders_xScroll : $('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#')
+							</cfif>--->
+
 							<cfif isDefined("arguments.columnSelectorContainer")>
 
 								<!--- Column selector options --->
@@ -1355,11 +1369,19 @@
 							    <!--- END column selector options --->
 
 							</cfif>
+
+							<cfif arguments.scrollerEnabled IS true>
+								, scroller_height : $(window).height()
+							</cfif>
 					    }
 
 					}).bind('tablesorter-ready', function(e, table) {
 
-						updateTableSorterScroller();
+						adjustTableSorterStickyHeader();
+
+						<cfif arguments.scrollerEnabled IS true>
+							updateTableSorterScroller(getTableSorterScrollerHeight());
+						</cfif>
 
 					});
 
@@ -1392,6 +1414,23 @@
 						$('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#').doubleScroll({
 						    onlyIfScroll: true, // top scrollbar is not shown if the bottom one is not present
 						    resetOnWindowResize: true
+						});
+
+						$('.doubleScroll-scroll-wrapper').affix({
+						  offset: {
+						    top: 0
+						  }
+						});
+
+						$('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#').scroll(function(){
+
+							$(window).scroll();
+						});
+
+						$('.doubleScroll-scroll-wrapper').on('affix.bs.affix', function () {
+
+							$('.doubleScroll-scroll-wrapper').css('margin-top', 10-$('.tablesorter-sticky-wrapper').height());
+
 						});
 
 					</cfif>
