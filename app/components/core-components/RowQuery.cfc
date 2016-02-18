@@ -986,6 +986,7 @@
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRowAttachedFiles" returnvariable="rowAttachedFilesQuery">
 			<cfinvokeargument name="table_id" value="#arguments.table_id#">
 			<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+			<cfinvokeargument name="row_id" value="#arguments.row_id#">
 
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
