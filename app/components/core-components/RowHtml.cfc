@@ -1147,35 +1147,7 @@
 
 		<cfif arguments.tablesorterEnabled IS true>
 			<script>
-
-				function updateTableSorterScroller() {
-
-					var windowHeight = $(window).height();
-
-					var topHeight = $('.tablesorter').offset().top+$('.tablesorter-scroller-header').height();
-					var scrollerHeight = 0;
-
-					if( $('##mainNavBarFixedTop').css('position') == "fixed" ) {
-
-						if(windowHeight > 768)
-							scrollerHeight = windowHeight-topHeight;
-						else {
-							scrollerHeight = windowHeight-$('.tablesorter').offset().top;
-						}
-
-					} else {
-
-						scrollerHeight = windowHeight-$('.tablesorter-scroller-header').height();
-
-					}
-
-					$('.tablesorter-scroller-table').css({
-							height: '',
-							'max-height': scrollerHeight + 'px'
-					});
-
-				}
-
+			
 				$(window).resize( function() {
 
 				    updateTableSorterScroller();
