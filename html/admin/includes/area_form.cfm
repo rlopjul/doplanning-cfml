@@ -68,7 +68,7 @@
 		</div>
 	</div>
 
-	<cfif areaTypeWeb IS true>
+	<cfif APPLICATION.webFriendlyUrls IS true AND areaTypeWeb IS true>
 
 		<div class="row">
 			<div class="col-sm-12">
