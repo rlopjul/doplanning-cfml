@@ -677,6 +677,45 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------- getTableRows -------------------------------------  --->
+
+	<cffunction name="getTableRowCount" output="false" access="public" returntype="struct">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+
+
+		<cfset var method = "getTableRowCount">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRowCount" returnvariable="rowQuery">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#">
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset response = {result=true, rowCount=rowQuery.count}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- ------------------------------------- getTableActions -------------------------------------  --->
 
 	<cffunction name="getTableActions" output="false" access="public" returntype="struct">

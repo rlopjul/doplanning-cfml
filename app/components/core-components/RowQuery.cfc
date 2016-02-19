@@ -618,6 +618,59 @@
 	</cffunction>
 
 
+	<!---getTableRowCount--->
+
+	<cffunction name="getTableRowCount" output="false" returntype="query" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="areas_ids" type="string" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getTableRowCount">
+
+		<cfset var subAreasIds = "">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
+			<cfif isDefined("arguments.area_id")>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset subAreasIds = listAppend(subAreasIds, arguments.area_id)>
+
+			</cfif>
+
+			<cfquery name="getTableRows" datasource="#client_dsn#">
+				SELECT count(*) AS count
+
+				FROM `#client_abb#_#tableTypeTable#_rows_#arguments.table_id#` AS table_row
+
+				<cfif len(subAreasIds) GT 0>
+
+					WHERE area_id IN (<cfqueryparam value="#subAreasIds#" cfsqltype="cf_sql_integer" list="true">)
+
+				</cfif>
+
+				<cfif isDefined("arguments.areas_ids")>
+
+					WHERE area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_integer" list="true">)
+
+				</cfif>;
+			</cfquery>
+
+		<cfreturn getTableRows>
+
+	</cffunction>
+
+
 
 	<!---getTableRowsSearch--->
 

@@ -429,6 +429,38 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- getTableRowCount ------------------------------------- --->
+
+	<cffunction name="getTableRowCount" returntype="struct" access="public">
+		<cfargument name="table_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+
+		<cfset var method = "getTableRowCount">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/TableManager" method="getTableRowCount" returnvariable="response">
+				<cfinvokeargument name="table_id" value="#arguments.table_id#"/>
+				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+			</cfinvoke>
+
+			<cfinclude template="includes/responseHandlerStruct.cfm">
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- ----------------------------------- getTableRowsSearch ------------------------------------- --->
 
 	<cffunction name="getTableRowsSearch" returntype="struct" access="public">
@@ -1070,7 +1102,24 @@
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 
 						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#"><!---onclick="stopEvent(event)"--->
-							<td><a href="#APPLICATION.path#/html/#item_page_url#" class="text_item" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a></td>
+							<td><a href="#APPLICATION.path#/html/#item_page_url#" class="text_item" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a>
+
+								<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
+
+									<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTableRowCount" returnvariable="rowCountResponse">
+										<cfinvokeargument name="table_id" value="#itemsQuery.id#">
+										<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
+										<cfif itemsQuery.general IS true AND isDefined("arguments.area_id")>
+											<cfinvokeargument name="area_id" value="#arguments.area_id#">
+										</cfif>
+									</cfinvoke>
+									<cfset tableRowCount = rowCountResponse.rowCount>
+
+									<span class="label label-primary label-as-badge">#tableRowCount#</span>
+
+								</cfif>
+
+							</td>
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 							<td>
 								<!---
@@ -1082,6 +1131,7 @@
 								onclick="#rowsOnClick#"
 								--->
 								<a href="#itemTypeName#_rows.cfm?#itemTypeName#=#itemsQuery.id##area_param#" onclick="stopPropagation(event)" title="Registros" lang="es"><i class="icon-list" style="font-size:15px;"></i></a>
+
 							</td>
 							</cfif>
 							<td><cfset spacePos = findOneOf(" ", itemsQuery.creation_date)>
