@@ -1175,16 +1175,16 @@
 							<cfif arguments.includeLinkButton IS true OR arguments.includeEditButton IS true>
 							0: {
 								sorter: false
-							}
+							},
 								<cfif arguments.includePositionColumn IS true>
-								, 1: {
+								1: {
 									sorter: "digit"
-								}
+								},
 								</cfif>
 							<cfelseif arguments.includePositionColumn IS true>
 							0: {
 								sorter: "digit"
-							}
+							},
 							</cfif>
 
 							<cfset sortArray = arrayNew(1)>
@@ -1205,16 +1205,16 @@
 
 								<cfif fields.field_id IS "creation_date" OR fields.field_id IS "last_update_date" OR fields.field_type_id IS 6><!--- DATE --->
 
-									, #curFieldIndex#: {
+									#curFieldIndex#: {
 										<!---sorter: "datetime"--->
 										sorter: "shortDate"
-									}
+									},
 
 								<cfelseif fields.field_id NEQ 4 AND fields.field_id NEQ 5><!--- IS NOT INTEGER OR DECIMAL --->
 
-									, #curFieldIndex#: {
+									#curFieldIndex#: {
 										sorter: "text"
-									}
+									}, 
 
 								</cfif>
 
