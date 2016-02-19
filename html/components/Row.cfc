@@ -473,6 +473,7 @@
 			<cfargument name="columnSelectorContainer" type="string" required="false">
 			<cfargument name="tablesorterEnabled" type="boolean" required="false">
 			<cfargument name="scrollerEnabled" type="boolean" required="false">
+			<cfargument name="stickyHeadersEnabled" type="boolean" required="false">
 			<cfargument name="mathEnabled" type="boolean" required="false" default="false">
 			<cfargument name="includeLinkButton" type="boolean" required="false">
 			<cfargument name="includeEditButton" type="boolean" required="false">

@@ -293,6 +293,52 @@ function updateTableSorterScroller(scrollerHeight) {
 
 }
 
+function adjustTableSorterStickyHeader(){
+
+	if( $('#mainNavBarFixedTop').css('position') == "fixed" ) {
+
+		if( $('.doubleScroll-scroll-wrapper').length )
+			$('.tablesorter-sticky-wrapper').css('margin-top', $('#mainNavBarFixedTop').height()+18);
+		else
+			$('.tablesorter-sticky-wrapper').css('margin-top', $('#mainNavBarFixedTop').height());
+
+	} else {
+
+		if( $('.doubleScroll-scroll-wrapper').length )
+			$('.tablesorter-sticky-wrapper').css('margin-top', 18);
+		else
+			$('.tablesorter-sticky-wrapper').css('margin-top', 0);
+
+	}
+
+}
+
+function onDoubleScrollAffix(){
+
+	var stickyWrapperHeight = $('.tablesorter-sticky-wrapper').height();
+
+	if( $('#mainNavBarFixedTop').css('position') == "fixed" ) {
+
+		$('.doubleScroll-scroll-wrapper').css('margin-top', 7-stickyWrapperHeight);
+		$('.doubleScroll-scroll-wrapper').css('margin-bottom', 7+stickyWrapperHeight);
+
+	} else {
+
+		$('.doubleScroll-scroll-wrapper').css('margin-top', 7-stickyWrapperHeight-$('#mainNavBarFixedTop').height()-18);
+		$('.doubleScroll-scroll-wrapper').css('margin-bottom', 7+stickyWrapperHeight+$('#mainNavBarFixedTop').height()+18);
+
+	}
+
+}
+
+function onDoubleScrollAffixed(){
+
+	var stickyWrapperHeight = $('.tablesorter-sticky-wrapper').height();
+
+	$('.doubleScroll-scroll-wrapper').css('margin-top', 0);
+	$('.doubleScroll-scroll-wrapper').css('margin-bottom', 0);
+
+}
 
 /*
    Licensed under the Apache License, Version 2.0 (the "License");

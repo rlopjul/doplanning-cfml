@@ -1127,7 +1127,8 @@
 		<cfargument name="includeFromAreaColumn" type="boolean" required="false" default="false">
 		<cfargument name="includePositionColumn" type="boolean" required="false" default="true">
 		<cfargument name="doubleScrollEnabled" type="boolean" required="false" default="true">
-		<cfargument name="scrollerEnabled" type="boolean" required="false" default="false">
+		<cfargument name="scrollerEnabled" type="boolean" required="false" default="false"><!---Scroller no se debe usar en tablas de más de 100 registros--->
+		<cfargument name="stickyHeadersEnabled" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -1148,22 +1149,6 @@
 		<cfif arguments.tablesorterEnabled IS true>
 			<script>
 
-				function adjustTableSorterStickyHeader(){
-
-					if( $('##mainNavBarFixedTop').css('position') == "fixed" ) {
-
-						$('.tablesorter-sticky-wrapper').css('margin-top', $('##mainNavBarFixedTop').height()+20);
-
-					}
-
-				}
-
-				$(window).resize( function() {
-
-				    updateTableSorterScroller(getTableSorterScrollerHeight());
-
-				});
-
 				$(document).ready(function() {
 
 					$("##dataTable#arguments.tableTypeId#_#arguments.table_id#").tablesorter({  <!--- Se le asigna un id único a la tabla por si hay más en la misma página --->
@@ -1175,11 +1160,11 @@
 							<!---<cfif tableRows.recordCount LT 100>,'saveSort'</cfif>Este plugin no debe usarse con listas grandes--->
 							<cfif arguments.mathEnabled IS true>,'math'</cfif>
 							<cfif isDefined("arguments.columnSelectorContainer")>,'columnSelector'</cfif>
-							<!---<cfif arguments.scrollerEnabled IS true AND tableRows.recordCount LT 200>
-								,'scroller'
-							<cfelse>--->
+							<cfif arguments.stickyHeadersEnabled IS true>
 								,'stickyHeaders'
-							<!---</cfif>--->
+							<cfelseif arguments.scrollerEnabled IS true>
+								,'scroller'
+							</cfif>
 						],<!---'zebra','uitheme',--->
 
 						<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
@@ -1317,6 +1302,14 @@
 							<!--- Fin suma de los valores de las columnas --->
 							</cfif>
 
+							<!---<cfif arguments.stickyHeadersEnabled IS true>
+								Esto no vale para dispositivos móviles en los que ##mainNavBarFixedTop está oculto
+								<cfif arguments.doubleScrollEnabled IS true>
+									,stickyHeaders_offset: $('##mainNavBarFixedTop').height()+18
+								<cfelse>
+									,stickyHeaders_offset: $('##mainNavBarFixedTop')
+								</cfif>
+							</cfif>--->
 
 							<!---,stickyHeaders_attachTo : '##pageHeaderContainer' Esto no funciona--->
 
@@ -1377,14 +1370,40 @@
 
 					}).bind('tablesorter-ready', function(e, table) {
 
-						adjustTableSorterStickyHeader();
+						<cfif arguments.stickyHeadersEnabled IS true>
 
-						<cfif arguments.scrollerEnabled IS true>
+							adjustTableSorterStickyHeader();
+
+						<cfelseif arguments.scrollerEnabled IS true>
+
 							updateTableSorterScroller(getTableSorterScrollerHeight());
+
 						</cfif>
 
 					});
 
+					$(window).resize( function() {
+
+						<cfif arguments.stickyHeadersEnabled IS true>
+
+							adjustTableSorterStickyHeader();
+
+							<cfif arguments.doubleScrollEnabled IS true>
+
+								if ( $('.doubleScroll-scroll-wrapper').css('position') == "fixed" )
+									onDoubleScrollAffix();
+								else
+									onDoubleScrollAffixed();
+
+							</cfif>
+
+						<cfelseif arguments.scrollerEnabled IS true>
+
+							updateTableSorterScroller(getTableSorterScrollerHeight());
+
+						</cfif>
+
+					});
 
 					<cfif arguments.openRowOnSelect IS true>
 					<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
@@ -1416,22 +1435,43 @@
 						    resetOnWindowResize: true
 						});
 
-						$('.doubleScroll-scroll-wrapper').affix({
-						  offset: {
-						    top: 0
-						  }
-						});
 
-						$('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#').scroll(function(){
+						<cfif arguments.stickyHeadersEnabled IS true>
 
-							$(window).scroll();
-						});
+							$('.doubleScroll-scroll-wrapper').affix({
+							  offset: {
+							    top: function () {
 
-						$('.doubleScroll-scroll-wrapper').on('affix.bs.affix', function () {
+										if( $('##mainNavBarFixedTop').length )
+											return $('##mainNavBarFixedTop').height();
+										else
+											return 0;
+							    }
 
-							$('.doubleScroll-scroll-wrapper').css('margin-top', 10-$('.tablesorter-sticky-wrapper').height());
+							  }
+							});
 
-						});
+							$('##tableDoubleScroll#arguments.tableTypeId#_#arguments.table_id#').scroll(function(){
+
+								if( $('.tablesorter-sticky-wrapper').css('visibility') == 'visible' )
+									$(window).scroll(); <!--- Update stickyHeader position --->
+
+							});
+
+							$('.doubleScroll-scroll-wrapper').on('affix.bs.affix', function () {
+
+								onDoubleScrollAffix();
+
+							});
+
+
+							$('.doubleScroll-scroll-wrapper').on('affixed-top.bs.affix', function () {
+
+								onDoubleScrollAffixed();
+
+							});
+
+						</cfif>
 
 					</cfif>
 
