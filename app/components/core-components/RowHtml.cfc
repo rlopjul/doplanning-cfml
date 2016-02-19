@@ -877,7 +877,7 @@
 							</cfif>
 
 									<input type="hidden" name="#field_name#" id="#field_name#" value="#field_value#" />
-									<input type="text" name="#field_name#_title" id="#field_name#_title" value="#field_value_title#" #field_required_att# class="#text_input_class#" readonly onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" />
+									<input type="text" name="#field_name#_title" id="#field_name#_title" value="#HTMLEditFormat(field_value_title)#" #field_required_att# class="#text_input_class#" readonly onclick="openItemSelectorWithField(#fields.item_type_id#,'#field_name#')" />
 									<cfif fields.required IS true AND arguments.search_inputs IS false>
 										<script type="text/javascript">
 											addRailoRequiredInteger("#field_name#", "Campo '#field_label#' obligatorio");
