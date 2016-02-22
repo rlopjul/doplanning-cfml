@@ -298,14 +298,14 @@ function adjustTableSorterStickyHeader(){
 	if( $('#mainNavBarFixedTop').css('position') == "fixed" ) {
 
 		if( $('.doubleScroll-scroll-wrapper').length )
-			$('.tablesorter-sticky-wrapper').css('margin-top', $('#mainNavBarFixedTop').height()+18);
+			$('.tablesorter-sticky-wrapper').css('margin-top', $('#mainNavBarFixedTop').height()+17);
 		else
 			$('.tablesorter-sticky-wrapper').css('margin-top', $('#mainNavBarFixedTop').height());
 
 	} else {
 
 		if( $('.doubleScroll-scroll-wrapper').length )
-			$('.tablesorter-sticky-wrapper').css('margin-top', 18);
+			$('.tablesorter-sticky-wrapper').css('margin-top', 17);
 		else
 			$('.tablesorter-sticky-wrapper').css('margin-top', 0);
 
@@ -313,19 +313,23 @@ function adjustTableSorterStickyHeader(){
 
 }
 
+var doubleScrollOriginalOffetTop;
+
 function onDoubleScrollAffix(){
 
 	var stickyWrapperHeight = $('.tablesorter-sticky-wrapper').height();
 
 	if( $('#mainNavBarFixedTop').css('position') == "fixed" ) {
 
-		$('.doubleScroll-scroll-wrapper').css('margin-top', 7-stickyWrapperHeight);
-		$('.doubleScroll-scroll-wrapper').css('margin-bottom', 7+stickyWrapperHeight);
+		if(doubleScrollOriginalOffetTop === undefined)
+			doubleScrollOriginalOffetTop = $('.doubleScroll-scroll-wrapper').offset().top;
+
+		$('.doubleScroll-scroll-wrapper').css('margin-top', - ( doubleScrollOriginalOffetTop-$('#mainNavBarFixedTop').height()+3 ) );
 
 	} else {
 
 		$('.doubleScroll-scroll-wrapper').css('margin-top', 7-stickyWrapperHeight-$('#mainNavBarFixedTop').height()-18);
-		$('.doubleScroll-scroll-wrapper').css('margin-bottom', 7+stickyWrapperHeight+$('#mainNavBarFixedTop').height()+18);
+		//$('.doubleScroll-scroll-wrapper').css('margin-bottom', 7+stickyWrapperHeight+$('#mainNavBarFixedTop').height()+18);
 
 	}
 
@@ -333,10 +337,10 @@ function onDoubleScrollAffix(){
 
 function onDoubleScrollAffixed(){
 
-	var stickyWrapperHeight = $('.tablesorter-sticky-wrapper').height();
-
 	$('.doubleScroll-scroll-wrapper').css('margin-top', 0);
-	$('.doubleScroll-scroll-wrapper').css('margin-bottom', 0);
+	//$('.doubleScroll-scroll-wrapper').css('margin-bottom', 0);
+
+	doubleScrollOriginalOffetTop = undefined;
 
 }
 

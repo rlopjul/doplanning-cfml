@@ -1214,7 +1214,7 @@
 
 									#curFieldIndex#: {
 										sorter: "text"
-									}, 
+									},
 
 								</cfif>
 
@@ -1390,10 +1390,15 @@
 
 							<cfif arguments.doubleScrollEnabled IS true>
 
-								if ( $('.doubleScroll-scroll-wrapper').css('position') == "fixed" )
-									onDoubleScrollAffix();
-								else
-									onDoubleScrollAffixed();
+								onDoubleScrollAffixed(); <!--- Lo pone en su estado inicial --->
+
+								$('.doubleScroll-scroll-wrapper').affix('checkPosition');
+
+								if ( $('.doubleScroll-scroll-wrapper').css('position') == "fixed" ) {
+
+									onDoubleScrollAffix(); <!--- Si está fijado recalcula la posicion --->
+
+								}
 
 							</cfif>
 
