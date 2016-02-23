@@ -1122,10 +1122,13 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Indica si la definición de campos de esta tipología está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this typology is available to be used as a template by any user in the organization",
 		"Indica si la definición de campos de esta tipología de usuario está disponible para ser usada como plantilla por cualquier usuario de la organización.":"Mark checkbox if field definition of this user typology is available to be used as a template",
 
+    "Habilitar como lista global":"Enable as global list",
 		"Habilitar como tipología global":"Enable as global typology",
-		"Se podrá utilizar esta tipología en cualquier área de la organización.":"This typology may be used in any area of the organization",
+		"Se podrá utilizar esta lista en cualquier área de la organización.":"This list may be used in any area of the organization",
+    "Se podrá utilizar esta tipología en cualquier área de la organización.":"This typology may be used in any area of the organization",
 		"Define dónde se podrán publicar vistas de la Lista":"Set the area type where views of this List can be published",
 		"Define dónde se podrán publicar vistas del Formulario":"Set the area type where views of this Form can be published",
+    "IMPORTANTE: los registros de las lista globales pueden ser editados por cualquier usuario con acceso al área donde han sido introducidos, no requieren permiso de edición.":"IMPORTANT: records of global list can be edited by anyone with access to the area where they have been introduced, do not require permission to edit.",
 
 		"Añadir campo":"Add field",
 		"Copiar de plantilla":"Copy from template",

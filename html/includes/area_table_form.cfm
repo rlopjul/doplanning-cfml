@@ -285,8 +285,8 @@
 		<div class="col-sm-12 col-sm-8">
 			<label for="form_display_type" class="control-label"><span lang="es">Modo del formulario de edición de registros</span>:</label>
 			<select name="form_display_type" id="form_display_type" class="form-control">
-					<option value="">Por defecto</option>
-					<option value="horizontal" <cfif table.form_display_type IS "horizontal">selected</cfif>>Horizontal: título y campo en una misma fila</option>
+					<option value="" lang="es">Por defecto</option>
+					<option value="horizontal" <cfif table.form_display_type IS "horizontal">selected</cfif> lang="es">Horizontal: título y campo en una misma fila</option>
 			</select>
 			<small class="help-block" lang="es">Define la posición de los campos en el formulario de edición de registros</small>
 		</div>
