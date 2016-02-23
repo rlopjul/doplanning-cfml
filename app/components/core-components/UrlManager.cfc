@@ -276,7 +276,10 @@
 		<cfset titleUrl = replaceList(titleUrl," ,á,é,í,ó,ú,ñ,%", "-,a,e,i,o,u,n,%25")>
 
 		<!---Reemplazar comillas dobles por comillas simples--->
-		<cfset titleUrl = replaceList(titleUrl, Chr(34), "")>
+		<cfset titleUrl = replace(titleUrl, Chr(34), "")>
+
+		<!---Borrar +--->
+		<cfset titleUrl = replace(titleUrl, "+", "")>
 
 		<!---<cfset titleUrl = URLEncodedFormat(titleUrl)>--->
 
