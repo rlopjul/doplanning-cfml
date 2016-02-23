@@ -325,4 +325,75 @@
 	</cffunction>
 
 
+	<!---setSubAreasUrlId--->
+
+	<cffunction name="setSubAreasUrlId" output="true" returntype="void" access="public">
+		<cfargument name="area_id" type="string" required="yes">
+		<cfargument name="parent_url_id" type="string" required="false">
+
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">
+
+		<cfset var method = "setSubAreasUrlId">
+
+		<cfset var nameTourlId = "">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="getSubAreas">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="remove_order" value="true">
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+			<cfoutput>
+
+			<cfloop query="getSubAreas">
+
+				<cfif len(getSubAreas.url_id) IS 0>
+
+					#getSubAreas.name#<br/>
+
+					<cfif len(getSubAreas.name) GT 55>
+						<cfset nameTourlId = replaceList(lCase(getSubAreas.name)," de , para , por , a , un , una ", " , , , , , ")>
+					<cfelse>
+						<cfset nameTourlId = getSubAreas.name>
+					</cfif>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="pageTitleToUrl" returnvariable="nameTourlId">
+						<cfinvokeargument name="title" value="#nameTourlId#">
+					</cfinvoke>
+
+					<cfif isDefined("arguments.parent_url_id") AND len(arguments.parent_url_id) GT 0>
+						<cfset nameTourlId = arguments.parent_url_id&"/"&nameTourlId>
+					</cfif>
+
+					<cfquery name="parentIdQuery" datasource="#client_dsn#">
+						UPDATE #arguments.client_abb#_areas
+						SET url_id = <cfqueryparam value="#nameTourlId#" cfsqltype="cf_sql_varchar">
+						WHERE id = <cfqueryparam value="#getSubAreas.id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+
+				<cfelse>
+
+					<cfset nameTourlId = getSubAreas.url_id>
+
+				</cfif>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="setSubAreasUrlId">
+					<cfinvokeargument name="area_id" value="#getSubAreas.id#">
+					<cfinvokeargument name="parent_url_id" value="#nameTourlId#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+			</cfloop>
+
+			</cfoutput>
+
+
+	</cffunction>
+
+
 </cfcomponent>
