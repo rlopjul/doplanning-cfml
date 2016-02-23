@@ -1127,7 +1127,7 @@
 		<cfargument name="includeFromAreaColumn" type="boolean" required="false" default="false">
 		<cfargument name="includePositionColumn" type="boolean" required="false" default="true">
 		<cfargument name="doubleScrollEnabled" type="boolean" required="false" default="true">
-		<cfargument name="scrollerEnabled" type="boolean" required="false" default="false"><!---Scroller no se debe usar en tablas de más de 100 registros--->
+		<cfargument name="scrollerEnabled" type="boolean" required="false" default="false"><!---Widget deshabilitado. Scroller no se debe usar en tablas de más de 100 registros--->
 		<cfargument name="stickyHeadersEnabled" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">

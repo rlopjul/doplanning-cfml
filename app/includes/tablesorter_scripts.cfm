@@ -3,7 +3,7 @@
 <script src="#APPLICATION.mainUrl#/jquery/tablesorter/jquery.tablesorter.widgets.min.js?v=2.2"></script>
 <script src="#APPLICATION.mainUrl#/jquery/tablesorter/widgets/widget-math.min.js?v=2.2"></script>
 <script src="#APPLICATION.mainUrl#/jquery/tablesorter/widgets/widget-columnSelector.min.js?v=2.2"></script>
-<script src="#APPLICATION.mainUrl#/jquery/tablesorter/widgets/widget-scroller.min.js"></script>
+<!---<script src="#APPLICATION.mainUrl#/jquery/tablesorter/widgets/widget-scroller.min.js"></script>--->
 
 <script src="#APPLICATION.mainUrl#/jquery/jquery.doubleScroll.js"></script>
 
