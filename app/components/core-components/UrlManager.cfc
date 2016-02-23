@@ -329,6 +329,7 @@
 
 	<cffunction name="setSubAreasUrlId" output="true" returntype="void" access="public">
 		<cfargument name="area_id" type="string" required="yes">
+		<cfargument name="path" type="string" required="true">
 		<cfargument name="parent_url_id" type="string" required="false">
 
 		<cfargument name="client_abb" type="string" required="yes">
@@ -378,10 +379,25 @@
 
 					<cfset nameTourlId = getSubAreas.url_id>
 
+					<cfset urlDir = left(getSubAreas.url_id, len(arguments.path)+1)>
+
+					<cfif urlDir NEQ "#arguments.path#/">
+
+						<cfset nameTourlId = arguments.path&"/"&nameTourlId>
+
+						<cfquery name="parentIdQuery" datasource="#client_dsn#">
+							UPDATE #arguments.client_abb#_areas
+							SET url_id = <cfqueryparam value="#nameTourlId#" cfsqltype="cf_sql_varchar">
+							WHERE id = <cfqueryparam value="#getSubAreas.id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+					</cfif>
+
 				</cfif>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="setSubAreasUrlId">
 					<cfinvokeargument name="area_id" value="#getSubAreas.id#">
+					<cfinvokeargument name="path" value="#arguments.path#">
 					<cfinvokeargument name="parent_url_id" value="#nameTourlId#">
 
 					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">

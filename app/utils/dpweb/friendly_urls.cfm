@@ -58,6 +58,7 @@
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="setSubAreasUrlId">
 							<cfinvokeargument name="area_id" value="#getWebQuery.area_id#">
+							<cfinvokeargument name="path" value="#getWebQuery.path#">
 
 							<cfinvokeargument name="client_abb" value="#new_client_abb#">
 							<cfinvokeargument name="client_dsn" value="#client_datasource#">
