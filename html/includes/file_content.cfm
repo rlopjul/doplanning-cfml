@@ -531,6 +531,12 @@
 				<div class="div_file_page_label"><span lang="es">URL</span> <b lang="es">relativa para enlazar el archivo en la #area_type#</b><cfif APPLICATION.publicationValidation IS true AND objectFile.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif></span>:</div>
 				<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
 
+				<cfif area_type EQ "web" AND isDefined("webPathUrl")>
+
+					<div class="div_file_page_label"><span lang="es">URL</span> <b lang="es">absoluta para enlazar el archivo desde cualquier sitio</b><cfif APPLICATION.publicationValidation IS true AND objectFile.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif></span>:</div>
+					<div class="div_file_page_user"><input type="text" value="#webPathUrl##fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
+
+				</cfif>
 
 			<cfelseif APPLICATION.publicationScope IS true AND ( SESSION.client_abb EQ "hcs" ) AND ( objectFile.publication_scope_id IS 2 OR objectFile.publication_scope_id IS 3 )><!--- Scope IS Web OR Intranet --->
 
