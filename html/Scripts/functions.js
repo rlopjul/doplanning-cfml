@@ -344,6 +344,30 @@ function onDoubleScrollAffixed(){
 
 }
 
+function substringPageName(str, delimiter) {
+
+	var pos = str.indexOf(delimiter);
+
+	if( pos != -1)
+		return str.substring(pos+2, str.length);
+	else
+		return str;
+
+}
+
+function pageNameToUrl(pageName) {
+
+	pageName = substringPageName(pageName, '.-', -1);
+	pageName = $.trim(pageName);
+	pageName = pageName.toLowerCase();
+	pageName = removeDiacritics(pageName);
+	pageName = pageName.replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g,"");
+	pageName = pageName.replace(/\s+/g, "-");
+
+	return pageName;
+
+}
+
 /*
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

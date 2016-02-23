@@ -24,34 +24,72 @@
 </cfif>
 
 <cfif areaTypeWeb IS true>
-<script>
 
-	$(function () {
+	<cfif NOT isDefined("objectParentArea")>
+		<!--- Get parent area --->
+		<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectParentArea">
+			<cfif isDefined("parent_area_id")>
+				<cfinvokeargument name="get_area_id" value="#parent_area_id#">
+			<cfelse>
+				<cfinvokeargument name="get_area_id" value="#objectArea.parent_id#">
+			</cfif>
+			<cfinvokeargument name="return_type" value="query">
+		</cfinvoke>
+	</cfif>
 
-		$('#url_id').focus( function() {
+	<cfset parentAreaName = objectParentArea.name>
 
-			if(	$('#url_id').val().length == 0 ) {
+	<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebs" returnvariable="getWebsResult">
+		<cfinvokeargument name="area_type" value="#area_type#">
+	</cfinvoke>
 
-				var pageUrl = $('#name').val()
-		    pageUrl = pageUrl.toLowerCase();
-				pageUrl = removeDiacritics(pageUrl);
-		    pageUrl = pageUrl.replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g,"");
-		    pageUrl = pageUrl.replace(/\s+/g, "-");
+	<cfset websQuery = getWebsResult.query>
 
-		    $('#url_id').val(pageUrl);
-			}
+	<cfloop query="#websQuery#">
+
+		<cfif websQuery.area_id IS objectParentArea.id>
+			<cfset parentAreaName = "">
+		</cfif>
+
+	</cfloop>
+
+	<cfoutput>
+	<script>
+
+		$(function () {
+
+			$('##url_id').focus( function() {
+
+				if(	$('##url_id').val().length == 0 ) {
+
+					var parentAreaName = "#parentAreaName#";
+
+					if(parentAreaName.length > 0){
+						parentAreaName = pageNameToUrl(parentAreaName);
+
+						if(parentAreaName.length > 0)
+							parentAreaName = parentAreaName+"/";
+					}
+
+					var pageNameUrl = $('##name').val();
+					pageNameUrl	= pageNameToUrl(pageNameUrl);
+					pageNameUrl = parentAreaName+pageNameUrl;
+
+			    $('##url_id').val(pageNameUrl);
+				}
+
+			});
+
+			$('##url_id').mask("A", {
+				translation: {
+					"A": { pattern: /[\w@\-.+/]/, recursive: true }
+				}
+			});
 
 		});
 
-		$('#url_id').mask("A", {
-			translation: {
-				"A": { pattern: /[\w@\-.+]/, recursive: true }
-			}
-		});
-
-	});
-
-</script>
+	</script>
+	</cfoutput>
 </cfif>
 
 <cfoutput>
@@ -68,25 +106,25 @@
 		</div>
 	</div>
 
+	<cfif isDefined("objectParentArea")>
+		<div class="row">
+			<div class="col-sm-12">
+				<label class="control-label" for="name" lang="es">Área padre</label>
+				<input type="text" name="parent_name" id="parent_name" value="#objectParentArea.name#" class="form-control" readonly="true" />
+			</div>
+		</div>
+	</cfif>
+
 	<cfif APPLICATION.webFriendlyUrls IS true AND areaTypeWeb IS true>
 
 		<div class="row">
 			<div class="col-sm-12">
 				<label class="control-label" for="url_id" lang="es">Nombre de la página (URL)</label>
 				<input type="text" name="url_id" id="url_id" value="#HTMLEditFormat(objectArea.url_id)#" required="true" maxlength="75" title="Nombre de la página (URL) requerido" class="form-control" />
-				<small class="help-block" style="margin-bottom:0" lang="es">Valor que aparecerá en la URL de la página, ejemplo: nombre-de-la-pagina</small>
+				<small class="help-block" style="margin-bottom:0" lang="es">Valor que aparecerá en la URL de la página, ejemplo: pagina-padre/nombre-de-la-pagina</small>
 			</div>
 		</div>
 
-	</cfif>
-
-	<cfif isDefined("objectParentArea")>
-	<div class="row">
-		<div class="col-sm-12">
-			<label class="control-label" for="name" lang="es">Área padre</label>
-			<input type="text" name="parent_name" id="parent_name" value="#objectParentArea.name#" class="form-control" readonly="true" />
-		</div>
-	</div>
 	</cfif>
 
 	<div class="row">

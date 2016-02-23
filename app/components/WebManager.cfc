@@ -40,4 +40,39 @@
 	<!--- ------------------------------------------------------------------------------  --->
 
 
+	<!--- --------------------------- GET WEBS ---------------------------------------   --->
+
+	<cffunction name="getWebs" output="false" returntype="struct" access="public">
+		<cfargument name="area_type" type="string" required="false">
+
+		<cfset var method = "getWebs">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWebs" returnvariable="websQuery">
+				<cfinvokeargument name="area_type" value="#arguments.area_type#"/>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#"/>
+				<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
+			</cfinvoke>
+
+			<cfset response = {result=true, query=#websQuery#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+	<!--- ------------------------------------------------------------------------------  --->
+
+
 </cfcomponent>
