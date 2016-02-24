@@ -7,6 +7,8 @@
 	<cfset dateTimeFormat = APPLICATION.dbDateTimeFormat>
 	<cfset timeZoneTo = APPLICATION.dbTimeZoneTo>
 
+	<cfset LIST_TEXT_VALUES_DELIMITER = "#chr(13)##chr(10)#">
+
 	<!--- ------------------------------------- getUser -------------------------------------  --->
 
 	<cffunction name="getUser" output="false" access="public" returntype="query">
@@ -455,7 +457,6 @@
 		<cfreturn response>
 
 	</cffunction>
-
 
 
 </cfcomponent>
