@@ -3,6 +3,7 @@
 <!---email--->
 <cfset structInsert(actionTypesStruct, 1, {id=1, position=1, name="email", label="Enviar email", actionTypeId=1})>
 
-<!---post--->
+<!---http request--->
+<cfset structInsert(actionTypesStruct, 2, {id=2, position=2, name="request", label="Petición HTTP", actionTypeId=2})>
 
 <!---sms--->

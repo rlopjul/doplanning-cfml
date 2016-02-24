@@ -2,11 +2,11 @@
 
 <cfcomponent output="false">
 
-	<cfset component = "ActionQuery">	
+	<cfset component = "ActionQuery">
 
 
 	<!---getTableActions--->
-		
+
 	<cffunction name="getTableActions" output="false" returntype="query" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -18,8 +18,8 @@
 
 		<cfset var method = "getTableActions">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-							
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 			<cfquery name="getTableActionsQuery" datasource="#client_dsn#">
 				SELECT table_actions.*,
 				CONCAT_WS(' ', insert_users.family_name, insert_users.name) AS insert_user_full_name, insert_users.image_type AS insert_user_image_type,
@@ -39,14 +39,14 @@
 				</cfif>
 				;
 			</cfquery>
-				
+
 		<cfreturn getTableActionsQuery>
-		
+
 	</cffunction>
 
 
 	<!---setActionLastSuccessExecution--->
-		
+
 	<cffunction name="setActionLastSuccessExecution" output="false" returntype="void" access="public">
 		<cfargument name="action_id" type="numeric" required="true">
 		<cfargument name="row_id" type="numeric" required="true">
@@ -56,22 +56,22 @@
 
 		<cfset var method = "setActionLastSuccessExecution">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-							
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 			<cfquery name="setActionLastExecution" datasource="#client_dsn#">
 				UPDATE `#client_abb#_#tableTypeTable#_actions`
-				SET 
+				SET
 				last_success_execution_row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">,
 				last_success_execution_date = NOW()
 				WHERE action_id = <cfqueryparam value="#arguments.action_id#" cfsqltype="cf_sql_integer">
 				;
 			</cfquery>
-						
+
 	</cffunction>
 
 
 	<!---getAction--->
-		
+
 	<cffunction name="getAction" output="false" returntype="query" access="public">
 		<cfargument name="action_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -82,8 +82,8 @@
 
 		<cfset var method = "getAction">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-							
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 			<cfquery name="getActionQuery" datasource="#client_dsn#">
 				SELECT table_actions.*
 				<cfif arguments.with_table IS true>
@@ -96,14 +96,14 @@
 				WHERE action_id = <cfqueryparam value="#arguments.action_id#" cfsqltype="cf_sql_integer">
 				;
 			</cfquery>
-				
+
 		<cfreturn getActionQuery>
-		
+
 	</cffunction>
 
 
 	<!---getActionFields--->
-		
+
 	<cffunction name="getActionFields" output="false" returntype="query" access="public">
 		<cfargument name="action_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -113,21 +113,23 @@
 
 		<cfset var method = "getActionFields">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-							
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 			<cfquery name="getActionFieldsQuery" datasource="#client_dsn#">
-				SELECT table_actions_fields.*
+				SELECT table_actions_fields.*, fields.field_type_id
 				FROM `#client_abb#_#tableTypeTable#_actions_fields` AS table_actions_fields
+				INNER JOIN `#client_abb#_#tableTypeTable#_fields` AS fields
+				ON fields.field_id = table_actions_fields.field_id
 				WHERE action_id = <cfqueryparam value="#arguments.action_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
-				
+
 		<cfreturn getActionFieldsQuery>
-		
+
 	</cffunction>
 
 
 	<!--- ------------------------------------ deleteTableActions -----------------------------------  --->
-		
+
 	<cffunction name="deleteTableActions" output="false" access="package" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -136,13 +138,13 @@
 		<cfargument name="client_dsn" type="string" required="true">
 
 		<cfset var method = "deleteTableActions">
-			
+
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionQuery" method="getTableActions" returnvariable="actions">
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				
+
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
@@ -155,7 +157,7 @@
 				</cfquery>
 
 			</cfloop>
-			
+
 	</cffunction>
 
 </cfcomponent>

@@ -1,12 +1,12 @@
 <!--- Copyright Era7 Information Technologies 2007-2015 --->
 
 <cfcomponent output="false">
-	
+
 	<cfset component = "ActionManager">
 
 
 	<!--- ------------------------------------- createAction -------------------------------------  --->
-	
+
 	<cffunction name="createAction" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -26,7 +26,7 @@
 		<cfset var action_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -35,7 +35,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			</cfinvoke>
-			
+
 			<cfif getTableResponse.result IS false>
 				<cfreturn getTableResponse>
 			</cfif>
@@ -83,7 +83,7 @@
 			</cftransaction>
 
 			<cfinclude template="includes/logRecord.cfm">
-			
+
 			<cfset response = {result=true, action_id=#action_id#, table_id=#arguments.table_id#}>
 
 			<cfcatch>
@@ -94,12 +94,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- updateAction -------------------------------------  --->
-	
+
 	<cffunction name="updateAction" output="false" access="public" returntype="struct">
 		<cfargument name="action_id" type="numeric" required="true">
 		<cfargument name="table_id" type="numeric" required="true">
@@ -119,7 +119,7 @@
 		<cfset var area_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -128,7 +128,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			</cfinvoke>
-			
+
 			<cfif getTableResponse.result IS false>
 				<cfreturn getTableResponse>
 			</cfif>
@@ -148,7 +148,7 @@
 
 				<cfquery name="createAction" datasource="#client_dsn#">
 					UPDATE `#client_abb#_#tableTypeTable#_actions`
-					SET 
+					SET
 					action_type_id = <cfqueryparam value="#arguments.action_type_id#" cfsqltype="cf_sql_integer">,
 					action_event_type_id = <cfqueryparam value="#arguments.action_event_type_id#" cfsqltype="cf_sql_integer">,
 					title = <cfqueryparam value="#arguments.title#" cfsqltype="cf_sql_varchar">,
@@ -162,7 +162,7 @@
 				</cfquery>
 
 				<cfquery name="deleteActionField" datasource="#client_dsn#">
-					DELETE 
+					DELETE
 					FROM `#client_abb#_#tableTypeTable#_actions_fields`
 					WHERE action_id = <cfqueryparam value="#arguments.action_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>
@@ -176,7 +176,7 @@
 			</cftransaction>
 
 			<cfinclude template="includes/logRecord.cfm">
-		
+
 			<cfset response = {result=true, action_id=#arguments.action_id#, table_id=#arguments.table_id#}>
 
 			<cfcatch>
@@ -187,12 +187,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- copyTableActions -------------------------------------  --->
-	
+
 	<!---<cffunction name="copyTableActions" output="false" access="public" returntype="struct">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -207,7 +207,7 @@
 		<cfset var actions = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -217,7 +217,7 @@
 				<cfinvokeargument name="table_id" value="#arguments.table_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
 			</cfinvoke>
-			
+
 			<cfif getTableResponse.result IS false>
 				<cfreturn getTableResponse>
 			</cfif>
@@ -247,7 +247,7 @@
 				<cfloop query="actions">
 
 					<cfif arrayFind(arguments.actions_ids, actions.action_id)>
-						
+
 						<cfinvoke component="ActionManager" method="createActionInDatabase" returnvariable="action_id">
 							<cfinvokeargument name="table_id" value="#arguments.table_id#">
 							<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
@@ -271,11 +271,11 @@
 						</cfinvoke>
 
 					</cfif>
-					
+
 				</cfloop>
 
 			</cftransaction>
-			
+
 			<cfinclude template="includes/logRecord.cfm">
 
 			<cfset response = {result=true, table_id=#arguments.table_id#}>
@@ -288,12 +288,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>--->
 
 
 	<!--- ------------------------------------- deleteAction -------------------------------------  --->
-	
+
 	<cffunction name="deleteAction" output="false" access="public" returntype="struct">
 		<cfargument name="action_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -305,7 +305,7 @@
 		<cfset var area_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
@@ -337,7 +337,7 @@
 				</cfquery>
 
 			</cftransaction>
-			
+
 			<cfinclude template="includes/logRecord.cfm">
 
 			<cfset response = {result=true, action_id=#arguments.action_id#}>
@@ -350,19 +350,19 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------ deleteTableActions -----------------------------------  --->
-		
+
 	<cffunction name="deleteTableActions" output="false" access="package" returntype="void">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
 		<cfset var method = "deleteTableActions">
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionQuery" method="deleteTableActions">
@@ -372,13 +372,13 @@
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------- getAction -------------------------------------  --->
-	
+
 	<cffunction name="getAction" output="false" access="public" returntype="struct">
 		<cfargument name="action_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -391,23 +391,23 @@
 		<cfset var area_id = "">
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionQuery" method="getAction" returnvariable="getActionQuery">
 				<cfinvokeargument name="action_id" value="#arguments.action_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
 				<cfinvokeargument name="with_table" value="true"/>
 				<cfif isDefined("arguments.with_type")>
-					<cfinvokeargument name="with_type" value="#arguments.with_type#"/>		
+					<cfinvokeargument name="with_type" value="#arguments.with_type#"/>
 				</cfif>
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfif getActionQuery.recordCount GT 0>
 
 				<cfset area_id = getActionQuery.area_id>
@@ -418,13 +418,13 @@
 				<cfset response = {result=true, action=#getActionQuery#}>
 
 			<cfelse><!---Item does not exist--->
-			
+
 				<cfset error_code = 501>
-			
+
 				<cfthrow errorcode="#error_code#">
 
 			</cfif>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -433,12 +433,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- getEmptyAction -------------------------------------  --->
-	
+
 	<cffunction name="getEmptyAction" output="false" access="public" returntype="struct">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
@@ -447,11 +447,11 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfquery name="getActionQuery" datasource="#client_dsn#">
 				SELECT *
 				FROM #client_abb#_#tableTypeTable#_actions
@@ -468,14 +468,14 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 
 
 	<!--- ------------------------------------- getActionTypes -------------------------------------  --->
-	
+
 	<cffunction name="getActionTypes" output="false" access="public" returntype="struct">
 		<cfargument name="tableTypeId" type="numeric" required="true">
 
@@ -484,18 +484,18 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionManager" method="getActionTypesStruct" returnvariable="getActionTypesStruct">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<!---<cfinvokeargument name="client_dsn" value="#client_dsn#">--->
 			</cfinvoke>
 
 			<cfset response = {result=true, actionTypes=getActionTypesStruct}>
-								
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -504,13 +504,13 @@
 		</cftry>
 
 		<cfreturn response>
-		
+
 	</cffunction>
 
 
 
 	<!--- ------------------------------------- getActionType -------------------------------------  --->
-	
+
 	<cffunction name="getActionType" output="false" access="public" returntype="struct">
 		<cfargument name="action_type_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -520,31 +520,31 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionQuery" method="getActionType" returnvariable="getActionTypeQuery">
 				<cfinvokeargument name="action_type_id" value="#arguments.action_type_id#">
 				<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-			
+
 			<cfif getActionTypeQuery.recordCount GT 0>
 
 				<cfset response = {result=true, actionType=#getActionTypeQuery#}>
 
 			<cfelse><!---Item does not exist--->
-			
+
 				<cfset error_code = 501>
-			
+
 				<cfthrow errorcode="#error_code#">
 
 			</cfif>
-		
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -553,12 +553,12 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
 	</cffunction>
 
 
 	<!--- ------------------------------------- getActionFields -------------------------------------  --->
-	
+
 	<cffunction name="getActionFields" output="false" access="public" returntype="struct">
 		<cfargument name="action_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -568,21 +568,21 @@
 		<cfset var response = structNew()>
 
 		<cftry>
-			
+
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionQuery" method="getActionFields" returnvariable="getActionFieldsQuery">
 				<cfinvokeargument name="action_id" value="#arguments.action_id#">
 				<cfinvokeargument name="tableTypeId" value="#arguments.tableTypeId#">
-				
+
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
 			<cfset response = {result=true, actionFields=#getActionFieldsQuery#}>
-			
+
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
@@ -591,7 +591,48 @@
 		</cftry>
 
 		<cfreturn response>
-			
+
+	</cffunction>
+
+
+	<!--- ------------------------------------- throwTableAction -------------------------------------  --->
+
+	<cffunction name="throwTableAction" output="false" access="remote" returntype="struct">
+		<cfargument name="action_id" type="numeric" required="true">
+		<cfargument name="tableTypeId" type="numeric" required="true">
+
+		<cfset var method = "throwTableAction">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfthread name="throwTableAction#arguments.action_id#" action="run" priority="LOW" action_id="#arguments.action_id#" tableTypeId="#arguments.tableTypeId#" user_id="#SESSION.user_id#" client_abb="#SESSION.client_abb#" client_dsn="#client_dsn#">
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/ActionManager" method="throwTableAction">
+					<cfinvokeargument name="action_id" value="#action_id#">
+					<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+					<cfinvokeargument name="user_id" value="#user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfthread>
+
+			<cfset response = {result=true}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
 	</cffunction>
 
 

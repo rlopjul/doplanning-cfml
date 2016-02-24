@@ -142,6 +142,11 @@
 					<option value="2" <cfif isDefined("action.action_event_type_id") AND action.action_event_type_id IS 2>selected</cfif> lang="es">Registro modificado en #tableTypeNameEs#</option>
 				</cfif>
 				<option value="3" <cfif isDefined("action.action_event_type_id") AND action.action_event_type_id IS 3>selected</cfif> lang="es">Registro eliminado en #tableTypeNameEs#</option>
+
+				<cfif isDefined("action.action_event_type_id") AND action.action_event_type_id IS 4><!---Esta opción no está habilitada para ser seleccionada por el usuario--->
+					<option value="4" <cfif isDefined("action.action_event_type_id") AND action.action_event_type_id IS 4>selected</cfif> lang="es">Acción iniciada por usuario responsable de #itemTypeNameEs#</option>
+				</cfif>
+
 			</select>
 			<small class="help-block" lang="es">Se realizará la acción cuando ocurra este evento</small>
 		</div>

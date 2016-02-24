@@ -6,10 +6,10 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
 <script>
-	$(document).ready(function() { 
-		
+	$(document).ready(function() {
+
 		<!---<cfif actions_selectable IS false>--->
-			$("#dataTable").tablesorter({ 
+			$("#dataTable").tablesorter({
 				widgets: ['zebra','uitheme','select'],
 				theme : "bootstrap",
 				headerTemplate : '{content} {icon}',
@@ -20,7 +20,7 @@
 			    }
 			});
 		<!---<cfelse>
-			$("#dataTable").tablesorter({ 
+			$("#dataTable").tablesorter({
 				widgets: ['zebra','uitheme'],
 				theme : "bootstrap",
 				headerTemplate : '{content} {icon}',
@@ -31,7 +31,7 @@
 			});
 		</cfif>--->
 
-	}); 
+	});
 </script>
 
 <cfset selectFirst = true>
@@ -66,21 +66,21 @@
 	<tbody>
 
 	<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
-	
+
 	<cfset alreadySelected = false>
 
 	<cfloop query="actions">
 
-		
+
 		<cfset rpage = "#tableTypeName#_actions.cfm?#tableTypeName#=#table_id#">
 
 		<cfset action_page_url = "#tableTypeName#_action.cfm?action=#actions.action_id#&return_page=#URLEncodedFormat(rpage)#">
 
 		<!---Row selection--->
 		<cfset actionSelected = false>
-		
+
 		<!---<cfif actions_selectable IS false>
-			
+
 			<cfif alreadySelected IS false>
 
 				<cfif ( isDefined("URL.action") AND URL.action IS actions.action_id ) OR ( selectFirst IS true AND actions.currentrow IS 1 AND app_version NEQ "mobile" ) >
@@ -92,9 +92,9 @@
 
 					<cfset actionSelected = true>
 					<cfset alreadySelected = true>
-																	
+
 				</cfif>
-				
+
 			</cfif>
 
 		</cfif>--->
@@ -102,7 +102,7 @@
 		<tr <cfif actionSelected IS true>class="selected"</cfif> onclick="<cfif actions_selectable IS false>openUrl('#action_page_url#','itemIframe',event)<cfelse>toggleCheckboxChecked('##action_#actions.action_id#')</cfif>">
 			<cfif actions_selectable IS true>
 				<td style="text-align:center;"><input type="checkbox" name="actions_ids[]" id="action_#actions.action_id#" value="#actions.action_id#" checked="checked" onClick="stopPropagation(event);" /></td>
-			</cfif>	
+			</cfif>
 			<td><div class="item_position">#actions.currentRow#</div></td>
 			<td>
 				#actions.title#
@@ -117,10 +117,12 @@
 						Registro modificado en #tableTypeNameEs#
 					<cfelseif actions.action_event_type_id IS 3>
 						Registro eliminado en #tableTypeNameEs#
+					<cfelseif actions.action_event_type_id IS 4>
+						Acción iniciada por usuario responsable de #itemTypeNameEs#
 					</cfif></span>
 			</td>
 			<td>#DateFormat(actions.creation_date, APPLICATION.dateFormat)# #TimeFormat(actions.creation_date, "HH:mm")#</td>
-			<td><cfif len(actions.last_update_date) GT 0>#DateFormat(actions.last_update_date, APPLICATION.dateFormat)# #TimeFormat(actions.last_update_date, "HH:mm")#<cfelse>-</cfif></td>	
+			<td><cfif len(actions.last_update_date) GT 0>#DateFormat(actions.last_update_date, APPLICATION.dateFormat)# #TimeFormat(actions.last_update_date, "HH:mm")#<cfelse>-</cfif></td>
 			<td>#actions.insert_user_full_name#</td>
 			<td>#actions.update_user_full_name#</td>
 		</tr>
