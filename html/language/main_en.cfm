@@ -1167,6 +1167,7 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Elemento de DoPlanning":"DoPlanning element",
 		"No se puede modificar el tipo una vez creado el campo.":"Type cannot be modified once the field is created",
 
+    "Búsqueda de registros":"Search for records",
 		"Obligatorio":"Obligatory",
 		"Indica si el campo deber rellenarse de forma obligatoria":"Mark checkbox if this field must be necessarily filled in",
 
