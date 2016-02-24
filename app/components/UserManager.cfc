@@ -1557,19 +1557,13 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<!---isUserInArea--->
-			<cfquery name="isUserInArea" datasource="#client_dsn#">
-				SELECT user_id
-				FROM #client_abb#_areas_users
-				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				AND user_id = <cfqueryparam value="#arguments.check_user_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="isUserAssociatedToArea" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="user_id" value="#arguments.check_user_id#"/>
 
-			<cfif isUserInArea.recordCount GT 0><!--- The user is in the area  --->
-				<cfset response = {result=true, isUserInArea=true}>
-			<cfelse>
-				<cfset response = {result=true, isUserInArea=false}>
-			</cfif>
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 
 			<cfcatch>
 
@@ -1595,7 +1589,6 @@
 
 		<cfset var response = structNew()>
 
-		<cfset var user_id = "">
 		<cfset var client_abb = "">
 
 		<cftry>
@@ -1604,67 +1597,14 @@
 
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 
-			<!---checkIfExist--->
-			<cfinvoke component="UserManager" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="check_user_id" value="#arguments.add_user_id#">
-			</cfinvoke>
-			<cfif isUserInAreaResponse.result IS false>
-				<cfreturn isUserInAreaResponse>
-			</cfif>
-
-			<cfif isUserInAreaResponse.isUserInArea IS true><!--- The user already is in the area  --->
-				<cfset error_code = 408>
-
-				<cfthrow errorcode="#error_code#">
-			</cfif>
-
-			<!---<cfquery name="assignUser" datasource="#client_dsn#">
-				INSERT INTO #client_abb#_areas_users (area_id, user_id, association_date)
-				VALUES(<cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">,
-					<cfqueryparam value="#arguments.add_user_id#" cfsqltype="cf_sql_integer">,
-					NOW());
-			</cfquery>--->
-
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="assignUserToArea">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="assignUserToArea" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 				<cfinvokeargument name="user_id" value="#arguments.add_user_id#"/>
+				<cfinvokeargument name="send_alert" value="#arguments.send_alert#"/>
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
-
-			<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
-				<cfinvokeargument name="get_user_id" value="#arguments.add_user_id#">
-				<cfinvokeargument name="return_type" value="query"/>
-			</cfinvoke>
-
-			<cfif arguments.send_alert IS true>
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="assignUserToArea">
-					<cfinvokeargument name="objectUser" value="#objectUser#">
-					<cfinvokeargument name="area_id" value="#arguments.area_id#">
-					<cfinvokeargument name="new_area" value="false">
-
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
-
-			</cfif>
-
-
-			<!--- deleteUserCacheTree --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
-				<cfinvokeargument name="user_id" value="#arguments.add_user_id#">
-				<cfinvokeargument name="tree_type" value="default">
-
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
-			<cfinclude template="includes/functionEndOnlyLog.cfm">
-
-			<cfset response = {result=true, area_id=#arguments.area_id#, user_id=#arguments.add_user_id#}>
 
 			<cfcatch>
 
@@ -1786,7 +1726,6 @@
 
 		<cfset var response = structNew()>
 
-		<cfset var user_id = "">
 		<cfset var client_abb = "">
 
 		<cftry>
@@ -1795,61 +1734,13 @@
 
 			<cfinclude template="includes/checkAreaAdminAccess.cfm">
 
-			<cfquery name="getArea" datasource="#client_dsn#">
-				SELECT user_in_charge
-				FROM #client_abb#_areas AS areas
-				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="dissociateUserFromArea" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="user_id" value="#arguments.dissociate_user_id#">
 
-			<cfif getArea.recordCount GT 0>
-
-				<cfinvoke component="UserManager" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
-					<cfinvokeargument name="area_id" value="#arguments.area_id#">
-					<cfinvokeargument name="check_user_id" value="#arguments.dissociate_user_id#">
-				</cfinvoke>
-				<cfif isUserInAreaResponse.result IS false>
-					<cfreturn isUserInAreaResponse>
-				</cfif>
-
-				<cfif isUserInAreaResponse.isUserInArea IS false><!--- The user is not associated  --->
-					<cfset response = {result=false, message="Este usuario no está asociado directamente a esta área"}>
-					<cfreturn response>
-				</cfif>
-
-				<!---check if the user is the user_in_charge of the area--->
-				<cfif getArea.user_in_charge EQ arguments.dissociate_user_id>
-
-					<cfset error_code = 411>
-
-					<cfthrow errorcode="#error_code#">
-
-				</cfif>
-
-				<cfquery name="dissociateUser" datasource="#client_dsn#">
-					DELETE FROM #client_abb#_areas_users
-					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer"> AND user_id = <cfqueryparam value="#arguments.dissociate_user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-
-				<!--- deleteUserCacheTree --->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
-					<cfinvokeargument name="user_id" value="#arguments.dissociate_user_id#">
-					<cfinvokeargument name="tree_type" value="default">
-
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
-
-			<cfelse><!---The area does not exist--->
-
-				<cfset error_code = 401>
-
-				<cfthrow errorcode="#error_code#">
-
-			</cfif>
-
-			<cfinclude template="includes/functionEndOnlyLog.cfm">
-
-			<cfset response = {result=true, message="", area_id=#arguments.area_id#}>
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 
 			<cfcatch>
 

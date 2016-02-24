@@ -384,7 +384,7 @@
 	</cffunction>
 
 
-	<!------------------------ ASSIGN USER TO AREA-------------------------------------->
+	<!------------------------ ASSIGN USER TO AREA -------------------------------------->
 
 	<cffunction name="assignUserToArea" returntype="void" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="true"/>
@@ -404,6 +404,58 @@
 				</cfquery>
 
 	</cffunction>
+
+
+	<!------------------------ DISSOCIATE USER FROM AREA -------------------------------------->
+
+	<cffunction name="dissociateUserFromArea" returntype="void" output="false" access="public">
+		<cfargument name="area_id" type="numeric" required="true"/>
+		<cfargument name="user_id" type="numeric" required="true"/>
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "dissociateUserFromArea">
+
+				<cfquery name="dissociateUser" datasource="#client_dsn#">
+					DELETE FROM #client_abb#_areas_users
+					WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+					AND user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+	</cffunction>
+
+
+	<!------------------------ IS USER ASSOCIATED TO AREA-------------------------------------->
+	<cffunction name="isUserAssociatedToArea" returntype="struct" output="false" access="public">
+		<cfargument name="area_id" type="numeric" required="true"/>
+		<cfargument name="user_id" type="numeric" required="true"/>
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "isUserAssociatedToArea">
+
+		<cfset var response = structNew()>
+
+			<!---isUserInArea--->
+			<cfquery name="isUserInArea" datasource="#client_dsn#">
+				SELECT user_id
+				FROM #client_abb#_areas_users
+				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				AND user_id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfif isUserInArea.recordCount GT 0><!--- The user is in the area  --->
+				<cfset response = {result=true, isUserInArea=true}>
+			<cfelse>
+				<cfset response = {result=true, isUserInArea=false}>
+			</cfif>
+
+		<cfreturn response>
+
+	</cffunction>
+
 
 
 </cfcomponent>

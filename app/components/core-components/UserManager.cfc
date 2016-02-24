@@ -1555,5 +1555,169 @@
 
 
 
+	<!------------------------ ASSIGN USER TO AREA-------------------------------------->
+
+	<cffunction name="assignUserToArea" returntype="struct" output="false" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="send_alert" type="boolean" required="false" default="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "assignUserToArea">
+
+		<cfset var response = structNew()>
+
+
+			<!---checkIfExist--->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+			<cfif isUserInAreaResponse.result IS false>
+				<cfreturn isUserInAreaResponse>
+			</cfif>
+
+			<cfif isUserInAreaResponse.isUserInArea IS true><!--- The user already is in the area  --->
+				<cfset error_code = 408>
+
+				<cfthrow errorcode="#error_code#">
+			</cfif>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="assignUserToArea">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="user_id" value="#arguments.user_id#"/>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="objectUser">
+				<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfif arguments.send_alert IS true>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="assignUserToArea">
+					<cfinvokeargument name="objectUser" value="#objectUser#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="new_area" value="false">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfif>
+
+
+			<!--- deleteUserCacheTree --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
+				<cfinvokeargument name="user_id" value="#arguments.user_id#">
+				<cfinvokeargument name="tree_type" value="default">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfinclude template="includes/logRecord.cfm">
+
+			<cfset response = {result=true, area_id=#arguments.area_id#, user_id=#arguments.user_id#}>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+	<!--- -------------------DISSOCIATE USER FROM AREA------------------------------------ --->
+
+	<cffunction name="dissociateUserFromArea" returntype="struct" output="true" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "dissociateUserFromArea">
+
+		<cfset var response = structNew()>
+
+			<cfquery name="getArea" datasource="#client_dsn#">
+				SELECT user_in_charge
+				FROM #client_abb#_areas AS areas
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+			<cfif getArea.recordCount GT 0>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="isUserAssociatedToArea" returnvariable="isUserInAreaResponse">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+				<cfif isUserInAreaResponse.result IS false>
+					<cfreturn isUserInAreaResponse>
+				</cfif>
+
+				<cfif isUserInAreaResponse.isUserInArea IS false><!--- The user is not associated  --->
+					<cfset response = {result=false, message="Este usuario no está asociado directamente a esta área"}>
+					<cfreturn response>
+				</cfif>
+
+				<!---check if the user is the user_in_charge of the area--->
+				<cfif getArea.user_in_charge EQ arguments.user_id>
+
+					<cfset error_code = 411>
+
+					<cfthrow errorcode="#error_code#">
+
+				</cfif>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="dissociateUserFromArea">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<!--- deleteUserCacheTree --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/CacheQuery" method="deleteUserCacheTree">
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
+					<cfinvokeargument name="tree_type" value="default">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfinclude template="includes/logRecord.cfm">
+
+			<cfelse><!---The area does not exist--->
+
+				<cfset error_code = 401>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+
+			<cfset response = {result=true, message="", area_id=#arguments.area_id#}>
+
+
+		<cfreturn response>
+
+
+	</cffunction>
+
+
+
 
 </cfcomponent>
