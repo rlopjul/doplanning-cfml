@@ -550,6 +550,78 @@
 	</cffunction>
 
 
+	<!--- -------------------------- isUserAreaResponsible -------------------------------- --->
+	<!---Comprueba si el usuario es responsable del área, y devuelve el resultado en una variable--->
+	<!---El administrador general tiene permiso de responsable en todas las áreas--->
+
+	<cffunction name="isUserAreaResponsible" returntype="boolean" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
+
+		<cfargument name="client_administrator" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "isUserAreaResponsible">
+
+		<cfset var access_result = false>
+
+		<cfif NOT isDefined("arguments.client_administrator")>
+
+			<cfquery name="getClientAdministrator" datasource="#APPLICATION.dsn#">
+				SELECT administrator_id
+				FROM app_clients
+				WHERE abbreviation = <cfqueryparam value="#client_abb#" cfsqltype="cf_sql_varchar">;
+			</cfquery>
+
+			<cfset client_administrator = getClientAdministrator.administrator_id>
+
+		</cfif>
+
+		<cfif client_administrator IS arguments.user_id><!---Is general administrator user--->
+			<cfreturn true>
+		</cfif>
+
+		<cfquery datasource="#client_dsn#" name="getArea">
+			SELECT areas.user_in_charge, areas.parent_id
+			FROM #client_abb#_areas AS areas
+			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaResponsible" returnvariable="getArea">
+			<cfinvokeargument name="area_id" value="#getArea.parent_id#">
+
+			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+		</cfinvoke>
+
+		<cfif getArea.recordCount GT 0>
+
+			<cfif getArea.user_in_charge IS SESSION.user_id>
+				<cfreturn true>
+			</cfif>
+
+			<cfif isNumeric(getArea.parent_id)>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
+					<cfinvokeargument name="area_id" value="#getArea.parent_id#">
+					<cfinvokeargument name="user_id" value="#arguments.user_id#">
+					<cfinvokeargument name="client_administrator" value="#client_administrator#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+					<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+				</cfinvoke>
+
+			</cfif>
+
+		</cfif>
+
+		<cfreturn access_result>
+
+	</cffunction>
+
+
 
 
 

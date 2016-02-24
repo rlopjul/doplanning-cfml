@@ -575,35 +575,18 @@
 
 		<cfset var method = "isUserAreaResponsible">
 
-		<cfset var user_id = "">
-
 		<cfset var access_result = false>
 
 		<cfinclude template="includes/functionStartOnlySession.cfm">
 
-		<cfif SESSION.client_administrator IS SESSION.user_id><!---Is general administrator user--->
-			<cfreturn true>
-		</cfif>
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+			<cfinvokeargument name="client_administrator" value="#SESSION.client_administrator#">
 
-		<cfquery datasource="#client_dsn#" name="getArea">
-			SELECT areas.user_in_charge, areas.parent_id
-			FROM #client_abb#_areas AS areas
-			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-		</cfquery>
-
-		<cfif getArea.recordCount GT 0>
-
-			<cfif getArea.user_in_charge IS SESSION.user_id>
-				<cfreturn true>
-			</cfif>
-
-			<cfif isNumeric(getArea.parent_id)>
-				<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
-					<cfinvokeargument name="area_id" value="#getArea.parent_id#">
-				</cfinvoke>
-			</cfif>
-
-		</cfif>
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
 
 		<cfreturn access_result>
 

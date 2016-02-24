@@ -48,6 +48,33 @@
 	</cffunction>
 
 
+	<!------------------------ IS USER RESPONSIBLE OF AREA-------------------------------------->
+
+	<cffunction name="getAreaResponsible" returntype="query" output="false" access="public">
+		<cfargument name="area_id" type="numeric" required="true"/>
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getAreaResponsible">
+
+		<cfset var response = structNew()>
+
+			<!---getUserAreaResponsible--->
+			<cfquery name="areaResponsibleQuery" datasource="#client_dsn#">
+				SELECT areas.user_in_charge, areas.parent_id
+				FROM #client_abb#_areas AS areas
+				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+			</cfquery>
+
+		<cfreturn areaResponsibleQuery>
+
+	</cffunction>
+
+
+
+
+
 	<!---getRootArea--->
 
 	<!---Devuelve el área raiz real del árbol--->
