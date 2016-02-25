@@ -68,6 +68,7 @@
 		<cfargument name="moduleLdapDiraya" type="boolean" required="false" default="false">
 		<cfargument name="moduleAntiVirus" type="boolean" required="false" default="false">
 		<cfargument name="cacheTree" type="boolean" required="false" default="true">
+		<cfargument name="changeUserPreferencesByAdmin" type="boolean" required="false" default="false">
 
 		<cfargument name="homeTab" type="boolean" required="false" default="true">
 		<cfargument name="moduleDPDocuments" type="boolean" required="false" default="true">
@@ -130,6 +131,7 @@
 			<cfset APPLICATION.moduleLdapDiraya = arguments.moduleLdapDiraya><!--- asnc, agsna --->
 			<cfset APPLICATION.moduleAntiVirus = arguments.moduleAntiVirus>
 			<cfset APPLICATION.cacheTree = arguments.cacheTree>
+			<cfset APPLICATION.changeUserPreferencesByAdmin = arguments.changeUserPreferencesByAdmin>
 			<cfset APPLICATION.homeTab = arguments.homeTab>
 			<cfset APPLICATION.moduleMailing = arguments.moduleMailing>
 			<cfset APPLICATION.includeLegalTextInAlerts = arguments.includeLegalTextInAlerts>
