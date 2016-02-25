@@ -61,13 +61,6 @@
 		});
 
 
-		<!---
-		function submitUserModifyModal(){
-
-			postUserDataForm("#APPLICATION.htmlComponentsPath#/User.cfc?method=updateUser");
-
-		}--->
-
 	</script>
 	</cfoutput>
 
