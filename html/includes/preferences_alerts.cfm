@@ -537,7 +537,7 @@ Preferencias de notificaciones
 
 					</cfif>
 
-					<cfif SESSION.client_abb NEQ "hcs">
+					<cfif APPLICATION.title EQ "DoPlanning">
 
 						<div class="form_separator"></div>
 
@@ -619,7 +619,7 @@ Preferencias de notificaciones
 
 					 	<div class="col-sm-9">
 
-							<select name="notifications_digest_type_id" id="notifications_digest_type_id" class="form-control">
+							<select name="notifications_digest_type_id" id="notifications_digest_type_id" class="form-control" style="font-size:18px">
 								<option value="" lang="es">Nunca</option>
 								<option value="1" <cfif preferences.notifications_digest_type_id IS 1>selected="selected"</cfif> lang="es">Todos los días</option>
 								<option value="2" <cfif preferences.notifications_digest_type_id IS 2>selected="selected"</cfif> lang="es">Cada 7 días</option>
@@ -666,7 +666,7 @@ Preferencias de notificaciones
 
 						<div class="col-sm-9">
 
-							<select name="notifications_web_digest_type_id" id="notifications_web_digest_type_id" class="form-control">
+							<select name="notifications_web_digest_type_id" id="notifications_web_digest_type_id" class="form-control" style="font-size:18px">
 								<option value="" lang="es">Nunca</option>
 								<option value="1" <cfif preferences.notifications_web_digest_type_id IS 1>selected="selected"</cfif> lang="es">Todos los días</option>
 								<option value="2" <cfif preferences.notifications_web_digest_type_id IS 2>selected="selected"</cfif> lang="es">Cada 7 días</option>
