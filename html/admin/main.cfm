@@ -9,7 +9,7 @@
 
 <html lang="es">
 <head>
-<!--Developed and copyright by Era7 Information Technologies 2007-2014 (www.era7.com)-->
+<!--Developed and copyright by Era7 Information Technologies 2007-2016 (www.era7.com)-->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <cfoutput>
