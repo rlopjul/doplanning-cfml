@@ -17,7 +17,7 @@
 
 		<cfset text_re = Trim(arguments.text)><!---Remove white space from the beginning and the end--->
 		<cfif arguments.removeSpecialChars IS true>
-			<cfset text_re = replaceList(text_re, "+,?,*,|,(,),[,],\", ",,,,,,,,")><!---Remove special chars to avoid errors--->
+			<cfset text_re = replaceList(text_re, "+,?,*,|,(,),[,],\", ".,,,,,,,,")><!---Remove special chars to avoid errors--->
 		</cfif>
 		<cfset text_re = "(#text_re#">
 		<!---<cfset text_re = ReplaceNoCase(text_re," ","|","ALL")>--->
