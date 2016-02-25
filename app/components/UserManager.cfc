@@ -1058,6 +1058,10 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfif arguments.update_user_id NEQ SESSION.user_id>
+				<cfinclude template="includes/checkAdminAccess.cfm">
+			</cfif>
+
 			<cfquery name="selectQuery" datasource="#client_dsn#">
 				SELECT id
 				FROM #client_abb#_users
