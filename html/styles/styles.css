@@ -566,7 +566,7 @@ fieldset {
 	font-size:14px;
 	/*height: 48px;*/
 	padding-top:4px;
-	margin-bottom:16px;
+	margin-bottom:10px;
 	padding-left:2px;
 	/*display:table-cell;*/ /*para que los botones se muestren en dos líneas en la versión móvil sin pisar otros elementos y haya un margen entre cada botón*/
 }

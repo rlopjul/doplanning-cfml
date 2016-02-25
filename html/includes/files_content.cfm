@@ -17,7 +17,7 @@
 <cfset numItems = files.recordCount>
 
 <cfoutput>
-<div class="row"><!---div_head_subtitle_area--->
+<div class="row">
 
 	<!---
 
