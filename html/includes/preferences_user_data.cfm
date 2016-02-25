@@ -4,7 +4,7 @@ Datos Personales
 </div>--->
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
-<cfset return_page = "preferences.cfm">
+<!---<cfset return_page = "preferences.cfm">--->
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Login" method="getUserLoggedIn" returnvariable="objectUser">
 </cfinvoke>
