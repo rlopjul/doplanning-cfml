@@ -42,7 +42,7 @@
 	<cfif len(newQueryString) GT 0>
 		<cfset newUrl = "#CGI.SCRIPT_NAME#?#newQueryString#">
 	<cfelse>
-		<cfset newUrl = "#CGI.SCRIPT_NAME#">
+		<cfset newUrl = "#CGI.SCRIPT_NAME#?abb=#SESSION.client_abb#">
 	</cfif>
 
 
