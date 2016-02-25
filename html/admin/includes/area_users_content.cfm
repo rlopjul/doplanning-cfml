@@ -144,27 +144,42 @@
 	}
 </script>
 
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
+	<cfinvokeargument name="area_id" value="#area_id#">
+</cfinvoke>
+
+<cfset users = usersResponse.users>
+<cfset numUsers = ArrayLen(users)>
+
 
 <!--- Nav tabs --->
 <cfif SESSION.client_administrator IS SESSION.user_id>
 
-	<ul class="nav nav-tabs" role="tablist">
-	  <li class="active"><a href="#users" role="tab" data-toggle="tab"><span lang="es">Usuarios</span></a></li>
-	  <li><a href="#administrators" role="tab" data-toggle="tab"><span lang="es">Administradores</span></a></li>
-	</ul>
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaAdministrators" returnvariable="administratorsResponse">
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfinvoke>
+
+	<cfset administrators = administratorsResponse.users>
+	<cfset numAdministrators = ArrayLen(administrators)>
+
+	<cfoutput>
+		<ul class="nav nav-pills" role="tablist">
+		  <li class="active"><a href="##users" role="tab" data-toggle="tab"><span lang="es">Usuarios</span> (#numUsers#)</a></li>
+		  <li><a href="##administrators" role="tab" data-toggle="tab"><span lang="es">Administradores</span> (#numAdministrators#)</a></li>
+		</ul>
+	</cfoutput>
 
 	<!--- Tab panes --->
 	<div class="tab-content">
 	  <div class="tab-pane active" id="users">
 
+<cfelse>
+
+	<cfoutput>
+		<span class="label label-primary">#numUsers# <span lang="es">Usuarios</span></span>
+	</cfoutput>
+
 </cfif>
-
-  	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaUsers" returnvariable="usersResponse">
-		<cfinvokeargument name="area_id" value="#area_id#">
-	</cfinvoke>
-
-	<cfset users = usersResponse.users>
-	<cfset numUsers = ArrayLen(users)>
 
 	<div class="div_users">
 
