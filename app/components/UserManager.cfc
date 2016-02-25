@@ -2361,6 +2361,7 @@
 			<cfif isDefined("arguments.search_text") AND len(arguments.search_text) GT 0>
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/SearchManager" method="generateSearchText" returnvariable="search_text_re">
 					<cfinvokeargument name="text" value="#arguments.search_text#">
+					<cfinvokeargument name="removeSpecialChars" value="true">
 				</cfinvoke>
 			</cfif>
 
