@@ -51,7 +51,7 @@
 	<!------------------------ IS USER RESPONSIBLE OF AREA-------------------------------------->
 
 	<cffunction name="getAreaResponsible" returntype="query" output="false" access="public">
-		<cfargument name="area_id" type="numeric" required="true"/>
+		<cfargument name="area_id" type="numeric" required="true">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">

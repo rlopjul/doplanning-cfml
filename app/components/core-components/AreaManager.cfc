@@ -583,14 +583,8 @@
 			<cfreturn true>
 		</cfif>
 
-		<cfquery datasource="#client_dsn#" name="getArea">
-			SELECT areas.user_in_charge, areas.parent_id
-			FROM #client_abb#_areas AS areas
-			WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
-		</cfquery>
-
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaResponsible" returnvariable="getArea">
-			<cfinvokeargument name="area_id" value="#getArea.parent_id#">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
 
 			<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 			<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
@@ -598,7 +592,7 @@
 
 		<cfif getArea.recordCount GT 0>
 
-			<cfif getArea.user_in_charge IS SESSION.user_id>
+			<cfif getArea.user_in_charge IS arguments.user_id>
 				<cfreturn true>
 			</cfif>
 
