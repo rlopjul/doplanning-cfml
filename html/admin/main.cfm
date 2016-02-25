@@ -156,7 +156,7 @@
 
 <cfif isUserAdministrator IS true>
 	<cfinclude template="#APPLICATION.corePath#/includes/user_form_scripts.cfm">
-	<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.5"></script>
+	<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.6"></script>
 </cfif>
 
 </cfoutput>
