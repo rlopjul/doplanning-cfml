@@ -153,6 +153,12 @@
 <script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.94"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
+
+<cfif isUserAdministrator IS true>
+	<cfinclude template="#APPLICATION.corePath#/includes/user_form_scripts.cfm">
+	<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.5"></script>
+</cfif>
+
 </cfoutput>
 
 <script>

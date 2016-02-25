@@ -141,6 +141,7 @@ Datos Personales
 <cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
 
 <cfset page_type = 2>
+<cfinclude template="#APPLICATION.corePath#/includes/user_form_scripts.cfm">
 <cfinclude template="#APPLICATION.corePath#/includes/user_data_form.cfm"/>
 
 <div class="container">

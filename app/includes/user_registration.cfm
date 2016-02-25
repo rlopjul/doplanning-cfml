@@ -123,6 +123,7 @@
 </cfif>
 
 <cfset page_type = 3>
+<cfinclude template="#APPLICATION.corePath#/includes/user_form_scripts.cfm">
 <cfinclude template="#APPLICATION.corePath#/includes/user_data_form.cfm"/>
 
 <div class="container">

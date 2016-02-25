@@ -1,7 +1,3 @@
-<cfoutput>
-<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.5"></script>
-</cfoutput>
-
 <cfif isDefined("URL.user") AND isNumeric(URL.user)>
 
 	<cfset user_id = URL.user>

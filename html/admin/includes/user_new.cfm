@@ -1,8 +1,3 @@
-<cfoutput>
-<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.5"></script>
-</cfoutput>
-
-
 <cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getEmptyUser" returnvariable="getUserResponse">
 </cfinvoke>
 
