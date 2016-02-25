@@ -543,6 +543,7 @@
 					<cfinvokeargument name="termsOfUseUrl" value="https://ceseand.net/es/page.cfm?id=57&title=terminos-de-uso">
 
 					<cfinvokeargument name="logoWebNotifications" value="/assets/logo-ceseand-emails.jpg">
+					<cfinvokeargument name="changeUserPreferencesByAdmin" value="true">
 
 				</cfinvoke>
 
