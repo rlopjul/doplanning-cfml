@@ -60,6 +60,14 @@
 
           AND field_#fields.field_id# IN (SELECT id FROM #client_abb#_files WHERE file_type_id = <cfqueryparam value="#attachedFileTypeId#" cfsqltype="cf_sql_integer"> AND file_name REGEXP <cfqueryparam value="#field_value_re#" cfsqltype="cf_sql_varchar">)
 
+        <cfelseif fields.field_type_group IS "boolean">
+
+          AND field_#fields.field_id#
+          <cfif field_value EQ "NULL">
+            IS NULL
+          <cfelse>
+            = <cfqueryparam value="#field_value#" cfsqltype="#fields.cf_sql_type#">
+          </cfif>
 
         <cfelse>
 

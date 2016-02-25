@@ -363,8 +363,11 @@
 
 									<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control">
 										<option value=""></option>
-										<option value="1" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
-										<option value="0" <cfif field_value IS false>selected="selected"</cfif>>No</option>
+										<option value="1" lang="es" <cfif field_value IS true>selected="selected"</cfif>>Sí</option>
+										<option value="0" lang="es" <cfif field_value IS false>selected="selected"</cfif>>No</option>
+										<cfif arguments.search_inputs IS true>
+											<option value="NULL" lang="es" <cfif field_value IS "NULL">selected="selected"</cfif>>NO RELLENADO</option>
+										</cfif>
 									</select>
 
 								</cfif>
@@ -578,7 +581,7 @@
 
 							</cfif>
 
-							<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" <cfif (fields.field_type_id IS 10 OR fields.field_type_id IS 16)>multiple style="height:90px"</cfif>><!---AND arguments.search_inputs IS false--->
+							<select name="#field_name#[]" id="#field_name#" #field_required_att# class="form-control selectpicker" data-none-selected-text="" <cfif (fields.field_type_id IS 10 OR fields.field_type_id IS 16)>multiple style="height:90px"</cfif>><!---AND arguments.search_inputs IS false--->
 								<cfif ( (fields.field_type_id IS 9 OR fields.field_type_id IS 15) AND fields.required IS false ) OR ( arguments.search_inputs IS true AND (fields.field_type_id NEQ 10 AND fields.field_type_id NEQ 16) )>
 									<option value=""></option>
 								</cfif>
@@ -955,7 +958,7 @@
 
 								<cfset referencedRowUrl = "#APPLICATION.mainUrl#/?abb=#client_abb#&area=#referencedTableQuery.area_id#&#referencedTableTypeName#=#referencedTableId#&row=">
 
-								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control selectpicker" data-live-search="true" data-width="100%" data-size="5" data-container="body" onchange=" $('##referencedRowLink').attr('href', '#referencedRowUrl#'+$('###field_name#').val() )">
+								<select name="#field_name#" id="#field_name#" #field_required_att# class="form-control selectpicker" data-none-selected-text="" data-live-search="true" data-width="100%" data-size="5" data-container="body" onchange=" $('##referencedRowLink').attr('href', '#referencedRowUrl#'+$('###field_name#').val() )">
 
 									<cfif fields.required IS false OR arguments.search_inputs IS true>
 										<option value=""></option>
