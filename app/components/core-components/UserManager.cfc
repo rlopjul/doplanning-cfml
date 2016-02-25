@@ -1347,7 +1347,161 @@
 
 			</cfif>
 
+
+
+			<cfif client_abb EQ "ceseand">
+
+				<!--- Funcionalidad específica para CESEAND, añade los usuarios a un área u otra según un parámetro especificado en sus datos --->
+
+				<cfset ADD_TO_AREA_USER_TYPOLOGY = 1>
+				<cfset ADD_TO_AREA_TYPOLOGY_FIELD = 52>
+
+				<cfset ADD_TO_AREA_WITH_TRUE_VALUE = 118>
+				<cfset ADD_TO_AREA_WITH_FALSE_VALUE = 120>
+
+				<cfif arguments.table_id IS ADD_TO_AREA_USER_TYPOLOGY>
+
+					<cfif isDefined("arguments.field_#ADD_TO_AREA_TYPOLOGY_FIELD#")>
+
+						<cfset fieldValue = arguments['field_#ADD_TO_AREA_TYPOLOGY_FIELD#']>
+
+						<cfif fieldValue IS true OR fieldValue IS false><!--- TRUE OR FALSE --->
+
+							<cfif fieldValue IS true>
+
+								<cfset areaToAddUser = ADD_TO_AREA_WITH_TRUE_VALUE>
+								<cfset areaToRemoveUser = ADD_TO_AREA_WITH_FALSE_VALUE>
+
+							<cfelse>
+
+								<cfset areaToAddUser = ADD_TO_AREA_WITH_FALSE_VALUE>
+								<cfset areaToRemoveUser = ADD_TO_AREA_WITH_TRUE_VALUE>
+
+							</cfif>
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="addOrRemoveUserFromSpecialArea" returnvariable="isUserAssociatedToAreaToAdd">
+								<cfinvokeargument name="user_id" value="#arguments.update_user_id#"/>
+
+								<cfinvokeargument name="add_to_area_id" value="#areaToAddUser#"/>
+								<cfinvokeargument name="remove_from_area_id" value="#areaToRemoveUser#"/>
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+						<cfelse><!--- EMPTY VALUE --->
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="addOrRemoveUserFromSpecialArea" returnvariable="isUserAssociatedToAreaToAdd">
+								<cfinvokeargument name="user_id" value="#arguments.update_user_id#"/>
+
+								<cfinvokeargument name="remove_from_area_id" value="#ADD_TO_AREA_WITH_TRUE_VALUE#"/>
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="addOrRemoveUserFromSpecialArea" returnvariable="isUserAssociatedToAreaToAdd">
+								<cfinvokeargument name="user_id" value="#arguments.update_user_id#"/>
+
+								<cfinvokeargument name="remove_from_area_id" value="#ADD_TO_AREA_WITH_FALSE_VALUE#"/>
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+						</cfif>
+
+					</cfif>
+
+				</cfif>
+
+			</cfif>
+
+
 		<cfreturn row_id>
+
+	</cffunction>
+
+
+	<!--- ----------------------------------- addOrRemoveUserFromSpecialArea -------------------------------------- --->
+
+	<cffunction name="addOrRemoveUserFromSpecialArea" output="false" returntype="void" access="public">
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="add_to_area_id" type="numeric" required="false">
+		<cfargument name="remove_from_area_id" type="numeric" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "addOrRemoveUserFromSpecialArea">
+
+
+			<cfif isDefined("arguments.add_to_area_id")>
+
+				<!--- areaToAddUser --->
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="isUserAssociatedToArea" returnvariable="isUserAssociatedToAreaToAdd">
+					<cfinvokeargument name="area_id" value="#arguments.add_to_area_id#"/>
+					<cfinvokeargument name="user_id" value="#arguments.user_id#"/>
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif isUserAssociatedToAreaToAdd.isUserInArea IS false>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="assignUserToArea">
+						<cfinvokeargument name="area_id" value="#arguments.add_to_area_id#"/>
+						<cfinvokeargument name="user_id" value="#arguments.user_id#"/>
+						<cfinvokeargument name="send_alert" value="false">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+
+			</cfif>
+
+
+			<cfif isDefined("arguments.remove_from_area_id")>
+
+
+				<!--- areaToRemoveUser --->
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="isUserAssociatedToArea" returnvariable="isUserAssociatedToAreaToRemove">
+					<cfinvokeargument name="area_id" value="#arguments.remove_from_area_id#"/>
+					<cfinvokeargument name="user_id" value="#arguments.user_id#"/>
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif isUserAssociatedToAreaToRemove.isUserInArea IS true>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaResponsible" returnvariable="areaResponsible">
+						<cfinvokeargument name="area_id" value="#arguments.remove_from_area_id#">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+
+					<cfif areaResponsible.user_in_charge NEQ arguments.user_id>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="dissociateUserFromArea">
+							<cfinvokeargument name="area_id" value="#arguments.remove_from_area_id#"/>
+							<cfinvokeargument name="user_id" value="#arguments.user_id#"/>
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif>
+
+				</cfif>
+
+
+			</cfif>
 
 	</cffunction>
 
