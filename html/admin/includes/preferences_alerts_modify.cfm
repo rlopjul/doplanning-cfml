@@ -32,7 +32,7 @@
 
  		<div class="container-fluid">
 
-			<div class="alert alert-warning" role="alert">Tenga en cuenta que no debe modificar las preferencias de notificaciones de los usuarios sin su consentimiento</div>
+			<div class="alert alert-warning" role="alert">Tenga en cuenta que no debe modificar las preferencias de notificaciones de los usuarios</div>
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUserPreferences" returnvariable="preferences">
 				<cfinvokeargument name="get_user_id" value="#user_id#">

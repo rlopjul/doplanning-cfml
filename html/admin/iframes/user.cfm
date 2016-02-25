@@ -134,11 +134,11 @@
 				  </ul>
 				</div>
 
-	 			<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar usuario</span></a>
+	 			<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
 
 				<cfif APPLICATION.changeUserPreferencesByAdmin IS true>
 
-					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#user_id#');"><i class="icon-envelope-alt icon-white"></i> <span lang="es">Modificar notificaciones</span></a>
+					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#user_id#');"><i class="icon-envelope-alt icon-white"></i> <span lang="es">Notificaciones</span></a>
 
 				</cfif>
 
