@@ -1574,7 +1574,7 @@
 								</cfif>
 								<th style="width:38px;"><span lang="es">Activo</span></th>
 								<cfif SESSION.client_administrator EQ SESSION.user_id>
-								<th style="width:100px;"></th>
+								<th style="width:130px;"></th>
 								</cfif>
 							</cfif>
 							<!---<cfif APPLICATION.moduleWebRTC IS true>
@@ -1670,7 +1670,10 @@
 								<td lang="es"><cfif objectUser.enabled IS true>Sí<cfelse>No</cfif></td>
 
 								<cfif SESSION.client_administrator EQ SESSION.user_id>
-									<td><a onclick="parent.loadModal('html_content/user_modify.cfm?user=#objectUser.id#')" class="btn btn-primary btn-sm"><i class="icon-edit icon-white"></i></a>
+									<td><a onclick="parent.loadModal('html_content/user_modify.cfm?user=#objectUser.id#')" class="btn btn-primary btn-sm" title="Modificar" lang="es"><i class="icon-edit icon-white"></i></a>
+										<cfif APPLICATION.changeUserPreferencesByAdmin IS true>
+											<a onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#objectUser.id#')" class="btn btn-default btn-sm" title="Notificaciones" lang="es"><i class="icon-envelope-alt icon-white"></i></a>
+										</cfif>
 										<a class="btn btn-danger btn-sm" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#objectUser.id#');" lang="es"><i class="icon-remove"></i></a>
 									</td>
 								</cfif>
