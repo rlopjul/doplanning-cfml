@@ -73,7 +73,7 @@
 		<cfset var method = "getUser">
 
 			<cfquery name="getUserPreferencesQuery" datasource="#arguments.client_dsn#">
-				SELECT id, notify_new_message, notify_new_file, notify_replace_file, notify_new_area,
+				SELECT id, id AS user_id, notify_new_message, notify_new_file, notify_replace_file, notify_new_area,
 				notify_new_event, notify_new_task
 				, notify_delete_file <!---, notify_dissociate_file--->
 				<cfif APPLICATION.moduleAreaFilesLite IS true>

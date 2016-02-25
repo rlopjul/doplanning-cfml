@@ -108,3 +108,47 @@ function postUserDataForm(requestUrl) {
 	return false;
 
 }
+
+function postUserAlertPreferencesForm(requestUrl) {
+
+	$('body').modalmanager('loading');
+	$("#userPreferencesSubmitButton").button('loading');
+
+	var formId = "#updateUserAlertPreferences";
+
+	$.ajax({
+		  type: "POST",
+		  url: requestUrl,
+		  data: $(formId).serialize(),
+		  success: function(data, status) {
+
+		  	if(status == "success"){
+		  		var message = data.message;
+
+		  		$('body').modalmanager('removeLoading');
+
+		  		if(data.result == true) {
+
+					var userId = data.user_id;
+		  			//openUrl("user.cfm?user="+userId, "userAdminIframe");
+
+		  			hideDefaultModal();
+		  			showAlertMessage(message, data.result);
+
+		  		} else {
+
+		  			showAlertErrorModal(message);
+		  			$("#userPreferencesSubmitButton").button("reset");
+		  		}
+
+		  	}else
+				showAlertModal(status);
+
+		  },
+		  dataType: "json"
+		});
+
+
+	return false;
+
+}

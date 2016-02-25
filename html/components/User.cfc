@@ -224,6 +224,7 @@
 
 
 	<cffunction name="getUserPreferences" output="false" returntype="query" access="public">
+		<cfargument name="get_user_id" type="numeric" required="true">
 
 		<cfset var method = "getUserPreferences">
 
@@ -232,6 +233,7 @@
 		<cftry>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUserPreferences" returnvariable="response">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -428,7 +430,8 @@
 
 	<!--- updateUserPreferences --->
 
-	<cffunction name="updateUserPreferences" returntype="void" output="false" access="remote">
+	<cffunction name="updateUserPreferences" output="false" returntype="string" returnformat="plain" access="remote">
+		<cfargument name="update_user_id" type="numeric" required="true">
 		<cfargument name="notify_new_message" type="string" required="false" default="false">
 		<cfargument name="notify_new_file" type="string" required="false" default="false">
 		<cfargument name="notify_replace_file" type="string" required="false" default="false">
@@ -477,22 +480,18 @@
 			</cfinvoke>
 
 			<cfif response.result IS true>
-				<cfset msg = "Modificación guardada.">
-			<cfelse>
-				<cfset msg = response.message>
+
+				<cfset response.message = "Modificación guardada.">
+
 			</cfif>
 
-			<cfset msg = URLEncodedFormat(msg)>
-
-      <!---<cflocation url="#APPLICATION.htmlPath#/iframes/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">--->
-
-      <cflocation url="#APPLICATION.htmlPath#/preferences_alerts.cfm?msg=#msg#&res=#response.result#" addtoken="no">
-
 			<cfcatch>
-				<cfinclude template="includes/errorHandlerStruct.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>
 
 		</cftry>
+
+		<cfreturn serializeJSON(response)>
 
 	</cffunction>
 
