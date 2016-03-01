@@ -138,7 +138,7 @@
 
 				<cfif APPLICATION.changeUserPreferencesByAdmin IS true>
 
-					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#user_id#');"><i class="icon-envelope-alt icon-white"></i> <span lang="es">Notificaciones</span></a>
+					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#user_id#');" title="Preferencias de notificaciones" lang="es"><i class="icon-envelope-alt icon-white"></i> <span lang="es">Preferencias</span></a>
 
 				</cfif>
 

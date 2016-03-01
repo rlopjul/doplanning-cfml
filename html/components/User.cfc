@@ -1672,7 +1672,7 @@
 								<cfif SESSION.client_administrator EQ SESSION.user_id>
 									<td><a onclick="parent.loadModal('html_content/user_modify.cfm?user=#objectUser.id#')" class="btn btn-primary btn-sm" title="Modificar" lang="es"><i class="icon-edit icon-white"></i></a>
 										<cfif APPLICATION.changeUserPreferencesByAdmin IS true>
-											<a onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#objectUser.id#')" class="btn btn-default btn-sm" title="Notificaciones" lang="es"><i class="icon-envelope-alt icon-white"></i></a>
+											<a onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#objectUser.id#')" class="btn btn-default btn-sm" title="Preferencias de notificaciones" lang="es"><i class="icon-envelope-alt icon-white"></i></a>
 										</cfif>
 										<a class="btn btn-danger btn-sm" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#objectUser.id#');" lang="es"><i class="icon-remove"></i></a>
 									</td>

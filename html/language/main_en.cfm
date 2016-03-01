@@ -877,6 +877,7 @@ curLangTextEn = {
 
 		/*admin/main.cfm*/
 		"Preferencias del usuario":"User preferences",
+    "Preferencias":"Preferences",
 		"Administración general":"General administration",
 		"Administración de áreas":"Areas administration",
 		"No cambiar de pestaña al seleccionar área":"Do not change tab when an area is selected",
