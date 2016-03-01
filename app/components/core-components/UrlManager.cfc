@@ -358,8 +358,8 @@
 
 					#getSubAreas.name#<br/>
 
-					<cfif len(getSubAreas.name) GT 55>
-						<cfset nameTourlId = replaceList(lCase(getSubAreas.name)," de , para , por , a , un , una ", " , , , , , ")>
+					<cfif len(getSubAreas.name) GT 10>
+						<cfset nameTourlId = replaceList(lCase(getSubAreas.name)," de , del , para , por , a , un , una , el , en , y ,", " , , , , , , , , , ")>
 					<cfelse>
 						<cfset nameTourlId = getSubAreas.name>
 					</cfif>
