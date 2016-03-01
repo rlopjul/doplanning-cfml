@@ -40,9 +40,10 @@
 			<cfoutput>
 			CLIENTE: #getClient.name#<br/>
 
+			<cfset area_type = "web"><!---web/intranet--->
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWebs" returnvariable="getWebQuery">
-				<cfinvokeargument name="area_type" value="web">
+				<cfinvokeargument name="area_type" value="#area_type#">
 
 				<cfinvokeargument name="client_abb" value="#new_client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_datasource#">
@@ -52,7 +53,7 @@
 
 				<cfloop query="getWebQuery">
 
-					<cfif getWebQuery.area_type EQ "web">
+					<cfif getWebQuery.area_type EQ area_type>
 
 						#getWebQuery.path# <br/>
 
