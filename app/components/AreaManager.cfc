@@ -1943,7 +1943,7 @@
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
 		<cfargument name="read_only" type="boolean" required="false" default="false"/>
-		<cfargument name="list_mode" type="string" required="true"/>
+		<cfargument name="list_mode" type="string" required="false" default=""/>
 		<cfargument name="url_id" type="string" required="false">
 
 
@@ -2139,7 +2139,7 @@
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
 		<cfargument name="read_only" type="boolean" required="false" default="false"/>
-		<cfargument name="list_mode" type="string" required="true"/>
+		<cfargument name="list_mode" type="string" required="false" default=""/>
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -2224,7 +2224,7 @@
 		<cfargument name="items_enabled_subareas" type="boolean" required="false" default="false"/>
 		<cfargument name="users_visible" type="boolean" required="false" default="false"/>
 		<cfargument name="read_only" type="boolean" required="false" default="false"/>
-		<cfargument name="list_mode" type="string" required="true"/>
+		<cfargument name="list_mode" type="string" required="false" default=""/>
 		<cfargument name="url_id" type="string" required="false">
 
 
