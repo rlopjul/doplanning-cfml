@@ -1,4 +1,4 @@
-<cfif page_directory EQ "intranet" AND APPLICATION.webFriendlyUrls IS false><!---INTRANET--->
+<cfif page_directory EQ "intranet"><!---INTRANET--->
 
   <!--- Add client abb to all URLs --->
   <cfoutput>
@@ -15,9 +15,9 @@
       window.lang.change('#language#');
     </cfif>
 
-    <cfif NOT isDefined("URL.abb")>
+    <cfif NOT isDefined("URL.abb") AND NOT isDefined("url_id")>
 
-      <cfif len(CGI.QUERY_STRING) GT 0 AND APPLICATION.webFriendlyUrls IS false>
+      <cfif len(CGI.QUERY_STRING) GT 0>
         <cfset newQueryString = "?#CGI.QUERY_STRING#&abb=#clientAbb#">
       <cfelse>
         <cfset newQueryString = "?abb=#clientAbb#">
