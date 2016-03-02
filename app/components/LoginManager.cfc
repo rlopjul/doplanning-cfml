@@ -103,12 +103,6 @@
 
 			<cfset getClient = getClientResponse.client>
 
-			<cfinvoke component="UserManager" method="objectUser" returnvariable="objectUser">
-				<cfinvokeargument name="email" value="#arguments.login#"/>
-				<cfinvokeargument name="password" value="#arguments.password#"/>
-				<cfinvokeargument name="return_type" value="object"/>
-			</cfinvoke>
-
 			<cfif APPLICATION.moduleLdapUsers IS true><!---LDAP Login--->
 
 				<cfif arguments.ldap_id EQ "doplanning">
@@ -125,10 +119,12 @@
 			<cfif ldapLogin IS true><!---LDAP Login--->
 
 				<cfinvoke component="LoginLDAPManager" method="loginLDAPUser" returnvariable="response">
-					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-					<cfinvokeargument name="objectClient" value="#getClient#">
-					<cfinvokeargument name="objectUser" value="#objectUser#">
 					<cfinvokeargument name="ldap_id" value="#arguments.ldap_id#">
+					<cfinvokeargument name="objectClient" value="#getClient#">
+					<cfinvokeargument name="user_login" value="#arguments.login#">
+					<cfinvokeargument name="password" value="#arguments.password#">
+
+					<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				</cfinvoke>
 
 				<!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
@@ -150,14 +146,13 @@
 
 					<cfif loginQuery.enabled IS true>
 
-						<cfset objectUser.id = loginQuery.id>
-						<cfset objectUser.language = loginQuery.language>
-						<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
-
 						<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="response">
 							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 							<cfinvokeargument name="objectClient" value="#getClient#">
-							<cfinvokeargument name="objectUser" value="#objectUser#">
+							<cfinvokeargument name="user_id" value="#loginQuery.id#">
+							<cfinvokeargument name="user_login" value="#arguments.login#">
+							<cfinvokeargument name="password" value="#arguments.password#">
+							<cfinvokeargument name="user_language" value="#loginQuery.language#">
 						</cfinvoke>
 
 						<!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
@@ -198,34 +193,30 @@
 	<!--- loginUserInApplication --->
 
 	<cffunction name="loginUserInApplication" returntype="struct" output="false" access="public">
-		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="objectClient" type="any" required="yes">
-		<cfargument name="objectUser" type="struct" required="yes">
+		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="user_login" type="string" required="true">
+		<cfargument name="password" type="string" required="true">
+		<cfargument name="user_language" type="string" required="true">
 
 		<cfset var method = "loginUserInApplication">
 
 		<cfset var response = structNew()>
 
-		<cfset var user_login = "">
-		<cfset var password = "">
 
 			<cfinclude template="includes/functionStartNoSession.cfm">
 
-			<cfset user_login = objectUser.email>
-			<cfset password = objectUser.password>
 
 			<cfset role = "general">
 
 			<!---  CFLOGIN   --->
 			<cflogin>
 
-				<cfset user_id = arguments.objectUser.id>
-
 				<!---Save user_id, client_abb and language in SESSION--->
 				<cfset SESSION.user_id = #user_id#>
 				<cfset SESSION.client_abb = arguments.client_abb>
 				<!---Hay que obtener de las preferencias el idioma--->
-				<cfset SESSION.user_language = objectUser.language>
+				<cfset SESSION.user_language = arguments.user_language>
 
 				<cfset SESSION.client_id = objectClient.id>
 				<cfset SESSION.client_name = objectClient.name>
@@ -239,41 +230,29 @@
 				<cfset SESSION.client_force_notifications = objectClient.force_notifications><!--- Esta variable se almacena en sesion para evitar el error "can't use different connections inside a transaction" --->
 				--->
 
-				<cfloginuser name="#user_login#" password="#password#" roles="#role#">
+				<cfloginuser name="#arguments.user_login#" password="#arguments.password#" roles="#role#">
 
-				<!---  Managing user connections to the program --->
-				<cfset connections = #objectUser.number_of_connections#+1>
-				<!---<cfset lastConnection = '#DateFormat(Now())# #TimeFormat(Now())#'>--->
 				<!--- Here we set the user's state to connected and update the number of connections he has alaready stablished as --->
 				<!--- well as setting the time and date of the last connection of the user --->
-				<cfquery datasource="#client_dsn#" name="beginQuery">
-					BEGIN;
-				</cfquery>
+				<cftransaction>
 
-				<cfset users_table = client_abb&"_users">
+					<cfset users_table = client_abb&"_users">
 
-				<cfquery datasource="#client_dsn#" name="manageConnectionsQuery">
-					UPDATE #users_table#
-					SET connected=1,
-					number_of_connections=#connections#,
-					last_connection = now()
-					WHERE id=<cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
+					<cfquery datasource="#client_dsn#" name="manageConnectionsQuery">
+						UPDATE #users_table#
+						SET connected = 1,
+						number_of_connections = number_of_connections+1,
+						last_connection = NOW(),
+						session_id = '#SESSION.SessionID#'
+						WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
 
-				<cfquery datasource="#client_dsn#" name="sessionQuery">
-					UPDATE #users_table#
-					SET session_id='#SESSION.SessionID#'
-					WHERE id=<cfqueryparam value="#user_id#" cfsqltype="cf_sql_numeric">;
-				</cfquery>
-
-				<cfquery datasource="#client_dsn#" name="commitQuery">
-					COMMIT;
-				</cfquery>
+				</cftransaction>
 
 				<cfif APPLICATION.moduleMessenger EQ true>
 					<cfinvoke component="MessengerManager" method="disconnectUser">
 						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="user_id" value="#user_id#">
+						<cfinvokeargument name="user_id" value="#arguments.user_id#">
 					</cfinvoke>
 				</cfif>
 

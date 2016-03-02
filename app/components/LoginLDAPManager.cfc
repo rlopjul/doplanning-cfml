@@ -6,27 +6,26 @@
 
 
 	<cffunction name="loginLDAPUser" returntype="struct" output="false" access="package">
-		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="objectClient" type="any" required="true">
-		<cfargument name="objectUser" type="struct" required="true">
 		<cfargument name="ldap_id" type="string" required="true">
+		<cfargument name="objectClient" type="any" required="true">
+		<cfargument name="user_login" type="string" required="true">
+		<cfargument name="password" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
 
 		<cfset var method = "loginLDAPUser">
 
 		<cfset var response = structNew()>
 
-		<cfset var user_login = "">
-		<cfset var password = "">
 		<cfset var password_ldap = "">
 		<cfset var login_ldap_column = "">
 		<cfset var loginValid = false>
 		<cfset var loginMessage = "">
+		<cfset var name_ldap = "">
+		<cfset var family_name_ldap = "">
 
 
 			<cfinclude template="includes/functionStartNoSession.cfm">
-
-			<cfset user_login = arguments.objectUser.email>
-			<cfset password = arguments.objectUser.password>
 
 			<!---Importante:
 			Para comparar con passwords codificados en MD5 en LDAP, es necesario hacer lo siguiente:
@@ -42,7 +41,7 @@
 			<cfset password_ldap = binaryDecode(password_ldap,"Hex")>
 			<cfset password_ldap = binaryEncode(password_ldap,"Base64")>
 			<cfset password_ldap = "{MD5}"&password_ldap>--->
-			<cfset password_ldap = password>
+			<cfset password_ldap = arguments.password>
 
 			<cfif arguments.ldap_id EQ "asnc"><!---Default LDAP ASNC--->
 
@@ -112,6 +111,16 @@
 						<cfif isDefined("usuarioXml.email")>
 							<cfset email_hvn = usuarioXml.email.xmlText>
 						</cfif>
+						<cfif isDefined("usuarioXml.nombre.xmlText")>
+							<cfset name_ldap = usuarioXml.nombre.xmlText>
+						</cfif>
+						<cfif isDefined("usuarioXml.apellido1.xmlText")>
+							<cfset family_name_ldap = usuarioXml.apellido1.xmlText>
+						</cfif>
+						<cfif isDefined("usuarioXml.apellido2.xmlText")>
+							<cfset family_name_ldap = family_name_ldap&" "&usuarioXml.apellido2.xmlText>
+						</cfif>
+
 						<!---<cfset response = {result="true", message="", usuario_id=usuarioXml.id.xmlText, nombre=usuarioXml.nombre.xmlText, apellido1=usuarioXml.apellido1.xmlText, apellido2=usuarioXml.apellido2.xmlText}>--->
 
 					</cfif>
@@ -185,14 +194,13 @@
 
 					<cfif loginQuery.enabled IS true>
 
-						<cfset objectUser.id = loginQuery.id>
-						<cfset objectUser.language = loginQuery.language>
-						<cfset objectUser.number_of_connections = loginQuery.number_of_connections>
-
 						<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="loginResult">
 							<cfinvokeargument name="client_abb" value="#client_abb#">
 							<cfinvokeargument name="objectClient" value="#objectClient#">
-							<cfinvokeargument name="objectUser" value="#objectUser#">
+							<cfinvokeargument name="user_id" value="#loginQuery.id#">
+							<cfinvokeargument name="user_login" value="#arguments.login#">
+							<cfinvokeargument name="password" value="#password_ldap#">
+							<cfinvokeargument name="user_language" value="#loginQuery.language#">
 						</cfinvoke>
 
 						<!---<cfsavecontent variable="xmlResponse">
@@ -217,7 +225,42 @@
 
 				<cfelse>
 
-					<cfset loginMessage = "Usuario no disponible en esta aplicación.">
+
+					<cfif arguments.ldap_id EQ "hvn" AND isDefined("email_hvn") AND len(email_hvn) GT 0>
+
+						<!--- createuserFromLdap --->
+
+						<cfinvoke component="LoginLDAPManager" method="createuserFromLdap" returnvariable="createUserFromLdapResponse">
+							<cfinvokeargument name="ldap_id" value="#arguments.ldap_id#">
+							<cfinvokeargument name="email" value="#email_hvn#">
+							<cfinvokeargument name="name" value="#family_name_ldap#">
+							<cfinvokeargument name="family_name" value="#name_ldap#">
+
+							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfif createUserFromLdapResponse.result IS true>
+
+							<cfinvoke component="LoginManager" method="loginUserInApplication" returnvariable="loginResult">
+								<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+								<cfinvokeargument name="objectClient" value="#objectClient#">
+								<cfinvokeargument name="user_id" value="#createUserFromLdapResponse.user_id#">
+								<cfinvokeargument name="user_login" value="#arguments.user_login#">
+								<cfinvokeargument name="password" value="#password_ldap#">
+								<cfinvokeargument name="user_language" value="#createUserFromLdapResponse.language#">
+							</cfinvoke>
+
+						</cfif>
+
+						<cfreturn loginResult>
+
+					<cfelse>
+
+						<cfset loginMessage = "Usuario no disponible en esta aplicación.">
+
+					</cfif>
+
 
 					<cfset response = {result=false, message=#loginMessage#}>
 
@@ -238,6 +281,60 @@
 		<cfreturn response>
 
 	</cffunction>
+
+
+	<!--- createuserFromLdap --->
+
+	<cffunction name="createuserFromLdap" returntype="struct" output="false" access="package">
+		<cfargument name="ldap_id" type="string" required="true">
+		<cfargument name="email" type="string" required="true">
+		<cfargument name="name" type="string" required="false" default="">
+		<cfargument name="family_name" type="string" required="false" default="">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "createuserFromLdap">
+
+		<cfset var response = structNew()>
+
+			<!--- generatePassword --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="generatePassword" returnvariable="password">
+				<cfinvokeargument name="numberOfCharacters" value="8">
+			</cfinvoke>
+
+			<!--- createUser --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" returnvariable="response">
+				<cfinvokeargument name="email" value="#Trim(arguments.email)#">
+				<cfinvokeargument name="name" value="#Trim(arguments.name)#">
+				<cfinvokeargument name="family_name" value="#Trim(arguments.family_name)#">
+				<cfinvokeargument name="internal_user" value="0">
+				<cfinvokeargument name="enabled" value="1">
+				<cfinvokeargument name="verified" value="1">
+				<cfinvokeargument name="language" value="#APPLICATION.defaultLanguage#">
+				<cfinvokeargument name="hide_not_allowed_areas" value="true">
+				<cfinvokeargument name="user_administrator" value="false">
+				<cfinvokeargument name="password" value="#password#">
+				<cfinvokeargument name="password_confirmation" value="#password#">
+				<cfinvokeargument name="notify_admin" value="false">
+				<cfinvokeargument name="include_admin_fields" value="false">
+				<cfinvokeargument name="notify_user" value="true">
+				<cfinvokeargument name="notify_admin" value="true">
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+			<cfif response.result NEQ true>
+				<cfthrow message="#response.message#">
+			</cfif>
+
+			<cfset response.message = "Usuario dado de alta en la aplicación. Está pendiente la asignación de permisos por parte del administrador.">
+
+		<cfreturn response>
+
+	</cffunction>
+
 
 
 
