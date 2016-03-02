@@ -164,14 +164,14 @@
 
 	<cfoutput>
 		<ul class="nav nav-pills" role="tablist">
-		  <li class="active"><a href="##users" role="tab" data-toggle="tab"><span lang="es">Usuarios</span> (#numUsers#)</a></li>
-		  <li><a href="##administrators" role="tab" data-toggle="tab"><span lang="es">Administradores</span> (#numAdministrators#)</a></li>
+		  <li role="presentation" class="active"><a href="##users" role="tab" data-toggle="tab"><span lang="es">Usuarios</span> (#numUsers#)</a></li>
+		  <li role="presentation"><a href="##administrators" role="tab" data-toggle="tab"><span lang="es">Administradores</span> (#numAdministrators#)</a></li>
 		</ul>
 	</cfoutput>
 
 	<!--- Tab panes --->
 	<div class="tab-content">
-	  <div class="tab-pane active" id="users">
+	  <div class="tab-pane active" role="tabpanel" id="users">
 
 <cfelse>
 
@@ -181,7 +181,7 @@
 
 </cfif>
 
-	<div class="div_users">
+	<div>
 
 		<cfif numUsers GT 0>
 
@@ -223,7 +223,7 @@
 <cfif SESSION.client_administrator IS SESSION.user_id>
 
 	  </div>
-	  <div class="tab-pane" id="administrators"></div>
+	  <div class="tab-pane" role="tabpanel" id="administrators"></div>
 	</div>
 
 </cfif>
