@@ -15,6 +15,7 @@
 		<cfargument name="emailServerPassword" type="string" required="true">
 		<cfargument name="emailFrom" type="string" required="true">
 		<cfargument name="emailReply" type="string" required="false" default="support@doplanninng.net">
+		<cfargument name="emailFalseTo" type="string" required="false" default="""Undisclosed-Recipients"" <dpera7@gmail.com>">
 
 		<cfargument name="openTokApiKey" type="numeric" required="false">
 		<cfargument name="openTokApiSecret" type="string" required="false">
@@ -176,7 +177,7 @@
 			<cfset APPLICATION.emailServerPassword = arguments.emailServerPassword>
 			<cfset APPLICATION.emailFrom = arguments.emailFrom>
 
-			<cfset APPLICATION.emailFalseTo = """Undisclosed-Recipients"" <dpera7@gmail.com>">
+			<cfset APPLICATION.emailFalseTo = arguments.emailFalseTo>
 			<cfset APPLICATION.emailReply = arguments.emailReply>
 			<cfset APPLICATION.emailFail = "support@doplanning.net">
 			<cfset APPLICATION.emailErrors = "bugs@doplanning.net">
