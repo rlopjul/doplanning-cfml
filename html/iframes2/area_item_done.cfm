@@ -1,1 +1,0 @@
-<cfinclude template="#APPLICATION.htmlPath#/includes/area_item_done.cfm">
