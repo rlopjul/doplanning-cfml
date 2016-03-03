@@ -198,7 +198,7 @@
 							<cfinvokeargument name="client_abb" value="#client_abb#">
 							<cfinvokeargument name="objectClient" value="#objectClient#">
 							<cfinvokeargument name="user_id" value="#loginQuery.id#">
-							<cfinvokeargument name="user_login" value="#arguments.login#">
+							<cfinvokeargument name="user_login" value="#arguments.user_login#">
 							<cfinvokeargument name="password" value="#password_ldap#">
 							<cfinvokeargument name="user_language" value="#loginQuery.language#">
 						</cfinvoke>
