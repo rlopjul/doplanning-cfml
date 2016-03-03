@@ -43,6 +43,8 @@
 			<cfset password_ldap = "{MD5}"&password_ldap>--->
 			<cfset password_ldap = arguments.password>
 
+			<cfset table = arguments.client_abb&"_users">
+
 			<cfif arguments.ldap_id EQ "asnc"><!---Default LDAP ASNC--->
 
 				<cftry>
@@ -123,6 +125,23 @@
 
 						<!---<cfset response = {result="true", message="", usuario_id=usuarioXml.id.xmlText, nombre=usuarioXml.nombre.xmlText, apellido1=usuarioXml.apellido1.xmlText, apellido2=usuarioXml.apellido2.xmlText}>--->
 
+					<cfelseif arguments.client_abb EQ "omars"><!--- El login no es del Hospital o DMSAS, se prueba con OMARS --->
+
+						<cfquery name="loginOmarsQuery" datasource="#client_dsn#">
+							SELECT users.id
+							FROM #table# AS users
+							WHERE users.login_omars = <cfqueryparam value="#arguments.user_login#" cfsqltype="cf_sql_varchar">
+							AND users.password = <cfqueryparam value="#hash(password_ldap)#" cfsqltype="cf_sql_varchar">;
+						</cfquery>
+
+						<cfif loginOmarsQuery.recordCount GT 0>
+
+							<cfset login_ldap_column = "login_omars">
+
+							<cfset loginValid = true>
+
+						</cfif>
+
 					</cfif>
 
 				<cfelse>
@@ -177,8 +196,6 @@
 
 			<cfif loginValid IS true><!---AND getUser.recordCount GT 0--->
 
-				<cfset table = arguments.client_abb&"_users">
-
 				<!---  Checking if user is correct   --->
 				<cfquery name="loginQuery" datasource="#client_dsn#">
 					SELECT users.id, users.number_of_connections, users.language, users.enabled
@@ -203,9 +220,9 @@
 							<cfinvokeargument name="user_language" value="#loginQuery.language#">
 						</cfinvoke>
 
-						<!---<cfsavecontent variable="xmlResponse">
+						<!--- <cfsavecontent variable="xmlResponse">
 							<cfoutput><login valid="#loginResult.result#"></login></cfoutput>
-						</cfsavecontent>--->
+						</cfsavecontent> --->
 
 						<cfset response = {result=loginResult.result}>
 
@@ -216,9 +233,9 @@
 
 						<cfset loginMessage = "Cuenta de usuario deshabilitada.">
 
-						<!---<cfsavecontent variable="xmlResponse">
+						<!--- <cfsavecontent variable="xmlResponse">
 							<cfoutput><login valid="false"><message><![CDATA[#login_message#]]></message></login></cfoutput>
-						</cfsavecontent>--->
+						</cfsavecontent> --->
 						<cfset response = {result=false, message=#loginMessage#}>
 
 					</cfif>
@@ -251,9 +268,10 @@
 								<cfinvokeargument name="user_language" value="#createUserFromLdapResponse.language#">
 							</cfinvoke>
 
+							<cfreturn loginResult>
+
 						</cfif>
 
-						<cfreturn loginResult>
 
 					<cfelse>
 
