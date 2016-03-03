@@ -61,6 +61,19 @@
 
         <small lang="es">Identificar con usuario y contraseña de:</small>
 
+        <cfif client_abb EQ "omars" OR client_abb EQ "era7_fibao">
+          <div class="radio">
+            <label for="ldap_hvn">
+              <input type="radio" name="ldap_id" value="hvn" id="ldap_hvn" onclick="onLdapChange(this)" checked="checked" /> Hospital / DMSAS <cfif client_abb EQ "omars">/ Web OMARS</cfif>
+            </label>
+          </div>
+          <!---<div class="radio">
+            <label for="ldap_dmsas_hvn">
+              <input type="radio" name="ldap_id" value="dmsas_hvn" id="ldap_dmsas_hvn" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
+            </label>
+          </div>--->
+        </cfif>
+
         <cfif APPLICATION.identifier EQ "vpnet">
           <div class="radio">
             <label for="ldap_asnc">
@@ -71,7 +84,7 @@
         <cfelse>
           <div class="radio">
             <label for="ldap_doplanning">
-              <input type="radio" name="ldap_id" value="doplanning" id="ldap_doplanning" onclick="onLdapChange(this)" checked="checked" /> DoPlanning
+              <input type="radio" name="ldap_id" value="doplanning" id="ldap_doplanning" onclick="onLdapChange(this)" <cfif client_abb NEQ "omars" AND client_abb NEQ "era7_fibao">checked="checked"</cfif> /> DoPlanning <cfif client_abb EQ "omars" OR client_abb EQ "era7_fibao">(email)</cfif>
             </label>
           </div>
         </cfif>
@@ -90,19 +103,6 @@
               <input type="radio" name="ldap_id" value="portalep_hcs" id="ldap_portalep_hcs" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
             </label>
           </div>
-        </cfif>
-
-        <cfif client_abb EQ "omars" OR client_abb EQ "era7_fibao">
-          <div class="radio">
-            <label for="ldap_hvn">
-              <input type="radio" name="ldap_id" value="hvn" id="ldap_hvn" onclick="onLdapChange(this)" /> Hospital / DMSAS
-            </label>
-          </div>
-          <!---<div class="radio">
-            <label for="ldap_dmsas_hvn">
-              <input type="radio" name="ldap_id" value="dmsas_hvn" id="ldap_dmsas_hvn" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
-            </label>
-          </div>--->
         </cfif>
 
         <!---<cfif APPLICATION.identifier EQ "vpnet" OR client_abb EQ "agsna">--->
