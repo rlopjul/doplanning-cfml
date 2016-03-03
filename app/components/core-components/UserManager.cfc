@@ -987,6 +987,16 @@
 		<cfargument name="notify_user" type="boolean" required="false" default="true">
 		<cfargument name="import" type="boolean" required="false" default="false">
 
+		<!--- OMARS --->
+		<cfargument name="login_omars" type="string" required="false">
+		<cfargument name="login_hospital" type="string" required="false">
+
+		<cfargument name="grupos" type="string" required="false">
+		<cfargument name="actividades" type="string" required="false">
+		<cfargument name="envioemail" type="string" required="false">
+		<cfargument name="recibir_notificaciones" type="string" required="false">
+
+
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
@@ -1059,7 +1069,7 @@
 						<cfquery name="checkEmail" datasource="#client_dsn#">
 							SELECT id
 							FROM #client_abb#_users
-							WHERE email=<cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">;
+							WHERE email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">;
 						</cfquery>
 
 						<cfif checkEmail.recordCount GT 0><!---User email already used--->
@@ -1079,7 +1089,7 @@
 							<cfquery name="checkLoginLdap" datasource="#client_dsn#">
 								SELECT *
 								FROM #client_abb#_users
-								WHERE login_ldap=<cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">;
+								WHERE login_ldap = <cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">;
 							</cfquery>
 
 							<cfif checkLoginLdap.recordCount GT 0><!---User LDAP login already assigned to another user--->
@@ -1117,12 +1127,46 @@
 
 						</cfif>
 
+						<cfif isDefined("arguments.login_omars") AND len(arguments.login_omars) GT 0>
+
+							<!---Check if login already used--->
+							<cfquery name="checkLoginOmars" datasource="#client_dsn#">
+								SELECT *
+								FROM #client_abb#_users
+								WHERE login_omars = <cfqueryparam value="#arguments.login_omars#" cfsqltype="cf_sql_varchar">;
+							</cfquery>
+
+							<cfif checkLoginOmars.recordCount GT 0><!---User LDAP login already assigned to another user--->
+								<!---<cfset error_code = 211>>--->
+								<cfset response = {result=false, message="El login de OMARS introducido ya está asociado a otro usuario de la aplicación"}>
+								<cfreturn response>
+							</cfif>
+
+						</cfif>
+
+						<cfif isDefined("arguments.login_hospital") AND len(arguments.login_hospital) GT 0>
+
+							<!---Check if login already used--->
+							<cfquery name="checkLoginHospital" datasource="#client_dsn#">
+								SELECT *
+								FROM #client_abb#_users
+								WHERE login_hospital = <cfqueryparam value="#arguments.login_hospital#" cfsqltype="cf_sql_varchar">;
+							</cfquery>
+
+							<cfif checkLoginHospital.recordCount GT 0><!---User LDAP login already assigned to another user--->
+								<!---<cfset error_code = 211>>--->
+								<cfset response = {result=false, message="El login de Hospital introducido ya está asociado a otro usuario de la aplicación"}>
+								<cfreturn response>
+							</cfif>
+
+						</cfif>
+
 					</cfif>
 
 					<!---Insert User in DataBase--->
 					<cfquery name="insertUserQuery" datasource="#client_dsn#" result="insertUserResult">
 						INSERT INTO #client_abb#_users
-						SET email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">,
+						SET
 						name = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar">,
 						family_name = <cfqueryparam value="#arguments.family_name#" cfsqltype="cf_sql_varchar">,
 						telephone = <cfqueryparam value="#arguments.telephone#" cfsqltype="cf_sql_varchar">,
@@ -1151,6 +1195,9 @@
 						twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
 						verified = <cfqueryparam value="#arguments.verified#" cfsqltype="cf_sql_bit">,
 						verification_code = <cfqueryparam value="#verification_code#" cfsqltype="cf_sql_varchar">
+						<cfif APPLICATION.userEmailRequired IS true OR len(arguments.email) GT 0>
+						, email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">
+						</cfif>
 						<cfif isDefined("arguments.start_page")>
 						, start_page = <cfqueryparam value="#arguments.start_page#" cfsqltype="cf_sql_varchar">
 						</cfif>
@@ -1173,6 +1220,19 @@
 							, service = <cfqueryparam value="#arguments.service#" cfsqltype="cf_sql_varchar">
 							, other_1 = <cfqueryparam value="#arguments.other_1#" cfsqltype="cf_sql_varchar">
 							, other_2 = <cfqueryparam value="#arguments.other_2#" cfsqltype="cf_sql_varchar">
+						</cfif>
+
+						<cfif isDefined("arguments.login_omars")>
+							<cfif len(arguments.login_omars) GT 0>
+								, login_omars = <cfqueryparam value="#arguments.login_omars#" cfsqltype="cf_sql_varchar">
+							</cfif>
+							<cfif len(arguments.login_hospital) GT 0>
+								, login_hospital = <cfqueryparam value="#arguments.login_hospital#" cfsqltype="cf_sql_varchar">
+							</cfif>
+							, grupos = <cfqueryparam value="#arguments.grupos#" cfsqltype="cf_sql_longvarchar">
+							, actividades = <cfqueryparam value="#arguments.actividades#" cfsqltype="cf_sql_longvarchar">
+							, envioemail = <cfqueryparam value="#arguments.envioemail#" cfsqltype="cf_sql_bit">
+							, recibir_notificaciones = <cfqueryparam value="#arguments.recibir_notificaciones#" cfsqltype="cf_sql_bit">
 						</cfif>
 						;
 					</cfquery>
