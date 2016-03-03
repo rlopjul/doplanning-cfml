@@ -952,8 +952,9 @@
 		<cfargument name="telephone_ccode" type="string" required="false" default="">
 		<cfargument name="address" type="string" required="false" default="">
 		<cfargument name="language" type="string" required="true">
-		<cfargument name="password" type="string" required="true">
-		<cfargument name="password_confirmation" type="string" required="true">
+		<cfargument name="password" type="string" required="false">
+		<cfargument name="password_confirmation" type="string" required="false">
+		<cfargument name="password_md5" type="string" required="false">
 		<cfargument name="files" type="array" required="false"/>
 		<cfargument name="hide_not_allowed_areas" type="boolean" default="false">
 
@@ -997,25 +998,31 @@
 		<cfset var password_encoded = "">
 
 
-			<cfif arguments.password NEQ arguments.password_confirmation>
+			<cfif isDefined("arguments.password")>
 
-				<cfset response = {result=false, message="La nueva contraseña y su confirmación deben ser iguales."}>
+				<cfif arguments.password NEQ arguments.password_confirmation>
 
-				<cfreturn response>
-
-			<cfelse>
-
-				<cfif APPLICATION.userEmailRequired IS true AND len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
-
-					<cfset response = {result=false, message="Debe introducir un email válido."}>
+					<cfset response = {result=false, message="La nueva contraseña y su confirmación deben ser iguales."}>
 
 					<cfreturn response>
 
 				</cfif>
 
+				<cfset password_encoded = hash(arguments.password)>
+
+			<cfelse>
+
+				<cfset password_encoded = arguments.password_md5>
+
 			</cfif>
 
-			<cfset password_encoded = hash(arguments.password)>
+			<cfif APPLICATION.userEmailRequired IS true AND len(arguments.email) IS 0 AND NOT isValid("email",arguments.email)>
+
+				<cfset response = {result=false, message="Debe introducir un email válido."}>
+
+				<cfreturn response>
+
+			</cfif>
 
 			<!--- getClient --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/ClientQuery" method="getClient" returnvariable="clientQuery">
