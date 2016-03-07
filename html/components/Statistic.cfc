@@ -39,28 +39,32 @@
 
 	<!--- ----------------------- GET TOTAL ITEMS BY USERS -------------------------------- --->
 
-	<cffunction name="getTotalItemsByUser" returntype="struct" access="remote">
-		<cfargument name="area_id" type="numric" required="true">
+	<cffunction name="getTotalItemsByUser" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="area_type" type="string" require="true">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
 
 		<cfset var method = "getTotalItemsByUser">
 
 		<cfset var response = structNew()>
 
-		<cftry>
+		<!---
+		commented for development
+		<cftry>--->
 
 			<cfinvoke component="#APPLICATION.componentsPath#/StatisticManager" method="getTotalItemsByUser" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+				<cfinvokeargument name="area_type" value="#arguments.area_type#"/>
 				<cfinvokeargument name="include_subareas" value="#arguments.include_subareas#"/>
 			</cfinvoke>
 
-			<cfinclude template="includes/responseHandlerStructNoRedirect.cfm">
-
+			<!---
+			commented for development
 			<cfcatch>
-				<cfinclude template="includes/responseHandlerStructNoRedirect.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>
 
-		</cftry>
+		</cftry>--->
 
 		<cfreturn response>
 

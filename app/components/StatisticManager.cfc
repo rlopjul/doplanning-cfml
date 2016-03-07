@@ -50,20 +50,46 @@
 	<!--- ----------------------- GET TOTAL ITEMS BY USERS -------------------------------- --->
 
 	<cffunction name="getTotalItemsByUser" output="false" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="include_subareas" type="boolean" required="false" default="false">
+		<cfargument name="area_type" type="string" requierd="true">
 		<cfargument name="from_date" type="string" required="false">
 		<cfargument name="end_date" type="string" required="false">
+
 
 		<cfset var method = "getTotalItemsByUser">
 
 		<cfset var response = structNew()>
+		<cfset var itemsByType = structNew()>
+		<cfset var subAreasIds = "">
+		<cfset var areasIds = "">
 
-		<cftry>
+		<!---
+		commented for development
+		<cftry>--->
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfif arguments.include_subareas IS true>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset areasIds = ListAppend(subAreasIds, arguments.area_id)>
+
+			</cfif>
+
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="area_type" value="#area_type#">
+				<cfif arguments.include_subareas IS true>
+					<cfinvokeargument name="areas_ids" value="#areasIds#">
+				<cfelse>
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfif>
+				<cfinvokeargument name="area_type" value="#arguments.area_type#">
 
 				<cfinvokeargument name="published" value="false">
 
@@ -75,12 +101,13 @@
 				<cfinvokeargument name="withMailings" value="#APPLICATION.moduleMailing#">
 
 				<cfinvokeargument name="full_content" value="false">
+				<cfinvokeargument name="with_position" value="false">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<cfset itemsQuery = getAreaItemsResult.query>
+			<cfset totalItemsQuery = getAreaItemsResult.query>
 
 			<!--- getAreaItemTypesStruct --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
@@ -91,15 +118,34 @@
 			<!--- Loop items types --->
 			<cfloop array="#itemTypesArray#" index="itemTypeId">
 
+				<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
 
-			<cfset response = {result=true, query=#statisticsQuery#}>
+					<cfset var itemTypeName = itemTypesStruct[itemTypeId].name>
+					<cfset var itemTypeGender = itemTypesStruct[itemTypeId].gender>
 
+					<cfquery dbtype="query" name="itemsQuery">
+						SELECT user_in_charge AS user_id, user_full_name, count(*) AS total
+						FROM totalItemsQuery
+						WHERE itemTypeId = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">
+						GROUP BY user_in_charge, user_full_name;
+					</cfquery>
+
+					<cfset itemsByType[itemTypeId] = itemsQuery>
+
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=true, totalItems=#itemsByType#}>
+
+			<!---
+			commented for development
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
 
 			</cfcatch>
-		</cftry>
+		</cftry>--->
 
 		<cfreturn response>
 
