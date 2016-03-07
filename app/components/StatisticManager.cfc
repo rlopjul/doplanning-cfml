@@ -60,7 +60,7 @@
 		<cfset var method = "getTotalItemsByUser">
 
 		<cfset var response = structNew()>
-		<cfset var itemsByType = structNew()>
+		<cfset var itemsByType = arrayNew(1)>
 		<cfset var subAreasIds = "">
 		<cfset var areasIds = "">
 
@@ -130,7 +130,15 @@
 						GROUP BY user_in_charge, user_full_name;
 					</cfquery>
 
-					<cfset itemsByType[itemTypeId] = itemsQuery>
+					<!--- <cfset itemsByType[itemTypeId] = itemsQuery> --->
+
+					<cfset itemTypeStruct = structNew()>
+					<cfset itemTypeStruct.item_type_id = itemTypeId>
+					<cfset itemTypeStruct.user_id = itemsQuery.user_id>
+					<cfset itemTypeStruct.user_full_name = itemsQuery.user_full_name>
+					<cfset itemTypeStruct.total = itemsQuery.total>
+
+					<cfset ArrayAppend(itemsByType, itemTypeStruct)>
 
 				</cfif>
 
