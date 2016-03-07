@@ -1,4 +1,4 @@
-<!--Developed and copyright by Era7 Information Technologies & Web4Bio 2007-2015 (www.doplanning.net)-->
+<!--Developed and copyright by Era7 Information Technologies & Web4Bio 2007-2016 (www.doplanning.net)-->
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!---<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />--->
