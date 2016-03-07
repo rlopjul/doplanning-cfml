@@ -801,6 +801,7 @@
 		<cfargument name="area_type" type="string" required="false">
 		<cfargument name="limit" type="numeric" required="false">
 		<cfargument name="full_content" type="boolean" required="false" default="false">
+		<cfargument name="with_position" type="boolean" required="false" default="true">
 
 		<cfargument name="withConsultations" type="boolean" required="false" default="false">
 		<cfargument name="withPubmedsComments" type="boolean" required="false" default="false">
@@ -931,7 +932,9 @@
 
 						items.*, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 						<cfif isDefined("arguments.area_type") AND len(arguments.area_type) GT 0><!--- WEB --->
-						, items_position.position
+							<cfif arguments.with_position IS true>
+								, items_position.position
+							</cfif>
 							<cfif arguments.full_content IS true>
 								, iframes_display_types.width AS iframe_width, iframes_display_types.width_unit AS iframe_width_unit, iframes_display_types.height AS iframe_height, iframes_display_types.height_unit AS iframe_height_unit
 							</cfif>
