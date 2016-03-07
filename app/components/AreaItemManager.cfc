@@ -545,6 +545,7 @@
 		<cfargument name="notify_by_sms" type="boolean" required="false">
 		<cfargument name="post_to_twitter" type="boolean" required="false">
 		<cfargument name="creation_date" type="string" required="false">
+		<cfargument name="creation_date_import" type="string" required="false">
 		<cfargument name="start_date" type="string" required="false">
 		<cfargument name="end_date" type="string" required="false">
 		<cfargument name="start_hour" type="numeric" required="false">
@@ -580,6 +581,7 @@
 		<cfargument name="content_styles" type="string" required="false">
 		<cfargument name="send_to_area_users" type="boolean" required="false" default="false">
 		<cfargument name="send_to_test_users" type="boolean" required="false" default="false">
+		<cfargument name="user_import" type="numeric" required="false">
 
 		<cfset var method = "createItem">
 
@@ -749,7 +751,12 @@
 					description = <cfqueryparam value="#arguments.description#" cfsqltype="CF_SQL_varchar">,
 					parent_id = <cfqueryparam value="#arguments.parent_id#" cfsqltype="cf_sql_integer">,
 					parent_kind = <cfqueryparam value="#arguments.parent_kind#" cfsqltype="CF_SQL_varchar">,
-					user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
+					<cfif isDefined("arguments.user_import") AND SESSION.user_id EQ SESSION.client_administrator>
+						user_in_charge = <cfqueryparam value="#arguments.user_import#" cfsqltype="cf_sql_integer">,
+					<cfelse>
+						user_in_charge = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
+					</cfif>
+
 					<!---<cfif len(objectItem.attached_file_name) GT 0>
 						attached_file_name = <cfqueryparam value="#objectItem.attached_file_name#" cfsqltype="cf_sql_varchar">,
 					</cfif>
@@ -758,6 +765,8 @@
 					</cfif>,--->
 					<cfif itemTypeId IS 4 OR ( itemTypeId IS 2 AND isDefined("arguments.creation_date") )><!---News OR Entries--->
 					  creation_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.creation_date# 00:00" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM'),
+					<cfelseif isDefined("arguments.creation_date_import") AND SESSION.user_id EQ SESSION.client_administrator>
+						creation_date = <cfqueryparam value="#arguments.creation_date_import#" cfsqltype="cf_sql_date">
 					<cfelse>
 						creation_date = NOW(),
 					</cfif>
@@ -4525,7 +4534,7 @@
 						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 						<cfinvokeargument name="parent_id" value="#arguments.area_id#">
 						<cfinvokeargument name="parent_kind" value="area">
-						<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">
+						<!---<cfinvokeargument name="user_in_charge" value="#SESSION.user_id#">--->
 						<cfinvokeargument name="no_notify" value="true">
 					</cfinvoke>
 
