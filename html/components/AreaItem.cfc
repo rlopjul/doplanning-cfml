@@ -3452,8 +3452,21 @@
 												</cfif>
 
 												<cfif len(itemsQuery.link) GT 0 AND itemsQuery.link NEQ "http://">
-													<a href="#itemsQuery.link#" target="_blank" class="link_external"><i class="icon-link"></i></a>
-													<a href="#itemsQuery.link#" target="_blank" class="link_external">#itemsQuery.link#</a><br/>
+
+													<cfif SESSION.client_abb EQ "omars" AND find("/html/download_gtrabajo.cfm?area=", itemsQuery.link) GT 0>
+
+														<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
+															<cfinvokeargument name="file_name" value="#itemsQuery.link#"/>
+														</cfinvoke>
+
+														<a href="#itemsQuery.link#" target="_blank" class="link_attached" title="Descargar"><i class="#attached_file_icon#"></i></a>
+														<a href="#itemsQuery.link#" target="_blank" class="link_attached">#listLast(itemsQuery.link, "=")#</a><br/>
+
+													<cfelse>
+														<a href="#itemsQuery.link#" target="_blank" class="link_external"><i class="icon-link"></i></a>
+														<a href="#itemsQuery.link#" target="_blank" class="link_external">#itemsQuery.link#</a><br/>
+													</cfif>
+
 												</cfif>
 
 											</div>
