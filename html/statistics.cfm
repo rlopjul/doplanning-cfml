@@ -51,10 +51,12 @@
 								http://www.cutterscrossing.com/index.cfm/2012/5/2/JQuery-Plugin-serializeCFJSON
 								En lugar de esto se puede llamar a standardiseCfQueryJSON que parece que funciona correctamente
 								--->
-								var temp = new Object();
+								<!---var temp = new Object();
 								temp.data = data.totalItems;
 
-								var totalItems = $.serializeCFJSON(temp).data;
+								var totalItems = $.serializeCFJSON(temp).data;--->
+
+								var totalItems = data.totalItems;
 
 								console.log(totalItems);
 								$("##dataTextArea").val(JSON.stringify(totalItems));
