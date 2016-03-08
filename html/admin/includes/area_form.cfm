@@ -259,6 +259,26 @@
 
 		</div>
 	</div>
+	<cfelse><!--- Create area --->
+
+		<cfif SESSION.user_id EQ SESSION.client_administrator>
+
+			<div class="row">
+				<div class="col-xs-12">
+
+					<div class="checkbox">
+						<label class="control-label" for="no_notify">
+							<input id="no_notify" name="no_notify" type="checkbox" value="true" class="checkbox_locked" />
+							<span lang="es">NO enviar notificación por email</span>
+						</label>
+						<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+					</div>
+
+				</div>
+			</div>
+
+		</cfif>
+
 	</cfif>
 
 

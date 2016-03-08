@@ -766,7 +766,7 @@
 					<cfif itemTypeId IS 4 OR ( itemTypeId IS 2 AND isDefined("arguments.creation_date") )><!---News OR Entries--->
 					  creation_date = CONVERT_TZ(STR_TO_DATE(<cfqueryparam value="#arguments.creation_date# 00:00" cfsqltype="cf_sql_varchar">,'%d-%m-%Y %H:%i'), '#timeZoneTo#', 'SYSTEM'),
 					<cfelseif isDefined("arguments.creation_date_import") AND SESSION.user_id EQ SESSION.client_administrator>
-						creation_date = <cfqueryparam value="#arguments.creation_date_import#" cfsqltype="cf_sql_date">
+						creation_date = <cfqueryparam value="#arguments.creation_date_import#" cfsqltype="cf_sql_timestamp">,
 					<cfelse>
 						creation_date = NOW(),
 					</cfif>
