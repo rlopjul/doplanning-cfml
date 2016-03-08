@@ -53,9 +53,6 @@
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
 		<cfargument name="area_type" type="string" requierd="true">
-		<cfargument name="from_date" type="string" required="false">
-		<cfargument name="end_date" type="string" required="false">
-
 
 		<cfset var method = "getTotalItemsByUser">
 
@@ -140,7 +137,6 @@
 							<cfset itemTypeStruct.total = itemsQuery.total>
 
 							<cfset ArrayAppend(itemsByType, itemTypeStruct)>
-
 						</cfloop>
 
 					<cfelse><!--- NO results --->
@@ -154,7 +150,6 @@
 						<cfset ArrayAppend(itemsByType, itemTypeStruct)>
 
 					</cfif>
-
 
 				</cfif>
 
