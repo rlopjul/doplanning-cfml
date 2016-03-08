@@ -1,3 +1,18 @@
+<!--- APP HTML HEADER --->
+
+<cfif find("error.cfm", CGI.SCRIPT_NAME) IS 0><!---error.cfm no necesita esto y puede dar problemas en errores de consultad de usuarios--->
+
+  <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+    <cfinvokeargument name="user_id" value="#SESSION.user_id#">
+  </cfinvoke>
+
+</cfif>
+
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+</cfinvoke>
+
+<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
 <!--Developed and copyright by Era7 Information Technologies & Web4Bio 2007-2016 (www.doplanning.net)-->
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->

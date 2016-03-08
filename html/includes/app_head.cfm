@@ -1,16 +1,3 @@
-<cfif find("error.cfm", CGI.SCRIPT_NAME) IS 0><!---error.cfm no necesita esto y puede dar problemas en errores de consultad de usuarios--->
-
-  <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
-    <cfinvokeargument name="user_id" value="#SESSION.user_id#">
-  </cfinvoke>
-
-</cfif>
-
-<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-</cfinvoke>
-
-<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
-
 <cfoutput>
 
 <div class="overlay"></div>
