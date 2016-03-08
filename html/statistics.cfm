@@ -163,10 +163,10 @@
 
                     var myLegend = myChart.addLegend(200, 10, 380, 20, "left");
 
-                    myChart.svg.attr("width", "100%")
-                        .attr("height", "100%")
-                        .attr("viewBox", "0 0 700 400");
-												s.addOrderRule("item_type_id");
+                    //myChart.svg.attr("width", "100%")
+                      //  .attr("height", "100%")
+                        //.attr("viewBox", "0 0 700 400");
+										//s.addOrderRule("item_type_id");
                     myChart.ease = "bounce";
                     myChart.staggerDraw = true;
                     myChart.draw(800);
@@ -176,7 +176,7 @@
 
                     // Get a unique list of Owner values to use when filtering
                     var filterValues = dimple.getUniqueValues(totalItems, "user_id");
-										console.log(totalItems);
+
                     // Get all the rectangles from our now orphaned legend
                     myLegend.shapes.selectAll("rect")
                       // Add a click event to each rectangle
@@ -184,6 +184,7 @@
                         // This indicates whether the item is already visible or not
                         var hide = false;
                         var newFilters = [];
+												console.log("click legend");
                         // If the filters contain the clicked shape hide it
                         filterValues.forEach(function (f) {
                           if (f === e.aggField.slice(-1)[0]) {
@@ -201,6 +202,7 @@
                         }
                         // Update the filters
                         filterValues = newFilters;
+												console.log(filterValues);
 												s.addOrderRule("item_type_id");
                         // Filter the data
                         myChart.data = dimple.filterData(totalItems, "user_id", filterValues);
