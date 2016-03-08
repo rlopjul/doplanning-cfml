@@ -130,15 +130,31 @@
 						GROUP BY user_in_charge, user_full_name;
 					</cfquery>
 
-					<!--- <cfset itemsByType[itemTypeId] = itemsQuery> --->
+					<cfif itemsQuery.recordCount GT 0>
 
-					<cfset itemTypeStruct = structNew()>
-					<cfset itemTypeStruct.item_type_id = itemTypeId>
-					<cfset itemTypeStruct.user_id = itemsQuery.user_id>
-					<cfset itemTypeStruct.user_full_name = itemsQuery.user_full_name>
-					<cfset itemTypeStruct.total = itemsQuery.total>
+						<cfloop query="#itemsQuery#">
+							<cfset itemTypeStruct = structNew()>
+							<cfset itemTypeStruct.item_type_id = itemTypeId>
+							<cfset itemTypeStruct.user_id = itemsQuery.user_id>
+							<cfset itemTypeStruct.user_full_name = itemsQuery.user_full_name>
+							<cfset itemTypeStruct.total = itemsQuery.total>
 
-					<cfset ArrayAppend(itemsByType, itemTypeStruct)>
+							<cfset ArrayAppend(itemsByType, itemTypeStruct)>
+
+						</cfloop>
+
+					<cfelse><!--- NO results --->
+
+						<cfset itemTypeStruct = structNew()>
+						<cfset itemTypeStruct.item_type_id = itemTypeId>
+						<cfset itemTypeStruct.user_id = "">
+						<cfset itemTypeStruct.user_full_name = "">
+						<cfset itemTypeStruct.total = 0>
+
+						<cfset ArrayAppend(itemsByType, itemTypeStruct)>
+
+					</cfif>
+
 
 				</cfif>
 
