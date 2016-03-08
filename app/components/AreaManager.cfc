@@ -1946,6 +1946,8 @@
 		<cfargument name="list_mode" type="string" required="false" default=""/>
 		<cfargument name="url_id" type="string" required="false">
 
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
+
 
 		<cfset var method = "createArea">
 
@@ -1994,26 +1996,30 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newArea">
-				<cfinvokeargument name="objectArea" value="#areaQuery#">
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
+			<cfif arguments.no_notify IS false>
 
-			<!---Alerta al usuario que que es responsable de la misma--->
-			<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
-				<cfinvokeargument name="get_user_id" value="#arguments.user_in_charge#"/>
-				<cfinvokeargument name="return_type" value="query"/>
-			</cfinvoke>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newArea">
+					<cfinvokeargument name="objectArea" value="#areaQuery#">
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="assignUserToArea">
-				<cfinvokeargument name="objectUser" value="#objectUser#">
-				<cfinvokeargument name="area_id" value="#area_id#">
-				<cfinvokeargument name="new_area" value="true">
+				<!---Alerta al usuario que que es responsable de la misma--->
+				<cfinvoke component="UserManager" method="getUser" returnvariable="objectUser">
+					<cfinvokeargument name="get_user_id" value="#arguments.user_in_charge#"/>
+					<cfinvokeargument name="return_type" value="query"/>
+				</cfinvoke>
 
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="assignUserToArea">
+					<cfinvokeargument name="objectUser" value="#objectUser#">
+					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="new_area" value="true">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfif>
 
 			<!--- updateRootAreaVersionTree --->
 			<cfinclude template="includes/updateRootAreaVersionTree.cfm">

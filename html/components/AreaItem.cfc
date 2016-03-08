@@ -1891,7 +1891,23 @@
 
 
 							<cfif len(objectItem.link) GT 0>
-								<div><!---<span lang="es"><cfif itemTypeId IS 3>URL del enlace<cfelse>Más información</cfif>:</span><br/>---> <a href="#objectItem.link#" target="_blank" class="link_external"><i class="icon-link"></i> #objectItem.link#</a></div>
+
+								<div><cfif SESSION.client_abb EQ "omars" AND find("/html/download_gtrabajo.cfm?area=", objectItem.link) GT 0>
+
+									<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
+										<cfinvokeargument name="file_name" value="#objectItem.link#"/>
+									</cfinvoke>
+
+									<a href="#objectItem.link#" target="_blank" class="link_attached" onclick="return downloadFileLinked(this,event)" title="Descargar"><i class="#attached_file_icon#"></i>
+									#listLast(objectItem.link, "=")#</a>
+
+								<cfelse>
+
+									<a href="#objectItem.link#" target="_blank" class="link_external"><i class="icon-link"></i> #objectItem.link#</a>
+
+								</cfif></div>
+
+
 							</cfif>
 
 							<cfif itemTypeId IS 8 AND len(objectItem.identifier) GT 0 AND isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
@@ -3452,8 +3468,20 @@
 												</cfif>
 
 												<cfif len(itemsQuery.link) GT 0 AND itemsQuery.link NEQ "http://">
-													<a href="#itemsQuery.link#" target="_blank" class="link_external"><i class="icon-link"></i></a>
-													<a href="#itemsQuery.link#" target="_blank" class="link_external">#itemsQuery.link#</a><br/>
+
+													<cfif SESSION.client_abb EQ "omars" AND find("/html/download_gtrabajo.cfm?area=", itemsQuery.link) GT 0>
+
+														<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
+															<cfinvokeargument name="file_name" value="#itemsQuery.link#"/>
+														</cfinvoke>
+
+														<a href="#itemsQuery.link#" target="_blank" onclick="return downloadFileLinked(this,event)" class="link_attached" title="Descargar"><i class="#attached_file_icon#"></i> #listLast(itemsQuery.link, "=")#</a><br/>
+
+													<cfelse>
+														<a href="#itemsQuery.link#" target="_blank" class="link_external"><i class="icon-link"></i></a>
+														<a href="#itemsQuery.link#" target="_blank" class="link_external">#itemsQuery.link#</a><br/>
+													</cfif>
+
 												</cfif>
 
 											</div>
