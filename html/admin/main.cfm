@@ -159,6 +159,17 @@
 	<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.6"></script>
 </cfif>
 
+
+<cfif SESSION.client_abb EQ "ceseand">
+
+	<cfset entitiesListAreaId = 100>
+
+	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="canUserAccessToEntitiesList">
+		<cfinvokeargument name="area_id" value="#entitiesListAreaId#">
+	</cfinvoke>
+
+</cfif>
+
 </cfoutput>
 
 <script>
@@ -546,11 +557,13 @@
 		  <ul class="nav nav-pills" id="dpTab" style="clear:none;padding-bottom:5px;">
 			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
+			<cfif isUserAdministrator IS true>
+				<li><a href="#tab7" data-toggle="tab" lang="es">Usuarios</a></li>
+			</cfif>
+			<cfif SESSION.client_abb EQ "ceseand" AND canUserAccessToEntitiesList IS true>
+			<li><a href="#tabEntities" data-toggle="tab" lang="es">Entidades</a></li>
+			</cfif>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
-			<li><a href="#tab7" data-toggle="tab" lang="es">Usuarios</a></li>
-				<cfif SESSION.client_abb EQ "ceseand">
-				<li><a href="#tabEntities" data-toggle="tab" lang="es">Entidades</a></li>
-				</cfif>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Tipologías</a></li>
 			<li><a href="#tab4" data-toggle="tab" lang="es">Categorías</a></li>
 			<li><a href="#tab5" data-toggle="tab" lang="es">Estadísticas</a></li>
@@ -777,11 +790,8 @@
 
 			</cfif>
 
-			<cfif SESSION.client_administrator IS SESSION.user_id>
+			<cfif SESSION.client_abb EQ "ceseand" AND canUserAccessToEntitiesList IS true>
 
-
-			<cfif SESSION.client_abb EQ "ceseand">
-				
 				<div class="tab-pane" id="tabEntities"><!---Tab Entities CESEAND--->
 
 					<div class="tabbable"><!---Tab Panel--->
@@ -794,6 +804,8 @@
 				</div><!---END Tab Entities CESEAND--->
 
 			</cfif>
+
+			<cfif SESSION.client_administrator IS SESSION.user_id>
 
 			<div class="tab-pane" id="tab3"><!---Tab Typologies--->
 
