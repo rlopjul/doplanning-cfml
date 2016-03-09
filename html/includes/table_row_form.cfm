@@ -138,7 +138,9 @@
 		<div id="submitDiv1" style="margin-bottom:10px;">
 			<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
 
-			<cfif page_type IS 2>
+			<cfif page_type IS 1>
+				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#&from_area=#from_area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+			<cfelseif page_type IS 2>
 				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#&area=#area_id#&from_area=#from_area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 			</cfif>
 		</div>
@@ -164,7 +166,9 @@
 
 		<div id="submitDiv2" style="margin-top:20px;">
 			<input type="submit" value="Guardar" class="btn btn-primary" lang="es"/>
-			<cfif page_type IS 2>
+			<cfif page_type IS 1>
+				<a href="#tableTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#&from_area=#from_area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+			<cfelseif page_type IS 2>
 				<a href="#tableTypeName#_row.cfm?#tableTypeName#=#table_id#&row=#row_id#&area=#area_id#&from_area=#from_area_id#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
 			</cfif>
 		</div>
