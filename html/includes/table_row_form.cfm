@@ -19,7 +19,7 @@
 
 <cfoutput>
 <div class="div_head_subtitle">
-	<span lang="es"><cfif page_type IS 1>Nuevo<cfelse>Modificar</cfif> Registro</span>
+	<span lang="es"><cfif page_type IS 1>Nuevo<cfelse>Modificar</cfif> registro</span>
 </div>
 
 <div class="div_separator"><!-- --></div>

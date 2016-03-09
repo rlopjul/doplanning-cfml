@@ -435,7 +435,7 @@ curLangTextEn = {
     /* list_row_new.cfm*/
     "Guardar":"Save",
     "Nombre *":"Name *",
-    "Modificar Registro":"Modify record",
+    "Modificar registro":"Modify record",
     "Registro eliminado":"Record deleted",
     "Registro guardado":"Record saved",
     "Registro modificado":"Record modified",
@@ -929,7 +929,7 @@ curLangTextEn = {
 		"Modificar usuario":"Modify user",
 		"Asociar como administrador del área":"Associate as area administrator",
 		"Asociar al área":"Associate to area",
-
+    "Entidades":"Entities",
 		/*END admin/main.cfm*/
 
 		/*admin - new/modify user window form*/
@@ -1099,7 +1099,7 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Descripción":"Description",
 		"Ámbito de publicación":"Publication scope",
 
-    /*topology*/
+    /*typology*/
     "Tipología creada, ahora debe definir los campos.":"Typology created, you must now define the fields.",
     "Tipología definida por defecto en esta área":"Default typology defined in this area",
     "Definir Tipología por defecto":"Define default typology",
