@@ -148,7 +148,7 @@
 				<script>
 				    function drawChart(totalItems){
 
-							
+
             	var svg1 = dimple.newSvg('#userLogArea', 900, 400);
 
               var myChart = new dimple.chart(svg1,  totalItems);
@@ -159,11 +159,12 @@
 
               // In order to deal with cases where order differs by column
               // it's needed to include it as series definition
-              var s = myChart.addSeries(["user_full_name"], dimple.plot.bar);
-							//var s2 = myChart.addSeries(["item_type_id"], dimple.plot.bar);
 
-              var userLegend = myChart.addLegend(700, 50, 350, 100);
-							//var typeLegend = myChart.addLegend(700, 100, 350, 100,s2);
+              var s = myChart.addSeries(["user_full_name"], dimple.plot.bar);
+							var s2 = myChart.addSeries(["item_type_id"]);
+
+							var userLegend = myChart.addLegend(700, 50, 350, 100, "left", s);
+							var typeLegend = myChart.addLegend(700, 250, 350, 100,"left", s2);
               //myChart.svg.attr("width", "100%")
               //  .attr("height", "100%")
               //.attr("viewBox", "0 0 700 400");
@@ -171,14 +172,18 @@
               myChart.ease = "bounce";
               myChart.staggerDraw = true;
               myChart.draw(800);
-              s.categoryFields = ["user_full_name"];
+
+							//remove svg shape for series item_type_id
+							s2.shapes.remove();
+              //s.categoryFields = ["user_full_name"];
+							//s2.categoryFields = ["item_type_id"];
 
               myChart.legends = [];
               // Get a unique list of Owner values to use when filtering
               var filterValues = dimple.getUniqueValues(totalItems, "user_full_name");
 
               // Get all the rectangles from our now orphaned legend
-              userLegend.shapes.selectAll("rect")
+              typeLegend.shapes.selectAll("rect")
               // Add a click event to each rectangle
               	.on("click", function (e) {
                 		// This indicates whether the item is already visible or not
@@ -189,10 +194,11 @@
                     filterValues.forEach(function (f) {
 
                         if (f === e.aggField.slice(-1)[0]) {
-                              hide = true;
+													newFilters.push(f);
+													console.log(newFilters);
                             } else {
-															console.log(f);
-                              newFilters.push(f);
+																hide = true;
+
                             }
                         });
                        // Hide the shape or show it
@@ -203,15 +209,17 @@
                             newFilters.push(e.aggField.slice(-1)[0]);
                             d3.select(this).style("opacity", 0.8);
                         }
+
                        // Update the filters
                       filterValues = newFilters;
-											console.log(filterValues);
+
                       // Filter the data
                       myChart.data = dimple.filterData(totalItems, "user_full_name", filterValues);
-											console.log(myChart.data);
+
                       // Passing a duration parameter makes the chart animate. Without
                       // it there is no transition
-                      myChart.draw(800);
+                      myChart.draw(500);
+											  s.categoryFields = ["user_full_name"];
 
                   });
             }
