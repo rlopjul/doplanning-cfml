@@ -58,6 +58,7 @@
 
 		<cfset var response = structNew()>
 		<cfset var itemsByType = arrayNew(1)>
+		<cfset var itemsType = arrayNew(1)>
 		<cfset var subAreasIds = "">
 		<cfset var areasIds = "">
 
@@ -117,8 +118,11 @@
 
 				<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
 
-					<cfset var itemTypeName = itemTypesStruct[itemTypeId].name>
-					<cfset var itemTypeGender = itemTypesStruct[itemTypeId].gender>
+					<cfset itemTypeName = itemTypesStruct[itemTypeId].name>
+					<cfset itemTypeGender = itemTypesStruct[itemTypeId].gender>
+					<cfset itemTypeLabel = itemTypesStruct[itemTypeId].label>
+
+					<cfset ArrayAppend(itemsType, {id=itemTypeId, name=itemTypeName, gender=itemTypeGender, label=itemTypeLabel})>
 
 					<cfquery dbtype="query" name="itemsQuery">
 						SELECT user_in_charge AS user_id, user_full_name, count(*) AS total
@@ -155,7 +159,7 @@
 
 			</cfloop>
 
-			<cfset response = {result=true, totalItems=#itemsByType#}>
+			<cfset response = {result=true, totalItems=#itemsByType#, itemsTypes=#itemsType#}>
 
 			<!---
 			commented for development
@@ -185,6 +189,7 @@
 
 		<cfset var response = structNew()>
 		<cfset var totalItems = arrayNew(1)>
+		<cfset var itemsType = arrayNew(1)>
 		<cfset var subAreasIds = "">
 		<cfset var areasIds = "">
 
@@ -249,7 +254,24 @@
 
 			</cfloop>
 
-			<cfset response = {result=true, totalItems=#totalItems#}>
+			<!--- getAreaItemTypesStruct --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+			</cfinvoke>
+
+			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
+			<!--- Loop items types --->
+			<cfloop array="#itemTypesArray#" index="itemTypeId">
+
+				<cfset itemTypeName = itemTypesStruct[itemTypeId].name>
+				<cfset itemTypeGender = itemTypesStruct[itemTypeId].gender>
+				<cfset itemTypeLabel = itemTypesStruct[itemTypeId].label>
+
+				<cfset ArrayAppend(itemsType, {id=itemTypeId, name=itemTypeName, gender=itemTypeGender, label=itemTypeLabel})>
+
+			</cfloop>
+
+			<cfset response = {result=true, totalItems=#totalItems#, itemsTypes=#itemsType#}>
 
 			<!---
 			commented for development
