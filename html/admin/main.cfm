@@ -181,6 +181,8 @@
 
 		$("#statisticsGeneralIframe").height(newHeight-36);
 		$("#statisticsFilesIframe").height(newHeight-36);
+
+		$("#entitiesIframe").height(newHeight-36);
 	}
 
 	function changeLanguage() {
@@ -261,6 +263,14 @@
 	function usersGeneralIframeLoaded() {
 
 		if($("#usersGeneralIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
+			$("#loadingContainer").hide();
+		}
+
+	}
+
+	function entitiesIframeLoaded() {
+
+		if($("#entitiesIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
 			$("#loadingContainer").hide();
 		}
 
@@ -442,6 +452,10 @@
 				$("#loadingContainer").show();
 			}
 
+			if(currentTab == "#tabEntities" && $("#entitiesIframe").attr('src') == "about:blank") { //Load entities page
+				$("#entitiesIframe").attr('src', 'iframes/list_rows.cfm?list=4');
+				$("#loadingContainer").show();
+			}
 
 
 		})
@@ -534,6 +548,9 @@
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
 			<li><a href="#tab7" data-toggle="tab" lang="es">Usuarios</a></li>
+				<cfif SESSION.client_abb EQ "ceseand">
+				<li><a href="#tabEntities" data-toggle="tab" lang="es">Entidades</a></li>
+				</cfif>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Tipologías</a></li>
 			<li><a href="#tab4" data-toggle="tab" lang="es">Categorías</a></li>
 			<li><a href="#tab5" data-toggle="tab" lang="es">Estadísticas</a></li>
@@ -761,6 +778,22 @@
 			</cfif>
 
 			<cfif SESSION.client_administrator IS SESSION.user_id>
+
+
+			<cfif SESSION.client_abb EQ "ceseand">
+				
+				<div class="tab-pane" id="tabEntities"><!---Tab Entities CESEAND--->
+
+					<div class="tabbable"><!---Tab Panel--->
+
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="entitiesIframe" onload="entitiesIframeLoaded()"></iframe>
+
+					</div><!---END TabPanel--->
+
+
+				</div><!---END Tab Entities CESEAND--->
+
+			</cfif>
 
 			<div class="tab-pane" id="tab3"><!---Tab Typologies--->
 
