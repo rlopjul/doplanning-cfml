@@ -58,7 +58,7 @@
 
 		<cfset var response = structNew()>
 		<cfset var itemsByType = arrayNew(1)>
-		<cfset var itemsType = arrayNew(1)>
+		<!---<cfset var itemsType = arrayNew(1)>--->
 		<cfset var subAreasIds = "">
 		<cfset var areasIds = "">
 
@@ -118,11 +118,12 @@
 
 				<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
 
-					<cfset itemTypeName = itemTypesStruct[itemTypeId].name>
-					<cfset itemTypeGender = itemTypesStruct[itemTypeId].gender>
 					<cfset itemTypeLabel = itemTypesStruct[itemTypeId].label>
 
-					<cfset ArrayAppend(itemsType, {id=itemTypeId, name=itemTypeName, gender=itemTypeGender, label=itemTypeLabel})>
+					<!--- <cfset itemTypeName = itemTypesStruct[itemTypeId].name>
+					<cfset itemTypeGender = itemTypesStruct[itemTypeId].gender>
+
+					<cfset ArrayAppend(itemsType, {id=itemTypeId, name=itemTypeName, gender=itemTypeGender, label=itemTypeLabel})> --->
 
 					<cfquery dbtype="query" name="itemsQuery">
 						SELECT user_in_charge AS user_id, user_full_name, count(*) AS total
@@ -136,6 +137,7 @@
 						<cfloop query="#itemsQuery#">
 							<cfset itemTypeStruct = structNew()>
 							<cfset itemTypeStruct.item_type_id = itemTypeId>
+							<cfset itemTypeStruct.item_type_label = itemTypeLabel>
 							<cfset itemTypeStruct.user_id = itemsQuery.user_id>
 							<cfset itemTypeStruct.user_full_name = itemsQuery.user_full_name>
 							<cfset itemTypeStruct.total = itemsQuery.total>
@@ -159,7 +161,7 @@
 
 			</cfloop>
 
-			<cfset response = {result=true, totalItems=#itemsByType#, itemsTypes=#itemsType#}>
+			<cfset response = {result=true, totalItems=#itemsByType#}>
 
 			<!---
 			commented for development
@@ -238,10 +240,17 @@
 
 			<cfset totalItemsQuery = getAreaItemsResult.query>
 
+			<!--- getAreaItemTypesStruct --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+			</cfinvoke>
+
+			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
 			<cfloop query="#totalItemsQuery#">
 
 				<cfset itemTypeStruct = structNew()>
 				<cfset itemTypeStruct.item_type_id = totalItemsQuery.itemTypeId>
+				<cfset itemTypeStruct.item_type_label = itemTypesStruct[totalItemsQuery.itemTypeId].label>
 				<cfif arguments.parse_dates IS true>
 					<cfset itemTypeStruct.creation_date = dateFormat(totalItemsQuery.creation_date, APPLICATION.dateFormat)&" "&timeFormat(totalItemsQuery.creation_date, "HH:mm:ss")>
 				<cfelse>
@@ -253,12 +262,6 @@
 				<cfset ArrayAppend(totalItems, itemTypeStruct)>
 
 			</cfloop>
-
-			<!--- getAreaItemTypesStruct --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-			</cfinvoke>
-
-			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
 			<!--- Loop items types --->
 			<cfloop array="#itemTypesArray#" index="itemTypeId">
