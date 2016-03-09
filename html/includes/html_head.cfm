@@ -93,7 +93,9 @@
 
 	<cfif isDefined("SESSION.user_language")>
 		<cfif SESSION.user_language NEQ "es">
+    $(document).ready(function() {
 			window.lang.change('#SESSION.user_language#');
+    });
 		</cfif>
 		bootbox.setDefaults({"locale" : "#SESSION.user_language#"});
 	</cfif>
