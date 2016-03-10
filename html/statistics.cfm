@@ -128,7 +128,7 @@
 					var promise = getTotalItemsByUser(#URL.area#, '#area_type#', true);
 
 					promise.success(function (data) {
-
+						console.log(data);
 						drawChart(data.totalItems);
 					});
 
@@ -161,7 +161,7 @@
               // it's needed to include it as series definition
 
               var s = myChart.addSeries(["user_full_name"], dimple.plot.bar);
-							var s2 = myChart.addSeries(["item_type_id"]);
+							var s2 = myChart.addSeries(["item_type_label"]);
 
 							var userLegend = myChart.addLegend(700, 50, 350, 100, "left", s);
 							var typeLegend = myChart.addLegend(700, 250, 350, 100,"left", s2);
@@ -174,54 +174,91 @@
               myChart.draw(800);
 
 							//remove svg shape for series item_type_id
-							s2.shapes.remove();
+							//s2.shapes.remove();
               //s.categoryFields = ["user_full_name"];
 							//s2.categoryFields = ["item_type_id"];
 
-              myChart.legends = [];
-              // Get a unique list of Owner values to use when filtering
-              var filterValues = dimple.getUniqueValues(totalItems, "user_full_name");
+							myChart.legends = [];
+	    // Get a unique list of Owner values to use when filtering
+	        var userFilterValues = dimple.getUniqueValues(totalItems, "user_full_name");
+	        var typeFilterValues = dimple.getUniqueValues(totalItems, "item_type_label");
+	        var hiddenUserValue = [];
+	        var hiddenTypeValue = [];
 
-              // Get all the rectangles from our now orphaned legend
-              typeLegend.shapes.selectAll("rect")
-              // Add a click event to each rectangle
-              	.on("click", function (e) {
-                		// This indicates whether the item is already visible or not
-                    var hide = false;
-                    var newFilters = [];
+					legendBits = userLegend.shapes;
+	 legendBits[0] = legendBits[0]
+			 .concat(typeLegend.shapes[0]);
 
-                    // If the filters contain the clicked shape hide it
-                    filterValues.forEach(function (f) {
+			 // Get all the rectangles from now orphaned legend
+			 legendBits.selectAll("rect")
+				 // Add a click event to each rectangle
+				 .on("click", function (e) {
+					 // This indicates whether the item is already visible or not
+					 var hide = false;
+					 var newUserFilters = [];
+					 var newTypeFilters = [];
+					 var currentVaue = e.aggField.slice(-1)[0];
 
-                        if (f === e.aggField.slice(-1)[0]) {
-													newFilters.push(f);
-													console.log(newFilters);
-                            } else {
-																hide = true;
 
-                            }
-                        });
-                       // Hide the shape or show it
-                      if (hide) {
-                            d3.select(this).style("opacity", 0.2);
-                        } else {
+					 userFilterValues.forEach(function(f){
+							 if(f === currentVaue){
+									 var whereIsIt = hiddenUserValue.indexOf(currentVaue);
 
-                            newFilters.push(e.aggField.slice(-1)[0]);
-                            d3.select(this).style("opacity", 0.8);
-                        }
+									 if (whereIsIt > -1) {
+											 //it is hidden and needs to be shown.
+											 hide = false;
+											 hiddenUserValue.splice(whereIsIt, 1);
+									 } else {
+											 //it needs to be hidden
+												hide = true;
+												hiddenUserValue.push(currentVaue);
+									 }
+							 }
+					 });
 
-                       // Update the filters
-                      filterValues = newFilters;
+					 typeFilterValues.forEach(function(f){
+							 if(f === currentVaue){
+									 var whereIsIt = hiddenTypeValue.indexOf(currentVaue);
 
-                      // Filter the data
-                      myChart.data = dimple.filterData(totalItems, "user_full_name", filterValues);
+									 if (whereIsIt > -1) {
+											 //it is hidden and needs to be shown.
+											 hide = false;
+											 hiddenTypeValue.splice(whereIsIt, 1);
+									 } else {
+											 //it needs to be hidden
+												hide = true;
+												hiddenTypeValue.push(currentVaue);
+									 }
+							 }
+					 });
 
-                      // Passing a duration parameter makes the chart animate. Without
-                      // it there is no transition
-                      myChart.draw(500);
-											  s.categoryFields = ["user_full_name"];
 
-                  });
+			if (hide) {
+				d3.select(this).style("opacity", 0.2);
+			} else {
+				d3.select(this).style("opacity", 0.8);
+			}
+
+					 if(hiddenTypeValue.length == "" ){
+							 newTypeFilters =  typeFilterValues;
+					 }else{
+							 newTypeFilters = hiddenTypeValue;
+					 }
+
+					 if( hiddenUserValue.length == ""){
+							 newUserFilters = userFilterValues;
+					 }else{
+							 newUserFilters = hiddenUserValue;
+					 }
+				
+					 // Filter the data
+myChart.data = dimple.filterData(dimple.filterData(totalItems, 'user_full_name', newUserFilters), 'item_type_label', newTypeFilters);
+			// Passing a duration parameter makes the chart animate. Without
+			// it there is no transition
+
+myChart.draw(800);
+ });
+
             }
 
 				</script>
