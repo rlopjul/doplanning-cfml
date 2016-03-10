@@ -293,13 +293,13 @@
 
 	<!--- ----------------------- GET TOTAL ITEMS BY DATE -------------------------------- --->
 
-	<cffunction name="getTotalItemsByDate" output="false" returntype="struct" access="public">
+	<cffunction name="getTotalItemsByDay" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
 		<cfargument name="area_type" type="string" requierd="true">
 		<cfargument name="parse_dates" type="boolean" required="false" default="true">
 
-		<cfset var method = "getTotalItemsByDate">
+		<cfset var method = "getTotalItemsByDay">
 
 		<cfset var response = structNew()>
 		<cfset var totalItems = arrayNew(1)>

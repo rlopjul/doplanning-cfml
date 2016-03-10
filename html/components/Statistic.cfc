@@ -109,13 +109,13 @@
 
 	<!--- ----------------------- GET TOTAL ITEMS BY DATE -------------------------------- --->
 
-	<cffunction name="getTotalItemsByDate" returntype="struct" returnformat="json" access="remote">
+	<cffunction name="getTotalItemsByDay" returntype="struct" returnformat="json" access="remote">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="area_type" type="string" require="true">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
 		<cfargument name="parse_dates" type="boolean" required="false">
 
-		<cfset var method = "getTotalItemsByDate">
+		<cfset var method = "getTotalItemsByDay">
 
 		<cfset var response = structNew()>
 
@@ -123,7 +123,7 @@
 		commented for development
 		<cftry>--->
 
-			<cfinvoke component="#APPLICATION.componentsPath#/StatisticManager" method="getTotalItemsByDate" returnvariable="response">
+			<cfinvoke component="#APPLICATION.componentsPath#/StatisticManager" method="getTotalItemsByDay" returnvariable="response">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 				<cfinvokeargument name="area_type" value="#arguments.area_type#"/>
 				<cfinvokeargument name="include_subareas" value="#arguments.include_subareas#"/>
