@@ -250,7 +250,7 @@
 					 }else{
 							 newUserFilters = hiddenUserValue;
 					 }
-					 console.log(newTypeFilters );
+				
 					 // Filter the data
 myChart.data = dimple.filterData(dimple.filterData(totalItems, 'user_full_name', newUserFilters), 'item_type_label', newTypeFilters);
 			// Passing a duration parameter makes the chart animate. Without
