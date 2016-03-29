@@ -459,7 +459,7 @@
 					<cfif isDefined("arguments.emailFrom")>
 						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
 					<cfelse>
-						<cfinvokeargument name="emailFrom" value="no-reply@genome7.com">
+						<cfinvokeargument name="emailFrom" value="no-reply@era7bioinformatics.com">
 					</cfif>
 
 					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
