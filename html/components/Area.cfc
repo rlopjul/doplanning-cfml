@@ -38,6 +38,58 @@
 	</cffunction>
 
 
+	<!--- ----------------------------------- getMainTreeJson -------------------------------------- --->
+
+	<cffunction name="getMainTreeJson" returntype="struct" returnformat="json" access="remote">
+		<cfargument name="get_user_id" type="numeric" required="false">
+
+		<cfset var method = "getMainTreeJson">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getMainTree" returnvariable="response">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+	<!--- ----------------------------------- getMainTreeXml -------------------------------------- --->
+
+	<cffunction name="getMainTreeXml" returntype="xml" returnformat="xml" access="remote">
+		<cfargument name="get_user_id" type="numeric" required="false">
+
+		<cfset var method = "getMainTreeXml">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getMainTree" returnvariable="response">
+				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response.areasXml>
+
+	</cffunction>
+
+
 	<!--- ----------------------------------- getMainTreeAdmin -------------------------------------- --->
 
 	<cffunction name="getMainTreeAdmin" output="false" returntype="struct" access="public">
