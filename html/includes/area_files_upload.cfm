@@ -95,6 +95,15 @@ function setFileTypeId(fileTypeId, fileUploadId) {
 
 }
 
+function getCheckBoxChecked(checkBoxId) {
+
+	if( $("#"+checkBoxId).prop('checked') )
+		return "checked";
+	else
+		return "";
+
+}
+
 $(function () {
     'use strict';
 
@@ -226,6 +235,11 @@ $(function () {
     <cfinvokeargument name="return_type" value="query">
 </cfinvoke>
 
+<!--- getClient --->
+<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+	<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+</cfinvoke>
+
 <cfset file_reviser_user = userQuery.id>
 <!---<cfset file_reviser_user_full_name = userQuery.user_full_name>--->
 <cfset file_approver_user = userQuery.id>
@@ -292,19 +306,31 @@ $(function () {
                     <div class="progress-extended">&nbsp;</div>
                 </div>
             </div>
-						<div class="row">
 
+						<cfif clientQuery.force_notifications IS false>
+						<div class="row">
 							<div class="col-sm-12">
 
-                  <cfif FindNoCase('MSIE 9',CGI.HTTP_USER_AGENT) IS 0>
-
-                      <div class="well"><i class="icon-plus" style="color:#5BB75B;font-size:22px;"></i>&nbsp;<span lang="es" style="font-size:16px;">Puede arrastrar aquí los archivos que desea subir.</span></div>
-
-                  </cfif>
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="no_notify_general" id="no_notify_general" value="true"> <span lang="es">NO enviar notificación por email</span>
+										</label>
+									</div>
 
 							</div>
-
 						</div>
+						</cfif>
+
+						<cfif FindNoCase('MSIE 9',CGI.HTTP_USER_AGENT) IS 0>
+						<div class="row">
+							<div class="col-sm-12">
+
+                  <div class="well"><i class="icon-plus" style="color:#5BB75B;font-size:22px;"></i>&nbsp;<span lang="es" style="font-size:16px;">Puede arrastrar aquí los archivos que desea subir.</span></div>
+
+							</div>
+						</div>
+						</cfif>
+
 
             <!-- The table listing the files available for upload/download -->
             <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
@@ -552,13 +578,6 @@ $(function () {
 
 								</div>
 
-
-
-								<!--- getClient --->
-								<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
-									<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-								</cfinvoke>
-
 								<cfif clientQuery.force_notifications IS false>
 
 									<div class="form-group" style="margin-bottom:0">
@@ -567,7 +586,7 @@ $(function () {
 
 											<div class="checkbox">
 												<label>
-													<input type="checkbox" name="no_notify" id="no_notify" value="true"> <span lang="es">NO enviar notificación por email</span>
+													<input type="checkbox" name="no_notify" id="no_notify{%=curFile%}" value="true" {%=getCheckBoxChecked('no_notify_general')%}> <span lang="es">NO enviar notificación por email</span>
 												</label>
 											</div>
 
