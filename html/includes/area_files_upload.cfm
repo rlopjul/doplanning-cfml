@@ -104,6 +104,15 @@ function getCheckBoxChecked(checkBoxId) {
 
 }
 
+function isFileTypeIdSelected(fileTypeId) {
+
+	if( $('#fileTypeId_general').val() == fileTypeId )
+		return "selected";
+	else
+		return "";
+
+}
+
 $(function () {
     'use strict';
 
@@ -470,11 +479,11 @@ $(function () {
 
                     <div class="col-sm-10">
                         <select name="fileTypeId" id="fileTypeId{%=curFile%}" class="form-control" onchange="setFileTypeId($('##fileTypeId{%=curFile%}').val(),{%=curFile%});">
-                            <option value="1" selected="selected" lang="es">Archivo de usuario</option>
+                            <option value="1" {%=isFileTypeIdSelected(1)%} lang="es">Archivo de usuario</option>
 														<cfif APPLICATION.moduleAreaFilesLite IS true>
-															<option value="2" lang="es">Archivo de área sin circuito de calidad</option>
+															<option value="2"{%=isFileTypeIdSelected(2)%} lang="es">Archivo de área sin circuito de calidad</option>
 															<cfif len(area_type) IS 0>
-	                            	<option value="3" lang="es">Archivo de área con circuito de calidad</option>
+	                            	<option value="3" {%=isFileTypeIdSelected(3)%} lang="es">Archivo de área con circuito de calidad</option>
 															</cfif>
 														</cfif>
                         </select>
