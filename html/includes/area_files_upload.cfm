@@ -333,39 +333,49 @@ $(function () {
                 </div>
             </div>
 
-						<div class="row">
-							<div class="col-sm-12">
+						<div class="form-horizontal well">
 
-								<label for="fileTypeId" class="col-sm-2 control-label" lang="es">Tipo</label>
-
-								<div class="col-sm-10">
-										<select name="fileTypeId_general" id="fileTypeId_general" class="form-control">
-												<option value="1" selected="selected" lang="es">Archivo de usuario</option>
-												<cfif APPLICATION.moduleAreaFilesLite IS true>
-													<option value="2" lang="es">Archivo de área sin circuito de calidad</option>
-													<cfif len(area_type) IS 0>
-														<option value="3" lang="es">Archivo de área con circuito de calidad</option>
-													</cfif>
-												</cfif>
-										</select>
+							<div class="form-group">
+								<div class="col-sm-12">
+									<span lang="es">Opciones para aplicar a todos los archivos</span>
 								</div>
-
 							</div>
-						</div>
 
-						<cfif clientQuery.force_notifications IS false>
-						<div class="row">
-							<div class="col-sm-12">
+							<div class="form-group">
+								<div class="col-sm-12">
 
-									<div class="checkbox">
-										<label>
-											<input type="checkbox" name="no_notify_general" id="no_notify_general" value="true"> <span lang="es">NO enviar notificación por email</span>
-										</label>
+									<label for="fileTypeId" class="col-sm-2 control-label" lang="es">Tipo</label>
+
+									<div class="col-sm-10">
+											<select name="fileTypeId_general" id="fileTypeId_general" class="form-control">
+													<option value="1" selected="selected" lang="es">Archivo de usuario</option>
+													<cfif APPLICATION.moduleAreaFilesLite IS true>
+														<option value="2" lang="es">Archivo de área sin circuito de calidad</option>
+														<cfif len(area_type) IS 0>
+															<option value="3" lang="es">Archivo de área con circuito de calidad</option>
+														</cfif>
+													</cfif>
+											</select>
 									</div>
 
+								</div>
 							</div>
+
+							<cfif clientQuery.force_notifications IS false>
+							<div class="form-group">
+								<div class="col-sm-11 col-sm-offset-1">
+
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="no_notify_general" id="no_notify_general" value="true"> <span lang="es">NO enviar notificación por email</span>
+											</label>
+										</div>
+
+								</div>
+							</div>
+							</cfif>
+
 						</div>
-						</cfif>
 
 						<cfif FindNoCase('MSIE 9',CGI.HTTP_USER_AGENT) IS 0>
 						<div class="row">
