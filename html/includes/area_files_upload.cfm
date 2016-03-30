@@ -238,6 +238,20 @@ $(function () {
 				});
     });
 
+		$('#fileTypeId_general').change(function() {
+
+        var selectedValue = $(this).val();
+
+				$("select[name='fileTypeId']").each( function() {
+
+						$(this).val(selectedValue);
+
+				});
+    });
+
+
+
+
 });
 </script>
 
@@ -318,6 +332,26 @@ $(function () {
                     <div class="progress-extended">&nbsp;</div>
                 </div>
             </div>
+
+						<div class="row">
+							<div class="col-sm-12">
+
+								<label for="fileTypeId" class="col-sm-2 control-label" lang="es">Tipo</label>
+
+								<div class="col-sm-10">
+										<select name="fileTypeId_general" id="fileTypeId_general" class="form-control">
+												<option value="1" selected="selected" lang="es">Archivo de usuario</option>
+												<cfif APPLICATION.moduleAreaFilesLite IS true>
+													<option value="2" lang="es">Archivo de área sin circuito de calidad</option>
+													<cfif len(area_type) IS 0>
+														<option value="3" lang="es">Archivo de área con circuito de calidad</option>
+													</cfif>
+												</cfif>
+										</select>
+								</div>
+
+							</div>
+						</div>
 
 						<cfif clientQuery.force_notifications IS false>
 						<div class="row">
