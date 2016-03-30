@@ -84,13 +84,14 @@ function setFileTypeId(fileTypeId, fileUploadId) {
         //$("##documentUsersContainer").show();
         $("#documentVersionIndex"+fileUploadId).show();
 				$("#publicFile"+fileUploadId).hide();
-
+				$("#groupVersions"+fileUploadId).show();
 
     }else{
 
         //$("##documentUsersContainer").hide();
         $("#documentVersionIndex"+fileUploadId).hide();
 				$("#publicFile"+fileUploadId).show();
+				$("#groupVersions"+fileUploadId).hide();
     }
 
 }
@@ -247,13 +248,30 @@ $(function () {
 				});
     });
 
+		$('#group_versions_general').change(function() {
+
+        var isChecked = $(this).is(':checked');
+
+				$("input[name='group_versions']").each( function() {
+
+						$(this).prop("checked",isChecked);
+
+				});
+    });
+
 		$('#fileTypeId_general').change(function() {
 
         var selectedValue = $(this).val();
 
+				if(selectedValue == 3)
+					$("#groupVersionsGeneral").show();
+				else
+					$("#groupVersionsGeneral").hide();
+
 				$("select[name='fileTypeId']").each( function() {
 
 						$(this).val(selectedValue);
+						$(this).trigger("change");
 
 				});
     });
@@ -383,6 +401,19 @@ $(function () {
 								</div>
 							</div>
 							</cfif>
+
+							<div class="form-group" id="groupVersionsGeneral" style="display:none">
+								<div class="col-sm-11 col-sm-offset-1">
+
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="group_versions_general" id="group_versions_general" value="true"> <span lang="es">Agrupar versiones de archivos</span>
+												<p class="help-block">Agrupa en un único archivo de área los archivos con el mismo nombre y en cuyo nombre se incluye el número de versión al final separado por un espacio. Ejemplos:<br> <i>Archivo de prueba 1.doc, Archivo de prueba 2.doc, Archivo de prueba 3.doc</i></p>
+											</label>
+										</div>
+
+								</div>
+							</div>
 
 						</div>
 
@@ -661,6 +692,19 @@ $(function () {
 
 								</cfif>
 
+								<div class="form-group" style="margin-bottom:0;display:none" id="groupVersions{%=curFile%}">
+
+									<div class="col-sm-11 col-sm-offset-1">
+
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="group_versions" id="group_versions{%=curFile%}" value="true" {%=getCheckBoxChecked('group_versions_general')%}> <span lang="es">Agrupar versiones de archivos</span>
+											</label>
+										</div>
+
+									</div>
+
+								</div>
 
             </div>
 
@@ -688,6 +732,18 @@ $(function () {
         </td>
 
     </tr>
+
+
+		{%
+
+			//Waits for template process
+			function changeNewFileType () {
+				setFileTypeId( $('##fileTypeId_general').val(), curFile );
+			}
+
+			setTimeout(	changeNewFileType , 500);
+
+		%}
 
 {% } %}
 </cfoutput>
