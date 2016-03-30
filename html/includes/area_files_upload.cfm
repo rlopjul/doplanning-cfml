@@ -226,6 +226,18 @@ $(function () {
 
 		</cfif>
 
+
+		$('#no_notify_general').change(function() {
+
+        var isChecked = $(this).is(':checked');
+
+				$("input[name='no_notify']").each( function() {
+
+						$(this).prop("checked",isChecked);
+
+				});
+    });
+
 });
 </script>
 
