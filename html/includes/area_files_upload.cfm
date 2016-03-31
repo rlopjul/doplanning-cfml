@@ -394,7 +394,7 @@ $(function () {
 
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" name="no_notify_general" id="no_notify_general" value="true"> <span lang="es">NO enviar notificación por email</span>
+												<input type="checkbox" name="no_notify_general" id="no_notify_general" value="true" checked> <span lang="es">NO enviar notificación por email</span>
 											</label>
 										</div>
 
