@@ -3438,8 +3438,6 @@
 		<cfset var response = structNew()>
 
 		<cfset var destination = "">
-		<cfset var destinationFile = "">
-		<cfset var upload_file_id = "">
 
 		<cftry>
 
@@ -3469,26 +3467,25 @@
 				<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
 			</cfif>
 
-
 			<cfset temp_file="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">
 
 			<cfif len(uploadedFile.clientFileExt) IS 0>
+
+				<cffile action="delete" file="#destination##temp_file#">
 
 				<cfthrow message="No se puede subir un archivo sin extensión">
 
 			</cfif>
 
-
 			<cfif arguments.fileTypeId IS 3 AND arguments.group_versions IS true>
 
-				<cfset versionValue = ListLast(uploadedFile.clientFileName, " ")>
+				<cflock type="exclusive" timeout="30">
 
-				<cfif IsNumeric(versionValue)>
+					<cfset versionValue = ListLast(uploadedFile.clientFileName, " ")>
 
-					<cfset fileNameToSearch = left(uploadedFile.clientFileName, len(uploadedFile.clientFileName)-len(versionValue))>
+					<cfif IsNumeric(versionValue)>
 
-					<cflock name="#fileNameToSearch#" type="exclusive" timeout="20">
-
+						<cfset fileNameToSearch = left(uploadedFile.clientFileName, len(uploadedFile.clientFileName)-len(versionValue))>
 						<cfset fileNameToSearchRE = "^#fileNameToSearch# ?[0-9]*\.#uploadedFile.clientFileExt#$">
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
@@ -3509,51 +3506,122 @@
 
 							<cffile action="delete" file="#destination##temp_file#">
 
-								<cfif filesWithSameName.locked IS false>
+							<cfif filesWithSameName.locked IS false>
 
-									<cfinvoke component="FileManager" method="changeAreaFileLock" returnvariable="changeLockResponse">
-										<cfinvokeargument name="file_id" value="#filesWithSameName.id#"/>
-										<cfinvokeargument name="fileTypeId" value="#filesWithSameName.file_type_id#"/>
-										<cfinvokeargument name="lock" value="true"/>
-										<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
-									</cfinvoke>
-
-								</cfif>
-
-								<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="replaceFile" argumentcollection="#arguments#" returnvariable="replaceFileResponse">
-									<cfinvokeargument name="file_id" value="#filesWithSameName.id#">
-									<cfinvokeargument name="version_index" value="#versionValue#">
-									<cfif filesWithSameName.locked IS false>
-										<cfinvokeargument name="unlock" value="true">
-									</cfif>
+								<cfinvoke component="FileManager" method="changeAreaFileLock" returnvariable="changeLockResponse">
+									<cfinvokeargument name="file_id" value="#filesWithSameName.id#"/>
+									<cfinvokeargument name="fileTypeId" value="#filesWithSameName.file_type_id#"/>
+									<cfinvokeargument name="lock" value="true"/>
+									<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
 								</cfinvoke>
 
-								<cfreturn replaceFileResponse>
+							</cfif>
 
-								<!---<cfif replaceFileResponse.result IS true>
+							<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="replaceFile" argumentcollection="#arguments#" returnvariable="response">
+								<cfinvokeargument name="file_id" value="#filesWithSameName.id#">
+								<cfinvokeargument name="version_index" value="#versionValue#">
+								<cfif filesWithSameName.locked IS false>
+									<cfinvokeargument name="unlock" value="true">
+								</cfif>
+							</cfinvoke>
 
-									<cfreturn replaceFileResponse>
+						<cfelse>
 
-								</cfif>--->
+							<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="uploadNewFileProcess" argumentcollection="#arguments#" returnvariable="response">
+								<cfinvokeargument name="destination" value="#destination#">
+								<cfinvokeargument name="uploadedFile" value="#uploadedFile#">
+								<cfinvokeargument name="temp_file" value="#temp_file#">
+								<cfinvokeargument name="user_id" value="#user_id#">
 
-								<!---<cfargument name="file_id" type="string" required="true"/>
-								<cfargument name="fileTypeId" type="numeric" required="true" />
-								<cfargument name="Filedata" type="string" required="true"/>
-								<cfargument name="version_index" type="string" required="false">
-								<cfargument name="unlock" type="boolean" required="false" default="false">
-								<cfargument name="no_notify" type="boolean" required="false" default="false">--->
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
 
 						</cfif><!---filesWithSameName.recordCount GT 0--->
 
-					</cflock>
+					<cfelse>
 
-				</cfif><!--- IsNumeric(versionValue)>--->
+						<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="uploadNewFileProcess" argumentcollection="#arguments#" returnvariable="response">
+							<cfinvokeargument name="destination" value="#destination#">
+							<cfinvokeargument name="uploadedFile" value="#uploadedFile#">
+							<cfinvokeargument name="temp_file" value="#temp_file#">
+							<cfinvokeargument name="user_id" value="#user_id#">
 
-				<cfset response = {result=false, message="versionValue: #versionValue#, fileNameToSearch=#fileNameToSearch#, filesWithSameName=#filesWithSameName.recordCount#"}>
-				<cfreturn response>
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif><!--- IsNumeric(versionValue)>--->
+
+				</cflock>
+
+			<cfelse>
+
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="uploadNewFileProcess" argumentcollection="#arguments#" returnvariable="response">
+					<cfinvokeargument name="destination" value="#destination#">
+					<cfinvokeargument name="uploadedFile" value="#uploadedFile#">
+					<cfinvokeargument name="temp_file" value="#temp_file#">
+					<cfinvokeargument name="user_id" value="#user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
 
 			</cfif>
 
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
+	<!--- ----------------------------------- uploadNewFile -------------------------------------- --->
+
+	<cffunction name="uploadNewFileProcess" output="false" returntype="struct" access="private">
+		<cfargument name="fileTypeId" type="numeric" required="true"/>
+		<cfargument name="name" type="string" required="true"/>
+		<cfargument name="description" type="string" required="true"/>
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="areas_ids" type="string" required="false">
+		<cfargument name="Filedata" type="string" required="false"/>
+		<cfargument name="files" type="array" required="false"/>
+		<cfargument name="typology_id" type="string" required="false">
+		<cfargument name="reviser_user" type="numeric" required="false">
+		<cfargument name="approver_user" type="numeric" required="false">
+		<cfargument name="publication_scope_id" type="numeric" required="false">
+		<cfargument name="publication_date" type="string" required="false">
+		<cfargument name="publication_hour" type="numeric" required="false">
+		<cfargument name="publication_minute" type="numeric" required="false">
+		<cfargument name="publication_validated" type="boolean" required="false" default="false">
+		<cfargument name="version_index" type="string" required="false">
+		<cfargument name="public" type="boolean" required="false">
+		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
+		<cfargument name="group_versions" type="boolean" required="false" default="false">
+
+		<cfargument name="destination" type="string" required="true">
+		<cfargument name="uploadedFile" type="struct" required="true">
+		<cfargument name="temp_file" type="string" required="true">
+		<cfargument name="user_id" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "uploadNewFile">
+
+		<cfset var response = structNew()>
+
+		<cfset var destinationFile = "">
+		<cfset var upload_file_id = "">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
 			<cfinvoke component="FileManager" method="createFile" returnvariable="createFileResult">
 				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
@@ -3766,16 +3834,7 @@
 
 			</cftry>
 
-
-
 			<cfset response = {result=true, file_id=#upload_file_id#, file=objectFile}>
-
-			<cfcatch>
-
-				<cfinclude template="includes/errorHandlerStruct.cfm">
-
-			</cfcatch>
-		</cftry>
 
 		<cfreturn response>
 
@@ -4858,101 +4917,105 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+			<cflock name="#client_abb#_file_#arguments.file_id#" type="exclusive" timeout="10">
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
-				<cfinvokeargument name="file_id" value="#arguments.file_id#">
-				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
-				<cfinvokeargument name="with_lock" value="true">
-				<cfinvokeargument name="parse_dates" value="true">
+				<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
-			<cfif fileQuery.recordCount IS 0><!---File does not exist--->
-
-				<cfset error_code = 601>
-
-				<cfthrow errorcode="#error_code#">
-
-			</cfif>
-
-			<cfset area_id = fileQuery.area_id>
-
-			<cfif fileQuery.locked EQ arguments.lock>
-
-				<cfif arguments.lock IS true>
-
-					<cfthrow message="Error, el archivo ya está bloqueado.">
-
-				<cfelse>
-
-					<cfthrow message="Error, el archivo ya está desbloqueado.">
-
-				</cfif>
-
-			<cfelseif arguments.lock IS false AND fileQuery.lock_user_id NEQ user_id>
-
-				<!---checkAreaResponsibleAccess--->
-				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
-					<cfinvokeargument name="area_id" value="#area_id#">
-				</cfinvoke>
-
-			<cfelse>
-
-				<!---checkAreaAccess--->
-				<cfinclude template="includes/checkAreaAccess.cfm">
-
-			</cfif>
-
-			<cfif fileQuery.in_approval IS true>
-
-				<cfset response = {result=false, file_id=#arguments.file_id#, message="No se puede bloquear un archivo en proceso de aprobación."}>
-				<cfreturn response>
-
-			</cfif>
-
-			<cftransaction>
-
-				<cfquery name="addFileLock" datasource="#client_dsn#">
-					INSERT INTO `#client_abb#_#fileTypeTable#_locks`
-					SET file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">,
-					user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-					lock_date = NOW(),
-					`lock` = <cfqueryparam value="#arguments.lock#" cfsqltype="cf_sql_bit">;
-				</cfquery>
-
-				<cfquery name="changeAreaFileLock" datasource="#client_dsn#">
-					UPDATE `#client_abb#_#fileTypeTable#`
-					SET	locked = <cfqueryparam value="#arguments.lock#" cfsqltype="cf_sql_bit">
-					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
-				</cfquery>
-
-			</cftransaction>
-
-			<cfinclude template="includes/logRecord.cfm">
-
-
-			<cfif arguments.no_notify IS false>
-
-				<!--- Alert --->
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
-					<cfinvokeargument name="objectFile" value="#fileQuery#">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+					<cfinvokeargument name="file_id" value="#arguments.file_id#">
 					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
-					<cfinvokeargument name="area_id" value="#area_id#">
-					<cfinvokeargument name="user_id" value="#user_id#">
-					<cfif arguments.lock IS true>
-						<cfinvokeargument name="action" value="lock">
-					<cfelse>
-						<cfinvokeargument name="action" value="unlock">
-					</cfif>
+					<cfinvokeargument name="with_lock" value="true">
+					<cfinvokeargument name="parse_dates" value="true">
 
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-			</cfif>
+				<cfif fileQuery.recordCount IS 0><!---File does not exist--->
+
+					<cfset error_code = 601>
+
+					<cfthrow errorcode="#error_code#">
+
+				</cfif>
+
+				<cfset area_id = fileQuery.area_id>
+
+				<cfif fileQuery.locked EQ arguments.lock>
+
+					<cfif arguments.lock IS true>
+
+						<cfthrow message="Error, el archivo ya está bloqueado.">
+
+					<cfelse>
+
+						<cfthrow message="Error, el archivo ya está desbloqueado.">
+
+					</cfif>
+
+				<cfelseif arguments.lock IS false AND fileQuery.lock_user_id NEQ user_id>
+
+					<!---checkAreaResponsibleAccess--->
+					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+						<cfinvokeargument name="area_id" value="#area_id#">
+					</cfinvoke>
+
+				<cfelse>
+
+					<!---checkAreaAccess--->
+					<cfinclude template="includes/checkAreaAccess.cfm">
+
+				</cfif>
+
+				<cfif fileQuery.in_approval IS true>
+
+					<cfset response = {result=false, file_id=#arguments.file_id#, message="No se puede bloquear un archivo en proceso de aprobación."}>
+					<cfreturn response>
+
+				</cfif>
+
+				<cftransaction>
+
+					<cfquery name="addFileLock" datasource="#client_dsn#">
+						INSERT INTO `#client_abb#_#fileTypeTable#_locks`
+						SET file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">,
+						user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
+						lock_date = NOW(),
+						`lock` = <cfqueryparam value="#arguments.lock#" cfsqltype="cf_sql_bit">;
+					</cfquery>
+
+					<cfquery name="changeAreaFileLock" datasource="#client_dsn#">
+						UPDATE `#client_abb#_#fileTypeTable#`
+						SET	locked = <cfqueryparam value="#arguments.lock#" cfsqltype="cf_sql_bit">
+						WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+
+				</cftransaction>
+
+				<cfinclude template="includes/logRecord.cfm">
+
+
+				<cfif arguments.no_notify IS false>
+
+					<!--- Alert --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
+						<cfinvokeargument name="objectFile" value="#fileQuery#">
+						<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+						<cfinvokeargument name="area_id" value="#area_id#">
+						<cfinvokeargument name="user_id" value="#user_id#">
+						<cfif arguments.lock IS true>
+							<cfinvokeargument name="action" value="lock">
+						<cfelse>
+							<cfinvokeargument name="action" value="unlock">
+						</cfif>
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+
+			</cflock>
 
 			<cfset response = {result=true, file_id=#arguments.file_id#, lock=arguments.lock}>
 
