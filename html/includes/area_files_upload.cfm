@@ -481,9 +481,15 @@ $(function () {
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 <cfoutput>
-{% for (var i=0, file; file=o.files[i]; i++) { %}
+{%
+	var filesAdded = new Array();
 
-    {% curFile = curFile+1; %}
+	for (var i=0, file; file=o.files[i]; i++) {
+
+			curFile = curFile+1;
+
+			filesAdded[i] = curFile;
+%}
 
     <tr class="template-upload fade">
         <td>
@@ -734,18 +740,26 @@ $(function () {
     </tr>
 
 
-		{%
+{% } %}
+
+{% for (var i=0, file; file=o.files[i]; i++) {
 
 			//Waits for template process
+
+			/*setTimeout(function(){
+				  setFileTypeId( $('##fileTypeId_general').val(), filesAdded[i] );
+				}, 100);*/
+
 			function changeNewFileType () {
-				setFileTypeId( $('##fileTypeId_general').val(), curFile );
+
+				for (var i=0, file; file=o.files[i]; i++) {
+					setFileTypeId( $('##fileTypeId_general').val(), filesAdded[i]  );
+				}
+
 			}
+			setTimeout(	changeNewFileType , 200);
 
-			setTimeout(	changeNewFileType , 500);
-
-		%}
-
-{% } %}
+} %}
 </cfoutput>
 </script>
 <!-- The template to display files available for download -->
