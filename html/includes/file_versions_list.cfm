@@ -1,15 +1,15 @@
-<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">	
+<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
 <script>
-	$(document).ready(function() { 
+	$(document).ready(function() {
 
 
 		<!---$.tablesorter.addParser({
 			id: "datetime",
 			is: function(s) {
-				return false; 
+				return false;
 			},
 			format: function(s,table) {
 				s = s.replace(/\-/g,"/");
@@ -18,18 +18,18 @@
 			},
 			type: "numeric"
 		});--->
-		
-		
-		$("#dataTable").tablesorter({ 
+
+
+		$("#dataTable").tablesorter({
 			widgets: ['zebra','uitheme'], <!---,'select'--->
 			theme : "bootstrap",
 			headerTemplate : '{content} {icon}',
 			sortList: [[0,1]] ,
 			<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 			dateFormat: "ddmmyyyy", // set the default date format
-			headers: { 
-				5: { 
-					sorter: "shortDate" 
+			headers: {
+				5: {
+					sorter: "shortDate"
 				}
 			}
 		});
@@ -50,7 +50,7 @@
 	    });
 
 
-	}); 
+	});
 </script>
 
 <cfset selectFirst = true>
@@ -90,7 +90,7 @@
 
 		<!---Row selection--->
 		<cfset fieldSelected = false>
-		
+
 		<cfif alreadySelected IS false>
 
 			<cfif ( isDefined("URL.file_version") AND (URL.file_version IS versions.version_id) ) OR ( selectFirst IS true AND versions.currentrow IS 1 AND app_version NEQ "mobile" ) >
@@ -103,9 +103,9 @@
 
 				<cfset fieldSelected = true>
 				<cfset alreadySelected = true>
-																
+
 			</cfif>
-			
+
 		</cfif>
 
 		<tr <cfif fieldSelected IS true>class="selected"</cfif> <cfif versions.currentRow IS 1>style="font-weight:bold"</cfif> data-item-url="#version_page_url#"><!---onclick="openUrl('#version_page_url#','itemIframe',event)"--->
@@ -114,17 +114,18 @@
 			<td>#versions.file_name#</td>
 			<td>
 				<cfif len(versions.user_image_type) GT 0>
-					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#versions.user_in_charge#&type=#versions.user_image_type#&small=" alt="#versions.user_full_name#" class="item_img"/>									
-				<cfelse>							
+					<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#versions.user_in_charge#&type=#versions.user_image_type#&small=" alt="#versions.user_full_name#" class="item_img"/>
+				<cfelse>
 					<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#versions.user_full_name#" class="item_img_default" />
 				</cfif>
 				<span>#versions.user_full_name#</span>
 			</td>
-			<cfset uploadDate = versions.uploading_date>	
-			<cfset spacePos = findOneOf(" ", uploadDate)>
+			<cfset uploadDate = versions.uploading_date>
+			<!---<cfset spacePos = findOneOf(" ", uploadDate)>--->
 			<td>
-				<span>#left(uploadDate, spacePos)#</span>
-				<span class="hidden">#right(uploadDate, len(uploadDate)-spacePos)#</span>
+				<span>#uploadDate#</span>
+				<!---<span>#left(uploadDate, spacePos)#</span>
+				<span class="hidden">#right(uploadDate, len(uploadDate)-spacePos)#</span>--->
 			</td>
 			<td>
 				<!---fileSize--->
@@ -145,7 +146,7 @@
 </table>
 
 <cfif isDefined("onpenUrlHtml2")>
-					
+
 	<!---Esta acción sólo se completa si está en la versión HTML2--->
 	<script>
 		openUrlHtml2('#onpenUrlHtml2#','itemIframe');
