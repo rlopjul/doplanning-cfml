@@ -283,6 +283,7 @@
 		<cfargument name="typology_id" type="numeric" required="false">
 		<cfargument name="name" type="string" required="false">
 		<cfargument name="file_name" type="string" required="false">
+		<cfargument name="file_name_re" type="string" required="no">
 		<cfargument name="description" type="string" required="false">
 		<cfargument name="limit" type="numeric" required="false">
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
@@ -308,7 +309,6 @@
 
 		<cfset var search_text_re = "">
 		<cfset var name_re = "">
-		<cfset var file_name_re = "">
 		<cfset var description_re = "">
 
 		<cfif isDefined("arguments.search_text") AND len(arguments.search_text) GT 0>
@@ -341,7 +341,7 @@
 
 			<cfquery name="areaFilesQuery" datasource="#client_dsn#">
 				SELECT <cfif isDefined("arguments.limit")>SQL_CALC_FOUND_ROWS</cfif>
-				files.id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.name, files.file_name, files.description, files.file_type_id,
+				files.id, files.physical_name, files.user_in_charge, files.file_size, files.file_type, files.name, files.file_name, files.description, files.file_type_id, files.locked,
 					IF( replacement_date IS NULL, IF(association_date IS NULL, uploading_date, association_date), replacement_date ) AS last_version_date,
 					IF( a.area_id IS NULL, files.area_id, a.area_id ) AS area_id
 				<cfif arguments.parse_dates IS true>
@@ -431,7 +431,7 @@
 					)
 				</cfif>
 				<cfif len(search_text_re) GT 0><!---Search--->
-				AND (files.name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
+				AND ( files.name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
 				OR files.file_name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
 				OR files.description REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
 				)
@@ -439,7 +439,7 @@
 				<cfif len(name_re) GT 0>
 					AND	files.name REGEXP <cfqueryparam value="#name_re#" cfsqltype="cf_sql_varchar">
 				</cfif>
-				<cfif len(file_name_re) GT 0>
+				<cfif isDefined("file_name_re") AND len(file_name_re) GT 0>
 					AND	files.file_name REGEXP <cfqueryparam value="#file_name_re#" cfsqltype="cf_sql_varchar">
 				</cfif>
 				<cfif len(description_re) GT 0>

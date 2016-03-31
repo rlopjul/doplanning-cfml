@@ -3431,6 +3431,7 @@
 		<cfargument name="public" type="boolean" required="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
+		<cfargument name="group_versions" type="boolean" required="false" default="false">
 
 		<cfset var method = "uploadNewFile">
 
@@ -3476,6 +3477,83 @@
 				<cfthrow message="No se puede subir un archivo sin extensión">
 
 			</cfif>
+
+
+			<cfif arguments.fileTypeId IS 3 AND arguments.group_versions IS true>
+
+				<cfset versionValue = ListLast(uploadedFile.clientFileName, " ")>
+
+				<cfif IsNumeric(versionValue)>
+
+					<cfset fileNameToSearch = left(uploadedFile.clientFileName, len(uploadedFile.clientFileName)-len(versionValue))>
+
+					<cflock name="#fileNameToSearch#" type="exclusive" timeout="20">
+
+						<cfset fileNameToSearchRE = "^#fileNameToSearch# ?[0-9]*\.#uploadedFile.clientFileExt#$">
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
+							<cfinvokeargument name="area_id" value="#arguments.area_id#">
+							<cfinvokeargument name="parse_dates" value="false">
+
+							<cfinvokeargument name="file_name_re" value="#fileNameToSearchRE#">
+
+							<cfinvokeargument name="with_user" value="false"/>
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfset filesWithSameName = getAreaFilesResult.query>
+
+						<cfif filesWithSameName.recordCount GT 0>
+
+							<cffile action="delete" file="#destination##temp_file#">
+
+								<cfif filesWithSameName.locked IS false>
+
+									<cfinvoke component="FileManager" method="changeAreaFileLock" returnvariable="changeLockResponse">
+										<cfinvokeargument name="file_id" value="#filesWithSameName.id#"/>
+										<cfinvokeargument name="fileTypeId" value="#filesWithSameName.file_type_id#"/>
+										<cfinvokeargument name="lock" value="true"/>
+										<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
+									</cfinvoke>
+
+								</cfif>
+
+								<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="replaceFile" argumentcollection="#arguments#" returnvariable="replaceFileResponse">
+									<cfinvokeargument name="file_id" value="#filesWithSameName.id#">
+									<cfinvokeargument name="version_index" value="#versionValue#">
+									<cfif filesWithSameName.locked IS false>
+										<cfinvokeargument name="unlock" value="true">
+									</cfif>
+								</cfinvoke>
+
+								<cfreturn replaceFileResponse>
+
+								<!---<cfif replaceFileResponse.result IS true>
+
+									<cfreturn replaceFileResponse>
+
+								</cfif>--->
+
+								<!---<cfargument name="file_id" type="string" required="true"/>
+								<cfargument name="fileTypeId" type="numeric" required="true" />
+								<cfargument name="Filedata" type="string" required="true"/>
+								<cfargument name="version_index" type="string" required="false">
+								<cfargument name="unlock" type="boolean" required="false" default="false">
+								<cfargument name="no_notify" type="boolean" required="false" default="false">--->
+
+						</cfif><!---filesWithSameName.recordCount GT 0--->
+
+					</cflock>
+
+				</cfif><!--- IsNumeric(versionValue)>--->
+
+				<cfset response = {result=false, message="versionValue: #versionValue#, fileNameToSearch=#fileNameToSearch#, filesWithSameName=#filesWithSameName.recordCount#"}>
+				<cfreturn response>
+
+			</cfif>
+
 
 			<cfinvoke component="FileManager" method="createFile" returnvariable="createFileResult">
 				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
@@ -3975,15 +4053,15 @@
 
 		<cfif fileQuery.locked IS true AND fileQuery.lock_user_id NEQ user_id>
 
-			<cfset response = {result=false, file_id=#fileQuery.file_id#, message="El archivo está bloqueado por otro usuario y no puede ser modificado."}>
+			<cfset response = {result=false, file_id=#fileQuery.file_id#, message="El archivo de área está bloqueado por otro usuario y no puede ser modificado."}>
 
 		<cfelseif fileQuery.locked IS false AND fileQuery.file_type_id IS NOT 1>
 
-			<cfset response = {result=false, file_id=#fileQuery.file_id#, message="Debe bloquear el archivo para poder modificarlo."}>
+			<cfset response = {result=false, file_id=#fileQuery.file_id#, message="Debe bloquear el archivo de área para poder modificarlo."}>
 
 		<cfelseif fileQuery.in_approval IS true>
 
-			<cfset response = {result=false, file_id=#fileQuery.file_id#, message="No se puede modificar un archivo en proceso de aprobación."}>
+			<cfset response = {result=false, file_id=#fileQuery.file_id#, message="No se puede modificar un archivo de área en proceso de aprobación."}>
 
 		<cfelse>
 
@@ -4003,7 +4081,7 @@
 	<cffunction name="replaceFile" output="false" returntype="struct" access="public">
 		<cfargument name="file_id" type="string" required="true"/>
 		<cfargument name="fileTypeId" type="numeric" required="true" />
-		<cfargument name="Filedata" type="string" required="true"/>
+		<cfargument name="Filedata" type="string" required="false"/>
 		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="unlock" type="boolean" required="false" default="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
@@ -4051,7 +4129,11 @@
 
 			</cfif>
 
-			<cffile action="upload" filefield="Filedata" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
+			<cfif isDefined("arguments.Filedata")><!--- Default --->
+				<cffile action="upload" filefield="Filedata" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
+			<cfelse><!---jQuery fileupload--->
+				<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
+			</cfif>
 
 			<cfset temp_file="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">
 
@@ -4306,7 +4388,7 @@
 
 			</cfif>
 
-			<cfset response = {result=true, file_id=#arguments.file_id#}>
+			<cfset response = {result=true, file_id=#arguments.file_id#, file=#fileReplacedQuery#}>
 
 
 			<cfcatch>
@@ -4763,6 +4845,7 @@
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
 		<cfargument name="lock" type="boolean" required="true">
+		<cfargument name="no_notify" type="boolean" required="false" default="false">
 
 		<cfset var method = "changeAreaFileLock">
 
@@ -4850,21 +4933,26 @@
 
 			<cfinclude template="includes/logRecord.cfm">
 
-			<!--- Alert --->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
-				<cfinvokeargument name="objectFile" value="#fileQuery#">
-				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
-				<cfinvokeargument name="area_id" value="#area_id#">
-				<cfinvokeargument name="user_id" value="#user_id#">
-				<cfif arguments.lock IS true>
-					<cfinvokeargument name="action" value="lock">
-				<cfelse>
-					<cfinvokeargument name="action" value="unlock">
-				</cfif>
 
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
+			<cfif arguments.no_notify IS false>
+
+				<!--- Alert --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
+					<cfinvokeargument name="objectFile" value="#fileQuery#">
+					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
+					<cfinvokeargument name="area_id" value="#area_id#">
+					<cfinvokeargument name="user_id" value="#user_id#">
+					<cfif arguments.lock IS true>
+						<cfinvokeargument name="action" value="lock">
+					<cfelse>
+						<cfinvokeargument name="action" value="unlock">
+					</cfif>
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfif>
 
 			<cfset response = {result=true, file_id=#arguments.file_id#, lock=arguments.lock}>
 
