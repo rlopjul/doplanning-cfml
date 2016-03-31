@@ -550,7 +550,7 @@
 				      {
 				        url: "",
 				        thumbnail_url: "",
-				        name: "#file.name#",
+				        name: "#file.file_name#",
 				        <!---type: "text/plain",--->
 				        type: #fileGetMimeType(file.name, false)#,
 				        size: #file.file_size#,
