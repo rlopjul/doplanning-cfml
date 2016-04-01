@@ -21,9 +21,7 @@
 
 
 		$("#dataTable").tablesorter({
-			widgets: ['zebra','uitheme'], <!---,'select'--->
-			theme : "bootstrap",
-			headerTemplate : '{content} {icon}',
+			widgets: ['zebra'], <!---,'select'--->
 			sortList: [[0,1]] ,
 			<!--- http://mottie.github.io/tablesorter/docs/example-option-date-format.html ---->
 			dateFormat: "ddmmyyyy", // set the default date format
@@ -60,7 +58,7 @@
 </cfif>
 
 <cfoutput>
-<table id="dataTable" class="data-table" style="margin-top:5px;">
+<table id="dataTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap data-table" style="margin-top:5px;">
 	<thead>
 		<tr>
 			<th style="width:25px;">##</th>

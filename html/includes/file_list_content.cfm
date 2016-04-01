@@ -13,12 +13,10 @@
 
 		$("#listTable").tablesorter({
 			<cfif full_content IS false>
-			widgets: ['zebra','uitheme','filter','select'],
+			widgets: ['zebra','filter','select'],
 			<cfelse>
-			widgets: ['zebra','uitheme','select'],
+			widgets: ['zebra','select'],
 			</cfif>
-			theme : "bootstrap",
-			headerTemplate : '{content} {icon}',
 			sortList: [[5,1]] ,
 			headers: {
 				0: {
@@ -72,7 +70,7 @@
 
 	<cfoutput>
 
-	<table id="listTable" class="tablesorter">
+	<table id="listTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap">
 		<thead>
 			<tr>
 				<cfif full_content IS false>
