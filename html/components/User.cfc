@@ -339,6 +339,8 @@
 		<cfargument name="start_page" type="string" required="true">
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
+		<cfargument name="user_administrator" type="boolean" required="false" default="false">
+		<cfargument name="area_admin_administrator" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
 		<cfargument name="login_ldap" type="string" required="false">
@@ -378,28 +380,6 @@
 						<cfif isDefined("password_encoded")>
 							<cfinvokeargument name="password" value="#password_encoded#">
 						</cfif>
-						<!---<cfinvokeargument name="email" value="#arguments.email#">
-						<cfinvokeargument name="mobile_phone_ccode" value="#arguments.mobile_phone_ccode#">
-						<cfinvokeargument name="mobile_phone" value="#arguments.mobile_phone#">
-						<cfinvokeargument name="telephone_ccode" value="#arguments.telephone_ccode#">
-						<cfinvokeargument name="telephone" value="#arguments.telephone#">
-						<cfinvokeargument name="language" value="#arguments.language#">
-						<cfinvokeargument name="family_name" value="#arguments.family_name#">
-						<cfinvokeargument name="name" value="#arguments.name#">
-						<cfinvokeargument name="address" value="#arguments.address#">
-						<cfinvokeargument name="dni" value="#arguments.dni#">
-						<cfinvokeargument name="files" value="#arguments.files#">
-						<cfinvokeargument name="hide_not_allowed_areas" value="#arguments.hide_not_allowed_areas#">
-						<cfinvokeargument name="linkedin_url" value="#arguments.linkedin_url#">
-						<cfinvokeargument name="twitter_url" value="#arguments.twitter_url#">
-						<cfinvokeargument name="information" value="#arguments.information#">
-						<cfinvokeargument name="internal_user" value="#arguments.internal_user#">
-						<cfinvokeargument name="enabled" value="#arguments.enabled#">
-
-						<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
-						<cfinvokeargument name="login_diraya" value="#arguments.login_diraya#">
-						<cfinvokeargument name="perfil_cabecera" value="#arguments.perfil_cabecera#">
-						<cfinvokeargument name="adminFields" value="#arguments.adminFields#">--->
 					</cfinvoke>
 
 					<cfif response.result IS true>
