@@ -3477,6 +3477,25 @@
 	<!---  --->
 
 
+	<!--- -------------------------- CHECK USER ADMIN ACCESS -------------------------------- --->
+	<!---Comprueba si el usuario es el administrador de usuarios y si no lanza un error--->
+
+	<cffunction name="checkUserAdminAccess" returntype="void" access="public">
+
+		<cfset var method = "checkUserAdminAccess">
+
+		<cfinclude template="includes/functionStart.cfm">
+
+		<cfif SESSION.user_administrator IS false><!---user logged in is not an administrator user--->
+			<cfset error_code = 106>
+
+			<cfthrow errorcode="#error_code#">
+
+		</cfif>
+
+	</cffunction>
+
+
 
 
 </cfcomponent>
