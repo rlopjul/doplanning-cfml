@@ -553,7 +553,7 @@
 				LEFT JOIN #client_abb#_users AS users_revision ON files.revision_user = users_revision.id
 				LEFT JOIN #client_abb#_users AS users_approval ON files.approval_user = users_approval.id
 				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
-				ORDER BY files.version_id DESC
+				ORDER BY ABS(files.version_index) DESC, files.version_id DESC
 				<cfif isDefined("arguments.limit")>
 				LIMIT #arguments.limit#
 				</cfif>;
