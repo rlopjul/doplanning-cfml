@@ -628,7 +628,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<cfinclude template="includes/checkUserAdminAccess.cfm">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
 				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
@@ -703,7 +703,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfif arguments.update_user_id NEQ SESSION.user_id>
-				<cfinclude template="includes/checkAdminAccess.cfm">
+				<cfinclude template="includes/checkUserAdminAccess.cfm">
 			</cfif>
 
 			<cfinvoke component="UserManager" method="getUser" returnvariable="userQuery">
@@ -970,7 +970,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfif arguments.update_user_id NEQ SESSION.user_id>
-				<cfinclude template="includes/checkAdminAccess.cfm">
+				<cfinclude template="includes/checkUserAdminAccess.cfm">
 			</cfif>
 
 			<cfif listFind(APPLICATION.languages, arguments.language) GT 0>
@@ -1061,7 +1061,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfif arguments.update_user_id NEQ SESSION.user_id>
-				<cfinclude template="includes/checkAdminAccess.cfm">
+				<cfinclude template="includes/checkUserAdminAccess.cfm">
 			</cfif>
 
 			<cfquery name="selectQuery" datasource="#client_dsn#">
@@ -1275,7 +1275,18 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<!--- checkUserAdminAccess --->
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isUserUserAdministrator" returnvariable="isUserUserAdministratorResponse">
+				<cfinvokeargument name="check_user_id" value="#SESSION.user_id#">
+			</cfinvoke>
+
+			<cfif isUserUserAdministratorResponse.result IS false OR isUserUserAdministratorResponse.isUserAdministrator IS false>
+
+				<cfset error_code = 106>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
 
 			<cfquery name="getUserQuery" datasource="#client_dsn#">
 				SELECT id, root_folder_id, image_file, typology_id, typology_row_id
@@ -1474,9 +1485,14 @@
 
 					<cfloop query="filesQuery">
 
-						<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="deleteFileResult">
 							<cfinvokeargument name="file_id" value="#filesQuery.id#">
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 							<cfinvokeargument name="with_transaction" value="false">
+							<cfinvokeargument name="moveToBin" value="false">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
 
 						<cfif deleteFileResult.result IS false>
@@ -1773,7 +1789,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<cfinclude template="includes/checkAreaAdministratorAdminAccess.cfm">
 
 			<!---checkIfExist--->
 			<cfquery name="checkIfExist" datasource="#client_dsn#">
@@ -1867,7 +1883,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<cfinclude template="includes/checkAreaAdministratorAdminAccess.cfm">
 
 			<cfquery name="getArea" datasource="#client_dsn#">
 				SELECT user_in_charge
@@ -2901,7 +2917,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<!--- checkAdminAccess --->
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<cfinclude template="includes/checkUserAdminAccess.cfm">
 
 			<!--- getAllUsers --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getAllUsers" returnvariable="getAllUsersQuery">
@@ -3484,9 +3500,24 @@
 
 		<cfset var method = "checkUserAdminAccess">
 
-		<cfinclude template="includes/functionStart.cfm">
-
 		<cfif SESSION.user_administrator IS false><!---user logged in is not an administrator user--->
+			<cfset error_code = 106>
+
+			<cfthrow errorcode="#error_code#">
+
+		</cfif>
+
+	</cffunction>
+
+
+	<!--- -------------------------- CHECK AREA ADMINISTRATOR ADMIN ACCESS -------------------------------- --->
+	<!---Comprueba si el usuario es el administrador de usuarios y si no lanza un error--->
+
+	<cffunction name="checkAreaAdministratorAdminAccess" returntype="void" access="public">
+
+		<cfset var method = "checkAreaAdministratorAdminAccess">
+
+		<cfif SESSION.area_admin_administrator IS false><!---user logged in is not an administrator --->
 			<cfset error_code = 106>
 
 			<cfthrow errorcode="#error_code#">

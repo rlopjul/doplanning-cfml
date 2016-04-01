@@ -3327,11 +3327,17 @@
 
 		<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
-		<!---checkAdminUser--->
-		<cfif SESSION.client_administrator NEQ user_id><!---The user is not the organization administrator--->
+		<!--- checkUserAdminAccess --->
+		<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isUserUserAdministrator" returnvariable="isUserUserAdministratorResponse">
+			<cfinvokeargument name="check_user_id" value="#SESSION.user_id#">
+		</cfinvoke>
+
+		<cfif isUserUserAdministratorResponse.result IS false OR isUserUserAdministratorResponse.isUserAdministrator IS false>
+
 			<cfset error_code = 106>
 
 			<cfthrow errorcode="#error_code#">
+
 		</cfif>
 
 		<!--- --------------DELETE USER ITEMS------------------------- --->
@@ -3345,10 +3351,15 @@
 
 			<cfloop query="userItemsQuery">
 
-				<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="deleteItemResult">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItem" returnvariable="deleteItemResult">
 					<cfinvokeargument name="item_id" value="#userItemsQuery.id#">
 					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
 					<cfinvokeargument name="moveToBin" value="false">
+
+					<cfinvokeargument name="delete_user_id" value="#SESSION.user_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
 				<cfif deleteItemResult.result IS false>
@@ -3419,38 +3430,6 @@
 					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
 						<cfinvokeargument name="area_id" value="#area_id#">
 					</cfinvoke>
-
-					<cfif itemTypeId IS 13><!--- Typology --->
-
-						<!--- Get typology files --->
-						<cfquery name="tableFilesQuery" datasource="#client_dsn#">
-							SELECT id
-							FROM #client_abb#_files
-							WHERE #itemTypeName#_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
-
-						<cfif tableFilesQuery.recordCount GT 0>
-
-							<cfthrow message="No se puede borrar una tipología que está usada en archivos. Debe eliminar los archivos o cambiar su tipología para poder eliminarla.">
-
-						</cfif>
-
-					<cfelseif itemTypeId IS 16><!--- Users typology --->
-
-						<!--- Get typology users --->
-						<cfquery name="usersTypologyQuery" datasource="#client_dsn#">
-							SELECT id
-							FROM #client_abb#_users
-							WHERE typology_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
-
-						<cfif usersTypologyQuery.recordCount GT 0>
-
-							<cfthrow message="No se puede borrar una tipología que está usada en usuarios. Debe eliminar los usuarios o cambiar su tipología por otra para poder eliminarla.">
-
-						</cfif>
-
-					</cfif>
 
 				</cfif>
 
