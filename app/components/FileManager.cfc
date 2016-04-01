@@ -4978,7 +4978,9 @@
 
 					<cfquery name="addFileLock" datasource="#client_dsn#">
 						INSERT INTO `#client_abb#_#fileTypeTable#_locks`
-						SET file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">,
+						SET
+						lock_id = <cfqueryparam value="#CreateUUID()#" cfsqltype="cf_sql_varchar">,
+						file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">,
 						user_id = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
 						lock_date = NOW(),
 						`lock` = <cfqueryparam value="#arguments.lock#" cfsqltype="cf_sql_bit">;
