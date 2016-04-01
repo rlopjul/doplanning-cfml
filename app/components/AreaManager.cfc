@@ -351,7 +351,7 @@
 
 		<cfinclude template="includes/functionStart.cfm">
 
-		<cfif SESSION.client_administrator NEQ user_id><!---Te user logged in is not an administrator user--->
+		<cfif SESSION.client_administrator NEQ user_id><!---user logged in is not an administrator user--->
 			<cfset error_code = 106>
 
 			<cfthrow errorcode="#error_code#">
