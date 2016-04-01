@@ -2941,12 +2941,12 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled, verified">
+				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled, verified, user_administrator, area_admin_administrator">
 
 				<cfif selectUserQuery.language EQ "es">
-					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo, Verificado">
+					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo, Verificado, Administrador de usuarios, Administrador de administradores de área">
 				<cfelse>
-					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active, Verified">
+					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active, Verified, User administrator, Area administrators admin">
 				</cfif>
 
 				<cfif arguments.include_id IS true>
@@ -2996,24 +2996,20 @@
 						<cfinvokeargument name="table_id" value="#arguments.typology_id#">
 						<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
 
-						<!---<cfinvokeargument name="include_creation_date" value="#arguments.include_creation_date#">
-						<cfinvokeargument name="include_last_update_date" value="#arguments.include_last_update_date#">
-						<cfinvokeargument name="include_insert_user" value="#arguments.include_insert_user#">
-						<cfinvokeargument name="include_update_user" value="#arguments.include_update_user#">
-						<cfinvokeargument name="decimals_with_mask" value="#arguments.decimals_with_mask#">--->
-
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
 					<cfset rowsQuery = generateRowsQueryResponse.rowsQuery>
 					<cfset rowsFieldsNames = generateRowsQueryResponse.fieldsNames>
-					<cfset fieldsNames = listAppend( fieldsNames, rowsFieldsNames )>
-					<cfset fieldsLabels = listAppend( fieldsLabels, generateRowsQueryResponse.fieldsLabels )>
+					<cfif len(rowsFieldsNames) GT 0>
+						<cfset fieldsNames = listAppend( fieldsNames, rowsFieldsNames )>
+						<cfset fieldsLabels = listAppend( fieldsLabels, generateRowsQueryResponse.fieldsLabels )>
+					</cfif>
 
-					<!---Query to fix bug with position field in qery of query--->
+					<!---Query to fix bug with position field in query of query--->
 					<cfquery dbtype="query" name="rowsQueryWithoutPosition">
-						SELECT #rowsFieldsNames#, row_id
+						SELECT row_id <cfif len(rowsFieldsNames) GT 0>, #rowsFieldsNames#</cfif>
 						FROM rowsQuery;
 					</cfquery>
 

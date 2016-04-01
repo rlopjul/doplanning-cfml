@@ -212,10 +212,10 @@
 
 			<cfquery name="getAllUsersQuery" datasource="#arguments.client_dsn#">
                 SELECT id, email, telephone, space_used, number_of_connections, last_connection, connected, session_id, u.creation_date, internal_user, root_folder_id, family_name, name, address, mobile_phone, telephone_ccode, mobile_phone_ccode, image_type,
-                	CONCAT_WS(' ', family_name, name) AS user_full_name, enabled, typology_row_id, verified
-                	<cfif arguments.client_abb EQ "hcs">
-                		, perfil_cabecera
-                	</cfif>
+              	CONCAT_WS(' ', family_name, name) AS user_full_name, enabled, typology_row_id, verified, user_administrator, area_admin_administrator
+              	<cfif arguments.client_abb EQ "hcs">
+              		, perfil_cabecera
+              	</cfif>
                 FROM #arguments.client_abb#_users AS u
 
                 <cfif isDefined("arguments.typology_id") AND ( isNumeric(arguments.typology_id) OR arguments.typology_id EQ "null") >
