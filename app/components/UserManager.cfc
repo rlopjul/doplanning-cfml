@@ -671,6 +671,7 @@
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="user_administrator" type="boolean" required="false" default="false">
+		<cfargument name="area_admin_administrator" type="boolean" required="false" default="false">
 		<cfargument name="verified" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
@@ -767,10 +768,11 @@
 						</cfif>
 					</cfif>
 
-					<cfif arguments.adminFields IS true AND SESSION.client_administrator EQ SESSION.user_id>
+					<cfif arguments.adminFields IS true AND SESSION.user_administrator>
 						, information = <cfqueryparam value="#arguments.information#" cfsqltype="cf_sql_longvarchar">
 						, internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">
 						, user_administrator = <cfqueryparam value="#arguments.user_administrator#" cfsqltype="cf_sql_bit">
+						, area_admin_administrator = <cfqueryparam value="#arguments.area_admin_administrator#" cfsqltype="cf_sql_bit">
 						, verified = <cfqueryparam value="#arguments.verified#" cfsqltype="cf_sql_bit">
 						, enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
 						<cfif isDefined("arguments.perfil_cabecera")>
