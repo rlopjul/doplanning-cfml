@@ -4144,6 +4144,7 @@
 		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="unlock" type="boolean" required="false" default="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
+		<cfargument name="group_versions" type="boolean" required="false" default="false">
 
 		<cfset var method = "replaceFile">
 
@@ -4206,6 +4207,27 @@
 
 					<cfif arguments.fileTypeId IS 3><!--- Save new version --->
 
+						<cfif arguments.group_versions IS true>
+
+							<!--- getLastFileVersion --->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileVersions" returnvariable="getLastFileVersionQuery">
+								<cfinvokeargument name="file_id" value="#arguments.file_id#">
+								<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
+								<cfinvokeargument name="limit" value="1">
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<cfset lastVersionIndex = getLastFileVersionQuery.version_index>
+
+							<cfif len(lastVersionIndex) GT 0 AND NOT isNumeric(lastVersionIndex)>
+								<!---remove characters that are not numeric--->
+								<cfset lastVersionIndex = reReplaceNoCase(lastVersionIndex, '[^[:digit:]]', '', 'ALL')>
+							</cfif>
+
+						</cfif>
+
 						<cfquery name="insertFileVersionQuery" datasource="#client_dsn#">
 							INSERT INTO `#client_abb#_#fileTypeTable#_versions`
 							SET file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">,
@@ -4243,9 +4265,6 @@
 						UPDATE #client_abb#_#fileTypeTable#
 						SET replacement_date = NOW(),
 						replacement_user = <cfqueryparam value="#user_id#" cfsqltype="cf_sql_integer">,
-						file_size = <cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">,
-						file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">,
-						file_name = <cfqueryparam value="#file_name#" cfsqltype="cf_sql_varchar">,
 						status = 'ok',
 						status_replacement = 'uploaded',
 						<cfif APPLICATION.moduleAntiVirus IS true>
@@ -4254,8 +4273,13 @@
 							anti_virus_check = <cfqueryparam null="true" cfsqltype="cf_sql_bit">,
 						</cfif>
 						anti_virus_check_result = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
-						<cfif arguments.fileTypeId IS 3>
-						, physical_name = <cfqueryparam value="#new_physical_name#" cfsqltype="cf_sql_varchar">
+						<cfif arguments.group_versions IS false OR arguments.version_index GTE lastVersionIndex>
+							, file_size = <cfqueryparam value="#file_size_full#" cfsqltype="cf_sql_integer">
+							, file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">
+							, file_name = <cfqueryparam value="#file_name#" cfsqltype="cf_sql_varchar">
+							<cfif arguments.fileTypeId IS 3>
+							, physical_name = <cfqueryparam value="#new_physical_name#" cfsqltype="cf_sql_varchar">
+							</cfif>
 						</cfif>
 						WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
