@@ -320,6 +320,8 @@ page_types
 
 					<div class="col-xs-7 col-sm-8 col-md-9">
 
+						<small class="help-block" lang="es">Los cambios en opciones y permisos se aplicarán en el próximo inicio de sesión del usuario.</small>
+
 						<div class="checkbox">
 							<label>
 								<input type="checkbox" name="verified" id="verified" value="true" <cfif isDefined("objectUser.verified") AND objectUser.verified IS true>checked="checked"</cfif> /> <span lang="es">Verificado</span>
