@@ -853,97 +853,6 @@
 				</div><!--- END col --->
 			</div><!---END row item container--->
 
-
-			<!---
-
-			<div class="div_user_page_title">
-
-			<!---<cfif len(objectUser.image_type) GT 0>
-				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&medium=" alt="#objectUser.family_name# #objectUser.name#" class="img-thumbnail" style="margin-right:2px;"/>
-			<cfelse>
-				<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="img-thumbnail" style="margin-right:2px;"/>
-			</cfif><br/>--->
-
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
-				<cfinvokeargument name="user_id" value="#objectUser.id#">
-				<cfinvokeargument name="user_full_name" value="#objectUser.family_name# #objectUser.name#">
-				<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
-				<cfinvokeargument name="class" value="img-thumbnail"/>
-			</cfinvoke><br/>
-
-			#objectUser.family_name# #objectUser.name#</div>
-			<div class="div_separator"><!-- --></div>
-			<div class="div_user_page_user">
-				<div class="div_user_page_label"><!---<span lang="es">Email:</span>---><i class="icon-inbox" style="font-size:18px"></i>  <a href="mailto:#objectUser.email#" class="div_user_page_text">#objectUser.email#</a></div>
-
-				<cfif SESSION.client_abb NEQ "hcs"><!---OR showAdminFields IS true--->
-					<cfif len(objectUser.dni) GT 0>
-					<div class="div_user_page_label"><span lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif>:</span> <span class="div_user_page_text">#objectUser.dni#</span></div>
-					</cfif>
-					<cfif len(objectUser.telephone) GT 0>
-						<div class="div_user_page_label"><!---<span lang="es">Teléfono:</span>---><i class="icon-phone-sign" style="font-size:20px"></i> <a href="tel:#objectUser.telephone#" class="div_user_page_text"><cfif len(objectUser.telephone) GT 0>#objectUser.telephone_ccode#</cfif> #objectUser.telephone#</a></div>
-					</cfif>
-					<cfif len(objectUser.mobile_phone) GT 0>
-						<div class="div_user_page_label"><!---<span lang="es">Teléfono móvil:</span>--->&nbsp;<i class="icon-mobile-phone" style="font-size:18px"></i> <a href="tel:#objectUser.mobile_phone#" class="div_user_page_text"><cfif len(objectUser.mobile_phone) GT 0>#objectUser.mobile_phone_ccode#</cfif> #objectUser.mobile_phone#</a></div>
-					</cfif>
-				</cfif>
-
-
-				<cfif len(objectUser.linkedin_url) GT 0>
-					<div class="div_user_page_label"><i class="icon-linkedin-sign" style="font-size:18px;"></i> <a href="#objectUser.linkedin_url#" target="_blank">#objectUser.linkedin_url#</a></div>
-				</cfif>
-
-				<cfif len(objectUser.twitter_url) GT 0>
-					<div class="div_user_page_label"><i class="icon-twitter-sign" style="font-size:18px;"></i> <a href="#objectUser.twitter_url#" target="_blank">#objectUser.twitter_url#</a></div>
-				</cfif>
-
-				<cfif len(objectUser.address) GT 0>
-					<div class="div_user_page_label"><!---<span lang="es">Dirección:</span>---><i class="icon-envelope" style="font-size:18px"></i></div>
-					<div class="div_user_page_address">#objectUser.address#</div>
-				</cfif>
-
-				<cfif arguments.showAdminFields IS true>
-
-					<div class="div_user_page_label"><span lang="es">Información:</span></div>
-					<div class="div_user_page_address">#objectUser.information#</div>
-
-					<cfif SESSION.client_abb EQ "hcs">
-						<cfif SESSION.client_administrator EQ SESSION.user_id>
-							<div class="div_user_page_label"><span lang="es">Login #APPLICATION.ldapName#:</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
-						</cfif>
-						<div class="div_user_page_label"><span lang="es">Perfil de cabecera:</span> <span class="div_user_page_text">#objectUser.perfil_cabecera#</span></div>
-					</cfif>
-
-					<div class="div_user_page_label"><span lang="es">Usuario interno:</span> <span class="div_user_page_text" lang="es"><cfif objectUser.internal_user IS true><b>Sí</b><cfelse>No</cfif></span></div>
-
-					<cfif SESSION.client_administrator EQ SESSION.user_id>
-						<div class="div_user_page_label"><span>Fecha de creación:</span> <span class="div_user_page_text">#objectUser.creation_date#</span></div>
-						<div class="div_user_page_label"><span>Fecha de última conexión:</span> <span class="div_user_page_text">#objectUser.last_connection#</span></div>
-						<div class="div_user_page_label"><span>Número de conexiones:</span> <span class="div_user_page_text">#objectUser.number_of_connections#</span></div>
-					</cfif>
-
-				</cfif>
-
-				<div class="div_user_page_label"><span lang="es">Activo:</span> <span class="div_user_page_text" lang="es"><cfif objectUser.enabled IS true>Sí<cfelse><b>No</b></cfif></span></div>
-
-				<cfif objectUser.enabled IS true>
-					<cfif APPLICATION.moduleWebRTC IS true>
-					<div style="padding-top:8px; clear:both;">
-						<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/user_meeting.png" width="20" alt="Reunión virtual" lang="es"/>--->
-
-						<div>
-						<a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es" class="btn btn-sm btn-info"><i class="icon-facetime-video"></i>&nbsp; <span lang="es">Reunión virtual</span></a>
-						</div>
-						<div class="div_user_page_label"><span lang="es">URL de acceso a reunión virtual con este usuario:</span></div>
-						<textarea class="form-control" readonly="readonly" style="height:50px; cursor:text">#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#</textarea>
-
-					</div>
-					</cfif>
-				</cfif>
-
-
-			</div>
-			---->
 			</cfoutput>
 
 			<cfcatch>
@@ -970,7 +879,9 @@
 
 			<cfoutput>
 
-				<div><i class="icon-inbox" style="font-size:18px"></i>  <a href="mailto:#objectUser.email#" class="link_external">#objectUser.email#</a></div>
+				<cfset mailto = "mailto:"&objectUser.email>
+
+				<div><i class="icon-inbox" style="font-size:18px"></i>  <a href="#mailto#" class="link_external">#objectUser.email#</a></div>
 
 				<cfif len(objectUser.linkedin_url) GT 0>
 					<div><i class="icon-linkedin-sign" style="font-size:18px;"></i> <a href="#objectUser.linkedin_url#" target="_blank" class="link_external">#objectUser.linkedin_url#</a></div>
