@@ -4461,6 +4461,7 @@
 					<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
 					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#"/>
 					<cfinvokeargument name="lock" value="false"/>
+					<cfinvokeargument name="no_notify" value="#arguments.no_notify#">
 				</cfinvoke>
 
 				<cfif changeLockResponse.result IS false>
