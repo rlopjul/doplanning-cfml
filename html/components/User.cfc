@@ -1317,6 +1317,7 @@
 		<cfargument name="select_enabled" type="boolean" required="false" default="false">
 		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
 		<cfargument name="adminUsers" type="boolean" required="false" default="false">
+		<cfargument name="openRowOnSelect" type="boolean" required="false" default="false">
 
 		<cfargument name="list_id" type="numeric" required="false">
 
@@ -1426,20 +1427,21 @@
 
 						});
 
-
+						<cfif arguments.openRowOnSelect IS true>
 						$('###usersTableId# tbody tr').on('click', function(e) {
 
-					        var row = $(this);
+				        var row = $(this);
 
-					        if(!row.hasClass("selected")) {
-					        	$('###usersTableId# tbody tr').removeClass("selected");
-					        	row.addClass("selected");
-					        }
+				        if(!row.hasClass("selected")) {
+				        	$('###usersTableId# tbody tr').removeClass("selected");
+				        	row.addClass("selected");
+				        }
 
-					        var itemUrl = row.data("item-url");
+				        var itemUrl = row.data("item-url");
 						    openUrlLite(itemUrl,'#arguments.open_url_target#');
 
-					    });
+					  });
+						</cfif>
 
 					});
 				</script>
@@ -1464,7 +1466,7 @@
 								<th><span lang="es">Perfil cabecera</span></th>
 								</cfif>
 								<th style="width:38px;"><span lang="es">Activo</span></th>
-								<cfif SESSION.client_administrator EQ SESSION.user_id>
+								<cfif SESSION.user_administrator>
 								<th style="width:130px;"></th>
 								</cfif>
 							</cfif>
@@ -1495,7 +1497,7 @@
 						<!---Item selection--->
 						<cfset itemSelected = false>
 
-						<cfif arguments.show_area_members IS true or arguments.showAdminFields IS true><!--- Selección de fila sólo disponible para listados de administración --->
+						<cfif arguments.openRowOnSelect IS true AND ( arguments.show_area_members IS true OR arguments.showAdminFields IS true )><!--- Selección de fila sólo disponible para listados de administración --->
 
 							<cfif alreadySelected IS false>
 
@@ -1560,7 +1562,7 @@
 								</cfif>
 								<td lang="es"><cfif objectUser.enabled IS true>Sí<cfelse>No</cfif></td>
 
-								<cfif SESSION.client_administrator EQ SESSION.user_id>
+								<cfif SESSION.user_administrator>
 									<td><a onclick="parent.loadModal('html_content/user_modify.cfm?user=#objectUser.id#')" class="btn btn-primary btn-sm" title="Modificar" lang="es"><i class="icon-edit icon-white"></i></a>
 										<cfif APPLICATION.changeUserPreferencesByAdmin IS true>
 											<a onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#objectUser.id#')" class="btn btn-default btn-sm" title="Preferencias de notificaciones" lang="es"><i class="icon-envelope-alt icon-white"></i></a>
