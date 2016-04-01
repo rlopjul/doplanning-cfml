@@ -408,7 +408,7 @@ $(function () {
 										<div class="checkbox">
 											<label>
 												<input type="checkbox" name="group_versions_general" id="group_versions_general" value="true"> <span lang="es">Agrupar versiones de archivos</span>
-												<p class="help-block">Agrupa en un único archivo de área los archivos con el mismo nombre y en cuyo nombre se incluye el número de versión al final separado por un espacio. Ejemplos:<br> <i>Archivo de prueba 1.doc, Archivo de prueba 2.doc, Archivo de prueba 3.doc</i></p>
+												<p class="help-block">Agrupa en un único archivo de área los archivos con el mismo nombre y en cuyo nombre se incluye el número de versión al final separado por un espacio. Ejemplos: <i>Archivo de prueba 1.doc, Archivo de prueba 2.doc, Archivo de prueba 3.doc</i></p>
 											</label>
 										</div>
 
