@@ -316,6 +316,35 @@ page_types
 
 				<div class="row">
 
+					<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666">OPCIONES</label>
+
+					<div class="col-xs-7 col-sm-8 col-md-9">
+
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="verified" id="verified" value="true" <cfif isDefined("objectUser.verified") AND objectUser.verified IS true>checked="checked"</cfif> /> <span lang="es">Verificado</span>
+							</label>
+							<small class="help-block" lang="es">Si el usuario no se marca como verificado, tras ser dado de alta deberá acceder a verificar su cuenta de correo para poder usar la aplicación y recibir emails de la misma.</small>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
+
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="enabled" id="enabled" value="true" <cfif isDefined("objectUser.enabled") AND objectUser.enabled IS true>checked="checked"</cfif> /> <span lang="es">Activo</span>
+							</label>
+							<small class="help-block" lang="es">Los usuarios no activos no podrán acceder a la aplicación ni recibirán notificaciones por email y seguirán siendo visibles en todos los listados de la aplicación.</small>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+
 					<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666">PERMISOS</label>
 
 					<div class="col-xs-7 col-sm-8 col-md-9">
@@ -359,34 +388,6 @@ page_types
 					</div>
 				</div>
 
-				<div class="row">
-
-					<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666">OPCIONES</label>
-
-					<div class="col-xs-7 col-sm-8 col-md-9">
-
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" name="verified" id="verified" value="true" <cfif isDefined("objectUser.verified") AND objectUser.verified IS true>checked="checked"</cfif> /> <span lang="es">Verificado</span>
-							</label>
-							<small class="help-block" lang="es">Si el usuario no se marca como verificado, tras ser dado de alta deberá acceder a verificar su cuenta de correo para poder usar la aplicación y recibir emails de la misma.</small>
-						</div>
-
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
-
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" name="enabled" id="enabled" value="true" <cfif isDefined("objectUser.enabled") AND objectUser.enabled IS true>checked="checked"</cfif> /> <span lang="es">Activo</span>
-							</label>
-							<small class="help-block" lang="es">Los usuarios no activos no podrán acceder a la aplicación ni recibirán notificaciones por email y seguirán siendo visibles en todos los listados de la aplicación.</small>
-						</div>
-
-					</div>
-				</div>
 
 
 			</cfif>
