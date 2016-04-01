@@ -24,7 +24,7 @@
 		<cfset var method = "getUser">
 
 			<cfquery name="getUserQuery" datasource="#arguments.client_dsn#">
-				SELECT id, id AS user_id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, internal_user AS whole_tree_visible, image_file, image_type, dni, language, enabled, information, hide_not_allowed_areas, linkedin_url, twitter_url, typology_id, typology_row_id, no_notifications, start_page, start_page_locked, verified, verification_date, verification_code, CONCAT_WS(' ', family_name, name) AS user_full_name
+				SELECT id, id AS user_id, email, telephone, telephone_ccode, family_name, name, address, mobile_phone, mobile_phone_ccode, internal_user, internal_user AS whole_tree_visible, image_file, image_type, dni, language, enabled, information, hide_not_allowed_areas, linkedin_url, twitter_url, typology_id, typology_row_id, no_notifications, start_page, start_page_locked, verified, verification_date, verification_code, user_administrator, area_admin_administrator, CONCAT_WS(' ', family_name, name) AS user_full_name
 				<cfif arguments.format_content EQ "all">
 				, space_used, number_of_connections, connected, session_id, root_folder_id, sms_allowed
 					<cfif arguments.parse_dates IS true>
