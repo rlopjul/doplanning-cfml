@@ -292,28 +292,13 @@ page_types
 
 			</cfif><!--- END page_type NEQ 3 --->
 
-
-			<cfif page_type IS 1>
-
-				<div class="row">
-					<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
-
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" name="internal_user" id="internal_user" value="true" <cfif isDefined("objectUser.internal_user") AND objectUser.internal_user IS true>checked="checked"</cfif> /> <span lang="es">Usuario interno</span>
-							</label>
-							<small class="help-block" lang="es">Los usuarios internos pueden ver todo el árbol de la organización, y no sólo las áreas a las que tienen acceso.</small>
-						</div>
-
-					</div>
-				</div>
-
-			</cfif>
-
 			<cfif page_type NEQ 3>
 
 			<div class="row">
-				<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
+
+				<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666">PREFERENCIAS</label>
+
+				<div class="col-xs-7 col-sm-8 col-md-9">
 
 					<div class="checkbox">
 						<label>
@@ -330,7 +315,55 @@ page_types
 			<cfif page_type IS 1>
 
 				<div class="row">
+
+					<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666">PERMISOS</label>
+
+					<div class="col-xs-7 col-sm-8 col-md-9">
+
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="internal_user" id="internal_user" value="true" <cfif isDefined("objectUser.internal_user") AND objectUser.internal_user IS true>checked="checked"</cfif> /> <span lang="es">Usuario interno</span>
+							</label>
+							<small class="help-block" lang="es">Los usuarios internos pueden ver todo el árbol de la organización, y no sólo las áreas a las que tienen acceso.</small>
+						</div>
+
+					</div>
+				</div>
+
+				<!---
+				DESHABILITADO TEMPORALMENTE HASTA TERMINARLO--->
+				<div class="row">
+
 					<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
+
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="user_administrator" id="user_administrator" value="true" <cfif isDefined("objectUser.user_administrator") AND objectUser.user_administrator IS true>checked="checked"</cfif> /> <span lang="es">Administrador de usuarios</span>
+							</label>
+							<small class="help-block" lang="es">Podrá administrar los usuarios de la aplicación.</small>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
+
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="area_admin_administrator" id="area_admin_administrator" value="true" <cfif isDefined("objectUser.area_admin_administrator") AND objectUser.area_admin_administrator IS true>checked="checked"</cfif> /> <span lang="es">Administrador de administradores de área</span>
+							</label>
+							<small class="help-block" lang="es">Podrá dar permiso de administrador de área a los usuarios de la aplicación.</small>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+
+					<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666">OPCIONES</label>
+
+					<div class="col-xs-7 col-sm-8 col-md-9">
 
 						<div class="checkbox">
 							<label>
@@ -355,21 +388,6 @@ page_types
 					</div>
 				</div>
 
-				<!---
-				DESHABILITADO TEMPORALMENTE HASTA TERMINARLO
-				<div class="row">
-					<div class="col-xs-offset-5 col-sm-offset-4 col-md-offset-3 col-xs-7 col-sm-8 col-md-9">
-
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" name="user_administrator" id="user_administrator" value="true" <cfif isDefined("objectUser.user_administrator") AND objectUser.user_administrator IS true>checked="checked"</cfif> /> <span lang="es">Administrador de usuarios</span>
-							</label>
-							<small class="help-block" lang="es">El usuario podrá gestionar los usuarios de la aplicación.</small>
-						</div>
-
-					</div>
-				</div>
-				--->
 
 			</cfif>
 
