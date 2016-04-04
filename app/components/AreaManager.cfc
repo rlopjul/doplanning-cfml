@@ -1569,8 +1569,8 @@
 
 	<cffunction name="getAreaContent" output="false" returntype="string" access="public">
 		<cfargument name="area_id" type="numeric" required="true">
-		<cfargument name="allowed" type="Boolean" required="true">
-		<cfargument name="whole_tree" type="Boolean" required="false">
+		<cfargument name="allowed" type="boolean" required="true">
+		<cfargument name="whole_tree" type="boolean" required="false">
 		<cfargument name="areaType" type="string" required="false" default="">
 
 		<cfargument name="parent_image_id" type="string" required="false" default="">
@@ -1591,6 +1591,7 @@
 
 		<cfset var xmlPart = "">
 		<cfset var xmlAreaResult = "">
+		<cfset var isUserAreaResponsible = false>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
@@ -1621,11 +1622,16 @@
 
 			</cfif>
 
+			<cfif areaAttsQuery.user_in_charge EQ arguments.get_user_id>
+				<cfset isUserAreaResponsible = true>
+			</cfif>
+
 			<cfinvoke component="AreaManager" method="getAreaQueryContent" returnvariable="xmlAreaResult">
 				<cfinvokeargument name="areaQuery" value="#areaAttsQuery#">
 				<cfinvokeargument name="areaRow" value="1">
 
 				<cfinvokeargument name="allowed" value="#arguments.allowed#">
+				<cfinvokeargument name="responsible" value="#isUserAreaResponsible#">
 				<cfinvokeargument name="whole_tree" value="#arguments.whole_tree#">
 				<cfinvokeargument name="areaType" value="#arguments.areaType#">
 
@@ -1653,7 +1659,8 @@
 		<cfargument name="areaRow" type="numeric" required="yes">
 
 		<!---<cfargument name="areasArray" type="Array" required="false">--->
-		<cfargument name="allowed" type="Boolean" required="true">
+		<cfargument name="allowed" type="boolean" required="true">
+		<cfargument name="responsible" type="boolean" required="true">
 		<cfargument name="whole_tree" type="Boolean" required="true">
 		<cfargument name="areaType" type="string" required="false" default="">
 
@@ -1679,6 +1686,7 @@
 
 		<cfset var aRow = arguments.areaRow>
 		<cfset var userBelongsToArea = false>
+		<cfset var isUserAreaResponsible = false>
 		<cfset var curAreaType = "">
 
 			<cfinclude template="includes/functionStart.cfm">
@@ -1736,6 +1744,18 @@
 
 			</cfif>
 
+			<cfif arguments.responsible IS true>
+
+				<cfset isUserAreaResponsible = true>
+
+			<cfelseif userBelongsToArea IS true>
+
+				<cfif arguments.get_user_id IS areaQuery.user_in_charge[aRow]>
+					<cfset isUserAreaResponsible = true>
+				</cfif>
+
+			</cfif>
+
 			<!---area_image--->
 			<cfif len(areaQuery.image_id[aRow]) IS NOT 0 AND areaQuery.image_id[aRow] NEQ "NULL">
 
@@ -1769,7 +1789,7 @@
 
 			<cfif whole_tree EQ true OR userBelongsToArea EQ true>
 
-					<cfset xmlPart = '<area id="#area_id#" name="#xmlFormat(areaQuery.name[aRow])#" parent_id="#areaQuery.parent_id[aRow]#" allowed="#userBelongsToArea#" with_link="#with_link#" user_in_charge="#areaQuery.user_in_charge[aRow]#" type="#curAreaType#">'><!--- label="#xmlFormat(areaQuery.name[aRow])#" creation_date="#areaQuery.creation_date[aRow]#" image_id="#image_id#" --->
+					<cfset xmlPart = '<area id="#area_id#" name="#xmlFormat(areaQuery.name[aRow])#" parent_id="#areaQuery.parent_id[aRow]#" allowed="#NumberFormat(userBelongsToArea)#" responsible="#NumberFormat(isUserAreaResponsible)#" with_link="#NumberFormat(with_link)#" type="#curAreaType#">'><!--- label="#xmlFormat(areaQuery.name[aRow])#" creation_date="#areaQuery.creation_date[aRow]#" image_id="#image_id#" user_in_charge="#areaQuery.user_in_charge[aRow]#" --->
 
 			</cfif>
 
@@ -1781,6 +1801,7 @@
 					<cfinvokeargument name="areasArray" value="#arguments.areasArray#">
 					</cfif>--->
 					<cfinvokeargument name="allowed" value="#userBelongsToArea#">
+					<cfinvokeargument name="responsible" value="#isUserAreaResponsible#">
 					<cfinvokeargument name="whole_tree" value="#whole_tree#">
 					<cfinvokeargument name="areaType" value="#curAreaType#">
 
@@ -1814,6 +1835,7 @@
 		<cfargument name="parent_id" type="numeric" required="true">
 		<!---<cfargument name="areasArray" type="Array" required="false">--->
 		<cfargument name="allowed" type="Boolean" required="true">
+		<cfargument name="responsible" type="boolean" required="true">
 		<cfargument name="whole_tree" type="Boolean" required="true">
 		<cfargument name="areaType" type="string" required="true">
 
@@ -1856,6 +1878,7 @@
 						<cfinvokeargument name="areasArray" value="#arguments.areasArray#">
 						</cfif>--->
 						<cfinvokeargument name="allowed" value="#arguments.allowed#">
+						<cfinvokeargument name="responsible" value="#arguments.responsible#">
 						<cfinvokeargument name="whole_tree" value="#arguments.whole_tree#">
 						<cfinvokeargument name="areaType" value="#arguments.areaType#">
 
