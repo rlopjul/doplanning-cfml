@@ -29,7 +29,7 @@
 		<!--- basic_email_notification column --->
 
 		<cfquery datasource="#client_datasource#">
-      ALTER TABLE`#new_client_abb#_users_typologies`
+      ALTER TABLE `#new_client_abb#_users_typologies`
       ADD COLUMN `basic_email_notification` TINYINT(1) NOT NULL DEFAULT 0 AFTER `form_display_type`;
 		</cfquery>
 
