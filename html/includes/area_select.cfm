@@ -38,6 +38,37 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/jstree_scripts.cfm">
 
+<cfif APPLICATION.publicationScope IS true AND isDefined("scope_id")>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+		<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+	</cfinvoke>
+
+	<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
+			<cfinvokeargument name="scope_id" value="#scope_id#">
+		</cfinvoke>
+		<cfset scopesQuery = getScopesResult.scopesAreas>
+		<cfset scopeAreasList = valueList(scopesQuery.area_id)>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAllAreasIds" returnvariable="getScopesAllAreasResult">
+			<cfinvokeargument name="scope_id" value="#scope_id#">
+		</cfinvoke>
+		<cfset scopeAllAreasList = getScopesAllAreasResult.areasIds>
+
+	<cfelse>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAllAreasIds" returnvariable="getScopesAllAreasResult">
+			<cfinvokeargument name="scope_id" value="#scope_id#">
+		</cfinvoke>
+		<cfset scopeAreasList = getScopesAllAreasResult.areasIds>
+		<cfset scopeAllAreasList = scopeAreasList>
+
+	</cfif>
+
+</cfif>
+
 <script>
 
 	<cfoutput>
@@ -54,7 +85,9 @@
 		<cfif isDefined("disable_area_id")>
 		var disableAreaId = #disable_area_id#;
 		</cfif>
-
+		<cfif isDefined("scopeAllAreasList")>
+		var scopeAllAreasList = [#scopeAllAreasList#];
+		</cfif>
 	</cfoutput>
 
 	<cfif isDefined("URL.multiple")>
@@ -107,18 +140,35 @@
 
 			var checkBoxId = "#area"+areaId;
 
-			if (disableAreaId == areaId) {
+			if (typeof readOnly !== 'undefined') {
 
-				alert("El área seleccionada es la misma donde se va a crear el archivo");
-				setTimeout(function(){
-				    $(checkBoxId).prop("checked",false);
-				}, 500);
+				var areaNode = $("#"+areaId);
 
+				if( readOnly != areaNode.data("read-only") ) {
+
+					bootbox.alert("Área de solo lectura");
+					setTimeout(function(){
+					    $(checkBoxId).prop("checked",false);
+					}, 500);
+
+				}
 
 			} else {
 
-				if($(checkBoxId).attr('disabled')!='disabled'){
-					toggleCheckboxChecked(checkBoxId);
+				if (disableAreaId == areaId) {
+
+					bootbox.alert("El área seleccionada es la misma donde se va a crear el archivo");
+					setTimeout(function(){
+					    $(checkBoxId).prop("checked",false);
+					}, 500);
+
+
+				} else {
+
+					if($(checkBoxId).attr('disabled')!='disabled'){
+						toggleCheckboxChecked(checkBoxId);
+					}
+
 				}
 
 			}
@@ -131,25 +181,34 @@
 
 				var areaNode = $("#"+areaId);
 
+				if (typeof scopeAllAreasList !== 'undefined') {
+
+					if ( $.inArray(parseInt(areaId), scopeAllAreasList) == -1 ) {
+						bootbox.alert("El área seleccionada no está dentro del ámbito de publicación");
+						return;
+					}
+
+				}
+
 				var relAtt = areaNode.attr("rel");
 
 				if( allEnabled == false) {
 
-					if( relAtt == "not-allowed" || relAtt == "not-allowed-web" ){
+					if( relAtt == "not-allowed" || relAtt == "not-allowed-web" || relAtt == "not-allowed-intranet" ){
 
-						alert("No tiene permiso de acceso en esta área");
+						bootbox.alert("No tiene permiso de acceso en esta área");
 						return;
 
-					} else if( (webEnabled == false && relAtt == "allowed-web") || (noWebEnabled == false && relAtt == "allowed") ) {
+					} else if( (webEnabled == false && ( relAtt == "allowed-web" || relAtt == "allowed-intranet" ) ) || (noWebEnabled == false && relAtt == "allowed") ) {
 
-						alert("No puede seleccionar este tipo de área");
+						bootbox.alert("No puede seleccionar este tipo de área");
 						return;
 					}
 
 				}
 
 				if( responsibleRequired == true && areaNode.data("responsible") == false ) {
-					alert("No tiene permiso de responsable en esta área");
+					bootbox.alert("No tiene permiso de responsable en esta área");
 					return;
 				}
 
@@ -157,7 +216,7 @@
 
 					if( readOnly != areaNode.data("read-only") ) {
 
-						alert("Área de solo lectura");
+						bootbox.alert("Área de solo lectura");
 						return;
 
 					}
@@ -223,31 +282,6 @@
 	</div>
 
 </div>
-
-<cfif APPLICATION.publicationScope IS true AND isDefined("scope_id")>
-
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
-		<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-	</cfinvoke>
-
-	<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false>
-
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
-			<cfinvokeargument name="scope_id" value="#scope_id#">
-		</cfinvoke>
-		<cfset scopesQuery = getScopesResult.scopesAreas>
-		<cfset scopeAreasList = valueList(scopesQuery.area_id)>
-
-	<cfelse>
-
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAllAreasIds" returnvariable="getScopesResult">
-			<cfinvokeargument name="scope_id" value="#scope_id#">
-		</cfinvoke>
-		<cfset scopeAreasList = getScopesResult.areasIds>
-
-	</cfif>
-
-</cfif>
 
 <cfprocessingdirective suppresswhitespace="true">
 <div id="areasTreeContainer" style="clear:both">
