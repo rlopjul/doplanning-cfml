@@ -166,11 +166,11 @@
 				</cfif>
 
 				<cfif isDefined("xmlArea.area.XmlAttributes.hide_in_menu")>
-					<cfset with_link=xmlArea.area.XmlAttributes.hide_in_menu>
+					<cfset hide_in_menu=xmlArea.area.XmlAttributes.hide_in_menu>
 				</cfif>
 
 				<cfif isDefined("xmlArea.area.XmlAttributes.menu_type_id")>
-					<cfset with_link=xmlArea.area.XmlAttributes.menu_type_id>
+					<cfset menu_type_id=xmlArea.area.XmlAttributes.menu_type_id>
 				</cfif>
 
 			<cfelseif NOT isDefined("arguments.id")>
@@ -1744,6 +1744,7 @@
 				<cfif len(areaQuery.link[aRow]) GT 0 AND areaQuery.link[aRow] NEQ "NULL">
 					<cfset with_link = "true">
 				</cfif>
+
 			<cfelse>
 
 				<cfset image_id = arguments.parent_image_id>
