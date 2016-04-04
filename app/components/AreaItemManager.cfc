@@ -1950,7 +1950,10 @@
 
 			<cfif itemQuery.area_id EQ arguments.new_area_id>
 
-				<cfthrow message="El elemento ya estaba en esta área">
+				<cfset message = "El elemento ya estaba en esta área">
+				<cfset response = {result=false, message=#message#, item_id=#arguments.item_id#, area_id=#area_id#}>
+
+				<cfreturn response>
 
 			<cfelse>
 
@@ -1981,11 +1984,54 @@
 
 			<cfif itemTypeWeb IS false AND len(new_area_type) GT 0>
 
-				<cfthrow message="No puede mover este elemento a un área web">
+				<cfset message = "No puede mover este elemento a un área web">
+				<cfset response = {result=false, message=#message#, item_id=#arguments.item_id#, area_id=#area_id#}>
+
+				<cfreturn response>
 
 			<cfelseif itemTypeNoWeb IS false AND len(new_area_type) IS 0><!--- Entries, News, Images --->
 
-				<cfthrow message="No puede mover este elemento a un área no web">
+				<cfset message = "No puede mover este elemento a un área no web">
+				<cfset response = {result=false, message=#message#, item_id=#arguments.item_id#, area_id=#area_id#}>
+
+				<cfreturn response>
+
+			</cfif>
+
+			<!--- getArea --->
+			<cfinvoke component="AreaManager" method="getArea" returnvariable="areaQuery">
+				<cfinvokeargument name="get_area_id" value="#itemQuery.area_id#">
+				<cfinvokeargument name="return_type" value="query">
+			</cfinvoke>
+
+			<cfif areaQuery.read_only IS true>
+
+				<cfset message = "El área de origen es de solo lectura">
+				<cfset response = {result=false, message=#message#, item_id=#arguments.item_id#, area_id=#area_id#}>
+
+				<cfreturn response>
+
+			</cfif>
+
+			<!--- getArea --->
+			<cfinvoke component="AreaManager" method="getArea" returnvariable="newAreaQuery">
+				<cfinvokeargument name="get_area_id" value="#arguments.new_area_id#">
+				<cfinvokeargument name="return_type" value="query">
+			</cfinvoke>
+
+			<cfif newAreaQuery.read_only IS true>
+
+				<cfset message = "El área de destino es de solo lectura">
+				<cfset response = {result=false, message=#message#, item_id=#arguments.item_id#, area_id=#area_id#}>
+
+				<cfreturn response>
+
+			<cfelseif newAreaQuery['item_type_#arguments.itemTypeId#_enabled'] IS false>
+
+				<cfset message = "Tipo de elemento deshabilitado en el área de destino">
+				<cfset response = {result=false, message=#message#, item_id=#arguments.item_id#, area_id=#area_id#}>
+
+				<cfreturn response>
 
 			</cfif>
 
