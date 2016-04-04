@@ -14,6 +14,12 @@
 	<cfset noWebEnabled = true>
 </cfif>
 
+<cfif isDefined("URL.responsible_required") AND URL.responsible_required IS true>
+	<cfset responsibleRequired = true>
+<cfelse>
+	<cfset responsibleRequired = false>
+</cfif>
+
 <cfif isDefined("URL.scope") AND isNumeric(URL.scope)>
 	<cfset scope_id = URL.scope>
 </cfif>
@@ -229,6 +235,10 @@
 		<cfif isDefined("URL.multiple")>
 			<cfinvokeargument name="with_input_type" value="checkbox">
 		</cfif>
+		<cfif isDefined("URL.responsible_required") AND URL.responsible_required IS true>
+			<cfinvokeargument name="with_responsible" value="true">
+		</cfif>
+
 		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
 	</cfinvoke>
 
