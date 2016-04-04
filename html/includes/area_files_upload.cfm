@@ -84,14 +84,33 @@ function setFileTypeId(fileTypeId, fileUploadId) {
         //$("##documentUsersContainer").show();
         $("#documentVersionIndex"+fileUploadId).show();
 				$("#publicFile"+fileUploadId).hide();
-
+				$("#groupVersions"+fileUploadId).show();
 
     }else{
 
         //$("##documentUsersContainer").hide();
         $("#documentVersionIndex"+fileUploadId).hide();
 				$("#publicFile"+fileUploadId).show();
+				$("#groupVersions"+fileUploadId).hide();
     }
+
+}
+
+function getCheckBoxChecked(checkBoxId) {
+
+	if( $("#"+checkBoxId).prop('checked') )
+		return "checked";
+	else
+		return "";
+
+}
+
+function isFileTypeIdSelected(fileTypeId) {
+
+	if( $('#fileTypeId_general').val() == fileTypeId )
+		return "selected";
+	else
+		return "";
 
 }
 
@@ -217,6 +236,49 @@ $(function () {
 
 		</cfif>
 
+
+		$('#no_notify_general').change(function() {
+
+        var isChecked = $(this).is(':checked');
+
+				$("input[name='no_notify']").each( function() {
+
+						$(this).prop("checked",isChecked);
+
+				});
+    });
+
+		$('#group_versions_general').change(function() {
+
+        var isChecked = $(this).is(':checked');
+
+				$("input[name='group_versions']").each( function() {
+
+						$(this).prop("checked",isChecked);
+
+				});
+    });
+
+		$('#fileTypeId_general').change(function() {
+
+        var selectedValue = $(this).val();
+
+				if(selectedValue == 3)
+					$("#groupVersionsGeneral").show();
+				else
+					$("#groupVersionsGeneral").hide();
+
+				$("select[name='fileTypeId']").each( function() {
+
+						$(this).val(selectedValue);
+						$(this).trigger("change");
+
+				});
+    });
+
+
+
+
 });
 </script>
 
@@ -224,6 +286,11 @@ $(function () {
     <cfinvokeargument name="user_id" value="#SESSION.user_id#">
     <cfinvokeargument name="format_content" value="default">
     <cfinvokeargument name="return_type" value="query">
+</cfinvoke>
+
+<!--- getClient --->
+<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+	<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 </cfinvoke>
 
 <cfset file_reviser_user = userQuery.id>
@@ -278,11 +345,6 @@ $(function () {
 
                     <input type="checkbox" class="toggle">--->
 
-                    <cfif FindNoCase('MSIE 9',CGI.HTTP_USER_AGENT) IS 0>
-
-                        <div class="well"><i class="icon-plus" style="color:#5BB75B;font-size:22px;"></i>&nbsp;<span lang="es" style="font-size:16px;">Puede arrastrar aquí los archivos que desea subir.</span></div>
-
-                    </cfif>
 
                     <!-- The global file processing state -->
                     <span class="fileupload-process"></span>
@@ -297,6 +359,74 @@ $(function () {
                     <div class="progress-extended">&nbsp;</div>
                 </div>
             </div>
+
+						<div class="form-horizontal well">
+
+							<div class="form-group">
+								<div class="col-sm-12">
+									<span lang="es">Opciones para aplicar a todos los archivos</span>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-12">
+
+									<label for="fileTypeId" class="col-sm-2 control-label" lang="es">Tipo</label>
+
+									<div class="col-sm-10">
+											<select name="fileTypeId_general" id="fileTypeId_general" class="form-control">
+													<option value="1" selected="selected" lang="es">Archivo de usuario</option>
+													<cfif APPLICATION.moduleAreaFilesLite IS true>
+														<option value="2" lang="es">Archivo de área sin circuito de calidad</option>
+														<cfif len(area_type) IS 0>
+															<option value="3" lang="es">Archivo de área con circuito de calidad</option>
+														</cfif>
+													</cfif>
+											</select>
+									</div>
+
+								</div>
+							</div>
+
+							<cfif clientQuery.force_notifications IS false>
+							<div class="form-group">
+								<div class="col-sm-11 col-sm-offset-1">
+
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="no_notify_general" id="no_notify_general" value="true" checked> <span lang="es">NO enviar notificación por email</span>
+											</label>
+										</div>
+
+								</div>
+							</div>
+							</cfif>
+
+							<div class="form-group" id="groupVersionsGeneral" style="display:none">
+								<div class="col-sm-11 col-sm-offset-1">
+
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="group_versions_general" id="group_versions_general" value="true"> <span lang="es">Agrupar versiones de archivos</span>
+												<p class="help-block">Agrupa en un único archivo de área los archivos con el mismo nombre y en cuyo nombre se incluye el número de versión al final separado por un espacio. Ejemplos: <i>Archivo de prueba 1.doc, Archivo de prueba 2.doc, Archivo de prueba 3.doc</i></p>
+											</label>
+										</div>
+
+								</div>
+							</div>
+
+						</div>
+
+						<cfif FindNoCase('MSIE 9',CGI.HTTP_USER_AGENT) IS 0>
+						<div class="row">
+							<div class="col-sm-12">
+
+                  <div class="well"><i class="icon-plus" style="color:#5BB75B;font-size:22px;"></i>&nbsp;<span lang="es" style="font-size:16px;">Puede arrastrar aquí los archivos que desea subir.</span></div>
+
+							</div>
+						</div>
+						</cfif>
+
 
             <!-- The table listing the files available for upload/download -->
             <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
@@ -351,9 +481,15 @@ $(function () {
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 <cfoutput>
-{% for (var i=0, file; file=o.files[i]; i++) { %}
+{%
+	var filesAdded = new Array();
 
-    {% curFile = curFile+1; %}
+	for (var i=0, file; file=o.files[i]; i++) {
+
+			curFile = curFile+1;
+
+			filesAdded[i] = curFile;
+%}
 
     <tr class="template-upload fade">
         <td>
@@ -380,11 +516,11 @@ $(function () {
 
                     <div class="col-sm-10">
                         <select name="fileTypeId" id="fileTypeId{%=curFile%}" class="form-control" onchange="setFileTypeId($('##fileTypeId{%=curFile%}').val(),{%=curFile%});">
-                            <option value="1" selected="selected" lang="es">Archivo de usuario</option>
+                            <option value="1" {%=isFileTypeIdSelected(1)%} lang="es">Archivo de usuario</option>
 														<cfif APPLICATION.moduleAreaFilesLite IS true>
-															<option value="2" lang="es">Archivo de área sin circuito de calidad</option>
+															<option value="2"{%=isFileTypeIdSelected(2)%} lang="es">Archivo de área sin circuito de calidad</option>
 															<cfif len(area_type) IS 0>
-	                            	<option value="3" lang="es">Archivo de área con circuito de calidad</option>
+	                            	<option value="3" {%=isFileTypeIdSelected(3)%} lang="es">Archivo de área con circuito de calidad</option>
 															</cfif>
 														</cfif>
                         </select>
@@ -544,13 +680,6 @@ $(function () {
 
 								</div>
 
-
-
-								<!--- getClient --->
-								<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
-									<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-								</cfinvoke>
-
 								<cfif clientQuery.force_notifications IS false>
 
 									<div class="form-group" style="margin-bottom:0">
@@ -559,7 +688,7 @@ $(function () {
 
 											<div class="checkbox">
 												<label>
-													<input type="checkbox" name="no_notify" id="no_notify" value="true"> <span lang="es">NO enviar notificación por email</span>
+													<input type="checkbox" name="no_notify" id="no_notify{%=curFile%}" value="true" {%=getCheckBoxChecked('no_notify_general')%}> <span lang="es">NO enviar notificación por email</span>
 												</label>
 											</div>
 
@@ -569,6 +698,19 @@ $(function () {
 
 								</cfif>
 
+								<div class="form-group" style="margin-bottom:0;display:none" id="groupVersions{%=curFile%}">
+
+									<div class="col-sm-11 col-sm-offset-1">
+
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="group_versions" id="group_versions{%=curFile%}" value="true" {%=getCheckBoxChecked('group_versions_general')%}> <span lang="es">Agrupar versiones de archivos</span>
+											</label>
+										</div>
+
+									</div>
+
+								</div>
 
             </div>
 
@@ -597,7 +739,27 @@ $(function () {
 
     </tr>
 
+
 {% } %}
+
+{% for (var i=0, file; file=o.files[i]; i++) {
+
+			//Waits for template process
+
+			/*setTimeout(function(){
+				  setFileTypeId( $('##fileTypeId_general').val(), filesAdded[i] );
+				}, 100);*/
+
+			function changeNewFileType () {
+
+				for (var i=0, file; file=o.files[i]; i++) {
+					setFileTypeId( $('##fileTypeId_general').val(), filesAdded[i]  );
+				}
+
+			}
+			setTimeout(	changeNewFileType , 200);
+
+} %}
 </cfoutput>
 </script>
 <!-- The template to display files available for download -->

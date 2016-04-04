@@ -198,7 +198,7 @@
 
 				<!---  Checking if user is correct   --->
 				<cfquery name="loginQuery" datasource="#client_dsn#">
-					SELECT users.id, users.number_of_connections, users.language, users.enabled
+					SELECT users.id, users.number_of_connections, users.language, users.enabled, users.user_administrator, users.area_admin_administrator
 					FROM #table# AS users
 					WHERE users.#login_ldap_column# = <cfqueryparam value="#user_login#" cfsqltype="cf_sql_varchar">
 					<cfif arguments.ldap_id EQ "hvn" AND isDefined("email_hvn") AND len(email_hvn) GT 0>
@@ -218,6 +218,8 @@
 							<cfinvokeargument name="user_login" value="#arguments.user_login#">
 							<cfinvokeargument name="password" value="#password_ldap#">
 							<cfinvokeargument name="user_language" value="#loginQuery.language#">
+							<cfinvokeargument name="user_administrator" value="#loginQuery.user_administrator#">
+							<cfinvokeargument name="area_admin_administrator" value="#loginQuery.area_admin_administrator#">
 						</cfinvoke>
 
 						<!--- <cfsavecontent variable="xmlResponse">
@@ -266,6 +268,8 @@
 								<cfinvokeargument name="user_login" value="#arguments.user_login#">
 								<cfinvokeargument name="password" value="#password_ldap#">
 								<cfinvokeargument name="user_language" value="#createUserFromLdapResponse.language#">
+								<cfinvokeargument name="user_administrator" value="#createUserFromLdapResponse.user_administrator#">
+								<cfinvokeargument name="area_admin_administrator" value="#createUserFromLdapResponse.area_admin_administrator#">	
 							</cfinvoke>
 
 							<cfreturn loginResult>

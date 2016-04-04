@@ -1,5 +1,5 @@
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>
-	
+
 	<cfset area_id = URL.area>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getAreaTypeWeb" returnvariable="areaTypeResult">
@@ -35,11 +35,11 @@
 				    		font-size: 12px;
 				    	}
 				    	h4{
-							font-size: 14px;				    		
+							font-size: 14px;
 				    	}
 				    </style>
-			   </head>	
-			   
+			   </head>
+
 			   <body style="margin:0;padding:0;width:100%">
 
 			   		<!---<table border="1" width="100%" bordercolor="##000000" bgolor="##000000">
@@ -48,9 +48,9 @@
 			   			</tr>
 			   		</table>--->
 			   		<h2>#area_name#</h2><br/>
-			 
+
 					<cfif numItems GT 0>
-						
+
 						<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputAllItemsFullList">
 							<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
 							<cfinvokeargument name="return_path" value="#APPLICATION.htmlPath#/">
@@ -59,7 +59,7 @@
 						</cfinvoke>
 
 					</cfif>
-				
+
 			   </body>
 		   </html>
 		</cfsavecontent>
@@ -76,7 +76,7 @@
 		   <cfdocumentitem type="footer">
 			   <body>
 				   	<p style="font-size: 0.5em;" align="right">#cfdocument.currentpagenumber# / #cfdocument.totalpagecount#</p>
-			   </body>  
+			   </body>
 		   </cfdocumentitem>
 
 		   #documentContent#

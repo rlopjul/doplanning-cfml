@@ -1,7 +1,3 @@
-<!---checkAdminAccess--->
-<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAdminAccess">
-</cfinvoke>
-
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>
 
 <cfset area_id = URL.area>
@@ -25,6 +21,7 @@
 			<cfinvokeargument name="open_url_target" value="userAreaIframe">
 			<cfinvokeargument name="filter_enabled" value="false">
 			<cfinvokeargument name="adminUsers" value="true">
+			<cfinvokeargument name="openRowOnSelect" value="true">
 		</cfinvoke>
 
 	<cfelse>

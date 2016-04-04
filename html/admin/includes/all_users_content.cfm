@@ -29,21 +29,24 @@ page_type
 	<div class="navbar navbar-default navbar-static-top navbar_admin" style="margin-bottom:8px;">
 		<div class="container-fluid">
 			<span class="navbar-brand" lang="es">Usuarios de la organización</span>
-			<cfif SESSION.client_administrator IS SESSION.user_id>
+			<cfif SESSION.user_administrator>
 				<a class="btn btn-primary btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="font-size:14px"></i> <span lang="es">Nuevo usuario</span></a><!---color:##5BB75B;--->
 
 				<cfif page_type IS 2>
 
-					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/all_administrators.cfm');"><i class="icon-group icon-white"></i> <span lang="es">Administradores</span></a>
-					<!---<cfif SESSION.client_abb NEQ "hcs">--->
-						<!---<div class="btn-group">--->
+					<cfif SESSION.area_admin_administrator>
+						<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/all_administrators.cfm');"><i class="icon-group icon-white"></i> <span lang="es">Administradores</span></a>
+					</cfif>
+
+					<cfif SESSION.user_administrator>
+						<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/users_export.cfm');" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> <span lang="es">Exportar usuarios</span></a>
+
+						<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/users_import.cfm');"><i class="icon-edit icon-circle-arrow-up"></i> <span lang="es">Importar usuarios</span></a>
+					</cfif>
+
+					<cfif SESSION.client_administrator IS SESSION.user_id>
 							<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/client_options.cfm');"><i class="icon-edit icon-white"></i> <span lang="es">Opciones de la organización</span></a>
-						<!---</div>--->
-					<!---</cfif>--->
-
-					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/users_export.cfm');" title="Exportar usuarios"><i class="icon-circle-arrow-down"></i> <span lang="es">Exportar usuarios</span></a>
-
-					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/users_import.cfm');"><i class="icon-edit icon-circle-arrow-up"></i> <span lang="es">Importar usuarios</span></a>
+					</cfif>
 
 				</cfif>
 
@@ -93,6 +96,7 @@ page_type
 				<cfif page_type IS 1>
 					<cfinvokeargument name="filter_enabled" value="true">
 					<cfinvokeargument name="select_enabled" value="true">
+					<cfinvokeargument name="openRowOnSelect" value="true">
 				</cfif>
 
 				<cfinvokeargument name="showAdminFields" value="true">

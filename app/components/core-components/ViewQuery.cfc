@@ -10,7 +10,7 @@
 
 
 	<!---getView--->
-		
+
 	<cffunction name="getView" output="false" returntype="query" access="public">
 		<cfargument name="view_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -20,19 +20,19 @@
 		<cfargument name="published" type="boolean" required="false" default="true">
 
 		<cfargument name="client_abb" type="string" required="true">
-		<cfargument name="client_dsn" type="string" required="true">		
-				
+		<cfargument name="client_dsn" type="string" required="true">
+
 		<cfset var method = "getView">
 
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-			
+
 			<cfquery name="getView" datasource="#client_dsn#">
 				SELECT table_views.id, table_views.id AS view_id, table_views.user_in_charge, table_views.title, table_views.description, table_views.area_id, table_views.table_id,
-				table_views.include_creation_date, table_views.include_last_update_date, table_views.include_insert_user, table_views.include_update_user, table_views.creation_date_position, table_views.last_update_date_position, table_views.insert_user_position, table_views.update_user_position, 
+				table_views.include_creation_date, table_views.include_last_update_date, table_views.include_insert_user, table_views.include_update_user, table_views.creation_date_position, table_views.last_update_date_position, table_views.insert_user_position, table_views.update_user_position,
 				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				<cfif arguments.parse_dates IS true>
-				, DATE_FORMAT(CONVERT_TZ(table_views.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date 
-				, DATE_FORMAT(CONVERT_TZ(table_views.last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date 
+				, DATE_FORMAT(CONVERT_TZ(table_views.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
+				, DATE_FORMAT(CONVERT_TZ(table_views.last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date
 				<cfelse>
 					, table_views.creation_date, table_views.last_update_date
 				</cfif>
@@ -48,7 +48,7 @@
 					<cfelse>
 					, table_views.publication_date
 					</cfif>
-					, table_views.publication_validated
+					, table_views.publication_validated, tables.publication_restricted
 				</cfif>
 				FROM `#client_abb#_#tableTypeTable#_views` AS table_views
 				INNER JOIN #client_abb#_users AS users ON table_views.user_in_charge = users.id
@@ -65,14 +65,14 @@
 					</cfif>
 				</cfif>;
 			</cfquery>
-		
+
 		<cfreturn getView>
-		
+
 	</cffunction>
 
 
 	<!---getTableViews--->
-		
+
 	<cffunction name="getTableViews" output="false" returntype="query" access="public">
 		<cfargument name="table_id" type="numeric" required="true">
 		<cfargument name="tableTypeId" type="numeric" required="true">
@@ -84,14 +84,14 @@
 
 		<cfset var method = "getTableViews">
 
-			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">		
-							
+			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
+
 			<cfquery name="getTableViewsQuery" datasource="#client_dsn#">
 				SELECT table_views.id as view_id, table_views.title, table_views.area_id, areas.name AS area_name
 				, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				<cfif arguments.parse_dates IS true>
-				, DATE_FORMAT(CONVERT_TZ(table_views.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date 
-				, DATE_FORMAT(CONVERT_TZ(table_views.last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date 
+				, DATE_FORMAT(CONVERT_TZ(table_views.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
+				, DATE_FORMAT(CONVERT_TZ(table_views.last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date
 				</cfif>
 				<cfif arguments.with_table IS true>
 				, tables.area_id, tables.general <!--- , tables.structure_available--->
@@ -105,9 +105,9 @@
 				WHERE table_id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
 				ORDER BY view_id DESC;
 			</cfquery>
-				
+
 		<cfreturn getTableViewsQuery>
-		
+
 	</cffunction>
 
 </cfcomponent>

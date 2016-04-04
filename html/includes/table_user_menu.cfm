@@ -4,7 +4,7 @@
 <cfif isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
 
 	<cfset table_id = URL[tableTypeName]>
-	
+
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getTable" returnvariable="table">
 		<cfinvokeargument name="table_id" value="#table_id#"/>
 		<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
@@ -15,16 +15,18 @@
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_id.cfm">
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
 
-	<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
+	<cfif NOT isDefined("includeAppMenu") OR includeAppMenu IS true>
+		<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
+	</cfif>
 
 	<cfif isDefined("URL.return_page") AND len(URL.return_page) GT 0>
 		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##URL.return_page#")>
 	<cfelse>
 		<cfset url_return_page = "&return_page="&URLEncodedFormat("#return_path##tableTypeName#_users.cfm?#tableTypeName#=#table_id#")>
 	</cfif>
-	
+
 	<!---is_user_table_area_responsible--->
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_table_area_responsible">				
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_table_area_responsible">
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
 
@@ -34,7 +36,7 @@
 		<script type="text/javascript">
 
 			function confirmRemoveUserFromTable() {
-		
+
 				var message_confirm = "¿Seguro que desea quitar este usuario de la #tableTypeNameEs#?";
 				return confirm(message_confirm);
 			}

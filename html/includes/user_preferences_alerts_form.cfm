@@ -514,7 +514,7 @@
 
 					</cfif>
 
-					<cfif APPLICATION.title EQ "DoPlanning">
+					<cfif APPLICATION.title EQ "DoPlanning" AND SESSION.client_abb NEQ "omars">
 
 						<div class="form_separator"></div>
 
