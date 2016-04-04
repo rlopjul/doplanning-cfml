@@ -63,10 +63,6 @@
 
 								var totalItems = $.serializeCFJSON(temp).data;--->
 
-								// var totalItems = data.totalItems;
-
-								// $("##dataTextArea").val(JSON.stringify(totalItems));
-
 
 							}else{
 								alert(data.message);
