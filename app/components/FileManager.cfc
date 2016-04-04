@@ -4893,7 +4893,7 @@
 
 					<cfreturn response>
 
-				<cfelseif newAreaQuery['item_type_#arguments.itemTypeId#_enabled'] IS false>
+				<cfelseif newAreaQuery['item_type_#fileItemTypeId#_enabled'] IS false>
 
 					<cfset message = "Tipo de elemento deshabilitado en el área de destino">
 					<cfset response = {result=false, message=#message#, file_id=#arguments.file_id#}>
