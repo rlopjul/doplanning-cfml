@@ -1954,10 +1954,21 @@
 
 			<cfelse>
 
-				<!--- checkAreaAccess --->
-				<cfinvoke component="AreaManager" method="checkAreaAccess">
-					<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
-				</cfinvoke>
+				<cfif arguments.itemTypeId IS NOT 11 AND arguments.itemTypeId IS NOT 12 AND arguments.itemTypeId IS NOT 13 AND arguments.itemTypeId IS NOT 17><!---IS NOT table or mailing--->
+
+					<!--- checkAreaAccess --->
+					<cfinvoke component="AreaManager" method="checkAreaAccess">
+						<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+					</cfinvoke>
+
+				<cfelse>
+
+					<!---checkAreaResponsibleAccess--->
+					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+						<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+					</cfinvoke>
+
+				</cfif>
 
 			</cfif>
 
