@@ -3066,7 +3066,7 @@
 	<cffunction name="getArea" returntype="any" access="public">
 		<cfargument name="get_area_id" type="numeric" required="yes">
 		<cfargument name="format_content" type="string" required="no" default="default">
-        <cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
+    <cfargument name="return_type" type="string" required="no" default="xml"><!---xml/object/query--->
 
 		<cfset var method = "getArea">
 
@@ -3118,9 +3118,9 @@
 
 				<cfif arguments.return_type EQ "query">
 
-                    <cfset response = selectAreaQuery>
+        	<cfset response = selectAreaQuery>
 
-                <cfelse>
+        <cfelse>
 
 					<cfinvoke component="AreaManager" method="objectArea" returnvariable="area">
 						<cfinvokeargument name="id" value="#selectAreaQuery.id#">
@@ -3140,19 +3140,19 @@
 						<cfinvokeargument name="menu_type_id" value="#selectAreaQuery.menu_type_id#">
 					</cfinvoke>
 
-	                <cfif arguments.return_type EQ "object">
+          <cfif arguments.return_type EQ "object">
 
-	                    <cfset response = area>
+              <cfset response = area>
 
-	                <cfelse>
+          <cfelse>
 
-	                	<cfinvoke component="AreaManager" method="xmlArea" returnvariable="xmlResponseContent">
-	                        <cfinvokeargument name="objectArea" value="#area#">
-	                    </cfinvoke>
+          	<cfinvoke component="AreaManager" method="xmlArea" returnvariable="xmlResponseContent">
+                  <cfinvokeargument name="objectArea" value="#area#">
+              </cfinvoke>
 
-	                    <cfset response = xmlResponseContent>
+              <cfset response = xmlResponseContent>
 
-	                </cfif>
+          </cfif>
 
 				</cfif>
 
