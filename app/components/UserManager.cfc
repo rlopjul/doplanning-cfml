@@ -915,7 +915,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfif SESSION.client_administrator NEQ SESSION.user_id>
+			<cfif SESSION.user_administrator IS false>
 
 				<cfif isDefined("arguments.row_id")>
 
@@ -3357,14 +3357,16 @@
 							<cfset rowValues["internal_user"] = trim(curRow[9])>
 							<cfset rowValues["enabled"] = trim(curRow[10])>
 							<cfset rowValues["verified"] = trim(curRow[11])>
+							<cfset rowValues["user_administrator"] = trim(curRow[12])>
+							<cfset rowValues["area_admin_administrator"] = trim(curRow[13])>
 							<cfif SESSION.client_abb EQ "hcs">
-								<cfset rowValues["perfil_cabecera"] = trim(curRow[12])>
+								<cfset rowValues["perfil_cabecera"] = trim(curRow[14])>
 							</cfif>
 
 							<cfif SESSION.client_abb EQ "hcs">
-								<cfset curColumn = 13>
+								<cfset curColumn = 15>
 							<cfelse>
-								<cfset curColumn = 12>
+								<cfset curColumn = 14>
 							</cfif>
 
 							<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
@@ -3412,7 +3414,6 @@
 								<cfinvokeargument name="twitter_url" value="">
 								<cfinvokeargument name="language" value="#APPLICATION.defaultLanguage#">
 								<cfinvokeargument name="hide_not_allowed_areas" value="true">
-								<cfinvokeargument name="user_administrator" value="false">
 								<cfinvokeargument name="password" value="#password#">
 								<cfinvokeargument name="password_confirmation" value="#password#">
 								<cfinvokeargument name="notify_admin" value="false">

@@ -1349,7 +1349,7 @@
 
 				<cfinclude template="includes/logRecord.cfm">
 
-				<cfset response = {result=true, user_id=new_user_id, language=#arguments.language#, client_administrator=#arguments.client_administrator#, area_admin_administrator=#arguments.area_admin_administrator#}>
+				<cfset response = {result=true, user_id=new_user_id, language=#arguments.language#, user_administrator=#arguments.user_administrator#, area_admin_administrator=#arguments.area_admin_administrator#}>
 
 
 			<cfelse><!---The client does not exist--->
