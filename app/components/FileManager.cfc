@@ -4865,6 +4865,44 @@
 
 			<cfelse>
 
+				<!--- getArea --->
+				<cfinvoke component="AreaManager" method="getArea" returnvariable="areaQuery">
+					<cfinvokeargument name="get_area_id" value="#fileQuery.area_id#">
+					<cfinvokeargument name="return_type" value="query">
+				</cfinvoke>
+
+				<cfif areaQuery.read_only IS true>
+
+					<cfset message = "El área de origen es de solo lectura">
+					<cfset response = {result=false, message=#message#, file_id=#arguments.file_id#}>
+
+					<cfreturn response>
+
+				</cfif>
+
+				<!--- getArea --->
+				<cfinvoke component="AreaManager" method="getArea" returnvariable="newAreaQuery">
+					<cfinvokeargument name="get_area_id" value="#arguments.new_area_id#">
+					<cfinvokeargument name="return_type" value="query">
+				</cfinvoke>
+
+				<cfif newAreaQuery.read_only IS true>
+
+					<cfset message = "El área de destino es de solo lectura">
+					<cfset response = {result=false, message=#message#, file_id=#arguments.file_id#}>
+
+					<cfreturn response>
+
+				<cfelseif newAreaQuery['item_type_#arguments.itemTypeId#_enabled'] IS false>
+
+					<cfset message = "Tipo de elemento deshabilitado en el área de destino">
+					<cfset response = {result=false, message=#message#, file_id=#arguments.file_id#}>
+
+					<cfreturn response>
+
+				</cfif>
+
+
 				<!--- associateFileToArea --->
 				<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="associateFileResult">
 					<cfinvokeargument name="objectFile" value="#fileQuery#">
