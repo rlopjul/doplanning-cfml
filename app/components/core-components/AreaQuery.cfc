@@ -138,7 +138,7 @@
 		<cfset var method = "getSubAreas">
 
 			<cfquery name="subAreasQuery" datasource="#client_dsn#">
-				SELECT id, <cfif arguments.remove_order IS true>SUBSTRING_INDEX(name, '.-', -1) AS name<cfelse>name</cfif>, parent_id, creation_date, user_in_charge, image_id, link, type, menu_type_id, hide_in_menu, url_id
+				SELECT id, <cfif arguments.remove_order IS true>SUBSTRING_INDEX(name, '.-', -1) AS name<cfelse>name</cfif>, parent_id, creation_date, user_in_charge, image_id, link, type, menu_type_id, hide_in_menu, url_id, read_only
 				<cfif arguments.with_description IS true>
 					, description
 				</cfif>

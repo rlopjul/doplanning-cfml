@@ -20,6 +20,10 @@
 	<cfset responsibleRequired = false>
 </cfif>
 
+<cfif isDefined("URL.read_only")>
+	<cfset readOnly = URL.read_only>
+</cfif>
+
 <cfif isDefined("URL.scope") AND isNumeric(URL.scope)>
 	<cfset scope_id = URL.scope>
 </cfif>
@@ -41,6 +45,9 @@
 		var webEnabled = #webEnabled#;
 		var noWebEnabled = #noWebEnabled#;
 		var responsibleRequired = #responsibleRequired#;
+		<cfif isDefined("readOnly")>
+		var readOnly = #readOnly#;
+		</cfif>
 		<cfif isDefined("itemTypeId")>
 		var itemTypeId = #itemTypeId#;
 		</cfif>
@@ -143,7 +150,18 @@
 
 				if( responsibleRequired == true && areaNode.data("responsible") == false ) {
 					alert("No tiene permiso de responsable en esta área");
-					return;					
+					return;
+				}
+
+				if (typeof readOnly !== 'undefined') {
+
+					if( readOnly != areaNode.data("read-only") ) {
+
+						alert("Área de solo lectura");
+						return;
+
+					}
+
 				}
 
 				var areaName = $.trim( $(areaNode).find("a:first").text() );

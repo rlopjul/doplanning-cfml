@@ -1608,7 +1608,7 @@
 			</cfif>
 
 			<cfquery name="areaAttsQuery" datasource="#client_dsn#">
-				SELECT id, name, parent_id, creation_date, user_in_charge, image_id, link, type
+				SELECT id, name, parent_id, creation_date, user_in_charge, image_id, link, type, read_only
 				FROM #client_abb#_areas AS areas
 				WHERE areas.id = #arguments.area_id#
 				ORDER BY areas.name ASC;
@@ -1789,7 +1789,7 @@
 
 			<cfif whole_tree EQ true OR userBelongsToArea EQ true>
 
-				<cfset xmlPart = '<area id="#area_id#" name="#xmlFormat(areaQuery.name[aRow])#" parent_id="#areaQuery.parent_id[aRow]#" allowed="#NumberFormat(userBelongsToArea)#" responsible="#NumberFormat(isUserAreaResponsible)#" with_link="#NumberFormat(with_link)#" type="#curAreaType#">'><!--- label="#xmlFormat(areaQuery.name[aRow])#" creation_date="#areaQuery.creation_date[aRow]#" image_id="#image_id#" user_in_charge="#areaQuery.user_in_charge[aRow]#" --->
+				<cfset xmlPart = '<area id="#area_id#" name="#xmlFormat(areaQuery.name[aRow])#" parent_id="#areaQuery.parent_id[aRow]#" allowed="#NumberFormat(userBelongsToArea)#" responsible="#NumberFormat(isUserAreaResponsible)#" read_only="#NumberFormat(areaQuery.read_only)#" with_link="#NumberFormat(with_link)#" type="#curAreaType#">'><!--- label="#xmlFormat(areaQuery.name[aRow])#" creation_date="#areaQuery.creation_date[aRow]#" image_id="#image_id#" user_in_charge="#areaQuery.user_in_charge[aRow]#" --->
 
 			</cfif>
 

@@ -49,7 +49,7 @@
 			<cfset responsibleRequired = 0>
 		</cfif>
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=#webEnabled#&no_web_enabled=#noWebEnabled#&responsible_required=#responsibleRequired#');
+		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=#webEnabled#&no_web_enabled=#noWebEnabled#&responsible_required=#responsibleRequired#&read_only=false');
 
 	}
 
