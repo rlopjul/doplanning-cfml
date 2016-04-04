@@ -530,6 +530,7 @@
 		<cfargument name="public" type="boolean" required="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
+		<cfargument name="group_versions" type="boolean" required="false" default="false">
 
 		<cfset var response = structNew()>
 

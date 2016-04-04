@@ -43,7 +43,13 @@
 			<cfset noWebEnabled = 0>
 		</cfif>
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=#webEnabled#&no_web_enabled=#noWebEnabled#');
+		<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 17>
+			<cfset responsibleRequired = 1>
+		<cfelse>
+			<cfset responsibleRequired = 0>
+		</cfif>
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=#webEnabled#&no_web_enabled=#noWebEnabled#&responsible_required=#responsibleRequired#');
 
 	}
 

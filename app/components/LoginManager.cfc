@@ -36,40 +36,9 @@
 			<cfif getAuthUser() NEQ "">
 				<cflogout>
 
-				<!---Check if SESSION vars exists--->
-				<cfif isDefined("SESSION.user_id")>
-					<cfset StructDelete(SESSION, "user_id")>
-				</cfif>
-				<cfif isDefined("SESSION.client_abb")>
-					<cfset StructDelete(SESSION, "client_abb")>
-				</cfif>
-				<cfif isDefined("SESSION.user_language")>
-					<cfset StructDelete(SESSION, "user_language")>
-				</cfif>
-				<cfif isDefined("SESSION.client_id")>
-					<cfset StructDelete(SESSION, "client_id")>
-				</cfif>
-				<cfif isDefined("SESSION.client_name")>
-					<cfset StructDelete(SESSION, "client_name")>
-				</cfif>
-				<cfif isDefined("SESSION.client_app_title")>
-					<cfset StructDelete(SESSION, "client_app_title")>
-				</cfif>
-				<cfif isDefined("SESSION.client_administrator")>
-					<cfset StructDelete(SESSION, "client_administrator")>
-				</cfif>
-				<!---<cfif isDefined("SESSION.app_client_version")>
-					<cfset StructDelete(SESSION, "app_client_version")>
-				</cfif>--->
-				<cfif isDefined("SESSION.client_email_support")>
-					<cfset StructDelete(SESSION, "client_email_support")>
-				</cfif>
-				<cfif isDefined("SESSION.client_email_from")>
-					<cfset StructDelete(SESSION, "client_email_from")>
-				</cfif>
-				<!---<cfif isDefined("SESSION.client_force_notifications")>
-					<cfset StructDelete(SESSION, "client_force_notifications")>
-				</cfif>--->
+				<cfinvoke component="LoginManager" method="clearSessionVars">
+				</cfinvoke>
+
 			</cfif>
 
 			<cfif APPLICATION.moduleLdapUsers IS false OR arguments.ldap_id EQ "doplanning">
@@ -135,7 +104,7 @@
 
 				<!---  Checking if both user name and password are corrects   --->
 				<cfquery name="loginQuery" datasource="#client_dsn#">
-					SELECT users.id, users.number_of_connections, users.language, users.enabled
+					SELECT users.id, users.number_of_connections, users.language, users.enabled, users.user_administrator, users.area_admin_administrator
 					FROM #table# AS users
 					WHERE users.email = <cfqueryparam value="#arguments.login#" cfsqltype="cf_sql_varchar">
 					AND password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">;
@@ -153,6 +122,8 @@
 							<cfinvokeargument name="user_login" value="#arguments.login#">
 							<cfinvokeargument name="password" value="#arguments.password#">
 							<cfinvokeargument name="user_language" value="#loginQuery.language#">
+							<cfinvokeargument name="user_administrator" value="#loginQuery.user_administrator#">
+							<cfinvokeargument name="area_admin_administrator" value="#loginQuery.area_admin_administrator#">
 						</cfinvoke>
 
 						<!---Aquí no se guarda log porque ya se ha guardado en el método anterior--->
@@ -190,6 +161,52 @@
 	</cffunction>
 
 
+	<cffunction name="clearSessionVars" returntype="void" output="false" access="public">
+
+		<!---Check if SESSION vars exists--->
+		<cfif isDefined("SESSION.user_id")>
+			<cfset StructDelete(SESSION, "user_id")>
+		</cfif>
+		<cfif isDefined("SESSION.client_abb")>
+			<cfset StructDelete(SESSION, "client_abb")>
+		</cfif>
+		<cfif isDefined("SESSION.user_language")>
+			<cfset StructDelete(SESSION, "user_language")>
+		</cfif>
+		<cfif isDefined("SESSION.user_administrator")>
+			<cfset StructDelete(SESSION, "user_administrator")>
+		</cfif>
+		<cfif isDefined("SESSION.area_admin_administrator")>
+			<cfset StructDelete(SESSION, "area_admin_administrator")>
+		</cfif>
+		<cfif isDefined("SESSION.client_id")>
+			<cfset StructDelete(SESSION, "client_id")>
+		</cfif>
+		<cfif isDefined("SESSION.client_name")>
+			<cfset StructDelete(SESSION, "client_name")>
+		</cfif>
+		<cfif isDefined("SESSION.client_app_title")>
+			<cfset StructDelete(SESSION, "client_app_title")>
+		</cfif>
+		<cfif isDefined("SESSION.client_administrator")>
+			<cfset StructDelete(SESSION, "client_administrator")>
+		</cfif>
+		<!---<cfif isDefined("SESSION.app_client_version")>
+			<cfset StructDelete(SESSION, "app_client_version")>
+		</cfif>--->
+		<cfif isDefined("SESSION.client_email_support")>
+			<cfset StructDelete(SESSION, "client_email_support")>
+		</cfif>
+		<cfif isDefined("SESSION.client_email_from")>
+			<cfset StructDelete(SESSION, "client_email_from")>
+		</cfif>
+		<!---<cfif isDefined("SESSION.client_force_notifications")>
+			<cfset StructDelete(SESSION, "client_force_notifications")>
+		</cfif>--->
+
+	</cffunction>
+
+
 	<!--- loginUserInApplication --->
 
 	<cffunction name="loginUserInApplication" returntype="struct" output="false" access="public">
@@ -198,6 +215,8 @@
 		<cfargument name="user_login" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
 		<cfargument name="user_language" type="string" required="true">
+		<cfargument name="user_administrator" type="boolean" required="true">
+		<cfargument name="area_admin_administrator" type="boolean" required="true">
 
 		<cfset var method = "loginUserInApplication">
 
@@ -213,10 +232,18 @@
 			<cflogin>
 
 				<!---Save user_id, client_abb and language in SESSION--->
-				<cfset SESSION.user_id = #user_id#>
+				<cfset SESSION.user_id = arguments.user_id>
 				<cfset SESSION.client_abb = arguments.client_abb>
 				<!---Hay que obtener de las preferencias el idioma--->
 				<cfset SESSION.user_language = arguments.user_language>
+
+				<cfif objectClient.administrator_id EQ arguments.user_id>
+					<cfset SESSION.user_administrator = true>
+					<cfset SESSION.area_admin_administrator = true>
+				<cfelse>
+					<cfset SESSION.user_administrator = arguments.user_administrator>
+					<cfset SESSION.area_admin_administrator = arguments.area_admin_administrator>
+				</cfif>
 
 				<cfset SESSION.client_id = objectClient.id>
 				<cfset SESSION.client_name = objectClient.name>
@@ -309,40 +336,8 @@
 
 			<cflogout>
 
-			<!---Check if SESSION vars exists--->
-			<cfif isDefined("SESSION.user_id")>
-				<cfset StructDelete(SESSION, "user_id")>
-			</cfif>
-			<cfif isDefined("SESSION.client_abb")>
-				<cfset StructDelete(SESSION, "client_abb")>
-			</cfif>
-			<cfif isDefined("SESSION.user_language")>
-				<cfset StructDelete(SESSION, "user_language")>
-			</cfif>
-			<cfif isDefined("SESSION.client_id")>
-				<cfset StructDelete(SESSION, "client_id")>
-			</cfif>
-			<cfif isDefined("SESSION.client_name")>
-				<cfset StructDelete(SESSION, "client_name")>
-			</cfif>
-			<cfif isDefined("SESSION.client_app_title")>
-				<cfset StructDelete(SESSION, "client_app_title")>
-			</cfif>
-			<cfif isDefined("SESSION.client_administrator")>
-				<cfset StructDelete(SESSION, "client_administrator")>
-			</cfif>
-			<!---<cfif isDefined("SESSION.app_client_version")>
-				<cfset StructDelete(SESSION, "app_client_version")>
-			</cfif>--->
-			<cfif isDefined("SESSION.client_email_support")>
-				<cfset StructDelete(SESSION, "client_email_support")>
-			</cfif>
-			<cfif isDefined("SESSION.client_email_from")>
-				<cfset StructDelete(SESSION, "client_email_from")>
-			</cfif>
-			<!---<cfif isDefined("SESSION.client_force_notifications")>
-				<cfset StructDelete(SESSION, "client_force_notifications")>
-			</cfif>--->
+			<cfinvoke component="LoginManager" method="clearSessionVars">
+			</cfinvoke>
 
 			<!---The log is saved before in this method--->
 

@@ -628,7 +628,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<cfinclude template="includes/checkUserAdminAccess.cfm">
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="createUser" argumentcollection="#arguments#" returnvariable="response">
 				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
@@ -671,6 +671,7 @@
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="user_administrator" type="boolean" required="false" default="false">
+		<cfargument name="area_admin_administrator" type="boolean" required="false" default="false">
 		<cfargument name="verified" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
@@ -702,7 +703,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfif arguments.update_user_id NEQ SESSION.user_id>
-				<cfinclude template="includes/checkAdminAccess.cfm">
+				<cfinclude template="includes/checkUserAdminAccess.cfm">
 			</cfif>
 
 			<cfinvoke component="UserManager" method="getUser" returnvariable="userQuery">
@@ -767,10 +768,11 @@
 						</cfif>
 					</cfif>
 
-					<cfif arguments.adminFields IS true AND SESSION.client_administrator EQ SESSION.user_id>
+					<cfif arguments.adminFields IS true AND SESSION.user_administrator>
 						, information = <cfqueryparam value="#arguments.information#" cfsqltype="cf_sql_longvarchar">
 						, internal_user = <cfqueryparam value="#arguments.internal_user#" cfsqltype="cf_sql_bit">
 						, user_administrator = <cfqueryparam value="#arguments.user_administrator#" cfsqltype="cf_sql_bit">
+						, area_admin_administrator = <cfqueryparam value="#arguments.area_admin_administrator#" cfsqltype="cf_sql_bit">
 						, verified = <cfqueryparam value="#arguments.verified#" cfsqltype="cf_sql_bit">
 						, enabled = <cfqueryparam value="#arguments.enabled#" cfsqltype="cf_sql_bit">
 						<cfif isDefined("arguments.perfil_cabecera")>
@@ -913,7 +915,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfif SESSION.client_administrator NEQ SESSION.user_id>
+			<cfif SESSION.user_administrator IS false>
 
 				<cfif isDefined("arguments.row_id")>
 
@@ -968,7 +970,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfif arguments.update_user_id NEQ SESSION.user_id>
-				<cfinclude template="includes/checkAdminAccess.cfm">
+				<cfinclude template="includes/checkUserAdminAccess.cfm">
 			</cfif>
 
 			<cfif listFind(APPLICATION.languages, arguments.language) GT 0>
@@ -1059,7 +1061,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfif arguments.update_user_id NEQ SESSION.user_id>
-				<cfinclude template="includes/checkAdminAccess.cfm">
+				<cfinclude template="includes/checkUserAdminAccess.cfm">
 			</cfif>
 
 			<cfquery name="selectQuery" datasource="#client_dsn#">
@@ -1273,7 +1275,18 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<!--- checkUserAdminAccess --->
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="isUserUserAdministrator" returnvariable="isUserUserAdministratorResponse">
+				<cfinvokeargument name="check_user_id" value="#SESSION.user_id#">
+			</cfinvoke>
+
+			<cfif isUserUserAdministratorResponse.result IS false OR isUserUserAdministratorResponse.isUserAdministrator IS false>
+
+				<cfset error_code = 106>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
 
 			<cfquery name="getUserQuery" datasource="#client_dsn#">
 				SELECT id, root_folder_id, image_file, typology_id, typology_row_id
@@ -1472,9 +1485,14 @@
 
 					<cfloop query="filesQuery">
 
-						<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="deleteFileResult">
 							<cfinvokeargument name="file_id" value="#filesQuery.id#">
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 							<cfinvokeargument name="with_transaction" value="false">
+							<cfinvokeargument name="moveToBin" value="false">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
 
 						<cfif deleteFileResult.result IS false>
@@ -1771,7 +1789,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<cfinclude template="includes/checkAreaAdministratorAdminAccess.cfm">
 
 			<!---checkIfExist--->
 			<cfquery name="checkIfExist" datasource="#client_dsn#">
@@ -1865,7 +1883,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<cfinclude template="includes/checkAreaAdministratorAdminAccess.cfm">
 
 			<cfquery name="getArea" datasource="#client_dsn#">
 				SELECT user_in_charge
@@ -2546,6 +2564,8 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfinclude template="includes/checkAreaAdministratorAdminAccess.cfm">
+
 			<cfset init_area_id = arguments.area_id>
 
 			<!--- ORDER --->
@@ -2899,7 +2919,7 @@
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<!--- checkAdminAccess --->
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<cfinclude template="includes/checkUserAdminAccess.cfm">
 
 			<!--- getAllUsers --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getAllUsers" returnvariable="getAllUsersQuery">
@@ -2923,12 +2943,12 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled, verified">
+				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled, verified, user_administrator, area_admin_administrator">
 
 				<cfif selectUserQuery.language EQ "es">
-					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo, Verificado">
+					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo, Verificado, Administrador de usuarios, Administrador de administradores de área">
 				<cfelse>
-					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active, Verified">
+					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active, Verified, User administrator, Area administrators admin">
 				</cfif>
 
 				<cfif arguments.include_id IS true>
@@ -2978,24 +2998,20 @@
 						<cfinvokeargument name="table_id" value="#arguments.typology_id#">
 						<cfinvokeargument name="tableTypeId" value="#typologyTableTypeId#">
 
-						<!---<cfinvokeargument name="include_creation_date" value="#arguments.include_creation_date#">
-						<cfinvokeargument name="include_last_update_date" value="#arguments.include_last_update_date#">
-						<cfinvokeargument name="include_insert_user" value="#arguments.include_insert_user#">
-						<cfinvokeargument name="include_update_user" value="#arguments.include_update_user#">
-						<cfinvokeargument name="decimals_with_mask" value="#arguments.decimals_with_mask#">--->
-
 						<cfinvokeargument name="client_abb" value="#client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
 					<cfset rowsQuery = generateRowsQueryResponse.rowsQuery>
 					<cfset rowsFieldsNames = generateRowsQueryResponse.fieldsNames>
-					<cfset fieldsNames = listAppend( fieldsNames, rowsFieldsNames )>
-					<cfset fieldsLabels = listAppend( fieldsLabels, generateRowsQueryResponse.fieldsLabels )>
+					<cfif len(rowsFieldsNames) GT 0>
+						<cfset fieldsNames = listAppend( fieldsNames, rowsFieldsNames )>
+						<cfset fieldsLabels = listAppend( fieldsLabels, generateRowsQueryResponse.fieldsLabels )>
+					</cfif>
 
-					<!---Query to fix bug with position field in qery of query--->
+					<!---Query to fix bug with position field in query of query--->
 					<cfquery dbtype="query" name="rowsQueryWithoutPosition">
-						SELECT #rowsFieldsNames#, row_id
+						SELECT row_id <cfif len(rowsFieldsNames) GT 0>, #rowsFieldsNames#</cfif>
 						FROM rowsQuery;
 					</cfquery>
 
@@ -3343,14 +3359,16 @@
 							<cfset rowValues["internal_user"] = trim(curRow[9])>
 							<cfset rowValues["enabled"] = trim(curRow[10])>
 							<cfset rowValues["verified"] = trim(curRow[11])>
+							<cfset rowValues["user_administrator"] = trim(curRow[12])>
+							<cfset rowValues["area_admin_administrator"] = trim(curRow[13])>
 							<cfif SESSION.client_abb EQ "hcs">
-								<cfset rowValues["perfil_cabecera"] = trim(curRow[12])>
+								<cfset rowValues["perfil_cabecera"] = trim(curRow[14])>
 							</cfif>
 
 							<cfif SESSION.client_abb EQ "hcs">
-								<cfset curColumn = 13>
+								<cfset curColumn = 15>
 							<cfelse>
-								<cfset curColumn = 12>
+								<cfset curColumn = 14>
 							</cfif>
 
 							<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
@@ -3398,7 +3416,6 @@
 								<cfinvokeargument name="twitter_url" value="">
 								<cfinvokeargument name="language" value="#APPLICATION.defaultLanguage#">
 								<cfinvokeargument name="hide_not_allowed_areas" value="true">
-								<cfinvokeargument name="user_administrator" value="false">
 								<cfinvokeargument name="password" value="#password#">
 								<cfinvokeargument name="password_confirmation" value="#password#">
 								<cfinvokeargument name="notify_admin" value="false">
@@ -3473,6 +3490,47 @@
 	</cffunction>
 
 	<!---  --->
+
+
+	<!--- -------------------------- CHECK USER ADMIN ACCESS -------------------------------- --->
+	<!---Comprueba si el usuario es el administrador de usuarios y si no lanza un error--->
+
+	<cffunction name="checkUserAdminAccess" returntype="void" access="public">
+
+		<cfset var method = "checkUserAdminAccess">
+
+		<cfif SESSION.user_administrator IS false><!---user logged in is not an administrator user--->
+			<cfset error_code = 106>
+
+			<cfthrow errorcode="#error_code#">
+
+		</cfif>
+
+	</cffunction>
+
+
+	<!--- -------------------------- CHECK AREA ADMINISTRATOR ADMIN ACCESS -------------------------------- --->
+	<!---Comprueba si el usuario es el administrador de usuarios y si no lanza un error--->
+
+	<cffunction name="checkAreaAdministratorAdminAccess" returntype="void" access="public">
+		<cfargument name="area_id" required="true">
+
+		<cfset var method = "checkAreaAdministratorAdminAccess">
+
+		<cfif SESSION.area_admin_administrator IS false><!---user logged in is not an administrator --->
+			<cfset error_code = 106>
+
+			<cfthrow errorcode="#error_code#">
+
+		<cfelse>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+
+		</cfif>
+
+	</cffunction>
 
 
 

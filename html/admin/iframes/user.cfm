@@ -116,11 +116,15 @@
 
 			<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreasAssociateModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar a varias áreas</span></a>--->
 
-			<cfif SESSION.client_administrator IS SESSION.user_id>
+			<cfif SESSION.area_admin_administrator IS true>
 
 				<a class="btn btn-info btn-sm navbar-btn" onclick="parent.openAreaAssociateAdministratorModal(#user_id#);"><i class="icon-plus icon-white"></i> <span lang="es">Asociar como administrador del área</span></a>
 
+			</cfif>
+
 				<!--- <a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_new.cfm');"><i class="icon-plus icon-white" style="color:##5BB75B;font-size:15px"></i> Nuevo usuario</a> --->
+
+			<cfif SESSION.user_administrator IS true OR SESSION.area_admin_administrator IS true>
 
 				<span class="divider">&nbsp;</span>
 
@@ -129,22 +133,28 @@
 				    <i class="icon-sitemap icon-white"></i> <span lang="es">Ver árbol</span> <span class="caret"></span>
 				  </button>
 				  <ul class="dropdown-menu" role="menu">
+						<cfif SESSION.user_administrator>
 				   	<li><a onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');" style="cursor:pointer" lang="es">De áreas</a></li>
-				    <li><a onclick="parent.loadModal('html_content/user_tree_admin.cfm?user=#user_id#');" style="cursor:pointer" lang="es">De administración</a></li>
+						</cfif>
+						<cfif SESSION.area_admin_administrator>
+				    	<li><a onclick="parent.loadModal('html_content/user_tree_admin.cfm?user=#user_id#');" style="cursor:pointer" lang="es">De administración</a></li>
+						</cfif>
 				  </ul>
 				</div>
 
-	 			<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+				<cfif SESSION.user_administrator>
+	 				<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_modify.cfm?user=#user_id#');"><i class="icon-edit icon-white"></i> <span lang="es">Modificar</span></a>
+				</cfif>
 
-				<cfif APPLICATION.changeUserPreferencesByAdmin IS true>
+				<cfif SESSION.user_administrator AND APPLICATION.changeUserPreferencesByAdmin IS true>
 
 					<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#user_id#');" title="Preferencias de notificaciones" lang="es"><i class="icon-envelope-alt icon-white"></i> <span lang="es">Preferencias</span></a>
 
 				</cfif>
 
-	 			<!---<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_tree.cfm?user=#user_id#');"><i class="icon-sitemap icon-white"></i> <span lang="es">Árbol de áreas</span></a>--->
-
-	 			<a class="btn btn-danger btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_delete.cfm?user=#user_id#');" title="Eliminar usuario" lang="es"><i class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+				<cfif SESSION.user_administrator>
+	 				<a class="btn btn-danger btn-sm navbar-btn" onclick="parent.loadModal('html_content/user_delete.cfm?user=#user_id#');" title="Eliminar usuario" lang="es"><i 	class="icon-remove"></i> <span lang="es">Eliminar</span></a>
+				</cfif>
 
 			</cfif>
 

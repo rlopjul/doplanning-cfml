@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<meta charset="utf-8"> 
+<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- InstanceBeginEditable name="doctitle" -->
 <title></title>
@@ -62,17 +62,17 @@
 	jquery_lang_js.prototype.currentLang = 'es';
 	jquery_lang_js.prototype.lang.en = [{}];
 	window.lang = new jquery_lang_js();
-	
+
 	$().ready(function () {
    		window.lang.run();
 	});--->
-	
+
 	<!---Lang.prototype.pack.en = {};
 	Lang.prototype.pack.en.token = {};--->
-	
+
 	$().ready(function () {
 		window.lang = new Lang('es');
-		
+
 		window.lang.dynamic('en', '#APPLICATION.mainUrl#/html/language/main_en.cfm');
 		<cfif SESSION.user_language NEQ "es">
 			window.lang.change('#SESSION.user_language#');
@@ -99,30 +99,21 @@
 <cfoutput>
 <div class="navbar navbar-default navbar-fixed-top navbar_admin">
 	<div class="container-fluid">
-		
+
 		<cfif isDefined("user_id") AND isDefined("area_id")>
 			<a class="btn btn-warning btn-sm navbar-btn" title="Quitar Usuario" onClick="parent.loadModal('html_content/area_user_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar del área</span></a>
 		</cfif>
 
-		<cfif SESSION.client_administrator IS SESSION.user_id>
+		<cfif SESSION.area_admin_administrator IS true>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
-				<cfinvokeargument name="area_id" value="#area_id#"/>
-				<cfinvokeargument name="user_id" value="#user_id#"/>
-			</cfinvoke>
+			<a class="btn btn-warning btn-sm navbar-btn" title="Quitar administrador" onClick="parent.loadModal('html_content/area_administrator_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de administrador del área</span></a>
 
-			<cfif isAdministratorResponse.isUserAdministrator IS true>
+		<!---<cfelse>
 
-				<a class="btn btn-warning btn-sm navbar-btn" title="Quitar administrador" onClick="parent.loadModal('html_content/area_administrator_dissociate.cfm?area=#area_id#&user=#user_id#');" lang="es"><i class="icon-remove"></i> <span lang="es">Quitar de administrador del área</span></a>
-				
-			<!---<cfelse>
-
-				<a class="btn btn-info btn-sm navbar-btn" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>--->
-
-			</cfif>
+			<a class="btn btn-info btn-sm navbar-btn" title="Añadir administrador" lang="es"><i class="icon-plus"></i> <span lang="es">Añadir como administrador del área</span></a>--->
 
 		</cfif>
-			
+
 	</div>
 </div>
 </cfoutput>

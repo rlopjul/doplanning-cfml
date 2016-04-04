@@ -159,6 +159,17 @@
 	<script src="#APPLICATION.htmlPath#/admin/scripts/userFormFunctions.js?v=1.6"></script>
 </cfif>
 
+
+<cfif SESSION.client_abb EQ "ceseand">
+
+	<cfset entitiesListAreaId = 100>
+
+	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="canUserAccessToArea" returnvariable="canUserAccessToEntitiesList">
+		<cfinvokeargument name="area_id" value="#entitiesListAreaId#">
+	</cfinvoke>
+
+</cfif>
+
 </cfoutput>
 
 <script>
@@ -181,6 +192,8 @@
 
 		$("#statisticsGeneralIframe").height(newHeight-36);
 		$("#statisticsFilesIframe").height(newHeight-36);
+
+		$("#entitiesIframe").height(newHeight-36);
 	}
 
 	function changeLanguage() {
@@ -261,6 +274,14 @@
 	function usersGeneralIframeLoaded() {
 
 		if($("#usersGeneralIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
+			$("#loadingContainer").hide();
+		}
+
+	}
+
+	function entitiesIframeLoaded() {
+
+		if($("#entitiesIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
 			$("#loadingContainer").hide();
 		}
 
@@ -442,6 +463,10 @@
 				$("#loadingContainer").show();
 			}
 
+			if(currentTab == "#tabEntities" && $("#entitiesIframe").attr('src') == "about:blank") { //Load entities page
+				$("#entitiesIframe").attr('src', 'iframes/list_rows.cfm?list=4');
+				$("#loadingContainer").show();
+			}
 
 
 		})
@@ -532,8 +557,13 @@
 		  <ul class="nav nav-pills" id="dpTab" style="clear:none;padding-bottom:5px;">
 			<li class="active"><a href="#tab1" data-toggle="tab" lang="es">Árbol</a></li>
 			<li><a href="#tab2" data-toggle="tab" lang="es">Área</a></li>
+			<cfif isUserAdministrator IS true>
+				<li><a href="#tab7" data-toggle="tab" lang="es">Usuarios</a></li>
+			</cfif>
+			<cfif SESSION.client_abb EQ "ceseand" AND canUserAccessToEntitiesList IS true>
+			<li><a href="#tabEntities" data-toggle="tab" lang="es">Entidades</a></li>
+			</cfif>
 			<cfif SESSION.client_administrator IS SESSION.user_id>
-			<li><a href="#tab7" data-toggle="tab" lang="es">Usuarios</a></li>
 			<li><a href="#tab3" data-toggle="tab" lang="es">Tipologías</a></li>
 			<li><a href="#tab4" data-toggle="tab" lang="es">Categorías</a></li>
 			<li><a href="#tab5" data-toggle="tab" lang="es">Estadísticas</a></li>
@@ -757,6 +787,21 @@
 
 
 				</div><!---END Tab Users--->
+
+			</cfif>
+
+			<cfif SESSION.client_abb EQ "ceseand" AND canUserAccessToEntitiesList IS true>
+
+				<div class="tab-pane" id="tabEntities"><!---Tab Entities CESEAND--->
+
+					<div class="tabbable"><!---Tab Panel--->
+
+						<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="entitiesIframe" onload="entitiesIframeLoaded()"></iframe>
+
+					</div><!---END TabPanel--->
+
+
+				</div><!---END Tab Entities CESEAND--->
 
 			</cfif>
 

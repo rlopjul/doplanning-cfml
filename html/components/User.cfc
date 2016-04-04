@@ -339,6 +339,8 @@
 		<cfargument name="start_page" type="string" required="true">
 		<cfargument name="information" type="string" required="false">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
+		<cfargument name="user_administrator" type="boolean" required="false" default="false">
+		<cfargument name="area_admin_administrator" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
 		<cfargument name="login_ldap" type="string" required="false">
@@ -378,28 +380,6 @@
 						<cfif isDefined("password_encoded")>
 							<cfinvokeargument name="password" value="#password_encoded#">
 						</cfif>
-						<!---<cfinvokeargument name="email" value="#arguments.email#">
-						<cfinvokeargument name="mobile_phone_ccode" value="#arguments.mobile_phone_ccode#">
-						<cfinvokeargument name="mobile_phone" value="#arguments.mobile_phone#">
-						<cfinvokeargument name="telephone_ccode" value="#arguments.telephone_ccode#">
-						<cfinvokeargument name="telephone" value="#arguments.telephone#">
-						<cfinvokeargument name="language" value="#arguments.language#">
-						<cfinvokeargument name="family_name" value="#arguments.family_name#">
-						<cfinvokeargument name="name" value="#arguments.name#">
-						<cfinvokeargument name="address" value="#arguments.address#">
-						<cfinvokeargument name="dni" value="#arguments.dni#">
-						<cfinvokeargument name="files" value="#arguments.files#">
-						<cfinvokeargument name="hide_not_allowed_areas" value="#arguments.hide_not_allowed_areas#">
-						<cfinvokeargument name="linkedin_url" value="#arguments.linkedin_url#">
-						<cfinvokeargument name="twitter_url" value="#arguments.twitter_url#">
-						<cfinvokeargument name="information" value="#arguments.information#">
-						<cfinvokeargument name="internal_user" value="#arguments.internal_user#">
-						<cfinvokeargument name="enabled" value="#arguments.enabled#">
-
-						<cfinvokeargument name="login_ldap" value="#arguments.login_ldap#">
-						<cfinvokeargument name="login_diraya" value="#arguments.login_diraya#">
-						<cfinvokeargument name="perfil_cabecera" value="#arguments.perfil_cabecera#">
-						<cfinvokeargument name="adminFields" value="#arguments.adminFields#">--->
 					</cfinvoke>
 
 					<cfif response.result IS true>
@@ -873,97 +853,6 @@
 				</div><!--- END col --->
 			</div><!---END row item container--->
 
-
-			<!---
-
-			<div class="div_user_page_title">
-
-			<!---<cfif len(objectUser.image_type) GT 0>
-				<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&medium=" alt="#objectUser.family_name# #objectUser.name#" class="img-thumbnail" style="margin-right:2px;"/>
-			<cfelse>
-				<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.family_name# #objectUser.name#" class="img-thumbnail" style="margin-right:2px;"/>
-			</cfif><br/>--->
-
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
-				<cfinvokeargument name="user_id" value="#objectUser.id#">
-				<cfinvokeargument name="user_full_name" value="#objectUser.family_name# #objectUser.name#">
-				<cfinvokeargument name="user_image_type" value="#objectUser.image_type#">
-				<cfinvokeargument name="class" value="img-thumbnail"/>
-			</cfinvoke><br/>
-
-			#objectUser.family_name# #objectUser.name#</div>
-			<div class="div_separator"><!-- --></div>
-			<div class="div_user_page_user">
-				<div class="div_user_page_label"><!---<span lang="es">Email:</span>---><i class="icon-inbox" style="font-size:18px"></i>  <a href="mailto:#objectUser.email#" class="div_user_page_text">#objectUser.email#</a></div>
-
-				<cfif SESSION.client_abb NEQ "hcs"><!---OR showAdminFields IS true--->
-					<cfif len(objectUser.dni) GT 0>
-					<div class="div_user_page_label"><span lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif>:</span> <span class="div_user_page_text">#objectUser.dni#</span></div>
-					</cfif>
-					<cfif len(objectUser.telephone) GT 0>
-						<div class="div_user_page_label"><!---<span lang="es">Teléfono:</span>---><i class="icon-phone-sign" style="font-size:20px"></i> <a href="tel:#objectUser.telephone#" class="div_user_page_text"><cfif len(objectUser.telephone) GT 0>#objectUser.telephone_ccode#</cfif> #objectUser.telephone#</a></div>
-					</cfif>
-					<cfif len(objectUser.mobile_phone) GT 0>
-						<div class="div_user_page_label"><!---<span lang="es">Teléfono móvil:</span>--->&nbsp;<i class="icon-mobile-phone" style="font-size:18px"></i> <a href="tel:#objectUser.mobile_phone#" class="div_user_page_text"><cfif len(objectUser.mobile_phone) GT 0>#objectUser.mobile_phone_ccode#</cfif> #objectUser.mobile_phone#</a></div>
-					</cfif>
-				</cfif>
-
-
-				<cfif len(objectUser.linkedin_url) GT 0>
-					<div class="div_user_page_label"><i class="icon-linkedin-sign" style="font-size:18px;"></i> <a href="#objectUser.linkedin_url#" target="_blank">#objectUser.linkedin_url#</a></div>
-				</cfif>
-
-				<cfif len(objectUser.twitter_url) GT 0>
-					<div class="div_user_page_label"><i class="icon-twitter-sign" style="font-size:18px;"></i> <a href="#objectUser.twitter_url#" target="_blank">#objectUser.twitter_url#</a></div>
-				</cfif>
-
-				<cfif len(objectUser.address) GT 0>
-					<div class="div_user_page_label"><!---<span lang="es">Dirección:</span>---><i class="icon-envelope" style="font-size:18px"></i></div>
-					<div class="div_user_page_address">#objectUser.address#</div>
-				</cfif>
-
-				<cfif arguments.showAdminFields IS true>
-
-					<div class="div_user_page_label"><span lang="es">Información:</span></div>
-					<div class="div_user_page_address">#objectUser.information#</div>
-
-					<cfif SESSION.client_abb EQ "hcs">
-						<cfif SESSION.client_administrator EQ SESSION.user_id>
-							<div class="div_user_page_label"><span lang="es">Login #APPLICATION.ldapName#:</span> <span class="div_user_page_text">#objectUser.login_ldap#</span></div>
-						</cfif>
-						<div class="div_user_page_label"><span lang="es">Perfil de cabecera:</span> <span class="div_user_page_text">#objectUser.perfil_cabecera#</span></div>
-					</cfif>
-
-					<div class="div_user_page_label"><span lang="es">Usuario interno:</span> <span class="div_user_page_text" lang="es"><cfif objectUser.internal_user IS true><b>Sí</b><cfelse>No</cfif></span></div>
-
-					<cfif SESSION.client_administrator EQ SESSION.user_id>
-						<div class="div_user_page_label"><span>Fecha de creación:</span> <span class="div_user_page_text">#objectUser.creation_date#</span></div>
-						<div class="div_user_page_label"><span>Fecha de última conexión:</span> <span class="div_user_page_text">#objectUser.last_connection#</span></div>
-						<div class="div_user_page_label"><span>Número de conexiones:</span> <span class="div_user_page_text">#objectUser.number_of_connections#</span></div>
-					</cfif>
-
-				</cfif>
-
-				<div class="div_user_page_label"><span lang="es">Activo:</span> <span class="div_user_page_text" lang="es"><cfif objectUser.enabled IS true>Sí<cfelse><b>No</b></cfif></span></div>
-
-				<cfif objectUser.enabled IS true>
-					<cfif APPLICATION.moduleWebRTC IS true>
-					<div style="padding-top:8px; clear:both;">
-						<!---<img src="#APPLICATION.htmlPath#/assets/icons_dp/user_meeting.png" width="20" alt="Reunión virtual" lang="es"/>--->
-
-						<div>
-						<a href="#APPLICATION.htmlPath#/user_meeting.cfm?user=#objectUser.id#" target="_blank" onclick="openUrl('#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#','_blank',event)" title="Reunión virtual" lang="es" class="btn btn-sm btn-info"><i class="icon-facetime-video"></i>&nbsp; <span lang="es">Reunión virtual</span></a>
-						</div>
-						<div class="div_user_page_label"><span lang="es">URL de acceso a reunión virtual con este usuario:</span></div>
-						<textarea class="form-control" readonly="readonly" style="height:50px; cursor:text">#APPLICATION.mainUrl##APPLICATION.htmlPath#/meeting/?user=#objectUser.id#&abb=#SESSION.client_abb#</textarea>
-
-					</div>
-					</cfif>
-				</cfif>
-
-
-			</div>
-			---->
 			</cfoutput>
 
 			<cfcatch>
@@ -990,7 +879,9 @@
 
 			<cfoutput>
 
-				<div><i class="icon-inbox" style="font-size:18px"></i>  <a href="mailto:#objectUser.email#" class="link_external">#objectUser.email#</a></div>
+				<cfset mailto = "mailto:"&objectUser.email>
+
+				<div><i class="icon-inbox" style="font-size:18px"></i>  <a href="#mailto#" class="link_external">#objectUser.email#</a></div>
 
 				<cfif len(objectUser.linkedin_url) GT 0>
 					<div><i class="icon-linkedin-sign" style="font-size:18px;"></i> <a href="#objectUser.linkedin_url#" target="_blank" class="link_external">#objectUser.linkedin_url#</a></div>
@@ -1426,6 +1317,7 @@
 		<cfargument name="select_enabled" type="boolean" required="false" default="false">
 		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
 		<cfargument name="adminUsers" type="boolean" required="false" default="false">
+		<cfargument name="openRowOnSelect" type="boolean" required="false" default="false">
 
 		<cfargument name="list_id" type="numeric" required="false">
 
@@ -1535,20 +1427,21 @@
 
 						});
 
-
+						<cfif arguments.openRowOnSelect IS true>
 						$('###usersTableId# tbody tr').on('click', function(e) {
 
-					        var row = $(this);
+				        var row = $(this);
 
-					        if(!row.hasClass("selected")) {
-					        	$('###usersTableId# tbody tr').removeClass("selected");
-					        	row.addClass("selected");
-					        }
+				        if(!row.hasClass("selected")) {
+				        	$('###usersTableId# tbody tr').removeClass("selected");
+				        	row.addClass("selected");
+				        }
 
-					        var itemUrl = row.data("item-url");
+				        var itemUrl = row.data("item-url");
 						    openUrlLite(itemUrl,'#arguments.open_url_target#');
 
-					    });
+					  });
+						</cfif>
 
 					});
 				</script>
@@ -1573,7 +1466,7 @@
 								<th><span lang="es">Perfil cabecera</span></th>
 								</cfif>
 								<th style="width:38px;"><span lang="es">Activo</span></th>
-								<cfif SESSION.client_administrator EQ SESSION.user_id>
+								<cfif SESSION.user_administrator>
 								<th style="width:130px;"></th>
 								</cfif>
 							</cfif>
@@ -1604,7 +1497,7 @@
 						<!---Item selection--->
 						<cfset itemSelected = false>
 
-						<cfif arguments.show_area_members IS true or arguments.showAdminFields IS true><!--- Selección de fila sólo disponible para listados de administración --->
+						<cfif arguments.openRowOnSelect IS true AND ( arguments.show_area_members IS true OR arguments.showAdminFields IS true )><!--- Selección de fila sólo disponible para listados de administración --->
 
 							<cfif alreadySelected IS false>
 
@@ -1669,7 +1562,7 @@
 								</cfif>
 								<td lang="es"><cfif objectUser.enabled IS true>Sí<cfelse>No</cfif></td>
 
-								<cfif SESSION.client_administrator EQ SESSION.user_id>
+								<cfif SESSION.user_administrator>
 									<td><a onclick="parent.loadModal('html_content/user_modify.cfm?user=#objectUser.id#')" class="btn btn-primary btn-sm" title="Modificar" lang="es"><i class="icon-edit icon-white"></i></a>
 										<cfif APPLICATION.changeUserPreferencesByAdmin IS true>
 											<a onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#objectUser.id#')" class="btn btn-default btn-sm" title="Preferencias de notificaciones" lang="es"><i class="icon-envelope-alt icon-white"></i></a>

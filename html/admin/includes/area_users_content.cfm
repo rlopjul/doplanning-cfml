@@ -153,7 +153,7 @@
 
 
 <!--- Nav tabs --->
-<cfif SESSION.client_administrator IS SESSION.user_id>
+<cfif SESSION.area_admin_administrator IS true>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getAllAreaAdministrators" returnvariable="administratorsResponse">
 		<cfinvokeargument name="area_id" value="#area_id#">
@@ -192,6 +192,7 @@
 				<cfinvokeargument name="show_area_members" value="true">
 				<cfinvokeargument name="open_url_target" value="userAreaIframe">
 				<cfinvokeargument name="filter_enabled" value="false">
+				<cfinvokeargument name="openRowOnSelect" value="true">
 			</cfinvoke>
 
 			<cfif objectArea.users_visible IS false>
@@ -220,7 +221,7 @@
 
 	</div>
 
-<cfif SESSION.client_administrator IS SESSION.user_id>
+<cfif SESSION.area_admin_administrator IS true>
 
 	  </div>
 	  <div class="tab-pane" role="tabpanel" id="administrators"></div>

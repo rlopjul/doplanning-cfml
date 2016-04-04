@@ -27,7 +27,9 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_id.cfm">
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
+<cfif NOT isDefined("includeAppMenu") OR includeAppMenu IS true>
+	<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
+</cfif>
 
 <div class="div_head_subtitle"><span lang="es">Añadir editores</span></div>
 

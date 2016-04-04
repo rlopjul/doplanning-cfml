@@ -964,6 +964,7 @@
 		<cfargument name="information" type="string" required="false" default="">
 		<cfargument name="internal_user" type="boolean" required="false" default="false">
 		<cfargument name="user_administrator" type="boolean" required="false" default="false">
+		<cfargument name="area_admin_administrator" type="boolean" required="false" default="false">
 		<cfargument name="verified" type="boolean" required="false" default="false">
 		<cfargument name="enabled" type="boolean" required="false" default="false">
 
@@ -1194,7 +1195,9 @@
 						linkedin_url = <cfqueryparam value="#arguments.linkedin_url#" cfsqltype="cf_sql_varchar">,
 						twitter_url = <cfqueryparam value="#arguments.twitter_url#" cfsqltype="cf_sql_varchar">,
 						verified = <cfqueryparam value="#arguments.verified#" cfsqltype="cf_sql_bit">,
-						verification_code = <cfqueryparam value="#verification_code#" cfsqltype="cf_sql_varchar">
+						verification_code = <cfqueryparam value="#verification_code#" cfsqltype="cf_sql_varchar">,
+						user_administrator = <cfqueryparam value="#arguments.user_administrator#" cfsqltype="cf_sql_bit">,
+						area_admin_administrator = <cfqueryparam value="#arguments.area_admin_administrator#" cfsqltype="cf_sql_bit">
 						<cfif APPLICATION.userEmailRequired IS true OR len(arguments.email) GT 0>
 						, email = <cfqueryparam value="#arguments.email#" cfsqltype="cf_sql_varchar">
 						</cfif>
@@ -1346,7 +1349,7 @@
 
 				<cfinclude template="includes/logRecord.cfm">
 
-				<cfset response = {result=true, user_id=new_user_id, language=#arguments.language#}>
+				<cfset response = {result=true, user_id=new_user_id, language=#arguments.language#, user_administrator=#arguments.user_administrator#, area_admin_administrator=#arguments.area_admin_administrator#}>
 
 
 			<cfelse><!---The client does not exist--->
@@ -1621,6 +1624,7 @@
 			<cfset queryAddRow(getEmptyUserQuery, 1)>
 
 			<cfset querySetCell(getEmptyUserQuery, "user_administrator", 0)>
+			<cfset querySetCell(getEmptyUserQuery, "area_admin_administrator", 0)>
 			<cfset querySetCell(getEmptyUserQuery, "verified", 1)>
 			<cfset querySetCell(getEmptyUserQuery, "enabled", 1)>
 			<!---<cfset querySetCell(getEmptyUserQuery, "mobile_phone_ccode", "34")>

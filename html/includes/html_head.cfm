@@ -1,3 +1,18 @@
+<!--- APP HTML HEADER --->
+
+<cfif find("error.cfm", CGI.SCRIPT_NAME) IS 0 AND isDefined("SESSION.user_id")><!---error.cfm no necesita esto y puede dar problemas en errores de consultad de usuarios--->
+
+  <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+    <cfinvokeargument name="user_id" value="#SESSION.user_id#">
+  </cfinvoke>
+
+  <cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+  </cfinvoke>
+
+  <cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
+</cfif>
+
 <!--Developed and copyright by Era7 Information Technologies & Web4Bio 2007-2016 (www.doplanning.net)-->
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
@@ -78,7 +93,9 @@
 
 	<cfif isDefined("SESSION.user_language")>
 		<cfif SESSION.user_language NEQ "es">
+    $(document).ready(function() {
 			window.lang.change('#SESSION.user_language#');
+    });
 		</cfif>
 		bootbox.setDefaults({"locale" : "#SESSION.user_language#"});
 	</cfif>
