@@ -40,6 +40,7 @@
 		var allEnabled = #allEnabled#;
 		var webEnabled = #webEnabled#;
 		var noWebEnabled = #noWebEnabled#;
+		var responsibleRequired = #responsibleRequired#;
 		<cfif isDefined("itemTypeId")>
 		var itemTypeId = #itemTypeId#;
 		</cfif>
@@ -123,7 +124,7 @@
 
 				var areaNode = $("#"+areaId);
 
-				var relAtt = (areaNode).attr("rel");
+				var relAtt = areaNode.attr("rel");
 
 				if( allEnabled == false) {
 
@@ -138,6 +139,11 @@
 						return;
 					}
 
+				}
+
+				if( responsibleRequired == true && areaNode.data("responsible") == false ) {
+					alert("No tiene permiso de responsable en esta área");
+					return;					
 				}
 
 				var areaName = $.trim( $(areaNode).find("a:first").text() );
