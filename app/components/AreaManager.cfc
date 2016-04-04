@@ -1768,7 +1768,7 @@
 
 			<cfif whole_tree EQ true OR userBelongsToArea EQ true>
 
-					<cfset xmlPart = '<area id="#area_id#" name="#xmlFormat(areaQuery.name[aRow])#" parent_id="#areaQuery.parent_id[aRow]#" allowed="#userBelongsToArea#" image_id="#image_id#" with_link="#with_link#" type="#curAreaType#">'><!--- label="#xmlFormat(areaQuery.name[aRow])#" user_in_charge="#areaQuery.user_in_charge[aRow]#" creation_date="#areaQuery.creation_date[aRow]#"--->
+					<cfset xmlPart = '<area id="#area_id#" name="#xmlFormat(areaQuery.name[aRow])#" parent_id="#areaQuery.parent_id[aRow]#" allowed="#userBelongsToArea#" with_link="#with_link#" user_in_charge="#areaQuery.user_in_charge[aRow]#" type="#curAreaType#">'><!--- label="#xmlFormat(areaQuery.name[aRow])#" creation_date="#areaQuery.creation_date[aRow]#" image_id="#image_id#" --->
 
 			</cfif>
 
