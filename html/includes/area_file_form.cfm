@@ -491,7 +491,7 @@
 
 				function openAreasSelector(){
 
-					return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?multiple=1&disable_area=#area_id#');
+					return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?multiple=1&disable_area=#area_id#&read_only=0');
 
 				}
 

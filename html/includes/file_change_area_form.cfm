@@ -35,7 +35,11 @@
 
 		<cfset noWebEnabled = 1>
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=#webEnabled#&no_web_enabled=#noWebEnabled#&read_only=false&scope=#file.publication_scope_id#');
+		<cfif isNumeric(file.publication_scope_id)>
+			return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=#webEnabled#&no_web_enabled=#noWebEnabled#&read_only=0&scope=#file.publication_scope_id#');
+		<cfelse>
+			return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=#webEnabled#&no_web_enabled=#noWebEnabled#&read_only=0');
+		</cfif>
 
 	}
 
