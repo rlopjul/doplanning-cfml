@@ -2564,6 +2564,8 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
+			<cfinclude template="includes/checkAreaAdministratorAdminAccess.cfm">
+
 			<cfset init_area_id = arguments.area_id>
 
 			<!--- ORDER --->
@@ -3511,6 +3513,7 @@
 	<!---Comprueba si el usuario es el administrador de usuarios y si no lanza un error--->
 
 	<cffunction name="checkAreaAdministratorAdminAccess" returntype="void" access="public">
+		<cfargument name="area_id" required="true">
 
 		<cfset var method = "checkAreaAdministratorAdminAccess">
 
@@ -3518,6 +3521,12 @@
 			<cfset error_code = 106>
 
 			<cfthrow errorcode="#error_code#">
+
+		<cfelse>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="checkAreaAdminAccess">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
 
 		</cfif>
 

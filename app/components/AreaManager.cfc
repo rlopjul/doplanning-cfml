@@ -1237,8 +1237,8 @@
 
 			<cfif arguments.get_user_id NEQ SESSION.user_id>
 
-				<!--- checkAdminAccess --->
-				<cfinclude template="includes/checkAdminAccess.cfm">
+				<!--- checkUserAdminAccess --->
+				<cfinclude template="includes/checkUserAdminAccess.cfm">
 
 			</cfif>
 
@@ -1407,10 +1407,11 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfif arguments.get_user_id NEQ SESSION.user_id>
+			<cfif arguments.get_user_id NEQ SESSION.user_id AND SESSION.area_admin_administrator IS false>
 
-				<!--- checkAdminAccess --->
-				<cfinclude template="includes/checkAdminAccess.cfm">
+				<cfset error_code = 106>
+
+				<cfthrow errorcode="#error_code#">
 
 			</cfif>
 

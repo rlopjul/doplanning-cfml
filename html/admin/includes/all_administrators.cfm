@@ -1,4 +1,5 @@
 <cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllAreasAdministrators" returnvariable="usersResponse">
+  <cfinvokeargument name="area_id" value="#area_id#">
 </cfinvoke>
 
 <div class="modal-header">
@@ -21,19 +22,19 @@
 		<span class="help-block" lang="es">Puede añadir o quitar administradores accediendo al área correspondiente</span>
 
 		<div class="div_items">
-			
+
 			<cfif numUsers GT 0>
 
 				<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputAdministratorsList">
 					<cfinvokeargument name="users" value="#users#">
-				</cfinvoke>	
+				</cfinvoke>
 
 			<cfelse>
 				<span lang="es">No hay usuarios administradores asignados.</span>
 			</cfif>
-			
-		</div>	
-		
+
+		</div>
+
 	</cfif>
 
 </div>
