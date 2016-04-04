@@ -1197,6 +1197,8 @@
 
 			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.6.cfm">
 
+			<cfinclude template="#APPLICATION.resourcesPath#/includes/db/transaction_to_3.7.cfm">
+
 			<!---createClientFolders--->
 			<cfinvoke component="ClientManager" method="createClientFolders">
 				<cfinvokeargument name="cur_client_abb" value="#new_client_abb#">
