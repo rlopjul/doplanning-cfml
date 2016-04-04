@@ -708,6 +708,28 @@
 
 			</cfif>
 
+			<!--- getArea --->
+			<cfinvoke component="AreaManager" method="getArea" returnvariable="areaQuery">
+				<cfinvokeargument name="get_area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="return_type" value="query">
+			</cfinvoke>
+
+			<cfif areaQuery.read_only IS true>
+
+				<cfset message = "El área es de solo lectura">
+				<cfset response = {result=false, message=#message#}>
+
+				<cfreturn response>
+
+			<cfelseif areaQuery['item_type_#arguments.itemTypeId#_enabled'] IS false>
+
+				<cfset message = "Tipo de elemento deshabilitado en esta área">
+				<cfset response = {result=false, message=#message#}>
+
+				<cfreturn response>
+
+			</cfif>
+
 			<cfquery datasource="#client_dsn#" name="getUserData">
 				SELECT family_name, name
 				FROM #client_abb#_users
