@@ -17,8 +17,8 @@
 	<!---getArea--->
 
 	<cffunction name="getArea" output="false" returntype="query" access="public">
-		<cfargument name="area_id" type="numeric" required="yes">
-		<!---<cfargument name="area_type" type="string" required="no">--->
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="url_id" type="string" required="false">
 		<cfargument name="with_user" type="boolean" required="no" default="true">
 
 		<cfargument name="client_abb" type="string" required="yes">
@@ -36,10 +36,11 @@
 				<cfif arguments.with_user IS true>
 				INNER JOIN #client_abb#_users AS users ON areas.user_in_charge = users.id
 				</cfif>
-				WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-				<!---<cfif isDefined("arguments.area_type")>
-				, areas.type = <cfqueryparam value="#arguments.type#" cfsqltype="cf_sql_varchar">
-				</cfif>--->
+				<cfif isDefined("arguments.url_id")>
+					WHERE areas.url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
+				<cfelse>
+					WHERE areas.id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+				</cfif>
 				LIMIT 1;
 			</cfquery>
 

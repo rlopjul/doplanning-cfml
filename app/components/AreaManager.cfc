@@ -1992,6 +1992,21 @@
 				<cfinvokeargument name="area_id" value="#arguments.parent_id#">
 			</cfinvoke>
 
+			<cfif isDefined("arguments.url_id") AND len(url_id) GT 0>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="areaByUrlQuery">
+					<cfinvokeargument name="url_id" value="#arguments.url_id#">
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif areaByUrlQuery.recordCount GT 0>
+					<cfset response = {result=false, message="El nombre de la página (URL) ya existe, debe usar otro distinto", area_id=#arguments.parent_id#}>
+					<cfreturn response>
+				</cfif>
+
+			</cfif>
+
 			<cftransaction>
 
 				<cfinvoke component="AreaManager" method="createAreaInDatabase" argumentcollection="#arguments#" returnvariable="area_id">
@@ -2005,7 +2020,7 @@
 
 			</cftransaction>
 
-            <!---Alerta a todos los usuarios que tienen acceso al área que se ha creado--->
+      <!---Alerta a todos los usuarios que tienen acceso al área que se ha creado--->
 			<!---<cfinvoke component="AreaManager" method="objectArea" returnvariable="objectArea">
 				<cfinvokeargument name="id" value="#area_id#"/>
 				<cfinvokeargument name="parent_id" value="#arguments.parent_id#"/>
