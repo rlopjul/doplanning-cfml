@@ -1,10 +1,12 @@
-var margin = {top: 40, right: 150, bottom: 80, left: 50},
+function mline(){
+
+  var margin = {top: 40, right: 150, bottom: 80, left: 50},
      margin2 = { top: 460, right: 10, bottom: 20, left: 50 },
     width = 900 - margin.left - margin.right ,
     height = 500 - margin.top - margin.bottom ,
     height2 = 500 - margin2.top - margin2.bottom;
 
- 
+
 var color = d3.scale.category10();
 
 var parseDate = d3.time.format("%d/%m/%Y").parse;
@@ -12,10 +14,10 @@ var parseDate = d3.time.format("%d/%m/%Y").parse;
 
 
 var div = d3.select('body') //select tooltip div over body
-                .append("div") 
+                .append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
-            
+
 
 var user = [];
 var item = [];
@@ -23,9 +25,9 @@ var item = [];
 testdata.forEach(function(d,i){
     item.push(d.item_type_label);
     user.push(d.user_full_name);
-    
+
     // Use index.of() to check the index. if it returns -1.
-    // push the name to arrayList i.ie(user or item). 
+    // push the name to arrayList i.ie(user or item).
     // No need to check for uniq
 })
 
@@ -58,26 +60,26 @@ userName.shift();
 var nested = d3.nest()
 		.key(function(d) { return d.user_full_name })
 		.map(testdata)
-    
+
 // only retrieve data from the selected series, using the nest we just created
 var lineData ;
 var count = 0;
 
-userName.forEach(function(name){                                                           
+userName.forEach(function(name){
     if( count == 0){
         var data = nested[name];
-        
+
         lineData = d3.nest()
             .key(function(d){ return d.item_type_label; })
             .entries(data);
-        
+
     }else{
         var data = nested[name];
-        
+
         var usrData = d3.nest()
             .key(function(d){ return d.item_type_label; })
             .entries(data);
-        
+
         lineData = lineData.concat(usrData);
     }
     count +=1;
@@ -113,12 +115,12 @@ function createData(){
         }
     });
 
-    
+
     //Using map to create one nested object of nestedfilter data.
-    //Using the first key in nested data to create object key and using values from second 
+    //Using the first key in nested data to create object key and using values from second
     // nest to creat a array of values. First map is over the itemtype and second
     // map is over date and total. Aggregate the date and total to first nest.
-    seriesData = nestedFilter.map(function (objectArray) { 
+    seriesData = nestedFilter.map(function (objectArray) {
         //console.log(objectArray);
 
             return {
@@ -134,10 +136,10 @@ function createData(){
 d3.selectAll("input").on("change", function() {
     var selected = this.value;
     var check = this.checked ? true : false;
-    
+
     if(check == true){
         if(this.id == "Check All"){
-            
+
             checkUser = userName.slice();
             d3.selectAll('input').property('checked',true);
         }else{
@@ -148,7 +150,7 @@ d3.selectAll("input").on("change", function() {
         drawChart();
 
     }
-    
+
     if(check == false){
         var userIndex = checkUser.indexOf(this.id);
         if(this.id == "Check All"){
@@ -160,7 +162,7 @@ d3.selectAll("input").on("change", function() {
         d3.select("#mlineBrush").select('svg').remove();
         createData();
         drawChart();
-       
+
     }
 })
 
@@ -179,7 +181,7 @@ function unique(arr) {
 }
 
 function drawChart(){
-   
+
     //create an SVG
 var svg = d3.select("#mlineBrush").append("svg")
     .attr("width", "100%")
@@ -187,17 +189,17 @@ var svg = d3.select("#mlineBrush").append("svg")
     .attr("viewBox", "0 0 900 500")
     .attr("preserveAspectRatio", "xMinYMin")
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top  + ")");  
+    .attr("transform", "translate(" + margin.left + "," + margin.top  + ")");
 
 svg.append("defs")
-  .append("clipPath") 
+  .append("clipPath")
     .attr("id", "clip")
     .append("rect")
     .attr("x", 0)
     .attr("y", -5)
     .attr("width", width + 20 )
-    .attr("height", height ); 
-    
+    .attr("height", height );
+
     //setup the x and y scales
 var x = d3.time.scale()
 		.domain([
@@ -238,7 +240,7 @@ svg.append("svg:g")
 var xAxis2 = d3.svg.axis() // xAxis for brush slider
     .scale(x2)
     .orient("bottom")
-    .tickPadding(10);  
+    .tickPadding(10);
 
 var yAxis = d3.svg.axis()
     .scale(y)
@@ -263,7 +265,7 @@ context.append("g")
    .attr("class", "x axis2")
         .attr("transform", "translate(0," + height2 + ")")
         .call(xAxis2);
-    
+
     var brush = d3.svg.brush()
     .x(x2)
     .on("brush", brushed);
@@ -286,16 +288,16 @@ context.append("g")
         .selectAll("rect")
         .attr("height", height2 + 5 )
         .attr("fill", "#E6E7E8");
-    
+
 var thegraph = svg.selectAll(".thegraph")
     .data(seriesData);
-    
+
 var thegraphEnter = thegraph.enter().append("g")
     .attr("clip-path", "url(#clip)")
     .attr("class", "thegraph")
     .attr("id", function(d){ return d.values[0].user_full_name.replace(/\s+/g, '')+ d.key.replace(/\s+/g, ''); })
     .style("stroke-width", "3");
-    
+
 //actually append the line to the graph
 	thegraphEnter.append("path")
     	.attr("class", "line")
@@ -304,8 +306,8 @@ var thegraphEnter = thegraph.enter().append("g")
      .transition() // Call Transition Method
 	.duration(4000) // Set Duration timing (ms)
 	.ease("bounce") ;
- 
-    
+
+
     thegraphEnter.append("g").selectAll(".dot")
 	    .data( function(d) {return(d.values);} )
         .enter().append("circle")
@@ -325,13 +327,13 @@ var thegraphEnter = thegraph.enter().append("g")
         .attr("fill-opacity", 1)
 	    .attr("stroke-width", 1)
         .style("stroke", "white")
-        //.style("stroke-opacity", .8) 
+        //.style("stroke-opacity", .8)
         .on("mouseover", function(d){
-        
+
             div.transition()
                 .duration(100)
                 .style("opacity", 1);
-        
+
             div.html(  "Item Type : "+ this.parentNode.__data__.key + "<br/>"+ " No. of Items : " + d.total + "<br/>" + "Date : " + d.creation_date )
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
@@ -341,8 +343,8 @@ var thegraphEnter = thegraph.enter().append("g")
 	    }) ;
 
      var typeClickLegends = [];
-     var usrClickLegends = []; 
-     
+     var usrClickLegends = [];
+
      var legend = svg.selectAll(".legend")
             .data(item_type)
           .enter().append("g")
@@ -350,96 +352,96 @@ var thegraphEnter = thegraph.enter().append("g")
             .attr('id',function(d){ return d.replace(/\s+/g, ''); })
             .attr("transform", function (d, i) { return "translate(50," + i * 20 + ")"; })
      .on("click", function(d){
-       
+
          var that = this;
          if(typeClickLegends.indexOf(this) == -1){
             typeClickLegends.push(this);
-             
+
              d3.selectAll(".thegraph")
                 .transition()
                     .duration(500)
                     .style("opacity", 0);
-             
+
               d3.selectAll(".legend")
                 .transition()
                 .duration(500)
                 .style("opacity", .3);
              var temp_usr = [];
-             
+
              if(usrClickLegends.length > 0){
                  usrClickLegends.forEach(function(usrLegend){
                      temp_usr.push(usrLegend.id);
                  });
-                 
+
              }else{
                  temp_usr = userName;
              }
-            
+
              typeClickLegends.forEach(function(legend){
-                 
-                 temp_usr.forEach(function(name){ 
+
+                 temp_usr.forEach(function(name){
                     var lineId = "#"+name.replace(/\s+/g, '')+legend.id;
-                     
+
                     d3.selectAll(lineId)
                         .transition()
                         .duration(500)
                         .style("opacity", 1);
                 })
             })
-             typeClickLegends.forEach(function(legend){ 
-             
+             typeClickLegends.forEach(function(legend){
+
                  d3.select(legend)
                     .attr("fakeclass", "fakelegend")
                     .transition()
                     .duration(500)
                     .style("opacity", 1);
              })
-             
+
          }else{
-                
+
                 if(typeClickLegends.length > 1){
-                   
+
                     var currentItemLegend = typeClickLegends.indexOf(this);
                     typeClickLegends.splice( currentItemLegend, 1)
-                    
-                    userName.forEach(function(name){ 
+
+                    userName.forEach(function(name){
                         var lineId = "#"+name.replace(/\s+/g, '')+that.id;
-                 
+
                         d3.selectAll(lineId)
                             .transition()
                             .duration(500)
                             .style("opacity", 0);
                     })
-                    
+
                     d3.select(this)
                         .attr("fakeclass", "fakelegend")
                         .transition()
                         .duration(500)
                         .style("opacity", .3);
-                                    
+
                 }else{
                     typeClickLegends = [];
                     d3.selectAll(".thegraph")
                         .transition()
                         .duration(500)
                         .style("opacity", 1);
-             
+
                     d3.selectAll(".legend")
                         .transition()
                         .duration(500)
                         .style("opacity", 1);
-                    
+
                      d3.selectAll(".userlegend")
                         .transition()
                         .duration(500)
                         .style("opacity", 1);
-                    
+
                      d3.select(this)
                     .attr("fakeclass", "fakelegend")
                     .transition()
                     .duration(500)
                     .style("opacity", 1);
-             
+
             }
          }
      });
@@ -458,8 +460,8 @@ var thegraphEnter = thegraph.enter().append("g")
             .style("fill",function(d) { return color(d); } )
             .style("text-anchor", "end")
             .text(function (d) { return d; });
-    
-// update the axes,   
+
+// update the axes,
   // Add the X Axis
     svg.append("g")
         .attr("clip-path", "url(#clip)")
@@ -481,27 +483,28 @@ var thegraphEnter = thegraph.enter().append("g")
         .style("font-size", 12)
         .style("font-weight", "bold")
         .text("NO. OF ITEMS");;
- 
+
     function brushed() {
 
-        x.domain(brush.empty() ? x2.domain() : brush.extent()); // If brush is empty then reset the Xscale domain to default, if not then make it the brush extent 
+        x.domain(brush.empty() ? x2.domain() : brush.extent()); // If brush is empty then reset the Xscale domain to default, if not then make it the brush extent
 
         svg.select(".x.axis") // replot xAxis with transition when brush used
             .transition()
             .call(xAxis);
-    
+
         svg.select(".y.axis") // Redraw yAxis
             .transition()
-            .call(yAxis);   
+            .call(yAxis);
 
-        thegraph.selectAll("path") // Redraw lines based on brush xAxis scale and domain 
+        thegraph.selectAll("path") // Redraw lines based on brush xAxis scale and domain
             .transition()
-            .attr("d", function(d){ return line(d.values) ; }); 
-            
-        thegraph.selectAll("circle") // Redraw circles based on brush xAxis scale and domain 
+            .attr("d", function(d){ return line(d.values) ; });
+
+        thegraph.selectAll("circle") // Redraw circles based on brush xAxis scale and domain
             .transition()
             .attr("cx", function(d) { return x(parseDate(d.creation_date)); })
             .attr("cy", function (d) { return y(d.total); });
-  }// end of brush     
+  }// end of brush
 
+}
 }

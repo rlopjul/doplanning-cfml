@@ -1,5 +1,5 @@
-
-var margin = {top: 20, right: 120, bottom: 20, left: 120},
+function areaTree(treeXml){
+  var margin = {top: 20, right: 120, bottom: 20, left: 120},
     width = 1200 - margin.right - margin.left,
     height = 900 - margin.top - margin.bottom;
 
@@ -62,9 +62,9 @@ function zoom() {
 			svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 		}
 		// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
-		
+
 var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
-	   
+
 
 function centerNode(source) {
 			scale = zoomListener.scale();
@@ -79,7 +79,7 @@ function centerNode(source) {
 			zoomListener.translate([x, y]);
 		}
 
-var svg = d3.select("#treeView").append("svg")
+var svg = d3.select("#treeContainer").append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
     .attr("viewBox", "0 0 1200 900")
@@ -89,11 +89,11 @@ var svg = d3.select("#treeView").append("svg")
     .attr("class", "overlay")
     .call(zoomListener);
 
-    
-d3.xml("../data/tree.xml", "application/xml", function (error, flare) {
-  
+
+function drawTree(flare) {
+
     var flareJSON = xmlToJson(flare);
-    
+
     // Call visit function to establish maxLabelLength
     visit(flareJSON._children[0], function(d) {
 		totalNodes++;
@@ -101,7 +101,7 @@ d3.xml("../data/tree.xml", "application/xml", function (error, flare) {
 	}, function(d) {
 		return d.children && d.children.length > 0 ? d.children : null;
     });
-    
+
     root = flareJSON._children[0];
     root.x0 = height/6;
     root.y0 = 0;
@@ -113,19 +113,20 @@ d3.xml("../data/tree.xml", "application/xml", function (error, flare) {
       	   d.children = null;
     	}
     }
-   
+
     root.children.forEach(collapse);
     centerNode(root);
     update(root);
-    
-    d3.select("#reset").on("click", centerNode(root));
 
-});
+  //  d3.select("#reset").on("click", centerNode(root));
 
+};
+
+drawTree(treeXml);
 function update(source) {
 
 	var levelWidth = [1];
-    
+
 	var childCount = function(level, n) {
 			if (n.children && n.children.length > 0) {
 				if (levelWidth.length <= level + 1) levelWidth.push(0);
@@ -135,7 +136,7 @@ function update(source) {
 					});
 				}
 			};
-			
+
 	childCount(0, root);
 	var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line
 	tree = tree.size([newHeight, width]);
@@ -240,7 +241,7 @@ function click(d) {
 }
 
 function xmlToJson(xml){
-    
+
     var obj = {};
 
     if (xml.nodeType == 1) { // element
@@ -251,30 +252,31 @@ function xmlToJson(xml){
                 obj[attribute.nodeName] = attribute.nodeValue;
             }
         }
-    } 
-    
+    }
+
     if (xml.hasChildNodes()) {
-        
+
         for (var i = 0; i < xml.childNodes.length; i++)
         {
             // if recursive call returned a node, append it to children
-            
+
             var child = xmlToJson(xml.childNodes.item(i));
-            
+
             if(child)
             {
-		
+
                 if(!child.name || child.parent_id == 422){
                     (obj.children || (obj.children = [])).push(child);
                 }else {
                 (obj._children || (obj._children = [])).push(child);
                 }
             }
-             
+
         }
-       
+
     }
-        
+
     return obj;
-   
+
 };
+}

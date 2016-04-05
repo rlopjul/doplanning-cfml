@@ -80,6 +80,26 @@
 
 	}
 
+	function getMainTreeXml(areaId, areaType, includeSubareas) {
+
+	    return $.ajax({
+	        url: '#APPLICATION.htmlComponentsPath#/Area.cfc',
+	        data: {
+	            method: 'getMainTreeXml',
+	            area_id: areaId,
+	            area_type: areaType,
+	            include_subareas: includeSubareas
+	        },
+	        method:'POST',
+	        dataType: "xml",
+	          success:function(xml){
+							areaTree(xml);
+	          }
+	    });
+
+
+	  }
+
 	</cfoutput>
 
 	$(window).load( function() {
@@ -123,6 +143,8 @@
 				<cfoutput>
 
 				$(document).ready(function () {
+
+					getMainTreeXml(#URL.area#, '#area_type#', true);
 
 					var promise = getTotalItemsByUser(#URL.area#, '#area_type#', true);
 
