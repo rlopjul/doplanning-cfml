@@ -37,7 +37,7 @@
 		</cfinvoke>
 	</cfif>
 
-	<cfset parentAreaName = objectParentArea.name>
+	<cfset parentAreaName = objectParentArea.url_id>
 
 	<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebs" returnvariable="getWebsResult">
 		<cfinvokeargument name="area_type" value="#area_type#">
@@ -48,7 +48,7 @@
 	<cfloop query="#websQuery#">
 
 		<cfif websQuery.area_id IS objectParentArea.id>
-			<cfset parentAreaName = "">
+			<cfset parentAreaName = websQuery.path>
 		</cfif>
 
 	</cfloop>
@@ -56,27 +56,47 @@
 	<cfoutput>
 	<script>
 
+		function generateUrlId(){
+
+			if(	$('##url_id').val().length == 0 ) {
+
+				var parentAreaName = "#parentAreaName#";
+
+				if(parentAreaName.length > 0){
+					/*parentAreaName = pageNameToUrl(parentAreaName);
+
+					if(parentAreaName.length > 0)*/
+					parentAreaName = parentAreaName+"/";
+				}
+
+				var pageNameUrl = $('##name').val();
+
+				if(pageNameUrl.length == 0){
+
+					bootbox.alert(window.lang.translate("Debe introducir un nombre de área"), function(){
+
+						$('##name').focus();
+
+					});
+
+				}	else {
+
+					pageNameUrl	= pageNameToUrl(pageNameUrl);
+					pageNameUrl = parentAreaName+pageNameUrl;
+
+					$('##url_id').val(pageNameUrl);
+
+				}
+
+			}
+
+		}
+
 		$(function () {
 
 			$('##url_id').focus( function() {
 
-				if(	$('##url_id').val().length == 0 ) {
-
-					var parentAreaName = "#parentAreaName#";
-
-					if(parentAreaName.length > 0){
-						parentAreaName = pageNameToUrl(parentAreaName);
-
-						if(parentAreaName.length > 0)
-							parentAreaName = parentAreaName+"/";
-					}
-
-					var pageNameUrl = $('##name').val();
-					pageNameUrl	= pageNameToUrl(pageNameUrl);
-					pageNameUrl = parentAreaName+pageNameUrl;
-
-			    $('##url_id').val(pageNameUrl);
-				}
+				generateUrlId();
 
 			});
 
@@ -85,6 +105,13 @@
 					"A": { pattern: /[\w@\-.+/]/, recursive: true }
 				}
 			});
+
+			$('##name').focusout( function() {
+
+				generateUrlId();
+
+			});
+
 
 		});
 
@@ -102,7 +129,7 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<label class="control-label" for="name" lang="es">Nombre</label>
-			<input type="text" name="name" id="name" value="#HTMLEditFormat(objectArea.name)#" required="true" title="Nombre de área requerida" class="form-control" />
+			<input type="text" name="name" id="name" value="#HTMLEditFormat(objectArea.name)#" required="true" title="Nombre de área requerida" class="form-control" autofocus/>
 		</div>
 	</div>
 
@@ -121,7 +148,7 @@
 			<div class="col-sm-12">
 				<label class="control-label" for="url_id" lang="es">Nombre de la página (URL)</label>
 				<input type="text" name="url_id" id="url_id" value="#HTMLEditFormat(objectArea.url_id)#" required="true" maxlength="75" title="Nombre de la página (URL) requerido" class="form-control" />
-				<small class="help-block" style="margin-bottom:0" lang="es">Valor que aparecerá en la URL de la página, ejemplo: pagina-padre/nombre-de-la-pagina</small>
+				<small class="help-block" style="margin-bottom:0" lang="es">Valor que aparecerá en la URL de la página, ejemplo: es/nombre-de-la-pagina</small>
 			</div>
 		</div>
 
