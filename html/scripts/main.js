@@ -159,7 +159,11 @@ function postModalFormTree(formId, requestUrl){
 		  		//alert(JSON.stringify(data));
 		  		var message = data.message;
 
-		  		hideDefaultModal();
+          if(data.result == true) {
+
+  		  		hideDefaultModal();
+
+          }
 
 		  		if(formId != "#deleteAreaForm") {
 
@@ -171,13 +175,12 @@ function postModalFormTree(formId, requestUrl){
 		  			updateTree();
 		  		}
 
-
-		  		$('body').modalmanager('removeLoading');
+  		  	$('body').modalmanager('removeLoading');
 
 		  		showAlertMessage(message, data.result);
 
 		  	}else
-				alert(status);
+				    alert(status);
 
 		  }
 		});
