@@ -1,17 +1,17 @@
 <!--- APP HTML HEADER --->
 
-<cfif find("error.cfm", CGI.SCRIPT_NAME) IS 0 AND isDefined("SESSION.user_id")><!---error.cfm no necesita esto y puede dar problemas en errores de consultad de usuarios--->
+<cfif find("error.cfm", CGI.SCRIPT_NAME) IS 0 AND isDefined("SESSION.user_id")><!---error.cfm no necesita esto y puede dar problemas en errores de consulta de usuarios--->
 
   <cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
     <cfinvokeargument name="user_id" value="#SESSION.user_id#">
   </cfinvoke>
 
-  <cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-  </cfinvoke>
-
-  <cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
-
 </cfif>
+
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+</cfinvoke>
+
+<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
 <!--Developed and copyright by Era7 Information Technologies & Web4Bio 2007-2016 (www.doplanning.net)-->
 <meta charset="utf-8">
