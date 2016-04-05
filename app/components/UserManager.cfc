@@ -761,10 +761,18 @@
 					</cfif>
 					<cfif APPLICATION.moduleLdapUsers EQ true>
 						<cfif isDefined("arguments.login_ldap")>
-							, login_ldap = <cfqueryparam value = "#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
+							<cfif len(arguments.login_ldap) GT 0>
+								, login_ldap = <cfqueryparam value="#arguments.login_ldap#" cfsqltype="cf_sql_varchar">
+							<cfelse>
+								, login_ldap = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
+							</cfif>
 						</cfif>
 						<cfif isDefined("arguments.login_diraya")>
-							, login_diraya = <cfqueryparam value = "#arguments.login_diraya#" cfsqltype="cf_sql_varchar">
+							<cfif len(arguments.login_diraya) GT 0>
+								, login_diraya = <cfqueryparam value="#arguments.login_diraya#" cfsqltype="cf_sql_varchar">
+							<cfelse>
+								, login_diraya = <cfqueryparam null="true" cfsqltype="cf_sql_varchar">
+							</cfif>
 						</cfif>
 					</cfif>
 
