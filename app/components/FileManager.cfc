@@ -3482,6 +3482,7 @@
 				<cflock type="exclusive" timeout="30">
 
 					<cfset versionValue = ListLast(uploadedFile.clientFileName, " ")>
+					<cfset versionValue = REReplace(versionValue,"^0+","","ALL")>
 
 					<cfif IsNumeric(versionValue)>
 
@@ -3532,6 +3533,7 @@
 								<cfinvokeargument name="uploadedFile" value="#uploadedFile#">
 								<cfinvokeargument name="temp_file" value="#temp_file#">
 								<cfinvokeargument name="user_id" value="#user_id#">
+								<cfinvokeargument name="version_index" value="#versionValue#">
 
 								<cfinvokeargument name="client_abb" value="#client_abb#">
 								<cfinvokeargument name="client_dsn" value="#client_dsn#">
