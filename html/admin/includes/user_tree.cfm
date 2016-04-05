@@ -17,10 +17,11 @@
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
 			<cfinvokeargument name="get_user_id" value="#user_id#">
+			<cfinvokeargument name="error_redirect" value="false">
 		</cfinvoke>
 
 	</div>
 	</cfprocessingdirective>
-	<div style="height:2px; clear:both;"><!-- --></div>	
+	<div style="height:2px; clear:both;"><!-- --></div>
 
 </cfif>

@@ -22,6 +22,8 @@
 
 		<cfargument name="get_user_id" type="numeric" required="false">
 
+		<cfargument name="error_redirect" type="boolean" required="false" default="true">
+
 		<cfset var method = "outputMainTree">
 
 		<cfset var curArea = "">
@@ -30,6 +32,7 @@
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getMainTree" returnvariable="getMainTreeResponse">
 				<cfinvokeargument name="get_user_id" value="#arguments.get_user_id#">
+				<cfinvokeargument name="error_redirect" value="false">
 			</cfinvoke>
 
 			<cfxml variable="xmlAreas">
@@ -53,11 +56,17 @@
 			<cfelse>
 				<!---User without areas--->
 				<!---<cfthrow errorcode="403">--->
-				<ul><li rel="not-allowed"><a class="jstree-node" style="font-weight:bold" onClick="event.stopPropagation()">No tiene asignada ningún área de la organización para poder acceder. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</a></li></ul>
+				<ul><li rel="not-allowed"><a class="jstree-node" onClick="event.stopPropagation()"><span style="color:##e4514b">No tiene asignada ningún área de la organización para poder acceder. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</span></a></li></ul>
 			</cfif>
 
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfif arguments.error_redirect IS true>
+					<cfinclude template="includes/errorHandler.cfm">
+				<cfelse>
+					<cfoutput>
+						<ul><li rel="not-allowed"><a class="jstree-node" onClick="event.stopPropagation()"><span style="color:##e4514b">#cfcatch.message#</span></a></li></ul>
+					</cfoutput>
+				</cfif>
 			</cfcatch>
 
 		</cftry>
@@ -114,14 +123,14 @@
 			<cfelse>
 				<!---User without areas to admin--->
 				<!---<cfthrow errorcode="403">--->
-				<ul><li rel="not-allowed"><a class="jstree-node" style="font-weight:bold" onClick="event.stopPropagation()" lang="es">No tiene asignada ningún área de la organización para poder administrar. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</a></li></ul>
+				<ul><li rel="not-allowed"><a class="jstree-node" onClick="event.stopPropagation()" lang="es"><span style="color:##e4514b">No tiene asignada ningún área de la organización para poder administrar. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</span></a></li></ul>
 			</cfif>
 
 			<cfcatch>
 
 				<cfif cfcatch.errorcode IS 404>
 
-					<ul><li rel="not-allowed"><a class="jstree-node" style="font-weight:bold" onClick="event.stopPropagation()" lang="es">No tiene asignada ningún área de la organización para poder administrar. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</a></li></ul>
+					<ul><li rel="not-allowed"><a class="jstree-node" onClick="event.stopPropagation()" lang="es"><span style="color:##e4514b">No tiene asignada ningún área de la organización para poder administrar. Contacte con el administrador de la misma para que le facilite acceso al área o áreas que necesite.</span></a></li></ul>
 
 				<cfelse>
 

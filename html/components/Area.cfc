@@ -14,6 +14,7 @@
 
 	<cffunction name="getMainTree" output="false" returntype="struct" access="public">
 		<cfargument name="get_user_id" type="numeric" required="false">
+		<cfargument name="error_redirect" type="boolean" required="false" default="true">
 
 		<cfset var method = "getMainTree">
 
@@ -28,7 +29,11 @@
 			<cfinclude template="includes/responseHandlerStruct.cfm">
 
 			<cfcatch>
-				<cfinclude template="includes/errorHandlerStruct.cfm">
+				<cfif arguments.error_redirect IS true>
+					<cfinclude template="includes/errorHandlerStruct.cfm">
+				<cfelse>
+					<cfrethrow>
+				</cfif>
 			</cfcatch>
 
 		</cftry>
