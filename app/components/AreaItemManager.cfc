@@ -2551,6 +2551,10 @@
 					<cfset objectItem.creation_date = cur_date>
 				</cfif>
 
+				<cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 8>
+					<cfset objectItem.url_id = "">
+				</cfif>
+
 			</cfif>
 
 			<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->

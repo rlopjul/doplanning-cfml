@@ -1164,6 +1164,41 @@
 
 </cfif>
 
+<cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 8><!---News, events and publications--->
+
+	<cfif len(area_type) GT 0>
+
+		<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebsPathUrl" returnvariable="getWebsResult">
+			<cfinvokeargument name="area_type" value="#area_type#">
+		</cfinvoke>
+
+		<cfset path_url = getWebsResult.path_url>
+
+	<cfelse>
+
+		<cfset path_url = "">
+
+	</cfif>
+
+	<div class="row">
+
+		<div class="col-md-12">
+
+			<label class="control-label" for="url_id"><span lang="es">URL de la página</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
+
+			<div class="input-group">
+				<cfif len(path_url) GT 0>
+			  	<span class="input-group-addon">#path_url#/</span>
+				</cfif>
+				<input type="text" name="url_id" id="url_id" value="#objectItem.url_id#" class="form-control" passthrough="#passthrough#">
+			</div>
+
+		</div>
+
+	</div>
+
+</cfif>
+
 </cfoutput>
 
 <cfif APPLICATION.identifier NEQ "dp"><!---SMS Deshabilitado para DoPlanning--->

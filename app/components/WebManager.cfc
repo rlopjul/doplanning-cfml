@@ -75,4 +75,51 @@
 	<!--- ------------------------------------------------------------------------------  --->
 
 
+	<!--- --------------------------- GET WEBS PATH URL ---------------------------------------   --->
+
+	<cffunction name="getWebsPathUrl" output="false" returntype="struct" access="public">
+		<cfargument name="area_type" type="string" required="true">
+
+		<cfset var method = "getWebsPathUrl">
+
+		<cfset var response = structNew()>
+
+		<cfset var pathUrl = "">
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWebs" returnvariable="websQuery">
+				<cfinvokeargument name="area_type" value="#arguments.area_type#"/>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#"/>
+				<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
+			</cfinvoke>
+
+			<cfloop query="#websQuery#">
+
+				<cfif len(pathUrl) IS 0>
+					<cfset pathUrl = websQuery.path_url>
+				<cfelseif pathUrl NEQ websQuery.path_url>
+					<cfset response = {result=true, path_url=""}>
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=true, path_url=#pathUrl#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+	<!--- ------------------------------------------------------------------------------  --->
+
+
 </cfcomponent>
