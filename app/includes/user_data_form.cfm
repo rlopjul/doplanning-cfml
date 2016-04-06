@@ -296,7 +296,7 @@ page_types
 
 			<div class="row">
 
-				<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666">PREFERENCIAS</label>
+				<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666;" lang="es">Preferencias</label>
 
 				<div class="col-xs-7 col-sm-8 col-md-9">
 
@@ -316,7 +316,7 @@ page_types
 
 				<div class="row">
 
-					<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666">OPCIONES</label>
+					<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666;" lang="es">Opciones</label>
 
 					<div class="col-xs-7 col-sm-8 col-md-9">
 
@@ -347,7 +347,7 @@ page_types
 
 				<div class="row">
 
-					<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666">PERMISOS</label>
+					<label class="col-xs-5 col-sm-4 col-md-3 control-label" style="color:##666666" lang="es">Permisos</label>
 
 					<div class="col-xs-7 col-sm-8 col-md-9">
 
@@ -371,7 +371,7 @@ page_types
 							<label>
 								<input type="checkbox" name="user_administrator" id="user_administrator" value="true" <cfif isDefined("objectUser.user_administrator") AND objectUser.user_administrator IS true>checked="checked"</cfif> /> <span lang="es">Administrador de usuarios</span>
 							</label>
-							<small class="help-block" lang="es">Podrá administrar los usuarios de la aplicación.</small>
+							<small class="help-block" lang="es">Puede administrar los usuarios de la aplicación.</small>
 						</div>
 
 					</div>
@@ -384,7 +384,7 @@ page_types
 							<label>
 								<input type="checkbox" name="area_admin_administrator" id="area_admin_administrator" value="true" <cfif isDefined("objectUser.area_admin_administrator") AND objectUser.area_admin_administrator IS true>checked="checked"</cfif> /> <span lang="es">Administrador de administradores de área</span>
 							</label>
-							<small class="help-block" lang="es">Podrá dar permiso de administrador de área a los usuarios de la aplicación.</small>
+							<small class="help-block" lang="es">Puede dar permiso de administrador de área a los usuarios de la aplicación.</small>
 						</div>
 
 					</div>

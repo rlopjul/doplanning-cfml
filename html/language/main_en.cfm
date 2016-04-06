@@ -878,6 +878,8 @@ curLangTextEn = {
 		/*admin/main.cfm*/
 		"Preferencias del usuario":"User preferences",
     "Preferencias":"Preferences",
+    "Opciones":"Options",
+    "Permisos":"Permissions",
 		"Administración general":"General administration",
 		"Administración de áreas":"Areas administration",
 		"No cambiar de pestaña al seleccionar área":"Do not change tab when an area is selected",
@@ -1031,8 +1033,14 @@ curLangTextEn = {
 		"Confirmar contraseña":"Confirm new password:",
 		"Modificación guardada.":"Modification saved.",
 		"Mostrar sólo áreas con acceso":"Show only areas with access permission",
+    "Administrador de usuarios":"User administrator",
+    "Administrador de administradores de área":"Administrator of area administrators",
 		"En el árbol de áreas sólo se mostrarán las áreas con permiso de acceso.":"The areas tree will only show the areas with access permission.",
 		"Login Portal del Empleado":"Employee Portal login",
+    "Los cambios en opciones y permisos se aplicarán en el próximo inicio de sesión del usuario.":"Changes in options and permissions are applied at the next logon of the user",
+    "Puede administrar los usuarios de la aplicación.":"Manage application users.",
+    "Puede dar permiso de administrador de área a los usuarios de la aplicación.":"He can give area administrator permision to other users.",
+    "Si el usuario no se marca como verificado, tras ser dado de alta deberá acceder a verificar su cuenta de correo para poder usar la aplicación y recibir emails de la misma.":"After being created, the user must go to check his mail account to use the application and receive emails.",
 		/*END preferences_user_data.cfm*/
 
 		/*preferences_alerts.cfm*/
