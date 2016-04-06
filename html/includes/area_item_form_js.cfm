@@ -35,7 +35,7 @@ $(window).on('beforeunload', function(event){
 
 $(document).ready(function() {
 
-  	$('input').change(function() {
+  $('input').change(function() {
 		preventClose = true;
 	});
 
