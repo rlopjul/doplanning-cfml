@@ -56,18 +56,11 @@
 	<cfoutput>
 	<script>
 
-		function generateUrlId(){
+		var parentAreaName = "#parentAreaName#";
 
-			if(	$('##url_id').val().length == 0 ) {
+		$(function () {
 
-				var parentAreaName = "#parentAreaName#";
-
-				if(parentAreaName.length > 0){
-					/*parentAreaName = pageNameToUrl(parentAreaName);
-
-					if(parentAreaName.length > 0)*/
-					parentAreaName = parentAreaName+"/";
-				}
+			$('##url_id').focus( function() {
 
 				var pageNameUrl = $('##name').val();
 
@@ -79,24 +72,14 @@
 
 					});
 
-				}	else {
+				} else {
 
-					pageNameUrl	= pageNameToUrl(pageNameUrl);
-					pageNameUrl = parentAreaName+pageNameUrl;
+					if(	$('##url_id').val().length == 0 ) {
 
-					$('##url_id').val(pageNameUrl);
+						$('##url_id').val(generateUrlId(parentAreaName, pageNameUrl));
 
+					}
 				}
-
-			}
-
-		}
-
-		$(function () {
-
-			$('##url_id').focus( function() {
-
-				generateUrlId();
 
 			});
 
@@ -108,7 +91,9 @@
 
 			$('##name').focusout( function() {
 
-				generateUrlId();
+				var pageNameUrl = $('##name').val();
+
+				generateUrlId(parentAreaName, pageNameUrl);
 
 			});
 
