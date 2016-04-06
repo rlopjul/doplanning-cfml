@@ -9,7 +9,7 @@
 	<script src="./Scripts/areaTree.js"></script>
 
 	<!-- stylesheet for visualization -->
-	<link rel="stylesheet" href="./style/visualization.css">
+	 <link rel="stylesheet" href="./styles/visualization.css">
 
 
 <cfoutput>
@@ -155,13 +155,13 @@
 
 					getMainTreeXml(#URL.area#, '#area_type#', true);
 
-					/*var promise = getTotalItemsByUser(#URL.area#, '#area_type#', true);
+					var promise = getTotalItemsByUser(#URL.area#, '#area_type#', true);
 
-					promise.success(function (data) {
+						promise.success(function (data) {
 
 						drawChart(data.totalItems);
 					});
-					*/
+
 				});
 
 				</cfoutput>

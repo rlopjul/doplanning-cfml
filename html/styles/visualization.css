@@ -58,22 +58,39 @@ div.tooltip {
   fill-opacity: .3;
   shape-rendering: crispEdges;
 }
-    .node {
-  cursor: pointer;
-}
 
-.node circle {
-  fill: #fff;
-  stroke: steelblue;
-  stroke-width: 1.5px;
-}
+.node {
+   cursor: pointer;
+ }
 
-.node text {
-  font: 10px sans-serif;
-}
+ .overlay{
+     background-color:#EEE;
+ }
 
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 1.5px;
-}
+ .overlayWhite{
+     background-color:#fff;
+ }
+
+ .node circle {
+   fill: #fff;
+   stroke: steelblue;
+   stroke-width: 1.5px;
+ }
+
+ .node text {
+   font-size:12px;
+   font-family:sans-serif;
+ }
+
+ .link {
+   fill: none;
+   stroke: #ccc;
+   stroke-width: 1.5px;
+ }
+
+ #tree-container{
+   margin-top: 10px;
+   margin-left: 10px;
+   margin-right: 10px;
+   margin-right: 10px;
+ }
