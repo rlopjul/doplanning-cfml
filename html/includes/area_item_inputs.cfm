@@ -969,34 +969,51 @@
 
 <cfif itemTypeId IS NOT 20 AND itemTypeId IS NOT 17><!--- IS NOT DoPlanning Document OR Mailings --->
 
-	<div class="row">
+	<fieldset>
 
-		<div class="col-md-12">
+		<legend lang="es">#t_link#</legend>
 
-			<label class="control-label" for="link"><span lang="es">#t_link#</span>: <cfif link_required IS true>*</cfif></label>
-			<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+		<div class="row">
 
-		</div>
+			<div class="col-xs-3 col-md-2">
 
-	</div>
+				<label class="control-label" for="link"><span lang="es">URL</span>: <cfif link_required IS true>*</cfif></label>
 
-	<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7 AND itemTypeId IS NOT 17><!---IS NOT Messages, Tasks, Consultations OR Mailings--->
+			</div>
 
-	<div class="row">
+			<div class="col-xs-9 col-md-10">
 
-		<div class="col-md-6">
+				<cfinput type="text" name="link" id="link" value="#objectItem.link#" placeholder="http://" required="#link_required#" message="#t_link# válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
 
-			<label class="control-label" for="link_target"><span lang="es">Abrir URL en</span>:</label> <cfif APPLICATION.moduleWeb EQ true><small lang="es">(Sólo para publicar en web)</small></cfif>
-			<select name="link_target" id="link_target" class="form-control">
-				<option value="_blank" <cfif objectItem.link_target EQ "_blank">selected="selected"</cfif> lang="es">Nueva ventana</option>
-				<option value="_self" <cfif objectItem.link_target EQ "_self">selected="selected"</cfif> lang="es">Misma ventana</option>
-			</select>
+			</div>
 
 		</div>
 
-	</div>
+		<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 6 AND itemTypeId IS NOT 7 AND itemTypeId IS NOT 17><!---IS NOT Messages, Tasks, Consultations OR Mailings--->
 
-	</cfif>
+		<div class="row">
+
+			<div class="col-xs-3 col-md-2">
+
+					<label class="control-label" for="link_target"><span lang="es">Abrir URL en</span>:</label>
+
+			</div>
+
+			<div class="col-xs-9 col-md-10">
+
+				<select name="link_target" id="link_target" class="form-control">
+					<option value="_blank" <cfif objectItem.link_target EQ "_blank">selected="selected"</cfif> lang="es">Nueva ventana</option>
+					<option value="_self" <cfif objectItem.link_target EQ "_self">selected="selected"</cfif> lang="es">Misma ventana</option>
+				</select>
+				<cfif APPLICATION.moduleWeb EQ true><small lang="es">(Sólo para publicar en web)</small></cfif>
+
+			</div>
+
+		</div>
+
+		</cfif>
+
+	</fieldset>
 
 </cfif>
 

@@ -80,7 +80,7 @@ return_path: define la ruta donde se encuentra esta página, para que al enviar 
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form_js.cfm">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-horizontal"  onsubmit="return onSubmitForm();"><!--- class="form-horizontal" class="form-inline" --->
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="item_form" class="form-horizontal item_form"  onsubmit="return onSubmitForm();"><!--- class="form-horizontal" class="form-inline" --->
 	<cfinput type="hidden" name="itemTypeId" value="#itemTypeId#">
 	<cfinput type="hidden" name="area_id" value="#area_id#">
 	<cfinput type="hidden" name="return_path" value="#return_path#">

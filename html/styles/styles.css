@@ -50,6 +50,22 @@ label {
 	font-size: 15px;
 }
 
+fieldset {
+		margin-top: 15px;
+}
+
+.item_form legend {
+	font-size: 15px;
+	border: none;
+	margin-bottom: 0;
+}
+
+.item_form fieldset {
+	border: 1px solid #c0c0c0;
+	/*margin: 0 2px;*/
+	padding: 0.35em 0.625em 0.75em;
+}
+
 /*.btn-info {
 
 	background-color: #019ED3;
@@ -426,9 +442,6 @@ fieldset[disabled] .btn-warning.active {
 	background-image: none; /* Para corregir un fallo que con ckeditor y bootstrap los select se muestran al desplegarse con muchas flechas */
 }
 
-fieldset {
-		margin-top: 20px;
-}
 
 .label-as-badge {
     border-radius: 1em;
