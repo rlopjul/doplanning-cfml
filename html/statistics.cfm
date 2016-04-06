@@ -98,6 +98,8 @@
 	        dataType: "xml",
 	          success:function(xml){
 
+							// Modify root node
+							// Add name and id to root node
 							xml.childNodes[0].setAttribute("name", "root");
 							var rootId = xml.childNodes[0].attributes.item(1).nodeValue;
 							xml.childNodes[0].setAttribute("id", rootId);
