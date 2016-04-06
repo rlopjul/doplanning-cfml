@@ -1168,17 +1168,87 @@
 
 	<cfif len(area_type) GT 0>
 
-		<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebsPathUrl" returnvariable="getWebsResult">
-			<cfinvokeargument name="area_type" value="#area_type#">
+		<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebFromArea" returnvariable="getWebsResult">
+			<cfinvokeargument name="area_id" value="#area_id#">
 		</cfinvoke>
 
-		<cfset path_url = getWebsResult.path_url>
+		<cfif getWebsResult.result IS true>
+
+			<cfset webQuery = getWebsResult.query>
+			<cfset web_path_url = webQuery.path_url>
+			<cfset web_language = webQuery.language>
+
+		<cfelse>
+
+			<cfset web_path_url = "">
+			<cfset web_language = APPLICATION.defaultLanguage>
+
+		</cfif>
 
 	<cfelse>
 
-		<cfset path_url = "">
+		<cfset web_path_url = "">
+		<cfset web_language = APPLICATION.defaultLanguage>
 
 	</cfif>
+
+	<cfif web_language EQ "es">
+		<cfset pagePath = lcase(itemTypeNameEsP)>
+	<cfelse>
+		<cfif itemTypeId IS 4><!---News--->
+			<cfset pagePath = itemTypeName>
+		<cfelse>
+			<cfset pagePath = itemTypeNameP>
+		</cfif>
+	</cfif>
+
+	<script>
+
+		var pagePath = "#pagePath#";
+
+		$(function () {
+
+			$('##url_id').focus( function() {
+
+				var pageNameUrl = $('##item_title').val();
+
+				if(pageNameUrl.length == 0){
+
+					bootbox.alert(window.lang.translate("Debe introducir un título"), function(){
+
+						$('##item_title').focus();
+
+					});
+
+				} else {
+
+					if(	$('##url_id').val().length == 0 ) {
+
+						$('##url_id').val(generateUrlId(pagePath, pageNameUrl));
+
+					}
+				}
+
+			});
+
+			$('##url_id').mask("A", {
+				translation: {
+					"A": { pattern: /[\w@\-.+/]/, recursive: true }
+				}
+			});
+
+			$('##item_title').focusout( function() {
+
+				var pageNameUrl = $('##item_title').val();
+
+				generateUrlId(pagePath, pageNameUrl);
+
+			});
+
+
+		});
+
+	</script>
 
 	<div class="row">
 
@@ -1187,8 +1257,8 @@
 			<label class="control-label" for="url_id"><span lang="es">URL de la página</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
 
 			<div class="input-group">
-				<cfif len(path_url) GT 0>
-			  	<span class="input-group-addon">#path_url#/</span>
+				<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
+			  	<span class="input-group-addon">#web_path_url#/</span>
 				</cfif>
 				<input type="text" name="url_id" id="url_id" value="#objectItem.url_id#" class="form-control" passthrough="#passthrough#">
 			</div>
