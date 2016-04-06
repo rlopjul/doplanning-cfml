@@ -118,6 +118,24 @@
 
 	</cfscript>
 
+
+	<!--- PROVISIONAL
+		Esto hay que quitarlo cuando se actualice a Lucee, ya que Lucee incluye una función para esto
+	--->
+
+	<cfscript>
+			function getQueryRow(query, rowNumber) {
+					var i = 0;
+					var rowData = StructNew();
+					var cols    = ListToArray(query.columnList);
+					for (i = 1; i lte ArrayLen(cols); i = i + 1) {
+							rowData[cols[i]] = query[cols[i]][rowNumber];
+					}
+					return rowData;
+			}
+	</cfscript>
+
+
 	<!--- insertBR --->
 
 	<cffunction name="insertBR" returntype="string" access="public">

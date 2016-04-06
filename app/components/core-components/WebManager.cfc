@@ -49,4 +49,54 @@
 
   </cffunction>
 
+
+	<!--- --------------------------- GET WEB FROM AREA ---------------------------------------   --->
+
+	<cffunction name="getWebFromArea" output="false" returntype="struct" access="public">
+		<cfargument name="area_id" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+	  <cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getWebFromArea">
+
+		<cfset var response = structNew()>
+
+		<cfset var parentAreasIds = "">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getParentAreasIds" returnvariable="parentAreasIds">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWebs" returnvariable="websQuery">
+				<cfinvokeargument name="client_abb" value="#client_abb#"/>
+				<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
+			</cfinvoke>
+
+			<cfloop query="#websQuery#">
+
+				<cfif listFind(parentAreasIds, websQuery.area_id) GT 0>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="getQueryRow" returnvariable="webQuery">
+						<cfinvokeargument name="query" value="#websQuery#">
+						<cfinvokeargument name="rowNumber" value="#websQuery.currentRow#">
+					</cfinvoke>
+
+					<cfset response = {result=true, query=#webQuery#}>
+					<cfreturn response>
+
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=false}>
+
+		<cfreturn response>
+
+	</cffunction>
+	<!--- ------------------------------------------------------------------------------  --->
+
 </cfcomponent>

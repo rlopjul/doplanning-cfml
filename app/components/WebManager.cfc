@@ -75,6 +75,39 @@
 	<!--- ------------------------------------------------------------------------------  --->
 
 
+	<!--- --------------------------- GET WEB FROM AREA ---------------------------------------   --->
+
+	<cffunction name="getWebFromArea" output="false" returntype="struct" access="public">
+		<cfargument name="area_id" type="string" required="true">
+
+		<cfset var method = "getWebFromArea">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/WebManager" method="getWebFromArea" returnvariable="response">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#"/>
+				<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
+			</cfinvoke>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+	<!--- ------------------------------------------------------------------------------  --->
+
+
 	<!--- --------------------------- GET WEBS PATH URL ---------------------------------------   --->
 
 	<cffunction name="getWebsPathUrl" output="false" returntype="struct" access="public">
