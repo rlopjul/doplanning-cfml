@@ -146,8 +146,8 @@
 
 		<div class="row">
 			<div class="col-sm-12">
-				<label class="control-label" for="url_id" lang="es">Nombre de la página (URL)</label>
-				<input type="text" name="url_id" id="url_id" value="#HTMLEditFormat(objectArea.url_id)#" required="true" maxlength="75" title="Nombre de la página (URL) requerido" class="form-control" />
+				<label class="control-label" for="url_id" lang="es">URL de la página</label>
+				<input type="text" name="url_id" id="url_id" value="#HTMLEditFormat(objectArea.url_id)#" required="true" maxlength="75" title="URL de la página requerido" class="form-control" />
 				<small class="help-block" style="margin-bottom:0" lang="es">Valor que aparecerá en la URL de la página, ejemplo: es/nombre-de-la-pagina</small>
 			</div>
 		</div>

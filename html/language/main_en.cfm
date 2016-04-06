@@ -886,7 +886,7 @@ curLangTextEn = {
 		"Administradores":"Administrators",
 		"Nuevo usuario":"New user",
 		"Opciones de la organización":"Organization options",
-    "Nombre de la página (URL)":"Name of page (URL)",
+    "URL de la página":"Page URL",
     "Valor que aparecerá en la URL de la página, ejemplo: nombre-de-la-pagina":"Value included in the URL of the page. Example: name-of-page",
     "Área padre":"Parent area",
     "Ocultar del menú web":"Hide from web menu",
