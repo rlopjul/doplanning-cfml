@@ -8,6 +8,10 @@
 	<script src="./Scripts/mlineBrush.js"></script>
 	<script src="./Scripts/areaTree.js"></script>
 
+	<!-- stylesheet for visualization -->
+	<link rel="stylesheet" href="./style/visualization.css">
+
+
 <cfoutput>
 
 <title>Estadísticas #APPLICATION.title#<cfif isDefined("SESSION.client_name")> - #SESSION.client_name#</cfif></title>
@@ -93,6 +97,11 @@
 	        method:'POST',
 	        dataType: "xml",
 	          success:function(xml){
+
+							xml.childNodes[0].setAttribute("name", "root");
+							var rootId = xml.childNodes[0].attributes.item(1).nodeValue;
+							xml.childNodes[0].setAttribute("id", rootId);
+
 							areaTree(xml);
 	          }
 	    });
@@ -146,13 +155,13 @@
 
 					getMainTreeXml(#URL.area#, '#area_type#', true);
 
-					var promise = getTotalItemsByUser(#URL.area#, '#area_type#', true);
+					/*var promise = getTotalItemsByUser(#URL.area#, '#area_type#', true);
 
 					promise.success(function (data) {
 
 						drawChart(data.totalItems);
 					});
-
+					*/
 				});
 
 				</cfoutput>
@@ -163,12 +172,20 @@
 			<!--- PAGE CONTENT HERE --->
 
 
+			 <div class="container-fluid">
+				 <div class="row" >
+				 	<div id="userLogArea" class="col-lg-9 col-md-9 col-sm-9"> </div>
+			 	</div>
 
-			<div id="userLogArea"> </div>
-			<div id="multiLine"></div>
-			<div id="treeContainer"></div>
+				<div class="row">
+				 <div id="multiLine" class="col-lg-9 col-md-9 col-sm-9"></div>
+			 </div>
 
+			 <div class="row">
+				 <div id="treeContainer" class="col-lg-9 col-md-9 col-sm-9"></div>
+			 </div>
 
+			</div>
 
 			<!--- END PAGE CONTENT --->
 

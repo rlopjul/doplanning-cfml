@@ -1,4 +1,6 @@
 function areaTree(treeXml){
+
+
   var margin = {top: 20, right: 120, bottom: 20, left: 120},
     width = 1200 - margin.right - margin.left,
     height = 900 - margin.top - margin.bottom;
@@ -90,39 +92,7 @@ var svg = d3.select("#treeContainer").append("svg")
     .call(zoomListener);
 
 
-function drawTree(flare) {
 
-    var flareJSON = xmlToJson(flare);
-
-    // Call visit function to establish maxLabelLength
-    visit(flareJSON._children[0], function(d) {
-		totalNodes++;
-		maxLabelLength = Math.max(d.name.length, maxLabelLength);
-	}, function(d) {
-		return d.children && d.children.length > 0 ? d.children : null;
-    });
-
-    root = flareJSON._children[0];
-    root.x0 = height/6;
-    root.y0 = 0;
-
-    function collapse(d) {
-    	if (d.children) {
-   	   d._children = d.children;
-     	   d._children.forEach(collapse);
-      	   d.children = null;
-    	}
-    }
-
-    root.children.forEach(collapse);
-    centerNode(root);
-    update(root);
-
-  //  d3.select("#reset").on("click", centerNode(root));
-
-};
-
-drawTree(treeXml);
 function update(source) {
 
 	var levelWidth = [1];
@@ -240,6 +210,41 @@ function click(d) {
    centerNode(d);
 }
 
+function drawTree(flare) {
+
+    var flareJSON = xmlToJson(flare);
+
+    // Call visit function to establish maxLabelLength
+    visit(flareJSON._children[0], function(d) {
+		totalNodes++;
+		maxLabelLength = Math.max(d.name.length, maxLabelLength);
+	}, function(d) {
+		return d.children && d.children.length > 0 ? d.children : null;
+    });
+
+    root = flareJSON._children[0];
+    root.x0 = height/6;
+    root.y0 = 0;
+
+    console.log(root);
+    function collapse(d) {
+    	if (d.children) {
+   	   d._children = d.children;
+     	   d._children.forEach(collapse);
+      	   d.children = null;
+    	}
+    }
+
+    root.children.forEach(collapse);
+    centerNode(root);
+    update(root);
+
+  //  d3.select("#reset").on("click", centerNode(root));
+
+};
+
+drawTree(treeXml);
+
 function xmlToJson(xml){
 
     var obj = {};
@@ -247,8 +252,8 @@ function xmlToJson(xml){
     if (xml.nodeType == 1) { // element
         // do attributes
         if (xml.attributes.length > 0) {
-            for (var j = 0; j < xml.attributes.length; j++) {
-                var attribute = xml.attributes.item(j);
+            for (var i = 0; i < xml.attributes.length; i++) {
+                var attribute = xml.attributes.item(i);
                 obj[attribute.nodeName] = attribute.nodeValue;
             }
         }
