@@ -163,7 +163,7 @@
 
 						drawChart(data.totalItems);
 					});
-
+					
 				});
 
 				</cfoutput>
