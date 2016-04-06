@@ -61,10 +61,10 @@ var svg = d3.select("#treeContainer").append("svg")
     .attr("height", "100%")
     .attr("viewBox", "0 0 1200 900")
     .attr("preserveAspectRatio", "xMinYMin")
+    .call(zoomListener)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-    .attr("class", "overlay")
-    .call(zoomListener);
+    .attr("class", "overlay");
 
 
 
