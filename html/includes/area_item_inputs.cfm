@@ -1264,23 +1264,30 @@
 
 	</script>
 
-	<div class="row">
 
-		<div class="col-md-12">
+	<fieldset>
 
-			<label class="control-label" for="url_id"><span lang="es">URL de la página</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
+		<legend><span lang="es">URL de la página</span> <small lang="es">(Sólo para publicar en web)</small></legend>
 
-			<div class="input-group">
-				<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
-			  	<span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#pagePath#/</span></span>
-				</cfif>
-				<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectItem.url_id,'/')#" class="form-control" passthrough="#passthrough#">
-				<input type="hidden" name="url_id" id="url_id" value="#pagePath#/#listLast(objectItem.url_id,'/')#" />
+		<div class="row">
+
+			<div class="col-md-12">
+
+					<label class="sr-only" for="url_id" lang="es">URL de la página</label>
+
+					<div class="input-group">
+						<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
+					  	<span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#pagePath#/</span></span>
+						</cfif>
+						<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectItem.url_id,'/')#" class="form-control" passthrough="#passthrough#">
+						<input type="hidden" name="url_id" id="url_id" value="#pagePath#/#listLast(objectItem.url_id,'/')#" />
+					</div>
+
 			</div>
 
 		</div>
 
-	</div>
+	</fieldset>
 
 </cfif>
 
