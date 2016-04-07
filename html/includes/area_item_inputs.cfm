@@ -1163,7 +1163,7 @@
 
 			<div class="col-md-12">
 
-					<label class="sr-only" for="url_id" lang="es">URL de la página</label>
+					<label class="sr-only" for="url_id_suffix" lang="es">URL de la página</label>
 
 					<div class="input-group">
 						<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
