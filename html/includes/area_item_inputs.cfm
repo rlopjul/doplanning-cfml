@@ -1283,6 +1283,8 @@
 						<input type="hidden" name="url_id" id="url_id" value="#pagePath#/#listLast(objectItem.url_id,'/')#" />
 					</div>
 
+					<p class="help-block" style="margin-bottom:0">Esta URL solo está disponible cuando el elemento está publicado en la web.<br/>Puede no estar habilitada en la web de su organización.</p>
+
 			</div>
 
 		</div>
