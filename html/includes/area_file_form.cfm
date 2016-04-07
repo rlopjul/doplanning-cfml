@@ -692,7 +692,7 @@
 
 			</cfif>
 
-			<cfif len(area_type) GT 0><!--- Esto es provisional mientras se busca solución a la generación de url_id en todos los archivos de DP --->
+			<cfif APPLICATION.webFriendlyUrls IS true AND len(area_type) GT 0><!--- Esto es provisional mientras se busca solución a la generación de url_id en todos los archivos de DP, porque es necesaria para cuando se publique en la web un archivo de un área normal --->
 
 				<cfif web_language EQ "es">
 					<cfset pagePath = lcase(itemTypeNameEsP)>

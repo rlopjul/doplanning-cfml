@@ -1067,7 +1067,7 @@
 
 </cfif>
 
-<cfif itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 8><!---News, events and publications--->
+<cfif APPLICATION.webFriendlyUrls IS true AND ( itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 8 )><!---News, events and publications--->
 
 	<cfif len(area_type) GT 0>
 
