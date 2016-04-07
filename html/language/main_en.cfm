@@ -898,6 +898,7 @@ curLangTextEn = {
     "Tipo de menú":"Menu type",
     "Si se selecciona esta opción no se mostrará el área ni sus áreas inferiores en el menú web":"If this option is selected, the area or lower areas not will be displayed in the web menu",
 		"En esta área se pueden crear los siguientes elementos:":"In this area you can create the following elements:",
+    "Opciones web":"Web options",
     "Opciones de personalización del área":"Options for area customization",
     "Modo de listado de elementos del área":"List area elements",
     "Completo (Por defecto)":"Full (Default)",
