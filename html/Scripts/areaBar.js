@@ -17,10 +17,11 @@ function drawChart(totalItems){
 
 							var userLegend = myChart.addLegend(670, 50, 350, 100, "left", s);
 							var typeLegend = myChart.addLegend(670, 250, 350, 100,"left", s2);
-              //myChart.svg.attr("width", "100%")
-              //  .attr("height", "100%")
-              //.attr("viewBox", "0 0 700 400");
-              //s.addOrderRule("item_type_id");
+
+              myChart.svg.attr("width", "100%")
+                .attr("height", "100%")
+                .attr("viewBox", "0 0 900 400");
+
               myChart.ease = "bounce";
               myChart.staggerDraw = true;
               myChart.draw(800);

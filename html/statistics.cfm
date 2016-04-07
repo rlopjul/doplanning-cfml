@@ -191,15 +191,16 @@
 
 				$(document).ready(function () {
 
-					getMainTreeXml(#URL.area#, '#area_type#', true);
-					getAllItemsArea(#URL.area#, '#area_type#', true);
-
 					var promise = getTotalItemsByUser(#URL.area#, '#area_type#', true);
 
 						promise.success(function (data) {
 
 						drawChart(data.totalItems);
 					});
+
+					getAllItemsArea(#URL.area#, '#area_type#', true);
+
+					getMainTreeXml(#URL.area#, '#area_type#', true);
 
 				});
 
@@ -213,7 +214,7 @@
 
 			 <div class="container-fluid">
 				 <div class="row" >
-				 	<div id="userLogArea" class="col-lg-9 col-md-9 col-sm-9"> </div>
+				 	<div id="userLogArea" class="col-lg-12 col-md-12 col-sm-12"> </div>
 			 	</div>
 
 				<div class="row">

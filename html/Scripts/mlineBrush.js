@@ -49,7 +49,7 @@ labelEnter.append("input")
         id: function(d){ return d;}
     })
     .property("checked",function(d,i){
-        if(i == 1) return true;
+       return true;
     });
 
     labelEnter.append("label")
@@ -88,7 +88,7 @@ userName.forEach(function(name){
 });
 
 var seriesData;
-var checkUser = userName[0];
+var checkUser = userName;
 var checkItem = ["Archivo", "Lista", "Evento"];
 
 function createData(){
