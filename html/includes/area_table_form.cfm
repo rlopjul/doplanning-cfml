@@ -180,11 +180,12 @@
 
 	</fieldset>
 
+	<cfif tableTypeId IS 1 OR tableTypeId IS 2>
+
 	<fieldset>
 
 		<legend lang="es">Listado de registros</legend>
 
-		<cfif tableTypeId IS 1 OR 2>
 		<div class="row">
 			<div class="col-xs-12 col-sm-12">
 				<div class="checkbox">
@@ -221,9 +222,11 @@
 				<small class="help-block" lang="es">Define la posición de los campos en el formulario de edición de registros</small>
 			</div>
 		</div>
-		</cfif>
 
 	</fieldset>
+
+	</cfif>
+
 
 	<!--- <cfdump var="#table#"> --->
 
