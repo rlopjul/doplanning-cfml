@@ -355,19 +355,6 @@ function substringPageName(str, delimiter) {
 
 }
 
-function generateUrlId(path, pageName){
-
-	if(path.length > 0){
-		path = path+"/";
-	}
-
-	var pageNameUrl	= pageNameToUrl(pageName);
-	pageNameUrl = path+pageNameUrl;
-
-	return pageNameUrl;
-
-}
-
 function pageNameToUrl(pageName) {
 
 	pageName = substringPageName(pageName, '.-', -1);
