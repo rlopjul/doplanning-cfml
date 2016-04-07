@@ -473,21 +473,28 @@
 
 		<cfif scopesQuery.recordCount GT 0>
 
-			<div class="row" id="publicationScopeContainer">
-				<div class="col-sm-12">
-					<label for="publication_scope_id" class="control-label"><span lang="es">Ámbito de publicación</span>:</label>
-					<select name="publication_scope_id" id="publication_scope_id" class="form-control">
-						<cfloop query="scopesQuery">
-							<option value="#scopesQuery.scope_id#" <cfif objectFile.publication_scope_id IS scopesQuery.scope_id>selected="selected"<cfelseif NOT isNumeric(objectFile.publication_scope_id) AND findNoCase(area_type, scopesQuery.name) GT 0>selected="selected"</cfif>>#scopesQuery.name#</option>
-						</cfloop>
-					</select>
-					<small class="help-block"><span lang="es">Define las áreas del árbol donde se podrá asociar el documento.</span>
-						<cfif SESSION.client_abb EQ "hcs"><!---OR SESSION.client_abb EQ "bioinformatics7" OR SESSION.client_abb EQ "era7bioinfo"--->
-							<br/><b lang="es">Importante</b>: <span lang="es">los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.</span>
-						</cfif>
-					</small>
+
+			<fieldset>
+
+				<legend lang="es">Ámbito de publicación</legend>
+
+				<div class="row" id="publicationScopeContainer">
+					<div class="col-sm-12">
+						<label for="publication_scope_id" class="sr-only"><span lang="es">Ámbito de publicación</span>:</label>
+						<select name="publication_scope_id" id="publication_scope_id" class="form-control">
+							<cfloop query="scopesQuery">
+								<option value="#scopesQuery.scope_id#" <cfif objectFile.publication_scope_id IS scopesQuery.scope_id>selected="selected"<cfelseif NOT isNumeric(objectFile.publication_scope_id) AND findNoCase(area_type, scopesQuery.name) GT 0>selected="selected"</cfif>>#scopesQuery.name#</option>
+							</cfloop>
+						</select>
+						<small class="help-block"><span lang="es">Define las áreas del árbol donde se podrá asociar el documento.</span>
+							<cfif SESSION.client_abb EQ "hcs"><!---OR SESSION.client_abb EQ "bioinformatics7" OR SESSION.client_abb EQ "era7bioinfo"--->
+								<br/><b lang="es">Importante</b>: <span lang="es">los archivos con el ámbito WEB PÚBLICA o INTRANET pueden ser accedidos mediante su URL a través de la web o intranet sin necesidad de que sean asociados a las áreas web o aprobada su publicación.</span>
+							</cfif>
+						</small>
+					</div>
 				</div>
-			</div>
+
+			</fieldset>
 
 		</cfif>
 
@@ -770,7 +777,7 @@
 									<input type="hidden" name="url_id" id="url_id" value="#pagePath#/#listLast(objectFile.url_id,'/')#" />
 								</div>
 
-								<p class="help-block" style="margin-bottom:0">Esta URL solo está disponible cuando el archivo está publicado en la web.<br/>Puede no estar habilitada en la web de su organización.</p>
+								<small class="help-block" style="margin-bottom:0">Esta URL solo está disponible cuando el archivo está publicado en la web.<br/>Puede no estar habilitada en la web de su organización.</small>
 
 						</div>
 
@@ -858,10 +865,10 @@
 	<cfif fileTypeId IS NOT 1 AND page_type IS 2>
 
 		<div class="checkbox">
-		    <label>
-		    	<input type="checkbox" name="unlock" value="true" checked><span lang="es">Desbloquear archivo tras guardar modificación</span>
-		    </label>
-	  	</div>
+	    <label>
+	    	<input type="checkbox" name="unlock" value="true" checked><span lang="es">Desbloquear archivo tras guardar modificación</span>
+	    </label>
+  	</div>
 
 	</cfif>
 
@@ -874,18 +881,22 @@
 
 		<cfif clientQuery.force_notifications IS false>
 
-			<div class="row">
-				<div class="col-md-12">
+			<fieldset>
 
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /> <span lang="es">NO enviar notificación por email</span>
-						</label>
-						<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+				<div class="row">
+					<div class="col-md-12">
+
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectFile.no_notify") AND objectFile.no_notify IS true>checked="checked"</cfif> /> <span lang="es">NO enviar notificación por email</span>
+							</label>
+							<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+						</div>
+
 					</div>
-
 				</div>
-			</div>
+
+			</fieldset>
 
 		</cfif>
 

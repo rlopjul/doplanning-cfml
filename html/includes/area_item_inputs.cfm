@@ -880,7 +880,6 @@
 					</div>
 				</div>
 
-
 			<cfelse><!---Es para copiar elemento--->
 
 				<cfif itemTypeId IS NOT 3 AND isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0><!---No es enlace y el archivo está definido--->
@@ -903,14 +902,18 @@
 
 		<cfelse>
 
-			<div class="row">
-				<div class="col-md-12">
+			<fieldset>
 
-					<label for="filedata" class="control-label"><i class="icon-file icon-large" title="Archivo" lang="es"></i> <span lang="es">Archivo</span>:</label>
-					<cfinput type="file" name="Filedata" id="filedata">
+				<div class="row">
+					<div class="col-md-12">
 
+						<label for="filedata" class="control-label"><i class="icon-file icon-large" title="Archivo" lang="es"></i> <span lang="es">Archivo</span>:</label>
+						<cfinput type="file" name="Filedata" id="filedata">
+
+					</div>
 				</div>
-			</div>
+
+			</fieldset>
 		</cfif>
 
 	</cfif>
@@ -948,18 +951,24 @@
 
 			</cfif>
 		<cfelse>
-			<div class="row">
-				<div class="col-md-12">
 
-					<label for="imagedata" class="control-label"><i class="icon-camera icon-large" title="Imagen (jpg, png, gif)" lang="es"></i> <span lang="es">Imagen</span>: <cfif itemTypeId IS 9>*</cfif></label>
-					<cfif itemTypeId IS NOT 9>
-						<cfinput type="file" name="imagedata" id="imagedata" accept="image/*">
-					<cfelse><!--- Image --->
-						<cfinput type="file" name="imagedata" id="imagedata" accept="image/*" required="true" message="Archivo de imagen requerido">
-					</cfif>
+			<fieldset>
 
+				<div class="row">
+					<div class="col-md-12">
+
+						<label for="imagedata" class="control-label"><i class="icon-camera icon-large" title="Imagen (jpg, png, gif)" lang="es"></i> <span lang="es">Imagen</span>: <cfif itemTypeId IS 9>*</cfif></label>
+						<cfif itemTypeId IS NOT 9>
+							<cfinput type="file" name="imagedata" id="imagedata" accept="image/*">
+						<cfelse><!--- Image --->
+							<cfinput type="file" name="imagedata" id="imagedata" accept="image/*" required="true" message="Archivo de imagen requerido">
+						</cfif>
+
+					</div>
 				</div>
-			</div>
+
+			</fieldset>
+
 		</cfif>
 
 	</cfif>
@@ -1155,24 +1164,26 @@
 	</cfif>--->
 
 	<cfif itemTypeId IS 2>
-	<div class="row">
+	<fieldset>
+		<div class="row">
 
-		<div class="col-md-6">
+			<div class="col-md-6">
 
-			<label class="control-label"><span lang="es">#t_display_type#</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
+				<label class="control-label"><span lang="es">#t_display_type#</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/DisplayTypeManager" method="getDisplayTypes" returnvariable="displayTypeQuery">
-			</cfinvoke>
+				<cfinvoke component="#APPLICATION.componentsPath#/DisplayTypeManager" method="getDisplayTypes" returnvariable="displayTypeQuery">
+				</cfinvoke>
 
-			<select name="display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
-				<cfloop query="displayTypeQuery">
-					<option value="#displayTypeQuery.display_type_id#" <cfif objectItem.display_type_id IS displayTypeQuery.display_type_id>selected="selected"</cfif>>#displayTypeQuery.display_type_title_es#</option>
-				</cfloop>
-			</select>
+				<select name="display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
+					<cfloop query="displayTypeQuery">
+						<option value="#displayTypeQuery.display_type_id#" <cfif objectItem.display_type_id IS displayTypeQuery.display_type_id>selected="selected"</cfif>>#displayTypeQuery.display_type_title_es#</option>
+					</cfloop>
+				</select>
+
+			</div>
 
 		</div>
-
-	</div>
+	</fieldset>
 	</cfif>
 
 </cfif>
@@ -1321,17 +1332,20 @@
 	</cfinvoke>
 
 	<cfif clientQuery.force_notifications IS false>
+		<fieldset>
 
-		<div class="row">
-			<div class="col-md-12">
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectItem.no_notify") AND objectItem.no_notify IS true>checked="checked"</cfif> /> <span lang="es">NO enviar notificación por email</span>
-					</label>
-					<small class="help-block" lang="es">Si seleccionas esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="no_notify" id="no_notify" value="true" <cfif isDefined("objectItem.no_notify") AND objectItem.no_notify IS true>checked="checked"</cfif> /> <span lang="es">NO enviar notificación por email</span>
+						</label>
+						<small class="help-block" lang="es">Si seleccionas esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+					</div>
 				</div>
 			</div>
-		</div>
+
+		</fieldset>
 
 	</cfif>
 
