@@ -26,6 +26,7 @@
 <cfif areaTypeWeb IS true>
 
 	<cfif NOT isDefined("objectParentArea")>
+
 		<!--- Get parent area --->
 		<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectParentArea">
 			<cfif isDefined("parent_area_id")>
@@ -35,32 +36,40 @@
 			</cfif>
 			<cfinvokeargument name="return_type" value="query">
 		</cfinvoke>
+
 	</cfif>
 
-	<cfset parentAreaName = objectParentArea.url_id>
+	<cfset parentAreaUrlId = objectParentArea.url_id>
 
-	<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebs" returnvariable="getWebsResult">
-		<cfinvokeargument name="area_type" value="#area_type#">
+	<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebFromArea" returnvariable="getWebsResult">
+		<cfinvokeargument name="area_id" value="#objectParentArea.id#">
 	</cfinvoke>
 
-	<cfset websQuery = getWebsResult.query>
+	<cfif getWebsResult.result IS true>
 
-	<cfloop query="#websQuery#">
+		<cfset webQuery = getWebsResult.query>
+		<cfset web_path_url = webQuery.path_url>
+		<cfset web_path = webQuery.path>
 
-		<cfif websQuery.area_id IS objectParentArea.id>
-			<cfset parentAreaName = websQuery.path>
+		<cfif webQuery.area_id IS objectParentArea.id>
+			<cfset parentAreaUrlId = webQuery.path>
 		</cfif>
 
-	</cfloop>
+	<cfelse>
+
+		<cfset web_path_url = "">
+		<cfset web_path = "">
+
+	</cfif>
 
 	<cfoutput>
 	<script>
 
-		var parentAreaName = "#parentAreaName#";
-
 		$(function () {
 
-			$('##url_id').focus( function() {
+			var urlIdInput = "##url_id_suffix";
+
+			$(urlIdInput).focus( function() {
 
 				var pageNameUrl = $('##name').val();
 
@@ -74,18 +83,18 @@
 
 				} else {
 
-					if(	$('##url_id').val().length == 0 ) {
+					if(	$(urlIdInput).val().length == 0 ) {
 
-						$('##url_id').val(generateUrlId(parentAreaName, pageNameUrl));
+						$(urlIdInput).val(pageNameToUrl(pageNameUrl));
 
 					}
 				}
 
 			});
 
-			$('##url_id').mask("A", {
+			$(urlIdInput).mask("A", {
 				translation: {
-					"A": { pattern: /[\w@\-.+/]/, recursive: true }
+					"A": { pattern: /[\w\-.]/, recursive: true }
 				}
 			});
 
@@ -93,7 +102,11 @@
 
 				var pageNameUrl = $('##name').val();
 
-				generateUrlId(parentAreaName, pageNameUrl);
+				if(	$(urlIdInput).val().length == 0 ) {
+
+					$(urlIdInput).val(pageNameToUrl(pageNameUrl));
+
+				}
 
 			});
 
@@ -132,8 +145,16 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<label class="control-label" for="url_id" lang="es">URL de la página</label>
-				<input type="text" name="url_id" id="url_id" value="#HTMLEditFormat(objectArea.url_id)#" required="true" maxlength="75" title="URL de la página requerido" class="form-control" />
-				<small class="help-block" style="margin-bottom:0" lang="es">Valor que aparecerá en la URL de la página, ejemplo: es/nombre-de-la-pagina</small>
+
+				<div class="input-group">
+					<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
+						<span class="input-group-addon" style="font-size:16px;padding-left:0;padding-right:0;">#web_path_url#/<span id="url_id_prefix"><cfif len(parentAreaUrlId) GT 0>#parentAreaUrlId#<cfelse>#web_path#</cfif>/</span></span>
+					</cfif>
+					<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectArea.url_id,'/')#" class="form-control">
+					<input type="hidden" name="url_id" id="url_id" value="<cfif len(parentAreaUrlId) GT 0>#parentAreaUrlId#<cfelse>#web_path#</cfif>/#listLast(objectArea.url_id,'/')#" />
+				</div>
+
+				<small class="help-block" style="margin-bottom:0" lang="es">Valor que aparecerá en la URL de la página, ejemplo: nombre-de-la-pagina</small>
 			</div>
 		</div>
 

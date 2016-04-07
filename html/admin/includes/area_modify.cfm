@@ -32,6 +32,13 @@
 
 					submitHandler: function(form) {
 
+						if( $("##url_id_suffix").length ){
+
+							var url_id = $("##url_id_prefix").text()+$("##url_id_suffix").val();
+
+							$("##url_id").val( url_id.toLowerCase() );
+						}
+
 						if( $.isNumeric($("##user_in_charge").val()) ){
 
 							if( $("##name").val().length > 0 ){

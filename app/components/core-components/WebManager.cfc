@@ -66,6 +66,7 @@
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getParentAreasIds" returnvariable="parentAreasIds">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="areas_list" value="#arguments.area_id#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
