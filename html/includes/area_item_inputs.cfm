@@ -1204,11 +1204,11 @@
 
 	<script>
 
-		var pagePath = "#pagePath#";
-
 		$(function () {
 
-			$('##url_id').focus( function() {
+			var urlIdInput = "##url_id_suffix";
+
+			$(urlIdInput).focus( function() {
 
 				var pageNameUrl = $('##item_title').val();
 
@@ -1222,18 +1222,17 @@
 
 				} else {
 
-					if(	$('##url_id').val().length == 0 ) {
+					if(	$(urlIdInput).val().length == 0 ) {
 
-						$('##url_id').val(generateUrlId(pagePath, pageNameUrl));
-
+						$(urlIdInput).val(pageNameToUrl(pageNameUrl));
 					}
 				}
 
 			});
 
-			$('##url_id').mask("A", {
+			$(urlIdInput).mask("A", {
 				translation: {
-					"A": { pattern: /[\w@\-.+/]/, recursive: true }
+					"A": { pattern: /[\w\-.]/, recursive: true }
 				}
 			});
 
@@ -1241,7 +1240,9 @@
 
 				var pageNameUrl = $('##item_title').val();
 
-				generateUrlId(pagePath, pageNameUrl);
+				if(	$(urlIdInput).val().length == 0 ) {
+					$(urlIdInput).val(pageNameToUrl(pageNameUrl));
+				}
 
 			});
 
@@ -1258,9 +1259,10 @@
 
 			<div class="input-group">
 				<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
-			  	<span class="input-group-addon">#web_path_url#/</span>
+			  	<span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#pagePath#/</span></span>
 				</cfif>
-				<input type="text" name="url_id" id="url_id" value="#objectItem.url_id#" class="form-control" passthrough="#passthrough#">
+				<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectItem.url_id,'/')#" class="form-control" passthrough="#passthrough#">
+				<input type="hidden" name="url_id" id="url_id" value="#pagePath#/#listLast(objectItem.url_id,'/')#" />
 			</div>
 
 		</div>

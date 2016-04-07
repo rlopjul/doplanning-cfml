@@ -75,6 +75,14 @@ $(document).ready(function() {
 
 function onSubmitForm()
 {
+
+	if( $("##url_id_suffix").length ){
+
+		var url_id = $("##url_id_prefix").text()+$("##url_id_suffix").val();
+
+		$("##url_id").val( url_id.toLowerCase() );
+	}
+
 	if(check_custom_form())
 	{
 		var submitForm = true;
