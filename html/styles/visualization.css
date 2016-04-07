@@ -76,3 +76,22 @@
    stroke: #ccc;
    stroke-width: 1.5px;
  }
+
+ #mlineLegend{
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+#treeContainer,
+#mlineBrush,
+#userLogArea,
+#mlineLegend{
+    border: 1px solid rgba(54, 64, 74, 0.08);
+    margin-bottom: 20px;
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
+    -moz-border-radius: 1px;
+    background-clip: padding-box;
+    background-color: #F7F7F7;
+}
