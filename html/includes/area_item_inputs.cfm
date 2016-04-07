@@ -331,8 +331,8 @@
 	<cfset t_sub_type = "Tipo de">
 </cfif>
 <cfset t_position = "Posición">
-<cfset t_iframe_url = "Incrustar contenido">
-<cfset t_iframe_display_type = "Tamaño contenido incrustado">
+<cfset t_iframe_url = "Incrustar contenido (iframe)">
+<cfset t_iframe_display_type = "Tamaño contenido">
 
 <cfif read_only IS true>
 	<cfset passthrough = 'readonly="readonly"'>
@@ -1067,36 +1067,52 @@
 
 	</div>
 
-	<div class="row">
+	<fieldset>
 
-		<div class="col-md-12">
+		<legend lang="es">#t_iframe_url#</legend>
 
-			<label class="control-label" for="iframe_url"><span lang="es">#t_iframe_url#</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
+		<div class="row">
 
-			<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="#t_iframe_url# válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
+			<div class="col-xs-3 col-md-2">
 
-		</div>
+				<label class="control-label" for="iframe_url"><span lang="es">URL</span>:</label>
 
-	</div>
+			</div>
 
-	<div class="row">
+			<div class="col-xs-9 col-md-10">
 
-		<div class="col-md-6">
+				<cfinput type="text" name="iframe_url" id="iframe_url" value="#objectItem.iframe_url#" placeholder="http://" message="URL válida con http:// requerida" class="form-control col-md-5" passthrough="#passthrough#"><!---validate="url" DA PROBLEMAS--->
 
-			<label class="control-label" for="iframe_display_type_id"><span lang="es">#t_iframe_display_type#</span>:</label> <small lang="es">(Sólo para publicar en web)</small>
-
-			<cfinvoke component="#APPLICATION.componentsPath#/IframeDisplayTypeManager" method="getDisplayTypes" returnvariable="iframeDisplayTypeQuery">
-			</cfinvoke>
-
-			<select name="iframe_display_type_id" id="iframe_display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
-				<cfloop query="iframeDisplayTypeQuery">
-					<option value="#iframeDisplayTypeQuery.iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframeDisplayTypeQuery.iframe_display_type_id>selected="selected"</cfif>>#iframeDisplayTypeQuery.iframe_display_type_title_es#</option>
-				</cfloop>
-			</select>
+			</div>
 
 		</div>
 
-	</div>
+		<div class="row">
+
+			<div class="col-xs-3 col-md-2">
+
+				<label class="control-label" for="iframe_display_type_id"><span lang="es">#t_iframe_display_type#</span>:</label>
+
+			</div>
+
+			<div class="col-xs-9 col-md-10">
+
+				<cfinvoke component="#APPLICATION.componentsPath#/IframeDisplayTypeManager" method="getDisplayTypes" returnvariable="iframeDisplayTypeQuery">
+				</cfinvoke>
+
+				<select name="iframe_display_type_id" id="iframe_display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
+					<cfloop query="iframeDisplayTypeQuery">
+						<option value="#iframeDisplayTypeQuery.iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframeDisplayTypeQuery.iframe_display_type_id>selected="selected"</cfif>>#iframeDisplayTypeQuery.iframe_display_type_title_es#</option>
+					</cfloop>
+				</select>
+
+				<small lang="es">(Sólo para publicar en web)</small>
+
+			</div>
+
+		</div>
+
+	</fieldset>
 
 
 	<!---<cfset t_iframe_width = "Ancho">
