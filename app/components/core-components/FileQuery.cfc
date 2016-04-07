@@ -234,7 +234,7 @@
 				</cfif>
 
 				<cfif isDefined("arguments.url_id")>
-					, url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
+					, url_id = <cfqueryparam value="#lCase(arguments.url_id)#" cfsqltype="cf_sql_varchar">
 				</cfif>
 				;
 			</cfquery>
