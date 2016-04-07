@@ -15,6 +15,7 @@
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+<script src="#APPLICATION.path#/jquery/jquery-mask/jquery.mask.min.js"></script>
 
 <script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>
 </cfoutput>
@@ -59,8 +60,10 @@
 		  	if(fileName.length > 0) {
 			  fileName = fileName.substr(fileName.lastIndexOf('\\') + 1);
 
-			  if($('##formFileName').val().length == 0)
+			  if($('##formFileName').val().length == 0) {
 			  	$('##formFileName').val(fileName);
+					$('##formFileName').trigger("change");
+				}
 			}
 
 		});
@@ -251,7 +254,7 @@
 
 <div class="contenedor_fondo_blanco">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal item_form" onsubmit="return onSubmitForm();">
 
 	<script>
 		var railo_custom_form;
@@ -626,96 +629,235 @@
 
 	</cfif>
 
-	<cfif ( len(area_type) GT 0 OR page_type IS 3 ) AND page_type IS NOT 2><!--- WEB or Publish file version--->
 
-		<div class="row">
+	<cfif APPLICATION.moduleWeb IS true>
 
-			<cfif isDefined("objectFile.publication_hour")><!--- After send FORM --->
+		<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebs" returnvariable="getWebsResult">
+		</cfinvoke>
 
-				<cfset publication_hour = objectFile.publication_hour>
-				<cfset publication_minute = objectFile.publication_minute>
+		<cfset websQuery = getWebsResult.query>
+
+		<cfif websQuery.recordCount GT 0>
+			<cfset dpWithWeb = true>
+		<cfelse>
+			<cfset dpWithWeb = false>
+		</cfif>
+
+		<cfif dpWithWeb IS true>
+
+			<cfif len(area_type) GT 0>
+
+				<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebFromArea" returnvariable="getWebsResult">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+				<cfif getWebsResult.result IS true>
+
+					<cfset webQuery = getWebsResult.query>
+					<cfset web_path_url = webQuery.path_url>
+					<cfset web_language = webQuery.language>
+
+				<cfelse>
+
+					<cfset web_path_url = "">
+					<cfset web_language = APPLICATION.defaultLanguage>
+
+				</cfif>
 
 			<cfelse>
 
-				<cfset publication_hour = timeFormat(objectFile.publication_date, "HH")>
-				<cfset publication_minute = timeFormat(objectFile.publication_date, "mm")>
+				<cfset web_path_url = "">
+				<cfset web_language = APPLICATION.defaultLanguage>
 
-				<cfif len(objectFile.publication_date) GT 10>
-					<cfset objectFile.publication_date = left(objectFile.publication_date, findOneOf(" ", objectFile.publication_date))>
+			</cfif>
+
+			<cfif len(area_type) GT 0><!--- Esto es provisional mientras se busca solución a la generación de url_id en todos los archivos de DP --->
+
+				<cfif web_language EQ "es">
+					<cfset pagePath = lcase(itemTypeNameEsP)>
+				<cfelse>
+					<cfset pagePath = itemTypeNameP>
+				</cfif>
+
+				<script>
+
+					$(function () {
+
+						var urlIdInput = "##url_id_suffix";
+
+						$(urlIdInput).focus( function() {
+
+							var pageNameUrl = $('##formFileName').val();
+
+							if(pageNameUrl.length == 0){
+
+								bootbox.alert(window.lang.translate("Debe introducir un título"), function(){
+
+									$('##formFileName').focus();
+
+								});
+
+							} else {
+
+								if(	$(urlIdInput).val().length == 0 ) {
+
+									$(urlIdInput).val(pageNameToUrl(pageNameUrl));
+								}
+							}
+
+						});
+
+						$(urlIdInput).mask("A", {
+							translation: {
+								"A": { pattern: /[\w\-.]/, recursive: true }
+							}
+						});
+
+						$('##formFileName').focusout( function() {
+
+							var pageNameUrl = $('##formFileName').val();
+
+							if(	$(urlIdInput).val().length == 0 ) {
+								$(urlIdInput).val(pageNameToUrl(pageNameUrl));
+							}
+
+						});
+
+						$('##formFileName').change( function() {
+
+							var pageNameUrl = $('##formFileName').val();
+
+							if(	$(urlIdInput).val().length == 0 ) {
+								$(urlIdInput).val(pageNameToUrl(pageNameUrl));
+							}
+
+						});
+
+					});
+
+				</script>
+
+				<fieldset>
+
+					<legend><span lang="es">URL del archivo en la <cfif len(area_type) GT 0>#area_type#<cfelse>web</cfif></span> <small lang="es">(Sólo para publicar en web)</small></legend>
+
+					<div class="row">
+
+						<div class="col-md-12">
+
+								<label class="sr-only" for="url_id" lang="es">URL del archivo</label>
+
+								<div class="input-group">
+									<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
+								  	<span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#pagePath#/</span></span>
+									</cfif>
+									<cfinput type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectFile.url_id,'/')#" class="form-control" required="true" message="URL del archivo para web requerida">
+									<input type="hidden" name="url_id" id="url_id" value="#pagePath#/#listLast(objectFile.url_id,'/')#" />
+								</div>
+
+								<p class="help-block" style="margin-bottom:0">Esta URL solo está disponible cuando el archivo está publicado en la web.<br/>Puede no estar habilitada en la web de su organización.</p>
+
+						</div>
+
+					</div>
+
+				</fieldset>
+
+			</cfif>
+
+			<cfif ( len(area_type) GT 0 OR page_type IS 3 ) AND page_type IS NOT 2><!--- WEB or Publish file version--->
+
+				<div class="row">
+
+					<cfif isDefined("objectFile.publication_hour")><!--- After send FORM --->
+
+						<cfset publication_hour = objectFile.publication_hour>
+						<cfset publication_minute = objectFile.publication_minute>
+
+					<cfelse>
+
+						<cfset publication_hour = timeFormat(objectFile.publication_date, "HH")>
+						<cfset publication_minute = timeFormat(objectFile.publication_date, "mm")>
+
+						<cfif len(objectFile.publication_date) GT 10>
+							<cfset objectFile.publication_date = left(objectFile.publication_date, findOneOf(" ", objectFile.publication_date))>
+						</cfif>
+
+					</cfif>
+
+					<div class="col-xs-6 col-md-3">
+						<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span>:</label>
+						<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectFile.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
+					</div>
+
+					<div class="col-xs-6">
+
+						<!---
+						<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
+						<div class="input-group" style="width:170px">
+							<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
+								<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
+									<cfset curHour = TimeFormat(hour, 'HH')>
+									<option value="#curHour#" <cfif curHour EQ publication_hour>selected="selected"</cfif>>#curHour#</option>
+								</cfloop>
+							</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
+								<cfset minutesInOptions = false>
+								<cfloop from="0" to="59" index="minutes" step="5">
+									<cfif len(minutes) EQ 1>
+										<cfset minutes = "0"&minutes>
+									</cfif>
+									<cfif minutes EQ publication_minute>
+										<cfset minutesSelected = true>
+										<cfset minutesInOptions = true>
+									<cfelse>
+										<cfset minutesSelected = false>
+									</cfif>
+									<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
+								</cfloop>
+								<cfif minutesInOptions IS false AND len(publication_minute) GT 0>
+									<option value="#publication_minute#" selected="selected">#publication_minute#</option>
+								</cfif>
+							</select>
+						</div> --->
+
+					</div>
+
+					<input type="hidden" name="publication_hour" value="00"/>
+					<input type="hidden" name="publication_minute" value="00"/>
+
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<small class="help-block" lang="es">Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
+					</div>
+				</div>
+
+				<cfif APPLICATION.publicationValidation IS true>
+
+					<!--- isUserAreaResponsible --->
+					<cfif is_user_area_responsible IS true>
+
+						<div class="row">
+							<div class="col-xs-12 col-sm-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("objectFile.publication_validated") AND objectFile.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+									</label>
+									<small class="help-block" lang="es">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
+								</div>
+							</div>
+						</div>
+
+					</cfif>
+
 				</cfif>
 
 			</cfif>
 
-			<div class="col-xs-6 col-md-3">
-				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span>:</label>
-				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectFile.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
-			</div>
+		</cfif><!--- END dpWithWeb IS true --->
 
-			<div class="col-xs-6">
-
-				<!---
-				<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
-				<div class="input-group" style="width:170px">
-					<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
-						<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
-							<cfset curHour = TimeFormat(hour, 'HH')>
-							<option value="#curHour#" <cfif curHour EQ publication_hour>selected="selected"</cfif>>#curHour#</option>
-						</cfloop>
-					</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
-						<cfset minutesInOptions = false>
-						<cfloop from="0" to="59" index="minutes" step="5">
-							<cfif len(minutes) EQ 1>
-								<cfset minutes = "0"&minutes>
-							</cfif>
-							<cfif minutes EQ publication_minute>
-								<cfset minutesSelected = true>
-								<cfset minutesInOptions = true>
-							<cfelse>
-								<cfset minutesSelected = false>
-							</cfif>
-							<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
-						</cfloop>
-						<cfif minutesInOptions IS false AND len(publication_minute) GT 0>
-							<option value="#publication_minute#" selected="selected">#publication_minute#</option>
-						</cfif>
-					</select>
-				</div> --->
-
-			</div>
-
-			<input type="hidden" name="publication_hour" value="00"/>
-			<input type="hidden" name="publication_minute" value="00"/>
-
-		</div>
-
-		<div class="row">
-			<div class="col-sm-12">
-				<small class="help-block" lang="es">Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).</small>
-			</div>
-		</div>
-
-		<cfif APPLICATION.publicationValidation IS true>
-
-			<!--- isUserAreaResponsible --->
-			<cfif is_user_area_responsible IS true>
-
-				<div class="row">
-					<div class="col-xs-12 col-sm-8">
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("objectFile.publication_validated") AND objectFile.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
-							</label>
-							<small class="help-block" lang="es">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
-						</div>
-					</div>
-				</div>
-
-			</cfif>
-
-		</cfif>
-
-	</cfif>
-
+	</cfif><!--- END APPLICATION.moduleWeb IS true --->
 
 
 	<!--- Typology fields --->

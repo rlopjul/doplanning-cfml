@@ -660,6 +660,7 @@
 		<cfargument name="approver_user" type="numeric" required="false">
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="url_id" type="string" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
 
 		<cfset var method = "updateFile">

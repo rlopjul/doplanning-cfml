@@ -51,7 +51,7 @@ label {
 }
 
 fieldset {
-		margin-top: 15px;
+	margin-top: 10px;
 }
 
 .item_form legend {
@@ -64,6 +64,11 @@ fieldset {
 	border: 1px solid #DDDDDD;
 	/*margin: 0 2px;*/
 	padding: 0.35em 0.625em 0.75em;
+}
+
+.item_form .input-group-addon {
+	font-size: 16px;
+	padding-right: 0;
 }
 
 /*.btn-info {

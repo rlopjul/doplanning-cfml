@@ -2005,6 +2005,7 @@
 			<cfset file.publication_validated = true>
 
 			<cfset file.public = false>
+			<cfset file.url_id = "">
 
 			<cfset response = {result=true, file=#file#}>
 
@@ -2980,6 +2981,7 @@
 		<cfargument name="version_index" type="string" required="false">
 		<cfargument name="public" type="boolean" required="false">
 		<cfargument name="categories_ids" type="array" required="false">
+		<cfargument name="url_id" type="string" required="false">
 
 
 		<!---Este parametro se le pasa cuando se adjunta un archivo a un mensaje, que primero se crea el mensaje y luego se sube--->
@@ -3606,12 +3608,13 @@
 		<cfargument name="public" type="boolean" required="false">
 		<cfargument name="categories_ids" type="array" required="false">
 		<cfargument name="no_notify" type="boolean" required="false" default="false">
+		<cfargument name="url_id" type="string" required="false">
 		<cfargument name="group_versions" type="boolean" required="false" default="false">
 
 		<cfargument name="destination" type="string" required="true">
 		<cfargument name="uploadedFile" type="struct" required="true">
 		<cfargument name="temp_file" type="string" required="true">
-		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -3639,6 +3642,7 @@
 				<cfinvokeargument name="version_index" value="#arguments.version_index#"/>
 				<cfinvokeargument name="public" value="#arguments.public#"/>
 				<cfinvokeargument name="categories_ids" value="#arguments.categories_ids#"/>
+				<cfinvokeargument name="url_id" value="#arguments.url_id#"/>
 
 				<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
 			</cfinvoke>
@@ -3857,6 +3861,7 @@
 		<cfargument name="publication_scope_id" type="numeric" required="false">
 		<cfargument name="unlock" type="boolean" required="false" default="false">
 		<cfargument name="public" type="boolean" required="false" default="false">
+		<cfargument name="url_id" type="string" required="false">
 		<!--- La fecha de publicación no se puede modificar én este método porque esos atributos pertenecen al área donde esté publicada el archivo y no son atributos propios del archivo. --->
 
 		<cfset var method = "updateFile">
@@ -3966,6 +3971,9 @@
 							</cfif>
 
 						</cfif>
+					</cfif>
+					<cfif isDefined("arguments.url_id")>
+						, url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
 					</cfif>
 					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 				</cfquery>

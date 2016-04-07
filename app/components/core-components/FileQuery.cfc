@@ -43,7 +43,7 @@
 			<cfset fileTypeTable = "files">
 
 			<cfquery name="selectFileQuery" datasource="#client_dsn#">
-				SELECT files.id, files.id AS file_id, physical_name, files.user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user, files.public, files.file_public_id, files.item_id, files.item_type_id, files.row_id, files.field_id
+				SELECT files.id, files.id AS file_id, physical_name, files.user_in_charge, file_size, file_type, files.name, file_name, files.description, files.status, users.image_type AS user_image_type, files.typology_id, files.typology_row_id, files.file_type_id, files.locked, files.area_id, files.reviser_user, files.approver_user, files.in_approval, files.replacement_user, files.public, files.file_public_id, files.item_id, files.item_type_id, files.row_id, files.field_id, files.url_id
 					, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name
 				<cfif isDefined("arguments.area_id")>
 					, areas_files.association_date
@@ -176,6 +176,7 @@
 		<cfargument name="itemTypeId" type="numeric" required="false">
 		<cfargument name="row_id" type="numeric" required="false">
 		<cfargument name="field_id" type="numeric" required="false">
+		<cfargument name="url_id" type="string" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -230,6 +231,10 @@
 				<cfif isDefined("arguments.row_id") AND isDefined("arguments.field_id")>
 					, row_id = <cfqueryparam value="#arguments.row_id#" cfsqltype="cf_sql_integer">
 					, field_id = <cfqueryparam value="#arguments.field_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+
+				<cfif isDefined("arguments.url_id")>
+					, url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
 				</cfif>
 				;
 			</cfquery>

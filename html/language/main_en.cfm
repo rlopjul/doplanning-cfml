@@ -866,6 +866,7 @@ curLangTextEn = {
 
 		/*file.cfm*/
 		"Debe bloquear el archivo para poder realizar cualquier modificación.":"You have to lock the file to make any changes.",
+    "URL del archivo en la web":"File URL in web",
 		"URL del archivo en DoPlanning":"File URL in DoPlanning",
 		"URL de descarga desde DoPlanning":"Download URL from DoPlanning",
 		/*END file.cfm*/
