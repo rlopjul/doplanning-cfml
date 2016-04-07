@@ -582,6 +582,7 @@
 		<cfargument name="send_to_area_users" type="boolean" required="false" default="false">
 		<cfargument name="send_to_test_users" type="boolean" required="false" default="false">
 		<cfargument name="user_import" type="numeric" required="false">
+		<cfargument name="url_id" type="string" required="false">
 
 		<cfset var method = "createItem">
 
@@ -832,6 +833,10 @@
 							<cfif itemTypeId IS 2><!---Entries--->
 							, display_type_id = <cfqueryparam value="#arguments.display_type_id#" cfsqltype="cf_sql_integer">
 							</cfif>
+						</cfif>
+
+						<cfif isDefined("arguments.url_id")>
+							, url_id = <cfqueryparam value="#lCase(arguments.url_id)#" cfsqltype="cf_sql_varchar">
 						</cfif>
 
 					</cfif><!--- END WEB --->
@@ -1096,6 +1101,7 @@
 		<cfargument name="content_styles" type="string" required="false">
 		<cfargument name="send_to_area_users" type="boolean" required="false" default="false">
 		<cfargument name="send_to_test_users" type="boolean" required="false" default="false">
+		<cfargument name="url_id" type="string" required="false">
 
 
 		<cfset var method = "updateItem">
@@ -1363,6 +1369,10 @@
 							<cfif itemTypeId IS 2><!---Entries--->
 							, display_type_id = <cfqueryparam value="#arguments.display_type_id#" cfsqltype="cf_sql_integer">
 							</cfif>
+						</cfif>
+
+						<cfif isDefined("arguments.url_id")>
+							, url_id = <cfqueryparam value="#lCase(arguments.url_id)#" cfsqltype="cf_sql_varchar">
 						</cfif>
 
 					</cfif><!--- END WEB --->
