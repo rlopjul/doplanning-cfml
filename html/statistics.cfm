@@ -102,7 +102,6 @@
 
 						if( data.result == true){
 
-							console.log(data.totalItems);
 							mline(data.totalItems);
 
 						}else{
@@ -219,6 +218,7 @@
 
 				<div class="row">
 				 <div id="mlineBrush" class="col-lg-9 col-md-9 col-sm-9"></div>
+				  <div id="mlineLegend" class="col-lg-3 col-md-3 col-sm-3"></div>
 			 </div>
 
 			 <div class="row">

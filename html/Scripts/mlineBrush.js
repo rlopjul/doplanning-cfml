@@ -22,7 +22,6 @@ var div = d3.select('body') //select tooltip div over body
 var user = [];
 var item = [];
 
-console.log(areaData);
 areaData.forEach(function(d,i){
     item.push(d.item_type_label);
     user.push(d.user_full_name);
@@ -87,7 +86,7 @@ userName.forEach(function(name){
 });
 
 var seriesData;
-var checkUser = ["Alexis Lucena"];
+var checkUser = userName[0];
 var checkItem = ["Archivo", "Lista", "Evento"];
 
 function createData(){
@@ -122,8 +121,7 @@ function createData(){
     // nest to creat a array of values. First map is over the itemtype and second
     // map is over date and total. Aggregate the date and total to first nest.
     seriesData = nestedFilter.map(function (objectArray) {
-        //console.log(objectArray);
-
+      
             return {
                 key: objectArray.key,
                 values: objectArray.values.map(function (d) {

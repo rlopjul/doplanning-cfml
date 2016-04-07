@@ -25,126 +25,134 @@ function drawChart(totalItems){
               myChart.staggerDraw = true;
               myChart.draw(800);
 
-							//remove svg shape for series item_type_id
-							//s2.shapes.remove();
-              //s.categoryFields = ["user_full_name"];
-							//s2.categoryFields = ["item_type_id"];
+              s2.shapes.remove();
 
-							myChart.legends = [];
-            var typeFilterValues = dimple.getUniqueValues(totalItems, "Type");
-         var userFilterValues = dimple.getUniqueValues(totalItems, "User");
-         var hiddenUserValue = [];
-         var hiddenTypeValue = [];
+              console.log(totalItems);
+           myChart.legends = [];
+      // Get a unique list of Owner values to use when filtering
+          var typeFilterValues = dimple.getUniqueValues(totalItems, "Type");
+          var userFilterValues = dimple.getUniqueValues(totalItems, "User");
+          var hiddenUserValue = [];
+          var hiddenTypeValue = [];
 
-     legendBits = userLegend.shapes;
-     legendBits[0] = legendBits[0]
-         .concat(typeLegend.shapes[0]);
+          typeFilterValues.forEach(function(typeName){
 
-         // Get all the rectangles from now orphaned legend
-         legendBits.selectAll("rect")
-           // Add a click event to each rectangle
-           .on("click", function (e) {
-             // This indicates whether the item is already visible or not
-             var hide = false;
-             var newUserFilters = [];
-             var newTypeFilters = [];
-             var currentVaue = e.aggField.slice(-1)[0];
+              var typeClass = ".dimple-legend .dimple-" + typeName.toLowerCase();
+
+              d3.selectAll(typeClass)
+                  .style("fill", "grey");
+                  //.style("stroke", "grey");
+          });
+
+      legendBits = userLegend.shapes;
+      legendBits[0] = legendBits[0]
+          .concat(typeLegend.shapes[0]);
+
+          // Get all the rectangles from now orphaned legend
+          legendBits.selectAll("rect")
+            // Add a click event to each rectangle
+            .on("click", function (e) {
+              // This indicates whether the item is already visible or not
+              var hide = false;
+              var newUserFilters = [];
+              var newTypeFilters = [];
+              var currentVaue = e.aggField.slice(-1)[0];
 
 
-             userFilterValues.forEach(function(f){
-                 if(f === currentVaue){
-                     var whereIsIt = hiddenUserValue.indexOf(currentVaue);
+              userFilterValues.forEach(function(f){
+                  if(f === currentVaue){
+                      var whereIsIt = hiddenUserValue.indexOf(currentVaue);
 
-                     if (whereIsIt > -1) {
-                         //it is hidden and needs to be shown.
-                         hide = false;
-                         //hiddenUserValue.splice(whereIsIt, 1);
-                         hiddenUserValue = [];
-                     } else {
-                         //it needs to be hidden
-                          hide = true;
-                          hiddenUserValue.push(currentVaue);
-                     }
+                      if (whereIsIt > -1) {
+                          //it is hidden and needs to be shown.
+                          hide = false;
+                          //hiddenUserValue.splice(whereIsIt, 1);
+                          hiddenUserValue = [];
+                      } else {
+                          //it needs to be hidden
+                           hide = true;
+                           hiddenUserValue.push(currentVaue);
+                      }
+                  }
+              });
+              typeFilterValues.forEach(function(f){
+
+                  if(f === currentVaue){
+                      var whereIsIt = hiddenTypeValue.indexOf(currentVaue);
+
+                      if (whereIsIt > -1) {
+
+                          //it is hidden and needs to be shown.
+                          hide = false;
+                          hiddenTypeValue.splice(whereIsIt, 1);
+                      } else {
+                      //    it needs to be hidden
+                           hide = true;
+
+                           hiddenTypeValue.push(currentVaue);
+                      }
+                  }
+              });
+
+
+             userFilterValues.forEach(function(userName){
+
+                     if(hiddenUserValue.indexOf(userName) == -1 && hiddenUserValue.length > 0){
+
+                          var usrClass = ".dimple-legend .dimple-" + userName.toLowerCase();
+
+                         d3.selectAll(usrClass)
+                          .style("opacity", .3);
+
+                 }else{
+
+                     var usrClass = ".dimple-legend .dimple-" + userName.toLowerCase();
+
+                     d3.selectAll(usrClass)
+                      .style("opacity", 1);
                  }
-             });
-             typeFilterValues.forEach(function(f){
 
-                 if(f === currentVaue){
-                     var whereIsIt = hiddenTypeValue.indexOf(currentVaue);
+             })
 
-                     if (whereIsIt > -1) {
+              typeFilterValues.forEach(function(typeName){
 
-                         //it is hidden and needs to be shown.
-                         hide = false;
-                         hiddenTypeValue.splice(whereIsIt, 1);
-                     } else {
-                     //    it needs to be hidden
-                          hide = true;
+                     if(hiddenTypeValue.indexOf(typeName) == -1 && hiddenTypeValue.length > 0){
 
-                          hiddenTypeValue.push(currentVaue);
-                     }
+                          var typeClass = ".dimple-legend .dimple-" + typeName.toLowerCase();
+
+                         d3.selectAll(typeClass)
+                          .style("opacity", .3);
+
+                 }else{
+                     var typeClass = ".dimple-legend .dimple-" + typeName.toLowerCase();
+
+
+                     d3.selectAll(typeClass)
+                      .style("opacity", 1);
                  }
-             });
+
+             })
 
 
-            userFilterValues.forEach(function(userName){
+              if(hiddenTypeValue.length == "" ){
+                  newTypeFilters =  typeFilterValues;
+              }else{
+                  newTypeFilters = hiddenTypeValue;
+              }
 
-                    if(hiddenUserValue.indexOf(userName) == -1 && hiddenUserValue.length > 0){
+              if( hiddenUserValue.length == 0){
+                  newUserFilters = userFilterValues;
+                  //d3.selectAll("rect").style("opacity", 1);
+              }else{
+                  newUserFilters = hiddenUserValue;
+              }
 
-                         var usrClass = ".dimple-legend .dimple-" + userName.toLowerCase();
+              // Filter the data
+  myChart.data = dimple.filterData(dimple.filterData(totalItems, 'User', newUserFilters), 'Type', newTypeFilters);
+         // Passing a duration parameter makes the chart animate. Without
+         // it there is no transition
 
-                        d3.selectAll(usrClass)
-                         .style("opacity", .3);
-
-                }else{
-
-                    var usrClass = ".dimple-legend .dimple-" + userName.toLowerCase();
-
-                    d3.selectAll(usrClass)
-                     .style("opacity", 1);
-                }
-
-            })
-
-             typeFilterValues.forEach(function(typeName){
-                    console.log(typeName);
-                    if(hiddenTypeValue.indexOf(typeName) == -1 && hiddenTypeValue.length > 0){
-
-                         var typeClass = ".dimple-legend .dimple-" + typeName.toLowerCase();
-                    console.log(typeClass);
-                        d3.selectAll(typeClass)
-                         .style("opacity", .3);
-
-                }else{
-                    var typeClass = ".dimple-legend .dimple-" + typeName.toLowerCase();
-
-
-                    d3.selectAll(typeClass)
-                     .style("opacity", 1);
-                }
-
-            })
-
-
-             if(hiddenTypeValue.length == "" ){
-                 newTypeFilters =  typeFilterValues;
-             }else{
-                 newTypeFilters = hiddenTypeValue;
-             }
-
-             if( hiddenUserValue.length == 0){
-                 newUserFilters = userFilterValues;
-                 //d3.selectAll("rect").style("opacity", 1);
-             }else{
-                 newUserFilters = hiddenUserValue;
-             }
-
-             // Filter the data
- myChart.data = dimple.filterData(dimple.filterData(totalItems, 'User', newUserFilters), 'Type', newTypeFilters);
-        // Passing a duration parameter makes the chart animate. Without
-        // it there is no transition
-
-  myChart.draw(800);
-
-           });
+   myChart.draw(800);
+           s2.shapes.remove();
+            });
 }
