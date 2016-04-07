@@ -83,6 +83,41 @@
 			});
 
 	}
+	function getAllItemsArea(areaId, areaType, includeSubareas){
+
+		return $.ajax({
+
+				url: '#APPLICATION.htmlComponentsPath#/Statistic.cfc',
+				data:{
+					method: 'getTotalItemsByDay',
+					area_id: areaId,
+					area_type: areaType,
+					include_subareas: includeSubareas
+				},
+				method: 'POST',
+				dataType:'json',
+				success: function(data, textStatus){
+
+					if(textStatus == 'success'){
+
+						if( data.result == true){
+
+							console.log(data.totalItems);
+							mline(data.totalItems);
+
+						}else{
+							alert(data.message);
+						}
+					}else{
+						alert(textStatus);
+					}
+
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					alert( textStatus + ':' + errorThrown);
+				}
+		});
+	}
 
 	function getMainTreeXml(areaId, areaType, includeSubareas) {
 
@@ -98,18 +133,20 @@
 	        dataType: "xml",
 	          success:function(xml){
 
-							// Modify root node
-							// Add name and id to root node
-							xml.childNodes[0].setAttribute("name", "root");
-							var rootId = xml.childNodes[0].attributes.item(1).nodeValue;
-							xml.childNodes[0].setAttribute("id", rootId);
+								// Modify root node
+								// Add name and id to root node
+								xml.childNodes[0].setAttribute("name", "root");
+								var rootId = xml.childNodes[0].attributes.item(1).nodeValue;
+								xml.childNodes[0].setAttribute("id", rootId);
 
-							areaTree(xml);
+								areaTree(xml);
+
 	          }
 	    });
 
+		}
 
-	  }
+
 
 	</cfoutput>
 
@@ -156,6 +193,7 @@
 				$(document).ready(function () {
 
 					getMainTreeXml(#URL.area#, '#area_type#', true);
+					getAllItemsArea(#URL.area#, '#area_type#', true);
 
 					var promise = getTotalItemsByUser(#URL.area#, '#area_type#', true);
 
@@ -180,7 +218,7 @@
 			 	</div>
 
 				<div class="row">
-				 <div id="multiLine" class="col-lg-9 col-md-9 col-sm-9"></div>
+				 <div id="mlineBrush" class="col-lg-9 col-md-9 col-sm-9"></div>
 			 </div>
 
 			 <div class="row">

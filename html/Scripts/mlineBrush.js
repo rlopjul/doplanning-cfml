@@ -1,4 +1,4 @@
-function mline(){
+function mline(areaData){
 
   var margin = {top: 40, right: 150, bottom: 80, left: 50},
      margin2 = { top: 460, right: 10, bottom: 20, left: 50 },
@@ -9,7 +9,7 @@ function mline(){
 
 var color = d3.scale.category10();
 
-var parseDate = d3.time.format("%d/%m/%Y").parse;
+var parseDate = d3.time.format("%d-%m-%Y").parse;
 
 
 
@@ -22,7 +22,8 @@ var div = d3.select('body') //select tooltip div over body
 var user = [];
 var item = [];
 
-testdata.forEach(function(d,i){
+console.log(areaData);
+areaData.forEach(function(d,i){
     item.push(d.item_type_label);
     user.push(d.user_full_name);
 
@@ -59,7 +60,7 @@ labelEnter.append("br");
 userName.shift();
 var nested = d3.nest()
 		.key(function(d) { return d.user_full_name })
-		.map(testdata)
+		.map(areaData)
 
 // only retrieve data from the selected series, using the nest we just created
 var lineData ;
@@ -105,7 +106,7 @@ function createData(){
                         total: sum
                     };
                 })
-                .entries(testdata);
+                .entries(areaData);
 
     //dynamicaaly remove undefined array from object
     nestedFilter.forEach(function(obj, i){
