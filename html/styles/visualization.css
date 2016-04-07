@@ -1,15 +1,4 @@
-div.tooltip {
-    position: absolute;
-    text-align: center;
-    font: 12px sans-serif;
-    border: 5px;
-    border-color: aliceblue;
-    border-radius: 8px;
-    padding: 8px;
-    color: cornsilk;
-    background:black;
-    pointer-events: none;
-}
+
 
         path {
     stroke-width: 3;

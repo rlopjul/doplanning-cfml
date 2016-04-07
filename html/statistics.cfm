@@ -184,7 +184,7 @@
 			 </div>
 
 			 <div class="row">
-				 <div id="treeContainer" class="col-lg-9 col-md-9 col-sm-9"></div>
+				 <div id="treeContainer" class="col-lg-12 col-md-12 col-sm-12"></div>
 			 </div>
 
 			</div>
