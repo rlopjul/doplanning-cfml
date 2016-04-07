@@ -83,7 +83,7 @@
 
 <div class="contenedor_fondo_blanco">
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal" name="item_form" onsubmit="return onSubmitForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="form-horizontal item_form" name="item_form" onsubmit="return onSubmitForm();">
 
 	<script>
 		var railo_custom_form;

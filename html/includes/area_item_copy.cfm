@@ -418,7 +418,7 @@ function onSubmitForm()
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_item_form_js.cfm">
 
 <div id="mainContainer" style="clear:both; margin-left:5px;">
-<cfform name="item_form" method="post" enctype="multipart/form-data" action="#CGI.SCRIPT_NAME#" style="clear:both;" onsubmit="return onSubmitForm();">
+<cfform name="item_form" method="post" enctype="multipart/form-data" action="#CGI.SCRIPT_NAME#" class="item_form" style="clear:both;" onsubmit="return onSubmitForm();">
 	<input type="hidden" name="itemTypeId" value="#itemTypeId#">
 	<cfif isDefined("sourceItemTypeId")>
 	<input type="hidden" name="sourceItemTypeId" value="#sourceItemTypeId#">
