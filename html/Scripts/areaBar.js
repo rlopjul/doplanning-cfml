@@ -6,7 +6,7 @@ function drawChart(totalItems){
               var myChart = new dimple.chart(svg1,  totalItems);
               myChart.setBounds(60, 30, 600, 300);
 
-              var x = myChart.addCategoryAxis("x", "item_type_id");
+              var x = myChart.addCategoryAxis("x", "item_type_label");
               var y = myChart.addMeasureAxis("y", "total");
 
               // In order to deal with cases where order differs by column
@@ -27,14 +27,15 @@ function drawChart(totalItems){
 
               s2.shapes.remove();
 
-              console.log(totalItems);
+
            myChart.legends = [];
       // Get a unique list of Owner values to use when filtering
-          var typeFilterValues = dimple.getUniqueValues(totalItems, "Type");
-          var userFilterValues = dimple.getUniqueValues(totalItems, "User");
+          var typeFilterValues = dimple.getUniqueValues(totalItems, "item_type_label");
+          var userFilterValues = dimple.getUniqueValues(totalItems, "user_full_name");
           var hiddenUserValue = [];
           var hiddenTypeValue = [];
 
+console.log(typeFilterValues);
           typeFilterValues.forEach(function(typeName){
 
               var typeClass = ".dimple-legend .dimple-" + typeName.toLowerCase();
@@ -148,7 +149,7 @@ function drawChart(totalItems){
               }
 
               // Filter the data
-  myChart.data = dimple.filterData(dimple.filterData(totalItems, 'User', newUserFilters), 'Type', newTypeFilters);
+  myChart.data = dimple.filterData(dimple.filterData(totalItems, 'user_full_name', newUserFilters), 'item_type_label', newTypeFilters);
          // Passing a duration parameter makes the chart animate. Without
          // it there is no transition
 

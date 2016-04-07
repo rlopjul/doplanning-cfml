@@ -1,6 +1,6 @@
 function mline(areaData){
 
-  var margin = {top: 40, right: 150, bottom: 80, left: 50},
+  var margin = {top: 40, right: 200, bottom: 80, left: 50},
      margin2 = { top: 460, right: 10, bottom: 20, left: 50 },
     width = 900 - margin.left - margin.right ,
     height = 500 - margin.top - margin.bottom ,
@@ -52,7 +52,9 @@ labelEnter.append("input")
         if(i == 1) return true;
     });
 
-labelEnter.append("label").text(function(d){ return d;});
+    labelEnter.append("label")
+        .style("font-size", "10px")
+        .text(function(d){ return d; });
 
 labelEnter.append("br");
 
@@ -121,7 +123,7 @@ function createData(){
     // nest to creat a array of values. First map is over the itemtype and second
     // map is over date and total. Aggregate the date and total to first nest.
     seriesData = nestedFilter.map(function (objectArray) {
-      
+
             return {
                 key: objectArray.key,
                 values: objectArray.values.map(function (d) {
@@ -349,7 +351,7 @@ var thegraphEnter = thegraph.enter().append("g")
           .enter().append("g")
             .attr("class", "legend")
             .attr('id',function(d){ return d.replace(/\s+/g, ''); })
-            .attr("transform", function (d, i) { return "translate(50," + i * 20 + ")"; })
+            .attr("transform", function (d, i) { return "translate(10," + i * 15 + ")"; })
      .on("click", function(d){
 
          var that = this;
@@ -447,17 +449,16 @@ var thegraphEnter = thegraph.enter().append("g")
 
         legend.append("rect")
             .attr("x", width + 5)
-            .attr("width", 10)
+            .attr("width", 20)
             .attr("height", 10)
-            .style("fill",function(d) { return color(d); } )
-            .style("stroke", "grey");
+            .style("fill",function(d) { return color(d); } );
+            //.style("stroke", "grey");
 
         legend.append("text")
-            .attr("x", width + 100)
+            .attr("x", width + 30)
             .attr("y", 5)
             .attr("dy", ".35em")
-            .style("fill",function(d) { return color(d); } )
-            .style("text-anchor", "end")
+            //.style("fill",function(d) { return color(d); } )
             .text(function (d) { return d; });
 
 // update the axes,
@@ -466,6 +467,8 @@ var thegraphEnter = thegraph.enter().append("g")
         .attr("clip-path", "url(#clip)")
         .attr("class", "axis x")
         .attr("transform", "translate(0," + height + ")")
+        .style("font-family", "sans-serif")
+        .style("shape-rendering", "crispEdges")
         .style("font-size", "8px")
         .call(xAxis);
 
