@@ -44,7 +44,7 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 			<cfquery name="selectItemQuery" datasource="#client_dsn#">
-				SELECT items.id, items.id AS item_id, items.parent_id, items.parent_kind, items.user_in_charge,  items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link, items.status, items.url_id,
+				SELECT items.id, items.id AS item_id, items.parent_id, items.parent_kind, items.user_in_charge,  items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link, items.status,
 				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				<cfif arguments.parse_dates IS true>
 					, DATE_FORMAT(CONVERT_TZ(items.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
@@ -105,6 +105,8 @@
 							, items.display_type_id
 						</cfif>
 					</cfif>
+
+					, items.url_id
 
 				</cfif><!--- END WEB --->
 				<cfif arguments.itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, Publications--->
