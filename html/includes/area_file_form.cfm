@@ -507,14 +507,20 @@
 
 			</script>
 
-			<div class="row" id="areasSelectorContainer">
-				<div class="col-xs-12">
-					<label class="control-label" for="new_area_name" lang="es">Añadir el archivo a más áreas</label>
-					<input type="hidden" name="areas_ids" id="areas_ids" value=""/>
-					<cfinput type="text" name="areas_ids_names" id="areas_ids_names" value="" readonly="true" onclick="openAreasSelector()" class="form-control" /> <button onclick="return openAreasSelector()" class="btn btn-default"><span lang="es">Seleccionar más áreas</span></button>
-					<small class="help-block" lang="es">Además del área actual, el archivo estará acesible en las áreas seleccionadas</small>
+			<fieldset>
+
+				<legend lang="es">Añadir el archivo a más áreas</legend>
+
+				<div class="row" id="areasSelectorContainer">
+					<div class="col-xs-12">
+						<label class="sr-only" for="new_area_name" lang="es">Añadir el archivo a más áreas</label>
+						<input type="hidden" name="areas_ids" id="areas_ids" value=""/>
+						<cfinput type="text" name="areas_ids_names" id="areas_ids_names" value="" readonly="true" onclick="openAreasSelector()" class="form-control" /> <button onclick="return openAreasSelector()" class="btn btn-default"><span lang="es">Seleccionar más áreas</span></button>
+						<small class="help-block" lang="es">Además del área actual, el archivo estará acesible en las áreas seleccionadas</small>
+					</div>
 				</div>
-			</div>
+
+			</fieldset>
 
 		</cfif>
 	</cfif>
@@ -533,99 +539,101 @@
 
 		<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
-		<div class="row">
+		<fieldset>
 
-			<div class="col-md-12">
+			<legend lang="es">Categorías</legend>
 
-				<label class="control-label" for="categories_ids" lang="es">Categorías</label>
+			<div class="row">
 
-			</div>
+				<div class="col-sm-11 col-sm-offset-1" style="margin-bottom:10px">
 
-		</div>
-
-		<div class="row">
-
-			<div class="col-sm-11 col-sm-offset-1" style="margin-bottom:10px">
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
-					<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
-					<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
-
-				<cfif subAreas.recordCount GT 0>
-
-					<cfif page_type IS NOT 1>
-
-						<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItemCategories" returnvariable="getItemCategoriesResult">
-							<cfinvokeargument name="item_id" value="#file_id#">
-							<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-						</cfinvoke>
-
-						<cfset fileCategories = getItemCategoriesResult.query>
-
-						<cfif fileCategories.recordCount GT 0>
-							<cfset selectedAreasList = valueList(fileCategories.category_id)>
-						<cfelse>
-							<cfset selectedAreasList = "">
-						</cfif>
-
-					<cfelse>
-
-						<cfset selectedAreasList = "">
-
-					</cfif>
-
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreas" returnvariable="subAreas">
 						<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
-						<cfinvokeargument name="subAreas" value="#subAreas#">
-						<cfif len(selectedAreasList) GT 0>
-							<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
-						</cfif>
-						<cfinvokeargument name="recursive" value="false">
-						<cfinvokeargument name="field_name" value="categories_ids"/>
-						<cfinvokeargument name="field_input_type" value="checkbox">
 						<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
-					<script>
+					<cfif subAreas.recordCount GT 0>
 
-						addRailoRequiredCheckBox("categories_ids[]", window.lang.translate("Debe seleccionar al menos una categoría"));
+						<cfif page_type IS NOT 1>
 
-					</script>
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItemCategories" returnvariable="getItemCategoriesResult">
+								<cfinvokeargument name="item_id" value="#file_id#">
+								<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+							</cfinvoke>
 
-					<p class="help-block" lang="es">Estas categorías permiten a los usuarios clasificar los elementos y filtrar las notificaciones por email que se reciben</p>
+							<cfset fileCategories = getItemCategoriesResult.query>
 
-				<cfelse>
+							<cfif fileCategories.recordCount GT 0>
+								<cfset selectedAreasList = valueList(fileCategories.category_id)>
+							<cfelse>
+								<cfset selectedAreasList = "">
+							</cfif>
 
-					<p class="help-block" lang="es">Este elemento tiene un área para categorías seleccionada pero esta área no tiene subareas para definir las categorías</p>
+						<cfelse>
 
-				</cfif>
+							<cfset selectedAreasList = "">
+
+						</cfif>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaHtml" method="outputSubAreasInput">
+							<cfinvokeargument name="area_id" value="#itemTypeOptions.category_area_id#">
+							<cfinvokeargument name="subAreas" value="#subAreas#">
+							<cfif len(selectedAreasList) GT 0>
+								<cfinvokeargument name="selected_areas_ids" value="#selectedAreasList#">
+							</cfif>
+							<cfinvokeargument name="recursive" value="false">
+							<cfinvokeargument name="field_name" value="categories_ids"/>
+							<cfinvokeargument name="field_input_type" value="checkbox">
+							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<script>
+
+							addRailoRequiredCheckBox("categories_ids[]", window.lang.translate("Debe seleccionar al menos una categoría"));
+
+						</script>
+
+						<p class="help-block" lang="es">Estas categorías permiten a los usuarios clasificar los elementos y filtrar las notificaciones por email que se reciben</p>
+
+					<cfelse>
+
+						<p class="help-block" lang="es">Este elemento tiene un área para categorías seleccionada pero esta área no tiene subareas para definir las categorías</p>
+
+					</cfif>
+
+				</div>
 
 			</div>
 
-		</div>
+		</fieldset>
 
 	</cfif>
 
 
 	<cfif fileTypeId IS 1 OR fileTypeId IS 2>
 
-		<div class="row" id="publicFile">
+		<fieldset>
 
-			<div class="col-md-12">
+			<legend lang="es">Compartir archivo</legend>
 
-				<div class="checkbox">
-				    <label>
-				    	<input type="checkbox" name="public" value="true" <cfif isDefined("objectFile.public") AND objectFile.public IS true>checked</cfif>> <span lang="es">Habilitar URL pública para poder</span> <b lang="es">compartir el archivo con cualquier usuario</b>
-				    </label>
-				    <small class="help-block" lang="es">El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL</small>
-			  	</div>
+			<div class="row" id="publicFile">
+
+				<div class="col-md-12">
+
+					<div class="checkbox">
+					    <label>
+					    	<input type="checkbox" name="public" value="true" <cfif isDefined("objectFile.public") AND objectFile.public IS true>checked</cfif>> <span lang="es">Habilitar URL pública para poder</span> <b lang="es">compartir el archivo con cualquier usuario</b>
+					    </label>
+					    <small class="help-block" lang="es">El archivo estará público y podrá ser accedido por cualquier usuario que tenga esta URL</small>
+				  	</div>
+
+				</div>
 
 			</div>
 
-		</div>
+		</fieldset>
 
 	</cfif>
 
@@ -767,6 +775,10 @@
 
 			<cfif ( len(area_type) GT 0 OR page_type IS 3 ) AND page_type IS NOT 2><!--- WEB or Publish file version--->
 
+			<fieldset>
+
+				<legend><span lang="es">Publicación en <cfif len(area_type)>#area_type#<cfelse>web</cfif></legend>
+
 				<div class="row">
 
 					<cfif isDefined("objectFile.publication_hour")><!--- After send FORM --->
@@ -785,41 +797,12 @@
 
 					</cfif>
 
-					<div class="col-xs-6 col-md-3">
+					<div class="col-xs-3 col-md-2">
 						<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span>:</label>
-						<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectFile.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
 					</div>
 
-					<div class="col-xs-6">
-
-						<!---
-						<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
-						<div class="input-group" style="width:170px">
-							<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
-								<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
-									<cfset curHour = TimeFormat(hour, 'HH')>
-									<option value="#curHour#" <cfif curHour EQ publication_hour>selected="selected"</cfif>>#curHour#</option>
-								</cfloop>
-							</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
-								<cfset minutesInOptions = false>
-								<cfloop from="0" to="59" index="minutes" step="5">
-									<cfif len(minutes) EQ 1>
-										<cfset minutes = "0"&minutes>
-									</cfif>
-									<cfif minutes EQ publication_minute>
-										<cfset minutesSelected = true>
-										<cfset minutesInOptions = true>
-									<cfelse>
-										<cfset minutesSelected = false>
-									</cfif>
-									<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
-								</cfloop>
-								<cfif minutesInOptions IS false AND len(publication_minute) GT 0>
-									<option value="#publication_minute#" selected="selected">#publication_minute#</option>
-								</cfif>
-							</select>
-						</div> --->
-
+					<div class="col-xs-9 col-md-10">
+						<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectFile.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY">
 					</div>
 
 					<input type="hidden" name="publication_hour" value="00"/>
@@ -842,7 +825,7 @@
 							<div class="col-xs-12 col-sm-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("objectFile.publication_validated") AND objectFile.publication_validated IS true>checked="checked"</cfif> /> Aprobar publicación
+										<input type="checkbox" name="publication_validated" id="publication_validated" value="true" class="checkbox_locked" <cfif isDefined("objectFile.publication_validated") AND objectFile.publication_validated IS true>checked="checked"</cfif> /> <span lang="es">Aprobar publicación</span>
 									</label>
 									<small class="help-block" lang="es">Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).</small>
 								</div>
@@ -852,6 +835,8 @@
 					</cfif>
 
 				</cfif>
+
+			</fieldset>
 
 			</cfif>
 
