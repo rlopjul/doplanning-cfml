@@ -374,127 +374,6 @@
 	<cfinput type="hidden" name="title" value="#objectItem.title#">
 </cfif>
 
-<cfif itemTypeWeb IS true AND ( NOT isDefined("area_type") OR len(area_type) GT 0 )><!--- WEB --->
-
-	<div class="row">
-
-		<cfif isDefined("objectItem.publication_hour")><!--- After send FORM --->
-
-			<cfset publication_hour = objectItem.publication_hour>
-			<cfset publication_minute = objectItem.publication_minute>
-
-		<cfelse>
-
-			<!---<cfif len(objectItem.publication_time) IS 0>
-				<cfset objectItem.publication_time = createTime(0,0,0)>
-			</cfif>--->
-
-			<cfset publication_hour = timeFormat(objectItem.publication_date, "HH")>
-			<cfset publication_minute = timeFormat(objectItem.publication_date, "mm")>
-
-			<cfif len(objectItem.publication_date) GT 10>
-				<cfset objectItem.publication_date = left(objectItem.publication_date, findOneOf(" ", objectItem.publication_date))>
-			</cfif>
-
-		</cfif>
-
-		<!--- <cfif len(objectItem.publication_date) GT 10></cfif> --->
-
-		<div class="col-xs-6 col-md-3">
-			<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span> <span lang="es">#itemTypeNameEs#</span>:</label>
-			<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectItem.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
-		</div>
-
-		<div class="col-xs-6">
-			<!---
-				<label class="control-label" for="publication_hour"><span lang="es">Hora de publicación</span></label>
-							<div class="input-group" style="width:170px">
-								<select name="publication_hour" id="publication_hour" class="form-control" style="width:70px;">
-									<cfloop from="00:00" to="23:00" step="#CreateTimeSpan(0, 1, 0, 0)#" index="hour">
-										<cfset curHour = TimeFormat(hour, 'HH')>
-										<option value="#curHour#" <cfif curHour EQ publication_hour>selected="selected"</cfif>>#curHour#</option>
-									</cfloop>
-								</select><span class="input-group-addon">:</span><select name="publication_minute" class="form-control" style="width:70px;">
-									<cfset minutesInOptions = false>
-									<cfloop from="0" to="59" index="minutes" step="5">
-										<cfif len(minutes) EQ 1>
-											<cfset minutes = "0"&minutes>
-										</cfif>
-										<cfif minutes EQ publication_minute>
-											<cfset minutesSelected = true>
-											<cfset minutesInOptions = true>
-										<cfelse>
-											<cfset minutesSelected = false>
-										</cfif>
-										<option value="#minutes#" <cfif minutesSelected>selected="selected"</cfif>>#minutes#</option>
-									</cfloop>
-									<cfif minutesInOptions IS false AND len(publication_minute) GT 0>
-										<option value="#publication_minute#" selected="selected">#publication_minute#</option>
-									</cfif>
-								</select>
-							</div> --->
-
-		</div>
-
-
-		<input type="hidden" name="publication_hour" value="00"/>
-		<input type="hidden" name="publication_minute" value="00"/>
-
-
-	</div>
-
-	<cfif isDefined("area_type")>
-	<div class="row">
-		<div class="col-sm-12">
-			<!---<small class="help-block">Si está definida, <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# se publicará en la fecha especificada.</small>--->
-			<small class="help-block" lang="es">Si está definida, este contenido se mostrará en la #area_type# en la fecha especificada.</small>
-		</div>
-	</div>
-	</cfif>
-
-	<cfif APPLICATION.publicationValidation IS true>
-
-		<cfif isDefined("is_user_area_responsible")><!--- Está definida el área en la que se va a publicar el elemento --->
-
-			<cfif is_user_area_responsible IS true>
-
-				<div class="row">
-					<div class="col-xs-12 col-sm-8">
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("objectItem.publication_validated") AND objectItem.publication_validated IS true>checked="checked"</cfif> /> <span lang="es">Aprobar publicación</span>
-							</label>
-							<small class="help-block" lang="es">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
-						</div>
-					</div>
-				</div>
-
-			</cfif>
-
-		<cfelse>
-
-			<input type="hidden" name="publication_validated" value="false"/>
-			<small class="help-block" lang="es">La publicación del elemento deberá ser aprobada en cada una de las áreas en las que se publique.</small>
-
-		</cfif>
-
-	</cfif>
-
-	<cfif APPLICATION.publicationRestricted IS true AND isDefined("area_type") AND area_type EQ "web">
-		<div class="row">
-			<div class="col-xs-12 col-sm-8">
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" name="publication_restricted" id="publication_restricted" value="true" <cfif isDefined("objectItem.publication_restricted") AND objectItem.publication_restricted IS true>checked="checked"</cfif> /> <span lang="es">Visible sólo para usuarios identificados</span>
-					</label>
-					<small class="help-block" lang="es"><cfif itemTypeGender EQ "male">El<cfelse>La</cfif> #itemTypeNameEs# sólo podrá ser visible en la web por usuarios logueados.</small>
-				</div>
-			</div>
-		</div>
-	</cfif>
-
-</cfif>
-
 <cfif itemTypeId IS 4><!---News--->
 
 	<div class="row">
@@ -1294,7 +1173,7 @@
 						<input type="hidden" name="url_id" id="url_id" value="#pagePath#/#listLast(objectItem.url_id,'/')#" />
 					</div>
 
-					<p class="help-block" style="margin-bottom:0">Esta URL solo está disponible cuando el elemento está publicado en la web.<br/>Puede no estar habilitada en la web de su organización.</p>
+					<small class="help-block" style="margin-bottom:0">Esta URL solo está disponible cuando el elemento está publicado en la web.<br/>Puede no estar habilitada en la web de su organización.</small>
 
 			</div>
 
@@ -1303,6 +1182,106 @@
 	</fieldset>
 
 </cfif>
+
+
+<cfif itemTypeWeb IS true AND ( NOT isDefined("area_type") OR len(area_type) GT 0 )><!--- WEB --->
+
+	<fieldset>
+
+		<legend><span lang="es">Publicación en <cfif len(area_type)>#area_type#<cfelse>web</cfif></legend>
+
+		<div class="row">
+
+			<cfif isDefined("objectItem.publication_hour")><!--- After send FORM --->
+
+				<cfset publication_hour = objectItem.publication_hour>
+				<cfset publication_minute = objectItem.publication_minute>
+
+			<cfelse>
+
+				<!---<cfif len(objectItem.publication_time) IS 0>
+					<cfset objectItem.publication_time = createTime(0,0,0)>
+				</cfif>--->
+
+				<cfset publication_hour = timeFormat(objectItem.publication_date, "HH")>
+				<cfset publication_minute = timeFormat(objectItem.publication_date, "mm")>
+
+				<cfif len(objectItem.publication_date) GT 10>
+					<cfset objectItem.publication_date = left(objectItem.publication_date, findOneOf(" ", objectItem.publication_date))>
+				</cfif>
+
+			</cfif>
+
+			<!--- <cfif len(objectItem.publication_date) GT 10></cfif> --->
+
+			<div class="col-xs-3 col-md-2">
+				<label class="control-label" for="publication_date"><span lang="es">Fecha de publicación</span> <span lang="es">#itemTypeNameEs#</span>:</label>
+			</div>
+
+			<div class="col-xs-9 col-md-10">
+				<cfinput type="text" name="publication_date" id="publication_date" class="form-control" value="#objectItem.publication_date#" required="false" message="Fecha de publicación válida requerida" validate="eurodate" mask="DD-MM-YYYY" passthrough="#passthrough#">
+			</div>
+
+			<input type="hidden" name="publication_hour" value="00"/>
+			<input type="hidden" name="publication_minute" value="00"/>
+
+
+		</div>
+
+		<cfif isDefined("area_type")>
+		<div class="row">
+			<div class="col-sm-12">
+				<!---<small class="help-block">Si está definida, <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# se publicará en la fecha especificada.</small>--->
+				<small class="help-block" lang="es">Si está definida, este contenido se mostrará en la #area_type# en la fecha especificada.</small>
+			</div>
+		</div>
+		</cfif>
+
+		<cfif APPLICATION.publicationValidation IS true>
+
+			<cfif isDefined("is_user_area_responsible")><!--- Está definida el área en la que se va a publicar el elemento --->
+
+				<cfif is_user_area_responsible IS true>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-8">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="publication_validated" id="publication_validated" value="true" <cfif isDefined("objectItem.publication_validated") AND objectItem.publication_validated IS true>checked="checked"</cfif> /> <span lang="es">Aprobar publicación</span>
+								</label>
+								<small class="help-block" lang="es">Valida <cfif itemTypeGender EQ "male">el<cfelse>la</cfif> #itemTypeNameEs# para que pueda ser <cfif itemTypeGender EQ "male">publicado<cfelse>publicada</cfif>.</small>
+							</div>
+						</div>
+					</div>
+
+				</cfif>
+
+			<cfelse>
+
+				<input type="hidden" name="publication_validated" value="false"/>
+				<small class="help-block" lang="es">La publicación del elemento deberá ser aprobada en cada una de las áreas en las que se publique.</small>
+
+			</cfif>
+
+		</cfif>
+
+		<cfif APPLICATION.publicationRestricted IS true AND isDefined("area_type") AND area_type EQ "web">
+			<div class="row">
+				<div class="col-xs-12 col-sm-8">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="publication_restricted" id="publication_restricted" value="true" <cfif isDefined("objectItem.publication_restricted") AND objectItem.publication_restricted IS true>checked="checked"</cfif> /> <span lang="es">Visible solo para usuarios identificados</span>
+						</label>
+						<small class="help-block" lang="es"><cfif itemTypeGender EQ "male">El<cfelse>La</cfif> #itemTypeNameEs# sólo podrá ser visible en la web por usuarios logueados.</small>
+					</div>
+				</div>
+			</div>
+		</cfif>
+
+	</fieldset>
+
+</cfif>
+
 
 </cfoutput>
 

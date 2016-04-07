@@ -795,6 +795,7 @@ curLangTextEn = {
 		"Si está definida, el archivo se publicará en la fecha especificada (sólo para publicación en web e intranet).":"If set, the file will be published on the specified date (for publication on web and intranet only).",
 
 		"Aprobar publicación":"Approve publication",
+    "Visible solo para usuarios identificados":"Visible only for identified users",
 		"Valida el archivo para que pueda ser publicado (sólo para publicación en web e intranet).":"Validates the file so that it can be published (only for publication on website and intranet)",
 		"Habilitar URL pública para poder":"Enable public URL to",
 		"compartir el archivo con cualquier usuario":"share the file with any user",
