@@ -114,6 +114,13 @@
 
 	function onSubmitForm() {
 
+		if( $("##url_id_suffix").length ){
+
+			var url_id = $("##url_id_prefix").text()+$("##url_id_suffix").val();
+
+			$("##url_id").val( url_id.toLowerCase() );
+		}
+
 		// Update textareas content from ckeditor
 		for (var i in CKEDITOR.instances) {
 
@@ -612,7 +619,7 @@
 	</cfif>
 
 
-	<cfif fileTypeId IS 1 OR fileTypeId IS 2>
+	<cfif ( fileTypeId IS 1 OR fileTypeId IS 2 ) AND area_type NEQ "web">
 
 		<fieldset>
 
