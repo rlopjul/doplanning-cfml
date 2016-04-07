@@ -473,7 +473,6 @@
 
 		<cfif scopesQuery.recordCount GT 0>
 
-
 			<fieldset>
 
 				<legend lang="es">Ámbito de publicación</legend>

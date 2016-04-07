@@ -1166,6 +1166,8 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Lista de opciones con selección múltiple":"List of options, multiple selection",
 		"Lista de opciones con selección simple a partir de área":"List of options, single selection from an area",
 		"Lista de opciones con selección múltiple a partir de área":"List of options, multiple selection from an area",
+    "Opciones de acceso":"Access options",
+    "Listado de registros":"Records list",
     "Listar todos los registros por defecto":"List all records by default",
     "Desmarcar esta opción si hay o habrá muchos registros. Si no se marca esta opción, se mostrará una búsqueda de registros, en lugar del listado de todos los registros.":"Uncheck this option if there are or there will be many records. If this option is not selected, a search for records will be displayed, instead of listing all records.",
     "Desmarcar esta opción si hay o habrá muchos registros, ya que aumenta el tiempo de carga de la lista.":"Uncheck this option if there will be many records or because it increases list load time.",
