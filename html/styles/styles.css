@@ -69,6 +69,7 @@ fieldset {
 .item_form .input-group-addon {
 	font-size: 16px;
 	padding-right: 0;
+	padding-left: 0;
 }
 
 /*.btn-info {
