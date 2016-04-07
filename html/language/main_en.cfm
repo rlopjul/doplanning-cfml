@@ -291,7 +291,7 @@ curLangTextEn = {
 		"Abrir URL en":"Open URL in",
 		"Nueva ventana":"New window",
 		"Misma ventana":"Same window",
-		"Incrustar contenido (iframe)":"Embed content (iframe)",
+		"Incrustar contenido":"Embed content",
 		"(Sólo para publicar en web)":"(Only for web publication)",
 		"Tamaño contenido":"Content size",
 		"Posición":"Position",

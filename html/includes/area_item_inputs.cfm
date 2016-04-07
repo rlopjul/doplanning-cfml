@@ -331,7 +331,6 @@
 	<cfset t_sub_type = "Tipo de">
 </cfif>
 <cfset t_position = "Posición">
-<cfset t_iframe_url = "Incrustar contenido (iframe)">
 <cfset t_iframe_display_type = "Tamaño contenido">
 
 <cfif read_only IS true>
@@ -1069,7 +1068,7 @@
 
 	<fieldset>
 
-		<legend lang="es">#t_iframe_url#</legend>
+		<legend><span lang="es">Incrustar contenido</span> <small lang="es">(Sólo para publicar en web)</small></legend>
 
 		<div class="row">
 
@@ -1105,8 +1104,6 @@
 						<option value="#iframeDisplayTypeQuery.iframe_display_type_id#" <cfif objectItem.iframe_display_type_id IS iframeDisplayTypeQuery.iframe_display_type_id>selected="selected"</cfif>>#iframeDisplayTypeQuery.iframe_display_type_title_es#</option>
 					</cfloop>
 				</select>
-
-				<small lang="es">(Sólo para publicar en web)</small>
 
 			</div>
 
