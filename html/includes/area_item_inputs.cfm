@@ -1100,6 +1100,8 @@
 	<cfelse>
 		<cfif itemTypeId IS 4><!---News--->
 			<cfset pagePath = itemTypeName>
+		<cfelseif itemTypeId IS 8><!---Publications--->
+			<cfset pagePath = "publications">
 		<cfelse>
 			<cfset pagePath = itemTypeNameP>
 		</cfif>
@@ -1167,10 +1169,10 @@
 
 					<div class="input-group">
 						<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
-					  	<span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#pagePath#/</span></span>
+					  	<span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#web_language#/#pagePath#/</span></span>
 						</cfif>
 						<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectItem.url_id,'/')#" class="form-control" passthrough="#passthrough#">
-						<input type="hidden" name="url_id" id="url_id" value="#pagePath#/#listLast(objectItem.url_id,'/')#" />
+						<input type="hidden" name="url_id" id="url_id" value=">#web_language#/#pagePath#/#listLast(objectItem.url_id,'/')#" />
 					</div>
 
 					<small class="help-block" style="margin-bottom:0">Esta URL solo está disponible cuando el elemento está publicado en la web.<br/>Puede no estar habilitada en la web de su organización.</small>
