@@ -731,6 +731,14 @@
 
 			</cfif>
 
+			<!--- Check url_id length --->
+			<cfif isDefined("arguments.url_id") AND len(url_id) GT 75>
+
+				<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 75 caracteres"}>
+				<cfreturn response>
+
+			</cfif>
+
 			<cfquery datasource="#client_dsn#" name="getUserData">
 				SELECT family_name, name
 				FROM #client_abb#_users
@@ -1300,6 +1308,14 @@
 					</cfif>
 
 				</cfif>
+
+			</cfif>
+
+			<!--- Check url_id length --->
+			<cfif isDefined("arguments.url_id") AND len(url_id) GT 75>
+
+				<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 75 caracteres"}>
+				<cfreturn response>
 
 			</cfif>
 
