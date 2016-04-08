@@ -211,7 +211,7 @@
 			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
 			<cfset APPLICATION.bootstrapDatepickerJSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/js/bootstrap-datepicker.js">
 	    <cfset APPLICATION.bootstrapDatepickerCSSPath = APPLICATION.htmlPath&"/bootstrap/bootstrap-datepicker/css/datepicker.css">
-	    <cfset APPLICATION.functionsJSPath = APPLICATION.htmlPath&"/scripts/functions.min.js?v=3.3">
+	    <cfset APPLICATION.functionsJSPath = APPLICATION.htmlPath&"/scripts/functions.min.js?v=3.4">
 
 	    <cfset APPLICATION.ckeditorJSPath = "#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4">
 
@@ -359,6 +359,7 @@
 					<cfinvokeargument name="signOutUrl" value="https://doplanning.net">
 
 					<cfinvokeargument name="moduleWeb" value="true">
+					<cfinvokeargument name="webFriendlyUrls" value="true">
 
 					<cfinvokeargument name="homeTab" value="true">
 					<cfinvokeargument name="moduleDPDocuments" value="true">
