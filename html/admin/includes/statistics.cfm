@@ -36,6 +36,7 @@
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>
 </cfoutput>
 
 <script>
@@ -68,13 +69,6 @@
 
 	function setFromDate(){
 		$('#end_date').datepicker('setStartDate', $('#from_date').val());
-	}
-
-	function setSelectedUser(userId, userName, fieldName) {
-
-		document.getElementById(fieldName).value = userId;
-		document.getElementById(fieldName+"_user_full_name").value = userName;
-
 	}
 
 	<cfoutput>
