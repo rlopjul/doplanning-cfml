@@ -2,7 +2,7 @@
 
 <cfcomponent output="false">
 
-	<cfset component = "StatisticQuery">	
+	<cfset component = "StatisticQuery">
 
 
 	<!--- getGeneralStatistics --->
@@ -22,12 +22,12 @@
 			<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
 			<cfquery name="getGeneralStatistics" datasource="#client_dsn#">
-				
-				SELECT <cfloop array="#itemTypesArray#" index="curItemTypeId">#itemTypesStruct[curItemTypeId].table#.#itemTypesStruct[curItemTypeId].table#_count,</cfloop> 
+
+				SELECT <cfloop array="#itemTypesArray#" index="curItemTypeId">#itemTypesStruct[curItemTypeId].table#.#itemTypesStruct[curItemTypeId].table#_count,</cfloop>
 				users.users_count, areas.areas_count, users_login_success.users_login_success_count, users_login_failed.users_login_failed_count
 
 				FROM
-				
+
 				<cfloop array="#itemTypesArray#" index="curItemTypeId">
 
 					<cfif curItemTypeId IS 10>
@@ -39,87 +39,84 @@
 					(
 						SELECT count(*) AS #itemTypesStruct[curItemTypeId].table#_count
 						FROM #client_abb#_#itemTypesStruct[curItemTypeId].table#
+						WHERE 1=1
+						<cfif isDefined("arguments.from_user")>
+							AND user_in_charge = <cfqueryparam value="#arguments.from_user#" cfsqltype="cf_sql_integer">
+						</cfif>
 						<cfif isDefined("arguments.from_date")>
-						WHERE
-						#creation_date_field# >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
+							AND	#creation_date_field# >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
 						</cfif>
 						<cfif isDefined("arguments.end_date")>
-							<cfif NOT isDefined("arguments.from_date")>
-								WHERE
-							<cfelse>
-								AND
-							</cfif>
-						#creation_date_field# <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
+							AND	#creation_date_field# <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
 						</cfif>
 					) AS #itemTypesStruct[curItemTypeId].table#,
 				</cfloop>
 
-				( 
+				(
 					SELECT count(*) AS users_count
 					FROM #client_abb#_users
+					WHERE 1=1
+					<cfif isDefined("arguments.from_user")>
+						AND id = <cfqueryparam value="#arguments.from_user#" cfsqltype="cf_sql_integer">
+					</cfif>
 					<cfif isDefined("arguments.from_date")>
-					WHERE
-					creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
+						AND creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
 					</cfif>
 					<cfif isDefined("arguments.end_date")>
-						<cfif NOT isDefined("arguments.from_date")>
-							WHERE
-						<cfelse>
-							AND
-						</cfif>
-					creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
+						AND	creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
 					</cfif>
 				) AS users,
 
 
-				(	
+				(
 					SELECT count(*) AS areas_count
 					FROM #client_abb#_areas
+					WHERE 1=1
+					<cfif isDefined("arguments.from_user")>
+						AND user_in_charge = <cfqueryparam value="#arguments.from_user#" cfsqltype="cf_sql_integer">
+					</cfif>
 					<cfif isDefined("arguments.from_date")>
-					WHERE
-					creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
+						AND creation_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
 					</cfif>
 					<cfif isDefined("arguments.end_date")>
-						<cfif NOT isDefined("arguments.from_date")>
-							WHERE
-						<cfelse>
-							AND
-						</cfif>
-					creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
+						AND	creation_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
 					</cfif>
 				) AS areas,
 
 
-				( 
-					SELECT count(*) AS users_login_success_count 
+				(
+					SELECT count(*) AS users_login_success_count
 					FROM #client_abb#_logs
 					WHERE method = 'loginUserInApplication'
+					<cfif isDefined("arguments.from_user")>
+						AND user_id = <cfqueryparam value="#arguments.from_user#" cfsqltype="cf_sql_integer">
+					</cfif>
 					<cfif isDefined("arguments.from_date")>
-					AND time >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
+						AND time >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
 					</cfif>
 					<cfif isDefined("arguments.end_date")>
-					AND time <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
+						AND time <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
 					</cfif>
 				) AS users_login_success,
 
-				( 
-					SELECT count(*) AS users_login_failed_count 
+				(
+					SELECT count(*) AS users_login_failed_count
 					FROM #client_abb#_logs
 					WHERE method = 'loginUser'
 					<cfif isDefined("arguments.from_date")>
-					AND time >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
+						AND time >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
 					</cfif>
 					<cfif isDefined("arguments.end_date")>
-					AND time <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
+						AND time <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
 					</cfif>
 				) AS users_login_failed
 
 				;
 
 			</cfquery>
-				
+
 		<cfreturn getGeneralStatistics>
-		
+
 	</cffunction>
 
 </cfcomponent>

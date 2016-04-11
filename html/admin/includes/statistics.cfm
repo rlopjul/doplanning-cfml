@@ -10,6 +10,12 @@
 	<cfset end_date = "">
 </cfif>
 
+<cfif isDefined("URL.from_user") AND isNumeric(URL.from_user)>
+	<cfset user_in_charge = URL.from_user>
+<cfelse>
+	<cfset user_in_charge = "">
+</cfif>
+
 <!--- getGeneralStatistics --->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Statistic" method="getGeneralStatistics" returnvariable="getStatisticsResponse">
 	<cfif len(from_date) GT 0>
@@ -17,6 +23,9 @@
 	</cfif>
 	<cfif len(end_date) GT 0>
 		<cfinvokeargument name="end_date" value="#end_date#"/>
+	</cfif>
+	<cfif len(user_in_charge) GT 0>
+		<cfinvokeargument name="from_user" value="#user_in_charge#"/>
 	</cfif>
 </cfinvoke>
 
@@ -30,29 +39,29 @@
 </cfoutput>
 
 <script>
-	
+
 	$(function() {
 
 		$('#from_date').datepicker({
-		  format: 'dd-mm-yyyy', 
+		  format: 'dd-mm-yyyy',
 		  autoclose: true,
 		  weekStart: 1,
 		  language: 'es',
 		  todayBtn: 'linked',
-		  endDate: $('#end_date').val()  
+		  endDate: $('#end_date').val()
 		});
-	
+
 		$('#end_date').datepicker({
 		  format: 'dd-mm-yyyy',
 		  weekStart: 1,
 		  language: 'es',
-		  todayBtn: 'linked', 
+		  todayBtn: 'linked',
 		  autoclose: true
 		});
 
 	});
-	
-	
+
+
 	function setEndDate(){
 		$('#from_date').datepicker('setEndDate', $('#end_date').val());
 	}
@@ -60,6 +69,21 @@
 	function setFromDate(){
 		$('#end_date').datepicker('setStartDate', $('#from_date').val());
 	}
+
+	function setSelectedUser(userId, userName, fieldName) {
+
+		document.getElementById(fieldName).value = userId;
+		document.getElementById(fieldName+"_user_full_name").value = userName;
+
+	}
+
+	<cfoutput>
+	function openUserSelectorWithField(fieldName){
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+
+	}
+	</cfoutput>
 
 </script>
 
@@ -82,7 +106,7 @@
 
 					<div class="row">
 
-						<label for="from_date" class="col-xs-5 col-sm-3 control-label" lang="es"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha desde</span></label> 
+						<label for="from_date" class="col-xs-5 col-sm-3 control-label" lang="es"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha desde</span></label>
 
 						<div class="col-xs-7 col-sm-9">
 							<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()">
@@ -92,7 +116,7 @@
 
 					<div class="row">
 
-						<label for="end_date" class="col-xs-5 col-sm-3 control-label"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha hasta</span></label> 
+						<label for="end_date" class="col-xs-5 col-sm-3 control-label"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha hasta</span></label>
 
 						<div class="col-xs-7 col-sm-9">
 							<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()"/>
@@ -102,7 +126,70 @@
 
 					<div class="row">
 
-						<div class="col-sm-offset-3 col-sm-10"> 
+						<label for="end_date" class="col-xs-5 col-sm-3 control-label"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha hasta</span></label>
+
+						<div class="col-xs-7 col-sm-9">
+							<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()"/>
+						</div>
+
+					</div>
+
+
+					<div class="row">
+
+						<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es">Usuario</label>
+
+						<div class="col-xs-6 col-sm-7 col-md-8">
+
+							<cfif isNumeric(user_in_charge)>
+
+								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
+									<cfinvokeargument name="user_id" value="#user_in_charge#">
+								</cfinvoke>
+
+								<cfif userQuery.recordCount GT 0>
+
+									<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+										<cfset from_user_full_name = userQuery.user_full_name>
+									<cfelse>
+										<cfset from_user_full_name = "USUARIO SELECCIONADO SIN NOMBRE">
+									</cfif>
+
+								<cfelse>
+
+									<cfset from_user_full_name = "USUARIO NO ENCONTRADO">
+									<cfset user_in_charge = "">
+
+								</cfif>
+
+							<cfelse>
+
+								<cfset from_user_full_name = "">
+
+							</cfif>
+
+							<input type="hidden" name="from_user" id="from_user" value="#user_in_charge#" />
+							<input type="text" name="from_user_user_full_name" id="from_user_user_full_name" value="#from_user_full_name#" class="form-control" readonly onclick="openUserSelectorWithField('from_user')" />
+
+						</div>
+
+						<div class="col-xs-1 col-sm-1 col-md-1">
+							<button onclick="clearFieldSelectedUser('from_user')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-xs-5 col-sm-3"></div>
+						<div class="col-xs-7 col-sm-8 col-md-9">
+							<button onclick="openUserSelectorWithField('from_user')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+						</div>
+					</div>
+
+
+					<div class="row">
+
+						<div class="col-sm-offset-3 col-sm-10">
 							<input type="submit" name="search" class="btn btn-primary" style="margin-top:30px;" lang="es" value="Filtrar" />
 						</div>
 
@@ -122,15 +209,15 @@
 
 	<script>
 
-		$(document).ready(function() { 
-			
+		$(document).ready(function() {
 
-			$("##statisticsTable").tablesorter({ 
+
+			$("##statisticsTable").tablesorter({
 
 				widgets: ['zebra','uitheme','filter','stickyHeaders','math'],<!---'select',--->
 				theme : "bootstrap",
 				headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
-				headers: { 
+				headers: {
 					0: {
 						sorter: "text"
 					}
@@ -167,9 +254,9 @@
 			    }
 			});
 
-		}); 
+		});
 	</script>
-	
+
 	<div class="row">
 		<div class="col-sm-12">
 
@@ -178,7 +265,7 @@
 				<thead>
 					<tr>
 						<th><span lang="es">Elemento</span></th>
-						<th><span lang="es">Registros</span></th>	
+						<th><span lang="es">Registros</span></th>
 					</tr>
 				</thead>
 
@@ -189,12 +276,12 @@
 					</tr>
 				</tfoot>
 
-				
+
 				<tbody>
 
 					<cfloop array="#itemTypesArray#" index="curItemTypeId">
 					<tr>
-						<td><span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span></td>			
+						<td><span lang="es">#itemTypesStruct[curItemTypeId].labelPlural#</span></td>
 						<td>#statisticsQuery['#itemTypesStruct[curItemTypeId].table#_count']#</td>
 					</tr>
 					</cfloop>
@@ -211,22 +298,22 @@
 				<tbody>
 
 					<tr>
-						<td><span lang="es">Áreas</span></td>			
+						<td><span lang="es">Áreas</span> <cfif len(user_in_charge) GT 0>*</cfif></td>
 						<td>#statisticsQuery.areas_count#</td>
 					</tr>
 
 					<tr>
-						<td><span lang="es">Usuarios</span></td>			
+						<td><span lang="es">Usuarios</span></td>
 						<td>#statisticsQuery.users_count#</td>
-					</tr>				  
+					</tr>
 
 					<tr>
-						<td><span lang="es">Accesos a la aplicación</span></td>			
+						<td><span lang="es">Accesos a la aplicación</span></td>
 						<td>#statisticsQuery.users_login_success_count#</td>
 					</tr>
 
 					<tr>
-						<td><span lang="es">Login fallidos</span></td>			
+						<td><span lang="es">Login fallidos</span> <cfif len(user_in_charge) GT 0>**</cfif></td>
 						<td>#statisticsQuery.users_login_failed_count#</td>
 					</tr>
 
@@ -234,6 +321,15 @@
 
 			</table>
 
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-sm-12">
+			<p class="help-block">
+			* Áreas en las que el usuario es responsable<br/>
+			* Login fallidos de todos los usuarios de la aplicación</p>
 		</div>
 	</div>
 

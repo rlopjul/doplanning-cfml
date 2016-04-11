@@ -8,6 +8,7 @@
 	<cffunction name="getGeneralStatistics" returntype="struct" access="public">
 		<cfargument name="from_date" type="string" required="false">
 		<cfargument name="end_date" type="string" required="false">
+		<cfargument name="from_user" type="numeric" required="false">
 
 		<cfset var method = "getGeneralStatistics">
 
@@ -22,6 +23,7 @@
 				<cfif isDefined("arguments.end_date")>
 					<cfinvokeargument name="end_date" value="#arguments.end_date#"/>
 				</cfif>
+				<cfinvokeargument name="from_user" value="#arguments.from_user#">
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">

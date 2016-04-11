@@ -10,6 +10,7 @@
 	<cffunction name="getGeneralStatistics" output="false" returntype="struct" access="public">
 		<cfargument name="from_date" type="string" required="false">
 		<cfargument name="end_date" type="string" required="false">
+		<cfargument name="from_user" type="numeric" required="false">
 
 		<cfset var method = "getGeneralStatistics">
 
@@ -23,11 +24,13 @@
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/StatisticQuery" method="getGeneralStatistics" returnvariable="statisticsQuery">
 				<cfif isDefined("arguments.from_date")>
-					<cfinvokeargument name="from_date" value="#from_date#"/>
+					<cfinvokeargument name="from_date" value="#arguments.from_date#"/>
 				</cfif>
 				<cfif isDefined("arguments.end_date")>
-					<cfinvokeargument name="end_date" value="#end_date#"/>
+					<cfinvokeargument name="end_date" value="#arguments.end_date#"/>
 				</cfif>
+				<cfinvokeargument name="from_user" value="#arguments.from_user#">
+					
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#"/>
 				<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
 			</cfinvoke>
