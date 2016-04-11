@@ -263,6 +263,12 @@
 				headers: {
 					0: {
 						sorter: "text"
+					},
+					3: {
+						sorter: "datetime"
+					},
+					4: {
+						sorter: "datetime"
 					}
 				}
 				, widgetOptions : {
