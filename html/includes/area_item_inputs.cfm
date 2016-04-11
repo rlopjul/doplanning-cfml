@@ -1069,6 +1069,8 @@
 
 <cfif APPLICATION.webFriendlyUrls IS true AND ( itemTypeId IS 4 OR itemTypeId IS 5 OR itemTypeId IS 8 )><!---News, events and publications--->
 
+	<!--- Page URL --->
+
 	<cfif len(area_type) GT 0>
 
 		<cfinvoke component="#APPLICATION.componentsPath#/WebManager" method="getWebFromArea" returnvariable="getWebsResult">
@@ -1168,9 +1170,7 @@
 					<label class="sr-only" for="url_id_suffix" lang="es">URL de la página</label>
 
 					<div class="input-group">
-						<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
-					  	<span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#web_language#/#pagePath#/</span></span>
-						</cfif>
+					  <span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#web_language#/#pagePath#/</span></span>
 						<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectItem.url_id,'/')#" class="form-control" passthrough="#passthrough#">
 						<input type="hidden" name="url_id" id="url_id" value=">#web_language#/#pagePath#/#listLast(objectItem.url_id,'/')#" />
 					</div>
