@@ -11,6 +11,8 @@
 		<cfargument name="from_date" type="string" required="false">
 		<cfargument name="end_date" type="string" required="false">
 		<cfargument name="from_user" type="numeric" required="false">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="include_subareas" type="boolean" required="false" default="false">
 
 		<cfset var method = "getGeneralStatistics">
 
@@ -30,7 +32,9 @@
 					<cfinvokeargument name="end_date" value="#arguments.end_date#"/>
 				</cfif>
 				<cfinvokeargument name="from_user" value="#arguments.from_user#">
-					
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="include_subareas" value="#arguments.include_subareas#">
+
 				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#"/>
 				<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
 			</cfinvoke>

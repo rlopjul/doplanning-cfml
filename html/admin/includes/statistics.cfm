@@ -16,6 +16,18 @@
 	<cfset user_in_charge = "">
 </cfif>
 
+<cfif isDefined("URL.area_id") AND isNumeric(URL.area_id)>
+	<cfset area_id = URL.area_id>
+<cfelse>
+	<cfset area_id = "">
+</cfif>
+
+<cfif isDefined("URL.include_subareas") AND URL.include_subareas IS true>
+	<cfset include_subareas = URL.include_subareas>
+<cfelse>
+	<cfset include_subareas = "">
+</cfif>
+
 <!--- getGeneralStatistics --->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/Statistic" method="getGeneralStatistics" returnvariable="getStatisticsResponse">
 	<cfif len(from_date) GT 0>
@@ -26,6 +38,12 @@
 	</cfif>
 	<cfif len(user_in_charge) GT 0>
 		<cfinvokeargument name="from_user" value="#user_in_charge#"/>
+	</cfif>
+	<cfif len(area_id) GT 0>
+		<cfinvokeargument name="area_id" value="#area_id#"/>
+	</cfif>
+	<cfif include_subareas IS true>
+		<cfinvokeargument name="include_subareas" value="true">
 	</cfif>
 </cfinvoke>
 
@@ -71,10 +89,30 @@
 		$('#end_date').datepicker('setStartDate', $('#from_date').val());
 	}
 
+	function setSelectedArea(areaId, areaName) {
+
+		$("#area_id").val(areaId);
+		$("#area_name").val(areaName);
+
+	}
+
+	function clearFieldSelectedArea(){
+
+		$("#area_id").val("");
+		$("#area_name").val("");
+
+	}
+
 	<cfoutput>
 	function openUserSelectorWithField(fieldName){
 
 		return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+
+	}
+
+	function openAreaSelector(){
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
 
 	}
 	</cfoutput>
@@ -117,17 +155,6 @@
 						</div>
 
 					</div>
-
-					<div class="row">
-
-						<label for="end_date" class="col-xs-5 col-sm-3 control-label"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha hasta</span></label>
-
-						<div class="col-xs-7 col-sm-9">
-							<input type="text" name="end_date" id="end_date" value="#end_date#" class="form-control input_datepicker" onchange="setEndDate()"/>
-						</div>
-
-					</div>
-
 
 					<div class="row">
 
@@ -181,12 +208,49 @@
 					</div>
 
 
-					<div class="row">
+					<div class="row" id="listAreaSelector">
+						<cfif isNumeric(area_id)>
+							<!--- getArea --->
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="selectedArea">
+								<cfinvokeargument name="area_id" value="#area_id#">
+							</cfinvoke>
+							<cfset area_name = selectedArea.name>
+						<cfelse>
+							<cfset area_name = "">
+						</cfif>
 
+						<label for="area_id" id="listAreaText" class="col-xs-5 col-sm-3 control-label" lang="es">Área</label>
+
+						<div class="col-xs-6 col-sm-7 col-md-8">
+							<input type="hidden" name="area_id" id="area_id" value="#area_id#" />
+							<input type="text" name="area_name" id="area_name" class="form-control" value="#area_name#" readonly="true" onclick="openAreaSelector()" />
+						</div>
+						<div class="col-xs-1 col-sm-1 col-md-1">
+							<button onclick="clearFieldSelectedArea()" type="button" class="btn btn-default" lang="es" title="Quitar área seleccionada"><i class="icon-remove"></i></button>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-5 col-sm-3"></div>
+						<div class="col-sm-3 col-md-2">
+							<button onclick="return openAreaSelector()" type="button" class="btn btn-default" lang="es">Seleccionar área</button>
+						</div>
+
+						<div class="col-xs-offset-5 col-xs-7 col-sm-offset-0 col-sm-6">
+
+							<div class="checkbox">
+						    <label>
+						      <input type="checkbox" name="include_subareas" value="true" <cfif include_subareas IS true>checked</cfif>> Incluir áreas inferiores a la seleccionada
+						    </label>
+						  </div>
+
+						</div>
+					</div>
+
+					<div class="row">
 						<div class="col-sm-offset-3 col-sm-10">
 							<input type="submit" name="search" class="btn btn-primary" style="margin-top:30px;" lang="es" value="Filtrar" />
 						</div>
-
 					</div>
 
 				</form>

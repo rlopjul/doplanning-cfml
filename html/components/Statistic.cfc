@@ -9,6 +9,8 @@
 		<cfargument name="from_date" type="string" required="false">
 		<cfargument name="end_date" type="string" required="false">
 		<cfargument name="from_user" type="numeric" required="false">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="include_subareas" type="boolean" required="false">
 
 		<cfset var method = "getGeneralStatistics">
 
@@ -24,6 +26,8 @@
 					<cfinvokeargument name="end_date" value="#arguments.end_date#"/>
 				</cfif>
 				<cfinvokeargument name="from_user" value="#arguments.from_user#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="include_subareas" value="#arguments.include_subareas#">
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">
@@ -44,7 +48,7 @@
 	<cffunction name="getTotalItemsByUser" returntype="struct" returnformat="json" access="remote">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="area_type" type="string" require="true">
-		<cfargument name="include_subareas" type="boolean" required="false" default="false">
+		<cfargument name="include_subareas" type="boolean" required="false">
 
 		<cfset var method = "getTotalItemsByUser">
 
