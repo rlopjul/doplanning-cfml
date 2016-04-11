@@ -415,20 +415,11 @@
 		</cfif>
 
 
-
 		<div class="row">
 			<label for="text" class="col-xs-5 col-sm-3 control-label" lang="es">Texto a buscar</label>
 
 			<div class="col-xs-7 col-sm-9">
-
-				<!---<div class="input-group">
-					<cfif APPLICATION.hideInputLabels IS true>
-						<span class="input-group-addon"><label for="text"><i class="icon-search"></i></label></span>
-					<cfelse>
-						<span class="input-group-addon"><i class="icon-search"></i></span>
-					</cfif>--->
-				  <input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control" lang="es"/>
-				<!---</div>--->
+				<input type="text" name="text" id="text" value="#HTMLEditFormat(search_text)#" class="form-control" lang="es"/>
 			</div>
 		</div>
 
@@ -443,12 +434,6 @@
 			<label for="from_date" class="col-xs-5 col-sm-3 control-label" lang="es"><i class="icon-calendar"></i>&nbsp;&nbsp;<span lang="es">Fecha desde</span></label>
 
 			<div class="col-xs-7 col-sm-9">
-				<!---<cfif APPLICATION.hideInputLabels IS true>
-					<div class="input-group">
-						 <span class="input-group-addon"><label for="from_date"><i class="icon-calendar"></i></label></span>
-						<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()" placeholder="Fecha desde" lang="es">
-					</div>
-				<cfelse>--->
 				<input type="text" name="from_date" id="from_date" class="form-control input_datepicker" value="#from_date#" onchange="setFromDate()">
 			</div>
 
@@ -463,16 +448,6 @@
 			</div>
 
 		</div>
-
-		<!---<div class="row">
-
-			<div class="col-xs-7 col-xs-offset-5 col-sm-offset-3 col-sm-9">
-
-				<hr style="margin-top:35px; border-top:1px solid ##ddd">
-
-			</div>
-
-		</div>--->
 
 		<cfif itemTypeId IS 6><!---Tasks--->
 			<div class="row">
@@ -833,10 +808,6 @@
 
 		</div>
 	</div>
-
-	<!--- <cfif NOT isDefined("curElement") OR curElement NEQ "users">
-			<span class="help-block" style="font-size:10px" lang="es">Formato fecha DD-MM-AAAA. Ejemplo: #DateFormat(now(), "DD-MM-YYYY")#</span>
-	</cfif> --->
 
 
 </cfform>
