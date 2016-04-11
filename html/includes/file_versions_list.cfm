@@ -5,21 +5,6 @@
 <script>
 	$(document).ready(function() {
 
-
-		<!---$.tablesorter.addParser({
-			id: "datetime",
-			is: function(s) {
-				return false;
-			},
-			format: function(s,table) {
-				s = s.replace(/\-/g,"/");
-				s = s.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$2/$1");
-				return $.tablesorter.formatFloat(new Date(s).getTime());
-			},
-			type: "numeric"
-		});--->
-
-
 		$("#dataTable").tablesorter({
 			widgets: ['zebra'], <!---,'select'--->
 			sortList: [[0,1]] ,
@@ -27,26 +12,24 @@
 			dateFormat: "ddmmyyyy", // set the default date format
 			headers: {
 				5: {
-					sorter: "shortDate"
+					sorter: "datetime"
 				}
 			}
 		});
 
-
 		$('#dataTable tbody tr').on('click', function(e) {
 
-	       	var row = $(this);
+     	var row = $(this);
 
-	        if(!row.hasClass("selected")) {
-	        	$('#dataTable tbody tr').removeClass("selected");
-	        	row.addClass("selected");
-	        }
+      if(!row.hasClass("selected")) {
+      	$('#dataTable tbody tr').removeClass("selected");
+      	row.addClass("selected");
+      }
 
-	        var itemUrl= row.data("item-url");
-		    openUrlLite(itemUrl,'itemIframe');
+      var itemUrl= row.data("item-url");
+		  openUrlLite(itemUrl,'itemIframe');
 
-	    });
-
+	  });
 
 	});
 </script>
