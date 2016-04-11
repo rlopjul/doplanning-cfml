@@ -16,6 +16,12 @@
 	<cfset user_in_charge = "">
 </cfif>
 
+<cfif isDefined("URL.download_user") AND isNumeric(URL.download_user)>
+	<cfset download_user_id = URL.download_user>
+<cfelse>
+	<cfset download_user_id = "">
+</cfif>
+
 <!--- getFilesDownloads --->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFilesDownloads" returnvariable="filesDownloadsResponse">
 	<cfinvokeargument name="parse_dates" value="true">
@@ -27,6 +33,9 @@
 	</cfif>
 	<cfif len(user_in_charge) GT 0>
 		<cfinvokeargument name="user_in_charge" value="#user_in_charge#"/>
+	</cfif>
+	<cfif len(download_user_id) GT 0>
+		<cfinvokeargument name="download_user_id" value="#download_user_id#"/>
 	</cfif>
 </cfinvoke>
 
@@ -120,7 +129,7 @@
 
 					<div class="row">
 
-						<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es">Usuario</label>
+						<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es">Usuario propietario</label>
 
 						<div class="col-xs-6 col-sm-7 col-md-8">
 
@@ -166,6 +175,58 @@
 						<div class="col-xs-5 col-sm-3"></div>
 						<div class="col-xs-7 col-sm-8 col-md-9">
 							<button onclick="openUserSelectorWithField('from_user')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+						</div>
+					</div>
+
+
+					<div class="row">
+
+						<label for="download_user" class="col-xs-5 col-sm-3 control-label" lang="es">Usuario que realiza descarga</label>
+
+						<div class="col-xs-6 col-sm-7 col-md-8">
+
+							<cfif isNumeric(download_user_id)>
+
+								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
+									<cfinvokeargument name="user_id" value="#download_user_id#">
+								</cfinvoke>
+
+								<cfif userQuery.recordCount GT 0>
+
+									<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+										<cfset download_user_full_name = userQuery.user_full_name>
+									<cfelse>
+										<cfset download_user_full_name = "USUARIO SELECCIONADO SIN NOMBRE">
+									</cfif>
+
+								<cfelse>
+
+									<cfset download_user_full_name = "USUARIO NO ENCONTRADO">
+									<cfset download_user_id = "">
+
+								</cfif>
+
+							<cfelse>
+
+								<cfset download_user_full_name = "">
+
+							</cfif>
+
+							<input type="hidden" name="download_user" id="download_user" value="#download_user_id#" />
+							<input type="text" name="download_user_user_full_name" id="download_user_user_full_name" value="#download_user_full_name#" class="form-control" readonly onclick="openUserSelectorWithField('download_user')" />
+
+						</div>
+
+						<div class="col-xs-1 col-sm-1 col-md-1">
+							<button onclick="clearFieldSelectedUser('download_user')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-xs-5 col-sm-3"></div>
+						<div class="col-xs-7 col-sm-8 col-md-9">
+							<button onclick="openUserSelectorWithField('download_user')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
 						</div>
 					</div>
 

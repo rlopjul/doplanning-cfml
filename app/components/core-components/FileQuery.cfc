@@ -656,6 +656,7 @@
 		<cfargument name="from_date" type="string" required="false">
 		<cfargument name="end_date" type="string" required="false">
 		<cfargument name="user_in_charge" type="numeric" required="false">
+		<cfargument name="download_user_id" type="numeric" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -682,6 +683,9 @@
 			</cfif>
 			<cfif isDefined("arguments.user_in_charge")>
 				AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
+			</cfif>
+			<cfif isDefined("arguments.download_user_id")>
+				AND files_downloads.user_id = <cfqueryparam value="#arguments.download_user_id#" cfsqltype="cf_sql_integer">
 			</cfif>
 			GROUP BY file_id
 			ORDER BY downloads DESC, download_date DESC;
