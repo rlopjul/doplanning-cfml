@@ -438,6 +438,7 @@
 					<!---<cfinvokeargument name="title" value="Era7">--->
 					<cfinvokeargument name="moduleWeb" value="true">
 					<cfinvokeargument name="moduleWebRTC" value="true">
+					<cfinvokeargument name="webFriendlyUrls" value="true">
 
 					<cfinvokeargument name="homeTab" value="true">
 					<cfinvokeargument name="moduleDPDocuments" value="true">
