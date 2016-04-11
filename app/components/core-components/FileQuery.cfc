@@ -33,6 +33,7 @@
 		<cfargument name="published" type="boolean" required="false" default="true">
 		<cfargument name="with_owner_area" type="boolean" required="false" default="false">
 
+
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
@@ -654,6 +655,7 @@
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="from_date" type="string" required="false">
 		<cfargument name="end_date" type="string" required="false">
+		<cfargument name="user_in_charge" type="numeric" required="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -677,6 +679,9 @@
 			</cfif>
 			<cfif isDefined("arguments.end_date")>
 				AND download_date <= STR_TO_DATE(<cfqueryparam value="#arguments.end_date# 23:59:59" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateTimeFormat#')
+			</cfif>
+			<cfif isDefined("arguments.user_in_charge")>
+				AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
 			</cfif>
 			GROUP BY file_id
 			ORDER BY downloads DESC, download_date DESC;

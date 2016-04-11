@@ -10,6 +10,12 @@
 	<cfset end_date = "">
 </cfif>
 
+<cfif isDefined("URL.from_user") AND isNumeric(URL.from_user)>
+	<cfset user_in_charge = URL.from_user>
+<cfelse>
+	<cfset user_in_charge = "">
+</cfif>
+
 <!--- getFilesDownloads --->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFilesDownloads" returnvariable="filesDownloadsResponse">
 	<cfinvokeargument name="parse_dates" value="true">
@@ -18,6 +24,9 @@
 	</cfif>
 	<cfif len(end_date) GT 0>
 		<cfinvokeargument name="end_date" value="#end_date#"/>
+	</cfif>
+	<cfif len(user_in_charge) GT 0>
+		<cfinvokeargument name="user_in_charge" value="#user_in_charge#"/>
 	</cfif>
 </cfinvoke>
 
@@ -28,6 +37,7 @@
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>
 </cfoutput>
 
 <script>
@@ -61,6 +71,14 @@
 	function setFromDate(){
 		$('#end_date').datepicker('setStartDate', $('#from_date').val());
 	}
+
+	<cfoutput>
+	function openUserSelectorWithField(fieldName){
+
+		return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+
+	}
+	</cfoutput>
 
 </script>
 
@@ -99,6 +117,58 @@
 						</div>
 
 					</div>
+
+					<div class="row">
+
+						<label for="from_user" class="col-xs-5 col-sm-3 control-label" lang="es">Usuario</label>
+
+						<div class="col-xs-6 col-sm-7 col-md-8">
+
+							<cfif isNumeric(user_in_charge)>
+
+								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="userQuery">
+									<cfinvokeargument name="user_id" value="#user_in_charge#">
+								</cfinvoke>
+
+								<cfif userQuery.recordCount GT 0>
+
+									<cfif len(userQuery.user_full_name) GT 0 AND userQuery.user_full_name NEQ " ">
+										<cfset from_user_full_name = userQuery.user_full_name>
+									<cfelse>
+										<cfset from_user_full_name = "USUARIO SELECCIONADO SIN NOMBRE">
+									</cfif>
+
+								<cfelse>
+
+									<cfset from_user_full_name = "USUARIO NO ENCONTRADO">
+									<cfset user_in_charge = "">
+
+								</cfif>
+
+							<cfelse>
+
+								<cfset from_user_full_name = "">
+
+							</cfif>
+
+							<input type="hidden" name="from_user" id="from_user" value="#user_in_charge#" />
+							<input type="text" name="from_user_user_full_name" id="from_user_user_full_name" value="#from_user_full_name#" class="form-control" readonly onclick="openUserSelectorWithField('from_user')" />
+
+						</div>
+
+						<div class="col-xs-1 col-sm-1 col-md-1">
+							<button onclick="clearFieldSelectedUser('from_user')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-xs-5 col-sm-3"></div>
+						<div class="col-xs-7 col-sm-8 col-md-9">
+							<button onclick="openUserSelectorWithField('from_user')" type="button" class="btn btn-default" lang="es">Seleccionar usuario</button>
+						</div>
+					</div>
+
 
 					<div class="row">
 

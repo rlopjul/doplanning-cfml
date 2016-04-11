@@ -1627,6 +1627,7 @@
 		<cfargument name="parse_dates" type="boolean" required="false" default="false">
 		<cfargument name="from_date" type="string" required="false">
 		<cfargument name="end_date" type="string" required="false">
+		<cfargument name="user_in_charge" type="numeric" required="false">
 
 		<cfset var method = "getFilesDownloads">
 
@@ -1642,6 +1643,7 @@
 				<cfif isDefined("arguments.end_date")>
 					<cfinvokeargument name="end_date" value="#arguments.end_date#"/>
 				</cfif>
+				<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">
