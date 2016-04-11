@@ -345,7 +345,6 @@
 									<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#filesDownloadsQuery.file_id#&#itemTypesStruct[filesDownloadsQuery.item_type_id].name#=#filesDownloadsQuery.item_id#" onclick="return downloadFileLinked(this,event)">#filesDownloadsQuery.file_name#</a>
 								<cfelse>
 									<span>#filesDownloadsQuery.file_name#</span>
-									<!---<a href="#APPLICATION.htmlPath#/file.cfm?file=#filesDownloadsQuery.file_id#" target="_blank">--->
 								</cfif>
 							</td>
 							<td>#filesDownloadsQuery.name#</td>
