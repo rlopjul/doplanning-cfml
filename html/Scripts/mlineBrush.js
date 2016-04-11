@@ -46,6 +46,7 @@ labelEnter.append("input")
     .attr({
         type: "checkbox",
         name: "mode",
+        class: "lineInput",
         id: function(d){ return d;}
     })
     .property("checked",function(d,i){
@@ -134,7 +135,7 @@ function createData(){
       });
 }
 
-d3.selectAll("input").on("change", function() {
+d3.selectAll(".lineInput").on("change", function() {
     var selected = this.value;
     var check = this.checked ? true : false;
 
@@ -142,7 +143,7 @@ d3.selectAll("input").on("change", function() {
         if(this.id == "Check All"){
 
             checkUser = userName.slice();
-            d3.selectAll('input').property('checked',true);
+            d3.selectAll('lineInput').property('checked',true);
         }else{
             checkUser.push(this.id);
         }
@@ -156,7 +157,7 @@ d3.selectAll("input").on("change", function() {
         var userIndex = checkUser.indexOf(this.id);
         if(this.id == "Check All"){
             checkUser = [];
-             d3.selectAll('input').property('checked',false);
+             d3.selectAll('lineInput').property('checked',false);
         }else{
             checkUser.splice(userIndex, 1);
         }

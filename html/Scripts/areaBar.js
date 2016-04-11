@@ -1,160 +1,253 @@
 function drawChart(totalItems){
 
 
-            	var svg1 = dimple.newSvg('#userLogArea', 950, 400);
+  //console.log(testdata);
+var margin = {top: 40, right: 20, bottom: 80, left: 50},
+width = 900 - margin.left - margin.right ,
+height = 500 - margin.top - margin.bottom ;
 
-              var myChart = new dimple.chart(svg1,  totalItems);
-              myChart.setBounds(60, 30, 600, 300);
+var x = d3.scale.ordinal()
+.rangeRoundBands([0, width], .1);
 
-              var x = myChart.addCategoryAxis("x", "item_type_label");
-              var y = myChart.addMeasureAxis("y", "total");
-
-              // In order to deal with cases where order differs by column
-              // it's needed to include it as series definition
-
-              var s = myChart.addSeries(["user_full_name"], dimple.plot.bar);
-							var s2 = myChart.addSeries(["item_type_label"]);
-
-							var userLegend = myChart.addLegend(670, 50, 350, 100, "left", s);
-							var typeLegend = myChart.addLegend(670, 250, 350, 100,"left", s2);
-
-              myChart.svg.attr("width", "100%")
-                .attr("height", "100%")
-                .attr("viewBox", "0 0 900 400");
-
-              myChart.ease = "bounce";
-              myChart.staggerDraw = true;
-              myChart.draw(800);
-
-              s2.shapes.remove();
+var y = d3.scale.linear()
+.rangeRound([height, 0]);
 
 
-           myChart.legends = [];
-      // Get a unique list of Owner values to use when filtering
-          var typeFilterValues = dimple.getUniqueValues(totalItems, "item_type_label");
-          var userFilterValues = dimple.getUniqueValues(totalItems, "user_full_name");
-          var hiddenUserValue = [];
-          var hiddenTypeValue = [];
+var color = d3.scale.ordinal()    .range(["#8dd3c7","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#b15928","#e5c494","#fccde5","#bc80bd","#ccebc5","#ffed6f","#1f78b4"]);
 
-console.log(typeFilterValues);
-          typeFilterValues.forEach(function(typeName){
+var userList = [];
+var checkUser = [];
 
-              var typeClass = ".dimple-legend .dimple-" + typeName.toLowerCase();
+totalItems.forEach(function(d){
 
-              d3.selectAll(typeClass)
-                  .style("fill", "grey");
-                  //.style("stroke", "grey");
+if(userList.indexOf(d.user_full_name) == -1 && d.user_full_name){
+userList.push(d.user_full_name);
+}
+});
+
+userList.unshift("Check All");
+
+var form = d3.select("#stackLegend").append("form");
+
+var checkEnter = form.selectAll("span")
+.data(userList)
+.enter()
+.append("span");
+
+checkEnter.append("input")
+.attr({
+type: "checkbox",
+name: "mode",
+class: "stackInput",
+id: function(d){ return d.replace(/\s+/g, '-') + "stackLegend"; }
+})
+.property("checked", function(d,i){
+return true;
+});
+
+checkEnter.append("label")
+.style("font=size", "8px")
+.text(function(d){ return d; });
+
+checkEnter.append("br")
+
+userList.shift();
+checkUser = userList;
+
+d3.selectAll(".stackInput").on("change", function(){
+var check = this.checked ? true : false;
+var userId = this.id.replace(/-/g, " ").substr(0, this.id.length - 11);
+
+if( check == true){
+if(userId == "Check All"){
+  checkUser = userList.slice();
+  d3.selectAll('.stackInput').property('checked', true);
+}else{
+  checkUser.push(userId);
+}
+
+d3.select("#userLogArea").select('svg').remove();
+updateData();
+drawStackBar();
+}else{
+var userIndex = checkUser.indexOf(userId);
+if(userId == "Check All"){
+  checkUser = [];
+  d3.selectAll(".stackInput").property("checked", false);
+}else{
+  checkUser.splice(userIndex, 1);
+}
+d3.select("#userLogArea").select('svg').remove();
+updateData();
+drawStackBar();
+}
+})
+
+var nestedData = d3.nest()
+      .key( function(d) {
+           return d.item_type_label;})
+      .entries(totalItems);
+
+//dynamicaaly remove undefined array from object
+nestedData.forEach(function(obj, i){
+
+if(obj.key == "undefined"){
+  nestedData.splice(i,1);
+}
+});
+
+//Using map to create one nested object of nestedfilter data.
+//Using the first key in nested data to create object key and using values from second
+// nest to creat a array of values. First map is over the itemtype and second
+// map is over date and total. Aggregate the date and total to first nest.
+
+var layerData;
+function updateData(){
+  layerData = nestedData.map(function (objectArray) {
+
+    var y0 = 0;
+        return {
+            key: objectArray.key,
+            values: objectArray.values.map(function (d) {
+
+                if( checkUser.indexOf(d.user_full_name) != -1 ){
+                   // console.log(checkUser.indexOf(d.user_full_name));
+                    return {
+                        name: d.user_full_name,
+                        y0: y0,
+                        y1: y0 += +[d.total]
+                    }
+                }else{
+                    return {
+                        name: d.user_full_name,
+                        y0: 0,
+                        y1: 0
+                    }
+                }
+            }),
+        };
+      });
+
+      layerData.forEach(function(d) {
+      d.total = d.values[d.values.length - 1].y1;
+      });
+
+      layerData.sort(function (a, b) {
+              return b.values[0].y1 - a.values[0].y1;
           });
 
-      legendBits = userLegend.shapes;
-      legendBits[0] = legendBits[0]
-          .concat(typeLegend.shapes[0]);
+          x.domain(layerData.map(function(d) { return d.key; }));
+          y.domain([0, d3.max(layerData, function(d) { return d.total; })]);
+  }
 
-          // Get all the rectangles from now orphaned legend
-          legendBits.selectAll("rect")
-            // Add a click event to each rectangle
-            .on("click", function (e) {
-              // This indicates whether the item is already visible or not
-              var hide = false;
-              var newUserFilters = [];
-              var newTypeFilters = [];
-              var currentVaue = e.aggField.slice(-1)[0];
+drawStackBar();
+//drawUserLegend()
+function drawStackBar(){
+
+var svg = d3.select("#userLogArea").append("svg")
+.attr("width", "100%")
+.attr("height", "100%")
+.attr("viewBox", "0 0 900 500")
+.attr("preserveAspectRation", "xMidYMid")
+.append("g")
+.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var xAxis = d3.svg.axis()
+.scale(x)
+.orient("bottom");
+
+svg.append("svg:g")
+.attr("class", "x-axis");
+
+var yAxis = d3.svg.axis()
+.scale(y)
+.orient("left");
+
+svg.append("svg:g")
+.attr("class", "y-axis");
+
+updateData();
+
+var layer = svg.selectAll(".stack")
+.data(layerData)
+.enter().append("g")
+.attr("class", "stack")
+.attr("id", function(d){
+  return d.key.replace(/\s+/g, "")+"stack";
+})
+.attr("transform", function(d) { return "translate(" + x(d.key) + ",0)"; });
+
+layer.selectAll("rect")
+.data(function(d) { return d.values; })
+.enter().append("rect")
+.attr("width", x.rangeBand())
+.attr("y", function(d) { return y(d.y1); })
+.attr("height", function(d) { return y(d.y0) - y(d.y1);  })
+.style("fill", function(d) { return color(d.name); });
+
+var legend = d3.select
+svg.append("g")
+.attr("class", "x axis")
+.attr("transform", "translate(0," + height + ")")
+.call(xAxis)
+.selectAll(".tick text")
+.call(wrap, x.rangeBand());;
+
+svg.append("g")
+.attr("class", "y axis")
+.call(yAxis)
+.append("text")
+.attr("transform", "rotate(-90)")
+.attr("y", 6)
+.attr("dy", ".71em")
+.style("text-anchor", "end")
+.text("Total");
+}
+
+function wrap(text, width) {
+text.each(function() {
+var text = d3.select(this),
+words = text.text().split(/\s+/).reverse(),
+word,
+line = [],
+lineNumber = 0,
+lineHeight = 1.1, // ems
+y = text.attr("y"),
+dy = parseFloat(text.attr("dy")),
+tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+
+while (word = words.pop()) {
+line.push(word);
+tspan.text(line.join(" "));
+if (tspan.node().getComputedTextLength() > width) {
+line.pop();
+tspan.text(line.join(" "));
+line = [word];
+tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+}
+}
+});
+}
 
 
-              userFilterValues.forEach(function(f){
-                  if(f === currentVaue){
-                      var whereIsIt = hiddenUserValue.indexOf(currentVaue);
+//https://gist.github.com/biovisualize/3085882
+function drawUserLegend(){
+var userName = ["lkj", "asd", "ard", "asiur"];
 
-                      if (whereIsIt > -1) {
-                          //it is hidden and needs to be shown.
-                          hide = false;
-                          //hiddenUserValue.splice(whereIsIt, 1);
-                          hiddenUserValue = [];
-                      } else {
-                          //it needs to be hidden
-                           hide = true;
-                           hiddenUserValue.push(currentVaue);
-                      }
-                  }
-              });
-              typeFilterValues.forEach(function(f){
+var svgLegend = d3.select("#stackLegend").append("svg")
+.attr("width", 100)
+.attr("height", 100);
 
-                  if(f === currentVaue){
-                      var whereIsIt = hiddenTypeValue.indexOf(currentVaue);
+svgLegend.append("foreignObject")
+.data(function(d){ return userName; })
+.attr("width", 100)
+.attr("height", 100)
+.append("xhtml:body")
+.html(function(d){  for(var i=0; i<5; i++){  return "<form><input type=checkbox id=check /></form>"; } })
+.on("click", function(d, i){
+  console.log(i);
+  console.log(svgLegend.select("#check").node().checked);
+});
 
-                      if (whereIsIt > -1) {
-
-                          //it is hidden and needs to be shown.
-                          hide = false;
-                          hiddenTypeValue.splice(whereIsIt, 1);
-                      } else {
-                      //    it needs to be hidden
-                           hide = true;
-
-                           hiddenTypeValue.push(currentVaue);
-                      }
-                  }
-              });
-
-
-             userFilterValues.forEach(function(userName){
-
-                     if(hiddenUserValue.indexOf(userName) == -1 && hiddenUserValue.length > 0){
-
-                          var usrClass = ".dimple-legend .dimple-" + userName.toLowerCase();
-
-                         d3.selectAll(usrClass)
-                          .style("opacity", .3);
-
-                 }else{
-
-                     var usrClass = ".dimple-legend .dimple-" + userName.toLowerCase();
-
-                     d3.selectAll(usrClass)
-                      .style("opacity", 1);
-                 }
-
-             })
-
-              typeFilterValues.forEach(function(typeName){
-
-                     if(hiddenTypeValue.indexOf(typeName) == -1 && hiddenTypeValue.length > 0){
-
-                          var typeClass = ".dimple-legend .dimple-" + typeName.toLowerCase();
-
-                         d3.selectAll(typeClass)
-                          .style("opacity", .3);
-
-                 }else{
-                     var typeClass = ".dimple-legend .dimple-" + typeName.toLowerCase();
-
-
-                     d3.selectAll(typeClass)
-                      .style("opacity", 1);
-                 }
-
-             })
-
-
-              if(hiddenTypeValue.length == "" ){
-                  newTypeFilters =  typeFilterValues;
-              }else{
-                  newTypeFilters = hiddenTypeValue;
-              }
-
-              if( hiddenUserValue.length == 0){
-                  newUserFilters = userFilterValues;
-                  //d3.selectAll("rect").style("opacity", 1);
-              }else{
-                  newUserFilters = hiddenUserValue;
-              }
-
-              // Filter the data
-  myChart.data = dimple.filterData(dimple.filterData(totalItems, 'user_full_name', newUserFilters), 'item_type_label', newTypeFilters);
-         // Passing a duration parameter makes the chart animate. Without
-         // it there is no transition
-
-   myChart.draw(800);
-           s2.shapes.remove();
-            });
+}
 }

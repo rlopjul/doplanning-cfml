@@ -215,6 +215,7 @@
 			 <div class="container-fluid">
 				 <div class="row" >
 				 	<div id="userLogArea" class="col-lg-12 col-md-12 col-sm-12"> </div>
+					<div id="stackLegend" class="col-lg-3 col-md-3 col-sm-3"></div>
 			 	</div>
 
 				<div class="row">
