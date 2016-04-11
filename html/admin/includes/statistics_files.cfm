@@ -339,13 +339,14 @@
 						<tr>
 							<td>
 								<cfif isNumeric(filesDownloadsQuery.area_id)>
-									<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#filesDownloadsQuery.file_id#&area=#filesDownloadsQuery.area_id#" onclick="return downloadFileLinked(this,event)">
+									<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#filesDownloadsQuery.file_id#&area=#filesDownloadsQuery.area_id#" onclick="return downloadFileLinked(this,event)">#filesDownloadsQuery.file_name#</a>
 									<!---<a href="#APPLICATION.htmlPath#/file.cfm?file=#filesDownloadsQuery.file_id#&area=#filesDownloadsQuery.area_id#" target="_blank"> No todos son archivos de área--->
+								<cfelseif isNumeric(filesDownloadsQuery.item_type_id)>
+									<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#filesDownloadsQuery.file_id#&#itemTypesStruct[filesDownloadsQuery.item_type_id].name#=#filesDownloadsQuery.item_id#" onclick="return downloadFileLinked(this,event)">#filesDownloadsQuery.file_name#</a>
 								<cfelse>
-									<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#filesDownloadsQuery.file_id#" onclick="return downloadFileLinked(this,event)">
+									<span>#filesDownloadsQuery.file_name#</span>
 									<!---<a href="#APPLICATION.htmlPath#/file.cfm?file=#filesDownloadsQuery.file_id#" target="_blank">--->
 								</cfif>
-								#filesDownloadsQuery.file_name#</a>
 							</td>
 							<td>#filesDownloadsQuery.name#</td>
 							<td>#filesDownloadsQuery.file_type#</td>
@@ -368,34 +369,34 @@
 
 									<cfif itemQuery.recordCount GT 0>
 
-											<cfif listFind("11,12", filesDownloadsQuery.item_type_id) GT 0>
+										<cfif listFind("11,12", filesDownloadsQuery.item_type_id) GT 0>
 
-												<!---tableRowUrl--->
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="areaItemUrl">
-													<cfinvokeargument name="table_id" value="#filesDownloadsQuery.item_id#">
-													<cfinvokeargument name="tableTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
-													<cfinvokeargument name="row_id" value="#filesDownloadsQuery.row_id#">
-													<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
+											<!---tableRowUrl--->
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="areaItemUrl">
+												<cfinvokeargument name="table_id" value="#filesDownloadsQuery.item_id#">
+												<cfinvokeargument name="tableTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
+												<cfinvokeargument name="row_id" value="#filesDownloadsQuery.row_id#">
+												<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
 
-													<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-												</cfinvoke>
+												<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+											</cfinvoke>
 
-											<cfelse>
+										<cfelse>
 
-												<!---itemUrl--->
-												<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
-													<cfinvokeargument name="item_id" value="#filesDownloadsQuery.item_id#">
-													<cfinvokeargument name="itemTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
-													<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
+											<!---itemUrl--->
+											<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+												<cfinvokeargument name="item_id" value="#filesDownloadsQuery.item_id#">
+												<cfinvokeargument name="itemTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
+												<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
 
-													<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-												</cfinvoke>
-
-											</cfif>
-
-											<a href="#areaItemUrl#" target="_blank">#itemTypesStruct[filesDownloadsQuery.item_type_id].label#</a>
+												<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+											</cfinvoke>
 
 										</cfif>
+
+										<a href="#areaItemUrl#" target="_blank">#itemTypesStruct[filesDownloadsQuery.item_type_id].label#</a>
+
+									</cfif>
 
 								</cfif>
 
