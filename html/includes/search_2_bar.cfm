@@ -234,13 +234,13 @@
 
 							<div class="row" style="width:450px;">
 
-					            <ul class="list-unstyled col-md-6">
+					        <ul class="list-unstyled col-md-6">
 
-					            	<li>
-										<a href="areas_search.cfm" title="Áreas" lang="es">
-											<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Áreas" lang="es" style="width:35px"/>&nbsp;<span lang="es">Áreas</span>
-										</a>
-									</li>
+			            	<li>
+											<a href="areas_search.cfm" title="Áreas" lang="es">
+												<img src="#APPLICATION.htmlPath#/assets/v3/icons_dp/area_small.png" alt="Áreas" lang="es" style="width:35px"/>&nbsp;<span lang="es">Áreas</span>
+											</a>
+										</li>
 
 							    	<cfloop array="#itemTypesArray#" index="curItemTypeId">
 
@@ -292,7 +292,7 @@
 
 								</ul><!--- END list-unstyled col-md-6 --->
 
-			           		</div><!--- END row --->
+			        </div><!--- END row --->
 
 						</li>
 
