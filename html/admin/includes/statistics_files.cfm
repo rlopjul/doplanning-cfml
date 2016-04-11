@@ -241,6 +241,7 @@
 		});
 	</script>
 
+	<span class="label label-primary">#filesDownloadsQuery.recordcount# <span lang="es">Archivos</span></span>
 
 	<div class="row">
 		<div class="col-sm-12">
@@ -270,7 +271,6 @@
 				   		<th></th>
 					</tr>
 				</tfoot>
-
 
 				<tbody>
 
