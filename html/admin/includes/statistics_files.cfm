@@ -198,9 +198,7 @@
 
 			$("##statisticsTable").tablesorter({
 
-				widgets: ['zebra','uitheme','filter','stickyHeaders','math'],<!---'select',--->
-				theme : "bootstrap",
-				headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
+				widgets: ['zebra','filter','stickyHeaders','math'],<!---'select',--->
 				headers: {
 					0: {
 						sorter: "text"
@@ -246,7 +244,7 @@
 	<div class="row">
 		<div class="col-sm-12">
 
-			<table id="statisticsTable" class="tablesorter" style="margin-top:20px;">
+			<table id="statisticsTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap data-table" style="margin-top:20px;">
 
 				<thead>
 					<tr>
