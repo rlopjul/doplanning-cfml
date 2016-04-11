@@ -202,7 +202,6 @@ function drawTree(flare) {
     root.x0 = height/6;
     root.y0 = 0;
 
-    console.log(root);
     function collapse(d) {
     	if (d.children) {
    	   d._children = d.children;
