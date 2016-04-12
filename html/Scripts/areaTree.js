@@ -35,40 +35,24 @@ function visit(parent, visitFn, childrenFn) {
 		}
 
 
-function zoom() {
-			svgTree.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-		}
-		// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
-
-var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
-
-
-function centerNode(source) {
-			scale = zoomListener.scale();
-			x = -source.y0;
-			y = -source.x0;
-			xTree = x * scale + width / 2;
-			yTree = y * scale + height / 2;
-			d3.select('g').transition()
-				.duration(duration)
-				.attr("transform", "translate(" + xTree + "," + yTree + ")scale(" + scale + ")");
-			zoomListener.scale(scale);
-			zoomListener.translate([xTree, yTree]);
-		}
-
-var svgTree = d3.select("#treeContainer").append("svg")
-    .attr("width", "100%")
-    .attr("height", "100%")
-    .attr("viewBox", "0 0 1200 900")
-    .attr("preserveAspectRatio", "xMinYMin")
-    .call(zoomListener)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    //.attr("class", "overlay");
-
-
 
 function update(source) {
+
+  function zoom() {
+ 			svgTree.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+ 		}
+ 		// define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
+
+ var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+
+ var svgTree = d3.select("#treeContainer").append("svg")
+     .attr("width", "100%")
+     .attr("height", "100%")
+     .attr("viewBox", "0 0 1200 900")
+     .attr("preserveAspectRatio", "xMinYMin")
+     .call(zoomListener)
+     .append("g")
+     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   var levelWidth = [1];
 
@@ -81,6 +65,7 @@ function update(source) {
   					});
   				}
   			};
+
   			childCount(0, root);
   			var newHeight = d3.max(levelWidth) * 25; // 25 pixels per line
   			tree = tree.size([newHeight, width]);
@@ -182,8 +167,8 @@ function click(d) {
     d.children = d._children;
     d._children = null;
   }
+  d3.select("#treeContainer").select("svg").remove();
   update(d);
-   centerNode(d);
 }
 
 function drawTree(flare) {
@@ -212,9 +197,6 @@ function drawTree(flare) {
 
     update(root);
     root.children.forEach(collapse);
-    centerNode(root);
-
-  //  d3.select("#reset").on("click", centerNode(root));
 
 };
 
