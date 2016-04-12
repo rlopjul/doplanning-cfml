@@ -143,7 +143,7 @@ d3.selectAll(".lineInput").on("change", function() {
         if(this.id == "Check All"){
 
             checkUser = userName.slice();
-            d3.selectAll('lineInput').property('checked',true);
+            d3.selectAll('.lineInput').property('checked',true);
         }else{
             checkUser.push(this.id);
         }
@@ -157,7 +157,7 @@ d3.selectAll(".lineInput").on("change", function() {
         var userIndex = checkUser.indexOf(this.id);
         if(this.id == "Check All"){
             checkUser = [];
-             d3.selectAll('lineInput').property('checked',false);
+             d3.selectAll('.lineInput').property('checked',false);
         }else{
             checkUser.splice(userIndex, 1);
         }
