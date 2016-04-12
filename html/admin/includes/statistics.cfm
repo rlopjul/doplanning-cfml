@@ -270,11 +270,9 @@
 		$(document).ready(function() {
 
 
-			$(".tablesorter").tablesorter({
+			$("##statisticsTable").tablesorter({
 
-				widgets: ['zebra','uitheme','filter','stickyHeaders','math'],<!---'select',--->
-				theme : "bootstrap",
-				headerTemplate : '{content} {icon}',<!---new in v2.7. Needed to add the bootstrap icon!--->
+				widgets: ['zebra','filter','stickyHeaders','math'],<!---'select',--->
 				headers: {
 					0: {
 						sorter: "text"
@@ -312,17 +310,28 @@
 			    }
 			});
 
+			$("##accessTable").tablesorter({
+
+				widgets: ['zebra'],
+				headers: {
+					0: {
+						sorter: "text"
+					}
+				}
+
+			});
+
 		});
 	</script>
 
 	<div class="row">
 		<div class="col-sm-12">
 
-			<table id="statisticsTable" class="tablesorter" style="margin-top:20px;">
+			<table id="statisticsTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap data-table" style="margin-top:20px;">
 
 				<thead>
 					<tr>
-						<th><span lang="es">Elemento</span></th>
+						<th><span lang="es">Acción</span></th>
 						<th><span lang="es">Registros</span></th>
 					</tr>
 				</thead>
@@ -366,8 +375,13 @@
 					</tr>
 				</tfoot>
 
+		</div>
+	</div>
 
-			<table class="tablesorter" style="margin-top:20px;">
+	<div class="row">
+		<div class="col-sm-12">
+
+			<table id="accessTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap data-table" style="margin-top:20px;">
 
 				<thead>
 					<tr>
