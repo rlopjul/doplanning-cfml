@@ -270,7 +270,7 @@
 		$(document).ready(function() {
 
 
-			$("##statisticsTable").tablesorter({
+			$(".tablesorter").tablesorter({
 
 				widgets: ['zebra','uitheme','filter','stickyHeaders','math'],<!---'select',--->
 				theme : "bootstrap",
@@ -327,14 +327,6 @@
 					</tr>
 				</thead>
 
-				<tfoot>
-				   	<tr>
-				   		<th></th>
-				   		<th data-math="col-sum"></th>
-					</tr>
-				</tfoot>
-
-
 				<tbody>
 
 					<cfloop array="#itemTypesArray#" index="curItemTypeId">
@@ -349,7 +341,7 @@
 				<tbody class="tablesorter-infoOnly">
 				    <tr>
 				      <th><span lang="es">Total elementos de área</span></th>
-				      <th data-math="above-sum">above-sum</th>
+				      <th data-math="above-sum"></th>
 				    </tr>
 				</tbody>
 
@@ -364,6 +356,27 @@
 						<td><span lang="es">Usuarios</span></td>
 						<td>#statisticsQuery.users_count#</td>
 					</tr>
+				</tbody>
+
+
+				<tfoot>
+				   	<tr>
+				   		<th>Total elementos</th>
+				   		<th data-math="col-sum"></th>
+					</tr>
+				</tfoot>
+
+
+			<table class="tablesorter" style="margin-top:20px;">
+
+				<thead>
+					<tr>
+						<th><span lang="es">Elemento</span></th>
+						<th><span lang="es">Registros</span></th>
+					</tr>
+				</thead>
+
+				<tbody>
 
 					<tr>
 						<td><span lang="es">Accesos a la aplicación</span></td>
@@ -371,7 +384,7 @@
 					</tr>
 
 					<tr>
-						<td><span lang="es">Login fallidos</span> <cfif len(user_in_charge) GT 0>**</cfif></td>
+						<td><span lang="es">Login fallidos</span> **</td>
 						<td>#statisticsQuery.users_login_failed_count#</td>
 					</tr>
 
@@ -386,8 +399,10 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<p class="help-block">
+			<cfif len(user_in_charge) GT 0>
 			* Áreas en las que el usuario es responsable<br/>
-			* Login fallidos de todos los usuarios de la aplicación</p>
+			</cfif>
+			** Login fallidos de todos los usuarios de la aplicación</p>
 		</div>
 	</div>
 
