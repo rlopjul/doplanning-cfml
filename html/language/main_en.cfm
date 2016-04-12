@@ -1299,12 +1299,12 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		/*bin*/
 		"Eliminar definitivamente":"Remove permanently",
 		"Restaurar":"Restore",
-		"elementos":"elements",
+    "Elemento":"Item",
+		"Elementos":"Items",
 		"Eliminar todo definitivamente":"Remove all permanently",
 		"Restaurar todo":"Restore all",
 		"Todos los de la organización":"All from the organization",
 		"Eliminados por mi":"Removed by me",
-		"elemento":"element",
 		"Elemento eliminado.":"Element removed.",
 		/*END bin*/
 
@@ -1424,12 +1424,15 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Generales":"General",
 		"Estadísticas generales":"General statistics",
 		"Estadísticas de descarga archivos":"Files downloads statistics",
-		"Total elementos de área":"Area elements total",
-		"Elemento":"Item",
+		"Total elementos de área":"Area items total",
+    "Total elementos":"Items total",
 		"Descargas":"Downloads",
 		"Adjunto de":"Attached of",
 		"Accesos a la aplicación":"Access to the application",
 		"Login fallidos":"Failed login",
+    "Incluir áreas inferiores a la seleccionada":"Include lower areas",
+    "Login fallidos de todos los usuarios de la aplicación":"Login failed from all users of the application",
+    "Áreas en las que el usuario es responsable":"Areas where the user is responsible",
     /*END statistics*/
 
     /*typologies*/
@@ -1444,7 +1447,7 @@ IMPORTANT: Any notification of the application will be received, except for the 
 
     /*categories*/
 		"Categorías":"Categories",
-		"Categorías de elementos de área":"Area elements categories",
+		"Categorías de elementos de área":"Area items categories",
 		"Debe seleccionar al menos una categoría para poder subir el archivo":"You must select at least one category to upload the file",
 		"No hay categorías definidas en tu organización":"No defined categories in your organization",
     /*END categories*/

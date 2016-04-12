@@ -240,7 +240,7 @@
 
 							<div class="checkbox">
 						    <label>
-						      <input type="checkbox" name="include_subareas" value="true" <cfif include_subareas IS true>checked</cfif>> Incluir áreas inferiores a la seleccionada
+						      <input type="checkbox" name="include_subareas" value="true" <cfif include_subareas IS true>checked</cfif>> <span lang="es">Incluir áreas inferiores a la seleccionada</span>
 						    </label>
 						  </div>
 
@@ -331,7 +331,7 @@
 
 				<thead>
 					<tr>
-						<th><span lang="es">Acción</span></th>
+						<th><span lang="es">Elemento</span></th>
 						<th><span lang="es">Registros</span></th>
 					</tr>
 				</thead>
@@ -370,7 +370,7 @@
 
 				<tfoot>
 				   	<tr>
-				   		<th>Total elementos</th>
+				   		<th><span lang="es">Total elementos</span></th>
 				   		<th data-math="col-sum"></th>
 					</tr>
 				</tfoot>
@@ -385,7 +385,7 @@
 
 				<thead>
 					<tr>
-						<th><span lang="es">Elemento</span></th>
+						<th><span lang="es">Acción</span></th>
 						<th><span lang="es">Registros</span></th>
 					</tr>
 				</thead>
@@ -414,9 +414,9 @@
 		<div class="col-sm-12">
 			<p class="help-block">
 			<cfif len(user_in_charge) GT 0>
-			* Áreas en las que el usuario es responsable<br/>
+			* <span lang="es">Áreas en las que el usuario es responsable</span><br/>
 			</cfif>
-			** Login fallidos de todos los usuarios de la aplicación</p>
+			** <span lang="es">Login fallidos de todos los usuarios de la aplicación</span></p>
 		</div>
 	</div>
 

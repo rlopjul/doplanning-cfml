@@ -1,5 +1,5 @@
 <cfoutput>
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
  --->
 
@@ -41,24 +41,24 @@
 		<cfif SESSION.user_id EQ SESSION.client_administrator>
 
 		<script>
-		
-			$(window).load( function() {		
-				
+
+			$(window).load( function() {
+
 				$('#binTab a').click( function (e) {
 					if(e.preventDefault)
 				  		e.preventDefault();
-						
+
 				  	$(this).tab('show');
 				});
-				
+
 			} );
-			
+
 		</script>
 
 
 		<div class="tabbable" role="tabpanel">
 
-				
+
 			<ul class="nav nav-tabs" role="tablist" id="binTab">
 			  <li class="active"><a href="#tab1" lang="es">Eliminados por mi</a></li>
 			  <li><a href="#tab2" lang="es">Todos los de la organización</a></li>
@@ -66,10 +66,10 @@
 
 
 			<div class="tab-content">
-		  
+
 				<div class="tab-pane active" id="tab1"><!--- My items --->
 
-		</cfif>		
+		</cfif>
 
 					<!--- All deleted items --->
 					<cfinvoke component="#APPLICATION.htmlComponentsPath#/Bin" method="getAllBinItems" returnvariable="getMyItemsResult">
@@ -81,7 +81,7 @@
 					</cfinvoke>
 
 					<cfset myItemsQuery = getMyItemsResult.query>
-						
+
 					<div class="navbar navbar-default"><!---navbar-static-top--->
 						<div class="container-fluid">
 
@@ -91,22 +91,22 @@
 								<div class="btn-toolbar navbar-left" role="toolbar">
 									<div class="btn-group">
 										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItems&delete_user_id=#SESSION.user_id##url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-primary btn-sm navbar-btn"><i class="icon-undo icon-white"></i> <span lang="es">Restaurar todo</span></a>
-									</div>	
+									</div>
 
 									<div class="btn-group">
 										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=deleteBinItems&delete_user_id=#SESSION.user_id##url_return_page#" onclick="return confirmAction('eliminar');" class="btn btn-danger btn-sm navbar-btn"><i class="icon-remove icon-white"></i> <span lang="es">Eliminar todo definitivamente</span></a>
 									</div>
 								</div>
-							</cfif>	
+							</cfif>
 
 							<!---<cfif app_version NEQ "mobile">
 								<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm navbar-btn navbar-right" style="margin-left:8px;margin-right:5px;"><i class="icon-refresh icon-white"></i></a>
 							</cfif>--->
-							
-							<p class="navbar-text navbar-right">#myItemsQuery.recordCount# <cfif myItemsQuery.recordCount IS 1><span lang="es">elemento</span><cfelse><span lang="es">elementos</span></cfif>&nbsp;&nbsp;&nbsp;</p>	
+
+							<p class="navbar-text navbar-right">#myItemsQuery.recordCount# <cfif myItemsQuery.recordCount IS 1><span lang="es">Elemento</span><cfelse><span lang="es">Elementos</span></cfif>&nbsp;&nbsp;&nbsp;</p>	
 
 							</cfoutput>
-								
+
 						</div>
 					</div>
 
@@ -124,7 +124,7 @@
 									<cfinvokeargument name="deletedItems" value="true">
 								</cfinvoke>
 
-							<cfelse>		
+							<cfelse>
 
 								<cfoutput>
 								<p lang="es">No hay elementos</p>
@@ -152,26 +152,26 @@
 
 				<div class="tab-pane" id="tab2">
 
-					
+
 					<div class="navbar navbar-default"><!---navbar-static-top--->
 						<div class="container-fluid">
-							
+
 							<cfoutput>
 
 							<cfif itemsQuery.recordCount GT 0>
 								<div class="btn-toolbar navbar-left" role="toolbar">
 									<div class="btn-group">
-										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItems#url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-primary btn-sm navbar-btn"><i class="icon-undo icon-white"></i> <span lang="es">Restaurar todo</span></a>	
+										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=restoreBinItems#url_return_page#" onclick="return confirmReversibleAction('restaurar');" class="btn btn-primary btn-sm navbar-btn"><i class="icon-undo icon-white"></i> <span lang="es">Restaurar todo</span></a>
 									</div>
 
 									<div class="btn-group">
 										<a href="#APPLICATION.htmlComponentsPath#/Bin.cfc?method=deleteBinItems#url_return_page#" onclick="return confirmAction('eliminar');" class="btn btn-danger btn-sm navbar-btn"><i class="icon-remove icon-white"></i> <span lang="es">Eliminar todo definitivamente</span></a>
 									</div>
 								</div>
-							</cfif>	
+							</cfif>
 
 							<!---<cfif app_version NEQ "mobile">
-								<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm navbar-btn navbar-right" style="margin-left:8px;margin-right:5px;"><i class="icon-refresh icon-white"></i></a>	
+								<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm navbar-btn navbar-right" style="margin-left:8px;margin-right:5px;"><i class="icon-refresh icon-white"></i></a>
 							</cfif>--->
 
 							<p class="navbar-text navbar-right">#itemsQuery.recordCount# <cfif itemsQuery.recordCount IS 1><span lang="es">elemento</span><cfelse><span lang="es">elementos</span></cfif>&nbsp;&nbsp;&nbsp;</p>
@@ -195,7 +195,7 @@
 									<cfinvokeargument name="deletedItems" value="true">
 								</cfinvoke>
 
-							<cfelse>		
+							<cfelse>
 
 								<cfoutput>
 								<p lang="es">No hay elementos</p>
@@ -220,7 +220,7 @@
 
 		</cfif>
 
-		
+
 	</div><!--- END contenedor_fondo_blanco --->
 
 
