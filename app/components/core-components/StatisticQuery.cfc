@@ -14,7 +14,6 @@
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
 
-
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 

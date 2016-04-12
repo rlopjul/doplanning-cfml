@@ -1629,6 +1629,8 @@
 		<cfargument name="end_date" type="string" required="false">
 		<cfargument name="user_in_charge" type="numeric" required="false">
 		<cfargument name="download_user_id" type="numeric" required="false">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="include_subareas" type="boolean" required="false">
 
 		<cfset var method = "getFilesDownloads">
 
@@ -1646,6 +1648,8 @@
 				</cfif>
 				<cfinvokeargument name="user_in_charge" value="#arguments.user_in_charge#"/>
 				<cfinvokeargument name="download_user_id" value="#arguments.download_user_id#"/>
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="include_subareas" value="#arguments.include_subareas#">
 			</cfinvoke>
 
 			<cfinclude template="includes/responseHandlerStruct.cfm">

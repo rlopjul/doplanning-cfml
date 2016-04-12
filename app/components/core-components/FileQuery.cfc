@@ -657,14 +657,44 @@
 		<cfargument name="end_date" type="string" required="false">
 		<cfargument name="user_in_charge" type="numeric" required="false">
 		<cfargument name="download_user_id" type="numeric" required="false">
+		<cfargument name="area_id" type="numeric" required="false">
+		<cfargument name="include_subareas" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
 
 		<cfset var method = "getFilesDownloads">
 
+		<cfset var areasIds = "">
+		<cfset var allRelatedAreasIds = "">
+
+		<cfif isDefined("arguments.area_id")>
+
+			<cfif arguments.include_subareas IS true>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="areasIds">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+			</cfif>
+
+			<cfset areasIds = ListAppend(areasIds, arguments.area_id)>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getParentAreasIds" returnvariable="allRelatedAreasIds">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfinvokeargument name="areas_list" value="#areasIds#">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+		</cfif>
+
 		<cfquery name="getFilesDownloads" datasource="#client_dsn#">
-			SELECT files.file_name, files.name, files.file_type, files.item_id, files.item_type_id, files.row_id, files.field_id, files_downloads.area_id, files_downloads.file_id, count(*) AS downloads
+			SELECT files.file_name, files.name, files.file_type, files.item_id, files.item_type_id, files.row_id, files.field_id, files.area_id, files_downloads.area_id AS download_area_id, files_downloads.file_id, count(*) AS downloads
 			<cfif arguments.parse_dates IS true>
 				, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date
 				, DATE_FORMAT(CONVERT_TZ(files.replacement_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS replacement_date
@@ -686,6 +716,10 @@
 			</cfif>
 			<cfif isDefined("arguments.download_user_id")>
 				AND files_downloads.user_id = <cfqueryparam value="#arguments.download_user_id#" cfsqltype="cf_sql_integer">
+			</cfif>
+			<cfif isDefined("arguments.area_id")>
+				AND ( files_downloads.area_id IN (<cfqueryparam value="#areasIds#" list="true" cfsqltype="cf_sql_integer">)
+				OR files.area_id IN (<cfqueryparam value="#areasIds#" list="true" cfsqltype="cf_sql_integer">) )
 			</cfif>
 			GROUP BY file_id
 			ORDER BY downloads DESC, download_date DESC;
