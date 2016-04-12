@@ -111,7 +111,7 @@ function updateData(){
             values: objectArray.values.map(function (d) {
 
                 if( checkUser.indexOf(d.user_full_name) != -1 ){
-                   // console.log(checkUser.indexOf(d.user_full_name));
+
                     return {
                         name: d.user_full_name,
                         y0: y0,
@@ -139,6 +139,8 @@ function updateData(){
                }
            }
        }
+
+       if(!d.total) { d.total = 0; }
       });
 
       layerData.sort(function (a, b) {
