@@ -129,7 +129,16 @@ function updateData(){
       });
 
       layerData.forEach(function(d) {
-      d.total = d.values[d.values.length - 1].y1;
+
+        if(d.values[d.values.length - 1].y1 !=0 ){
+           d.total = d.values[d.values.length - 1].y1;
+       }else{
+           for(var i = 0; i < d.values.length; i++ ){
+               if( d.values[i].y1 !=0){
+                   d.total = d.values[i].y1;
+               }
+           }
+       }
       });
 
       layerData.sort(function (a, b) {
