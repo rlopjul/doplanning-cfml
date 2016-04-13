@@ -143,9 +143,13 @@
 	          }
 	    });
 
-		}
+	}
 
+	function resizeStackLegend() {
 
+		$('##stackLegend').height($('##userLogArea').height());
+
+	}
 
 	</cfoutput>
 
@@ -196,11 +200,21 @@
 						promise.success(function (data) {
 
 						drawChart(data.totalItems);
+
+						resizeStackLegend();
+
 					});
 
 					getAllItemsArea(#URL.area#, '#area_type#', true);
 
 					getMainTreeXml(#URL.area#, '#area_type#', true);
+
+
+			    $(window).resize(function() {
+
+						resizeStackLegend();
+
+			    }).trigger('resize');
 
 				});
 
@@ -212,22 +226,20 @@
 			<!--- PAGE CONTENT HERE --->
 
 
-			 <div class="container-fluid">
-				 <div class="row" >
-				 	<div id="userLogArea" class="col-lg-9 col-md-9 col-sm-9"> </div>
-					<div id="stackLegend" class="col-lg-3 col-md-3 col-sm-3"></div>
-			 	</div>
+			<div class="row" >
+			 	<div id="userLogArea" class="col-lg-9 col-md-9 col-sm-9"> </div>
+				<div id="stackLegend" class="col-lg-3 col-md-3 col-sm-3"></div>
+		 	</div>
 
-				<div class="row">
-				 <div id="mlineBrush" class="col-lg-9 col-md-9 col-sm-9"></div>
-				  <div id="mlineLegend" class="col-lg-3 col-md-3 col-sm-3"></div>
-			 </div>
+			<div class="row">
+			 <div id="mlineBrush" class="col-lg-9 col-md-9 col-sm-9"></div>
+			  <div id="mlineLegend" class="col-lg-3 col-md-3 col-sm-3"></div>
+		 </div>
 
-			 <div class="row">
-				 <div id="treeContainer" class="col-lg-12 col-md-12 col-sm-12"></div>
-			 </div>
-
-			</div>
+		 <div class="row">
+			 <div id="treeContainer" class="col-lg-12 col-md-12 col-sm-12"></div>
+		 </div>
+		 
 
 			<!--- END PAGE CONTENT --->
 
