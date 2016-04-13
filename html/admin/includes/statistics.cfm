@@ -272,7 +272,7 @@
 
 			$("##statisticsTable").tablesorter({
 
-				widgets: ['zebra','filter','stickyHeaders','math'],<!---'select',--->
+				widgets: ['zebra','filter','stickyHeaders','math'],
 				headers: {
 					0: {
 						sorter: "text"
@@ -315,7 +315,10 @@
 				widgets: ['zebra'],
 				headers: {
 					0: {
-						sorter: "text"
+						sorter: false
+					},
+					1: {
+						sorter: false
 					}
 				}
 
