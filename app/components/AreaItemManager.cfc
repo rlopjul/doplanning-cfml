@@ -732,9 +732,9 @@
 			</cfif>
 
 			<!--- Check url_id length --->
-			<cfif isDefined("arguments.url_id") AND len(url_id) GT 75>
+			<cfif isDefined("arguments.url_id") AND len(url_id) GT 255>
 
-				<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 75 caracteres"}>
+				<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres"}>
 				<cfreturn response>
 
 			</cfif>
@@ -1312,9 +1312,9 @@
 			</cfif>
 
 			<!--- Check url_id length --->
-			<cfif isDefined("arguments.url_id") AND len(url_id) GT 75>
+			<cfif isDefined("arguments.url_id") AND len(url_id) GT 255>
 
-				<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 75 caracteres"}>
+				<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres"}>
 				<cfreturn response>
 
 			</cfif>

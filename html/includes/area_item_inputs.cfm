@@ -1171,7 +1171,7 @@
 
 					<div class="input-group">
 					  <span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#web_language#/#pagePath#/</span></span>
-						<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectItem.url_id,'/')#" class="form-control" passthrough="#passthrough#">
+						<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectItem.url_id,'/')#" class="form-control" maxlength="200" passthrough="#passthrough#">
 						<input type="hidden" name="url_id" id="url_id" value=">#web_language#/#pagePath#/#listLast(objectItem.url_id,'/')#" />
 					</div>
 

@@ -3050,6 +3050,15 @@
 			</cfif>
 
 
+			<!--- Check url_id length --->
+			<cfif isDefined("arguments.url_id") AND len(url_id) GT 255>
+
+				<cfset response = {result=false, message="URL de archivo demasiado larga, introduzca una URL con menos de 200 caracteres"}>
+				<cfreturn response>
+
+			</cfif>
+
+
 			<cftransaction>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="createFileInDatabase" argumentcollection="#arguments#" returnvariable="file_id">

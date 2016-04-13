@@ -772,7 +772,7 @@
 									<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
 								  	<span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#pagePath#/</span></span>
 									</cfif>
-									<cfinput type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectFile.url_id,'/')#" class="form-control" required="true" message="URL del archivo para web requerida">
+									<cfinput type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectFile.url_id,'/')#" class="form-control" required="true" maxlength="200" message="URL del archivo para web requerida">
 									<input type="hidden" name="url_id" id="url_id" value="#pagePath#/#listLast(objectFile.url_id,'/')#" />
 								</div>
 

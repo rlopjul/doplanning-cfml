@@ -1992,7 +1992,15 @@
 				<cfinvokeargument name="area_id" value="#arguments.parent_id#">
 			</cfinvoke>
 
-			<cfif isDefined("arguments.url_id") AND len(url_id) GT 0>
+			<cfif isDefined("arguments.url_id") AND len(arguments.url_id) GT 0>
+
+				<!--- Check url_id length --->
+				<cfif len(arguments.url_id) GT 255>
+
+					<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres", area_id=#arguments.parent_id#}>
+					<cfreturn response>
+
+				</cfif>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="areaByUrlQuery">
 					<cfinvokeargument name="url_id" value="#arguments.url_id#">
@@ -2289,6 +2297,29 @@
 			</cfquery>--->
 
 			<cftry>
+
+					<cfif isDefined("arguments.url_id") AND len(arguments.url_id) GT 0>
+
+						<!--- Check url_id length --->
+						<cfif len(arguments.url_id) GT 255>
+
+							<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres", area_id=#arguments.area_id#}>
+							<cfreturn response>
+
+						</cfif>
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="areaByUrlQuery">
+							<cfinvokeargument name="url_id" value="#arguments.url_id#">
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfif areaByUrlQuery.recordCount GT 1 OR (areaByUrlQuery.recordCount IS 1 AND areaByUrlQuery.id NEQ arguments.area_id)>
+							<cfset response = {result=false, message="El nombre de la página (URL) ya existe, debe usar otro distinto", area_id=#arguments.area_id#}>
+							<cfreturn response>
+						</cfif>
+
+					</cfif>
 
 					<cftransaction>
 

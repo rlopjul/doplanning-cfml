@@ -171,7 +171,7 @@
 							<cfif isDefined("web_path_url") AND len(web_path_url) GT 0>
 								<span class="input-group-addon" style="font-size:16px;padding-left:0;padding-right:0;">#web_path_url#/<span id="url_id_prefix"><cfif len(parentAreaUrlId) GT 0>#parentAreaUrlId#<cfelse>#web_path#</cfif>/</span></span>
 							</cfif>
-							<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectArea.url_id,'/')#" class="form-control">
+							<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectArea.url_id,'/')#" class="form-control" maxlength="200" required title="URL de la página requerida">
 							<input type="hidden" name="url_id" id="url_id" value="<cfif len(parentAreaUrlId) GT 0>#parentAreaUrlId#<cfelse>#web_path#</cfif>/#listLast(objectArea.url_id,'/')#" />
 						</div>
 
@@ -307,21 +307,23 @@
 	</fieldset>
 
 		<cfif SESSION.user_id EQ SESSION.client_administrator>
+			<fieldset>
 
-			<div class="row">
-				<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-12">
 
-					<div class="checkbox">
-						<label class="control-label" for="no_notify">
-							<input id="no_notify" name="no_notify" type="checkbox" value="true" class="checkbox_locked" />
-							<span lang="es">NO enviar notificación por email</span>
-						</label>
-						<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+						<div class="checkbox">
+							<label class="control-label" for="no_notify">
+								<input id="no_notify" name="no_notify" type="checkbox" value="true" class="checkbox_locked" />
+								<span lang="es">NO enviar notificación por email</span>
+							</label>
+							<small class="help-block" lang="es">Si selecciona esta opción no se enviará notificación instantánea por email de esta acción a los usuarios.</small>
+						</div>
+
 					</div>
-
 				</div>
-			</div>
 
+			</fieldset>
 		</cfif>
 
 	</cfif>
