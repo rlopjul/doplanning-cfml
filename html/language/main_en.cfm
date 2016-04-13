@@ -614,6 +614,7 @@ curLangTextEn = {
 		"Elemento web enviado.":"Generic content element sent.",
 		"Noticia enviada.":"News item sent",
 		"Respuesta a Consulta enviada.":"Consultation response sent.",
+    "Archivo añadido al área.":"File added to the area.",
 
 		"Evento modificado.":"Event modified.",
 		"Tarea modificada.":"Task modified.",
@@ -895,6 +896,7 @@ curLangTextEn = {
     "URL de la página":"Page URL",
     "Valor que aparecerá en la URL de la página, ejemplo: nombre-de-la-pagina":"Value included in the URL of the page. Example: name-of-page",
     "Una vez creada la página, no se debe cambiar este valor.":"Once the page is created, you should not change this value.",
+    "La URL de la página ya existe, debe usar otra distinta":"The URL of the page already exists, you must use a different one",
     "Área padre":"Parent area",
     "Ocultar del menú web":"Hide from web menu",
     "Tipo de menú":"Menu type",
