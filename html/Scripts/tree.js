@@ -1,6 +1,6 @@
 var areasNamesArray = [];
 
-function showTree(selectable) { 
+function showTree(selectable) {
 
 	/********************************** Typeahead **********************************/
 
@@ -18,15 +18,15 @@ function showTree(selectable) {
 	})
 	.bind("search.jstree", function (e, data) {
 	   if (data.res.length == 0){
-	   		showAlertMessage(window.lang.translate("No hay resultados"),0);
+	   		showAlertMessage("No hay resultados",0);
 	   }else{
 	   		showAlertMessage(data.res.length+" "+window.lang.translate("resultados"),1);
 	   }
 	})
-	.jstree({ 
+	.jstree({
 		"core" : {
-			"themes" : { 
-				"name" : "dp", 
+			"themes" : {
+				"name" : "dp",
 				"dots" : false,
 				"responsive" : false
 			},
@@ -38,17 +38,17 @@ function showTree(selectable) {
 		    	}
 		    }*/
 		},
-		"search" : { 
-			"fuzzy" : false 
+		"search" : {
+			"fuzzy" : false
 		},
 		/*"types" : {
 			"allowed" : {},
 			"allowed-web" : {},
 			"not-allowed" : {},
-			"not-allowed-web" : {}	
+			"not-allowed-web" : {}
 		},
 		Plugin state da problemas en MAC porque se guarda la selección de área
-		"state" : { 
+		"state" : {
 			"key" : "main_tree",
 			"events" : "open_node.jstree close_node.jstree"
 		},*/
@@ -57,12 +57,12 @@ function showTree(selectable) {
 
 
   	});
-	
+
 }
 
-var searchTimeOut = false; 
+var searchTimeOut = false;
 
-function searchInTree(text) {	
+function searchInTree(text) {
 	//$('#areasTreeContainer').jstree("search", text);
 
 	if(searchTimeOut) { clearTimeout(searchTimeOut); }
@@ -73,27 +73,27 @@ function searchInTree(text) {
 }
 
 function expandTree() {
-	
+
 	$('#areasTreeContainer').jstree('open_all');
-	
+
 }
 
 function collapseTree() {
-	
+
 	$('#areasTreeContainer').jstree('close_all');
-	
+
 }
 
 function expandNode() {
-	
-	$("#areasTreeContainer").jstree("open_all", $("#areasTreeContainer").jstree('get_selected') );	
-	
+
+	$("#areasTreeContainer").jstree("open_all", $("#areasTreeContainer").jstree('get_selected') );
+
 }
 
 function collapseNode() {
-	
-	$("#areasTreeContainer").jstree("close_all", $("#areasTreeContainer").jstree('get_selected') );	
-	
+
+	$("#areasTreeContainer").jstree("close_all", $("#areasTreeContainer").jstree('get_selected') );
+
 }
 
 function jsTreeLoaded(event, data) { //JStree loaded
@@ -113,13 +113,13 @@ function jsTreeLoaded(event, data) { //JStree loaded
 	var substringMatcher = function(strs) {
 	  return function findMatches(q, cb) {
 	    var matches, substrRegex;
-	 
+
 	    // an array that will be populated with substring matches
 	    matches = [];
-	 
+
 	    // regex used to determine if a string contains the substring `q`
 	    substrRegex = new RegExp(q, 'i');
-	 
+
 	    // iterate through the pool of strings and for any string that
 	    // contains the substring `q`, add it to the `matches` array
 	    $.each(strs, function(i, str) {
@@ -129,12 +129,12 @@ function jsTreeLoaded(event, data) { //JStree loaded
 	        matches.push({ value: str });
 	      }
 	    });
-	 
+
 	    cb(matches);
 	  };
 	};
-	 
-	 
+
+
 	// constructs the suggestion engine
 	var areasNamesArray2 = new Bloodhound({
 	  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
@@ -142,10 +142,10 @@ function jsTreeLoaded(event, data) { //JStree loaded
 	  // `areasNamesArray` is an array of state names defined in "The Basics"
 	  local: $.map(areasNamesArray, function(state) { return { value: state }; })
 	});
-	 
+
 	// kicks off the loading/processing of `local` and `prefetch`
 	areasNamesArray2.initialize();
-	 
+
 	$('#searchText').typeahead({
 	  hint: true,
 	  highlight: true,
@@ -163,6 +163,6 @@ function jsTreeLoaded(event, data) { //JStree loaded
 
 	/*********************************** END Typeahead ***********************************/
 
-	
+
 	treeLoaded();
 }

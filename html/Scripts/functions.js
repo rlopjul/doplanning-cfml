@@ -232,7 +232,7 @@ function showAlertMessage(msg, res){
 	else
 		$("#alertContainer").attr("class", "alert alert-danger");
 
-	$("#alertContainer button").after('<span lang="es">'+msg+'</span>');
+	$("#alertContainer button").after('<span>'+window.lang.translate(msg)+'</span>');
 
 	var maxZIndex = getMaxZIndex();
 

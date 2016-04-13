@@ -33,7 +33,7 @@
 		})
 		.bind("search.jstree", function (e, data) {
 		   if (data.res.length == 0){
-		   		showAlertMessage(window.lang.translate("No hay resultados"),0);
+		   		showAlertMessage("No hay resultados",0);
 		   }else{
 		   		showAlertMessage(data.res.length+" "+window.lang.translate("resultados"),1);
 		   }
