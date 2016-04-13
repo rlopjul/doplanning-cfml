@@ -96,63 +96,6 @@
 
 </cfif>
 
-<!---<cfset return_page = "area.cfm?area=#area_id#">
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">
-	<cfinvokeargument name="return_page" value="#return_page#">
-</cfinvoke>--->
-
-
-<!---
-<script>
-
-	function showAlertMessage(msg, res){
-
-		if($("#alertContainer span").length != 0)
-			$("#alertContainer span").remove();
-
-		if(res == true)
-			$("#alertContainer").attr("class", "alert alert-success");
-		else
-			$("#alertContainer").attr("class", "alert alert-danger");
-
-		$("#alertContainer button").after('<span>'+msg+'</span>');
-
-		var maxZIndex = getMaxZIndex();
-
-	    $("#alertContainer").css('zIndex',maxZIndex+1);
-
-		$("#alertContainer").fadeIn('slow');
-
-
-		setTimeout(function(){
-
-		    hideAlertMessage();
-
-		    }, 9500);
-	}
-
-	function hideAlertMessage(){
-
-		$("#alertContainer").fadeOut('slow', function() {
-		    $("#alertContainer span").remove();
-		});
-
-	}
-
-	$(document).ready(function () {
-
-		// Alert
-		$('#alertContainer .close').click(function(e) {
-
-			hideAlertMessage();
-
-		});
-
-	});
-
-</script>
---->
-
 
 
 <!-- InstanceEndEditable -->
