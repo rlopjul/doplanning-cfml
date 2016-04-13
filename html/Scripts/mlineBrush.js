@@ -54,7 +54,7 @@ labelEnter.append("input")
     });
 
     labelEnter.append("label")
-        .style("font-size", "10px")
+        .style("font-size", "12px")
         .text(function(d){ return d; });
 
 labelEnter.append("br");

@@ -79,7 +79,7 @@
 
  #mlineLegend,
  #stackLegend{
-    height: 400px;
+    height: ;
     overflow-y: scroll;
     overflow-x: scroll;
 }
@@ -96,4 +96,17 @@
     -moz-border-radius: 1px;
     background-clip: padding-box;
     background-color: #F7F7F7;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    font: 12px sans-serif;
+    border: 5px;
+    border-color: aliceblue;
+    border-radius: 8px;
+    padding: 8px;
+    color: cornsilk;
+    background:black;
+    pointer-events: none;
 }

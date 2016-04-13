@@ -13,7 +13,12 @@ var y = d3.scale.linear()
 .rangeRound([height, 0]);
 
 
-var color = d3.scale.ordinal()    .range(["#8dd3c7","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#b15928","#e5c494","#fccde5","#bc80bd","#ccebc5","#ffed6f","#1f78b4"]);
+var color = d3.scale.category10();
+//var color = d3.scale.ordinal()    .range(["#8dd3c7","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#b15928","#e5c494","#fccde5","#bc80bd","#ccebc5","#ffed6f","#1f78b4"]);
+
+var div = d3.select('body').append('div')
+    .attr("class", "tooltip")
+    .style("opcity", 0);
 
 var userList = [];
 var checkUser = [];
@@ -41,12 +46,14 @@ name: "mode",
 class: "stackInput",
 id: function(d){ return d.replace(/\s+/g, '-') + "stackLegend"; }
 })
+.style("border-color", function(d){ return color(d); })
 .property("checked", function(d,i){
 return true;
 });
 
 checkEnter.append("label")
-.style("font=size", "8px")
+.style("font-size", "12px")
+.style("color", function(d){ return color(d); })
 .text(function(d){ return d; });
 
 checkEnter.append("br")
@@ -194,7 +201,24 @@ layer.selectAll("rect")
 .attr("width", x.rangeBand())
 .attr("y", function(d) { return y(d.y1); })
 .attr("height", function(d) { return y(d.y0) - y(d.y1);  })
-.style("fill", function(d) { return color(d.name); });
+.style("fill", function(d) { return color(d.name); })
+.on("mouseover", function(d){
+
+    div.transition()
+      .duration(500)
+      .style("opacity", 1);
+
+      div.html("User : " + d.name + "<br/>" + "Total : " +(d.y1 - d.y0) )
+        .style("left", (d3.event.pageX + 5) + "px")
+        .style("top", (d3.event.pageY + 5) + "px");
+
+})
+.on("mouseout", function(d){
+
+  div.transition()
+    .duration(100)
+    .style("opacity", 0);
+})
 
 var legend = d3.select
 svg.append("g")
