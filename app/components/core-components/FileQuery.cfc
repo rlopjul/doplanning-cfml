@@ -24,6 +24,7 @@
 	<cffunction name="getFile" output="false" returntype="query" access="public">
 		<cfargument name="file_id" type="numeric" required="false">
 		<cfargument name="file_public_id" type="string" required="false">
+		<cfargument name="url_id" type="string" required="false">
 		<cfargument name="fileTypeId" type="numeric" required="false">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="with_lock" type="boolean" required="false" default="false">
@@ -130,6 +131,8 @@
 				WHERE
 				<cfif isDefined("arguments.file_public_id")>
 					files.file_public_id = <cfqueryparam value="#arguments.file_public_id#" cfsqltype="cf_sql_varchar">
+				<cfelseif isDefined("arguments.url_id")>
+					files.url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
 				<cfelse>
 					files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
 				</cfif>

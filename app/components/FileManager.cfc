@@ -3050,11 +3050,28 @@
 			</cfif>
 
 
-			<!--- Check url_id length --->
-			<cfif isDefined("arguments.url_id") AND len(url_id) GT 255>
+			<cfif isDefined("arguments.url_id")>
 
-				<cfset response = {result=false, message="URL de archivo demasiado larga, introduzca una URL con menos de 200 caracteres"}>
-				<cfreturn response>
+				<!--- Check url_id length --->
+				<cfif len(arguments.url_id) GT 255>
+
+					<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres"}>
+					<cfreturn response>
+
+				</cfif>
+
+				<!--- Check if url_id exist --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileByUrlQuery">
+					<cfinvokeargument name="url_id" value="#arguments.url_id#">
+					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif fileByUrlQuery.recordCount GT 0>
+					<cfset response = {result=false, message="La URL de la página ya existe, debe usar otra distinta"}>
+					<cfreturn response>
+				</cfif>
 
 			</cfif>
 
@@ -3934,6 +3951,31 @@
 					</cfif>
 
 				</cfloop>
+
+			</cfif>
+
+			<cfif isDefined("arguments.url_id")>
+
+				<!--- Check url_id length --->
+				<cfif len(arguments.url_id) GT 255>
+
+					<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres"}>
+					<cfreturn response>
+
+				</cfif>
+
+				<!--- Check if url_id exist --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileByUrlQuery">
+					<cfinvokeargument name="url_id" value="#arguments.url_id#">
+					<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif fileByUrlQuery.recordCount GT 1 OR (fileByUrlQuery.recordCount IS 1 AND fileByUrlQuery.id NEQ arguments.file_id)>
+					<cfset response = {result=false, message="La URL de la página ya existe, debe usar otra distinta"}>
+					<cfreturn response>
+				</cfif>
 
 			</cfif>
 

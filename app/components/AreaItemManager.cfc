@@ -731,11 +731,28 @@
 
 			</cfif>
 
-			<!--- Check url_id length --->
-			<cfif isDefined("arguments.url_id") AND len(url_id) GT 255>
+			<cfif isDefined("arguments.url_id")>
 
-				<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres"}>
-				<cfreturn response>
+				<!--- Check url_id length --->
+				<cfif len(arguments.url_id) GT 255>
+
+					<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres"}>
+					<cfreturn response>
+
+				</cfif>
+
+				<!--- Check if url_id exist --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemByUrlQuery">
+					<cfinvokeargument name="url_id" value="#arguments.url_id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif itemByUrlQuery.recordCount GT 0>
+					<cfset response = {result=false, message="La URL de la página ya existe, debe usar otra distinta"}>
+					<cfreturn response>
+				</cfif>
 
 			</cfif>
 
@@ -1311,11 +1328,28 @@
 
 			</cfif>
 
-			<!--- Check url_id length --->
-			<cfif isDefined("arguments.url_id") AND len(url_id) GT 255>
+			<cfif isDefined("arguments.url_id")>
 
-				<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres"}>
-				<cfreturn response>
+				<!--- Check url_id length --->
+				<cfif len(arguments.url_id) GT 255>
+
+					<cfset response = {result=false, message="URL de la página demasiado larga, introduzca una URL con menos de 200 caracteres"}>
+					<cfreturn response>
+
+				</cfif>
+
+				<!--- Check if url_id exist --->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemByUrlQuery">
+					<cfinvokeargument name="url_id" value="#arguments.url_id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfif itemByUrlQuery.recordCount GT 1 OR (itemByUrlQuery.recordCount IS 1 AND itemByUrlQuery.id NEQ arguments.item_id)>
+					<cfset response = {result=false, message="La URL de la página ya existe, debe usar otra distinta"}>
+					<cfreturn response>
+				</cfif>
 
 			</cfif>
 

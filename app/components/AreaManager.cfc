@@ -1992,7 +1992,7 @@
 				<cfinvokeargument name="area_id" value="#arguments.parent_id#">
 			</cfinvoke>
 
-			<cfif isDefined("arguments.url_id") AND len(arguments.url_id) GT 0>
+			<cfif isDefined("arguments.url_id")>
 
 				<!--- Check url_id length --->
 				<cfif len(arguments.url_id) GT 255>
@@ -2002,6 +2002,7 @@
 
 				</cfif>
 
+				<!--- Check if url_id exist --->
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="areaByUrlQuery">
 					<cfinvokeargument name="url_id" value="#arguments.url_id#">
 					<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -2009,7 +2010,7 @@
 				</cfinvoke>
 
 				<cfif areaByUrlQuery.recordCount GT 0>
-					<cfset response = {result=false, message="El nombre de la página (URL) ya existe, debe usar otro distinto", area_id=#arguments.parent_id#}>
+					<cfset response = {result=false, message="La URL de la página ya existe, debe usar otra distinta", area_id=#arguments.parent_id#}>
 					<cfreturn response>
 				</cfif>
 
@@ -2298,7 +2299,7 @@
 
 			<cftry>
 
-					<cfif isDefined("arguments.url_id") AND len(arguments.url_id) GT 0>
+					<cfif isDefined("arguments.url_id")>
 
 						<!--- Check url_id length --->
 						<cfif len(arguments.url_id) GT 255>
@@ -2308,6 +2309,7 @@
 
 						</cfif>
 
+						<!--- Check if url_id exist --->
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getArea" returnvariable="areaByUrlQuery">
 							<cfinvokeargument name="url_id" value="#arguments.url_id#">
 							<cfinvokeargument name="client_abb" value="#client_abb#">
@@ -2315,7 +2317,7 @@
 						</cfinvoke>
 
 						<cfif areaByUrlQuery.recordCount GT 1 OR (areaByUrlQuery.recordCount IS 1 AND areaByUrlQuery.id NEQ arguments.area_id)>
-							<cfset response = {result=false, message="El nombre de la página (URL) ya existe, debe usar otro distinto", area_id=#arguments.area_id#}>
+							<cfset response = {result=false, message="La URL de la página ya existe, debe usar otra distinta", area_id=#arguments.area_id#}>
 							<cfreturn response>
 						</cfif>
 
