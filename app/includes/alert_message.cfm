@@ -58,7 +58,7 @@
 			else
 				$("#pageAlertContainer").attr("class", "alert alert-danger");
 
-			$("#pageAlertContainer button").after('<span lang="es">'+window.lang.translate(msg)+'</span>');
+			$("#pageAlertContainer button").after('<span>'+window.lang.translate(msg)+'</span>');
 
 			$("#pageAlertContainer").fadeIn('slow');
 
@@ -78,11 +78,15 @@
 		}
 
 		<cfoutput>
-		$(function () {
-
-			showPageAlertMessage('#JSStringFormat(msg)#', #msg_res#);
+		$(window).load(function() {
 
 			History.replaceState(History.getState().data, History.options.initialTitle, "#newUrl#");
+
+			setTimeout(function(){ //Waits for load language
+
+				showPageAlertMessage('#JSStringFormat(msg)#', #msg_res#);
+
+			}, 200);
 
 		});
 		</cfoutput>
