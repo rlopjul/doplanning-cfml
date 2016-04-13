@@ -347,70 +347,76 @@
 		</div>
 	</div>
 
+	<div class="row">
+		<div class="col-sm-12">
+			<span class="label label-primary">#filesDownloadsQuery.recordcount# <span lang="es">Archivos</span></span>
+		</div>
+	</div>
 
-	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-	</cfinvoke>
+</div><!---END div container--->
 
-	<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+</cfinvoke>
 
-	<script>
+<cfset totalDownloads = 0>
 
-		$(document).ready(function() {
-
-
-			$("##statisticsTable").tablesorter({
-
-				widgets: ['zebra','filter','stickyHeaders','math'],<!---'select',--->
-				headers: {
-					0: {
-						sorter: "text"
-					},
-					3: {
-						sorter: "datetime"
-					},
-					4: {
-						sorter: "datetime"
-					}
-				}
-				, widgetOptions : {
-					filter_childRows : false,
-					filter_columnFilters : true,
-					filter_cssFilter : 'tablesorter-filter',
-					filter_filteredRow   : 'filtered',
-					filter_formatter : null,
-					filter_functions : null,
-					filter_hideFilters : false,
-					filter_ignoreCase : true,
-					filter_liveSearch : true,
-					//filter_reset : 'button.reset',
-					filter_searchDelay : 300,
-					filter_serversideFiltering: false,
-					filter_startsWith : false,
-					filter_useParsedData : false
-
-						, math_data     : 'math' // data-math attribute
-					    , math_ignore   : [0,1,2,3,4,7,8,9]
-					    , math_mask     : '##000,##'
-					    <!---. math_mask     : '##,####0.00'--->
-					    <!---, math_complete : function($cell, wo, result, value, arry) {
-					        var txt = '<span class="align-decimal"> ' + result + '</span>';
-					        if ($cell.attr('data-math') === 'all-sum') {
-					          // when the "all-sum" is processed, add a count to the end
-					          return txt + ' (Sum of ' + arry.length + ' cells)';
-					        }
-					        return txt;
-					    } --->
-
-			    }
-			});
-
-		});
-	</script>
-
-	<span class="label label-primary">#filesDownloadsQuery.recordcount# <span lang="es">Archivos</span></span>
+<div class="container-fluid" style="position:absolute;width:100%;left:0;">
 
 	<div class="row">
 		<div class="col-sm-12">
+
+			<script>
+
+				$(document).ready(function() {
+
+					$("##statisticsTable").tablesorter({
+
+						widgets: ['zebra','filter','stickyHeaders'<cfif filesDownloadsQuery.recordCount LT 500>,'math'</cfif>],
+						headers: {
+							0: {
+								sorter: "text"
+							},
+							3: {
+								sorter: "datetime"
+							},
+							4: {
+								sorter: "datetime"
+							}
+						}
+						, widgetOptions : {
+							filter_childRows : false,
+							filter_columnFilters : true,
+							filter_cssFilter : 'tablesorter-filter',
+							filter_filteredRow   : 'filtered',
+							filter_formatter : null,
+							filter_functions : null,
+							filter_hideFilters : false,
+							filter_ignoreCase : true,
+							filter_liveSearch : true,
+							//filter_reset : 'button.reset',
+							filter_searchDelay : 300,
+							filter_serversideFiltering: false,
+							filter_startsWith : false,
+							filter_useParsedData : false
+
+								, math_data     : 'math' // data-math attribute
+							    , math_ignore   : [0,1,2,3,4,7,8,9]
+							    , math_mask     : '##000,##'
+							    <!---. math_mask     : '##,####0.00'--->
+							    <!---, math_complete : function($cell, wo, result, value, arry) {
+							        var txt = '<span class="align-decimal"> ' + result + '</span>';
+							        if ($cell.attr('data-math') === 'all-sum') {
+							          // when the "all-sum" is processed, add a count to the end
+							          return txt + ' (Sum of ' + arry.length + ' cells)';
+							        }
+							        return txt;
+							    } --->
+
+					    }
+					});
+
+				});
+			</script>
 
 			<table id="statisticsTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap data-table" style="margin-top:20px;">
 
@@ -427,14 +433,14 @@
 				</thead>
 
 				<tfoot>
-				   	<tr>
-				   		<th></th>
-				   		<th></th>
-				   		<th></th>
-				   		<th></th>
-				   		<th></th>
-				   		<th data-math="col-sum"></th>
-				   		<th></th>
+						<tr>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th data-math="col-sum"></th>
+							<th></th>
 					</tr>
 				</tfoot>
 
@@ -463,7 +469,9 @@
 							<td>#filesDownloadsQuery.file_type#</td>
 							<td>#filesDownloadsQuery.uploading_date#</td>
 							<td>#filesDownloadsQuery.replacement_date#</td>
-							<td>#filesDownloadsQuery.downloads#</td>
+							<td>#filesDownloadsQuery.downloads#
+								<cfset totalDownloads = totalDownloads+filesDownloadsQuery.downloads>
+							</td>
 							<td>
 
 								<cfif isNumeric(filesDownloadsQuery.item_id)>
@@ -519,10 +527,10 @@
 
 			</table>
 
+			<cfif filesDownloadsQuery.recordCount GTE 500><span lang="es">Total de descargas del resultado:</span> #totalDownloads#</cfif>
+
 		</div>
 	</div>
 
-	</cfoutput>
-
-
 </div>
+</cfoutput>
