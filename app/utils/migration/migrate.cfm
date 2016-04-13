@@ -112,6 +112,7 @@
 							<option value="3.5">3.5 Opción en áreas para modo listado por defecto</option>
 							<option value="3.6">3.6 Campo url_id para áreas y elementos web</option>
 							<option value="3.7">3.7 Permiso de administrador de administradores de áreas y errores corregidos</option>
+							<option value="3.8">3.8 Aumentado tamaño de campo url_id</option>
 						</select>
 					</div>
 
