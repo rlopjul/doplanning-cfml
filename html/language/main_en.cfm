@@ -63,7 +63,8 @@ curLangTextEn = {
 
 		"Lo último":"Last items",
     "Ver":"View",
-    "Área modificada":"Area Modified",
+    "Área modificada":"Area modified",
+    "Área creada":"Area created",
 		"Filtrar":"Filter",
 		"Ver en área":"View in area",
 		"Ir al área":"Go to area",
@@ -893,6 +894,7 @@ curLangTextEn = {
 		"Opciones de la organización":"Organization options",
     "URL de la página":"Page URL",
     "Valor que aparecerá en la URL de la página, ejemplo: nombre-de-la-pagina":"Value included in the URL of the page. Example: name-of-page",
+    "Una vez creada la página, no se debe cambiar este valor.":"Once the page is created, you should not change this value.",
     "Área padre":"Parent area",
     "Ocultar del menú web":"Hide from web menu",
     "Tipo de menú":"Menu type",
