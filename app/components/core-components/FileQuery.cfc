@@ -694,7 +694,7 @@
 		</cfif>
 
 		<cfquery name="getFilesDownloads" datasource="#client_dsn#">
-			SELECT files.file_name, files.name, files.file_type, files.item_id, files.item_type_id, files.row_id, files.field_id, files.area_id, files_downloads.area_id AS download_area_id, files_downloads.file_id, count(*) AS downloads
+			SELECT files.id AS file_id, files.file_name, files.name, files.file_type, files.item_id, files.item_type_id, files.row_id, files.field_id, files.area_id, files_downloads.area_id AS download_area_id, count(files_downloads.file_id) AS downloads
 			<cfif arguments.parse_dates IS true>
 				, DATE_FORMAT(CONVERT_TZ(files.uploading_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS uploading_date
 				, DATE_FORMAT(CONVERT_TZ(files.replacement_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS replacement_date
@@ -702,8 +702,8 @@
 				, files.uploading_date
 				, files.replacement_date
 			</cfif>
-			FROM #client_abb#_files_downloads AS files_downloads
-			INNER JOIN #client_abb#_files AS files
+			FROM #client_abb#_files AS files
+			LEFT JOIN #client_abb#_files_downloads AS files_downloads
 			ON files.id = files_downloads.file_id
 			<cfif isDefined("arguments.from_date")>
 				AND download_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')
@@ -750,7 +750,8 @@
 					)
 
 			</cfif>
-			GROUP BY file_id
+
+			GROUP BY files.id
 			ORDER BY downloads DESC, download_date DESC;
 		</cfquery>
 
