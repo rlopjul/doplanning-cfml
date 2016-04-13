@@ -659,6 +659,7 @@
 		<cfargument name="download_user_id" type="numeric" required="false">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
+		<cfargument name="include_without_downloads" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="true">
 		<cfargument name="client_dsn" type="string" required="true">
@@ -703,7 +704,12 @@
 				, files.replacement_date
 			</cfif>
 			FROM #client_abb#_files AS files
-			LEFT JOIN #client_abb#_files_downloads AS files_downloads
+			<cfif arguments.include_without_downloads IS false>
+				INNER
+			<cfelse>
+				LEFT
+			</cfif>
+			JOIN #client_abb#_files_downloads AS files_downloads
 			ON files.id = files_downloads.file_id
 			<cfif isDefined("arguments.from_date")>
 				AND download_date >= STR_TO_DATE(<cfqueryparam value="#arguments.from_date#" cfsqltype="cf_sql_varchar">,'#APPLICATION.dbDateFormat#')

@@ -34,6 +34,12 @@
 	<cfset include_subareas = "">
 </cfif>
 
+<cfif isDefined("URL.include_without_downloads") AND URL.include_without_downloads IS true>
+	<cfset include_without_downloads = URL.include_without_downloads>
+<cfelse>
+	<cfset include_without_downloads = "">
+</cfif>
+
 <!--- getFilesDownloads --->
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFilesDownloads" returnvariable="filesDownloadsResponse">
 	<cfinvokeargument name="parse_dates" value="true">
@@ -54,6 +60,9 @@
 	</cfif>
 	<cfif include_subareas IS true>
 		<cfinvokeargument name="include_subareas" value="true">
+	</cfif>
+	<cfif include_without_downloads IS true>
+		<cfinvokeargument name="include_without_downloads" value="true">
 	</cfif>
 </cfinvoke>
 
@@ -308,6 +317,20 @@
 						</div>
 					</div>
 
+					<div class="row">
+
+						<div class="col-xs-5 col-sm-3">
+						</div>
+
+						<div class="col-xs-7 col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="include_without_downloads" value="true" <cfif include_without_downloads IS true>checked</cfif>> <span lang="es">Incluir archivos sin descargas registradas</span>
+								</label>
+							</div>
+						</div>
+
+					</div>
 
 					<div class="row">
 

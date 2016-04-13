@@ -6260,6 +6260,7 @@
 		<cfargument name="download_user_id" type="numeric" required="false">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
+		<cfargument name="include_without_downloads" type="boolean" required="false" default="false">
 
 		<cfset var method = "getFilesDownloads">
 
@@ -6283,6 +6284,7 @@
 				<cfinvokeargument name="download_user_id" value="#arguments.download_user_id#"/>
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				<cfinvokeargument name="include_subareas" value="#arguments.include_subareas#">
+				<cfinvokeargument name="include_without_downloads" value="#arguments.include_without_downloads#">
 
 				<cfinvokeargument name="client_abb" value="#client_abb#"/>
 				<cfinvokeargument name="client_dsn" value="#client_dsn#"/>
