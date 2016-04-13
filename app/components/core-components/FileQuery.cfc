@@ -718,8 +718,37 @@
 				AND files_downloads.user_id = <cfqueryparam value="#arguments.download_user_id#" cfsqltype="cf_sql_integer">
 			</cfif>
 			<cfif isDefined("arguments.area_id")>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+				</cfinvoke>
+
+				<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
+				<cfloop array="#itemTypesArray#" index="curItemTypeId">
+
+					<cfif listFind("10,11,12,13,14,15,16,17,20", curItemTypeId) IS 0 >
+						LEFT JOIN #client_abb#_#itemTypesStruct[curItemTypeId].table# AS #itemTypesStruct[curItemTypeId].table#
+						ON files.item_type_id = #curItemTypeId#
+						AND files.item_id = #itemTypesStruct[curItemTypeId].table#.id
+					</cfif>
+
+				</cfloop>
+
+				WHERE 1=1
+
 				AND ( files_downloads.area_id IN (<cfqueryparam value="#areasIds#" list="true" cfsqltype="cf_sql_integer">)
-				OR files.area_id IN (<cfqueryparam value="#areasIds#" list="true" cfsqltype="cf_sql_integer">) )
+				OR files.area_id IN (<cfqueryparam value="#areasIds#" list="true" cfsqltype="cf_sql_integer">)
+
+					<cfloop array="#itemTypesArray#" index="curItemTypeId">
+
+						<cfif listFind("10,11,12,13,14,15,16,17,20", curItemTypeId) IS 0 >
+							OR #itemTypesStruct[curItemTypeId].table#.area_id IN (<cfqueryparam value="#areasIds#" list="true" cfsqltype="cf_sql_integer">)
+						</cfif>
+
+					</cfloop>
+
+					)
+
 			</cfif>
 			GROUP BY file_id
 			ORDER BY downloads DESC, download_date DESC;
