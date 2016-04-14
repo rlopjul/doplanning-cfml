@@ -309,6 +309,9 @@ curLangTextEn = {
 		"PubMed Id no válido":"Invalid PubMed Id",
 		"Precio":"Price",
 		"Valor":"Value",
+    "Listado de elementos":"Items list",
+    "Imagen a la izquierda":"Image to the left",
+    "Imagen a la derecha":"Image to the right",
 
 		"Registros":"Records",
 		"Campos":"Fields",
@@ -1051,6 +1054,8 @@ curLangTextEn = {
     "Puede administrar los usuarios de la aplicación.":"Manage application users.",
     "Puede dar permiso de administrador de área a los usuarios de la aplicación.":"He can give area administrator permision to other users.",
     "Si el usuario no se marca como verificado, tras ser dado de alta deberá acceder a verificar su cuenta de correo para poder usar la aplicación y recibir emails de la misma.":"After being created, the user must go to check his mail account to use the application and receive emails.",
+    "Página por defecto":"Default page",
+    "Últimas 20 áreas con actividad reciente":"Last 20 areas with recent activity",
 		/*END preferences_user_data.cfm*/
 
 		/*preferences_alerts.cfm*/
@@ -1427,7 +1432,7 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Estadísticas":"Statistics",
 		"Generales":"General",
 		"Estadísticas generales":"General statistics",
-		"Estadísticas de descarga archivos":"Files downloads statistics",
+		"Estadísticas de descarga de archivos":"Files downloads statistics",
     "Estadísticas de usuarios":"User statistics",
 		"Total elementos de área":"Area items total",
     "Total elementos":"Items total",
@@ -1437,6 +1442,7 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Login fallidos":"Failed login",
     "Incluir áreas inferiores a la seleccionada":"Include lower areas",
     "Incluir usuarios que no han accedido a la aplicación":"Include users who have not logged in to the application",
+    "Incluir archivos sin descargas registradas":"Include files without registered downloads",
     "Login fallidos de todos los usuarios de la aplicación":"Login failed from all users of the application",
     "Áreas en las que el usuario es responsable":"Areas where the user is responsible",
     "Quitar área seleccionada":"Remove selected area",

@@ -1055,7 +1055,7 @@
 
 				<select name="display_type_id" class="form-control" <cfif read_only IS true>disabled="disabled"</cfif>>
 					<cfloop query="displayTypeQuery">
-						<option value="#displayTypeQuery.display_type_id#" <cfif objectItem.display_type_id IS displayTypeQuery.display_type_id>selected="selected"</cfif>>#displayTypeQuery.display_type_title_es#</option>
+						<option value="#displayTypeQuery.display_type_id#" lang="es" <cfif objectItem.display_type_id IS displayTypeQuery.display_type_id>selected="selected"</cfif>>#displayTypeQuery.display_type_title_es#</option>
 					</cfloop>
 				</select>
 
