@@ -2368,6 +2368,7 @@
 		<cfargument name="order_type" type="string" required="false"/>
 		<cfargument name="limit" type="numeric" required="false">
 		<cfargument name="users_ids" type="string" required="false">
+		<cfargument name="return_type" type="string" required="false" default="array">
 
 		<cfset var method = "getAllUsers">
 
@@ -2380,6 +2381,7 @@
 		<cfset var search_text_re = "">
 
 		<cfset var usersArray = arrayNew(1)>
+		<cfset var usersQuery = "">
 
 		<cftry>
 
@@ -2405,11 +2407,19 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToArray" returnvariable="usersArray">
-				<cfinvokeargument name="data" value="#getAllUsersQuery#">
-			</cfinvoke>
+			<cfif return_type IS "array">
 
-			<cfset response = {result=true, users=#usersArray#}>
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToArray" returnvariable="usersArray">
+					<cfinvokeargument name="data" value="#getAllUsersQuery#">
+				</cfinvoke>
+
+				<cfset response = {result=true, users=#usersArray#}>
+
+			<cfelse>
+
+				<cfset response = {result=true, users=#getAllUsersQuery#}>
+
+			</cfif>
 
 			<cfcatch>
 

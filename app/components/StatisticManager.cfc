@@ -153,6 +153,7 @@
 	<cffunction name="getTotalItemsByUser" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
+		<cfargument name="subareas_ids" type="string" required="false">
 		<cfargument name="area_type" type="string" required="false">
 		<cfargument name="group_by_users" type="boolean" required="false" default="false">
 
@@ -161,14 +162,11 @@
 		<cfset var response = structNew()>
 		<cfset var itemsByUsers = structNew()>
 		<cfset var itemsByType = arrayNew(1)>
-		<!---<cfset var itemsType = arrayNew(1)>--->
 		<cfset var subAreasIds = "">
 		<cfset var areasIds = "">
 		<cfset var areaType = "">
 
-		<!---
-		commented for development
-		<cftry>--->
+		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
@@ -189,21 +187,29 @@
 
 			</cfif>
 
-			<cfif arguments.include_subareas IS true>
+			<cfif isDefined("arguments.area_id") AND arguments.include_subareas IS true>
 
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
-					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				<cfif NOT isDefined("arguments.subareas_ids")>
 
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
+						<cfinvokeargument name="area_id" value="#arguments.area_id#">
 
-				<cfset areasIds = ListAppend(subAreasIds, arguments.area_id)>
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfset areasIds = listAppend(subAreasIds, arguments.area_id)>
+
+				<cfelse>
+
+					<cfset areasIds = listAppend(arguments.subareas_ids, arguments.area_id)>
+
+				</cfif>
 
 			</cfif>
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
-				<cfif arguments.include_subareas IS true>
+				<cfif isDefined("arguments.area_id") AND arguments.include_subareas IS true>
 					<cfinvokeargument name="areas_ids" value="#areasIds#">
 				<cfelseif isDefined("arguments.area_id")>
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -241,11 +247,6 @@
 
 					<cfset itemTypeLabel = itemTypesStruct[itemTypeId].label>
 
-					<!--- <cfset itemTypeName = itemTypesStruct[itemTypeId].name>
-					<cfset itemTypeGender = itemTypesStruct[itemTypeId].gender>
-
-					<cfset ArrayAppend(itemsType, {id=itemTypeId, name=itemTypeName, gender=itemTypeGender, label=itemTypeLabel})> --->
-
 					<cfquery dbtype="query" name="itemsQuery">
 						SELECT user_in_charge AS user_id, user_full_name, count(*) AS total
 						FROM totalItemsQuery
@@ -263,7 +264,7 @@
 
 						</cfif>
 
-					<cfelse>
+					<cfelse><!--- GROUP BY ITEMS TYPES AND USERS --->
 
 						<cfif itemsQuery.recordCount GT 0>
 
@@ -307,14 +308,12 @@
 
 			</cfif>
 
-			<!---
-			commented for development
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
 
 			</cfcatch>
-		</cftry>--->
+		</cftry>
 
 		<cfreturn response>
 

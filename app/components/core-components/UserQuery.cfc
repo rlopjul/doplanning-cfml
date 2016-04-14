@@ -239,7 +239,7 @@
 				<cfif arguments.with_external EQ false>
 					WHERE u.internal_user = true
 				</cfif>
-				
+
 				<cfif len(arguments.search_text_re) GT 0>
 
 					<cfif arguments.with_external EQ false OR ( isDefined("arguments.typology_id") AND ( isNumeric(arguments.typology_id) OR arguments.typology_id EQ "null") )>
@@ -307,6 +307,41 @@
       </cfquery>
 
 		<cfreturn getAllUsersQuery>
+
+	</cffunction>
+
+
+
+	<!--- ------------------------------------- getAllUsersRelatedToAreas -------------------------------------  --->
+
+	<cffunction name="getAllUsersRelatedToAreas" output="false" access="public" returntype="query">
+		<cfargument name="areas_ids" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfargument name="parse_dates" type="boolean" required="false" default="false">
+
+		<cfset var method = "getAllUsersRelatedToAreas">
+
+			<cfquery name="getAllUsersRelatedToAreasQuery" datasource="#arguments.client_dsn#">
+          SELECT *, id AS user_id
+
+					<cfif arguments.parse_dates IS true>
+						, DATE_FORMAT(CONVERT_TZ(creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
+						, DATE_FORMAT(CONVERT_TZ(last_update_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS last_update_date
+						, DATE_FORMAT(CONVERT_TZ(notifications_last_digest_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS notifications_last_digest_date
+						, DATE_FORMAT(CONVERT_TZ(notifications_web_last_digest_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS notifications_web_last_digest_date
+					</cfif>
+
+          FROM #arguments.client_abb#_users AS users
+					INNER JOIN #arguments.client_abb#_areas_users AS areas_users
+					ON users.id = areas_users.user_id
+					AND areas_users.area_id IN (<cfqueryparam value="#arguments.areas_ids#" cfsqltype="cf_sql_integer" list="true">)
+					GROUP BY id;
+      </cfquery>
+
+		<cfreturn getAllUsersRelatedToAreasQuery>
 
 	</cffunction>
 

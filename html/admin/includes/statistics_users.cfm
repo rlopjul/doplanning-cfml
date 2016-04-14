@@ -1,3 +1,6 @@
+<cfset client_abb = SESSION.client_abb>
+<cfset client_dsn = APPLICATION.identifier&"_"&client_abb>
+
 <!---<cfif isDefined("URL.from_date")>
 	<cfset from_date = URL.from_date>
 <cfelse>
@@ -10,20 +13,42 @@
 	<cfset end_date = "">
 </cfif>--->
 
-<cfif isDefined("URL.area_id") AND isNumeric(URL.area_id)>
-	<cfset area_id = URL.area_id>
-<cfelse>
-	<cfset area_id = "">
-</cfif>
-
 <cfif isDefined("URL.include_subareas") AND URL.include_subareas IS true>
 	<cfset include_subareas = URL.include_subareas>
 <cfelse>
 	<cfset include_subareas = "">
 </cfif>
 
+<cfif isDefined("URL.area_id") AND isNumeric(URL.area_id)>
+	<cfset area_id = URL.area_id>
+
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getParentAreasIds" returnvariable="parentAreasIds">
+		<cfinvokeargument name="area_id" value="#area_id#">
+
+		<cfinvokeargument name="client_abb" value="#client_abb#">
+		<cfinvokeargument name="client_dsn" value="#client_dsn#">
+	</cfinvoke>
+
+	<cfset areasIds = ListAppend(parentAreasIds, area_id)>
+	<cfif include_subareas IS true>
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
+			<cfinvokeargument name="area_id" value="#area_id#">
+
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+
+		<cfset areasIds = ListAppend(subAreasIds, areasIds)>
+
+	</cfif>
+
+<cfelse>
+	<cfset area_id = "">
+</cfif>
+
 <cfif isDefined("URL.include_without_connections") AND URL.include_without_connections IS true>
-	<cfset include_without_connections = URL.include_without_connections>
+	<cfset include_without_connections = true>
 <cfelse>
 	<cfset include_without_connections = false>
 </cfif>
@@ -36,29 +61,66 @@
 	</cfif>
 	<cfif len(end_date) GT 0>
 		<cfinvokeargument name="end_date" value="#end_date#"/>
-	</cfif>
-	<cfif len(user_in_charge) GT 0>
-		<cfinvokeargument name="from_user" value="#user_in_charge#"/>
 	</cfif>--->
 	<cfif isNumeric(area_id)>
-		<cfinvokeargument name="area_id" value="#area_id#"/>
-	<cfelse>
-
-		<!---getRootAreaId--->
-		<!---<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getRootAreaId" returnvariable="rootAreaId">
-		</cfinvoke>
-
-		<cfinvokeargument name="area_id" value="#rootAreaId#"/>--->
-
+		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfif>
 	<cfif include_subareas IS true>
 		<cfinvokeargument name="include_subareas" value="true">
+		<cfinvokeargument name="subareas_ids" value="#subAreasIds#">
 	</cfif>
 </cfinvoke>
 
 <cfset itemsByUsers = getStatisticsResponse.itemsByUsers>
+<cfset usersWithItems = structCount(itemsByUsers)>
 
-<!---<cfdump var="#itemsByUsers#">--->
+<cfset order_by = "user_full_name">
+<cfset order_type = "ASC">
+
+<!--- getAllUsers --->
+<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getAllUsers" returnvariable="response">
+	<cfinvokeargument name="order_by" value="#order_by#">
+	<cfinvokeargument name="order_type" value="#order_type#">
+	<cfinvokeargument name="return_type" value="query">
+</cfinvoke>
+
+<cfset usersQuery = response.users>
+
+<cfif isNumeric(area_id)>
+
+	<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getAllUsersRelatedToAreas" returnvariable="relatedUsersQuery">
+		<cfinvokeargument name="areas_ids" value="#areasIds#">
+
+		<cfinvokeargument name="client_abb" value="#client_abb#">
+		<cfinvokeargument name="client_dsn" value="#client_dsn#">
+	</cfinvoke>
+
+	<cfset relatedUsersQueryIds = valueList(relatedUsersQuery.user_id)>
+
+</cfif>
+
+<!---
+<cfif isNumeric(area_id)>
+
+	<!--- getAllAreaUsers --->
+	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getAllAreaUsers" returnvariable="response">
+		<cfinvokeargument name="area_id" value="#area_id#"/>
+		<cfinvokeargument name="order_by" value="#order_by#"/>
+		<cfinvokeargument name="order_type" value="#order_type#"/>
+	</cfinvoke>
+
+	<cfset areaUsers = response.users>
+	<cfset areaUsersIds = valueList(areaUsers.user_id)>
+
+</cfif>
+---->
+
+<!--- getAreaItemTypesStruct --->
+<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
+</cfinvoke>
+
+<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
+
 
 <cfoutput>
 
@@ -130,40 +192,6 @@
 	</cfoutput>
 
 </script>
-
-<!---<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>--->
-
-<cfset order_by = "user_full_name">
-<cfset order_type = "ASC">
-
-<cfif isNumeric(area_id)>
-
-	<!--- getAllAreaUsers --->
-	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getAllAreaUsers" returnvariable="response">
-		<cfinvokeargument name="area_id" value="#area_id#"/>
-		<cfinvokeargument name="order_by" value="#order_by#"/>
-		<cfinvokeargument name="order_type" value="#order_type#"/>
-	</cfinvoke>
-
-<cfelse>
-
-	<!--- getAllUsers --->
-	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUsers" returnvariable="response">
-		<cfinvokeargument name="order_by" value="#order_by#">
-		<cfinvokeargument name="order_type" value="#order_type#">
-		<!---<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-		<cfinvokeargument name="client_dsn" value="#client_dsn#">--->
-	</cfinvoke>
-
-</cfif>
-
-<cfset users = response.users>
-
-<!--- getAreaItemTypesStruct --->
-<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
-</cfinvoke>
-
-<cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
 <div class="container">
 
@@ -249,7 +277,7 @@
 						<div class="col-xs-7 col-sm-9">
 							<div class="checkbox">
 								<label>
-									<input type="checkbox" name="include_without_downloads" value="true" <cfif include_without_connections IS true>checked</cfif>> <span lang="es">Incluir usuarios que no han accedido a la aplicación</span>
+									<input type="checkbox" name="include_without_connections" value="true" <cfif include_without_connections IS true>checked</cfif>> <span lang="es">Incluir usuarios que no han accedido a la aplicación</span>
 								</label>
 							</div>
 						</div>
@@ -277,7 +305,7 @@
 
 		$("##statisticsTable").tablesorter({
 
-			widgets: ['zebra','filter','stickyHeaders'<cfif arrayLen(users) LT 100>,'math'</cfif> ],
+			widgets: ['zebra','filter','stickyHeaders'<cfif usersWithItems LT 100 AND isDefined("area_id")>,'math'</cfif> ],
 			headers: {
 				0: {
 					sorter: "text"
@@ -336,7 +364,7 @@
 
 							<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
 
-								<th class="filter-false"><span lang="es">#itemTypesStruct[itemTypeId].label#</span></th>
+								<th><span lang="es">#itemTypesStruct[itemTypeId].labelPlural#</span></th>
 
 							</cfif>
 
@@ -345,7 +373,7 @@
 					</tr>
 				</thead>
 
-				<cfif arrayLen(users) LT 100>
+				<cfif usersWithItems LT 100 AND isNumeric(area_id)>
 					<tfoot>
 					  <tr>
 					   	<th></th>
@@ -368,38 +396,42 @@
 
 					<cfset usersCount = 0>
 
-					<cfloop array="#users#" index="objectUser">
+					<cfloop query="#usersQuery#">
 
-						<cfif objectUser.number_of_connections GT 0 OR include_without_connections IS true>
+						<cfif usersQuery.number_of_connections GT 0 OR include_without_connections IS true>
 
-							<cfset usersCount = usersCount+1>
+							<cfif NOT isNumeric(area_id) OR isDefined("itemsByUsers[usersQuery.id]") OR ListFind(relatedUsersQueryIds, usersQuery.id) GT 0>
 
-							<tr>
+								<cfset usersCount = usersCount+1>
 
-								<td>#objectUser.user_full_name#</td>
+								<tr>
 
-								<td>#objectUser.number_of_connections#</td>
+									<td>#usersQuery.user_full_name#</td>
 
-								<!--- Loop items types --->
-								<cfloop array="#itemTypesArray#" index="itemTypeId">
+									<td>#usersQuery.number_of_connections#</td>
 
-									<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
+									<!--- Loop items types --->
+									<cfloop array="#itemTypesArray#" index="itemTypeId">
 
-										<cfif isDefined("itemsByUsers[objectUser.id].items[itemTypeId].total")>
+										<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
 
-											<td>#itemsByUsers[objectUser.id].items[itemTypeId].total#</td>
+											<cfif isDefined("itemsByUsers[usersQuery.id].items[itemTypeId].total")>
 
-										<cfelse>
+												<td>#itemsByUsers[usersQuery.id].items[itemTypeId].total#</td>
 
-											<td>0</td>
+											<cfelse>
+
+												<td>0</td>
+
+											</cfif>
 
 										</cfif>
 
-									</cfif>
+									</cfloop>
 
-								</cfloop>
+								</tr>
 
-							</tr>
+							</cfif>
 
 						</cfif>
 
