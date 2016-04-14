@@ -1428,6 +1428,7 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Generales":"General",
 		"Estadísticas generales":"General statistics",
 		"Estadísticas de descarga archivos":"Files downloads statistics",
+    "Estadísticas de usuarios":"User statistics",
 		"Total elementos de área":"Area items total",
     "Total elementos":"Items total",
 		"Descargas":"Downloads",
@@ -1435,8 +1436,10 @@ IMPORTANT: Any notification of the application will be received, except for the 
 		"Accesos a la aplicación":"Access to the application",
 		"Login fallidos":"Failed login",
     "Incluir áreas inferiores a la seleccionada":"Include lower areas",
+    "Incluir usuarios que no han accedido a la aplicación":"Include users who have not logged in to the application",
     "Login fallidos de todos los usuarios de la aplicación":"Login failed from all users of the application",
     "Áreas en las que el usuario es responsable":"Areas where the user is responsible",
+    "Quitar área seleccionada":"Remove selected area",
     /*END statistics*/
 
     /*typologies*/
