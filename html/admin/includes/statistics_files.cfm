@@ -432,17 +432,19 @@
 					</tr>
 				</thead>
 
-				<tfoot>
-						<tr>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th data-math="col-sum"></th>
-							<th></th>
-					</tr>
-				</tfoot>
+				<cfif filesDownloadsQuery.recordCount LT 500>
+					<tfoot>
+							<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th data-math="col-sum"></th>
+								<th></th>
+						</tr>
+					</tfoot>
+				</cfif>
 
 				<tbody>
 
