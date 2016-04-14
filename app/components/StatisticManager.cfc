@@ -88,7 +88,7 @@
 
 			<cfelseif isDefined("arguments.area_type")>
 
-				<cfset areaType = arguments.area_type>				
+				<cfset areaType = arguments.area_type>
 
 			</cfif>
 
@@ -108,7 +108,7 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
 				<cfif arguments.include_subareas IS true>
 					<cfinvokeargument name="areas_ids" value="#areasIds#">
-				<cfelse>
+				<cfelseif isDefined("arguments.area_id")>
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfif>
 				<cfinvokeargument name="area_type" value="#areaType#">
@@ -151,13 +151,15 @@
 	<!--- ----------------------- GET TOTAL ITEMS BY USERS -------------------------------- --->
 
 	<cffunction name="getTotalItemsByUser" output="false" returntype="struct" access="public">
-		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
 		<cfargument name="area_type" type="string" required="false">
+		<cfargument name="group_by_users" type="boolean" required="false" default="false">
 
 		<cfset var method = "getTotalItemsByUser">
 
 		<cfset var response = structNew()>
+		<cfset var itemsByUsers = structNew()>
 		<cfset var itemsByType = arrayNew(1)>
 		<!---<cfset var itemsType = arrayNew(1)>--->
 		<cfset var subAreasIds = "">
@@ -170,7 +172,7 @@
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfif NOT isDefined("arguments.area_type")>
+			<cfif NOT isDefined("arguments.area_type") AND isDefined("arguments.area_id")>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
@@ -181,7 +183,7 @@
 
 				<cfset areaType = getAreaTypeResult.areaType>
 
-			<cfelse>
+			<cfelseif isDefined("arguments.area_type")>
 
 				<cfset areaType = arguments.area_type>
 
@@ -203,7 +205,7 @@
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
 				<cfif arguments.include_subareas IS true>
 					<cfinvokeargument name="areas_ids" value="#areasIds#">
-				<cfelse>
+				<cfelseif isDefined("arguments.area_id")>
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfif>
 				<cfinvokeargument name="area_type" value="#areaType#">
@@ -251,29 +253,43 @@
 						GROUP BY user_in_charge, user_full_name;
 					</cfquery>
 
-					<cfif itemsQuery.recordCount GT 0>
+					<cfif arguments.group_by_users IS true><!--- GROUP BY USERS --->
 
-						<cfloop query="#itemsQuery#">
+						<cfif itemsQuery.recordCount GT 0>
+
+							<cfloop query="#itemsQuery#">
+								<cfset itemsByUsers[itemsQuery.user_id].items[itemTypeId].total = itemsQuery.total>
+							</cfloop>
+
+						</cfif>
+
+					<cfelse>
+
+						<cfif itemsQuery.recordCount GT 0>
+
+							<cfloop query="#itemsQuery#">
+								<cfset itemTypeStruct = structNew()>
+								<cfset itemTypeStruct.item_type_id = itemTypeId>
+								<cfset itemTypeStruct.item_type_label = itemTypeLabel>
+								<cfset itemTypeStruct.user_id = itemsQuery.user_id>
+								<cfset itemTypeStruct.user_full_name = itemsQuery.user_full_name>
+								<cfset itemTypeStruct.total = itemsQuery.total>
+
+								<cfset ArrayAppend(itemsByType, itemTypeStruct)>
+							</cfloop>
+
+						<cfelse><!--- NO results --->
+
 							<cfset itemTypeStruct = structNew()>
 							<cfset itemTypeStruct.item_type_id = itemTypeId>
 							<cfset itemTypeStruct.item_type_label = itemTypeLabel>
-							<cfset itemTypeStruct.user_id = itemsQuery.user_id>
-							<cfset itemTypeStruct.user_full_name = itemsQuery.user_full_name>
-							<cfset itemTypeStruct.total = itemsQuery.total>
+							<cfset itemTypeStruct.user_id = "">
+							<cfset itemTypeStruct.user_full_name = "">
+							<cfset itemTypeStruct.total = 0>
 
 							<cfset ArrayAppend(itemsByType, itemTypeStruct)>
-						</cfloop>
 
-					<cfelse><!--- NO results --->
-
-						<cfset itemTypeStruct = structNew()>
-						<cfset itemTypeStruct.item_type_id = itemTypeId>
-						<cfset itemTypeStruct.item_type_label = itemTypeLabel>
-						<cfset itemTypeStruct.user_id = "">
-						<cfset itemTypeStruct.user_full_name = "">
-						<cfset itemTypeStruct.total = 0>
-
-						<cfset ArrayAppend(itemsByType, itemTypeStruct)>
+						</cfif>
 
 					</cfif>
 
@@ -281,7 +297,15 @@
 
 			</cfloop>
 
-			<cfset response = {result=true, totalItems=#itemsByType#}>
+			<cfif arguments.group_by_users IS true><!--- GROUP BY USERS --->
+
+				<cfset response = {result=true, itemsByUsers=#itemsByUsers#}>
+
+			<cfelse>
+
+				<cfset response = {result=true, totalItems=#itemsByType#}>
+
+			</cfif>
 
 			<!---
 			commented for development

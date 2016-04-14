@@ -23,7 +23,8 @@
 </cfif>
 
 <!--- getGeneralStatistics --->
-<cfinvoke component="#APPLICATION.componentsPath#/StatisticManager" method="getTotalItems" returnvariable="getStatisticsResponse">
+<cfinvoke component="#APPLICATION.componentsPath#/StatisticManager" method="getTotalItemsByUser" returnvariable="getStatisticsResponse">
+	<cfinvokeargument name="group_by_users" value="true">
 	<!---<cfif len(from_date) GT 0>
 		<cfinvokeargument name="from_date" value="#from_date#"/>
 	</cfif>
@@ -49,11 +50,11 @@
 	</cfif>
 </cfinvoke>
 
-<cfset totalItemsQuery = getStatisticsResponse.query>
+<cfset itemsByUsers = getStatisticsResponse.itemsByUsers>
+
+<!---<cfdump var="#itemsByUsers#">--->
 
 <cfoutput>
-
-#totalItemsQuery.recordCount#
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
@@ -141,11 +142,12 @@
 
 <cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
 
+
 <div class="container">
 
 	<div class="row">
 		<div class="col-sm-12">
-			<div class="div_message_page_title" lang="es">Estadísticas generales</div>
+			<div class="div_message_page_title" lang="es">Estadísticas de usuarios</div>
 		</div>
 	</div>
 
@@ -230,12 +232,12 @@
 		</div>
 	</div>
 
+</div><!---END div container--->
+
 	<script>
 
 		$(document).ready(function() {
 
-
-			<!---
 			$("##statisticsTable").tablesorter({
 
 				widgets: ['zebra','filter','stickyHeaders'],<!---,'math'--->
@@ -261,38 +263,42 @@
 					filter_useParsedData : false
 
 						, math_data     : 'math' // data-math attribute
-					    , math_ignore   : [0,1,2,3,4,7,8,9]
-					    , math_mask     : '##000,##'
-					    <!---. math_mask     : '##,####0.00'--->
-					    <!---, math_complete : function($cell, wo, result, value, arry) {
-					        var txt = '<span class="align-decimal"> ' + result + '</span>';
-					        if ($cell.attr('data-math') === 'all-sum') {
-					          // when the "all-sum" is processed, add a count to the end
-					          return txt + ' (Sum of ' + arry.length + ' cells)';
-					        }
-					        return txt;
-					    } --->
+				    , math_ignore   : [0]
+				    , math_mask     : '##000,##'
+				    <!---. math_mask     : '##,####0.00'--->
+				    <!---, math_complete : function($cell, wo, result, value, arry) {
+				        var txt = '<span class="align-decimal"> ' + result + '</span>';
+				        if ($cell.attr('data-math') === 'all-sum') {
+				          // when the "all-sum" is processed, add a count to the end
+				          return txt + ' (Sum of ' + arry.length + ' cells)';
+				        }
+				        return txt;
+				    } --->
 
 			    }
-			});--->
+			});
 
 		});
 	</script>
 
+
+<div class="container-fluid" style="position:absolute;width:100%;left:0;">
+
 	<div class="row">
 		<div class="col-sm-12">
 
-			<table style="margin-top:20px;"><!---id="statisticsTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap data-table" --->
+			<table id="statisticsTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap data-table" style="margin-top:20px;">
 
 				<thead>
 					<tr>
 						<th><span lang="es">Usuario</span></th>
+
 						<!--- Loop items types --->
 						<cfloop array="#itemTypesArray#" index="itemTypeId">
 
 							<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
 
-								<th>#itemTypesStruct[itemTypeId].label#</th>
+								<th class="filter-false"><span lang="es">#itemTypesStruct[itemTypeId].label#</span></th>
 
 							</cfif>
 
@@ -307,36 +313,23 @@
 					<cfloop query="#usersQuery#">
 
 						<tr>
-							<td>#usersQuery.user_full_name#</td>
 
-							<!---<cfquery dbtype="query" name="userItemsQuery">
-								SELECT *
-								FROM totalItemsQuery
-								WHERE user_in_charge = <cfqueryparam value="#usersQuery.id#" cfsqltype="cf_sql_integer">;
-							</cfquery>--->
+							<td>#usersQuery.user_full_name#</td>
 
 							<!--- Loop items types --->
 							<cfloop array="#itemTypesArray#" index="itemTypeId">
 
 								<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
 
-									<!---<cfif userItemsQuery.recordCount GT 0>
+									<cfif isDefined("itemsByUsers[usersQuery.id].items[itemTypeId].total")>
 
-										<cfquery dbtype="query" name="itemsQuery">
-											SELECT count(*) AS total
-											FROM userItemsQuery
-											WHERE itemTypeId = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">;
-										</cfquery>
-
-										<td><cfif itemsQuery.recordCount GT 0>#itemsQuery.total#<cfelse>0</cfif></td>
+										<td>#itemsByUsers[usersQuery.id].items[itemTypeId].total#</td>
 
 									<cfelse>
 
 										<td>0</td>
 
-									</cfif>--->
-
-									<td></td>
+									</cfif>
 
 								</cfif>
 
@@ -345,53 +338,6 @@
 						</tr>
 
 					</cfloop>
-
-					<!---
-					<cfset itemsByType = ArrayNew(1)>
-
-					<!--- Loop items types --->
-					<cfloop array="#itemTypesArray#" index="itemTypeId">
-
-						<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
-
-							<cfset itemTypeLabel = itemTypesStruct[itemTypeId].label>
-
-							<cfquery dbtype="query" name="itemsQuery">
-								SELECT user_in_charge AS user_id, user_full_name, count(*) AS total
-								FROM totalItemsQuery
-								WHERE itemTypeId = <cfqueryparam value="#itemTypeId#" cfsqltype="cf_sql_integer">
-								GROUP BY user_in_charge, user_full_name;
-							</cfquery>
-
-							<cfif itemsQuery.recordCount GT 0>
-
-								<cfloop query="#itemsQuery#">
-									<cfset itemTypeStruct = structNew()>
-									<cfset itemTypeStruct.item_type_id = itemTypeId>
-									<cfset itemTypeStruct.item_type_label = itemTypeLabel>
-									<cfset itemTypeStruct.user_id = itemsQuery.user_id>
-									<cfset itemTypeStruct.user_full_name = itemsQuery.user_full_name>
-									<cfset itemTypeStruct.total = itemsQuery.total>
-
-									<cfset ArrayAppend(itemsByType, itemTypeStruct)>
-								</cfloop>
-
-							<cfelse><!--- NO results --->
-
-								<cfset itemTypeStruct = structNew()>
-								<cfset itemTypeStruct.item_type_id = itemTypeId>
-								<cfset itemTypeStruct.item_type_label = itemTypeLabel>
-								<cfset itemTypeStruct.user_id = "">
-								<cfset itemTypeStruct.user_full_name = "">
-								<cfset itemTypeStruct.total = 0>
-
-								<cfset ArrayAppend(itemsByType, itemTypeStruct)>
-
-							</cfif>
-
-						</cfif>
-
-					</cfloop>--->
 
 				</tbody>
 
