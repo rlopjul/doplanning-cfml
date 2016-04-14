@@ -56,7 +56,7 @@
 
 	<!--- ----------------------- GET TOTAL ITEMS -------------------------------- --->
 
-	<cffunction name="getTotalItems" output="false" returntype="struct" access="public">
+	<!---<cffunction name="getTotalItems" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
 		<cfargument name="area_type" type="string" required="false">
@@ -69,9 +69,7 @@
 		<cfset var areasIds = "">
 		<cfset var areaType = "">
 
-		<!---
-		commented for development
-		<cftry>--->
+		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
@@ -133,18 +131,16 @@
 
 			<cfset response = {result=true, query=#totalItemsQuery#}>
 
-			<!---
-			commented for development
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
 
 			</cfcatch>
-		</cftry>--->
+		</cftry>
 
 		<cfreturn response>
 
-	</cffunction>
+	</cffunction>--->
 	<!--- ------------------------------------------------------------------------------  --->
 
 
