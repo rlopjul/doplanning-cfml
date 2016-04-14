@@ -54,26 +54,43 @@
 	<!--- ------------------------------------------------------------------------------  --->
 
 
-	<!--- ----------------------- GET TOTAL ITEMS BY USERS -------------------------------- --->
+	<!--- ----------------------- GET TOTAL ITEMS -------------------------------- --->
 
-	<cffunction name="getTotalItemsByUser" output="false" returntype="struct" access="public">
-		<cfargument name="area_id" type="numeric" required="true">
+	<cffunction name="getTotalItems" output="false" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="include_subareas" type="boolean" required="false" default="false">
-		<cfargument name="area_type" type="string" requierd="true">
+		<cfargument name="area_type" type="string" required="false">
 
-		<cfset var method = "getTotalItemsByUser">
+		<cfset var method = "getTotalItems">
 
 		<cfset var response = structNew()>
 		<cfset var itemsByType = arrayNew(1)>
-		<!---<cfset var itemsType = arrayNew(1)>--->
 		<cfset var subAreasIds = "">
 		<cfset var areasIds = "">
+		<cfset var areaType = "">
 
 		<!---
 		commented for development
 		<cftry>--->
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfif NOT isDefined("arguments.area_type") AND isDefined("arguments.area_id")>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset areaType = getAreaTypeResult.areaType>
+
+			<cfelseif isDefined("arguments.area_type")>
+
+				<cfset areaType = arguments.area_type>				
+
+			</cfif>
 
 			<cfif arguments.include_subareas IS true>
 
@@ -94,7 +111,102 @@
 				<cfelse>
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfif>
-				<cfinvokeargument name="area_type" value="#arguments.area_type#">
+				<cfinvokeargument name="area_type" value="#areaType#">
+
+				<cfinvokeargument name="published" value="false">
+
+				<cfinvokeargument name="withConsultations" value="#APPLICATION.moduleConsultations#">
+				<cfinvokeargument name="withPubmedsComments" value="#APPLICATION.modulePubMedComments#">
+				<cfinvokeargument name="withLists" value="#APPLICATION.moduleLists#">
+				<cfinvokeargument name="withForms" value="#APPLICATION.moduleForms#">
+				<cfinvokeargument name="withDPDocuments" value="#APPLICATION.moduleDPDocuments#">
+				<cfinvokeargument name="withMailings" value="#APPLICATION.moduleMailing#">
+
+				<cfinvokeargument name="full_content" value="false">
+				<cfinvokeargument name="with_position" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfset totalItemsQuery = getAreaItemsResult.query>
+
+			<cfset response = {result=true, query=#totalItemsQuery#}>
+
+			<!---
+			commented for development
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>--->
+
+		<cfreturn response>
+
+	</cffunction>
+	<!--- ------------------------------------------------------------------------------  --->
+
+
+	<!--- ----------------------- GET TOTAL ITEMS BY USERS -------------------------------- --->
+
+	<cffunction name="getTotalItemsByUser" output="false" returntype="struct" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="include_subareas" type="boolean" required="false" default="false">
+		<cfargument name="area_type" type="string" required="false">
+
+		<cfset var method = "getTotalItemsByUser">
+
+		<cfset var response = structNew()>
+		<cfset var itemsByType = arrayNew(1)>
+		<!---<cfset var itemsType = arrayNew(1)>--->
+		<cfset var subAreasIds = "">
+		<cfset var areasIds = "">
+		<cfset var areaType = "">
+
+		<!---
+		commented for development
+		<cftry>--->
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfif NOT isDefined("arguments.area_type")>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaType" returnvariable="getAreaTypeResult">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset areaType = getAreaTypeResult.areaType>
+
+			<cfelse>
+
+				<cfset areaType = arguments.area_type>
+
+			</cfif>
+
+			<cfif arguments.include_subareas IS true>
+
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfset areasIds = ListAppend(subAreasIds, arguments.area_id)>
+
+			</cfif>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="listAllAreaItems" returnvariable="getAreaItemsResult">
+				<cfif arguments.include_subareas IS true>
+					<cfinvokeargument name="areas_ids" value="#areasIds#">
+				<cfelse>
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfif>
+				<cfinvokeargument name="area_type" value="#areaType#">
 
 				<cfinvokeargument name="published" value="false">
 
@@ -156,6 +268,7 @@
 
 						<cfset itemTypeStruct = structNew()>
 						<cfset itemTypeStruct.item_type_id = itemTypeId>
+						<cfset itemTypeStruct.item_type_label = itemTypeLabel>
 						<cfset itemTypeStruct.user_id = "">
 						<cfset itemTypeStruct.user_full_name = "">
 						<cfset itemTypeStruct.total = 0>

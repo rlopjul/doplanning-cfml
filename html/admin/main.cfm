@@ -219,6 +219,7 @@
 
 			if(currentTab == "#tab5" && $("#statisticsGeneralIframe").attr('src') == "about:blank") { //Load statistics page
 				$("#statisticsGeneralIframe").attr('src', 'iframes/statistics.cfm');
+				$("#statisticsUsersIframe").attr('src', 'iframes/statistics_users.cfm');
 				$("#statisticsFilesIframe").attr('src', 'iframes/statistics_files.cfm');
 				$("#loadingContainer").show();
 			}
@@ -626,22 +627,30 @@
 
 					<ul class="nav nav-pills" id="statisticsTab" style="clear:none; padding-bottom:5px;">
 						<li class="active"><a href="#statisticsTab1" data-toggle="tab" lang="es">Generales</a></li>
-						<li><a href="#statisticsTab2" data-toggle="tab" lang="es">Archivos</a></li>
+						<li><a href="#statisticsTabUsers" data-toggle="tab" lang="es">Usuarios</a></li>
+						<li><a href="#statisticsTabFiles" data-toggle="tab" lang="es">Archivos</a></li>
 					</ul>
 
 					<div class="tab-content">
 
-						<div class="tab-pane active" id="statisticsTab1"><!---Tab Generales--->
+						<div class="tab-pane active" id="statisticsTab1"><!---Tab General--->
 
 							<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="statisticsGeneralIframe" onload="statisticsGeneralIframeLoaded()"></iframe>
 
 						</div><!---END Tab Generales--->
 
-						<div class="tab-pane" id="statisticsTab2"><!---Tab Archivos--->
+						<div class="tab-pane active" id="statisticsTabUsers"><!---Tab Users--->
+
+							<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="statisticsUsersIframe" onload="statisticsUsersIframeLoaded()"></iframe>
+
+						</div><!---END Tab Users--->
+
+
+						<div class="tab-pane" id="statisticsTabFiles"><!---Tab Files--->
 
 							<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="statisticsFilesIframe" onload="statisticsFilesIframeLoaded()"></iframe>
 
-						</div><!---END Tab Archivos--->
+						</div><!---END Tab Files--->
 
 					</div>
 

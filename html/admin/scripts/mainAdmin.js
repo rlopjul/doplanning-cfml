@@ -87,6 +87,14 @@ function statisticsFilesIframeLoaded() {
 
 }
 
+function statisticsUsersIframeLoaded() {
+
+  /*if($("#statisticsUsersIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
+    $("#loadingContainer").hide();
+  }*/
+
+}
+
 function logIframeLoaded() {
 
   if($("#logIframe").attr('src') != "about:blank" && $("#loadingContainer").css('display') == "block"){
