@@ -22,6 +22,12 @@
 	<cfset include_subareas = "">
 </cfif>
 
+<cfif isDefined("URL.include_without_connections") AND URL.include_without_connections IS true>
+	<cfset include_without_connections = URL.include_without_connections>
+<cfelse>
+	<cfset include_without_connections = false>
+</cfif>
+
 <!--- getGeneralStatistics --->
 <cfinvoke component="#APPLICATION.componentsPath#/StatisticManager" method="getTotalItemsByUser" returnvariable="getStatisticsResponse">
 	<cfinvokeargument name="group_by_users" value="true">
@@ -220,6 +226,21 @@
 					</div>
 
 					<div class="row">
+
+						<div class="col-xs-5 col-sm-3">
+						</div>
+
+						<div class="col-xs-7 col-sm-9">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" name="include_without_downloads" value="true" <cfif include_without_connections IS true>checked</cfif>> <span lang="es">Incluir usuarios que no han accedido a la aplicación</span>
+								</label>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="row">
 						<div class="col-sm-offset-3 col-sm-10">
 							<input type="submit" name="search" class="btn btn-primary" style="margin-top:30px;" lang="es" value="Filtrar" />
 						</div>
@@ -293,6 +314,8 @@
 					<tr>
 						<th><span lang="es">Usuario</span></th>
 
+						<th><span lang="es">Número de conexiones</span></th>
+
 						<!--- Loop items types --->
 						<cfloop array="#itemTypesArray#" index="itemTypeId">
 
@@ -312,30 +335,36 @@
 
 					<cfloop query="#usersQuery#">
 
-						<tr>
+						<cfif usersQuery.number_of_connections GT 0 OR include_without_connections IS true>
 
-							<td>#usersQuery.user_full_name#</td>
+							<tr>
 
-							<!--- Loop items types --->
-							<cfloop array="#itemTypesArray#" index="itemTypeId">
+								<td>#usersQuery.user_full_name#</td>
 
-								<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
+								<td>#usersQuery.number_of_connections#</td>
 
-									<cfif isDefined("itemsByUsers[usersQuery.id].items[itemTypeId].total")>
+								<!--- Loop items types --->
+								<cfloop array="#itemTypesArray#" index="itemTypeId">
 
-										<td>#itemsByUsers[usersQuery.id].items[itemTypeId].total#</td>
+									<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
 
-									<cfelse>
+										<cfif isDefined("itemsByUsers[usersQuery.id].items[itemTypeId].total")>
 
-										<td>0</td>
+											<td>#itemsByUsers[usersQuery.id].items[itemTypeId].total#</td>
+
+										<cfelse>
+
+											<td>0</td>
+
+										</cfif>
 
 									</cfif>
 
-								</cfif>
+								</cfloop>
 
-							</cfloop>
+							</tr>
 
-						</tr>
+						</cfif>
 
 					</cfloop>
 
