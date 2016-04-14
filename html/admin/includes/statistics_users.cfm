@@ -40,7 +40,7 @@
 	<cfif len(user_in_charge) GT 0>
 		<cfinvokeargument name="from_user" value="#user_in_charge#"/>
 	</cfif>--->
-	<cfif len(area_id) GT 0>
+	<cfif isNumeric(area_id)>
 		<cfinvokeargument name="area_id" value="#area_id#"/>
 	<cfelse>
 
@@ -131,23 +131,39 @@
 
 </script>
 
-<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
+<!---<cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>--->
 
-<!--- getAllUsers --->
-<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getAllUsers" argumentcollection="#arguments#" returnvariable="usersQuery">
-	<cfinvokeargument name="order_by" value="user_full_name">
-	<cfinvokeargument name="order_type" value="ASC">
+<cfset order_by = "user_full_name">
+<cfset order_type = "ASC">
 
-	<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-	<cfinvokeargument name="client_dsn" value="#client_dsn#">
-</cfinvoke>
+<cfif isNumeric(area_id)>
+
+	<!--- getAllAreaUsers --->
+	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getAllAreaUsers" returnvariable="response">
+		<cfinvokeargument name="area_id" value="#area_id#"/>
+		<cfinvokeargument name="order_by" value="#order_by#"/>
+		<cfinvokeargument name="order_type" value="#order_type#"/>
+	</cfinvoke>
+
+<cfelse>
+
+	<!--- getAllUsers --->
+	<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="getUsers" returnvariable="response">
+		<cfinvokeargument name="order_by" value="#order_by#">
+		<cfinvokeargument name="order_type" value="#order_type#">
+		<!---<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+		<cfinvokeargument name="client_dsn" value="#client_dsn#">--->
+	</cfinvoke>
+
+</cfif>
+
+<cfset users = response.users>
 
 <!--- getAreaItemTypesStruct --->
 <cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="getAreaItemTypesStruct" returnvariable="itemTypesStruct">
 </cfinvoke>
 
 <cfset itemTypesArray = structSort(itemTypesStruct, "numeric", "ASC", "position")>
-
 
 <div class="container">
 
@@ -255,53 +271,52 @@
 
 </div><!---END div container--->
 
-	<script>
+<script>
 
-		$(document).ready(function() {
+	$(document).ready(function() {
 
-			$("##statisticsTable").tablesorter({
+		$("##statisticsTable").tablesorter({
 
-				widgets: ['zebra','filter','stickyHeaders'],<!---,'math'--->
-				headers: {
-					0: {
-						sorter: "text"
-					}
+			widgets: ['zebra','filter','stickyHeaders'<cfif arrayLen(users) LT 100>,'math'</cfif> ],
+			headers: {
+				0: {
+					sorter: "text"
 				}
-				, widgetOptions : {
-					filter_childRows : false,
-					filter_columnFilters : true,
-					filter_cssFilter : 'tablesorter-filter',
-					filter_filteredRow   : 'filtered',
-					filter_formatter : null,
-					filter_functions : null,
-					filter_hideFilters : false,
-					filter_ignoreCase : true,
-					filter_liveSearch : true,
-					//filter_reset : 'button.reset',
-					filter_searchDelay : 300,
-					filter_serversideFiltering: false,
-					filter_startsWith : false,
-					filter_useParsedData : false
+			}
+			, widgetOptions : {
+				filter_childRows : false,
+				filter_columnFilters : true,
+				filter_cssFilter : 'tablesorter-filter',
+				filter_filteredRow   : 'filtered',
+				filter_formatter : null,
+				filter_functions : null,
+				filter_hideFilters : false,
+				filter_ignoreCase : true,
+				filter_liveSearch : true,
+				//filter_reset : 'button.reset',
+				filter_searchDelay : 300,
+				filter_serversideFiltering: false,
+				filter_startsWith : false,
+				filter_useParsedData : false
 
-						, math_data     : 'math' // data-math attribute
-				    , math_ignore   : [0]
-				    , math_mask     : '##000,##'
-				    <!---. math_mask     : '##,####0.00'--->
-				    <!---, math_complete : function($cell, wo, result, value, arry) {
-				        var txt = '<span class="align-decimal"> ' + result + '</span>';
-				        if ($cell.attr('data-math') === 'all-sum') {
-				          // when the "all-sum" is processed, add a count to the end
-				          return txt + ' (Sum of ' + arry.length + ' cells)';
-				        }
-				        return txt;
-				    } --->
+					, math_data     : 'math' // data-math attribute
+			    , math_ignore   : [0]
+			    , math_mask     : '##000,##'
+			    <!---. math_mask     : '##,####0.00'--->
+			    <!---, math_complete : function($cell, wo, result, value, arry) {
+			        var txt = '<span class="align-decimal"> ' + result + '</span>';
+			        if ($cell.attr('data-math') === 'all-sum') {
+			          // when the "all-sum" is processed, add a count to the end
+			          return txt + ' (Sum of ' + arry.length + ' cells)';
+			        }
+			        return txt;
+			    } --->
 
-			    }
-			});
-
+		    }
 		});
-	</script>
 
+	});
+</script>
 
 <div class="container-fluid" style="position:absolute;width:100%;left:0;">
 
@@ -314,7 +329,7 @@
 					<tr>
 						<th><span lang="es">Usuario</span></th>
 
-						<th><span lang="es">Número de conexiones</span></th>
+						<th><span lang="es">Accesos a la aplicación</span></th>
 
 						<!--- Loop items types --->
 						<cfloop array="#itemTypesArray#" index="itemTypeId">
@@ -330,27 +345,49 @@
 					</tr>
 				</thead>
 
+				<cfif arrayLen(users) LT 100>
+					<tfoot>
+					  <tr>
+					   	<th></th>
+					   	<th data-math="col-sum"></th>
+							<!--- Loop items types --->
+							<cfloop array="#itemTypesArray#" index="itemTypeId">
+
+								<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
+
+									<th data-math="col-sum"></th>
+
+								</cfif>
+
+							</cfloop>
+						</tr>
+					</tfoot>
+				</cfif>
 
 				<tbody>
 
-					<cfloop query="#usersQuery#">
+					<cfset usersCount = 0>
 
-						<cfif usersQuery.number_of_connections GT 0 OR include_without_connections IS true>
+					<cfloop array="#users#" index="objectUser">
+
+						<cfif objectUser.number_of_connections GT 0 OR include_without_connections IS true>
+
+							<cfset usersCount = usersCount+1>
 
 							<tr>
 
-								<td>#usersQuery.user_full_name#</td>
+								<td>#objectUser.user_full_name#</td>
 
-								<td>#usersQuery.number_of_connections#</td>
+								<td>#objectUser.number_of_connections#</td>
 
 								<!--- Loop items types --->
 								<cfloop array="#itemTypesArray#" index="itemTypeId">
 
 									<cfif listFind("13,16", itemTypeId) IS 0><!---Typologies are not included--->
 
-										<cfif isDefined("itemsByUsers[usersQuery.id].items[itemTypeId].total")>
+										<cfif isDefined("itemsByUsers[objectUser.id].items[itemTypeId].total")>
 
-											<td>#itemsByUsers[usersQuery.id].items[itemTypeId].total#</td>
+											<td>#itemsByUsers[objectUser.id].items[itemTypeId].total#</td>
 
 										<cfelse>
 
@@ -370,14 +407,17 @@
 
 				</tbody>
 
-				<!---<tfoot>
-				   	<tr>
-				   		<th></th>
-				   		<th data-math="col-sum"></th>
-					</tr>
-				</tfoot>--->
+			</table>
 
 		</div>
+	</div>
+
+	<div class="row">
+
+		<div class="col-sm-12">
+				#usersCount# <span lang="es">Usuarios</span>
+		</div>
+
 	</div>
 
 	</cfoutput>

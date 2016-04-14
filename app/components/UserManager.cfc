@@ -2239,7 +2239,7 @@
 	<!---Devuelve la lista de todos los usuarios según el usuario sea interno o externo--->
 
 	<cffunction name="getUsers" returntype="struct" output="false" access="public">
-		<cfargument name="xmlUser" type="xml" required="true"/>
+		<!---<cfargument name="xmlUser" type="xml" required="true"/>--->
 		<cfargument name="with_external" type="boolean" required="false" default="true"/>
 		<cfargument name="search_text" type="string" required="false"/>
 		<cfargument name="order_by" type="string" required="false"/>
@@ -2395,60 +2395,7 @@
 				</cfinvoke>
 			</cfif>
 
-            <!---<cfif isDefined("xmlUser.user.xmlAttributes.space_used") OR isDefined("xmlUser.user.xmlAttributes.number_of_connections")>
-
-                <cfquery name="getTotals" datasource="#client_dsn#">
-                    SELECT
-                    <cfif isDefined("xmlUser.user.xmlAttributes.space_used")>
-                    SUM(space_used) AS total_space_used
-                    </cfif>
-                    <cfif isDefined("xmlUser.user.xmlAttributes.number_of_connections")>
-                    	 <cfif isDefined("xmlUser.user.xmlAttributes.space_used")>
-                         ,
-                         </cfif>
-                    	SUM(number_of_connections) AS total_connections
-                    </cfif>
-                    FROM #client_abb#_users AS u
-                    <cfif with_external EQ "false">
-					WHERE u.internal_user = true
-					</cfif>
-
-					<cfif len(search_text_re) GT 0>
-						<cfif with_external EQ "false">
-						AND
-						<cfelse>
-						WHERE
-						</cfif>
-						(u.name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						OR u.family_name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						OR u.email REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						OR u.address REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						OR u.dni REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						<cfif SESSION.client_abb EQ "hcs">
-							OR u.information REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-							OR u.perfil_cabecera REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
-						</cfif>)
-					</cfif>
-
-					<cfif isDefined("arguments.users_ids")>
-
-						<cfif arguments.with_external EQ false OR len(arguments.search_text_re) GT 0>
-							AND
-						<cfelse>
-							WHERE
-						</cfif>
-						u.id IN (<cfqueryparam value="#arguments.users_ids#" cfsqltype="cf_sql_varchar" list="true">)
-
-					</cfif>
-
-					<cfif isDefined("arguments.limit")>
-					LIMIT #arguments.limit#
-					</cfif>;
-                </cfquery>
-
-            </cfif>--->
-
-            <!--- getAllUsers --->
+      <!--- getAllUsers --->
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getAllUsers" argumentcollection="#arguments#" returnvariable="getAllUsersQuery">
 				<cfinvokeargument name="search_text_re" value="#search_text_re#">
 				<cfinvokeargument name="order_by" value="#order_by#">
@@ -2507,7 +2454,7 @@
 
 	<cffunction name="getAllAreaUsers" returntype="struct" output="false" access="public">
 		<cfargument name="area_id" type="numeric" required="true"/>
-		<cfargument name="xmlUser" type="xml" required="true"/>
+		<!---<cfargument name="xmlUser" type="xml" required="true"/>--->
 		<cfargument name="order_by" type="string" required="false"/>
 		<cfargument name="order_type" type="string" required="false"/>
 
