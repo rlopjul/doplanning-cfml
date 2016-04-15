@@ -178,7 +178,7 @@ page_types
 
 			<div class="row">
 
-				<label for="password" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es"><cfif passwordRequired><span lang="es">Contraseña</span> *<cfelse>Nueva contraseña</cfif></label>
+				<label for="password" class="col-xs-5 col-sm-4 col-md-3 control-label"><cfif passwordRequired><span lang="es">Contraseña</span> *<cfelse>Nueva contraseña</cfif></label>
 
 				<div class="col-xs-7 col-sm-8 col-md-9">
 					<input type="password" name="password" id="password" <cfif isDefined("objectUser.new_password") AND page_type IS NOT 3>value="#objectUser.new_password#"</cfif> class="form-control" value="" autocomplete="off" <cfif passwordRequired>required title="Introduzca contraseña"</cfif> />
@@ -188,7 +188,7 @@ page_types
 
 			<div class="row">
 
-				<label for="password_confirmation" class="col-xs-5 col-sm-4 col-md-3 control-label" lang="es"><span lang="es">Confirmar contraseña</span><cfif passwordRequired> *</cfif></label>
+				<label for="password_confirmation" class="col-xs-5 col-sm-4 col-md-3 control-label"><span lang="es">Confirmar contraseña</span><cfif passwordRequired> *</cfif></label>
 
 				<div class="col-xs-7 col-sm-8 col-md-9">
 					<input type="password" name="password_confirmation" id="password_confirmation" <cfif isDefined("objectUser.new_password") AND page_type IS NOT 3>value="#objectUser.new_password#"</cfif> class="form-control" value="" autocomplete="off" <cfif passwordRequired>required title="Introduzca confirmación de la contraseña"</cfif> />
