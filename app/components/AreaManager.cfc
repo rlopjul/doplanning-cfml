@@ -3828,21 +3828,40 @@
 
 		<cfset var usersArray = arrayNew(1)>
 
+		<cfset var allUserAreasAdminList = "">
+
 		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
-			<cfinclude template="includes/checkAdminAccess.cfm">
+			<!--- checkAreaAdministratorAdminAccess --->
+			<cfif SESSION.area_admin_administrator IS false><!---user logged in is not an administrator --->
+
+				<cfset error_code = 106>
+
+				<cfthrow errorcode="#error_code#">
+
+			</cfif>
+
+			<cfif SESSION.client_administrator NEQ SESSION.user_id><!---Is not general administrator user--->
+
+				<cfinvoke component="AreaManager" method="getAllUserAreasAdminList" returnvariable="allUserAreasAdminList">
+					<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
+				</cfinvoke>
+
+			</cfif>
 
 			<cfquery name="getAreasAdministrators" datasource="#client_dsn#">
 				SELECT areas_administrators.user_id, areas_administrators.area_id, areas.name AS area_name, users.family_name, users.name AS user_name,
 				users.email, users.image_type, users.enabled
 				FROM #client_abb#_areas_administrators AS areas_administrators
 				INNER JOIN #client_abb#_areas AS areas ON areas_administrators.area_id = areas.id
+				<cfif SESSION.client_administrator NEQ SESSION.user_id>
+					AND areas_administrators.area_id IN (<cfqueryparam value="#allUserAreasAdminList#" cfsqltype="cf_sql_integer" list="true">)
+				</cfif>
 				INNER JOIN #client_abb#_users AS users ON areas_administrators.user_id = users.id
 				ORDER BY users.family_name;
 			</cfquery>
-			<!---WHERE areas_administrators.area_id = areas.id;--->
 
 			<cfloop query="getAreasAdministrators">
 
@@ -3860,38 +3879,9 @@
 				<cfset user.enabled = getAreasAdministrators.enabled>
 				<cfset user.area_name = getAreasAdministrators.area_name>
 
-				<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/UserManager" method="appendUser" returnvariable="usersArrayUpdated">
-					<cfinvokeargument name="usersArray" value="#usersArray#">
-					<cfinvokeargument name="objectUser" value="#user#">
-				</cfinvoke>--->
-
 				<cfset arrayAppend(usersArray,user)>
 
-				<!---<cfset usersArray = usersArrayUpdated>--->
-
 			</cfloop>
-
-			<!---<cfprocessingdirective suppresswhitespace="yes">
-				<cfsavecontent variable="xmlResult">
-				<areas_admins>
-					<cfif getAreasAdministrators.recordCount GT 0>
-						<cfoutput>
-							<cfloop query="getAreasAdministrators">
-								<area_admin>
-									<user id="#getAreasAdministrators.user_id#"><name><![CDATA[#getAreasAdministrators.user_name#]]></name><family_name><![CDATA[#getAreasAdministrators.family_name#]]></family_name></user>
-									<area id="#getAreasAdministrators.area_id#">
-										<name><![CDATA[#getAreasAdministrators.name#]]></name>
-									</area>
-								</area_admin>
-							</cfloop>
-						</cfoutput>
-					</cfif>
-				</areas_admins>
-				</cfsavecontent>
-			</cfprocessingdirective>
-
-
-			<cfset xmlResponseContent = xmlResult>--->
 
 			<cfset response = {result=true, usersArray=usersArray}>
 

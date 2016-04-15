@@ -1,5 +1,4 @@
 <cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAllAreasAdministrators" returnvariable="usersResponse">
-  <cfinvokeargument name="area_id" value="#area_id#">
 </cfinvoke>
 
 <div class="modal-header">
@@ -18,7 +17,9 @@
 
 		<cfset users = usersResponse.usersArray>
 		<cfset numUsers = ArrayLen(users)>
-
+    <cfif SESSION.client_administrator NEQ SESSION.user_id>
+      <span lang="es">En la lista se muestran solo los administradores sobre los que tiene permiso de edición.</span>
+    </cfif>
 		<span class="help-block" lang="es">Puede añadir o quitar administradores accediendo al área correspondiente</span>
 
 		<div class="div_items">
