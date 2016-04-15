@@ -151,7 +151,7 @@
 <script src="#APPLICATION.htmlPath#/scripts/functions.min.js?v=2.7"></script>
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
 <script src="#APPLICATION.htmlPath#/scripts/main.min.js?v=2.94"></script>
-<script src="#APPLICATION.htmlPath#/admin/scripts/mainAdmin.min.js"></script>
+<script src="#APPLICATION.htmlPath#/admin/scripts/mainAdmin.min.js?v=1.1"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 
@@ -639,7 +639,7 @@
 
 						</div><!---END Tab Generales--->
 
-						<div class="tab-pane active" id="statisticsTabUsers"><!---Tab Users--->
+						<div class="tab-pane" id="statisticsTabUsers"><!---Tab Users--->
 
 							<iframe marginheight="0" marginwidth="0" scrolling="auto" width="100%" frameborder="0" class="iframes" src="about:blank" style="height:100%;background-color:##FFFFFF;" id="statisticsUsersIframe" onload="statisticsUsersIframeLoaded()"></iframe>
 
