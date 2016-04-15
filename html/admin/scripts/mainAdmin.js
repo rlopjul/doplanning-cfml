@@ -15,6 +15,7 @@ function resizeIframe() {
   $("#typologiesFilesIframe").height(newHeight-36);
 
   $("#statisticsGeneralIframe").height(newHeight-36);
+  $("#statisticsUsersIframe").height(newHeight-36);
   $("#statisticsFilesIframe").height(newHeight-36);
 
   $("#entitiesIframe").height(newHeight-36);
