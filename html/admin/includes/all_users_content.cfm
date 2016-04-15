@@ -51,6 +51,10 @@ page_type
 				</cfif>
 
 			</cfif>
+
+			<cfif SESSION.area_admin_administrator IS true AND SESSION.user_administrator IS false AND page_type IS 1>
+				<a class="btn btn-default btn-sm navbar-btn" onclick="parent.loadModal('html_content/all_administrators.cfm');"><i class="icon-group icon-white"></i> <span lang="es">Administradores</span></a>
+			</cfif>
 		</div>
 	</div>
 </div>
