@@ -962,10 +962,10 @@ curLangTextEn = {
 		"Usuarios administradores de áreas": "Area administrators",
 		"URL:":"URL:",
 		"Fecha de creación:":"Creation date:",
-		"Fecha de última conexión:":"Last connection date:",
-		"Número de conexiones:":"Number of connections:",
+		"Fecha de última conexión":"Last connection date",
+		"Número de conexiones":"Number of connections",
 		"Usuario creado. Seleccione a continuación las áreas a las que desea asociarlo.":"User created. Now select the areas to add the user.",
-    "Eliminar Usuario":"Delete User",
+    "Eliminar usuario":"Delete user",
 		/*END admin - new user window form*/
 
 		"Fecha de última modificación":"Last modification date",
@@ -1448,6 +1448,8 @@ IMPORTANT: Any notification of the application will be received, except for the 
     "Login fallidos de todos los usuarios de la aplicación":"Login failed from all users of the application",
     "Áreas en las que el usuario es responsable":"Areas where the user is responsible",
     "Quitar área seleccionada":"Remove selected area",
+    "Usuario propietario":"Owner user",
+    "Usuario que realiza descarga":"User who does the download",
     /*END statistics*/
 
     /*typologies*/

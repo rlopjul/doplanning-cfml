@@ -925,8 +925,8 @@
 
 					<cfif SESSION.client_administrator EQ SESSION.user_id>
 						<div class="div_user_page_label"><span lang="es">Fecha de creación:</span> <span class="div_user_page_text">#objectUser.creation_date#</span></div>
-						<div class="div_user_page_label"><span lang="es">Fecha de última conexión:</span> <span class="div_user_page_text">#objectUser.last_connection#</span></div>
-						<div class="div_user_page_label"><span lang="es">Número de conexiones:</span> <span class="div_user_page_text">#objectUser.number_of_connections#</span></div>
+						<div class="div_user_page_label"><span lang="es">Fecha de última conexión</span>: <span class="div_user_page_text">#objectUser.last_connection#</span></div>
+						<div class="div_user_page_label"><span lang="es">Número de conexiones</span>: <span class="div_user_page_text">#objectUser.number_of_connections#</span></div>
 					</cfif>
 
 				</cfif>
@@ -1352,7 +1352,7 @@
 
 						$("###usersTableId#").tablesorter({
 							<cfif arguments.filter_enabled IS true>
-							widgets: ['filter','stickyHeaders'],<!---'select',--->
+							widgets: ['filter','stickyHeaders'],
 							</cfif>
 							<cfif arrayLen(arguments.users) LT 500><!---El orden del tablesorter en listados con muchos registros es muy lento--->
 								<cfif arguments.select_enabled IS true>
@@ -1567,7 +1567,7 @@
 										<cfif APPLICATION.changeUserPreferencesByAdmin IS true>
 											<a onclick="parent.loadModal('html_content/preferences_alerts_modify.cfm?user=#objectUser.id#')" class="btn btn-default btn-sm" title="Preferencias de notificaciones" lang="es"><i class="icon-envelope-alt icon-white"></i></a>
 										</cfif>
-										<a class="btn btn-danger btn-sm" title="Eliminar Usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#objectUser.id#');" lang="es"><i class="icon-remove"></i></a>
+										<a class="btn btn-danger btn-sm" title="Eliminar usuario" onclick="parent.loadModal('html_content/user_delete.cfm?user=#objectUser.id#');" lang="es"><i class="icon-remove"></i></a>
 									</td>
 								</cfif>
 							</cfif>
