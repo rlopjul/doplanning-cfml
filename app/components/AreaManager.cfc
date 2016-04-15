@@ -3772,39 +3772,6 @@
 
 			<cfset response = {result=true, files=#getAreaFilesResult.query#}>
 
-			<!---<cfset xmlObject='<files label="files">'>
-			<cfif filesQuery.recordCount GT 0>
-				<cfloop query="filesQuery">
-					<cfinvoke component="FileManager" method="objectFile" returnvariable="xmlFile">
-						<cfinvokeargument name="id" value="#filesQuery.id#">
-						<cfinvokeargument name="physical_name" value="#filesQuery.physical_name#">
-						<cfinvokeargument name="user_in_charge" value="#filesQuery.user_in_charge#">
-						<cfinvokeargument name="file_size" value="#filesQuery.file_size#">
-						<cfinvokeargument name="file_type" value="#filesQuery.file_type#">
-						<cfinvokeargument name="association_date" value="#filesQuery.association_date#">
-						<cfinvokeargument name="replacement_date" value="#filesQuery.replacement_date#">
-						<cfinvokeargument name="name" value="#filesQuery.name#">
-						<cfinvokeargument name="file_name" value="#filesQuery.file_name#">
-						<!---<cfinvokeargument name="description" value="#filesQuery.description#">--->
-						<cfinvokeargument name="user_full_name" value="#filesQuery.family_name# #filesQuery.user_name#">
-
-						<cfinvokeargument name="return_type" value="xml">
-					</cfinvoke>
-
-					<cfset xmlObject = xmlObject&xmlFile>
-				</cfloop>
-			</cfif>
-			<cfset xmlObject=xmlObject&'</files>'>
-
-			<cfset xmlResponseContent = xmlObject>
-
-			<cfinclude template="includes/functionEndNoLog.cfm">
-
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>--->
-
 			<cfcatch>
 
 				<cfinclude template="includes/errorHandlerStruct.cfm">
