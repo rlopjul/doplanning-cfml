@@ -286,6 +286,7 @@
 		<cfargument name="cur_area_link_class" type="string" required="false" default="">
 		<cfargument name="cur_area_link_styles" type="string" required="false" default="">
 		<cfargument name="area_link_styles" type="string" required="false" default="">
+		<cfargument name="with_url_id" type="boolean" required="false" default="false">
 
 		<cfargument name="client_abb" type="string" required="yes">
 		<cfargument name="client_dsn" type="string" required="yes">
@@ -299,7 +300,7 @@
 		<cfif NOT isDefined("arguments.from_area_id") OR arguments.include_from_area IS true OR arguments.area_id NEQ arguments.from_area_id><!---Si el área de inicio no es el área actual o se incluye el área de inicio en la ruta)--->
 
 			<cfquery name="getAreaQuery" datasource="#client_dsn#">
-				SELECT name, parent_id, menu_type_id
+				SELECT name, parent_id, menu_type_id, url_id
 				FROM #client_abb#_areas
 				WHERE id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
@@ -327,7 +328,12 @@
 								<cfset arguments.cur_area_link_styles = ' style="#arguments.area_link_styles##arguments.cur_area_link_styles#"'>
 							</cfif>
 
-							<cfset cur_area = '<a href="'&arguments.with_base_link&arguments.area_id&'" #arguments.cur_area_link_class##arguments.cur_area_link_styles#>'&cur_area&'</a>'>
+							<cfif arguments.with_url_id IS true>
+								<cfset cur_area = '<a href="'&arguments.with_base_link&getAreaQuery.url_id&'" #arguments.cur_area_link_class##arguments.cur_area_link_styles#>'&cur_area&'</a>'>
+							<cfelse>
+								<cfset cur_area = '<a href="'&arguments.with_base_link&arguments.area_id&'" #arguments.cur_area_link_class##arguments.cur_area_link_styles#>'&cur_area&'</a>'>
+							</cfif>
+
 						</cfif>
 
 						<cfif len(arguments.path) GT 0>
@@ -355,6 +361,7 @@
 							<cfinvokeargument name="with_base_link" value="#arguments.with_base_link#">
 							<cfinvokeargument name="hide_menu_type_area" value="#arguments.hide_menu_type_area#">
 							<cfinvokeargument name="area_link_styles" value="#arguments.area_link_styles#">
+							<cfinvokeargument name="with_url_id" value="#arguments.with_url_id#">
 
 							<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 							<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
