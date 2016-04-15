@@ -227,19 +227,19 @@
 
 
 			<div class="row" >
-			 	<div id="userLogArea" class="col-lg-9 col-md-9 col-sm-9"> </div>
+			 	<div id="userLogArea" class="col-lg-9 col-md-9 col-sm-9"><h5>Per User Item Log </h5> </div>
 				<div id="stackLegend" class="col-lg-3 col-md-3 col-sm-3"></div>
 		 	</div>
 
 			<div class="row">
-			 <div id="mlineBrush" class="col-lg-9 col-md-9 col-sm-9"></div>
+			 <div id="mlineBrush" class="col-lg-9 col-md-9 col-sm-9"><h5>Per User Item Usage Over Time</h5></div>
 			  <div id="mlineLegend" class="col-lg-3 col-md-3 col-sm-3"></div>
 		 </div>
 
 		 <div class="row">
-			 <div id="treeContainer" class="col-lg-12 col-md-12 col-sm-12"></div>
+			 <div id="treeContainer" class="col-lg-12 col-md-12 col-sm-12"><h5>Tree View </h5> <span>Hirarchial Representation Of User Area<span></div>
 		 </div>
-		 
+
 
 			<!--- END PAGE CONTENT --->
 

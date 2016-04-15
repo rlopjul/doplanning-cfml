@@ -2,7 +2,7 @@ function drawChart(totalItems){
 
 
   //console.log(testdata);
-var margin = {top: 40, right: 20, bottom: 80, left: 50},
+var margin = {top: 40, right: 20, bottom: 150, left: 50},
 width = 900 - margin.left - margin.right ,
 height = 500 - margin.top - margin.bottom ;
 
@@ -225,8 +225,12 @@ svg.append("g")
 .attr("class", "x axis")
 .attr("transform", "translate(0," + height + ")")
 .call(xAxis)
-.selectAll(".tick text")
-.call(wrap, x.rangeBand());;
+.selectAll("text")
+.attr("y", 0)
+    .attr("x", 9)
+    .attr("dy", ".35em")
+    .attr("transform", "rotate(90)")
+    .style("text-anchor", "start");
 
 svg.append("g")
 .attr("class", "y axis")

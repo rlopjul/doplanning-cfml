@@ -168,6 +168,14 @@ d3.selectAll(".lineInput").on("change", function() {
     }
 })
 
+d3.select(window).on('resize', resizeLegend);
+
+function resizeLegend(){
+
+  $('#mlineLegend').height($('#userLogArea').height());
+
+}
+
 createData();
  drawChart();
 

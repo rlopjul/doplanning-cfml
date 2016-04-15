@@ -79,11 +79,8 @@
 
  #mlineLegend,
  #stackLegend{
-<<<<<<< HEAD
-=======
-    height: 400px;
+   height: 525px;
     overflow: auto;
->>>>>>> 82f6a44d2b12053a7f4f93c3dbbbd287f6dba9a3
 }
 
 #treeContainer,
