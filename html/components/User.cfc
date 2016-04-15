@@ -1630,12 +1630,10 @@
 
 						$("###usersTableId#").tablesorter({
 							<cfif arguments.filter_enabled IS true>
-							widgets: ['zebra','uitheme','filter'],<!--- 'select','stickyHeaders' stickyHeaders no sale bien, se muestra fuera de la ventana--->
+							widgets: ['zebra','filter'],<!--- 'select','stickyHeaders' stickyHeaders no sale bien, se muestra fuera de la ventana--->
 							<cfelse>
-							widgets: ['zebra','uitheme'],<!--- ,'select' --->
+							widgets: ['zebra'],<!--- ,'select' --->
 							</cfif>
-							theme : "bootstrap",
-							headerTemplate : '{content} {icon}',
 							sortList: [[1,0]] ,
 							headers: {
 								0: {
@@ -1664,7 +1662,7 @@
 								filter_startsWith : false,
 								filter_useParsedData : false,
 						    },
-						    </cfif>
+						  </cfif>
 
 						});
 
@@ -1677,7 +1675,7 @@
 				</script>
 
 				<cfoutput>
-				<table id="#usersTableId#" class="users-table table-hover">
+				<table id="#usersTableId#" class="users-table table table-hover table-bordered table-striped tablesorter-bootstrap">
 					<thead>
 						<tr>
 							<th style="width:35px;" class="filter-false"></th>
