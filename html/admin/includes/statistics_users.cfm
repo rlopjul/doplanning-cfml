@@ -305,7 +305,7 @@
 
 		$("##statisticsTable").tablesorter({
 
-			widgets: ['zebra','filter','stickyHeaders'<cfif usersWithItems LT 100 AND isDefined("area_id")>,'math'</cfif> ],
+			widgets: ['zebra','filter','stickyHeaders'<cfif usersWithItems LT 180>,'math'</cfif> ],
 			headers: {
 				0: {
 					sorter: "text"
@@ -373,7 +373,7 @@
 					</tr>
 				</thead>
 
-				<cfif usersWithItems LT 100 AND isNumeric(area_id)>
+				<cfif usersWithItems LT 180>
 					<tfoot>
 					  <tr>
 					   	<th></th>
