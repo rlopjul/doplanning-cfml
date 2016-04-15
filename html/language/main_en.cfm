@@ -949,6 +949,7 @@ curLangTextEn = {
 
 		/*admin - new/modify user window form*/
 		"Activo":"Active",
+    "Verificado":"Verified",
 		"Si el usuario se marca como activo, se le enviará una":"If user is marked as active, he/she will receive a",
 		"con los datos de acceso a la aplicación, incluyendo la contraseña.":"with data to access the application, including the password.",
 		"Información":"Information",
@@ -1056,6 +1057,7 @@ curLangTextEn = {
     "Si el usuario no se marca como verificado, tras ser dado de alta deberá acceder a verificar su cuenta de correo para poder usar la aplicación y recibir emails de la misma.":"After being created, the user must go to check his mail account to use the application and receive emails.",
     "Página por defecto":"Default page",
     "Últimas 20 áreas con actividad reciente":"Last 20 areas with recent activity",
+    "Primera área con permiso de acceso":"First area with access permission",
 		/*END preferences_user_data.cfm*/
 
 		/*preferences_alerts.cfm*/
