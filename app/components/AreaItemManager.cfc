@@ -1,21 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2013
-
-    File created by: alucena
-    ColdFusion version required: 8
-    Last file change by: alucena
-    Date of last file change: 11-06-2013
-
-	06-09-2012 alucena: añadido en objectItem parseo de fechas start_date y end_date
-	26-09-2012 alucena: reemplazado "true" por true en comparaciones de booleanos
-	28-09-2012 alucena: añadido iframe_url e iframe_display_type
-	26-11-2012 alucena: añadido position a noticias
-	27-11-2012 alucena: se puede modificar la fecha de creación de las noticias
-	19-12-2012 alucena: comprueba APPLICATION.moduleWeb EQ "enabled" al definir iframe_display_type
-	09-01-2013 alucena: añadido attached_image_id al contenido de los listados
-	10-01-2013 alucena: los elementos web se pueden modificar por usuarios que no son los propietarios
-	15-04-2013 alucena: añadido deleteUserItems
-	11-06-2013 alucena: iframe_display_type_id se recibe y guarda aunque APPLICATION.moduleWeb sea falso
---->
+<!--- Copyright Era7 Information Technologies 2007-2016 --->
 <cfcomponent output="false">
 
 	<cfset component = "AreaItemManager">
@@ -428,10 +411,6 @@
 			</cfinvoke>
 			<cfset end_date = stringStartDate>
 
-			<!---<cfif len(description) GT 0>
-				<cfset description = Replace(description,'SIZE="','style="font-size:',"ALL")>
-			</cfif>--->
-
 			<cfset object = {
 				id="#id#",
 				parent_id="#parent_id#",
@@ -514,9 +493,6 @@
 
 	<cffunction name="createDateFromString" returntype="date" output="false" access="public">
 		<cfargument name="strDate" type="string" required="yes">
-
-		<!---<cfset date = createDate(listGetAt(strDate,3,'-'), listGetAt(strDate,2,"-"), listGetAt(strDate,1,"-"))>
-		<cfreturn date>--->
 
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/DateManager" method="createDateFromString" returnvariable="date">
 			<cfinvokeargument name="strDate" value="#arguments.strDate#">
@@ -2792,22 +2768,6 @@
 				<!---checkAreaAccess--->
 				<cfinclude template="includes/checkAreaAccess.cfm">
 
-				<!---<cfquery name="getOtherItem" datasource="#client_dsn#">
-					SELECT id, position
-					FROM #client_abb#_#itemTypeTable#
-					WHERE
-					area_id = <cfqueryparam value="#getItem.area_id#" cfsqltype="cf_sql_integer">
-					AND
-					<cfif arguments.action IS "increase">
-					position < <cfqueryparam value="#getItem.position#" cfsqltype="cf_sql_integer">
-					ORDER BY position DESC
-					<cfelse>
-					position > <cfqueryparam value="#getItem.position#" cfsqltype="cf_sql_integer">
-					ORDER BY position ASC
-					</cfif>
-					LIMIT 1;
-				</cfquery>--->
-
 				<cfset b_itemNewPosition = getItem.position>
 
 				<cfset itemTypeId = arguments.b_itemTypeId>
@@ -3123,27 +3083,6 @@
 						WHERE
 						id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
-
-					<!---<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
-						<cfinvokeargument name="item_id" value="#arguments.item_id#">
-						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-						<cfinvokeargument name="parse_dates" value="true">
-						<cfinvokeargument name="published" value="false">
-
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">
-					</cfinvoke>
-
-					<!---Alert--->
-					 <cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newAreaItem">
-						<cfinvokeargument name="objectItem" value="#itemQuery#">
-						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-						<cfinvokeargument name="action" value="done">
-
-						<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">
-					</cfinvoke> --->
 
 					<cfinclude template="includes/logRecord.cfm">
 
