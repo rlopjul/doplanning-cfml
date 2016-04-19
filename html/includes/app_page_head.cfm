@@ -351,7 +351,7 @@
 		<cfif isDefined("rewriteCurUrlPage")>
 			var curPageUrl = "#rewriteCurUrlPage#";
 			History.replaceState(History.getState().data, History.options.initialTitle, curPageUrl);
-		<cfelseif NOT isDefined("URL.abb")>
+		<cfelseif NOT isDefined("URL.abb") AND APPLICATION.dpUrlRewrite IS true>
 
 			<cfif len(CGI.QUERY_STRING) GT 0>
 				<cfset newQueryString = "?#CGI.QUERY_STRING#&abb=#SESSION.client_abb#">

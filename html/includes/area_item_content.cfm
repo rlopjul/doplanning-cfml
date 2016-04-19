@@ -39,7 +39,9 @@
 <cfset itemCategories = getItemResponse.categories>
 <cfset area_id = objectItem.area_id>
 
-<cfset rewriteCurUrlPage = "#APPLICATION.htmlPath#/?abb=#SESSION.client_abb#&area=#area_id#&#itemTypeName#=#item_id#">
+<cfif APPLICATION.dpUrlRewrite IS true>
+	<cfset rewriteCurUrlPage = "#APPLICATION.htmlPath#/?abb=#SESSION.client_abb#&area=#area_id#&#itemTypeName#=#item_id#">
+</cfif>
 
 <!---
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">

@@ -75,6 +75,7 @@
 		<cfargument name="moduleDPDocuments" type="boolean" required="false" default="true">
 		<cfargument name="moduleMailing" type="boolean" required="false" default="true">
 		<cfargument name="includeLegalTextInAlerts" type="boolean" required="false" default="false">
+		<cfargument name="dpUrlRewrite" type="boolean" required="false" default="true">
 		<cfargument name="webFriendlyUrls" type="boolean" required="false" default="false">
 
 		<cfargument name="hideInputLabels" type="boolean" required="false" default="false">
@@ -136,6 +137,7 @@
 			<cfset APPLICATION.homeTab = arguments.homeTab>
 			<cfset APPLICATION.moduleMailing = arguments.moduleMailing>
 			<cfset APPLICATION.includeLegalTextInAlerts = arguments.includeLegalTextInAlerts>
+			<cfset APPLICATION.dpUrlRewrite = arguments.dpUrlRewrite>
 			<cfset APPLICATION.webFriendlyUrls = arguments.webFriendlyUrls>
 
 			<cfset APPLICATION.moduleDPDocuments = arguments.moduleDPDocuments>
