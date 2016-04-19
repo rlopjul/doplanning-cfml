@@ -80,7 +80,9 @@
 		<cfoutput>
 		$(window).load(function() {
 
-			History.replaceState(History.getState().data, History.options.initialTitle, "#newUrl#");
+			<cfif APPLICATION.dpUrlRewrite IS true>
+				History.replaceState(History.getState().data, History.options.initialTitle, "#newUrl#");
+			</cfif>
 
 			setTimeout(function(){ //Waits for load language
 
