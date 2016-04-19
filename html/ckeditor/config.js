@@ -77,7 +77,7 @@ CKEDITOR.editorConfig = function( config ) {
 	//config.extraPlugins = 'insertpre';
 	//config.insertpre_class = '';
 
-	config.extraPlugins = 'tweetabletext,autogrow';
+	//config.extraPlugins = 'tweetabletext,autogrow';
 	config.autoGrow_onStartup = true;
 	//config.autoGrow_bottomSpace = 80;
 
