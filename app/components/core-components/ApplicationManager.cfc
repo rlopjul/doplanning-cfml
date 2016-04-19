@@ -26,6 +26,8 @@
 		<cfargument name="proxyServer" type="string" required="false">
 		<cfargument name="proxyPort" type="numeric" required="false">
 
+		<cfargument name="path" type="string" required="false" default="">
+		<cfargument name="htmlComponentsPath" type="string" required="false">
 		<cfargument name="mainUrl" type="string" required="true">
 		<cfargument name="signOutUrl" type="string" required="true">
 		<cfargument name="helpUrl" type="string" required="false" default="https://doplanning.net/es/page.cfm?id=118&title=soporte"><!---https://doplanning.net/es/page.cfm?id=9&amp;title=tutoriales--->
@@ -196,7 +198,7 @@
 			<cfset APPLICATION.smsServerAddress = "http://api.mensatek.com/v4/enviar.php">
 			<cfset APPLICATION.smsReportAddress = "support@era7.com">
 
-			<cfset APPLICATION.path = "">
+			<cfset APPLICATION.path = arguments.path>
 			<cfset APPLICATION.resourcesPath = APPLICATION.path&"/app">
 			<cfset APPLICATION.uploadFilesPath = APPLICATION.path&"/app/uploadFiles">
 			<cfset APPLICATION.corePath = "/dp-core">
@@ -207,7 +209,11 @@
 			<cfset APPLICATION.filesTimeout = 840><!---14 minutes--->
 
 			<cfset APPLICATION.htmlPath = APPLICATION.path&"/html">
-			<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
+			<cfif isDefined("arguments.htmlComponentsPath")>
+				<cfset APPLICATION.htmlComponentsPath = arguments.htmlComponentsPath>
+			<cfelse>
+				<cfset APPLICATION.htmlComponentsPath = APPLICATION.htmlPath&"/components">
+			</cfif>
 
 			<cfset APPLICATION.jqueryJSPath = "//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
 			<cfset APPLICATION.bootstrapJSPath = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
