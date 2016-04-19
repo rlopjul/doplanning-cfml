@@ -22,10 +22,10 @@
 			  	if(status == "success"){
 
 			  		var message = data.message;
-			  		openUrl("#CGI.SCRIPT_NAME#?res="+data.result+"&msg="+encodeURIComponent(message));
+			  		openUrl("?res="+data.result+"&msg="+encodeURIComponent(message));
 
 			  	}else
-						openUrl("#CGI.SCRIPT_NAME#?res=0&msg="+encodeURIComponent(status));
+						openUrl("?res=0&msg="+encodeURIComponent(status));
 
 			  },
 			  dataType: "json"

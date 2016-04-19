@@ -48,9 +48,9 @@ Datos Personales
 				  	if(status == "success"){
 				  		//alert(JSON.stringify(data));
 				  		var message = data.message;
-				  		openUrl("#CGI.SCRIPT_NAME#?res="+data.result+"&msg="+encodeURIComponent(message));
+				  		openUrl("?res="+data.result+"&msg="+encodeURIComponent(message));
 				  	}else
-						openUrl("#CGI.SCRIPT_NAME#?res=0&msg="+encodeURIComponent(status));
+						openUrl("?res=0&msg="+encodeURIComponent(status));
 
 				  },
 				  dataType: "json"
@@ -68,10 +68,10 @@ Datos Personales
 				  		var result = $.parseJSON(data);
 				  		var message = result.message;
 
-				  		openUrl("#CGI.SCRIPT_NAME#?res="+result.result+"&msg="+encodeURIComponent(message));
+				  		openUrl("?res="+result.result+"&msg="+encodeURIComponent(message));
 
 				  	}else
-				  		openUrl("#CGI.SCRIPT_NAME#?res=0&msg="+encodeURIComponent(status));
+				  		openUrl("?res=0&msg="+encodeURIComponent(status));
 
 				}).error(function ( data, status )  {
 
@@ -105,7 +105,7 @@ Datos Personales
 				  		var message = data.message;
 
 				  		//var userId = data.user_id;
-				  		openUrl("#CGI.SCRIPT_NAME#?res="+data.result+"&msg="+encodeURIComponent(message));
+				  		openUrl("?res="+data.result+"&msg="+encodeURIComponent(message));
 
 				  	}else
 						alert(status);
