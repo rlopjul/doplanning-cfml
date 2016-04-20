@@ -93,7 +93,7 @@
 
 			<cfelseif arguments.ldap_id EQ "hvn">
 
-				<cfhttp method="post" url="http://www.hvn.es/servicios/login.php" resolveurl="no" result="wsResponse" charset="utf-8">
+				<cfhttp method="post" url="http://www.hvn.es/servicios/login.php" proxyServer="#APPLICATION.proxyServer#" proxyPort="#APPLICATION.proxyPort#" resolveurl="no" result="wsResponse" charset="utf-8">
 					<cfhttpparam type="formfield" name="login" value="#user_login#">
 					<cfhttpparam type="formfield" name="pass" value="#password_ldap#">
 				</cfhttp>
@@ -269,7 +269,7 @@
 								<cfinvokeargument name="password" value="#password_ldap#">
 								<cfinvokeargument name="user_language" value="#createUserFromLdapResponse.language#">
 								<cfinvokeargument name="user_administrator" value="#createUserFromLdapResponse.user_administrator#">
-								<cfinvokeargument name="area_admin_administrator" value="#createUserFromLdapResponse.area_admin_administrator#">	
+								<cfinvokeargument name="area_admin_administrator" value="#createUserFromLdapResponse.area_admin_administrator#">
 							</cfinvoke>
 
 							<cfreturn loginResult>
