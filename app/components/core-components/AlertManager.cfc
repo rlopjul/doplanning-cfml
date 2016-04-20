@@ -5024,7 +5024,7 @@
 			</cfif>
 			<br/>
 		</cfif>
-		
+
 	</p>
 
 	<cfif basicEmail IS false>
@@ -5134,6 +5134,8 @@
 
 			<cfif arguments.client_abb EQ "hcs">
 				<cfset accessClient = "doplanning">
+			<cfelseif arguments.client_abb EQ "era7_fibao">
+				<cfset accessClient = "">
 			<cfelse>
 				<cfset accessClient = arguments.client_id>
 			</cfif>
