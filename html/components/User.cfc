@@ -1318,6 +1318,7 @@
 		<cfargument name="showAdminFields" type="boolean" required="false" default="false">
 		<cfargument name="adminUsers" type="boolean" required="false" default="false">
 		<cfargument name="openRowOnSelect" type="boolean" required="false" default="false">
+		<cfargument name="includeRemoveFromTableButton" type="boolean" required="false" default="false">
 
 		<cfargument name="list_id" type="numeric" required="false">
 
@@ -1355,14 +1356,14 @@
 							widgets: ['filter','stickyHeaders'],
 							</cfif>
 							<cfif arrayLen(arguments.users) LT 500><!---El orden del tablesorter en listados con muchos registros es muy lento--->
-								<cfif arguments.select_enabled IS true>
+								<cfif arguments.select_enabled IS true OR includeRemoveFromTableButton IS true>
 									sortList: [[2,0]] ,
 								<cfelse>
 									sortList: [[1,0]] ,
 								</cfif>
 							</cfif>
 							headers: {
-								<cfif arguments.select_enabled IS true>
+								<cfif arguments.select_enabled IS true OR includeRemoveFromTableButton IS true>
 									0: {
 										<!---<cfif arrayLen(arguments.users) LT 50>
 										sorter: "custom-checkbox"
@@ -1444,7 +1445,23 @@
 						</cfif>
 
 					});
+
+					<cfif arguments.includeRemoveFromTableButton IS true>
+
+						function confirmRemoveUserFromTable() {
+
+							var message_confirm = "¿Seguro que desea quitar este usuario?";
+							return confirm(message_confirm);
+						}
+
+					</cfif>
 				</script>
+
+				<cfif arguments.includeRemoveFromTableButton IS true>
+
+					<cfset url_return_page = "&return_page="&URLEncodedFormat("#APPLICATION.htmlPath#/list_users.cfm?list=#arguments.list_id#")>
+
+				</cfif>
 
 				<cfoutput>
 
@@ -1454,6 +1471,11 @@
 							<cfif arguments.select_enabled IS true>
 							<th style="width:35px;" class="filter-false"></th>
 							</cfif>
+
+							<cfif arguments.includeRemoveFromTableButton IS true>
+								<th style="width:25px;" class="filter-false"></th>
+							</cfif>
+
 							<th style="width:35px;" class="filter-false"></th>
 							<th><span lang="es">Nombre</span></th>
 							<th><span lang="es">Apellidos</span></th>
@@ -1533,6 +1555,13 @@
 								<input type="checkbox" name="selected_user_#objectUser.id#" value="#objectUser.id#">
 							</td>
 							</cfif>
+
+							<cfif arguments.includeRemoveFromTableButton IS true>
+							<td>
+								<a class="btn btn-primary btn-xs" href="#APPLICATION.htmlComponentsPath#/Table.cfc?method=removeUserFromTable&table_id=#list_id#&tableTypeId=1&remove_user_id=#objectUser.id##url_return_page#" onclick="event.stopPropagation(); return confirmRemoveUserFromTable();" title="Quitar usuario"><i class="fa fa-remove"></i></a>
+							</td>
+							</cfif>
+
 							<td style="text-align:center">
 
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">

@@ -25,6 +25,11 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
 
+<!---is_user_table_area_responsible--->
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="isUserAreaResponsible" returnvariable="is_user_table_area_responsible">
+	<cfinvokeargument name="area_id" value="#area_id#">
+</cfinvoke>
+
 <cfoutput>
 
 <cfif app_version NEQ "mobile">
@@ -40,9 +45,11 @@
 			<a href="#itemTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
 		</div>
 
-		<div class="btn-group">
-			<a  href="#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;line-height:20px;"></i> <span lang="es">Añadir editores</span></a>
-		</div>
+		<cfif is_user_table_area_responsible IS true>
+			<div class="btn-group">
+				<a  href="#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;line-height:20px;"></i> <span lang="es">Añadir editores</span></a>
+			</div>
+		</cfif>
 
 		<cfif app_version NEQ "mobile">
 			<div class="btn-group pull-right">
@@ -71,9 +78,15 @@
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
 			<cfinvokeargument name="users" value="#usersArray#">
 			<cfinvokeargument name="openRowOnSelect" value="true">
+
 			<cfif tableTypeId IS 1>
 				<cfinvokeargument name="list_id" value="#table_id#"/>
+				
+				<cfif is_user_table_area_responsible IS true>
+					<cfinvokeargument name="includeRemoveFromTableButton" value="true">
+				</cfif>
 			</cfif>
+
 		</cfinvoke>
 
 	<cfelse>
