@@ -423,4 +423,100 @@
 	</cffunction>
 
 
+	<!---setSubAreasItemsUrlId--->
+
+	<cffunction name="setSubAreasItemsUrlId" output="true" returntype="void" access="public">
+		<cfargument name="area_id" type="string" required="yes">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="path" type="string" required="true">
+		<cfargument name="web_language" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="yes">
+		<cfargument name="client_dsn" type="string" required="yes">
+
+		<cfset var method = "setSubAreasItemsUrlId">
+
+		<cfset var nameTourlId = "">
+		<cfset var pagePath = "">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getSubAreasIds" returnvariable="subAreasIds">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
+
+			<cfoutput>
+
+				<cfif len(subAreasIds) GT 0>
+
+					<cfif arguments.web_language EQ "es">
+
+						<cfset pagePath = lcase(itemTypeNameEsP)>
+
+					<cfelse>
+
+						<cfif itemTypeId IS 4><!---News--->
+							<cfset pagePath = itemTypeName>
+						<cfelseif itemTypeId IS 8><!---Publications--->
+							<cfset pagePath = "publications">
+						<cfelse>
+							<cfset pagePath = itemTypeNameP>
+						</cfif>
+
+					</cfif>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getAreaItems" returnvariable="getAreaItemsResult">
+						<cfinvokeargument name="areas_ids" value="#subAreasIds#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="listFormat" value="true">
+						<cfinvokeargument name="with_user" value="false">
+						<cfinvokeargument name="parse_dates" value="false">
+						<cfinvokeargument name="published" value="false">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+
+					<cfset areaItemsQuery = getAreaItemsResult.query>
+
+					<cfloop query="areaItemsQuery">
+
+						<cfif len(areaItemsQuery.url_id) IS 0>
+
+							<!--- Esto se borra aquí en lugar de en pageTitleToUrl para mantener compatibilidad con URLs antiguas en las que no se han borrado esos valores --->
+							<cfset nameTourlId = replaceList(lCase(areaItemsQuery.title),'¿,?,(,),¡,!,.,",:', ',,,,,,,,')>
+
+							<cfset nameTourlId = replaceList(nameTourlId," de , del , para , por , a , un , una , el , en , y ,", " , , , , , , , , , ,")>
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="pageTitleToUrl" returnvariable="nameTourlId">
+								<cfinvokeargument name="title" value="#nameTourlId#">
+							</cfinvoke>
+
+							<cfset nameTourlId = arguments.path&"/"&pagePath&"/"&nameTourlId>
+
+							#areaItemsQuery.title#<br/>
+							#nameTourlId#<br/><br/>
+
+							<cfquery name="parentIdQuery" datasource="#client_dsn#">
+								UPDATE #arguments.client_abb#_#itemTypeTable# AS items
+								SET url_id = <cfqueryparam value="#nameTourlId#" cfsqltype="cf_sql_varchar">
+								WHERE id = <cfqueryparam value="#areaItemsQuery.id#" cfsqltype="cf_sql_integer">;
+							</cfquery>
+
+						</cfif>
+
+					</cfloop>
+
+				</cfif>
+
+
+			</cfoutput>
+
+
+	</cffunction>
+
+
 </cfcomponent>
