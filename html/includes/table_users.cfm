@@ -27,15 +27,6 @@
 
 <cfoutput>
 
-<!---<script type="text/javascript">
-
-	function openUsersSelector(){
-
-		 return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select_multiple.cfm?area=#area_id#');
-	}
-
-</script>--->
-
 <cfif app_version NEQ "mobile">
 	<div class="div_message_page_title">#table.title#</div>
 	<div class="div_separator"><!-- --></div>
@@ -46,23 +37,18 @@
 	<div class="btn-toolbar" style="padding-right:5px;">
 
 		<div class="btn-group">
-			<!---<a href="area_items.cfm?area=#area_id#&#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>--->
 			<a href="#itemTypeName#_rows.cfm?#tableTypeName#=#table_id#&area=#area_id#" class="btn btn-default btn-sm" title="#tableTypeNameEs#" lang="es"> <img style="height:17px;" src="/html/assets/icons/#itemTypeName#.png" alt="#tableTypeNameEs#">&nbsp;&nbsp;<span lang="es">#tableTypeNameEs#</span></a>
 		</div>
 
 		<div class="btn-group">
-			<a  href="#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;line-height:20px;"></i> <span lang="es">Añadir editores</span></a><!---color:##5BB75B;--->
+			<a  href="#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#" onclick="openUrl('#tableTypeName#_users_add.cfm?#tableTypeName#=#table_id#', 'itemIframe', event)" class="btn btn-primary btn-sm"><i class="icon-plus icon-white" style="font-size:14px;line-height:20px;"></i> <span lang="es">Añadir editores</span></a>
 		</div>
-
-		<!---<span class="divider">&nbsp;</span>--->
 
 		<cfif app_version NEQ "mobile">
 			<div class="btn-group pull-right">
 				<a href="#APPLICATION.htmlPath#/#tableTypeName#_users.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Abrir en nueva ventana" lang="es" target="_blank"><i class="icon-external-link" style="font-size:14px; line-height:23px;"></i></a>
 			</div>
 		</cfif>
-
-		<!---<a href="#tableTypeName#_users.cfm?#tableTypeName#=#table_id#" class="btn btn-default btn-sm" title="Actualizar" lang="es"><i class="icon-refresh" style="font-size:14px; line-height:23px;"></i></a>--->
 
 	</div>
 
@@ -73,8 +59,6 @@
 <div class="div_users">
 
 	<cfif users.recordCount GT 0>
-
-		<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_users_list.cfm">--->
 
 		<cfoutput>
 		<cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
@@ -93,10 +77,6 @@
 		</cfinvoke>
 
 	<cfelse>
-
-		<!---<script type="text/javascript">
-			openUrlHtml2('empty.cfm','itemIframe');
-		</script>--->
 
 		<cfoutput>
 		<div class="alert alert-info" style="margin-top:10px;">
