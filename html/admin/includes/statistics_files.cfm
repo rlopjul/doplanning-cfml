@@ -1,3 +1,25 @@
+
+<cfset clientDirectoryPath = APPLICATION.filesPath&"/#SESSION.client_abb#/">
+
+<cfset clientDirectory = DirectoryList(clientDirectoryPath, true, "query")>
+
+<!---<cfdump var="#clientDirectory#">--->
+
+<cfquery dbtype="query" name="clientDirectorySize">
+	SELECT SUM(size) AS dirSize
+	FROM clientDirectory;
+</cfquery>
+
+<cfset totalSize = clientDirectorySize.dirSize / (1024*1024*1024)>
+
+<cfoutput>
+	<!---#totalSize#<br/>--->
+	<span>Espacio ocupado en disco: </span> #NumberFormat(totalSize, "9.99")# GiB
+</cfoutput>
+
+
+
+
 <cfif isDefined("URL.from_date")>
 	<cfset from_date = URL.from_date>
 <cfelse>
