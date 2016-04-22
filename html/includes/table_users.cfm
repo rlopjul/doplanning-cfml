@@ -82,20 +82,21 @@
 
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/Utils" method="queryToArray" returnvariable="usersArray">
 			<cfinvokeargument name="data" value="#users#">
-		</cfinvoke>	
+		</cfinvoke>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
 			<cfinvokeargument name="users" value="#usersArray#">
+			<cfinvokeargument name="openRowOnSelect" value="true">
 			<cfif tableTypeId IS 1>
 				<cfinvokeargument name="list_id" value="#table_id#"/>
 			</cfif>
-		</cfinvoke>	
+		</cfinvoke>
 
 	<cfelse>
-	
-		<script type="text/javascript">
+
+		<!---<script type="text/javascript">
 			openUrlHtml2('empty.cfm','itemIframe');
-		</script>				
+		</script>--->
 
 		<cfoutput>
 		<div class="alert alert-info" style="margin-top:10px;">
