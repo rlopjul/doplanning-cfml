@@ -378,7 +378,7 @@
 						WHERE id = <cfqueryparam value="#getSubAreas.id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 
-				<cfelse>
+				<!---<cfelse>
 
 					<cfset nameTourlId = getSubAreas.url_id>
 
@@ -394,7 +394,7 @@
 							WHERE id = <cfqueryparam value="#getSubAreas.id#" cfsqltype="cf_sql_integer">;
 						</cfquery>
 
-					</cfif>
+					</cfif>--->
 
 				</cfif>
 

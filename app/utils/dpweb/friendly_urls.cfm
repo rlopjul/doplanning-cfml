@@ -103,6 +103,8 @@
 
 						</cfoutput>
 
+						<p class="help-block">Solo se definirán los valores de URL vacíos, no se modificarán los valores de URL ya definidos</p>
+
 					</div>
 
 					<cfinput type="submit" name="migrate" value="MODIFICAR URLs" class="btn btn-default btn-primary">
