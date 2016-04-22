@@ -358,6 +358,7 @@
 
 					<!--- Esto se borra aquí en lugar de en pageTitleToUrl para mantener compatibilidad con URLs antiguas en las que no se han borrado esos valores --->
 					<cfset nameTourlId = replaceList(lCase(getSubAreas.name),'¿,?,(,),¡,!,.,",:', ',,,,,,,,')>
+					<cfset nameTourlId = replace(nameTourlId, ",", "-", "ALL")>
 
 					<cfif len(getSubAreas.name) GT 10>
 						<cfset nameTourlId = replaceList(nameTourlId," de , del , para , por , a , un , una , el , en , y ,", " , , , , , , , , , ,")>
@@ -488,6 +489,7 @@
 
 							<!--- Esto se borra aquí en lugar de en pageTitleToUrl para mantener compatibilidad con URLs antiguas en las que no se han borrado esos valores --->
 							<cfset nameTourlId = replaceList(lCase(areaItemsQuery.title),'¿,?,(,),¡,!,.,",:', ',,,,,,,,')>
+							<cfset nameTourlId = replace(nameTourlId, ",", "-", "ALL")>
 
 							<cfset nameTourlId = replaceList(nameTourlId," de , del , para , por , a , un , una , el , en , y ,", " , , , , , , , , , ,")>
 
