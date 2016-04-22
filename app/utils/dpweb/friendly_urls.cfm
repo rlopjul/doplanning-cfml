@@ -86,15 +86,23 @@
 					<div class="form-group">
 						<label>Web a cambiar URLs</label>
 
-						<cfquery datasource="#APPLICATION.dsn#" name="getClients">
+						<!---<cfquery datasource="#APPLICATION.dsn#" name="getClients">
 							SELECT *
 							FROM app_clients;
 						</cfquery>
+
 						<select name="abb">
 							<cfoutput query="getClients">
 								<option value="#getClients.abbreviation#">#getClients.name# (#getClients.abbreviation#)</option>
 							</cfoutput>
-						</select>
+						</select>--->
+
+						<cfoutput>
+
+							<input type="text" name="abb" value="#SESSION.client_abb#" readonly class="form-control"/>
+
+						</cfoutput>
+
 					</div>
 
 					<cfinput type="submit" name="migrate" value="MODIFICAR URLs" class="btn btn-default btn-primary">
