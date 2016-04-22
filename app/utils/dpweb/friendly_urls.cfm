@@ -5,7 +5,7 @@
 	<cfoutput>
 		<link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 	</cfoutput>
-	<title>Cambiar URLs DoPlanning Web</title>
+	<title>Cambiar URLs Áreas DoPlanning Web</title>
 	</head>
 
 	<body>
@@ -16,7 +16,7 @@
 
 			<div class="col-sm-12">
 
-				<h2>Cambiar URLs DoPlanning Web</h1>
+				<h2>Cambiar URLs Áreas DoPlanning Web</h1>
 
 			</div>
 
@@ -38,7 +38,7 @@
 			</cfif>
 
 			<cfoutput>
-			CLIENTE: #getClient.name#<br/>
+			WEB CLIENTE: #getClient.name#<br/>
 
 			<!---<cfset area_type = "web">---><!---web/intranet--->
 
