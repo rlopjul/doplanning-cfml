@@ -1,5 +1,5 @@
-	<!DOCTYPE html>
-	<html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<cfoutput>
@@ -110,17 +110,22 @@
 
 		</div>
 
+
+		<div class="row">
+
+			<div class="col-sm-12" style="padding-top:40px;">
+
+				<a href="friendly_urls_items.cfm">Cambiar URLs de elementos</a>
+
+			</div>
+
+		</div>
+
 	</cfif>
 
 	</div>
 
 
 
-
-	<!---<br/>
-	<cfform method="post" action="#CGI.SCRIPT_NAME#">
-		<cfinput type="submit" name="migrate" value="MIGRAR TODOS LOS CLIENTES">
-	</cfform>--->
-
 	</body>
-	</html>
+</html>
