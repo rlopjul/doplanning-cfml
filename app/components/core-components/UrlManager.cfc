@@ -356,12 +356,11 @@
 
 				<cfif len(getSubAreas.url_id) IS 0>
 
-					#getSubAreas.name#<br/>
+					<!--- Esto se borra aquí en lugar de en pageTitleToUrl para mantener compatibilidad con URLs antiguas en las que no se han borrado esos valores --->
+					<cfset nameTourlId = replaceList(lCase(getSubAreas.name),'¿,?,(,),¡,!,.,",:', ',,,,,,,,')>
 
 					<cfif len(getSubAreas.name) GT 10>
-						<cfset nameTourlId = replaceList(lCase(getSubAreas.name)," de , del , para , por , a , un , una , el , en , y ,", " , , , , , , , , , ")>
-					<cfelse>
-						<cfset nameTourlId = getSubAreas.name>
+						<cfset nameTourlId = replaceList(nameTourlId," de , del , para , por , a , un , una , el , en , y ,", " , , , , , , , , , ,")>
 					</cfif>
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="pageTitleToUrl" returnvariable="nameTourlId">
@@ -370,7 +369,12 @@
 
 					<cfif isDefined("arguments.parent_url_id") AND len(arguments.parent_url_id) GT 0>
 						<cfset nameTourlId = arguments.parent_url_id&"/"&nameTourlId>
+					<cfelse>
+						<cfset nameTourlId = arguments.path&"/"&nameTourlId>
 					</cfif>
+
+					#getSubAreas.name#<br/>
+					#nameTourlId#<br/><br/>
 
 					<cfquery name="parentIdQuery" datasource="#client_dsn#">
 						UPDATE #arguments.client_abb#_areas
@@ -395,6 +399,10 @@
 						</cfquery>
 
 					</cfif>--->
+
+				<cfelse>
+
+					<cfset nameTourlId = getSubAreas.url_id>
 
 				</cfif>
 
