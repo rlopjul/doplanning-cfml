@@ -40,10 +40,10 @@
 			<cfoutput>
 			CLIENTE: #getClient.name#<br/>
 
-			<cfset area_type = "web"><!---web/intranet--->
+			<!---<cfset area_type = "web">---><!---web/intranet--->
 
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWebs" returnvariable="getWebQuery">
-				<cfinvokeargument name="area_type" value="#area_type#">
+				<!---<cfinvokeargument name="area_type" value="#area_type#">--->
 
 				<cfinvokeargument name="client_abb" value="#new_client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_datasource#">
@@ -53,19 +53,15 @@
 
 				<cfloop query="getWebQuery">
 
-					<cfif getWebQuery.area_type EQ area_type>
+					#getWebQuery.path# <br/>
 
-						#getWebQuery.path# <br/>
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="setSubAreasUrlId">
+						<cfinvokeargument name="area_id" value="#getWebQuery.area_id#">
+						<cfinvokeargument name="path" value="#getWebQuery.path#">
 
-						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="setSubAreasUrlId">
-							<cfinvokeargument name="area_id" value="#getWebQuery.area_id#">
-							<cfinvokeargument name="path" value="#getWebQuery.path#">
-
-							<cfinvokeargument name="client_abb" value="#new_client_abb#">
-							<cfinvokeargument name="client_dsn" value="#client_datasource#">
-						</cfinvoke>
-
-					</cfif>
+						<cfinvokeargument name="client_abb" value="#new_client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_datasource#">
+					</cfinvoke>
 
 				</cfloop>
 
