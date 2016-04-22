@@ -1,5 +1,5 @@
-	<!DOCTYPE html>
-	<html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<cfoutput>
@@ -40,11 +40,7 @@
 			<cfoutput>
 			WEB CLIENTE: #getClient.name#<br/>
 
-			<!---<cfset area_type = "web">---><!---web/intranet--->
-
 			<cfinvoke component="#APPLICATION.coreComponentsPath#/WebQuery" method="getWebs" returnvariable="getWebQuery">
-				<!---<cfinvokeargument name="area_type" value="#area_type#">--->
-
 				<cfinvokeargument name="client_abb" value="#new_client_abb#">
 				<cfinvokeargument name="client_dsn" value="#client_datasource#">
 			</cfinvoke>
@@ -113,17 +109,20 @@
 
 		</div>
 
+		<div class="row">
+
+			<div class="col-sm-12" style="padding-top:40px;">
+
+				<a href="friendly_urls.cfm">Cambiar URLs de áreas</a>
+
+			</div>
+
+		</div>
+
 	</cfif>
 
 	</div>
 
 
-
-
-	<!---<br/>
-	<cfform method="post" action="#CGI.SCRIPT_NAME#">
-		<cfinput type="submit" name="migrate" value="MIGRAR TODOS LOS CLIENTES">
-	</cfform>--->
-
 	</body>
-	</html>
+</html>
