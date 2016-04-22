@@ -1,6 +1,4 @@
-
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-<!---<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">--->
 
 <cfif isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
 	<cfset table_id = URL[tableTypeName]>
@@ -79,11 +77,6 @@
 		  		var message = encodeURIComponent(data.message);
 
 		  		goToUrl(responseUrl+"&msg="+message+"&res="+data.result);
-
-		  		<!---openUrl(responseUrl);
-		  		hideDefaultModal();
-		  		$('body').modalmanager('removeLoading');
-		  		showAlertMessage(message, data.result);--->
 
 		  	}else{
 

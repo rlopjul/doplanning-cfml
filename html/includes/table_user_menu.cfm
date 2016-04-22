@@ -1,5 +1,4 @@
 <cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
-<!---<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">--->
 
 <cfif isDefined("URL.#tableTypeName#") AND isNumeric(URL[tableTypeName])>
 
