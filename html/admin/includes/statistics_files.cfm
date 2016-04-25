@@ -1,25 +1,3 @@
-
-<cfset clientDirectoryPath = APPLICATION.filesPath&"/#SESSION.client_abb#/">
-
-<cfset clientDirectory = DirectoryList(clientDirectoryPath, true, "query")>
-
-<!---<cfdump var="#clientDirectory#">--->
-
-<cfquery dbtype="query" name="clientDirectorySize">
-	SELECT SUM(size) AS dirSize
-	FROM clientDirectory;
-</cfquery>
-
-<cfset totalSize = clientDirectorySize.dirSize / (1024*1024*1024)>
-
-<cfoutput>
-	<!---#totalSize#<br/>--->
-	<span>Espacio ocupado en disco: </span> #NumberFormat(totalSize, "9.99")# GiB
-</cfoutput>
-
-
-
-
 <cfif isDefined("URL.from_date")>
 	<cfset from_date = URL.from_date>
 <cfelse>
@@ -162,13 +140,44 @@
 
 <div class="container">
 
+	<cfoutput>
+
+	<div class="row">
+
+		<div class="col-sm-12">
+
+			<cfset clientDirectoryPath = APPLICATION.filesPath&"/#SESSION.client_abb#/">
+
+			<cfset clientDirectory = DirectoryList(clientDirectoryPath, true, "query")>
+
+			<cfquery dbtype="query" name="clientDirectorySize">
+				SELECT SUM(size) AS dirSize
+				FROM clientDirectory;
+			</cfquery>
+
+			<!---<cfset totalSizeGiB = clientDirectorySize.dirSize / (1024*1024*1024)>--->
+			<cfset totalSizeGB = clientDirectorySize.dirSize / (1000*1000*1000)>
+
+			<div class="panel panel-default">
+			  <div class="panel-heading">Espacio ocupado en disco por todos los archivos de la organización</div>
+			  <div class="panel-body">
+			    <h5>#NumberFormat(totalSizeGB, "9.99")# GB</h5> <!---(#NumberFormat(totalSizeGiB, "9.99")# GiB)--->
+					<cfif SESSION.client_abb EQ "hcs">
+						<br/>Almacenamiento total contratado: 1 TB
+					</cfif>
+			  </div>
+			</div>
+
+		</div>
+
+	</div>
+
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="div_message_page_title" lang="es">Estadísticas de descarga de archivos</div>
 		</div>
 	</div>
 
-	<cfoutput>
 	<div class="row">
 		<div class="col-sm-12">
 
