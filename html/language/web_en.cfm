@@ -1,3 +1,4 @@
+<cfheader name="Access-Control-Allow-Origin" value="*">
 <cfsilent>
 <cfscript>
 curLangTextEn = structNew();
@@ -34,6 +35,9 @@ curLangTextEn = {
 		"Su nueva contraseña ha sido enviada a su dirección de email":"Your new password has been sent to your email address",
 		"Cuenta de usuario deshabilitada":"Disabled user account",
 		/*END remember_password.cfm*/
+
+    /*forms*/
+    "Utilice la tecla Ctrl para seleccionar varios elementos de la lista":"Use the CTRL key to select several elements from the list",
 
     /*Intranet*/
     "Email" : "Email",
