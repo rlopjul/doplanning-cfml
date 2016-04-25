@@ -206,8 +206,11 @@
 			});
 
 
-			if( $("##item_title").val().length == 0 )
+			if( $("##item_title").val().length == 0 ) {
 				$("##item_title").val(jTitle.text());
+				$("##item_title").trigger("change");
+			}
+
 
 			var publicationContent = '<p>'+authors+'</p>'+'<p>'+jJournal.text()+'. ';
 
@@ -1144,6 +1147,16 @@
 			});
 
 			$('##item_title').focusout( function() {
+
+				var pageNameUrl = $('##item_title').val();
+
+				if(	$(urlIdInput).val().length == 0 ) {
+					$(urlIdInput).val(pageNameToUrl(pageNameUrl));
+				}
+
+			});
+
+			$('##item_title').change( function() {
 
 				var pageNameUrl = $('##item_title').val();
 
