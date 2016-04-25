@@ -17,7 +17,7 @@
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.js"></script>
 <link rel="stylesheet" href="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.css">
 
-<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2.1"></script>
 
 <script>
 
@@ -308,6 +308,13 @@
 			loadAreaList(#field.list_area_id#, '#field.default_value#');
 		</cfif>
 
+		$("##referenced_table_id").change(function() {
+
+			loadTableFields($('##table_type_id').val(),$('##referenced_table_id').val());
+
+		});
+
+
 		//$('.selectpicker').selectpicker();
 	});
 </script>
@@ -461,7 +468,7 @@
 
 			<label class="control-label" for="referenced_table_id"><span lang="es">Tabla referenciada</span> *</label>
 
-			<input type="hidden" name="referenced_table_id" id="referenced_table_id" value="#field.referenced_table_id#" onchange="loadTableFields($('##table_type_id').val(),$('##referenced_table_id').val())"/>
+			<input type="hidden" name="referenced_table_id" id="referenced_table_id" value="#field.referenced_table_id#" />
 			<input type="text" name="referenced_table_id_title" id="referenced_table_id_title" value="#referenced_table_title#" required class="form-control" readonly onclick="openItemSelectorWithField($('##table_type_id').val(),'referenced_table_id')" />
 
 			<cfif page_type IS 1>
