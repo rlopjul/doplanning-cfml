@@ -22,16 +22,6 @@
 		</cfif>
 	</cfinvoke>
 
-
-	<!---<cfset full_content = true>--->
-
-	<!---<cfxml variable="xmlUsers">
-		<cfoutput>
-		#usersResponse.usersXml#
-		</cfoutput>
-	</cfxml>
-	<cfset numUsers = ArrayLen(xmlUsers.users.XmlChildren)>--->
-
 	<cfset users = usersResponse.users>
 	<cfset numUsers = ArrayLen(users)>
 
