@@ -301,7 +301,7 @@
 	<div class="row">
 		<div class="col-sm-12">
 
-			<a class="btn btn-default btn-sm pull-right" role="button" id="outputTableButton"><i class="fa fa-download"></i> Descargar resultados</a>
+			<a class="btn btn-default btn-sm pull-right" role="button" id="outputTableButton"><i class="fa fa-download"></i> <span lang="es">Descargar resultados</span></a>
 
 		</div>
 	</div>
@@ -357,7 +357,7 @@
 	      , output_saveRows      : 'f'        // (a)ll, (v)isible, (f)iltered, jQuery filter selector (string only) or filter function
 	      , output_duplicateSpans: true        // duplicate output data in tbody colspan/rowspan
 	      , output_replaceQuote  : '\u201c;'   // change quote to left double quote
-	      , output_includeHTML   : true        // output includes all cell HTML (except the header cells)
+	      , output_includeHTML   : false        // output includes all cell HTML (except the header cells)
 	      , output_trimSpaces    : false       // remove extra white-space characters from beginning & end
 	      , output_wrapQuotes    : false       // wrap every cell output in quotes
 	      , output_saveFileName  : 'statistics_users.csv'
