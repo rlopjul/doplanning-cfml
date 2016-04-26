@@ -295,6 +295,15 @@
 			</div>
 
 		</div>
+
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12">
+
+			<a class="btn btn-default btn-sm pull-right" role="button" id="outputTableButton"><i class="fa fa-download"></i> Descargar resultados</a>
+
+		</div>
 	</div>
 
 </div><!---END div container--->
@@ -305,7 +314,7 @@
 
 		$("##statisticsTable").tablesorter({
 
-			widgets: ['zebra','filter','stickyHeaders'<cfif usersWithItems LT 180>,'math'</cfif> ],
+			widgets: ['zebra','filter','stickyHeaders','output'<cfif usersWithItems LT 180>,'math'</cfif> ],
 			headers: {
 				0: {
 					sorter: "text"
@@ -327,21 +336,42 @@
 				filter_startsWith : false,
 				filter_useParsedData : false
 
-					, math_data     : 'math' // data-math attribute
-			    , math_ignore   : [0]
-			    , math_mask     : '##000,##'
-			    <!---. math_mask     : '##,####0.00'--->
-			    <!---, math_complete : function($cell, wo, result, value, arry) {
-			        var txt = '<span class="align-decimal"> ' + result + '</span>';
-			        if ($cell.attr('data-math') === 'all-sum') {
-			          // when the "all-sum" is processed, add a count to the end
-			          return txt + ' (Sum of ' + arry.length + ' cells)';
-			        }
-			        return txt;
-			    } --->
+				, math_data     : 'math' // data-math attribute
+		    , math_ignore   : [0]
+		    , math_mask     : '##000,##'
+		    <!---. math_mask     : '##,####0.00'--->
+		    <!---, math_complete : function($cell, wo, result, value, arry) {
+		        var txt = '<span class="align-decimal"> ' + result + '</span>';
+		        if ($cell.attr('data-math') === 'all-sum') {
+		          // when the "all-sum" is processed, add a count to the end
+		          return txt + ' (Sum of ' + arry.length + ' cells)';
+		        }
+		        return txt;
+		    } --->
+
+				, output_separator     : ';'
+	      , output_hiddenColumns : false
+				, output_includeFooter : true
+	      , output_headerRows    : true
+	      , output_delivery      : 'd'        // (p)opup, (d)ownload
+	      , output_saveRows      : 'f'        // (a)ll, (v)isible, (f)iltered, jQuery filter selector (string only) or filter function
+	      , output_duplicateSpans: true        // duplicate output data in tbody colspan/rowspan
+	      , output_replaceQuote  : '\u201c;'   // change quote to left double quote
+	      , output_includeHTML   : true        // output includes all cell HTML (except the header cells)
+	      , output_trimSpaces    : false       // remove extra white-space characters from beginning & end
+	      , output_wrapQuotes    : false       // wrap every cell output in quotes
+	      , output_saveFileName  : 'statistics_users.csv'
 
 		    }
 		});
+
+
+		$("##outputTableButton").on( "click", function() {
+
+			$("##statisticsTable").trigger('outputTable');
+
+		});
+
 
 	});
 </script>
