@@ -1450,6 +1450,7 @@ IMPORTANT: Any notification of the application will be received, except for the 
     "Quitar área seleccionada":"Remove selected area",
     "Usuario propietario":"Owner user",
     "Usuario que realiza descarga":"User who does the download",
+    "Descargar resultados":"Download results",
     /*END statistics*/
 
     /*typologies*/
