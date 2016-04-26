@@ -381,6 +381,8 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<span class="label label-primary">#filesDownloadsQuery.recordcount# <span lang="es">Archivos</span></span>
+
+			<a class="btn btn-default btn-sm pull-right" role="button" id="outputTableButton"><i class="fa fa-download"></i> <span lang="es">Descargar resultados</span></a>
 		</div>
 	</div>
 
@@ -402,7 +404,7 @@
 
 					$("##statisticsTable").tablesorter({
 
-						widgets: ['zebra','filter','stickyHeaders'<cfif filesDownloadsQuery.recordCount LT 500>,'math'</cfif>],
+						widgets: ['zebra','filter','stickyHeaders','output'<cfif filesDownloadsQuery.recordCount LT 500>,'math'</cfif>],
 						headers: {
 							0: {
 								sorter: "text"
@@ -430,20 +432,39 @@
 							filter_startsWith : false,
 							filter_useParsedData : false
 
-								, math_data     : 'math' // data-math attribute
-							    , math_ignore   : [0,1,2,3,4,7,8,9]
-							    , math_mask     : '##000,##'
-							    <!---. math_mask     : '##,####0.00'--->
-							    <!---, math_complete : function($cell, wo, result, value, arry) {
-							        var txt = '<span class="align-decimal"> ' + result + '</span>';
-							        if ($cell.attr('data-math') === 'all-sum') {
-							          // when the "all-sum" is processed, add a count to the end
-							          return txt + ' (Sum of ' + arry.length + ' cells)';
-							        }
-							        return txt;
-							    } --->
+							, math_data     : 'math' // data-math attribute
+					    , math_ignore   : [0,1,2,3,4,7,8,9]
+					    , math_mask     : '##000,##'
+					    <!---. math_mask     : '##,####0.00'--->
+					    <!---, math_complete : function($cell, wo, result, value, arry) {
+					        var txt = '<span class="align-decimal"> ' + result + '</span>';
+					        if ($cell.attr('data-math') === 'all-sum') {
+					          // when the "all-sum" is processed, add a count to the end
+					          return txt + ' (Sum of ' + arry.length + ' cells)';
+					        }
+					        return txt;
+					    } --->
+
+							, output_separator     : ';'
+				      , output_hiddenColumns : false
+							, output_includeFooter : true
+				      , output_headerRows    : true
+				      , output_delivery      : 'd'        // (p)opup, (d)ownload
+				      , output_saveRows      : 'f'        // (a)ll, (v)isible, (f)iltered, jQuery filter selector (string only) or filter function
+				      , output_duplicateSpans: true        // duplicate output data in tbody colspan/rowspan
+				      , output_replaceQuote  : '\u201c;'   // change quote to left double quote
+				      , output_includeHTML   : false        // output includes all cell HTML (except the header cells)
+				      , output_trimSpaces    : false       // remove extra white-space characters from beginning & end
+				      , output_wrapQuotes    : false       // wrap every cell output in quotes
+				      , output_saveFileName  : 'statistics_files.csv'
 
 					    }
+					});
+
+					$("##outputTableButton").on("click", function() {
+
+						$("##statisticsTable").trigger('outputTable');
+
 					});
 
 				});
@@ -483,76 +504,80 @@
 
 					<cfloop query="filesDownloadsQuery">
 						<tr>
-							<td>
-								<cfif isNumeric(filesDownloadsQuery.area_id) OR isNumeric(filesDownloadsQuery.download_area_id)>
-									<cfif isNumeric(filesDownloadsQuery.area_id)>
-										<cfset file_area_id = filesDownloadsQuery.area_id>
-									<cfelse>
-										<cfset file_area_id = filesDownloadsQuery.download_area_id>
-									</cfif>
-									<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#filesDownloadsQuery.file_id#&area=#file_area_id#" onclick="return downloadFileLinked(this,event)">#filesDownloadsQuery.file_name#</a>
-									<!---<a href="#APPLICATION.htmlPath#/file.cfm?file=#filesDownloadsQuery.file_id#&area=#filesDownloadsQuery.area_id#" target="_blank"> No todos son archivos de área--->
-								<cfelseif isNumeric(filesDownloadsQuery.item_type_id)>
-									<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#filesDownloadsQuery.file_id#&#itemTypesStruct[filesDownloadsQuery.item_type_id].name#=#filesDownloadsQuery.item_id#" onclick="return downloadFileLinked(this,event)">#filesDownloadsQuery.file_name#</a>
+
+							<cfif isNumeric(filesDownloadsQuery.area_id) OR isNumeric(filesDownloadsQuery.download_area_id)>
+								<cfif isNumeric(filesDownloadsQuery.area_id)>
+									<cfset file_area_id = filesDownloadsQuery.area_id>
 								<cfelse>
-									<span>#filesDownloadsQuery.file_name#</span>
+									<cfset file_area_id = filesDownloadsQuery.download_area_id>
 								</cfif>
-							</td>
+								<td><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#filesDownloadsQuery.file_id#&area=#file_area_id#" onclick="return downloadFileLinked(this,event)">#filesDownloadsQuery.file_name#</a></td>
+								<!---<a href="#APPLICATION.htmlPath#/file.cfm?file=#filesDownloadsQuery.file_id#&area=#filesDownloadsQuery.area_id#" target="_blank"> No todos son archivos de área--->
+							<cfelseif isNumeric(filesDownloadsQuery.item_type_id)>
+								<td><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#filesDownloadsQuery.file_id#&#itemTypesStruct[filesDownloadsQuery.item_type_id].name#=#filesDownloadsQuery.item_id#" onclick="return downloadFileLinked(this,event)">#filesDownloadsQuery.file_name#</a></td>
+							<cfelse>
+								<td><span>#filesDownloadsQuery.file_name#</span></td>
+							</cfif>
 							<td>#filesDownloadsQuery.name#</td>
 							<td>#filesDownloadsQuery.file_type#</td>
 							<td>#filesDownloadsQuery.uploading_date#</td>
 							<td>#filesDownloadsQuery.replacement_date#</td>
-							<td>#filesDownloadsQuery.downloads#
-								<cfset totalDownloads = totalDownloads+filesDownloadsQuery.downloads>
-							</td>
-							<td>
+							<td>#filesDownloadsQuery.downloads#</td>
+							<cfset totalDownloads = totalDownloads+filesDownloadsQuery.downloads>
 
-								<cfif isNumeric(filesDownloadsQuery.item_id)>
+							<cfif isNumeric(filesDownloadsQuery.item_id)>
 
-									<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
-										<cfinvokeargument name="item_id" value="#filesDownloadsQuery.item_id#">
-										<cfinvokeargument name="itemTypeId" value="#filesDownloadsQuery.item_type_id#">
-										<cfinvokeargument name="parse_dates" value="false">
-										<cfinvokeargument name="published" value="false">
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItem" returnvariable="itemQuery">
+									<cfinvokeargument name="item_id" value="#filesDownloadsQuery.item_id#">
+									<cfinvokeargument name="itemTypeId" value="#filesDownloadsQuery.item_type_id#">
+									<cfinvokeargument name="parse_dates" value="false">
+									<cfinvokeargument name="published" value="false">
 
-										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-										<cfinvokeargument name="client_dsn" value="#client_dsn#">
-									</cfinvoke>
+									<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
 
-									<cfif itemQuery.recordCount GT 0>
+								<cfif itemQuery.recordCount GT 0>
 
-										<cfif listFind("11,12", filesDownloadsQuery.item_type_id) GT 0>
+									<cfif listFind("11,12", filesDownloadsQuery.item_type_id) GT 0>
 
-											<!---tableRowUrl--->
-											<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="areaItemUrl">
-												<cfinvokeargument name="table_id" value="#filesDownloadsQuery.item_id#">
-												<cfinvokeargument name="tableTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
-												<cfinvokeargument name="row_id" value="#filesDownloadsQuery.row_id#">
-												<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
+										<!---tableRowUrl--->
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getTableRowUrl" returnvariable="areaItemUrl">
+											<cfinvokeargument name="table_id" value="#filesDownloadsQuery.item_id#">
+											<cfinvokeargument name="tableTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
+											<cfinvokeargument name="row_id" value="#filesDownloadsQuery.row_id#">
+											<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
 
-												<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-											</cfinvoke>
+											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+										</cfinvoke>
 
-										<cfelse>
+									<cfelse>
 
-											<!---itemUrl--->
-											<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
-												<cfinvokeargument name="item_id" value="#filesDownloadsQuery.item_id#">
-												<cfinvokeargument name="itemTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
-												<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
+										<!---itemUrl--->
+										<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaItemUrl" returnvariable="areaItemUrl">
+											<cfinvokeargument name="item_id" value="#filesDownloadsQuery.item_id#">
+											<cfinvokeargument name="itemTypeName" value="#itemTypesStruct[filesDownloadsQuery.item_type_id].name#">
+											<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
 
-												<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-											</cfinvoke>
-
-										</cfif>
-
-										<a href="#areaItemUrl#" target="_blank">#itemTypesStruct[filesDownloadsQuery.item_type_id].label#</a>
+											<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+										</cfinvoke>
 
 									</cfif>
 
+									<td><a href="#areaItemUrl#" target="_blank">#itemTypesStruct[filesDownloadsQuery.item_type_id].label#</a></td>
+
+								<cfelse>
+
+									<td></td>
+
 								</cfif>
 
-							</td>
+							<cfelse>
+
+								<td></td>
+
+							</cfif>
+
 						</tr>
 					</cfloop>
 
