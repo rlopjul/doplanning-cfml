@@ -85,9 +85,21 @@ page_type
 	<cfset users = usersResponse.users>
 	<cfset numUsers = ArrayLen(users)>
 
-	<cfoutput>
-	<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numUsers# <span lang="es"><cfif numUsers GT 1>Usuarios<cfelse>Usuario</cfif></span></div>
-	</cfoutput>
+	<div class="row">
+		<div class="col-sm-12">
+
+			<cfoutput>
+				<span class="label label-primary">#numUsers# <span lang="es"><cfif numUsers GT 1>Usuarios<cfelse>Usuario</cfif></span></span>
+			</cfoutput>
+
+			<cfif page_type IS 2>
+
+				<a class="btn btn-default btn-sm pull-right" role="button" id="outputTableButton" style="margin-bottom:10px"><i class="fa fa-download"></i> <span lang="es">Descargar resultados</span></a>
+
+			</cfif>
+
+		</div>
+	</div>
 
 	<div class="div_items">
 
@@ -101,6 +113,8 @@ page_type
 					<cfinvokeargument name="filter_enabled" value="true">
 					<cfinvokeargument name="select_enabled" value="true">
 					<cfinvokeargument name="openRowOnSelect" value="true">
+				<cfelse>
+					<cfinvokeargument name="outputRowsEnabled" value="true">
 				</cfif>
 
 				<cfinvokeargument name="showAdminFields" value="true">
@@ -156,16 +170,26 @@ page_type
 
 		$('#addSelectedUsersNavBar').hide();
 
-	    $('#usersTable tbody input[type=checkbox]').on('click', function(e) {
+    $('#usersTable tbody input[type=checkbox]').on('click', function(e) {
 
-	    	stopPropagation(e);
+    	stopPropagation(e);
 
-	    	if( $('#usersTable tbody tr:visible input[type=checkbox]:checked').length > 0 )
-				$('#addSelectedUsersNavBar').show();
-			else
-				$('#addSelectedUsersNavBar').hide();
+    	if( $('#usersTable tbody tr:visible input[type=checkbox]:checked').length > 0 )
+			$('#addSelectedUsersNavBar').show();
+		else
+			$('#addSelectedUsersNavBar').hide();
 
-	    });
+    });
+
+		<cfif page_type IS 2>
+
+			$("#outputTableButton").on( "click", function() {
+
+				$("#usersTable").trigger('outputTable');
+
+			});
+
+		</cfif>
 
 	});
 </script>

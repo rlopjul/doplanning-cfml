@@ -1319,6 +1319,7 @@
 		<cfargument name="adminUsers" type="boolean" required="false" default="false">
 		<cfargument name="openRowOnSelect" type="boolean" required="false" default="false">
 		<cfargument name="includeRemoveFromTableButton" type="boolean" required="false" default="false">
+		<cfargument name="outputRowsEnabled" type="boolean" required="false" default="false">
 
 		<cfargument name="list_id" type="numeric" required="false">
 
@@ -1353,7 +1354,7 @@
 
 						$("###usersTableId#").tablesorter({
 							<cfif arguments.filter_enabled IS true>
-							widgets: ['filter','stickyHeaders'],
+							widgets: ['filter','stickyHeaders'<cfif arguments.outputRowsEnabled>,'output'</cfif>],
 							</cfif>
 							<cfif arrayLen(arguments.users) LT 500><!---El orden del tablesorter en listados con muchos registros es muy lento--->
 								<cfif arguments.select_enabled IS true OR includeRemoveFromTableButton IS true>
@@ -1422,7 +1423,26 @@
 								filter_searchDelay : 500,
 								filter_serversideFiltering: false,
 								filter_startsWith : false,
-								filter_useParsedData : false,
+								filter_useParsedData : false
+
+								<cfif arguments.outputRowsEnabled IS true>
+
+									, output_ignoreColumns : [0]   
+									, output_separator     : ';'
+						      , output_hiddenColumns : false
+									, output_includeFooter : true
+						      , output_headerRows    : true
+						      , output_delivery      : 'd'        // (p)opup, (d)ownload
+						      , output_saveRows      : 'f'        // (a)ll, (v)isible, (f)iltered, jQuery filter selector (string only) or filter function
+						      , output_duplicateSpans: true        // duplicate output data in tbody colspan/rowspan
+						      , output_replaceQuote  : '\u201c;'   // change quote to left double quote
+						      , output_includeHTML   : false        // output includes all cell HTML (except the header cells)
+						      , output_trimSpaces    : false       // remove extra white-space characters from beginning & end
+						      , output_wrapQuotes    : false       // wrap every cell output in quotes
+						      , output_saveFileName  : 'users.csv'
+
+								</cfif>
+
 						    },
 						  </cfif>
 
