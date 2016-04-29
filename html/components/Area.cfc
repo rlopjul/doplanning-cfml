@@ -175,34 +175,6 @@
 	</cffunction>
 
 
-	<!--- ----------------------------------- getParentAreaId -------------------------------------- --->
-
-	<!---<cffunction name="getParentAreaId" returntype="numeric" access="public">
-		<cfargument name="area_id" type="numeric" required="true">
-
-		<cfset var method = "getParentAreaId">
-
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
-
-		<cfset var parent_area_id = "">
-
-		<cftry>
-
-			<cfinvoke component="#APPLICATION.componentsPath#/#request_component#" method="#method#" returnvariable="parent_area_id">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-			</cfinvoke>
-
-			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
-			</cfcatch>
-
-		</cftry>
-
-		<cfreturn parent_area_id>
-
-	</cffunction>--->
-
 	<!--- ----------------------------------- getArea ------------------------------------- --->
 
 	<!---Este método NO hay que usarlo en páginas en las que su contenido se cague con JavaScript (páginas de html_content) porque si hay un error este método redirige a otra página. En esas páginas hay que obtener el Area directamente del AreaManager y comprobar si result es true o false para ver si hay error y mostrarlo correctamente--->

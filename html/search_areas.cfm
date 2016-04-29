@@ -99,12 +99,6 @@
 
 	<cfinclude template="includes/search_pages.cfm">
 
-	<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getParentAreaId" returnvariable="parent_area_id">
-		<cfinvokeargument name="area_id" value="#area_id#">
-	</cfinvoke>--->
-
-	<!---<cfset area_name = xmlAreas.area.xmlAttributes.name>
-	<cfset area_allowed = xmlAreas.area.xmlAttributes.allowed>--->
 	<cfset numAreas = ArrayLen(xmlAreas.areas.XmlChildren)>
 
 	<cfif numAreas GT 0>
