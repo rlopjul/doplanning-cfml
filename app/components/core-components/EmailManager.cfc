@@ -21,6 +21,7 @@
 
 		<cfset var toEmails = "">
 		<cfset var jsonFields = "">
+		<cfset var jsonBody = "">
 		<cfset var fromName = "">
 		<cfset var responseResult = "">
 		<cfset var attachmentbase64Value = "">
@@ -181,22 +182,28 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 				"Reply-To": "#APPLICATION.emailReply#"
 			},--->
 
+
+			<!--- Bug with Mandrill and special chars: https://parse.com/questions/sometimes-getting-mandrill-you-must-specify-a-key-value-error-when-sending-email --->
+
+			<!---<cfset jsonBody = reReplace(serializeJSON(jsonFields),"[^\x00-\x7F]","","ALL")>--->
+			<cfset jsonBody = serializeJSON(jsonFields)>
+
 			<cfloop from="1" to="3" index="curAttempt">
 
 				<cftry>
 
 					<cfif APPLICATION.proxy IS true><!---With proxy--->
 
-						<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" proxyServer="10.104.1.7" proxyPort="8080" result="responseResult" timeout="56">
+						<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" proxyServer="10.104.1.7" proxyPort="8080" result="responseResult" charset="utf-8" timeout="56">
 							<cfhttpparam type="header" name="Content-Type" value="application/json" />
-							<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
+							<cfhttpparam type="body" value="#jsonBody#">
 						</cfhttp>
 
 					<cfelse>
 
-						<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult" timeout="56">
+						<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult" charset="utf-8" timeout="56">
 							<cfhttpparam type="header" name="Content-Type" value="application/json" />
-							<cfhttpparam type="body" value="#serializeJSON(jsonFields)#">
+							<cfhttpparam type="body" value="#jsonBody#">
 						</cfhttp>
 
 					</cfif>
