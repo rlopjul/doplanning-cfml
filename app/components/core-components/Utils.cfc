@@ -1161,4 +1161,66 @@
 	</cfscript>
 
 
+	<!---
+		https://github.com/JamoCA/CIDRBlocklist
+		http://tech.groups.yahoo.com/group/fusebox5/message/2089
+	--->
+	<cffunction name="isWithinCIDR" access="public" output="false" returntype="boolean" hint="I test if an IP address falls within the given CIDR range.">
+		<cfargument name="CIDR" required="true" type="string" hint="A CIDR address range in the form of AAA.BBB.CCC.DDD/xx">
+		<cfargument name="TestIP" required="true" type="string" hint="An IP address to test.">
+		<cfset var CIDRParts = ListToArray(arguments.CIDR, "/")>
+		<cfset var CIDRAddress = ListToArray(CIDRParts[1], ".")>
+		<cfset var CIDRMask = 32>
+		<cfset var TestIPAddress = ListToArray(arguments.TestIP, ".")>
+		<cfset var CIDRRealAddress = 0>
+		<cfset var CIDRRealMask = 0>
+		<cfset var TestRealAddress = 0>
+		<cfset var TestIPA = 0>
+		<cfset var TestIPB = 0>
+		<cfset var CidrA = 0>
+		<cfset var CidrB = 0>
+		<cfset var MaskA = 0>
+		<cfset var MaskB = 0>
+		<cfset var x = "">
+		<CFIF ArrayLen(CIDRParts) EQ 2 AND VAL(CIDRParts[2]) GT 1 AND VAL(CIDRParts[2]) LT 33>
+			<cfset CIDRMask = CIDRParts[2]>
+		</CFIF>
+
+		<!--- Get the integer the CIDR core address represents --->
+		<cfset CIDRRealAddress = CIDRAddress[4]>
+		<cfset CIDRRealAddress = CIDRRealAddress + CIDRAddress[3] * 256> <!--- 2^8 --->
+		<cfset CIDRRealAddress = CIDRRealAddress + CIDRAddress[2] * 65536> <!--- 2^16 --->
+		<cfset CIDRRealAddress = CIDRRealAddress + CIDRAddress[1] * 16777216> <!--- 2^24 --->
+
+		<!--- Get the integer representation of the test IP address --->
+		<cfset TestRealAddress = TestIPAddress[4]>
+		<cfset TestRealAddress = TestRealAddress + TestIPAddress[3] * 256> <!--- 2^8 --->
+		<cfset TestRealAddress = TestRealAddress + TestIPAddress[2] * 65536> <!--- 2^16 --->
+		<cfset TestRealAddress = TestRealAddress + TestIPAddress[1] * 16777216> <!--- 2^24 --->
+
+		<!--- Get the integer representation of the CIDR mask --->
+		<cfloop from="1" to="#CIDRMask#" index="x">
+			<cfset CIDRRealMask = CIDRRealMask + 2^(32-x) >
+		</cfloop>
+
+		<!--- CF's BitAnd() cannot handle 32-bit unsigned integers, we will
+		break these addresses into numbers denoting their left and right half bits --->
+		<!--- Just the left 16 bits --->
+		<cfset CidrA = int(CIDRRealAddress / 65536)>
+		<cfset TestIPA = int(TestRealAddress / 65536)>
+		<cfset MaskA = int(CIDRRealMask / 65536)>
+		<!--- Just the right 16 bits --->
+		<!--- Much more efficient would be to use "mod 65536" but even this does not support unsigned integers --->
+		<cfset CidrB = CIDRRealAddress - (CidrA * 65536)>
+		<cfset TestIPB = TestRealAddress - (TestIPA * 65536)>
+		<cfset MaskB = CIDRRealMask - (MaskA * 65536)>
+
+		<cfif BitAnd(CidrA, MaskA) eq BitAnd(TestIPA, MaskA) AND BitAnd(CidrB, MaskB) eq BitAnd(TestIPB, MaskB)>
+			<cfreturn true>
+		<cfelse>
+			<cfreturn false>
+		</cfif>
+	</cffunction>
+
+
 </cfcomponent>
