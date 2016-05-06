@@ -1083,11 +1083,13 @@
 		<cfif getWebsResult.result IS true>
 
 			<cfset webQuery = getWebsResult.query>
+			<cfset web_path = webQuery.path>
 			<cfset web_path_url = webQuery.path_url>
 			<cfset web_language = webQuery.language>
 
 		<cfelse>
 
+			<cfset web_path = APPLICATION.defaultLanguage>
 			<cfset web_path_url = "">
 			<cfset web_language = APPLICATION.defaultLanguage>
 
@@ -1095,6 +1097,7 @@
 
 	<cfelse>
 
+		<cfset web_path = APPLICATION.defaultLanguage>
 		<cfset web_path_url = "">
 		<cfset web_language = APPLICATION.defaultLanguage>
 
@@ -1183,7 +1186,7 @@
 					<label class="sr-only" for="url_id_suffix" lang="es">URL de la página</label>
 
 					<div class="input-group">
-					  <span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#web_language#/#pagePath#/</span></span>
+					  <span class="input-group-addon">#web_path_url#/<span id="url_id_prefix">#web_path#/#pagePath#/</span></span>
 						<input type="text" name="url_id_suffix" id="url_id_suffix" value="#listLast(objectItem.url_id,'/')#" class="form-control" maxlength="200" passthrough="#passthrough#">
 						<input type="hidden" name="url_id" id="url_id" value=">#web_language#/#pagePath#/#listLast(objectItem.url_id,'/')#" />
 					</div>
