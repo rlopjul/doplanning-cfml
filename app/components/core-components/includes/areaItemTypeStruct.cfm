@@ -41,7 +41,7 @@
 <cfset structInsert(itemTypesStruct, 12, {id=12, position=11, name="form", namePlural="forms", table="forms", label="Formulario", labelPlural="Formularios", gender="male", web=true, noWeb=true, showInSelect=true, tableTypeId=2})>
 
 <!---typologies (files)--->
-<cfset structInsert(itemTypesStruct, 13, {id=13, position=12, name="typology", namePlural="typologies", table="typologies", label="Tipología de archivo", labelPlural="Tipologías de archivos", gender="female", web=false, noWeb=true, showInSelect=false, tableTypeId=3})>
+<cfset structInsert(itemTypesStruct, 13, {id=13, position=12, name="typology", namePlural="typologies", table="typologies", label="Tipología de archivo", labelPlural="Tipologías de archivos", gender="female", web=true, noWeb=true, showInSelect=false, tableTypeId=3})>
 
 <!---lists views--->
 <cfset structInsert(itemTypesStruct, 14, {id=14, position=15, name="list_view", namePlural="lists_views", table="lists_views", label="Vista de Lista", labelPlural="Vistas de Listas", gender="female", web=true, noWeb=true, showInSelect=false, tableTypeId=1, tableTypeName="list"})>
