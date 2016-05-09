@@ -379,51 +379,6 @@
 			</cfcase>
 
 
-			<cfcase value="hcs.es">
-
-				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
-
-					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
-					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
-					<cfif isDefined("arguments.emailFrom")>
-						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
-					<cfelse>
-						<cfinvokeargument name="emailFrom" value="doplanning-no-reply@hcs.es">
-					</cfif>
-
-					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
-					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
-
-					<cfinvokeargument name="serverIp" value="54.228.233.178">
-
-					<cfinvokeargument name="mainUrl" value="https://hcs.es">
-					<cfinvokeargument name="signOutUrl" value="https://hcs.es">
-
-					<cfinvokeargument name="ldapName" value="Portal del Empleado">
-
-					<cfinvokeargument name="moduleLdapUsers" value="true">
-					<cfinvokeargument name="moduleWeb" value="true">
-					<cfinvokeargument name="moduleWebRTC" value="true">
-					<cfinvokeargument name="showDniTitle" value="true">
-					<cfinvokeargument name="modulePubMedComments" value="true">
-					<cfinvokeargument name="moduleListsWithPermissions" value="true">
-					<cfinvokeargument name="changeElementsArea" value="true">
-					<cfinvokeargument name="publicationScope" value="true">
-					<cfinvokeargument name="publicationValidation" value="true">
-					<cfinvokeargument name="userEmailRequired" value="false">
-					<cfinvokeargument name="moduleAntiVirus" value="true">
-
-					<cfinvokeargument name="homeTab" value="true">
-					<cfinvokeargument name="moduleDPDocuments" value="true">
-
-					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
-
-					<cfinvokeargument name="hideInputLabels" value="true">
-				</cfinvoke>
-
-			</cfcase>
-
-
 			<cfcase value="era7bioinformatics.com">
 
 				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
