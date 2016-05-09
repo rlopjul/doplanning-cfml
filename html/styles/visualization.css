@@ -1,0 +1,111 @@
+
+
+        path {
+    stroke-width: 3;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 2;
+    shape-rendering: crispEdges;
+}
+
+.axis2 path,
+.axis2 line
+        {
+             stroke: grey;
+    stroke-width: 2;
+    shape-rendering: crispEdges;
+        }
+.dot {
+  stroke: #fff;
+  fill: #FF4330;
+  stroke-width: 1.5px;
+  clip-path: url(#clip);
+}
+
+
+.legend {
+    font-family: "Bitstream Vera Serif Bold";
+    font-size: 13px;
+    font-weight: bold;
+    text-anchor: left;
+}
+
+.y-axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+
+.brush .extent {
+  stroke: black;
+  fill-opacity: .3;
+  shape-rendering: crispEdges;
+}
+
+.node {
+   cursor: pointer;
+ }
+
+ .overlay{
+     background-color:#EEE;
+ }
+
+ .overlayWhite{
+     background-color:#fff;
+ }
+
+ .node circle {
+   fill: #fff;
+   stroke: steelblue;
+   stroke-width: 1.5px;
+ }
+
+ .node text {
+   font-size:12px;
+   font-family:sans-serif;
+ }
+
+ .link {
+   fill: none;
+   stroke: #ccc;
+   stroke-width: 1.5px;
+ }
+
+ #mlineLegend,
+ #stackLegend{
+   height: 525px;
+    overflow: auto;
+}
+
+#treeContainer,
+#mlineBrush,
+#userLogArea,
+#stackLegend,
+#mlineLegend{
+    border: 1px solid rgba(54, 64, 74, 0.08);
+    margin-bottom: 20px;
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
+    -moz-border-radius: 1px;
+    background-clip: padding-box;
+    background-color: #F7F7F7;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    font: 12px sans-serif;
+    border: 5px;
+    border-color: aliceblue;
+    border-radius: 8px;
+    padding: 8px;
+    color: cornsilk;
+    background:black;
+    pointer-events: none;
+}
