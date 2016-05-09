@@ -42,7 +42,7 @@
 					<!--- Antes si se ponía tables.publication_scope_id NO devolvía el valor correcto de esa columna (siempre devolvía 1) --->
 					, tables.publication_scope_id, scopes.name AS publication_scope_name
 				</cfif>
-				<cfif tableTypeId IS 1 OR tableTypeId IS 2>
+				<!---<cfif tableTypeId IS 1 OR tableTypeId IS 2>--->
 					, tables.list_rows_by_default, math_enabled, form_display_type
 					<cfif arguments.parse_dates IS true>
 					, DATE_FORMAT(CONVERT_TZ(tables.publication_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS publication_date
@@ -50,7 +50,7 @@
 					, tables.publication_date
 					</cfif>
 					, tables.publication_validated, tables.publication_restricted
-				</cfif>
+				<!---</cfif>--->
 				<cfif tableTypeId IS 4>
 					, tables.basic_email_notification
 				</cfif>
@@ -61,7 +61,7 @@
 					LEFT JOIN #client_abb#_scopes AS scopes ON tables.publication_scope_id = scopes.scope_id
 				</cfif>
 				WHERE tables.id = <cfqueryparam value="#arguments.table_id#" cfsqltype="cf_sql_integer">
-				<cfif arguments.published IS true AND (tableTypeId IS 1 OR tableTypeId IS 2)>
+				<cfif arguments.published IS true><!---AND (tableTypeId IS 1 OR tableTypeId IS 2)--->
 					AND ( tables.publication_date IS NULL OR tables.publication_date <= NOW() )
 					<cfif APPLICATION.publicationValidation IS true>
 					AND ( tables.publication_validated IS NULL OR tables.publication_validated = true )
