@@ -185,8 +185,8 @@
 			<cfinvokeargument name="request_parameters" value="#getUsersParameters#">
 		</cfinvoke>--->
 
-        <!--- getUsersToNotifyLists --->
-        <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
+    <!--- getUsersToNotifyLists --->
+    <cfinvoke component="UserManager" method="getUsersToNotifyLists" returnvariable="usersToNotifyLists">
 			<!---<cfinvokeargument name="request" value="#getUsersRequest#"/>--->
 			<cfinvokeargument name="area_id" value="#objectItem.area_id#">
 			<cfif arguments.action NEQ "attached_file_deleted_virus" AND arguments.action NEQ "attached_image_deleted_virus">
