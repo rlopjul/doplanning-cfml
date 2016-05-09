@@ -2040,7 +2040,7 @@
 							</cfif>
 
 
-							<cfif APPLICATION.publicationScope IS true AND itemTypeId IS 11 OR itemTypeId IS 12>
+							<cfif APPLICATION.publicationScope IS true AND ( itemTypeId IS 11 OR itemTypeId IS 12 )>
 								<div class="div_message_page_label"><span lang="es">Ámbito de publicación:</span> <span class="text_message_page">#objectItem.publication_scope_name#</span></div>
 							</cfif>
 
