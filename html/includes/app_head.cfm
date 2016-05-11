@@ -53,18 +53,24 @@
             <a href="bin.cfm?abb=#SESSION.client_abb#"><i class="icon-trash"></i> <span lang="es">Papelera</span></a>
         </li>
 
-        <cfinvoke component="#APPLICATION.htmlComponentsPath#/Web" method="getWeb" returnvariable="getWebResult">
-    			<cfinvokeargument name="path" value="intranet">
+        <cfinvoke component="#APPLICATION.htmlComponentsPath#/Web" method="getWebs" returnvariable="getWebResult">
+    			<cfinvokeargument name="area_type" value="intranet">
     		</cfinvoke>
 
-        <cfset webQuery = getWebResult.query>
+        <cfset websQuery = getWebResult.query>
 
-    		<cfif webQuery.recordCount GT 0>
+    		<cfif websQuery.recordCount GT 0>
 
           <cfif SESSION.client_abb NEQ "hcs">
-            <li>
-                <a href="#APPLICATION.path#/intranet/?abb=#SESSION.client_abb#" target="_blank"><i class="fa fa-archive"></i> <span lang="es">Intranet</span></a>
-            </li>
+
+            <cfloop query="#websQuery#">
+
+              <li>
+                  <a href="#APPLICATION.path#/#websQuery.path#/?abb=#SESSION.client_abb#" target="_blank"><i class="fa fa-archive"></i> <span lang="es">Intranet<cfif websQuery.recordCount GT 0 AND websQuery.currentRow GT 1> #websQuery.path#</cfif></span></a>
+              </li>
+
+            </cfloop>
+
           <cfelse>
             <li>
                 <a href="http://intranet.hcs.es/" target="_blank"><i class="fa fa-archive"></i> <span lang="es">Intranet</span></a>
