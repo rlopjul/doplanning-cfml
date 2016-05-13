@@ -69,7 +69,7 @@
 		<!-- InstanceBeginEditable name="contenido_app" -->
 
 		<!---<cfoutput>
-		<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.4.4.4"></script>
+		<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.5.8"></script>
 		</cfoutput>--->
 		
 		<script>
