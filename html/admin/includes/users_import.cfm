@@ -264,7 +264,7 @@
 
 			</form>
 
-			<form action="users_export_download.cfm" method="get" class="form-horizontal" target="downloadFileIframe">
+			<form action="#APPLICATION.htmlPath#/admin/users_export_download.cfm" method="get" class="form-horizontal" target="downloadFileIframe">
 
 				<input type="hidden" name="typology_id" id="typology_export_id" value=""/>
 
