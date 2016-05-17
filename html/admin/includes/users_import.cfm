@@ -220,9 +220,15 @@
 							-Tipo de archivo: <strong>.csv</strong> delimitado por ;
 							-Codificación: <strong>iso-8859-1</strong> (codificación por defecto en Windows).<br />
 							-Cada fila del archivo corresponderá a un usuario.<br/>
-							-<strong>Orden de las columnas que deberá tener el archivo</strong>:<br />
-							<em>Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Teléfono, Código País, Móvil, Móvil, Usuario interno, Activo<cfif SESSION.client_abb EQ "hcs">, Perfil de cabecera</cfif></em>
-							<br/>
+							-<strong>Orden de las columnas que deberá tener el archivo</strong>: haz clic en Descargar archivo de ejemplo para obtener un archivo como el que se debe usar para la importación.<br />
+							<!----<strong>Orden de las columnas que deberá tener el archivo</strong>:<br />
+							<cfif APPLICATION.showDniTitle IS true>
+								<cfset dniTitle = "DNI">
+							<cfelse>
+								<cfset dniTitle = "Número de identificación">
+							</cfif>
+							<em>Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Teléfono, Código País, Móvil, Móvil, #dniTitle#, Usuario interno, Activo<cfif SESSION.client_abb EQ "hcs">, Perfil de cabecera</cfif></em>
+							<br/>--->
 							-Si no se cumplen las características anteriores, la importación no se podrá realizar correctamente.
 							<br/>
 							<!--- -<a href="usuarios_ejemplo.csv">Aquí</a> puede descargar un archivo de ejemplo.<br/>--->

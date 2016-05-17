@@ -2908,12 +2908,27 @@
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
 				</cfinvoke>
 
-				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, internal_user, enabled, verified, user_administrator, area_admin_administrator">
+				<cfif APPLICATION.showDniTitle IS true>
+					<cfset dniTitle = "DNI">
+				<cfelse>
+					<cfset dniTitle = "Número de identificación">
+				</cfif>
+
+				<cfset fieldsNames = "email, family_name, name, address, telephone_ccode, telephone, mobile_phone_ccode, mobile_phone, dni, internal_user, enabled, verified, user_administrator, area_admin_administrator">
 
 				<cfif selectUserQuery.language EQ "es">
-					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, Usuario interno, Activo, Verificado, Administrador de usuarios, Administrador de administradores de área">
+					<cfset fieldsLabels = "Email, Nombre, Apellidos, Dirección, Código País Teléfono, Teléfono, Código País Móvil, Móvil, #dniTitle#, Usuario interno, Activo, Verificado, Administrador de usuarios, Administrador de administradores de área">
 				<cfelse>
-					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, Internal user, Active, Verified, User administrator, Area administrators admin">
+					<cfset fieldsLabels = "Email, Name, Family name, Address, Phone Country Code, Phone, Mobile Country Code, Mobile, #dniTitle#, Internal user, Active, Verified, User administrator, Area administrators admin">
+				</cfif>
+
+				<cfif APPLICATION.moduleLdapUsers EQ true>
+					<cfset fieldsNames = listAppend(fieldsNames, "login_ldap")>
+					<cfif selectUserQuery.language EQ "es">
+						<cfset fieldsLabels = listAppend(fieldsLabels, "Login #APPLICATION.ldapName#")>
+					<cfelse>
+						<cfset fieldsLabels = listAppend(fieldsLabels, "Login #APPLICATION.ldapName#")>
+					</cfif>
 				</cfif>
 
 				<cfif arguments.include_id IS true>
@@ -3321,19 +3336,28 @@
 							<cfset rowValues["telephone"] = trim(curRow[6])>
 							<cfset rowValues["mobile_phone_ccode"] = trim(curRow[7])>
 							<cfset rowValues["mobile_phone"] = trim(curRow[8])>
-							<cfset rowValues["internal_user"] = trim(curRow[9])>
-							<cfset rowValues["enabled"] = trim(curRow[10])>
-							<cfset rowValues["verified"] = trim(curRow[11])>
-							<cfset rowValues["user_administrator"] = trim(curRow[12])>
-							<cfset rowValues["area_admin_administrator"] = trim(curRow[13])>
-							<cfif SESSION.client_abb EQ "hcs">
-								<cfset rowValues["perfil_cabecera"] = trim(curRow[14])>
-							</cfif>
+							<cfset rowValues["dni"] = trim(curRow[9])>
+							<cfset rowValues["internal_user"] = trim(curRow[10])>
+							<cfset rowValues["enabled"] = trim(curRow[11])>
+							<cfset rowValues["verified"] = trim(curRow[12])>
+							<cfset rowValues["user_administrator"] = trim(curRow[13])>
+							<cfset rowValues["area_admin_administrator"] = trim(curRow[14])>
 
-							<cfif SESSION.client_abb EQ "hcs">
-								<cfset curColumn = 15>
+							<cfif APPLICATION.moduleLdapUsers EQ true>
+
+								<cfset rowValues["login_ldap"] = trim(curRow[15])>
+
+								<cfif SESSION.client_abb EQ "hcs">
+									<cfset rowValues["perfil_cabecera"] = trim(curRow[16])>
+									<cfset curColumn = 17>
+								<cfelse>
+									<cfset curColumn = 16>
+								</cfif>
+
 							<cfelse>
-								<cfset curColumn = 14>
+
+								<cfset curColumn = 15>
+
 							</cfif>
 
 							<cfif isDefined("arguments.typology_id") AND isNumeric(arguments.typology_id)>
