@@ -114,6 +114,7 @@
 							<option value="3.7">3.7 Permiso de administrador de administradores de áreas y errores corregidos</option>
 							<option value="3.8">3.8 Aumentado tamaño de campo url_id</option>
 							<option value="3.9">3.9 Campos web para tipologías</option>
+							<option value="3.10">3.10 Campos web para tipologías de usuarios</option>
 						</select>
 					</div>
 
