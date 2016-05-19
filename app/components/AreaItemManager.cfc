@@ -3371,24 +3371,50 @@
 
 		<!--- --------------DELETE AREA ITEMS------------------------- --->
 		<cfquery name="itemsQuery" datasource="#client_dsn#">
-			SELECT id
-			FROM #client_abb#_#itemTypeTable#
-			WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
-			AND status = 'ok';
+			SELECT items.id, items.status, items_deleted.delete_user_id
+			FROM #client_abb#_#itemTypeTable# AS items
+			LEFT JOIN #client_abb#_items_deleted AS items_deleted
+			ON items.id = items_deleted.item_id
+			AND items_deleted.item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">
+			WHERE items.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">
+			AND ( items.status = "ok" OR items.status = "deleted" );
 		</cfquery>
 
 		<cfif itemsQuery.recordCount GT 0>
 
 			<cfloop query="itemsQuery">
 
-				<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="deleteItemResult">
-					<cfinvokeargument name="item_id" value="#itemsQuery.id#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
-				</cfinvoke>
+				<cfif itemsQuery.status IS "ok">
 
-				<cfif deleteItemResult.result IS false>
-					<cfthrow message="#deleteItemResult.message#">
+					<cfinvoke component="AreaItemManager" method="deleteItem" returnvariable="deleteItemResult">
+						<cfinvokeargument name="item_id" value="#itemsQuery.id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
+					</cfinvoke>
+
+					<cfif deleteItemResult.result IS false>
+						<cfthrow message="#deleteItemResult.message#">
+					</cfif>
+
+				<cfelseif itemsQuery.status IS "deleted">
+
+					<cfif NOT IsNumeric(itemsQuery.delete_user_id)>
+						<cfthrow message="ITEMS ID: #itemsQuery.id#">
+					</cfif>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/BinManager" method="deleteBinItem" returnvariable="deleteBinItemResponse">
+						<cfinvokeargument name="item_id" value="#itemsQuery.id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="delete_user_id" value="#itemsQuery.delete_user_id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfif deleteBinItemResponse.result IS false>
+						<cfthrow message="#deleteBinItemResponse.message#">
+					</cfif>
+
 				</cfif>
 
 			</cfloop>

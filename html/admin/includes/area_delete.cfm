@@ -1,5 +1,5 @@
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>
-	
+
 	<cfset area_id = URL.area>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="objectArea">
@@ -9,7 +9,7 @@
 	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getAreaPath" returnvariable="area_path">
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
-	
+
 	<cfoutput>
 
 		<div class="modal-header">
@@ -18,7 +18,7 @@
 		</div>
 
 	 	<div class="modal-body">
-	  		
+
 			<span lang="es">¿Seguro que deseas eliminar definitivamente esta área?</span>:<br/>
 			<div style="padding-left:50px; padding-top:15px; padding-bottom:15px;">
 
@@ -28,7 +28,9 @@
 				</div>
 			</div>
 
-			<div><span lang="es">Ten en cuenta que <b>se eliminarán DEFINITIVAMENTE todos los elementos del área</b>: mensajes, archivos, tareas, eventos...</span></div>
+			<div class="alert alert-danger"><i class="icon-warning-sign"></i>
+				<span lang="es">Ten en cuenta que <b>se eliminarán DEFINITIVAMENTE todos los elementos del área</b>: mensajes, archivos, tareas, eventos...</span></div>
+			</div>
 
 			<form id="deleteAreaForm" method="post">
 				<input type="hidden" name="area_id" value="#objectArea.id#"/>
@@ -48,7 +50,7 @@
 					e.preventDefault();
 
 				$("##areaDeleteSubmit").button('loading');
-				
+
 				postModalFormTree("##deleteAreaForm", "#APPLICATION.htmlComponentsPath#/Area.cfc?method=deleteArea");
 
 			}

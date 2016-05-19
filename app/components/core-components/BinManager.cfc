@@ -18,7 +18,7 @@
 				</cfif>
 				<cfif isDefined("APPLICATION.schedulesOnlyClient") AND len(APPLICATION.schedulesOnlyClient) GT 0>
 					<cfinvokeargument name="client_abb" value="#APPLICATION.schedulesOnlyClient#">
-				</cfif>					
+				</cfif>
 			</cfinvoke>
 
 			<cfloop query="getClientsQuery">
@@ -120,7 +120,7 @@
 
 	<!--- Este método no comprueba permisos. Debe poder eliminar los elementos aunque no exista su área. --->
 
-	<cffunction name="deleteBinItem" returntype="struct" access="private">
+	<cffunction name="deleteBinItem" returntype="struct" access="public">
 		<cfargument name="item_id" type="numeric" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="delete_user_id" type="numeric" required="true">
