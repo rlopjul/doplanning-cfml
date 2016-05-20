@@ -1,11 +1,3 @@
-<cfoutput>
-<!---
-<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
- --->
-
-<!---<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.5.8"></script>--->
-</cfoutput>
-
 
 <!--- getClient --->
 <cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
@@ -103,7 +95,7 @@
 								<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm navbar-btn navbar-right" style="margin-left:8px;margin-right:5px;"><i class="icon-refresh icon-white"></i></a>
 							</cfif>--->
 
-							<p class="navbar-text navbar-right">#myItemsQuery.recordCount# <cfif myItemsQuery.recordCount IS 1><span lang="es">Elemento</span><cfelse><span lang="es">Elementos</span></cfif>&nbsp;&nbsp;&nbsp;</p>	
+							<p class="navbar-text navbar-right">#myItemsQuery.recordCount# <cfif myItemsQuery.recordCount IS 1><span lang="es">Elemento</span><cfelse><span lang="es">Elementos</span></cfif>&nbsp;&nbsp;&nbsp;</p>
 
 							</cfoutput>
 

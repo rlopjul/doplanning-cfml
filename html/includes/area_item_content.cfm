@@ -3,7 +3,7 @@
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
  --->
 <cfif itemTypeId IS 17>
-	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.5.8"></script>
+	<script src="#APPLICATION.ckeditorJSPath#"></script>
 </cfif>
 </cfoutput>
 

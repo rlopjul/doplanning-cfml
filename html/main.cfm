@@ -103,7 +103,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 <!---<script src="#APPLICATION.htmlPath#/language/main_en.js?v=1.2" charset="utf-8"></script>--->
 <script src="#APPLICATION.htmlPath#/language/dp_en.js" charset="utf-8"></script>
 
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.5.8"></script>
+<script src="#APPLICATION.ckeditorJSPath#"></script>
 </cfoutput>
 
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>

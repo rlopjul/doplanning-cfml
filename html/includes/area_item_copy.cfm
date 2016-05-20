@@ -191,7 +191,7 @@
 
 	<cfset editorApp = "ckeditor">
 
-	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.5.8"></script>
+	<script src="#APPLICATION.ckeditorJSPath#"></script>
 
 <!---</cfif>--->
 

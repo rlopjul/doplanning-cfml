@@ -30,7 +30,7 @@
 	<div class="alert alert-warning" role="alert"><i class="fa fa-warning"></i> <span lang="es">No hay campos definidos para rellenar.</span></div>
 
 <cfelse>
-	<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.5.8"></script>
+	<script src="#APPLICATION.ckeditorJSPath#"></script>
 	<link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>

@@ -14,7 +14,7 @@
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8"></script>
 <script src="#APPLICATION.htmlPath#/language/area_table_content_en.js" charset="utf-8"></script>
  --->
-<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js"></script>
+<script src="#APPLICATION.ckeditorJSPath#"></script>
 </cfoutput>
 
 <cfif tableTypeId IS NOT 4>

@@ -25,7 +25,7 @@
 </cfif>
 
 
- 
+
 <!---<cfoutput>
 <cfif APPLICATION.title EQ "DoPlanning">
 	<div style="float:left; padding-top:2px;">
@@ -45,20 +45,20 @@
 
 
 <div id="wrapper"><!--- wrapper --->
-        
+
 	<!---<div class="container">
 		<div class="row">
 			<div class="col-lg-8 col-lg-offset-2">
 				<h1></h1>
 				<p></p>
-							
+
 			</div>
 		</div>
 	</div>--->
 
 	<!---<div class="div_contenedor_contenido">--->
-	
-	
+
+
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_client_head.cfm">
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/app_head.cfm">
@@ -68,10 +68,6 @@
 	<div class="container app_main_container">
 		<!-- InstanceBeginEditable name="contenido_app" -->
 
-		<!---<cfoutput>
-		<script src="#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.5.8"></script>
-		</cfoutput>--->
-		
 		<script>
 
 			function loadHome(){
@@ -93,7 +89,7 @@
 		</script>
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
-		
+
 		<cfset rightContent = false>
 		<cfinclude template="#APPLICATION.htmlPath#/includes/home_content.cfm">
 
@@ -104,7 +100,7 @@
 
 
 	<!---</div>--->
-	
+
 </div>
 <!--- END wrapper --->
 
