@@ -1,9 +1,9 @@
 <cfif isDefined("URL.parent")>
-	
+
 	<cfset parent_area_id = URL.parent>
 
 	<!--- Get parent area --->
-	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectParentArea">	
+	<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="getArea" returnvariable="objectParentArea">
 		<cfinvokeargument name="get_area_id" value="#parent_area_id#">
 		<cfinvokeargument name="return_type" value="query">
 	</cfinvoke>
@@ -37,7 +37,7 @@
 
 					</div>
 				</div>
-				
+
 			</div>
 
 		</div>
@@ -52,14 +52,14 @@
 
 			    if(e.preventDefault)
 					e.preventDefault();
-			    
+
 				hideDefaultModal();
-			    
-			    goToUrl("#APPLICATION.htmlPath#/admin/area_export_structure_download.cfm?area=#parent_area_id#");
+
+			    goToUrl("area_export_structure_download.cfm?area=#parent_area_id#");
 
 			}
 		</script>
 
 	</cfoutput>
-	
+
 </cfif>
