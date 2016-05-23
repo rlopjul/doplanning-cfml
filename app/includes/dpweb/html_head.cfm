@@ -17,7 +17,7 @@ $(function () {
     window.lang.change('#language#');
   </cfif>
 
-  <cfif areaTypeRequired EQ "intranet" AND ( NOT isDefined("URL.abb") AND NOT isDefined("url_id") )>
+  <cfif APPLICATION.dpUrlRewrite IS true AND ( areaTypeRequired EQ "intranet" AND ( NOT isDefined("URL.abb") AND NOT isDefined("url_id") ) )>
 
     <cfif len(CGI.QUERY_STRING) GT 0>
       <cfset newQueryString = "?#CGI.QUERY_STRING#&abb=#clientAbb#">
