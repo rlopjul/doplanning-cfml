@@ -891,7 +891,7 @@
 					<div><i class="icon-twitter-sign" style="font-size:18px;"></i> <a href="#objectUser.twitter_url#" target="_blank" class="link_external">#objectUser.twitter_url#</a></div>
 				</cfif>
 
-				<!---<cfif SESSION.client_abb NEQ "hcs">---><!---OR showAdminFields IS true--->
+				<cfif SESSION.client_abb NEQ "hcs"><!--- OR showAdminFields IS true--->
 					<cfif len(objectUser.telephone) GT 0>
 						<div class="div_user_page_label"><!---<span lang="es">Teléfono:</span>---><i class="icon-phone-sign" style="font-size:20px"></i> <a href="tel:#objectUser.telephone#" class="div_user_page_text"><cfif len(objectUser.telephone) GT 0>#objectUser.telephone_ccode#</cfif> #objectUser.telephone#</a></div>
 					</cfif>
@@ -901,7 +901,7 @@
 					<cfif len(objectUser.dni) GT 0>
 						<div class="div_user_page_label"><span lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif></span> <span class="div_user_page_text">#objectUser.dni#</span></div>
 					</cfif>
-				<!---</cfif>--->
+				</cfif>
 
 				<cfif len(objectUser.address) GT 0>
 					<div class="div_user_page_label"><!---<span lang="es">Dirección:</span>---><i class="icon-envelope" style="font-size:18px"></i> #objectUser.address#</div>
@@ -1427,7 +1427,7 @@
 
 								<cfif arguments.outputRowsEnabled IS true>
 
-									, output_ignoreColumns : [0]   
+									, output_ignoreColumns : [0]
 									, output_separator     : ';'
 						      , output_hiddenColumns : false
 									, output_includeFooter : true
@@ -2163,7 +2163,7 @@
 											<div class="div_user_page_label"><i class="icon-twitter-sign" style="font-size:18px;"></i> <a href="#user.twitter_url#" target="_blank" class="link_external">#user.twitter_url#</a></div>
 										</cfif>
 
-										<!---<cfif SESSION.client_abb NEQ "hcs">---><!---OR showAdminFields IS true--->
+										<cfif SESSION.client_abb NEQ "hcs"><!---OR showAdminFields IS true--->
 											<cfif len(user.telephone) GT 0>
 												<div class="div_user_page_label"><!---<span lang="es">Teléfono:</span>---><i class="icon-phone-sign" style="font-size:20px"></i> <a href="tel:#user.telephone#" class="div_user_page_text"><cfif len(user.telephone) GT 0>#user.telephone_ccode#</cfif> #user.telephone#</a></div>
 											</cfif>
@@ -2173,7 +2173,7 @@
 											<cfif len(user.dni) GT 0>
 												<div class="div_user_page_label"><span lang="es"><cfif APPLICATION.showDniTitle IS true>DNI<cfelse>Número de identificación</cfif></span> <span class="div_user_page_text">#user.dni#</span></div>
 											</cfif>
-										<!---</cfif>--->
+										</cfif>
 
 										<cfif len(user.address) GT 0>
 											<div class="div_user_page_label"><!---<span lang="es">Dirección:</span>---><i class="icon-envelope" style="font-size:18px"></i> #user.address#</div>
