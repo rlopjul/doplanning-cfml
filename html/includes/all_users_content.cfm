@@ -35,6 +35,7 @@
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUsersList">
 				<cfinvokeargument name="users" value="#users#">
+				<cfinvokeargument name="openRowOnSelect" value="true">
 			</cfinvoke>
 
 		<cfelse>
