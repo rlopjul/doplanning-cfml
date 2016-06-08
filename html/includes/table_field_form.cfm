@@ -711,7 +711,7 @@
 			<div class="row">
 				<div class="col-xs-11 col-sm-6">
 					<input type="hidden" name="default_value" id="default_value_user" value="#field_default_value#" />
-					<input type="text" name="default_value_user_full_name" id="default_value_user_full_name" value="#field_value_user#" class="form-control" readonly onclick="openUserSelectorWithField('default_value_user')" />
+					<input type="text" name="default_value_user_user_full_name" id="default_value_user_user_full_name" value="#field_value_user#" class="form-control" readonly onclick="openUserSelectorWithField('default_value_user')" />
 				</div>
 				<div class="col-xs-1 col-sm-6">
 					<button onclick="clearFieldSelectedUser('default_value_user')" type="button" class="btn btn-default" lang="es" title="Quitar usuario seleccionado"><i class="icon-remove"></i></button>
