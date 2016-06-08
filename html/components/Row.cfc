@@ -942,6 +942,35 @@
 
 							</div>
 
+						<cfelseif fields.field_type_id IS 19><!--- Table Row	 --->
+
+							<div class="div_message_page_label">#field_label#
+
+								<cfif isNumeric(field_value) AND isNumeric(fields.referenced_table_id) AND isNumeric(fields.item_type_id)>
+
+									<cfset referencedTableId = fields.referenced_table_id>
+									<cfset referencedTableTypeName = itemTypesStruct[fields.item_type_id].name>
+									<cfset referencedTableTypeId = itemTypesStruct[fields.item_type_id].tableTypeId>
+
+									<cfinvoke component="#APPLICATION.coreComponentsPath#/RowQuery" method="getTableRows" returnvariable="rowQuery">
+										<cfinvokeargument name="table_id" value="#referencedTableId#">
+										<cfinvokeargument name="tableTypeId" value="#referencedTableTypeId#">
+										<cfinvokeargument name="row_id" value="#field_value#">
+
+										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+										<cfinvokeargument name="client_dsn" value="#client_dsn#">
+									</cfinvoke>
+
+									<cfif rowQuery.recordCount GT 0>
+
+										<a href="#APPLICATION.htmlPath#/#referencedTableTypeName#_row.cfm?#referencedTableTypeName#=#referencedTableId#&row=#field_value#">#rowQuery['field_#fields.referenced_field_id#']#</a>
+
+									</cfif>
+
+								</cfif>
+
+							</div>
+
 						<cfelse>
 
 							<cfif fields.field_type_id IS 5><!--- DECIMAL --->
