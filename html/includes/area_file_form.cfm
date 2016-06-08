@@ -17,7 +17,7 @@
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 <script src="#APPLICATION.path#/jquery/jquery-mask/jquery.mask.min.js"></script>
 
-<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>
+<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2.2"></script>
 </cfoutput>
 
 <cfset itemTypeId = 10>

@@ -4,7 +4,7 @@
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script type="text/javascript" src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
-<!---<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2"></script>--->
+<!---<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2.2"></script>--->
 <script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 <!---bootstrap-select--->
