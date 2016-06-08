@@ -160,7 +160,7 @@
 
 	function openUserSelectorWithField(fieldName){
 
-		return openUserPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+		return openUserPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
 
 	}
 

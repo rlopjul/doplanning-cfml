@@ -294,7 +294,7 @@
 
 	function loadTableFields(itemTypeId, tableId) {
 
-		$( 'select[name="referenced_field_id"]' ).load( '#APPLICATION.htmlPath#/html_content/table_fields_select_options.cfm?itemTypeId='+itemTypeId+'&table='+tableId  );
+		$( 'select[name="referenced_field_id"]' ).load( '#APPLICATION.mainUrl##APPLICATION.htmlPath#/html_content/table_fields_select_options.cfm?itemTypeId='+itemTypeId+'&table='+tableId  );
 
 	}
 
