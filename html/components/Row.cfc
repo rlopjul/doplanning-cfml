@@ -965,6 +965,8 @@
 
 										<a href="#APPLICATION.htmlPath#/#referencedTableTypeName#_row.cfm?#referencedTableTypeName#=#referencedTableId#&row=#field_value#">#rowQuery['field_#fields.referenced_field_id#']#</a>
 
+									<cfelse>
+										<i lang="es">REGISTRO NO ENCONTRADO</i>
 									</cfif>
 
 								</cfif>
