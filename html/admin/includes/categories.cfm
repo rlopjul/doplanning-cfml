@@ -46,7 +46,7 @@
 
 		function openAreaSelector(itemTypeId){
 		
-			return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?itemTypeId='+itemTypeId);
+			return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm?itemTypeId='+itemTypeId);
 			
 		}
 

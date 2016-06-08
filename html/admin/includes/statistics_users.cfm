@@ -185,7 +185,7 @@
 
 	function openAreaSelector(){
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm');
 
 	}
 

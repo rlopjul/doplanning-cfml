@@ -45,9 +45,9 @@
 	function openAreaSelector(){
 
 		<cfif APPLICATION.publicationScope IS true AND isNumeric(table.publication_scope_id)>
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?scope=#table.publication_scope_id#');
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm?scope=#table.publication_scope_id#');
 		<cfelse>
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm');
 		</cfif>
 
 	}

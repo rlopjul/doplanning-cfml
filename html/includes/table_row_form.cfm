@@ -42,13 +42,13 @@
 
 		function openUserSelectorWithField(fieldName){
 
-			return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+			return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
 
 		}
 
 		function openItemSelectorWithField(itemTypeId,fieldName){
 
-			return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
+			return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
 
 		}
 

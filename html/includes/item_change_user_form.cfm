@@ -29,7 +29,7 @@
 
 	function openUserSelector(){
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
 	}
 
 	function setSelectedUser(userId, userName) {

@@ -50,7 +50,7 @@
 
 	function openAreaSelector(){
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm');
 
 	}
 
@@ -65,13 +65,13 @@
 
 	function openUserSelectorWithField(fieldName){
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
 
 	}
 
 	function openItemSelectorWithField(itemTypeId,fieldName){
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
 
 	}
 
@@ -81,7 +81,7 @@
 
 			showLoadingPage(true);
 
-			var areaListPage = "#APPLICATION.htmlPath#/html_content/area_list_input_options.cfm?area="+areaId;
+			var areaListPage = "#APPLICATION.mainUrl##APPLICATION.htmlPath#/html_content/area_list_input_options.cfm?area="+areaId;
 
 			if(!isNaN(selectedValue)){
 				areaListPage = areaListPage+"&selected="+selectedValue;

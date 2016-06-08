@@ -164,13 +164,13 @@
 
 	function openUserSelector(){
 
-		 return openPopUp('#APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
+		 return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
 	}
 
 	function openUserSelectorWithField(fieldName){
 
 		selectUserType = fieldName;
-		return openPopUp('#APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/users_select.cfm?field='+fieldName);
 
 	}
 
@@ -190,14 +190,14 @@
 
 	function openItemSelectorWithField(itemTypeId,fieldName){
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/all_items_select.cfm?itemTypeId='+itemTypeId+'&field='+fieldName);
 
 	}
 
 
 	function openAreaSelector(){
 
-		return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm');
+		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm');
 
 	}
 
@@ -507,7 +507,7 @@
 
 				function openAreasSelector(){
 
-					return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?multiple=1&disable_area=#area_id#&read_only=0');
+					return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm?multiple=1&disable_area=#area_id#&read_only=0');
 
 				}
 

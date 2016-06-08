@@ -28,9 +28,9 @@
 	function openAreaSelector(){
 
 		<cfif isNumeric(file.publication_scope_id)>
-			return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=0&no_web_enabled=1&scope=#file.publication_scope_id#');
+			return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=0&no_web_enabled=1&scope=#file.publication_scope_id#');
 		<cfelse>
-			return openPopUp('#APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=0&no_web_enabled=1');
+			return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=0&no_web_enabled=1');
 		</cfif>
 
 	}
