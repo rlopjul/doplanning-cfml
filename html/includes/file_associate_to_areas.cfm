@@ -140,7 +140,12 @@
 	<cfset folder_id = URL.folder>
 </cfif>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/file_head.cfm">
+<cfif isDefined("URL.file")>
+	<cfset file_id = URL.file>
+<cfelse>
+	<cflocation url="area.cfm" addtoken="no">
+</cfif>
+
 
 <cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
 	<cfinvokeargument name="file_id" value="#file_id#">
