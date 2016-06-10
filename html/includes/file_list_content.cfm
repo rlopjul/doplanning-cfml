@@ -98,6 +98,34 @@
 
   });
 
+	<cfoutput>
+
+	<cfif select_enabled IS true>
+
+		function goToAssociateFileToAreas() {
+
+			var associateFilesIds = "";
+
+			$('##listTable tbody tr:visible input[type=checkbox]:checked').each(function() {
+
+				if(associateFilesIds.length > 0)
+					associateFilesIds = associateFilesIds+","+this.value;
+				else
+					associateFilesIds = this.value;
+
+			});
+
+			if(associateFilesIds.length > 0)
+				goToUrl("area_file_associate_areas.cfm?area=#area_id#&files="+associateFilesIds);
+			else
+				parent.showAlertModal("No hay archivos seleccionados");
+
+		}
+
+	</cfif>
+
+	</cfoutput>
+
 </script>
 
 <div class="row">
@@ -109,7 +137,7 @@
 
 					<div class="btn-toolbar">
 						<div class="btn-group">
-							<a class="btn btn-info btn-sm navbar-btn"><i class="icon-plus icon-white"></i> <span lang="es">Asociar a áreas</span></a>
+							<button class="btn btn-info btn-sm navbar-btn" onclick="goToAssociateFileToAreas()"><i class="icon-plus icon-white"></i> <span lang="es">Asociar a áreas</span></button>
 						</div>
 					</div>
 
@@ -118,7 +146,7 @@
 		</div>
 	</nav>
 
-</div>	
+</div>
 
 <cfset numFiles = files.recordCount>
 <div class="div_items">
