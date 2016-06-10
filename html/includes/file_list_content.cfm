@@ -7,6 +7,12 @@
  --->
 <cfset page_type = 3>
 
+<cfif full_content IS false>
+	<cfset select_enabled = true>
+<cfelse>
+	<cfset select_enabled = false>
+</cfif>
+
 
 <script>
 	$(document).ready(function() {
@@ -17,21 +23,42 @@
 			<cfelse>
 			widgets: ['zebra'],
 			</cfif>
-			sortList: [[5,1]] ,
-			headers: {
-				0: {
-					sorter: false
+			<cfif select_enabled IS true>
+				sortList: [[6,1]] ,
+				headers: {
+					0: {
+						sorter: false
+					},
+					1: {
+						sorter: false
+					},
+					2: {
+						sorter: "text"
+					},
+					5: {
+						sorter: "datetime"
+					},
+					6: {
+						sorter: "datetime"
+					}
 				},
-				1: {
-					sorter: "text"
+			<cfelse>
+				sortList: [[5,1]] ,
+				headers: {
+					0: {
+						sorter: false
+					},
+					1: {
+						sorter: "text"
+					},
+					4: {
+						sorter: "datetime"
+					},
+					5: {
+						sorter: "datetime"
+					}
 				},
-				4: {
-					sorter: "datetime"
-				},
-				5: {
-					sorter: "datetime"
-				}
-			},
+			</cfif>
 			<cfif full_content IS false>
 			widgetOptions : {
 				filter_childRows : false,
@@ -67,7 +94,10 @@
 	<table id="listTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap">
 		<thead>
 			<tr>
-				<cfif full_content IS false>
+				<cfif full_content IS false><!--- Files of one area --->
+					<cfif select_enabled IS true>
+						<th style="width:35px;" class="filter-false"></th>
+					</cfif>
 					<th style="width:32px" class="filter-false"></th>
 					<th style="width:37%" lang="es">Archivo</th>
 					<th style="width:6%" lang="es">Tipo</th>
@@ -97,6 +127,13 @@
 		<cfset item_page_url = "file.cfm?area=#files.area_id#&file=#files.id#">
 
 		<tr data-item-url="#item_page_url#" data-item-id="#files.id#" onclick="stopEvent(event)" <cfif itemSelected IS true>class="selected"</cfif>>
+
+			<cfif select_enabled IS true>
+				<td style="text-align:center">
+					<input type="checkbox" name="selected_file_#files.id#" value="#files.id#">
+				</td>
+			</cfif>
+
 			<td style="text-align:center">
 				<cfif isDefined("page_type") AND page_type IS 2>
 					<form name="file_#files.id#" action="#APPLICATION.htmlComponentsPath#/File.cfc?method=associateFile" method="post" style="float:left;">
