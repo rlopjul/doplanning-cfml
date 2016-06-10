@@ -1,6 +1,6 @@
 <cfoutput>
 
-<!--- 
+<!---
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
  --->
 
@@ -24,57 +24,29 @@
 	</div>
 
 	<script>
-		$(document).ready(function() { 
-
-			<!---$("##submit_select").click(function(){ 
-								
-				var itemId = null;
-				var itemName = "";
-
-				// Selección de item
-				itemId = $("##listTable tr.selected").data("item-id");
-				
-				if(itemId != null) {
-			
-					itemName = $("##listTable tr.selected a:first").text();
-
-					window.opener.setSelectedItem(itemId, itemName, '#URL.field#');
-					
-					window.close();	
-
-				}else{
-					alert(window.lang.translate("No se ha seleccionado ningún elemento"));
-				}
-
-			});--->
-
-			<!---$('##listTable').bind('select.tablesorter.select', function(e, ts){--->
+		$(document).ready(function() {
 
 			$('##listTable tbody tr').on('click', function(e) {
 			   	var itemId = null;
 				var itemName = "";
 
-				<!---itemId = $("##listTable tr.selected").data("item-id");--->
-
 				var $row = $(this);
 				var itemId = $row.data("item-id");
-				
+
 				if(itemId != null) {
-			
-					<!---itemName = $("##listTable tr.selected a.text_item").text();--->
 
 					itemName = $row.find("a.text_item").text();
 
 					window.opener.setSelectedItem(itemId, itemName, '#URL.field#');
-					window.close();	
+					window.close();
 
 				}else{
 					alert(window.lang.translate("Selección incorrecta"));
 				}
-			    
+
 			});
 
-		}); 
+		});
 	</script>
 
 	<div class="container">
@@ -84,11 +56,11 @@
 	<cfif isDefined("URL.search")>
 
 		<cfif itemTypeId IS 10><!--- Files --->
-		
-			
+
+
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getAllAreasFiles" argumentcollection="#URL#" returnvariable="getAllAreasFilesResponse">
 				<cfif len(search_text) GT 0>
-					<cfinvokeargument name="search_text" value="#search_text#">	
+					<cfinvokeargument name="search_text" value="#search_text#">
 				</cfif>
 				<cfif isNumeric(user_in_charge)>
 					<cfinvokeargument name="user_in_charge" value="#user_in_charge#">
@@ -98,7 +70,7 @@
 			<cfset files = getAllAreasFilesResponse.files>
 
 			<cfset numItems = files.recordCount>
-			
+
 			<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numItems# <span lang="es"><cfif numItems IS 1>Archivo<cfelse>Archivos</cfif></span></div>
 
 			<cfset full_content = true>
@@ -112,7 +84,7 @@
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getAllAreasItems" returnvariable="getAllAreasItemsResponse">
 				<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 				<cfif len(search_text) GT 0>
-				<cfinvokeargument name="search_text" value="#search_text#">	
+				<cfinvokeargument name="search_text" value="#search_text#">
 				</cfif>
 				<cfif isNumeric(user_in_charge)>
 				<cfinvokeargument name="user_in_charge" value="#user_in_charge#">
@@ -133,17 +105,17 @@
 				<cfif isNumeric(limit_to)>
 					<cfinvokeargument name="limit" value="#limit_to#">
 				</cfif>
-				
+
 				<cfif len(from_date) GT 0>
 					<cfinvokeargument name="from_date" value="#from_date#">
-				</cfif>		
-				
+				</cfif>
+
 				<cfif len(end_date) GT 0>
 					<cfinvokeargument name="end_date" value="#end_date#">
-				</cfif>		
-				
+				</cfif>
+
 			</cfinvoke>
-			
+
 			<cfset areaItemsQuery = getAllAreasItemsResponse.query>
 
 			<cfset numItems = areaItemsQuery.recordCount>
@@ -151,13 +123,13 @@
 				<div class="div_search_results_text" style="margin-bottom:5px; margin-top:5px;"><span lang="es">Resultado:</span> #numItems# <span lang="es"><cfif numItems GT 1>#itemTypeNameEsP#<cfelse>#itemTypeNameEs#</cfif></span>
 				</div>
 				<div class="div_items">
-				
+
 				<!---<cfif itemTypeId IS NOT 6>
 					<cfset current_url = "#lCase(itemTypeNameP)#_search.cfm?from_user=#user_in_charge#&limit=#limit_to#">
 				<cfelse>
 					<cfset current_url = "#lCase(itemTypeNameP)#_search.cfm?from_user=#user_in_charge#&to_user=#recipient_user#&limit=#limit_to#">
 				</cfif>--->
-				
+
 				<cfif itemTypeId IS 7><!---Consultations--->
 
 					<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputConsultationsList">
@@ -177,9 +149,9 @@
 						<cfinvokeargument name="app_version" value="html2">
 						<cfinvokeargument name="openItemOnSelect" value="false">
 					</cfinvoke>
-			
+
 				<cfelse>
-				
+
 					<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItemsList">
 						<cfinvokeargument name="itemsQuery" value="#areaItemsQuery#">
 						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
@@ -187,9 +159,9 @@
 						<cfinvokeargument name="app_version" value="html2">
 						<cfinvokeargument name="openItemOnSelect" value="false">
 					</cfinvoke>
-				
+
 				</cfif>
-				
+
 				</div>
 
 				<!---<cfoutput>

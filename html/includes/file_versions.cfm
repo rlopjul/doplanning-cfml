@@ -39,7 +39,7 @@
 <span lang="es">Versiones de archivo</span></div>
 
 <cfif app_version NEQ "mobile">
-	
+
 <div class="div_head_subtitle_area">
 
 	<div class="btn-toolbar" style="padding-right:5px;">
@@ -53,12 +53,6 @@
 		</cfif>--->
 
 		<!---<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Archivo" lang="es"> <img style="height:22px;" src="/html/assets/icons/file_edited.png">&nbsp;&nbsp;<span lang="es">Archivo</span></a>--->
-
-		<!---<div class="btn-group">
-			<a href="area_items.cfm?area=#area_id#&file=#file_id#" class="btn btn-default btn-sm" title="Área" lang="es"> <img src="/html/assets/icons_dp/area_small.png" style="height:17px;" alt="Área" lang="es">&nbsp;<span lang="es">Área</span></a>
-		</div>--->
-
-		<!---<span class="divider">&nbsp;</span>--->
 
 		<cfif app_version NEQ "mobile">
 			<div class="btn-group pull-right">
@@ -79,8 +73,6 @@
 	<cfif versions.recordCount GT 0>
 
 		<cfinclude template="#APPLICATION.htmlPath#/includes/file_versions_list.cfm">
-		<!---<cfset full_content = false>
-		<cfinclude template="#APPLICATION.htmlPath#/includes/file_list_content.cfm">--->		
 
 	</cfif>
 
