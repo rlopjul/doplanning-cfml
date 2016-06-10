@@ -13,9 +13,9 @@
 
 		$("#listTable").tablesorter({
 			<cfif full_content IS false>
-			widgets: ['zebra','filter','select'],
+			widgets: ['zebra','filter'],
 			<cfelse>
-			widgets: ['zebra','select'],
+			widgets: ['zebra'],
 			</cfif>
 			sortList: [[5,1]] ,
 			headers: {
