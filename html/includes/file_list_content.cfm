@@ -80,9 +80,45 @@
 		});
 
 
+		<cfif select_enabled IS true>
+
+			$('#listTable tbody input[type=checkbox]').on('click', function(e) {
+
+	    	stopPropagation(e);
+
+	    	if( $('#listTable tbody tr:visible input[type=checkbox]:checked').length > 0 )
+					$('#actionFilesNavBar').show();
+				else
+					$('#actionFilesNavBar').hide();
+
+	    });
+
+		</cfif>
+
+
   });
 
 </script>
+
+<div class="row">
+
+	<nav class="navbar-default" id="actionFilesNavBar" style="display:none">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+
+					<div class="btn-toolbar">
+						<div class="btn-group">
+							<a class="btn btn-info btn-sm navbar-btn"><i class="icon-plus icon-white"></i> <span lang="es">Asociar a áreas</span></a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</nav>
+
+</div>	
 
 <cfset numFiles = files.recordCount>
 <div class="div_items">
