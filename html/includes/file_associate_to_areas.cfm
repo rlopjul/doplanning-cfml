@@ -7,12 +7,12 @@
 	page_type 2:
 		area_id
 --->
-<cfif isDefined("FORM.areas_ids") AND isDefined("FORM.file_id")>
+<cfif isDefined("FORM.areas_ids") AND isDefined("FORM.files_ids")>
 
-	<cfset file_id = FORM.file_id>
+	<cfset files_ids = FORM.files_ids>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="associateFileToAreas" returnvariable="resultAddFiles">
-		<cfinvokeargument name="file_id" value="#file_id#">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="associateFilesToAreas" returnvariable="resultAddFiles">
+		<cfinvokeargument name="files_ids" value="#files_ids#">
 		<cfinvokeargument name="areas_ids" value="#FORM.areas_ids#">
 
 		<cfif isDefined("FORM.publication_date")>
@@ -32,7 +32,11 @@
 	<cfset res = resultAddFiles.result>
 
 	<cfif isDefined("FORM.area_id")>
-		<cflocation url="#return_path#file.cfm?file=#file_id#&area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+		<cfif listlen(files_ids) IS 1>
+			<cflocation url="#return_path#file.cfm?file=#files_ids#&area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+		<cfelse>
+			<cflocation url="#return_path#files.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+		</cfif>
 	<cfelseif isDefined("FORM.folder_id")>
 		<cflocation url="#return_path#my_files_file.cfm?file=#file_id#&folder=#FORM.folder_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 	</cfif>
@@ -251,7 +255,7 @@
 	</script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
-	<input type="hidden" name="file_id" value="#file_id#">
+	<input type="hidden" name="files_ids" value="#files_ids#">
 	<cfif isDefined("area_id")>
 	<input type="hidden" name="area_id" value="#area_id#">
 	</cfif>

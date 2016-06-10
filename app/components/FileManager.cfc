@@ -913,7 +913,7 @@
 
 			<cfinclude template="includes/functionEndNoLog.cfm">
 
-			<cfset response = {result=true, file_id=#arguments.file_id#, areas_ids=#successfulAreas#, allAreas=#allAreas#}>
+			<cfset response = {result=true, file_id=#arguments.file_id#, file_name=#objectFile.name#, areas_ids=#successfulAreas#, allAreas=#allAreas#}>
 
 			<cfcatch>
 

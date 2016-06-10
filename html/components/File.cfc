@@ -411,10 +411,10 @@
 	</cffunction>
 
 
-	<!--- ---------------------------------- associateFileToAreas -------------------------------------- --->
+	<!--- ---------------------------------- associateFilesToAreas -------------------------------------- --->
 
-	<cffunction name="associateFileToAreas" access="public" returntype="struct">
-		<cfargument name="file_id" type="numeric" required="true">
+	<cffunction name="associateFilesToAreas" access="public" returntype="struct">
+		<cfargument name="files_ids" type="string" required="true">
 		<cfargument name="areas_ids" type="array" required="true">
 
 		<cfargument name="publication_date" type="string" required="false">
@@ -422,48 +422,65 @@
 		<cfargument name="publication_minute" type="numeric" required="false">
 		<cfargument name="publication_validated" type="boolean" required="false">
 
-		<cfset var method = "associateFileToAreas">
+		<cfset var method = "associateFilesToAreas">
 
 		<cfset var response = structNew()>
 
+		<cfset var response_messages = "">
+
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="associateFileToAreas" returnvariable="response">
-				<cfinvokeargument name="file_id" value="#arguments.file_id#"/>
-				<cfinvokeargument name="areas_ids" value="#arrayToList(arguments.areas_ids)#"/>
+			<cfloop list="#files_ids#" index="file_id">
 
-				<cfif isDefined("arguments.publication_date")>
-					<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
-				</cfif>
-				<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
-			</cfinvoke>
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="associateFileToAreas" returnvariable="associateResponse">
+					<cfinvokeargument name="file_id" value="#file_id#"/>
+					<cfinvokeargument name="areas_ids" value="#arrayToList(arguments.areas_ids)#"/>
 
-			<cfif response.result IS true>
+					<cfif isDefined("arguments.publication_date")>
+						<cfinvokeargument name="publication_date" value="#arguments.publication_date# #arguments.publication_hour#:#arguments.publication_minute#">
+					</cfif>
+					<cfinvokeargument name="publication_validated" value="#arguments.publication_validated#">
+				</cfinvoke>
 
-				<cfif response.allAreas IS true>
+				<cfif associateResponse.result IS true>
 
-					<cfif arrayLen(areas_ids) IS 1>
-						<cfset response_message = "Archivo asociado al área.">
+					<cfif associateResponse.allAreas IS true>
+
+						<cfif arrayLen(areas_ids) IS 1 AND listLen(files_ids) IS 1>
+							<cfset response_message = "Archivo asociado al área.">
+						<cfelse>
+							<cfset response_message = "Archivo asociado a las áreas.">
+						</cfif>
+
 					<cfelse>
-						<cfset response_message = "Archivo asociado a las áreas.">
+
+						<cfif arrayLen(areas_ids) IS 1 AND listLen(files_ids) IS 1>
+							<cfset response_message = "El archivo ya estaba asociado al área.">
+
+							<cfset response = {result=false, message=#response_message#}>
+							<cfreturn response>
+						<cfelse>
+							<cfset response_message = "Archivo asociado a las áreas. En una o varias de las areas seleccionadas ya estaba asociado.">
+						</cfif>
+
+					</cfif>
+
+					<cfif listLen(files_ids) GT 1>
+						<cfset response_messages = response_messages&"<b>#associateResponse.file_name#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_message>
 					</cfif>
 
 				<cfelse>
 
-					<cfif arrayLen(areas_ids) IS 1>
-						<cfset response_message = "El archivo ya estaba asociado al área.">
-
-						<cfset response = {result=false, message=#response_message#}>
-						<cfreturn response>
-					<cfelse>
-						<cfset response_message = "Archivo asociado a las áreas. En una o varias de las areas seleccionadas ya estaba asociado.">
-					</cfif>
+					<cfset response = {result=false, message=associateResponse.message}>
+					<cfbreak>
 
 				</cfif>
 
-				<cfset response = {result=true, message=#response_message#}>
+			</cfloop>
 
-			</cfif>
+			<cfset response = {result=true, message=#response_messages#}>
 
 			<cfcatch>
 
