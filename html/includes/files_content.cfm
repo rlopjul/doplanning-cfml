@@ -91,19 +91,13 @@
 
 	$(document).ready(function() {
 
-		<!--- https://code.google.com/p/tablesorter-extras/wiki/TablesorterSelect --->
-		<!---$('#listTable').bind('select.tablesorter.select', function(event, ts){
-		    var itemUrl= $(ts.elem).data("item-url");
-		    openUrlLite(itemUrl,'itemIframe');
-		});--->
-
 		$('#listTable tbody tr').on('click', function(e) {
 
-	        var row = $(this);
-	        var itemUrl = row.data("item-url");
-	        goToUrl(itemUrl);
+        var row = $(this);
+        var itemUrl = row.data("item-url");
+        goToUrl(itemUrl);
 
-	    });
+	  });
 
 	});
 
