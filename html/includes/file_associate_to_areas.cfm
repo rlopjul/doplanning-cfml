@@ -171,8 +171,12 @@
 <cfif page_type IS 1>
 <span lang="es">Asociar archivo a áreas</span>
 <cfelse>
-<!---Copiar archivo a áreas--->
-<span lang="es">Asociar archivo a áreas</span>
+	<!---Copiar archivo a áreas--->
+	<cfif isDefined("URL.file")>
+		<span lang="es">Asociar archivo a áreas</span>
+	<cfelse>
+		<span lang="es">Asociar archivos a áreas</span>
+	</cfif>
 </cfif>
 </div>
 

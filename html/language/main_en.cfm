@@ -854,6 +854,7 @@ curLangTextEn = {
 
     /*area_file_associate_areas*/
     "Asociar archivo a áreas":"Associate file to areas",
+    "Asociar archivos a áreas":"Associate files to areas",
     "Seleccione las áreas a las que desea asociar el archivo":"Select the areas you want to associate the file",
     "Ámbito de publicación definido para el archivo:":"Publication scope defined for the file:",
     "Archivo desbloqueado.":"File is unlocked.",
