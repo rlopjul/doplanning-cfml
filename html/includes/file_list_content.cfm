@@ -215,11 +215,6 @@
 	</cfoutput>
 
 <cfelse>
-
-	<script type="text/javascript">
-		openUrlHtml2('empty.cfm','itemIframe');
-	</script>
-
 	<div class="alert alert-info" role="alert" style="margin:10px;"><i class="icon-info-sign"></i> <span lang="es">No hay archivos en esta área.</span></div>
 </cfif>
 </div>
