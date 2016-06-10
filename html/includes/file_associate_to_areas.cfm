@@ -262,7 +262,11 @@
 	<input type="submit" class="btn btn-primary"  lang="es" value="Añadir archivo a áreas seleccionadas" />
 
 	<cfif isDefined("area_id")>
-		<cfset return_page = "#return_path#file.cfm?file=#file_id#&area=#area_id#">
+		<cfif isDefined("URL.file")>
+			<cfset return_page = "#return_path#file.cfm?file=#file_id#&area=#area_id#">
+		<cfelse>
+			<cfset return_page = "#return_path#files.cfm?area=#area_id#">
+		</cfif>
 	<cfelseif isDefined("folder_id")>
 		<cfset return_page = "#return_path#my_files_file.cfm?file=#file_id#&folder=#folder_id#">
 	</cfif>
