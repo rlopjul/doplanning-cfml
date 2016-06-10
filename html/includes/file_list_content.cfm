@@ -57,14 +57,8 @@
 
 </script>
 
-<!---<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">--->
-
-<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIconsTypes" returnvariable="iconTypes">
-</cfinvoke>--->
-
 <cfset numFiles = files.recordCount>
 <div class="div_items">
-<!---<div class="div_separator"><!-- --></div>--->
 
 <cfif numFiles GT 0>
 
@@ -85,7 +79,6 @@
 					<th style="width:21%" lang="es">Archivo</th>
 					<th style="width:6%" lang="es">Tipo</th>
 					<th style="width:18%" lang="es">De</th>
-					<!---<th style="width:12%" lang="es">Tamaño</th>--->
 					<th style="width:17%" lang="es">Fecha asociación</th>
 					<th style="width:17%" lang="es">Última versión</th>
 					<th style="width:19%" lang="es">Área</th>
@@ -100,36 +93,6 @@
 
 		<!---File selection--->
 		<cfset itemSelected = false>
-
-		<!---
-		<cfif alreadySelected IS false AND NOT isDefined("URL.field")><!---No es selección de archivo--->
-
-			<cfif isDefined("URL.file")>
-
-				<cfif URL.file IS files.id>
-					<!---Esta acción solo se completa si está en la versión HTML2--->
-					<script type="text/javascript">
-						openUrlHtml2('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe');
-					</script>
-					<cfset itemSelected = true>
-				</cfif>
-
-			<cfelseif files.currentRow IS 1>
-
-				<!---Esta acción solo se completa si está en la versión HTML2--->
-				<script type="text/javascript">
-					openUrlHtml2('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe');
-				</script>
-				<cfset itemSelected = true>
-
-			</cfif>
-
-			<cfif itemSelected IS true>
-				<cfset alreadySelected = true>
-			</cfif>
-
-		</cfif>
-		--->
 
 		<cfset item_page_url = "file.cfm?area=#files.area_id#&file=#files.id#">
 
@@ -185,12 +148,6 @@
 
 			<cfelse><i><span lang="es">Área</span></i></cfif>
 			</td>
-			<!---<td><span>#files.file_size#</span></td>--->
-			<!---<cfif len(files.association_date) GT 0>
-				<cfset addedDate = files.association_date>
-			<cfelse>
-				<cfset addedDate = files.uploading_date>
-			</cfif>--->
 			<cfset addedDate = files.association_date>
 			<cfset spacePos = findOneOf(" ", addedDate)>
 			<td>
@@ -226,7 +183,6 @@
 		openUrlHtml2('empty.cfm','itemIframe');
 	</script>
 
-	<!---<div class="div_text_result"><span lang="es">No hay archivos en esta área.</span></div>--->
 	<div class="alert alert-info" role="alert" style="margin:10px;"><i class="icon-info-sign"></i> <span lang="es">No hay archivos en esta área.</span></div>
 </cfif>
 </div>
