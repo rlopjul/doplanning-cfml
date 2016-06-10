@@ -180,6 +180,9 @@
 </cfif>
 </div>
 
+
+<cfset scopeFilesAreasList = "">
+
 <cfoutput>
 
 <cfloop list="#files_ids#" index="file_id">
@@ -236,6 +239,31 @@
 
 			</cfif>
 
+			<cfif len(scopeFilesAreasList) IS 0>
+				<cfset scopeFilesAreasList = scopeAreasList>
+			<cfelse>
+
+				<!--- Get common scope areas --->
+
+				<cfset newScopeAreasList = "">
+
+				<cfloop list="#scopeAreasList#" index="scope_area_id">
+
+					<cfset isAreaInFilesScope = listFind(scopeFilesAreasList, scope_area_id)>
+
+					<cfif isAreaInFilesScope GT 0>
+
+						<cfset newScopeAreasList = listAppend(newScopeAreasList, scope_area_id)>
+
+					</cfif>
+
+				</cfloop>
+
+				<cfset scopeFilesAreasList = newScopeAreasList>
+
+			</cfif>
+
+
 		</cfif>
 
 	</div>
@@ -245,6 +273,12 @@
 <div class="alert alert-info" style="margin:5px;"><span lang="es">Seleccione las áreas a las que desea asociar el archivo</span></div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
+
+<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id) AND listLen(scopeFilesAreasList) GT 0>
+	<cfif isDefined("URL.files")>
+		<small>Solo se muestran seleccionables las áreas dentro del ámbito de todos los archivos</small>
+	</cfif>
+</cfif>
 
 <div id="mainContainer" style="clear:both;display:none;padding-left:5px;">
 <cfform name="add_file_to_areas" method="post" action="#CGI.SCRIPT_NAME#" class="form-horizontal" style="clear:both;" onsubmit="return onSubmitForm();">
@@ -302,10 +336,8 @@
 		<!--- Ahora sí se pueden asociar archivos internos a las áreas web
 		<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan asociar archivos a las áreas WEB---> --->
 
-		<cfif isDefined("URL.file")>
-			<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id) AND listLen(scopeAreasList) GT 0>
-				<cfinvokeargument name="enable_only_areas_ids" value="#scopeAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
-			</cfif>
+		<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id) AND listLen(scopeFilesAreasList) GT 0>
+			<cfinvokeargument name="enable_only_areas_ids" value="#scopeFilesAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
 		</cfif>
 		<cfinvokeargument name="with_input_type" value="checkbox">
 		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
