@@ -1340,18 +1340,6 @@
 				<script>
 					$(document).ready(function() {
 
-						<!---$.tablesorter.addParser({
-					        id: "custom-checkbox",
-					        is: function(s) {
-					            return false;
-					        },
-					        format: function(s, t, cell) {
-					        	console.log($(cell).find("input[type=checkbox]").is(':checked'));
-					            return $(cell).find("input[type=checkbox]").is(':checked') ? 1 : 0;
-					        },
-					        type: "numeric"
-					    });--->
-
 						$("###usersTableId#").tablesorter({
 							<cfif arguments.filter_enabled IS true>
 							widgets: ['filter','stickyHeaders'<cfif arguments.outputRowsEnabled>,'output'</cfif>],
@@ -1402,11 +1390,7 @@
 										</cfif>
 									</cfif>
 								</cfif>
-								<!---<cfif APPLICATION.moduleWebRTC IS true>
-								, 5: {
-									sorter: false
-								}
-								</cfif>--->
+
 							},
 							<cfif arguments.filter_enabled IS true>
 							widgetOptions : {
@@ -1512,9 +1496,6 @@
 								<th style="width:130px;"></th>
 								</cfif>
 							</cfif>
-							<!---<cfif APPLICATION.moduleWebRTC IS true>
-							<th style="width:40px;" lang="es"></th>
-							</cfif>--->
 						</tr>
 					</thead>
 
@@ -1591,13 +1572,6 @@
 									<cfinvokeargument name="width_px" value="32">
 								</cfinvoke>
 
-								<!---
-								<cfif len(objectUser.image_type) GT 0>
-									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectUser.id#&type=#objectUser.image_type#&small=" alt="#objectUser.family_name# #objectUser.name#" class="item_img"/>
-								<cfelse>
-									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectUser.user_full_name#" class="item_img_default" />
-								</cfif>
-								---->
 							</td>
 							<td class="text_item">#objectUser.family_name#</td>
 							<td class="text_item">#objectUser.name#</td>
