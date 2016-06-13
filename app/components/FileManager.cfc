@@ -748,16 +748,6 @@
 			<cfset file_id = fileXml.file.xmlAttributes.id>
 			<cfset folder_id = folderXml.folder.xmlAttributes.id>
 
-			<!---<cfif isDefined("fileXml.file.xmlAttr.xmlText")>
-				<cfset desc = "#fileXml.file.description.xmlText#">
-				<cfset desc = '#replace(desc,"<![CDATA[","","all")#'>
-				<cfset desc = '#replace(desc,"]]>","","all")#'>
-				<cfquery name="descriptionQuery" datasource="#client_dsn#">
-					UPDATE #client_abb#_files SET description = <cfqueryPARAM value = "#desc#" CFSQLType = "CF_SQL_varchar">
-					WHERE id = <cfqueryPARAM value = "#fileXml.file.XmlAttributes.id#" CFSQLType = "CF_SQL_integer">;
-				</cfquery>
-			</cfif>--->
-
 			<cfquery name="moveFileQuery" datasource="#client_dsn#">
 				UPDATE #client_abb#_folders_files SET folder_id = <cfqueryparam value="#folder_id#" cfsqltype="cf_sql_integer">
 				WHERE file_id = <cfqueryparam value="#file_id#" cfsqltype="cf_sql_integer">;
@@ -780,7 +770,6 @@
 			<cfset xmlResponse.response.xmlAttributes.component = component>
 			<cfset xmlResponse.response.xmlAttributes.method = method>
 
-			<!---<cfinclude template="includes/functionEnd.cfm">--->
 			<cfinclude template="includes/logRecord.cfm">
 
 			<cfcatch>
@@ -1001,7 +990,6 @@
 					<cfinvokeargument name="area_id" value="#objectFile.area_id#">
 				</cfinvoke>
 			<cfelseif objectFile.user_in_charge NEQ user_id>
-				<!--- <cfthrow message="No puede asociar a un área un archivo que no es de su propiedad"> --->
 
 				<cfset response = {result=false, file_id=#objectFile.id#, area_id=#arguments.area_id#, message="No puede asociar a un área un archivo que no es de su propiedad"}>
 
@@ -1042,8 +1030,6 @@
 					<cfset response = {result=false, file_id=#objectFile.id#, area_id=#arguments.area_id#, message="El ámbito de publicación de este archivo no permite publicarlo en esta área"}>
 
 					<cfreturn response>
-
-					<!---<cfthrow message="El ámbito de publicación de este archivo no permite publicarlo en esta área">--->
 
 				</cfif>
 
@@ -1253,7 +1239,6 @@
 				<cfset response_message = "El archivo solo está asociado en esta área. Para quitarlo debe eliminarlo.">
 				<cfset response = {result=false, message=#response_message#, file_id=#file_id#, area_id=#arguments.area_id#}>
 				<cfreturn response>
-				<!---<cfthrow message="El archivo sólo está asociado en esta área. Para quitarlo debe eliminarlo.">--->
 			</cfif>
 
 			<cftransaction>
