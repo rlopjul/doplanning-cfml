@@ -7,12 +7,12 @@
 	page_type 2:
 		area_id
 --->
-<cfif isDefined("FORM.areas_ids") AND isDefined("FORM.file_id")>
+<cfif isDefined("FORM.areas_ids") AND isDefined("FORM.files_ids")>
 
-	<cfset file_id = FORM.file_id>
+	<cfset files_ids = FORM.files_ids>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="associateFileToAreas" returnvariable="resultAddFiles">
-		<cfinvokeargument name="file_id" value="#file_id#">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="associateFilesToAreas" returnvariable="resultAddFiles">
+		<cfinvokeargument name="files_ids" value="#files_ids#">
 		<cfinvokeargument name="areas_ids" value="#FORM.areas_ids#">
 
 		<cfif isDefined("FORM.publication_date")>
@@ -32,7 +32,15 @@
 	<cfset res = resultAddFiles.result>
 
 	<cfif isDefined("FORM.area_id")>
-		<cflocation url="#return_path#file.cfm?file=#file_id#&area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+		<cfif listlen(files_ids) IS 1>
+			<cflocation url="#return_path#file.cfm?file=#files_ids#&area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+		<cfelse>
+			<cfif res IS false>
+				<cflocation url="#return_path#files.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+			<cfelse><!--- Show warning message: we don't know if all files result are success --->
+				<cflocation url="#return_path#files.cfm?area=#FORM.area_id#&res=-1&msg=#URLEncodedFormat(msg)#" addtoken="no">
+			</cfif>
+		</cfif>
 	<cfelseif isDefined("FORM.folder_id")>
 		<cflocation url="#return_path#my_files_file.cfm?file=#file_id#&folder=#FORM.folder_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 	</cfif>
@@ -140,14 +148,15 @@
 	<cfset folder_id = URL.folder>
 </cfif>
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/file_head.cfm">
+<cfif isDefined("URL.file")>
+	<!---<cfset file_id = URL.file>--->
+	<cfset files_ids = URL.file>
+<cfelseif isDefined("URL.files")>
+	<cfset files_ids = URL.files>
+<cfelse>
+	<cflocation url="area.cfm" addtoken="no">
+</cfif>
 
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
-	<cfinvokeargument name="file_id" value="#file_id#">
-	<!---<cfif isDefined("area_id")>
-	<cfinvokeargument name="area_id" value="#area_id#">
-	</cfif>--->
-</cfinvoke>
 
 <cfif isDefined("area_id")>
 <!---<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">--->
@@ -162,26 +171,101 @@
 
 </cfif>
 
-<!---<cfoutput>
-<div class="div_file_page_name">#objectFile.name#</div>
-</cfoutput>--->
-
 <div class="div_head_subtitle">
 <cfif page_type IS 1>
 <span lang="es">Asociar archivo a áreas</span>
 <cfelse>
-<!---Copiar archivo a áreas--->
-<span lang="es">Asociar archivo a áreas</span>
+	<!---Copiar archivo a áreas--->
+	<cfif isDefined("URL.file")>
+		<span lang="es">Asociar archivo a áreas</span>
+	<cfelse>
+		<span lang="es">Asociar archivos a áreas</span>
+	</cfif>
 </cfif>
 </div>
+
+
+<cfset scopeFilesAreasList = "">
+
+<cfoutput>
+
+<cfloop list="#files_ids#" index="file_id">
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
+		<cfinvokeargument name="file_id" value="#file_id#">
+		<!---<cfif isDefined("area_id")>
+		<cfinvokeargument name="area_id" value="#area_id#">
+		</cfif>--->
+	</cfinvoke>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
+		<cfinvokeargument name="fileQuery" value="#objectFile#">
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfinvoke>
+
+	<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+		</cfinvoke>
+
+		<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false AND listLen(files_ids) IS 1>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
+				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
+			</cfinvoke>
+			<cfset scopesQuery = getScopesResult.scopesAreas>
+			<cfset scopeAreasList = valueList(scopesQuery.area_id)>
+
+		<cfelse>
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAllAreasIds" returnvariable="getScopesResult">
+				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
+			</cfinvoke>
+			<cfset scopeAreasList = getScopesResult.areasIds>
+
+		</cfif>
+
+		<cfif len(scopeFilesAreasList) IS 0>
+			<cfset scopeFilesAreasList = scopeAreasList>
+		<cfelse>
+
+			<!--- Get common scope areas --->
+
+			<cfset newScopeAreasList = "">
+
+			<cfloop list="#scopeAreasList#" index="scope_area_id">
+
+				<cfset isAreaInFilesScope = listFind(scopeFilesAreasList, scope_area_id)>
+
+				<cfif isAreaInFilesScope GT 0>
+
+					<cfset newScopeAreasList = listAppend(newScopeAreasList, scope_area_id)>
+
+				</cfif>
+
+			</cfloop>
+
+			<cfset scopeFilesAreasList = newScopeAreasList>
+
+		</cfif>
+
+	</cfif>
+
+</cfloop>
 
 <div class="alert alert-info" style="margin:5px;"><span lang="es">Seleccione las áreas a las que desea asociar el archivo</span></div>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/loading_div.cfm">
 
+<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id) AND listLen(scopeFilesAreasList) GT 0>
+	<cfif isDefined("URL.files")>
+		<small>Solo se muestran seleccionables las áreas comunes a todos los ámbitos de los archivos seleccionados</small>
+	</cfif>
+</cfif>
+
 <div id="mainContainer" style="clear:both;display:none;padding-left:5px;">
 <cfform name="add_file_to_areas" method="post" action="#CGI.SCRIPT_NAME#" class="form-horizontal" style="clear:both;" onsubmit="return onSubmitForm();">
-	<cfoutput>
 
 	<script>
 		var railo_custom_form;
@@ -193,7 +277,7 @@
 	</script>
 	<script type="text/javascript" src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
-	<input type="hidden" name="file_id" value="#file_id#">
+	<input type="hidden" name="files_ids" value="#files_ids#">
 	<cfif isDefined("area_id")>
 	<input type="hidden" name="area_id" value="#area_id#">
 	</cfif>
@@ -201,23 +285,17 @@
 	<input type="hidden" name="folder_id" value="#folder_id#">
 	</cfif>
 
-	</cfoutput>
+	<input type="submit" class="btn btn-primary"  lang="es" value="Añadir archivo a áreas seleccionadas" />
 
 	<cfif isDefined("area_id")>
-		<cfset return_page = "#return_path#file.cfm?file=#file_id#&area=#area_id#">
+		<cfif isDefined("URL.file")>
+			<cfset return_page = "#return_path#file.cfm?file=#file_id#&area=#area_id#">
+		<cfelse>
+			<cfset return_page = "#return_path#files.cfm?area=#area_id#">
+		</cfif>
 	<cfelseif isDefined("folder_id")>
 		<cfset return_page = "#return_path#my_files_file.cfm?file=#file_id#&folder=#folder_id#">
 	</cfif>
-
-	<cfoutput>
-
-	<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
-		<div>
-			<span class="help-block"><span lang="es">Ámbito de publicación definido para el archivo:</span> #objectFile.publication_scope_name#</span>
-		</div>
-	</cfif>
-
-	<input type="submit" class="btn btn-primary"  lang="es" value="Añadir archivo a áreas seleccionadas" />
 
 	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 
@@ -237,38 +315,13 @@
 
 	</div>
 
-	<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
-
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
-			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-		</cfinvoke>
-
-		<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false>
-
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
-				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
-			</cfinvoke>
-			<cfset scopesQuery = getScopesResult.scopesAreas>
-			<cfset scopeAreasList = valueList(scopesQuery.area_id)>
-
-		<cfelse>
-
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAllAreasIds" returnvariable="getScopesResult">
-				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
-			</cfinvoke>
-			<cfset scopeAreasList = getScopesResult.areasIds>
-
-		</cfif>
-
-	</cfif>
-
 	<div id="areasTreeContainer" style="clear:both; margin-top:2px; margin-bottom:2px;">
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaTree" method="outputMainTree">
 		<!--- Ahora sí se pueden asociar archivos internos a las áreas web
 		<cfinvokeargument name="disable_input_web" value="true"><!---Esto es para que no se puedan asociar archivos a las áreas WEB---> --->
 
-		<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id) AND listLen(scopeAreasList) GT 0>
-			<cfinvokeargument name="enable_only_areas_ids" value="#scopeAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
+		<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id) AND listLen(scopeFilesAreasList) GT 0>
+			<cfinvokeargument name="enable_only_areas_ids" value="#scopeFilesAreasList#"><!--- Habilita sólo las áreas pasadas y sus descendientes --->
 		</cfif>
 		<cfinvokeargument name="with_input_type" value="checkbox">
 		<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
@@ -372,9 +425,9 @@
 
 	<input name="submit" type="submit" class="btn btn-primary" lang="es" value="Añadir archivo a áreas seleccionadas" />
 	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
-	</cfoutput>
-</cfform>
 
+</cfform>
+</cfoutput>
 	<div style="height:5px;"><!-- --></div>
 
 	<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Interface" method="returnElement">

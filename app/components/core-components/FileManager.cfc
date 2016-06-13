@@ -82,6 +82,7 @@
 		<cfset var path = "">
 		<cfset var filePath ="">
 		<cfset var isApproved = "">
+		<cfset var itemCategories = "">
 
 
 			<cfif NOT isDefined("arguments.fileQuery")>
@@ -123,6 +124,14 @@
 				FROM #client_abb#_areas_files
 				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
+
+			<!--- Get item categories before delete --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
+				<cfinvokeargument name="item_id" value="#arguments.file_id#">
+				<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
+				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+			</cfinvoke>
 
 			<cfif arguments.forceDeleteVirus IS false AND clientQuery.bin_enabled IS true AND arguments.moveToBin IS true><!--- MOVE TO BIN --->
 
@@ -209,6 +218,15 @@
 
 					<!--- Delete areas positions --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="deleteItemPosition">
+						<cfinvokeargument name="item_id" value="#arguments.file_id#">
+						<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
+
+						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
+						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
+					</cfinvoke>
+
+					<!--- Delete file categories --->
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItemCategories">
 						<cfinvokeargument name="item_id" value="#arguments.file_id#">
 						<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
 
@@ -312,14 +330,6 @@
 			<cfif ( arguments.forceDeleteVirus IS false AND clientQuery.bin_enabled IS true AND fileQuery.status NEQ "deleted") OR clientQuery.bin_enabled IS false OR arguments.forceDeleteVirus IS true>
 
 				<cfif getFileAreasQuery.recordCount GT 0>
-
-					<!--- getItemCategories --->
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemQuery" method="getItemCategories" returnvariable="itemCategories">
-						<cfinvokeargument name="item_id" value="#arguments.file_id#">
-						<cfinvokeargument name="itemTypeId" value="#fileItemTypeId#">
-						<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
-						<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
-					</cfinvoke>
 
 					<cfloop query="getFileAreasQuery">
 

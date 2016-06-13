@@ -7,31 +7,58 @@
  --->
 <cfset page_type = 3>
 
+<cfif full_content IS false>
+	<cfset select_enabled = true>
+<cfelse>
+	<cfset select_enabled = false>
+</cfif>
+
 
 <script>
 	$(document).ready(function() {
 
 		$("#listTable").tablesorter({
 			<cfif full_content IS false>
-			widgets: ['zebra','filter','select'],
+			widgets: ['zebra','filter'],
 			<cfelse>
-			widgets: ['zebra','select'],
+			widgets: ['zebra'],
 			</cfif>
-			sortList: [[5,1]] ,
-			headers: {
-				0: {
-					sorter: false
+			<cfif select_enabled IS true>
+				sortList: [[6,1]] ,
+				headers: {
+					0: {
+						sorter: false
+					},
+					1: {
+						sorter: false
+					},
+					2: {
+						sorter: "text"
+					},
+					5: {
+						sorter: "datetime"
+					},
+					6: {
+						sorter: "datetime"
+					}
 				},
-				1: {
-					sorter: "text"
+			<cfelse>
+				sortList: [[5,1]] ,
+				headers: {
+					0: {
+						sorter: false
+					},
+					1: {
+						sorter: "text"
+					},
+					4: {
+						sorter: "datetime"
+					},
+					5: {
+						sorter: "datetime"
+					}
 				},
-				4: {
-					sorter: "datetime"
-				},
-				5: {
-					sorter: "datetime"
-				}
-			},
+			</cfif>
 			<cfif full_content IS false>
 			widgetOptions : {
 				filter_childRows : false,
@@ -53,18 +80,76 @@
 		});
 
 
+		<cfif select_enabled IS true>
+
+			$('#listTable tbody input[type=checkbox]').on('click', function(e) {
+
+	    	stopPropagation(e);
+
+	    	if( $('#listTable tbody tr:visible input[type=checkbox]:checked').length > 0 )
+					$('#actionFilesNavBar').show();
+				else
+					$('#actionFilesNavBar').hide();
+
+	    });
+
+		</cfif>
+
+
   });
+
+	<cfoutput>
+
+	<cfif select_enabled IS true>
+
+		function goToAssociateFileToAreas() {
+
+			var associateFilesIds = "";
+
+			$('##listTable tbody tr:visible input[type=checkbox]:checked').each(function() {
+
+				if(associateFilesIds.length > 0)
+					associateFilesIds = associateFilesIds+","+this.value;
+				else
+					associateFilesIds = this.value;
+
+			});
+
+			if(associateFilesIds.length > 0)
+				goToUrl("area_file_associate_areas.cfm?area=#area_id#&files="+associateFilesIds);
+			else
+				parent.showAlertModal("No hay archivos seleccionados");
+
+		}
+
+	</cfif>
+
+	</cfoutput>
 
 </script>
 
-<!---<cfset iconTypes = "pdf,rtf,txt,doc,docx,png,jpg,jpeg,gif,rar,zip,xls,xlsm,xlsx,ppt,pptx,pps,ppsx,odt">--->
+<div class="row">
 
-<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIconsTypes" returnvariable="iconTypes">
-</cfinvoke>--->
+	<nav class="navbar-default" id="actionFilesNavBar" style="display:none">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+
+					<div class="btn-toolbar">
+						<div class="btn-group">
+							<button class="btn btn-info btn-sm navbar-btn" onclick="goToAssociateFileToAreas()"><i class="icon-plus icon-white"></i> <span lang="es">Asociar a áreas</span></button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</nav>
+
+</div>
 
 <cfset numFiles = files.recordCount>
 <div class="div_items">
-<!---<div class="div_separator"><!-- --></div>--->
 
 <cfif numFiles GT 0>
 
@@ -73,7 +158,10 @@
 	<table id="listTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap">
 		<thead>
 			<tr>
-				<cfif full_content IS false>
+				<cfif full_content IS false><!--- Files of one area --->
+					<cfif select_enabled IS true>
+						<th style="width:35px;" class="filter-false"></th>
+					</cfif>
 					<th style="width:32px" class="filter-false"></th>
 					<th style="width:37%" lang="es">Archivo</th>
 					<th style="width:6%" lang="es">Tipo</th>
@@ -85,7 +173,6 @@
 					<th style="width:21%" lang="es">Archivo</th>
 					<th style="width:6%" lang="es">Tipo</th>
 					<th style="width:18%" lang="es">De</th>
-					<!---<th style="width:12%" lang="es">Tamaño</th>--->
 					<th style="width:17%" lang="es">Fecha asociación</th>
 					<th style="width:17%" lang="es">Última versión</th>
 					<th style="width:19%" lang="es">Área</th>
@@ -101,39 +188,16 @@
 		<!---File selection--->
 		<cfset itemSelected = false>
 
-		<!---
-		<cfif alreadySelected IS false AND NOT isDefined("URL.field")><!---No es selección de archivo--->
-
-			<cfif isDefined("URL.file")>
-
-				<cfif URL.file IS files.id>
-					<!---Esta acción solo se completa si está en la versión HTML2--->
-					<script type="text/javascript">
-						openUrlHtml2('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe');
-					</script>
-					<cfset itemSelected = true>
-				</cfif>
-
-			<cfelseif files.currentRow IS 1>
-
-				<!---Esta acción solo se completa si está en la versión HTML2--->
-				<script type="text/javascript">
-					openUrlHtml2('file.cfm?area=#files.area_id#&file=#files.id#','itemIframe');
-				</script>
-				<cfset itemSelected = true>
-
-			</cfif>
-
-			<cfif itemSelected IS true>
-				<cfset alreadySelected = true>
-			</cfif>
-
-		</cfif>
-		--->
-
 		<cfset item_page_url = "file.cfm?area=#files.area_id#&file=#files.id#">
 
 		<tr data-item-url="#item_page_url#" data-item-id="#files.id#" onclick="stopEvent(event)" <cfif itemSelected IS true>class="selected"</cfif>>
+
+			<cfif select_enabled IS true>
+				<td style="text-align:center" onclick="stopEvent(event)">
+					<input type="checkbox" name="selected_file_#files.id#" value="#files.id#">
+				</td>
+			</cfif>
+
 			<td style="text-align:center">
 				<cfif isDefined("page_type") AND page_type IS 2>
 					<form name="file_#files.id#" action="#APPLICATION.htmlComponentsPath#/File.cfc?method=associateFile" method="post" style="float:left;">
@@ -185,12 +249,6 @@
 
 			<cfelse><i><span lang="es">Área</span></i></cfif>
 			</td>
-			<!---<td><span>#files.file_size#</span></td>--->
-			<!---<cfif len(files.association_date) GT 0>
-				<cfset addedDate = files.association_date>
-			<cfelse>
-				<cfset addedDate = files.uploading_date>
-			</cfif>--->
 			<cfset addedDate = files.association_date>
 			<cfset spacePos = findOneOf(" ", addedDate)>
 			<td>
@@ -221,12 +279,6 @@
 	</cfoutput>
 
 <cfelse>
-
-	<script type="text/javascript">
-		openUrlHtml2('empty.cfm','itemIframe');
-	</script>
-
-	<!---<div class="div_text_result"><span lang="es">No hay archivos en esta área.</span></div>--->
 	<div class="alert alert-info" role="alert" style="margin:10px;"><i class="icon-info-sign"></i> <span lang="es">No hay archivos en esta área.</span></div>
 </cfif>
 </div>
