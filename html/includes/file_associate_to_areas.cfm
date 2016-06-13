@@ -276,7 +276,7 @@
 
 <cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id) AND listLen(scopeFilesAreasList) GT 0>
 	<cfif isDefined("URL.files")>
-		<small>Solo se muestran seleccionables las áreas dentro del ámbito de todos los archivos</small>
+		<small>Solo se muestran seleccionables las áreas comunes a todos los ámbitos de los archivos seleccionados</small>
 	</cfif>
 </cfif>
 
