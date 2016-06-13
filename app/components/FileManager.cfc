@@ -884,7 +884,7 @@
 					<cfelse>
 						<cfset allAreas = false>
 
-						<cfset response = {result=false, file_id=#arguments.file_id#, areas_ids=#successfulAreas#, allAreas=#allAreas#, message=#associateFileResult.message#}>
+						<cfset response = {result=false, file_id=#arguments.file_id#, file_name=#objectFile.name#, areas_ids=#successfulAreas#, allAreas=#allAreas#, message=#associateFileResult.message#}>
 						<cfreturn response>
 
 					</cfif>

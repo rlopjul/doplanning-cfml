@@ -465,17 +465,25 @@
 
 					</cfif>
 
-					<cfif listLen(files_ids) GT 1>
-						<cfset response_messages = response_messages&"<b>#associateResponse.file_name#</b>: #response_message#<br>">
-					<cfelse>
-						<cfset response_messages = response_message>
-					</cfif>
-
 				<cfelse>
 
-					<cfset response = {result=false, message=associateResponse.message}>
-					<cfbreak>
+					<cfset response_message = associateResponse.message>
 
+					<cfif listLen(files_ids) IS 1>
+						<cfset response = {result=false, message=response_message}>
+						<cfreturn response>
+					</cfif>
+
+				</cfif>
+
+				<cfif listLen(files_ids) GT 1>
+					<cfif isDefined("associateResponse.file_name")>
+						<cfset response_messages = response_messages&"<b>#associateResponse.file_name#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_messages&response_message&"<br>">
+					</cfif>
+				<cfelse>
+					<cfset response_messages = response_message>
 				</cfif>
 
 			</cfloop>

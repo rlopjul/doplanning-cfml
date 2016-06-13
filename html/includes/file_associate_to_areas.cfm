@@ -205,7 +205,7 @@
 			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 		</cfinvoke>
 
-		<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false>
+		<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false AND listLen(files_ids) IS 1>
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
 				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
