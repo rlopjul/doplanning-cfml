@@ -55,8 +55,11 @@
 
 			if(res == true)
 				$("#pageAlertContainer").attr("class", "alert alert-success");
-			else
+			else if (res == false) {
 				$("#pageAlertContainer").attr("class", "alert alert-danger");
+			} else {
+				$("#pageAlertContainer").attr("class", "alert alert-warning");
+			}
 
 			$("#pageAlertContainer button").after('<span>'+window.lang.translate(msg)+'</span>');
 

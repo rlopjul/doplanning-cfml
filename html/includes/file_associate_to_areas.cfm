@@ -35,7 +35,11 @@
 		<cfif listlen(files_ids) IS 1>
 			<cflocation url="#return_path#file.cfm?file=#files_ids#&area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 		<cfelse>
-			<cflocation url="#return_path#files.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+			<cfif res IS false>
+				<cflocation url="#return_path#files.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+			<cfelse><!--- Show warning message: we don't know if all files result are success --->
+				<cflocation url="#return_path#files.cfm?area=#FORM.area_id#&res=-1&msg=#URLEncodedFormat(msg)#" addtoken="no">
+			</cfif>
 		</cfif>
 	<cfelseif isDefined("FORM.folder_id")>
 		<cflocation url="#return_path#my_files_file.cfm?file=#file_id#&folder=#FORM.folder_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
