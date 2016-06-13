@@ -193,7 +193,7 @@
 		<tr data-item-url="#item_page_url#" data-item-id="#files.id#" onclick="stopEvent(event)" <cfif itemSelected IS true>class="selected"</cfif>>
 
 			<cfif select_enabled IS true>
-				<td style="text-align:center">
+				<td style="text-align:center" onclick="stopEvent(event)">
 					<input type="checkbox" name="selected_file_#files.id#" value="#files.id#">
 				</td>
 			</cfif>
