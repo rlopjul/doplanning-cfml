@@ -1480,6 +1480,40 @@
 	</cffunction>
 
 
+	<!--- ----------------------- outputFileSmall -------------------------------- --->
+
+	<cffunction name="outputFileSmall" returntype="void" output="true" access="public">
+		<cfargument name="fileQuery" type="query" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfset var method = "outputFileSmall">
+
+		<div class="well well-sm">
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="file_icon">
+				<cfinvokeargument name="file_name" value="#fileQuery.file_name#"/>
+			</cfinvoke>
+
+			<div>
+
+					<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#fileQuery.id#&area=#arguments.area_id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar">
+						<i class="#file_icon#" style="font-size:24px"></i>
+					</a>
+
+					<strong>#fileQuery.name#</strong><br>
+
+					<cfif APPLICATION.publicationScope IS true AND isNumeric(fileQuery.publication_scope_id)>
+						<div>
+							<span lang="es">Ámbito de publicación definido para el archivo:</span> <strong>#fileQuery.publication_scope_name#</strong>
+						</div>
+					</cfif>
+
+			</div>
+
+		</div>
+
+	</cffunction>
+
 
 	<!--- ----------------------- outputFileVersionStatus -------------------------------- --->
 

@@ -194,79 +194,59 @@
 		</cfif>--->
 	</cfinvoke>
 
-	<div class="well well-sm">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
+		<cfinvokeargument name="fileQuery" value="#objectFile#">
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfinvoke>
 
-		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="file_icon">
-			<cfinvokeargument name="file_name" value="#objectFile.file_name#"/>
+	<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
 		</cfinvoke>
 
-		<div>
+		<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false>
 
-				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&area=#area_id#" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar">
-					<i class="#file_icon#" style="font-size:24px"></i>
-				</a>
-
-				<strong>#objectFile.name#</strong><br>
-
-				<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
-					<div>
-						<span lang="es">Ámbito de publicación definido para el archivo:</span> <strong>#objectFile.publication_scope_name#</strong>
-					</div>
-				</cfif>
-
-		</div>
-
-		<cfif APPLICATION.publicationScope IS true AND isNumeric(objectFile.publication_scope_id)>
-
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="getUser" returnvariable="loggedUser">
-				<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
+				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
 			</cfinvoke>
+			<cfset scopesQuery = getScopesResult.scopesAreas>
+			<cfset scopeAreasList = valueList(scopesQuery.area_id)>
 
-			<cfif loggedUser.internal_user IS true AND loggedUser.hide_not_allowed_areas IS false>
+		<cfelse>
 
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAreas" returnvariable="getScopesResult">
-					<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
-				</cfinvoke>
-				<cfset scopesQuery = getScopesResult.scopesAreas>
-				<cfset scopeAreasList = valueList(scopesQuery.area_id)>
-
-			<cfelse>
-
-				<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAllAreasIds" returnvariable="getScopesResult">
-					<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
-				</cfinvoke>
-				<cfset scopeAreasList = getScopesResult.areasIds>
-
-			</cfif>
-
-			<cfif len(scopeFilesAreasList) IS 0>
-				<cfset scopeFilesAreasList = scopeAreasList>
-			<cfelse>
-
-				<!--- Get common scope areas --->
-
-				<cfset newScopeAreasList = "">
-
-				<cfloop list="#scopeAreasList#" index="scope_area_id">
-
-					<cfset isAreaInFilesScope = listFind(scopeFilesAreasList, scope_area_id)>
-
-					<cfif isAreaInFilesScope GT 0>
-
-						<cfset newScopeAreasList = listAppend(newScopeAreasList, scope_area_id)>
-
-					</cfif>
-
-				</cfloop>
-
-				<cfset scopeFilesAreasList = newScopeAreasList>
-
-			</cfif>
-
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/Scope" method="getScopeAllAreasIds" returnvariable="getScopesResult">
+				<cfinvokeargument name="scope_id" value="#objectFile.publication_scope_id#">
+			</cfinvoke>
+			<cfset scopeAreasList = getScopesResult.areasIds>
 
 		</cfif>
 
-	</div>
+		<cfif len(scopeFilesAreasList) IS 0>
+			<cfset scopeFilesAreasList = scopeAreasList>
+		<cfelse>
+
+			<!--- Get common scope areas --->
+
+			<cfset newScopeAreasList = "">
+
+			<cfloop list="#scopeAreasList#" index="scope_area_id">
+
+				<cfset isAreaInFilesScope = listFind(scopeFilesAreasList, scope_area_id)>
+
+				<cfif isAreaInFilesScope GT 0>
+
+					<cfset newScopeAreasList = listAppend(newScopeAreasList, scope_area_id)>
+
+				</cfif>
+
+			</cfloop>
+
+			<cfset scopeFilesAreasList = newScopeAreasList>
+
+		</cfif>
+
+	</cfif>
 
 </cfloop>
 
