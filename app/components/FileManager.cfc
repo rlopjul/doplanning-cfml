@@ -996,25 +996,13 @@
 				<cfreturn response>
 			</cfif>
 
-			<!--- check area type --->
-			<cfif objectFile.file_type_id IS 3><!--- Area file with versions ---><!---objectFile.file_type_id IS 2 OR --->
+			<cfif objectFile.file_type_id IS 3><!--- Area file with versions and quality circuit --->
 
-				<cfinvoke component="AreaManager" method="getAreaType" returnvariable="areaTypeResult">
-					<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				</cfinvoke>
+				<cfset response = {result=false, file_id=#objectFile.id#, area_id=#arguments.area_id#, message="No se puede asociar un archivo de área con circuito de calidad a otra área"}>
 
-				<cfset areaType = areaTypeResult.areaType>
-
-				<cfif len(areaType) GT 0>
-
-					<cfset response = {result=false, file_id=#objectFile.id#, area_id=#arguments.area_id#, message="No se puede publicar un archivo de área en un área web"}>
-
-					<cfreturn response>
-
-				</cfif>
+				<cfreturn response>
 
 			</cfif>
-
 
 
 			<!--- checkScope --->
