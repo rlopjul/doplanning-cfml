@@ -996,7 +996,7 @@
 				<cfreturn response>
 			</cfif>
 
-			<cfif objectFile.file_type_id IS 3><!--- Area file with versions and quality circuit --->
+			<cfif objectFile.file_type_id IS 3 AND objectFile.area_id NEQ arguments.area_id><!--- Area file with versions and quality circuit --->
 
 				<cfset response = {result=false, file_id=#objectFile.id#, area_id=#arguments.area_id#, message="No se puede asociar un archivo de área con circuito de calidad a otra área"}>
 
