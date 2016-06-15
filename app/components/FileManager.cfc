@@ -3439,6 +3439,10 @@
 		<cfset var response = structNew()>
 
 		<cfset var destination = "">
+		<cfset var fileNameToSearch = "">
+		<cfset var fileNameToSearchRE = "">
+		<cfset var getAreaFilesResult = "">
+		<cfset var filesWithSameName = "">
 
 		<cftry>
 
