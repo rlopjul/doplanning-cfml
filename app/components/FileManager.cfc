@@ -3486,12 +3486,12 @@
 
 				<cflock type="exclusive" timeout="30">
 
-					<cfset versionValue = ListLast(uploadedFile.clientFileName, " ")>
-					<cfset versionValue = REReplace(versionValue,"^0+","","ALL")>
+					<cfset versionValueWithZeros = ListLast(uploadedFile.clientFileName, " ")>
+					<cfset versionValue = REReplace(versionValueWithZeros,"^0+","","ALL")>
 
 					<cfif IsNumeric(versionValue)>
 
-						<cfset fileNameToSearch = left(uploadedFile.clientFileName, len(uploadedFile.clientFileName)-len(versionValue))>
+						<cfset fileNameToSearch = left(uploadedFile.clientFileName, len(uploadedFile.clientFileName)-len(versionValueWithZeros))>
 						<cfset fileNameToSearchRE = "^#fileNameToSearch# ?[0-9]*\.#uploadedFile.clientFileExt#$">
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
