@@ -3472,7 +3472,9 @@
 				<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
 			</cfif>
 
-			<cfset temp_file="#uploadedFile.clientFileName#.#uploadedFile.clientFileExt#">
+			<cfset clientFileName = trim(uploadedFile.clientFileName)>
+
+			<cfset temp_file="#clientFileName#.#uploadedFile.clientFileExt#">
 
 			<cfif len(uploadedFile.clientFileExt) IS 0>
 
@@ -3486,12 +3488,12 @@
 
 				<cflock type="exclusive" timeout="30">
 
-					<cfset versionValueWithZeros = ListLast(uploadedFile.clientFileName, " ")>
+					<cfset versionValueWithZeros = ListLast(clientFileName, " ")>
 					<cfset versionValue = REReplace(versionValueWithZeros,"^0+","","ALL")>
 
 					<cfif IsNumeric(versionValue)>
 
-						<cfset fileNameToSearch = left(uploadedFile.clientFileName, len(uploadedFile.clientFileName)-len(versionValueWithZeros))>
+						<cfset fileNameToSearch = left(clientFileName, len(clientFileName)-len(versionValueWithZeros))>
 						<cfset fileNameToSearchRE = "^#fileNameToSearch# ?[0-9]*\.#uploadedFile.clientFileExt#$">
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
