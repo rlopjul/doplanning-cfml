@@ -85,6 +85,7 @@
 		<cfargument name="addSchedules" type="boolean" required="false" default="false">
 		<cfargument name="schedulesExcludeClients" type="string" required="false" default="">
 		<cfargument name="schedulesOnlyClient" type="string" required="false" default="">
+		<cfargument name="schedulesMainUrl" type="string" required="false">
 
 		<cfargument name="defaultLanguage" type="string" required="false" default="es">
 
@@ -265,24 +266,28 @@
 
 			<cfif arguments.addSchedules IS true>
 
+				<cfif NOT isDefined("arguments.schedulesMainUrl")>
+					<cfset arguments.schedulesMainUrl = APPLICATION.mainUrl>
+				</cfif>
+
 				<cfset APPLICATION.schedulesExcludeClients = arguments.schedulesExcludeClients>
 				<cfset APPLICATION.schedulesOnlyClient = arguments.schedulesOnlyClient>
 
 				<!---sendAllDiaryAlerts schedule--->
 				<cfschedule action="update"	task="sendAllDiaryAlerts" operation="HTTPRequest"
-					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/sendAllDiaryAlerts.cfm"
+					url="#arguments.schedulesMainUrl##APPLICATION.resourcesPath#/schedules/sendAllDiaryAlerts.cfm"
 					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(9,5,0)#"
 					interval="daily" requestTimeOut="300" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/sendAllDiaryAlerts.txt')#">
 
 				<!---sendDiaryAlerts schedule--->
 				<cfschedule action="update"	task="sendDiaryAlerts" operation="HTTPRequest"
-					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.cfm"
+					url="#arguments.schedulesMainUrl##APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.cfm"
 					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(8,5,0)#"
 					interval="daily" requestTimeOut="60" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/sendDiaryAlerts.txt')#">
 
 				<!---deleteBinItems schedule--->
 				<cfschedule action="update"	task="deleteBinItems" operation="HTTPRequest"
-					url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/deleteBinItems.cfm"
+					url="#arguments.schedulesMainUrl##APPLICATION.resourcesPath#/schedules/deleteBinItems.cfm"
 					startDate="#createDate( year(now()),month(now()),day(now()) )#" startTime="#createTime(1,35,0)#"
 					interval="daily" requestTimeOut="60" resolveURL="no" publish="true" file="#expandPath('#APPLICATION.resourcesPath#/schedules/deleteBinItems.txt')#">
 
@@ -295,7 +300,7 @@
 				<cfif arguments.addSchedules IS true>
 
 					<cfschedule action="update"	task="checkIfUsersAreConnected"	operation="HTTPRequest"
-						url="#APPLICATION.mainUrl##APPLICATION.resourcesPath#/schedules/checkIfUsersAreConnected.cfm"
+						url="#arguments.schedulesMainUrl##APPLICATION.resourcesPath#/schedules/checkIfUsersAreConnected.cfm"
 						startDate="#DateFormat(now(), 'm/d/yyyy')#"	startTime="#TimeFormat(now(), 'h:mm tt')#"
 						interval="#APPLICATION.messengerUserExpireTime#" requestTimeOut="30" publish="no"
 						path="#ExpandPath('#APPLICATION.resourcesPath#/schedules/')#"
