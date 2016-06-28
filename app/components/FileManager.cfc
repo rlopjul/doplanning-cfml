@@ -3472,7 +3472,7 @@
 				<cffile action="upload" filefield="files[]" destination="#destination#" nameconflict="overwrite" result="uploadedFile">
 			</cfif>
 
-			<cfset clientFileName = trim(uploadedFile.clientFileName)>
+			<cfset clientFileName = uploadedFile.clientFileName>
 
 			<cfset temp_file="#clientFileName#.#uploadedFile.clientFileExt#">
 
