@@ -287,6 +287,7 @@
 	<cffunction name="getAreaFiles" output="false" returntype="struct" access="public">
 		<cfargument name="area_id" type="numeric" required="no">
 		<cfargument name="areas_ids" type="string" required="no">
+		<cfargument name="fileTypeId" type="numeric" required="no">
 		<cfargument name="search_text" type="string" required="no">
 		<cfargument name="user_in_charge" type="numeric" required="no">
 		<cfargument name="typology_id" type="numeric" required="false">
@@ -444,6 +445,9 @@
 				OR files.file_name REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
 				OR files.description REGEXP <cfqueryparam value="#search_text_re#" cfsqltype="cf_sql_varchar">
 				)
+				</cfif>
+				<cfif isDefined("arguments.fileTypeId")>
+					AND files.file_type_id = <cfqueryparam value="#arguments.fileTypeId#" cfsqltype="cf_sql_integer">
 				</cfif>
 				<cfif len(name_re) GT 0>
 					AND	files.name REGEXP <cfqueryparam value="#name_re#" cfsqltype="cf_sql_varchar">

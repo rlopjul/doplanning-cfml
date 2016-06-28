@@ -3498,6 +3498,7 @@
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getAreaFiles" returnvariable="getAreaFilesResult">
 							<cfinvokeargument name="area_id" value="#arguments.area_id#">
+							<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 							<cfinvokeargument name="parse_dates" value="false">
 
 							<cfinvokeargument name="file_name_re" value="#fileNameToSearchRE#">
@@ -5040,6 +5041,11 @@
 
 					<cfthrow errorcode="#error_code#">
 
+				</cfif>
+
+				<cfif NOT isNumeric(fileQuery.area_id)>
+					<cfset response = {result=false, file_id=#arguments.file_id#, message="El archivo no es un archivo de área."}>
+					<cfreturn response>
 				</cfif>
 
 				<cfset area_id = fileQuery.area_id>
