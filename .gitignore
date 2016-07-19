@@ -1,5 +1,5 @@
 #################
-## General
+## Project
 #################
 *.zip
 *.sublime-project
@@ -24,7 +24,7 @@ sftp-config.json
 /doplanning_FILES/
 /styles.css
 /styles_menu.css
-/Application.cfc
+Application.private.cfm
 Application_POZOBLANCO.cfc
 Application_POZOBLANCO_ANTERIOR.cfc
 index_POZOBLANCO.cfm
@@ -34,6 +34,7 @@ index_POZOBLANCO.cfm
 /html/styles/styles.min_HCS.css
 project.sublime-workspace
 deployment-config.json
+
 
 
 #################
