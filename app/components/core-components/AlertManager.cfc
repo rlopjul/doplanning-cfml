@@ -3157,6 +3157,30 @@
 
 				<!--- Users to areas --->
 
+				<cfif client_abb EQ "ceseand">
+
+					<!--- Remove new associated user notification in "Clientes CESEAND" area for non administrators users --->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/UserQuery" method="getUser" returnvariable="selectUserQuery">
+						<cfinvokeargument name="user_id" value="#user_id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfif isNumeric(selectUserQuery.typology_id)>
+
+						<cfset clientes_ceseand_area_id = 118>
+
+						<cfset listPos = listFind(userAreasIds, clientes_ceseand_area_id)>
+						<cfif listPos GT 0>
+						    <cfset userAreasIds = listDeleteAt(userAreasIds, listPos)>
+						</cfif>
+
+					</cfif>
+
+				</cfif><!---END ceseand--->
+
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaQuery" method="getAreaUsers" returnvariable="usersQuery">
 					<cfinvokeargument name="from_date" value="#lastDigestDateFormatted#">
 					<cfinvokeargument name="end_date" value="#currentDigestDateFormatted#">
