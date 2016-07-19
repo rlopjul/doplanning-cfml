@@ -3401,6 +3401,16 @@
 
 			</cfif>
 
+			<cfif APPLICATION.moduleMailing IS true>
+
+				<!--- ----------------- DELETE AREA MAILINGS ------------------------- --->
+				<cfinvoke component="AreaItemManager" method="deleteAreaItems">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="itemTypeId" value="17">
+				</cfinvoke>
+
+			</cfif>
+
 			<cfif APPLICATION.moduleDPDocuments IS true>
 
 				<!--- -----------------DELETE AREA DPDOCUMENTS------------------------- --->
