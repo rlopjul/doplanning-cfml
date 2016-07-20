@@ -479,47 +479,6 @@
 
 			</cfcase>
 
-			<cfcase value="ceseand.net">
-
-				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
-					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
-					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
-					<cfif isDefined("arguments.emailFrom")>
-						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
-					<cfelse>
-						<cfinvokeargument name="emailFrom" value="info@ceseand.net">
-					</cfif>
-					<cfinvokeargument name="emailReply" value="info@ceseand.net">
-
-					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
-					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
-
-					<cfinvokeargument name="serverIp" value="54.72.1.86">
-
-					<cfinvokeargument name="mainUrl" value="https://ceseand.net">
-					<cfinvokeargument name="signOutUrl" value="https://ceseand.net">
-
-					<cfinvokeargument name="title" value="CESEAND">
-					<cfinvokeargument name="titlePrefix" value="web">
-					<cfinvokeargument name="moduleWeb" value="true">
-
-					<cfinvokeargument name="homeTab" value="true">
-					<cfinvokeargument name="moduleDPDocuments" value="true">
-					<cfinvokeargument name="moduleMailing" value="true">
-					<cfinvokeargument name="includeLegalTextInAlerts" value="true">
-
-					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
-
-					<cfinvokeargument name="helpUrl" value="https://ceseand.net/es/page.cfm?id=76&title=manuales-de-la-web">
-					<cfinvokeargument name="termsOfUseUrl" value="https://ceseand.net/es/page.cfm?id=57&title=terminos-de-uso">
-
-					<cfinvokeargument name="logoWebNotifications" value="/assets/logo-ceseand-emails.jpg">
-					<cfinvokeargument name="changeUserPreferencesByAdmin" value="true">
-
-				</cfinvoke>
-
-			</cfcase>
-
 		</cfswitch>
 
 		<cfif NOT isDefined("APPLICATION.dsn")>
