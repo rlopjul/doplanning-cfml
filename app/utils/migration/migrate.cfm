@@ -115,6 +115,7 @@
 							<option value="3.8">3.8 Aumentado tamaño de campo url_id</option>
 							<option value="3.9">3.9 Campos web para tipologías</option>
 							<option value="3.10">3.10 Campos web para tipologías de usuarios</option>
+							<option value="3.11">3.11 Campo filter_by_select</option>
 						</select>
 					</div>
 
