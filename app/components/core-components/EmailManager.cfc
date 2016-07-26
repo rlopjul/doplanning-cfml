@@ -195,16 +195,21 @@ font-family:Verdana, Arial, Helvetica, sans-serif;--->
 					<cfif APPLICATION.proxy IS true><!---With proxy--->
 
 						<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" proxyServer="10.104.1.7" proxyPort="8080" result="responseResult" charset="utf-8" timeout="56">
-							<cfhttpparam type="header" name="Content-Type" value="application/json" />
+							<cfhttpparam type="header" name="Content-Type" value="application/json; charset=utf-8" />
 							<cfhttpparam type="body" value="#jsonBody#">
 						</cfhttp>
 
 					<cfelse>
 
 						<cfhttp method="post" url="https://mandrillapp.com/api/1.0/messages/send.json" result="responseResult" charset="utf-8" timeout="56">
-							<cfhttpparam type="header" name="Content-Type" value="application/json" />
+							<cfhttpparam type="header" name="Content-Type" value="application/json; charset=utf-8" />
 							<cfhttpparam type="body" value="#jsonBody#">
 						</cfhttp>
+
+						<!---
+						<cfdump var="#jsonBody#">
+						<cfdump var="#responseResult#"><cfabort>
+						--->
 
 					</cfif>
 
