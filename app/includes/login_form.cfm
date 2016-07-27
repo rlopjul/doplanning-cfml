@@ -100,7 +100,8 @@
         <cfif client_abb EQ "hcs">
           <div class="radio">
             <label for="ldap_portalep_hcs">
-              <input type="radio" name="ldap_id" value="portalep_hcs" id="ldap_portalep_hcs" onclick="onLdapChange(this)" /> #APPLICATION.ldapName#
+              <input type="radio" name="ldap_id" value="portalep_hcs" id="ldap_portalep_hcs" onclick="onLdapChange(this)" disabled /> #APPLICATION.ldapName#
+              <small class="help-block" style="margin-top:0">Opción deshabilitada temporalmente. Acceda a "Resetear contraseña" para obtener una contraseña a partir de su email y poder acceder mediante la opción DoPlanning.</small>
             </label>
           </div>
         </cfif>
