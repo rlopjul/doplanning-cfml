@@ -92,7 +92,7 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 
 <script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="#APPLICATION.path#/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="#APPLICATION.path#/jquery/jquery-lang/jquery-lang.min.js" charset="utf-8"></script>
 
 
