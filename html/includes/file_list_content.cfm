@@ -102,18 +102,26 @@
 
 	<cfif select_enabled IS true>
 
-		function goToAssociateFileToAreas() {
+		function getSelectedFilesIds() {
 
-			var associateFilesIds = "";
+			var selectedFilesIds = "";
 
 			$('##listTable tbody tr:visible input[type=checkbox]:checked').each(function() {
 
-				if(associateFilesIds.length > 0)
-					associateFilesIds = associateFilesIds+","+this.value;
+				if(selectedFilesIds.length > 0)
+					selectedFilesIds = selectedFilesIds+","+this.value;
 				else
-					associateFilesIds = this.value;
+					selectedFilesIds = this.value;
 
 			});
+
+			return selectedFilesIds;
+
+		}
+
+		function goToAssociateFileToAreas() {
+
+			var associateFilesIds = getSelectedFilesIds();
 
 			if(associateFilesIds.length > 0)
 				goToUrl("area_file_associate_areas.cfm?area=#area_id#&files="+associateFilesIds);
@@ -124,7 +132,12 @@
 
 		function goToDeleteFiles(){
 
+			var deleteFilesIds = getSelectedFilesIds();
 
+			if(deleteFilesIds.length > 0)
+				goToUrl("area_files_delete.cfm?area=#area_id#&files="+deleteFilesIds);
+			else
+				parent.showAlertModal("No hay archivos seleccionados");
 
 		}
 
