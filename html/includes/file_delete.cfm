@@ -45,15 +45,17 @@
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="canUserDeleteFile">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="canUserDeleteFile" returnvariable="canUserDeleteFileResposne">
 		<cfinvokeargument name="file_id" value="#file_id#">
 		<cfinvokeargument name="fileQuery" value="#objectFile#">
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
 
-	<cfif canUserDeleteFile.result IS false>
+	<cfif canUserDeleteFileResposne.result IS false>
 
-		
+		<div class="alert alert-warning" role="alert">
+			#canUserDeleteFileResposne.message#
+		</div>
 
 	</cfif>
 
