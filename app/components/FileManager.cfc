@@ -576,7 +576,7 @@
 
 					<cfif isAdministratorResponse.isUserAdministrator IS false>
 
-						<cfset response = {result=false, file_id=#arguments.file_id#, message="No puede eliminar el archivo de área, no dispone de acceso al área"}>
+						<cfset response = {result=false, file_id=#arguments.file_id#, message="No puede eliminar el archivo de área, no tiene acceso al área."}>
 						<cfreturn response>
 
 					</cfif>
@@ -600,14 +600,14 @@
 
 							<cfif isAdministratorResponse.isUserAdministrator IS false>
 
-								<cfset response = {result=false, file_id=#arguments.file_id#, message="No puede eliminar un archivo perteneciente a otro usuario"}>
+								<cfset response = {result=false, file_id=#arguments.file_id#, message="No puede eliminar un archivo perteneciente a otro usuario."}>
 								<cfreturn response>
 
 							</cfif>
 
 						<cfelse>
 
-							<cfset response = {result=false, file_id=#arguments.file_id#, message="No puede eliminar un archivo perteneciente a otro usuario"}>
+							<cfset response = {result=false, file_id=#arguments.file_id#, message="No puede eliminar un archivo perteneciente a otro usuario."}>
 							<cfreturn response>
 
 						</cfif>

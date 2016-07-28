@@ -1616,7 +1616,7 @@
 					</cfif>
 
 					<cfif isDefined("arguments.alertMessage") AND len(arguments.alertMessage)>
-						<div class="#arguments.alertClass#" role="alert" style="margin-bottom:0">
+						<div class="#arguments.alertClass#" role="alert" style="margin-bottom:0" lang="es">
 							#arguments.alertMessage#
 						</div>
 					</cfif>
