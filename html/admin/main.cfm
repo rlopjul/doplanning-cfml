@@ -33,7 +33,7 @@
     <script src="#APPLICATION.htmlPath#/scripts/respond/respond.proxy.js"></script>
 <![endif]-->
 
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="#APPLICATION.path#/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet">
 <link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet">
@@ -48,10 +48,10 @@
 </cfif>
 
 
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.2" rel="stylesheet" />
+<link href="#APPLICATION.jsTreeCSSPath#" rel="stylesheet" />
 
 <script src="#APPLICATION.jqueryJSPath#"></script>
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
+<script src="#APPLICATION.jsTreeJSPath#"></script>
 
 <script src="#APPLICATION.bootstrapJSPath#"></script>
 
