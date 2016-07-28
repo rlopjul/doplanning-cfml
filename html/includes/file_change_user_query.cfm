@@ -6,7 +6,7 @@
 
 <cfif isDefined("FORM.page")>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="changeFileUser" argumentcollection="#FORM#" returnvariable="actionResponse">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="changeFilesUser" argumentcollection="#FORM#" returnvariable="actionResponse">
 	</cfinvoke>
 
 	<cfif actionResponse.result IS true>
