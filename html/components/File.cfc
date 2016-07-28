@@ -534,6 +534,72 @@
 	</cffunction>
 
 
+	<!--- ---------------------------------- deleteFiles -------------------------------------- --->
+
+	<cffunction name="deleteFiles" access="public" returntype="struct">
+		<cfargument name="files_ids" type="string" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfset var method = "deleteFiles">
+
+		<cfset var response = structNew()>
+
+		<cfset var response_messages = "">
+
+		<cftry>
+
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
+
+			<cfloop list="#arguments.files_ids#" index="file_id">
+
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="deleteFile" returnvariable="deleteFileResponse">
+					<cfinvokeargument name="file_id" value="#file_id#"/>
+					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+					<cfinvokeargument name="moveToBin" value="#clientQuery.bin_enabled#"/>
+				</cfinvoke>
+
+				<cfif deleteFileResponse.result IS true>
+
+					<cfset response_message = "Archivo asociado al área.">
+
+				<cfelse>
+
+					<cfset response_message = deleteFileResponse.message>
+
+				</cfif>
+
+				<cfif listLen(files_ids) GT 1>
+
+					<cfif isDefined("deleteFileResponse.file_name")>
+						<cfset response_messages = response_messages&"<b>#deleteFileResponse.file_name#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_messages&response_message&"<br>">
+					</cfif>
+
+				<cfelse>
+					<cfset response_messages = response_message>
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=true, message=#response_messages#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- ---------------------------------- dissociateFile -------------------------------------- --->
 
 	<cffunction name="dissociateFile" returntype="void" access="remote">
