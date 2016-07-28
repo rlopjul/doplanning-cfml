@@ -664,7 +664,7 @@ curLangTextEn = {
 		"Cambiar propietario de la Imagen":"Change owner of the Image",
 		"Cambiar usuario propietario":"Change owner user",
 		"Convertir en archivo del área":"Convert to area file",
-		"Cambiar propietario del archivo":"Change owner fo the file",
+		"Cambiar propietario del archivo":"Change owner of the file",
 		"Cambiar propietario del Evento":"Change owner of the Event",
 		"Cambiar propietario de la Tarea":"Change owner of the Task",
 		"Cambiar propietario de la Lista":"Change owner of the List",
