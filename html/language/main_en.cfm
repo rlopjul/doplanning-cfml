@@ -685,8 +685,16 @@ curLangTextEn = {
 		"Archivo reemplazado correctamente.":"File replaced",
 		/*END area_file_upload.cfm, area_file_replace_upload.cfm*/
 
+    "Eliminar archivo":"Delete file",
+    "Eliminar archivos":"Delete files",
 
 		"Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?":"If you DELETE the file, it will be deleted from ALL areas to which it is associated. Are you sure you want to delete the file?",
+
+    "No puede eliminar el archivo o archivos seleccionados.":"You can't delete the selected file/s.",
+    "No puede eliminar un archivo perteneciente a otro usuario.":"You can't delete a file that belongs to another user.",
+    "No se puede eliminar un archivo bloqueado, debe desbloquearlo.":"You can't delete a locked file, you must unlock.",
+    "No se puede eliminar un archivo con una versión aprobada.":"You can't delete a file with an approved version.",
+    "Solo se muestran seleccionables las áreas comunes a todos los ámbitos de los archivos seleccionados.":"Only are selectables the common areas of all files scopes.",
 
 		"Descargar":"Download",
 		"Abrir":"Open",
@@ -966,7 +974,6 @@ curLangTextEn = {
 		"Fecha de última conexión":"Last connection date",
 		"Número de conexiones":"Number of connections",
 		"Usuario creado. Seleccione a continuación las áreas a las que desea asociarlo.":"User created. Now select the areas to add the user.",
-    "Eliminar usuario":"Delete user",
 		/*END admin - new user window form*/
 
 		"Fecha de última modificación":"Last modification date",
