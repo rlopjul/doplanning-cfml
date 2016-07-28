@@ -122,6 +122,12 @@
 
 		}
 
+		function goToDeleteFiles(){
+
+
+
+		}
+
 	</cfif>
 
 	</cfoutput>
@@ -138,6 +144,10 @@
 					<div class="btn-toolbar">
 						<div class="btn-group">
 							<button class="btn btn-info btn-sm navbar-btn" onclick="goToAssociateFileToAreas()"><i class="icon-plus icon-white"></i> <span lang="es">Asociar a áreas</span></button>
+						</div>
+
+						<div class="btn-group">
+							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToDeleteFiles()"><i class="fa fa-trash-o" aria-hidden="true"></i> <span lang="es">Eliminar</span></button>
 						</div>
 					</div>
 
