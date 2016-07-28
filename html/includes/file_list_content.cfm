@@ -135,7 +135,7 @@
 			var deleteFilesIds = getSelectedFilesIds();
 
 			if(deleteFilesIds.length > 0)
-				goToUrl("area_files_delete.cfm?area=#area_id#&files="+deleteFilesIds);
+				goToUrl("file_delete.cfm?area=#area_id#&files="+deleteFilesIds);
 			else
 				parent.showAlertModal("No hay archivos seleccionados");
 
