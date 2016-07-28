@@ -406,6 +406,7 @@ curLangTextEn = {
 		"Mover Documento DoPlanning a otra área":"Move DoPlanning Document to other area",
 		"Se enviará notificación por email del del cambio de área del Documento DoPlanning.":"An email notification will be sent informing about the area change",
     "Cambiar propietario de la Tipología de archivo":"Change owner of typology file",
+    "Propietario":"Owner",
     "Propietario actual":"Current owner",
 		"Nuevo propietario":"New owner",
     "Debe seleccionar un nuevo propietario":"Select a user as a new owner",
