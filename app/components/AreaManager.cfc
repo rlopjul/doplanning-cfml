@@ -577,7 +577,7 @@
 
 		<cfset var response = structNew()>
 
-		<cfset var allUserAreasList = "">
+		<cfset var allUserAreasAdminList = "">
 		<cfset var access_result = false>
 
 		<cfif SESSION.client_administrator NEQ arguments.user_id><!---Is not general administrator user--->
