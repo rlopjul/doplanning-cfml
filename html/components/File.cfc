@@ -563,7 +563,7 @@
 
 				<cfif deleteFileResponse.result IS true>
 
-					<cfset response_message = "Archivo asociado al área.">
+					<cfset response_message = "Archivo eliminado.">
 
 				<cfelse>
 
