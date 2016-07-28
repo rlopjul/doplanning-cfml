@@ -30,11 +30,11 @@
 		 return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
 	}
 
+	var curUserId = null;
+
 	function setSelectedUser(userId, userName) {
 
-		var curUserId = "#file.user_in_charge#";
-
-		if(curUserId != userId) {
+		if( isNaN(curUserId) || curUserId != userId) {
 			document.getElementById("new_user_in_charge").value = userId;
 			document.getElementById("new_user_full_name").value = userName;
 		} else {
@@ -67,11 +67,17 @@
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
 
-	<cfloop list="#arguments.files_ids#" index="file_id">
+	<cfloop list="#files_ids#" index="file_id">
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
 			<cfinvokeargument name="file_id" value="#file_id#">
 		</cfinvoke>
+
+		<cfif listLen(files_ids) IS 1>
+			<script>
+				curUserId = "#file.user_in_charge#";
+			</script>
+		</cfif>
 
 		<div class="row">
 			<div class="col-sm-12">
@@ -87,7 +93,7 @@
 			</div>
 		</div>
 
-	</cfif>
+	</cfloop>
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-6">
@@ -102,7 +108,12 @@
 	<div id="submitDiv">
 		<input type="submit" class="btn btn-primary" name="modify" value="Cambiar propietario" lang="es"/>
 
-		<a href="file.cfm?file=#file_id#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		<cfif listLen(files_ids) IS 1>
+			<a href="file.cfm?file=#files_ids#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		<cfelse>
+			<a href="files.cfm?area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		</cfif>
+
 	</div>
 
 	<br/>
