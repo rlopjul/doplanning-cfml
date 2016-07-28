@@ -914,7 +914,7 @@
 					<cfset response.message = "Propietario modificado">
 				</cfif>
 
-			</cfoop>
+			</cfloop>
 
 			<cfcatch>
 
