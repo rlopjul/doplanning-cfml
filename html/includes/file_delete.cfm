@@ -10,9 +10,9 @@
 	<cfset res = resultDeleteFiles.result>
 
 	<cfif res IS false>
-		<cflocation url="#return_path#area.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+		<cflocation url="#return_path#area_items.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 	<cfelse><!--- Show warning message: we don't know if all files result are success --->
-		<cflocation url="#return_path#area.cfm?area=#FORM.area_id#&res=-1&msg=#URLEncodedFormat(msg)#" addtoken="no">
+		<cflocation url="#return_path#area_items.cfm?area=#FORM.area_id#&res=-1&msg=#URLEncodedFormat(msg)#" addtoken="no">
 	</cfif>
 
 </cfif>
@@ -79,7 +79,6 @@
 			<cfinvokeargument name="alertClass" value="alert alert-warning">
 		</cfif>
 	</cfinvoke>
-
 
 </cfloop>
 
