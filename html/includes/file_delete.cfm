@@ -34,6 +34,8 @@
 
 <cfoutput>
 
+<cfset filesDeleteIds = files_ids>
+
 <cfloop list="#files_ids#" index="file_id">
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
@@ -53,6 +55,8 @@
 
 	<cfif canUserDeleteFileResposne.result IS false>
 
+		<cfset filesDeleteIds = listDeleteAt(filesDeleteIds, listFind(filesDeleteIds, file_id))>
+
 		<div class="alert alert-warning" role="alert">
 			#canUserDeleteFileResposne.message#
 		</div>
@@ -62,13 +66,13 @@
 
 </cfloop>
 
-<cfif listLen(files_ids) GT 0>
+<cfif listLen(filesDeleteIds) GT 0>
 
   <form name="delete_files" method="post" action="#CGI.SCRIPT_NAME#" class="form-horizontal" style="clear:both;">
 
-  	<input type="hidden" name="files_ids" value="#files_ids#">
+  	<input type="hidden" name="files_ids" value="#filesDeleteIds#">
 
-    <cfif listLen(files_ids) GT 1>
+    <cfif listLen(filesDeleteIds) GT 1>
   		<input type="submit" class="btn btn-primary" lang="es" value="Eliminar archivos" />
     <cfelse>
       <input type="submit" class="btn btn-primary" lang="es" value="Eliminar archivo" />
@@ -88,7 +92,9 @@
 
 <cfelse>
 
-  No puede eliminar el archivo o archivos seleccionados.
+	<div class="alert alert-danger" role="alert">
+  	No puede eliminar el archivo o archivos seleccionados.
+	</div>
 
 </cfif>
 
