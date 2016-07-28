@@ -1619,6 +1619,11 @@
 						</div>
 					</cfif>
 
+					<div>
+						<span lang="es">Propietario:</span>
+						<strong>#fileQuery.user_full_name#</strong>
+					</div>
+
 					<cfif isDefined("arguments.alertMessage") AND len(arguments.alertMessage)>
 						<div class="#arguments.alertClass#" role="alert" style="margin-bottom:0" lang="es">
 							#arguments.alertMessage#
