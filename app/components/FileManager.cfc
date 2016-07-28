@@ -588,6 +588,119 @@
 	</cffunction>
 
 
+
+	<!--- ------------------------------------- canUserDeleteFile -------------------------------------  --->
+
+	<cffunction name="canUserDeleteFile" output="false" access="public" returntype="struct">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileQuery" type="query" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+
+		<cfset var method = "canUserDeleteFile">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfset fileTypeId = fileQuery.file_type_id>
+
+			<!---checkAccess--->
+			<cfif fileQuery.file_type_id IS 2 OR fileQuery.file_type_id IS 3><!---Area file (ALL area users can delete the file)--->
+
+				<cfset area_id = fileQuery.area_id>
+
+				<!--- checkAreaAccess --->
+				<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+				<cfif access_result IS false>
+
+					<cfset response = {result=false, file_id=#arguments.file_id#, message="No dispone de acceso al área"}>
+					<cfreturn response>
+
+				</cfif>
+
+			<cfelse><!--- User file --->
+
+				<cfif fileQuery.user_in_charge NEQ SESSION.user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
+
+					<cfif SESSION.client_administrator NEQ SESSION.user_id><!---user logged in is not general administrator user--->
+
+						<cfif isDefined("arguments.area_id")>
+
+							<cfset area_id = arguments.area_id>
+
+							<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
+								<cfinvokeargument name="area_id" value="#area_id#"/>
+								<cfinvokeargument name="user_id" value="#SESSION.user_id#"/>
+							</cfinvoke>
+
+							<cfif isAdministratorResponse.isUserAdministrator IS false>
+
+								<cfset response = {result=false, file_id=#arguments.file_id#, message="No dispone de acceso al área"}>
+								<cfreturn response>
+
+							</cfif>
+
+						<cfelse>
+
+							<cfset response = {result=false, file_id=#arguments.file_id#, message="No dispone de acceso al área"}>
+							<cfreturn response>
+
+						</cfif>
+
+					</cfif>
+
+				</cfif>
+
+			</cfif>
+
+
+			<cfif fileQuery.locked IS true>
+
+				<cfset response = {result=false, file_id=#arguments.file_id#, message="No se puede eliminar un archivo bloqueado, debe desbloquearlo."}>
+
+			<cfelse>
+
+				<cfif fileQuery.file_type_id IS 3><!--- Comprobar si el archivo está aprobado --->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="isFileApproved" returnvariable="isApproved">
+						<cfinvokeargument name="file_id" value="#arguments.file_id#">
+						<cfinvokeargument name="fileTypeId" value="#fileQuery.file_type_id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+					<cfif isApproved IS true>
+
+						<cfset response = {result=false, file_id=#arguments.file_id#, message="No se puede eliminar un archivo con una versión aprobada."}>
+						<cfreturn response>
+
+					</cfif>
+
+				</cfif>
+
+			</cfif>
+
+			<cfset response = {result=true, file_id=#arguments.file_id#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
 	<!--- ----------------------- DELETE FILE VERSION -------------------------------- --->
 
 	<cffunction name="deleteFileVersion" returntype="struct" output="false" access="public">
