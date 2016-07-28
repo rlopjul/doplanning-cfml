@@ -98,4 +98,6 @@
 
 </cfif>
 
+<div style="height:10px;"><!-- --></div>
+
 </cfoutput>
