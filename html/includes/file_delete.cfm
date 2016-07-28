@@ -1,5 +1,19 @@
-<cfif isDefined("URL.area") AND isNumeric(URL.area)>
-	<cfset area_id = URL.area>
+<cfif isDefined("FORM.files_ids") AND isDefined("FORM.area_id")>
+
+	<cfset files_ids = FORM.files_ids>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="deleteFiles" returnvariable="resultDeleteFiles">
+		<cfinvokeargument name="files_ids" value="#files_ids#">
+	</cfinvoke>
+	<cfset msg = resultDeleteFiles.message>
+	<cfset res = resultDeleteFiles.result>
+
+	<cfif res IS false>
+		<cflocation url="#return_path#area.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
+	<cfelse><!--- Show warning message: we don't know if all files result are success --->
+		<cflocation url="#return_path#area.cfm?area=#FORM.area_id#&res=-1&msg=#URLEncodedFormat(msg)#" addtoken="no">
+	</cfif>
+
 </cfif>
 
 <cfif isDefined("URL.file")>
@@ -7,12 +21,12 @@
 <cfelseif isDefined("URL.files")>
 	<cfset files_ids = URL.files>
 <cfelse>
-	<cflocation url="area.cfm" addtoken="no">
+	<cflocation url="index.cfm" addtoken="no">
 </cfif>
 
-
 <cfif isDefined("area_id")>
-<!---<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">--->
+
+	<cfset area_id = URL.area>
 
 	<cfset itemTypeId = 10>
 	<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -21,6 +35,10 @@
 	<cfinclude template="#APPLICATION.htmlPath#/includes/area_checks.cfm">
 
 	<cfinclude template="#APPLICATION.htmlPath#/includes/app_page_head.cfm">
+
+<cfelse>
+
+	<cflocation url="index.cfm" addtoken="no">
 
 </cfif>
 
@@ -71,6 +89,7 @@
   <form name="delete_files" method="post" action="#CGI.SCRIPT_NAME#" class="form-horizontal" style="clear:both;">
 
   	<input type="hidden" name="files_ids" value="#filesDeleteIds#">
+		<input type="hidden" name="area_id" value="#area_id#">
 
     <cfif listLen(filesDeleteIds) GT 1>
   		<input type="submit" class="btn btn-primary" lang="es" value="Eliminar archivos" />
