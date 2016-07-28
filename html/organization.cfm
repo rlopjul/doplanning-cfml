@@ -34,9 +34,9 @@
 <link href="styles/styles_iphone.css" rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" />--->
 
 <cfoutput>
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script type="text/javascript" src="#APPLICATION.jqueryJSPath#"></script>
-<script type="text/javascript" src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js"></script>
+<script src="#APPLICATION.jqueryJSPath#"></script>
+<link href="#APPLICATION.jsTreeCSSPath#" rel="stylesheet" />
+<script src="#APPLICATION.jsTreeJSPath#"></script>
 </cfoutput>
 
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>

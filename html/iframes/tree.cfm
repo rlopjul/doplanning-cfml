@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es"><!-- InstanceBegin template="/Templates/plantilla_app_iframes_estilos.dwt.cfm" codeOutsideHTMLIsLocked="true" -->
 <head>
-<meta charset="utf-8"> 
+<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" /><!--- Fuerza a IE que renderize el contenido en la última versión (que no habilite el modo de compatibilidad) --->
 <!-- InstanceBeginEditable name="doctitle" -->
 <title></title>
@@ -63,17 +63,17 @@
 	jquery_lang_js.prototype.currentLang = 'es';
 	jquery_lang_js.prototype.lang.en = [{}];
 	window.lang = new jquery_lang_js();
-	
+
 	$().ready(function () {
    		window.lang.run();
 	});--->
-	
+
 	<!---Lang.prototype.pack.en = {};
 	Lang.prototype.pack.en.token = {};--->
-	
+
 	$().ready(function () {
 		window.lang = new Lang('es');
-		
+
 		window.lang.dynamic('en', '#APPLICATION.mainUrl#/html/language/main_en.cfm');
 		<cfif SESSION.user_language NEQ "es">
 			window.lang.change('#SESSION.user_language#');
@@ -118,8 +118,8 @@
 
 	<cfoutput>
 
-	<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-	<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.2"></script>
+	<link href="#APPLICATION.jsTreeCSSPath#" rel="stylesheet" />
+	<script src="#APPLICATION.jsTreeJSPath#"></script>
 	<script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
 	<!---<script src="#APPLICATION.htmlPath#/language/main_en.js" charset="utf-8"></script>--->
 

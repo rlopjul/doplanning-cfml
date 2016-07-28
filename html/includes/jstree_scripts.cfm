@@ -1,7 +1,6 @@
 <cfoutput>
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.3" rel="stylesheet" />
-
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.2"></script>
+<link href="#APPLICATION.jsTreeCSSPath#" rel="stylesheet" />
+<script src="#APPLICATION.jsTreeJSPath#"></script>
 
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
 
@@ -9,26 +8,26 @@
 </cfoutput>
 
 <script>
-	
-	function treeLoaded() { 
-		
+
+	function treeLoaded() {
+
 		$("#loadingContainer").hide();
-		
+
 	}
 
 	function searchTextInTree(){
-		searchInTree(document.getElementById('searchText').value);	
+		searchInTree(document.getElementById('searchText').value);
 	}
 
-	$(window).load( function() {		
+	$(window).load( function() {
 
 		showTree(true);
 
-		$("#searchText").on("keydown", function(e) { 
-			
+		$("#searchText").on("keydown", function(e) {
+
 			if(e.which == 13) //Enter key
 				searchTextInTree();
-			
+
 		});
 
 	});

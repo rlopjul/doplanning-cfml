@@ -171,8 +171,8 @@
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css" rel="stylesheet" />
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3"></script>
+<link href="#APPLICATION.jsTreeCSSPath#" rel="stylesheet" />
+<script src="#APPLICATION.jsTreeJSPath#"></script>
 
 <script src="#APPLICATION.htmlPath#/scripts/tree.min.js?v=3.1.2"></script>
 

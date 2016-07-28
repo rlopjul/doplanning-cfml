@@ -54,8 +54,6 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 </cfif>
 --->
 
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.1" rel="stylesheet" />
-
 <cfif APPLICATION.identifier EQ "vpnet">
 	<!---Esto solo debe mantenerse para la versión vpnet (por el Messenger)--->
 	<script src="../SpryAssets/includes/xpath.js"></script>
@@ -69,7 +67,8 @@ Parece que cargando los scrips de CDN con HTPPS hace que aparezca un mensaje de 
 </cfif>
 
 <script src="#APPLICATION.jqueryJSPath#"></script>
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.0"></script>
+<link href="#APPLICATION.jsTreeCSSPath#" rel="stylesheet" />
+<script src="#APPLICATION.jsTreeJSPath#"></script>
 
 <script src="#APPLICATION.bootstrapJSPath#"></script>
 

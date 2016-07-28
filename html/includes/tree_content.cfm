@@ -1,7 +1,6 @@
 <cfoutput>
-<link href="#APPLICATION.path#/jquery/jstree/themes/dp/style.min.css?v=3.2" rel="stylesheet" />
-
-<script src="#APPLICATION.path#/jquery/jstree/jquery.jstree.js?v=3.1.1"></script>
+<link href="#APPLICATION.jsTreeCSSPath#" rel="stylesheet" />
+<script src="#APPLICATION.jsTreeJSPath#"></script>
 
 <script src="#APPLICATION.path#/jquery/typeahead/typeahead.bundle.min.js" charset="utf-8"></script>
 
