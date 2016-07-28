@@ -457,6 +457,7 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var response_message = "">
 		<cfset var response_messages = "">
 
 		<cftry>
@@ -544,6 +545,7 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var response_message = "">
 		<cfset var response_messages = "">
 
 		<cftry>
@@ -895,15 +897,16 @@
 	<!--- ---------------------------------- changeFileUser -------------------------------------- --->
 
 	<cffunction name="changeFilesUser" returntype="struct" access="public">
-		<cfargument name="files_ids" type="numeric" required="true">
+		<cfargument name="files_ids" type="string" required="true">
 		<cfargument name="new_user_in_charge" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 
-		<cfset var method = "changeFileUser">
+		<cfset var method = "changeFilesUser">
 
 		<cfset var response = structNew()>
 
 		<cfset var response_message = "">
+		<cfset var response_messages = "">
 
 		<cftry>
 
@@ -927,7 +930,7 @@
 
 				<cfif listLen(files_ids) GT 1>
 
-					<cfif isDefined("deleteFileResponse.file_name")>
+					<cfif isDefined("changeFileUserResponse.file_name")>
 						<cfset response_messages = response_messages&"<b>#changeFileUserResponse.file_name#</b>: #response_message#<br>">
 					<cfelse>
 						<cfset response_messages = response_messages&response_message&"<br>">
