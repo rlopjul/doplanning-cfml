@@ -73,25 +73,16 @@
 			<cfinvokeargument name="file_id" value="#file_id#">
 		</cfinvoke>
 
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
+			<cfinvokeargument name="fileQuery" value="#file#">
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>
+
 		<cfif listLen(files_ids) IS 1>
 			<script>
 				curUserId = "#file.user_in_charge#";
 			</script>
 		</cfif>
-
-		<div class="row">
-			<div class="col-sm-12">
-				<span lang="es">Nombre del archivo:</span>
-				<strong>#file.name#</strong>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-sm-12">
-				<span lang="es">Propietario actual:</span>
-				<strong>#file.user_full_name#</strong>
-			</div>
-		</div>
 
 	</cfloop>
 
