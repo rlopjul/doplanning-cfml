@@ -24,7 +24,7 @@
 <link href="#APPLICATION.htmlPath#/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
 <link href="#APPLICATION.baseCSSPath#" rel="stylesheet">
 <link href="#APPLICATION.baseCSSIconsPath#" rel="stylesheet">
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="#APPLICATION.path#/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 <link href="#APPLICATION.dpCSSPath#" rel="stylesheet" />
 <cfif len(APPLICATION.themeCSSPath) GT 0>
 <link href="#APPLICATION.themeCSSPath#" rel="stylesheet">
