@@ -11,11 +11,9 @@
 
 	<cfif actionResponse.result IS true>
 
-		<cfset file_id = actionResponse.file_id>
-
 		<cfset msg = URLEncodedFormat(actionResponse.message)>
 
-		<cflocation url="area_items.cfm?area=#area_id#&file=#file_id#&res=1&msg=#msg#" addtoken="no">
+		<cflocation url="area_items.cfm?area=#area_id#&res=1&msg=#msg#" addtoken="no">
 
 	<cfelse>
 
