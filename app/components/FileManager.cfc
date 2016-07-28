@@ -569,8 +569,17 @@
 
 				<cfif access_result IS false>
 
-					<cfset response = {result=false, file_id=#arguments.file_id#, message="No puede eliminar el archivo de área, no dispone de acceso al área"}>
-					<cfreturn response>
+					<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
+						<cfinvokeargument name="area_id" value="#area_id#"/>
+						<cfinvokeargument name="user_id" value="#SESSION.user_id#"/>
+					</cfinvoke>
+
+					<cfif isAdministratorResponse.isUserAdministrator IS false>
+
+						<cfset response = {result=false, file_id=#arguments.file_id#, message="No puede eliminar el archivo de área, no dispone de acceso al área"}>
+						<cfreturn response>
+
+					</cfif>
 
 				</cfif>
 
