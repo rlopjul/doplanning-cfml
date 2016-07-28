@@ -131,6 +131,37 @@
 	</cffunction>
 
 
+	<!--- ---------------------------------- canUserDeleteFile -------------------------------------- --->
+
+	<cffunction name="canUserDeleteFile" output="false" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileQuery" type="query" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+
+		<cfset var method = "canUserDeleteFile">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="canUserDeleteFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="fileQuery" value="#arguments.fileQuery#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
 
 	<!--- ----------------------------------- getEmptyFile -------------------------------------- --->
 

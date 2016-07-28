@@ -45,6 +45,19 @@
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
 
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="canUserDeleteFile">
+		<cfinvokeargument name="file_id" value="#file_id#">
+		<cfinvokeargument name="fileQuery" value="#objectFile#">
+		<cfinvokeargument name="area_id" value="#area_id#">
+	</cfinvoke>
+
+	<cfif canUserDeleteFile.result IS false>
+
+		
+
+	</cfif>
+
+
 </cfloop>
 
 <cfif listLen(files_ids) GT 0>
