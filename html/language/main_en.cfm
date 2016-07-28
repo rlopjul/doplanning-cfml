@@ -685,6 +685,8 @@ curLangTextEn = {
 		"Archivo reemplazado correctamente.":"File replaced",
 		/*END area_file_upload.cfm, area_file_replace_upload.cfm*/
 
+    "Eliminar archivo":"Delete file",
+    "Eliminar archivos":"Delete files",
 
 		"Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?":"If you DELETE the file, it will be deleted from ALL areas to which it is associated. Are you sure you want to delete the file?",
 
