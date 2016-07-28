@@ -133,6 +133,17 @@
 
 		}
 
+		function goToChangeUser(){
+
+			var filesIds = getSelectedFilesIds();
+
+			if(filesIds.length > 0)
+				goToUrl("file_change_user.cfm?area=#area_id#&files="+filesIds);
+			else
+				parent.showAlertModal("No hay archivos seleccionados");
+
+		}
+
 		function goToDeleteFiles(){
 
 			var deleteFilesIds = getSelectedFilesIds();
@@ -167,10 +178,13 @@
 						</div>
 
 						<div class="btn-group">
+							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToChangeUser()"><i class="fa icon-user" aria-hidden="true"></i> <span lang="es">Cambiar propietario</span></button>
+						</div>
+
+						<div class="btn-group">
 							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToDeleteFiles()"><i class="fa fa-trash-o" aria-hidden="true"></i> <span lang="es">Eliminar</span></button>
 						</div>
 					</div>
-
 
 				</div>
 			</div>
