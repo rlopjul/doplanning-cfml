@@ -227,6 +227,8 @@
 	    <cfset APPLICATION.functionsJSPath = APPLICATION.htmlPath&"/scripts/functions.min.js?v=3.4">
 
 	    <cfset APPLICATION.ckeditorJSPath = "#APPLICATION.htmlPath#/ckeditor/ckeditor.js?v=4.5.10">
+			<cfset APPLICATION.jsTreeJSPath = "#APPLICATION.path#/libs/jstree/3.3.1/jstree.min.js">
+			<cfset APPLICATION.jsTreeCSSPath = "#APPLICATION.path#/libs/jstree/3.3.1/themes/dp/style.min.css">
 
 			<cfset APPLICATION.hideInputLabels = arguments.hideInputLabels>
 			<cfset APPLICATION.baseCSSPath = arguments.baseCSSPath>
