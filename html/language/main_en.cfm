@@ -694,6 +694,7 @@ curLangTextEn = {
     "No puede eliminar un archivo perteneciente a otro usuario.":"You can't delete a file that belongs to another user.",
     "No se puede eliminar un archivo bloqueado, debe desbloquearlo.":"You can't delete a locked file, you must unlock.",
     "No se puede eliminar un archivo con una versión aprobada.":"You can't delete a file with an approved version.",
+    "Solo se muestran seleccionables las áreas comunes a todos los ámbitos de los archivos seleccionados.":"Only are selectables the common areas of all files scopes.",
 
 		"Descargar":"Download",
 		"Abrir":"Open",
