@@ -894,8 +894,8 @@
 
 	<!--- ---------------------------------- changeFileUser -------------------------------------- --->
 
-	<cffunction name="changeFileUser" returntype="struct" access="public">
-		<cfargument name="file_id" type="numeric" required="true">
+	<cffunction name="changeFilesUser" returntype="struct" access="public">
+		<cfargument name="files_ids" type="numeric" required="true">
 		<cfargument name="new_user_in_charge" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 
@@ -905,12 +905,16 @@
 
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileUser" argumentcollection="#arguments#" returnvariable="response">
-			</cfinvoke>
+			<cfloop list="#arguments.files_ids#" index="file_id">
 
-			<cfif response.result IS true>
-				<cfset response.message = "Propietario modificado">
-			</cfif>
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileUser" argumentcollection="#arguments#" returnvariable="response">
+				</cfinvoke>
+
+				<cfif response.result IS true>
+					<cfset response.message = "Propietario modificado">
+				</cfif>
+
+			</cfoop>
 
 			<cfcatch>
 
