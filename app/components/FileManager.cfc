@@ -505,7 +505,7 @@
 					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfinvoke>
 
-				<cfif canUserDeleteFileResponse.response IS false>
+				<cfif canUserDeleteFileResponse.result IS false>
 					<cfset canUserDeleteFileResponse.file_name = fileQuery.name>
 					<cfreturn canUserDeleteFileResponse>
 				</cfif>
