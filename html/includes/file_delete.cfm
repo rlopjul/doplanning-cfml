@@ -4,6 +4,7 @@
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="deleteFiles" returnvariable="resultDeleteFiles">
 		<cfinvokeargument name="files_ids" value="#files_ids#">
+		<cfinvokeargument name="area_id" value="#FORM.area_id#">
 	</cfinvoke>
 	<cfset msg = resultDeleteFiles.message>
 	<cfset res = resultDeleteFiles.result>
@@ -24,7 +25,7 @@
 	<cflocation url="index.cfm" addtoken="no">
 </cfif>
 
-<cfif isDefined("area_id")>
+<cfif isDefined("URL.area")>
 
 	<cfset area_id = URL.area>
 
@@ -84,6 +85,10 @@
 
 </cfloop>
 
+<cfif isDefined("area_id")>
+		<cfset return_page = "#return_path#files.cfm?area=#area_id#">
+</cfif>
+
 <cfif listLen(filesDeleteIds) GT 0>
 
   <form name="delete_files" method="post" action="#CGI.SCRIPT_NAME#" class="form-horizontal" style="clear:both;">
@@ -97,14 +102,6 @@
       <input type="submit" class="btn btn-primary" lang="es" value="Eliminar archivo" />
     </cfif>
 
-  	<cfif isDefined("area_id")>
-  		<cfif isDefined("URL.file")>
-  			<cfset return_page = "#return_path#file.cfm?file=#file_id#&area=#area_id#">
-  		<cfelse>
-  			<cfset return_page = "#return_path#files.cfm?area=#area_id#">
-  		</cfif>
-  	</cfif>
-
   	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 
   </form>
@@ -114,6 +111,8 @@
 	<div class="alert alert-danger" role="alert">
   	No puede eliminar el archivo o archivos seleccionados.
 	</div>
+
+	<a href="#return_page#" class="btn btn-default" lang="es">Cancelar</a>
 
 </cfif>
 
