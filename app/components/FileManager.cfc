@@ -497,83 +497,35 @@
 
 			</cfif>
 
-			<cfset fileTypeId = fileQuery.file_type_id>
-			<!---<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">--->
-
 			<cfif arguments.forceDeleteVirus IS false>
 
-				<!---checkAccess--->
-				<cfif fileQuery.file_type_id IS 2 OR fileQuery.file_type_id IS 3><!---Area file (ALL area users can delete the file)--->
-
-					<cfset area_id = fileQuery.area_id>
-
-					<!---checkAreaAccess--->
-					<cfinclude template="includes/checkAreaAccess.cfm">
-
-				<cfelse><!--- User file --->
-
-					<cfif fileQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
-
-						<cfif isDefined("arguments.area_id")>
-
-							<cfset area_id = arguments.area_id>
-
-							<cfinclude template="includes/checkAreaAdminAccess.cfm">
-
-						<cfelse>
-
-							<cfinclude template="includes/checkAdminAccess.cfm">
-
-						</cfif>
-
-					</cfif>
-
-				</cfif>
-
-			</cfif>
-
-			<cfif fileQuery.locked IS true AND arguments.forceDeleteVirus IS false>
-
-				<cfset response = {result=false, file_id=#arguments.file_id#, file_name=#fileQuery.name#, message="No se puede eliminar un archivo bloqueado, debe desbloquearlo."}>
-
-			<cfelse>
-
-				<cfif fileQuery.file_type_id IS 3 AND arguments.forceDeleteVirus IS false><!--- Comprobar si el archivo está aprobado --->
-
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="isFileApproved" returnvariable="isApproved">
-						<cfinvokeargument name="file_id" value="#arguments.file_id#">
-						<cfinvokeargument name="fileTypeId" value="#fileQuery.file_type_id#">
-
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">
-					</cfinvoke>
-
-					<cfif isApproved IS true>
-
-						<cfset response = {result=false, file_id=#arguments.file_id#, file_name=#fileQuery.name#, message="No se puede eliminar un archivo con una versión aprobada."}>
-
-						<cfreturn response>
-
-					</cfif>
-
-				</cfif>
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="response">
-					<cfinvokeargument name="file_id" value="#file_id#">
-					<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#">
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="canUserDeleteFile" returnvariable="canUserDeleteFileResponse">
+					<cfinvokeargument name="file_id" value="#arguments.file_id#">
 					<cfinvokeargument name="fileQuery" value="#fileQuery#">
-					<cfinvokeargument name="user_id" value="#user_id#">
-					<cfinvokeargument name="with_transaction" value="#arguments.with_transaction#">
-					<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
-					<cfif isDefined("area_id")>
-						<cfinvokeargument name="area_id" value="#area_id#">
-					</cfif>
-
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfinvoke>
 
+				<cfif canUserDeleteFileResponse.response IS false>
+					<cfset canUserDeleteFileResponse.file_name = fileQuery.name>
+					<cfreturn canUserDeleteFileResponse>
+				</cfif>
+
 			</cfif>
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#file_id#">
+				<cfinvokeargument name="forceDeleteVirus" value="#arguments.forceDeleteVirus#">
+				<cfinvokeargument name="fileQuery" value="#fileQuery#">
+				<cfinvokeargument name="user_id" value="#user_id#">
+				<cfinvokeargument name="with_transaction" value="#arguments.with_transaction#">
+				<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
+				<cfif isDefined("area_id")>
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfif>
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
 
 			<cfcatch>
 
