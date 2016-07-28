@@ -690,6 +690,7 @@ curLangTextEn = {
 
     "No puede eliminar el archivo o archivos seleccionados.":"You can't delete the selected file/s.",
     "No puede eliminar un archivo perteneciente a otro usuario.":"You can't delete a file that belongs to another user.",
+    "No se puede eliminar un archivo bloqueado, debe desbloquearlo.":"You can't delete a locked file, you must unlock.",
 
 		"Descargar":"Download",
 		"Abrir":"Open",
