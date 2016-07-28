@@ -909,7 +909,10 @@
 
 			<cfloop list="#arguments.files_ids#" index="file_id">
 
-				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileUser" argumentcollection="#arguments#" returnvariable="changeFileUserResponse">
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileUser" returnvariable="changeFileUserResponse">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="new_user_in_charge" value="#arguments.new_user_in_charge#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
 				</cfinvoke>
 
 				<cfif changeFileUserResponse.result IS true>
