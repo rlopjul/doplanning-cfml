@@ -534,7 +534,7 @@
 
 			<cfif fileQuery.locked IS true AND arguments.forceDeleteVirus IS false>
 
-				<cfset response = {result=false, file_id=#arguments.file_id#, message="No se puede eliminar un archivo bloqueado, debe desbloquearlo."}>
+				<cfset response = {result=false, file_id=#arguments.file_id#, file_name=#fileQuery.name#, message="No se puede eliminar un archivo bloqueado, debe desbloquearlo."}>
 
 			<cfelse>
 
@@ -550,7 +550,7 @@
 
 					<cfif isApproved IS true>
 
-						<cfset response = {result=false, file_id=#arguments.file_id#, message="No se puede eliminar un archivo con una versión aprobada."}>
+						<cfset response = {result=false, file_id=#arguments.file_id#, file_name=#fileQuery.name#, message="No se puede eliminar un archivo con una versión aprobada."}>
 
 						<cfreturn response>
 
@@ -568,7 +568,6 @@
 					<cfif isDefined("area_id")>
 						<cfinvokeargument name="area_id" value="#area_id#">
 					</cfif>
-
 
 					<cfinvokeargument name="client_abb" value="#client_abb#">
 					<cfinvokeargument name="client_dsn" value="#client_dsn#">
