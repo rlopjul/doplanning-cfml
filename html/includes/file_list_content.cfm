@@ -86,10 +86,13 @@
 
 	    	stopPropagation(e);
 
-	    	if( $('#listTable tbody tr:visible input[type=checkbox]:checked').length > 0 )
+	    	if( $('#listTable tbody tr:visible input[type=checkbox]:checked').length > 0 ){
 					$('#actionFilesNavBar').show();
-				else
+					$('#actionFilesHelpText').hide();
+				}else{
 					$('#actionFilesNavBar').hide();
+					$('#actionFilesHelpText').show();
+				}
 
 	    });
 
@@ -149,6 +152,10 @@
 
 <div class="row">
 
+	<div class="col-sm-12" id="actionFilesHelpText">
+		<small class="help-block">Selecciona archivos de la lista para visualizar las acciones disponibles sobre varios archivos a la vez</small>
+	</div>
+
 	<nav class="navbar-default" id="actionFilesNavBar" style="display:none">
 		<div class="container">
 			<div class="row">
@@ -163,6 +170,7 @@
 							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToDeleteFiles()"><i class="fa fa-trash-o" aria-hidden="true"></i> <span lang="es">Eliminar</span></button>
 						</div>
 					</div>
+
 
 				</div>
 			</div>
