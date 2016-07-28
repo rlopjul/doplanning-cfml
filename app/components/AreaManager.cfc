@@ -535,32 +535,17 @@
 
 		<cfset var method = "checkAreaAdminAccess">
 
-		<cfset var user_id = "">
-
-		<cfset var allUserAreasAdminList = "">
 		<cfset var access_result = false>
 
-		<!---<cfinclude template="includes/initVars.cfm">--->
+		<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#"/>
+		</cfinvoke>
 
-		<cfinclude template="includes/functionStartOnlySession.cfm">
+		<cfif isAdministratorResponse.isUserAdministrator IS NOT true>
+			<cfset error_code = 105>
 
-		<cfif SESSION.client_administrator NEQ SESSION.user_id><!---Is not an administrator user--->
-
-			<cfinvoke component="AreaManager" method="getAllUserAreasAdminList" returnvariable="allUserAreasAdminList">
-				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
-			</cfinvoke>
-
-			<cfinvoke component="AreaManager" method="canTheUserAccess" returnvariable="access_result">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="allUserAreasList" value="#allUserAreasAdminList#">
-			</cfinvoke>
-
-			<cfif access_result IS NOT true>
-				<cfset error_code = 105>
-
-				<cfthrow errorcode="#error_code#">
-			</cfif>
-
+			<cfthrow errorcode="#error_code#">
 		</cfif>
 
 	</cffunction>
