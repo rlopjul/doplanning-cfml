@@ -48,9 +48,9 @@
 </cfif>
 
 
-<link href="#APPLICATION.jsTreeCSSPath#" rel="stylesheet" />
-
 <script src="#APPLICATION.jqueryJSPath#"></script>
+
+<link href="#APPLICATION.jsTreeCSSPath#" rel="stylesheet" />
 <script src="#APPLICATION.jsTreeJSPath#"></script>
 
 <script src="#APPLICATION.bootstrapJSPath#"></script>
