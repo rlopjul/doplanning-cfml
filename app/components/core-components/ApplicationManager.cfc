@@ -94,11 +94,11 @@
 		<cfargument name="twitterAccessToken" type="string" required="false">
 		<cfargument name="twitterAccessTokenSecret" type="string" required="false">
 
-		<cfargument name="jqueryJSPath" type="string" required="false" default="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
-		<cfargument name="bootstrapJSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+		<cfargument name="jqueryJSPath" type="string" required="false" default="/libs/jquery/1.11.3/jquery.min.js">
+		<cfargument name="bootstrapJSPath" type="string" required="false" default="/libs/bootstrap/3.3.6/js/bootstrap.min.js">
 
-		<cfargument name="baseCSSPath" type="string" required="false" default="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/paper/bootstrap.min.css">
-		<cfargument name="baseCSSIconsPath" type="string" required="false" default="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+		<cfargument name="baseCSSPath" type="string" required="false" default="/libs/bootswatch/3.3.6/paper/bootstrap.min.css">
+		<cfargument name="baseCSSIconsPath" type="string" required="false" default="/libs/font-awesome/3.2.1/css/font-awesome.min.css">
 
 		<cfargument name="dpCSSPath" type="string" required="false" default="/html/styles/styles.min.css?v=3.4">
 		<cfargument name="themeCSSPath" type="string" required="false" default="">

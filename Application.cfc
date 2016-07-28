@@ -2,7 +2,7 @@
 
 <cfcomponent displayname="Application" output="false">
 
-	<cfset this.name = 'dp_dev'>
+	<cfset this.name = 'dp_dev_1'>
 
 	<cfset this.clientmanagement="true">
 	<cfset this.sessionmanagement="true">
