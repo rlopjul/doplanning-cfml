@@ -86,10 +86,13 @@
 
 	    	stopPropagation(e);
 
-	    	if( $('#listTable tbody tr:visible input[type=checkbox]:checked').length > 0 )
+	    	if( $('#listTable tbody tr:visible input[type=checkbox]:checked').length > 0 ){
 					$('#actionFilesNavBar').show();
-				else
+					$('#actionFilesHelpText').hide();
+				}else{
 					$('#actionFilesNavBar').hide();
+					$('#actionFilesHelpText').show();
+				}
 
 	    });
 
@@ -102,21 +105,40 @@
 
 	<cfif select_enabled IS true>
 
-		function goToAssociateFileToAreas() {
+		function getSelectedFilesIds() {
 
-			var associateFilesIds = "";
+			var selectedFilesIds = "";
 
 			$('##listTable tbody tr:visible input[type=checkbox]:checked').each(function() {
 
-				if(associateFilesIds.length > 0)
-					associateFilesIds = associateFilesIds+","+this.value;
+				if(selectedFilesIds.length > 0)
+					selectedFilesIds = selectedFilesIds+","+this.value;
 				else
-					associateFilesIds = this.value;
+					selectedFilesIds = this.value;
 
 			});
 
+			return selectedFilesIds;
+
+		}
+
+		function goToAssociateFileToAreas() {
+
+			var associateFilesIds = getSelectedFilesIds();
+
 			if(associateFilesIds.length > 0)
 				goToUrl("area_file_associate_areas.cfm?area=#area_id#&files="+associateFilesIds);
+			else
+				parent.showAlertModal("No hay archivos seleccionados");
+
+		}
+
+		function goToDeleteFiles(){
+
+			var deleteFilesIds = getSelectedFilesIds();
+
+			if(deleteFilesIds.length > 0)
+				goToUrl("file_delete.cfm?area=#area_id#&files="+deleteFilesIds);
 			else
 				parent.showAlertModal("No hay archivos seleccionados");
 
@@ -130,6 +152,10 @@
 
 <div class="row">
 
+	<div class="col-sm-12" id="actionFilesHelpText">
+		<small class="help-block">Selecciona archivos de la lista para visualizar las acciones disponibles sobre varios archivos a la vez</small>
+	</div>
+
 	<nav class="navbar-default" id="actionFilesNavBar" style="display:none">
 		<div class="container">
 			<div class="row">
@@ -139,7 +165,12 @@
 						<div class="btn-group">
 							<button class="btn btn-info btn-sm navbar-btn" onclick="goToAssociateFileToAreas()"><i class="icon-plus icon-white"></i> <span lang="es">Asociar a áreas</span></button>
 						</div>
+
+						<div class="btn-group">
+							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToDeleteFiles()"><i class="fa fa-trash-o" aria-hidden="true"></i> <span lang="es">Eliminar</span></button>
+						</div>
 					</div>
+
 
 				</div>
 			</div>

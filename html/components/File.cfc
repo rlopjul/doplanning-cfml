@@ -131,6 +131,37 @@
 	</cffunction>
 
 
+	<!--- ---------------------------------- canUserDeleteFile -------------------------------------- --->
+
+	<cffunction name="canUserDeleteFile" output="false" returntype="struct" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileQuery" type="query" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+
+		<cfset var method = "canUserDeleteFile">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="canUserDeleteFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="fileQuery" value="#arguments.fileQuery#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
 
 	<!--- ----------------------------------- getEmptyFile -------------------------------------- --->
 
@@ -482,6 +513,72 @@
 					<cfelse>
 						<cfset response_messages = response_messages&response_message&"<br>">
 					</cfif>
+				<cfelse>
+					<cfset response_messages = response_message>
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=true, message=#response_messages#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+	<!--- ---------------------------------- deleteFiles -------------------------------------- --->
+
+	<cffunction name="deleteFiles" access="public" returntype="struct">
+		<cfargument name="files_ids" type="string" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfset var method = "deleteFiles">
+
+		<cfset var response = structNew()>
+
+		<cfset var response_messages = "">
+
+		<cftry>
+
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
+
+			<cfloop list="#arguments.files_ids#" index="file_id">
+
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="deleteFile" returnvariable="deleteFileResponse">
+					<cfinvokeargument name="file_id" value="#file_id#"/>
+					<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+					<cfinvokeargument name="moveToBin" value="#clientQuery.bin_enabled#"/>
+				</cfinvoke>
+
+				<cfif deleteFileResponse.result IS true>
+
+					<cfset response_message = "Archivo eliminado.">
+
+				<cfelse>
+
+					<cfset response_message = deleteFileResponse.message>
+
+				</cfif>
+
+				<cfif listLen(files_ids) GT 1>
+
+					<cfif isDefined("deleteFileResponse.file_name")>
+						<cfset response_messages = response_messages&"<b>#deleteFileResponse.file_name#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_messages&response_message&"<br>">
+					</cfif>
+
 				<cfelse>
 					<cfset response_messages = response_message>
 				</cfif>
@@ -1493,6 +1590,8 @@
 	<cffunction name="outputFileSmall" returntype="void" output="true" access="public">
 		<cfargument name="fileQuery" type="query" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="alertMessage" type="string" required="false">
+		<cfargument name="alertClass" type="string" required="false" default="alert alert-warning">
 
 		<cfset var method = "outputFileSmall">
 
@@ -1513,6 +1612,12 @@
 					<cfif APPLICATION.publicationScope IS true AND isNumeric(fileQuery.publication_scope_id)>
 						<div>
 							<span lang="es">Ámbito de publicación definido para el archivo:</span> <strong>#fileQuery.publication_scope_name#</strong>
+						</div>
+					</cfif>
+
+					<cfif isDefined("arguments.alertMessage") AND len(arguments.alertMessage)>
+						<div class="#arguments.alertClass#" role="alert" style="margin-bottom:0">
+							#arguments.alertMessage#
 						</div>
 					</cfif>
 

@@ -535,85 +535,17 @@
 
 		<cfset var method = "checkAreaAdminAccess">
 
-		<cfset var user_id = "">
-
-		<cfset var allUserAreasAdminList = "">
 		<cfset var access_result = false>
 
-		<!---<cfinclude template="includes/initVars.cfm">--->
-
-		<cfinclude template="includes/functionStartOnlySession.cfm">
-
-		<cfif SESSION.client_administrator NEQ SESSION.user_id><!---Is not an administrator user--->
-
-			<cfinvoke component="AreaManager" method="getAllUserAreasAdminList" returnvariable="allUserAreasAdminList">
-				<cfinvokeargument name="get_user_id" value="#SESSION.user_id#">
-			</cfinvoke>
-
-			<cfinvoke component="AreaManager" method="canTheUserAccess" returnvariable="access_result">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-				<cfinvokeargument name="allUserAreasList" value="#allUserAreasAdminList#">
-			</cfinvoke>
-
-			<cfif access_result IS NOT true>
-				<cfset error_code = 105>
-
-				<cfthrow errorcode="#error_code#">
-			</cfif>
-
-		</cfif>
-
-	</cffunction>
-
-
-	<!--- -------------------------- isUserAreaResponsible -------------------------------- --->
-	<!---Comprueba si el usuario es responsable del área, y devuelve el resultado en una variable--->
-	<!---El administrador general tiene permiso de responsable en todas las áreas--->
-
-	<cffunction name="isUserAreaResponsible" returntype="boolean" access="public">
-		<cfargument name="area_id" type="numeric" required="true">
-
-		<cfset var method = "isUserAreaResponsible">
-
-		<cfset var access_result = false>
-
-		<cfinclude template="includes/functionStartOnlySession.cfm">
-
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
-			<cfinvokeargument name="area_id" value="#arguments.area_id#">
-			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
-			<cfinvokeargument name="client_administrator" value="#SESSION.client_administrator#">
-
-			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#"/>
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#"/>
 		</cfinvoke>
 
-		<cfreturn access_result>
+		<cfif isAdministratorResponse.isUserAdministrator IS NOT true>
+			<cfset error_code = 105>
 
-	</cffunction>
-
-
-	<!--- -------------------------- CHECK AREA RESPONSIBLE ACCESS -------------------------------- --->
-	<!---Comprueba si el usuario es responsable del área y si no lanza un error--->
-	<!---El administrador general tiene permiso de responsable en todas las áreas--->
-
-	<cffunction name="checkAreaResponsibleAccess" returntype="void" access="public">
-		<cfargument name="area_id" type="numeric" required="true">
-
-		<cfset var method = "checkAreaResponsibleAccess">
-
-		<cfif SESSION.client_administrator NEQ SESSION.user_id><!---Is not an administrator user--->
-
-			<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
-				<cfinvokeargument name="area_id" value="#arguments.area_id#">
-			</cfinvoke>
-
-			<cfif access_result IS NOT true>
-				<cfset error_code = 105>
-
-				<cfthrow errorcode="#error_code#">
-			</cfif>
-
+			<cfthrow errorcode="#error_code#">
 		</cfif>
 
 	</cffunction>
@@ -630,7 +562,7 @@
 
 		<cfset var response = structNew()>
 
-		<cfset var allUserAreasList = "">
+		<cfset var allUserAreasAdminList = "">
 		<cfset var access_result = false>
 
 		<cfif SESSION.client_administrator NEQ arguments.user_id><!---Is not general administrator user--->
@@ -686,6 +618,59 @@
 			</cfif>
 
 		<cfreturn response>
+
+	</cffunction>
+
+
+	<!--- -------------------------- isUserAreaResponsible -------------------------------- --->
+	<!---Comprueba si el usuario es responsable del área, y devuelve el resultado en una variable--->
+	<!---El administrador general tiene permiso de responsable en todas las áreas--->
+
+	<cffunction name="isUserAreaResponsible" returntype="boolean" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfset var method = "isUserAreaResponsible">
+
+		<cfset var access_result = false>
+
+		<cfinclude template="includes/functionStartOnlySession.cfm">
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
+			<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			<cfinvokeargument name="user_id" value="#SESSION.user_id#">
+			<cfinvokeargument name="client_administrator" value="#SESSION.client_administrator#">
+
+			<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+
+		<cfreturn access_result>
+
+	</cffunction>
+
+
+	<!--- -------------------------- CHECK AREA RESPONSIBLE ACCESS -------------------------------- --->
+	<!---Comprueba si el usuario es responsable del área y si no lanza un error--->
+	<!---El administrador general tiene permiso de responsable en todas las áreas--->
+
+	<cffunction name="checkAreaResponsibleAccess" returntype="void" access="public">
+		<cfargument name="area_id" type="numeric" required="true">
+
+		<cfset var method = "checkAreaResponsibleAccess">
+
+		<cfif SESSION.client_administrator NEQ SESSION.user_id><!---Is not an administrator user--->
+
+			<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="access_result">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+
+			<cfif access_result IS NOT true>
+				<cfset error_code = 105>
+
+				<cfthrow errorcode="#error_code#">
+			</cfif>
+
+		</cfif>
 
 	</cffunction>
 

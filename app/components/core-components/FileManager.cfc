@@ -356,7 +356,7 @@
 			</cfif>
 
 
-			<cfset response = {result=true, file_id=#arguments.file_id#}>
+			<cfset response = {result=true, file_id=#arguments.file_id#, file_name=#fileQuery.name#}>
 
 
 		<cfreturn response>
