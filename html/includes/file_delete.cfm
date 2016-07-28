@@ -61,26 +61,24 @@
 		<cfinvokeargument name="file_id" value="#file_id#">
 	</cfinvoke>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
-		<cfinvokeargument name="fileQuery" value="#objectFile#">
-		<cfinvokeargument name="area_id" value="#area_id#">
-	</cfinvoke>
-
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="canUserDeleteFile" returnvariable="canUserDeleteFileResposne">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="canUserDeleteFile" returnvariable="canUserDeleteFileResponse">
 		<cfinvokeargument name="file_id" value="#file_id#">
 		<cfinvokeargument name="fileQuery" value="#objectFile#">
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
 
-	<cfif canUserDeleteFileResposne.result IS false>
-
+	<cfif canUserDeleteFileResponse.result IS false>
 		<cfset filesDeleteIds = listDeleteAt(filesDeleteIds, listFind(filesDeleteIds, file_id))>
-
-		<div class="alert alert-warning" role="alert">
-			#canUserDeleteFileResposne.message#
-		</div>
-
 	</cfif>
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
+		<cfinvokeargument name="fileQuery" value="#objectFile#">
+		<cfinvokeargument name="area_id" value="#area_id#">
+		<cfif canUserDeleteFileResponse.result IS false>
+			<cfinvokeargument name="alertMessage" value="#canUserDeleteFileResponse.message#">
+			<cfinvokeargument name="alertClass" value="alert alert-warning">
+		</cfif>
+	</cfinvoke>
 
 
 </cfloop>

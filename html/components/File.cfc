@@ -1590,6 +1590,8 @@
 	<cffunction name="outputFileSmall" returntype="void" output="true" access="public">
 		<cfargument name="fileQuery" type="query" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="alertMessage" type="string" required="false">
+		<cfargument name="alertClass" type="string" required="false" default="alert alert-warning">
 
 		<cfset var method = "outputFileSmall">
 
@@ -1610,6 +1612,12 @@
 					<cfif APPLICATION.publicationScope IS true AND isNumeric(fileQuery.publication_scope_id)>
 						<div>
 							<span lang="es">Ámbito de publicación definido para el archivo:</span> <strong>#fileQuery.publication_scope_name#</strong>
+						</div>
+					</cfif>
+
+					<cfif isDefined("arguments.alertMessage") AND len(arguments.alertMessage)>
+						<div class="#arguments.alertClass#" role="alert" style="margin-bottom:0">
+							#arguments.alertMessage#
 						</div>
 					</cfif>
 
