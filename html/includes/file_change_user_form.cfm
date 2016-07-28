@@ -1,6 +1,6 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/file_change_user_query.cfm">
 
-<!--- 
+<!---
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput> --->
@@ -31,16 +31,16 @@
 	}
 
 	function setSelectedUser(userId, userName) {
-		
+
 		var curUserId = "#file.user_in_charge#";
 
 		if(curUserId != userId) {
 			document.getElementById("new_user_in_charge").value = userId;
-			document.getElementById("new_user_full_name").value = userName;			
+			document.getElementById("new_user_full_name").value = userName;
 		} else {
 			alert("Debe seleccionar un propietario distinto al actual");
 		}
-			
+
 	}
 
 </script>
@@ -52,34 +52,43 @@
 <div class="contenedor_fondo_blanco">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
-	
+
 	<script>
 		var railo_custom_form;
 
-		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 			railo_custom_form = new LuceeForms('file_form');
 		else
 			railo_custom_form = new RailoForms('file_form');
 	</script>
-	
+
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
-	<input type="hidden" name="file_id" value="#file_id#"/>
+	<input type="hidden" name="files_ids" value="#files_ids#"/>
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
-	<div class="row">
-		<div class="col-sm-12">
-			<span lang="es">Nombre del archivo:</span>
-			<strong>#file.name#</strong>
-		</div>
-	</div>
 
-	<div class="row">
-		<div class="col-sm-12">
-			<span lang="es">Propietario actual:</span>
-			<strong>#file.user_full_name#</strong>
+	<cfloop list="#arguments.files_ids#" index="file_id">
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
+			<cfinvokeargument name="file_id" value="#file_id#">
+		</cfinvoke>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<span lang="es">Nombre del archivo:</span>
+				<strong>#file.name#</strong>
+			</div>
 		</div>
-	</div>
-	
+
+		<div class="row">
+			<div class="col-sm-12">
+				<span lang="es">Propietario actual:</span>
+				<strong>#file.user_full_name#</strong>
+			</div>
+		</div>
+
+	</cfif>
+
 	<div class="row">
 		<div class="col-xs-12 col-sm-6">
 			<label class="control-label" for="new_user_full_name" lang="es">Nuevo propietario</label>
@@ -87,7 +96,7 @@
 			<cfinput type="text" name="new_user_full_name" id="new_user_full_name" value="#newUser.new_user_full_name#" readonly="true" required="true" message="Debe seleccionar un nuevo propietario" onclick="openUserSelector()" class="form-control" /> <button onclick="return openUserSelector()" class="btn btn-default" lang="es">Seleccionar usuario</button>
 		</div>
 	</div>
-	
+
 	<div style="height:10px;"><!--- ---></div>
 
 	<div id="submitDiv">
