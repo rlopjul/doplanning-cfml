@@ -4748,7 +4748,7 @@
 
 			<cfif fileQuery.user_in_charge EQ arguments.new_user_in_charge>
 
-				<cfset response = {result=false, file_id=#arguments.file_id#, message="El usuario seleccionado es el propietario del archivo"}>
+				<cfset response = {result=false, file_id=#arguments.file_id#, file_name=#fileQuery.name#, message="El usuario seleccionado es el propietario del archivo"}>
 
 			<cfelse>
 
@@ -4788,7 +4788,7 @@
 
 				<cfinclude template="includes/logRecord.cfm">
 
-				<cfset response = {result=true, file_id=#arguments.file_id#}>
+				<cfset response = {result=true, file_id=#arguments.file_id#, file_name=#fileQuery.name#}>
 
 			</cfif>
 
