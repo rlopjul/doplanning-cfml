@@ -903,18 +903,40 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var response_message = "">
+
 		<cftry>
 
 			<cfloop list="#arguments.files_ids#" index="file_id">
 
-				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileUser" argumentcollection="#arguments#" returnvariable="response">
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileUser" argumentcollection="#arguments#" returnvariable="changeFileUserResponse">
 				</cfinvoke>
 
-				<cfif response.result IS true>
-					<cfset response.message = "Propietario modificado">
+				<cfif changeFileUserResponse.result IS true>
+
+					<cfset response_message = "Propietario modificado.">
+
+				<cfelse>
+
+					<cfset response_message = changeFileUserResponse.message>
+
+				</cfif>
+
+				<cfif listLen(files_ids) GT 1>
+
+					<cfif isDefined("deleteFileResponse.file_name")>
+						<cfset response_messages = response_messages&"<b>#changeFileUserResponse.file_name#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_messages&response_message&"<br>">
+					</cfif>
+
+				<cfelse>
+					<cfset response_messages = response_message>
 				</cfif>
 
 			</cfloop>
+
+			<cfset response = {result=true, message=#response_messages#}>
 
 			<cfcatch>
 
@@ -1613,16 +1635,16 @@
 
 					<strong>#fileQuery.name#</strong><br>
 
+					<div>
+						<span lang="es">Propietario</span>:
+						<strong>#fileQuery.user_full_name#</strong>
+					</div>
+
 					<cfif APPLICATION.publicationScope IS true AND isNumeric(fileQuery.publication_scope_id)>
 						<div>
 							<span lang="es">Ámbito de publicación definido para el archivo:</span> <strong>#fileQuery.publication_scope_name#</strong>
 						</div>
 					</cfif>
-
-					<div>
-						<span lang="es">Propietario:</span>
-						<strong>#fileQuery.user_full_name#</strong>
-					</div>
 
 					<cfif isDefined("arguments.alertMessage") AND len(arguments.alertMessage)>
 						<div class="#arguments.alertClass#" role="alert" style="margin-bottom:0" lang="es">
