@@ -1872,10 +1872,15 @@
 
 			<cfif itemQuery.user_in_charge NEQ user_id>
 
-				<!---checkAreaResponsibleAccess--->
-				<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
+				<!--- isUserAreaResponsible --->
+				<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
 					<cfinvokeargument name="area_id" value="#area_id#">
 				</cfinvoke>
+
+				<cfif isUserAreaResponsible IS false>
+					<cfset response = {result=false, item_id=#arguments.item_id#, item_title=#itemQuery.title#, area_id=#area_id#, message="No tiene permiso."}>
+					<cfreturn response>
+				</cfif>
 
 			</cfif>
 

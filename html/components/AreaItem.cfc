@@ -780,16 +780,13 @@
 					</cfif>
 
 				<cfelse>
-					<cfset response_messages = response_message>
+					<cfset response = {result=changeItemUserResponse.result, message=#response_message#, item_id=#arguments.items_ids#}>
+					<cfreturn response>
 				</cfif>
 
 			</cfloop>
 
-			<cfif listLen(arguments.items_ids) IS 1>
-				<cfset response = {result=true, message=#response_messages#, item_id=#arguments.items_ids#}>
-			<cfelse>
-				<cfset response = {result=true, message=#response_messages#}>
-			</cfif>
+			<cfset response = {result=true, message=#response_messages#, item_id=#arguments.items_ids#}>
 
 			<cfcatch>
 
