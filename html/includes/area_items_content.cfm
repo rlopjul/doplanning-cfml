@@ -39,14 +39,14 @@
 <cfset select_enabled = true>
 
 <cfif select_enabled IS true>
-
+<cfoutput>
 	<script>
 
 		function getSelectedItemsIds() {
 
 			var selectedItemsIds = "";
 
-			$('#listTable tbody tr:visible input[type=checkbox]:checked').each(function() {
+			$('##listTable tbody tr:visible input[type=checkbox]:checked').each(function() {
 
 				if(selectedItemsIds.length > 0)
 					selectedItemsIds = selectedItemsIds+","+this.value;
@@ -64,7 +64,7 @@
 			var itemsIds = getSelectedItemsIds();
 
 			if(itemsIds.length > 0)
-				goToUrl("item_change_user.cfm?area=#area_id#&items="+itemsIds);
+				goToUrl("item_change_user.cfm?area=#area_id#&itemTypeId=#itemTypeId#&items="+itemsIds);
 			else
 				parent.showAlertModal("No hay elementos seleccionados");
 
@@ -82,7 +82,7 @@
 		}
 
 	</script>
-
+</cfoutput>
 </cfif>
 
 <div class="row">
