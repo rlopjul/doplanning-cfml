@@ -1282,6 +1282,14 @@ fieldset[disabled] .btn-warning.active {
 	display: block;
 }
 
+#actionFilesNavBar .dropdown-menu a {
+	cursor: pointer;
+}
+
+#actionFilesNavBar .dropdown-toggle.navbar-btn {
+	margin-bottom: 0;
+}
+
 /*#newItemDropDown ul li,
 #filterAreaElements ul li{
 	padding: 5px;

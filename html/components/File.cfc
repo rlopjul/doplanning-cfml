@@ -894,7 +894,7 @@
 	</cffunction>
 
 
-	<!--- ---------------------------------- changeFileUser -------------------------------------- --->
+	<!--- ---------------------------------- changeFilesUser -------------------------------------- --->
 
 	<cffunction name="changeFilesUser" returntype="struct" access="public">
 		<cfargument name="files_ids" type="string" required="true">
@@ -957,25 +957,55 @@
 	</cffunction>
 
 
-	<!--- ---------------------------------- changeFileOwnerToArea -------------------------------------- --->
+	<!--- ---------------------------------- changeFilesOwnerToArea -------------------------------------- --->
 
-	<cffunction name="changeFileOwnerToArea" returntype="struct" access="public">
-		<cfargument name="file_id" type="numeric" required="true">
+	<cffunction name="changeFilesOwnerToArea" returntype="struct" access="public">
+		<cfargument name="files_ids" type="string" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 		<cfargument name="new_area_id" type="numeric" required="true">
 
-		<cfset var method = "changeFileOwnerToArea">
+		<cfset var method = "changeFilesOwnerToArea">
 
 		<cfset var response = structNew()>
 
+		<cfset var response_message = "">
+		<cfset var response_messages = "">
+
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileOwnerToArea" argumentcollection="#arguments#" returnvariable="response">
-			</cfinvoke>
+			<cfloop list="#arguments.files_ids#" index="file_id">
 
-			<cfif response.result IS true>
-				<cfset response.message = "Propiedad del archivo cambiada">
-			</cfif>
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileOwnerToArea" returnvariable="changeFileOwnerToAreaResponse">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+					<cfinvokeargument name="new_area_id" value="#arguments.new_area_id#">
+				</cfinvoke>
+
+				<cfif changeFileOwnerToAreaResponse.result IS true>
+
+					<cfset response_message = "Convertido en archivo de área.">
+
+				<cfelse>
+
+					<cfset response_message = changeFileOwnerToAreaResponse.message>
+
+				</cfif>
+
+				<cfif listLen(files_ids) GT 1>
+
+					<cfif isDefined("changeFileOwnerToAreaResponse.file_name")>
+						<cfset response_messages = response_messages&"<b>#changeFileOwnerToAreaResponse.file_name#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_messages&response_message&"<br>">
+					</cfif>
+
+				<cfelse>
+					<cfset response_messages = response_message>
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=true, message=#response_messages#}>
 
 			<cfcatch>
 
