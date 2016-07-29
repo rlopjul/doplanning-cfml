@@ -696,6 +696,8 @@ curLangTextEn = {
     "No se puede eliminar un archivo bloqueado, debe desbloquearlo.":"You can't delete a locked file, you must unlock.",
     "No se puede eliminar un archivo con una versión aprobada.":"You can't delete a file with an approved version.",
     "Solo se muestran seleccionables las áreas comunes a todos los ámbitos de los archivos seleccionados.":"Only are selectables the common areas of all files scopes.",
+    "Este archivo ya es un archivo de área.":"This file is already an area file.",
+    "No hay archivos para convertir en archivos de área.":"No files to convert to area file.",
 
 		"Descargar":"Download",
 		"Abrir":"Open",
