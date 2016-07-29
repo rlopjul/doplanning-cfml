@@ -3638,7 +3638,7 @@
 
 						<cfif isAdministratorResponse.isUserAdministrator IS false>
 
-							<cfset response = {result=false, item_id=#arguments.item_id#, message="No puede eliminar el elemento, no tiene acceso al área."}>
+							<cfset response = {result=false, item_id=#arguments.item_id#, message="No puede eliminar el elemento, no tiene permiso."}>
 							<cfreturn response>
 
 						</cfif>
