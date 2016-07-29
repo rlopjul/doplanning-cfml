@@ -144,6 +144,17 @@
 
 		}
 
+		function goToChangeOwnerToArea(){
+
+			var filesIds = getSelectedFilesIds();
+
+			if(filesIds.length > 0)
+				goToUrl("file_change_owner_to_area.cfm?area=#area_id#&files="+filesIds);
+			else
+				parent.showAlertModal("No hay archivos seleccionados");
+
+		}
+
 		function goToDeleteFiles(){
 
 			var deleteFilesIds = getSelectedFilesIds();
@@ -178,7 +189,12 @@
 						</div>
 
 						<div class="btn-group">
-							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToChangeUser()"><i class="fa icon-user" aria-hidden="true"></i> <span lang="es">Cambiar propietario</span></button>
+							<button class="btn btn-default btn-sm dropdown-toggle navbar-btn" data-toggle="dropdown" title="Cambiar propietario" lang="es">
+							<i class="fa icon-user" aria-hidden="true"></i> <span lang="es">Cambiar propietario</span> <span class="caret"></span></button>
+							<ul class="dropdown-menu">
+								<li><a onclick="goToChangeUser()" lang="es">Cambiar usuario propietario</a></li>
+								<li><a onclick="goToChangeOwnerToArea()" lang="es">Convertir en archivo del área</a></li>
+							</ul>
 						</div>
 
 						<div class="btn-group">
