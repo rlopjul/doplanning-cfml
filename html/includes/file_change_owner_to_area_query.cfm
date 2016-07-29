@@ -3,22 +3,24 @@
 <cfelse>
 	<cflocation url="empty.cfm" addtoken="no">
 </cfif>
-	
+
 <cfif isDefined("FORM.page")>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="changeFileOwnerToArea" argumentcollection="#FORM#" returnvariable="actionResponse">
-	</cfinvoke>	
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="changeFilesOwnerToArea" argumentcollection="#FORM#" returnvariable="actionResponse">
+	</cfinvoke>
 
 	<cfif actionResponse.result IS true>
 
-		<cfset file_id = actionResponse.file_id>
-
 		<cfset msg = URLEncodedFormat(actionResponse.message)>
-		
-		<cflocation url="area_items.cfm?area=#area_id#&file=#file_id#&res=1&msg=#msg#" addtoken="no">
-			
+
+		<cfif listLen(FORM.files_ids) GT 1><!--- Show warning message: we don't know if all files result are success --->
+			<cflocation url="area_items.cfm?area=#area_id#&res=-1&msg=#msg#" addtoken="no">
+		<cfelse>
+			<cflocation url="area_items.cfm?area=#area_id#&res=1&msg=#msg#" addtoken="no">
+		</cfif>
+
 	<cfelse>
-		
+
 		<cfset URL.res = 0>
 		<cfset URL.msg = actionResponse.message>
 
@@ -29,7 +31,9 @@
 <cfelse>
 
 	<cfif isDefined("URL.file") AND isNumeric(URL.file)>
-		<cfset file_id = URL.file>
+		<cfset files_ids = URL.file>
+	<cfelseif isDefined("URL.files")>
+		<cfset files_ids = URL.files>
 	<cfelse>
 		<cflocation url="empty.cfm" addtoken="no">
 	</cfif>
@@ -43,13 +47,3 @@
 	<cfset ownerArea.new_area_name = fileArea.name>
 
 </cfif>
-
-<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
-	<cfinvokeargument name="file_id" value="#file_id#">
-</cfinvoke>
-
-<!---<cfif file.file_type_id IS 1>
-	<cfset file_area_id = area_id>
-<cfelse>
-	<cfset file_area_id = file.area_id>
-</cfif>--->
