@@ -100,7 +100,11 @@
 	<div id="submitDiv">
 		<input type="submit" class="btn btn-primary" name="modify" value="Cambiar propietario" lang="es"/>
 
-		<a href="#itemTypeName#.cfm?#itemTypeName#=#item_id#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		<cfif listLen(items_ids) IS 1>
+			<a href="#itemTypeName#.cfm?#itemTypeName#=#items_ids#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		<cfelse>
+			<a href="#itemTypeNameP#.cfm?area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		</cfif>
 	</div>
 
 	<br/>
