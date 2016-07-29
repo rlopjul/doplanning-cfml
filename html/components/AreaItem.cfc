@@ -785,7 +785,11 @@
 
 			</cfloop>
 
-			<cfset response = {result=true, message=#response_messages#}>
+			<cfif listLen(arguments.items_ids) IS 1>
+				<cfset response = {result=true, message=#response_messages#, item_id=#arguments.items_ids#}>
+			<cfelse>
+				<cfset response = {result=true, message=#response_messages#}>
+			</cfif>
 
 			<cfcatch>
 
