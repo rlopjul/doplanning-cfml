@@ -67,19 +67,39 @@
 	<input type="hidden" name="itemTypeId" value="#itemTypeId#"/>
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
-	<div class="row">
-		<div class="col-sm-12">
-			<span lang="es">#itemTypeNameEs#</span>:
-			<strong>#item.title#</strong>
-		</div>
-	</div>
+	<cfloop list="#items_ids#" index="item_id">
 
-	<div class="row">
-		<div class="col-sm-12">
-			<span lang="es">Propietario actual</span>:
-			<strong>#item.user_full_name#</strong>
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="item">
+			<cfinvokeargument name="item_id" value="#item_id#">
+			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+		</cfinvoke>
+
+		<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
+			<cfinvokeargument name="fileQuery" value="#file#">
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>
+
+		<cfif listLen(files_ids) IS 1>
+			<script>
+				curUserId = "#file.user_in_charge#";
+			</script>
+		</cfif>--->
+
+		<div class="row">
+			<div class="col-sm-12">
+				<span lang="es">#itemTypeNameEs#</span>:
+				<strong>#item.title#</strong>
+			</div>
 		</div>
-	</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<span lang="es">Propietario actual</span>:
+				<strong>#item.user_full_name#</strong>
+			</div>
+		</div>
+
+	</cfloop>
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-6">
