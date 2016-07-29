@@ -41,6 +41,8 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
+<cfinclude template="#APPLICATION.htmlPath#/includes/item_multiple_menu.cfm">
+
 <cfif tableTypeId IS 3><!--- Typologies --->
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Table" method="getAreaDefaultTable" returnvariable="getDefaultTableResponse">
@@ -65,6 +67,7 @@
 				<cfinvokeargument name="default_table_id" value="#default_table_id#"/>
 			</cfif>
 			<cfinvokeargument name="area_id" value="#area_id#"/>
+			<cfinvokeargument name="select_enabled" value="#select_enabled#">
 		</cfinvoke>
 
 	<!---<cfelse>
