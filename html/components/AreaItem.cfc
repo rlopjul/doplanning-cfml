@@ -4017,4 +4017,40 @@
 	</cffunction>
 
 
+	<!--- ----------------------- outputItemSmall -------------------------------- --->
+
+	<cffunction name="outputItemSmall" returntype="void" output="true" access="public">
+		<cfargument name="itemQuery" type="query" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="alertMessage" type="string" required="false">
+		<cfargument name="alertClass" type="string" required="false" default="alert alert-warning">
+
+		<cfset var method = "outputItemSmall">
+
+		<div class="well well-sm">
+
+			<div>
+
+					<div>
+						<strong>#itemQuery.title#</strong>
+					</div>
+
+					<div>
+						<span lang="es">Propietario</span>:
+						<strong>#itemQuery.user_full_name#</strong>
+					</div>
+
+					<cfif isDefined("arguments.alertMessage") AND len(arguments.alertMessage)>
+						<div class="#arguments.alertClass#" role="alert" style="margin-bottom:0" lang="es">
+							#arguments.alertMessage#
+						</div>
+					</cfif>
+
+			</div>
+
+		</div>
+
+	</cffunction>
+
+
 </cfcomponent>

@@ -69,30 +69,16 @@
 			<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 		</cfinvoke>
 
-		<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
-			<cfinvokeargument name="fileQuery" value="#file#">
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItemSmall">
+			<cfinvokeargument name="itemQuery" value="#item#">
 			<cfinvokeargument name="area_id" value="#area_id#">
-		</cfinvoke>--->
+		</cfinvoke>
 
 		<cfif listLen(items_ids) IS 1>
 			<script>
 				curUserId = "#item.user_in_charge#";
 			</script>
 		</cfif>
-
-		<div class="row">
-			<div class="col-sm-12">
-				<span lang="es">#itemTypeNameEs#</span>:
-				<strong>#item.title#</strong>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-sm-12">
-				<span lang="es">Propietario actual</span>:
-				<strong>#item.user_full_name#</strong>
-			</div>
-		</div>
 
 	</cfloop>
 
