@@ -103,7 +103,7 @@
 
 <cfelse>
 
-	<div class="alert alert-danger" role="alert" lang="es">No puede eliminar el archivo o archivos seleccionados.</div>
+	<div class="alert alert-danger" role="alert" lang="es">No puede eliminar el elemento o elementos seleccionados.</div>
 
 	<a href="#return_page#" class="btn btn-default" lang="es">Cancelar</a>
 
