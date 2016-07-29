@@ -736,25 +736,56 @@
 	</cffunction>
 
 
-	<!--- ---------------------------------- changeItemUser -------------------------------------- --->
+	<!--- ---------------------------------- changeItemsUser -------------------------------------- --->
 
-	<cffunction name="changeItemUser" returntype="struct" access="public">
-		<cfargument name="item_id" type="numeric" required="true">
+	<cffunction name="changeItemsUser" returntype="struct" access="public">
+		<cfargument name="items_ids" type="string" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="new_user_in_charge" type="numeric" required="true">
 
-		<cfset var method = "changeItemUser">
+		<cfset var method = "changeItemsUser">
 
 		<cfset var response = structNew()>
 
+		<cfset var response_message = "">
+		<cfset var response_messages = "">
+
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeItemUser" argumentcollection="#arguments#" returnvariable="response">
-			</cfinvoke>
+			<cfloop list="#arguments.items_ids#" index="item_id">
 
-			<cfif response.result IS true>
-				<cfset response.message = "Propietario modificado">
-			</cfif>
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeItemUser" returnvariable="changeItemUserResponse">
+					<cfinvokeargument name="item_id" value="#item_id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="new_user_in_charge" value="#arguments.new_user_in_charge#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+				<cfif changeItemUserResponse.result IS true>
+
+					<cfset response_message = "Propietario modificado.">
+
+				<cfelse>
+
+					<cfset response_message = changeItemUserResponse.message>
+
+				</cfif>
+
+				<cfif listLen(arguments.items_ids) GT 1>
+
+					<cfif isDefined("changeItemUserResponse.item_title")>
+						<cfset response_messages = response_messages&"<b>#changeItemUserResponse.item_title#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_messages&response_message&"<br>">
+					</cfif>
+
+				<cfelse>
+					<cfset response_messages = response_message>
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=true, message=#response_messages#}>
 
 			<cfcatch>
 
