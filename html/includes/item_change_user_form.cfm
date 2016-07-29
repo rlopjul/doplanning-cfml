@@ -32,11 +32,11 @@
 		return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_users_select.cfm?area=#area_id#');
 	}
 
+	var curUserId = null;
+
 	function setSelectedUser(userId, userName) {
 
-		var curUserId = "#item.user_in_charge#";
-
-		if(curUserId != userId) {
+		if( isNaN(curUserId) || curUserId != userId ) {
 			document.getElementById("new_user_in_charge").value = userId;
 			document.getElementById("new_user_full_name").value = userName;
 		} else {
@@ -62,11 +62,6 @@
 			railo_custom_form = new RailoForms('item_form');
 	</script>
 
-	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
-	<input type="hidden" name="item_id" value="#item_id#"/>
-	<input type="hidden" name="itemTypeId" value="#itemTypeId#"/>
-	<input type="hidden" name="area_id" value="#area_id#"/>
-
 	<cfloop list="#items_ids#" index="item_id">
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="item">
@@ -77,13 +72,13 @@
 		<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
 			<cfinvokeargument name="fileQuery" value="#file#">
 			<cfinvokeargument name="area_id" value="#area_id#">
-		</cfinvoke>
+		</cfinvoke>--->
 
-		<cfif listLen(files_ids) IS 1>
+		<cfif listLen(items_ids) IS 1>
 			<script>
-				curUserId = "#file.user_in_charge#";
+				curUserId = "#item.user_in_charge#";
 			</script>
-		</cfif>--->
+		</cfif>
 
 		<div class="row">
 			<div class="col-sm-12">
@@ -100,6 +95,11 @@
 		</div>
 
 	</cfloop>
+
+	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
+	<input type="hidden" name="items_ids" value="#items_ids#"/>
+	<input type="hidden" name="itemTypeId" value="#itemTypeId#"/>
+	<input type="hidden" name="area_id" value="#area_id#"/>
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-6">
