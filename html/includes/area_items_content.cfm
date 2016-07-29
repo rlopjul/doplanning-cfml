@@ -75,7 +75,7 @@
 			var deleteItemsIds = getSelectedItemsIds();
 
 			if(deleteItemsIds.length > 0)
-				goToUrl("file_delete.cfm?area=#area_id#&files="+deleteItemsIds);
+				goToUrl("item_delete.cfm?area=#area_id#&itemTypeId=#itemTypeId#&items="+deleteItemsIds);
 			else
 				parent.showAlertModal("No hay elementos seleccionados");
 
@@ -104,9 +104,10 @@
 							</div>
 						</cfif>
 
-						<!---<div class="btn-group">
-							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToDeleteFiles()"><i class="fa fa-trash-o" aria-hidden="true"></i> <span lang="es">Eliminar</span></button>
-						</div>--->
+						<div class="btn-group">
+							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToDeleteItems()"><i class="fa fa-trash-o" aria-hidden="true"></i> <span lang="es">Eliminar</span></button>
+						</div>
+
 					</div>
 
 				</div>
