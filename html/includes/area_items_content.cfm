@@ -98,9 +98,11 @@
 
 					<div class="btn-toolbar">
 
-						<div class="btn-group">
-							<button class="btn btn-default btn-sm navbar-btn" onclick="goToChangeUser()"><i class="fa icon-user" aria-hidden="true"></i> <span lang="es">Cambiar propietario</span></button>
-						</div>
+						<cfif itemTypeId IS NOT 1>
+							<div class="btn-group">
+								<button class="btn btn-default btn-sm navbar-btn" onclick="goToChangeUser()"><i class="fa icon-user" aria-hidden="true"></i> <span lang="es">Cambiar propietario</span></button>
+							</div>
+						</cfif>
 
 						<!---<div class="btn-group">
 							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToDeleteFiles()"><i class="fa fa-trash-o" aria-hidden="true"></i> <span lang="es">Eliminar</span></button>
