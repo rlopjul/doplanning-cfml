@@ -457,6 +457,7 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var response_message = "">
 		<cfset var response_messages = "">
 
 		<cftry>
@@ -544,6 +545,7 @@
 
 		<cfset var response = structNew()>
 
+		<cfset var response_message = "">
 		<cfset var response_messages = "">
 
 		<cftry>
@@ -894,23 +896,53 @@
 
 	<!--- ---------------------------------- changeFileUser -------------------------------------- --->
 
-	<cffunction name="changeFileUser" returntype="struct" access="public">
-		<cfargument name="file_id" type="numeric" required="true">
+	<cffunction name="changeFilesUser" returntype="struct" access="public">
+		<cfargument name="files_ids" type="string" required="true">
 		<cfargument name="new_user_in_charge" type="numeric" required="true">
 		<cfargument name="area_id" type="numeric" required="true">
 
-		<cfset var method = "changeFileUser">
+		<cfset var method = "changeFilesUser">
 
 		<cfset var response = structNew()>
 
+		<cfset var response_message = "">
+		<cfset var response_messages = "">
+
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileUser" argumentcollection="#arguments#" returnvariable="response">
-			</cfinvoke>
+			<cfloop list="#arguments.files_ids#" index="file_id">
 
-			<cfif response.result IS true>
-				<cfset response.message = "Propietario modificado">
-			</cfif>
+				<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="changeFileUser" returnvariable="changeFileUserResponse">
+					<cfinvokeargument name="file_id" value="#file_id#">
+					<cfinvokeargument name="new_user_in_charge" value="#arguments.new_user_in_charge#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+				<cfif changeFileUserResponse.result IS true>
+
+					<cfset response_message = "Propietario modificado.">
+
+				<cfelse>
+
+					<cfset response_message = changeFileUserResponse.message>
+
+				</cfif>
+
+				<cfif listLen(files_ids) GT 1>
+
+					<cfif isDefined("changeFileUserResponse.file_name")>
+						<cfset response_messages = response_messages&"<b>#changeFileUserResponse.file_name#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_messages&response_message&"<br>">
+					</cfif>
+
+				<cfelse>
+					<cfset response_messages = response_message>
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=true, message=#response_messages#}>
 
 			<cfcatch>
 
@@ -1608,6 +1640,11 @@
 					</a>
 
 					<strong>#fileQuery.name#</strong><br>
+
+					<div>
+						<span lang="es">Propietario</span>:
+						<strong>#fileQuery.user_full_name#</strong>
+					</div>
 
 					<cfif APPLICATION.publicationScope IS true AND isNumeric(fileQuery.publication_scope_id)>
 						<div>
