@@ -16,7 +16,7 @@
 
 		<cfset msg = URLEncodedFormat(actionResponse.message)>
 
-		<cfif listLen(FORM.files_ids) GT 1><!--- Show warning message: we don't know if all files result are success --->
+		<cfif listLen(FORM.items_ids) GT 1><!--- Show warning message: we don't know if all files result are success --->
 			<cflocation url="area_items.cfm?area=#area_id#&res=-1&msg=#msg#" addtoken="no">
 		<cfelse>
 			<cfset item_id = actionResponse.item_id>
