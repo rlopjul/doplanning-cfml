@@ -36,6 +36,8 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
+<cfset select_enabled = true>
+
 <cfif select_enabled IS true>
 
 	<script>
@@ -44,7 +46,7 @@
 
 			var selectedItemsIds = "";
 
-			$('##listTable tbody tr:visible input[type=checkbox]:checked').each(function() {
+			$('#listTable tbody tr:visible input[type=checkbox]:checked').each(function() {
 
 				if(selectedItemsIds.length > 0)
 					selectedItemsIds = selectedItemsIds+","+this.value;
@@ -59,7 +61,7 @@
 
 		function goToChangeUser(){
 
-			var itemsIds = getSelectedFilesIds();
+			var itemsIds = getSelectedItemsIds();
 
 			if(itemsIds.length > 0)
 				goToUrl("item_change_user.cfm?area=#area_id#&items="+itemsIds);
@@ -130,7 +132,7 @@
 					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 					<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
 					<cfinvokeargument name="app_version" value="#app_version#">
-					<cfinvokeargument name="select_enabled" value="true">
+					<cfinvokeargument name="select_enabled" value="#select_enabled#">
 				</cfinvoke>
 
 			<cfelse><!---Consultations--->
