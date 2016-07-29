@@ -66,7 +66,6 @@
 	<input type="hidden" name="files_ids" value="#files_ids#"/>
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
-
 	<cfloop list="#files_ids#" index="file_id">
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
