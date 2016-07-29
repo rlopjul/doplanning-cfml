@@ -87,11 +87,11 @@
 	    	stopPropagation(e);
 
 	    	if( $('#listTable tbody tr:visible input[type=checkbox]:checked').length > 0 ){
-					$('#actionFilesNavBar').show();
-					$('#actionFilesHelpText').hide();
+					$('#actionItemsNavBar').show();
+					$('#actionItemsHelpText').hide();
 				}else{
-					$('#actionFilesNavBar').hide();
-					$('#actionFilesHelpText').show();
+					$('#actionItemsNavBar').hide();
+					$('#actionItemsHelpText').show();
 				}
 
 	    });
@@ -174,11 +174,11 @@
 
 <div class="row">
 
-	<div class="col-sm-12" id="actionFilesHelpText">
+	<div class="col-sm-12" id="actionItemsHelpText">
 		<small class="help-block">Selecciona archivos de la lista para visualizar las acciones disponibles sobre varios archivos a la vez</small>
 	</div>
 
-	<nav class="navbar-default" id="actionFilesNavBar" style="display:none">
+	<nav class="navbar-default" id="actionItemsNavBar" style="display:none">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-12">
