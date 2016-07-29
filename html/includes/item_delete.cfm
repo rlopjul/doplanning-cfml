@@ -2,8 +2,9 @@
 
 	<cfset items_ids = FORM.items_ids>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Item" method="deleteItems" returnvariable="resultDeleteItems">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="deleteItems" returnvariable="resultDeleteItems">
 		<cfinvokeargument name="items_ids" value="#items_ids#">
+		<cfinvokeargument name="itemTypeId" value="#FORM.itemTypeId#">
 		<cfinvokeargument name="area_id" value="#FORM.area_id#">
 	</cfinvoke>
 	<cfset msg = resultDeleteItems.message>
@@ -89,13 +90,10 @@
   <form name="delete_items" method="post" action="#CGI.SCRIPT_NAME#" class="form-horizontal" style="clear:both;">
 
   	<input type="hidden" name="items_ids" value="#itemsDeleteIds#">
+		<input type="hidden" name="itemTypeId" value="#itemTypeId#">
 		<input type="hidden" name="area_id" value="#area_id#">
 
-    <cfif listLen(itemsDeleteIds) GT 1>
-  		<input type="submit" class="btn btn-primary" lang="es" value="Eliminar archivos" />
-    <cfelse>
-      <input type="submit" class="btn btn-primary" lang="es" value="Eliminar archivo" />
-    </cfif>
+  	<input type="submit" class="btn btn-primary" lang="es" value="Eliminar" />
 
   	<a href="#return_page#" class="btn btn-default" style="float:right;" lang="es">Cancelar</a>
 
