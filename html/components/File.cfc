@@ -937,7 +937,8 @@
 					</cfif>
 
 				<cfelse>
-					<cfset response_messages = response_message>
+					<cfset response = {result=changeFileUserResponse.result, message=#response_message#}>
+					<cfreturn response>
 				</cfif>
 
 			</cfloop>
