@@ -1041,6 +1041,38 @@
 	</cffunction>
 
 
+	<!--- ---------------------------------- canUserDeleteItem -------------------------------------- --->
+
+	<cffunction name="canUserDeleteItem" output="false" returntype="struct" access="public">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="itemQuery" type="query" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+
+		<cfset var method = "canUserDeleteItem">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="canUserDeleteItem" returnvariable="response">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="itemQuery" value="#arguments.itemQuery#">
+				<cfinvokeargument name="area_id" value="#arguments.area_id#">
+			</cfinvoke>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandler.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- deleteItem --->
 	<cffunction name="deleteItem" returntype="void" access="remote">
 		<cfargument name="item_id" type="string" required="true">

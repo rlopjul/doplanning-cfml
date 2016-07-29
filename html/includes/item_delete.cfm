@@ -62,15 +62,16 @@
 		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 	</cfinvoke>
 
-	<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="canUserDeleteItem" returnvariable="canUserDeleteItemResponse">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="canUserDeleteItem" returnvariable="canUserDeleteItemResponse">
 		<cfinvokeargument name="item_id" value="#item_id#">
+		<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 		<cfinvokeargument name="itemQuery" value="#objectItem#">
 		<cfinvokeargument name="area_id" value="#area_id#">
 	</cfinvoke>
 
 	<cfif canUserDeleteItemResponse.result IS false>
 		<cfset itemsDeleteIds = listDeleteAt(itemsDeleteIds, listFind(itemsDeleteIds, item_id))>
-	</cfif>--->
+	</cfif>
 
 	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Item" method="outputItemSmall">
 		<cfinvokeargument name="itemQuery" value="#objectItem#">

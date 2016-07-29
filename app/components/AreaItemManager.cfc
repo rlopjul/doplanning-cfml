@@ -3577,6 +3577,99 @@
 
 
 
+	<!--- ------------------------------------- canUserDeleteItem -------------------------------------  --->
+
+	<cffunction name="canUserDeleteItem" output="false" access="public" returntype="struct">
+		<cfargument name="item_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+		<cfargument name="itemQuery" type="query" required="true">
+		<cfargument name="area_id" type="numeric" required="false">
+
+		<cfset var method = "canUserDeleteItem">
+
+		<cfset var response = structNew()>
+
+		<cftry>
+
+			<cfinclude template="includes/functionStartOnlySession.cfm">
+
+			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
+
+			<cfif itemQuery.recordCount GT 0>
+
+				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16 OR itemTypeId IS 17><!---List, Forms, Typologies, Users typologies, Mailings--->
+
+					<!--- isUserAreaResponsible --->
+					<cfinvoke component="AreaManager" method="isUserAreaResponsible" returnvariable="isUserAreaResponsible">
+						<cfinvokeargument name="area_id" value="#area_id#">
+					</cfinvoke>
+
+					<cfif isUserAreaResponsible IS false>
+
+						<cfset response = {result=false, item_id=#arguments.item_id#, message="No puede eliminar el elemento, no tiene permiso de responsable del área."}>
+						<cfreturn response>
+
+					</cfif>
+
+				</cfif>
+
+
+				<!--- checkAreaAccess --->
+				<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+					<cfinvokeargument name="area_id" value="#area_id#">
+				</cfinvoke>
+
+				<cfif access_result IS false>
+
+					<cfset response = {result=false, item_id=#arguments.item_id#, message="No puede eliminar el elemento, no tiene acceso al área."}>
+					<cfreturn response>
+
+				<cfelse>
+
+					<cfif ( itemQuery.user_in_charge NEQ user_id ) OR ( arguments.itemTypeId IS 7 AND itemQuery.state NEQ "created" )><!---El usuario del item no es el mismo que el que intenta eliminar o es una interconsulta en estado enviada--->
+
+						<!---Las consultas solo se pueden eliminar si están en estado creadas (enviadas)
+						Los administradores sí pueden borrar las consultas cuando borran un área--->
+
+						<cfinvoke component="#APPLICATION.componentsPath#/AreaManager" method="isUserAreaAdministrator" returnvariable="isAdministratorResponse">
+							<cfinvokeargument name="area_id" value="#area_id#"/>
+							<cfinvokeargument name="user_id" value="#SESSION.user_id#"/>
+						</cfinvoke>
+
+						<cfif isAdministratorResponse.isUserAdministrator IS false>
+
+							<cfset response = {result=false, item_id=#arguments.item_id#, message="No puede eliminar el elemento, no tiene acceso al área."}>
+							<cfreturn response>
+
+						</cfif>
+
+					</cfif>
+
+				</cfif>
+
+
+			<cfelse><!---Item does not exist--->
+
+				<cfset response = {result=false, item_id=#arguments.item_id#, message="Elemento no encontrado."}>
+				<cfreturn response>
+
+			</cfif>
+
+			<cfset response = {result=true, item_id=#arguments.item_id#}>
+
+			<cfcatch>
+
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+
+			</cfcatch>
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
 
 	<!--- ----------------------- DELETE ITEM ATTACHED FILE -------------------------------- --->
 
