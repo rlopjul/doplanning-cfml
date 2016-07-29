@@ -2662,6 +2662,7 @@
 		<cfargument name="return_page" type="string" required="no">
 		<cfargument name="app_version" type="string" required="true">
 		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
+		<cfargument name="select_enabled" type="boolean" required="false" default="false">
 
 		<cfset var method = "outputConsultationsList">
 
@@ -2726,6 +2727,24 @@
 					    });
 						</cfif>
 
+						<cfif arguments.select_enabled IS true>
+
+							$('##listTable tbody input[type=checkbox]').on('click', function(e) {
+
+					    	stopPropagation(e);
+
+					    	if( $('##listTable tbody tr:visible input[type=checkbox]:checked').length > 0 ){
+									$('##actionItemsNavBar').show();
+									$('##actionItemsHelpText').hide();
+								}else{
+									$('##actionItemsNavBar').hide();
+									$('##actionItemsHelpText').show();
+								}
+
+					    });
+
+						</cfif>
+
 					});
 				</script>
 
@@ -2735,6 +2754,9 @@
 				<table id="listTable" class="tablesorter">
 					<thead>
 						<tr>
+							<cfif select_enabled IS true>
+								<th style="width:35px;" class="filter-false"></th>
+							</cfif>
 							<th style="width:23%" lang="es">De</th>
 							<th style="width:12%" lang="es">Fecha</th>
 							<cfif arguments.full_content IS false>
@@ -2770,7 +2792,11 @@
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 
 						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#" onclick="stopEvent(event)"><!--- id: usado para cuando se tiene que obtener el id del elemento seleccionado (al seleccionar un listado de elementos)--->
-
+							<cfif select_enabled IS true>
+								<td style="text-align:center" onclick="stopEvent(event)">
+									<input type="checkbox" name="selected_file_#itemsQuery.id#" value="#itemsQuery.id#">
+								</td>
+							</cfif>
 							<td>
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 									<cfinvokeargument name="user_id" value="#itemsQuery.user_in_charge#">
