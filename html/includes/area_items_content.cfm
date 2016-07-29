@@ -36,6 +36,82 @@
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
 
+<cfif select_enabled IS true>
+
+	<script>
+
+		function getSelectedItemsIds() {
+
+			var selectedItemsIds = "";
+
+			$('##listTable tbody tr:visible input[type=checkbox]:checked').each(function() {
+
+				if(selectedItemsIds.length > 0)
+					selectedItemsIds = selectedItemsIds+","+this.value;
+				else
+					selectedItemsIds = this.value;
+
+			});
+
+			return selectedItemsIds;
+
+		}
+
+		function goToChangeUser(){
+
+			var itemsIds = getSelectedFilesIds();
+
+			if(itemsIds.length > 0)
+				goToUrl("item_change_user.cfm?area=#area_id#&items="+itemsIds);
+			else
+				parent.showAlertModal("No hay elementos seleccionados");
+
+		}
+
+		function goToDeleteItems(){
+
+			var deleteItemsIds = getSelectedItemsIds();
+
+			if(deleteItemsIds.length > 0)
+				goToUrl("file_delete.cfm?area=#area_id#&files="+deleteItemsIds);
+			else
+				parent.showAlertModal("No hay elementos seleccionados");
+
+		}
+
+	</script>
+
+</cfif>
+
+<div class="row">
+
+	<div class="col-sm-12" id="actionItemsHelpText">
+		<small class="help-block">Selecciona elementos de la lista para visualizar las acciones disponibles sobre varios archivos a la vez</small>
+	</div>
+
+	<nav class="navbar-default" id="actionItemsNavBar" style="display:none">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+
+					<div class="btn-toolbar">
+
+						<div class="btn-group">
+							<button class="btn btn-default btn-sm navbar-btn" onclick="goToChangeUser()"><i class="fa icon-user" aria-hidden="true"></i> <span lang="es">Cambiar propietario</span></button>
+						</div>
+
+						<!---<div class="btn-group">
+							<button class="btn btn-danger btn-sm navbar-btn" onclick="goToDeleteFiles()"><i class="fa fa-trash-o" aria-hidden="true"></i> <span lang="es">Eliminar</span></button>
+						</div>--->
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</nav>
+
+</div>
+
 
 <div class="row">
 	<div class="col-sm-12">
