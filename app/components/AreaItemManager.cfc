@@ -1881,7 +1881,8 @@
 
 			<cfif itemQuery.user_in_charge EQ arguments.new_user_in_charge>
 
-				<cfthrow message="El usuario seleccionado es el propietario">
+				<cfset response = {result=false, item_id=#arguments.item_id#, item_title=#itemQuery.title#, area_id=#area_id#, message="El usuario seleccionado es el propietario"}>
+				<cfreturn response>
 
 			</cfif>
 
@@ -1932,7 +1933,7 @@
 
 			<cfinclude template="includes/logRecord.cfm">
 
-			<cfset response = {result=true, item_id=#arguments.item_id#, area_id=#area_id#}>
+			<cfset response = {result=true, item_id=#arguments.item_id#, item_title=#itemQuery.title#, area_id=#area_id#}>
 
 			<cfcatch>
 

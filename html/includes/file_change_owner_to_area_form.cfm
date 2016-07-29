@@ -91,8 +91,11 @@
 
 	</cfloop>
 
+
 	<cfif listLen(filesChangeIds) IS 0>
+
 		<div class="alert alert-danger" role="alert" lang="es">No hay archivos para convertir en archivos de área.</div>
+
 	<cfelse>
 
 		<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
@@ -115,13 +118,22 @@
 
 		<div style="height:10px;"><!--- ---></div>
 
-		<div id="submitDiv">
-			<input type="submit" class="btn btn-primary" name="modify" value="Convertir en archivo de área" lang="es"/>
-
-			<a href="file.cfm?file=#file_id#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
-		</div>
-
 	</cfif>
+
+	<div id="submitDiv">
+
+		<cfif listLen(filesChangeIds) GT 0>
+			<input type="submit" class="btn btn-primary" name="modify" value="Convertir en archivo de área" lang="es"/>
+		</cfif>
+
+		<cfif listLen(files_ids) IS 1>
+			<a href="file.cfm?file=#files_ids#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		<cfelse>
+			<a href="files.cfm?area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		</cfif>
+
+	</div>
+
 </cfform>
 
 </div>

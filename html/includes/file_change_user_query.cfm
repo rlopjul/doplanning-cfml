@@ -1,7 +1,7 @@
 <cfif isDefined("URL.area") AND isNumeric(URL.area)>
 	<cfset area_id = URL.area>
 <cfelse>
-	<cflocation url="empty.cfm" addtoken="no">
+	<cflocation url="index.cfm" addtoken="no">
 </cfif>
 
 <cfif isDefined("FORM.page")>
@@ -35,7 +35,7 @@
 	<cfelseif isDefined("URL.files")>
 		<cfset files_ids = URL.files>
 	<cfelse>
-		<cflocation url="empty.cfm" addtoken="no">
+		<cflocation url="index.cfm" addtoken="no">
 	</cfif>
 
 	<cfset newUser = structNew()>

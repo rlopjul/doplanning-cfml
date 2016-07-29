@@ -736,24 +736,59 @@
 	</cffunction>
 
 
-	<!--- ---------------------------------- changeItemUser -------------------------------------- --->
+	<!--- ---------------------------------- changeItemsUser -------------------------------------- --->
 
-	<cffunction name="changeItemUser" returntype="struct" access="public">
-		<cfargument name="item_id" type="numeric" required="true">
+	<cffunction name="changeItemsUser" returntype="struct" access="public">
+		<cfargument name="items_ids" type="string" required="true">
 		<cfargument name="itemTypeId" type="numeric" required="true">
 		<cfargument name="new_user_in_charge" type="numeric" required="true">
 
-		<cfset var method = "changeItemUser">
+		<cfset var method = "changeItemsUser">
 
 		<cfset var response = structNew()>
 
+		<cfset var response_message = "">
+		<cfset var response_messages = "">
+
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeItemUser" argumentcollection="#arguments#" returnvariable="response">
-			</cfinvoke>
+			<cfloop list="#arguments.items_ids#" index="item_id">
 
-			<cfif response.result IS true>
-				<cfset response.message = "Propietario modificado">
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="changeItemUser" returnvariable="changeItemUserResponse">
+					<cfinvokeargument name="item_id" value="#item_id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="new_user_in_charge" value="#arguments.new_user_in_charge#">
+					<cfinvokeargument name="area_id" value="#arguments.area_id#">
+				</cfinvoke>
+
+				<cfif changeItemUserResponse.result IS true>
+
+					<cfset response_message = "Propietario modificado.">
+
+				<cfelse>
+
+					<cfset response_message = changeItemUserResponse.message>
+
+				</cfif>
+
+				<cfif listLen(arguments.items_ids) GT 1>
+
+					<cfif isDefined("changeItemUserResponse.item_title")>
+						<cfset response_messages = response_messages&"<b>#changeItemUserResponse.item_title#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_messages&response_message&"<br>">
+					</cfif>
+
+				<cfelse>
+					<cfset response_messages = response_message>
+				</cfif>
+
+			</cfloop>
+
+			<cfif listLen(arguments.items_ids) IS 1>
+				<cfset response = {result=true, message=#response_messages#, item_id=#arguments.items_ids#}>
+			<cfelse>
+				<cfset response = {result=true, message=#response_messages#}>
 			</cfif>
 
 			<cfcatch>
@@ -2200,6 +2235,7 @@
 		<cfargument name="return_page" type="string" required="no">
 		<cfargument name="app_version" type="string" required="true">
 		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
+		<cfargument name="select_enabled" type="boolean" required="false" default="false">
 
 		<cfset var method = "outputItemsList">
 
@@ -2327,6 +2363,24 @@
 
 						</cfif>
 
+						<cfif arguments.select_enabled IS true>
+
+							$('##listTable tbody input[type=checkbox]').on('click', function(e) {
+
+					    	stopPropagation(e);
+
+					    	if( $('##listTable tbody tr:visible input[type=checkbox]:checked').length > 0 ){
+									$('##actionItemsNavBar').show();
+									$('##actionItemsHelpText').hide();
+								}else{
+									$('##actionItemsNavBar').hide();
+									$('##actionItemsHelpText').show();
+								}
+
+					    });
+
+						</cfif>
+
 
 					});
 				</script>
@@ -2334,6 +2388,9 @@
 				<table id="listTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap">
 					<thead>
 						<tr>
+							<cfif select_enabled IS true>
+								<th style="width:35px;" class="filter-false"></th>
+							</cfif>
 							<cfif itemTypeId IS NOT 6>
 								<th style="width:35px" class="filter-false"></th>
 								<cfif arguments.full_content IS false>
@@ -2397,8 +2454,11 @@
 					<cfif arguments.full_content IS false AND itemTypeId IS 6><!---Tasks--->
 					<tfoot>
 					   <tr>
-					   		<th></th>
-					   		<th></th>
+							<cfif select_enabled IS true>
+		 						<th></th>
+		 					</cfif>
+					   	<th></th>
+					   	<th></th>
 							<th></th>
 							<th></th>
 							<th></th>
@@ -2471,6 +2531,11 @@
 
 
 						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#" onclick="stopEvent(event)"><!--- id: usado para cuando se tiene que obtener el id del elemento seleccionado (al seleccionar un listado de elementos)--->
+							<cfif select_enabled IS true>
+								<td style="text-align:center" onclick="stopEvent(event)">
+									<input type="checkbox" name="selected_file_#itemsQuery.id#" value="#itemsQuery.id#">
+								</td>
+							</cfif>
 							<td style="text-align:center">
 								<cfif itemTypeId IS 6><!---Tasks--->
 
@@ -2597,6 +2662,7 @@
 		<cfargument name="return_page" type="string" required="no">
 		<cfargument name="app_version" type="string" required="true">
 		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
+		<cfargument name="select_enabled" type="boolean" required="false" default="false">
 
 		<cfset var method = "outputConsultationsList">
 
@@ -2661,6 +2727,24 @@
 					    });
 						</cfif>
 
+						<cfif arguments.select_enabled IS true>
+
+							$('##listTable tbody input[type=checkbox]').on('click', function(e) {
+
+					    	stopPropagation(e);
+
+					    	if( $('##listTable tbody tr:visible input[type=checkbox]:checked').length > 0 ){
+									$('##actionItemsNavBar').show();
+									$('##actionItemsHelpText').hide();
+								}else{
+									$('##actionItemsNavBar').hide();
+									$('##actionItemsHelpText').show();
+								}
+
+					    });
+
+						</cfif>
+
 					});
 				</script>
 
@@ -2670,6 +2754,9 @@
 				<table id="listTable" class="tablesorter">
 					<thead>
 						<tr>
+							<cfif select_enabled IS true>
+								<th style="width:35px;" class="filter-false"></th>
+							</cfif>
 							<th style="width:23%" lang="es">De</th>
 							<th style="width:12%" lang="es">Fecha</th>
 							<cfif arguments.full_content IS false>
@@ -2705,7 +2792,11 @@
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 
 						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#" onclick="stopEvent(event)"><!--- id: usado para cuando se tiene que obtener el id del elemento seleccionado (al seleccionar un listado de elementos)--->
-
+							<cfif select_enabled IS true>
+								<td style="text-align:center" onclick="stopEvent(event)">
+									<input type="checkbox" name="selected_file_#itemsQuery.id#" value="#itemsQuery.id#">
+								</td>
+							</cfif>
 							<td>
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 									<cfinvokeargument name="user_id" value="#itemsQuery.user_in_charge#">
@@ -3983,6 +4074,42 @@
 		</div>
 
 		</cfoutput>
+
+	</cffunction>
+
+
+	<!--- ----------------------- outputItemSmall -------------------------------- --->
+
+	<cffunction name="outputItemSmall" returntype="void" output="true" access="public">
+		<cfargument name="itemQuery" type="query" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="alertMessage" type="string" required="false">
+		<cfargument name="alertClass" type="string" required="false" default="alert alert-warning">
+
+		<cfset var method = "outputItemSmall">
+
+		<div class="well well-sm">
+
+			<div>
+
+					<div>
+						<strong>#itemQuery.title#</strong>
+					</div>
+
+					<div>
+						<span lang="es">Propietario</span>:
+						<strong>#itemQuery.user_full_name#</strong>
+					</div>
+
+					<cfif isDefined("arguments.alertMessage") AND len(arguments.alertMessage)>
+						<div class="#arguments.alertClass#" role="alert" style="margin-bottom:0" lang="es">
+							#arguments.alertMessage#
+						</div>
+					</cfif>
+
+			</div>
+
+		</div>
 
 	</cffunction>
 

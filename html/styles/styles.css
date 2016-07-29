@@ -1282,11 +1282,11 @@ fieldset[disabled] .btn-warning.active {
 	display: block;
 }
 
-#actionFilesNavBar .dropdown-menu a {
+#actionItemsNavBar .dropdown-menu a {
 	cursor: pointer;
 }
 
-#actionFilesNavBar .dropdown-toggle.navbar-btn {
+#actionItemsNavBar .dropdown-toggle.navbar-btn {
 	margin-bottom: 0;
 }
 
