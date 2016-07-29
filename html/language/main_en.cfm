@@ -698,6 +698,7 @@ curLangTextEn = {
     "Solo se muestran seleccionables las áreas comunes a todos los ámbitos de los archivos seleccionados.":"Only are selectables the common areas of all files scopes.",
     "Este archivo ya es un archivo de área.":"This file is already an area file.",
     "No hay archivos para convertir en archivos de área.":"No files to convert to area file.",
+    "Convertido en archivo de área.":"Converted to area file.",
 
 		"Descargar":"Download",
 		"Abrir":"Open",
