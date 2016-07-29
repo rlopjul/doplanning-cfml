@@ -36,6 +36,8 @@
 
 	<cfif isDefined("URL.items")>
 		<cfset items_ids = URL.items>
+	<cfelseif isDefined("URL.item")>
+		<cfset items_ids = URL.item>
 	<cfelse>
 		<cflocation url="index.cfm" addtoken="no">
 	</cfif>
