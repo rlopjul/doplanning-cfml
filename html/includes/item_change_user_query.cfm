@@ -2,7 +2,7 @@
 	<cfset area_id = URL.area>
 	<cfset itemTypeId = URL.itemTypeId>
 <cfelse>
-	<cflocation url="empty.cfm" addtoken="no">
+	<cflocation url="index.cfm" addtoken="no">
 </cfif>
 
 <cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
@@ -34,10 +34,10 @@
 
 <cfelse>
 
-	<cfif isDefined("URL.item") AND isNumeric(URL.item)>
-		<cfset item_id = URL.item>
+	<cfif isDefined("URL.items")>
+		<cfset items_ids = URL.items>
 	<cfelse>
-		<cflocation url="empty.cfm" addtoken="no">
+		<cflocation url="index.cfm" addtoken="no">
 	</cfif>
 
 	<cfset newUser = structNew()>
