@@ -151,7 +151,7 @@
 			</cfinvoke>
 
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>
 
 		</cftry>
