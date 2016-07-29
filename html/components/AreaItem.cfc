@@ -1134,6 +1134,79 @@
 	</cffunction>
 
 
+	<!--- deleteItems --->
+
+	<cffunction name="deleteItems" returntype="struct" access="public">
+		<cfargument name="items_ids" type="string" required="true">
+		<cfargument name="area_id" type="numeric" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="true">
+
+		<cfset var method = "deleteItems">
+
+		<cfset var response = structNew()>
+
+		<cfset var response_message = "">
+		<cfset var response_messages = "">
+
+		<cftry>
+
+			<cfinclude template="#APPLICATION.htmlPath#/includes/item_type_switch.cfm">
+
+			<!--- getClient --->
+			<cfinvoke component="#APPLICATION.htmlPath#/components/Client" method="getClient" returnvariable="clientQuery">
+				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+			</cfinvoke>
+
+			<cfloop list="#arguments.items_ids#" index="item_id">
+
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="deleteItem" returnvariable="deleteItemResponse">
+					<cfinvokeargument name="item_id" value="#item_id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="moveToBin" value="#clientQuery.bin_enabled#">
+				</cfinvoke>
+
+				<cfif deleteItemResponse.result IS true>
+
+					<cfif itemTypeGender EQ "male">
+						<cfset response_message = "#itemTypeNameEs# eliminado.">
+					<cfelse>
+						<cfset response_message = "#itemTypeNameEs# eliminada.">
+					</cfif>
+
+				<cfelse>
+
+					<cfset response_message = deleteItemResponse.message>
+
+				</cfif>
+
+				<cfif listLen(arguments.items_ids) GT 1>
+
+					<cfif isDefined("deleteItemResponse.item_title")>
+						<cfset response_messages = response_messages&"<b>#deleteItemResponse.item_title#</b>: #response_message#<br>">
+					<cfelse>
+						<cfset response_messages = response_messages&response_message&"<br>">
+					</cfif>
+
+				<cfelse>
+					<cfset response = {result=deleteItemResponse.result, message=#response_message#}>
+					<cfreturn response>
+				</cfif>
+
+			</cfloop>
+
+			<cfset response = {result=true, message=#response_messages#}>
+
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
+			</cfcatch>
+
+		</cftry>
+
+		<cfreturn response>
+
+	</cffunction>
+
+
 	<!--- ----------------------- DELETE ITEM ATTACHED FILE -------------------------------- --->
 
 	<cffunction name="deleteItemAttachedFileRemote" returntype="void" access="remote">
