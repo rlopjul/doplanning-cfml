@@ -25,13 +25,14 @@
 			return false;
 	}
 
+	var publicationScopeId = null;
+
 	function openAreaSelector(){
 
-		<cfif isNumeric(file.publication_scope_id)>
-			return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=0&no_web_enabled=1&scope=#file.publication_scope_id#');
-		<cfelse>
+		if( !isNaN(publicationScopeId) )
+			return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=0&no_web_enabled=1&scope='+publicationScopeId);
+		else
 			return openPopUp('#APPLICATION.mainUrl##APPLICATION.htmlPath#/iframes/area_select.cfm?web_enabled=0&no_web_enabled=1');
-		</cfif>
 
 	}
 
@@ -70,6 +71,12 @@
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
 			<cfinvokeargument name="file_id" value="#file_id#">
 		</cfinvoke>
+
+		<cfif listLen(files_ids) IS 1>
+			<script>
+				publicationScopeId = "#file.publication_scope_id#";
+			</script>
+		</cfif>
 
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
 			<cfinvokeargument name="fileQuery" value="#file#">
