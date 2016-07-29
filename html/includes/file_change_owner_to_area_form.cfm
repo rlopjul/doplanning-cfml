@@ -1,6 +1,6 @@
 <cfinclude template="#APPLICATION.htmlPath#/includes/file_change_owner_to_area_query.cfm">
 
-<!--- 
+<!---
 <cfoutput>
 <script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
 </cfoutput> --->
@@ -51,34 +51,33 @@
 <div class="contenedor_fondo_blanco">
 
 <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" enctype="multipart/form-data" name="file_form" class="form-horizontal" onsubmit="return onSubmitForm();">
-	
+
 	<script>
 		var railo_custom_form;
 
-		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) ) 
+		if( typeof LuceeForms !== 'undefined' && $.isFunction(LuceeForms) )
 			railo_custom_form = new LuceeForms('file_form');
 		else
 			railo_custom_form = new RailoForms('file_form');
 	</script>
-	
+
 	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
-	<input type="hidden" name="file_id" value="#file_id#"/>
+	<input type="hidden" name="files_ids" value="#files_ids#"/>
 	<input type="hidden" name="area_id" value="#area_id#"/>
 
-	<div class="row">
-		<div class="col-sm-12">
-			<span lang="es">Nombre del archivo:</span>
-			<strong>#file.name#</strong>
-		</div>
-	</div>
+	<cfloop list="#files_ids#" index="file_id">
 
-	<div class="row">
-		<div class="col-sm-12">
-			<span lang="es">Propietario actual:</span>
-			<strong>#file.user_full_name#</strong>
-		</div>
-	</div>
-	
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="file">
+			<cfinvokeargument name="file_id" value="#file_id#">
+		</cfinvoke>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
+			<cfinvokeargument name="fileQuery" value="#file#">
+			<cfinvokeargument name="area_id" value="#area_id#">
+		</cfinvoke>
+
+	</cfloop>
+
 	<div class="row">
 		<div class="col-xs-12 col-sm-8">
 			<label class="control-label" for="new_area_name" lang="es">Área propietaria del archivo</label>
@@ -92,7 +91,7 @@
 		<span lang="es">El archivo seguirá estando accesible desde el área actual.</span><br>
 		<span lang="es">Se enviará notificación por email del cambio a los usuarios del área propietaria.</span>
 	</p>
-	
+
 	<div style="height:10px;"><!--- ---></div>
 
 	<div id="submitDiv">
