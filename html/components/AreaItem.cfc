@@ -2200,6 +2200,7 @@
 		<cfargument name="return_page" type="string" required="no">
 		<cfargument name="app_version" type="string" required="true">
 		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
+		<cfargument name="select_enabled" type="boolean" required="false" default="false">
 
 		<cfset var method = "outputItemsList">
 
@@ -2327,6 +2328,24 @@
 
 						</cfif>
 
+						<cfif arguments.select_enabled IS true>
+
+							$('##listTable tbody input[type=checkbox]').on('click', function(e) {
+
+					    	stopPropagation(e);
+
+					    	if( $('##listTable tbody tr:visible input[type=checkbox]:checked').length > 0 ){
+									$('##actionItemsNavBar').show();
+									$('##actionItemsHelpText').hide();
+								}else{
+									$('##actionItemsNavBar').hide();
+									$('##actionItemsHelpText').show();
+								}
+
+					    });
+
+						</cfif>
+
 
 					});
 				</script>
@@ -2334,6 +2353,9 @@
 				<table id="listTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap">
 					<thead>
 						<tr>
+							<cfif select_enabled IS true>
+								<th style="width:35px;" class="filter-false"></th>
+							</cfif>
 							<cfif itemTypeId IS NOT 6>
 								<th style="width:35px" class="filter-false"></th>
 								<cfif arguments.full_content IS false>
@@ -2397,8 +2419,11 @@
 					<cfif arguments.full_content IS false AND itemTypeId IS 6><!---Tasks--->
 					<tfoot>
 					   <tr>
-					   		<th></th>
-					   		<th></th>
+							<cfif select_enabled IS true>
+		 						<th></th>
+		 					</cfif>
+					   	<th></th>
+					   	<th></th>
 							<th></th>
 							<th></th>
 							<th></th>
@@ -2471,6 +2496,11 @@
 
 
 						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#" onclick="stopEvent(event)"><!--- id: usado para cuando se tiene que obtener el id del elemento seleccionado (al seleccionar un listado de elementos)--->
+							<cfif select_enabled IS true>
+								<td style="text-align:center" onclick="stopEvent(event)">
+									<input type="checkbox" name="selected_file_#itemsQuery.id#" value="#itemsQuery.id#">
+								</td>
+							</cfif>
 							<td style="text-align:center">
 								<cfif itemTypeId IS 6><!---Tasks--->
 

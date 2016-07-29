@@ -54,6 +54,7 @@
 					<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
 					<cfinvokeargument name="return_page" value="#lCase(itemTypeNameP)#.cfm?area=#area_id#">
 					<cfinvokeargument name="app_version" value="#app_version#">
+					<cfinvokeargument name="select_enabled" value="true">
 				</cfinvoke>
 
 			<cfelse><!---Consultations--->
