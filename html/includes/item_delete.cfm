@@ -44,11 +44,7 @@
 </cfif>
 
 <div class="div_head_subtitle">
-	<cfif isDefined("URL.item")>
-		<span lang="es">Eliminar archivo</span>
-	<cfelse>
-		<span lang="es">Eliminar archivos</span>
-	</cfif>
+	<span lang="es">Eliminar</span>
 </div>
 
 <cfoutput>
@@ -73,7 +69,7 @@
 		<cfset itemsDeleteIds = listDeleteAt(itemsDeleteIds, listFind(itemsDeleteIds, item_id))>
 	</cfif>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Item" method="outputItemSmall">
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="outputItemSmall">
 		<cfinvokeargument name="itemQuery" value="#objectItem#">
 		<cfinvokeargument name="area_id" value="#area_id#">
 		<cfif canUserDeleteItemResponse.result IS false>
