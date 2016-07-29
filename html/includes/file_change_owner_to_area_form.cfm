@@ -84,7 +84,7 @@
 			<cfinvokeargument name="fileQuery" value="#file#">
 			<cfinvokeargument name="area_id" value="#area_id#">
 			<cfif file.file_type_id IS NOT 1>
-				<cfinvokeargument name="alertMessage" value="Este archivo ya es un archivo de área">
+				<cfinvokeargument name="alertMessage" value="Este archivo ya es un archivo de área.">
 				<cfinvokeargument name="alertClass" value="alert alert-warning">
 			</cfif>
 		</cfinvoke>

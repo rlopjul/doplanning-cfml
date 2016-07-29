@@ -4832,72 +4832,79 @@
 				<cfinvokeargument name="client_dsn" value="#client_dsn#">
 			</cfinvoke>
 
-			<!---canUserModifyFile--->
-			<cfinvoke component="FileManager" method="canUserModifyFile" returnvariable="canUserModifyFileResponse">
-				<cfinvokeargument name="fileQuery" value="#fileQuery#">
-			</cfinvoke>
-			<cfif canUserModifyFileResponse.result IS false>
+			<cfif fileQuery.file_type_id IS NOT 1>
 
-				<cfreturn canUserModifyFileResponse>
+				<cfset response = {result=false, file_id=#arguments.file_id#, file_name=#fileQuery.name#, message="Este archivo ya es un archivo de área."}>
+				<cfreturn response>
 
-			</cfif>
+			<cfelse>
 
-			<!---Chequea si existe el archivo en el área--->
-			<cfquery datasource="#client_dsn#" name="isFileInAreaQuery">
-				SELECT file_id
-				FROM #client_abb#_areas_files
-				WHERE area_id = <cfqueryparam value = "#arguments.new_area_id#" cfsqltype="cf_sql_integer"> AND
-				file_id = <cfqueryparam value = "#arguments.file_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-
-			<cfif isFileInAreaQuery.recordCount IS 0><!---The file NOT exists in the area--->
-
-				<!--- Esto es necesario para que se puedan comprobar las áreas donde se pueden asociar el archivo --->
-				<cfset querySetCell(fileQuery, "file_type_id", 2)>
-				<cfset querySetCell(fileQuery, "area_id", arguments.new_area_id)>
-
-				<!--- associateFileToArea --->
-				<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="associateFileResult">
-					<cfinvokeargument name="objectFile" value="#fileQuery#">
-					<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+				<!---canUserModifyFile--->
+				<cfinvoke component="FileManager" method="canUserModifyFile" returnvariable="canUserModifyFileResponse">
+					<cfinvokeargument name="fileQuery" value="#fileQuery#">
 				</cfinvoke>
+				<cfif canUserModifyFileResponse.result IS false>
 
-				<cfif associateFileResult.result IS false>
-
-					<cfset response = {result=false, file_id=#arguments.file_id#, message=#associateFileResult.message#}>
-
-					<cfreturn response>
+					<cfreturn canUserModifyFileResponse>
 
 				</cfif>
 
+				<!---Chequea si existe el archivo en el área--->
+				<cfquery datasource="#client_dsn#" name="isFileInAreaQuery">
+					SELECT file_id
+					FROM #client_abb#_areas_files
+					WHERE area_id = <cfqueryparam value = "#arguments.new_area_id#" cfsqltype="cf_sql_integer"> AND
+					file_id = <cfqueryparam value = "#arguments.file_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+				<cfif isFileInAreaQuery.recordCount IS 0><!---The file NOT exists in the area--->
+
+					<!--- Esto es necesario para que se puedan comprobar las áreas donde se pueden asociar el archivo --->
+					<cfset querySetCell(fileQuery, "file_type_id", 2)>
+					<cfset querySetCell(fileQuery, "area_id", arguments.new_area_id)>
+
+					<!--- associateFileToArea --->
+					<cfinvoke component="FileManager" method="associateFileToArea" returnvariable="associateFileResult">
+						<cfinvokeargument name="objectFile" value="#fileQuery#">
+						<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+					</cfinvoke>
+
+					<cfif associateFileResult.result IS false>
+
+						<cfset response = {result=false, file_id=#arguments.file_id#, file_name=#fileQuery.name#, message=#associateFileResult.message#}>
+						<cfreturn response>
+
+					</cfif>
+
+				</cfif>
+
+				<!--- Set file to area --->
+				<cfquery datasource="#client_dsn#" name="setFileToArea">
+					UPDATE #client_abb#_files
+					SET file_type_id = <cfqueryparam value="2" cfsqltype="cf_sql_integer">,
+					area_id = <cfqueryparam value="#arguments.new_area_id#" cfsqltype="cf_sql_integer">
+					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+
+				<!---Send Alert--->
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
+					<cfinvokeargument name="objectFile" value="#fileQuery#">
+					<cfinvokeargument name="fileTypeId" value="2"/>
+					<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
+					<cfinvokeargument name="user_id" value="#user_id#">
+
+					<cfinvokeargument name="action" value="change_owner_to_area">
+
+					<cfinvokeargument name="client_abb" value="#client_abb#">
+					<cfinvokeargument name="client_dsn" value="#client_dsn#">
+				</cfinvoke>
+
+				<cfinclude template="includes/logRecord.cfm">
+
+				<cfset response = {result=true, file_id=#arguments.file_id#, file_name=#fileQuery.name#}>
+
 			</cfif>
-
-			<!--- Set file to area --->
-			<cfquery datasource="#client_dsn#" name="setFileToArea">
-				UPDATE #client_abb#_files
-				SET file_type_id = <cfqueryparam value="2" cfsqltype="cf_sql_integer">,
-				area_id = <cfqueryparam value="#arguments.new_area_id#" cfsqltype="cf_sql_integer">
-				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
-			</cfquery>
-
-
-			<!---Send Alert--->
-			<cfinvoke component="#APPLICATION.coreComponentsPath#/AlertManager" method="newFile">
-				<cfinvokeargument name="objectFile" value="#fileQuery#">
-				<cfinvokeargument name="fileTypeId" value="2"/>
-				<cfinvokeargument name="area_id" value="#arguments.new_area_id#">
-				<cfinvokeargument name="user_id" value="#user_id#">
-
-				<cfinvokeargument name="action" value="change_owner_to_area">
-
-				<cfinvokeargument name="client_abb" value="#client_abb#">
-				<cfinvokeargument name="client_dsn" value="#client_dsn#">
-			</cfinvoke>
-
-			<cfinclude template="includes/logRecord.cfm">
-
-			<cfset response = {result=true, file_id=#arguments.file_id#}>
-
 
 			<cfcatch>
 
