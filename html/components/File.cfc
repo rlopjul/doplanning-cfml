@@ -582,7 +582,8 @@
 					</cfif>
 
 				<cfelse>
-					<cfset response_messages = response_message>
+					<cfset response = {result=deleteFileResponse.result, message=#response_message#}>
+					<cfreturn response>
 				</cfif>
 
 			</cfloop>
@@ -1001,7 +1002,8 @@
 					</cfif>
 
 				<cfelse>
-					<cfset response_messages = response_message>
+					<cfset response = {result=changeFileOwnerToAreaResponse.result, message=#response_message#}>
+					<cfreturn response>
 				</cfif>
 
 			</cfloop>
@@ -1516,7 +1518,7 @@
 			</cfif>
 
 			<cfset msg = URLEncodedFormat(msg)>
-            <cflocation url="#APPLICATION.htmlPath#/#response_page#&msg=#msg#&res=#response.result#" addtoken="no">
+      <cflocation url="#APPLICATION.htmlPath#/#response_page#&msg=#msg#&res=#response.result#" addtoken="no">
 
 			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
