@@ -1933,7 +1933,7 @@
 
 			<cfinclude template="includes/logRecord.cfm">
 
-			<cfset response = {result=true, item_id=#arguments.item_id#, area_id=#area_id#}>
+			<cfset response = {result=true, item_id=#arguments.item_id#, item_title=#itemQuery.title#, area_id=#area_id#}>
 
 			<cfcatch>
 
