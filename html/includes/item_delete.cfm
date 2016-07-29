@@ -81,7 +81,7 @@
 </cfloop>
 
 <cfif isDefined("area_id")>
-		<cfset return_page = "#return_path#items.cfm?area=#area_id#">
+		<cfset return_page = "#return_path##itemTypeNameP#.cfm?area=#area_id#">
 </cfif>
 
 <cfif listLen(itemsDeleteIds) GT 0>
