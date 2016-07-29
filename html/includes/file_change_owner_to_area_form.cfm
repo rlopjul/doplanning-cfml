@@ -62,9 +62,7 @@
 			railo_custom_form = new RailoForms('file_form');
 	</script>
 
-	<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
-	<input type="hidden" name="files_ids" value="#files_ids#"/>
-	<input type="hidden" name="area_id" value="#area_id#"/>
+	<cfset filesChangeIds = files_ids>
 
 	<cfloop list="#files_ids#" index="file_id">
 
@@ -78,34 +76,52 @@
 			</script>
 		</cfif>
 
+		<cfif file.file_type_id IS NOT 1>
+			<cfset filesChangeIds = listDeleteAt(filesChangeIds, listFind(filesChangeIds, file_id))>
+		</cfif>
+
 		<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputFileSmall">
 			<cfinvokeargument name="fileQuery" value="#file#">
 			<cfinvokeargument name="area_id" value="#area_id#">
+			<cfif file.file_type_id IS NOT 1>
+				<cfinvokeargument name="alertMessage" value="Este archivo ya es un archivo de área">
+				<cfinvokeargument name="alertClass" value="alert alert-warning">
+			</cfif>
 		</cfinvoke>
 
 	</cfloop>
 
-	<div class="row">
-		<div class="col-xs-12 col-sm-8">
-			<label class="control-label" for="new_area_name" lang="es">Área propietaria del archivo</label>
-			<input type="hidden" name="new_area_id" id="new_area_id" value="#ownerArea.new_area_id#" validate="integer" required="true"/>
-			<cfinput type="text" name="new_area_name" id="new_area_name" value="#ownerArea.new_area_name#" readonly="true" required="true" message="Debe seleccionar una nueva área" onclick="openAreaSelector()" class="form-control" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
+	<cfif listLen(filesChangeIds) IS 0>
+		<div class="alert alert-danger" role="alert" lang="es">No hay archivos para convertir en archivos de área.</div>
+	<cfelse>
+
+		<input type="hidden" name="page" value="#CGI.SCRIPT_NAME#" />
+		<input type="hidden" name="files_ids" value="#filesChangeIds#"/>
+		<input type="hidden" name="area_id" value="#area_id#"/>
+
+		<div class="row">
+			<div class="col-xs-12 col-sm-8">
+				<label class="control-label" for="new_area_name" lang="es">Área propietaria del archivo</label>
+				<input type="hidden" name="new_area_id" id="new_area_id" value="#ownerArea.new_area_id#" validate="integer" required="true"/>
+				<cfinput type="text" name="new_area_name" id="new_area_name" value="#ownerArea.new_area_name#" readonly="true" required="true" message="Debe seleccionar una nueva área" onclick="openAreaSelector()" class="form-control" /> <button onclick="return openAreaSelector()" class="btn btn-default" lang="es">Seleccionar área</button>
+			</div>
 		</div>
-	</div>
 
-	<p class="help-block" style="font-size:12px;">
-		<span lang="es">El archivo pasará a ser propiedad del área seleccionada y podrá ser modificado por cualquier usuario de la misma.</span><br>
-		<span lang="es">El archivo seguirá estando accesible desde el área actual.</span><br>
-		<span lang="es">Se enviará notificación por email del cambio a los usuarios del área propietaria.</span>
-	</p>
+		<p class="help-block" style="font-size:12px;">
+			<span lang="es">El archivo pasará a ser propiedad del área seleccionada y podrá ser modificado por cualquier usuario de la misma.</span><br>
+			<span lang="es">El archivo seguirá estando accesible desde el área actual.</span><br>
+			<span lang="es">Se enviará notificación por email del cambio a los usuarios del área propietaria.</span>
+		</p>
 
-	<div style="height:10px;"><!--- ---></div>
+		<div style="height:10px;"><!--- ---></div>
 
-	<div id="submitDiv">
-		<input type="submit" class="btn btn-primary" name="modify" value="Convertir en archivo de área" lang="es"/>
+		<div id="submitDiv">
+			<input type="submit" class="btn btn-primary" name="modify" value="Convertir en archivo de área" lang="es"/>
 
-		<a href="file.cfm?file=#file_id#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
-	</div>
+			<a href="file.cfm?file=#file_id#&area=#area#" class="btn btn-default" style="float:right" lang="es">Cancelar</a>
+		</div>
+
+	</cfif>
 </cfform>
 
 </div>
