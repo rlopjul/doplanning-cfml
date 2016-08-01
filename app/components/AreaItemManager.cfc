@@ -3532,7 +3532,7 @@
 				</cfinvoke>
 
 				<cfif canUserDeleteItemResponse.result IS false>
-					
+
 					<cfset canUserDeleteItemResponse.item_title = itemQuery.title>
 					<cfreturn canUserDeleteItemResponse>
 
@@ -3608,6 +3608,41 @@
 						<cfreturn response>
 
 					</cfif>
+
+					<cfif itemTypeId IS 13><!--- Typology --->
+
+						<!--- Get typology files --->
+						<cfquery name="tableFilesQuery" datasource="#client_dsn#">
+							SELECT id
+							FROM #client_abb#_files
+							WHERE #itemTypeName#_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+						<cfif tableFilesQuery.recordCount GT 0>
+
+							<cfset response = {result=false, item_id=#arguments.item_id#, message="No se puede borrar una tipología que está usada en archivos. Debe eliminar los archivos o cambiar su tipología para poder eliminarla."}>
+							<cfreturn response>
+
+						</cfif>
+
+					<cfelseif itemTypeId IS 16><!--- Users typology --->
+
+						<!--- Get typology users --->
+						<cfquery name="usersTypologyQuery" datasource="#client_dsn#">
+							SELECT id
+							FROM #client_abb#_users
+							WHERE typology_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+						<cfif usersTypologyQuery.recordCount GT 0>
+
+							<cfset response = {result=false, item_id=#arguments.item_id#, message="No se puede borrar una tipología que está usada en usuarios. Debe eliminar los usuarios o cambiar su tipología por otra para poder eliminarla."}>
+							<cfreturn response>
+
+						</cfif>
+
+					</cfif>
+
 
 				</cfif>
 
