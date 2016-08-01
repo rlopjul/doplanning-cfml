@@ -2355,6 +2355,12 @@
 
 			<cfif numItems GT 0>
 
+			<cfif arguments.select_enabled IS true>
+				<cfset baseCol = 1>
+			<cfelse>
+				<cfset baseCol = 0>
+			</cfif>
+
 			<cfoutput>
 
 				<script>
@@ -2373,44 +2379,38 @@
 
 							<cfif itemTypeId IS 6><!---Tasks--->
 								<cfif arguments.full_content IS false>
-								sortList: [[8,1]] ,
+								sortList: [[#baseCol+8#,1]] ,
 								<cfelse>
-								sortList: [[8,0]] , <!---[9,0]] ,--->
+								sortList: [[#baseCol+8#,0]] ,
 								</cfif>
 							<cfelseif arguments.full_content IS true>
-								sortList: [[4,1]] ,
+								sortList: [[#baseCol+4#,1]] ,
 							<cfelseif itemTypeId IS 2 OR itemTypeId IS 3 OR itemTypeId IS 4><!---Entries, Links, News Order by position--->
-								sortList: [[5,1]] ,
+								sortList: [[#baseCol+5#,1]] ,
 							<cfelse>
-								sortList: [[4,1]] ,
+								sortList: [[#baseCol+4#,1]] ,
 							</cfif>
 							headers: {
 								<cfif itemTypeId IS NOT 6>
-								0: {
+								#baseCol+0#: {
 									sorter: false
 								},
-								1: {
+								#baseCol+1#: {
 									sorter: "text"
 								},
-								4: {
+								#baseCol+4#: {
 									sorter: "datetime"
 								}
 								<cfelse><!---Tasks--->
-									<!---<cfif arguments.full_content IS false>
-									7: {
-										sorter: "datetime"
-									}
-									<cfelse>--->
-									1: {
+									#baseCol+1#: {
 										sorter: "text"
 									},
-									7: {
+									#baseCol+7#: {
 										sorter: "datetime"
 									},
-									8: {
+									#baseCol+8#: {
 										sorter: "datetime"
 									}
-									<!---</cfif>--->
 								</cfif>
 							}
 							<cfif arguments.full_content IS false>
