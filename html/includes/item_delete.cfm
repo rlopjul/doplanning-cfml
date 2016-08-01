@@ -10,7 +10,8 @@
 	<cfset msg = resultDeleteItems.message>
 	<cfset res = resultDeleteItems.result>
 
-	<cfif res IS false>
+
+	<cfif listlen(items_ids) IS 1 OR res IS false>
 		<cflocation url="#return_path#area_items.cfm?area=#FORM.area_id#&res=#res#&msg=#URLEncodedFormat(msg)#" addtoken="no">
 	<cfelse><!--- Show warning message: we don't know if all items result are success --->
 		<cflocation url="#return_path#area_items.cfm?area=#FORM.area_id#&res=-1&msg=#URLEncodedFormat(msg)#" addtoken="no">
