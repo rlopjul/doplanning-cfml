@@ -939,34 +939,33 @@
 
 				<cfoutput>
 
-				<script type="text/javascript">
+				<script>
+
 					$(document).ready(function() {
 
 						$("##listTable").tablesorter({
 							<cfif arguments.full_content IS false>
-							widgets: ['zebra','uitheme','filter'],<!---,'select'--->
+								widgets: ['filter','stickyHeaders'],<!---,'select'--->
 							<cfelse>
-							widgets: ['zebra','uitheme'],
+								widgets: ['stickyHeaders'],
 							</cfif>
-							theme : "bootstrap",
-							headerTemplate : '{content} {icon}',
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
-							sortList: [[2,1]],
-							headers: {
-								1: {
-									sorter: false
-								},
-								2: {
-									sorter: "datetime"
+								sortList: [[2,1]],
+								headers: {
+									1: {
+										sorter: false
+									},
+									2: {
+										sorter: "datetime"
+									}
 								}
-							}
 							<cfelse><!--- Typologies --->
-							sortList: [[1,1]],
-							headers: {
-								1: {
-									sorter: "datetime"
+								sortList: [[1,1]],
+								headers: {
+									1: {
+										sorter: "datetime"
+									}
 								}
-							}
 							</cfif>
 							<cfif arguments.full_content IS false>
 							, widgetOptions : {
@@ -1035,7 +1034,7 @@
 				</script>
 
 
-				<table id="listTable">
+				<table id="listTable" class="table table-hover table-bordered table-striped tablesorter-bootstrap">
 					<thead>
 						<tr>
 							<cfif select_enabled IS true>
