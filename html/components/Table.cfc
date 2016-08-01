@@ -939,6 +939,12 @@
 
 				<cfoutput>
 
+				<cfif arguments.select_enabled IS true>
+					<cfset baseRow = 1>
+				<cfelse>
+					<cfset baseRow = 0>
+				</cfif>
+
 				<script>
 
 					$(document).ready(function() {
@@ -950,19 +956,19 @@
 								widgets: ['stickyHeaders'],
 							</cfif>
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
-								sortList: [[2,1]],
+								sortList: [[#baseRow+2#,1]],
 								headers: {
-									1: {
+									#baseRow+1#: {
 										sorter: false
 									},
-									2: {
+									#baseRow+2#: {
 										sorter: "datetime"
 									}
 								}
 							<cfelse><!--- Typologies --->
-								sortList: [[1,1]],
+								sortList: [[#baseRow+1#,1]],
 								headers: {
-									1: {
+									#baseRow+1#: {
 										sorter: "datetime"
 									}
 								}
