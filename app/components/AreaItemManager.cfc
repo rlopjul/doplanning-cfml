@@ -3524,27 +3524,16 @@
 				<!---checkAreaAccess--->
 				<cfset area_id = itemQuery.area_id>
 
-				<cfinclude template="includes/checkAreaAccess.cfm">
+				<cfinvoke component="#APPLICATION.componentsPath#/AreaItemManager" method="canUserDeleteItem" returnvariable="canUserDeleteItemResponse">
+					<cfinvokeargument name="item_id" value="#arguments.item_id#">
+					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+					<cfinvokeargument name="itemQuery" value="#itemQuery#">
+					<cfinvokeargument name="area_id" value="#itemQuery.area_id#">
+				</cfinvoke>
 
-				<cfif itemQuery.user_in_charge NEQ user_id><!---El usuario del item no es el mismo que el que intenta eliminar--->
-
-					<cfinclude template="includes/checkAreaAdminAccess.cfm">
-
-				<cfelseif arguments.itemTypeId IS 7 AND itemQuery.state NEQ "created"><!---Consultations--->
-
-					<!---Las consultas solo se pueden eliminar si están en estado creadas (enviadas)
-					Los administradores sí pueden borrar las consultas cuando borran un área--->
-					<cfinclude template="includes/checkAreaAdminAccess.cfm">
-
-				</cfif>
-
-				<cfif itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 OR itemTypeId IS 16 OR itemTypeId IS 17><!---List, Forms, Typologies, Users typologies, Mailings--->
-
-					<!---checkAreaResponsibleAccess--->
-					<cfinvoke component="AreaManager" method="checkAreaResponsibleAccess">
-						<cfinvokeargument name="area_id" value="#area_id#">
-					</cfinvoke>
-
+				<cfif canUserDeleteItemResponse.result IS false>
+					<cfset canUserDeleteItemResponse.item_title = itemQuery.title>
+					<cfreturn canUserDeleteItemResponse>
 				</cfif>
 
 				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItem" returnvariable="response">
