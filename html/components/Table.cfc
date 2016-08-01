@@ -937,13 +937,13 @@
 
 			<cfif numItems GT 0>
 
-				<cfoutput>
-
 				<cfif arguments.select_enabled IS true>
-					<cfset baseRow = 1>
+					<cfset baseCol = 1>
 				<cfelse>
-					<cfset baseRow = 0>
+					<cfset baseCol = 0>
 				</cfif>
+
+				<cfoutput>
 
 				<script>
 
@@ -956,19 +956,19 @@
 								widgets: ['stickyHeaders'],
 							</cfif>
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
-								sortList: [[#baseRow+2#,1]],
+								sortList: [[#baseCol+2#,1]],
 								headers: {
-									#baseRow+1#: {
+									#baseCol+1#: {
 										sorter: false
 									},
-									#baseRow+2#: {
+									#baseCol+2#: {
 										sorter: "datetime"
 									}
 								}
 							<cfelse><!--- Typologies --->
-								sortList: [[#baseRow+1#,1]],
+								sortList: [[#baseCol+1#,1]],
 								headers: {
-									#baseRow+1#: {
+									#baseCol+1#: {
 										sorter: "datetime"
 									}
 								}
