@@ -520,7 +520,7 @@
 
 			<cfinclude template="includes/logRecord.cfm">
 
-			<cfset response = {result=true, item_id=#arguments.item_id#}>
+			<cfset response = {result=true, item_id=#arguments.item_id#, item_title=#itemQuery.title#}>
 
 
 		<cfreturn response>

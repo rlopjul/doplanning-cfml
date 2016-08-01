@@ -923,6 +923,7 @@
 		<cfargument name="area_id" type="numeric" required="false">
 		<cfargument name="openItemOnSelect" type="boolean" required="false" default="true">
 		<cfargument name="internal_user" type="boolean" required="false">
+		<cfargument name="select_enabled" type="boolean" required="false" default="false">
 
 		<cfset var method = "outputTablesList">
 
@@ -1012,6 +1013,24 @@
 					    });
 						</cfif>
 
+						<cfif arguments.select_enabled IS true>
+
+							$('##listTable tbody input[type=checkbox]').on('click', function(e) {
+
+					    	stopPropagation(e);
+
+					    	if( $('##listTable tbody tr:visible input[type=checkbox]:checked').length > 0 ){
+									$('##actionItemsNavBar').show();
+									$('##actionItemsHelpText').hide();
+								}else{
+									$('##actionItemsNavBar').hide();
+									$('##actionItemsHelpText').show();
+								}
+
+					    });
+
+						</cfif>
+
 					});
 				</script>
 
@@ -1019,6 +1038,9 @@
 				<table id="listTable">
 					<thead>
 						<tr>
+							<cfif select_enabled IS true>
+								<th style="width:35px;" class="filter-false"></th>
+							</cfif>
 							<th><span lang="es">Nombre</span></th>
 							<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
 							<th class="filter-false" style="width:55px;"></th>
@@ -1102,6 +1124,11 @@
 						<!---Para lo de seleccionar el primero, en lugar de como está hecho, se puede llamar a un método JavaScript que compruebe si el padre es el HTML2, y si lo es seleccionar el primero--->
 
 						<tr <cfif itemSelected IS true>class="selected"</cfif> data-item-url="#item_page_url#" data-item-id="#itemsQuery.id#"><!---onclick="stopEvent(event)"--->
+							<cfif select_enabled IS true>
+								<td style="text-align:center" onclick="stopEvent(event)">
+									<input type="checkbox" name="selected_file_#itemsQuery.id#" value="#itemsQuery.id#">
+								</td>
+							</cfif>
 							<td><a href="#APPLICATION.path#/html/#item_page_url#" class="text_item" <cfif arguments.default_table_id IS itemsQuery.id>style="font-weight:bold"</cfif>>#itemsQuery.title# <cfif arguments.default_table_id IS itemsQuery.id>*</cfif></a>
 
 								<cfif itemTypeId IS 11 OR itemTypeId IS 12><!---Lists, Forms--->
