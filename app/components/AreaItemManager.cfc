@@ -3532,21 +3532,25 @@
 				</cfinvoke>
 
 				<cfif canUserDeleteItemResponse.result IS false>
+					
 					<cfset canUserDeleteItemResponse.item_title = itemQuery.title>
 					<cfreturn canUserDeleteItemResponse>
+
+				<cfelse>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItem" returnvariable="response">
+						<cfinvokeargument name="item_id" value="#arguments.item_id#">
+						<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+						<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
+						<cfinvokeargument name="itemQuery" value="#itemQuery#">
+
+						<cfinvokeargument name="delete_user_id" value="#SESSION.user_id#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
 				</cfif>
-
-				<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItem" returnvariable="response">
-					<cfinvokeargument name="item_id" value="#arguments.item_id#">
-					<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
-					<cfinvokeargument name="moveToBin" value="#arguments.moveToBin#">
-					<cfinvokeargument name="itemQuery" value="#itemQuery#">
-
-					<cfinvokeargument name="delete_user_id" value="#SESSION.user_id#">
-
-					<cfinvokeargument name="client_abb" value="#client_abb#">
-					<cfinvokeargument name="client_dsn" value="#client_dsn#">
-				</cfinvoke>
 
 			<cfelse><!---Item does not exist--->
 
