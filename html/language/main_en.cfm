@@ -692,6 +692,7 @@ curLangTextEn = {
 		"Si ELIMINA el archivo, se borrará de TODAS las áreas a las que esté asociado. ¿Seguro que desea borrar el archivo?":"If you DELETE the file, it will be deleted from ALL areas to which it is associated. Are you sure you want to delete the file?",
 
     "No puede eliminar el archivo o archivos seleccionados.":"You can't delete the selected file/s.",
+    "No puede eliminar el elemento o elementos seleccionados.":"You can't delete the selected item/s",
     "No puede eliminar un archivo perteneciente a otro usuario.":"You can't delete a file that belongs to another user.",
     "No se puede eliminar un archivo bloqueado, debe desbloquearlo.":"You can't delete a locked file, you must unlock.",
     "No se puede eliminar un archivo con una versión aprobada.":"You can't delete a file with an approved version.",
