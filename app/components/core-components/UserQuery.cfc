@@ -12,7 +12,8 @@
 	<!--- ------------------------------------- getUser -------------------------------------  --->
 
 	<cffunction name="getUser" output="false" access="public" returntype="query">
-		<cfargument name="user_id" type="numeric" required="true">
+		<cfargument name="user_id" type="numeric" required="false">
+		<cfargument name="user_full_name" type="string" required="false">
 		<cfargument name="format_content" type="string" required="false" default="default">
 		<cfargument name="with_ldap" type="boolean" required="false" default="false">
 		<cfargument name="with_vpnet" type="boolean" required="false" default="false">
@@ -48,7 +49,11 @@
 					, perfil_cabecera
 				</cfif>
 				FROM `#arguments.client_abb#_users`
-				WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">;
+				<cfif isDefined("arguments.user_id")>
+					WHERE id = <cfqueryparam value="#arguments.user_id#" cfsqltype="cf_sql_integer">
+				<cfelse>
+					WHERE CONCAT_WS(' ', family_name, name) = <cfqueryparam value="#arguments.user_full_name#" cfsqltype="cf_sql_varchar">
+				</cfif>;
 			</cfquery>
 
 
