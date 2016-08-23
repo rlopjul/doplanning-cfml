@@ -378,6 +378,8 @@
 	<cffunction name="deleteAreaFiles" returntype="struct" access="package">
 		<cfargument name="area_id" type="numeric" required="true">
 
+		<cfset var method = "deleteAreaFiles">
+
 		<cfset var response = structNew()>
 
 		<cfset var cur_file_id = "">
@@ -390,8 +392,10 @@
 
 			<!--- Get files to delete --->
 			<cfquery name="filesQuery" datasource="#client_dsn#">
-				SELECT file_id
-				FROM #client_abb#_areas_files
+				SELECT areas_files.file_id, files.file_type_id, files.area_id
+				FROM #client_abb#_areas_files AS areas_files
+				INNER JOIN #client_abb#_files AS files
+				ON areas_files.file_id = files.id
 				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 
@@ -417,21 +421,34 @@
 						</cfinvoke>
 
 						<cfif deleteFileResult.result IS false>
-
 							<cfreturn deleteFileResult>
-
 						</cfif>
 
-					<cfelse>
+					<cfelse><!--- The file is in more than 1 area --->
 
-						<cfinvoke component="FileManager" method="dissociateFile" returnvariable="dissociateFileResult">
-							<cfinvokeargument name="file_id" value="#cur_file_id#">
-							<cfinvokeargument name="area_id" value="#arguments.area_id#">
-						</cfinvoke>
+						<cfif filesQuery.file_type_id IS 1 OR filesQuery.area_id NEQ arguments.area_id><!--- User files AND area files from another area --->
 
-						<cfif dissociateFileResult.result IS false>
+							<cfinvoke component="FileManager" method="dissociateFile" returnvariable="dissociateFileResult">
+								<cfinvokeargument name="file_id" value="#cur_file_id#">
+								<cfinvokeargument name="area_id" value="#arguments.area_id#">
+							</cfinvoke>
 
-							<cfreturn dissociateFileResult>
+							<cfif dissociateFileResult.result IS false>
+								<cfreturn dissociateFileResult>
+							</cfif>
+
+						<cfelse><!--- Area files from this area--->
+
+							<cfinvoke component="FileManager" method="deleteFile" returnvariable="deleteFileResult">
+								<cfinvokeargument name="file_id" value="#cur_file_id#">
+								<cfinvokeargument name="area_id" value="#arguments.area_id#">
+								<cfinvokeargument name="with_transaction" value="false">
+								<cfinvokeargument name="moveToBin" value="false">
+							</cfinvoke>
+
+							<cfif deleteFileResult.result IS false>
+								<cfreturn deleteFileResult>
+							</cfif>
 
 						</cfif>
 
