@@ -396,7 +396,7 @@
 				FROM #client_abb#_areas_files AS areas_files
 				INNER JOIN #client_abb#_files AS files
 				ON areas_files.file_id = files.id
-				WHERE area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
+				WHERE areas_files.area_id = <cfqueryparam value="#arguments.area_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
 
 			<cfif filesQuery.recordCount GT 0>
