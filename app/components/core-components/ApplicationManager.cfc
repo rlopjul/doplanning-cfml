@@ -443,8 +443,8 @@
 
 					<cfinvokeargument name="serverIp" value="54.77.243.167">
 
-					<cfinvokeargument name="mainUrl" value="https://genome7.com">
-					<cfinvokeargument name="signOutUrl" value="https://genome7.com/genome7">
+					<cfinvokeargument name="mainUrl" value="http://genome7.com">
+					<cfinvokeargument name="signOutUrl" value="http://genome7.com/genome7">
 
 					<cfinvokeargument name="title" value="Genome7">
 					<cfinvokeargument name="moduleWeb" value="true">
