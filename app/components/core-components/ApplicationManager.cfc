@@ -28,6 +28,7 @@
 
 		<cfargument name="path" type="string" required="false" default="">
 		<cfargument name="htmlComponentsPath" type="string" required="false">
+		<cfargument name="filesPath" type="string" required="false" default="/webroot/files/doplanning">
 		<cfargument name="mainUrl" type="string" required="true">
 		<cfargument name="signOutUrl" type="string" required="true">
 		<cfargument name="helpUrl" type="string" required="false" default="https://doplanning.net/es/page.cfm?id=118&title=soporte"><!---https://doplanning.net/es/page.cfm?id=9&amp;title=tutoriales--->
@@ -209,7 +210,7 @@
 			<cfset APPLICATION.corePath = "/dp-core">
 			<cfset APPLICATION.componentsPath = APPLICATION.corePath&"/components">
 			<cfset APPLICATION.coreComponentsPath = APPLICATION.componentsPath&"/core-components">
-			<cfset APPLICATION.filesPath = "/webroot/files/doplanning">
+			<cfset APPLICATION.filesPath = arguments.filesPath>
 			<cfset APPLICATION.defaultTimeout = 840><!---Si se pone a un tiempo menor que el de filesTimeout parece que algunas veces da problemas en la subida de archivos al acceder a otros métodos--->
 			<cfset APPLICATION.filesTimeout = 840><!---14 minutes--->
 
