@@ -545,7 +545,7 @@
 		<cfargument name="dpWebEnableGeneratePdf" type="boolean" required="false" default="true">
 
 		<cfargument name="dpWebDownloadFilesAfterFormId" type="numeric" required="false">
-		<cfargument name="dpWebDownloadFilesAfterFormUrl" type="numeric" required="false">
+		<cfargument name="dpWebDownloadFilesAfterFormUrl" type="string" required="false">
 		<cfargument name="dpWebDownloadFilesAfterFormFieldWithFile" type="numeric">
 		<cfargument name="dpWebEnableDownloadFilesAfterFormAreaId" type="numeric">
 
