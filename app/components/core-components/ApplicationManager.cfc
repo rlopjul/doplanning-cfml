@@ -659,7 +659,7 @@
 				<cfset APPLICATION.googleSearchCode = arguments.googleSearchCode>
 			</cfif>
 
-			<cfif isDefined("APPLICATION.dpWebDownloadFilesAfterFormId")>
+			<cfif isDefined("arguments.dpWebDownloadFilesAfterFormId")>
 				<cfset APPLICATION.dpWebDownloadFilesAfterFormId = arguments.dpWebDownloadFilesAfterFormId>
 				<cfset APPLICATION.dpWebDownloadFilesAfterFormUrl = arguments.dpWebDownloadFilesAfterFormUrl>
 				<cfset APPLICATION.dpWebDownloadFilesAfterFormFieldWithFile = arguments.dpWebDownloadFilesAfterFormFieldWithFile>
