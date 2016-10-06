@@ -544,6 +544,12 @@
 		<cfargument name="dpWebEnableTwitterWidgets" type="boolean" required="false" default="false"><!---Carga el script de widgets de Twitter--->
 		<cfargument name="dpWebEnableGeneratePdf" type="boolean" required="false" default="true">
 
+		<cfargument name="dpWebDownloadFilesAfterFormId" type="numeric" required="false">
+		<cfargument name="dpWebDownloadFilesAfterFormUrl" type="numeric" required="false">
+		<cfargument name="dpWebDownloadFilesAfterFormFieldWithFile" type="numeric">
+		<cfargument name="dpWebEnableDownloadFilesAfterFormAreaId" type="numeric">
+
+
 			<cfset APPLICATION.dpWebClientAbb = arguments.dpWebClientAbb>
 			<cfset APPLICATION.dpWebClientDsn = APPLICATION.identifier&"_"&APPLICATION.dpWebClientAbb>
 			<cfset APPLICATION.dpWebClientTitle = arguments.dpWebClientTitle>
@@ -651,6 +657,13 @@
 
 			<cfif isDefined("arguments.googleSearchCode")>
 				<cfset APPLICATION.googleSearchCode = arguments.googleSearchCode>
+			</cfif>
+
+			<cfif isDefined("APPLICATION.dpWebDownloadFilesAfterFormId")>
+				<cfset APPLICATION.dpWebDownloadFilesAfterFormId = arguments.dpWebDownloadFilesAfterFormId>
+				<cfset APPLICATION.dpWebDownloadFilesAfterFormUrl = arguments.dpWebDownloadFilesAfterFormUrl>
+				<cfset APPLICATION.dpWebDownloadFilesAfterFormFieldWithFile = arguments.dpWebDownloadFilesAfterFormFieldWithFile>
+				<cfset APPLICATION.dpWebEnableDownloadFilesAfterFormAreaId = arguments.dpWebEnableDownloadFilesAfterFormAreaId>
 			</cfif>
 
 	</cffunction>
