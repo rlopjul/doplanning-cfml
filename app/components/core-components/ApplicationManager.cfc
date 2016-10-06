@@ -547,7 +547,7 @@
 		<cfargument name="dpWebDownloadFilesAfterFormId" type="numeric" required="false">
 		<cfargument name="dpWebDownloadFilesAfterFormUrl" type="string" required="false">
 		<cfargument name="dpWebDownloadFilesAfterFormFieldWithFile" type="numeric">
-		<cfargument name="dpWebEnableDownloadFilesAfterFormAreaId" type="numeric">
+		<cfargument name="dpWebDownloadFilesAfterFormAreaId" type="numeric">
 
 
 			<cfset APPLICATION.dpWebClientAbb = arguments.dpWebClientAbb>
@@ -663,7 +663,7 @@
 				<cfset APPLICATION.dpWebDownloadFilesAfterFormId = arguments.dpWebDownloadFilesAfterFormId>
 				<cfset APPLICATION.dpWebDownloadFilesAfterFormUrl = arguments.dpWebDownloadFilesAfterFormUrl>
 				<cfset APPLICATION.dpWebDownloadFilesAfterFormFieldWithFile = arguments.dpWebDownloadFilesAfterFormFieldWithFile>
-				<cfset APPLICATION.dpWebEnableDownloadFilesAfterFormAreaId = arguments.dpWebEnableDownloadFilesAfterFormAreaId>
+				<cfset APPLICATION.dpWebDownloadFilesAfterFormAreaId = arguments.dpWebDownloadFilesAfterFormAreaId>
 			</cfif>
 
 	</cffunction>
