@@ -18,8 +18,8 @@ page_type
 <script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js?v=2"></script>
 
 <!---bootstrap-select--->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/css/bootstrap-select.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/js/bootstrap-select.min.js"></script>
+<link href="#APPLICATION.path#/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css" rel="stylesheet">
+<script src="#APPLICATION.path#/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
 
 <cfinclude template="#APPLICATION.htmlPath#/includes/tablesorter_scripts.cfm">
 

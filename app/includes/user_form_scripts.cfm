@@ -8,8 +8,8 @@
 <script src="#APPLICATION.htmlPath#/scripts/checkRailoForm.js"></script>
 
 <!---bootstrap-select--->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/css/bootstrap-select.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/js/bootstrap-select.min.js"></script>
+<link href="#APPLICATION.path#/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css" rel="stylesheet">
+<script src="#APPLICATION.path#/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
 
 <script>
 

@@ -14,8 +14,8 @@
 <script src="#APPLICATION.bootstrapDatepickerJSPath#"></script>
 <script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js" charset="UTF-8"></script>
 
-<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.js"></script>
-<link rel="stylesheet" href="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.css">
+<link href="#APPLICATION.path#/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css" rel="stylesheet">
+<script src="#APPLICATION.path#/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
 
 <script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2.2"></script>
 
