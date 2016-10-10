@@ -12,9 +12,6 @@
 <cfoutput>
 <link href="#APPLICATION.bootstrapDatepickerCSSPath#" rel="stylesheet" />
 
-<!---<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.js"></script>
-<link rel="stylesheet" href="#APPLICATION.htmlPath#/bootstrap/bootstrap-select/bootstrap-select.min.css">--->
-
 <cfinclude template="#APPLICATION.htmlPath#/includes/summernote_scripts.cfm">
 
 <script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2.2"></script>

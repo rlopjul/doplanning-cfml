@@ -9,10 +9,6 @@
 
 	<script src="#APPLICATION.htmlPath#/scripts/tablesFunctions.js?v=2.2"></script>
 
-	<!---bootstrap-select--->
-	<!---<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>--->
-
 </cfoutput>
 
 <cfif NOT isDefined("itemTypeId")>
