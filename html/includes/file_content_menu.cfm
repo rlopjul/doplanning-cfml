@@ -264,7 +264,13 @@
 
 
 	<cfif APPLICATION.moduleConvertFiles EQ true>
-		<cfif objectFile.file_types_conversion.recordCount GT 0>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/FileType" method="getFileTypesConversion" returnvariable="fileTypeConversion">
+			<cfinvokeargument name="file_type" value="#objectFile.file_type#"/>
+		</cfinvoke>
+		<cfset fileTypeConversionQuery = fileTypeConversion.query>
+
+		<cfif fileTypeConversionQuery.recordCount GT 0>
 			<div class="div_element_menu" style="width:130px;">
 				<cfif page_type IS 1>
 					<cfset form_action = "my_files_file_convert.cfm">
@@ -281,8 +287,8 @@
 					<div class="div_icon_menus"><input type="image" src="assets/icons/view_file.gif" title="Visualizar el archivo"/></div>
 					<div class="div_text_menus"><a href="##" onclick="showHideDiv('convert_file_loading');submitForm('convert_file');" class="text_menus"><span lang="es">Visualizar en</span> </a>
 					<select name="file_type" style="width:90px;" onchange="showHideDiv('convert_file_loading');submitForm('convert_file');">
-						<cfloop query="objectFile.file_types_conversion">
-							<option value="#objectFile.file_types_conversion.file_type#">#objectFile.file_types_conversion.name_es#</option>
+						<cfloop query="fileTypeConversionQuery">
+							<option value="#fileTypeConversionQuery.file_type#">#fileTypeConversionQuery.name_es#</option>
 						</cfloop>
 					</select>
 					</div>
