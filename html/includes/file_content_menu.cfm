@@ -271,7 +271,12 @@
 		<cfset fileTypeConversionQuery = fileTypeConversion.query>
 
 		<cfif fileTypeConversionQuery.recordCount GT 0>
-			<div class="div_element_menu" style="width:130px;">
+
+			<div class="btn-group">
+
+				<a href="##" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Ver archivo como" lang="es">
+				<i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo </span> <span class="caret"></span></a>
+
 				<cfif page_type IS 1>
 					<cfset form_action = "my_files_file_convert.cfm">
 				<cfelse>
@@ -293,7 +298,9 @@
 					</select>
 					</div>
 				</form>
+
 			</div>
+
 		</cfif>
 	</cfif>
 
