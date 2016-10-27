@@ -347,7 +347,9 @@
 
 		<cfset var method = "convertFile">
 
-		<!---<cftry>--->
+		<!---
+		DESCOMENTAR
+		<cftry>--->
 
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
