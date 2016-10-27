@@ -20,9 +20,9 @@ Visualizar archivo</div>
 	<cfset message = convertFileResponse.message>
 
 	<cfoutput>
-	<div class="alert">#message#</div>
+	<div class="alert alert-info">#message#</div>
 
-	<div style="clear:both; padding-top:16px; margin-bottom:20px;">
+	<div style="clear:both; padding-top:10px; margin-bottom:20px;">
 
 		<cfif URL.file_type NEQ ".html">
 
@@ -32,7 +32,7 @@ Visualizar archivo</div>
 					<cfset open_file = "&open=1">
 				</cfif>
 
-				<a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type##open_file#" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
+				<a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type##open_file#" class="btn btn-default"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
 
 				<!---<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" class="text_menus"><img src="#APPLICATION.htmlPath#/assets/v3/icons/file_download.png" title="Descargar archivo" alt="Descargar archivo"/></a>
 				</div>
