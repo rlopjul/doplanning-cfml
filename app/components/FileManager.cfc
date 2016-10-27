@@ -1361,7 +1361,7 @@
 
 	<!--- ----------------------- CONVERT FILE -------------------------------- --->
 
-	<cffunction name="convertFile" returntype="string" output="false" access="public">
+	<cffunction name="convertFile" returntype="struct" output="false" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_type" type="string" required="true">
 
@@ -1374,7 +1374,9 @@
 
 		<cfset var objectFile = "">
 
-		<!---<cftry>--->
+		<!---
+		DESCOMENTAR
+		<cftry>--->
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
