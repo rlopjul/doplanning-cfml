@@ -45,6 +45,7 @@
 			<cfinvokeargument name="publicationRestricted" value="true">
 			<cfinvokeargument name="userEmailRequired" value="false">
 			<cfinvokeargument name="moduleAntiVirus" value="true">
+			<cfinvokeargument name="moduleConvertFiles" value="true">
 
 			<cfinvokeargument name="homeTab" value="true">
 			<cfinvokeargument name="moduleDPDocuments" value="true">
@@ -62,7 +63,7 @@
 
 
 	<cffunction name="onRequestStart" output="false" returntype="void">
-
+			
 		<cfif NOT isDefined("APPLICATION.dsn")>
 			<cfinvoke method="onApplicationStart">
 		</cfif>
