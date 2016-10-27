@@ -341,36 +341,26 @@
 
 	<!--- ---------------------------------- convertFile -------------------------------------- --->
 
-	<cffunction name="convertFile" returntype="xml" access="public">
+	<cffunction name="convertFile" returntype="struct" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_type" type="string" required="true">
 
 		<cfset var method = "convertFile">
 
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<!---<cftry>--->
 
-		<cftry>
-
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<file id="#arguments.file_id#" file_type="#arguments.file_type#"/>
-				</cfoutput>
-			</cfsavecontent>
-
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="file_type" value="#arguments.file_type#">
 			</cfinvoke>
 
-			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+			<!---<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>
 
-		</cftry>
+		</cftry>--->
 
-		<cfreturn xmlResponse>
+		<cfreturn response>
 
 	</cffunction>
 
