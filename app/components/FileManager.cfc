@@ -1362,11 +1362,10 @@
 	<!--- ----------------------- CONVERT FILE -------------------------------- --->
 
 	<cffunction name="convertFile" returntype="string" output="false" access="public">
-		<cfargument name="request" type="string" required="yes">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="file_type" type="string" required="true">
 
 		<cfset var method = "convertFile">
-		<cfset var file_id = "">
-		<cfset var file_type = "">
 
 		<cfset var files_directory = "">
 		<cfset var files_converted_directory = "">
@@ -1375,15 +1374,12 @@
 
 		<cfset var objectFile = "">
 
-		<cftry>
+		<!---<cftry>--->
 
-			<cfinclude template="includes/functionStart.cfm">
-
-			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
-			<cfset file_type = xmlRequest.request.parameters.file.xmlAttributes.file_type>
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">
-				<cfinvokeargument name="get_file_id" value="#file_id#">
+				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
 
 				<cfinvokeargument name="return_type" value="query">
 			</cfinvoke>
@@ -1456,9 +1452,7 @@
 
 					</cfif>
 
-					<cfset xmlResponseContent = "<file_convert><message><![CDATA[#file_convert_message#]]></message></file_convert>">
-
-					<cfinclude template="includes/functionEndNoLog.cfm">
+					<cfset response = {result=true, file_id=#file_id#, message=#file_convert_message#}>
 
 				<cfelse><!---The physical file does not exist--->
 
@@ -1476,14 +1470,13 @@
 
 			</cfif>
 
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
+			<!---<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>
 
-		</cftry>
+		</cftry>--->
 
-		<cfreturn xmlResponse>
+		<cfreturn response>
 
 	</cffunction>
 
