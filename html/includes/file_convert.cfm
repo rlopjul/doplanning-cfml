@@ -16,21 +16,34 @@ Visualizar archivo</div>
 		<cfinvokeargument name="file_id" value="#URL.file#">
 		<cfinvokeargument name="file_type" value="#URL.file_type#">
 	</cfinvoke>
-	
+
 	<cfset message = convertFileResponse.message>
 
 	<cfoutput>
 	<div class="alert">#message#</div>
 
 	<div style="clear:both; padding-top:16px; margin-bottom:20px;">
+
 		<cfif URL.file_type NEQ ".html">
-				<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" class="text_menus"><img src="#APPLICATION.htmlPath#/assets/v3/icons/file_download.png" title="Descargar archivo" alt="Descargar archivo"/></a>
+
+				<cfset open_file = "">
+
+				<cfif URL.file_type EQ ".pdf">
+					<cfset open_file = "&open=1">
+				</cfif>
+
+				<a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type##open_file#" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
+
+				<!---<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" class="text_menus"><img src="#APPLICATION.htmlPath#/assets/v3/icons/file_download.png" title="Descargar archivo" alt="Descargar archivo"/></a>
 				</div>
-				<div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" class="text_menus"><br/>Descargar archivo #URL.file_type#</a></div>
+				<div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" class="text_menus"><br/>Descargar archivo #URL.file_type#</a></div>--->
 		<cfelse>
+
 			<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" target="_blank"><img src="#APPLICATION.htmlPath#/assets/v3/icons/view_file.gif"/></a></div>
-		<div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" class="text_menus" target="_blank"><br />Ver archivo</a></div>
+			<div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" class="text_menus" target="_blank"><br />Ver archivo</a></div>
+
 		</cfif>
+
 	</div>
 	</cfoutput>
 
