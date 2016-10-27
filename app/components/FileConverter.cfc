@@ -19,10 +19,10 @@
 
 		<!---<cftry>--->
 
-			<cfset jarPath = "core-components/libs/jodconverter-core-3.0-beta-4.jar">
+			<!---<cfset jarPath = "core-components/libs/jodconverter-core-3.0-beta-4.jar">--->
 
 			<cfscript>
-				Config  = createObject("java", "org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration", jarPath).init();
+				Config  = createObject("java", "org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration").init();
 				Config.setOfficeHome("/opt/libreoffice5.2/");
 				Manager = Config.buildOfficeManager();
 				Manager.start();
@@ -30,7 +30,7 @@
 				inPath = arguments.inputFilePath;
 				outPath = arguments.outputFilePath;
 
-				OfficeDocumentConverter = createObject("java", "org.artofsolving.jodconverter.OfficeDocumentConverter", jarPath);
+				OfficeDocumentConverter = createObject("java", "org.artofsolving.jodconverter.OfficeDocumentConverter");
 				converter = OfficeDocumentConverter.init( Manager );
 				input = createObject("java", "java.io.File").init( inPath );
 				output = createObject("java", "java.io.File").init( outPath );
