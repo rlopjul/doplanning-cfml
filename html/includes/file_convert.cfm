@@ -2,29 +2,23 @@
 Visualizar archivo</div>
 
 <!---<cftry>--->
-	
+
 	<!---<cfinclude template="#APPLICATION.path#/app/includes/convert_file.cfm">--->
-	
+
 	<!---checkParameters--->
 	<cfif NOT isDefined("URL.file") OR NOT isDefined("URL.file_type")><!---No value given for one or more required parameters--->
 		<cfset error_code = 610>
-	
+
 		<cfthrow errorcode="#error_code#">
 	</cfif>
-	
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="convertFile" returnvariable="xmlResponse">
+
+	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="convertFile" returnvariable="convertFileResponse">
 		<cfinvokeargument name="file_id" value="#URL.file#">
 		<cfinvokeargument name="file_type" value="#URL.file_type#">
 	</cfinvoke>
 	
-	<cfxml variable="xmlFileConvert">
-		<cfoutput>
-		#xmlResponse.response.result.file_convert#
-		</cfoutput>
-	</cfxml>
-	
-	<cfset message = xmlFileConvert.file_convert.message.xmlText>
-	
+	<cfset message = convertFileResponse.message>
+
 	<cfoutput>
 	<div class="alert">#message#</div>
 
@@ -39,13 +33,13 @@ Visualizar archivo</div>
 		</cfif>
 	</div>
 	</cfoutput>
-	
+
 	<p style="margin-bottom:18px;">
 	IMPORTANTE: el archivo generado puede no reproducir exactamente el contenido del original.<br/> Para una visualización detallada se recomienda ver el archivo original.
 	</p>
-	
+
 	<!---<cfcatch>
 		<cfinclude template="components/includes/errorHandler.cfm">
-	</cfcatch>										
-	
+	</cfcatch>
+
 </cftry>--->
