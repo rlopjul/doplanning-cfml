@@ -1,74 +1,61 @@
 <div class="div_head_subtitle">
 Visualizar archivo</div>
 
-<!---<cftry>--->
+<!---checkParameters--->
+<cfif NOT isDefined("URL.file") OR NOT isDefined("URL.file_type")><!---No value given for one or more required parameters--->
+	<cfset error_code = 610>
 
-	<!---<cfinclude template="#APPLICATION.path#/app/includes/convert_file.cfm">--->
+	<cfthrow errorcode="#error_code#">
+</cfif>
 
-	<!---checkParameters--->
-	<cfif NOT isDefined("URL.file") OR NOT isDefined("URL.file_type")><!---No value given for one or more required parameters--->
-		<cfset error_code = 610>
+<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="convertFile" returnvariable="convertFileResponse">
+	<cfinvokeargument name="file_id" value="#URL.file#">
+	<cfinvokeargument name="file_type" value="#URL.file_type#">
+</cfinvoke>
 
-		<cfthrow errorcode="#error_code#">
-	</cfif>
+<cfset message = convertFileResponse.message>
 
-	<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="convertFile" returnvariable="convertFileResponse">
-		<cfinvokeargument name="file_id" value="#URL.file#">
-		<cfinvokeargument name="file_type" value="#URL.file_type#">
-	</cfinvoke>
+<cfset open_file = "">
 
-	<cfset message = convertFileResponse.message>
+<cfif URL.file_type EQ ".pdf">
+	<cfset open_file = "&open=1">
+</cfif>
 
-	<cfset open_file = "">
+<cfset download_url = "#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type##open_file#">
 
-	<cfif URL.file_type EQ ".pdf">
-		<cfset open_file = "&open=1">
-	</cfif>
+<cfif convertFileResponse.result IS true AND URL.file_type EQ ".pdf">
 
-	<cfset download_url = "#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type##open_file#">
+	<cflocation url="#download_url#" addtoken="false">
 
-	<cfif convertFileResponse.result IS true AND URL.file_type EQ ".pdf">
+</cfif>
 
-		<cflocation url="#download_url#" addtoken="false">
+<cfif convertFileResponse.result IS true>
 
-	</cfif>
+	<cfoutput>
+	<div class="alert alert-info">#message#</div>
 
-	<cfif convertFileResponse.result IS true>
+	<div style="clear:both; padding-top:10px; margin-bottom:20px;">
 
-		<cfoutput>
-		<div class="alert alert-info">#message#</div>
+		<cfif URL.file_type NEQ ".html">
 
-		<div style="clear:both; padding-top:10px; margin-bottom:20px;">
+				<a href="#download_url##open_file#" class="btn btn-default"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
 
-			<cfif URL.file_type NEQ ".html">
+		<cfelse>
 
-					<a href="#download_url##open_file#" class="btn btn-default"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
+			<div class="div_icon_menus"><a href="#download_url#" target="_blank"><img src="#APPLICATION.htmlPath#/assets/v3/icons/view_file.gif"/></a></div>
+			<div class="div_text_menus"><a href="#download_url#" class="text_menus" target="_blank"><br />Ver archivo</a></div>
 
-					<!---<div class="div_icon_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" class="text_menus"><img src="#APPLICATION.htmlPath#/assets/v3/icons/file_download.png" title="Descargar archivo" alt="Descargar archivo"/></a>
-					</div>
-					<div class="div_text_menus"><a href="#APPLICATION.htmlPath#/file_converted_download.cfm?file=#URL.file#&file_type=#URL.file_type#" class="text_menus"><br/>Descargar archivo #URL.file_type#</a></div>--->
-			<cfelse>
+		</cfif>
 
-				<div class="div_icon_menus"><a href="#download_url#" target="_blank"><img src="#APPLICATION.htmlPath#/assets/v3/icons/view_file.gif"/></a></div>
-				<div class="div_text_menus"><a href="#download_url#" class="text_menus" target="_blank"><br />Ver archivo</a></div>
+	</div>
+	</cfoutput>
 
-			</cfif>
+	<p style="margin-bottom:18px;">
+	IMPORTANTE: el archivo generado puede no reproducir exactamente el contenido del original.<br/> Para una visualización detallada se recomienda ver el archivo original.
+	</p>
 
-		</div>
-		</cfoutput>
+<cfelse>
 
-		<p style="margin-bottom:18px;">
-		IMPORTANTE: el archivo generado puede no reproducir exactamente el contenido del original.<br/> Para una visualización detallada se recomienda ver el archivo original.
-		</p>
+	<div class="alert alert-danger">#message#</div>
 
-	<cfelse>
-
-		<div class="alert alert-danger">#message#</div>
-
-	</cfif>
-
-	<!---<cfcatch>
-		<cfinclude template="components/includes/errorHandler.cfm">
-	</cfcatch>
-
-</cftry>--->
+</cfif>
