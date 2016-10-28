@@ -270,11 +270,7 @@
 		</cfinvoke>
 		<cfset fileTypeConversionQuery = fileTypeConversion.query>
 
-		<cfif page_type IS 1>
-			<cfset form_action = "my_files_file_convert.cfm">
-		<cfelse>
-			<cfset form_action = "area_file_convert.cfm">
-		</cfif>
+		<cfset convert_page = "area_file_convert.cfm?file=#objectFile.id#&area=#area_id#">
 
 		<cfif fileTypeConversionQuery.recordCount GT 0>
 
@@ -282,7 +278,7 @@
 
 				<cfif fileTypeConversionQuery.recordCount IS 1>
 
-					<cfset convert_url = form_action&"?file=#objectFile.id#&area=#area_id#&file_type=#fileTypeConversionQuery.file_type#">
+					<cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
 
 					<a href="#convert_url#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> #fileTypeConversionQuery.name_es#</a>
 
@@ -290,23 +286,19 @@
 				<cfelse>
 
 					<a href="##" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Ver archivo como" lang="es">
-					<i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo </span> <span class="caret"></span></a>
-					<form name="convert_file" id="convert_file" method="get" action="#form_action#" onsubmit="showHideDiv('convert_file_loading');">
-						<input type="hidden" name="file" value="#objectFile.id#" />
-						<cfif page_type IS 1>
-						<input type="hidden" name="folder" value="#folder_id#" />
-						<cfelse>
-						<input type="hidden" name="area" value="#area_id#" />
-						</cfif>
-						<div class="div_icon_menus"><input type="image" src="assets/icons/view_file.gif" title="Visualizar el archivo"/></div>
-						<div class="div_text_menus"><a href="##" onclick="showHideDiv('convert_file_loading');submitForm('convert_file');" class="text_menus"><span lang="es">Visualizar en</span> </a>
-						<select name="file_type" style="width:90px;" onchange="showHideDiv('convert_file_loading');submitForm('convert_file');">
-							<cfloop query="fileTypeConversionQuery">
-								<option value="#fileTypeConversionQuery.file_type#">#fileTypeConversionQuery.name_es#</option>
-							</cfloop>
-						</select>
-						</div>
-					</form>
+					<i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> <span class="caret"></span></a>
+
+					<ul class="dropdown-menu">
+
+						<cfloop query="fileTypeConversionQuery">
+
+							<cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
+
+							<li><a href="#convert_url#" lang="es" <cfif fileTypeConversionQuery.file_type EQ '.pdf'>target="_blank"</cfif>>#fileTypeConversionQuery.name_es#</a></li>
+
+						</cfloop>
+
+					</ul>
 
 				</cfif>
 
