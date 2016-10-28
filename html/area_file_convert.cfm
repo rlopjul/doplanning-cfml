@@ -72,7 +72,9 @@
 	<div class="container app_main_container">
 		<!-- InstanceBeginEditable name="contenido_app" -->
 
-<cfinclude template="#APPLICATION.htmlPath#/includes/file_convert.cfm">
+			<cfinclude template="#APPLICATION.htmlPath#/includes/area_head.cfm">
+
+			<cfinclude template="#APPLICATION.htmlPath#/includes/file_convert.cfm">
 
 <!-- InstanceEndEditable -->
 	</div>
