@@ -1426,7 +1426,7 @@
 
 							<cfelse>
 
-								<cfset file_converted = ExpandPath('#APPLICATION.path#/#client_abb#/temp/files/#objectFile.physical_name#_html/#objectFile.physical_name##file_type#')>
+								<cfset file_converted = ExpandPath('#APPLICATION.path#/#client_abb#/temp/files/#objectFile.physical_name#_html/#objectFile.physical_name#.cfm')>
 
 							</cfif>
 
