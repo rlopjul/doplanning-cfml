@@ -1394,7 +1394,10 @@
 
 			<cfif file_type_result IS true>
 
-				<cfset files_directory = "files">
+				<cfset fileTypeId = objectFile.file_type_id>
+				<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
+				<cfset files_directory = fileTypeDirectory>
 				<cfset files_converted_directory = "files_converted">
 
 				<cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#objectFile.physical_name#'>
