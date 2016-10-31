@@ -11,18 +11,6 @@
 			</cfif>
 		</div>
 
-	<cfif listFind(".zip,.rar,.exe,.avi",objectFile.file_type) IS 0>
-
-		<div class="btn-group">
-			<cfif page_type IS 1>
-				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
-			<cfelse>
-				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&area=#area_id#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
-			</cfif>
-		</div>
-
-	</cfif>
-
 	<cfif listFind(".gif,.jpg,.png",objectFile.file_type) GT 0>
 
 		<div class="btn-group">
@@ -122,6 +110,19 @@
 			</div>
 
 		</cfif>
+	</cfif>
+
+
+	<cfif listFind(".zip,.rar,.exe,.avi",objectFile.file_type) IS 0>
+
+		<div class="btn-group">
+			<cfif page_type IS 1>
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
+			<cfelse>
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&area=#area_id#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
+			</cfif>
+		</div>
+
 	</cfif>
 
 
