@@ -270,7 +270,49 @@
 		</cfinvoke>
 		<cfset fileTypeConversionQuery = fileTypeConversion.query>
 
-		<cfset convert_page = "area_file_convert.cfm?file=#objectFile.id#&area=#area_id#">
+		<!---<cfset convert_page = "area_file_convert.cfm?file=#objectFile.id#&area=#area_id#">--->
+		<cfset convert_page = "#APPLICATION.htmlComponentsPath#/File.cfc?method=convertFileRemote&file_id=#objectFile.id#">
+
+		<script>
+
+			$(function() {
+
+				$( ".convert_file" ).click(function(event) {
+
+					event.preventDefault();
+
+					bootbox.dialog({
+							message: '<div class="progress progress-striped active" style="height:23px"><div class="progress-bar" style="width:100%;">Generando vista</div></div>',
+							title: "Generando vista de archivo"
+							//closeButton: false
+					});
+
+					$.ajax({
+
+						type: 'GET',
+						url: $(this).attr('href'),
+						dataType: "json",
+						success: function(data, status) {
+
+								console.log(data);
+
+								bootbox.dialog({
+										message: data.content,
+										title: "Vista de archivo"
+								});
+
+
+						}
+
+					});
+
+
+				});
+
+
+			});
+
+		</script>
 
 		<cfif fileTypeConversionQuery.recordCount GT 0>
 
@@ -280,7 +322,7 @@
 
 					<cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
 
-					<a href="#convert_url#" title="Abrir en nueva ventana" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> #fileTypeConversionQuery.name_es#</a>
+					<a href="#convert_url#" class="convert_file" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> #fileTypeConversionQuery.name_es#</a>
 
 
 				<cfelse>
@@ -294,7 +336,7 @@
 
 							<cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
 
-							<li><a href="#convert_url#" lang="es" <cfif fileTypeConversionQuery.file_type EQ '.pdf'>target="_blank"</cfif>>#fileTypeConversionQuery.name_es#</a></li>
+							<li><a href="#convert_url#" class="convert_file" lang="es" <cfif fileTypeConversionQuery.file_type EQ '.pdf'>target="_blank"</cfif>>#fileTypeConversionQuery.name_es#</a></li>
 
 						</cfloop>
 
