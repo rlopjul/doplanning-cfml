@@ -282,7 +282,7 @@
 					event.preventDefault();
 
 					var bootboxLoading = bootbox.dialog({
-							message: '<div class="progress progress-striped active" style="height:23px"><div class="progress-bar" style="width:100%;">Generando vista</div></div>',
+							message: '<div class="progress progress-striped active" style="height:23px"><div class="progress-bar" style="width:100%;"><span lang="es">Generando vista</span></div></div><p lang="es">Este proceso tardará dependiendo del tamaño del archivo</p>',
 							title: "Generando vista de archivo",
 							closeButton: false
 					});
