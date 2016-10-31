@@ -378,9 +378,7 @@
 
 		<cfset var response = structNew()>
 
-		<!---
-		DESCOMENTAR
-		<cftry>--->
+		<cftry>
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="convertFile" returnvariable="convertFileResponse">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
@@ -432,14 +430,13 @@
 			</cfsavecontent>
 			</cfoutput>
 
-			<cfset response = {result=true, content=responseContent}>
+			<cfset response = {result=true, message=responseContent}>
 
-
-			<!---<cfcatch>
-				<cfinclude template="includes/errorHandlerStruct.cfm">
+			<cfcatch>
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>
 
-		</cftry>--->
+		</cftry>
 
 		<cfreturn response>
 
