@@ -400,7 +400,7 @@
 
 				<cfif convertFileResponse.result IS true>
 
-					<div class="alert alert-info">#message#</div>
+					<div class="hidden">#message#</div>
 
 					<div style="clear:both; padding-top:10px; margin-bottom:20px;">
 
