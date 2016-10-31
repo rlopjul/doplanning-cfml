@@ -37,7 +37,7 @@
 
 <cfelse>
 
-	<cfset source = '#APPLICATION.path#/#client_abb#/temp/files/#objectFile.physical_name#_html/#objectFile.physical_name#.cfm'>
+	<cfset source = '#APPLICATION.path#/#client_abb#/temp/files/#objectFile.physical_name#_html/#objectFile.physical_name#.html'>
 
 	<cflocation url="#source#" addtoken="no">
 </cfif>
