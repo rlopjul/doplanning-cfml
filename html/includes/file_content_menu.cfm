@@ -281,7 +281,7 @@
 
 					event.preventDefault();
 
-					bootbox.dialog({
+					var bootboxLoading = bootbox.dialog({
 							message: '<div class="progress progress-striped active" style="height:23px"><div class="progress-bar" style="width:100%;">Generando vista</div></div>',
 							title: "Generando vista de archivo"
 							//closeButton: false
@@ -294,13 +294,12 @@
 						dataType: "json",
 						success: function(data, status) {
 
-								console.log(data);
+							bootboxLoading.modal('hide');
 
-								bootbox.dialog({
-										message: data.content,
-										title: "Vista de archivo"
-								});
-
+							bootbox.dialog({
+									message: data.message,
+									title: "Vista de archivo"
+							});
 
 						}
 
