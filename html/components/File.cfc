@@ -367,6 +367,89 @@
 	</cffunction>
 
 
+
+	<!--- ---------------------------------- convertFileRemote -------------------------------------- --->
+
+	<cffunction name="convertFileRemote" output="false" returntype="struct" access="remote" returnformat="json">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="file_type" type="string" required="true">
+
+		<cfset var method = "convertFileRemote">
+
+		<cfset var response = structNew()>
+
+		<!---
+		DESCOMENTAR
+		<cftry>--->
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="convertFile" returnvariable="convertFileResponse">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="file_type" value="#arguments.file_type#">
+			</cfinvoke>
+
+			<cfset message = convertFileResponse.message>
+
+			<cfset open_file = "">
+
+			<cfif arguments.file_type EQ ".pdf">
+				<cfset open_file = "&open=1">
+			</cfif>
+
+			<cfset download_url = "#APPLICATION.htmlPath#/file_converted_download.cfm?file=#arguments.file_id#&file_type=#arguments.file_type##open_file#">
+
+			<cfoutput>
+			<cfsavecontent variable="responseContent">
+
+				<cfif convertFileResponse.result IS true>
+
+					<div class="alert alert-info">#message#</div>
+
+					<div style="clear:both; padding-top:10px; margin-bottom:20px;">
+
+						<cfif arguments.file_type NEQ ".html">
+
+								<a href="#download_url##open_file#" class="btn btn-default"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
+
+						<cfelse>
+
+							<div class="div_icon_menus"><a href="#download_url#" target="_blank"><img src="#APPLICATION.htmlPath#/assets/v3/icons/view_file.gif"/></a></div>
+							<div class="div_text_menus"><a href="#download_url#" class="text_menus" target="_blank"><br />Ver archivo</a></div>
+
+						</cfif>
+
+					</div>
+
+					<p style="margin-bottom:18px;">
+						IMPORTANTE: el archivo generado puede no reproducir exactamente el contenido del original.<br/> Para una visualización detallada se recomienda ver el archivo original.
+					</p>
+
+				<cfelse>
+
+					<div class="alert alert-danger">#message#</div>
+
+				</cfif>
+
+			</cfsavecontent>
+			</cfoutput>
+
+			<cfset response = {result=true, content=responseContent}>
+
+
+			<!---<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>--->
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
+
+
+
 	<!--- ---------------------------------- associateFile -------------------------------------- --->
 
 	<cffunction name="associateFile" returntype="void" access="remote">
