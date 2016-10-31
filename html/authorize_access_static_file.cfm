@@ -19,7 +19,7 @@
       	<cfinvokeargument name="return_type" value="query">
       </cfinvoke>
 
-      <cfset filePath = "#APPLICATION.path#/#SESSION.client_id#/#URL.file#">
+      <cfset filePath = "#APPLICATION.path#/#SESSION.client_id#/temp/#URL.file#">
 
       <cfset fileType = fileGetMimeType(filePath,false)>
 
