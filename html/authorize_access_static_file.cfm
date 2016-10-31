@@ -5,7 +5,11 @@
 
   <cfif len(fileName) GT 0>
 
-    <cfset fileId = listFirst(fileName,"_")>
+    <cfif isNumeric(listFirst(fileName, "."))><!--- .html files --->
+      <cfset fileId = listFirst(fileName, ".")>
+    <cfelse>
+      <cfset fileId = listFirst(fileName,"_")><!--- .png files --->
+    </cfif>
 
     <cfif len(fileId) GT 0 AND isNumeric(fileId)>
 
