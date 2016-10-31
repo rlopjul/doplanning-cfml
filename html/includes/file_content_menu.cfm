@@ -283,8 +283,8 @@
 
 					var bootboxLoading = bootbox.dialog({
 							message: '<div class="progress progress-striped active" style="height:23px"><div class="progress-bar" style="width:100%;">Generando vista</div></div>',
-							title: "Generando vista de archivo"
-							//closeButton: false
+							title: "Generando vista de archivo",
+							closeButton: false
 					});
 
 					$.ajax({
