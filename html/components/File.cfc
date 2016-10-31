@@ -408,8 +408,8 @@
 
 					</div>
 
-					<p style="margin-bottom:18px;">
-						IMPORTANTE: el archivo generado puede no reproducir exactamente el contenido del original.<br/> Para una visualización detallada se recomienda ver el archivo original.
+					<p style="margin-bottom:18px;" lang="es">
+						IMPORTANTE: el archivo generado puede no reproducir exactamente el contenido del original. Para una visualización detallada se recomienda ver el archivo original.
 					</p>
 
 				<cfelse>
