@@ -338,7 +338,7 @@
 
 							<cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
 
-							<li><a href="#convert_url#" class="convert_file" lang="es" <cfif fileTypeConversionQuery.file_type EQ '.pdf'>target="_blank"</cfif>>#fileTypeConversionQuery.name_es#</a></li>
+							<li><a href="#convert_url#" class="convert_file" lang="es">#fileTypeConversionQuery.name_es#</a></li>
 
 						</cfloop>
 
