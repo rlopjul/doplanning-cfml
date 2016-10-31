@@ -14,14 +14,19 @@
 
 		<cfif getAuthUser() EQ "" OR NOT isDefined("SESSION.client_abb") OR (isDefined("URL.abb") AND URL.abb NEQ SESSION.client_abb)><!---No está logueado o el client_abb en el que está logueado no es el mismo del que se hace la petición--->
 
+			<cfif find("authorize_access_static_file.cfm",CGI.SCRIPT_NAME) GT 0 AND isDefined("URL.file") AND isDefined("URL.abb")>
+				<cfset destination_page = URLEncodedFormat("#APPLICATION.path#/#URL.abb#/#URL.file#")>
+		  <cfelse>
+				<cfset destination_page = URLEncodedFormat(CGI.SCRIPT_NAME&"?"&CGI.QUERY_STRING)>
+			</cfif>
+
 			<!---Para que pueda acceder al login hay que pasarle el client_abb--->
 			<cfif isDefined("URL.abb")>
-				<cfset destination_page = URLEncodedFormat(CGI.SCRIPT_NAME&"?"&CGI.QUERY_STRING)>
+
 				<cflocation url="#APPLICATION.htmlPath#/login/?client_abb=#URL.abb#&dpage=#destination_page#" addtoken="no">
 			<!---<cfelseif isDefined("APPLICATION.dpWebClientAbb") AND APPLICATION.dpWebClientAbb EQ "hcs">
 				<cflocation url="#APPLICATION.htmlPath#/login/?client_abb=#APPLICATION.dpWebClientAbb#&dpage=#destination_page#" addtoken="no">--->
 			<cfelseif isDefined("APPLICATION.dpWebClientAbb") AND ( APPLICATION.dpWebClientAbb NEQ "doplanning" AND APPLICATION.dpWebClientAbb NEQ "bioinformatics7" )>
-				<cfset destination_page = URLEncodedFormat(CGI.SCRIPT_NAME&"?"&CGI.QUERY_STRING)>
 				<cflocation url="#APPLICATION.htmlPath#/login/?client_abb=#APPLICATION.dpWebClientAbb#&dpage=#destination_page#" addtoken="no">
 			<cfelse>
 				<cflocation url="#APPLICATION.mainUrl#" addtoken="no">
