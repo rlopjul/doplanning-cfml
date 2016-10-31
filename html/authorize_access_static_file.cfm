@@ -1,5 +1,5 @@
 <!--- Check access to static files from HTML generated file related to area file --->
-<cfif isDefined("URL.file")>
+<cfif isDefined("URL.file") AND URL.abb EQ SESSION.client_abb>
 
   <cfset fileName = GetFileFromPath(URL.file)>
 
