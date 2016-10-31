@@ -1,0 +1,3 @@
+Options +FollowSymLinks
+RewriteEngine on
+RewriteRule ^(.*)$ ../html/authorize_access_static_file.cfm?file=$1&abb=hcs [NC]
