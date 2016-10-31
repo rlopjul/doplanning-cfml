@@ -298,7 +298,10 @@
 
 							bootbox.dialog({
 									message: data.message,
-									title: "Vista de archivo"
+									title: "Vista de archivo",
+									onEscape: function() {}
+							}).on('click', function (event) {
+							    $(this).modal('hide');
 							});
 
 						}
