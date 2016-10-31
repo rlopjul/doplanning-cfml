@@ -1451,11 +1451,11 @@
 								NOW());
 							</cfquery>
 
-							<cfset file_convert_message = "Archivo generado correctamente.">
+							<cfset file_convert_message = "Visualización generada correctamente.">
 
 						<cfelse>
 
-							<cfset file_convert_message = "Archivo ya disponible en este formato, puede descargarlo.">
+							<cfset file_convert_message = "Archivo ya disponible para visualización en este formato.">
 
 						</cfif>
 
