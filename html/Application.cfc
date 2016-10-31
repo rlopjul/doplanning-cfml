@@ -15,7 +15,7 @@
 		<cfif getAuthUser() EQ "" OR NOT isDefined("SESSION.client_abb") OR (isDefined("URL.abb") AND URL.abb NEQ SESSION.client_abb)><!---No está logueado o el client_abb en el que está logueado no es el mismo del que se hace la petición--->
 
 			<cfif find("authorize_access_static_file.cfm",CGI.SCRIPT_NAME) GT 0 AND isDefined("URL.file") AND isDefined("URL.abb")>
-				<cfset destination_page = URLEncodedFormat("#APPLICATION.path#/#URL.abb#/#URL.file#")>
+				<cfset destination_page = URLEncodedFormat("#APPLICATION.path#/#URL.abb#/temp/#URL.file#")>
 		  <cfelse>
 				<cfset destination_page = URLEncodedFormat(CGI.SCRIPT_NAME&"?"&CGI.QUERY_STRING)>
 			</cfif>
