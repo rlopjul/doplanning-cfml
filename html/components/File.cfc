@@ -402,18 +402,9 @@
 
 					<div class="hidden">#message#</div>
 
-					<div style="clear:both; padding-top:10px; margin-bottom:20px;">
+					<div style="padding-top:10px; margin-bottom:20px;">
 
-						<cfif arguments.file_type NEQ ".html">
-
-								<a href="#download_url##open_file#" class="btn btn-default"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
-
-						<cfelse>
-
-							<div class="div_icon_menus"><a href="#download_url#" target="_blank"><img src="#APPLICATION.htmlPath#/assets/v3/icons/view_file.gif"/></a></div>
-							<div class="div_text_menus"><a href="#download_url#" class="text_menus" target="_blank"><br />Ver archivo</a></div>
-
-						</cfif>
+						<a href="#download_url##open_file#" target="_blank" class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
 
 					</div>
 
