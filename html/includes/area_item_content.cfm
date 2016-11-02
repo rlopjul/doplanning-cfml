@@ -545,13 +545,3 @@
 	<cfinvokeargument name="categories" value="#itemCategories#"/>
 	<cfinvokeargument name="internal_user" value="#loggedUser.internal_user#">
 </cfinvoke>
-
-
-<div id="convert_file_loading" style="position:absolute; width:100%; height:94%; top:0px; background-color:#EEEEEE; text-align:center; padding-top:90px; display:none;">
-<cfoutput>
-<div class="alert">Generando archivo...</div>
-<!---<div style="margin:auto; text-align:center; padding-top:30px;">
-<img src="#APPLICATION.path#/html/assets/icons/loading.gif" alt="Cargando" />
-</div>--->
-</cfoutput>
-</div>
