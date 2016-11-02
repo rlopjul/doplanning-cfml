@@ -1374,9 +1374,7 @@
 
 		<cfset var objectFile = "">
 
-		<!---
-		DESCOMENTAR
-		<cftry>--->
+		<cftry>
 
 			<cfinclude template="includes/functionStartOnlySession.cfm">
 
@@ -1404,7 +1402,7 @@
 
 				<cfif FileExists(source)>
 
-					<cflock name="#client_abb#_file_#arguments.file_id#_#arguments.file_type#" type="exclusive" timeout="100">
+					<cflock name="#client_abb#_file_#arguments.file_id#_#arguments.file_type#" type="exclusive" timeout="120">
 
 						<cfquery datasource="#client_dsn#" name="getFileConverted">
 							SELECT file_id, file_type, uploading_date, conversion_date
@@ -1479,11 +1477,11 @@
 
 			</cfif>
 
-			<!---<cfcatch>
+			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>
 
-		</cftry>--->
+		</cftry>
 
 		<cfreturn response>
 
