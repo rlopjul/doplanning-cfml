@@ -1,32 +1,49 @@
-<!--- Check access to static files from HTML generated file related to area file --->
-<cfif isDefined("URL.file") AND URL.abb EQ SESSION.client_abb>
+<cftry>
 
-  <cfset fileName = GetFileFromPath(URL.file)>
+  <!--- Check access to static files from HTML generated file related to area file --->
+  <cfif isDefined("URL.file") AND URL.abb EQ SESSION.client_abb>
 
-  <cfif len(fileName) GT 0>
+    <cfset fileName = GetFileFromPath(URL.file)>
 
-    <cfif isNumeric(listFirst(fileName, "."))><!--- .html files --->
-      <cfset fileId = listFirst(fileName, ".")>
-    <cfelse>
-      <cfset fileId = listFirst(fileName,"_")><!--- .png files --->
-    </cfif>
+    <cfif len(fileName) GT 0>
 
-    <cfif len(fileId) GT 0 AND isNumeric(fileId)>
+      <cfif isNumeric(listFirst(fileName, "."))><!--- .html files --->
+        <cfset fileId = listFirst(fileName, ".")>
+      <cfelse>
+        <cfset fileId = listFirst(fileName,"_")><!--- .png files --->
+      </cfif>
 
-      <cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFile" returnvariable="fileQuery">
-      	<cfinvokeargument name="get_file_id" value="#fileId#">
+      <cfif len(fileId) GT 0 AND isNumeric(fileId)>
 
-      	<cfinvokeargument name="return_type" value="query">
-      </cfinvoke>
+        <cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFile" returnvariable="fileQuery">
+        	<cfinvokeargument name="get_file_id" value="#fileId#">
 
-      <cfset filePath = "#APPLICATION.path#/#SESSION.client_id#/temp/#URL.file#">
+        	<cfinvokeargument name="return_type" value="query">
+        </cfinvoke>
 
-      <cfset fileType = fileGetMimeType(filePath,false)>
+        <cfset filePath = "#APPLICATION.path#/#SESSION.client_id#/temp/#URL.file#">
 
-      <cfcontent file="#filePath#" deletefile="no" type="#fileType#" />
+        <cfset fileType = fileGetMimeType(filePath,false)>
+
+        <cfcontent file="#filePath#" deletefile="no" type="#fileType#" />
+
+      </cfif>
 
     </cfif>
 
   </cfif>
 
-</cfif>
+  <cfcatch>
+
+    <cfif isDefined("cfcatch.errorcode") AND isValid("integer",cfcatch.errorcode)>
+      <cfset error_code = cfcatch.errorcode>
+    <cfelse>
+  		<cfset error_code = 10000><!--- Unexpected --->
+  	</cfif>
+
+  	<cfinvoke component="#APPLICATION.htmlComponentsPath#/Error" method="showError">
+  		<cfinvokeargument name="error_code" value="#error_code#">
+  	</cfinvoke>
+
+  </cfcatch>
+</cftry>
