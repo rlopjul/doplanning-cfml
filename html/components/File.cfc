@@ -344,6 +344,8 @@
 	<cffunction name="convertFile" returntype="struct" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_type" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="item_id" type="numeric" required="false">
 
 		<cfset var method = "convertFile">
 
@@ -352,6 +354,8 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="file_type" value="#arguments.file_type#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 			</cfinvoke>
 
 			<cfcatch>
@@ -371,6 +375,8 @@
 	<cffunction name="convertFileRemote" output="false" returntype="struct" access="remote" returnformat="json">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_type" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="item_id" type="numeric" required="false">
 
 		<cfset var method = "convertFileRemote">
 
@@ -378,9 +384,11 @@
 
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="convertFile" returnvariable="convertFileResponse">
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="convertFileResponse">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="file_type" value="#arguments.file_type#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 			</cfinvoke>
 
 			<cfset message = convertFileResponse.message>
@@ -392,6 +400,10 @@
 			</cfif>
 
 			<cfset download_url = "#APPLICATION.htmlPath#/file_converted_download.cfm?file=#arguments.file_id#&file_type=#arguments.file_type##open_file#">
+
+			<cfif isDefined("arguments.itemTypeId") AND isDefined("arguments.item_id")>
+				<cfset download_url = download_url&"&itemTypeId=#arguments.itemTypeId#&item_id=#arguments.item_id#">
+			</cfif>
 
 			<cfoutput>
 			<cfsavecontent variable="responseContent">
@@ -438,15 +450,21 @@
 	<cffunction name="outputConvertFileMenu" returntype="void" access="public" output="true">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_type" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="item_id" type="numeric" required="false">
 
 		<cfset var method = "outputConvertFileMenu">
+
+		<cfset var convert_page = "#APPLICATION.htmlComponentsPath#/File.cfc?method=convertFileRemote&file_id=#arguments.file_id#">
 
 			<cfinvoke component="#APPLICATION.htmlComponentsPath#/FileType" method="getFileTypesConversion" returnvariable="fileTypeConversion">
 			  <cfinvokeargument name="file_type" value="#arguments.file_type#"/>
 			</cfinvoke>
 			<cfset fileTypeConversionQuery = fileTypeConversion.query>
 
-			<cfset convert_page = "#APPLICATION.htmlComponentsPath#/File.cfc?method=convertFileRemote&file_id=#arguments.file_id#">
+			<cfif isDefined("arguments.itemTypeId") AND isDefined("arguments.item_id")>
+				<cfset convert_page = convert_page&"&itemTypeId=#arguments.itemTypeId#&item_id=#arguments.item_id#">
+			</cfif>
 
 			<script>
 

@@ -416,8 +416,10 @@
 				<cfif APPLICATION.moduleConvertFiles EQ true>
 
 					<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputConvertFileMenu">
-						<cfinvokeargument name="file_type" value=".#listLast(objectItem.attached_file_name,'.')#"/>
-						<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#"/>
+						<cfinvokeargument name="file_type" value=".#listLast(objectItem.attached_file_name,'.')#">
+						<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
+						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+						<cfinvokeargument name="item_id" value="#item_id#">	
 					</cfinvoke>
 
 				</cfif>

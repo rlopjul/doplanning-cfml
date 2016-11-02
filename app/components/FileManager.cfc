@@ -1364,6 +1364,8 @@
 	<cffunction name="convertFile" returntype="struct" output="false" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_type" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="item_id" type="numeric" required="false">
 
 		<cfset var method = "convertFile">
 
@@ -1380,6 +1382,8 @@
 
 			<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">
 				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 
 				<cfinvokeargument name="return_type" value="query">
 			</cfinvoke>
