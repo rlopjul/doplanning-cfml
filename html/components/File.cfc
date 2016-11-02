@@ -517,7 +517,7 @@
 
 			      <cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
 
-			      <a href="#convert_url#" class="convert_file" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> #fileTypeConversionQuery.name_es#</a>
+			      <a href="#convert_url#" class="btn btn-default btn-sm convert_file"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> #fileTypeConversionQuery.name_es#</a>
 
 
 			    <cfelse>
