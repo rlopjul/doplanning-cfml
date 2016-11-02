@@ -412,17 +412,13 @@
 
 				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
 
+				<!--- Convert files --->
 				<cfif APPLICATION.moduleConvertFiles EQ true>
 
-					<!--- Convert files --->
-					<cfif APPLICATION.moduleConvertFiles EQ true>
-
-						<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputConvertFileMenu">
-							<cfinvokeargument name="file_type" value="#objectFile.file_type#"/>
-							<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#"/>
-						</cfinvoke>
-
-					</cfif>
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputConvertFileMenu">
+						<cfinvokeargument name="file_type" value="#objectFile.file_type#"/>
+						<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#"/>
+					</cfinvoke>
 
 				</cfif>
 
