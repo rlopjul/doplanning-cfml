@@ -341,38 +341,101 @@
 
 	<!--- ---------------------------------- convertFile -------------------------------------- --->
 
-	<cffunction name="convertFile" returntype="xml" access="public">
+	<cffunction name="convertFile" returntype="struct" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_type" type="string" required="true">
 
 		<cfset var method = "convertFile">
 
-		<cfset var request_parameters = "">
-		<cfset var xmlResponse = "">
+		<!---
+		DESCOMENTAR
+		<cftry>--->
+
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="response">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="file_type" value="#arguments.file_type#">
+			</cfinvoke>
+
+			<!---<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
+			</cfcatch>
+
+		</cftry>--->
+
+		<cfreturn response>
+
+	</cffunction>
+
+
+
+	<!--- ---------------------------------- convertFileRemote -------------------------------------- --->
+
+	<cffunction name="convertFileRemote" output="false" returntype="struct" access="remote" returnformat="json">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="file_type" type="string" required="true">
+
+		<cfset var method = "convertFileRemote">
+
+		<cfset var response = structNew()>
 
 		<cftry>
 
-			<cfsavecontent variable="request_parameters">
-				<cfoutput>
-					<file id="#arguments.file_id#" file_type="#arguments.file_type#"/>
-				</cfoutput>
-			</cfsavecontent>
-
-			<cfinvoke component="Request" method="doRequest" returnvariable="xmlResponse">
-				<cfinvokeargument name="request_component" value="#request_component#">
-				<cfinvokeargument name="request_method" value="#method#">
-				<cfinvokeargument name="request_parameters" value="#request_parameters#">
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="convertFile" returnvariable="convertFileResponse">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="file_type" value="#arguments.file_type#">
 			</cfinvoke>
 
+			<cfset message = convertFileResponse.message>
+
+			<cfset open_file = "">
+
+			<cfif arguments.file_type EQ ".pdf">
+				<cfset open_file = "&open=1">
+			</cfif>
+
+			<cfset download_url = "#APPLICATION.htmlPath#/file_converted_download.cfm?file=#arguments.file_id#&file_type=#arguments.file_type##open_file#">
+
+			<cfoutput>
+			<cfsavecontent variable="responseContent">
+
+				<cfif convertFileResponse.result IS true>
+
+					<div class="hidden">#message#</div>
+
+					<div style="padding-top:10px; margin-bottom:20px;">
+
+						<a href="#download_url##open_file#" target="_blank" class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
+
+					</div>
+
+					<p style="margin-bottom:18px;" lang="es">
+						IMPORTANTE: el archivo generado puede no reproducir exactamente el contenido del original. Para una visualización detallada se recomienda ver el archivo original.
+					</p>
+
+				<cfelse>
+
+					<div class="alert alert-danger">#message#</div>
+
+				</cfif>
+
+			</cfsavecontent>
+			</cfoutput>
+
+			<cfset response = {result=true, message=responseContent}>
+
 			<cfcatch>
-				<cfinclude template="includes/errorHandler.cfm">
+				<cfinclude template="includes/errorHandlerNoRedirectStruct.cfm">
 			</cfcatch>
 
 		</cftry>
 
-		<cfreturn xmlResponse>
+		<cfreturn response>
 
 	</cffunction>
+
+
+
+
 
 
 	<!--- ---------------------------------- associateFile -------------------------------------- --->

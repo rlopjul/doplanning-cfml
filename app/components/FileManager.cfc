@@ -1361,12 +1361,11 @@
 
 	<!--- ----------------------- CONVERT FILE -------------------------------- --->
 
-	<cffunction name="convertFile" returntype="string" output="false" access="public">
-		<cfargument name="request" type="string" required="yes">
+	<cffunction name="convertFile" returntype="struct" output="false" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="file_type" type="string" required="true">
 
 		<cfset var method = "convertFile">
-		<cfset var file_id = "">
-		<cfset var file_type = "">
 
 		<cfset var files_directory = "">
 		<cfset var files_converted_directory = "">
@@ -1375,15 +1374,14 @@
 
 		<cfset var objectFile = "">
 
-		<cftry>
+		<!---
+		DESCOMENTAR
+		<cftry>--->
 
-			<cfinclude template="includes/functionStart.cfm">
-
-			<cfset file_id = xmlRequest.request.parameters.file.xmlAttributes.id>
-			<cfset file_type = xmlRequest.request.parameters.file.xmlAttributes.file_type>
+			<cfinclude template="includes/functionStartOnlySession.cfm">
 
 			<cfinvoke component="FileManager" method="getFile" returnvariable="objectFile">
-				<cfinvokeargument name="get_file_id" value="#file_id#">
+				<cfinvokeargument name="get_file_id" value="#arguments.file_id#">
 
 				<cfinvokeargument name="return_type" value="query">
 			</cfinvoke>
@@ -1396,69 +1394,74 @@
 
 			<cfif file_type_result IS true>
 
-				<cfset files_directory = "files">
+				<cfset fileTypeId = objectFile.file_type_id>
+				<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
+				<cfset files_directory = fileTypeDirectory>
 				<cfset files_converted_directory = "files_converted">
 
 				<cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#objectFile.physical_name#'>
 
 				<cfif FileExists(source)>
 
-					<cfquery datasource="#client_dsn#" name="getFileConverted">
-						SELECT file_id, file_type, uploading_date, conversion_date
-						FROM #client_abb#_files_converted
-						WHERE file_id = <cfqueryparam value="#objectFile.file_id#" cfsqltype="cf_sql_integer">
-						AND file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">;
-					</cfquery>
+					<cflock name="#client_abb#_file_#arguments.file_id#_#arguments.file_type#" type="exclusive" timeout="100">
 
-					<cfif getFileConverted.recordCount LT 1 OR getFileConverted.uploading_date LT objectFile.uploading_date OR getFileConverted.uploading_date LT objectFile.replacement_date>
+						<cfquery datasource="#client_dsn#" name="getFileConverted">
+							SELECT file_id, file_type, uploading_date, conversion_date
+							FROM #client_abb#_files_converted
+							WHERE file_id = <cfqueryparam value="#objectFile.file_id#" cfsqltype="cf_sql_integer">
+							AND file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">;
+						</cfquery>
 
-						<cfsetting requesttimeout="#APPLICATION.filesTimeout#">
+						<cfif getFileConverted.recordCount LT 1 OR getFileConverted.uploading_date LT objectFile.uploading_date OR getFileConverted.uploading_date LT objectFile.replacement_date>
 
-						<cfset file_copy = '#APPLICATION.filesPath#/#client_abb#/#files_converted_directory#/temp_#objectFile.physical_name#_#user_id##objectFile.file_type#'>
-						<cffile action="copy" source="#source#" destination="#file_copy#" nameconflict="overwrite">
+							<cfsetting requesttimeout="#APPLICATION.filesTimeout#">
 
-						<cfif file_type NEQ ".html">
+							<cfset file_copy = '#APPLICATION.filesPath#/#client_abb#/#files_converted_directory#/temp_#objectFile.physical_name#_#user_id##objectFile.file_type#'>
+							<cffile action="copy" source="#source#" destination="#file_copy#" nameconflict="overwrite">
 
-							<cfset file_converted = '#APPLICATION.filesPath#/#client_abb#/#files_converted_directory#/#objectFile.physical_name##file_type#'>
+							<cfif file_type NEQ ".html">
+
+								<cfset file_converted = '#APPLICATION.filesPath#/#client_abb#/#files_converted_directory#/#objectFile.physical_name##file_type#'>
+
+							<cfelse>
+
+								<cfset file_converted = ExpandPath('#APPLICATION.path#/#client_abb#/temp/files/#objectFile.physical_name#_html/#objectFile.physical_name#.html')>
+
+							</cfif>
+
+							<cfinvoke component="FileConverter" method="convertFile">
+								<cfinvokeargument name="inputFilePath" value="#file_copy#">
+								<cfinvokeargument name="outputFilePath" value="#file_converted#">
+							</cfinvoke>
+
+							<cffile action="delete" file="#file_copy#">
+
+							<cfquery datasource="#client_dsn#" name="insertConvertedFile">
+								REPLACE INTO #client_abb#_files_converted
+								(file_id, file_type, uploading_date, conversion_date)
+								VALUES (
+								<cfqueryparam value="#objectFile.file_id#" cfsqltype="cf_sql_integer">,
+								<cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">,
+								<cfif isDate(objectFile.replacement_date) AND objectFile.replacement_date GT objectFile.uploading_date>
+									<cfqueryparam value="#objectFile.replacement_date#" cfsqltype="cf_sql_timestamp">,
+								<cfelse>
+									<cfqueryparam value="#objectFile.uploading_date#" cfsqltype="cf_sql_timestamp">,
+								</cfif>
+								NOW());
+							</cfquery>
+
+							<cfset file_convert_message = "Visualización generada correctamente.">
 
 						<cfelse>
 
-							<cfset file_converted = ExpandPath('#APPLICATION.path#/#client_abb#/temp/files/#objectFile.physical_name#_html/#objectFile.physical_name##file_type#')>
+							<cfset file_convert_message = "Archivo ya disponible para visualización en este formato.">
 
 						</cfif>
 
-						<cfinvoke component="FileConverter" method="convertFile">
-							<cfinvokeargument name="inputFilePath" value="#file_copy#">
-							<cfinvokeargument name="outputFilePath" value="#file_converted#">
-						</cfinvoke>
+					</cflock>
 
-						<cffile action="delete" file="#file_copy#">
-
-						<cfquery datasource="#client_dsn#" name="insertConvertedFile">
-							REPLACE INTO #client_abb#_files_converted
-							(file_id, file_type, uploading_date, conversion_date)
-							VALUES (
-							<cfqueryparam value="#objectFile.file_id#" cfsqltype="cf_sql_integer">,
-							<cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">,
-							<cfif isDate(objectFile.replacement_date) AND objectFile.replacement_date GT objectFile.uploading_date>
-								<cfqueryparam value="#objectFile.replacement_date#" cfsqltype="cf_sql_timestamp">,
-							<cfelse>
-								<cfqueryparam value="#objectFile.uploading_date#" cfsqltype="cf_sql_timestamp">,
-							</cfif>
-							NOW());
-						</cfquery>
-
-						<cfset file_convert_message = "Archivo generado correctamente.">
-
-					<cfelse>
-
-						<cfset file_convert_message = "Archivo ya disponible en este formato, puede descargarlo.">
-
-					</cfif>
-
-					<cfset xmlResponseContent = "<file_convert><message><![CDATA[#file_convert_message#]]></message></file_convert>">
-
-					<cfinclude template="includes/functionEndNoLog.cfm">
+					<cfset response = {result=true, file_id=#file_id#, message=#file_convert_message#}>
 
 				<cfelse><!---The physical file does not exist--->
 
@@ -1476,14 +1479,13 @@
 
 			</cfif>
 
-			<cfcatch>
-				<cfset xmlResponseContent = arguments.request>
-				<cfinclude template="includes/errorHandler.cfm">
+			<!---<cfcatch>
+				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>
 
-		</cftry>
+		</cftry>--->
 
-		<cfreturn xmlResponse>
+		<cfreturn response>
 
 	</cffunction>
 

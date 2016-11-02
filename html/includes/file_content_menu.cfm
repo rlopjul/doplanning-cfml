@@ -11,18 +11,6 @@
 			</cfif>
 		</div>
 
-	<cfif listFind(".zip,.rar,.exe,.avi",objectFile.file_type) IS 0>
-
-		<div class="btn-group">
-			<cfif page_type IS 1>
-				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
-			<cfelse>
-				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&area=#area_id#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
-			</cfif>
-		</div>
-
-	</cfif>
-
 	<cfif listFind(".gif,.jpg,.png",objectFile.file_type) GT 0>
 
 		<div class="btn-group">
@@ -31,6 +19,108 @@
 		<cfelse>
 			<a href="area_file_view.cfm?file=#objectFile.id#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-eye-open"></i> <span lang="es">Visualizar</span></a>
 		</cfif>
+		</div>
+
+	</cfif>
+
+	<!--- Convert files --->
+	<cfif APPLICATION.moduleConvertFiles EQ true>
+
+		<cfinvoke component="#APPLICATION.htmlComponentsPath#/FileType" method="getFileTypesConversion" returnvariable="fileTypeConversion">
+			<cfinvokeargument name="file_type" value="#objectFile.file_type#"/>
+		</cfinvoke>
+		<cfset fileTypeConversionQuery = fileTypeConversion.query>
+
+		<!---<cfset convert_page = "area_file_convert.cfm?file=#objectFile.id#&area=#area_id#">--->
+		<cfset convert_page = "#APPLICATION.htmlComponentsPath#/File.cfc?method=convertFileRemote&file_id=#objectFile.id#">
+
+		<script>
+
+			$(function() {
+
+				$( ".convert_file" ).click(function(event) {
+
+					event.preventDefault();
+
+					var bootboxLoading = bootbox.dialog({
+							message: '<div class="progress progress-striped active" style="height:23px"><div class="progress-bar" style="width:100%;"><span lang="es">Generando vista</span></div></div><p lang="es">Este proceso tardará dependiendo del tamaño del archivo</p>',
+							title: "Generando vista de archivo",
+							closeButton: false
+					});
+
+					$.ajax({
+
+						type: 'GET',
+						url: $(this).attr('href'),
+						dataType: "json",
+						success: function(data, status) {
+
+							bootboxLoading.modal('hide');
+
+							bootbox.dialog({
+									message: data.message,
+									title: "Vista de archivo",
+									onEscape: function() {}
+							}).on('click', function (event) {
+							    $(this).modal('hide');
+							});
+
+						}
+
+					});
+
+
+				});
+
+
+			});
+
+		</script>
+
+		<cfif fileTypeConversionQuery.recordCount GT 0>
+
+			<div class="btn-group">
+
+				<cfif fileTypeConversionQuery.recordCount IS 1>
+
+					<cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
+
+					<a href="#convert_url#" class="convert_file" class="btn btn-default btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> #fileTypeConversionQuery.name_es#</a>
+
+
+				<cfelse>
+
+					<a href="##" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Ver archivo como" lang="es">
+					<i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> <span class="caret"></span></a>
+
+					<ul class="dropdown-menu">
+
+						<cfloop query="fileTypeConversionQuery">
+
+							<cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
+
+							<li><a href="#convert_url#" class="convert_file" lang="es">#fileTypeConversionQuery.name_es#</a></li>
+
+						</cfloop>
+
+					</ul>
+
+				</cfif>
+
+			</div>
+
+		</cfif>
+	</cfif>
+
+
+	<cfif listFind(".zip,.rar,.exe,.avi",objectFile.file_type) IS 0>
+
+		<div class="btn-group">
+			<cfif page_type IS 1>
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
+			<cfelse>
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&fileTypeId=#fileTypeid#&area=#area_id#&open=1&abb=#SESSION.client_abb#" target="_blank" class="btn btn-sm btn-default"><i class="icon-desktop"></i> <span lang="es">Abrir</span></a>
+			</cfif>
 		</div>
 
 	</cfif>
@@ -260,35 +350,6 @@
 			</div>
 		</cfif>
 
-	</cfif>
-
-
-	<cfif APPLICATION.moduleConvertFiles EQ true>
-		<cfif objectFile.file_types_conversion.recordCount GT 0>
-			<div class="div_element_menu" style="width:130px;">
-				<cfif page_type IS 1>
-					<cfset form_action = "my_files_file_convert.cfm">
-				<cfelse>
-					<cfset form_action = "area_file_convert.cfm">
-				</cfif>
-				<form name="convert_file" id="convert_file" method="get" action="#form_action#" onsubmit="showHideDiv('convert_file_loading');">
-					<input type="hidden" name="file" value="#objectFile.id#" />
-					<cfif page_type IS 1>
-					<input type="hidden" name="folder" value="#folder_id#" />
-					<cfelse>
-					<input type="hidden" name="area" value="#area_id#" />
-					</cfif>
-					<div class="div_icon_menus"><input type="image" src="assets/icons/view_file.gif" title="Visualizar el archivo"/></div>
-					<div class="div_text_menus"><a href="##" onclick="showHideDiv('convert_file_loading');submitForm('convert_file');" class="text_menus"><span lang="es">Visualizar en</span> </a>
-					<select name="file_type" style="width:90px;" onchange="showHideDiv('convert_file_loading');submitForm('convert_file');">
-						<cfloop query="objectFile.file_types_conversion">
-							<option value="#objectFile.file_types_conversion.file_type#">#objectFile.file_types_conversion.name_es#</option>
-						</cfloop>
-					</select>
-					</div>
-				</form>
-			</div>
-		</cfif>
 	</cfif>
 
 

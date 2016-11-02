@@ -660,15 +660,6 @@
 	</div><!--- END panel panel-default --->
 </cfoutput>
 
-<div id="convert_file_loading" style="position:absolute; width:100%; height:94%; top:0px; background-color:#EEEEEE; text-align:center; padding-top:90px; display:none;">
-<cfoutput>
-<div class="alert"><span lang="es">Generando archivo...</span></div>
-<!---<div style="margin:auto; text-align:center; padding-top:30px;">
-<img src="#APPLICATION.path#/html/assets/icons/loading.gif" alt="Cargando" />
-</div>--->
-</cfoutput>
-</div>
-
 <cfif isDefined("URL.download") AND URL.download IS true>
 	<cfoutput>
 	<iframe style="display:none" src="#APPLICATION.htmlPath#/file_download.cfm?id=#file_id#"></iframe>
