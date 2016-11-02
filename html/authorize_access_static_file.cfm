@@ -15,17 +15,38 @@
 
       <cfif len(fileId) GT 0 AND isNumeric(fileId)>
 
-        <cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFile" returnvariable="fileQuery">
-        	<cfinvokeargument name="get_file_id" value="#fileId#">
+        <cfset client_dsn = APPLICATION.identifier&"_"&SESSION.client_abb>
 
-        	<cfinvokeargument name="return_type" value="query">
-        </cfinvoke>
+        <cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="selectFileQuery">
+  				<cfinvokeargument name="file_id" value="#fileId#">
+  				<cfinvokeargument name="parse_dates" value="false">
+  				<cfinvokeargument name="published" value="false">
 
-        <cfset filePath = "#APPLICATION.path#/#SESSION.client_id#/temp/#URL.file#">
+  				<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+  				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+  			</cfinvoke>
 
-        <cfset fileType = fileGetMimeType(filePath,false)>
+        <cfif selectFileQuery.recordCount GT 0>
 
-        <cfcontent file="#filePath#" deletefile="no" type="#fileType#" />
+          <cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFile" returnvariable="fileQuery">
+          	<cfinvokeargument name="get_file_id" value="#fileId#">
+
+            <cfif isNumeric(selectFileQuery.item_type_id) AND isNumeric(selectFileQuery.item_id)>
+              <cfinvokeargument name="itemTypeId" value="#selectFileQuery.item_type_id#">
+              <cfinvokeargument name="item_id" value="#selectFileQuery.item_id#">
+            </cfif>
+
+          	<cfinvokeargument name="return_type" value="query">
+          </cfinvoke>
+
+          <cfset filePath = "#APPLICATION.path#/#SESSION.client_id#/temp/#URL.file#">
+
+          <cfset fileType = fileGetMimeType(filePath,false)>
+
+          <cfcontent file="#filePath#" deletefile="no" type="#fileType#" />
+
+
+        </cfif>
 
       </cfif>
 
