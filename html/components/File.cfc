@@ -414,7 +414,7 @@
 
 					<div style="padding-top:10px; margin-bottom:20px;">
 
-						<a href="#download_url##open_file#" target="_blank" class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
+						<a href="#download_url#" target="_blank" class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
 
 					</div>
 
