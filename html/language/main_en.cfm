@@ -700,6 +700,8 @@ curLangTextEn = {
     "Este archivo ya es un archivo de área.":"This file is already an area file.",
     "No hay archivos para convertir en archivos de área.":"No files to convert to area file.",
     "Convertido en archivo de área.":"Converted to area file.",
+    "Generando vista de archivo":"Generating file view",
+    "Vista de archivo":"File view",
     "Este proceso tardará dependiendo del tamaño del archivo":"This process will take some time depending on the file size",
     "IMPORTANTE: el archivo generado puede no reproducir exactamente el contenido del original. Para una visualización detallada se recomienda ver el archivo original.":"ATTENTION: The generated file can not produce exactly the content of the original. For a detailed visualization is recommended to view the original file.",
 
