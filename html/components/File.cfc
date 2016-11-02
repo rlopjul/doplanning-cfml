@@ -344,6 +344,8 @@
 	<cffunction name="convertFile" returntype="struct" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_type" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="item_id" type="numeric" required="false">
 
 		<cfset var method = "convertFile">
 
@@ -352,6 +354,8 @@
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="file_type" value="#arguments.file_type#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 			</cfinvoke>
 
 			<cfcatch>
@@ -371,6 +375,8 @@
 	<cffunction name="convertFileRemote" output="false" returntype="struct" access="remote" returnformat="json">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="file_type" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="item_id" type="numeric" required="false">
 
 		<cfset var method = "convertFileRemote">
 
@@ -378,9 +384,11 @@
 
 		<cftry>
 
-			<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="convertFile" returnvariable="convertFileResponse">
+			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="convertFileResponse">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="file_type" value="#arguments.file_type#">
+				<cfinvokeargument name="itemTypeId" value="#arguments.itemTypeId#">
+				<cfinvokeargument name="item_id" value="#arguments.item_id#">
 			</cfinvoke>
 
 			<cfset message = convertFileResponse.message>
@@ -393,6 +401,10 @@
 
 			<cfset download_url = "#APPLICATION.htmlPath#/file_converted_download.cfm?file=#arguments.file_id#&file_type=#arguments.file_type##open_file#">
 
+			<cfif isDefined("arguments.itemTypeId") AND isDefined("arguments.item_id")>
+				<cfset download_url = download_url&"&itemTypeId=#arguments.itemTypeId#&item_id=#arguments.item_id#">
+			</cfif>
+
 			<cfoutput>
 			<cfsavecontent variable="responseContent">
 
@@ -402,7 +414,7 @@
 
 					<div style="padding-top:10px; margin-bottom:20px;">
 
-						<a href="#download_url##open_file#" target="_blank" class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
+						<a href="#download_url#" target="_blank" class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver archivo</span></a>
 
 					</div>
 
@@ -430,6 +442,111 @@
 		<cfreturn response>
 
 	</cffunction>
+
+
+
+	<!--- ---------------------------------- outputConvertFileMenu -------------------------------------- --->
+
+	<cffunction name="outputConvertFileMenu" returntype="void" access="public" output="true">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="file_type" type="string" required="true">
+		<cfargument name="itemTypeId" type="numeric" required="false">
+		<cfargument name="item_id" type="numeric" required="false">
+
+		<cfset var method = "outputConvertFileMenu">
+
+		<cfset var convert_page = "#APPLICATION.htmlComponentsPath#/File.cfc?method=convertFileRemote&file_id=#arguments.file_id#">
+
+			<cfinvoke component="#APPLICATION.htmlComponentsPath#/FileType" method="getFileTypesConversion" returnvariable="fileTypeConversion">
+			  <cfinvokeargument name="file_type" value="#arguments.file_type#"/>
+			</cfinvoke>
+			<cfset fileTypeConversionQuery = fileTypeConversion.query>
+
+			<cfif isDefined("arguments.itemTypeId") AND isDefined("arguments.item_id")>
+				<cfset convert_page = convert_page&"&itemTypeId=#arguments.itemTypeId#&item_id=#arguments.item_id#">
+			</cfif>
+
+			<script>
+
+			  $(function() {
+
+			    $( ".convert_file" ).click(function(event) {
+
+			      event.preventDefault();
+
+			      var bootboxLoading = bootbox.dialog({
+			          message: '<div class="progress progress-striped active" style="height:23px"><div class="progress-bar" style="width:100%;"><span lang="es">Generando vista de archivo</span></div></div><p lang="es">Este proceso tardará dependiendo del tamaño del archivo</p>',
+			          title: window.lang.translate('Generando vista de archivo'),
+			          closeButton: false
+			      });
+
+			      $.ajax({
+
+			        type: 'GET',
+			        url: $(this).attr('href'),
+			        dataType: "json",
+			        success: function(data, status) {
+
+			          bootboxLoading.modal('hide');
+
+			          bootbox.dialog({
+			              message: data.message,
+			              title: window.lang.translate('Vista de archivo'),
+			              onEscape: function() {}
+			          }).on('click', function (event) {
+			              $(this).modal('hide');
+			          });
+
+			        }
+
+			      });
+
+
+			    });
+
+
+			  });
+
+			</script>
+
+			<cfif fileTypeConversionQuery.recordCount GT 0>
+
+			  <div class="btn-group">
+
+			    <cfif fileTypeConversionQuery.recordCount IS 1>
+
+			      <cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
+
+			      <a href="#convert_url#" class="btn btn-default btn-sm convert_file"><i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> #fileTypeConversionQuery.name_es#</a>
+
+
+			    <cfelse>
+
+			      <a href="##" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Ver archivo como" lang="es">
+			      <i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> <span class="caret"></span></a>
+
+			      <ul class="dropdown-menu">
+
+			        <cfloop query="fileTypeConversionQuery">
+
+			          <cfset convert_url = convert_page&"&file_type=#fileTypeConversionQuery.file_type#">
+
+			          <li><a href="#convert_url#" class="convert_file" lang="es">#fileTypeConversionQuery.name_es#</a></li>
+
+			        </cfloop>
+
+			      </ul>
+
+			    </cfif>
+
+			  </div>
+
+			</cfif>
+
+
+
+	</cffunction>
+
 
 
 

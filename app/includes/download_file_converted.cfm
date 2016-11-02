@@ -19,6 +19,10 @@
 
 <cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="getFile" returnvariable="objectFile">
 	<cfinvokeargument name="get_file_id" value="#URL.file#">
+	<cfif isDefined("URL.itemTypeId") AND isDefined("URL.item_id")>
+		<cfinvokeargument name="itemTypeId" value="#URL.itemTypeId#">
+		<cfinvokeargument name="item_id" value="#URL.item_id#">
+	</cfif>
 
 	<cfinvokeargument name="return_type" value="query">
 </cfinvoke>

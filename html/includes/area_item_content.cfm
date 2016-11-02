@@ -322,6 +322,28 @@
 
 		</cfif>
 
+		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
+
+			<div class="btn-group">
+
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
+
+				<!--- Convert files --->
+				<cfif APPLICATION.moduleConvertFiles EQ true>
+
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputConvertFileMenu">
+						<cfinvokeargument name="file_type" value=".#listLast(objectItem.attached_file_name,'.')#">
+						<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
+						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+						<cfinvokeargument name="item_id" value="#item_id#">
+					</cfinvoke>
+
+				</cfif>
+
+			</div>
+
+		</cfif>
+
 		<cfif itemTypeId IS 20><!--- DoPlanning document--->
 
 			<div class="btn-group">
@@ -405,41 +427,6 @@
 			</div>
 
 		</cfif>
-
-		<!---<cfif len(objectItem.attached_file_name) GT 0 AND objectItem.attached_file_name NEQ "-">--->
-		<!---<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
-			<div class="btn-group">
-				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
-				<cfif APPLICATION.moduleConvertFiles EQ true>
-					<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFile" returnvariable="objectFile">
-						<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
-						<cfinvokeargument name="item_id" value="#item_id#">
-						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-					</cfinvoke>
-					<cfif objectFile.file_types_conversion.recordCount GT 0>
-						<div class="div_element_menu" style="width:130px;">
-
-							<cfset form_action = "#itemTypeName#_file_convert.cfm">
-
-							<form name="convert_file" id="convert_file" method="get" action="#form_action#" onsubmit="showHideDiv('convert_file_loading');">
-								<input type="hidden" name="file" value="#objectFile.id#" />
-
-								<input type="hidden" name="#itemTypeName#" value="#objectItem.id#" />
-
-								<div class="div_icon_menus"><input type="image" src="#APPLICATION.htmlPath#/assets/v3/icons/view_file.gif" title="Visualizar el archivo"/></div>
-								<div class="div_text_menus"><a href="##" onclick="showHideDiv('convert_file_loading');submitForm('convert_file');" class="text_menus" lang="es">Ver adjunto en </a>
-								<select name="file_type" style="width:90px;" onchange="showHideDiv('convert_file_loading');submitForm('convert_file');">
-									<cfloop query="objectFile.file_types_conversion">
-										<option value="#objectFile.file_types_conversion.file_type#">#objectFile.file_types_conversion.name_es#</option>
-									</cfloop>
-								</select>
-								</div>
-							</form>
-						</div>
-					</cfif>
-				</cfif>
-			</div>
-		</cfif>--->
 
 
 		<cfif itemTypeId LT 10 OR itemTypeId IS 17>
@@ -556,13 +543,3 @@
 	<cfinvokeargument name="categories" value="#itemCategories#"/>
 	<cfinvokeargument name="internal_user" value="#loggedUser.internal_user#">
 </cfinvoke>
-
-
-<div id="convert_file_loading" style="position:absolute; width:100%; height:94%; top:0px; background-color:#EEEEEE; text-align:center; padding-top:90px; display:none;">
-<cfoutput>
-<div class="alert">Generando archivo...</div>
-<!---<div style="margin:auto; text-align:center; padding-top:30px;">
-<img src="#APPLICATION.path#/html/assets/icons/loading.gif" alt="Cargando" />
-</div>--->
-</cfoutput>
-</div>
